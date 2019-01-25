@@ -6,6 +6,7 @@ import com.hyjf.am.trade.dao.mapper.auto.HjhAssetRiskInfoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.cert.CertMapper;
 import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.nifa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -234,4 +235,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected  NifaStatisticalCustomizeMapper nifaStatisticalCustomizeMapper;
+
+	@Autowired
+	protected CertMapper certMapper;
 }

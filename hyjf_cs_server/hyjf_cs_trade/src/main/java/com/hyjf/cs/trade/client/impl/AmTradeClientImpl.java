@@ -26,6 +26,7 @@ import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
@@ -38,6 +39,7 @@ import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
+import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -56,6 +58,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -6384,6 +6387,137 @@ public class AmTradeClientImpl implements AmTradeClient {
         BigDecimalResponse response =restTemplate.getForEntity(url,BigDecimalResponse.class).getBody();
         if (Validator.isNotNull(response)&&response.getRtn().equals(Response.SUCCESS)){
             return response.getResultDec();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CertAccountListCustomizeVO> queryCertAccountList(CertRequest request) {
+        String url = urlBase + "cert/queryCertAccountList";
+        CertAccountListResponse response = restTemplate.postForEntity(url, request, CertAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AccountListVO> getAccountListVOListByRequest(CertRequest request) {
+
+        String url = urlBase + "cert/getAccountListVOListByRequest";
+        AccountListResponse response = restTemplate.postForEntity(url,request,AccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowRepayVO> getBorrowRepayListByRequest(CertRequest request) {
+        String url = urlBase + "cert/getBorrowRepayListByRequest";
+        BorrowRepayResponse response = restTemplate.postForEntity(url,request,BorrowRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowRepayPlanVO> getBorrowRepayPlanListByRequest(CertRequest request) {
+        String url = urlBase + "cert/getBorrowRepayPlanListByRequest";
+        BorrowRepayPlanResponse response = restTemplate.postForEntity(url,request,BorrowRepayPlanResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/getCouponRecoverListByCertRequest";
+        CouponRecoverResponse response = restTemplate.postForEntity(url,certRequest,CouponRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowTenderCpnVO> getBorrowTenderCpnListByCertRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/getBorrowTenderCpnListByCertRequest";
+        BorrowTenderCpnResponse response = restTemplate.postForEntity(url,certRequest,BorrowTenderCpnResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CouponRealTenderVO> getCouponRealTenderListByCertRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/getCouponRealTenderListByCertRequest";
+        CouponRealTenderResponse response = restTemplate.postForEntity(url,certRequest,CouponRealTenderResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowRecoverVO> selectBorrowRecoverListByRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/selectBorrowRecoverListByRequest";
+        BorrowRecoverResponse response = restTemplate.postForEntity(url,certRequest,BorrowRecoverResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/getHjhDebtCreditRepayListByRequest";
+        HjhDebtCreditRepayResponse response = restTemplate.postForEntity(url,certRequest,HjhDebtCreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CreditRepayVO> getCreditRepayListByRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/getCreditRepayListByRequest";
+        CreditRepayResponse response = restTemplate.postForEntity(url,certRequest,CreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<BorrowRecoverPlanVO> selectBorrowRecoverPlanListByRequest(CertRequest certRequest) {
+        String url = urlBase + "cert/selectBorrowRecoverPlanListByRequest";
+        BorrowRecoverPlanResponse response = restTemplate.postForEntity(url,certRequest,BorrowRecoverPlanResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRepayOrdId(CertRequest certRequest) {
+        String url = urlBase + "cert/getHjhDebtCreditRepayListByRepayOrdId";
+        HjhDebtCreditRepayResponse response = restTemplate.postForEntity(url,certRequest,HjhDebtCreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<CreditRepayVO> getCreditRepayListByRepayOrdId(CertRequest certRequest) {
+        String url = urlBase + "cert/getCreditRepayListByRepayOrdId";
+        CreditRepayResponse response = restTemplate.postForEntity(url,certRequest,CreditRepayResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
         }
         return null;
     }
