@@ -5,30 +5,95 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class HjhInstConfig implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 机构名称
+     *
+     * @mbggenerated
+     */
     private String instName;
 
+    /**
+     * 机构类别(0:借款机构,1:投资机构)
+     *
+     * @mbggenerated
+     */
     private Integer instType;
 
+    /**
+     * 额度上限
+     *
+     * @mbggenerated
+     */
     private BigDecimal capitalToplimit;
 
+    /**
+     * 提现手续费
+     *
+     * @mbggenerated
+     */
     private BigDecimal commissionFee;
 
+    /**
+     * 等额本息保证金的回滚方式 0：到期回滚 1：分期回滚
+     *
+     * @mbggenerated
+     */
     private Integer repayCapitalType;
 
+    /**
+     * 备注说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 添加人
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

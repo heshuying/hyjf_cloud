@@ -7,130 +7,445 @@ import java.util.Date;
 public class BorrowRecover implements Serializable {
     private Integer id;
 
+    /**
+     * 状态(初始:0,放款成功后更新成:1)
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 投资人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 标的编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 投资订单号(对应borrow_tender表的nid)
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 投资人投标成功的授权号
+     *
+     * @mbggenerated
+     */
     private String authCode;
 
+    /**
+     * 借款人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserid;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 投资ID(对应borrow_tender表里的ID字段)
+     *
+     * @mbggenerated
+     */
     private Integer tenderId;
 
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 还款状态(0:未还款,1:已还款)
+     *
+     * @mbggenerated
+     */
     private Integer recoverStatus;
 
+    /**
+     * 还款期数
+     *
+     * @mbggenerated
+     */
     private Integer recoverPeriod;
 
+    /**
+     * 估计还款时间(分期标的是下一期应还时间)
+     *
+     * @mbggenerated
+     */
     private Integer recoverTime;
 
+    /**
+     * 已经还款时间
+     *
+     * @mbggenerated
+     */
     private Integer recoverYestime;
 
+    /**
+     * 应还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccount;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverInterest;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverCapital;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountYes;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverInterestYes;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverCapitalYes;
 
+    /**
+     * 未收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountWait;
 
+    /**
+     * 未收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverCapitalWait;
 
+    /**
+     * 未收本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverInterestWait;
 
+    /**
+     * 还款流程(yes,late,wait)
+     *
+     * @mbggenerated
+     */
     private String recoverType;
 
+    /**
+     * 放款服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverServiceFee;
 
+    /**
+     * 已收管理费
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverFeeYes;
 
+    /**
+     * 已还款提前还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayChargeInterest;
 
+    /**
+     * 已还款延期还款利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayDelayInterest;
 
+    /**
+     * 已收债转管理费
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditManageFee;
 
+    /**
+     * 已还款逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayLateInterest;
 
+    /**
+     * 债权是否结束状态(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer debtStatus;
 
+    /**
+     * 债转状态 0初始 1承接停止 2完全承接
+     *
+     * @mbggenerated
+     */
     private Integer creditStatus;
 
+    /**
+     * 账户管理费
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverFee;
 
+    /**
+     * 逾期费用收入
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverLateFee;
 
+    /**
+     * 0:正常,1:提前,2:延期,3:逾期
+     *
+     * @mbggenerated
+     */
     private Integer advanceStatus;
 
+    /**
+     * 提前天数
+     *
+     * @mbggenerated
+     */
     private Integer chargeDays;
 
+    /**
+     * 提前减息
+     *
+     * @mbggenerated
+     */
     private BigDecimal chargeInterest;
 
+    /**
+     * 逾期天数
+     *
+     * @mbggenerated
+     */
     private Integer lateDays;
 
+    /**
+     * 逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal lateInterest;
 
+    /**
+     * 延期天数
+     *
+     * @mbggenerated
+     */
     private Integer delayDays;
 
+    /**
+     * 延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal delayInterest;
 
+    /**
+     * 延期费率
+     *
+     * @mbggenerated
+     */
     private BigDecimal delayRate;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 0发送邮件，1已发送
+     *
+     * @mbggenerated
+     */
     private Integer sendmail;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
+    /**
+     * 已转让本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditAmount;
 
+    /**
+     * 已债转总利息（含垫付）
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditInterestAmount;
 
+    /**
+     * 债转时间
+     *
+     * @mbggenerated
+     */
     private Integer creditTime;
 
+    /**
+     * 还款订单号
+     *
+     * @mbggenerated
+     */
     private String repayOrdid;
 
+    /**
+     * 还款时间
+     *
+     * @mbggenerated
+     */
     private String repayOrddate;
 
+    /**
+     * 推荐人用户名(还款时更新)
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 推荐人用户id(还款时更新)
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 一级部门id(还款时更新)
+     *
+     * @mbggenerated
+     */
     private Integer inviteRegionId;
 
+    /**
+     * 一级部门名称(还款时更新)
+     *
+     * @mbggenerated
+     */
     private String inviteRegionName;
 
+    /**
+     * 二级部门id(还款时更新)
+     *
+     * @mbggenerated
+     */
     private Integer inviteBranchId;
 
+    /**
+     * 二级部门名称(还款时更新)
+     *
+     * @mbggenerated
+     */
     private String inviteBranchName;
 
+    /**
+     * 三级部门id(还款时更新)
+     *
+     * @mbggenerated
+     */
     private Integer inviteDepartmentId;
 
+    /**
+     * 三级部门名称(还款时更新)
+     *
+     * @mbggenerated
+     */
     private String inviteDepartmentName;
 
+    /**
+     * 投资人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer tenderUserAttribute;
 
+    /**
+     * 推荐人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
+    /**
+     * 放款批次号
+     *
+     * @mbggenerated
+     */
     private String loanBatchNo;
 
+    /**
+     * 还款批次号
+     *
+     * @mbggenerated
+     */
     private String repayBatchNo;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

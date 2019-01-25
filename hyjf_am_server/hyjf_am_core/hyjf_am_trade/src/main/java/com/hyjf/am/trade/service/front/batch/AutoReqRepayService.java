@@ -17,11 +17,11 @@ public interface AutoReqRepayService extends BaseService {
      * 取得本日应还款标的列表
      * @return
      */
-    public List<AutoReqRepayBorrowCustomize> getAutoReqRepayBorrow();
+    List<AutoReqRepayBorrowCustomize> getAutoReqRepayBorrow();
 
     /**
      * 取得本日应还款标的列表
      */
-    public boolean repayUserBorrowProject(AutoReqRepayBorrowCustomize autoReqRepayBorrow)  throws Exception;
+    boolean repayUserBorrowProject(AutoReqRepayBorrowCustomize autoReqRepayBorrow)  throws Exception;
 
 }

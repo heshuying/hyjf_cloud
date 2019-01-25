@@ -1,17 +1,9 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
 package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author dangzw
- * @version HolidaysConfig, v0.1 2018/11/13 16:51
- */
 public class HolidaysConfig implements Serializable {
-
     /**
      * id
      *

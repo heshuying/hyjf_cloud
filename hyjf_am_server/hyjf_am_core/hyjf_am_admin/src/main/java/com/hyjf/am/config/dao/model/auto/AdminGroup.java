@@ -16,8 +16,18 @@ public class AdminGroup implements Serializable {
 
     private Integer sort;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUser;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private String updateUser;
 
     private Date createTime;

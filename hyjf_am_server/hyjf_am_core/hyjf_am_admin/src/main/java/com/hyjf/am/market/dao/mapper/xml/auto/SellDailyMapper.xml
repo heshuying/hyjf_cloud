@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.auto.SellDailyMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.SellDaily" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="date_str" property="dateStr" jdbcType="VARCHAR" />
+    <result column="draw_order" property="drawOrder" jdbcType="INTEGER" />
+    <result column="primary_division" property="primaryDivision" jdbcType="VARCHAR" />
+    <result column="two_division" property="twoDivision" jdbcType="VARCHAR" />
+    <result column="store_num" property="storeNum" jdbcType="INTEGER" />
+    <result column="invest_total_month" property="investTotalMonth" jdbcType="DECIMAL" />
+    <result column="repayment_total_month" property="repaymentTotalMonth" jdbcType="DECIMAL" />
+    <result column="invest_total_previous_month" property="investTotalPreviousMonth" jdbcType="DECIMAL" />
+    <result column="invest_ratio_growth" property="investRatioGrowth" jdbcType="VARCHAR" />
+    <result column="withdraw_total_month" property="withdrawTotalMonth" jdbcType="DECIMAL" />
+    <result column="withdraw_rate" property="withdrawRate" jdbcType="VARCHAR" />
+    <result column="recharge_total_month" property="rechargeTotalMonth" jdbcType="DECIMAL" />
+    <result column="invest_annual_total_month" property="investAnnualTotalMonth" jdbcType="DECIMAL" />
+    <result column="invest_annual_total_previous_month" property="investAnnualTotalPreviousMonth" jdbcType="DECIMAL" />
+    <result column="invest_annular_ratio_growth" property="investAnnularRatioGrowth" jdbcType="VARCHAR" />
+    <result column="invest_total_yesterday" property="investTotalYesterday" jdbcType="DECIMAL" />
+    <result column="repayment_total_yesterday" property="repaymentTotalYesterday" jdbcType="DECIMAL" />
+    <result column="invest_annual_total_yesterday" property="investAnnualTotalYesterday" jdbcType="DECIMAL" />
+    <result column="withdraw_total_yesterday" property="withdrawTotalYesterday" jdbcType="DECIMAL" />
+    <result column="recharge_total_yesterday" property="rechargeTotalYesterday" jdbcType="DECIMAL" />
+    <result column="net_capital_inflow_yesterday" property="netCapitalInflowYesterday" jdbcType="DECIMAL" />
+    <result column="non_repayment_today" property="nonRepaymentToday" jdbcType="DECIMAL" />
+    <result column="register_total_yesterday" property="registerTotalYesterday" jdbcType="INTEGER" />
+    <result column="recharge_gt3000_user_num" property="rechargeGt3000UserNum" jdbcType="INTEGER" />
+    <result column="invest_gt3000_user_num" property="investGt3000UserNum" jdbcType="INTEGER" />
+    <result column="invest_gt3000_month_user_num" property="investGt3000MonthUserNum" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, date_str, draw_order, primary_division, two_division, store_num, invest_total_month, 
+    repayment_total_month, invest_total_previous_month, invest_ratio_growth, withdraw_total_month, 
+    withdraw_rate, recharge_total_month, invest_annual_total_month, invest_annual_total_previous_month, 
+    invest_annular_ratio_growth, invest_total_yesterday, repayment_total_yesterday, invest_annual_total_yesterday, 
+    withdraw_total_yesterday, recharge_total_yesterday, net_capital_inflow_yesterday, 
+    non_repayment_today, register_total_yesterday, recharge_gt3000_user_num, invest_gt3000_user_num, 
+    invest_gt3000_month_user_num, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.SellDailyExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_sell_daily
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_sell_daily
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_sell_daily
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.SellDailyExample" >
+    delete from ht_sell_daily
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.SellDaily" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_sell_daily (date_str, draw_order, primary_division, 
+      two_division, store_num, invest_total_month, 
+      repayment_total_month, invest_total_previous_month, 
+      invest_ratio_growth, withdraw_total_month, 
+      withdraw_rate, recharge_total_month, invest_annual_total_month, 
+      invest_annual_total_previous_month, invest_annular_ratio_growth, 
+      invest_total_yesterday, repayment_total_yesterday, 
+      invest_annual_total_yesterday, withdraw_total_yesterday, 
+      recharge_total_yesterday, net_capital_inflow_yesterday, 
+      non_repayment_today, register_total_yesterday, 
+      recharge_gt3000_user_num, invest_gt3000_user_num, 
+      invest_gt3000_month_user_num, create_time, 
+      update_time)
+    values (#{dateStr,jdbcType=VARCHAR}, #{drawOrder,jdbcType=INTEGER}, #{primaryDivision,jdbcType=VARCHAR}, 
+      #{twoDivision,jdbcType=VARCHAR}, #{storeNum,jdbcType=INTEGER}, #{investTotalMonth,jdbcType=DECIMAL}, 
+      #{repaymentTotalMonth,jdbcType=DECIMAL}, #{investTotalPreviousMonth,jdbcType=DECIMAL}, 
+      #{investRatioGrowth,jdbcType=VARCHAR}, #{withdrawTotalMonth,jdbcType=DECIMAL}, 
+      #{withdrawRate,jdbcType=VARCHAR}, #{rechargeTotalMonth,jdbcType=DECIMAL}, #{investAnnualTotalMonth,jdbcType=DECIMAL}, 
+      #{investAnnualTotalPreviousMonth,jdbcType=DECIMAL}, #{investAnnularRatioGrowth,jdbcType=VARCHAR}, 
+      #{investTotalYesterday,jdbcType=DECIMAL}, #{repaymentTotalYesterday,jdbcType=DECIMAL}, 
+      #{investAnnualTotalYesterday,jdbcType=DECIMAL}, #{withdrawTotalYesterday,jdbcType=DECIMAL}, 
+      #{rechargeTotalYesterday,jdbcType=DECIMAL}, #{netCapitalInflowYesterday,jdbcType=DECIMAL}, 
+      #{nonRepaymentToday,jdbcType=DECIMAL}, #{registerTotalYesterday,jdbcType=INTEGER}, 
+      #{rechargeGt3000UserNum,jdbcType=INTEGER}, #{investGt3000UserNum,jdbcType=INTEGER}, 
+      #{investGt3000MonthUserNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.SellDaily" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_sell_daily
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dateStr != null" >
+        date_str,
+      </if>
+      <if test="drawOrder != null" >
+        draw_order,
+      </if>
+      <if test="primaryDivision != null" >
+        primary_division,
+      </if>
+      <if test="twoDivision != null" >
+        two_division,
+      </if>
+      <if test="storeNum != null" >
+        store_num,
+      </if>
+      <if test="investTotalMonth != null" >
+        invest_total_month,
+      </if>
+      <if test="repaymentTotalMonth != null" >
+        repayment_total_month,
+      </if>
+      <if test="investTotalPreviousMonth != null" >
+        invest_total_previous_month,
+      </if>
+      <if test="investRatioGrowth != null" >
+        invest_ratio_growth,
+      </if>
+      <if test="withdrawTotalMonth != null" >
+        withdraw_total_month,
+      </if>
+      <if test="withdrawRate != null" >
+        withdraw_rate,
+      </if>
+      <if test="rechargeTotalMonth != null" >
+        recharge_total_month,
+      </if>
+      <if test="investAnnualTotalMonth != null" >
+        invest_annual_total_month,
+      </if>
+      <if test="investAnnualTotalPreviousMonth != null" >
+        invest_annual_total_previous_month,
+      </if>
+      <if test="investAnnularRatioGrowth != null" >
+        invest_annular_ratio_growth,
+      </if>
+      <if test="investTotalYesterday != null" >
+        invest_total_yesterday,
+      </if>
+      <if test="repaymentTotalYesterday != null" >
+        repayment_total_yesterday,
+      </if>
+      <if test="investAnnualTotalYesterday != null" >
+        invest_annual_total_yesterday,
+      </if>
+      <if test="withdrawTotalYesterday != null" >
+        withdraw_total_yesterday,
+      </if>
+      <if test="rechargeTotalYesterday != null" >
+        recharge_total_yesterday,
+      </if>
+      <if test="netCapitalInflowYesterday != null" >
+        net_capital_inflow_yesterday,
+      </if>
+      <if test="nonRepaymentToday != null" >
+        non_repayment_today,
+      </if>
+      <if test="registerTotalYesterday != null" >
+        register_total_yesterday,
+      </if>
+      <if test="rechargeGt3000UserNum != null" >
+        recharge_gt3000_user_num,
+      </if>
+      <if test="investGt3000UserNum != null" >
+        invest_gt3000_user_num,
+      </if>
+      <if test="investGt3000MonthUserNum != null" >
+        invest_gt3000_month_user_num,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dateStr != null" >
+        #{dateStr,jdbcType=VARCHAR},
+      </if>
+      <if test="drawOrder != null" >
+        #{drawOrder,jdbcType=INTEGER},
+      </if>
+      <if test="primaryDivision != null" >
+        #{primaryDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="twoDivision != null" >
+        #{twoDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="storeNum != null" >
+        #{storeNum,jdbcType=INTEGER},
+      </if>
+      <if test="investTotalMonth != null" >
+        #{investTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentTotalMonth != null" >
+        #{repaymentTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investTotalPreviousMonth != null" >
+        #{investTotalPreviousMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investRatioGrowth != null" >
+        #{investRatioGrowth,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawTotalMonth != null" >
+        #{withdrawTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawRate != null" >
+        #{withdrawRate,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeTotalMonth != null" >
+        #{rechargeTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnualTotalMonth != null" >
+        #{investAnnualTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnualTotalPreviousMonth != null" >
+        #{investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnularRatioGrowth != null" >
+        #{investAnnularRatioGrowth,jdbcType=VARCHAR},
+      </if>
+      <if test="investTotalYesterday != null" >
+        #{investTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentTotalYesterday != null" >
+        #{repaymentTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnualTotalYesterday != null" >
+        #{investAnnualTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawTotalYesterday != null" >
+        #{withdrawTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="rechargeTotalYesterday != null" >
+        #{rechargeTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="netCapitalInflowYesterday != null" >
+        #{netCapitalInflowYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="nonRepaymentToday != null" >
+        #{nonRepaymentToday,jdbcType=DECIMAL},
+      </if>
+      <if test="registerTotalYesterday != null" >
+        #{registerTotalYesterday,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeGt3000UserNum != null" >
+        #{rechargeGt3000UserNum,jdbcType=INTEGER},
+      </if>
+      <if test="investGt3000UserNum != null" >
+        #{investGt3000UserNum,jdbcType=INTEGER},
+      </if>
+      <if test="investGt3000MonthUserNum != null" >
+        #{investGt3000MonthUserNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.SellDailyExample" resultType="java.lang.Integer" >
+    select count(*) from ht_sell_daily
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_sell_daily
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.dateStr != null" >
+        date_str = #{record.dateStr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.drawOrder != null" >
+        draw_order = #{record.drawOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.primaryDivision != null" >
+        primary_division = #{record.primaryDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="record.twoDivision != null" >
+        two_division = #{record.twoDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="record.storeNum != null" >
+        store_num = #{record.storeNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.investTotalMonth != null" >
+        invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repaymentTotalMonth != null" >
+        repayment_total_month = #{record.repaymentTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investTotalPreviousMonth != null" >
+        invest_total_previous_month = #{record.investTotalPreviousMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investRatioGrowth != null" >
+        invest_ratio_growth = #{record.investRatioGrowth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.withdrawTotalMonth != null" >
+        withdraw_total_month = #{record.withdrawTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.withdrawRate != null" >
+        withdraw_rate = #{record.withdrawRate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rechargeTotalMonth != null" >
+        recharge_total_month = #{record.rechargeTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investAnnualTotalMonth != null" >
+        invest_annual_total_month = #{record.investAnnualTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investAnnualTotalPreviousMonth != null" >
+        invest_annual_total_previous_month = #{record.investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investAnnularRatioGrowth != null" >
+        invest_annular_ratio_growth = #{record.investAnnularRatioGrowth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.investTotalYesterday != null" >
+        invest_total_yesterday = #{record.investTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.repaymentTotalYesterday != null" >
+        repayment_total_yesterday = #{record.repaymentTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.investAnnualTotalYesterday != null" >
+        invest_annual_total_yesterday = #{record.investAnnualTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.withdrawTotalYesterday != null" >
+        withdraw_total_yesterday = #{record.withdrawTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.rechargeTotalYesterday != null" >
+        recharge_total_yesterday = #{record.rechargeTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.netCapitalInflowYesterday != null" >
+        net_capital_inflow_yesterday = #{record.netCapitalInflowYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.nonRepaymentToday != null" >
+        non_repayment_today = #{record.nonRepaymentToday,jdbcType=DECIMAL},
+      </if>
+      <if test="record.registerTotalYesterday != null" >
+        register_total_yesterday = #{record.registerTotalYesterday,jdbcType=INTEGER},
+      </if>
+      <if test="record.rechargeGt3000UserNum != null" >
+        recharge_gt3000_user_num = #{record.rechargeGt3000UserNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.investGt3000UserNum != null" >
+        invest_gt3000_user_num = #{record.investGt3000UserNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.investGt3000MonthUserNum != null" >
+        invest_gt3000_month_user_num = #{record.investGt3000MonthUserNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_sell_daily
+    set id = #{record.id,jdbcType=INTEGER},
+      date_str = #{record.dateStr,jdbcType=VARCHAR},
+      draw_order = #{record.drawOrder,jdbcType=INTEGER},
+      primary_division = #{record.primaryDivision,jdbcType=VARCHAR},
+      two_division = #{record.twoDivision,jdbcType=VARCHAR},
+      store_num = #{record.storeNum,jdbcType=INTEGER},
+      invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
+      repayment_total_month = #{record.repaymentTotalMonth,jdbcType=DECIMAL},
+      invest_total_previous_month = #{record.investTotalPreviousMonth,jdbcType=DECIMAL},
+      invest_ratio_growth = #{record.investRatioGrowth,jdbcType=VARCHAR},
+      withdraw_total_month = #{record.withdrawTotalMonth,jdbcType=DECIMAL},
+      withdraw_rate = #{record.withdrawRate,jdbcType=VARCHAR},
+      recharge_total_month = #{record.rechargeTotalMonth,jdbcType=DECIMAL},
+      invest_annual_total_month = #{record.investAnnualTotalMonth,jdbcType=DECIMAL},
+      invest_annual_total_previous_month = #{record.investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+      invest_annular_ratio_growth = #{record.investAnnularRatioGrowth,jdbcType=VARCHAR},
+      invest_total_yesterday = #{record.investTotalYesterday,jdbcType=DECIMAL},
+      repayment_total_yesterday = #{record.repaymentTotalYesterday,jdbcType=DECIMAL},
+      invest_annual_total_yesterday = #{record.investAnnualTotalYesterday,jdbcType=DECIMAL},
+      withdraw_total_yesterday = #{record.withdrawTotalYesterday,jdbcType=DECIMAL},
+      recharge_total_yesterday = #{record.rechargeTotalYesterday,jdbcType=DECIMAL},
+      net_capital_inflow_yesterday = #{record.netCapitalInflowYesterday,jdbcType=DECIMAL},
+      non_repayment_today = #{record.nonRepaymentToday,jdbcType=DECIMAL},
+      register_total_yesterday = #{record.registerTotalYesterday,jdbcType=INTEGER},
+      recharge_gt3000_user_num = #{record.rechargeGt3000UserNum,jdbcType=INTEGER},
+      invest_gt3000_user_num = #{record.investGt3000UserNum,jdbcType=INTEGER},
+      invest_gt3000_month_user_num = #{record.investGt3000MonthUserNum,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.SellDaily" >
+    update ht_sell_daily
+    <set >
+      <if test="dateStr != null" >
+        date_str = #{dateStr,jdbcType=VARCHAR},
+      </if>
+      <if test="drawOrder != null" >
+        draw_order = #{drawOrder,jdbcType=INTEGER},
+      </if>
+      <if test="primaryDivision != null" >
+        primary_division = #{primaryDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="twoDivision != null" >
+        two_division = #{twoDivision,jdbcType=VARCHAR},
+      </if>
+      <if test="storeNum != null" >
+        store_num = #{storeNum,jdbcType=INTEGER},
+      </if>
+      <if test="investTotalMonth != null" >
+        invest_total_month = #{investTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentTotalMonth != null" >
+        repayment_total_month = #{repaymentTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investTotalPreviousMonth != null" >
+        invest_total_previous_month = #{investTotalPreviousMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investRatioGrowth != null" >
+        invest_ratio_growth = #{investRatioGrowth,jdbcType=VARCHAR},
+      </if>
+      <if test="withdrawTotalMonth != null" >
+        withdraw_total_month = #{withdrawTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawRate != null" >
+        withdraw_rate = #{withdrawRate,jdbcType=VARCHAR},
+      </if>
+      <if test="rechargeTotalMonth != null" >
+        recharge_total_month = #{rechargeTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnualTotalMonth != null" >
+        invest_annual_total_month = #{investAnnualTotalMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnualTotalPreviousMonth != null" >
+        invest_annual_total_previous_month = #{investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnularRatioGrowth != null" >
+        invest_annular_ratio_growth = #{investAnnularRatioGrowth,jdbcType=VARCHAR},
+      </if>
+      <if test="investTotalYesterday != null" >
+        invest_total_yesterday = #{investTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentTotalYesterday != null" >
+        repayment_total_yesterday = #{repaymentTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="investAnnualTotalYesterday != null" >
+        invest_annual_total_yesterday = #{investAnnualTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="withdrawTotalYesterday != null" >
+        withdraw_total_yesterday = #{withdrawTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="rechargeTotalYesterday != null" >
+        recharge_total_yesterday = #{rechargeTotalYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="netCapitalInflowYesterday != null" >
+        net_capital_inflow_yesterday = #{netCapitalInflowYesterday,jdbcType=DECIMAL},
+      </if>
+      <if test="nonRepaymentToday != null" >
+        non_repayment_today = #{nonRepaymentToday,jdbcType=DECIMAL},
+      </if>
+      <if test="registerTotalYesterday != null" >
+        register_total_yesterday = #{registerTotalYesterday,jdbcType=INTEGER},
+      </if>
+      <if test="rechargeGt3000UserNum != null" >
+        recharge_gt3000_user_num = #{rechargeGt3000UserNum,jdbcType=INTEGER},
+      </if>
+      <if test="investGt3000UserNum != null" >
+        invest_gt3000_user_num = #{investGt3000UserNum,jdbcType=INTEGER},
+      </if>
+      <if test="investGt3000MonthUserNum != null" >
+        invest_gt3000_month_user_num = #{investGt3000MonthUserNum,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.SellDaily" >
+    update ht_sell_daily
+    set date_str = #{dateStr,jdbcType=VARCHAR},
+      draw_order = #{drawOrder,jdbcType=INTEGER},
+      primary_division = #{primaryDivision,jdbcType=VARCHAR},
+      two_division = #{twoDivision,jdbcType=VARCHAR},
+      store_num = #{storeNum,jdbcType=INTEGER},
+      invest_total_month = #{investTotalMonth,jdbcType=DECIMAL},
+      repayment_total_month = #{repaymentTotalMonth,jdbcType=DECIMAL},
+      invest_total_previous_month = #{investTotalPreviousMonth,jdbcType=DECIMAL},
+      invest_ratio_growth = #{investRatioGrowth,jdbcType=VARCHAR},
+      withdraw_total_month = #{withdrawTotalMonth,jdbcType=DECIMAL},
+      withdraw_rate = #{withdrawRate,jdbcType=VARCHAR},
+      recharge_total_month = #{rechargeTotalMonth,jdbcType=DECIMAL},
+      invest_annual_total_month = #{investAnnualTotalMonth,jdbcType=DECIMAL},
+      invest_annual_total_previous_month = #{investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+      invest_annular_ratio_growth = #{investAnnularRatioGrowth,jdbcType=VARCHAR},
+      invest_total_yesterday = #{investTotalYesterday,jdbcType=DECIMAL},
+      repayment_total_yesterday = #{repaymentTotalYesterday,jdbcType=DECIMAL},
+      invest_annual_total_yesterday = #{investAnnualTotalYesterday,jdbcType=DECIMAL},
+      withdraw_total_yesterday = #{withdrawTotalYesterday,jdbcType=DECIMAL},
+      recharge_total_yesterday = #{rechargeTotalYesterday,jdbcType=DECIMAL},
+      net_capital_inflow_yesterday = #{netCapitalInflowYesterday,jdbcType=DECIMAL},
+      non_repayment_today = #{nonRepaymentToday,jdbcType=DECIMAL},
+      register_total_yesterday = #{registerTotalYesterday,jdbcType=INTEGER},
+      recharge_gt3000_user_num = #{rechargeGt3000UserNum,jdbcType=INTEGER},
+      invest_gt3000_user_num = #{investGt3000UserNum,jdbcType=INTEGER},
+      invest_gt3000_month_user_num = #{investGt3000MonthUserNum,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

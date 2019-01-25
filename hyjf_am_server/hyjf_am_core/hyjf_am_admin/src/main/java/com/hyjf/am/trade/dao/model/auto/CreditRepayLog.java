@@ -8,6 +8,11 @@ public class CreditRepayLog implements Serializable {
 
     private Integer creditNid;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private String errorCode;

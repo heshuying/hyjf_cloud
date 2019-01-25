@@ -5,8 +5,6 @@ import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TradeDetailBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -68,8 +66,11 @@ public class TradeDetailController  extends BaseTradeController {
         logger.info("web获取用户收支明细列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
         TradeDetailBean result = new TradeDetailBean();
+        result.setListType("trade");
         if(user != null){
-            CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            if(!user.isBankOpenAccount()){
+                return result;
+            }
             if(user.getRoleId() != null){
             	form.setRoleId(user.getRoleId());
             }
@@ -95,8 +96,11 @@ public class TradeDetailController  extends BaseTradeController {
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
         TradeDetailBeanRequest form=createTradeDetailBeanRequest(request);
         TradeDetailBean result = new TradeDetailBean();
+        result.setListType("recharge");
         if(user != null){
-            CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            if(!user.isBankOpenAccount()){
+                return result;
+            }
             if(user.getRoleId() != null){
             	form.setRoleId(user.getRoleId());
             }
@@ -120,14 +124,17 @@ public class TradeDetailController  extends BaseTradeController {
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
         TradeDetailBean result = new TradeDetailBean();
         TradeDetailBeanRequest form=createTradeDetailBeanRequest(request);
+        result.setListType("withdraw");
         if(user != null){
-            CheckUtil.check(null!=user&&user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            if(!user.isBankOpenAccount()){
+                return result;
+            }
             if(user.getRoleId()!= null){
             	form.setRoleId(user.getRoleId());
             }
             form.setUserId(user.getUserId().toString());
             result  = tradeDetailService.searchUserWithdrawList(form);
-            result.setListType("withdraw");	
+            result.setListType("withdraw");
         }
         return result;
     }

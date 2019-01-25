@@ -7,54 +7,174 @@ import java.util.Date;
 public class BankMerchantAccountList implements Serializable {
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
     private String borrowNid;
 
+    /**
+     * 分公司
+     *
+     * @mbggenerated
+     */
     private String regionName;
 
+    /**
+     * 分部
+     *
+     * @mbggenerated
+     */
     private String branchName;
 
+    /**
+     * 团队
+     *
+     * @mbggenerated
+     */
     private String departmentName;
 
+    /**
+     * 对方用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 对方电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 操作金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 账户类型
+     *
+     * @mbggenerated
+     */
     private String bankAccountType;
 
+    /**
+     * 商户子账户电子账号
+     *
+     * @mbggenerated
+     */
     private String bankAccountCode;
 
+    /**
+     * 银行账户可用金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAccountBalance;
 
+    /**
+     * 银行账户冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bankAccountFrost;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private Integer transType;
 
+    /**
+     * 收支类型1收入2支出
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 交易状态0: 失败 1：成功 2:处理中
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 备注字段
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

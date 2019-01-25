@@ -38,12 +38,14 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
 import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
+import com.hyjf.cs.trade.bean.repay.RepayPlanBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.AppProjectListService;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -91,6 +93,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private AuthService authService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CacheService cacheService;
 
 
     /**
@@ -113,6 +117,19 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         req.setLimitEnd(page.getLimit());
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
         ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
+
+        // 合规审批需求  add by huanghui 20181123 start
+        info.put("riskWarningHint", "散标是经过汇盈金服对借款人进行信息搜集和资信评估后在汇盈金服平台发布的借款标的统称。请您充分了解标的信息，谨慎出借。");
+        info.put("riskWarningContent", " $散标介绍$ " +
+                "\n" +
+                "散标是经过汇盈金服对具有借款需求的借款人进行信息搜集和资信评估后在汇盈金服平台发布的借款标的统称，包括但不限于实物抵押标、第三方保证标以及汇盈金服平台不时增加和发布的其他类型借款标。" +
+                "\n\n" +
+                " $出借人适当性管理告知$ " +
+                "\n" +
+                "作为网络借贷的出借人，应当具备出借风险意识，风险识别能力，拥有一定的金融产品出借经验并熟悉互联网金融。请您在出借前，确保了解借款项目的主要风险，同时确认具有相应的风险认知和承受能力，并自行承担出借可能产生的相关损失。");
+
+        // 合规审批需求  add by huanghui 20181123 end
+
         // ①查询count
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
@@ -212,7 +229,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
         map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-        ProjectCustomeDetailVO borrow = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrow = amTradeClient.searchProjectDetail(map);
         // 还款信息
         BorrowRepayVO borrowRepay = null;
         List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -240,9 +257,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         userValidation.put("roleId", roleId);
 
         jsonObject.put("userValidation", userValidation);
-        if (borrow == null) {
+        if (tempBorrow == null) {
             throw new CheckException("标的信息不存在");
         } else {
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+            // 转换一次是排除业务操作对缓存的干扰
+            ProjectCustomeDetailVO borrow = CommonUtils.convertBean(tempBorrow,ProjectCustomeDetailVO.class);
+            // 添加缓存后希望能拿到实时的标的剩余金额
+            String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+            if (org.apache.commons.lang.StringUtils.isNotBlank(investAccount)){
+                borrow.setInvestAccount(investAccount);
+            }
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
             borrowProjectInfoBean.setBorrowRemain(borrow.getInvestAccount());
             borrowProjectInfoBean.setBorrowProgress(borrow.getBorrowSchedule());
             borrowProjectInfoBean.setOnTime(borrow.getOnTime());
@@ -250,6 +276,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setOnAccrual((borrow.getReverifyTime() == null ? "放款成功立即计息" : borrow.getReverifyTime()));
+            borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
@@ -285,9 +312,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             jsonObject.put(ProjectConstant.RES_PROJECT_INFO, borrowProjectInfoBean);
 
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
 
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
@@ -531,7 +558,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @param borrowLevel 信用评级
      * @return
      */
-    private List<BorrowMsgBean> packDetail(Object objBean, int type, int borrowType, String borrowLevel) {
+    private List<BorrowMsgBean> packDetail(Object objBean, int type, int borrowType, String borrowLevel, String investLevel) {
         List<BorrowMsgBean> detailBeanList = new ArrayList<BorrowMsgBean>();
         String currencyName = "元";
         // 得到对象
@@ -1022,12 +1049,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
         }
         if (type == 1 || type == 4) {
-            //信用评级单独封装
+            // 信用评级单独封装
             BorrowMsgBean detailBean = new BorrowMsgBean();
             detailBean.setId("borrowLevel");
             detailBean.setKey("信用评级");
             detailBean.setVal(borrowLevel);
             detailBeanList.add(detailBean);
+            // 标的等级单独封装
+            BorrowMsgBean detailBeanLeve = new BorrowMsgBean();
+            detailBeanLeve.setId("investLevel");
+            detailBeanLeve.setKey("标的等级");
+            detailBeanLeve.setVal(investLevel);
+            detailBeanList.add(detailBeanLeve);
         }
         return detailBeanList;
     }
@@ -1086,6 +1119,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             logger.error("查询债权转让原子层count异常");
             throw new RuntimeException("查询债权转让原子层count异常");
         }
+
+        // 合规审批需求  add by huanghui 20181123 start
+        info.put("riskWarningHint", "债权转让是债权持有人在汇盈金服平台将债权挂出并将所持有的债权转让给受让人的操作。请您充分了解标的信息，谨慎出借。");
+        info.put("riskWarningContent", " $债权转让介绍$ " +
+                "\n" +
+                "债权持有人通过汇盈金服平台债权转让系统将债权挂出且与承接人签订债权转让协议，将所持有的债权转让给承接人的操作。" +
+                "\n\n" +
+                " $出借人适当性管理告知$ " +
+                "\n" +
+                "作为网络借贷的出借人，应当具备出借风险意识，风险识别能力，拥有一定的金融产品出借经验并熟悉互联网金融。请您在出借前，确保了解借款项目的主要风险，同时确认具有相应的风险认知和承受能力，并自行承担出借可能产生的相关损失。");
+        // 合规审批需求  add by huanghui 20181123 end
+
         int count = res.getCount();
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         if (count > 0) {
@@ -1181,9 +1226,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 2.根据项目标号获取相应的项目信息
             BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
             //借款人企业消息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfoVO = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -1205,39 +1250,39 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             int borrowType = borrowInfoVO.getCompanyOrPersonal();
             if (borrowType == 1 && borrowUsers != null) {
                 //基础信息
-                baseTableData = packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel());
+                baseTableData = packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 //信用状况
-                credTableData = packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel());
+                credTableData = packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 //审核信息
-                reviewTableData = packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
+                reviewTableData = packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 //其他信息
-                otherTableData = packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
+                otherTableData = packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
             } else {
                 if (borrowManinfoVO != null) {
                     //基础信息
-                    baseTableData = packDetail(borrowManinfoVO, 1, borrowType, borrow.getBorrowLevel());
+                    baseTableData = packDetail(borrowManinfoVO, 1, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                     //信用状况
-                    credTableData = packDetail(borrowManinfoVO, 4, borrowType, borrow.getBorrowLevel());
+                    credTableData = packDetail(borrowManinfoVO, 4, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                     //审核信息
-                    reviewTableData = packDetail(borrowManinfoVO, 5, borrowType, borrow.getBorrowLevel());
+                    reviewTableData = packDetail(borrowManinfoVO, 5, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                     //其他信息
-                    otherTableData = packDetail(borrowManinfoVO, 6, borrowType, borrow.getBorrowLevel());
+                    otherTableData = packDetail(borrowManinfoVO, 6, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 }
             }
 
             //资产信息
             if (!CollectionUtils.isEmpty(borrowHousesList)) {
                 for (BorrowHousesVO borrowHouses : borrowHousesList) {
-                    assetsTableData.addAll(packDetail(borrowHouses, 2, borrowType, borrow.getBorrowLevel()));
+                    assetsTableData.addAll(packDetail(borrowHouses, 2, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel()));
                 }
             }
             if (!CollectionUtils.isEmpty(borrowCarinfoList)) {
                 for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
-                    assetsTableData.addAll(packDetail(borrowCarinfo, 2, borrowType, borrow.getBorrowLevel()));
+                    assetsTableData.addAll(packDetail(borrowCarinfo, 2, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel()));
                 }
             }
             //项目介绍
-            intrTableData = packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
+            intrTableData = packDetail(borrow, 3, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
             JSONObject baseTableDataJson = new JSONObject();
             JSONObject assetsTableDataJson = new JSONObject();
             JSONObject intrTableDataJson = new JSONObject();
@@ -1270,7 +1315,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             projectDetail.add(otherTableDataJson);
             resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
             // 查询相应的还款计划
-            List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+            List<RepayPlanBean> repayPlanList = repayPlanService.getAppRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
             // 风控信息
             BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
@@ -1321,7 +1366,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         tenderCreditDetail.setTag("");
         tenderCreditDetail.setType("HZR");
         tenderCreditDetail.setRepayStyle(tenderCredit.getRepayStyle());
-        ;
+        tenderCreditDetail.setInvestLevel(tenderCredit.getInvestLevel());
         return tenderCreditDetail;
     }
 
@@ -1438,6 +1483,19 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             logger.error("app查询计划原子层count异常");
             throw new RuntimeException("app查询计划原子层count异常");
         }
+
+        // 合规审批需求  add by huanghui 20181123 start
+        info.put("riskWarningHint", "智投服务是平台根据出借人授权，帮助出借人分散投标、循环出借的服务。到期后退出时效以实际债权转让完成用时为准 。");
+        info.put("riskWarningContent", " $智投介绍$ " +
+                "\n" +
+                "智投服务是汇盈金服为您提供的本金自动循环出借及到期自动转让退出的自动投标服务，自动投标授权服务期限自授权出借之日起至退出完成。出借范围仅限于平台发布的借款标的或服务中被转让债权，您可随时查看持有的债权标的列表及标的详情。" +
+                "\n\n" +
+                " $出借人适当性管理告知$ " +
+                "\n" +
+                "作为网络借贷的出借人，应当具备出借风险意识，风险识别能力，请您在出借前，确保了解借款项目的主要风险，谨慎出借。\n" +
+                "汇盈金服展示的参考回报不代表对实际回报的承诺；您的出借本金及对应回报可能无法按时收回。服务回报期限届满，系统对尚未结清标的自动发起债权转让。退出完成需债权标的全部结清，并且债权转让全部完成。您所持债权转让完成的具体时间，视债权转让市场交易情况而定。");
+        // 合规审批需求  add by huanghui 20181123 end
+
         page.setTotal(count);
         if (count > 0) {
             List<HjhPlanCustomizeVO> list = amTradeClient.searchAppPlanList(request);
@@ -1953,6 +2011,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 计息时间
         projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
+
+        //标的等级
+        projectInfo.setInvestLevel(customize.getInvestLevel());
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),

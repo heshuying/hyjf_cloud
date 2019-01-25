@@ -25,7 +25,7 @@ public class StzhWhiteList implements Serializable {
      *
      * @mbggenerated
      */
-    private String accountid;
+    private String accountId;
 
     /**
      * 手机号
@@ -60,7 +60,7 @@ public class StzhWhiteList implements Serializable {
      *
      * @mbggenerated
      */
-    private String stAccountid;
+    private String stAccountId;
 
     /**
      * 收款人  手机号
@@ -102,14 +102,14 @@ public class StzhWhiteList implements Serializable {
      *
      * @mbggenerated
      */
-    private String instcode;
+    private String instCode;
 
     /**
      * 机构名称
      *
      * @mbggenerated
      */
-    private String instname;
+    private String instName;
 
     /**
      * 状态 1启用  0禁用
@@ -179,12 +179,12 @@ public class StzhWhiteList implements Serializable {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getAccountid() {
-        return accountid;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccountid(String accountid) {
-        this.accountid = accountid == null ? null : accountid.trim();
+    public void setAccountId(String accountId) {
+        this.accountId = accountId == null ? null : accountId.trim();
     }
 
     public String getMobile() {
@@ -219,12 +219,12 @@ public class StzhWhiteList implements Serializable {
         this.stUserName = stUserName == null ? null : stUserName.trim();
     }
 
-    public String getStAccountid() {
-        return stAccountid;
+    public String getStAccountId() {
+        return stAccountId;
     }
 
-    public void setStAccountid(String stAccountid) {
-        this.stAccountid = stAccountid == null ? null : stAccountid.trim();
+    public void setStAccountId(String stAccountId) {
+        this.stAccountId = stAccountId == null ? null : stAccountId.trim();
     }
 
     public String getStMobile() {
@@ -267,20 +267,20 @@ public class StzhWhiteList implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getInstcode() {
-        return instcode;
+    public String getInstCode() {
+        return instCode;
     }
 
-    public void setInstcode(String instcode) {
-        this.instcode = instcode == null ? null : instcode.trim();
+    public void setInstCode(String instCode) {
+        this.instCode = instCode == null ? null : instCode.trim();
     }
 
-    public String getInstname() {
-        return instname;
+    public String getInstName() {
+        return instName;
     }
 
-    public void setInstname(String instname) {
-        this.instname = instname == null ? null : instname.trim();
+    public void setInstName(String instName) {
+        this.instName = instName == null ? null : instName.trim();
     }
 
     public Integer getState() {

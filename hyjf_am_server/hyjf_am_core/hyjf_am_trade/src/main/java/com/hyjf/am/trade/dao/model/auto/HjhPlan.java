@@ -62,7 +62,7 @@ public class HjhPlan implements Serializable {
     private BigDecimal maxInvestment;
 
     /**
-     * 出借增量
+     * 投资增量
      *
      * @mbggenerated
      */
@@ -83,7 +83,7 @@ public class HjhPlan implements Serializable {
     private BigDecimal repayWaitAll;
 
     /**
-     * 出借状态 0 全部；1 启用；2 关闭
+     * 投资状态 0 全部；1 启用；2 关闭
      *
      * @mbggenerated
      */
@@ -160,7 +160,7 @@ public class HjhPlan implements Serializable {
     private BigDecimal planRepayCapital;
 
     /**
-     * 最小自动投标笔数
+     * 最小自动投资笔数
      *
      * @mbggenerated
      */

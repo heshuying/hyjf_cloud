@@ -100,6 +100,8 @@ public class HjhDebtCreditController extends BaseController{
                 jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
                 jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
                 jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
+                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
             }
         }
         return jsonObject;
@@ -123,6 +125,9 @@ public class HjhDebtCreditController extends BaseController{
             if (hjhDebtCreditVoList.size() > 0) {
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
+                Map<String,Object> sum = hjhDebtCreditService.selectDebtCreditTotal(request);
+                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+                jsonObject.put("hjhDebtCreditVoListSum",sum);
             } else {
                 jsonObject = this.success(0,new ArrayList<>());
             }
@@ -230,11 +235,11 @@ public class HjhDebtCreditController extends BaseController{
         map.put("userName", "出让人");
         map.put("creditNid", "债转编号");
         map.put("borrowNid", "原项目编号");
-        map.put("borrowApr", "原项目收益率");
+        map.put("borrowApr", "原项目出借利率");
         map.put("repayStyleName", "还款方式");
         map.put("creditCapital", "债权本金");
         map.put("liquidationFairValue", "债权价值");
-        map.put("actualApr", "预期承接收益率");
+        map.put("actualApr", "预期承接出借利率");
         map.put("assignCapital", "已转让本金");
         map.put("assignAdvanceInterest", "垫付利息");
         map.put("remainCredit", "剩余债权价值");

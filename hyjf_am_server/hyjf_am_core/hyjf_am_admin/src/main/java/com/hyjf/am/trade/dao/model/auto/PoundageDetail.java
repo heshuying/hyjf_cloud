@@ -7,28 +7,88 @@ import java.util.Date;
 public class PoundageDetail implements Serializable {
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 项目类型
+     *
+     * @mbggenerated
+     */
     private String borrowType;
 
+    /**
+     * 投资人用户名
+     *
+     * @mbggenerated
+     */
     private String usernname;
 
+    /**
+     * 分账类型
+     *
+     * @mbggenerated
+     */
     private String poundageType;
 
+    /**
+     * 分账来源
+     *
+     * @mbggenerated
+     */
     private String source;
 
+    /**
+     * 推荐人公司
+     *
+     * @mbggenerated
+     */
     private String inviteRegionName;
 
+    /**
+     * 推荐人id
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 分账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 实际分账时间段
+     *
+     * @mbggenerated
+     */
     private Integer ledgerTime;
 
+    /**
+     * 手续费分账配置id
+     *
+     * @mbggenerated
+     */
     private Integer ledgerId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

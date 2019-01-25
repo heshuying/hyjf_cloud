@@ -99,7 +99,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
-        return amTradeClient.getUserRepayFeeWaitTotal(userId);
+        return amTradeClient.getOrgRepayFeeWaitTotal(userId);
     }
 
     /**
@@ -156,6 +156,16 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             return new ArrayList<RepayListCustomizeVO>();
         }
         return resultList;
+    }
+
+    /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgRepayWaitTotalCurrent(RepayListRequest requestBean) {
+        return amTradeClient.orgRepayWaitTotalCurrent(requestBean);
     }
 
     /**

@@ -39,13 +39,17 @@ import java.util.Map;
  * @Version v0.1
  * @Date
  */
-@Api(tags = {"web端-自动债转授权（新）"})
+@Api(tags = {"WECHAT-自动债转授权"})
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-wechat/bank/user/auth/creditauthpageplus")
 public class WeChatCreditAuthPagePlusController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(WeChatCreditAuthPagePlusController.class);
+    private static final String WECHAT_CREDIT_AUTH = "/page";
+    private static final String WECHAT_CREDIT_SEACH_AUTH = "/seachFiledMess";
+    private static final String WECHAT_CREDIT_BG_AUTH = "/creditAuthBgreturn";
+    private static final String WECHAT_CREDIT_CLASS_NAME = "/hyjf-app/bank/user/auth/creditauthpageplus";
 
     @Autowired
     private AuthService authService;
@@ -54,12 +58,12 @@ public class WeChatCreditAuthPagePlusController extends BaseUserController {
     SystemConfig systemConfig;
 
     /**
-     * 用户自动债转授权
+     * WECHAT-自动债转授权
      * @param userId
      * @return
      */
-    @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
-    @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
+    @ApiOperation(value = "WECHAT-自动债转授权", notes = "WECHAT-自动债转授权")
+    @GetMapping(value = WECHAT_CREDIT_AUTH, produces = "application/json; charset=utf-8")
     @ResponseBody
     public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();

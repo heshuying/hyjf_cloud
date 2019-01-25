@@ -12,6 +12,11 @@ public class Consume implements Serializable {
 
     private Integer personNum;
 
+    /**
+     * 处理状态  0：未处理 1：已处理
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private String time;
@@ -20,10 +25,20 @@ public class Consume implements Serializable {
 
     private Integer personReal;
 
+    /**
+     * 打包状态 0:未打包 1：已打包
+     *
+     * @mbggenerated
+     */
     private Integer release;
 
     private String insertDay;
 
+    /**
+     * 资产包编号
+     *
+     * @mbggenerated
+     */
     private String consumeId;
 
     private static final long serialVersionUID = 1L;

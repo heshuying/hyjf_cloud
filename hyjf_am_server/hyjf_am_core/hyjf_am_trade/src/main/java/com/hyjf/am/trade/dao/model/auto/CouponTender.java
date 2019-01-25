@@ -19,7 +19,7 @@ public class CouponTender implements Serializable {
     private Integer couponGrantId;
 
     /**
-     * 出借订单编号
+     * 投资订单编号
      *
      * @mbggenerated
      */

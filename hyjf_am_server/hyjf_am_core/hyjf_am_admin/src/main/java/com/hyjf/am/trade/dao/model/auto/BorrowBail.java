@@ -15,6 +15,11 @@ public class BorrowBail implements Serializable {
 
     private BigDecimal bailNum;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

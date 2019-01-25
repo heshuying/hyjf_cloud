@@ -13,14 +13,14 @@ public class DebtDetail implements Serializable {
     private Integer id;
 
     /**
-     * 出借用户userId
+     * 投资用户userId
      *
      * @mbggenerated
      */
     private Integer userId;
 
     /**
-     * 出借用户名
+     * 投资用户名
      *
      * @mbggenerated
      */
@@ -90,7 +90,7 @@ public class DebtDetail implements Serializable {
     private String planOrderId;
 
     /**
-     * 原始标的出借订单号
+     * 原始标的投资订单号
      *
      * @mbggenerated
      */
@@ -118,7 +118,7 @@ public class DebtDetail implements Serializable {
     private String orderDate;
 
     /**
-     * 订单类型 0 汇添金专属项目出借 1 债权承接
+     * 订单类型 0 汇添金专属项目投资 1 债权承接
      *
      * @mbggenerated
      */
@@ -132,7 +132,7 @@ public class DebtDetail implements Serializable {
     private Integer sourceType;
 
     /**
-     * 出借金额或者债权承接金额
+     * 投资金额或者债权承接金额
      *
      * @mbggenerated
      */

@@ -3,9 +3,6 @@
  */
 package com.hyjf.cs.trade.service.borrow;
 
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -16,41 +13,18 @@ import com.hyjf.cs.trade.service.BaseTradeService;
  */
 public interface ApiAssetPushService extends BaseTradeService {
 
-    /**
-     * 发送消息
-     *
-     * @param record
-     */
-    void sendToMQ(HjhPlanAssetVO record);
+	/**
+	 * 个人资产推送
+	 *
+	 * @param pushRequestBean
+	 */
+	PushResultBean assetPush(PushRequestBean pushRequestBean);
 
-    /**
-     * 个人资产推送
-     *
-     * @param pushRequestBean
-     */
-    PushResultBean assetPush(PushRequestBean pushRequestBean);
+	/**
+	 * 企业资产推送
+	 *
+	 * @param pushRequestBean
+	 */
+	PushResultBean companyAssetPush(PushRequestBean pushRequestBean);
 
-    /**
-     * 查询标签
-     *
-     * @param borrowVO
-     * @param hjhPlanAssetVO
-     * @return
-     */
-    HjhLabelVO getLabelId(BorrowAndInfoVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO);
-
-    /**
-     * 发送消息自动备案
-     *
-     * @param hjhPlanAssetVO
-     * @param mqGroup
-     */
-    void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String mqGroup);
-
-    /**
-     * 企业资产推送
-     *
-     * @param pushRequestBean
-     */
-    PushResultBean companyAssetPush(PushRequestBean pushRequestBean);
 }

@@ -78,7 +78,6 @@ public class AuthConfigServiceImpl implements AuthConfigService {
             log.setAuthPeriod(form.getAuthPeriod());
             log.setEnabledStatus(form.getEnabledStatus());
             log.setRemark(form.getRemark());
-            log.setIp(form.getIp());
             log.setCreateUserId(form.getUpdateUserId());
             log.setCreateTime(form.getUpdateTime());
             updateResult1=hjhUserAuthConfigLogMapper.insertSelective(log);

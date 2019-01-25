@@ -5,7 +5,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
@@ -89,7 +89,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         UserVO userVO = bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         if (!this.authService.checkPaymentAuthStatus(userId)) {
-            throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
@@ -100,7 +100,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, bankWithdrawVO.getWithdrawmoney(),
                 bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
         if (null == bean) {
-            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+            throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }
         try {
             Map<String, Object> data = BankCallUtils.callApiMap(bean);
@@ -108,7 +108,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         } catch (Exception e) {
             logger.info("web端提现失败");
             e.printStackTrace();
-            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+            throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }
         return result;
     }

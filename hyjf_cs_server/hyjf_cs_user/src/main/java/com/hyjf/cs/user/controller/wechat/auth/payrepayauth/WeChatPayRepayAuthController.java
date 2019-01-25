@@ -78,7 +78,7 @@ public class WeChatPayRepayAuthController extends BaseUserController {
         // 失败页面
         String errorPath = "/user/setting/repayauth/result/failed";
         // 成功页面
-        String successPath = "/user/setting/mergeauth/result/success";
+        String successPath = "/user/setting/repayauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_WECHAT) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;

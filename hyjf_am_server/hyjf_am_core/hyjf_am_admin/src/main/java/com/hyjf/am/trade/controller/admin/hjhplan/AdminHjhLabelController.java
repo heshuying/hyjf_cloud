@@ -176,4 +176,14 @@ public class AdminHjhLabelController {
 		 int update = adminHjhLabelService.updateAllocationRecord(request);
 		 return new IntegerResponse(update);
 	 } 
+	 
+	/**
+	 * @Author: libin
+	 * @Desc :更新标签配置列表ByIdAndLabelState
+	 */
+	 @RequestMapping("/updateHjhLabelRecordByIdAndLabelState")
+	 public IntegerResponse updateHjhLabelRecordByIdAndLabelState(@RequestBody HjhLabelInfoRequest request) {
+		 int update = adminHjhLabelService.updateHjhLabelRecordByIdAndLabelState(request);
+		 return new IntegerResponse(update);
+	 }
 }

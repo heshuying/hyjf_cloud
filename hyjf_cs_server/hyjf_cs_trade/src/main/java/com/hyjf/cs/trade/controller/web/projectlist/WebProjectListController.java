@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,6 +34,9 @@ public class WebProjectListController extends BaseTradeController {
 
      @Autowired
      private WebProjectListService webProjectListService;
+
+     @Autowired
+     private CacheService cacheService;
 
     /**
      * 获取首页散标推荐列表(散标推荐和散标专区的散标出借，通用接口)(可能没有用了 ，后期废掉)
@@ -111,7 +115,7 @@ public class WebProjectListController extends BaseTradeController {
     @ApiOperation(value = "新手标和散标标的详情:出借记录" , notes = "新手标和散标标的详情:出借记录")
     @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
     public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
-        WebResult result = webProjectListService.getBorrowInvest(form,userId);
+        WebResult result = cacheService.getBorrowInvest(form,userId);
         return result;
     }
 

@@ -147,7 +147,7 @@ public class DayCreditDetailController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(response.getResultList())){
             returnList = CommonUtils.convertBeanList(response.getResultList(), DayCreditDetailVO.class);
-            return new AdminResult<ListResult<DayCreditDetailVO>>(ListResult.build(returnList, response.getCount()));
+            return new AdminResult<ListResult<DayCreditDetailVO>>(ListResult.build2(returnList, response.getCount(), response.getSumDayCreditDetailVO()));
         }else {
             return new AdminResult<ListResult<DayCreditDetailVO>>(ListResult.build(returnList, 0));
         }
@@ -226,13 +226,13 @@ public class DayCreditDetailController extends BaseController {
                     } else if (celLength == 7) {// 还款方式
                         cell.setCellValue(data.getRepayStyleName());
                     } else if (celLength == 8) {// 债权本金（元）
-                        cell.setCellValue(data.getCreditCapital());
+                        cell.setCellValue(data.getCreditCapital().toString());
                     } else if (celLength == 9) {// 债权价值（元）
-                        cell.setCellValue(data.getLiquidationFairValue());
+                        cell.setCellValue(data.getLiquidationFairValue().toString());
                     } else if (celLength == 10) {// 已转让本金（元）
-                        cell.setCellValue(data.getAssignCapital());
+                        cell.setCellValue(data.getAssignCapital().toString());
                     } else if (celLength == 11) {// 垫付利息（元）
-                        cell.setCellValue(data.getAssignAdvanceInterest());
+                        cell.setCellValue(data.getAssignAdvanceInterest().toString());
                     } else if (celLength == 12) {// 转让状态
                         cell.setCellValue(data.getCreditStatusName());
                     } else if (celLength == 13) {// 项目总期数

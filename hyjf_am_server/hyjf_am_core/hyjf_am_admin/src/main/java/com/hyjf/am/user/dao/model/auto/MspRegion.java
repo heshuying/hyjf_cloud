@@ -3,8 +3,18 @@ package com.hyjf.am.user.dao.model.auto;
 import java.io.Serializable;
 
 public class MspRegion implements Serializable {
+    /**
+     * 城市区号
+     *
+     * @mbggenerated
+     */
     private String regionId;
 
+    /**
+     * 城市名称
+     *
+     * @mbggenerated
+     */
     private String regionName;
 
     private static final long serialVersionUID = 1L;

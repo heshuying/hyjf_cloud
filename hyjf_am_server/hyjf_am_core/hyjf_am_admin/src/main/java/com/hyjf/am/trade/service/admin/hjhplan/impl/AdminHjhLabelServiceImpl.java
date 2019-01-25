@@ -538,14 +538,21 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 				}
 
 			}
-
 			// 如果找到返回最近的一个
 			return hjhLabel;
 
 		}
-
 		return resultLabel;
 	}
 
-
+	@Override
+	public int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request) {
+		HjhLabel hjhLabel  = new HjhLabel();
+		hjhLabel.setId(request.getId());
+		hjhLabel.setLabelState(request.getLabelState());
+		hjhLabel.setUpdateUserId(request.getUpdateUserId());
+		hjhLabel.setUpdateTime(new Date());
+		int flg = hjhLabelMapper.updateByPrimaryKeySelective(hjhLabel);
+		return flg;
+	}
 }

@@ -10,13 +10,13 @@ import java.util.List;
  * @version BankRepayFreezeLogService, v0.1 2018/7/9 16:02
  */
 public interface BankRepayFreezeLogService {
-    abstract Integer insertRepayFreezeLog(BankRepayFreezeLogRequest requestBean);
+    Integer insertRepayFreezeLog(BankRepayFreezeLogRequest requestBean);
 
-    abstract Integer deleteFreezeLogsByOrderId(String orderId);
+    Integer deleteFreezeLogsByOrderId(String orderId);
 
     Integer deleteFreezeLogById(Integer id);
 
-    abstract BankRepayFreezeLog getFreezeLog(Integer userId, String borrowNid);
+    BankRepayFreezeLog getFreezeLog(Integer userId, String borrowNid);
 
     BankRepayFreezeLog getBankFreezeLogByOrderId(String orderId);
 

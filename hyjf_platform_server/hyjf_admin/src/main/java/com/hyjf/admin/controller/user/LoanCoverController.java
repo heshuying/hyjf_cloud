@@ -88,7 +88,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "初始化修改借款盖章用户", notes = "初始化修改借款盖章用户")
     @PostMapping(value = "/updateLoancoverInit")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult<LoanCoverUserCustomizeVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
         LoanCoverUserResponse loanCoverUserResponse = loanCoverService.getLoanCoverUserById(id);
         if (null != loanCoverUserResponse) {

@@ -3,8 +3,18 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 
 public class TransferExceptionLogWithBLOBs extends TransferExceptionLog implements Serializable {
+    /**
+     * 请求内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * 返回结果
+     *
+     * @mbggenerated
+     */
     private String result;
 
     private static final long serialVersionUID = 1L;

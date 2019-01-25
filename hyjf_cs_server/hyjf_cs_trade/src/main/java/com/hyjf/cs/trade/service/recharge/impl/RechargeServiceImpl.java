@@ -19,7 +19,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -552,28 +551,28 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	public void checkUserMessage(BankCardVO bankCard,Integer userId,String money){
 		UserVO users=this.getUsers(userId);
 		if (users.getBankOpenAccount()==0) {
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+			throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
 		}
 		if (users.getIsSetPassword() == 0) {
-			throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+			throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
 		}
 		if (!this.authService.checkPaymentAuthStatus(userId)) {
-			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		if (bankCard == null) {
-			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_BANK_CARD_GET);
+			throw new CheckException(MsgEnum.ERR_AMT_RECHARGE_BANK_CARD_GET);
 		}
 
 		if (StringUtils.isEmpty(money)) {
-			throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_MONEY_REQUIRED);
+			throw new CheckException(MsgEnum.ERR_AMT_RECHARGE_MONEY_REQUIRED);
 		}
 		if (!money.matches("-?[0-9]+.*[0-9]*")) {
-			throw new ReturnMessageException(MsgEnum.ERR_FMT_MONEY);
+			throw new CheckException(MsgEnum.ERR_FMT_MONEY);
 		}
 		if(money.indexOf(".")>=0){
 			String l = money.substring(money.indexOf(".")+1,money.length());
 			if(l.length()>2){
-				throw new ReturnMessageException(MsgEnum.ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL);
+				throw new CheckException(MsgEnum.ERR_AMT_RECHARGE_MONEY_MORE_DECIMAL);
 			}
 		}
 	}

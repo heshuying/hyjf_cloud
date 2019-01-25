@@ -62,14 +62,14 @@ public class HjhDebtCreditTender implements Serializable {
     private String creditNid;
 
     /**
-     * 原始标的出借订单号
+     * 原始标的投资订单号
      *
      * @mbggenerated
      */
     private String investOrderId;
 
     /**
-     * 原标出借订单号
+     * 原标投资订单号
      *
      * @mbggenerated
      */
@@ -118,7 +118,7 @@ public class HjhDebtCreditTender implements Serializable {
     private String assignOrderDate;
 
     /**
-     * 出借人投标成功的授权号
+     * 投资人投标成功的授权号
      *
      * @mbggenerated
      */
@@ -265,7 +265,7 @@ public class HjhDebtCreditTender implements Serializable {
     private Integer assignType;
 
     /**
-     * 出借类型 0出借1复投
+     * 投资类型 0投资1复投
      *
      * @mbggenerated
      */

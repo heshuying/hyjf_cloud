@@ -3375,5 +3375,11 @@ public interface AmTradeClient {
      * @return
      */
     EvaluationBorrowLevelConfigLogResponse getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest requestBean);
+    
+    /**
+     * 更新标签配置列表ByIdAndLabelState
+     * @param request
+     */
+    int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
 }
 

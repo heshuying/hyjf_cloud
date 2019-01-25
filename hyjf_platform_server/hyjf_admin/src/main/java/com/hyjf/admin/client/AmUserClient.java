@@ -1,6 +1,8 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
+import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
@@ -1364,4 +1366,22 @@ public interface AmUserClient {
      * @Author : huanghui
      */
     UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
+
+    /***
+     * 开户掉单，保存开户User数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateUser(OpenAccountEnquiryDefineResultBean requestBean);
+
+    /***
+     * 开户掉单，保存开户Account数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateAccount(OpenAccountEnquiryDefineResultBean requestBean);
 }

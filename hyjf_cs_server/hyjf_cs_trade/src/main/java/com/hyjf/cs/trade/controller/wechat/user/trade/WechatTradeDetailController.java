@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,6 +71,10 @@ public class WechatTradeDetailController extends BaseTradeController {
         int totalCount = appTradeDetailBean.getTradeTotal();
 
         List<AppTradeListCustomizeVO> lstTrade = appTradeDetailBean.getUserTrades();
+        if(lstTrade!=null&&lstTrade.size()==1){
+            lstTrade=new ArrayList<AppTradeListCustomizeVO>();
+            totalCount=0;
+        }
         List<AppTradeListCustomizeVO> lstTradeCopy = Lists.newArrayList();
         lstTradeCopy.addAll(lstTrade);
         int page = trade.getCurrPage();

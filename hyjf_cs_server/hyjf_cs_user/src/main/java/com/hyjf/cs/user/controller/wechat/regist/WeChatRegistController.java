@@ -338,11 +338,12 @@ public class WeChatRegistController extends BaseUserController {
         }
 
         //验证图片验证码
-        JSONObject captchaCheckResult =this.checkcaptchajson(request, bean.getNewRegVerifyCode());
-        if(!"000".equals(captchaCheckResult.get("status"))) {
-            //不等于000 代表校验不通过
-            return captchaCheckResult;
-        }
+        // 微信 着陆页使用无感知图形验证码验证码, 屏蔽原有的图形验证码 ! --  add by huanghui
+//        JSONObject captchaCheckResult =this.checkcaptchajson(request, bean.getNewRegVerifyCode());
+//        if(!"000".equals(captchaCheckResult.get("status"))) {
+//            //不等于000 代表校验不通过
+//            return captchaCheckResult;
+//        }
         //验证短信验证码
         JSONObject verificationCodeCheckResult=this.validateVerificationCodeAction(bean, response);
         if(!"000".equals(verificationCodeCheckResult.get("status"))) {

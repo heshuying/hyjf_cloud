@@ -69,7 +69,7 @@ public class BorrowCredit implements Serializable {
     private String bidName;
 
     /**
-     * 原始出借订单号(对应borrow_tender表的nid字段)
+     * 原始投资订单号(对应borrow_tender表的nid字段)
      *
      * @mbggenerated
      */
@@ -251,7 +251,7 @@ public class BorrowCredit implements Serializable {
     private Integer assignTime;
 
     /**
-     * 出借次数
+     * 投资次数
      *
      * @mbggenerated
      */

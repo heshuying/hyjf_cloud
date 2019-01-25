@@ -39,8 +39,7 @@ public class SyncRUserConsumer implements RocketMQListener<MessageExt>, RocketMQ
     
     @Override
 	public void onMessage(MessageExt  message) {
-        logger.info("Ruser 用户信息同步...." + message);
-
+        logger.info("Ruser 用户信息同步...." );
         try {
 
             MessageExt msg = message;

@@ -21,7 +21,7 @@ public class RUser implements Serializable {
     private String mobile;
 
     /**
-     * 用户角色1出借人2借款人3担保机构
+     * 用户角色1投资人2借款人3担保机构
      *
      * @mbggenerated
      */

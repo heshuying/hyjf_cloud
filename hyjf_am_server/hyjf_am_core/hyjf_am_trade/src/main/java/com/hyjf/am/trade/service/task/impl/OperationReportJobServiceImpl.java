@@ -69,11 +69,6 @@ public class OperationReportJobServiceImpl implements OperationReportJobService 
 	}
 
 	@Override
-	public int getTradeCount(){
-		return operationReportCustomizeMapper.getTradeCount();
-
-	}
-	@Override
 	public float getFullBillAverageTime(Date date){
 		return operationReportCustomizeMapper.getFullBillAverageTime(date);
 
@@ -143,11 +138,7 @@ public class OperationReportJobServiceImpl implements OperationReportJobService 
 		return operationReportInfoJobCustomizeMapper.getOneInterestsMost(intervalMonth);
 
 	}
-	@Override
-	public OperationReportJobVO getUserAgeAndArea(Integer userId){
-		return operationReportInfoJobCustomizeMapper.getUserAgeAndArea(userId);
 
-	}
 	@Override
 	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date){
 		return operationReportInfoJobCustomizeMapper.getTenderAgeByRangeList(date);

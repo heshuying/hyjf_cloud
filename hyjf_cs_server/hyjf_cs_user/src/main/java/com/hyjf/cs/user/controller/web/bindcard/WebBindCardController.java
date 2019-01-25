@@ -70,13 +70,13 @@ public class WebBindCardController extends BaseUserController {
 		WebViewUserVO user = bindCardService.getUserFromCache(userId);
 
 		if(user == null){
-			result.setStatus(WebResult.ERROR);
-			result.setStatusDesc("用户未登录");
+			result.setStatus(MsgEnum.ERR_USER_NOT_LOGIN.getCode());
+			result.setStatusDesc(MsgEnum.ERR_USER_NOT_LOGIN.getMsg());
 			return result;
 		}
 		if(!user.isBankOpenAccount()){
-			result.setStatus(WebResult.ERROR);
-			result.setStatusDesc("用户未开户");
+			result.setStatus(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getCode());
+			result.setStatusDesc(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN.getMsg());
 			return result;
 		}
 

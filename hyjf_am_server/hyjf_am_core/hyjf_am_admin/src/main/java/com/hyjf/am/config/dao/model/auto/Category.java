@@ -4,26 +4,71 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Category implements Serializable {
+    /**
+     * 文档ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 上级分类ID
+     *
+     * @mbggenerated
+     */
     private Integer pid;
 
     private String code;
 
+    /**
+     * 分组
+     *
+     * @mbggenerated
+     */
     private String group;
 
+    /**
+     * 排序（同级有效）
+     *
+     * @mbggenerated
+     */
     private Integer sort;
 
+    /**
+     * 是否隐藏
+     *
+     * @mbggenerated
+     */
     private Integer hide;
 
+    /**
+     * 提示
+     *
+     * @mbggenerated
+     */
     private String tip;
 
     private Integer level;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

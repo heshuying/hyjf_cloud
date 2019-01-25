@@ -669,6 +669,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         result.put("evalType","");
         result.put("evalFlagType","");
         result.put("revaluationMoney","");
+        result.put("investLevel",checkLeve);
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -1256,33 +1257,67 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setNowTime(nowTime);
         request.setOrderId(planOrderId);
         if (Validator.isNotNull(userInfo)) {
-            UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
-
-            if (spreadsUsers != null) {
-                int refUserId = spreadsUsers.getUserId();
-                logger.info("推荐人信息：" + refUserId);
-                // 查找用户推荐人详情信息  部门啥的
-                UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
-                logger.info("查询推荐人1   :{}",JSONObject.toJSONString(userInfoCustomize));
-                if (Validator.isNotNull(userInfoCustomize)) {
-                    planAccede.setInviteUserId(userInfoCustomize.getUserId());
-                    planAccede.setInviteUserName(userInfoCustomize.getUserName());
-                    planAccede.setInviteUserAttribute(userInfoCustomize.getAttribute());
-                    planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
-                    planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
-                    planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
-                }
-            } else if (userInfo.getAttribute() == 2 || userInfo.getAttribute() == 3) {
-                // 查找用户推荐人详情信息
-                UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(userId);
-                logger.info("查询推荐人2   :{}",JSONObject.toJSONString(userInfoCustomize));
-                if (Validator.isNotNull(userInfoCustomize)) {
-                    planAccede.setInviteUserId(userInfoCustomize.getUserId());
-                    planAccede.setInviteUserName(userInfoCustomize.getUserName());
-                    planAccede.setInviteUserAttribute(userInfoCustomize.getAttribute());
-                    planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
-                    planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
-                    planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
+           // UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
+            // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+            Integer attribute = null;
+            if (userInfo != null) {
+                // 获取出借用户的用户属性
+                attribute = userInfo.getAttribute();
+                if (attribute != null) {
+                    // 出借人用户属性
+                    planAccede.setUserAttribute(attribute);
+                    // 如果是线上员工或线下员工，推荐人的userId和username不插
+                    if (attribute == 2 || attribute == 3) {
+                        EmployeeCustomizeVO employeeCustomize = this.amUserClient.selectEmployeeByUserId(userId);
+                        if (employeeCustomize != null) {
+                            planAccede.setInviteUserRegionname(employeeCustomize.getRegionName());
+                            planAccede.setInviteUserBranchname(employeeCustomize.getBranchName());
+                            planAccede.setInviteUserDepartmentname(employeeCustomize.getDepartmentName());
+                        }
+                    } else if (attribute == 1) {
+                        // 有主单
+                        SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
+                        if (spreadsUserVO!=null) {
+                            int refUserId = spreadsUserVO.getSpreadsUserId();
+                            // 查找用户推荐人
+                            UserVO userss = getUsers(refUserId);
+                            if (userss != null) {
+                                planAccede.setInviteUserId(userss.getUserId());
+                                planAccede.setInviteUserName(userss.getUsername());
+                            }
+                            // 推荐人信息
+                            UserInfoVO refUsers = this.getUsersInfoByUserId(refUserId);
+                            // 推荐人用户属性
+                            if (refUsers != null) {
+                                planAccede.setInviteUserAttribute(refUsers.getAttribute());
+                            }
+                            // 查找用户推荐人部门
+                            EmployeeCustomizeVO employeeCustomize =this.amUserClient.selectEmployeeByUserId(refUserId);
+                            if (employeeCustomize != null) {
+                                planAccede.setInviteUserRegionname(employeeCustomize.getRegionName());
+                                planAccede.setInviteUserBranchname(employeeCustomize.getBranchName());
+                                planAccede.setInviteUserDepartmentname(employeeCustomize.getDepartmentName());
+                            }
+                        }
+                    } else if (attribute == 0) {
+                        // 无主单
+                        SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
+                        if (spreadsUserVO != null) {
+                            int refUserId = spreadsUserVO.getSpreadsUserId();
+                            // 查找推荐人
+                            UserVO userss = getUsers(refUserId);
+                            if (userss != null) {
+                                planAccede.setInviteUserId(userss.getUserId());
+                                planAccede.setInviteUserName(userss.getUsername());
+                            }
+                            // 推荐人信息
+                            UserInfoVO refUsers = getUsersInfoByUserId(refUserId);
+                            // 推荐人用户属性
+                            if (refUsers != null) {
+                                planAccede.setInviteUserAttribute(refUsers.getAttribute());
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -1359,6 +1394,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         //发送纳觅返现mq  add   tyy2018-12-25
         try {
+            logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
             sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
 
         } catch (Exception e) {
@@ -1411,12 +1447,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         params.put("orderId", order);
         params.put("investMoney", investMoney.toString());
         //来源,1=新手标，2=散标，3=汇计划
-        Integer productType = 2;
-        //4 新手标
-        if(4 == projectType){
-            productType = 1;
-        }
-        params.put("productType", productType);
+        params.put("productType", projectType);
         commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
     }
     /**
@@ -1628,19 +1659,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
             }
         }
-        // 检查用户授权状态
-        HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());
-        // 为空则无授权
-        if (userAuth == null) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
-        } else {
-            if (userAuth.getAutoInvesStatus() == 0) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
-            }
-            if (userAuth.getAutoCreditStatus() == 0) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
-            }
-        }
+
         // 自动出借授权
         if (!authService.checkInvesAuthStatus(user.getUserId())) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);

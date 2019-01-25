@@ -7,14 +7,14 @@ public class CouponRealTender implements Serializable {
     private Integer id;
 
     /**
-     * 优惠券出借订单编号
+     * 优惠券投资订单编号
      *
      * @mbggenerated
      */
     private String couponTenderId;
 
     /**
-     * 真实出借订单编号
+     * 真实投资订单编号
      *
      * @mbggenerated
      */
