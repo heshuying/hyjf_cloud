@@ -122,8 +122,6 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         int pageSize = request.getPageSize();
         int limitStart = (currPage - 1) * pageSize;
         query.skip(limitStart).limit(pageSize);
-
-        query.with(new Sort(Sort.Direction.DESC, "_id"));
         return pcChannelStatisticsDao.find(query);
     }
 

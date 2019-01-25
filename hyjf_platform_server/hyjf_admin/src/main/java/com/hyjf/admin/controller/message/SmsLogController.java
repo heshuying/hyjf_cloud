@@ -79,7 +79,8 @@ public class SmsLogController extends BaseController {
 
     private String displayContent(SmsLogVO vo) {
         String content = null;
-        if (vo.getIsDisplay() == 1) {
+        Integer isDisplay = vo.getIsDisplay() == null ? 0 : vo.getIsDisplay();
+        if (isDisplay == 1) {
             content = "********************";
         } else {
             if (types.contains(vo.getType())) {
