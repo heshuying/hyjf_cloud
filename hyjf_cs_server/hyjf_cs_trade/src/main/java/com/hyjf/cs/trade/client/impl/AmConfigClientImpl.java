@@ -3,12 +3,16 @@ package com.hyjf.cs.trade.client.impl;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.admin.CertReportLogResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -261,4 +265,52 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public void holidays() {
 		restTemplate.getForEntity("http://AM-CONFIG/am-config/holidays/save", String.class);
 	}
+
+	/**
+	 * 应急中心 查找上报记录
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public List<CertLogVO> selectCertReportLogList(){
+		CertReportLogResponse reportLogResponse =
+				restTemplate.getForEntity("http://AM-CONFIG/am-config/certLog/selectCertReportLogList", CertReportLogResponse.class).getBody();
+		if (reportLogResponse != null && Response.SUCCESS.equals(reportLogResponse.getRtn())) {
+			return reportLogResponse.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 应急中心 根据id查找报送日志
+	 * @param logId
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public CertLogVO selectCertReportLogById(int logId){
+		CertReportLogResponse reportLogResponse =
+				restTemplate.getForEntity("http://AM-CONFIG/am-config/certLog/selectCertReportLogById/"+logId, CertReportLogResponse.class).getBody();
+		if (reportLogResponse != null && Response.SUCCESS.equals(reportLogResponse.getRtn())) {
+			return reportLogResponse.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 应急中心 更新操作日志
+	 * @param request
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public int updateCertLog(CertLogRequestBean request){
+		IntegerResponse response =
+				restTemplate.postForEntity("http://AM-CONFIG/am-config/certLog/updateCertLog", request,IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultInt().intValue();
+		}
+		return 0;
+	}
+
 }

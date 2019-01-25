@@ -1,8 +1,10 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.config.DebtConfigResponse;
+import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -107,4 +109,27 @@ public interface AmConfigClient {
 	SmsConfigVO findSmsConfig();
 
 	void holidays();
+
+	/**
+	 * 应急中心 查找上报记录
+	 * add by nxl
+	 * @return
+	 */
+	List<CertLogVO> selectCertReportLogList();
+
+	/**
+	 * 应急中心 根据id查找报送日志
+	 * @param logId
+	 * add by nxl
+	 * @return
+	 */
+	CertLogVO selectCertReportLogById(int logId);
+
+	/**
+	 * 应急中心 更新操作日志
+	 * @param request
+	 * add by nxl
+	 * @return
+	 */
+	int updateCertLog(CertLogRequestBean request);
 }
