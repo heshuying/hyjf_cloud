@@ -86,7 +86,6 @@ public class MailTemplateController extends BaseController {
 
 	@ApiOperation(value = "模板详情", notes = "模板详情")
 	@PostMapping("/infoAction")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
 	public AdminResult infoAction(@RequestBody MailTemplateRequest request) {
 		SmsMailTemplateVO vo = mailTemplateService.infoAction(request);
 		return new AdminResult(vo);
