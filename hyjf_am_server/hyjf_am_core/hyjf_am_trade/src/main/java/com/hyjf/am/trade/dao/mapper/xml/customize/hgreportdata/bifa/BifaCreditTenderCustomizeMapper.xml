@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.BifaCreditTenderCustomizeMapper" >
+  <select id="getBorrowCreditFeeSumByCreditNid" resultType="DECIMAL" parameterType="java.lang.String">
+    SELECT SUM(credit_fee) AS creditFee
+    FROM ht_credit_tender
+    WHERE credit_nid = #{creditNid,jdbcType = VARCHAR}
+  </select>
+</mapper>
