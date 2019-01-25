@@ -43,6 +43,8 @@ import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
+import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
+import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -62,6 +64,7 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -2604,6 +2607,104 @@ public interface AmTradeClient {
     void updateFddPush(BorrowApicronVO borrowApicronVO);
 
     /**
+     * 北互金获取借款人信息
+     * @param borrowNid
+     * @param companyOrPersonal
+     * @return
+     */
+    BifaBorrowUserInfoVO getBorrowUserInfo(String borrowNid, String companyOrPersonal);
+
+    /**
+     * 服务费=放款服务费+还款服务费
+     * @param borrowNid
+     * @return
+     */
+    String selectServiceCostSum(String borrowNid);
+
+    /**
+     * 散标转让服务费
+     * @param creditNid
+     * @return
+     */
+    BigDecimal getBorrowCreditFeeSumByCreditNid(String creditNid);
+
+    /**
+     * 智投转让服务费
+     * @param creditNid
+     * @return
+     */
+    BigDecimal getHjhCreditFeeSumByCreditNid(String creditNid);
+
+    /**
+     * 获取智投数
+     * @param nid
+     * @return
+     */
+    int countHjhPlan(String planNid);
+
+    /**
+     * 获取智投列表
+     * @return
+     */
+    List<HjhPlanVO> selectHjhPlanInfoList();
+
+    /**
+     * 已开户且出借>0的用户
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<UserIdAccountSumBeanVO> getBorrowTenderAccountSum(Integer startDate, Integer endDate);
+
+    /**
+     * 获取借款人信息
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<BorrowAndInfoVO> selectBorrowUserInfo(Integer startDate, Integer endDate);
+
+    /**
+     * 借贷笔数
+     * @param time
+     * @return
+     */
+    int getLoanNum(Date time);
+
+    /**
+     * 累计借贷余额
+     * @param time
+     * @return
+     */
+    BigDecimal getWillPayMoney(Date time);
+
+    /**
+     * 累计借贷余额笔数
+     * @param time
+     * @return
+     */
+    int getTotalLoanBalanceNum(Date time);
+
+    /**
+     * 累计借款人
+     * @return
+     */
+    Integer countBorrowUser();
+
+    /**
+     * 累计投资人数
+     * @param time
+     * @return
+     */
+    int getTenderCount(Date time);
+
+    /**
+     * 当前借款人
+     * @return
+     */
+    Integer countCurrentBorrowUser();
+
+    /**
      * 查询用户借款笔数(企业)
      *
      * @param username
@@ -2658,5 +2759,29 @@ public interface AmTradeClient {
     List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRepayOrdId(CertRequest certRequest);
 
     List<CreditRepayVO> getCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    /**
+     * 当前出借人
+     * @return
+     */
+    Integer countCurrentTenderUser();
+
+    /**
+     * 平台前十大融资人融资待还余额占比
+     * @return
+     */
+    BigDecimal sumBorrowUserMoneyTopTen();
+
+    /**
+     * 代还总金额
+     * @return
+     */
+    BigDecimal sumBorrowUserMoney();
+
+    /**
+     * 平台单一融资人最大融资待还余额占比
+     * @return
+     */
+    BigDecimal sumBorrowUserMoneyTopOne();
 }
 

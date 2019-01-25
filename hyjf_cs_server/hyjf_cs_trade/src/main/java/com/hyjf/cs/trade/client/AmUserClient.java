@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -466,4 +467,19 @@ public interface AmUserClient {
 	 * @return
 	 */
 	List<CertUserVO> getCertUsersByUserId(int userId);
+
+	/**
+	 * 获取最近七天开户的用户
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+    List<BifaIndexUserInfoBeanVO> getBankOpenedAccountUsers(Integer startDate, Integer endDate);
+
+	/**
+	 * 获取借款人信息
+	 * @param userId
+	 * @return
+	 */
+    BifaIndexUserInfoBeanVO getBifaIndexUserInfo(Integer userId);
 }
