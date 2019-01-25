@@ -169,24 +169,7 @@
         </if>
     </select>
 
-    <!--查询展示列表的金额总计数据-->
-    <select id="selectDebtCreditTotal" resultType="java.util.HashMap" parameterType="map">
-        SELECT
-        SUM(dc.credit_capital) AS  credit_capital,
-        SUM(dc.liquidation_fair_value) AS liquidation_fair_value,
-        SUM(dc.credit_capital_assigned ) AS assign_capital,
-        SUM(dc.credit_interest_advance_assigned) AS assign_advance_interest,
-        SUM(dc.credit_income) AS account_receive,
-        (SUM(dc.liquidation_fair_value) - SUM(dc.credit_capital_assigned) - SUM(dc.credit_interest_advance_assigned) ) AS  remain_credit
-        FROM
-        ht_hjh_debt_credit dc
-        INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
-        INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
-        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 
-        <include refid="Where_Clause" />
-        ORDER BY dc.create_time DESC
-    </select>
 
 
 </mapper>
