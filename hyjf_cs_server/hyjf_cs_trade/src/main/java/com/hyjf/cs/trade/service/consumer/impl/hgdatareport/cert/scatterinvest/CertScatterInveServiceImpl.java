@@ -38,7 +38,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
     @Autowired
     private AmTradeClient borrowClient;
     @Autowired
-    private SystemConfig systemConfig;
+    SystemConfig systemConfig;
 
     /**
      * 组装调用应急中心日志
@@ -177,7 +177,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             param.put("projectSource", "3");
             // 原产品链接
             // 报送散标URL
-            param.put("sourceProductUrl", systemConfig.webHost + "/bank/web/borrow/getBorrowDetail.do?borrowNid=" + borrow.getBorrowNid());
+            param.put("sourceProductUrl",systemConfig.getWebHost()+ "/bank/web/borrow/getBorrowDetail.do?borrowNid=" + borrow.getBorrowNid());
             //旧数据上报分组用
             // groupByDate  旧数据上报排序 按月用yyyy-MM
             String groupByDate = "";

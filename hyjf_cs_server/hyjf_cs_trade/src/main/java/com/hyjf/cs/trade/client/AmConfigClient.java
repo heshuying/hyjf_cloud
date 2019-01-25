@@ -117,6 +117,29 @@ public interface AmConfigClient {
     List<CertErrLogVO> getCertErrLogs();
 
 	/**
+	 * 应急中心 查找上报记录
+	 * add by nxl
+	 * @return
+	 */
+	List<CertLogVO> selectCertReportLogList();
+
+	/**
+	 * 应急中心 根据id查找报送日志
+	 * @param logId
+	 * add by nxl
+	 * @return
+	 */
+	CertLogVO selectCertReportLogById(int logId);
+
+	/**
+	 * 应急中心 更新操作日志
+	 * @param request
+	 * add by nxl
+	 * @return
+	 */
+	int updateCertLog(CertLogRequestBean request);
+
+	/**
 	 * 插入发送记录表
 	 * @param certLog
 	 * @return

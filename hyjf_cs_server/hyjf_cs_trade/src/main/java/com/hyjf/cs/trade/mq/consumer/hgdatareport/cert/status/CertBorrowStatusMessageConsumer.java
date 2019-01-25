@@ -18,7 +18,6 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
-import org.cert.open.CertToolV1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,6 @@ public class CertBorrowStatusMessageConsumer implements RocketMQListener<Message
 
     private String thisMessName = "散标状态信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
-    public static CertToolV1 tool = new CertToolV1();
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
@@ -48,8 +46,9 @@ public class CertBorrowStatusMessageConsumer implements RocketMQListener<Message
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info(logHeader+"====start=====");
+        logger.info(logHeader + "====start=====");
     }
+
     @Autowired
     private CertBorrowStatusService certBorrowStatusService;
 
@@ -83,7 +82,7 @@ public class CertBorrowStatusMessageConsumer implements RocketMQListener<Message
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
         boolean canRun = certBorrowStatusService.checkCanRun();
-        if(!canRun){
+        if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
         }
@@ -91,15 +90,15 @@ public class CertBorrowStatusMessageConsumer implements RocketMQListener<Message
         // --> 消息处理
         try {
             // --> 调用service组装数据
-            JSONArray listRepay  = new JSONArray();
-            Map<String,Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid,null,false,false);
+            JSONArray listRepay = new JSONArray();
+            Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false, false);
             listRepay.add(mapParam);
-            logger.info("数据："+listRepay);
+            logger.info("数据：" + listRepay);
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_STATUS, borrowNid, listRepay);
             try {
                 // 掉单用
-                if(tradeDate!=null&&!"".equals(tradeDate)){
+                if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
                 certBorrowStatusService.insertAndSendPost(entity);
@@ -109,17 +108,17 @@ public class CertBorrowStatusMessageConsumer implements RocketMQListener<Message
             //判断标的状态 = 9 的,再报送一次 添加判断=9
             // 上送数据
             String productStatus = mapParam.get("productStatus").toString();
-            if(productStatus.equals("9")){
+            if (productStatus.equals("9")) {
                 // --> 调用service组装数据
-                JSONArray listRepayAfter  = new JSONArray();
-                Map<String,Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid,productStatus,false,false);
+                JSONArray listRepayAfter = new JSONArray();
+                Map<String, Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, productStatus, false, false);
                 listRepayAfter.add(mapParamAfter);
-                logger.info("数据："+listRepayAfter);
+                logger.info("数据：" + listRepayAfter);
                 // 上送数据
                 CertReportEntityVO entityAfter = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_STATUS, borrowNid, listRepayAfter);
                 try {
                     // 掉单用
-                    if(tradeDate!=null&&!"".equals(tradeDate)){
+                    if (tradeDate != null && !"".equals(tradeDate)) {
                         entityAfter.setTradeDate(tradeDate);
                     }
                     certBorrowStatusService.insertAndSendPost(entityAfter);

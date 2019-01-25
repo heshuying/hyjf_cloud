@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.repayplan;
+package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.undertake;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.repayplan.CertRepayPlanService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.undertake.CertCreditInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -24,21 +24,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Description 合规数据上报 CERT 还款计划信息上报
+ * @Description 合规数据上报 CERT 承接订单信息上报
  * @Author nxl
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_BORROW_REPAYMENTPLAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_BORROW_REPAYMENTPLAN_GROUP)
-public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.CERT_CREDITTENDERINFO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_CREDITTENDERINFO_GROUP)
+public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    Logger logger = LoggerFactory.getLogger(CertRepayPlanMessageConsumer.class);
+    Logger logger = LoggerFactory.getLogger(CertCreditInfoMessageConsumer.class);
 
-    private String thisMessName = "还款计划信息推送";
+    private String thisMessName = "承接订单信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
-    private CertRepayPlanService certRepayPlanService;
+    private CertCreditInfoService certCreditInfoService;
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
@@ -70,16 +70,15 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
             return;
         }
 
-        String borrowNid = jsonObject.getString("borrowNid");
+        String creditTenderNid = jsonObject.getString("assignOrderId");
+        String flag = jsonObject.getString("flag");
         String tradeDate = jsonObject.getString("tradeDate");
-
-        if (StringUtils.isBlank(borrowNid)) {
+        if (StringUtils.isBlank(creditTenderNid) || StringUtils.isBlank(flag)) {
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
-
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
-        boolean canRun = certRepayPlanService.checkCanRun();
+        boolean canRun = certCreditInfoService.checkCanRun();
         if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
@@ -87,18 +86,20 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
 
         // --> 消息处理
         try {
+            // --> 增加防重校验（根据不同平台不同上送方式校验不同）
+
             // --> 调用service组装数据
-            JSONArray listRepay = certRepayPlanService.getBorrowReyapPlan(borrowNid, new JSONArray(), false);
+            JSONArray listRepay = certCreditInfoService.getBorrowTender(creditTenderNid, flag);
             logger.info("数据：" + listRepay.toString());
 
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_REPAY_PLAN, borrowNid, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_UNDER_TAKE, creditTenderNid, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
-                certRepayPlanService.insertAndSendPost(entity);
+                certCreditInfoService.insertAndSendPost(entity);
             } catch (Exception e) {
                 throw e;
             }
@@ -110,5 +111,4 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
             logger.info(logHeader + " 结束。");
         }
     }
-
 }
