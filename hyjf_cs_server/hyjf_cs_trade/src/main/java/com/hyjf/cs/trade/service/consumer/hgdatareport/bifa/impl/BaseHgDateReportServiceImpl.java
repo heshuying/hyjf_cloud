@@ -40,11 +40,6 @@ public class BaseHgDateReportServiceImpl extends BaseServiceImpl implements Base
     private String thisMessName = "合规数据上送共通方法";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
 
-    /**
-     * 北互金协议地址
-     **/
-    @Value("${hyjf.bifa.crt.path}")
-    String BIFA_CRT_PATH;
     /***
      * 北互金wsdl地址
      */
@@ -118,7 +113,7 @@ public class BaseHgDateReportServiceImpl extends BaseServiceImpl implements Base
     public String webService(String methodName, String encmsg) {
         // 北互金目前三个方法的参数统一
         String[] params = {"arg0", "arg1", "arg2"};
-        return WebServiceUtil.webService(BIFA_CRT_PATH, BIFA_END_POINT, BIFA_NAME_SPACE, methodName, params, new Object[]{BIFA_LOGIN_NAME, BIFA_PASS_WORD, encmsg});
+        return WebServiceUtil.webService(BIFA_END_POINT, BIFA_NAME_SPACE, methodName, params, new Object[]{BIFA_LOGIN_NAME, BIFA_PASS_WORD, encmsg});
     }
 
     /**
