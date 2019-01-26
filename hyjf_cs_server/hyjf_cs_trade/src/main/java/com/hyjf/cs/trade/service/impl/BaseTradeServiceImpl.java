@@ -1,8 +1,14 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -429,6 +435,70 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             default:
                 return -1;
         }
+    }
+
+    /**
+     * 获取散标债转信息表
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public BorrowCreditVO selectBorrowCreditByCreditNid(String creditNid) {
+        BorrowCreditVO borrowCreditVO = amTradeClient.getBorrowCreditByCreditNid(creditNid);
+        if (null != borrowCreditVO) {
+            return borrowCreditVO;
+        }
+        return null;
+    }
+
+    /**
+     * 获取散标债转承接人的承接信息
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public List<CreditTenderVO> selectCreditTenderByCreditNid(String creditNid) {
+        CreditTenderRequest request =new CreditTenderRequest();
+        request.setCreditNid(creditNid);
+        List<CreditTenderVO> creditTenderVOS = amTradeClient.getCreditTenderList(request);
+        if (CollectionUtils.isEmpty(creditTenderVOS)) {
+            return null;
+        }
+        return creditTenderVOS;
+    }
+
+    /**
+     * 承接人承接记录
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditTenderVO> selectHjhDebtCreditTenderByCreditNid(String creditNid) {
+        HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();
+        request.setCreditNid(creditNid);
+        List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOS = amTradeClient.getHjhDebtCreditTenderList(request);
+        if (CollectionUtils.isEmpty(hjhDebtCreditTenderVOS)) {
+            return null;
+        }
+        return hjhDebtCreditTenderVOS;
+    }
+
+    /**
+     * 汇计划债转表
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid) {
+        HjhDebtCreditVO hjhDebtCreditVO = amTradeClient.selectHjhDebtCreditByCreditNid(creditNid);
+        if (null != hjhDebtCreditVO) {
+            return hjhDebtCreditVO;
+        }
+        return null;
     }
 
 }

@@ -437,11 +437,23 @@ public interface MQConstant {
 	String NIFA_REPAY_INFO_GROUP = "NIFA_REPAY_INFO_GROUP";
 	String NIFA_REPAY_INFO_TOPIC = "NIFA_REPAY_INFO_TOPIC";
 
-    /**
-     * 互金放款生成合同信息要素
-     */
-    String NIFA_LOAN_GROUP = "NIFA_LOAN_GROUP";
-    String NIFA_LOAN_TOPIC = "NIFA_LOAN_TOPIC";
+	/**
+	 * 互金放款生成合同信息要素
+	 */
+	String NIFA_LOAN_GROUP = "NIFA_LOAN_GROUP";
+	String NIFA_LOAN_TOPIC = "NIFA_LOAN_TOPIC";
+
+	/**
+	 * 互金放款生成合同信息要素
+	 */
+	String NIFA_REPAY_GROUP = "NIFA_REPAY_GROUP";
+	String NIFA_REPAY_TOPIC = "NIFA_REPAY_TOPIC";
+
+	/**
+	 * 互金放款生成合同信息要素
+	 */
+	String NIFA_CREDIT_GROUP = "NIFA_CREDIT_GROUP";
+	String NIFA_CREDIT_TOPIC = "NIFA_CREDIT_TOPIC";
 
 	/** ------------------------------ 神策数据统计 start ------------------------------ */
 	/**

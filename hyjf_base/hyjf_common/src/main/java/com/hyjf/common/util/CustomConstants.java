@@ -1528,4 +1528,20 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 北京互金协会 缩写 */
     public static final String HG_DATAREPORT_BIFA = "BIFA";
     // 迁移 合规数据上报 共通 常量定义 jijun 20190115 end
+
+
+    /** 散标债转标识 */
+    public static Integer BORROW_CREDIT_STATUS = 1;
+    /** 智投债转标识 */
+    public static Integer HJH_CREDIT_STATUS = 2;
+    /**  互联网债权类融资项目信息  */
+    public static String NIFA_BORROW_INFO_TYPE = "24EXPORTBUSINESSZHAIQ";
+    /**  互联网债权类融资借款人信息  */
+    public static String NIFA_BORROWER_INFO_TYPE = "24EXPORTBUSINESSZHAIQ_BOR";
+    /**  互联网债权类融资出借人信息  */
+    public static String NIFA_LENDER_INFO_TYPE = "24EXPORTBUSINESSZHAIQ_INV";
+    /**  互联网金融产品及收益权转让融资项目信息  */
+    public static String NIFA_CREDIT_INFO_TYPE = "26EXPORTBUSINESSJINR";
+    /**  互联网金融产品及收益权转让融资受让人信息  */
+    public static String NIFA_CREDITER_INFO_TYPE = "26EXPORTBUSINESSJINR_INV";
 }

@@ -3,13 +3,12 @@
  */
 package com.hyjf.cs.message.service.hgreportdata.nifa.impl;
 
-import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowerInfoVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaTenderInfoVO;
+import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowInfoEntity;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowerInfoEntity;
+import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaCreditInfoEntity;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaTenderInfoEntity;
 import com.hyjf.cs.message.mongo.hgreportdata.nifa.*;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
@@ -70,13 +69,13 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
      */
     @Override
     public void insertNifaBorrowerInfo(NifaBorrowerInfoVO nifaBorrowerInfoVO) {
-        Query query = new Query();
-        Criteria criteria = Criteria.where("projectNo").is(nifaBorrowerInfoVO.getProjectNo()).and("message").is(nifaBorrowerInfoVO.getMessage()).and("userId").is(nifaBorrowerInfoVO.getUserId()).and("reportStatus").is("0");
-        query.addCriteria(criteria);
-        List<NifaBorrowerInfoEntity> nifaBorrowerInfoEntityList = nifaBorrowerInfoDao.find(query);
-        if (null != nifaBorrowerInfoEntityList && nifaBorrowerInfoEntityList.size() > 0) {
-            nifaBorrowerInfoDao.deleteBatch(nifaBorrowerInfoEntityList);
-        }
+//        Query query = new Query();
+//        Criteria criteria = Criteria.where("projectNo").is(nifaBorrowerInfoVO.getProjectNo()).and("message").is(nifaBorrowerInfoVO.getMessage()).and("userId").is(nifaBorrowerInfoVO.getUserId()).and("reportStatus").is("0");
+//        query.addCriteria(criteria);
+//        List<NifaBorrowerInfoEntity> nifaBorrowerInfoEntityList = nifaBorrowerInfoDao.find(query);
+//        if (null != nifaBorrowerInfoEntityList && nifaBorrowerInfoEntityList.size() > 0) {
+//            nifaBorrowerInfoDao.deleteBatch(nifaBorrowerInfoEntityList);
+//        }
         nifaBorrowerInfoDao.save(CommonUtils.convertBean(nifaBorrowerInfoVO, NifaBorrowerInfoEntity.class));
     }
 
@@ -87,13 +86,13 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
      */
     @Override
     public void insertNifaTenderInfo(NifaTenderInfoVO nifaTenderInfoVO) {
-        Query query = new Query();
-        Criteria criteria = Criteria.where("projectNo").is(nifaTenderInfoVO.getProjectNo()).and("message").is(nifaTenderInfoVO.getMessage()).and("lenderId").is(nifaTenderInfoVO.getLenderId()).and("reportStatus").is("0");
-        query.addCriteria(criteria);
-        List<NifaTenderInfoEntity> nifaTenderInfoEntities = this.nifaTenderInfoDao.find(query);
-        if (null != nifaTenderInfoEntities && nifaTenderInfoEntities.size() > 0) {
-            nifaBorrowerInfoDao.deleteBatch(nifaTenderInfoEntities);
-        }
+//        Query query = new Query();
+//        Criteria criteria = Criteria.where("projectNo").is(nifaTenderInfoVO.getProjectNo()).and("message").is(nifaTenderInfoVO.getMessage()).and("lenderId").is(nifaTenderInfoVO.getLenderId()).and("reportStatus").is("0");
+//        query.addCriteria(criteria);
+//        List<NifaTenderInfoEntity> nifaTenderInfoEntities = this.nifaTenderInfoDao.find(query);
+//        if (null != nifaTenderInfoEntities && nifaTenderInfoEntities.size() > 0) {
+//            nifaBorrowerInfoDao.deleteBatch(nifaTenderInfoEntities);
+//        }
         nifaTenderInfoDao.save(CommonUtils.convertBean(nifaTenderInfoVO, NifaTenderInfoEntity.class));
     }
 
@@ -150,5 +149,43 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
             update.set("reportStatus", "1");
             this.nifaTenderInfoDao.update(query,update);
         }
+    }
+
+    /**
+     * 散标债转数据拉取
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public NifaCreditInfoEntity selectNifaCreditInfoByCreditNid(String projectNo) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("projectNo").is(projectNo);
+        query.addCriteria(criteria);
+        NifaCreditInfoEntity nifaCreditInfoEntity = nifaCreditInfoDao.findOne(query);
+        if (null != nifaCreditInfoEntity) {
+            return nifaCreditInfoEntity;
+        }
+        return null;
+    }
+
+    /**
+     * 保存散标债转承接人信息
+     *
+     * @param nifaCreditTransferVO
+     */
+    @Override
+    public void insertNifaCreditTransfer(NifaCreditTransferVO nifaCreditTransferVO) {
+        nifaTenderInfoDao.save(CommonUtils.convertBean(nifaCreditTransferVO, NifaTenderInfoEntity.class));
+    }
+
+    /**
+     * 保存散标债转承接信息
+     *
+     * @param nifaCreditInfoVO
+     */
+    @Override
+    public void insertNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO) {
+        nifaTenderInfoDao.save(CommonUtils.convertBean(nifaCreditInfoVO, NifaTenderInfoEntity.class));
     }
 }

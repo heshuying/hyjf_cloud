@@ -3,11 +3,10 @@
  */
 package com.hyjf.cs.message.service.hgreportdata.nifa;
 
-import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowerInfoVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaTenderInfoVO;
+import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowInfoEntity;
+import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaCreditInfoEntity;
 
 import java.util.List;
 
@@ -62,4 +61,26 @@ public interface NifaStatisticalService extends BaseService {
      * @param msgBody
      */
     void updateNifaTenderInfo(String projectNo, String msgBody);
+
+    /**
+     * 散标债转数据拉取
+     *
+     * @param projectNo
+     * @return
+     */
+    NifaCreditInfoEntity selectNifaCreditInfoByCreditNid(String projectNo);
+
+    /**
+     * 保存散标债转承接人信息
+     *
+     * @param nifaCreditTransferVO
+     */
+    void insertNifaCreditTransfer(NifaCreditTransferVO nifaCreditTransferVO);
+
+    /**
+     * 保存散标债转信息
+     *
+     * @param nifaCreditInfoVO
+     */
+    void insertNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO);
 }

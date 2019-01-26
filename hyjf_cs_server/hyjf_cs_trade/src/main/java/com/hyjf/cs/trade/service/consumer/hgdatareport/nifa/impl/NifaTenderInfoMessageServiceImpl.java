@@ -40,7 +40,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
 
     private String thisMessName = "互金标的相关信息上送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_NIFA + " " + thisMessName + "】";
-    private String baseUrl = "http://CS-MESSAGE/cs-message/nifa_statistical/";
+    private String baseUrl = "http://CS-MESSAGE/cs-message/nifaStatistical/";
 
     @Autowired
     private BaseClient baseClient;
@@ -433,7 +433,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
         NifaBorrowInfoVO nifaBorrowInfo = new NifaBorrowInfoVO();
         nifaBorrowInfo.setProjectNo(COM_SOCIAL_CREDIT_CODE + "1" + borrowNid);
         nifaBorrowInfo.setMessage(msgBody);
-        String url = baseUrl + "get_nifa_borrow_info_by_project_no";
+        String url = baseUrl + "selectNifaBorrowInfoByProjectNo";
         NifaBorrowInfoResponse nifaBorrowInfoResponse = this.baseClient.postExe(url, nifaBorrowInfo, NifaBorrowInfoResponse.class);
         NifaBorrowInfoVO nifaBorrowInfoVO = nifaBorrowInfoResponse.getResult();
         if (null != nifaBorrowInfoVO) {
@@ -449,7 +449,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
      */
     @Override
     public boolean insertNifaBorrowerUserInfo(NifaBorrowerInfoVO nifaBorrowerInfoVO) {
-        String url = baseUrl + "insert_nifa_borrower_info";
+        String url = baseUrl + "insertNifaBorrowerInfo";
         BooleanResponse response = this.baseClient.postExe(url, nifaBorrowerInfoVO, BooleanResponse.class);
         return response.getResultBoolean();
     }
@@ -461,7 +461,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
      */
     @Override
     public boolean insertNifaTenderInfo(NifaTenderInfoVO nifaTenderInfoVO) {
-        String url = baseUrl + "insert_nifa_tender_info";
+        String url = baseUrl + "insertNifaTenderInfo";
         BooleanResponse response = this.baseClient.postExe(url, nifaTenderInfoVO, BooleanResponse.class);
         return response.getResultBoolean();
     }
@@ -473,7 +473,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
      */
     @Override
     public boolean insertNifaBorrowInfo(NifaBorrowInfoVO nifaBorrowInfoVO) {
-        String url = baseUrl + "insert_nifa_borrow_info";
+        String url = baseUrl + "insertNifaBorrowInfo";
         BooleanResponse response = this.baseClient.postExe(url, nifaBorrowInfoVO, BooleanResponse.class);
         return response.getResultBoolean();
     }
@@ -489,7 +489,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
         NifaBorrowerInfoVO nifaBorrowerInfoVO = new NifaBorrowerInfoVO();
         nifaBorrowerInfoVO.setProjectNo(COM_SOCIAL_CREDIT_CODE + "1" + borrowNid);
         nifaBorrowerInfoVO.setMessage(msgBody);
-        String url = baseUrl + "update_nifa_borrower_info";
+        String url = baseUrl + "updateNifaBorrowerInfo";
         BooleanResponse response = this.baseClient.postExe(url, nifaBorrowerInfoVO, BooleanResponse.class);
         return response.getResultBoolean();
     }
@@ -505,7 +505,7 @@ public class NifaTenderInfoMessageServiceImpl extends BaseTradeServiceImpl imple
         NifaTenderInfoVO nifaTenderInfoVO = new NifaTenderInfoVO();
         nifaTenderInfoVO.setProjectNo(COM_SOCIAL_CREDIT_CODE + "1" + borrowNid);
         nifaTenderInfoVO.setMessage(msgBody);
-        String url = baseUrl + "update_nifa_tender_info";
+        String url = baseUrl + "updateNifaTenderInfo";
         BooleanResponse response = this.baseClient.postExe(url,nifaTenderInfoVO, BooleanResponse.class);
         return response.getResultBoolean();
     }

@@ -1,7 +1,11 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
@@ -158,4 +162,36 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     Integer getBorrowLevel(String borrowLevel);
+
+    /**
+     * 获取散标债转信息表
+     *
+     * @param creditNid
+     * @return
+     */
+    BorrowCreditVO selectBorrowCreditByCreditNid(String creditNid);
+
+    /**
+     * 获取散标债转承接人的承接信息
+     *
+     * @param creditNid
+     * @return
+     */
+    List<CreditTenderVO> selectCreditTenderByCreditNid(String creditNid);
+
+    /**
+     * 承接人承接记录
+     *
+     * @param creditNid
+     * @return
+     */
+    List<HjhDebtCreditTenderVO> selectHjhDebtCreditTenderByCreditNid(String creditNid);
+
+    /**
+     * 汇计划债转表
+     *
+     * @param creditNid
+     * @return
+     */
+    HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
 }

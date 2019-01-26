@@ -5,12 +5,12 @@ package com.hyjf.cs.message.controller.hgreportdata.nifa;
 
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.hgreportdata.nifa.NifaBorrowInfoResponse;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowerInfoVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaTenderInfoVO;
+import com.hyjf.am.response.hgreportdata.nifa.NifaCreditInfoResponse;
+import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowInfoEntity;
+import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaCreditInfoEntity;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ import javax.validation.Valid;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/nifa_statistical")
+@RequestMapping("/cs-message/nifaStatistical")
 public class NifaStatisticalController extends BaseController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/get_nifa_borrow_info_by_project_no")
+    @PostMapping("/selectNifaBorrowInfoByProjectNo")
     public NifaBorrowInfoResponse selectNifaBorrowInfoByProjectNo(@RequestBody @Valid NifaBorrowInfoVO nifaBorrowInfoVO) {
         NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
         String projectNo = nifaBorrowInfoVO.getProjectNo();
@@ -56,7 +56,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaBorrowerInfoVO
      * @return
      */
-    @PostMapping("/insert_nifa_borrower_info")
+    @PostMapping("/insertNifaBorrowerInfo")
     public BooleanResponse insertNifaBorrowerInfo(@RequestBody @Valid NifaBorrowerInfoVO nifaBorrowerInfoVO) {
         nifaStatisticalService.insertNifaBorrowerInfo(nifaBorrowerInfoVO);
         return new BooleanResponse(true);
@@ -68,7 +68,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaTenderInfoVO
      * @return
      */
-    @PostMapping("/insert_nifa_tender_info")
+    @PostMapping("/insertNifaTenderInfo")
     public BooleanResponse insertNifaTenderInfo(@RequestBody @Valid NifaTenderInfoVO nifaTenderInfoVO) {
         nifaStatisticalService.insertNifaTenderInfo(nifaTenderInfoVO);
         return new BooleanResponse(true);
@@ -80,7 +80,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaBorrowInfoVO
      * @return
      */
-    @PostMapping("/insert_nifa_borrow_info")
+    @PostMapping("/insertNifaBorrowInfo")
     public BooleanResponse insertNifaBorrowInfo(@RequestBody @Valid NifaBorrowInfoVO nifaBorrowInfoVO) {
         nifaStatisticalService.insertNifaBorrowInfo(nifaBorrowInfoVO);
         return new BooleanResponse(true);
@@ -91,7 +91,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/update_nifa_borrower_info")
+    @PostMapping("/updateNifaBorrowerInfo")
     public BooleanResponse updateNifaBorrowerInfo(@RequestBody @Valid NifaBorrowerInfoVO nifaBorrowerInfoVO) {
         String projectNo = nifaBorrowerInfoVO.getProjectNo();
         String msgBody = nifaBorrowerInfoVO.getMessage();
@@ -104,11 +104,53 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/update_nifa_tender_info")
+    @PostMapping("/updateNifaTenderInfo")
     public BooleanResponse updateNifaTenderInfo(@RequestBody @Valid NifaTenderInfoVO nifaTenderInfoVO) {
         String projectNo = nifaTenderInfoVO.getProjectNo();
         String msgBody = nifaTenderInfoVO.getMessage();
         nifaStatisticalService.updateNifaTenderInfo(projectNo, msgBody);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 散标债转数据拉取
+     *
+     * @param nifaCreditInfoVO
+     * @return
+     */
+    @PostMapping("/selectNifaCreditInfoByCreditNid")
+    public NifaCreditInfoResponse selectNifaCreditInfoByCreditNid(@RequestBody @Valid NifaCreditInfoVO nifaCreditInfoVO) {
+        NifaCreditInfoResponse response = new NifaCreditInfoResponse();
+        String projectNo = nifaCreditInfoVO.getProjectNo();
+        NifaCreditInfoEntity list = nifaStatisticalService.selectNifaCreditInfoByCreditNid(projectNo);
+        if (null != list) {
+            NifaCreditInfoVO result = CommonUtils.convertBean(list, NifaCreditInfoVO.class);
+            response.setResult(result);
+        }
+        return response;
+    }
+
+    /**
+     * 保存散标债转承接人信息
+     *
+     * @param nifaCreditTransferVO
+     * @return
+     */
+    @PostMapping("/insertNifaCreditTransfer")
+    public BooleanResponse insertNifaCreditTransfer(@RequestBody @Valid NifaCreditTransferVO nifaCreditTransferVO) {
+        nifaStatisticalService.insertNifaCreditTransfer(nifaCreditTransferVO);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 保存散标债转信息
+     *
+     * @param nifaCreditInfoVO
+     * @return
+     */
+    @PostMapping("/insertNifaCreditInfo")
+    public BooleanResponse insertNifaCreditInfo(@RequestBody @Valid NifaCreditInfoVO nifaCreditInfoVO) {
+        nifaStatisticalService.insertNifaCreditInfo(nifaCreditInfoVO);
         return new BooleanResponse(true);
     }
 }
