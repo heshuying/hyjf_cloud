@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -1585,5 +1586,26 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             return usersList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 获取最近七天开户的用户
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @Override
+    public List<BifaIndexUserInfoBean> getBankOpenedAccountUsers(Integer startDate, Integer endDate) {
+        return bifaUserCustomizeMapper.getBankOpenedAccountUsers(startDate, endDate);
+    }
+
+    /**
+     *  获取借款人信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BifaIndexUserInfoBean getBifaIndexUserInfo(Integer userId) {
+        return bifaUserCustomizeMapper.selectUserCorpInfoByUserId(userId);
     }
 }

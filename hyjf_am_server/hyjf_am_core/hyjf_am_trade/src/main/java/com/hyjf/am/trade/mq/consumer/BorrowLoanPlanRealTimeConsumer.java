@@ -111,6 +111,14 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                         }
                         // 发送mq到生成互金合同要素信息
                         sendMQ(borrowApicron);
+
+                        // add 合规数据上报 埋点 liubin 20181122 start
+                        // 推送数据到MQ 放款成功
+                        JSONObject params = new JSONObject();
+                        params.put("borrowNid",borrowNid);
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                        // add 合规数据上报 埋点 liubin 20181122 end
                     }
                 }else if(loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
                     //放款成功

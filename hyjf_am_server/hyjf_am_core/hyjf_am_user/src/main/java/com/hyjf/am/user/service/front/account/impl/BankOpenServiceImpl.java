@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.user.service.front.account.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.base.CommonProducer;
@@ -209,6 +209,17 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         } catch (MQException e) {
             logger.error("开户统计app渠道失败....", e);
         }
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 开户 出借人
+        if(roleId.compareTo(1) == 0){
+            JSONObject params = new JSONObject();
+            params.put("userId", userId);
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+        }
+        // add 合规数据上报 埋点 liubin 20181122 end
+
         return openAccountFlag;
     }
 

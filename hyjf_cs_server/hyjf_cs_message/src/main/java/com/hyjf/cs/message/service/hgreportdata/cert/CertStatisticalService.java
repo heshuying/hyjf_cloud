@@ -22,4 +22,11 @@ public interface CertStatisticalService extends BaseService {
      * @param bean
      */
     void updateCertReport(CertReportEntitRequest bean);
+
+    /**
+     * 根据订单号查询
+     * @param logOrdId
+     * @return
+     */
+    CertReportEntity getCertSendLogByLogOrdId(String logOrdId);
 }

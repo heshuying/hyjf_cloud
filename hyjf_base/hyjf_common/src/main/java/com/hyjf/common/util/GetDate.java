@@ -925,6 +925,29 @@ public class GetDate extends PropertyEditorSupport {
 	}
 
 	/**
+	 * 获取当前时间
+	 * @return
+	 */
+    public static String getNowTimeYYYYMMDDHHMMSS() {
+		return yyyymmddhhmmss.format(new Date());
+    }
+
+	/**
+	 * 10位时间戳转换为字符串
+	 * @param timeParam
+	 * @return
+	 */
+	public static String timestamptoNUMStrYYYYMMDDHHMMSS2(Integer timeParam) {
+		Timestamp time = getTimestamp(Long.valueOf(timeParam) * 1000);
+		Date date = null;
+		if (null != time) {
+			date = new Date(time.getTime());
+			return date2Str(date, yyyymmddhhmmss);
+		}
+		return "";
+	}
+
+	/**
 	 * String类型 转换为Date, 如果参数长度为10 转换格式”yyyy-MM-dd“ 如果参数长度为19 转换格式”yyyy-MM-dd
 	 * HH:mm:ss“ * @param text String类型的时间值
 	 */

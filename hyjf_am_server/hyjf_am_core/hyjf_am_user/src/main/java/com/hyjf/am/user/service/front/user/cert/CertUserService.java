@@ -32,4 +32,18 @@ public interface CertUserService {
      * @param borrowNid
      */
     List<CertUser> getCertUserByUserIdBorrowNid(Integer userId, String borrowNid);
+
+    /**
+     * userId查询
+     * @param userId
+     * @return
+     */
+    List<CertUser> getCertUserByUserId(Integer userId);
+
+    /**
+     * 根据用户哈希值查询是否已经上报过了
+     * @param userIdcardHash
+     * @return
+     */
+    List<CertUser> getCertUserByUserIdcardHash(String userIdcardHash);
 }

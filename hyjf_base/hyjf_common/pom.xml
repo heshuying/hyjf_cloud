@@ -95,11 +95,17 @@
 		<dependency>
 			<groupId>org.apache.axis</groupId>
 			<artifactId>axis-saaj</artifactId>
-			<version>1.4</version> </dependency>
+			<version>1.4</version>
+		</dependency>
 		<dependency>
 			<groupId>wsdl4j</groupId>
 			<artifactId>wsdl4j</artifactId>
 			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>1.7.22</version>
 		</dependency>
 		<!-- axis 1.4 jar end -->
 

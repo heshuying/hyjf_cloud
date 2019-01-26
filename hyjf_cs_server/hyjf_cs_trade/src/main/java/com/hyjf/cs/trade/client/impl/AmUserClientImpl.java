@@ -4,6 +4,7 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.response.bifa.BifaIndexUserInfoBeanResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
@@ -18,6 +19,7 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -1039,6 +1041,88 @@ public class AmUserClientImpl implements AmUserClient {
 				userService+"certUser/getCertUserByUserIdBorrowNid/" + userId+"/"+borrowNid,
 				CertUserResponse.class).getBody();
 		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 查询是否已经上送了
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public CertUserVO getCertUserByUserId(Integer userId) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUserByUserId/" + userId ,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户哈希值查询是否已经上报过了
+	 *
+	 * @param userIdcardHash
+	 * @return
+	 */
+	@Override
+	public CertUserVO getCertUserByUserIdcardHash(String userIdcardHash) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUserByUserIdcardHash/" + userIdcardHash ,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询上报的用户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<CertUserVO> getCertUsersByUserId(int userId) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUsersByUserId/" + userId ,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取最近七天开户的用户
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	@Override
+	public List<BifaIndexUserInfoBeanVO> getBankOpenedAccountUsers(Integer startDate, Integer endDate) {
+		String url = "http://AM-USER/am-user/bifaDataReport/getBankOpenedAccountUsers/"+startDate+"/"+endDate;
+		BifaIndexUserInfoBeanResponse response = restTemplate.getForEntity(url,BifaIndexUserInfoBeanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取借款人信息
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public BifaIndexUserInfoBeanVO getBifaIndexUserInfo(Integer userId) {
+		String url = "http://AM-USER/am-user/bifaDataReport/getBifaIndexUserInfo/"+userId;
+		BifaIndexUserInfoBeanResponse response= restTemplate.getForEntity(url,BifaIndexUserInfoBeanResponse.class).getBody();
+		if (Response.isSuccess(response)){
 			return response.getResult();
 		}
 		return null;

@@ -510,6 +510,14 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 logger.error("发送短信失败");
             }
 
+            // add by liushouyi nifa2 20181204 start
+            // 发送满标状态埋点
+            // 发送发标成功的消息队列到互金上报数据
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("borrowNid", borrowNid);
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add by liushouyi nifa2 20181204 end
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");

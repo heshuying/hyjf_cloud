@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
@@ -19,6 +16,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -57,6 +55,8 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
     AmUserClient amUserClient;
     @Autowired
     AmTradeClient amTradeClient;
+    @Autowired
+    AmConfigClient amConfigClient;
     @Autowired
     private BaseClient baseClient;
 
@@ -108,8 +108,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
                 errLog.setResultCode("");
                 errLog.setResultMsg("");
             }
-           // certErrLogMapper.insert(errLog);
-            // TODo 插入错误日志表
+            amConfigClient.insertCertErrorLog(errLog);
         }
         return bean;
     }
@@ -196,12 +195,12 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @param certLog
      * @param bean
      */
-    private void insertCertLog(CertLogVO certLog, CertReportEntityVO bean) {
-        /*certLog.setInfType(Integer.parseInt(bean.getInfType()));
+    private boolean insertCertLog(CertLogVO certLog, CertReportEntityVO bean) {
+        certLog.setInfType(Integer.parseInt(bean.getInfType()));
         certLog.setLogOrdId(bean.getLogOrdId());
         certLog.setSendTime(GetDate.getNowTime10());
         certLog.setQueryResult(0);
-        certLogMapper.insert(certLog);*/
+        return amConfigClient.insertCertLog(certLog);
     }
 
     /**
@@ -326,39 +325,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public CertUserVO getCertUserByUserId(Integer userId) {
-       /* CertUserExample example = new CertUserExample();
-        CertUserExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        List<CertUser> list = certUserMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }*/
-
-        return null;
-    }
-
-    /**
-     * 获取项目类型
-     *
-     * @param projectType
-     * @return
-     */
-    @Override
-    public BorrowProjectTypeVO getBorrowProjectType(String projectType) {
-        if (StringUtils.isBlank(projectType)) {
-            return null;
-        }
-        BorrowProjectTypeVO borrowProjectType = null;
-        /*// 查找用户
-        BorrowProjectTypeExample borrowProjectTypeExample = new BorrowProjectTypeExample();
-        BorrowProjectTypeExample.Criteria criteria2 = borrowProjectTypeExample.createCriteria();
-        criteria2.andBorrowCdEqualTo(projectType);
-        List<BorrowProjectType> list = borrowProjectTypeMapper.selectByExample(borrowProjectTypeExample);
-        if (list != null && !list.isEmpty()) {
-            borrowProjectType = list.get(0);
-
-        }*/
-        return borrowProjectType;
+        return amUserClient.getCertUserByUserId(userId);
     }
 
     /**
@@ -414,14 +381,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public CertUserVO getCertUserByUserIdcardHash(String userIdcardHash) {
-        /*CertUserExample example = new CertUserExample();
-        CertUserExample.Criteria cra = example.createCriteria();
-        cra.andUserIdCardHashEqualTo(userIdcardHash);
-        List<CertUser> list = certUserMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }*/
-        return null;
+        return amUserClient.getCertUserByUserIdcardHash(userIdcardHash);
     }
 
     /**
@@ -431,15 +391,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      */
     protected CertUserVO getCertUserByUserIdBorrowNid(Integer userId, String borrowNid) {
-       /* CertUserExample example = new CertUserExample();
-        CertUserExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        cra.andBorrowNidEqualTo(borrowNid);
-        List<CertUser> list = certUserMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }*/
-        return null;
+        return amUserClient.getCertUserByUserIdBorrowNid(userId,borrowNid);
     }
 
     /**
@@ -448,7 +400,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      * @throws Exception
      */
-    protected String getUserHashValue(BorrowInfoVO borrow) throws Exception {
+    protected String getUserHashValue(BorrowAndInfoVO borrow) throws Exception {
         String userIdcard = "";
         if (borrow != null) {
             if ("1".equals(borrow.getCompanyOrPersonal())) {
@@ -478,14 +430,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public List<CertUserVO> getCertUsersByUserId(int userId) {
-        /*CertUserExample example = new CertUserExample();
-        CertUserExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        List<CertUser> list = certUserMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list;
-        }*/
-        return null;
+        return amUserClient.getCertUsersByUserId(userId);
     }
 
     /**

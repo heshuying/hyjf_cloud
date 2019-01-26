@@ -4,17 +4,16 @@
 package com.hyjf.cs.message.controller.hgreportdata.cert;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertReportEntity;
 import com.hyjf.cs.message.service.hgreportdata.cert.CertStatisticalService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -64,5 +63,21 @@ public class CertStatisticalController extends BaseController {
             return new BooleanResponse(true);
         }
         return new BooleanResponse(false);
+    }
+
+    /**
+     * 根据订单号查询
+     * @param logOrdId
+     * @return
+     */
+    @GetMapping("/getCertSendLogByLogOrdId/{logOrdId}")
+    public CertReportEntityResponse getCertSendLogByLogOrdId(@PathVariable("logOrdId") String logOrdId) {
+        CertReportEntityResponse response = new CertReportEntityResponse();
+        CertReportEntity entity = certStatisticalService.getCertSendLogByLogOrdId(logOrdId);
+        if(null!=entity){
+            CertReportEntityVO certReportEntityVO = CommonUtils.convertBean(entity,CertReportEntityVO.class);
+            response.setResult(certReportEntityVO);
+        }
+        return response;
     }
 }

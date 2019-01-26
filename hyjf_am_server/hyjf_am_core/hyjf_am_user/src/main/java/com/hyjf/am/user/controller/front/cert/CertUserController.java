@@ -93,4 +93,53 @@ public class CertUserController extends BaseController {
 		return response;
 	}
 
+	/**
+	 * 查询是否已经上送了
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/getCertUserByUserId/{userId}")
+	public CertUserResponse getCertUserByUserId(@PathVariable("userId") Integer userId) {
+		List<CertUser> certUsers = certUserService.getCertUserByUserId(userId);
+		CertUserResponse response = new CertUserResponse();
+		if (null != certUsers) {
+			CertUserVO certSendUserVO = CommonUtils.convertBean(certUsers.get(0),CertUserVO.class);
+			response.setResult(certSendUserVO);
+		}
+		return response;
+	}
+
+	/**
+	 * 根据用户哈希值查询是否已经上报过了
+	 * @param userIdcardHash
+	 * @return
+	 */
+	@GetMapping("/getCertUserByUserIdcardHash/{userIdcardHash}")
+	public CertUserResponse getCertUserByUserIdcardHash(@PathVariable("userIdcardHash") String userIdcardHash) {
+		List<CertUser> certUsers = certUserService.getCertUserByUserIdcardHash(userIdcardHash);
+		CertUserResponse response = new CertUserResponse();
+		if (null != certUsers) {
+			CertUserVO certSendUserVO = CommonUtils.convertBean(certUsers.get(0),CertUserVO.class);
+			response.setResult(certSendUserVO);
+		}
+		return response;
+	}
+
+	/**
+	 * 查询是否已经上送了
+	 * @param userId
+	 * @return
+	 */
+	@GetMapping("/getCertUsersByUserId/{userId}")
+	public CertUserResponse getCertUsersByUserId(@PathVariable("userId") Integer userId) {
+		List<CertUser> certUsers = certUserService.getCertUserByUserId(userId);
+		CertUserResponse response = new CertUserResponse();
+		if (null != certUsers) {
+			List<CertUserVO> certSendUserVOs = CommonUtils.convertBeanList(certUsers,CertUserVO.class);
+			response.setResultList(certSendUserVOs);
+		}
+		return response;
+	}
+
+
 }

@@ -6,10 +6,11 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowRecoverService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -135,4 +136,10 @@ public class BorrowRecoverServiceImpl extends BaseServiceImpl implements BorrowR
         }
         return null;
     }
+    @Override
+    public BigDecimal selectServiceCostSum(String borrowNid) {
+        return bifaBorrowRecoverCustomizeMapper.selectServiceCostSum(borrowNid);
+    }
+
+
 }

@@ -11,7 +11,10 @@ import java.io.Serializable;
  * @see 上午11:01:58
  */
 public class CertCallConstant implements Serializable {
-	/**
+
+    public static final String CERT_WEB_HOST = "";
+    public static final String CERT_SOURCE_CODE = "";
+    /**
 	 * 序列化id
 	 */
 	private static final long serialVersionUID = -7131277696965280498L;
