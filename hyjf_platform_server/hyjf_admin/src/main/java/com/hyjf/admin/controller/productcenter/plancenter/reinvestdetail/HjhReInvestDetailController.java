@@ -205,8 +205,9 @@ public class HjhReInvestDetailController extends BaseController {
         List<HjhReInvestDetailVO> resultList = null;
 
         HjhReInvestDetailResponse resultResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(hjhReInvestDetailCustomize);
-        logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount() + ";列表:" + resultResponse.getResultList().get(0).toString());
+        logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount());
         if (resultResponse.getCount() > 0) {
+            logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount() + ";列表:" + resultResponse.getResultList().get(0).toString());
             resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhReInvestDetailVO.class);
         }
 
