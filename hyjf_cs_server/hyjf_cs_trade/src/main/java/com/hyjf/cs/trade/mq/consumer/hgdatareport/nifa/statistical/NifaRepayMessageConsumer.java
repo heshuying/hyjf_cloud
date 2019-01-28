@@ -40,8 +40,8 @@ import java.util.List;
  * @version NifaRepayInfoMessageConsumer, v0.1 2019/1/24 15:03
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.NIFA_REPAY_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.NIFA_REPAY_GROUP)
-public class NifaRepayInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.REPAY_SINGLE_SUCCESS_TAG, consumerGroup = MQConstant.NIFA_REPAY_GROUP)
+public class NifaRepayMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(NifaTenderInfoMessageConsumer.class);
 

@@ -41,7 +41,7 @@ import java.util.Map;
  * @version NifaContractEssenceMessageConsumer, v0.1 2018/6/25 17:52
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CONTRACT_ESSENCE_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CONTRACT_ESSENCE_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.LOAN_SUCCESS_TAG, consumerGroup = "NIFA_CONTRACT_ESSENCE")
 public class NifaContractEssenceMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(NifaContractEssenceMessageConsumer.class);

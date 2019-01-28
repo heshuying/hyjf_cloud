@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  * @version NifaRepayInfoMessageConsumer, v0.1 2018/9/11 16:42
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.NIFA_REPAY_INFO_TOPIC,selectorExpression = "*", consumerGroup = MQConstant.NIFA_REPAY_INFO_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC,selectorExpression = MQConstant.REPAY_SINGLE_SUCCESS_TAG, consumerGroup = MQConstant.NIFA_REPAY_INFO_GROUP)
 public class NifaRepayInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(NifaContractEssenceMessageConsumer.class);

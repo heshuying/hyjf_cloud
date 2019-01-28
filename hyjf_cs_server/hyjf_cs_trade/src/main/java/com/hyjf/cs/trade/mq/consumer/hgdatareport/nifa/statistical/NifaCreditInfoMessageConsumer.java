@@ -38,7 +38,7 @@ import java.util.List;
  * @version NifaCreditInfoMessageConsumer, v0.1 2019/1/24 16:35
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.NIFA_CREDIT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.NIFA_CREDIT_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, consumerGroup = "NIFA_CREDIT_INFO_GROUP")
 public class NifaCreditInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(NifaTenderInfoMessageConsumer.class);

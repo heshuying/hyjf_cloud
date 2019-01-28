@@ -39,7 +39,7 @@ import java.util.List;
  * @version NifaTenderInfoMessageConsumer, v0.1 2018/6/25 17:52
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.NIFA_LOAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.NIFA_LOAN_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.LOAN_SUCCESS_TAG, consumerGroup = MQConstant.NIFA_LOAN_GROUP)
 public class NifaTenderInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(NifaTenderInfoMessageConsumer.class);
