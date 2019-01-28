@@ -947,7 +947,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						break;
 					case AuthBean.AUTH_TYPE_PAY_REPAY_AUTH:
 						if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
-								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
 							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 								return true;
@@ -963,7 +963,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 							}
 						}
 						if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
-								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()), AuthBean.AUTH_TYPE_REPAY_AUTH)){
 							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
 								return true;
@@ -978,22 +978,6 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 								}
 							}
 						}
-						if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
-								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
-							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
-								return true;
-							}
-							if(user.getUserType()!=1){
-								if(!config.getPersonalMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
-									return true;
-								}
-							}else{
-								if(!config.getEnterpriseMaxAmount().equals(Integer.parseInt(bean.getRepayMaxAmt()))){
-									return true;
-								}
-							}
-						};
 					default:
 						break;
 				}
@@ -1005,7 +989,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				//还款授权
 				String repayAuth = bean.getRepayAuth();
 				if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
-						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()), AuthBean.AUTH_TYPE_AUTO_BID)){
 					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 						return true;
@@ -1021,7 +1005,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					}
 				}
 				if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
-						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
 					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 						return true;
@@ -1037,7 +1021,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					}
 				}
 				if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
-						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
+						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()), AuthBean.AUTH_TYPE_REPAY_AUTH)){
 					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
 						return true;

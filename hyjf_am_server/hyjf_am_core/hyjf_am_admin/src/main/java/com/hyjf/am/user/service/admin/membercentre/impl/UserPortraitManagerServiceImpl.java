@@ -474,4 +474,19 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
         return Math.sqrt(dVar / m);
     }
 
+
+    @Override
+    public int countUserNames(List<String> userNames) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userNames", userNames);
+        int count = userCustomizeMapper.countUserNames(map);
+        return count;
+    }
+
+    @Override
+    public int importBatch(List<UserPortrait> userPortraits) {
+        int count = userCustomizeMapper.importBatch(userPortraits);
+        return count;
+    }
+
 }

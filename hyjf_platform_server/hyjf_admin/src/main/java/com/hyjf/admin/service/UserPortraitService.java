@@ -3,9 +3,12 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.vo.user.UserPortraitVO;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author nxl
@@ -41,4 +44,10 @@ public interface UserPortraitService {
      */
     UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest);
 
+    /**
+     * 导入当前拥有人
+     * @param request
+     * @return
+     */
+    StringResponse importBatch(HttpServletRequest request);
 }
