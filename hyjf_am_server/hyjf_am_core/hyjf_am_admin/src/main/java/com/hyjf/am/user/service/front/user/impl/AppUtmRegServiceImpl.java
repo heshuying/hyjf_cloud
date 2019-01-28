@@ -84,6 +84,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
             appUtmRegExample.setLimitStart(paginator.getOffset());
             appUtmRegExample.setLimitEnd(paginator.getLimit());
         }
+        appUtmRegExample.setOrderByClause("register_time desc");
         return appUtmRegMapper.selectByExample(appUtmRegExample);
 
     }
