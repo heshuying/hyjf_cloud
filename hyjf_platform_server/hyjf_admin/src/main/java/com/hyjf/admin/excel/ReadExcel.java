@@ -159,11 +159,17 @@ public class ReadExcel extends XxlsAbstract {
             jsonObject = new JSONObject();
             for (Map.Entry<String, Integer> entry : rowIndexMap.entrySet()) {
                 Integer index = entry.getValue();
-                String cellValue = rowlist.get(index);
-                String key = entry.getKey();
-                //保存数据
-                jsonObject = setFieldValue(key, cellValue, jsonObject);
-
+                String cellValue;
+                if (rowlist.size() != 0) {
+                    if (rowlist.size() < (index + 1)) {
+                        cellValue = "";
+                    } else {
+                        cellValue = rowlist.get(index);
+                    }
+                    String key = entry.getKey();
+                    //保存数据
+                    jsonObject = setFieldValue(key, cellValue, jsonObject);
+                }
             }
         } else {
             for (int i = 0; i < rowlist.size(); i++) {

@@ -81,7 +81,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String today = format.format(date);
 
-        String logoRealPathDir = filePhysicalPath + today;
+        String logoRealPathDir = filePhysicalPath + "/" + today;
         File logoSaveFile = new File(logoRealPathDir);
         if (!logoSaveFile.exists()) {
             logoSaveFile.mkdirs();
@@ -169,8 +169,10 @@ public class UserPortraitServiceImpl implements UserPortraitService {
                     if (usersPortraits.size() > 1000) {
                         request.setUserPortraitVOS(usersPortraits);
                         request.setUserNames(userNames);
-                        batchInsertOwner(request);
                         int result = userPortraitClient.countUserNames(request);
+                        if (result > 0) {
+                            batchInsertOwner(request);
+                        }
                         totalCount1 = totalCount1 + (userNames.size() - result);
                         usersPortraits.clear();
                         userNames.clear();
@@ -179,8 +181,10 @@ public class UserPortraitServiceImpl implements UserPortraitService {
                 if (!CollectionUtils.isEmpty(usersPortraits)) {
                     request.setUserPortraitVOS(usersPortraits);
                     request.setUserNames(userNames);
-                    batchInsertOwner(request);
                     int result = userPortraitClient.countUserNames(request);
+                    if (result > 0) {
+                        batchInsertOwner(request);
+                    }
                     totalCount1 = totalCount1 + (userNames.size() - result);
                 }
                 logger.info("批量导入当前拥有人失败数，共：" + totalCount1 + "条");
