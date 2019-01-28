@@ -1788,7 +1788,7 @@ public class BorrowCommonController extends BaseController {
 			case NUMERIC:
 				// 返回数值类型的值
 				String s = String.valueOf(hssfCell.getNumericCellValue());
-				return "0"+s;
+				return "0"+ s.replace(".0", "");
 			case FORMULA:
 				// 单元格为公式类型时
 				if (CellType.NUMERIC == hssfCell.getCachedFormulaResultTypeEnum()) {
