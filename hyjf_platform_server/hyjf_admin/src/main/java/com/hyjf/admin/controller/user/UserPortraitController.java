@@ -13,6 +13,7 @@ import com.hyjf.admin.service.UserPortraitService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.vo.user.UserPortraitVO;
@@ -135,6 +136,30 @@ public class UserPortraitController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();
+    }
+
+    /**
+     * 导入当前拥有人
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "导入当前拥有人", notes = "导入当前拥有人")
+    @PostMapping(value = "/importCurrentOwner")
+    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_IMPORT)
+    public AdminResult importCurrentOwner(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info("当前拥有人数据导入开始......");
+        StringResponse stringResponse = userPortraitService.importBatch(request);
+        if (stringResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(stringResponse)) {
+            return new AdminResult<>(FAIL, stringResponse.getMessage());
+        }
+        logger.info("当前拥有人数据导入结束......");
+        return new AdminResult(stringResponse);
     }
 
     /**

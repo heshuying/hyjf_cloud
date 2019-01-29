@@ -66,7 +66,10 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	
     @ApiModelProperty(value = "使用状态查询")
 	private Integer engineIdSrch;
-    
+
+	@ApiModelProperty(value = "使用智投编号查询")
+    private String planNidSrch;
+
     @ApiModelProperty(value = "标的最小期限")
     private String labelTermStart;
     
@@ -482,5 +485,13 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	}
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getPlanNidSrch() {
+		return planNidSrch;
+	}
+
+	public void setPlanNidSrch(String planNidSrch) {
+		this.planNidSrch = planNidSrch;
 	}
 }
