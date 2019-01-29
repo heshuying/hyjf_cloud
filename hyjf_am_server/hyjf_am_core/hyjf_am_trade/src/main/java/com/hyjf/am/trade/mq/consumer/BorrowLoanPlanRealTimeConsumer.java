@@ -64,9 +64,9 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                 logger.info(" 计划放款异常消息：" + msgD.getMsgId());
                 return;
             }
-
-            String borrowNid = borrowApicron.getBorrowNid();// 借款编号
-            Integer failTimes = borrowApicron.getFailCounts();
+            // 借款编号
+            String borrowNid = borrowApicron.getBorrowNid();
+            Integer failTimes = borrowApicron.getFailTimes();
             // 生成任务key 校验并发请求
             String redisKey = RedisConstants.ZHITOU_LOAN_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
 
@@ -91,24 +91,20 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                     }else{
                         //放款成功 更新业务数据 此处不开事务
                         realTimeBorrowLoanPlanService.updWhenPlanLoanSuccessed(borrowApicron);
-                        // 发送mq到生成互金合同要素信息
-                        sendMQ(borrowApicron);
-
-                        // add 合规数据上报 埋点 liubin 20181122 start
-                        // 推送数据到MQ 放款成功
-                        JSONObject params = new JSONObject();
-                        params.put("borrowNid",borrowNid);
-                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG, UUID.randomUUID().toString(), params),
-                                MQConstant.HG_REPORT_DELAY_LEVEL);
-                        // add 合规数据上报 埋点 liubin 20181122 end
                     }
                 } else if(loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
                     //自动修复出现异常的数据
                     realTimeBorrowLoanPlanService.updWhenPlanLoanSuccessed(borrowApicron);
-                    // 发送mq到生成互金合同要素信息
-                    sendMQ(borrowApicron);
                 } else {
                     logger.error("计划标的编号：" + borrowNid + "，不是放款状态 "+ borrowApicron.getStatus());
+                }
+
+                // 重新获取borrowApicron数据，根据状态判断是否发送互金等埋点MQ
+                borrowApicron = realTimeBorrowLoanPlanService.selApiCronByPrimaryKey(borrowApicron.getId());
+                //放款成功，并且所有数据(出借人，借款人)都更新成功
+                if(borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SUCCESS)){
+                    logger.info("智投标的:" + borrowNid + "放款成功，发送相关MQ");
+                    sendMQ(borrowApicron);
                 }
 
             } catch (Exception e) {
@@ -172,12 +168,24 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
 	 * @param borrowApicron
 	 */
 	private void sendMQ(BorrowApicron borrowApicron) {
+        JSONObject param = new JSONObject();
 		try {
-			JSONObject param = new JSONObject();
 			param.put("borrowNid", borrowApicron.getBorrowNid());
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC,UUID.randomUUID().toString(),param),2);
 		} catch (Exception e) {
 			logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
 		}
+
+		try {
+            // add 合规数据上报 埋点 liubin 20181122 start
+            // 推送数据到MQ 放款成功
+            param = new JSONObject();
+            param.put("borrowNid",borrowApicron.getBorrowNid());
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG, UUID.randomUUID().toString(), param),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add 合规数据上报 埋点 liubin 20181122 end
+        } catch (Exception e){
+            logger.error("发送合规数据上报MQ失败,放款标的:" + borrowApicron.getBorrowNid());
+        }
 	}
 }

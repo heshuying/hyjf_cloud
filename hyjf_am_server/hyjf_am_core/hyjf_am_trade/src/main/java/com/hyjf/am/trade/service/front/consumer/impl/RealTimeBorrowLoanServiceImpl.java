@@ -245,12 +245,6 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			String accountId = (String) map.get("accountId");
 			String txAmount = (String) map.get("txAmountSum");
 			String feeAmount = (String) map.get("serviceFeeSum");
-			// 此处更新没意义，先注释掉
-			// 更新任务API状态为进行中
-//			boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
-//			if (!apicronFlag) {
-//				throw new Exception("更新放款任务为进行中失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-//			}
 			
 			// 调用放款接口
 			BankCallBean loanBean = new BankCallBean();
@@ -295,36 +289,11 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 					}
 				}
 			} else {
-				//重新查询处理结果
+				//放款异常，更新放款任务表状态为放款失败
 				logger.error(borrowNid+" 实时放款请求异常: " + loanResult);
-                String oldOrdid = apicron.getOrdid();
-                if(StringUtils.isNotBlank(oldOrdid)){
-                    loanBean.setOrderId(oldOrdid);
-                }
-                
-                boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-                
-//                BankCallBean result = queryAutoLendResult(loanBean);
-//				if (result != null) {
-//					// 更新任务API状态
-//					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//					if (apicronResultFlag) {
-////						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
-//						return result;
-//					} else {
-//						throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-//					}
-//				}else{
-//					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-//					if (apicronResultFlag) {
-//						return loanResult;
-//					} else {
-//						throw new Exception("更新状态为（放款处理失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-//					}
-//				}
+                this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
 			}
-		
-			
+
 		} catch (Exception e) {
 			logger.info("==============cwyang 放款异常:" + e.getMessage());
 		}

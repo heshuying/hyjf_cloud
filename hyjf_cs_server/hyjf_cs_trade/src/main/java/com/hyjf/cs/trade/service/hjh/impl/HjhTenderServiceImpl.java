@@ -1477,7 +1477,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if ("endday".equals(borrowStyle)) {
             investProjectPeriod = plan.getLockPeriod() + "天";
         } else {
-            investProjectPeriod = plan.getLockPeriod() + "月";
+            investProjectPeriod = plan.getLockPeriod() + "个月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
         //压入消息队列
