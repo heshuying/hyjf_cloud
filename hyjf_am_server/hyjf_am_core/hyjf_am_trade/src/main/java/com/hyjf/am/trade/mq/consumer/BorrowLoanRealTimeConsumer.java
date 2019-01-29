@@ -59,21 +59,16 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
         logger.info("直投放款请求 收到消息，开始处理....");
         BorrowApicron borrowApicron;
         try{
-            try {
-                MessageExt msgD = messageExt;
-                borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
-                if (borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null
-                        || StringUtils.isNotEmpty(borrowApicron.getPlanNid())) {
-                    logger.info(" 直投放款异常消息：" + msgD.getMsgId());
-                    return;
-                }
-            } catch (Exception e1) {
-                logger.error(e1.getMessage());
+            MessageExt msgD = messageExt;
+            borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
+            if (borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null
+                    || StringUtils.isNotEmpty(borrowApicron.getPlanNid())) {
+                logger.info(" 直投放款异常消息：" + msgD.getMsgId());
                 return;
             }
-            String borrowNid = borrowApicron.getBorrowNid();// 借款编号
-            // int borrowUserId = borrowApicron.getUserId();// 借款人userId
-            Integer failTimes = borrowApicron.getFailCounts();
+            // 借款编号
+            String borrowNid = borrowApicron.getBorrowNid();
+            Integer failTimes = borrowApicron.getFailTimes();
             // 生成任务key 校验并发请求
             String redisKey = RedisConstants.ZHITOU_LOAN_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
 
@@ -87,31 +82,16 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
                 borrowApicron = realTimeBorrowLoanService.selApiCronByPrimaryKey(borrowApicron.getId());
                 // 如果放款状态为请求中
                 if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDING)) {
-                    // 发送放款
+                    //调用银行实时放款接口进行放款
                     BankCallBean requestLoanBean = realTimeBorrowLoanService.requestLoans(borrowApicron);
                     if (requestLoanBean == null) {
-                        borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
-                        // 放款失败处理
-                        boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
-                        if (!batchDetailFlag) {
-                            throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
-                        }
-                        // 不需要以下代码了
-    //						boolean apicronResultFlag = realTimeBorrowLoanService.updateBorrowApicron(borrowApicron,CustomConstants.BANK_BATCH_STATUS_FAIL);
-    //						if (apicronResultFlag) {
-    //							throw new Exception(
-    //									"更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-    //						} else {
-    //							throw new Exception("放款失败,[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-    //						}
-                    } else {// 放款成功
-                        // 进行后续操作
-                        boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
-                        if (!batchDetailFlag) {
-                            throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
-                        }
+                        //调用银行实时放款接口失败只打印日志，在requestLoans方法中已经更新borrow_apicron表的状态了
+                        logger.error("直投标的：" + borrowNid + "调用银行实时放款接口失败！");
+                    } else {
+                        //放款成功 更新业务数据 此处不开事务
+                        realTimeBorrowLoanService.updWhenLoanSuccessed(borrowApicron);
                         // 放款成功,更新mongo运营数据
-                        logger.info("放款成功更新运营数据...");
+                        logger.info("直投标的:" + borrowNid + "放款成功更新运营数据...");
                         sendMQ(borrowApicron);
 
                         // add 合规数据上报 埋点 liubin 20181122 start
@@ -122,16 +102,10 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
                                 MQConstant.HG_REPORT_DELAY_LEVEL);
                         // add 合规数据上报 埋点 liubin 20181122 end
                     }
-                    //
                 } else if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDED)) {
-                    // 发送放款
-                    BankCallBean requestLoanBean = new BankCallBean();
-                    boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
-                    if (!batchDetailFlag) {
-                        throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
-                    }
-                    // 放款成功,更新mongo运营数据
-                    logger.info("再次更新放款 运营数据...");
+                    //自动修复出现异常的数据
+                    realTimeBorrowLoanService.updWhenLoanSuccessed(borrowApicron);
+                    logger.info("直投标的:" + borrowNid + "再次更新放款 运营数据...");
                     sendMQ(borrowApicron);
                 } else {
                     logger.error("标的编号：" + borrowNid + "，不是放款状态 " + borrowApicron.getStatus());
