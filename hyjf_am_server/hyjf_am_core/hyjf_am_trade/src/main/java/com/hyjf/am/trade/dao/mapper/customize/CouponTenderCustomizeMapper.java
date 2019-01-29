@@ -200,4 +200,10 @@ public interface CouponTenderCustomizeMapper {
      * @return List<CouponTenderCustomize>
      */
     Integer selectCouponTenderListCount (CouponTenderRequest request);
+    /**
+     * 合规数据上报 CERT add by nxl 根据订单号查询优惠券利息
+     * @param couponTenderId
+     * @return
+     */
+    String sunRecoverInterest(String couponTenderId);
 }

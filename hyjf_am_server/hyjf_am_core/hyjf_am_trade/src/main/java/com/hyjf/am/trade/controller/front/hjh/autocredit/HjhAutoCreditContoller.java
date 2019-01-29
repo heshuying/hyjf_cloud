@@ -3,10 +3,14 @@
  */
 package com.hyjf.am.trade.controller.front.hjh.autocredit;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
+import com.hyjf.am.trade.mq.base.CommonProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 汇计划自动清算
@@ -26,6 +31,8 @@ import java.util.List;
 public class HjhAutoCreditContoller extends BaseController {
     @Autowired
     private HjhAutoCreditService hjhAutoCreditService;
+    @Autowired
+    private CommonProducer commonProducer;
 
     /**
      * 汇计划自动清算+计算公允价值
@@ -54,10 +61,20 @@ public class HjhAutoCreditContoller extends BaseController {
                             } catch (Exception e) {
                                 logger.error("汇计划自动清算后,发送【关联计划消息】MQ失败...");
                             }
-                            // 清算完成后,发送计算公允价值MQ
-                            accedeOrderList.add(hjhAccede.getAccedeOrderId());
+
+                            // add 合规数据上报 埋点 liubin 20181122 start
+                            // 推送数据到MQ 转让 智
+                            JSONObject params = new JSONObject();
+                            params.put("creditNid", creditList.get(j));
+                            params.put("flag", "2"); //1（散）2（智投）
+                            params.put("status", "0"); //0转让
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.TRANSFER_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                            // add 合规数据上报 埋点 liubin 20181122 end
                         }
                     }
+                    // 清算完成后,发送计算公允价值MQ
+                    accedeOrderList.add(hjhAccede.getAccedeOrderId());
                 }
             }
             // 计算公允价值

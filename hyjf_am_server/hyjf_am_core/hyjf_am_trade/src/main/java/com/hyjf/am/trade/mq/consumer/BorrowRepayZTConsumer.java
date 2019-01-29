@@ -145,6 +145,26 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 					} catch (Exception e) {
 						logger.error("发送mq到生成互金还款相关信息失败,放款标的:" + borrowApicron.getBorrowNid());
 					}
+
+					// add 合规数据上报 埋点 liubin 20181122 start
+					JSONObject params = new JSONObject();
+					params.put("borrowNid", borrowApicron.getBorrowNid());
+					params.put("repayPeriod", borrowApicron.getPeriodNow());
+					// 推送数据到MQ 还款（每期）
+					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+							MQConstant.HG_REPORT_DELAY_LEVEL);
+
+					// 最后一期
+					if(borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())){
+						params = new JSONObject();
+						params.put("borrowNid", borrowApicron.getBorrowNid());
+						params.put("flag", "1"); //1（散）2（智投）
+						// status=5标的已还款
+						params.put("status", "5"); //5(标的已还款)
+						commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+								MQConstant.HG_REPORT_DELAY_LEVEL);
+					}
+					// add 合规数据上报 埋点 liubin 20181122 end
 					logger.info("标的编号："+borrowNid+"，还款成功！");
 				}
 			}catch(Exception e){

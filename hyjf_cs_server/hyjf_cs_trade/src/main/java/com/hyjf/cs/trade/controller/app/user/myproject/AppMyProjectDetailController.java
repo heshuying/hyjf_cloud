@@ -15,6 +15,7 @@ import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
