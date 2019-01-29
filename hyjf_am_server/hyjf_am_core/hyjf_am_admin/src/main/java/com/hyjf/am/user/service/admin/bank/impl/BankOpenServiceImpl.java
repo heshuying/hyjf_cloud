@@ -206,7 +206,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         if(roleId.compareTo(1) == 0){
             JSONObject params = new JSONObject();
             params.put("userId", userId);
-            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.OPEN_ACCOUNT_SUCCESS_TAG, UUID.randomUUID().toString(), params),
                     MQConstant.HG_REPORT_DELAY_LEVEL);
         }
         // add 合规数据上报 埋点 liubin 20181122 end
