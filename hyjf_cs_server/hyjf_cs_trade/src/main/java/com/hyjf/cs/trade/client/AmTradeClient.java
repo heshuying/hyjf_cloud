@@ -2766,5 +2766,16 @@ public interface AmTradeClient {
      * @return
      */
     BigDecimal sumBorrowUserMoneyTopOne();
+
+    /**
+     * 互金下载反馈文件
+     */
+    void downloadFile();
+
+    /**
+     * 互金上传文件上报数据
+     */
+    void uploadFile();
+
 }
 
