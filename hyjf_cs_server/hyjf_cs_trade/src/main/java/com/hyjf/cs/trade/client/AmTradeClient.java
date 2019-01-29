@@ -2544,16 +2544,6 @@ public interface AmTradeClient {
     BooleanResponse updateMatchDays();
 
     /**
-     * 互金下载反馈文件
-     */
-    void downloadFile();
-
-    /**
-     * 互金上传文件上报数据
-     */
-    void uploadFile();
-
-    /**
      * 互金拉取逾期和完全债转数据更新合同状态
      */
     void updateRepayInfo();

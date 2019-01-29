@@ -6,7 +6,7 @@ package com.hyjf.am.trade.controller.hgreportdata.nifa;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaFieldDefinitionResponse;
-import com.hyjf.am.response.trade.NifaContractEssenceResponse;
+import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.NifaContractEssence;
 import com.hyjf.am.trade.dao.model.auto.NifaContractTemplate;

@@ -5,8 +5,7 @@ package com.hyjf.cs.message.service.hgreportdata.nifa;
 
 import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowInfoEntity;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaCreditInfoEntity;
+import com.hyjf.cs.message.bean.hgreportdata.nifa.*;
 
 import java.util.List;
 
@@ -83,4 +82,79 @@ public interface NifaStatisticalService extends BaseService {
      * @param nifaCreditInfoVO
      */
     void insertNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO);
+
+    /**
+     * 查询未上送的借款信息
+     *
+     * @param nifaBorrowInfoVO
+     * @return
+     */
+    List<NifaBorrowInfoEntity> selectNifaBorrowInfoByHistoryDate(NifaBorrowInfoVO nifaBorrowInfoVO);
+
+    /**
+     * 处理完成借款信息后更新mongo数据状态
+     *
+     * @param nifaBorrowInfoVO
+     */
+    void updateNifaBorrowInfoByHistoryDate(NifaBorrowInfoVO nifaBorrowInfoVO);
+
+    /**
+     * 查询相应标的的投资人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    List<NifaTenderInfoEntity> selectNifaTenderInfo(List<String> projectNo);
+
+    /**
+     * 更新相应标的的投资人信息
+     *
+     * @param projectNo
+     */
+    void updateTenderInfo(List<String> projectNo);
+
+    /**
+     * 拉取相应借款人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    List<NifaBorrowerInfoEntity> selectNifaBorrowerInfo(List<String> projectNo);
+
+    /**
+     * 更新相应标的的借款人信息
+     *
+     * @param projectNo
+     */
+    void updateBorrowerInfo(List<String> projectNo);
+
+    /**
+     * 查询未上送的债转信息
+     *
+     * @param nifaCreditInfoVO
+     * @return
+     */
+    List<NifaCreditInfoEntity> selectNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO);
+
+    /**
+     * 更新上送的债转信息
+     *
+     * @param nifaCreditInfoVO
+     */
+    void updateNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO);
+
+    /**
+     * 查询未上送的债转承接人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    List<NifaCreditTransferEntity> selectNifaCreditTransfer(List<String> projectNo);
+
+    /**
+     * 更新相应承接人上送状态
+     *
+     * @param projectNo
+     */
+    void updateCreditTransfer(List<String> projectNo);
 }

@@ -6,10 +6,7 @@ package com.hyjf.cs.message.service.hgreportdata.nifa.impl;
 import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowInfoEntity;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowerInfoEntity;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaCreditInfoEntity;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaTenderInfoEntity;
+import com.hyjf.cs.message.bean.hgreportdata.nifa.*;
 import com.hyjf.cs.message.mongo.hgreportdata.nifa.*;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -187,5 +185,174 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
     @Override
     public void insertNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO) {
         nifaTenderInfoDao.save(CommonUtils.convertBean(nifaCreditInfoVO, NifaTenderInfoEntity.class));
+    }
+
+    /**
+     * 查询未上送的借款信息
+     *
+     * @param nifaBorrowInfoVO
+     * @return
+     */
+    @Override
+    public List<NifaBorrowInfoEntity> selectNifaBorrowInfoByHistoryDate(NifaBorrowInfoVO nifaBorrowInfoVO) {
+        // --> 生成标的信息文件
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is(nifaBorrowInfoVO.getReportStatus()).and("historyData").is(nifaBorrowInfoVO.getHistoryData());
+        query.addCriteria(criteria);
+        List<NifaBorrowInfoEntity> nifaBorrowInfoEntities = nifaBorrowInfoDao.find(query);
+        if(null != nifaBorrowInfoEntities && nifaBorrowInfoEntities.size() > 0){
+            return nifaBorrowInfoEntities;
+        }
+        return null;
+    }
+
+    /**
+     * 处理完成借款信息后更新mongo数据状态
+     *
+     * @param nifaBorrowInfoVO
+     */
+    @Override
+    public void updateNifaBorrowInfoByHistoryDate(NifaBorrowInfoVO nifaBorrowInfoVO) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is(nifaBorrowInfoVO.getReportStatus()).and("historyData").is(nifaBorrowInfoVO.getHistoryData());
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("reportStatus", "1").set("updateTime", new Date());
+        nifaBorrowInfoDao.update(query, update);
+    }
+
+    /**
+     * 查询相应标的的投资人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public List<NifaTenderInfoEntity> selectNifaTenderInfo(List<String> projectNo) {
+        // --> 生成标的信息文件
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is("0").and("projectNo").in(projectNo);
+        query.addCriteria(criteria);
+        List<NifaTenderInfoEntity> list = nifaTenderInfoDao.find(query);
+        if(null != list && list.size() > 0){
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 更新相应标的的投资人信息
+     *
+     * @param projectNo
+     */
+    @Override
+    public void updateTenderInfo(List<String> projectNo) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is("0").and("projectNo").in(projectNo);
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("reportStatus", "1").set("updateTime", new Date());
+        nifaBorrowInfoDao.update(query, update);
+    }
+
+    /**
+     * 拉取相应借款人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public List<NifaBorrowerInfoEntity> selectNifaBorrowerInfo(List<String> projectNo) {
+        // --> 生成标的信息文件
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is("0").and("projectNo").in(projectNo);
+        query.addCriteria(criteria);
+        List<NifaBorrowerInfoEntity> list = nifaBorrowerInfoDao.find(query);
+        if(null != list && list.size() > 0){
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 更新相应标的的借款人信息
+     *
+     * @param projectNo
+     */
+    @Override
+    public void updateBorrowerInfo(List<String> projectNo) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is("0").and("projectNo").in(projectNo);
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("reportStatus", "1").set("updateTime", new Date());
+        nifaBorrowerInfoDao.update(query, update);
+    }
+
+    /**
+     * 查询未上送的债转信息
+     *
+     * @param nifaCreditInfoVO
+     * @return
+     */
+    @Override
+    public List<NifaCreditInfoEntity> selectNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is(nifaCreditInfoVO.getReportStatus()).and("historyData").is(nifaCreditInfoVO.getHistoryData());
+        query.addCriteria(criteria);
+        List<NifaCreditInfoEntity> list = nifaCreditInfoDao.find(query);
+        if(null != list && list.size() > 0){
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 更新上送的债转信息
+     *
+     * @param nifaCreditInfoVO
+     */
+    @Override
+    public void updateNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is(nifaCreditInfoVO.getReportStatus()).and("historyData").is(nifaCreditInfoVO.getHistoryData());
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("reportStatus", "1").set("updateTime", new Date());
+        nifaBorrowInfoDao.update(query, update);
+    }
+
+    /**
+     * 查询未上送的债转承接人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public List<NifaCreditTransferEntity> selectNifaCreditTransfer(List<String> projectNo) {
+        // --> 生成标的信息文件
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is("0").and("projectNo").in(projectNo);
+        query.addCriteria(criteria);
+        List<NifaCreditTransferEntity> list = nifaCreditTransferDao.find(query);
+        if(null != list && list.size() > 0){
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 更新相应承接人上送状态
+     *
+     * @param projectNo
+     */
+    @Override
+    public void updateCreditTransfer(List<String> projectNo) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("reportStatus").is("0").and("projectNo").in(projectNo);
+        query.addCriteria(criteria);
+        Update update = new Update();
+        update.set("reportStatus", "1").set("updateTime", new Date());
+        nifaCreditTransferDao.update(query, update);
     }
 }

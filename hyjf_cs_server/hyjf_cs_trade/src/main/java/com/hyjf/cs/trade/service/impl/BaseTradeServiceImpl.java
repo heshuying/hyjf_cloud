@@ -40,8 +40,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -501,4 +504,40 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         return null;
     }
 
+    /**
+     * 压缩zip文件包
+     *
+     * @param sb
+     * @param zipName
+     * @return
+     */
+    @Override
+    public boolean writeZip(StringBuffer sb, String zipName) {
+        try {
+            String[] files = sb.toString().split(",");
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
+            ZipOutputStream zos = new ZipOutputStream(os);
+            byte[] buf = new byte[8192];
+            int len;
+            for (int i = 0; i < files.length; i++) {
+                File file = new File(files[i]);
+                if (!file.isFile()) {
+                    continue;
+                }
+                ZipEntry ze = new ZipEntry(file.getName());
+                zos.putNextEntry(ze);
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                while ((len = bis.read(buf)) > 0) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+            }
+            zos.closeEntry();
+            zos.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

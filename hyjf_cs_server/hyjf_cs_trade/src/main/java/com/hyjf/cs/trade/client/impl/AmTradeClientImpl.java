@@ -30,6 +30,7 @@ import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
@@ -6194,16 +6195,6 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response;
         }
         return null;
-    }
-
-    @Override
-    public void downloadFile() {
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
-    }
-
-    @Override
-    public void uploadFile() {
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/upload_file", boolean.class);
     }
 
     @Override

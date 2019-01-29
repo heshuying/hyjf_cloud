@@ -4,19 +4,18 @@
 package com.hyjf.cs.message.controller.hgreportdata.nifa;
 
 import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.hgreportdata.nifa.NifaBorrowInfoResponse;
-import com.hyjf.am.response.hgreportdata.nifa.NifaCreditInfoResponse;
+import com.hyjf.am.response.hgreportdata.nifa.*;
 import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaBorrowInfoEntity;
-import com.hyjf.cs.message.bean.hgreportdata.nifa.NifaCreditInfoEntity;
+import com.hyjf.cs.message.bean.hgreportdata.nifa.*;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 中互金借款人信息处理
@@ -151,6 +150,146 @@ public class NifaStatisticalController extends BaseController {
     @PostMapping("/insertNifaCreditInfo")
     public BooleanResponse insertNifaCreditInfo(@RequestBody @Valid NifaCreditInfoVO nifaCreditInfoVO) {
         nifaStatisticalService.insertNifaCreditInfo(nifaCreditInfoVO);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 查询未上送的借款信息
+     *
+     * @return
+     */
+    @PostMapping("/selectNifaBorrowInfoByHistoryDate")
+    public NifaBorrowInfoResponse selectNifaBorrowInfoByHistoryDate(@RequestBody @Valid NifaBorrowInfoVO nifaBorrowInfoVO) {
+        NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
+        List<NifaBorrowInfoEntity> list = nifaStatisticalService.selectNifaBorrowInfoByHistoryDate(nifaBorrowInfoVO);
+        if (null != list && list.size()>0) {
+            NifaBorrowInfoVO result = CommonUtils.convertBean(list, NifaBorrowInfoVO.class);
+            response.setResult(result);
+        }
+        return response;
+    }
+
+    /**
+     * 处理完成借款信息后更新mongo数据状态
+     *
+     * @return
+     */
+    @PostMapping("/updateNifaBorrowInfoByHistoryDate")
+    public BooleanResponse updateNifaBorrowInfoByHistoryDate(@RequestBody @Valid NifaBorrowInfoVO nifaBorrowInfoVO) {
+        nifaStatisticalService.updateNifaBorrowInfoByHistoryDate(nifaBorrowInfoVO);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 查询相应标的的投资人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @PostMapping("/selectNifaTenderInfo")
+    public NifaTenderInfoResponse selectNifaTenderInfo(@PathVariable List<String> projectNo) {
+        NifaTenderInfoResponse response = new NifaTenderInfoResponse();
+        List<NifaTenderInfoEntity> list = nifaStatisticalService.selectNifaTenderInfo(projectNo);
+        if (null != list && list.size()>0) {
+            NifaTenderInfoVO result = CommonUtils.convertBean(list, NifaTenderInfoVO.class);
+            response.setResult(result);
+        }
+        return response;
+    }
+
+    /**
+     * 更新相应标的的投资人信息
+     *
+     * @return
+     */
+    @PostMapping("/updateTenderInfo")
+    public BooleanResponse updateTenderInfo(@PathVariable List<String> projectNo) {
+        nifaStatisticalService.updateTenderInfo(projectNo);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 拉取相应借款人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @PostMapping("/selectNifaBorrowerInfo")
+    public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@PathVariable List<String> projectNo) {
+        NifaBorrowerInfoResponse response = new NifaBorrowerInfoResponse();
+        List<NifaBorrowerInfoEntity> list = nifaStatisticalService.selectNifaBorrowerInfo(projectNo);
+        if (null != list && list.size()>0) {
+            NifaBorrowerInfoVO result = CommonUtils.convertBean(list, NifaBorrowerInfoVO.class);
+            response.setResult(result);
+        }
+        return response;
+    }
+
+    /**
+     * 更新相应标的的借款人信息
+     *
+     * @return
+     */
+    @PostMapping("/updateBorrowerInfo")
+    public BooleanResponse updateBorrowerInfo(@PathVariable List<String> projectNo) {
+        nifaStatisticalService.updateBorrowerInfo(projectNo);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 查询未上送的债转信息
+     *
+     * @param nifaCreditInfoVO
+     * @return
+     */
+    @PostMapping("/selectNifaCreditInfo")
+    public NifaCreditInfoResponse selectNifaCreditInfo(@RequestBody @Valid NifaCreditInfoVO nifaCreditInfoVO) {
+        NifaCreditInfoResponse response = new NifaCreditInfoResponse();
+        List<NifaCreditInfoEntity> list = nifaStatisticalService.selectNifaCreditInfo(nifaCreditInfoVO);
+        if (null != list && list.size()>0) {
+            NifaCreditInfoVO result = CommonUtils.convertBean(list, NifaCreditInfoVO.class);
+            response.setResult(result);
+        }
+        return response;
+    }
+
+    /**
+     * 更新上送的债转信息
+     *
+     * @param nifaCreditInfoVO
+     * @return
+     */
+    @PostMapping("/updateNifaCreditInfo")
+    public BooleanResponse updateNifaCreditInfo(@RequestBody @Valid NifaCreditInfoVO nifaCreditInfoVO) {
+        nifaStatisticalService.updateNifaCreditInfo(nifaCreditInfoVO);
+        return new BooleanResponse(true);
+    }
+
+    /**
+     * 查询未上送的债转承接人信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @PostMapping("/selectNifaCreditTransfer")
+    public NifaCreditTransferResponse selectNifaCreditTransfer(@PathVariable List<String> projectNo) {
+        NifaCreditTransferResponse response = new NifaCreditTransferResponse();
+        List<NifaCreditTransferEntity> list = nifaStatisticalService.selectNifaCreditTransfer(projectNo);
+        if (null != list && list.size()>0) {
+            NifaCreditTransferVO result = CommonUtils.convertBean(list, NifaCreditTransferVO.class);
+            response.setResult(result);
+        }
+        return response;
+    }
+
+    /**
+     * 更新相应承接人上送状态
+     *
+     * @return
+     */
+    @PostMapping("/updateCreditTransfer")
+    public BooleanResponse updateCreditTransfer(@PathVariable List<String> projectNo) {
+        nifaStatisticalService.updateCreditTransfer(projectNo);
         return new BooleanResponse(true);
     }
 }

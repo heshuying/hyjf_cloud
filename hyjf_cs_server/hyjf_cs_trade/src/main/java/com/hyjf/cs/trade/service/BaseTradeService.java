@@ -194,4 +194,13 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+    
+    /**
+     * 压缩zip文件包
+     *
+     * @param sb
+     * @param zipName
+     * @return
+     */
+    boolean writeZip(StringBuffer sb, String zipName);
 }
