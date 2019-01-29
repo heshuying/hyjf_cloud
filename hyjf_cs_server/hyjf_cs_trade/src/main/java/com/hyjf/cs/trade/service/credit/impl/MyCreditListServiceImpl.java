@@ -316,7 +316,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 债转保存
         try{
             logger.info("开始插入债转表---userId:{}  ",userId);
-            insertTenderToCredit(userId, request);
+            Integer creditNid = insertTenderToCredit(userId, request);
             logger.info("插入债转表结束---userId:{} ",userId);
             Map data = new HashedMap();
             // 结束日期
@@ -347,6 +347,16 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                     e.printStackTrace();
                 }
             }
+
+            // add 合规数据上报 埋点 liubin 20181122 start
+            // 推送数据到MQ 转让 散
+            JSONObject params = new JSONObject();
+            params.put("creditNid", creditNid+"");
+            params.put("flag", "1"); //1（散）2（智投）
+            params.put("status", "0"); //0转让
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.TRANSFER_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add 合规数据上报 埋点 liubin 20181122 end
 
         }catch (Exception e){
         	e.printStackTrace();

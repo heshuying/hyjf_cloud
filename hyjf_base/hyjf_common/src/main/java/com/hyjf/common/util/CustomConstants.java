@@ -1517,5 +1517,36 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /** 首页列表缓存存活时间 秒 */
     public static final int HOME_CACHE_LIVE_TIME = 12*60*60;
+    /** 标的详情缓存刷新时间 秒 */
+    public static final int PROJECT_DETAIL_CACHE_TIME = 5;
+    /** 标的信息(borrowUser,borrowMan)缓存 秒*/
+    public static final int PROJECT_BORROW_USER_CACHE_TIME = 60 * 5;
+    /** 散标投资记录 秒 */
+    public static final int PROJECT_BORROW_INVEST_CACHE_TIME = 60;
 
+    // 迁移 合规数据上报 共通 常量定义 jijun 20190115 start
+    /** 合规数据上报 */
+    public static final String HG_DATAREPORT = "合规数据上报";
+    /** 国家互联网应急中心 缩写 */
+    public static final String HG_DATAREPORT_CERT = "CERT";
+    /** 中国互金协会 缩写 */
+    public static final String HG_DATAREPORT_NIFA = "NIFA";
+    /** 北京互金协会 缩写 */
+    public static final String HG_DATAREPORT_BIFA = "BIFA";
+    // 迁移 合规数据上报 共通 常量定义 jijun 20190115 end
+
+    /** 散标债转标识 */
+    public static Integer BORROW_CREDIT_STATUS = 1;
+    /** 智投债转标识 */
+    public static Integer HJH_CREDIT_STATUS = 2;
+    /**  互联网债权类融资项目信息  */
+    public static String NIFA_BORROW_INFO_TYPE = "24EXPORTBUSINESSZHAIQ";
+    /**  互联网债权类融资借款人信息  */
+    public static String NIFA_BORROWER_INFO_TYPE = "24EXPORTBUSINESSZHAIQ_BOR";
+    /**  互联网债权类融资出借人信息  */
+    public static String NIFA_LENDER_INFO_TYPE = "24EXPORTBUSINESSZHAIQ_INV";
+    /**  互联网金融产品及收益权转让融资项目信息  */
+    public static String NIFA_CREDIT_INFO_TYPE = "26EXPORTBUSINESSJINR";
+    /**  互联网金融产品及收益权转让融资受让人信息  */
+    public static String NIFA_CREDITER_INFO_TYPE = "26EXPORTBUSINESSJINR_INV";
 }

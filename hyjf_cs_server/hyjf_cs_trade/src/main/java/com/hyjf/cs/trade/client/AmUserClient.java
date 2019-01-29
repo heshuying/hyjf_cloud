@@ -10,6 +10,9 @@ import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -410,4 +413,73 @@ public interface AmUserClient {
 	 * @return
 	 */
 	AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId);
+
+	/**
+	 * 根据userId查询需要上报的用户信息
+	 * @param userId
+	 * @return
+	 */
+    CertSendUserVO getCertSendUserByUserId(int userId);
+
+	/**
+	 * 插入国家互联网应急中心已上送用户表
+	 * @param certUser
+	 */
+	Integer insertCertUser(CertUserVO certUser);
+
+	/**
+	 * 修改国家互联网应急中心已上送用户表
+	 * @param certUser
+	 */
+	Integer updateCertUser(CertUserVO certUser);
+
+	/**
+	 * 批量插入上报记录
+	 * @param certUsers
+	 */
+	Integer insertCertUserByList(List<CertUserVO> certUsers);
+
+	/**
+	 * 根据borrowNid userId查询
+	 * @param userId
+	 * @param borrowNid
+	 * @return
+	 */
+	CertUserVO getCertUserByUserIdBorrowNid(int userId, String borrowNid);
+
+	/**
+	 * 查询是否已经上送了
+	 * @param userId
+	 * @return
+	 */
+    CertUserVO getCertUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户哈希值查询是否已经上报过了
+	 * @param userIdcardHash
+	 * @return
+	 */
+	CertUserVO getCertUserByUserIdcardHash(String userIdcardHash);
+
+	/**
+	 * 根据用户ID查询上报的用户
+	 * @param userId
+	 * @return
+	 */
+	List<CertUserVO> getCertUsersByUserId(int userId);
+
+	/**
+	 * 获取最近七天开户的用户
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+    List<BifaIndexUserInfoBeanVO> getBankOpenedAccountUsers(Integer startDate, Integer endDate);
+
+	/**
+	 * 获取借款人信息
+	 * @param userId
+	 * @return
+	 */
+    BifaIndexUserInfoBeanVO getBifaIndexUserInfo(Integer userId);
 }

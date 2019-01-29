@@ -4,50 +4,165 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhAllocationEngine implements Serializable {
+    /**
+     * 分配引擎表id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划名称
+     *
+     * @mbggenerated
+     */
     private String planName;
 
+    /**
+     * 计划专区(是否配置)添加时间
+     *
+     * @mbggenerated
+     */
     private Integer configAddTime;
 
+    /**
+     * 计划专区(是否配置)状态 0：停用 1：启用
+     *
+     * @mbggenerated
+     */
     private Integer configStatus;
 
+    /**
+     * 标签ID
+     *
+     * @mbggenerated
+     */
     private Integer labelId;
 
+    /**
+     * 标签名称
+     *
+     * @mbggenerated
+     */
     private String labelName;
 
+    /**
+     * 标签添加时间
+     *
+     * @mbggenerated
+     */
     private Integer addTime;
 
+    /**
+     * 标签排序 默认值为0(最低)，优先级递增 1,2,3....
+     *
+     * @mbggenerated
+     */
     private Integer labelSort;
 
+    /**
+     * 债转时间排序 0：按转让时间降序 1：按转让时间升序
+     *
+     * @mbggenerated
+     */
     private Integer transferTimeSort;
 
+    /**
+     * 债转时间排序优先级
+     *
+     * @mbggenerated
+     */
     private Integer transferTimeSortPriority;
 
+    /**
+     * 年化收益率排序 0：从低到高 1：从高到低
+     *
+     * @mbggenerated
+     */
     private Integer aprSort;
 
+    /**
+     * 年化收益率优先级
+     *
+     * @mbggenerated
+     */
     private Integer aprSortPriority;
 
+    /**
+     * 标的实际支付金额排序 0：从小到大 1：从大到小
+     *
+     * @mbggenerated
+     */
     private Integer actulPaySort;
 
+    /**
+     * 年化收益率优先级
+     *
+     * @mbggenerated
+     */
     private Integer actulPaySortPriority;
 
+    /**
+     * 投资进度排序 0：从小到大 1：从大到小
+     *
+     * @mbggenerated
+     */
     private Integer investProgressSort;
 
+    /**
+     * 投资进度优先级
+     *
+     * @mbggenerated
+     */
     private Integer investProgressSortPriority;
 
+    /**
+     * 标签状态 0：停用 1：启用
+     *
+     * @mbggenerated
+     */
     private Integer labelStatus;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -86,8 +86,8 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/setting/repayauth/result/failed";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH+"&platform="+platform;
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH+"&platform="+platform;
+        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH+"&platform="+platform;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_REPAY_CLASS_NAME+APP_REPAY_BG_AUTH;
 

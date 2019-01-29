@@ -57,7 +57,7 @@ public class DebtCreditTenderLog implements Serializable {
     private Integer repayPeriod;
 
     /**
-     * 原标出借订单号
+     * 原标投资订单号
      *
      * @mbggenerated
      */
@@ -71,7 +71,7 @@ public class DebtCreditTenderLog implements Serializable {
     private String creditNid;
 
     /**
-     * 原始标的出借订单号
+     * 原始标的投资订单号
      *
      * @mbggenerated
      */

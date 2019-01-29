@@ -38,12 +38,14 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
 import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
+import com.hyjf.cs.trade.bean.repay.RepayPlanBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.AppProjectListService;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -91,6 +93,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     private AuthService authService;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CacheService cacheService;
 
 
     /**
@@ -225,7 +229,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
         map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-        ProjectCustomeDetailVO borrow = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrow = amTradeClient.searchProjectDetail(map);
         // 还款信息
         BorrowRepayVO borrowRepay = null;
         List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -253,9 +257,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         userValidation.put("roleId", roleId);
 
         jsonObject.put("userValidation", userValidation);
-        if (borrow == null) {
+        if (tempBorrow == null) {
             throw new CheckException("标的信息不存在");
         } else {
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+            // 转换一次是排除业务操作对缓存的干扰
+            ProjectCustomeDetailVO borrow = CommonUtils.convertBean(tempBorrow,ProjectCustomeDetailVO.class);
+            // 添加缓存后希望能拿到实时的标的剩余金额
+            String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+            if (org.apache.commons.lang.StringUtils.isNotBlank(investAccount)){
+                borrow.setInvestAccount(investAccount);
+            }
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
             borrowProjectInfoBean.setBorrowRemain(borrow.getInvestAccount());
             borrowProjectInfoBean.setBorrowProgress(borrow.getBorrowSchedule());
             borrowProjectInfoBean.setOnTime(borrow.getOnTime());
@@ -299,9 +312,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             jsonObject.put(ProjectConstant.RES_PROJECT_INFO, borrowProjectInfoBean);
 
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
 
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
@@ -1213,9 +1226,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 2.根据项目标号获取相应的项目信息
             BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
             //借款人企业消息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfoVO = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -1302,7 +1315,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             projectDetail.add(otherTableDataJson);
             resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
             // 查询相应的还款计划
-            List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+            List<RepayPlanBean> repayPlanList = repayPlanService.getAppRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
             // 风控信息
             BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);

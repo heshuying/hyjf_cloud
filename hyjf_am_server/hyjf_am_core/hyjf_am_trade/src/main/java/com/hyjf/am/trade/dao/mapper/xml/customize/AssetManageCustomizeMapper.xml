@@ -139,7 +139,7 @@
 		hhp.plan_name,
 		<!-- hhp.plan_nid AS projectNid, -->
 		hhp.plan_name AS projectNid,
-		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		CONCAT(hha.expect_apr, '%') borrow_apr,
 		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
 		hha.last_payment_time,
 		5 AS type,
@@ -156,7 +156,7 @@
 		UNION ALL SELECT
 		hhp.plan_name,
 		hhp.plan_name AS projectNid,
-		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		CONCAT(hha.expect_apr, '%') borrow_apr,
 		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
 		hha.last_payment_time,
 		5 AS type,
@@ -2834,7 +2834,7 @@
 		hhp.plan_name,
 		<!-- hhp.plan_nid AS borrow_nid, -->
 		hhp.plan_name AS borrow_nid,
-		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		CONCAT(hha.expect_apr, '%') borrow_apr,
 		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
 		hha.last_payment_time,
 		5 AS type,

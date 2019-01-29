@@ -1,15 +1,18 @@
 package com.hyjf.cs.trade.service;
 
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.BaseBean;
 
 import java.math.BigDecimal;
-
+import java.util.List;
 
 public interface BaseTradeService extends BaseService{
     /**
@@ -100,4 +103,104 @@ public interface BaseTradeService extends BaseService{
     boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
     boolean checkIsNewUserCanInvest2(Integer userId);
+
+    /**
+     * 获取标的还款信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowRepayVO selectBorrowRepay(String borrowNid);
+
+    /**
+     * 获取标的放款信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverVO> selectBorrowRecoverListByBorrowNid(String borrowNid);
+
+    /**
+     * 获取标的投资人信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderByBorrowNid(String borrowNid);
+
+    /**
+     * 获取借款人信息（企业）
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowUserVO selectBorrowUsersByBorrowNid(String borrowNid);
+
+    /**
+     * 获取借款人信息（个人）
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowManinfoVO selectBorrowMainfo(String borrowNid);
+
+    /**
+     * 获取用户CA认证信息
+     *
+     * @param username
+     * @param cardNo
+     * @param idType
+     * @return
+     */
+    CertificateAuthorityVO selectCAInfoByUsername(String username, String cardNo, Integer idType);
+
+    /**
+     * 根据平台借款等级变换中互金借款等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    Integer getBorrowLevel(String borrowLevel);
+
+    /**
+     * 获取散标债转信息表
+     *
+     * @param creditNid
+     * @return
+     */
+    BorrowCreditVO selectBorrowCreditByCreditNid(String creditNid);
+
+    /**
+     * 获取散标债转承接人的承接信息
+     *
+     * @param creditNid
+     * @return
+     */
+    List<CreditTenderVO> selectCreditTenderByCreditNid(String creditNid);
+
+    /**
+     * 承接人承接记录
+     *
+     * @param creditNid
+     * @return
+     */
+    List<HjhDebtCreditTenderVO> selectHjhDebtCreditTenderByCreditNid(String creditNid);
+
+    /**
+     * 汇计划债转表
+     *
+     * @param creditNid
+     * @return
+     */
+    HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
+     * 压缩zip文件包
+     *
+     * @param sb
+     * @param zipName
+     * @return
+     */
+    boolean writeZip(StringBuffer sb, String zipName);
+
 }

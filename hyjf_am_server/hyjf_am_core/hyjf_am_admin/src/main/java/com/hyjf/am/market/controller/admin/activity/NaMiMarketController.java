@@ -33,7 +33,7 @@ public class NaMiMarketController {
     @PostMapping("/getNaMiMarketingList")
     public NaMiMarketingResponse selectActivityList(@RequestBody NaMiMarketingRequest request){
         NaMiMarketingResponse response = new NaMiMarketingResponse();
-        Map<String,Object> req=new HashMap<String, Object>();
+        Map<String, Object> req  = beanToMap(request);
         List<Integer> ids = naMiMarketingService.selectNaMiMarketingCount(req);
         if (!CollectionUtils.isEmpty(ids)) {
             Paginator paginator = new Paginator(request.getCurrPage(), ids.size(),request.getPageSize());
@@ -155,6 +155,7 @@ public class NaMiMarketController {
         response.setMonthList(resultList);
         return response;
     }
+
 
     public Map<String, Object> beanToMapReffer(NaMiMarketingRequest request){
         Map<String, Object> paraMap = new HashMap<String, Object>();

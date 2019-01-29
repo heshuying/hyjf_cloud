@@ -36,7 +36,7 @@ public class Borrow implements Serializable {
     private String borrowUserName;
 
     /**
-     * 状态 0备案中,1初审中,2出借中,3复审中(满标),4还款中,5已还款,6流标,7受托
+     * 状态 0备案中,1初审中,2投资中,3复审中(满标),4还款中,5已还款,6流标,7受托
      *
      * @mbggenerated
      */

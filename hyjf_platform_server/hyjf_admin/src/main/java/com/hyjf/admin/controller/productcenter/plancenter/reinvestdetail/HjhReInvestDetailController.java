@@ -165,7 +165,7 @@ public class HjhReInvestDetailController extends BaseController {
      */
     @ApiOperation(value = "复投原始标的列表导出", notes = "复投详情列表导出")
     @PostMapping(value = "/exportAction")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhReInvestDetailRequestBean requestBean) throws Exception {
 
         if (StringUtils.isEmpty(requestBean.getDate())){
             logger.error("复投原始标的列表导出日期为空无法导出!");
@@ -205,8 +205,9 @@ public class HjhReInvestDetailController extends BaseController {
         List<HjhReInvestDetailVO> resultList = null;
 
         HjhReInvestDetailResponse resultResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(hjhReInvestDetailCustomize);
-
+        logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount());
         if (resultResponse.getCount() > 0) {
+            logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount() + ";列表:" + resultResponse.getResultList().get(0).toString());
             resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhReInvestDetailVO.class);
         }
 

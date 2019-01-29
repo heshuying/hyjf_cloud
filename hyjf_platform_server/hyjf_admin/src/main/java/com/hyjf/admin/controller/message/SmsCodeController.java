@@ -70,7 +70,7 @@ public class SmsCodeController extends BaseController {
             }else{
                 Client c = SmsUtil.getClient();
                 remain_number = (int) c.getBalance() * 10;
-                remain_money = BigDecimal.valueOf(remain_number).multiply(BigDecimal.valueOf(0.06));
+                remain_money = BigDecimal.valueOf(remain_number).multiply(BigDecimal.valueOf(0.04));
                 RedisUtils.set(RedisConstants.REMAIN_NUMBER, remain_number + "", 5 * 60);
                 RedisUtils.set(RedisConstants.REMAIN_MONEY, remain_money.toString(), 5 * 60);
             }
@@ -147,6 +147,7 @@ public class SmsCodeController extends BaseController {
         String send_message = form.getMessage();
         String channelType = form.getChannelType();
         String sendType = form.getSendType();
+        Integer isDisplay = (form.getIsDisplay() == null ? 0 : form.getIsDisplay());
         form.setIp(GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest()));
         if (sendType == null) {
             jsonObject.put("msg", "请选择发送类型");
@@ -218,7 +219,7 @@ public class SmsCodeController extends BaseController {
                         }
                         try {
                             SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
-                                    MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+                                    MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType, isDisplay);
                             commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                     smsMessage));
                         } catch (Exception e) {
@@ -240,7 +241,7 @@ public class SmsCodeController extends BaseController {
                             mbl = mbl.substring(0, mbl.length() - 1);
                         }
                         SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
-                                MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+                                MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType, isDisplay);
                         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                 smsMessage));
                     }

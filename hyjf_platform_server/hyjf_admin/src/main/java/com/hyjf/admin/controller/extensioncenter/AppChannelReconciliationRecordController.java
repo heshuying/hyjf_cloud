@@ -82,7 +82,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
         public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
             List<UtmVO> list = channelService.searchUtmList(1);
             // 表格sheet名称
-            String sheetName = "PC渠道对账-散标";
+            String sheetName = "app渠道对账-散标";
             if (channelReconciliationRequest.getUtmPlat() == null) {
                 List<String> utmList = new ArrayList<>();
                 for (UtmVO vo : list) {
@@ -171,7 +171,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportHjhAction(HttpServletRequest request, HttpServletResponse response,@RequestBody  ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
         // 表格sheet名称
-        String sheetName = "PC渠道对账-智投服务";
+        String sheetName = "app渠道对账-智投服务";
         List<UtmVO> list = channelService.searchUtmList(1);
 
         if (channelReconciliationRequest.getUtmPlat() == null) {

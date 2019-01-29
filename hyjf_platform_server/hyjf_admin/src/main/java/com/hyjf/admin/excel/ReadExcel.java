@@ -37,9 +37,14 @@ public class ReadExcel extends XxlsAbstract {
      * @return List<JSONObject>
      * @throws IOException
      */
-    public List<JSONObject> readExcel(String filePath, Map<String, String> nameMaps) throws IOException {
+    public List<JSONObject> readExcel(String filePath, Map<String, String> nameMaps,Map<String, String> titleMaps) throws IOException {
         resumeList.clear();
-        titleMap = nameMaps;
+        if (titleMap != null){
+            titleMap = titleMaps;
+        }else{
+            titleMap = nameMaps;
+        }
+
         nameMap = nameMaps;
         try {
             if (filePath == null || EMPTY.equals(filePath)) {
@@ -154,11 +159,17 @@ public class ReadExcel extends XxlsAbstract {
             jsonObject = new JSONObject();
             for (Map.Entry<String, Integer> entry : rowIndexMap.entrySet()) {
                 Integer index = entry.getValue();
-                String cellValue = rowlist.get(index);
-                String key = entry.getKey();
-                //保存数据
-                jsonObject = setFieldValue(key, cellValue, jsonObject);
-
+                String cellValue;
+                if (rowlist.size() != 0) {
+                    if (rowlist.size() < (index + 1)) {
+                        cellValue = "";
+                    } else {
+                        cellValue = rowlist.get(index);
+                    }
+                    String key = entry.getKey();
+                    //保存数据
+                    jsonObject = setFieldValue(key, cellValue, jsonObject);
+                }
             }
         } else {
             for (int i = 0; i < rowlist.size(); i++) {

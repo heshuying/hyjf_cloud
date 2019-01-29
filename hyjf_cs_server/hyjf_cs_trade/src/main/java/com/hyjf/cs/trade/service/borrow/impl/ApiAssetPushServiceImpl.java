@@ -430,7 +430,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			return pushBean;
 		}
 
-		return saveAssetAndSendNext(pushBean, instCode, assetType, pushBean.getIdcard(), userInfo.getUserId(),
+		return saveAssetAndSendNext(pushBean, instCode, assetType, userInfo.getIdcard(), userInfo.getUserId(),
 				users.getMobile(), users.getUsername(), bankOpenAccount.getAccount(), userInfo.getTruename(),
 				stzAccount, 1);
 	}
@@ -706,7 +706,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
             record.setEntrustedFlg(1);
             record.setEntrustedUserId(stzAccount.getStUserId());
             record.setEntrustedUserName(stzAccount.getStUserName());
-            record.setEntrustedAccountId(stzAccount.getStAccountid());
+            record.setEntrustedAccountId(stzAccount.getStAccountId());
         }
 
         // 0：个人，1：企业

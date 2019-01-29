@@ -4,6 +4,8 @@
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.CommonProducer;
+import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
 import com.hyjf.am.resquest.user.UpdCompanyRequest;
@@ -16,6 +18,7 @@ import com.hyjf.am.user.dao.model.customize.*;
 import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
@@ -27,15 +30,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author nxl
@@ -45,6 +46,9 @@ import java.util.Map;
 @Service
 public class UserManagerServiceImpl extends BaseServiceImpl implements UserManagerService {
     private static Logger logger = LoggerFactory.getLogger(UserManagerServiceImpl.class);
+
+    @Autowired
+    private CommonProducer commonProducer;
 
     /**
      * 更新用户信息表-开户掉单更新
@@ -1475,6 +1479,16 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 changeLog.setUpdateTime(new Date());
                 changeLog.setBorrowerType(userInfoType.getBorrowerType());
                 userChangeLogMapper.insertSelective(changeLog);
+
+                //手机号
+                if (StringUtils.isNotBlank(request.getMobile())) {
+                    // 推送数据到MQ 用户信息修改（修改手机号）
+                    JSONObject params = new JSONObject();
+                    params.put("userId", request.getUserId());
+                    commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                            MQConstant.HG_REPORT_DELAY_LEVEL);
+                }
+
                 return usersUpdateFlag;
             }
         }
@@ -1507,6 +1521,15 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             //修改银行卡信息
             bankCardMapper.updateByPrimaryKeySelective(bankCard);
             bankCardLogMapper.insertSelective(bankAccountLog);
+
+            // add 合规数据上报 埋点 liubin 20181122 start
+            // 推送数据到MQ 用户信息修改（修改银行卡号）
+            JSONObject params = new JSONObject();
+            params.put("userId", bankCard.getUserId());
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add 合规数据上报 埋点 liubin 20181122 end
+
             return 1;
         }
         return 0;

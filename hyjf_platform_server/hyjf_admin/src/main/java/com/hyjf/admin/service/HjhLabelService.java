@@ -81,4 +81,12 @@ public interface HjhLabelService {
 	 * @return 
 	 */
 	int updateAllocationRecord(HjhLabelInfoRequest hjhLabelInfoRequest);
+	
+	/**
+	 * 更新标签配置列表ByLabelid和LabelState
+	 *
+	 * @param  request
+	 * @return 
+	 */
+	int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest hjhLabelInfoRequest);
 }

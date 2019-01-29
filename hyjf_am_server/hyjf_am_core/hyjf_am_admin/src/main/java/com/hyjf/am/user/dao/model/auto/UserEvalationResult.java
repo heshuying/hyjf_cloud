@@ -4,26 +4,71 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserEvalationResult implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
     private Integer userId;
 
+    /**
+     * 测评类型
+     *
+     * @mbggenerated
+     */
     private String evalType;
 
+    /**
+     * 总结
+     *
+     * @mbggenerated
+     */
     private String summary;
 
+    /**
+     * 问卷总分
+     *
+     * @mbggenerated
+     */
     private Integer scoreCount;
 
+    /**
+     * 测评机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 测评机构名称
+     *
+     * @mbggenerated
+     */
     private String instName;
 
     private Date lasttime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remarks;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

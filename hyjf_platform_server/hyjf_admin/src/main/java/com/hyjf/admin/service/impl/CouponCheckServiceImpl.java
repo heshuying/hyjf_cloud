@@ -100,7 +100,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
      * @return
      */
     @Override
-    public CouponCheckResponse uploadFile(HttpServletRequest request, HttpServletResponse response) {
+    public synchronized CouponCheckResponse uploadFile(HttpServletRequest request, HttpServletResponse response) {
         CouponCheckResponse checkResponse = new CouponCheckResponse();
         String errorMessage = "";
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;

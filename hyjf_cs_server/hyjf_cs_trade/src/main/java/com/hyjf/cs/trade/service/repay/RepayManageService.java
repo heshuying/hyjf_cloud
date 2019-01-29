@@ -69,6 +69,9 @@ public interface RepayManageService extends BaseTradeService {
      * @return
      */
     List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean);
+
+    BigDecimal selectOrgRepayWaitTotalCurrent(RepayListRequest requestBean);
+
     /**
      * 垫付机构已还款列表
      *

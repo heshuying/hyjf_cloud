@@ -281,7 +281,7 @@ public class ChannelController extends BaseController {
             ReadExcel readExcel = new ReadExcel();
             List<JSONObject> lists = new ArrayList<>();
             try {
-                lists = readExcel.readExcel(fileRealName, nameMaps);
+                lists = readExcel.readExcel(fileRealName, nameMaps,null);
 
                 List<ChannelCustomizeVO> voList = new ArrayList<>();
 

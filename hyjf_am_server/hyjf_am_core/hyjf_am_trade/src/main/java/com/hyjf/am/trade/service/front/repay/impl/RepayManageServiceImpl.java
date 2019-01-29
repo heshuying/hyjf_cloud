@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
@@ -46,6 +47,12 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
     @Autowired
     private CommonProducer commonProducer;
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
 
     /**
      * 普通借款人管理费总待还
@@ -154,6 +161,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
+                int addTime = ADD_TIME;
                 List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
                 if(agreementList !=null && !agreementList.isEmpty()){
                     TenderAgreement tenderAgreement = agreementList.get(0);
@@ -163,11 +171,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         record.setFddStatus(1);
                     }else {
                         //隐藏下载按钮
-                        record.setFddStatus(0);
+                        record.setFddStatus(2);
                     }
                 }else {
-                    //下载老版本协议
-                    record.setFddStatus(1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
+                    if(borrowRecover != null){
+                        //放款记录创建时间（放款时间）
+                        addTime = borrowRecover.getCreditTime();
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        record.setFddStatus(1);
+                    } else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
                 }
             }
         }
@@ -314,6 +338,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
+                //放款时间
+                int addTime = ADD_TIME;
                 List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
                 if(agreementList !=null && !agreementList.isEmpty()){
                     TenderAgreement tenderAgreement = agreementList.get(0);
@@ -323,16 +349,54 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         record.setFddStatus(1);
                     }else {
                         //隐藏下载按钮
-                        record.setFddStatus(0);
+                        record.setFddStatus(2);
                     }
                 }else {
-                    //下载老版本协议
-                    record.setFddStatus(1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
+                    if(borrowRecover != null){
+                        //放款记录创建时间（放款时间）
+                        addTime = borrowRecover.getCreditTime();
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        record.setFddStatus(1);
+                    } else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
                 }
             }
         }
 
         return list;
+    }
+
+    /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgRepayWaitCurrent(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        BigDecimal waitTotal =  repayManageCustomizeMapper.selectOrgRepayWaitTotal(param);
+
+        return waitTotal;
     }
 
     /**
@@ -399,6 +463,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
+                //放款时间
+                int addTime = ADD_TIME;
                 List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
                 if(agreementList !=null && !agreementList.isEmpty()){
                     TenderAgreement tenderAgreement = agreementList.get(0);
@@ -408,11 +474,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         record.setFddStatus(1);
                     }else {
                         //隐藏下载按钮
-                        record.setFddStatus(0);
+                        record.setFddStatus(2);
                     }
                 }else {
-                    //下载老版本协议
-                    record.setFddStatus(1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
+                    if(borrowRecover != null){
+                        //放款记录创建时间（放款时间）
+                        addTime = borrowRecover.getCreditTime();
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        record.setFddStatus(1);
+                    } else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
                 }
             }
         }
@@ -460,7 +542,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
         String borrowNid = StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
 
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
 
         if (borrow != null && borrowInfo != null) {
@@ -4221,7 +4303,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String nid = "";
         Boolean repayFlag = false;
         int errorCount = 0;
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         /** 标的基本数据 */
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
@@ -4896,7 +4978,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public boolean updateBorrowCreditStautus(String borrowNid) {
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         String planNid = borrow.getPlanNid();
         BigDecimal rollBackAccount = BigDecimal.ZERO;
         if (StringUtils.isNotBlank(planNid)) {//计划标的
@@ -4927,6 +5009,31 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     hjhAccede.setCreditCompleteFlag(2);//将清算状态置为2,以便2次清算
                     this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
                     logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "，订单号：" + planOrderId + "===================");
+
+                    // add 合规数据上报 埋点 liubin 20181122 start
+                    //停止债转并且没有被承接过
+                    if (hjhDebtCredit.getCreditStatus().compareTo(3) == 0) {
+                        if (hjhDebtCredit.getCreditCapitalAssigned().compareTo(BigDecimal.ZERO) == 0) {
+                            JSONObject params = new JSONObject();
+                            params.put("creditNid", hjhDebtCredit.getCreditNid());
+                            params.put("flag", "2");//1（散）2（智投）
+                            params.put("status", "3"); //3承接（失败）
+                            // 推送数据到MQ 承接（失败）智
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_FAIL_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                        } else {
+                            // add 合规数据上报 埋点 liubin 20181122 start
+                            // 推送数据到MQ 承接（完全）散
+                            JSONObject params = new JSONObject();
+                            params.put("creditNid", hjhDebtCredit.getCreditNid());
+                            params.put("flag", "2");//1（散）2（智投）
+                            params.put("status", "2"); //2承接（成功）
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                            // add 合规数据上报 埋点 liubin 20181122 end
+                        }
+                    }
+                    // add 合规数据上报 埋点 liubin 20181122 end
                 }
             }
             //回滚开放额度 add by cwyang 2017-12-25
@@ -4944,6 +5051,26 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 老系统也是3，可能不对， 经过刘阳和杨昌卫确认，此处改成1(承接停止)，  2018年10月24日10:21:39
                     borrowCredit.setCreditStatus(1);
                     this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
+
+                    //停止债转并且没有被承接过
+                    if (borrowCredit.getCreditCapitalAssigned().compareTo(BigDecimal.ZERO) == 0) {
+                        JSONObject params = new JSONObject();
+                        params.put("creditNid", borrowCredit.getCreditNid()+"");
+                        params.put("flag", "1");//1（散）2（智投）
+                        params.put("status", "3"); //3承接（失败）
+                        // 推送数据到MQ 承接（失败）散
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_FAIL_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                    }else{
+                        // 推送数据到MQ 承接（完全）散
+                        JSONObject params = new JSONObject();
+                        params.put("creditNid", borrowCredit.getCreditNid()+"");
+                        params.put("flag", "1"); //1（散）2（智投）
+                        params.put("status", "2"); //2承接（成功）
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                    }
+                    // add 合规数据上报 埋点 liubin 20181122 end
                 }
             }
         }
@@ -5100,7 +5227,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         borrowApicronMapper.updateByExampleSelective(apicron, example);
 
         //更新borrow表状态
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         borrow.setRepayStatus(status);
         this.borrowMapper.updateByPrimaryKey(borrow);
 
@@ -5236,7 +5363,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
         List<BorrowInfo> borrowInfoList = this.borrowInfoMapper.selectByExample(example);
         if (borrowInfoList != null && borrowInfoList.size() == 1) {
-            return this.getBorrow(borrowInfoList.get(0).getBorrowNid());
+            return this.getBorrowByNid(borrowInfoList.get(0).getBorrowNid());
         } else {
             return null;
         }

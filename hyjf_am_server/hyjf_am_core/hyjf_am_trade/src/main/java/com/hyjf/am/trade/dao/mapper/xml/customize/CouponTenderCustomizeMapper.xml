@@ -1541,4 +1541,23 @@
 			</if>
 		</where>
 	</sql>
+	<!-- 根据订单号查询优惠券利息-->
+	<!-- add by nxl 合规数据上报 CERT start -->
+	<select id="sunRecoverInterest" resultType="String"  parameterType="String">
+		SELECT
+		-- 	hct.order_id,
+		-- 	hcr.recover_period,
+		-- 	hbt.borrow_nid borrow_nid,
+		SUM(hcr.recover_account) recover_interest
+		FROM
+		ht_coupon_user hcu
+		INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		INNER JOIN ht_coupon_tender hct ON hcu.id = hct.coupon_grant_id
+		INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid
+		INNER JOIN ht_coupon_recover hcr ON hbt.nid = hcr.tender_id
+		where hct.order_id = #{couponTenderId}
+		GROUP BY hct.order_id
+	</select>
+	<!-- add by nxl 合规数据上报 CERT end -->
+
 </mapper>

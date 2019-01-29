@@ -183,7 +183,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     public int insertBeforeTender(TenderRequest tenderRequest) {
         Integer userId = tenderRequest.getUserId();
 
-        Borrow borrow = getBorrow(tenderRequest.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderRequest.getBorrowNid());
         BorrowTenderTmp temp = new BorrowTenderTmp();
         temp.setUserId(userId);
         temp.setUserName(tenderRequest.getUserName());
@@ -272,7 +272,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      */
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
-        Borrow borrow = getBorrow(tenderBg.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderBg.getBorrowNid());
         BorrowInfo borrowInfo = getBorrowInfoByNid(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表
@@ -467,7 +467,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
 
         // 计算此时的剩余可出借金额
-        BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
+        BigDecimal accountWait = this.getBorrowByNid(tenderBg.getBorrowNid()).getBorrowAccountWait();
         String borrowNid = tenderBg.getBorrowNid();
         logger.info("标的{}  剩余可投为：{} ",borrowNid,accountWait);
         // 满标处理
@@ -510,6 +510,14 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 logger.error("发送短信失败");
             }
 
+            // add by liushouyi nifa2 20181204 start
+            // 发送满标状态埋点
+            // 发送发标成功的消息队列到互金上报数据
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("borrowNid", borrowNid);
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add by liushouyi nifa2 20181204 end
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");

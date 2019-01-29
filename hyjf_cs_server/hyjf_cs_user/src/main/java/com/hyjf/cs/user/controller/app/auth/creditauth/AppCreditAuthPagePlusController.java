@@ -91,8 +91,8 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/setting/authorization/result/failed";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;;
+        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT+"&platform="+platform;;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_CREDIT_CLASS_NAME+APP_CREDIT_BG_AUTH;
 

@@ -2,11 +2,15 @@ package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
+import com.hyjf.am.trade.dao.mapper.auto.EvaluationConfigMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetRiskInfoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.mapper.customize.nifa.*;
+import com.hyjf.am.trade.dao.mapper.customize.batch.BorrowUserStatisticsMapper;
+import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.*;
+import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.cert.CertMapper;
+import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.nifa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -17,6 +21,9 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowCustomizeMapper borrowCustomizeMapper;
+
+	@Autowired
+	protected BifaBorrowCustomizeMapper bifaBorrowCustomizeMapper;
 
 	@Autowired
 	protected HjhDebtDetailCustomizeMapper hjhDebtDetailCustomizeMapper;
@@ -136,6 +143,9 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowTenderInfoCustomizeMapper borrowTenderInfoCustomizeMapper;
 
 	@Autowired
+	protected BifaBorrowTenderInfoCustomizeMapper bifaBorrowTenderInfoCustomizeMapper;
+
+	@Autowired
 	protected HjhPlanCapitalCustomizeMapper hjhPlanCapitalCustomizeMapper;
 
 	@Autowired
@@ -230,5 +240,32 @@ public class CustomizeMapper extends AutoMapper {
 	protected HjhAssetRiskInfoMapper hjhAssetRiskInfoMapper;
 
 	@Autowired
+	protected EvaluationConfigMapper evaluationConfigMapper;
+
+	@Autowired
 	protected SmsCodeCustomizeMapper smsCodeCustomizeMapper;
+
+	@Autowired
+	protected NifaStatisticalCustomizeMapper nifaStatisticalCustomizeMapper;
+
+	@Autowired
+	protected CertMapper certMapper;
+
+	@Autowired
+	protected BifaBorrowRecoverCustomizeMapper bifaBorrowRecoverCustomizeMapper;
+
+	@Autowired
+	protected BifaCreditTenderCustomizeMapper bifaCreditTenderCustomizeMapper;
+
+	@Autowired
+	protected BifaHjhDebtCreditTenderCustomizeMapper bifaHjhDebtCreditTenderCustomizeMapper;
+
+	@Autowired
+	protected OperationReportJobCustomizeMapper operationReportJobCustomizeMapper;
+
+	@Autowired
+	protected BifaOperationReportJobCustomizeMapper bifaOperationReportJobCustomizeMapper;
+
+	@Autowired
+	protected BorrowUserStatisticsMapper borrowUserStatisticsMapper;
 }

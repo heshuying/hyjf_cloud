@@ -5,14 +5,39 @@ import java.io.Serializable;
 public class DebtCompanyAuthen implements Serializable {
     private Integer id;
 
+    /**
+     * 认证项目名称
+     *
+     * @mbggenerated
+     */
     private String authenName;
 
+    /**
+     * 认证时间
+     *
+     * @mbggenerated
+     */
     private String authenTime;
 
+    /**
+     * 展示顺序
+     *
+     * @mbggenerated
+     */
     private Integer authenSortKey;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款预编号
+     *
+     * @mbggenerated
+     */
     private Integer borrowPreNid;
 
     private static final long serialVersionUID = 1L;

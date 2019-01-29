@@ -6,34 +6,109 @@ import java.util.Date;
 public class SmsConfig implements Serializable {
     private Integer id;
 
+    /**
+     * 每天最大发送量（同一IP）
+     *
+     * @mbggenerated
+     */
     private Integer maxIpCount;
 
+    /**
+     * 每天最大发送量（同一设备）
+     *
+     * @mbggenerated
+     */
     private Integer maxMachineCount;
 
+    /**
+     * 每天最大发送量（同一浏览器）
+     *
+     * @mbggenerated
+     */
     private Integer maxBrowserCount;
 
+    /**
+     * 每天最大发送量（同一手机号）
+     *
+     * @mbggenerated
+     */
     private Integer maxPhoneCount;
 
+    /**
+     * 发送短信的间隔时间(单位：秒)
+     *
+     * @mbggenerated
+     */
     private Integer maxIntervalTime;
 
+    /**
+     * 验证码有效时间(单位：分钟）
+     *
+     * @mbggenerated
+     */
     private Integer maxValidTime;
 
+    /**
+     * 接受超限通知的手机号
+     *
+     * @mbggenerated
+     */
     private String noticeToPhone;
 
+    /**
+     * 接受超限通知的邮箱
+     *
+     * @mbggenerated
+     */
     private String noticeToEmail;
 
+    /**
+     * 发送超限通知的间隔时间
+     *
+     * @mbggenerated
+     */
     private Integer noticeToTime;
 
+    /**
+     * 还款提醒手机号
+     *
+     * @mbggenerated
+     */
     private String repayMobiles;
 
+    /**
+     * 满标提醒手机号
+     *
+     * @mbggenerated
+     */
     private String fullMobiles;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

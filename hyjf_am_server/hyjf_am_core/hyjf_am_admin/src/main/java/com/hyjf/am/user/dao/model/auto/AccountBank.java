@@ -4,24 +4,74 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AccountBank implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 禁用状态
+     *
+     * @mbggenerated
+     */
     private Integer bankStatus;
 
+    /**
+     * 银行账号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 所属银行
+     *
+     * @mbggenerated
+     */
     private String bank;
 
+    /**
+     * 支行
+     *
+     * @mbggenerated
+     */
     private String branch;
 
+    /**
+     * 省份
+     *
+     * @mbggenerated
+     */
     private String province;
 
+    /**
+     * 城市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 区
+     *
+     * @mbggenerated
+     */
     private Integer area;
 
+    /**
+     * 卡类型 0普通提现卡1默认卡2快捷支付卡
+     *
+     * @mbggenerated
+     */
     private String cardType;
 
     private String respcode;

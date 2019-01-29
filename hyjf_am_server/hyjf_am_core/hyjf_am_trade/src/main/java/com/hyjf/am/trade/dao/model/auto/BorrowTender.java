@@ -15,7 +15,7 @@ public class BorrowTender implements Serializable {
     private Integer userId;
 
     /**
-     * 出借人用户名
+     * 投资人用户名
      *
      * @mbggenerated
      */
@@ -50,7 +50,7 @@ public class BorrowTender implements Serializable {
     private String borrowNid;
 
     /**
-     * 出借订单号
+     * 投资订单号
      *
      * @mbggenerated
      */
@@ -64,14 +64,14 @@ public class BorrowTender implements Serializable {
     private String accedeOrderId;
 
     /**
-     * 出借人投标成功的授权号
+     * 投资人投标成功的授权号
      *
      * @mbggenerated
      */
     private String authCode;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */
@@ -197,63 +197,63 @@ public class BorrowTender implements Serializable {
     private Integer client;
 
     /**
-     * 推荐人用户名(出借时)
+     * 推荐人用户名(投资时)
      *
      * @mbggenerated
      */
     private String inviteUserName;
 
     /**
-     * 推荐人用户id(出借时)
+     * 推荐人用户id(投资时)
      *
      * @mbggenerated
      */
     private Integer inviteUserId;
 
     /**
-     * 一级部门id(出借时)
+     * 一级部门id(投资时)
      *
      * @mbggenerated
      */
     private Integer inviteRegionId;
 
     /**
-     * 一级部门名称(出借时)
+     * 一级部门名称(投资时)
      *
      * @mbggenerated
      */
     private String inviteRegionName;
 
     /**
-     * 二级部门id(出借时)
+     * 二级部门id(投资时)
      *
      * @mbggenerated
      */
     private Integer inviteBranchId;
 
     /**
-     * 二级部门名称(出借时)
+     * 二级部门名称(投资时)
      *
      * @mbggenerated
      */
     private String inviteBranchName;
 
     /**
-     * 三级部门id(出借时)
+     * 三级部门id(投资时)
      *
      * @mbggenerated
      */
     private Integer inviteDepartmentId;
 
     /**
-     * 三级部门名称(出借时)
+     * 三级部门名称(投资时)
      *
      * @mbggenerated
      */
     private String inviteDepartmentName;
 
     /**
-     * 出借人用户属性
+     * 投资人用户属性
      *
      * @mbggenerated
      */
@@ -267,7 +267,7 @@ public class BorrowTender implements Serializable {
     private Integer inviteUserAttribute;
 
     /**
-     * 出借订单日期
+     * 投资订单日期
      *
      * @mbggenerated
      */
@@ -295,21 +295,21 @@ public class BorrowTender implements Serializable {
     private String remark;
 
     /**
-     * 出借类型 0手动投标 1预约投标 2自动投标
+     * 投资类型 0手动投标 1预约投标 2自动投标
      *
      * @mbggenerated
      */
     private Integer investType;
 
     /**
-     * 0出借1复投
+     * 0投资1复投
      *
      * @mbggenerated
      */
     private Integer tenderType;
 
     /**
-     * 出借来源:默认-hyjf,wrb-风车理财
+     * 投资来源:默认-hyjf,wrb-风车理财
      *
      * @mbggenerated
      */

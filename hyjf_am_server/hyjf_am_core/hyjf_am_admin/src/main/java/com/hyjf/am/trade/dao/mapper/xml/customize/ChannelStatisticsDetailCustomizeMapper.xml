@@ -51,9 +51,9 @@
 		t.utm_id,
 		t.user_id,
 		u.username AS user_name,
-		FROM_UNIXTIME( t.create_time, '%Y-%m-%d %H:%i:%S' ) AS register_time,
+		DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) AS register_time,
 		FROM_UNIXTIME( t.invest_time, '%Y-%m-%d %H:%i:%S' ) AS first_invest_time,
-		FROM_UNIXTIME( c.create_time, '%Y-%m-%d %H:%i:%S' ) AS open_account_time,
+		DATE_FORMAT(c.create_time, '%Y-%m-%d %H:%i:%s' ) AS open_account_time,
 		CASE ui.sex
 		WHEN 1 THEN '男'
 		WHEN 2 THEN '女'

@@ -82,6 +82,11 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
     private String on_time;
 
     /**
+     * 短信内容是否显示
+     */
+    private Integer isDisplay;
+
+    /**
      * @return the sender
      */
     public String getSender() {
@@ -225,5 +230,13 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
 
     public void setOn_time(String on_time) {
         this.on_time = on_time;
+    }
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
     }
 }

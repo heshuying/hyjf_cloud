@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanDetail;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanDetailExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface IncreaseInterestLoanDetailMapper {
     int countByExample(IncreaseInterestLoanDetailExample example);

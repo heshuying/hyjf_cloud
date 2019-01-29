@@ -7,56 +7,186 @@ import java.util.Date;
 public class DebtInvest implements Serializable {
     private Integer id;
 
+    /**
+     * 用户userId
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 投资用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 投资用户属性
+     *
+     * @mbggenerated
+     */
     private Integer userAttribute;
 
+    /**
+     * 计划nid
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划订单号
+     *
+     * @mbggenerated
+     */
     private String planOrderId;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 投资订单日期
+     *
+     * @mbggenerated
+     */
     private String orderDate;
 
+    /**
+     * 冻结标识
+     *
+     * @mbggenerated
+     */
     private String trxId;
 
+    /**
+     * 投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 放款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanAmount;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanFee;
 
+    /**
+     * 应还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccount;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapital;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterest;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountYes;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalYes;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestYes;
 
+    /**
+     * 待还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountWait;
 
+    /**
+     * 待还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalWait;
 
+    /**
+     * 待还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestWait;
 
+    /**
+     * 投资类型 0手动投标 1预约投标 2自动投标
+     *
+     * @mbggenerated
+     */
     private Integer investType;
 
+    /**
+     * 已还款次数
+     *
+     * @mbggenerated
+     */
     private Integer repayTimes;
 
+    /**
+     * 推荐人用户userId
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 推荐人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
     private Integer inviteRegionId;
@@ -71,52 +201,167 @@ public class DebtInvest implements Serializable {
 
     private String inviteDepartmentName;
 
+    /**
+     * 放款订单号
+     *
+     * @mbggenerated
+     */
     private String loanOrderId;
 
+    /**
+     * 放款日期
+     *
+     * @mbggenerated
+     */
     private String loanOrderDate;
 
+    /**
+     * 投资状态 0冻结成功 1放款成功 2还款中 3还款成功
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
+    /**
+     * 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 提前还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAdvanceFee;
 
+    /**
+     * 逾期还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverLateFee;
 
+    /**
+     * 投资奖励增加
+     *
+     * @mbggenerated
+     */
     private BigDecimal tenderAwardFee;
 
     private String contents;
 
+    /**
+     * 是否已回收完成
+     *
+     * @mbggenerated
+     */
     private Integer recoverFullStatus;
 
+    /**
+     * 放款服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverFee;
 
+    /**
+     * 回收类型
+     *
+     * @mbggenerated
+     */
     private String recoverType;
 
+    /**
+     * 债权转让
+     *
+     * @mbggenerated
+     */
     private Integer changeStatus;
 
+    /**
+     * 债权转让期数
+     *
+     * @mbggenerated
+     */
     private Integer changePeriod;
 
+    /**
+     * 转让人
+     *
+     * @mbggenerated
+     */
     private Integer changeUserid;
 
+    /**
+     * 投资奖励金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal tenderAwardAccount;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

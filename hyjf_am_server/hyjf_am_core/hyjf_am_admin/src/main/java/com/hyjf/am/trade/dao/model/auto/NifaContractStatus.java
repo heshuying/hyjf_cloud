@@ -6,22 +6,67 @@ import java.util.Date;
 public class NifaContractStatus implements Serializable {
     private Integer id;
 
+    /**
+     * 统一社会信用代码
+     *
+     * @mbggenerated
+     */
     private String platformNo;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String projectNo;
 
+    /**
+     * 合同编号
+     *
+     * @mbggenerated
+     */
     private String contractNo;
 
+    /**
+     * 合同状态
+     *
+     * @mbggenerated
+     */
     private Integer contractStatus;
 
+    /**
+     * 更新日期 YYYY-MM-DD HH:mm:ss
+     *
+     * @mbggenerated
+     */
     private String changeDate;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

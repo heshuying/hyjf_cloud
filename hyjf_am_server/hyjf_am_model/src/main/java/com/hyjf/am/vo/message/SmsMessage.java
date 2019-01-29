@@ -29,6 +29,8 @@ public class SmsMessage extends HyjfMessage {
 
     private String channelType;
 
+    private Integer isDisplay;
+
     public SmsMessage() {
         super();
     }
@@ -42,6 +44,18 @@ public class SmsMessage extends HyjfMessage {
         this.sender = sender;
         this.tplCode = tplCode;
         this.channelType = channelType;
+    }
+
+    public SmsMessage(Integer userId, Map<String, String> replaceStrs, String mobile, String message,
+                      String serviceType, String sender, String tplCode, String channelType, Integer isDisplay) {
+        super(userId, replaceStrs);
+        this.mobile = mobile;
+        this.message = message;
+        this.serviceType = serviceType;
+        this.sender = sender;
+        this.tplCode = tplCode;
+        this.channelType = channelType;
+        this.isDisplay = isDisplay;
     }
 
     public String getMobile() {
@@ -90,6 +104,14 @@ public class SmsMessage extends HyjfMessage {
 
     public void setChannelType(String channelType) {
         this.channelType = channelType;
+    }
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
     }
 
     @Override

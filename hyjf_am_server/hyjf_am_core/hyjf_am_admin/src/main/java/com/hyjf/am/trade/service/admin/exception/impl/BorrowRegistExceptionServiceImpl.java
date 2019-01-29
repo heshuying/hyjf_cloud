@@ -139,7 +139,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
         List<StzhWhiteList> sTZHWhiteList = stzhWhiteListMapper.selectByExample(stzhWhiteListExample);
         if (sTZHWhiteList != null && !sTZHWhiteList.isEmpty()) {
             StzhWhiteList stzf = sTZHWhiteList.get(0);
-            return stzf.getStAccountid();
+            return stzf.getStAccountId();
         }
         return "";
     }

@@ -52,9 +52,6 @@ public class StzfWhiteConfigController extends BaseController {
 		if (count > 0) {
 			if (!CollectionUtils.isEmpty(list)) {
 				List<STZHWhiteListVO> voList = CommonUtils.convertBeanList(list, STZHWhiteListVO.class);
-				for (STZHWhiteListVO vo : voList) {
-					vo.setApprovalTime(GetDate.timestamptoStrYYYYMMDD(Integer.valueOf(vo.getApprovalTime())));
-				}
 				response.setResultList(voList);
 				response.setCount(count);
 			} else {

@@ -403,7 +403,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "抵押车辆模板";
 
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + "xls";
 
 		String[] titles = new String[] { "车辆品牌", "型号", "车系", "颜色", "出厂年份", "产地", "购买日期(例：2016-01-04)", "购买价格（元）", "是否有保险(否|有)", "评估价（元）","车牌号","车辆登记地","车架号" };
 		// 声明一个工作薄
@@ -523,7 +523,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "抵押房产模板";
 
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + "xls";
 
 		String[] titles = new String[] { "房产类型", "房产位置", "建筑面积", "市值", "资产数量","评估价值（元）","资产所属" };
 		// 声明一个工作薄
@@ -627,7 +627,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "认证信息模板";
 
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + "xls";
 
 		String[] titles = new String[] { "展示顺序", "认证项目名称", "认证时间(例：2016-01-04)" };
 		// 声明一个工作薄
@@ -758,7 +758,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 6){//出借利率
 							resultMap.put("borrowApr", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 7){//融资用途
-							resultMap.put("financePurpose", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("financePurpose", this.getValue2(hssfRow.getCell(1)));
 						}else if(rowNum == 8){//月薪收入
 							resultMap.put("monthlyIncome", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 9){//还款来源
@@ -1027,7 +1027,7 @@ public class BorrowCommonController extends BaseController {
 		// 表格sheet名称
 				String sheetName = "借款内容填充模板";
 
-				String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+				String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + "xls";
 
 				String[] titles = new String[] { "" };
 				// 声明一个工作薄
@@ -1777,6 +1777,34 @@ public class BorrowCommonController extends BaseController {
 				return "";
 		}
 	}
+	private String getValue2(HSSFCell hssfCell) {
+		if (hssfCell == null) {
+			return "";
+		}
+		switch (hssfCell.getCellTypeEnum()) {
+			case BOOLEAN:
+				// 返回布尔类型的值
+				return String.valueOf(hssfCell.getBooleanCellValue());
+			case NUMERIC:
+				// 返回数值类型的值
+				String s = String.valueOf(hssfCell.getNumericCellValue());
+				return "0"+ s.replace(".0", "");
+			case FORMULA:
+				// 单元格为公式类型时
+				if (CellType.NUMERIC == hssfCell.getCachedFormulaResultTypeEnum()) {
+					// 返回数值类型的值
+					return String.valueOf(hssfCell.getNumericCellValue());
+				} else {
+					// 返回字符串类型的值
+					return String.valueOf(hssfCell.getStringCellValue());
+				}
+			case STRING:
+				// 返回字符串类型的值
+				return String.valueOf(hssfCell.getStringCellValue());
+			default:
+				return "";
+		}
+	}
 	/**
      * 迁移到详细画面
      *
@@ -2152,7 +2180,7 @@ public class BorrowCommonController extends BaseController {
 	        map.put("borrowNid", "项目编号");
 	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
-	        map.put("username", "用户名");
+	        map.put("username", "借款人用户名");
 //	        map.put("applicant", "项目申请人");
 	        map.put("projectName", "项目名称");
 	        map.put("borrowProjectTypeName", "项目类型");
@@ -2168,26 +2196,27 @@ public class BorrowCommonController extends BaseController {
 	        map.put("borrowAccountScale", "借款进度");
 	        map.put("status", "项目状态");
 	        map.put("addtime", "添加时间");
-	        map.put("verifyTime", "初审通过时间");
+	        map.put("verifyTime", "实际发标时间");
 	        map.put("ontime", "定时发标时间");
 	        map.put("bookingBeginTime", "预约开始时间");
 	        map.put("bookingEndTime", "预约截止时间");
 	        map.put("verifyTime", "实际发标时间");
-	        map.put("borrowValidTime", "投稿截止时间");
+	        map.put("borrowValidTime", "出借截止时间");
 	        map.put("borrowFullTime", "满标时间");
 	        map.put("reverifyTime", "复审通过时间");
 	        map.put("recoverLastTime", "放款完成时间");
 	        map.put("repayLastTime", "最后还款日");
 	        map.put("registTime", "备案时间");
-	        map.put("reverifyUserName", "复审人员");
+	      //  map.put("reverifyUserName", "复审人员");
 	        map.put("location", "所在地区");
 	        map.put("borrowerName", "借款人姓名");
 	        map.put("attribute", "属性");
 	        map.put("entrustedFlg", "是否受托支付");
 	        map.put("entrustedUsername", "收款人用户名");
-	        map.put("createUserName", "账户操作人");
-	        map.put("registUserName", "备案人员");
 	        map.put("labelNameSrch", "标签名称");
+//	        map.put("createUserName", "账户操作人");
+//	        map.put("registUserName", "备案人员");
+	        
 	        map.put("remark", "备注");
 	        map.put("createname", "添加标的人员");
 	        map.put("registname", "标的备案人员");

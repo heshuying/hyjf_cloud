@@ -10,6 +10,7 @@ import com.hyjf.am.response.admin.UserPortraitScoreResponse;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.admin.UserPortraitScoreRequest;
 import com.hyjf.am.resquest.user.LoanCoverUserRequest;
+import com.hyjf.am.resquest.user.UserPortraitCustomizeRequest;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.UserPortrait;
@@ -24,10 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -219,6 +217,25 @@ public class UserPortraitManagerController extends BaseController {
                 response.setResultList(listUserPortrait);
                 response.setRtn(Response.SUCCESS);
             }
+        }
+        return response;
+    }
+
+    @PostMapping("/countUserNames")
+    public IntegerResponse countUserNames(@RequestBody UserPortraitCustomizeRequest request) {
+        IntegerResponse response = new IntegerResponse();
+        int count = userPortraitManagerService.countUserNames(request.getUserNames());
+        response.setResultInt(count);
+        return response;
+    }
+
+    @PostMapping("/importBatch")
+    public IntegerResponse importBatch(@RequestBody UserPortraitCustomizeRequest request) {
+        IntegerResponse response = new IntegerResponse();
+        if (!CollectionUtils.isEmpty(request.getUserPortraitVOS())) {
+            List<UserPortrait> userPortraits = CommonUtils.convertBeanList(request.getUserPortraitVOS(), UserPortrait.class);
+            int count = userPortraitManagerService.importBatch(userPortraits);
+            response.setResultInt(count);
         }
         return response;
     }

@@ -20,7 +20,7 @@ import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,8 +46,6 @@ public class CreditController {
     private static final Logger logger = LoggerFactory.getLogger(CreditController.class);
     @Autowired
     private MyCreditListService creditListService;
-    @Autowired
-    NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
     private CommonProducer commonProducer;
     /**
@@ -107,7 +105,7 @@ public class CreditController {
         request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
         WebResult result =  creditListService.saveTenderToCredit(request,userId);
         //保存用户日志mq
-        BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(request.getBorrowNid());
+        BorrowAndInfoVO borrow = creditListService.getBorrowByNid(request.getBorrowNid());
         boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
 

@@ -5,18 +5,53 @@ import java.io.Serializable;
 public class AccountTrade implements Serializable {
     private Short id;
 
+    /**
+     * 交易类型 1收入 2支出  3冻结 4解冻
+     *
+     * @mbggenerated
+     */
     private Integer typeId;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 标识名
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 值
+     *
+     * @mbggenerated
+     */
     private String value;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Short order;
 
+    /**
+     * 账户余额操作(ADD:余额增加,SUB:余额减少,UNCHANGED:余额不变)
+     *
+     * @mbggenerated
+     */
     private String operation;
 
     private static final long serialVersionUID = 1L;

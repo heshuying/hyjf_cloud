@@ -22,7 +22,7 @@ public class ProductUser implements Serializable {
     private BigDecimal redeemed;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */
