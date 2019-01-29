@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.cert.CertMapper" >
+    <resultMap id="queryCertAccountListMap" type="com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="nid" property="nid" jdbcType="VARCHAR" />
+        <result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+        <result column="is_show" property="isShow" jdbcType="TINYINT" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="type" property="type" jdbcType="TINYINT" />
+        <result column="trade" property="trade" jdbcType="VARCHAR" />
+        <result column="trade_code" property="tradeCode" jdbcType="VARCHAR" />
+        <result column="total" property="total" jdbcType="DECIMAL" />
+        <result column="balance" property="balance" jdbcType="DECIMAL" />
+        <result column="frost" property="frost" jdbcType="DECIMAL" />
+        <result column="plan_frost" property="planFrost" jdbcType="DECIMAL" />
+        <result column="await" property="await" jdbcType="DECIMAL" />
+        <result column="repay" property="repay" jdbcType="DECIMAL" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="operator" property="operator" jdbcType="VARCHAR" />
+        <result column="ip" property="ip" jdbcType="VARCHAR" />
+        <result column="web" property="web" jdbcType="TINYINT" />
+        <result column="plan_balance" property="planBalance" jdbcType="DECIMAL" />
+        <result column="is_bank" property="isBank" jdbcType="TINYINT" />
+        <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+        <result column="tx_date" property="txDate" jdbcType="INTEGER" />
+        <result column="tx_time" property="txTime" jdbcType="INTEGER" />
+        <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
+        <result column="bank_seq_no" property="bankSeqNo" jdbcType="VARCHAR" />
+        <result column="check_status" property="checkStatus" jdbcType="TINYINT" />
+        <result column="trade_status" property="tradeStatus" jdbcType="TINYINT" />
+        <result column="bank_total" property="bankTotal" jdbcType="DECIMAL" />
+        <result column="bank_balance" property="bankBalance" jdbcType="DECIMAL" />
+        <result column="bank_frost" property="bankFrost" jdbcType="DECIMAL" />
+        <result column="bank_wait_repay" property="bankWaitRepay" jdbcType="DECIMAL" />
+        <result column="bank_wait_capital" property="bankWaitCapital" jdbcType="DECIMAL" />
+        <result column="bank_wait_interest" property="bankWaitInterest" jdbcType="DECIMAL" />
+        <result column="bank_interest_sum" property="bankInterestSum" jdbcType="DECIMAL" />
+        <result column="bank_invest_sum" property="bankInvestSum" jdbcType="DECIMAL" />
+        <result column="bank_await" property="bankAwait" jdbcType="DECIMAL" />
+        <result column="bank_await_capital" property="bankAwaitCapital" jdbcType="DECIMAL" />
+        <result column="bank_await_interest" property="bankAwaitInterest" jdbcType="DECIMAL" />
+        <result column="check_date" property="checkDate" jdbcType="INTEGER" />
+        <result column="check_balance" property="checkBalance" jdbcType="DECIMAL" />
+        <result column="account_date" property="accountDate" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="role_id" property="roleId" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <select id="queryCertAccountList" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+		SELECT
+			hui.role_id role_id,
+			hal.*
+		FROM
+			huiyingdai_account_list hal
+		INNER JOIN huiyingdai_users_info hui ON hal.user_id = hui.user_id
+		WHERE hal.id<![CDATA[>=]]>#{minId} AND hal.id<![CDATA[<=]]>#{maxId}
+	</select>
+</mapper>

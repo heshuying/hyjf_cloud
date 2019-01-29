@@ -2,7 +2,6 @@ package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
-import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
@@ -2814,5 +2813,23 @@ public class AmUserClientImpl implements AmUserClient {
 			return null;
 		}
 		return response.getOpenAccountEnquiryDefineResultBeanVO();
+	}
+
+    @Override
+    public int countUserNames(UserPortraitCustomizeRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPortraitManage/countUserNames",request, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+    }
+
+	@Override
+	public int updateBatch(UserPortraitCustomizeRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPortraitManage/importBatch", request, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 }

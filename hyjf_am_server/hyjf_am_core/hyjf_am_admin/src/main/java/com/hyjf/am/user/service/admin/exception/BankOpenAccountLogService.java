@@ -77,10 +77,4 @@ public interface BankOpenAccountLogService extends BaseService {
      */
     OpenAccountEnquiryResponse updateUser(OpenAccountEnquiryDefineRequest requestBean);
 
-    /**
-     * 开户掉单，同步保存开户(Account)数据
-     * @param requestBean
-     * @return
-     */
-    OpenAccountEnquiryResponse updateAccount(OpenAccountEnquiryDefineRequest requestBean);
 }

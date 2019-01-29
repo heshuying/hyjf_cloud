@@ -18,6 +18,8 @@ public class FddTempletVO extends BaseVO implements Serializable {
 
     private Integer certificateTime;
 
+    private String fileUrl;
+
     private String remark;
 
     private Integer createUserId;
@@ -136,5 +138,13 @@ public class FddTempletVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 }

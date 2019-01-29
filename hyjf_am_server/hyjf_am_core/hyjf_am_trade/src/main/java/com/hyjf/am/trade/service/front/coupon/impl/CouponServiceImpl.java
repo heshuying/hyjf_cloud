@@ -3,6 +3,7 @@ package com.hyjf.am.trade.service.front.coupon.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.customize.CustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.CouponCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.CouponTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
 import com.hyjf.am.trade.service.front.coupon.CouponService;
@@ -10,6 +11,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +38,8 @@ public class CouponServiceImpl extends CustomizeMapper implements CouponService{
 
 	@Resource
 	private CouponCustomizeMapper couponCustomizeMapper;
+	@Resource
+	private CouponTenderCustomizeMapper couponTenderCustomizeMapper;
 
 	/**
 	 * @param couponGrantId
@@ -273,5 +278,29 @@ public class CouponServiceImpl extends CustomizeMapper implements CouponService{
 			return list.get(0);
 		}
 		return null;
+	}
+	/**
+	 * 获取投资红包金额
+	 * add by nxl
+	 * @param realTenderId
+	 * @return
+	 */
+	@Override
+	public BigDecimal getRedPackageSum(String realTenderId) {
+		BigDecimal bigDecimalCouponQuota = new BigDecimal("0");
+		//9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
+		//获取优惠券信息
+		CouponRealTender couponRealTender = selectCouponRealTenderByOrderId(realTenderId);
+		if (null != couponRealTender) {
+			//代表使用了红包,各种优惠券等
+			//优惠券利息
+			BigDecimal bigSumRecover = new BigDecimal("0");
+			String sumRecoverInst = couponTenderCustomizeMapper.sunRecoverInterest(couponRealTender.getCouponTenderId());
+			if (StringUtils.isNotBlank(sumRecoverInst)) {
+				bigSumRecover = new BigDecimal(sumRecoverInst);
+			}
+			bigDecimalCouponQuota = bigDecimalCouponQuota.add(bigSumRecover);
+		}
+		return bigDecimalCouponQuota;
 	}
 }

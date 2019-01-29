@@ -154,6 +154,11 @@ public class BorrowController extends BaseController {
 		}
 		if (Validator.isNotNull(borrowInfo)){
 			borrowVO.setInstCode(borrowInfo.getInstCode());
+			borrowVO.setCompanyOrPersonal(borrowInfo.getCompanyOrPersonal() + "");
+			borrowVO.setBorrowLevel(borrowInfo.getBorrowLevel());
+			borrowVO.setProjectName(borrowInfo.getProjectName());
+			borrowVO.setAssetAttributes(borrowInfo.getAssetAttributes());
+			borrowVO.setFinancePurpose(borrowInfo.getFinancePurpose());
 		}
 		response.setResult(borrowVO);
 		return response;

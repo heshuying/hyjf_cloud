@@ -23,7 +23,7 @@ spring:
     percentage: 1
     
   profiles:
-    active: test
+    active: dev
 server:
   port: 8092
 

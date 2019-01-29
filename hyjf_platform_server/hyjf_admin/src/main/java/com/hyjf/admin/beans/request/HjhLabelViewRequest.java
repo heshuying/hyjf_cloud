@@ -48,7 +48,13 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
     
     @ApiModelProperty(value = "操作开始时间查询")
 	private String createTimeStartSrch;
-    
+
+    @ApiModelProperty(value = "修改时间开始查询")
+    private String updateTimeStartSrch;
+
+    @ApiModelProperty(value = "修改时间结束查询")
+    private String updateTimeEndSrch;
+
     @ApiModelProperty(value = "操作结束时间查询")
 	private String createTimeEndSrch;
 	
@@ -59,14 +65,17 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	private String assetTypeSrch;
     
     @ApiModelProperty(value = "项目类型查询")
-	private Integer projectTypeSrch;
+	private String projectTypeSrch;
     
     @ApiModelProperty(value = "还款方式查询")
 	private String borrowStyleSrch;
 	
     @ApiModelProperty(value = "使用状态查询")
 	private Integer engineIdSrch;
-    
+
+	@ApiModelProperty(value = "使用智投编号查询")
+    private String planNidSrch;
+
     @ApiModelProperty(value = "标的最小期限")
     private String labelTermStart;
     
@@ -232,11 +241,11 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 		this.assetTypeSrch = assetTypeSrch;
 	}
 
-	public Integer getProjectTypeSrch() {
+	public String getProjectTypeSrch() {
 		return projectTypeSrch;
 	}
 
-	public void setProjectTypeSrch(Integer projectTypeSrch) {
+	public void setProjectTypeSrch(String projectTypeSrch) {
 		this.projectTypeSrch = projectTypeSrch;
 	}
 
@@ -483,4 +492,28 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+	public String getPlanNidSrch() {
+		return planNidSrch;
+	}
+
+	public void setPlanNidSrch(String planNidSrch) {
+		this.planNidSrch = planNidSrch;
+	}
+
+    public String getUpdateTimeStartSrch() {
+        return updateTimeStartSrch;
+    }
+
+    public void setUpdateTimeStartSrch(String updateTimeStartSrch) {
+        this.updateTimeStartSrch = updateTimeStartSrch;
+    }
+
+    public String getUpdateTimeEndSrch() {
+        return updateTimeEndSrch;
+    }
+
+    public void setUpdateTimeEndSrch(String updateTimeEndSrch) {
+        this.updateTimeEndSrch = updateTimeEndSrch;
+    }
 }
