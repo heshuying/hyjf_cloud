@@ -147,6 +147,7 @@ public class SmsCodeController extends BaseController {
         String send_message = form.getMessage();
         String channelType = form.getChannelType();
         String sendType = form.getSendType();
+        Integer isDisplay = (form.getIsDisplay() == null ? 0 : form.getIsDisplay());
         form.setIp(GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest()));
         if (sendType == null) {
             jsonObject.put("msg", "请选择发送类型");
@@ -218,7 +219,7 @@ public class SmsCodeController extends BaseController {
                         }
                         try {
                             SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
-                                    MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+                                    MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType, isDisplay);
                             commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                     smsMessage));
                         } catch (Exception e) {
@@ -240,7 +241,7 @@ public class SmsCodeController extends BaseController {
                             mbl = mbl.substring(0, mbl.length() - 1);
                         }
                         SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
-                                MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+                                MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType, isDisplay);
                         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                 smsMessage));
                     }

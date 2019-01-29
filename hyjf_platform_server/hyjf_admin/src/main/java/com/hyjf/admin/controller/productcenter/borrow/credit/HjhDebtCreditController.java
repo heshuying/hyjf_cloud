@@ -100,6 +100,8 @@ public class HjhDebtCreditController extends BaseController{
                 jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
                 jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
                 jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
+                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
             }
         }
         return jsonObject;
@@ -123,6 +125,9 @@ public class HjhDebtCreditController extends BaseController{
             if (hjhDebtCreditVoList.size() > 0) {
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
+                Map<String,Object> sum = hjhDebtCreditService.selectDebtCreditTotal(request);
+                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+                jsonObject.put("hjhDebtCreditVoListSum",sum);
             } else {
                 jsonObject = this.success(0,new ArrayList<>());
             }

@@ -26,4 +26,11 @@ public interface AdminHjhDebtCreditService {
      * @return
      */
     List<AdminHjhDebtCreditCustomize> getList(Map map, int limitStart, int limitEnd);
+
+    /**
+     * 获取列表求和数据
+     * @param map
+     * @return
+     */
+    Map getListSum(Map map);
 }

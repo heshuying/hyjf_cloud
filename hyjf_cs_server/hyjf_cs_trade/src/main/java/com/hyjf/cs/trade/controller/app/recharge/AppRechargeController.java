@@ -7,7 +7,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
@@ -112,7 +112,7 @@ public class AppRechargeController extends BaseTradeController{
 		logger.info("解密前的手机号["+mobile+"],充值金额:[" + money + "]");
 		if(!"1".equals(isMencry)){
 			if (Validator.isNull(key)) {
-				throw new ReturnMessageException(MsgEnum.ERR_PARAM_NUM);
+				throw new CheckException(MsgEnum.ERR_PARAM_NUM);
 			}
 			// 解密
 			mobile = DES.decodeValue(key, mobile);
@@ -122,17 +122,17 @@ public class AppRechargeController extends BaseTradeController{
 		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
 		UserVO userVO=userRechargeService.getUserByUserId(user.getUserId());
 		if(null==userVO){
-			throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
+			throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
 		}
 
 		if(0==userVO.getIsSetPassword()){
-			throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+			throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
 		}
 		if(userVO.getBankOpenAccount()==0){
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+			throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
 		}
 		if (!this.authService.checkPaymentAuthStatus(userId)) {
-			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		logger.info("user is :{}", JSONObject.toJSONString(user));
 		String ipAddr = CustomUtil.getIpAddr(request);
@@ -157,7 +157,7 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		if (null == bean) {
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
@@ -165,7 +165,7 @@ public class AppRechargeController extends BaseTradeController{
 		} catch (Exception e) {
 			logger.info("app端充值失败");
 			e.printStackTrace();
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 
 		result.setStatus("000");

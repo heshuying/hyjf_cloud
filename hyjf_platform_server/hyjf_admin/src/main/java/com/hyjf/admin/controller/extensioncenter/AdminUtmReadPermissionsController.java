@@ -126,7 +126,7 @@ public class AdminUtmReadPermissionsController extends BaseController {
 
 	@ApiOperation(value = "渠道帐号管理", notes = "修改渠道帐号管理")
 	@PostMapping("/update")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody AdminUtmReadPermissionsRequest requestBean) {
 		AdminUtmReadPermissionsResponse response = adminUtmReadPermissionsService.updateAction(requestBean);
 		if (response == null) {

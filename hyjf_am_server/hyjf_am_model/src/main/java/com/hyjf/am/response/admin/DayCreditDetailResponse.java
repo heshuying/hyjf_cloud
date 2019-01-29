@@ -10,11 +10,21 @@ public class DayCreditDetailResponse extends Response<DayCreditDetailVO> {
 
     private  Integer  count;
 
+    private DayCreditDetailVO sumDayCreditDetailVO;
+
     public Integer getCount() {
         return count;
     }
 
     public void setCount(Integer count) {
         this.count = count;
+    }
+
+    public DayCreditDetailVO getSumDayCreditDetailVO() {
+        return sumDayCreditDetailVO;
+    }
+
+    public void setSumDayCreditDetailVO(DayCreditDetailVO sumDayCreditDetailVO) {
+        this.sumDayCreditDetailVO = sumDayCreditDetailVO;
     }
 }
