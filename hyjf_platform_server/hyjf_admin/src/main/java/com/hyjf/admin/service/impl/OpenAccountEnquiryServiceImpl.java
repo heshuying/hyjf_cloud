@@ -223,7 +223,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
      * 保存开户的数据
      * 此处事务不起作用，此方法已经挪到 am-admin,Zhadaojian 2019-01-22
      */
-    public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
+  /*  public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
         String idCard = requestBean.getIdcard();
         String platform = requestBean.getPlatform();//开户平台
@@ -363,7 +363,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         resultBean.setResult("开户掉单同步成功!");
         return resultBean;
 
-    }
+    }*/
 
     /**
      * 保存银行卡信息
