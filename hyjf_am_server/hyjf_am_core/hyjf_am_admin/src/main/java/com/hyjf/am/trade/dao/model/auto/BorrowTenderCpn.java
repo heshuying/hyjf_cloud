@@ -7,72 +7,217 @@ import java.util.Date;
 public class BorrowTenderCpn implements Serializable {
     private Integer id;
 
+    /**
+     * 用户名称
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 状态(0:初始,1:已放款,2:放款失败)
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private String borrowNid;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
     private BigDecimal accountTender;
 
     private BigDecimal account;
 
+    /**
+     * 债权转让
+     *
+     * @mbggenerated
+     */
     private Integer changeStatus;
 
+    /**
+     * 转让人
+     *
+     * @mbggenerated
+     */
     private Integer changeUserid;
 
+    /**
+     * 债权转让期数
+     *
+     * @mbggenerated
+     */
     private Integer changePeriod;
 
+    /**
+     * 投资状态
+     *
+     * @mbggenerated
+     */
     private Integer tenderStatus;
 
     private String tenderNid;
 
+    /**
+     * 投资奖励金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal tenderAwardAccount;
 
+    /**
+     * 满标状态(0:初始,1:满标)记录哪一笔是最后一笔满标
+     *
+     * @mbggenerated
+     */
     private Integer recoverFullStatus;
 
+    /**
+     * 回收的总费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverFee;
 
+    /**
+     * 回收类型
+     *
+     * @mbggenerated
+     */
     private String recoverType;
 
+    /**
+     * 收款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountAll;
 
+    /**
+     * 收款总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountInterest;
 
+    /**
+     * 已收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountYes;
 
+    /**
+     * 已收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountInterestYes;
 
+    /**
+     * 已收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountCapitalYes;
 
+    /**
+     * 待收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountWait;
 
+    /**
+     * 待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountInterestWait;
 
+    /**
+     * 待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountCapitalWait;
 
+    /**
+     * 已收期数
+     *
+     * @mbggenerated
+     */
     private Integer recoverTimes;
 
+    /**
+     * 提前还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAdvanceFee;
 
+    /**
+     * 逾期还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverLateFee;
 
+    /**
+     * 投资奖励增加
+     *
+     * @mbggenerated
+     */
     private BigDecimal tenderAwardFee;
 
+    /**
+     * 放款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanAmount;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanFee;
 
     private String contents;
 
+    /**
+     * 自动投标
+     *
+     * @mbggenerated
+     */
     private Integer autoStatus;
 
+    /**
+     * 网站投标
+     *
+     * @mbggenerated
+     */
     private Integer webStatus;
 
+    /**
+     * 放款状态
+     *
+     * @mbggenerated
+     */
     private Integer apiStatus;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
     private Integer periodStatus;
@@ -81,12 +226,32 @@ public class BorrowTenderCpn implements Serializable {
 
     private Integer isReport;
 
+    /**
+     * 专用标记
+     *
+     * @mbggenerated
+     */
     private Integer flag;
 
+    /**
+     * 活动专用标志
+     *
+     * @mbggenerated
+     */
     private Integer activityFlag;
 
+    /**
+     * 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 网站收支计算标识
+     *
+     * @mbggenerated
+     */
     private Integer web;
 
     private String inviteUserName;
@@ -113,12 +278,32 @@ public class BorrowTenderCpn implements Serializable {
 
     private String inviteRegionName;
 
+    /**
+     * 投资人username
+     *
+     * @mbggenerated
+     */
     private String tenderUserName;
 
+    /**
+     * 投资类别 1：直投类，2：汇添金
+     *
+     * @mbggenerated
+     */
     private Integer tenderType;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

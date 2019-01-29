@@ -1,78 +1,15 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
-import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
-import com.hyjf.am.resquest.user.AnswerRequest;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
-import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
-import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
-import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecordExample;
-import com.hyjf.am.user.dao.model.auto.Evalation;
-import com.hyjf.am.user.dao.model.auto.EvalationExample;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthExample;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
-import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
-import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
-import com.hyjf.am.user.dao.model.auto.PreRegist;
-import com.hyjf.am.user.dao.model.auto.PreRegistExample;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserBindEmailLog;
-import com.hyjf.am.user.dao.model.auto.UserBindEmailLogExample;
-import com.hyjf.am.user.dao.model.auto.UserContact;
-import com.hyjf.am.user.dao.model.auto.UserEvalation;
-import com.hyjf.am.user.dao.model.auto.UserEvalationBehavior;
-import com.hyjf.am.user.dao.model.auto.UserEvalationExample;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
-import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
-import com.hyjf.am.user.dao.model.auto.UserExample;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
-import com.hyjf.am.user.dao.model.auto.UserLog;
-import com.hyjf.am.user.dao.model.auto.UserLoginLog;
-import com.hyjf.am.user.dao.model.auto.UserLoginLogExample;
-import com.hyjf.am.user.dao.model.auto.UtmPlat;
-import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
-import com.hyjf.am.user.dao.model.auto.UtmReg;
-import com.hyjf.am.user.dao.model.auto.UtmRegExample;
-import com.hyjf.am.user.dao.model.auto.VipUserTender;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.mq.base.CommonProducer;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.service.front.user.UserService;
@@ -90,14 +27,20 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.StringRandomUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -642,6 +585,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Override
     public HjhUserAuthLog selectByExample(String orderId){
         HjhUserAuthLogExample example=new HjhUserAuthLogExample();
+        example.setOrderByClause("id desc");
         example.createCriteria().andOrderIdEqualTo(orderId);
         List<HjhUserAuthLog>  hjhUserAuthLogList = hjhUserAuthLogMapper.selectByExample(example);
         if(hjhUserAuthLogList!=null&&hjhUserAuthLogList.size()>0) {

@@ -1,8 +1,10 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author lisheng

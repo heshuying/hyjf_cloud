@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.common.util.ActivityDateUtil;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,8 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
         if(activityList==null){
             return null;
         }
+        activityList.setTimeEndT(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(activityList.getTimeEnd()));
+        activityList.setTimeStartT(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(activityList.getTimeStart()));
         //查询活动期间的合伙人
         List<User> id0 =naMiMarketingCustomizeMapper.selectId0List(activityList);
         if(CollectionUtils.isEmpty(id0)){
@@ -59,6 +62,8 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
         }
         paraMap.put("id0",id0);
         paraMap.put("activityList",activityList);
+
+
         //查询符合条件的用户id
         List<Integer> ids =new ArrayList<Integer>();
         String refferName= (String)paraMap.get("refferName");

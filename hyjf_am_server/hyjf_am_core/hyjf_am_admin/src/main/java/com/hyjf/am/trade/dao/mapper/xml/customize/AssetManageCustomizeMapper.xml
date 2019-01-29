@@ -126,7 +126,7 @@
         hhp.plan_name,
         <!-- hhp.plan_nid AS projectNid, -->
         hhp.plan_name AS projectNid,
-        CONCAT(hhp.expect_apr, '%') borrow_apr,
+        CONCAT(hha.expect_apr, '%') borrow_apr,
         IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
         hha.last_payment_time,
         5 AS type,
@@ -1026,10 +1026,11 @@
         AND hdpa.user_id=#{userId}
 
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hha.accede_order_id accede_order_id,
-        CONCAT(hhp.expect_apr, '%') expect_apr,
+        CONCAT(hha.expect_apr, '%') expect_apr,
         CASE
         WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
         ELSE CONCAT(hhp.lock_period,'个月')
@@ -1052,7 +1053,9 @@
         WHERE
         hha.order_status <![CDATA[<>]]>7
         AND hha.user_id=#{userId}
+
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hbtc.nid nid,
@@ -1199,11 +1202,13 @@
         WHERE
         hdp.debt_plan_status =11
         AND hdpa.user_id=#{userId}
+
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hha.accede_order_id accede_order_id,
-        CONCAT(hhp.expect_apr, '%') expect_apr,
+        CONCAT(hha.expect_apr, '%') expect_apr,
         CASE
         WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
         ELSE CONCAT(hhp.lock_period,'个月')
@@ -1223,7 +1228,9 @@
         WHERE
         hha.order_status = 7
         AND hha.user_id=#{userId}
+
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hbtc.nid nid,
@@ -2514,7 +2521,7 @@
         hhp.plan_name,
         <!-- hhp.plan_nid AS borrow_nid, -->
         hhp.plan_name AS borrow_nid,
-        CONCAT(hhp.expect_apr, '%') borrow_apr,
+        CONCAT(hha.expect_apr, '%') borrow_apr,
         IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
         hha.last_payment_time,
         5 AS type,

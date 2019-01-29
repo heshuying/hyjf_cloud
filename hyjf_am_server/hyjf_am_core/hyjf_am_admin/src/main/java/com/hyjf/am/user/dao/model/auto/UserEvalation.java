@@ -4,18 +4,53 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserEvalation implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户测评总结id
+     *
+     * @mbggenerated
+     */
     private Integer erId;
 
+    /**
+     * 问题id
+     *
+     * @mbggenerated
+     */
     private Integer questionId;
 
+    /**
+     * 答案id
+     *
+     * @mbggenerated
+     */
     private Integer answerId;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer sort;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

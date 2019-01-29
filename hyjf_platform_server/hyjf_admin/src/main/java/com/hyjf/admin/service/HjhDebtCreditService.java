@@ -8,6 +8,7 @@ import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther:yangchangwei
@@ -23,4 +24,5 @@ public interface HjhDebtCreditService extends BaseService{
     void queryHjhDebtCreditListStatusName(List<HjhDebtCreditVo> hjhDebtCreditVoList);
 
 
+    Map<String,Object> selectDebtCreditTotal(HjhDebtCreditListRequest request);
 }

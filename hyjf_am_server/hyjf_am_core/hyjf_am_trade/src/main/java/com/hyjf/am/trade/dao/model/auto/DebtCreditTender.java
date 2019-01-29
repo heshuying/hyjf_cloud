@@ -62,14 +62,14 @@ public class DebtCreditTender implements Serializable {
     private String creditNid;
 
     /**
-     * 原始标的出借订单号
+     * 原始标的投资订单号
      *
      * @mbggenerated
      */
     private String investOrderId;
 
     /**
-     * 原标出借订单号
+     * 原标投资订单号
      *
      * @mbggenerated
      */

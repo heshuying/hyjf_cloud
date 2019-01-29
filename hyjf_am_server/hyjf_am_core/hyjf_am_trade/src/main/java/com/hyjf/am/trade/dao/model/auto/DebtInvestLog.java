@@ -20,14 +20,14 @@ public class DebtInvestLog implements Serializable {
     private Integer userId;
 
     /**
-     * 出借用户名
+     * 投资用户名
      *
      * @mbggenerated
      */
     private String userName;
 
     /**
-     * 出借用户属性
+     * 投资用户属性
      *
      * @mbggenerated
      */
@@ -55,28 +55,28 @@ public class DebtInvestLog implements Serializable {
     private String borrowNid;
 
     /**
-     * 出借订单号
+     * 投资订单号
      *
      * @mbggenerated
      */
     private String orderId;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */
     private BigDecimal account;
 
     /**
-     * 出借类型 0手动投标 1预约投标 2自动投标
+     * 投资类型 0手动投标 1预约投标 2自动投标
      *
      * @mbggenerated
      */
     private Integer investType;
 
     /**
-     * 出借日志表 0 初始 1成功 2失败
+     * 投资日志表 0 初始 1成功 2失败
      *
      * @mbggenerated
      */

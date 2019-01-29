@@ -183,7 +183,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     public int insertBeforeTender(TenderRequest tenderRequest) {
         Integer userId = tenderRequest.getUserId();
 
-        Borrow borrow = getBorrow(tenderRequest.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderRequest.getBorrowNid());
         BorrowTenderTmp temp = new BorrowTenderTmp();
         temp.setUserId(userId);
         temp.setUserName(tenderRequest.getUserName());
@@ -272,7 +272,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      */
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
-        Borrow borrow = getBorrow(tenderBg.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderBg.getBorrowNid());
         BorrowInfo borrowInfo = getBorrowInfoByNid(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表
@@ -467,7 +467,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
 
         // 计算此时的剩余可出借金额
-        BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
+        BigDecimal accountWait = this.getBorrowByNid(tenderBg.getBorrowNid()).getBorrowAccountWait();
         String borrowNid = tenderBg.getBorrowNid();
         logger.info("标的{}  剩余可投为：{} ",borrowNid,accountWait);
         // 满标处理

@@ -37,9 +37,14 @@ public class ReadExcel extends XxlsAbstract {
      * @return List<JSONObject>
      * @throws IOException
      */
-    public List<JSONObject> readExcel(String filePath, Map<String, String> nameMaps) throws IOException {
+    public List<JSONObject> readExcel(String filePath, Map<String, String> nameMaps,Map<String, String> titleMaps) throws IOException {
         resumeList.clear();
-        titleMap = nameMaps;
+        if (titleMap != null){
+            titleMap = titleMaps;
+        }else{
+            titleMap = nameMaps;
+        }
+
         nameMap = nameMaps;
         try {
             if (filePath == null || EMPTY.equals(filePath)) {

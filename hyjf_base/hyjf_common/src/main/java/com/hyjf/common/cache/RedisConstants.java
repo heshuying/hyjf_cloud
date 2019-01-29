@@ -569,4 +569,8 @@ public class RedisConstants {
      * 逾期原因
      */
     public static final String LATER_REPAY_REASON = "NIFA:LATER_REPAY_REASON";
+    /**
+     * 推送表的消息唯一标识
+     */
+    public static final String MSG_PUSH_CODE = "MSG_PUSH_CODE:";
 }

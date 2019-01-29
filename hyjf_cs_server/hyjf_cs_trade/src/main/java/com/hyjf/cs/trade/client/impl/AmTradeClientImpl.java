@@ -12,24 +12,20 @@ import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
-import com.hyjf.am.response.bifa.BifaBorrowUserInfoResponse;
-import com.hyjf.am.response.bifa.BifaHjhPlanResponse;
-import com.hyjf.am.response.bifa.UserIdAccountSumBeanResponse;
 import com.hyjf.am.response.callcenter.CallCenterAccountDetailResponse;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
-import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
-import com.hyjf.am.response.trade.account.*;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountRechargeResponse;
+import com.hyjf.am.response.trade.account.*;
 import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
-import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -43,7 +39,6 @@ import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
-import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -62,20 +57,17 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
-import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
-import com.hyjf.am.vo.trade.account.*;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
+import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
-import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
@@ -88,6 +80,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -110,19 +103,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiasq
  * @version AmTradeClientImpl, v0.1 2018/6/19 15:44
  */
-@Service
+@Cilent
 public class AmTradeClientImpl implements AmTradeClient {
     private static Logger logger = LoggerFactory.getLogger(AmTradeClientImpl.class);
 
@@ -1235,6 +1230,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    @Cached(name="webProjectDetailCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = CustomConstants.PROJECT_DETAIL_CACHE_TIME, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public ProjectCustomeDetailVO searchProjectDetail(Map map) {
         ProjectDetailResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectDetail",map,ProjectDetailResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -3396,6 +3393,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal orgRepayWaitTotalCurrent(RepayListRequest requestBean) {
+        BigDecimalResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepay_waittotal_current", requestBean, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 还款申请更新
      * @auther: hesy
      * @date: 2018/7/10
@@ -3635,6 +3647,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appPlanDetailCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public int countPlanBorrowRecordTotal(Map<String, Object> params) {
 	    String url = urlBase+"hjhPlan/countPlanBorrowRecordTotal";
         return restTemplate.postForEntity(url,params,Integer.class).getBody();
@@ -3646,6 +3660,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appPlanDetailListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<DebtPlanBorrowCustomizeVO> selectPlanBorrowList(Map<String, Object> params) {
         String url = urlBase+"hjhPlan/selectPlanBorrowList";
         DebtPlanBorrowCustomizeResponse response = restTemplate.postForEntity(url,params,DebtPlanBorrowCustomizeResponse.class).getBody();
@@ -3761,6 +3777,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appAndWxPlanAccedeSumCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public Long selectPlanAccedeSum(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectPlanAccedeSum";
         return restTemplate.postForEntity(url,params,Long.class).getBody();
@@ -5959,23 +5977,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    /**
-     * 根据contract_id查询垫付协议生成详情
-     * @author Zha Daojian
-     * @date 2018/8/23 15:47
-     * @param contractId
-     * @return ApplyAgreementInfoVO
-     **/
-    public List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId) {
-        String url = "http://AM-TRADE/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
-        ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-
     @Override
     public List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String, Object> param) {
         String url = "http://AM-TRADE/am-trade/htj/selectInvestCreditList";
@@ -6185,7 +6186,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public void autoIssueRecover() {
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoIssueRecover/autoIssueRecover", String.class);
     }
 
     @Override
@@ -6195,6 +6196,16 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response;
         }
         return null;
+    }
+
+    @Override
+    public void downloadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+    }
+
+    @Override
+    public void uploadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/upload_file", boolean.class);
     }
 
     @Override

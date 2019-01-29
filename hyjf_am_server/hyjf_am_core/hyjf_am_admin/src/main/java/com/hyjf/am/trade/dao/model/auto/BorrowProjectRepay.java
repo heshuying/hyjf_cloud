@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BorrowProjectRepay implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
     private String borrowClass;
@@ -12,20 +17,40 @@ public class BorrowProjectRepay implements Serializable {
 
     private String methodName;
 
+    /**
+     * 删除状态
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private String createGroupId;
 
     private String createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private String updateGroupId;
 
     private String updateUserId;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

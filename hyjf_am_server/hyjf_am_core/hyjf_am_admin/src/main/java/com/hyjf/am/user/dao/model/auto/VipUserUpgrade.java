@@ -6,26 +6,81 @@ import java.util.Date;
 public class VipUserUpgrade implements Serializable {
     private Integer id;
 
+    /**
+     * 用户编号
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * vip编号
+     *
+     * @mbggenerated
+     */
     private Integer vipId;
 
+    /**
+     * vip升级时的V值
+     *
+     * @mbggenerated
+     */
     private Integer upgradeVipValue;
 
+    /**
+     * vip升级的类别，1：购买，2：V值升级
+     *
+     * @mbggenerated
+     */
     private Integer upgradeVipType;
 
+    /**
+     * 礼包发放状态，0：未发放，1：已发放
+     *
+     * @mbggenerated
+     */
     private Integer giftFlg;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标识 0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -515,6 +515,7 @@
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
 			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+			<columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1473,7 +1474,6 @@
         </table>
 
         <table tableName="ht_admin_menu" domainObjectName="AdminMenu">
-            <generatedKey column="menu_uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="menu_hide" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -1987,26 +1987,26 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
-
-        <!-- 国家互联网应急中心错误日志表 -->
-        <table tableName="ht_cert_err_log" domainObjectName="CertErrLog">
+        <table tableName="ht_evaluation_config" domainObjectName="EvaluationConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="send_count" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="query_result" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-
-        <!-- 国家互联网应急中心已上送用户表 -->
-        <table tableName="ht_cert_user" domainObjectName="CertUser">
+        <table tableName="ht_evaluation_config_log" domainObjectName="EvaluationConfigLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-        </table>
-
-        <!-- 国家互联网应急中心初始化标的表 -->
-        <table tableName="ht_cert_log" domainObjectName="CertLog">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="send_count" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="query_result" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
     </context>

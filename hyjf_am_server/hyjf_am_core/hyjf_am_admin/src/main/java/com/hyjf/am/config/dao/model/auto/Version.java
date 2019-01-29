@@ -6,22 +6,67 @@ import java.util.Date;
 public class Version implements Serializable {
     private Integer id;
 
+    /**
+     * 0 PC ,1 Android , 2 IOS , 3 wechat
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 版本号
+     *
+     * @mbggenerated
+     */
     private String version;
 
+    /**
+     * 是否需要更新（0必须强制更新、1可更新可不更新、2不需要更新）主要针对app
+     *
+     * @mbggenerated
+     */
     private Integer isUpdate;
 
+    /**
+     * url
+     *
+     * @mbggenerated
+     */
     private String url;
 
+    /**
+     * 版本描述
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

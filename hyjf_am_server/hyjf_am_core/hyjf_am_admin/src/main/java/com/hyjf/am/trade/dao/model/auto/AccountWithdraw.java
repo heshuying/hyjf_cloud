@@ -7,48 +7,148 @@ import java.util.Date;
 public class AccountWithdraw implements Serializable {
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 交易凭证号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 提现状态:0:初始,1:提现中,2:提现成功,3:提现失败，4：银行失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 账号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 所属银行
+     *
+     * @mbggenerated
+     */
     private String bank;
 
     private Integer bankId;
 
+    /**
+     * 总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal total;
 
+    /**
+     * 到账总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal credited;
 
+    /**
+     * 手续费
+     *
+     * @mbggenerated
+     */
     private String fee;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
     private String remark;
 
+    /**
+     * 0pc 1WX 2AND 3IOS 4other
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 提现原因
+     *
+     * @mbggenerated
+     */
     private String reason;
 
+    /**
+     * 银行存管提现标志位 1为银行存管 0非银行存管
+     *
+     * @mbggenerated
+     */
     private Integer bankFlag;
 
+    /**
+     * 银行电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer seqNo;
 
+    /**
+     * 交易日期+交易时间+交易流水号
+     *
+     * @mbggenerated
+     */
     private String bankSeqNo;
 
+    /**
+     * 提现类型 0主动提现  1代提现
+     *
+     * @mbggenerated
+     */
     private Integer withdrawType;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

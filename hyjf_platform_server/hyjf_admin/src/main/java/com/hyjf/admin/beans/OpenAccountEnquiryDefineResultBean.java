@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 /**
- * 开户点单查询返回实体
+ * 开户掉单查询返回实体
  * @version OpenAccountEnquiryDefineResultBean, v0.1 2018/8/20 15:42
  * @Author: Zha Daojian
  */

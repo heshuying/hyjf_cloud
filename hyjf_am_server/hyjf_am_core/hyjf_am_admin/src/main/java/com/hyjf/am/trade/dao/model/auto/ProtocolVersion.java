@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ProtocolVersion implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 协议id
+     *
+     * @mbggenerated
+     */
     private String protocolId;
 
+    /**
+     * 协议版本号
+     *
+     * @mbggenerated
+     */
     private String versionNumber;
 
+    /**
+     * 协议文件名称
+     *
+     * @mbggenerated
+     */
     private String protocolName;
 
+    /**
+     * 协议路径
+     *
+     * @mbggenerated
+     */
     private String protocolUrl;
 
+    /**
+     * 前台展示名称
+     *
+     * @mbggenerated
+     */
     private String displayName;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remarks;
 
+    /**
+     * 是否启用(0.版本不启用1.版本启用2.版本废弃)
+     *
+     * @mbggenerated
+     */
     private Integer displayFlag;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 修改人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

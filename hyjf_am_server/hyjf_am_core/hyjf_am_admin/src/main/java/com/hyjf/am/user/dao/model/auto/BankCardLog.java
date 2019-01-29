@@ -4,26 +4,76 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BankCardLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
     private String userName;
 
+    /**
+     * 银行账号
+     *
+     * @mbggenerated
+     */
     private String cardNo;
 
+    /**
+     * 银行缩写
+     *
+     * @mbggenerated
+     */
     private String bankCode;
 
+    /**
+     * 银行名称
+     *
+     * @mbggenerated
+     */
     private String bankName;
 
+    /**
+     * 卡类型 0普通提现卡1默认卡2快捷支付卡
+     *
+     * @mbggenerated
+     */
     private Integer cardType;
 
+    /**
+     * 操作类型 0绑定 1删除
+     *
+     * @mbggenerated
+     */
     private Integer operationType;
 
+    /**
+     * 操作状态  0 成功 1失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

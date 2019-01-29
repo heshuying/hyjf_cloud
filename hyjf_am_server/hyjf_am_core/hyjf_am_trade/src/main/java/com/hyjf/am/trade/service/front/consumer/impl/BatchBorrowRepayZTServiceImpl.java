@@ -457,16 +457,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						map.put("delFlag", delFlag);
 						return map;
 					} else {
-						throw new Exception("更新放款任务为放款请求失败失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+						throw new Exception("更新还款任务为还款请求失败失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
 					}
 				} else {
-					throw new Exception("放款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+					throw new Exception("还款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
 				}
 			} else {
-				throw new Exception("放款请求失败。[用户ID：" + apicron.getUserId()  + "]," + "[借款编号：" + borrowNid + "]");
+				throw new Exception("还款请求失败。[用户ID：" + apicron.getUserId()  + "]," + "[借款编号：" + borrowNid + "]");
 			}
 		} catch (Exception e) {
-			logger.info("-----------------------------------放款请求失败,错误信息:" + e.getMessage());
+			logger.info("-----------------------------------还款请求失败,错误信息:" + e.getMessage());
 		}
 		map.put("result", repayResult);
 		map.put("delFlag", delFlag);
@@ -589,17 +589,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		List<Account> listAccount = this.accountMapper.selectByExample(accountExample);
 		if (listAccount != null && listAccount.size() > 0) {
 			return listAccount.get(0);
-		}
-		return null;
-	}
-
-	private Borrow getBorrowByNid(String borrowNid) {
-		BorrowExample example = new BorrowExample();
-		BorrowExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<Borrow> list = borrowMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
 		}
 		return null;
 	}
@@ -818,8 +807,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 取得出借详情列表
 			List<BorrowRecover> borrowRecoverList = this.getBorrowRecoverList(borrowNid, apicron);
 			if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
+                logger.info("【直投还款】标的：{}，开始更新出借明细，共{}条。", borrowNid, borrowRecoverList.size());
 				// 遍历进行还款 
 				for (int i = 0; i < borrowRecoverList.size(); i++) {
+                    logger.info("【直投还款】标的：{}，开始更新第{}条出借明细。", borrowNid, i + 1);
 					// 出借明细
 					BorrowRecover borrowRecover = borrowRecoverList.get(i);
 					String tenderOrderId = borrowRecover.getNid();// 出借订单号
@@ -831,8 +822,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					JSONObject repayDetail = repayResults.get(repayOrderId);
 					// 如果发生了债转，处理相应的债转还款
 					if (creditAmount.compareTo(BigDecimal.ZERO) > 0) {
+                        logger.info("【直投还款】标的：{}，发生债转。", borrowNid);
 						List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, periodNow);
 						if (creditRepayList != null && creditRepayList.size() > 0) {
+                            logger.info("【直投还款】原始出借发生债转，出借订单号：{}，债转还款共{}条。", tenderOrderId, creditRepayList.size());
 							boolean creditRepayAllFlag = true;
 							boolean creditEndAllFlag = true;
 							for (int j = 0; j < creditRepayList.size(); j++) {
@@ -1751,7 +1744,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         logger.info("【直投还款】apicron:{}", JSON.toJSONString(apicron));
 		int repayUserId = apicron.getUserId();
 		int periodNow = apicron.getPeriodNow();
-		int repayCount = apicron.getTxCounts();// 放款总笔数
+		int repayCount = apicron.getTxCounts();// 还款总笔数
 		int txDate = Validator.isNotNull(apicron.getTxDate()) ? apicron.getTxDate() : 0;// 批次时间yyyyMMdd
 		int txTime = Validator.isNotNull(apicron.getTxTime()) ? apicron.getTxTime() : 0;// 批次时间hhmmss
 		String seqNo = Validator.isNotNull(apicron.getSeqNo()) ? String.valueOf(apicron.getSeqNo()) : null;// 流水号
@@ -2058,7 +2051,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
-					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
+					throw new Exception("更新状态为(还款成功)失败，项目编号:" + borrowNid + "]");
 				}
 			} else {
 				// 更新Borrow
@@ -2076,7 +2069,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
-					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
+					throw new Exception("更新状态为(还款成功)失败，项目编号:" + borrowNid + "]");
 				}
 			}
 		} else {
@@ -2308,7 +2301,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
-					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
+					throw new Exception("更新状态为(还款成功)失败，项目编号:" + borrowNid + "]");
 				}
 			} else {
 				// 更新Borrow
@@ -2326,7 +2319,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				apicron.setUpdateTime(new Date());
 				boolean apicronFlag = this.borrowApicronMapper.updateByExampleSelective(apicron, example) > 0 ? true : false;
 				if (!apicronFlag) {
-					throw new Exception("更新状态为(放款成功)失败，项目编号:" + borrowNid + "]");
+					throw new Exception("更新状态为(还款成功)失败，项目编号:" + borrowNid + "]");
 				}
 			}
 		}
@@ -2837,7 +2830,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		apicron.setFailCounts(apicron.getFailCounts() - 1);
 		boolean apicronSuccessFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(apicron) > 0 ? true : false;
 		if (!apicronSuccessFlag) {
-			throw new Exception("批次放款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
+			throw new Exception("批次还款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
 		}
 		try {
 			// 发送短信
@@ -3229,7 +3222,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             // 遍历标的放款信息
             for (int i = 0; i < borrowRecoverList.size(); i++) {
-                // 获取不分期的放款信息
+                // 获取不分期的还款信息
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
                 JSONObject subJson = new JSONObject();// 结果集对象
                 int tenderUserId = borrowRecover.getUserId();// 出借用户userId
@@ -3307,16 +3300,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                         map.put("delFlag", delFlag);
                         return map;
                     } else {
-                        throw new Exception("【直投批次代偿】更新放款任务为放款请求失败失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+                        throw new Exception("【直投批次代偿】更新还款任务为还款请求失败失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
                     }
                 } else {
-                    throw new Exception("【直投批次代偿】放款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+                    throw new Exception("【直投批次代偿】还款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
                 }
             } else {
-                throw new Exception("【直投批次代偿】放款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
+                throw new Exception("【直投批次代偿】还款请求失败。[用户ID：" + apicron.getUserId() + "]," + "[借款编号：" + borrowNid + "]");
             }
         } catch (Exception e) {
-            logger.info("-----------------------------------【直投批次代偿】放款请求失败,错误信息:" + e.getMessage());
+            logger.info("-----------------------------------【直投批次代偿】还款请求失败,错误信息:" + e.getMessage());
         }
         map.put("result", repayResult);
         map.put("delFlag", delFlag);

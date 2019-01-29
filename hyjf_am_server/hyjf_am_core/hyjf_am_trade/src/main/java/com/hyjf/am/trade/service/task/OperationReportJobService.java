@@ -62,11 +62,6 @@ public interface OperationReportJobService {
     double getInvestLastDate(Date date);
 
     /**
-     * 累计交易笔数
-     * @return
-     */
-    int getTradeCount();
-    /**
      * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
@@ -182,13 +177,6 @@ public interface OperationReportJobService {
      */
     List<OperationReportJobVO> getOneInterestsMost(int intervalMonth);
 
-    /**
-     * 通过用户ID查询 用户年龄，用户地区
-     *
-     * @param userId 用户ID
-     * @return
-     */
-    OperationReportJobVO getUserAgeAndArea(Integer userId);
 
     /**
      *出借人按照年龄分布 返回符合条件所有用户

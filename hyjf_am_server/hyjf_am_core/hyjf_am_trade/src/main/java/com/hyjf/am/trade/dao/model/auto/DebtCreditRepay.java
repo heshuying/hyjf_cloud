@@ -36,7 +36,7 @@ public class DebtCreditRepay implements Serializable {
     private String creditUserName;
 
     /**
-     * 原始标的出借订单号
+     * 原始标的投资订单号
      *
      * @mbggenerated
      */
@@ -316,63 +316,63 @@ public class DebtCreditRepay implements Serializable {
     private BigDecimal repayDelayInterest;
 
     /**
-     * 出借人收到的还款本息
+     * 投资人收到的还款本息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAccountYes;
 
     /**
-     * 出借人收到的还款本金
+     * 投资人收到的还款本金
      *
      * @mbggenerated
      */
     private BigDecimal receiveCapitalYes;
 
     /**
-     * 出借人收到的还款利息
+     * 投资人收到的还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveInterestYes;
 
     /**
-     * 出借人收取提前还款利息
+     * 投资人收取提前还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAdvanceInterest;
 
     /**
-     * 出借人收取逾期利息
+     * 投资人收取逾期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveLateInterest;
 
     /**
-     * 出借人收取延期利息
+     * 投资人收取延期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveDelayInterest;
 
     /**
-     * 出借人已收取提前还款利息
+     * 投资人已收取提前还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAdvanceInterestYes;
 
     /**
-     * 出借人已收取逾期利息
+     * 投资人已收取逾期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveLateInterestYes;
 
     /**
-     * 出借人已收取延期利息
+     * 投资人已收取延期利息
      *
      * @mbggenerated
      */

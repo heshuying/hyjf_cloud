@@ -27,7 +27,7 @@ public class HjhInstConfig implements Serializable {
     private String instName;
 
     /**
-     * 机构类别(0:借款机构,1:出借机构)
+     * 机构类别(0:借款机构,1:投资机构)
      *
      * @mbggenerated
      */

@@ -310,7 +310,7 @@ public class CouponBackMoneyController extends BaseController {
             map.put("couponQuota", "体验金面值");
             map.put("couponProfitTime", "体验金收益期限");
             map.put("couponUserCode", "体验金编号");
-            map.put("addTime", "投资时间");
+            map.put("addTime", "出借时间");
             map.put("hcrAddTime", "放款时间");
             map.put("recoverTime", "应回款时间");
             map.put("recoverInterest", "回款金额");

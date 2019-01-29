@@ -8,14 +8,14 @@ public class IncreaseInterestLoanDetail implements Serializable {
     private Integer id;
 
     /**
-     * 出借用户id
+     * 投资用户id
      *
      * @mbggenerated
      */
     private Integer userId;
 
     /**
-     * 出借用户名
+     * 投资用户名
      *
      * @mbggenerated
      */
@@ -78,21 +78,21 @@ public class IncreaseInterestLoanDetail implements Serializable {
     private String borrowStyleName;
 
     /**
-     * 出借id
+     * 投资id
      *
      * @mbggenerated
      */
     private Integer investId;
 
     /**
-     * 出借订单号
+     * 投资订单号
      *
      * @mbggenerated
      */
     private String investOrderId;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */

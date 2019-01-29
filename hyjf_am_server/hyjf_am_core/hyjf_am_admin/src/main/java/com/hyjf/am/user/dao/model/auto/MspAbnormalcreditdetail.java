@@ -5,14 +5,39 @@ import java.io.Serializable;
 public class MspAbnormalcreditdetail implements Serializable {
     private Integer id;
 
+    /**
+     * 异常还款记录明细
+     *
+     * @mbggenerated
+     */
     private String abcdId;
 
+    /**
+     * 到期日期
+     *
+     * @mbggenerated
+     */
     private String checkoverduedate;
 
+    /**
+     * 借款类型
+     *
+     * @mbggenerated
+     */
     private String overduedays;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private String overduereason;
 
+    /**
+     * 担保方式
+     *
+     * @mbggenerated
+     */
     private String overduestate;
 
     private String opertime;

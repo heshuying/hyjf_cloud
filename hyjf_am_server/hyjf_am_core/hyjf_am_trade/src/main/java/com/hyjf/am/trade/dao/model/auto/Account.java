@@ -113,7 +113,7 @@ public class Account implements Serializable {
     private BigDecimal planAccedeBalance;
 
     /**
-     * 出借汇添金标的出借的未放款金额
+     * 投资汇添金标的投资的未放款金额
      *
      * @mbggenerated
      */
@@ -197,7 +197,7 @@ public class Account implements Serializable {
     private BigDecimal bankInterestSum;
 
     /**
-     * 银行累计出借
+     * 银行累计投资
      *
      * @mbggenerated
      */
@@ -251,20 +251,6 @@ public class Account implements Serializable {
      * @mbggenerated
      */
     private Integer delFlag;
-
-    /**
-     * 创建人id
-     *
-     * @mbggenerated
-     */
-    private Integer createUser;
-
-    /**
-     * 更新人id
-     *
-     * @mbggenerated
-     */
-    private Integer updateUser;
 
     /**
      * 创建时间
@@ -568,22 +554,6 @@ public class Account implements Serializable {
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
-    }
-
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
     }
 
     public Date getCreateTime() {

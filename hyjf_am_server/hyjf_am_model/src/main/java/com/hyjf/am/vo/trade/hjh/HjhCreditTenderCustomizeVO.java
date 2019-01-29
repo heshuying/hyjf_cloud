@@ -358,4 +358,8 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
     public String getProjectPeriod() {
         return projectPeriod;
     }
+
+    public String getPeriodView(){
+		return this.getAssignPeriod() + "/" + this.getBorrowPeriod();
+	}
 }

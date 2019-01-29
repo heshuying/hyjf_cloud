@@ -139,9 +139,9 @@ public class BorrowAuthServiceImpl extends BaseTradeServiceImpl implements Borro
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallConstant.TXCODE_TRUSTEE_PAY);// 消息类型(用户开户)
         bean.setChannel("000002");// 渠道APP:000001,  渠道PC:000002 渠道Wechat:000003
-        bean.setAccountId(whiteListVO.getAccountid());// 电子账号
+        bean.setAccountId(whiteListVO.getAccountId());// 电子账号
         bean.setProductId(borrowNid); //标的编号
-        bean.setReceiptAccountId(whiteListVO.getStAccountid()); // 收款人电子帐户
+        bean.setReceiptAccountId(whiteListVO.getStAccountId()); // 收款人电子帐户
         // 取用户类型 如果企业用户 上送不同
         if (user.getUserType() == 1) { // 企业用户 传组织机构代码
             CorpOpenAccountRecordVO record = amUserClient.selectCorpOpenAccountRecordByUserId(user.getUserId());

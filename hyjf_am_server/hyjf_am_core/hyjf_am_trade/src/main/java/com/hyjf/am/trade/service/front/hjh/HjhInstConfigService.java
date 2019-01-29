@@ -23,11 +23,5 @@ public interface HjhInstConfigService {
      */
     HjhInstConfig selectInstConfigByInstCode(String instCode);
 
-    /**
-     * 根据机构编号查询机构列表
-     * @return
-     */
-    List<HjhInstConfig> selectInstConfigAll();
-
     List<RecentPaymentListCustomize> selectRecentPaymentList(Map<String, Object> paraMap);
 }

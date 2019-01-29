@@ -39,8 +39,6 @@ public class AppMyProjectDetailController extends BaseTradeController {
     @Autowired
     private AppMyProjectService appMyProjectService;
     @Autowired
-    NifaContractEssenceMessageService nifaContractEssenceMessageService;
-    @Autowired
     private CommonProducer commonProducer;
     /**
      * 用户中心我的散标详情
@@ -75,7 +73,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
     	String platform = httpServletRequest.getParameter("platform");
         JSONObject  result =  appMyProjectService.saveTenderToCredit(request,userId);
         //保存用户日志mq
-        BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(request.getBorrowNid());
+        BorrowAndInfoVO borrow = this.appMyProjectService.getBorrowByNid(request.getBorrowNid());
         boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
 

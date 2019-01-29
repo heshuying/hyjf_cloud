@@ -1,6 +1,7 @@
 package com.hyjf.admin.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
@@ -1364,4 +1365,36 @@ public interface AmUserClient {
      * @Author : huanghui
      */
     UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
+
+    /***
+     * 开户掉单，保存开户User数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateUser(OpenAccountEnquiryDefineResultBean requestBean);
+
+    /***
+     * 开户掉单，保存开户Account数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateAccount(OpenAccountEnquiryDefineResultBean requestBean);
+
+    /**
+     * 查询用户名不在表中数量
+     * @param request
+     * @return
+     */
+    int countUserNames(UserPortraitCustomizeRequest request);
+
+    /**
+     * 批量插入用户画像表
+     * @param request
+     * @return
+     */
+    int updateBatch(UserPortraitCustomizeRequest request);
 }

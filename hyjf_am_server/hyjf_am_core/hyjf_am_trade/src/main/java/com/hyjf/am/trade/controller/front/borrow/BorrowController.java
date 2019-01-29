@@ -137,7 +137,7 @@ public class BorrowController extends BaseController {
 	@GetMapping("/getBorrow/{borrowNid}")
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
-		Borrow borrow = borrowService.getBorrow(borrowNid);
+		Borrow borrow = borrowService.getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
 		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)) {
@@ -215,7 +215,7 @@ public class BorrowController extends BaseController {
 	@GetMapping("/getBorrowByNid/{borrowId}")
 	public BorrowResponse getBorrowByNid(@PathVariable String borrowId){
 		BorrowResponse response = new BorrowResponse();
-		Borrow borrow = borrowService.getBorrow(borrowId);
+		Borrow borrow = borrowService.getBorrowByNid(borrowId);
 		BorrowInfo borrowInfo=borrowService.getBorrowInfoByNid(borrowId);
 		BorrowAndInfoVO borrowAndInfoVo = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
@@ -236,7 +236,7 @@ public class BorrowController extends BaseController {
 	@GetMapping("/getRightBorrowByNid/{borrowId}")
 	public RightBorrowResponse getRightBorrowByNid(@PathVariable String borrowId){
 		RightBorrowResponse response = new RightBorrowResponse();
-		Borrow borrow = borrowService.getBorrow(borrowId);
+		Borrow borrow = borrowService.getBorrowByNid(borrowId);
 		if (Validator.isNotNull(borrow)){
 			response.setResult(CommonUtils.convertBean(borrow,RightBorrowVO.class));
 		}

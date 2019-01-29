@@ -14,7 +14,6 @@ import com.hyjf.cs.trade.bean.BaseBean;
 import java.math.BigDecimal;
 import java.util.List;
 
-
 public interface BaseTradeService extends BaseService{
     /**
      * @Description 根据token查询user
@@ -194,7 +193,7 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
-    
+
     /**
      * 压缩zip文件包
      *
@@ -203,4 +202,5 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     boolean writeZip(StringBuffer sb, String zipName);
+
 }

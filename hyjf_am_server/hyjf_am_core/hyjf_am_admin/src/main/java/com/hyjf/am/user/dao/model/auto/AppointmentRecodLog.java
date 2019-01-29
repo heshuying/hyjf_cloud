@@ -5,28 +5,88 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class AppointmentRecodLog implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 违约分值
+     *
+     * @mbggenerated
+     */
     private Integer recod;
 
+    /**
+     * 违约总计分值
+     *
+     * @mbggenerated
+     */
     private Integer recodTotal;
 
+    /**
+     * 违约标号
+     *
+     * @mbggenerated
+     */
     private String recodNid;
 
+    /**
+     * 违约金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recodMoney;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String apointOrderId;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String recodRemark;
 
+    /**
+     * 违约类型：0取消预约，1金额不足
+     *
+     * @mbggenerated
+     */
     private Integer recodType;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -6,25 +6,24 @@ package com.hyjf.cs.trade.client.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AccountWebListResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.bifa.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.response.trade.ChinapnrExclusiveLogWithBLOBsResponse;
 import com.hyjf.am.response.trade.ChinapnrLogResponse;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
 import com.hyjf.am.vo.trade.bifa.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.app.AppUtmRegResponse;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.trade.client.CsMessageClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ import java.util.List;
  * @author yaoyong
  * @version CsMessageClientImpl, v0.1 2018/8/14 19:46
  */
-@Service
+@Cilent
 public class CsMessageClientImpl implements CsMessageClient {
 
     @Autowired

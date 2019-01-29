@@ -64,17 +64,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	@Autowired
 	private SystemConfig systemConfig;
 
-	private Borrow getBorrowByNid(String borrowNid) {
-		BorrowExample example = new BorrowExample();
-		BorrowExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<Borrow> list = borrowMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
-
 	/**
 	 * 拼装返回信息
 	 * @param data
@@ -1278,7 +1267,8 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					System.out.println("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
 					BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
 					Transaction transaction = jedis.multi();
-					transaction.set(borrowNid, recoverAccount.toString());
+//					transaction.set(borrowNid, recoverAccount.toString());
+					transaction.set(RedisConstants.BORROW_NID + borrowNid, recoverAccount.toString());
 					List<Object> result = transaction.exec();
 					if (result == null || result.isEmpty()) {
 						jedis.unwatch();
@@ -1339,7 +1329,8 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 							} else {
 								Transaction transaction = jedis.multi();
 								BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
-								transaction.set(borrowNid, lastAccount.toString());
+//								transaction.set(borrowNid, lastAccount.toString());
+								transaction.set(RedisConstants.BORROW_NID + borrowNid, lastAccount.toString());
 								List<Object> result = transaction.exec();
 								if (result == null || result.isEmpty()) {
 									jedis.unwatch();
