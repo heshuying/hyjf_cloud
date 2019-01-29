@@ -103,7 +103,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
     }
 
     @Override
-    public void historydatareport() {
+    public void historyDataReport() {
         try {
             // 启动限制开关 redis.BIFA_HISTORY_OPEN_FLAG = 1 时，执行任务。
             if ( !(RedisUtils.get(RedisConstants.BIFA_HISTORY_OPEN_FLAG) != null

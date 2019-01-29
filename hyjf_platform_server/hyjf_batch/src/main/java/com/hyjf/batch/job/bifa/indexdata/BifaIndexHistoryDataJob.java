@@ -18,7 +18,7 @@ public class BifaIndexHistoryDataJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BifaIndexHistoryDataJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bifaIndexData/historydatareport", null);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bifaIndexData/historyDataReport", null);
         logger.info("BifaIndexHistoryDataJob execute end...");
     }
 }

@@ -11,5 +11,5 @@ public interface BifaIndexDataService extends BaseHgDateReportService {
 
     void report();
 
-    void historydatareport();
+    void historyDataReport();
 }
