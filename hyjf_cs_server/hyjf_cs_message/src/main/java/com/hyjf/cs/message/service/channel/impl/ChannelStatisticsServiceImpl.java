@@ -109,35 +109,67 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
 
     @Override
     public List<PcChannelStatistics> searchPcChannelStatisticsList(PcChannelStatisticsRequest request) {
-        Query query = new Query();
+        /*Query query = new Query();
         Criteria criteria = new Criteria();
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
+        String[] utmIdsSrch = request.getUtmIdsSrch();
         if (startTime != null && endTime != null) {
             criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
-        query.addCriteria(criteria);
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
+            List<String> sourceIds = Arrays.asList(utmIdsSrch);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
+        }
+      *//*  query.addCriteria(criteria);
 
         int currPage = request.getCurrPage();
         int pageSize = request.getPageSize();
         int limitStart = (currPage - 1) * pageSize;
         query.skip(limitStart).limit(pageSize);
 
-        query.with(new Sort(Sort.Direction.DESC, "_id"));
-        return pcChannelStatisticsDao.find(query);
+        query.with(new Sort(Sort.Direction.DESC, "_id"));*//*
+        return pcChannelStatisticsDao.find(query);*/
+        return pcChannelStatisticsDao.searchPcChannelStatisticsList(request);
+
     }
 
     @Override
     public int selectCount(PcChannelStatisticsRequest request) {
-        Query query = new Query();
-        Criteria criteria = new Criteria();
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
+        String[] utmIdsSrch = request.getUtmIdsSrch();
+        Query query = new Query();
+        Criteria criteria = new Criteria();
         if (startTime != null && endTime != null) {
             criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
-        query.addCriteria(criteria);
-        query.with(new Sort(Sort.Direction.DESC, "_id"));
-        return pcChannelStatisticsDao.count(query).intValue();
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
+            List<String> sourceIds = Arrays.asList(utmIdsSrch);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
+        }
+        Aggregation aggregation = Aggregation.newAggregation(
+                match(criteria),
+                Aggregation.group("sourceId").count().as("count")
+        );
+        AggregationResults<Map> ar = appChannelStatisticsDao.countChannelStatistics(aggregation);
+        List<Map> result = ar.getMappedResults();
+        int count = result.size();
+        return count;
+
     }
 }
