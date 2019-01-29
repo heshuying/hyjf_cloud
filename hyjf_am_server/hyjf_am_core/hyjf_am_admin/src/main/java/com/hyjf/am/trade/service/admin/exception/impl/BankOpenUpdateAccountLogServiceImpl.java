@@ -74,21 +74,8 @@ public class BankOpenUpdateAccountLogServiceImpl extends BaseServiceImpl impleme
         // 更新trade  的  account表的电子帐户号
         boolean tradeAccountFlag = accountDetailService.updateAccountNumberByUserId(userId,requestBean.getAccountId()) > 0 ? true : false;
         logger.info("开户掉单  更新 trade 的account 结果{}",tradeAccountFlag);
-
-        // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
-        // 加入到消息队列
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        params.put("userId", String.valueOf(userId));
-        try {
-            logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
-
-            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
-        } catch (Exception e) {
-            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
-        }
         resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y);
-        resultBean.setResult("开户掉单同步成功!");
+        resultBean.setResult("开户掉单同步资金成功!");
         response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
         return response;
     }

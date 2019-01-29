@@ -82,6 +82,16 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     @Autowired
     private AuthService authService;
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final String ADD_TIME328_STRING = "2018-03-28";
+
     /**
      * 普通用户管理费总待还
      * @param userId
@@ -575,8 +585,25 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }else {
             // 老版协议下载
             List<BorrowCustomizeVO> recordList = recordList1;
+            BorrowCustomizeVO borrowCustomizeVO = recordList.get(0);
+            /**
+             * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+             * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+             * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+             */
+            //根据订单号获取用户放款信息
+            //放款记录创建时间（放款时间）
+            int addTime = ADD_TIME;
+            if(borrowCustomizeVO != null){
+                //放款记录创建时间（放款时间）
+                addTime = (borrowCustomizeVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowCustomizeVO.getCreateTime()));
+                if (addTime > ADD_TIME328) {
+                    logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
+                    return  null;
+                }
+            }
             Map<String, Object> contents = new HashMap<String, Object>();
-            contents.put("record", recordList.get(0));
+            contents.put("record", borrowCustomizeVO);
             contents.put("borrowNid", borrowNid);
             contents.put("nid", nid);
 

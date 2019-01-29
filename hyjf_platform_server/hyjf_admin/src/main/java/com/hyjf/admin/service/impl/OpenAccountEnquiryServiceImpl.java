@@ -208,12 +208,12 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             return resultBean;
         }
         //同步保存user信息
-        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
         if(openAccountEnquiryDefineRequestBeanVO !=null){
             ////同步保存user信息成
             if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
                 //同步保存Account信息
-                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
+                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
             }
         }
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
