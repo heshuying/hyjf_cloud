@@ -48,6 +48,12 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     @Autowired
     private CommonProducer commonProducer;
 
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
+
     /**
      * 普通借款人管理费总待还
      * @param userId
@@ -155,6 +161,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
+                int addTime = ADD_TIME;
                 List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
                 if(agreementList !=null && !agreementList.isEmpty()){
                     TenderAgreement tenderAgreement = agreementList.get(0);
@@ -164,11 +171,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         record.setFddStatus(1);
                     }else {
                         //隐藏下载按钮
-                        record.setFddStatus(0);
+                        record.setFddStatus(2);
                     }
                 }else {
-                    //下载老版本协议
-                    record.setFddStatus(1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
+                    if(borrowRecover != null){
+                        //放款记录创建时间（放款时间）
+                        addTime = borrowRecover.getCreditTime();
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        record.setFddStatus(1);
+                    } else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
                 }
             }
         }
@@ -315,6 +338,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
+                //放款时间
+                int addTime = ADD_TIME;
                 List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
                 if(agreementList !=null && !agreementList.isEmpty()){
                     TenderAgreement tenderAgreement = agreementList.get(0);
@@ -324,11 +349,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         record.setFddStatus(1);
                     }else {
                         //隐藏下载按钮
-                        record.setFddStatus(0);
+                        record.setFddStatus(2);
                     }
                 }else {
-                    //下载老版本协议
-                    record.setFddStatus(1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
+                    if(borrowRecover != null){
+                        //放款记录创建时间（放款时间）
+                        addTime = borrowRecover.getCreditTime();
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        record.setFddStatus(1);
+                    } else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
                 }
             }
         }
@@ -422,6 +463,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
+                //放款时间
+                int addTime = ADD_TIME;
                 List<TenderAgreement> agreementList = this.getTenderAgreement(tender.getNid());
                 if(agreementList !=null && !agreementList.isEmpty()){
                     TenderAgreement tenderAgreement = agreementList.get(0);
@@ -431,11 +474,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         record.setFddStatus(1);
                     }else {
                         //隐藏下载按钮
-                        record.setFddStatus(0);
+                        record.setFddStatus(2);
                     }
                 }else {
-                    //下载老版本协议
-                    record.setFddStatus(1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
+                    if(borrowRecover != null){
+                        //放款记录创建时间（放款时间）
+                        addTime = borrowRecover.getCreditTime();
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        record.setFddStatus(1);
+                    } else {
+                        //隐藏下载按钮
+                        record.setFddStatus(0);
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
@@ -25,6 +26,7 @@ import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.util.Page;
@@ -69,6 +71,15 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
     @Autowired
     private AmUserClient amUserClient;
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final String ADD_TIME328_STRING = "2018-03-28";
 
 
     /**
@@ -125,6 +136,18 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 if (recordList.size() != 1) {
                     logger.error("标的信息异常[recordList.size = {}]（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。",recordList.size());
                     return null;
+                }
+                /**zdj
+                 * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                 * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                 * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                 */
+                //根据订单号获取用户放款信息
+                //放款记录创建时间（放款时间）
+                String addTime = recordList.get(0).getRecoverLastTime();
+                if (DateUtils.compareDateToString(ADD_TIME328_STRING,addTime)) {
+                    logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
+                    return  null;
                 }
                 contents.put("borrowNid", borrowNid);
                 contents.put("nid", nid);
@@ -380,7 +403,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             break;
                         }
                     }
-              /*  }else{
+                }else{
                     //计划中的标的
                     while (true) {
                         List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(assignNid);//hyjf_hjh_debt_credit_tender
@@ -388,6 +411,18 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
                             System.out.println("调用下载计划债转协议的方法 ---------------------:"+assignNid);
                             //调用下载计划债转协议的方法
+                            /**
+                             * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                             * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                             * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                             */
+                            //根据订单号获取用户放款信息
+                            //放款记录创建时间（放款时间）
+                           int addTime = (hjhCreditTender.getCreateTime() == null? 0 : GetDate.getTime10(hjhCreditTender.getCreateTime()));
+                            if (addTime > ADD_TIME328) {
+                                logger.error("createAgreementPDF 导出PDF文件（计划债转协议）,协议未生成");
+                                break;
+                            }
                             CreditAssignedBean tenderCreditAssignedBean  = new CreditAssignedBean();
                             Map<String, Object> creditContract = null;
                             tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
@@ -413,6 +448,22 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             nid = hjhCreditTender.getSellOrderId();
                             if(nid.equals(hjhCreditTender.getInvestOrderId())){
                                 //原始标的居间协议
+                                //放款记录创建时间（放款时间）
+                                addTime = ADD_TIME;
+                                /**
+                                 * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                                 * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                                 * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                                 */
+                                //根据订单号获取用户放款信息
+                                BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
+                                if(borrowRecoverVO != null){
+                                    addTime = borrowRecoverVO.getCreditTime();
+                                }
+                                if (addTime > ADD_TIME328) {
+                                    logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
+                                    break;
+                                }
                                 ProtocolRequest req;
                                 req = new ProtocolRequest();
                                 req.setBorrowNid(borrowNid);
@@ -432,9 +483,8 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             break;
                         }
                     }
-                }*/
+                }
             }
-        }
         if(files!=null && files.size()>0){
             ZIPGenerator.generateZip(response, files, borrowNid);
         }
@@ -596,15 +646,29 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             File file1;
             if (currentUserId != null && currentUserId.intValue() != 0) {
                 if (org.apache.commons.lang.StringUtils.isNotEmpty(borrowNid) && org.apache.commons.lang.StringUtils.isNotEmpty(nid)) {
-                    ProtocolRequest userInvestListBean = new ProtocolRequest();
-                    userInvestListBean.setBorrowNid(borrowNid);
-                    userInvestListBean.setNid(nid);
-                    userInvestListBean.setFlag(flag);
-                    userInvestListBean.setCreditUserId(creditUserId);
-                    file1 = creditPaymentPlan(userInvestListBean, currentUserId, request, response);
-                    if (file1 != null) {
-                        files.add(file1);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    int addTime = ADD_TIME;
+                    BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
+                    if(borrowRecoverVO != null){
+                        addTime = borrowRecoverVO.getCreditTime();
                     }
+                    if (addTime < ADD_TIME328) {
+                        ProtocolRequest userInvestListBean = new ProtocolRequest();
+                        userInvestListBean.setBorrowNid(borrowNid);
+                        userInvestListBean.setNid(nid);
+                        userInvestListBean.setFlag(flag);
+                        userInvestListBean.setCreditUserId(creditUserId);
+                        file1 = creditPaymentPlan(userInvestListBean, currentUserId, request, response);
+                        if (file1 != null) {
+                            files.add(file1);
+                        }
+                    }
+
                 }
             }
 
@@ -625,17 +689,31 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                         logger.info("下载协议参数不全。");
                         return;
                     }
-                    //将当前登陆者的ID传送
-                    tenderCreditAssignedBean.setCurrentUserId(currentUserId);
-                    // 模板参数对象
-                    Map<String, Object> creditContract = this.selectUserCreditContract(tenderCreditAssignedBean);
-                    // 临时文件夹生成PDF文件
-                    //generatePdfFile
-                    //原：PdfGenerator.generatePdf(request, response, ((CreditTender) creditContract.get("creditTender")).getAssignNid() + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
-                    File file2 = PdfGenerator.generatePdfFile(request, response, ((CreditTenderVO) creditContract.get("creditTender")).getAssignNid() + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
-                    if(file2!=null){
-                        files.add(file2);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    //根据订单号获取用户放款信息
+                    int addTime = ADD_TIME;
+                    CreditTenderVO creditTenderVO = amTradeClient.selectCreditTenderByAssignOrderId(assignNid);
+                    if(creditTenderVO != null){
+                        addTime = (creditTenderVO.getCreateTime() == null? 0 : GetDate.getTime10(creditTenderVO.getCreateTime()));
                     }
+                    if(addTime < ADD_TIME328){
+                        //将当前登陆者的ID传送
+                        tenderCreditAssignedBean.setCurrentUserId(currentUserId);
+                        // 模板参数对象
+                        Map<String, Object> creditContract = this.selectUserCreditContract(tenderCreditAssignedBean);
+                        // 临时文件夹生成PDF文件
+                        //generatePdfFile
+                        //原：PdfGenerator.generatePdf(request, response, ((CreditTender) creditContract.get("creditTender")).getAssignNid() + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
+                        File file2 = PdfGenerator.generatePdfFile(request, response, ((CreditTenderVO) creditContract.get("creditTender")).getAssignNid() + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
+                        if(file2!=null){
+                            files.add(file2);
+                        }
+                    }
+
                 } else {
                     logger.info("转让用户未登录！");
                     return;
@@ -1001,7 +1079,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         //输出文件集合
         List<File> files = new ArrayList<File>();
         TenderAgreementVO tenderAgreement = new TenderAgreementVO();
-        List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+        List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(nid);//汇盈金服互联网金融服务平台汇计划智投服务协议
         /*******************************下载法大大合同************************************/
 
         //下载法大大协议--债转
@@ -1009,7 +1087,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             tenderAgreement = tenderAgreementsNid.get(0);
             try {
                 if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
-                    File filePdf= FileUtil.getFile(tenderAgreement.getDownloadUrl(),nid+".pdf");//债转协议
+                    File filePdf= FileUtil.getFile(tenderAgreement.getDownloadUrl(),nid+".pdf");//汇盈金服互联网金融服务平台汇计划智投服务协议
                     if(filePdf!=null){
                         files.add(filePdf);
                     }
@@ -1023,23 +1101,39 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 return;
             }
         }else{//下载原来的
-            Map<String, Object> contents = new HashMap<String, Object>();
-            //1基本信息
-            Map<String ,Object> params=new HashMap<String ,Object>();
-            params.put("accedeOrderId", accedeOrderNid);
-            params.put("userId", userId);
-            UserInfoVO userInfo=amUserClient.findUserInfoById(userId);
-            contents.put("userInfo", userInfo);
-            contents.put("username", userVO.getUsername());
-            UserHjhInvistDetailCustomizeVO userHjhInvistDetailCustomize = amTradeClient.selectUserHjhInvistDetail(params);
-            contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
-            // 导出PDF文件
-            try {
-                PdfGenerator.generatePdf(request, response, planNid + "_" + accedeOrderNid + ".pdf",
-                        CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
-            } catch (Exception e) {
-                e.printStackTrace();
+            /**
+             * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+             * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+             * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+             */
+            //根据订单号获取用户放款信息
+            //放款记录创建时间（放款时间）
+            int addTime = ADD_TIME;
+            BorrowRecoverVO borrowRecoverVO =  amTradeClient.selectBorrowRecoverByNid(nid);
+            if(borrowRecoverVO != null){
+                //放款记录创建时间（放款时间）
+                addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                if (addTime < ADD_TIME328) {
+                    Map<String, Object> contents = new HashMap<String, Object>();
+                    //1基本信息
+                    Map<String ,Object> params=new HashMap<String ,Object>();
+                    params.put("accedeOrderId", accedeOrderNid);
+                    params.put("userId", userId);
+                    UserInfoVO userInfo=amUserClient.findUserInfoById(userId);
+                    contents.put("userInfo", userInfo);
+                    contents.put("username", userVO.getUsername());
+                    UserHjhInvistDetailCustomizeVO userHjhInvistDetailCustomize = amTradeClient.selectUserHjhInvistDetail(params);
+                    contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
+                    // 导出PDF文件
+                    try {
+                        PdfGenerator.generatePdf(request, response, planNid + "_" + accedeOrderNid + ".pdf",
+                                CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+
         }
     }
 
@@ -1075,6 +1169,23 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 return;
             }
 
+        }
+        /**
+         * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+         * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+         * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+         */
+        //根据订单号获取用户放款信息
+        //放款记录创建时间（放款时间）
+        int addTime = ADD_TIME;
+        BorrowRecoverVO borrowRecoverVO =  amTradeClient.selectBorrowRecoverByNid(nid);
+        if(borrowRecoverVO != null){
+            //放款记录创建时间（放款时间）
+            addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+            if (addTime > ADD_TIME328) {
+                logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
+                return;
+            }
         }
         //下载平台老协议
         // 融通宝静态打印
