@@ -1,15 +1,21 @@
 package com.hyjf.am.user.service.front.account.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardUpdateRequest;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.service.front.account.BindCardService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 绑卡接口实现类
@@ -18,6 +24,9 @@ import java.util.List;
 
 @Service
 public class BindCardServiceImpl extends BaseServiceImpl implements BindCardService {
+
+	@Autowired
+	private CommonProducer commonProducer;
 
 	/**
 	 * 查询用户已绑定的有效卡
@@ -102,7 +111,19 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 	@Override
 	public int updateUserCard(BankCard bankCard) {
 		bankCard.setUpdateTime(new Date());
-		return this.bankCardMapper.updateByPrimaryKeySelective(bankCard);
+		int cnt = this.bankCardMapper.updateByPrimaryKeySelective(bankCard);
+
+		// add 合规数据上报 埋点 liubin 20181122 start
+		if (StringUtils.isNotEmpty(bankCard.getCardNo()) && cnt > 0){
+			// 推送数据到MQ 用户信息修改（绑卡异步）
+			JSONObject params = new JSONObject();
+			params.put("userId", bankCard.getUserId());
+			commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+					MQConstant.HG_REPORT_DELAY_LEVEL);
+		}
+		// add 合规数据上报 埋点 liubin 20181122 end
+
+		return cnt;
 	}
 	
 	/**
