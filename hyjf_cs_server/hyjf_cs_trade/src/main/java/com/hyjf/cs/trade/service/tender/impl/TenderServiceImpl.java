@@ -898,7 +898,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                 if ("endday".equals(borrowStyle)) {
                     investProjectPeriod = borrow.getBorrowPeriod() + "天";
                 } else {
-                    investProjectPeriod = borrow.getBorrowPeriod() + "月";
+                    investProjectPeriod = borrow.getBorrowPeriod() + "个月";
                 }
                 params.put("investProjectPeriod", investProjectPeriod);
                 //根据investFlag标志位来决定更新哪种出借
@@ -941,7 +941,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			if ("endday".equals(borrowStyle)) {
 				investProjectPeriod = borrow.getBorrowPeriod() + "天";
 			} else {
-				investProjectPeriod = borrow.getBorrowPeriod() + "月";
+				investProjectPeriod = borrow.getBorrowPeriod() + "个月";
 			}
 			// 首次投标项目期限
 			params.put("investProjectPeriod", investProjectPeriod);
