@@ -98,12 +98,12 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
         this.prepareLenderZeroReportData(startDate, endDate);
         // 执行借贷用户(已放款)索引数据上报
         this.prepareBorrowedUserReportData(startDate, endDate);
-        // 执行数据上报操作
-        this.executeDataReport();
+        // 执行数据上报操作 测试时关闭北互金索引数据上报
+        //this.executeDataReport();
     }
 
     @Override
-    public void historydatareport() {
+    public void historyDataReport() {
         try {
             // 启动限制开关 redis.BIFA_HISTORY_OPEN_FLAG = 1 时，执行任务。
             if ( !(RedisUtils.get(RedisConstants.BIFA_HISTORY_OPEN_FLAG) != null

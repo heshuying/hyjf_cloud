@@ -33,8 +33,8 @@ public class BifaIndexDataController {
     /**
      * 索引历史数据上报
      */
-    @GetMapping("/historydatareport")
-    public void historydatareport(){
-        bifaIndexDataService.historydatareport();
+    @GetMapping("/historyDataReport")
+    public void historyDataReport(){
+        bifaIndexDataService.historyDataReport();
     }
 }
