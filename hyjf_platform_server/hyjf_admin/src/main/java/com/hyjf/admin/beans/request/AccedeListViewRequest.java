@@ -226,4 +226,20 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 	public void setIsOrganizationView(String isOrganizationView) {
 		this.isOrganizationView = isOrganizationView;
 	}
+
+	public String getMatchDatesSrch() {
+		return matchDatesSrch;
+	}
+
+	public void setMatchDatesSrch(String matchDatesSrch) {
+		this.matchDatesSrch = matchDatesSrch;
+	}
+
+	public String getInvestCountsSrch() {
+		return investCountsSrch;
+	}
+
+	public void setInvestCountsSrch(String investCountsSrch) {
+		this.investCountsSrch = investCountsSrch;
+	}
 }
