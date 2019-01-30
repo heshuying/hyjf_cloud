@@ -143,7 +143,7 @@
 
 	<!--如果订单状态异常时，且开始计息时间为空时也是要拿这个当前时间－授权服务时间-->
 	<update id="updateMatchDatesTwo" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
-        UPDATE ht_hjh_accedet
+        UPDATE ht_hjh_accede
         SET
             match_dates = IF(datediff(now(),FROM_UNIXTIME(create_time)) >= 99,99,datediff(now(),FROM_UNIXTIME(create_time)))
         WHERE
