@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.repayplan;
+package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.status;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.repayplan.CertRepayPlanService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.status.CertBorrowStatusService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -23,22 +23,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
- * @Description 合规数据上报 CERT 还款计划信息上报
+ * @Description 合规数据上报 CERT 散标状态上报（全部还款成功）
  * @Author nxl
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.LOAN_SUCCESS_TAG, consumerGroup = MQConstant.CERT_BORROW_REPAYMENTPLAN_GROUP)
-public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.REPAY_ALL_SUCCESS_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP)
+public class CertBorrowStatusMessageConsumerRepay implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    Logger logger = LoggerFactory.getLogger(CertRepayPlanMessageConsumer.class);
+    Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerRepay.class);
 
-    private String thisMessName = "还款计划信息推送";
+    private String thisMessName = "散标状态信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
-
-    @Autowired
-    private CertRepayPlanService certRepayPlanService;
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
@@ -49,6 +48,9 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
         logger.info(logHeader + "====start=====");
     }
+
+    @Autowired
+    private CertBorrowStatusService certBorrowStatusService;
 
     @Override
     public void onMessage(MessageExt msg) {
@@ -79,7 +81,7 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
         }
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
-        boolean canRun = certRepayPlanService.checkCanRun();
+        boolean canRun = certBorrowStatusService.checkCanRun();
         if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
@@ -88,22 +90,41 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
         // --> 消息处理
         try {
             // --> 调用service组装数据
-            JSONArray listRepay = certRepayPlanService.getBorrowReyapPlan(borrowNid, new JSONArray(), false);
-            logger.info("数据：" + listRepay.toString());
-            if (null == listRepay || listRepay.size() <= 0) {
-                logger.error(logHeader + "组装参数为空！！！标的编号为：" + borrowNid);
-                return;
-            }
+            JSONArray listRepay = new JSONArray();
+            Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false, false);
+            listRepay.add(mapParam);
+            logger.info("数据：" + listRepay);
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_REPAY_PLAN, borrowNid, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_STATUS, borrowNid, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
-                certRepayPlanService.insertAndSendPost(entity);
+                certBorrowStatusService.insertAndSendPost(entity);
             } catch (Exception e) {
                 throw e;
+            }
+            //判断标的状态 = 9 的,再报送一次 添加判断=9
+            // 上送数据
+            String productStatus = mapParam.get("productStatus").toString();
+            if (productStatus.equals("9")) {
+                // --> 调用service组装数据
+                JSONArray listRepayAfter = new JSONArray();
+                Map<String, Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, productStatus, false, false);
+                listRepayAfter.add(mapParamAfter);
+                logger.info("数据：" + listRepayAfter);
+                // 上送数据
+                CertReportEntityVO entityAfter = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_STATUS, borrowNid, listRepayAfter);
+                try {
+                    // 掉单用
+                    if (tradeDate != null && !"".equals(tradeDate)) {
+                        entityAfter.setTradeDate(tradeDate);
+                    }
+                    certBorrowStatusService.insertAndSendPost(entityAfter);
+                } catch (Exception e) {
+                    throw e;
+                }
             }
             logger.info(logHeader + " 处理成功。" + msgBody);
         } catch (Exception e) {
@@ -113,5 +134,4 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
             logger.info(logHeader + " 结束。");
         }
     }
-
 }
