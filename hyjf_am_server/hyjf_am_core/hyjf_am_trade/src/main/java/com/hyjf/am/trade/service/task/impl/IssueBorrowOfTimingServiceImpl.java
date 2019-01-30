@@ -62,7 +62,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void issueSplitBorrowOfTiming() throws Exception {
-		logger.info("拆分标的的自动发标 OntimeSplitTenderTask.run Start... ");
+		logger.info("汇计划自动发标任务 issueSplitBorrowOfTiming Start... ");
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
 		// 获取所有待发布的标的
