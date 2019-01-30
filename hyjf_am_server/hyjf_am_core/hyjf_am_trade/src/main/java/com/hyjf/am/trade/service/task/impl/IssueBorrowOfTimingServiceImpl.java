@@ -23,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -54,6 +51,13 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				if (!flag) {
 					throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 				}
+				// 散标自动发标成功发送mq到合规上报数据
+				// 3.自动发标batch 散标
+				JSONObject params = new JSONObject();
+				params.put("borrowNid", borrowCustomize.getBorrowNid());
+				params.put("userId", borrowCustomize.getUserId());
+				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+						MQConstant.HG_REPORT_DELAY_LEVEL);
 				logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
 			}
 		}
@@ -123,6 +127,14 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				if (!flag) {
 					throw new RuntimeException("汇计划标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 				}
+
+				// 智投标的自动发标成功发送mq到合规上报数据
+				// 4.自动发标batch 计划
+				JSONObject params = new JSONObject();
+				params.put("borrowNid", borrowCustomize.getBorrowNid());
+				params.put("userId", borrowCustomize.getUserId());
+				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+						MQConstant.HG_REPORT_DELAY_LEVEL);
 
 				if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
 					// 更新资产表

@@ -61,9 +61,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectUserRepayFeeWaitTotal(Integer userId){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("userId", userId);
-        return repayManageCustomizeMapper.selectUserRepayFeeWaitTotal(params);
+        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getWaitRepayManageFee(userId);
+        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getWaitRepayPlanManageFee(userId);
+        return waitManageFee.add(waitPlanManageFee);
     }
 
     /**
@@ -73,9 +73,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectOrgRepayFeeWaitTotal(Integer userId){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("userId", userId);
-        return repayManageCustomizeMapper.selectOrgRepayFeeWaitTotal(params);
+        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayManageFee(userId);
+        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayPlanManageFee(userId);
+        return waitManageFee.add(waitPlanManageFee);
     }
 
     /**
