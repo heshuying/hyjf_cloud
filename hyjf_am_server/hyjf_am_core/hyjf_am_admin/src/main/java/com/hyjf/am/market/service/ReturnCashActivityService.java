@@ -1,13 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.service.admin;
+package com.hyjf.am.market.service;
 
 import com.hyjf.am.market.dao.model.auto.InviterReturnDetail;
 import com.hyjf.am.market.dao.model.auto.NmUser;
 import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.resquest.market.InviterReturnCashCustomize;
-import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;

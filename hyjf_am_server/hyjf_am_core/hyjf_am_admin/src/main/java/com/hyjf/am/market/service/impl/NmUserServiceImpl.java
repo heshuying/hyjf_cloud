@@ -9,7 +9,6 @@ import com.hyjf.am.market.dao.model.auto.NmUser;
 import com.hyjf.am.market.dao.model.auto.NmUserExample;
 import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.market.service.NmUserService;
-import com.hyjf.am.trade.service.admin.impl.ReturnCashActivityServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
