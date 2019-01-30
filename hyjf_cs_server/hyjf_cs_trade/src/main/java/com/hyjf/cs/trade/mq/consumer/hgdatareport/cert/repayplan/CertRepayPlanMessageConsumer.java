@@ -90,7 +90,10 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
             // --> 调用service组装数据
             JSONArray listRepay = certRepayPlanService.getBorrowReyapPlan(borrowNid, new JSONArray(), false);
             logger.info("数据：" + listRepay.toString());
-
+            if (null == listRepay || listRepay.size() <= 0) {
+                logger.error(logHeader + "组装参数为空！！！标的编号为：" + borrowNid);
+                return;
+            }
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_REPAY_PLAN, borrowNid, listRepay);
             try {
