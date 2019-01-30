@@ -597,7 +597,6 @@
 		LEFT JOIN ht_borrow_repay br ON br.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		<include refid="Where_Clause1" />
-		ORDER BY verify_time ASC,borrowNid ASC, repayPeriod+0 ASC;
 		) as count
 	</select>
 
