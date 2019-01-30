@@ -87,6 +87,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     @Autowired
     private MyCreditListService myCreditListService;
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
     
     /**
      * 折让率格式
@@ -168,6 +174,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         String isIncrease = request.getParameter("isIncrease");
         // 还款日历里面点详情传入的是tender_nid  别的传的是ordid  加个字段区分一下  =1是还款日历的
         String isCalendar = request.getParameter("isCalendar");
+
+        // 原始投资订单号
+        String tenderNid = orderId;
 
         JSONObject jsonObject = new JSONObject();
 
@@ -388,7 +397,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             //调到居间服务协议
             jsonObject.put("isPreferred", false);
         }
-        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(orderId);//居间协议
+        int addTime = ADD_TIME;
+        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(tenderNid);//居间协议
+        BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(tenderNid);
+        if(borrowRecoverVO != null){
+            addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+        }
         if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
             TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
             Integer fddStatus = tenderAgreement.getStatus();
@@ -399,12 +413,21 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }else {
                 //隐藏下载按钮
                 //System.out.println("计划详情的接口参数******************2法大大协议状态：0");
-                jsonObject.put("fddStatus", 0);
+                jsonObject.put("fddStatus", 2);
             }
         }else {
-            //下载老版本协议
-            //System.out.println("计划详情的接口参数******************3法大大协议状态：2");
-            jsonObject.put("fddStatus", 1);;
+            /**
+             * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+             * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+             * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+             */
+            if (addTime<ADD_TIME328) {
+                //下载老版本协议
+                jsonObject.put("fddStatus", 1);
+            } else {
+                //隐藏下载按钮
+                jsonObject.put("fddStatus", 0);
+            }
         }
 
         jsonObject.put(CustomConstants.APP_STATUS,BaseResultBeanFrontEnd.SUCCESS);
