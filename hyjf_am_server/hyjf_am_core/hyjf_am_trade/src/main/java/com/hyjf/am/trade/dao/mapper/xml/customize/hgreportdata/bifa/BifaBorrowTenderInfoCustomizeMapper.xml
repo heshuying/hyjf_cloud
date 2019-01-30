@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.BifaBorrowTenderInfoCustomizeMapper">
+
+	<select id="getBorrowTenderAccountSum" resultType="com.hyjf.am.trade.dao.model.bifa.UserIdAccountSumBean">
+		SELECT DISTINCT
+			user_id
+		FROM
+			ht_borrow_tender
+		WHERE
+			loan_order_date BETWEEN DATE_FORMAT( FROM_UNIXTIME( #{startDate} ), '%Y%m%d' ) AND DATE_FORMAT( FROM_UNIXTIME( #{endDate} ), '%Y%m%d' )
+		UNION
+		SELECT DISTINCT
+			user_id
+		FROM
+			ht_credit_tender
+		WHERE
+			create_time BETWEEN  #{startDate}  AND  #{endDate}
+		UNION
+		SELECT DISTINCT
+			user_id
+		FROM
+			ht_hjh_debt_credit_tender
+		WHERE
+			create_time BETWEEN  #{startDate}  AND  #{endDate}
+	</select>
+
+</mapper>

@@ -559,7 +559,6 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/exportusers")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
-
         // 用户是否具有组织机构查看权限
         String isOrganizationView = userManagerRequestBean.getIsOrganizationView();
         // 获取该角色 权限列表
@@ -630,14 +629,19 @@ public class UserCenterController extends BaseController {
         map.put("userName", "用户名");
         map.put("realName", "姓名");
         map.put("sex", "性别");
-        map.put("birthday", "年龄");
+        map.put("age", "年龄");
         map.put("birthday", "生日");
         map.put("idcard", "身份证号");
-        map.put("idcard", "户籍所在地");
+        // 新增户籍所在地
+        map.put("areaByIdCard", "户籍所在地");
         map.put("mobile", "手机号码");
+        // 会员类型（迁移无字段）删除
+        //map.put("vipType", "会员类型");
         map.put("userRole", "用户角色");
         map.put("userProperty", "用户属性");
         map.put("recommendName", "推荐人");
+        // 51老用户（迁移无字段）删除
+        //map.put("is51", "51老用户");
         map.put("userStatus", "用户状态");
         map.put("bankOpenAccount", "银行开户状态");
         map.put("bankOpenTime", "银行开户时间");
@@ -691,13 +695,38 @@ public class UserCenterController extends BaseController {
                 return AsteriskProcessUtil.getAsteriskedValue(mobile);
             }
         };
+        //户籍所在地
+        IValueFormatter areaByIdCard = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String areaByIdCard = (String) object;
+                return  userCenterService.getAreaByIdCard(areaByIdCard);
+            }
+        };
+        // 年龄
+        IValueFormatter age = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String age = (String) object;
+                if (StringUtils.isBlank(age)) {
+                    return "";
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+                Date date = new Date();
+                String formatDate = sdf.format(date);
+                return  String.valueOf(Integer.parseInt(formatDate) - Integer.parseInt(age.substring(0, 4)));
+            }
+        };
         mapAdapter.put("sex", sexAdapter);
         mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("idcard", idcardAdapter);
         mapAdapter.put("bankOpenAccount", bankOpenAccounAdapter);
         mapAdapter.put("openAccount", openAccounAdapter);
+        mapAdapter.put("areaByIdCard", areaByIdCard);
+        mapAdapter.put("age", age);
         return mapAdapter;
     }
+
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         IValueFormatter sexAdapter = new IValueFormatter() {
@@ -733,12 +762,36 @@ public class UserCenterController extends BaseController {
                 return "1".equals(openAccount)?"已开户":"未开户";
             }
         };
+        IValueFormatter areaByIdCardAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String areaByIdCard = (String) object;
+                return  userCenterService.getAreaByIdCard(areaByIdCard);
+            }
+        };
+        IValueFormatter ageAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String age = (String) object;
+                if (StringUtils.isBlank(age)) {
+                    return "";
+                }
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+                Date date = new Date();
+                String formatDate = sdf.format(date);
+                return  String.valueOf(Integer.parseInt(formatDate) - Integer.parseInt(age.substring(0, 4)));
+            }
+        };
+
         mapAdapter.put("sex", sexAdapter);
        // mapAdapter.put("idcard", idcardAdapter);
         mapAdapter.put("bankOpenAccount", bankOpenAccounAdapter);
         mapAdapter.put("openAccount", openAccounAdapter);
+        mapAdapter.put("areaByIdCard", areaByIdCardAdapter);
+        mapAdapter.put("age", ageAdapter);
         return mapAdapter;
     }
+
     public String getAge(String birthday) {
         if (StringUtils.isBlank(birthday)||birthday.contains("--")) {
             return "";

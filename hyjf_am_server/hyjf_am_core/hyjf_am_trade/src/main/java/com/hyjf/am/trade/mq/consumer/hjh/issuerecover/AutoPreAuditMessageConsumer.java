@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Auther: walter.limeng
@@ -142,6 +143,14 @@ public class AutoPreAuditMessageConsumer
 			return;
 		}
 
+		// 自动初审成功推送消息到合规上报数据
+		// 6.流程自动初审成功后触发
+		JSONObject params = new JSONObject();
+		params.put("borrowNid", borrow.getBorrowNid());
+		params.put("userId", borrow.getUserId());
+		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+				MQConstant.HG_REPORT_DELAY_LEVEL);
+
 		if (borrow.getIsEngineUsed() != null && borrow.getIsEngineUsed() == 1) {
 			// 成功后到关联计划队列
 			this.sendAutoJoinPlanMessage(borrow.getBorrowNid());
@@ -193,6 +202,14 @@ public class AutoPreAuditMessageConsumer
 			logger.error("自动初审失败！" + "[资产编号：" + hjhPlanAsset.getAssetId() + "]");
 			return;
 		}
+
+		// 自动初审成功推送消息到合规上报数据
+		// 6.流程自动初审成功后触发
+		JSONObject params = new JSONObject();
+		params.put("borrowNid", borrow.getBorrowNid());
+		params.put("userId", borrow.getUserId());
+		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+				MQConstant.HG_REPORT_DELAY_LEVEL);
 
 		// 未匹配计划发送关联计划队列
 		if (StringUtils.isBlank(borrow.getPlanNid())) {

@@ -56,7 +56,7 @@ public class BorrowRepayController extends BaseController {
     }
 
 
-    @GetMapping("getBorrowRepayListByBorrowNid/{borrowNid}")
+    @GetMapping("/getBorrowRepayListByBorrowNid/{borrowNid}")
     public BorrowRepayResponse getBorrowRepayListByBorrowNid(@PathVariable String borrowNid) {
         BorrowRepayResponse response = new BorrowRepayResponse();
         List<BorrowRepay> borrowRepays = borrowRepayService.getBorrowRepayList(borrowNid);

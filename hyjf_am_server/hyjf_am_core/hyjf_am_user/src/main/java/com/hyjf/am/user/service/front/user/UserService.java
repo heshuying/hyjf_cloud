@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.front.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
@@ -312,4 +313,19 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     User updateUserByUserId(Integer userId);
+
+	/**
+	 * 获取最近七天开户的用户
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<BifaIndexUserInfoBean> getBankOpenedAccountUsers(Integer startDate, Integer endDate);
+
+	/**
+	 * 获取借款人信息
+	 * @param userId
+	 * @return
+	 */
+    BifaIndexUserInfoBean getBifaIndexUserInfo(Integer userId);
 }

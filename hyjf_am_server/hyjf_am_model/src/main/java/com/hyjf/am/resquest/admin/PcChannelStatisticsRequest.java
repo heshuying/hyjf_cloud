@@ -21,7 +21,11 @@ public class PcChannelStatisticsRequest extends BasePage {
     @ApiModelProperty(value = "开始时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;
+    @ApiModelProperty(value = "渠道类别")
+    private String utmIds;
 
+    @ApiModelProperty(value = "渠道")
+    private String[] utmIdsSrch;
     /**
      * 开始时间
      */
@@ -43,5 +47,21 @@ public class PcChannelStatisticsRequest extends BasePage {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public String getUtmIds() {
+        return utmIds;
+    }
+
+    public void setUtmIds(String utmIds) {
+        this.utmIds = utmIds;
+    }
+
+    public String[] getUtmIdsSrch() {
+        return utmIdsSrch;
+    }
+
+    public void setUtmIdsSrch(String[] utmIdsSrch) {
+        this.utmIdsSrch = utmIdsSrch;
     }
 }

@@ -1,8 +1,14 @@
 package com.hyjf.cs.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -32,8 +38,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
+import java.io.*;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeService {
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -308,5 +319,225 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
 
         return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
     }
+    /**
+     * 获取标的还款信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRepayVO selectBorrowRepay(String borrowNid) {
+        BorrowRepayVO borrowRepayVO = amTradeClient.getBorrowRepay(borrowNid);
+        if (null != borrowRepayVO) {
+            return borrowRepayVO;
+        }
+        return null;
+    }
 
+    /**
+     * 获取标的放款信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowRecoverVO> selectBorrowRecoverListByBorrowNid(String borrowNid) {
+        List<BorrowRecoverVO> borrowRecoverVOS = amTradeClient.selectBorrowRecoverByBorrowNid(borrowNid);
+        if (CollectionUtils.isEmpty(borrowRecoverVOS)) {
+            return null;
+        }
+        return borrowRecoverVOS;
+    }
+
+    /**
+     * 获取标的投资人信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> selectBorrowTenderByBorrowNid(String borrowNid) {
+        List<BorrowTenderVO> borrowTenderVOList = amTradeClient.getBorrowTenderListByBorrowNid(borrowNid);
+        if (CollectionUtils.isEmpty(borrowTenderVOList)) {
+            return null;
+        }
+        return borrowTenderVOList;
+    }
+
+    /**
+     * 获取借款人信息（企业）
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowUserVO selectBorrowUsersByBorrowNid(String borrowNid) {
+        BorrowUserVO borrowUserVO = amTradeClient.getBorrowUser(borrowNid);
+        if (null != borrowUserVO) {
+            return borrowUserVO;
+        }
+        return null;
+    }
+
+    /**
+     * 获取借款人信息（个人）
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowManinfoVO selectBorrowMainfo(String borrowNid) {
+        BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+        if (null != borrowManinfoVO) {
+            return borrowManinfoVO;
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户CA认证信息
+     *
+     * @param username
+     * @param cardNo
+     * @return
+     */
+    @Override
+    public CertificateAuthorityVO selectCAInfoByUsername(String username, String cardNo, Integer idType) {
+        CertificateAuthorityRequest request = new CertificateAuthorityRequest();
+        request.setTrueName(username);
+        request.setIdNo(cardNo);
+        request.setIdType(idType);
+        List<CertificateAuthorityVO> list = amUserClient.getCertificateAuthorityList(request);
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    /**
+     * 根据平台借款等级变换中互金借款等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    @Override
+    public Integer getBorrowLevel(String borrowLevel) {
+        switch (borrowLevel) {
+            case "BBB":
+                return 0;
+            case "A":
+                return 1;
+            case "AA-":
+                return 2;
+            case "AA":
+                return 3;
+            case "AA+":
+                return 4;
+            case "AAA":
+                return 5;
+            default:
+                return -1;
+        }
+    }
+
+    /**
+     * 获取散标债转信息表
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public BorrowCreditVO selectBorrowCreditByCreditNid(String creditNid) {
+        BorrowCreditVO borrowCreditVO = amTradeClient.getBorrowCreditByCreditNid(creditNid);
+        if (null != borrowCreditVO) {
+            return borrowCreditVO;
+        }
+        return null;
+    }
+
+    /**
+     * 获取散标债转承接人的承接信息
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public List<CreditTenderVO> selectCreditTenderByCreditNid(String creditNid) {
+        CreditTenderRequest request =new CreditTenderRequest();
+        request.setCreditNid(creditNid);
+        List<CreditTenderVO> creditTenderVOS = amTradeClient.getCreditTenderList(request);
+        if (CollectionUtils.isEmpty(creditTenderVOS)) {
+            return null;
+        }
+        return creditTenderVOS;
+    }
+
+    /**
+     * 承接人承接记录
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditTenderVO> selectHjhDebtCreditTenderByCreditNid(String creditNid) {
+        HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();
+        request.setCreditNid(creditNid);
+        List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOS = amTradeClient.getHjhDebtCreditTenderList(request);
+        if (CollectionUtils.isEmpty(hjhDebtCreditTenderVOS)) {
+            return null;
+        }
+        return hjhDebtCreditTenderVOS;
+    }
+
+    /**
+     * 汇计划债转表
+     *
+     * @param creditNid
+     * @return
+     */
+    @Override
+    public HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid) {
+        HjhDebtCreditVO hjhDebtCreditVO = amTradeClient.selectHjhDebtCreditByCreditNid(creditNid);
+        if (null != hjhDebtCreditVO) {
+            return hjhDebtCreditVO;
+        }
+        return null;
+    }
+
+    /**
+     * 压缩zip文件包
+     *
+     * @param sb
+     * @param zipName
+     * @return
+     */
+    @Override
+    public boolean writeZip(StringBuffer sb, String zipName) {
+        try {
+            String[] files = sb.toString().split(",");
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
+            ZipOutputStream zos = new ZipOutputStream(os);
+            byte[] buf = new byte[8192];
+            int len;
+            for (int i = 0; i < files.length; i++) {
+                File file = new File(files[i]);
+                if (!file.isFile()) {
+                    continue;
+                }
+                ZipEntry ze = new ZipEntry(file.getName());
+                zos.putNextEntry(ze);
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                while ((len = bis.read(buf)) > 0) {
+                    zos.write(buf, 0, len);
+                }
+                zos.closeEntry();
+            }
+            zos.closeEntry();
+            zos.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

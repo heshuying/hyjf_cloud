@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderVO;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -148,4 +149,11 @@ public interface CouponService {
      * @return
      */
     BorrowTenderCpn selectBorrowTenderCpnByCouponTenderId(String couponTenderId);
+    /**
+     * 获取投资红包金额
+     * add by nxl
+     * @param realTenderId
+     * @return
+     */
+    BigDecimal getRedPackageSum(String realTenderId);
 }

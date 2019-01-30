@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
@@ -5008,6 +5009,31 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     hjhAccede.setCreditCompleteFlag(2);//将清算状态置为2,以便2次清算
                     this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
                     logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "，订单号：" + planOrderId + "===================");
+
+                    // add 合规数据上报 埋点 liubin 20181122 start
+                    //停止债转并且没有被承接过
+                    if (hjhDebtCredit.getCreditStatus().compareTo(3) == 0) {
+                        if (hjhDebtCredit.getCreditCapitalAssigned().compareTo(BigDecimal.ZERO) == 0) {
+                            JSONObject params = new JSONObject();
+                            params.put("creditNid", hjhDebtCredit.getCreditNid());
+                            params.put("flag", "2");//1（散）2（智投）
+                            params.put("status", "3"); //3承接（失败）
+                            // 推送数据到MQ 承接（失败）智
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_FAIL_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                        } else {
+                            // add 合规数据上报 埋点 liubin 20181122 start
+                            // 推送数据到MQ 承接（完全）散
+                            JSONObject params = new JSONObject();
+                            params.put("creditNid", hjhDebtCredit.getCreditNid());
+                            params.put("flag", "2");//1（散）2（智投）
+                            params.put("status", "2"); //2承接（成功）
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                            // add 合规数据上报 埋点 liubin 20181122 end
+                        }
+                    }
+                    // add 合规数据上报 埋点 liubin 20181122 end
                 }
             }
             //回滚开放额度 add by cwyang 2017-12-25
@@ -5025,6 +5051,26 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 老系统也是3，可能不对， 经过刘阳和杨昌卫确认，此处改成1(承接停止)，  2018年10月24日10:21:39
                     borrowCredit.setCreditStatus(1);
                     this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
+
+                    //停止债转并且没有被承接过
+                    if (borrowCredit.getCreditCapitalAssigned().compareTo(BigDecimal.ZERO) == 0) {
+                        JSONObject params = new JSONObject();
+                        params.put("creditNid", borrowCredit.getCreditNid()+"");
+                        params.put("flag", "1");//1（散）2（智投）
+                        params.put("status", "3"); //3承接（失败）
+                        // 推送数据到MQ 承接（失败）散
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_FAIL_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                    }else{
+                        // 推送数据到MQ 承接（完全）散
+                        JSONObject params = new JSONObject();
+                        params.put("creditNid", borrowCredit.getCreditNid()+"");
+                        params.put("flag", "1"); //1（散）2（智投）
+                        params.put("status", "2"); //2承接（成功）
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                    }
+                    // add 合规数据上报 埋点 liubin 20181122 end
                 }
             }
         }
