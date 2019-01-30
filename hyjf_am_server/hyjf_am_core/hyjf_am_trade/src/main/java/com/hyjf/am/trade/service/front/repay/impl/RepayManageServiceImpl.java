@@ -183,7 +183,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
                     if(borrowRecover != null){
                         //放款记录创建时间（放款时间）
-                        addTime = borrowRecover.getCreditTime();
+                        addTime = (borrowRecover.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecover.getCreateTime()));
                     }
                     if (addTime<ADD_TIME328) {
                         //下载老版本协议
@@ -361,7 +361,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
                     if(borrowRecover != null){
                         //放款记录创建时间（放款时间）
-                        addTime = borrowRecover.getCreditTime();
+                        addTime = (borrowRecover.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecover.getCreateTime()));
                     }
                     if (addTime<ADD_TIME328) {
                         //下载老版本协议
@@ -486,7 +486,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
                     if(borrowRecover != null){
                         //放款记录创建时间（放款时间）
-                        addTime = borrowRecover.getCreditTime();
+                        addTime = (borrowRecover.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecover.getCreateTime()));
                     }
                     if (addTime<ADD_TIME328) {
                         //下载老版本协议

@@ -105,7 +105,7 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "初始化用户画像修改页面", notes = "初始化用户画像修改页面")
     @PostMapping(value = "/initUserPortraitEdit")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<UserPortraitCustomizeVO> initUserPortraitEdit(HttpServletRequest request, @RequestBody int userId) {
         UserPortraitVO userPortraitVO = userPortraitService.selectUsersPortraitByUserId(userId);
         UserPortraitCustomizeVO userPortraitCustomizeVO = new UserPortraitCustomizeVO();
