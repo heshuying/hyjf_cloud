@@ -860,13 +860,13 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			cra.andAssignNidEqualTo(request.getAssignNid());
 		}
 		if(StringUtils.isNotBlank(request.getBidNid())) {
-			cra.andAssignNidEqualTo(request.getBidNid());
+			cra.andBidNidEqualTo(request.getBidNid());
 		}
 		if(StringUtils.isNotBlank(request.getCreditNid())) {
-			cra.andAssignNidEqualTo(request.getCreditNid());
+			cra.andCreditNidEqualTo(request.getCreditNid());
 		}
 		if(StringUtils.isNotBlank(request.getCreditTenderNid())) {
-			cra.andAssignNidEqualTo(request.getCreditTenderNid());
+			cra.andCreditTenderNidEqualTo(request.getCreditTenderNid());
 		}
 		return this.creditTenderMapper.selectByExample(creditTenderExample);
 	}
