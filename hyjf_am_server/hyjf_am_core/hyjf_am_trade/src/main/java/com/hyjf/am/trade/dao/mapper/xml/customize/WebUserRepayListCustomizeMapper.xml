@@ -414,4 +414,54 @@
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
+	<select id="getWaitRepayManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(htbr.repay_fee),0)
+		FROM
+		ht_borrow htb
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_repay htbr ON htbr.borrow_nid = htb.borrow_nid
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = 1
+		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
+		AND htb.borrow_style in ('endday','end') AND htba.id is null AND htb.user_id = #{userId}
+		AND (htb.`status` = 4 AND htb.repay_full_status = 0 )
+	</select>
+	<select id="getWaitRepayPlanManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(htbr.repay_fee),0)
+		FROM
+		ht_borrow htb
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_repay_plan htbr ON htbr.borrow_nid = htb.borrow_nid
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = htbr.repay_period
+		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
+		AND htba.id is null AND htb.user_id = #{userId}
+		AND (htb.`status` = 4 AND htb.repay_full_status = 0 )
+	</select>
+	<select id="getOrgWaitRepayManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(htbr.repay_fee),0)
+		FROM
+		ht_borrow htb
+		INNER JOIN ht_borrow_info htbi ON htb.borrow_nid = htbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_repay htbr ON htbr.borrow_nid = htb.borrow_nid
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = 1
+		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
+		AND htb.borrow_style in ('endday','end') AND htba.id is null AND htbi.repay_org_user_id = #{userId}
+		AND (htb.`status` = 4 AND htb.repay_full_status = 0)
+	</select>
+	<select id="getOrgWaitRepayPlanManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(htbr.repay_fee),0)
+		FROM
+		ht_borrow htb
+		INNER JOIN ht_borrow_info htbi ON htb.borrow_nid = htbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_repay_plan htbr ON htbr.borrow_nid = htb.borrow_nid
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = htbr.repay_period
+		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
+		AND htba.id is null AND htbi.repay_org_user_id = #{userId}
+		AND (htb.`status` = 4 AND htb.repay_full_status = 0)
+	</select>
 </mapper>

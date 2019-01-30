@@ -2600,7 +2600,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if ("endday".equals(borrowStyle)) {
             investProjectPeriod = borrow.getBorrowPeriod() + "天";
         } else {
-            investProjectPeriod = borrow.getBorrowPeriod() + "月";
+            investProjectPeriod = borrow.getBorrowPeriod() + "个月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
         params.put("investFlag", checkAppUtmInvestFlag(userId));
