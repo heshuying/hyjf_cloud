@@ -159,7 +159,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 								// 更新还款信息
 								boolean flag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
 								if (!flag) {
-									throw new RuntimeException("债转还款表(ht_credit_repay)更新还款订单号失败！[承接订单号：" + creditRepay.getAssignNid() + "][出借订单号：" + tenderOrderId + "]");
+									throw new RuntimeException("债转还款表(ht_credit_repay)更新还款订单号失败！[承接订单号：" + creditRepay.getAssignNid() + "]，[出借订单号：" + tenderOrderId + "]");
 								}
 							}
 							if (isMonth && Validator.isNotNull(borrowRecoverPlan)) {
@@ -210,7 +210,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 如果是垫付机构还款
 			if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
 				// 调用相应的担保机构还款接口
-				logger.info("【直投还款】借款编号：{}，批次代偿接口请求开始！", borrowNid);
+				logger.info("【直投还款请求】借款编号：{}，批次代偿接口请求开始！", borrowNid);
 				if (isMonth) {
 					resultMap = this.requestOrgRepay(borrow, repayAccountId, apicron, null, recoverPlanList, creditRepayList);
 				}else{
@@ -218,7 +218,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				}
 			} else {
 				// 调用相应的非担保机构还款接口
-				logger.info("【直投还款】借款编号：{}，批次还款接口请求开始！", borrowNid);
+				logger.info("【直投还款请求】借款编号：{}，批次还款接口请求开始！", borrowNid);
 				if (isMonth) {
 					resultMap = this.requestRepay(borrow, repayAccountId, apicron, null, recoverPlanList, creditRepayList);
 				}else{
@@ -663,7 +663,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	@Override
 	public int reapyBatchDetailsUpdate(BorrowApicron apicron) {
 
-		String borrowNid = apicron.getBorrowNid();// 項目编号
+		String borrowNid = apicron.getBorrowNid();// 项目编号
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
 		// 调用批次查询接口查询批次返回结果
@@ -1494,14 +1494,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		String authCode = repayDetail.getString(BankCallConstant.PARAM_AUTHCODE);// 出借授权码
 		// 垫付机构还款时,结束无法结束债权
 		Integer borrowUserId = borrowInfo.getUserId();
+        logger.info("【直投还款】标的：{}，结束债权。借款人：{}-{}，出借人：{}-{}，授权码：{}，原始订单号：{}。",
+                productId, borrowUserId, forAccountId, userId, accountId, authCode, orgOrderId);
 		// 根据用户ID查询借款人用户电子账户号
 		Account borrowUserAccount = this.getAccountByUserId(borrowUserId);
 		if(borrowUserAccount==null || borrowUserAccount.getAccountId() == null){
 			logger.error("【直投还款】结束债权获取借款人电子账户号失败！用户ID:{}", borrowUserId);
 			return false;
 		}
-		logger.info("【直投还款】标的：{}，结束债权。借款人：{}-{}，出借人：{}-{}，授权码：{}，原始订单号：{}。",
-				productId, borrowUserId, forAccountId, userId, accountId, authCode, orgOrderId);
 		// 借款人电子账户号
 		forAccountId = borrowUserAccount.getAccountId();
 		try {
@@ -1854,7 +1854,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			BorrowRecoverExample recoverExample = new BorrowRecoverExample();
 			recoverExample.createCriteria().andBorrowNidEqualTo(borrowNid).andRecoverStatusNotEqualTo(1);
 			failCount = this.borrowRecoverMapper.countByExample(recoverExample);
-			logger.info("【直投还款】借款编号：{}，失败笔数为：{}", borrowNid, failCount);
+			logger.info("【直投还款】借款编号：{}，原始投资失败笔数为：{}", borrowNid, failCount);
 			if (failCount == 0) {
 				repayType = TYPE_WAIT_YES;
 				repayStatus = 1;
@@ -2539,7 +2539,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             accountWebList.setFlag(1);
             //网站收支明细队列
             try {
-                logger.info("【直投还款/出借人】发送网站收支明细。还款人id：{}，管理费：{}", repayUserId, manageFee);
+                logger.info("【直投还款/出借人】发送网站收支明细。还款人ID：{}，管理费：{}", repayUserId, manageFee);
                 commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
             } catch (MQException e) {
                 logger.error("【直投还款/出借人】发送网站收支明细时发生系统异常！", e);
@@ -2597,15 +2597,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRecoverPlan.setRecoverStatus(2);
 				boolean flag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
 				if (!flag) {
-					throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！借款编号:" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]，[期数：" + periodNow + "]");
+					throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]，[期数：" + periodNow + "]");
 				}
 			}
-
 		} else {
 			borrowRecover.setRecoverStatus(2);
 			boolean flag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 			if (!flag) {
-				throw new Exception("放款记录总表(ht_borrow_recover)更新失败！借款编号:" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+				throw new Exception("放款记录总表(ht_borrow_recover)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 			}
 		}
 		return true;
@@ -3046,7 +3045,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 // 更新任务API状态为进行中
                 boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
                 if (!apicronFlag) {
-                    throw new Exception("【直投批次代偿】更新还款任务为进行中失败！[用户ID：" + userId + "]，[借款编号：" + borrowNid + "]");
+                    throw new Exception("【直投批次代偿】更新还款任务为进行中失败！[借款人用户ID：" + userId + "]，[借款编号：" + borrowNid + "]");
                 }
                 // 调用还款接口
                 BankCallBean repayBean = new BankCallBean();
