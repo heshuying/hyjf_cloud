@@ -72,7 +72,7 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 			}
 			String borrowNid = borrowApicron.getBorrowNid();// 借款编号
 			int borrowUserId = borrowApicron.getUserId();// 借款人userId
-			logger.info("【直投还款】借款编号：{}，直投类开始还款。", borrowNid);
+			logger.info("【直投还款】借款编号：{}，开始还款。", borrowNid);
 			// 生成任务key 校验并发请求
 			String redisKey = RedisConstants.ZHITOU_REPAY_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
 			boolean result = RedisUtils.tranactionSet(redisKey, 300);
@@ -148,24 +148,27 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 					} catch (Exception e) {
 						logger.error("【直投还款】发送mq到生成互金还款相关信息失败，放款标的:{}", borrowNid);
 					}
-
-					// add 合规数据上报 埋点 liubin 20181122 start
-					JSONObject params = new JSONObject();
-					params.put("borrowNid", borrowApicron.getBorrowNid());
-					params.put("repayPeriod", borrowApicron.getPeriodNow());
-					// 推送数据到MQ 还款（每期）
-					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
-							MQConstant.HG_REPORT_DELAY_LEVEL);
-
-					// 最后一期
-					if(borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())){
-						params = new JSONObject();
+					try {
+						// add 合规数据上报 埋点 liubin 20181122 start
+						JSONObject params = new JSONObject();
 						params.put("borrowNid", borrowApicron.getBorrowNid());
-						params.put("flag", "1"); //1（散）2（智投）
-						// status=5标的已还款
-						params.put("status", "5"); //5(标的已还款)
-						commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+						params.put("repayPeriod", borrowApicron.getPeriodNow());
+						// 推送数据到MQ 还款（每期）
+						commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
 								MQConstant.HG_REPORT_DELAY_LEVEL);
+
+						// 最后一期
+						if(borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())){
+							params = new JSONObject();
+							params.put("borrowNid", borrowApicron.getBorrowNid());
+							params.put("flag", "1"); //1（散）2（智投）
+							// status=5标的已还款
+							params.put("status", "5"); //5(标的已还款)
+							commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+									MQConstant.HG_REPORT_DELAY_LEVEL);
+						}
+					} catch (Exception e) {
+						logger.error("【直投还款】借款编号：{}，合规数据上报发生系统异常！", borrowNid, e);
 					}
 					// add 合规数据上报 埋点 liubin 20181122 end
                     logger.info("【直投还款】借款编号：{}，还款成功！", borrowNid);
@@ -199,7 +202,6 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 				return;
 			}
 			RedisUtils.del(redisKey);
-			logger.info("----------------------------直投还款结束--------------------------------");
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 		} catch (Exception e) {
 			logger.error("【直投还款】消费异常!", e);
