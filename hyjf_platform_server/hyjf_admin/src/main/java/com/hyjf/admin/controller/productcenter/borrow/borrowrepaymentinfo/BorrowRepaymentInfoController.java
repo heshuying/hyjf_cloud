@@ -463,7 +463,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         map.put("recoverCapitalYes","已回本金");
         map.put("recoverInterestYes","已回利息");
         map.put("recoverAccountYes","已回本息");
-        map.put("recoverCapitalWait","余待回本金");
+        map.put("recoverCapitalWait","剩余待回本金");
         map.put("recoverInterestWait","剩余待回利息");
         map.put("recoverAccountWait","剩余待回本息");
         map.put("status","回款状态");

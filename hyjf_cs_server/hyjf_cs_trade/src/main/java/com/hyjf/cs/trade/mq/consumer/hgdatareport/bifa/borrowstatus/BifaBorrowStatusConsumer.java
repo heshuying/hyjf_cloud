@@ -46,8 +46,8 @@ public class BifaBorrowStatusConsumer implements RocketMQListener<MessageExt>, R
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        // 设置为广播消费(区别于集群消费)
-        defaultMQPushConsumer.setMessageModel(MessageModel.BROADCASTING);
+        // 设置为集群消费(区别于广播消费)
+        defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
         logger.info(logHeader + " 开始。");
     }
 
@@ -58,11 +58,12 @@ public class BifaBorrowStatusConsumer implements RocketMQListener<MessageExt>, R
             logger.error(logHeader + "接收到的消息为null");
             return;
         }
-
-        String msgBody = new String(msg.getBody());
-        logger.info(logHeader + "接收到的消息：" + msgBody);
-
+        //-->标的放款和最后一期还款完成上报产品状态更新
         if (MQConstant.LOAN_SUCCESS_TAG.equals(msg.getTags()) || MQConstant.REPAY_ALL_SUCCESS_TAG.equals(msg.getTags())) {
+            //-->日志输出接收到的消息
+            String msgBody = new String(msg.getBody());
+            logger.info(logHeader + "接收到的消息：" + msgBody);
+
             JSONObject jsonObject;
             try {
                 jsonObject = JSONObject.parseObject(msgBody);
