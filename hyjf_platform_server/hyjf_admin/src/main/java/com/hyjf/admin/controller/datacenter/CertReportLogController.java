@@ -5,16 +5,11 @@ package com.hyjf.admin.controller.datacenter;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.CertErrorReportLogResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
-import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
 import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
-import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -33,7 +28,7 @@ import java.util.List;
 /**
  * 合规数据上报 CERT 应急中心上报记录
  */
-@Api(value = "数据中心_应急中心上报记录", tags = "数据中心_应急中心上报记录")
+@Api(value = "数据中心-应急中心上报记录", tags = "数据中心-应急中心上报记录")
 @RestController
 @RequestMapping("/hyjf-admin/datacenter/certreportlog")
 public class CertReportLogController extends BaseController{
@@ -47,7 +42,7 @@ public class CertReportLogController extends BaseController{
 
     @ApiOperation(value = "应急中心日志列表显示", notes = "应急中心日志列表显示")
     @PostMapping("/selectCertReportLogList")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertLogVO>> selectCertReportLogList(@RequestBody CertReportLogRequestBean requestBean){
         CertReportLogResponse response = certReportLogService.selectCertReportLogList(requestBean);
         if(response==null) {
@@ -60,6 +55,6 @@ public class CertReportLogController extends BaseController{
         if(null!=response.getResultList()&&response.getResultList().size()>0){
             certLogVOS = CommonUtils.convertBeanList(response.getResultList(),CertLogVO.class);
         }
-        return new AdminResult<ListResult<CertLogVO>>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
+        return new AdminResult<>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
     }
 }
