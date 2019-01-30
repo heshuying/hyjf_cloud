@@ -61,7 +61,7 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
             borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
             if(borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null
                     || StringUtils.isEmpty(borrowApicron.getPlanNid()) ){
-                logger.info(" 计划放款异常消息：" + msgD.getMsgId());
+                logger.info(" 智投放款异常消息：" + msgD.getMsgId());
                 return;
             }
             // 借款编号
@@ -74,7 +74,7 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                 logger.info("标的编号："+borrowNid+"，开始实时放款！");
                 boolean result = RedisUtils.tranactionSet(redisKey, 300);
                 if(!result){
-                    logger.error("计划类放款请求中....");
+                    logger.error("智投类放款请求中....");
                     return;
                 }
 
@@ -96,7 +96,7 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                     //自动修复出现异常的数据
                     realTimeBorrowLoanPlanService.updWhenPlanLoanSuccessed(borrowApicron);
                 } else {
-                    logger.error("计划标的编号：" + borrowNid + "，不是放款状态 "+ borrowApicron.getStatus());
+                    logger.error("智投标的编号：" + borrowNid + "，不是放款状态 "+ borrowApicron.getStatus());
                 }
 
                 // 重新获取borrowApicron数据，根据状态判断是否发送互金等埋点MQ
@@ -108,7 +108,7 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                 }
 
             } catch (Exception e) {
-                logger.error("计划放款系统异常", e);
+                logger.error("智投放款系统异常", e);
                 StringBuffer sbError = new StringBuffer();// 错误信息
                 sbError.append(e.getMessage()).append("<br/>");
                 String online = "生产环境";// 取得是否线上
@@ -138,11 +138,11 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                 logger.error("放款请求系统异常....");
                 return;
             }
-            logger.info("----------------计划放款任务结束，项目编号：" + borrowNid + "=============");
+            logger.info("----------------智投放款任务结束，项目编号：" + borrowNid + "=============");
             RedisUtils.del(redisKey);
-            logger.info("---------------------计划放款结束--------------------------------");
+            logger.info("---------------------智投放款结束--------------------------------");
         } catch (Exception e) {
-            logger.error("【计划放款】消费异常!", e);
+            logger.error("【智投放款】消费异常!", e);
             return;
         }
 		return;
