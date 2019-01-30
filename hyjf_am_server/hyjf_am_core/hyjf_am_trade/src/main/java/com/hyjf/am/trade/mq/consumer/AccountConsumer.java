@@ -40,7 +40,11 @@ public class AccountConsumer implements RocketMQListener<MessageExt>, RocketMQPu
 			logger.info("注册保存账户表...userId is :", accountVO.getUserId());
 			Account account = new Account();
 			BeanUtils.copyProperties(accountVO, account);
-			accountService.insert(account);
+			//update by cwyang 2019-01-30 如果没有account表的时候再添加新表
+			Account oldAccount = accountService.getAccount(accountVO.getUserId());
+			if(oldAccount == null){
+				accountService.insert(account);
+			}
 		} else {
 			logger.error("消费失败，未获取账户信息...");
 		}
