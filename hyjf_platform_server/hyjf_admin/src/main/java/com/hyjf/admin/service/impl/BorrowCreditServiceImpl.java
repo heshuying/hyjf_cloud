@@ -261,7 +261,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
 
         // add 合规数据上报 埋点 liubin 20181122 start
         //停止债转并且没有被承接过
-        if (borrowCredit.getCreditCapitalAssigned().compareTo(BigDecimal.ZERO) == 0) {
+        if (credit.getCreditCapitalAssigned().equals("0")) {
             params = new HashMap<String, String>();
             params.put("creditNid", credit.getCreditNid()+"");
             params.put("flag", "1");//1（散）2（智投）
