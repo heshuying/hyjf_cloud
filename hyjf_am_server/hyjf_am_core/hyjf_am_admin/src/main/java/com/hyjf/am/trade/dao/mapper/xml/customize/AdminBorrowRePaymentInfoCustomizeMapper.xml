@@ -240,7 +240,7 @@
 		CASE WHEN br.invite_user_attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
 		br.invite_user_name AS referrer_name,
 		br.invite_user_id AS referrer_user_id,
-		br.invite_user_name AS referrer_true_name,
+		iu.truename AS referrer_true_name,
 		`od6`.`name` AS `referrer_region_name`,
 		`od5`.`name` AS `referrer_branch_name`,
 		`od4`.`name` AS `referrer_department_name`,
@@ -270,6 +270,8 @@
 		ht_borrow AS b
 		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
 		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+		LEFT JOIN ht_r_user AS iu on br.invite_user_id=iu.user_id
+
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
