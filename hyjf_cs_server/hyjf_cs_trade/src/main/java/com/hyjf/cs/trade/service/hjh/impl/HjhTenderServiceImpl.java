@@ -1375,7 +1375,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if ("endday".equals(borrowStyle)) {
                 investProjectPeriod = planPeriod + "天";
             } else {
-                investProjectPeriod = planPeriod + "月";
+                investProjectPeriod = planPeriod + "个月";
             }
             params.put("investProjectPeriod", investProjectPeriod);
             //根据investFlag标志位来决定更新哪种出借

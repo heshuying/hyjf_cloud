@@ -61,9 +61,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectUserRepayFeeWaitTotal(Integer userId){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("userId", userId);
-        return repayManageCustomizeMapper.selectUserRepayFeeWaitTotal(params);
+        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getWaitRepayManageFee(userId);
+        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getWaitRepayPlanManageFee(userId);
+        return waitManageFee.add(waitPlanManageFee);
     }
 
     /**
@@ -73,9 +73,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectOrgRepayFeeWaitTotal(Integer userId){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("userId", userId);
-        return repayManageCustomizeMapper.selectOrgRepayFeeWaitTotal(params);
+        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayManageFee(userId);
+        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayPlanManageFee(userId);
+        return waitManageFee.add(waitPlanManageFee);
     }
 
     /**
@@ -183,7 +183,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
                     if(borrowRecover != null){
                         //放款记录创建时间（放款时间）
-                        addTime = borrowRecover.getCreditTime();
+                        addTime = (borrowRecover.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecover.getCreateTime()));
                     }
                     if (addTime<ADD_TIME328) {
                         //下载老版本协议
@@ -361,7 +361,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
                     if(borrowRecover != null){
                         //放款记录创建时间（放款时间）
-                        addTime = borrowRecover.getCreditTime();
+                        addTime = (borrowRecover.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecover.getCreateTime()));
                     }
                     if (addTime<ADD_TIME328) {
                         //下载老版本协议
@@ -486,7 +486,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BorrowRecover borrowRecover =  selectBorrowRecoverByNid(tender.getNid());
                     if(borrowRecover != null){
                         //放款记录创建时间（放款时间）
-                        addTime = borrowRecover.getCreditTime();
+                        addTime = (borrowRecover.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecover.getCreateTime()));
                     }
                     if (addTime<ADD_TIME328) {
                         //下载老版本协议
