@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.exception.cert;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.cert.CertReportLogService;
@@ -49,7 +51,7 @@ public class CertSendExceptionController extends BaseController{
 
     @ApiOperation(value = "应急中心错误日志列表显示", notes = "应急中心错误日志列表显示")
     @PostMapping("/selectCertErrorLogList")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertErrLogVO>> selectCertErrorLogList(@RequestBody CertErrorReportLogRequestBean requestBean){
         CertErrorReportLogResponse response = certReportLogService.selectCertErrorReportLogList(requestBean);
         if(response==null) {
@@ -71,7 +73,7 @@ public class CertSendExceptionController extends BaseController{
      */
     @ApiOperation(value = "重新跑批", notes = "重新跑批")
     @PostMapping("/updateCount")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateCount(Integer id) {
         try{
             certReportLogService.updateErrorCount(id);
@@ -87,7 +89,7 @@ public class CertSendExceptionController extends BaseController{
      */
     @ApiOperation(value = "发送MQ", notes = "发送MQ")
     @PostMapping("/doSendMq")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult doSendMQ(HttpServletRequest request, String dataType, String mqValue) {
         try {
             _log.info("应急中心掉单处理，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】");

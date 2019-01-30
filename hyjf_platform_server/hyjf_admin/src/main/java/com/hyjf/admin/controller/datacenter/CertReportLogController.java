@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.datacenter;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CertReportLogResponse;
@@ -42,7 +44,7 @@ public class CertReportLogController extends BaseController{
 
     @ApiOperation(value = "应急中心日志列表显示", notes = "应急中心日志列表显示")
     @PostMapping("/selectCertReportLogList")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertLogVO>> selectCertReportLogList(@RequestBody CertReportLogRequestBean requestBean){
         CertReportLogResponse response = certReportLogService.selectCertReportLogList(requestBean);
         if(response==null) {
