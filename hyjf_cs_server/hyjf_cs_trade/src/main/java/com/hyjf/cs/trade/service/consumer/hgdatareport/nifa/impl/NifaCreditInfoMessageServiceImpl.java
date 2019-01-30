@@ -207,7 +207,7 @@ public class NifaCreditInfoMessageServiceImpl extends BaseTradeServiceImpl imple
         // 承接人表中转让费用累计
         nifaCreditInfoEntity.setAssignServiceFee(creditFee + "");
         // 转让时间    项目转让成立的时间，格式为YYYYMMDD     转让发起时间
-        nifaCreditInfoEntity.setAssignServiceTime(borrowCredit.getCreateDate() + "");
+        nifaCreditInfoEntity.setAssignServiceTime(GetDate.date2Str(borrowCredit.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd")).replaceAll("-", "") + "");
         // 受让人个数    项目转让成立时受让的人数
         nifaCreditInfoEntity.setUserCount(count + "");
         return true;
