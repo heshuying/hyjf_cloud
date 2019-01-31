@@ -35,7 +35,7 @@ import org.springframework.stereotype.Service;
 public class BaseHgDateReportServiceImpl extends BaseServiceImpl implements BaseHgDateReportService {
 
 
-    Logger _log = LoggerFactory.getLogger(BaseHgDateReportServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(BaseHgDateReportServiceImpl.class);
 
     private String thisMessName = "合规数据上送共通方法";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
@@ -145,9 +145,9 @@ public class BaseHgDateReportServiceImpl extends BaseServiceImpl implements Base
             data.setReportStatus("9");
             data.setErrCode(BifaCommonConstants.ERRCODE);
             data.setErrDesc(BifaCommonConstants.ERRDESC);
-            _log.error(logHeader + "北互金上报数据失败！！！", e);
+            logger.error(logHeader + "北互金上报数据失败！！！", e);
         } finally {
-            _log.info("北互金上报结果:"+JSONObject.toJSONString(data));
+            logger.info("北互金上报结果:"+JSONObject.toJSONString(data));
             return data;
         }
     }

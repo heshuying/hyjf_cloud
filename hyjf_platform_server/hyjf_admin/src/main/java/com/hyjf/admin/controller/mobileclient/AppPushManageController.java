@@ -171,19 +171,19 @@ public class AppPushManageController extends BaseController {
 
     /**
      * 更新单条记录的状态
-     * @param requestBean
+     * @param ids
      * @return
      */
     @ApiOperation(value = "根据ID 更新 单条信息状态", notes = "根据ID 更新 单条信息状态")
     @PostMapping("/updatePushManageStatusById")
-    public AdminResult<AppPushManageVO> updatePushManageStatusById(@RequestBody AppPushManageRequestBean requestBean){
+    public AdminResult<AppPushManageVO> updatePushManageStatusById(Integer ids){
 
         // ID必须不为空
-        if (StringUtils.isEmpty(requestBean.getIds())){
+        if (ids == null){
             return new AdminResult<>(FAIL, "ID必须不为空!");
         }
 
-        Integer ids = Integer.valueOf(requestBean.getIds());
+        logger.info("updatePushManageStatusById:更新但单条推送数据状态的ID:" + ids);
         boolean pushManageResponse = appPushManageService.updatePushManageStatusById(ids);
 
         if (pushManageResponse){

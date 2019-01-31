@@ -187,6 +187,11 @@ public class AppPushManageController extends BaseController {
 
         AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(id);
 
+        if (pushManage == null){
+            // 当前ID查询数据不存在时
+            logger.info("根据ID 更新App推送单条记录状态时ID对应数据不存在,提交ID为:" + id);
+            return false;
+        }
         pushManageRequest.setId(id);
 
         // 根据当前信息的状态,判断应该讲状态更新到的状态

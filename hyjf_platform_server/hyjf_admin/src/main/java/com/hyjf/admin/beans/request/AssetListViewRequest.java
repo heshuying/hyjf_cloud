@@ -59,7 +59,7 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 	private int limit;
 
 	@ApiModelProperty(value = "用户类型(选传)查询")
-	private int userType;
+	private int userTypeSrch;
 
 	@ApiModelProperty(value = "1 重新验证保证金 0 流标")
 	private String menuHide;
@@ -72,12 +72,12 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 		this.menuHide = menuHide;
 	}
 
-	public int getUserType() {
-		return userType;
+	public Integer getUserTypeSrch() {
+		return userTypeSrch;
 	}
 
-	public void setUserType(int userType) {
-		this.userType = userType;
+	public void setUserTypeSrch(Integer userTypeSrch) {
+		this.userTypeSrch = userTypeSrch;
 	}
 
 	public String getAssetIdSrch() {
@@ -183,4 +183,5 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
+
 }

@@ -49,9 +49,6 @@ public class BifaBorrowStatusServiceImpl extends BaseHgDateReportServiceImpl imp
     @Autowired
     AmUserClient amUserClient;
 
-    @Autowired
-    CsMessageClient csMessageClient;
-
     @Override
     public BorrowAndInfoVO getBorrowAndInfo(String borrowNid) {
         BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);

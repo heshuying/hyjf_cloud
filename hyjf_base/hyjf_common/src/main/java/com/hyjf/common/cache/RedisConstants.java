@@ -278,36 +278,6 @@ public class RedisConstants {
     public static final String REMAIN_MONEY = "remain_money:";
 
     /**
-     * 上海大屏幕运营数据
-     */
-    public static final String SH_OPERATIONAL_DATA = "sh_operational_data:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计出借人
-     */
-    public static final String STATISTICAL_INVESTOR = "statistical_investor:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计出借（statistical_investment:$String）
-     */
-    public static final String STATISTICAL_INVESTMENT = "statistical_investment:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计充值（statistical_recharge:$String）
-     */
-    public static final String STATISTICAL_RECHARGE = "statistical_recharge:";
-
-    /**
-     * 上海大屏幕运营数据 : 注册人统计(SH_OPERATIONAL_DATA+REGISTRANT_STATISTICS+1或2)
-     */
-    public static final String REGISTRANT_STATISTICS = "registrant_statistics:";
-
-    /**
-     * 上海大屏幕运营数据 : 公司动态列表
-     */
-    public static final String ARTICLE_LIST = "article_list:";
-
-    /**
      * 协议模板二期---动态展示协议前台展示名称
      */
     public static final String PROTOCOL_PARAMS = "protocol_params:";

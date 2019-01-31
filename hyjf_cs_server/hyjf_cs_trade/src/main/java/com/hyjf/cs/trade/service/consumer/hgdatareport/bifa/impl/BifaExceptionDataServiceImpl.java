@@ -44,9 +44,6 @@ public class BifaExceptionDataServiceImpl extends BaseHgDateReportServiceImpl im
     public static final String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
 
     @Autowired
-    CsMessageClient csMessageClient;
-
-    @Autowired
     AmTradeClient amTradeClient;
 
     @Override
