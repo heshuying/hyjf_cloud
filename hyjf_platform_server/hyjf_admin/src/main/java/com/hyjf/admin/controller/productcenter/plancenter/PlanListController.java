@@ -428,7 +428,7 @@ public class PlanListController extends BaseController{
 				try {
 					JSONObject params = new JSONObject();
 					params.put("planNid", planNid);
-					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.HJHPLAN_ADD_TAG, UUID.randomUUID().toString(), params),
 							MQConstant.HG_REPORT_DELAY_LEVEL);
 				} catch (Exception e) {
 					logger.error("新加智投发送mq消息到合规数据上报失败！planNid : " + planNid ,e);
