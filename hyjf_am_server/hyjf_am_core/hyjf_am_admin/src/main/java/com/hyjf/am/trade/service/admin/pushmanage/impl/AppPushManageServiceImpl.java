@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.AppPushManageMapper;
 import com.hyjf.am.trade.dao.model.auto.AppPushManage;
 import com.hyjf.am.trade.dao.model.auto.AppPushManageExample;
 import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,15 +77,10 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
-
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy())){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStartDiy()));
-                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEndDiy()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if (pushManageRequest.getTimeStartDiy() != null && pushManageRequest.getTimeEndDiy() != null){
+            String timeStart = pushManageRequest.getTimeStartDiy() + " 00:00:00";
+            String timeEnd = pushManageRequest.getTimeEndDiy() + " 23:59:59";
+            criteria.andCreateTimeBetween(GetDate.stringToDate(timeStart), GetDate.stringToDate(timeEnd));
         }
 
         return appPushManageMapper.selectByExample(example);
@@ -123,7 +119,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
-        pushManage.setId(pushManageRequest.getIds());
+        pushManage.setId(pushManageRequest.getId());
         if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {

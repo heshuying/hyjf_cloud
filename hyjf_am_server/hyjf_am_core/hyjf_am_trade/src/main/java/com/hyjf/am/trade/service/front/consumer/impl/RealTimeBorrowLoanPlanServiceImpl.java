@@ -2024,9 +2024,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			recoverTime = interestInfo.getRepayTime(); // 估计还款时间
 			recoverFee = interestInfo.getFee(); // 总管理费
 		}
-		// 写入还款明细表(huiyingdai_borrow_recover)
+		// 写入还款明细表(ht_borrow_recover)
 		BorrowRecover borrowRecover = new BorrowRecover();
-		borrowRecover.setStatus(0); // 状态
+		borrowRecover.setStatus(1); // 状态
+		borrowRecover.setLoanBatchNo(apicron.getBatchNo());
 		borrowRecover.setUserId(borrowTender.getUserId()); // 出借人
 		borrowRecover.setUserName(borrowTender.getUserName());
 		borrowRecover.setBorrowNid(borrowNid); // 借款编号
@@ -2074,13 +2075,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrowTender.setLoanAmount(account.subtract(serviceFee)); // 实际放款金额
 		borrowTender.setLoanFee(serviceFee); // 服务费
 		borrowTender.setRecoverFee(recoverFee);// 管理费
-		borrowTender.setStatus(0); // 状态
-		// 0，未放款，1，已放款
-		// borrowTender.setTenderStatus(0); // 出借状态
-		// // 0，未放款，1，已放款
-		// borrowTender.setApiStatus(0); // 放款状态
-		// // 0，未放款，1，已放款
-		// borrowTender.setWeb(0); // 写入网站收支明细
+		borrowTender.setStatus(1); // 状态
 		boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 		if (!borrowTenderFlag) {
 			throw new RuntimeException("出借详情(ht_borrow_tender)更新失败!" + "[出借订单号：" + ordId + "]");
@@ -2160,7 +2155,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				for (int j = 0; j < interestInfo.getListMonthly().size(); j++) {
 					monthly = interestInfo.getListMonthly().get(j);
 					recoverPlan = new BorrowRecoverPlan();
-					recoverPlan.setStatus(0); // 状态
+					recoverPlan.setAuthCode(authCode);
+					recoverPlan.setLoanBatchNo(apicron.getBatchNo());
+					recoverPlan.setStatus(1); // 状态
 					recoverPlan.setUserId(tenderUserId); // 出借人id
 					recoverPlan.setUserName(borrowTender.getUserName());
 					recoverPlan.setBorrowNid(borrowNid); // 借款订单id
