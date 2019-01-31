@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.nifa.registry;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaRepayInfoMessageService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaRepayMessageService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -24,13 +24,13 @@ import org.springframework.stereotype.Service;
  * @version NifaRepayInfoMessageConsumer, v0.1 2018/9/11 16:42
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC,selectorExpression = MQConstant.REPAY_SINGLE_SUCCESS_TAG, consumerGroup = MQConstant.NIFA_REPAY_INFO_GROUP)
-public class NifaRepayInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.REPAY_SINGLE_SUCCESS_TAG, consumerGroup = MQConstant.NIFA_REPAY_INFO_GROUP)
+public class NifaRepayMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(NifaContractEssenceMessageConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(NifaRepayMessageConsumer.class);
 
     @Autowired
-    NifaRepayInfoMessageService nifaRepayInfoMessageService;
+    NifaRepayMessageService nifaRepayMessageService;
 
     private String thisMessName = "【生成还款记录、合同状态、出借人回款信息】";
 
@@ -74,19 +74,19 @@ public class NifaRepayInfoMessageConsumer implements RocketMQListener<MessageExt
         // --> 消息处理
         try {
             // 借款人项目还款记录数据生成
-            boolean repayInfoResult = nifaRepayInfoMessageService.insertNifaRepayInfo(borrowNid, repayPeriod);
+            boolean repayInfoResult = nifaRepayMessageService.insertNifaRepayInfo(borrowNid, repayPeriod);
             if (!repayInfoResult) {
                 logger.error(thisMessName + "借款人项目还款记录数据生成失败！！borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
             }
 
             // 合同状态变更数据生成
-            boolean contractStatusResult = nifaRepayInfoMessageService.insertNifaContractStatus(borrowNid, repayPeriod);
+            boolean contractStatusResult = nifaRepayMessageService.insertNifaContractStatus(borrowNid, repayPeriod);
             if (!contractStatusResult) {
                 logger.error(thisMessName + "合同状态变更数据生成失败！！borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
             }
 
             // 出借人回款记录生成
-            boolean receivedPaymentsResult = nifaRepayInfoMessageService.insertNifaReceivedPayments(borrowNid, repayPeriod);
+            boolean receivedPaymentsResult = nifaRepayMessageService.insertNifaReceivedPayments(borrowNid, repayPeriod);
             if (!receivedPaymentsResult) {
                 logger.error(thisMessName + "出借人回款记录生成失败！！borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
             }
