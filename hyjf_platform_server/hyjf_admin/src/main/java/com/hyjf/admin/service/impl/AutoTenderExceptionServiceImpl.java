@@ -4,11 +4,14 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.TenderExceptionSolveRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
@@ -23,6 +26,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
@@ -38,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author nxl
@@ -51,6 +56,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
     private AmUserClient amUserClient;
     @Autowired
     private SystemConfig systemConfig;
+    @Autowired
+    private CommonProducer commonProducer;
 
     /**
      * 检索汇计划加入明细列表
@@ -318,6 +325,15 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             String redisStr = JSON.toJSONString(redisBorrow);
                             logger.info("退回队列 " + queueName + redisStr);
                             RedisUtils.rightpush(queueName,redisStr);
+                        }else{
+                            // add by liushouyi nifa2 20181204 start
+                            // 满标发送满标状态埋点
+                            // 发送发标成功的消息队列到互金上报数据
+                            JSONObject params = new JSONObject();
+                            params.put("borrowNid", borrow.getBorrowNid());
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                            // add by liushouyi nifa2 20181204 end
                         }
                     }
                     // 投标记录不存在才会继续，不然属于未知情况
@@ -399,6 +415,17 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     if(isOK){
                         // 更改加入明细状态和出借临时表状态
                         updateTenderByParam(orderStatus,hjhAccede.getId());
+
+                        // add 合规数据上报 埋点 liubin 20181122 start
+                        // 推送数据到MQ 承接（每笔）
+                        JSONObject params = new JSONObject();
+                        params.put("assignOrderId", bean.getOrderId());
+                        params.put("flag", "2"); //1（散）2（智投）
+                        params.put("status", "1"); //1承接（每笔）
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                        // add 合规数据上报 埋点 liubin 20181122 end
+
                         // 更新后重新查
                         credit =amTradeClient.selectHjhDebtCreditByCreditNid(hjhPlanBorrowTmp.getBorrowNid());
                         if (credit == null) {
@@ -421,6 +448,16 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         }
                         /** 4.7. 完全承接时，结束债券  */
                         if (credit.getCreditAccountWait().compareTo(BigDecimal.ZERO) == 0) {
+                            // add 合规数据上报 埋点 liubin 20181122 start
+                            // 推送数据到MQ 承接（完全）
+                            params = new JSONObject();
+                            params.put("creditNid", credit.getCreditNid());
+                            params.put("flag", "2"); //1（散）2（智投）
+                            params.put("status", "2"); //2承接（完全）
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                            // add 合规数据上报 埋点 liubin 20181122 end
+
                             //获取出让人投标成功的授权号
                             String sellerAuthCode =getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
                             if (sellerAuthCode == null) {

@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
@@ -99,6 +100,16 @@ public class BorrowCreditExpiresController extends BaseTradeController {
             param.put("val_amount", borrowCreditVO.getCreditCapitalAssigned() + "");
             param.put("val_profit", borrowCreditVO.getCreditInterestAdvance() + "");
             if (borrowCreditVO.getCreditCapitalAssigned() != null && borrowCreditVO.getCreditCapitalAssigned().longValue() > 0) {
+                // add 合规数据上报 埋点 liubin 20181122 start
+                // 推送数据到MQ 承接（完全）散
+                JSONObject params = new JSONObject();
+                params.put("creditNid", borrowCreditVO.getCreditNid()+"");
+                params.put("flag", "1"); //1（散）2（智投）
+                params.put("status", "2"); //2承接（成功）
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+                // add 合规数据上报 埋点 liubin 20181122 end
+
                 // 发送短信验证码
                 SmsMessage smsMessage =
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
@@ -109,6 +120,17 @@ public class BorrowCreditExpiresController extends BaseTradeController {
                     logger.error("债转部分转让发送短信失败：userId:" + borrowCreditVO.getCreditUserId() + ",trueName:" + userInfo.getTruename(), e);
                 }
             } else {
+                // add 合规数据上报 埋点 liubin 20181122 start
+                //停止债转并且没有被承接过
+                JSONObject params = new JSONObject();
+                params.put("creditNid", borrowCreditVO.getCreditNid()+"");
+                params.put("flag", "1");//1（散）2（智投）
+                params.put("status", "3"); //3承接（失败）
+                // 推送数据到MQ 承接（失败）散
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_FAIL_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+                // add 合规数据上报 埋点 liubin 20181122 end
+
                 param.put("val_amount", "0");
                 param.put("val_profit", "0");
                 // 发送短信验证码

@@ -28,6 +28,10 @@ public class NifaReportLogRequestBean extends BaseRequest {
     //上传时间(结束)
     @ApiModelProperty(value = "上传时间(结束)")
     private String createTimeEnd;
+    @ApiModelProperty(value = "上传时间（开始）")
+    private String uploadImeStart;
+    @ApiModelProperty(value = "上传时间（结束）")
+    private String uploadImeEnd;
 
     public Integer getId() {
         return id;
@@ -75,5 +79,21 @@ public class NifaReportLogRequestBean extends BaseRequest {
 
     public void setHistoryDate(String historyDate) {
         this.historyDate = historyDate;
+    }
+
+    public String getUploadImeStart() {
+        return uploadImeStart;
+    }
+
+    public void setUploadImeStart(String uploadImeStart) {
+        this.uploadImeStart = uploadImeStart;
+    }
+
+    public String getUploadImeEnd() {
+        return uploadImeEnd;
+    }
+
+    public void setUploadImeEnd(String uploadImeEnd) {
+        this.uploadImeEnd = uploadImeEnd;
     }
 }
