@@ -259,6 +259,42 @@ public class HjhReInvestDetailController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter userAttributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "无主单";
+                } else if ("1".equals(value)) {
+                    return "有主单";
+                } else if ("2".equals(value)) {
+                    return "线下员工";
+                } else if ("3".equals(value)) {
+                    return "线上员工";
+                }else {
+                    return value;
+                }
+            }
+        };
+
+        IValueFormatter investTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "手动投标";
+                } else if ("1".equals(value)) {
+                    return "预约投标";
+                } else if ("2".equals(value)) {
+                    return "自动投标";
+                }else {
+                    return value;
+                }
+            }
+        };
+
+        mapAdapter.put("userAttribute", userAttributeAdapter);
+        mapAdapter.put("investType", investTypeAdapter);
         return mapAdapter;
     }
 

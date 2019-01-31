@@ -3,38 +3,32 @@
  */
 package com.hyjf.cs.trade.service.consumer.hgdatareport.nifa;
 
-import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.cs.trade.service.BaseTradeService;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author PC-LIUSHOUYI
- * @version NifaRepayInfoMessageService, v0.1 2018/9/11 16:51
+ * @version NifaTwoRepayInfoMessageService, v0.1 2019/1/24 15:29
  */
-public interface NifaRepayInfoMessageService extends BaseService {
-
+public interface NifaRepayInfoMessageService extends BaseTradeService {
     /**
-     * 借款人还款表
+     * 处理还款数据
      *
-     * @param borrowNid
+     * @param historyData
      * @param repayPeriod
+     * @param borrow
+     * @param borrowRepay
+     * @param borrowRecoverList
+     * @param recoverFee
+     * @param lateCounts
+     * @param nifaRepayInfoEntity
      * @return
      */
-    boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod);
-
-    /**
-     * 合同状态变更数据生成
-     *
-     * @param borrowNid
-     * @param repayPeriod
-     * @return
-     */
-    boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod);
-
-    /**
-     * 出借人回款记录生成
-     *
-     * @param borrowNid
-     * @param repayPeriod
-     * @return
-     */
-    boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod);
+    boolean selectDualNifaRepayInfo(String historyData, Integer repayPeriod, BorrowAndInfoVO borrow, BorrowRepayVO borrowRepay, List<BorrowRecoverVO> borrowRecoverList, BigDecimal recoverFee, String lateCounts, NifaBorrowInfoVO nifaRepayInfoEntity);
 }

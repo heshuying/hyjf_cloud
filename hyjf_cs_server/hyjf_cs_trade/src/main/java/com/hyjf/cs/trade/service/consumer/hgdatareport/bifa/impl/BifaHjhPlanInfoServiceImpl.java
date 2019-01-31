@@ -3,20 +3,15 @@
  */
 package com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.bifa.BifaHjhPlanInfoEntityVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DigitalUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.CsMessageClient;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaHjhHistoryDataService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaHjhPlanInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,72 +19,31 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author jun
- * @version BifaHjhHistoryDataServiceImpl, v0.1 2019/1/18 17:11
+ * @version BifaHjhPlanInfoServiceImpl, v0.1 2019/1/31 15:36
  */
 @Service
-public class BifaHjhHistoryDataServiceImpl extends BaseHgDateReportServiceImpl implements BifaHjhHistoryDataService {
-
-    Logger logger = LoggerFactory.getLogger(BifaHjhHistoryDataServiceImpl.class);
-
-    private String thisMessName = "智投信息上报";
-    private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
+public class BifaHjhPlanInfoServiceImpl extends BaseHgDateReportServiceImpl implements BifaHjhPlanInfoService {
 
     @Autowired
     AmTradeClient amTradeClient;
 
     @Override
-    public void report() {
-        //报送现有智投列表中的智投信息
-        List<HjhPlanVO> hjhplans = this.selectHjhPlanInfoList();
-        for (HjhPlanVO hjhplan : hjhplans) {
-            //检查该智投是否上报
-            BifaHjhPlanInfoEntityVO entity =csMessageClient.getBifaHjhPlanInfoFromMongoDB(hjhplan.getPlanNid());
-            if (entity!=null){
-                logger.info(logHeader+"当前智投已上报："+JSONObject.toJSONString(entity));
-                continue;
-            }
-
-            BifaHjhPlanInfoEntityVO bifaHjhPlanInfoEntity = new BifaHjhPlanInfoEntityVO();
-            boolean result = this.convertBifaHjhPlanInfo(hjhplan,bifaHjhPlanInfoEntity);
-            if (!result){
-                logger.error(logHeader + "数据变换失败！！"+JSONObject.toJSONString(bifaHjhPlanInfoEntity));
-                return;
-            }
-
-            String methodName = "productRegistration";
-            BifaHjhPlanInfoEntityVO reportResult = this.reportData(methodName,bifaHjhPlanInfoEntity);
-            if ("1".equals(reportResult.getReportStatus()) || "7".equals(reportResult.getReportStatus())){
-                logger.info(logHeader + "上报数据成功。" + JSONObject.toJSONString(reportResult));
-            } else if ("9".equals(reportResult.getReportStatus())) {
-                logger.error(logHeader + "上报数据失败！！"+JSONObject.toJSONString(reportResult));
-            }
-            // --> 保存上报数据
-            this.insertHjhPlanInfoReportData(reportResult);
-            logger.info(logHeader + "上报数据保存本地！！"+JSONObject.toJSONString(reportResult));
-
-        }
-
+    public BifaHjhPlanInfoEntityVO getBifaHjhPlanInfoFromMongoDB(String planNid) {
+        BifaHjhPlanInfoEntityVO bifaHjhPlanInfoEntity = csMessageClient.getBifaHjhPlanInfoFromMongoDB(planNid);
+        return bifaHjhPlanInfoEntity;
     }
 
-    /**
-     * 智投上报数据保存本地mongo
-     * @param reportResult
-     */
-    private void insertHjhPlanInfoReportData(BifaHjhPlanInfoEntityVO reportResult) {
-        csMessageClient.insertHjhPlanInfoReportData(reportResult);
+    @Override
+    public HjhPlanVO getHjhPlan(String planNid) {
+        HjhPlanVO hjhplan = this.amTradeClient.getHjhPlan(planNid);
+        return hjhplan;
     }
 
-    /**
-     * 数据转换
-     * @param hjhplan
-     * @param bifaHjhPlanInfoEntity
-     * @return
-     */
-    private boolean convertBifaHjhPlanInfo(HjhPlanVO hjhplan, BifaHjhPlanInfoEntityVO bifaHjhPlanInfoEntity) {
+    @Override
+    public boolean convertBifaHjhPlanInfo(HjhPlanVO hjhplan, BifaHjhPlanInfoEntityVO bifaHjhPlanInfoEntity) {
         try {
             bifaHjhPlanInfoEntity.setProduct_reg_type("02");
             bifaHjhPlanInfoEntity.setProduct_name(hjhplan.getPlanName());
@@ -138,11 +92,8 @@ public class BifaHjhHistoryDataServiceImpl extends BaseHgDateReportServiceImpl i
         }
     }
 
-    /**
-     * 获取智投列表
-     * @return
-     */
-    private List<HjhPlanVO> selectHjhPlanInfoList() {
-        return amTradeClient.selectHjhPlanInfoList();
+    @Override
+    public void insertHjhPlanInfoReportData(BifaHjhPlanInfoEntityVO reportResult) {
+        csMessageClient.insertHjhPlanInfoReportData(reportResult);
     }
 }

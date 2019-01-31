@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.bifa;
+package com.hyjf.am.trade.controller.hgreportdata.bifa;
 
 
 import com.hyjf.am.response.Response;
@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ import java.util.List;
  * @author jijun
  * @version BifaBorrowUserInfoController
  */
+@Api(value = "北互金")
 @RestController
 @RequestMapping("/am-trade/bifaDataReport")
 public class BifaDataReportController extends BaseController {

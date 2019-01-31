@@ -55,8 +55,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
 
     @Autowired
     AmUserClient amUserClient;
-    @Autowired
-    CsMessageClient csMessageClient;
+
     @Autowired
     AmTradeClient amTradeClient;
 

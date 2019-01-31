@@ -258,15 +258,17 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 	@Override
 	public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
 		HjhLabel hjhLabel  = new HjhLabel();
-		hjhLabel.setUpdateTime(new Date());
-		hjhLabel.setUpdateUserId(request.getUpdateUserId());
+		// 主键
 		hjhLabel.setId(request.getId());
-		
-		
+		// 更新时间
+		hjhLabel.setUpdateTime(new Date());
+		// 更新着
+		hjhLabel.setUpdateUserId(request.getUpdateUserId());
+		// 标签名称
 		if(StringUtils.isNotEmpty(request.getLabelName())){
 			hjhLabel.setLabelName(request.getLabelName());
 		}
-		
+		// 标的期限
 		if(request.getLabelTermStart()!= null){
 			hjhLabel.setLabelTermStart(request.getLabelTermStart());
 		} else {
@@ -278,17 +280,17 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 			hjhLabel.setLabelTermEnd(null);
 		}
 		
-		
+
 		if(StringUtils.isNotEmpty(request.getLabelTermType())){
 			hjhLabel.setLabelTermType(request.getLabelTermType());
 		}
 		
+		// 标的实际利率
 		if(request.getLabelAprStart()!= null){
 			hjhLabel.setLabelAprStart(request.getLabelAprStart());
 		} else {
 			hjhLabel.setLabelAprStart(null);
 		}
-		
 		if(request.getLabelAprEnd()!=null){
 			hjhLabel.setLabelAprEnd(request.getLabelAprEnd());	
 		} else {
@@ -305,10 +307,11 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			hjhLabel.setLabelPaymentAccountEnd(null);
 		}
-		
+		// 还款方式
 		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
 			hjhLabel.setBorrowStyle(request.getBorrowStyle());
 		}
+		// 还款方式名称
 		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
 			hjhLabel.setBorrowStyleName(request.getBorrowStyleName());
 		}
@@ -323,6 +326,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			hjhLabel.setLabelPaymentAccountEnd(null);
 		}
+		
 		if(StringUtils.isNotEmpty(request.getInstCode())){
 			hjhLabel.setInstCode(request.getInstCode());
 		}
@@ -338,16 +342,11 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		if(StringUtils.isNotEmpty(request.getProjectTypeName())){
 			hjhLabel.setProjectTypeName(request.getProjectTypeName());
 		}
-		
-
 		hjhLabel.setIsCredit(request.getIsCredit());
 		hjhLabel.setIsLate(request.getIsLate());
 		hjhLabel.setCreditSumMax(request.getCreditSumMax());
-		
 		hjhLabel.setPushTimeStart(request.getPushTimeStart());
 		hjhLabel.setPushTimeEnd(request.getPushTimeEnd());
-		
-		
 		if(request.getRemainingDaysStart()!= null){
 			hjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
 		}else{
@@ -360,31 +359,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		}
 		
 		hjhLabel.setLabelState(request.getLabelState());
-		hjhLabel.setUpdateUserId(request.getCreateUserId());
-		hjhLabel.setUpdateTime(new Date());
-		
-		hjhLabel.setDelFlag(0);
-		
-/*        if(hjhLabel.getAssetType()==null){
-        	hjhLabel.setAssetTypeName("");
-        }
-        if(hjhLabel.getProjectType()==null){
-        	hjhLabel.setProjectTypeName("");
-        }
-        if(StringUtils.isEmpty(hjhLabel.getInstCode())){
-        	hjhLabel.setInstName("");
-        }uo 
-		BeanUtils.copyProperties(request, hjhLabel);*/
-/*		HjhLabelExample example = new HjhLabelExample();
-		HjhLabelExample.Criteria crt = example.createCriteria();
-		crt.andIdEqualTo(hjhLabel.getId());
-		int flg = hjhLabelMapper.updateByExampleSelective(hjhLabel, example);*/
-		
-	    HjhLabelExample example = new HjhLabelExample();
-	    HjhLabelExample.Criteria crt = example.createCriteria();
-	    crt.andIdEqualTo(hjhLabel.getId());
-	    int flg = hjhLabelMapper.updateByExample(hjhLabel, example);
-	    
+	    int flg = hjhLabelMapper.updateByPrimaryKeySelective(hjhLabel);
 		return flg;
 	}
 
