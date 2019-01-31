@@ -302,7 +302,7 @@ public class AppRechargeController extends BaseUserController {
             }
             //add by cwyang 20180629 增加app3.0.9的转账指南
             String transferUrl = systemConfig.getAppRechangeGuideUrl();
-            result.setTransferGuideURL(systemConfig.getWebHost() + transferUrl);
+            result.setTransferGuideURL(systemConfig.getAppServerHost() + transferUrl);
         }
         /** 充值描述 */
         result.setRcvAccountName(RCV_ACCOUNT_NAME);
