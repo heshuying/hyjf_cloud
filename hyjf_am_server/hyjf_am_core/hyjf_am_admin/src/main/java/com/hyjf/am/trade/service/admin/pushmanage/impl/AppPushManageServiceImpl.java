@@ -123,7 +123,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
-        pushManage.setId(pushManageRequest.getIds());
+        pushManage.setId(pushManageRequest.getId());
         if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
