@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.controller.bifa;
+package com.hyjf.am.trade.controller.hgreportdata.bifa;
 
 
 import com.hyjf.am.response.Response;
