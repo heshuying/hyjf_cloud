@@ -247,11 +247,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         createModule(moduleList, platform, "android_module2", "ios_module2", HOST);
         //运营数据
         AppAdsCustomizeVO appAdsCustomize = getOperationalDataUrl(platform, "android_module3", "ios_module3", HOST);
-        String url = "";
-        if(appAdsCustomize != null){
-            url = appAdsCustomize.getUrl();
-        }
-        info.put("operationalDataURL",url);
+//        String url = "";
+//        if(appAdsCustomize != null){
+//            url = appAdsCustomize.getUrl();
+//        }
+        info.put("operationalDataURL",HOST + "/operationalData");
         //关于我们
         createModule(moduleList, platform, "android_module4", "ios_module4", HOST);
 
