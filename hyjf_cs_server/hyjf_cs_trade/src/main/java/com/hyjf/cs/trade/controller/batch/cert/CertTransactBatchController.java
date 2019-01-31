@@ -23,7 +23,7 @@ import java.util.UUID;
 
 /**
  * @Description 应急中心异常处理
- * @Author sunss
+ * @Author pcc
  * @Date 2019/1/30 15:09
  */
 @RestController
