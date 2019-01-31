@@ -640,7 +640,7 @@ public interface MQConstant {
 	/**--------------------------------- 北互金start -------------------------------------*/
 	String BIFA_BORROW_STATUS_GROUP = "BIFA_BORROW_STATUS_GROUP";
 	String BIFA_CREDITTENDERINFO_GROUP = "BIFA_CREDITTENDERINFO_GROUP";
-
+	String BIFA_HJH_PLANINFO_GROUP = "BIFA_HJH_PLANINFO_GROUP";
 	/**--------------------------------- 北互金end -------------------------------------*/
 
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
@@ -685,6 +685,8 @@ public interface MQConstant {
 	// TAG：还款--全部还款成功
 	String REPAY_ALL_SUCCESS_GROUP = "REPAY_ALL_SUCCESS_GROUP";
 	String REPAY_ALL_SUCCESS_TAG = "REPAY_ALL_SUCCESS_TAG";
+	// TAG：新增智投
+	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
 
 	// 合规互金上报用MQ延迟发送等级（30s）
