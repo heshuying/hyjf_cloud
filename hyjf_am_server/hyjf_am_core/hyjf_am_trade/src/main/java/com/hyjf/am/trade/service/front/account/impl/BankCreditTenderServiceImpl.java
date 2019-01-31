@@ -856,10 +856,18 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	public List<CreditTender> getCreditTenderList(CreditTenderRequest request) {
 		CreditTenderExample creditTenderExample = new CreditTenderExample();
 		CreditTenderExample.Criteria cra = creditTenderExample.createCriteria();
-		cra.andAssignNidEqualTo(request.getAssignNid())
-				.andBidNidEqualTo(request.getBidNid())
-				.andCreditNidEqualTo(request.getCreditNid())
-				.andCreditTenderNidEqualTo(request.getCreditTenderNid());
+		if(StringUtils.isNotBlank(request.getAssignNid())) {
+			cra.andAssignNidEqualTo(request.getAssignNid());
+		}
+		if(StringUtils.isNotBlank(request.getBidNid())) {
+			cra.andBidNidEqualTo(request.getBidNid());
+		}
+		if(StringUtils.isNotBlank(request.getCreditNid())) {
+			cra.andCreditNidEqualTo(request.getCreditNid());
+		}
+		if(StringUtils.isNotBlank(request.getCreditTenderNid())) {
+			cra.andCreditTenderNidEqualTo(request.getCreditTenderNid());
+		}
 		return this.creditTenderMapper.selectByExample(creditTenderExample);
 	}
 

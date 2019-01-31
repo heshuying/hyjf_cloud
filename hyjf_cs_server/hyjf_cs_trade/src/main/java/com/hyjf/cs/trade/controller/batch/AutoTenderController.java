@@ -75,7 +75,7 @@ public class AutoTenderController extends BaseTradeController {
             if(!existRedisBorrowOrCredit(hjhAccede.getPlanNid())){
                 // Redis列表无资产时，存入List，并不投改订单
                 noAssetsPlanList.add(hjhAccede.getPlanNid());
-                logger.debug(logMsgHeader + " Redis列表无资产时，存入List，并不投改订单");
+                logger.debug(logMsgHeader + " Redis列表无资产时，存入List，并不投该订单");
                 continue;
             }
 

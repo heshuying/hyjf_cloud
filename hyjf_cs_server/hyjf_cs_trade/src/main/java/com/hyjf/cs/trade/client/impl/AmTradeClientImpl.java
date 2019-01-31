@@ -558,6 +558,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    @Override
+    public HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid) {
+        String url = urlBase + "hjhDebtCredit/doSelectHjhDebtCreditByCreditNid/" + creditNid;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url, HjhDebtCreditResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResult();
+    }
+
+    /**
      * 根据加入计划订单，取得加入订单
      * @author liubin
      * @date 2018/7/04 19:26

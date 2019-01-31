@@ -68,8 +68,10 @@ public class CommonProducer {
                 sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, messageContent.body);
             }
             if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
+                logger.debug("通用延时消息发送成功。" + "。 Topic:" +messageContent.topic+ "，Tag:" +messageContent.tag+ "，Message:" + messageContent.body);
                 return true;
             } else {
+                logger.debug("通用延时消息发送失败。" + "。 Topic:" +messageContent.topic+ "，Tag:" +messageContent.tag+ "，Message:" + messageContent.body);
                 return false;
             }
         } catch (Exception e) {
@@ -113,8 +115,10 @@ public class CommonProducer {
             SendResult sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, message, rocketMQTemplate.getProducer().getSendMsgTimeout(), delayLevel);
 
             if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
+                logger.debug("通用延时消息发送成功。" + "。 Topic:" +messageContent.topic+ "，Tag:" +messageContent.tag+ "，Message:" + messageContent.body);
                 return true;
             } else {
+                logger.debug("通用延时消息发送失败。" + "。 Topic:" +messageContent.topic+ "，Tag:" +messageContent.tag+ "，Message:" + messageContent.body);
                 return false;
             }
         } catch (Exception e) {

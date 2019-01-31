@@ -589,10 +589,6 @@ public interface AmUserClient {
 	 */
     UserVO updateUsersById(Integer userId);
 
-	/**
-	 * 运营数据-统计总注册人数
-	 */
-	void countRegist();
 	public void fddCertificate();
 
 	/**

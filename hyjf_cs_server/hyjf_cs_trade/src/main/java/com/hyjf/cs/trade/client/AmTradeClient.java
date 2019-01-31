@@ -193,6 +193,12 @@ public interface AmTradeClient {
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
 
     /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
      * 根据加入计划订单，取得加入订单
      * @author liubin
      * @date 2018/7/04 19:26

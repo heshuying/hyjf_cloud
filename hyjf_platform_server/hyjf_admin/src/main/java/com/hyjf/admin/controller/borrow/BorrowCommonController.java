@@ -1788,6 +1788,9 @@ public class BorrowCommonController extends BaseController {
 			case NUMERIC:
 				// 返回数值类型的值
 				String s = String.valueOf(hssfCell.getNumericCellValue());
+				if(s.equals("99.0")) {
+					return s.replace(".0", "");
+				}
 				return "0"+ s.replace(".0", "");
 			case FORMULA:
 				// 单元格为公式类型时
@@ -2186,7 +2189,8 @@ public class BorrowCommonController extends BaseController {
 	        map.put("borrowProjectTypeName", "项目类型");
 	        map.put("instName", "资产来源");
 	        map.put("account", "借款金额");
-	        map.put("borrowApr", "年化利率");
+	        map.put("borrowPeriod", "借款期限");
+	        map.put("borrowApr", "出借利率");
 	        map.put("borrowStyle", "还款方式");
 	        map.put("borrowServiceScale", "放款服务费率");
 	        map.put("borrowManagerScale", "还款服务费率");
@@ -2196,11 +2200,11 @@ public class BorrowCommonController extends BaseController {
 	        map.put("borrowAccountScale", "借款进度");
 	        map.put("status", "项目状态");
 	        map.put("addtime", "添加时间");
-	        map.put("verifyTime", "实际发标时间");
+	        map.put("verifyTime", "初审通过时间");
 	        map.put("ontime", "定时发标时间");
 	        map.put("bookingBeginTime", "预约开始时间");
 	        map.put("bookingEndTime", "预约截止时间");
-	        map.put("verifyTime", "实际发标时间");
+	        map.put("verifyTime2", "实际发标时间");
 	        map.put("borrowValidTime", "出借截止时间");
 	        map.put("borrowFullTime", "满标时间");
 	        map.put("reverifyTime", "复审通过时间");

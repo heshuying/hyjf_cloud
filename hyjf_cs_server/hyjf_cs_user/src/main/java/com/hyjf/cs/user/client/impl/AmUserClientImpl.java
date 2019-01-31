@@ -229,10 +229,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-    @Override
-    public void countRegist() {
-        restTemplate.getForEntity("http://AM-USER/am-user/batch/registrantChangeStatistics", String.class);
-    }
 	@Override
 	public void fddCertificate() {
 		restTemplate.getForEntity("http://AM-USER/am-user/batch/fddCertificate", String.class);
