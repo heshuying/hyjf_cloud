@@ -190,7 +190,7 @@ public class UserCenterController extends BaseController {
         }
         userDetailInfoResponseBean.setCertificateAuthorityVO(certificateAuthorityCustomizeVO);
         // 文件服务器
-        String fileDomainUrl = systemConfig.getFtpurl() + systemConfig.getFtpbasepathimg();
+        String fileDomainUrl = systemConfig.getFileDomainUrl();
         userDetailInfoResponseBean.setHostUrl(fileDomainUrl);
 
         {

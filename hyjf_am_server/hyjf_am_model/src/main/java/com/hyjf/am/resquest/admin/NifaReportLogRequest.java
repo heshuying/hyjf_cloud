@@ -4,7 +4,6 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -14,19 +13,18 @@ import java.io.Serializable;
  */
 public class NifaReportLogRequest extends BasePage implements Serializable{
 	//文件状态
-	@ApiModelProperty(value = "文件状态")
 	private Integer fileUploadStatus;
-	@ApiModelProperty(value = "创建时间（结束）")
+	//创建时间(开始)
 	private String createTimeStart;
-	@ApiModelProperty(value = "创建时间（结束）")
+	//创建时间(结束)
 	private String createTimeEnd;
-	@ApiModelProperty(value = "反馈文件状态")
+	// 反馈文件状态
 	private Integer feedbackResult;
-	@ApiModelProperty(value = "数据处理日期")
+	// 数据处理日期
 	private String historyDate;
-	@ApiModelProperty(value = "上传时间（开始）")
+	// 上传时间（开始）
 	private String uploadImeStart;
-	@ApiModelProperty(value = "上传时间（结束）")
+	// 上传时间（结束）
 	private String uploadImeEnd;
 
 	public Integer getFileUploadStatus() {

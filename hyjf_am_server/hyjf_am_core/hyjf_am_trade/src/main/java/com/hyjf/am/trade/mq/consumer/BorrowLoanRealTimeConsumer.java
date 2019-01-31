@@ -107,7 +107,7 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
                 }
 
             } catch (Exception e) {
-                logger.error("散标放款系统异常", e);
+                logger.error("直投放款系统异常", e);
                 StringBuffer sbError = new StringBuffer();// 错误信息
                 sbError.append(e.getMessage()).append("<br/>");
                 String online = "生产环境";// 取得是否线上
