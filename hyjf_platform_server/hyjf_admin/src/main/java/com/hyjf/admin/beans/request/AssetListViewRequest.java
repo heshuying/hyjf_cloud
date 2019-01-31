@@ -59,7 +59,7 @@ public class AssetListViewRequest extends BaseRequest implements Serializable{
 	private int limit;
 
 	@ApiModelProperty(value = "用户类型(选传)查询")
-	private int userTypeSrch;
+	private Integer userTypeSrch;
 
 	@ApiModelProperty(value = "1 重新验证保证金 0 流标")
 	private String menuHide;
