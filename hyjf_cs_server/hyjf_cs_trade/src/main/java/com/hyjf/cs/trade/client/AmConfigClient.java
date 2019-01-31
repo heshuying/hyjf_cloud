@@ -163,4 +163,10 @@ public interface AmConfigClient {
 	 * 修改错误次数加1
 	 */
 	boolean updateErrorLogCount(CertErrLogVO logVO);
+	/**
+	 * 应急中心 查询待异步查询的日志数量
+	 * add by nxl
+	 * @return
+	 */
+	int selectCertLogLength();
 }

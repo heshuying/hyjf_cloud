@@ -31,13 +31,13 @@ import java.util.List;
  */
 @Service
 @RocketMQMessageListener(topic = MQConstant.CERT_GETYIBU_MESSAGE_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_GETYIBU_MESSAGE_GROUP)
-public class CertGetYiBuMessageMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+public class CertGetYiBuMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    Logger logger = LoggerFactory.getLogger(CertGetYiBuMessageMessageConsumer.class);
+    Logger logger = LoggerFactory.getLogger(CertGetYiBuMessageConsumer.class);
 
     private String thisMessName = "查询批次数据入库消息";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
-    private static boolean isRun =false;
+    private static boolean isRun = false;
     @Autowired
     private CertGetYiBuMessageService certGetYiBuMessageService;
 
@@ -59,11 +59,11 @@ public class CertGetYiBuMessageMessageConsumer implements RocketMQListener<Messa
             logger.error(logHeader + "接收到的消息为null！！！");
             return;
         }
-        if(isRun){
+        if (isRun) {
             logger.error(logHeader + "正在运行中！！！");
             return;
         }
-        isRun = true ;
+        isRun = true;
         String msgBody = new String(msg.getBody());
         logger.info(logHeader + "接收到的消息：" + msgBody);
 
@@ -86,7 +86,7 @@ public class CertGetYiBuMessageMessageConsumer implements RocketMQListener<Messa
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
         boolean canRun = certGetYiBuMessageService.checkCanRun();
-        if(!canRun){
+        if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             isRun = false;
             return;
@@ -96,13 +96,13 @@ public class CertGetYiBuMessageMessageConsumer implements RocketMQListener<Messa
         try {
             // --> 调用service组装数据
             List<CertLogVO> certLogList = certGetYiBuMessageService.getCertLog();
-            if(null!=certLogList&&certLogList.size()>0){
-                for(CertLogVO certLog:certLogList){
+            if (null != certLogList && certLogList.size() > 0) {
+                for (CertLogVO certLog : certLogList) {
                     int start = certLog.getLogOrdId().indexOf("_");
-                    String bachNum = certLog.getLogOrdId().substring(start+1);
-                    String infType  = certLog.getLogOrdId().substring(0,start);
-                    CertReportEntityVO certReportEntity = certGetYiBuMessageService.updateYiBuMessage(bachNum,certLog.getId(),infType);
-                    logger.info(logHeader + "返回结果为:"+JSONObject.toJSON(certReportEntity));
+                    String bachNum = certLog.getLogOrdId().substring(start + 1);
+                    String infType = certLog.getLogOrdId().substring(0, start);
+                    CertReportEntityVO certReportEntity = certGetYiBuMessageService.updateYiBuMessage(bachNum, certLog.getId(), infType);
+                    logger.info(logHeader + "返回结果为:" + JSONObject.toJSON(certReportEntity));
                 }
                 logger.info(logHeader + " 处理成功。" + msgBody);
             }
@@ -110,7 +110,7 @@ public class CertGetYiBuMessageMessageConsumer implements RocketMQListener<Messa
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {
-            isRun = false ;
+            isRun = false;
             logger.info(logHeader + " 结束。");
         }
     }

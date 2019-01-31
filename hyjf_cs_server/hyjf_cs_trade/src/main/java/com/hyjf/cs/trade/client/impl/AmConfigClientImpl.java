@@ -390,4 +390,19 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return false;
 	}
+
+	/**
+	 * 应急中心 查询待异步查询的日志数量
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public int selectCertLogLength(){
+		IntegerResponse reportLogResponse =
+				restTemplate.getForEntity("http://AM-CONFIG/am-config/certLog/selectCertLogLength", IntegerResponse.class).getBody();
+		if (reportLogResponse != null && Response.SUCCESS.equals(reportLogResponse.getRtn())) {
+			return reportLogResponse.getResultInt();
+		}
+		return 0;
+	}
 }
