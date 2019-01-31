@@ -195,8 +195,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         // 交易明细
         insertAccountList(borrow, hjhAccede, bean);
 
-        int a = 1/0;
-
         // 满标处理
         updateBorrowFull(borrow, hjhAccede, bean);
 
