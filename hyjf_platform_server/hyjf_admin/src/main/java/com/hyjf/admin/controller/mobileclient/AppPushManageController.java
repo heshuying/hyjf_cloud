@@ -176,7 +176,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "根据ID 更新 单条信息状态", notes = "根据ID 更新 单条信息状态")
     @PostMapping("/updatePushManageStatusById")
-    public AdminResult<AppPushManageVO> updatePushManageStatusById(Integer ids){
+    public AdminResult<AppPushManageVO> updatePushManageStatusById(@RequestBody Integer ids){
 
         // ID必须不为空
         if (ids == null){
