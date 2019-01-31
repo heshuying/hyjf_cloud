@@ -41,7 +41,7 @@ import java.util.List;
 @RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, consumerGroup = "NIFA_CREDIT_INFO_GROUP")
 public class NifaCreditInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(NifaTenderInfoMessageConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(NifaCreditInfoMessageConsumer.class);
 
     private String thisMessName = "互金标的相关债转信息上送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_NIFA + " " + thisMessName + "】";
