@@ -2093,7 +2093,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		borrowRecover.setLoanBatchNo(batchNo);
 		boolean borrowRecoverFlag = borrowRecoverMapper.insertSelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new RuntimeException("还款明细表(ht_borrow_tender)写入失败!" + "[出借订单号：" + ordId + "]");
+			throw new RuntimeException("还款明细表(ht_borrow_recover)写入失败!" + "[出借订单号：" + ordId + "]");
 		}
 		// 更新出借详情表
 		borrowTender.setLoanOrdid(loanOrderId);
@@ -2223,7 +2223,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 					recoverPlan.setSendmail(0);
 					boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.insertSelective(recoverPlan) > 0 ? true : false;
 					if (!borrowRecoverPlanFlag) {
-						throw new RuntimeException("分期还款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[出借订单号：" + ordId
+						throw new RuntimeException("分期还款计划表(ht_borrow_recover_plan)写入失败!" + "[出借订单号：" + ordId
 								+ "]，" + "[期数：" + j + 1 + "]");
 					}
 					// 更新总的还款计划表(ht_borrow_repay_plan)
@@ -2326,7 +2326,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			accountBorrowFlag = this.accountBorrowMapper.updateByPrimaryKeySelective(accountBorrow) > 0 ? true : false;
 		}
 		if (!accountBorrowFlag) {
-			throw new RuntimeException("借款满标日志(huiyingdai_account_borrow)更新失败!" + "[出借订单号：" + ordId + "]");
+			throw new RuntimeException("借款满标日志(ht_account_borrow)更新失败!" + "[出借订单号：" + ordId + "]");
 		}
 		// 更新账户信息(出借人)
 		Account accountTender = new Account();
@@ -2438,7 +2438,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		} catch (Exception e) {
 			logger.error("放款------发送短信/APP消息MQ失败", e);
 		}
-		logger.info("-----------放款结束，放款成功---" + borrowNid + "---------出借订单号" + ordId);
+		logger.info("-----------放款投资业务数据更新成功：---" + borrowNid + "---------出借订单号" + ordId);
 		result.put("result", true);
 		result.put("recoverInterest", awaitInterest);
 

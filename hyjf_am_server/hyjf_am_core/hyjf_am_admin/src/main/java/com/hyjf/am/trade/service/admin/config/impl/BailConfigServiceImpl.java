@@ -179,6 +179,8 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         HjhBailConfig bailConfig = this.hjhBailConfigMapper.selectByPrimaryKey(bailConfigAddRequest.getId());
         // 创建时间记录
         bailConfigAddRequest.setUpdateTime(new Date());
+        // 前端未传送instcode需查询后设回
+        bailConfigAddRequest.setInstCode(bailConfig.getInstCode());
 
         HjhBailConfig hjhBailConfig = new HjhBailConfig();
         BeanUtils.copyProperties(bailConfigAddRequest, hjhBailConfig);

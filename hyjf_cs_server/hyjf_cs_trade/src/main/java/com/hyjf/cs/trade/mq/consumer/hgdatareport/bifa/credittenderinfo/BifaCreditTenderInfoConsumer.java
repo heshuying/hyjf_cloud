@@ -47,8 +47,8 @@ public class BifaCreditTenderInfoConsumer implements RocketMQListener<MessageExt
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        // 设置为广播消费(区别于集群消费)
-        defaultMQPushConsumer.setMessageModel(MessageModel.BROADCASTING);
+        // 设置为集群消费(区别于广播消费)
+        defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
         logger.info(logHeader + " 开始。");
     }
 
@@ -60,10 +60,11 @@ public class BifaCreditTenderInfoConsumer implements RocketMQListener<MessageExt
             return;
         }
 
-        String msgBody = new String(msg.getBody());
-        logger.info(logHeader + "接收到的消息：" + msgBody);
-
         if (MQConstant.UNDERTAKE_ALL_SUCCESS_TAG.equals(msg.getTags())) {
+            //-->日志输出接收到的消息
+            String msgBody = new String(msg.getBody());
+            logger.info(logHeader + "接收到的消息：" + msgBody);
+
             JSONObject jsonObject;
             try {
                 jsonObject = JSONObject.parseObject(msgBody);

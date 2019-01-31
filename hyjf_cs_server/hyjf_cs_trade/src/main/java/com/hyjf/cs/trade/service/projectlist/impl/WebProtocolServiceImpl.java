@@ -458,7 +458,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                                 //根据订单号获取用户放款信息
                                 BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
                                 if(borrowRecoverVO != null){
-                                    addTime = borrowRecoverVO.getCreditTime();
+                                    addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
                                 }
                                 if (addTime > ADD_TIME328) {
                                     logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
@@ -655,7 +655,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     int addTime = ADD_TIME;
                     BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
                     if(borrowRecoverVO != null){
-                        addTime = borrowRecoverVO.getCreditTime();
+                        addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
                     }
                     if (addTime < ADD_TIME328) {
                         ProtocolRequest userInvestListBean = new ProtocolRequest();

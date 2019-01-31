@@ -111,8 +111,11 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
     }
 
     @Override
-    public void insertBorrowInfoReportData(BifaBorrowInfoEntity data) {
-        bifaBorrowInfoDao.insert(data);
+    public synchronized void insertBorrowInfoReportData(BifaBorrowInfoEntity data) {
+        BifaBorrowInfoEntity resultMongoDB = bifaBorrowInfoDao.findOne(new Query(Criteria.where("source_product_code").is(data.getSource_product_code())));
+        if (resultMongoDB == null){
+            bifaBorrowInfoDao.insert(data);
+        }
     }
 
     /**
@@ -130,8 +133,11 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
      * @param data
      */
     @Override
-    public void insertHjhPlanInfoReportData(BifaHjhPlanInfoEntity data) {
-        bifaHjhPlanInfoDao.insert(data);
+    public synchronized void insertHjhPlanInfoReportData(BifaHjhPlanInfoEntity data) {
+        BifaHjhPlanInfoEntity resultMongoDB = bifaHjhPlanInfoDao.findOne(new Query(Criteria.where("source_product_code").is(data.getSource_product_code())));
+        if (resultMongoDB == null){
+            bifaHjhPlanInfoDao.insert(data);
+        }
     }
 
     @Override
@@ -153,9 +159,17 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
         return bifaBorrowStatusDao.findOne(new Query(Criteria.where("source_product_code").is(nid).and("product_status").is(statusStr)));
     }
 
+    /**
+     * 保存产品状态更新到mongoDB
+     * @param data
+     */
     @Override
-    public void insertBorrowStatusReportData(BifaBorrowStatusEntity data) {
-        bifaBorrowStatusDao.insert(data);
+    public synchronized void insertBorrowStatusReportData(BifaBorrowStatusEntity data) {
+        BifaBorrowStatusEntity resultMongoDB = bifaBorrowStatusDao.findOne(
+                new Query(Criteria.where("source_product_code").is(data.getSource_product_code()).and("product_status").is(data.getProduct_status())));
+        if (resultMongoDB == null){
+            bifaBorrowStatusDao.insert(data);
+        }
     }
 
     /**
@@ -173,8 +187,12 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
      * @param data
      */
     @Override
-    public void insertCreditTenderInfoReportData(BifaCreditTenderInfoEntity data) {
-        bifaCreditTenderInfoDao.insert(data);
+    public synchronized void insertCreditTenderInfoReportData(BifaCreditTenderInfoEntity data) {
+        BifaCreditTenderInfoEntity resultMongoDB = bifaCreditTenderInfoDao.findOne(
+                new Query(Criteria.where("source_product_code").is(data.getSource_product_code())));
+        if (resultMongoDB == null){
+            bifaCreditTenderInfoDao.insert(data);
+        }
     }
 
     /**
@@ -387,7 +405,7 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
 
     /**
      * 运营数据保存本地mongo
-     * @param bifaOperationDataEntity
+     * @param data
      */
     @Override
     public void insertOperationReportData(BifaOperationDataEntity data) {

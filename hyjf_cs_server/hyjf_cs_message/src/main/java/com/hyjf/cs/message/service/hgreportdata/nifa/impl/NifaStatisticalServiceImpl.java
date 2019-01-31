@@ -174,7 +174,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
      */
     @Override
     public void insertNifaCreditTransfer(NifaCreditTransferVO nifaCreditTransferVO) {
-        nifaTenderInfoDao.save(CommonUtils.convertBean(nifaCreditTransferVO, NifaTenderInfoEntity.class));
+        nifaCreditTransferDao.save(CommonUtils.convertBean(nifaCreditTransferVO, NifaCreditTransferEntity.class));
     }
 
     /**
@@ -184,7 +184,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
      */
     @Override
     public void insertNifaCreditInfo(NifaCreditInfoVO nifaCreditInfoVO) {
-        nifaTenderInfoDao.save(CommonUtils.convertBean(nifaCreditInfoVO, NifaTenderInfoEntity.class));
+        nifaCreditInfoDao.save(CommonUtils.convertBean(nifaCreditInfoVO, NifaCreditInfoEntity.class));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.front.config;
 
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface TenderAgreementService {
     TenderAgreement getTenderAgreementInfo(String tenderAgreementID);
 
     List<TenderAgreement> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
+
+    BorrowRecover selectBorrowRecoverByNid(String nid);
 }
