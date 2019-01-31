@@ -55,8 +55,39 @@
 			hui.role_id role_id,
 			hal.*
 		FROM
-			huiyingdai_account_list hal
+			ht_account_list hal
 		INNER JOIN huiyingdai_users_info hui ON hal.user_id = hui.user_id
 		WHERE hal.id<![CDATA[>=]]>#{minId} AND hal.id<![CDATA[<=]]>#{maxId}
 	</select>
+
+
+    <resultMap id="queryCertAccountListIdMap" type="com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize" >
+        <result column="limitMinId" property="limitMinId" jdbcType="INTEGER" />
+        <result column="limitMaxId" property="limitMaxId" jdbcType="INTEGER" />
+        <result column="sumCount" property="sumCount" jdbcType="INTEGER" />
+        <result column="maxId" property="maxId" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="queryCertAccountListId" resultMap="queryCertAccountListIdMap"
+            parameterType="java.util.Map">
+		SELECT
+			count(*) sumCount,
+			IFNULL(MIN(id), 0) limitMinId,
+			IFNULL(MAX(id), 0) limitMaxId,
+			(
+				SELECT
+					MAX(id)
+				FROM
+					ht_account_list
+
+			) maxId
+		FROM
+			(
+				SELECT
+					* FROM ht_account_list hal
+				WHERE
+					hal.id > #{minId}
+				LIMIT #{limitStart} , #{limitEnd}
+			) t
+	</select>
+
 </mapper>

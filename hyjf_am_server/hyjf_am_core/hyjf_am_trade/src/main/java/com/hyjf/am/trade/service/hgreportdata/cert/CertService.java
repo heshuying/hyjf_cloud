@@ -3,7 +3,9 @@ package com.hyjf.am.trade.service.hgreportdata.cert;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 
 import java.util.List;
 
@@ -37,4 +39,6 @@ public interface CertService extends BaseService {
     List<HjhDebtCreditRepay> getHjhDebtCreditRepayListByRepayOrdId(CertRequest certRequest);
 
     List<CreditRepay> getCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    CertAccountListIdCustomize queryCertAccountListId(CertRequest certRequest);
 }
