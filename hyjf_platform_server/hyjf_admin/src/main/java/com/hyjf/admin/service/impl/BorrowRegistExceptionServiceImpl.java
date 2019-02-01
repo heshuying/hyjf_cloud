@@ -284,6 +284,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                 result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                             }
                                         }
+                                    }else{
+                                        result.put("success", "1");
+                                        result.put("msg", "在银行方此标的状态为:" + state + "，暂时无法备案");
                                     }
                                 } else {
                                     logger.debug("@@20@@");

@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -302,6 +303,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		BankCallBean retBean = null;
 		try {
 			retBean  = BankCallUtils.callApiBg(bean);
+			logger.info("请求银行验证码接口返回：" + JSON.toJSONString(retBean));
 		} catch (Exception e) {
 			logger.info("请求银行接口失败", e);
 			return null;
