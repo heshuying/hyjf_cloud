@@ -25,10 +25,10 @@ public class AutoRepayController {
     private RepayReminderSmsNoticeBatchService repayReminderService;
 
     @RequestMapping("/taskRepayAssign")
-    public String taskRepayAssign() {
+    public boolean taskRepayAssign() {
         logger.info("【自动还款请求定时】开始。。。");
 
         repayReminderService.taskRepayAssign();
-        return "success";
+        return true;
     }
 }

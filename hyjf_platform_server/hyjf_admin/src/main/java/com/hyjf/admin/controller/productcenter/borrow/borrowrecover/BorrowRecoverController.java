@@ -13,6 +13,7 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
+import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -116,23 +117,20 @@ public class BorrowRecoverController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
-        helper.export(workbook, sheetName + "_第0页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        _log.info("totalCount"+totalCount);
-        _log.info("sheetCount"+sheetCount);
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }
-        for (int i = 1; i < sheetCount; i++) {
-
-            copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i);
-            // 查询
-            List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-            if (resultList != null && resultList.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
-            } else {
-                break;
+        }else {
+            for (int i = 1; i <= sheetCount; i++) {
+                copyForm.setPageSize(defaultRowMaxCount);
+                copyForm.setCurrPage(i);
+                // 查询
+                List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
+                if (resultList != null && resultList.size()> 0) {
+                    sheetNameTmp = sheetName + "_第" + (i) + "页";
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
+                } else {
+                    break;
+                }
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
