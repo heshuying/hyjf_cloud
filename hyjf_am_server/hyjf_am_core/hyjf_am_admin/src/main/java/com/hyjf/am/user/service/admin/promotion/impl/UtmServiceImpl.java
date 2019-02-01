@@ -256,10 +256,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
-        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
-            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
-            request.setLimitEnd(request.getPageSize());
-        }
+        request.setLimitStart(-1);
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -293,15 +290,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
-        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
-            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
-            request.setLimitEnd(request.getPageSize());
-        }
-        if (request.getInvestStartTime() != null) {
-            Date investStartTime = request.getInvestStartTime();
-            investStartTime = GetDate.getSomeDayStart(investStartTime);
-            request.setInvestStartTime(investStartTime);
-        }
+        request.setLimitStart(-1);
         if (request.getInvestEndTime() != null) {
             Date investEndTime = request.getInvestEndTime();
             investEndTime = GetDate.getSomeDayEnd(investEndTime);
