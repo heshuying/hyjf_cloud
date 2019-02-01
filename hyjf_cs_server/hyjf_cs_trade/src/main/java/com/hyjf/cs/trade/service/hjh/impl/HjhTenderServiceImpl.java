@@ -9,7 +9,6 @@ import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.admin.AccountDetailVO;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
@@ -1145,6 +1144,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             result.put("couponGrantId", couponUser.getId());
             result.put("projectType",couponUser.getProjectType());
             result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest)));
+            // app结果页加上面值
+            result.put("appEarnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest).add(couponUser.getCouponQuota())));
         }else{
             // 优惠券类别
             result.put("couponType", "");

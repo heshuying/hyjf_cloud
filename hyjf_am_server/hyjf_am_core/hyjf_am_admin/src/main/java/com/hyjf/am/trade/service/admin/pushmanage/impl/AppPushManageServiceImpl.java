@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.AppPushManageMapper;
 import com.hyjf.am.trade.dao.model.auto.AppPushManage;
 import com.hyjf.am.trade.dao.model.auto.AppPushManageExample;
 import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -64,7 +65,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
      * @return
      */
     @Override
-    public List<AppPushManage> getAllList(AppPushManageRequest pushManageRequest) {
+    public List<AppPushManage> getAllList(AppPushManageRequest pushManageRequest, Paginator paginator) {
         AppPushManageExample example = new AppPushManageExample();
         AppPushManageExample.Criteria criteria = example.createCriteria();
 
@@ -77,12 +78,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
-        if (pushManageRequest.getTimeStartDiy() != null && pushManageRequest.getTimeEndDiy() != null){
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
             String timeStart = pushManageRequest.getTimeStartDiy() + " 00:00:00";
             String timeEnd = pushManageRequest.getTimeEndDiy() + " 23:59:59";
             criteria.andCreateTimeBetween(GetDate.stringToDate(timeStart), GetDate.stringToDate(timeEnd));
         }
-
+        if (paginator.getLimit() >= 0 && paginator.getOffset() >= 0) {
+            example.setLimitStart(paginator.getOffset());
+            example.setLimitEnd(paginator.getLimit());
+        }
         return appPushManageMapper.selectByExample(example);
     }
 
