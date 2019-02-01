@@ -3,15 +3,12 @@ package com.hyjf.admin.beans.request;
 import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
  * @Author : huanghui
  */
-public class AppPushManageRequestBean extends BasePage {
-
-//    @ApiModelProperty(value = "当前ID")
-//    private Integer id;
+public class AppPushManageRequestBean extends BasePage implements Serializable {
 
     @ApiModelProperty(value = "查询ID")
     private String ids;
@@ -32,13 +29,7 @@ public class AppPushManageRequestBean extends BasePage {
     private Integer orderId;
 
     @ApiModelProperty(value = "0:禁用;1:启用.")
-    private Integer status;
-
-//    @ApiModelProperty(value = "开始时间")
-//    private String timeStart;
-
-//    @ApiModelProperty(value = "结束时间")
-//    private String timeEnd;
+    private Integer statuss;
 
     @ApiModelProperty(value = "开始时间 - 检索用")
     private String timeStartDiy;
@@ -100,12 +91,12 @@ public class AppPushManageRequestBean extends BasePage {
         this.orderId = orderId;
     }
 
-    public Integer getStatus() {
-        return status;
+    public Integer getStatuss() {
+        return statuss;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setStatuss(Integer statuss) {
+        this.statuss = statuss;
     }
 
     public String getThumb() {
