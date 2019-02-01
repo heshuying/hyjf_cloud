@@ -66,7 +66,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request.setSourceId(request.getUtmPlat()[0]);
         }
-        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecord(request);
+        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationCount(request);
         return response.getCount();
     }
     @Override
