@@ -14,6 +14,8 @@ import com.hyjf.cs.trade.service.trade.TradeDetailService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,7 @@ public class  AppTradeDetailController extends BaseTradeController {
         return info;
 
     }
+    private Logger _log = LoggerFactory.getLogger(AppTradeDetailController.class);
     /**
      * 用户收支明细
      *
@@ -56,6 +59,7 @@ public class  AppTradeDetailController extends BaseTradeController {
     @PostMapping(value = "/getTradeList",  produces = "application/json; charset=utf-8")
     public AppTradeDetailBean searchTradeDetailList(HttpServletRequest request,@RequestHeader(value = "userId" , required = false )Integer userId) {
         AppTradeDetailBeanRequest trade=createBean(request,userId);
+        _log.info("trade"+JSONObject.toJSONString(trade));
         AppTradeDetailBean appTradeDetailBean=tradeDetailService.createTradeDetailListPage(trade);
         appTradeDetailBean.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         appTradeDetailBean.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
