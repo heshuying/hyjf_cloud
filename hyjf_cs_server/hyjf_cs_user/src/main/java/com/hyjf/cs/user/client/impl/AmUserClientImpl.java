@@ -780,6 +780,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int insertUserCard(BankCardRequest request) {
+		logger.info("方法insertUserCard请求参数：" + request);
 		int result = restTemplate
 				.postForEntity(userService+"/card/insertUserCard", request, Integer.class).getBody();
 		return result;

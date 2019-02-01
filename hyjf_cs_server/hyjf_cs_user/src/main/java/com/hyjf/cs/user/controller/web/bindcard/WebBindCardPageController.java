@@ -95,6 +95,7 @@ public class WebBindCardPageController extends BaseUserController{
             return result;
         }
 
+        logger.info("bindCardPage接口返回的数据：" + JSON.toJSONString(result));
         return result;
     }
 
@@ -109,6 +110,8 @@ public class WebBindCardPageController extends BaseUserController{
         BankCallResult result = new BankCallResult();
         String phone = request.getParameter("phone");
         logger.info("页面绑卡异步回调start");
+        logger.info("绑卡接口异步回调参数Bean：" + JSON.toJSONString(bean));
+        logger.info("phone num:" + phone);
         bean.setMobile(phone);
         bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());
