@@ -149,5 +149,14 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
         return bean;
     }
 
+    /**
+     * 应急中心 查询待异步查询的日志数量
+     * add by nxl
+     * @return
+     */
+    @Override
+    public int selectCertLogLength(){
+        return amConfigClient.selectCertLogLength();
+    }
 }
 
