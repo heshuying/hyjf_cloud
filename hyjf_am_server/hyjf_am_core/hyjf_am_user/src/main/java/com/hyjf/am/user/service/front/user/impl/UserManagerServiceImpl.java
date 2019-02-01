@@ -78,6 +78,10 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 userManagerCustomize.setUserStatus(userStatus.getOrDefault(userManagerCustomize.getUserStatus(), null));
                 userManagerCustomize.setRegistPlat(client.getOrDefault(userManagerCustomize.getRegistPlat(), null));
                 userManagerCustomize.setUserType(userType.getOrDefault(userManagerCustomize.getUserType(), null));
+                //户籍所在地导出需要(身份证号)
+                userManagerCustomize.setAreaByIdCard(userManagerCustomize.getIdcard());
+                //年龄导出需要(生日日期)
+                userManagerCustomize.setAge(userManagerCustomize.getBirthday());
             }
         }
         return listUser;

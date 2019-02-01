@@ -208,12 +208,12 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             return resultBean;
         }
         //同步保存user信息
-        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
         if(openAccountEnquiryDefineRequestBeanVO !=null){
             ////同步保存user信息成
             if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
                 //同步保存Account信息
-                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
+                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
             }
         }
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
@@ -223,7 +223,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
      * 保存开户的数据
      * 此处事务不起作用，此方法已经挪到 am-admin,Zhadaojian 2019-01-22
      */
-    public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
+  /*  public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
         String idCard = requestBean.getIdcard();
         String platform = requestBean.getPlatform();//开户平台
@@ -363,7 +363,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         resultBean.setResult("开户掉单同步成功!");
         return resultBean;
 
-    }
+    }*/
 
     /**
      * 保存银行卡信息

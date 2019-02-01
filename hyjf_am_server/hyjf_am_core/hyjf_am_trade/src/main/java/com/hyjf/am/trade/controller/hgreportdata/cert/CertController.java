@@ -1,0 +1,199 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.trade.controller.hgreportdata.cert;
+
+import com.hyjf.am.response.admin.CouponRecoverResponse;
+import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.account.AccountListResponse;
+import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
+import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
+import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
+import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
+import com.hyjf.am.vo.trade.CreditRepayVO;
+import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
+import com.hyjf.common.util.CommonUtils;
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * @Description
+ * @Author pangchengchao
+ * @Version v0.1
+ * @Date
+ */
+@Api(value = "应急中心")
+@RestController
+@RequestMapping("/am-trade/cert")
+public class CertController extends BaseController {
+
+    @Autowired
+    CertService certService;
+
+
+    @PostMapping("/queryCertAccountList")
+    public CertAccountListResponse queryCertAccountList(@RequestBody CertRequest certRequest) {
+        CertAccountListResponse response = new CertAccountListResponse();
+        List<CertAccountListCustomize> certAccountListCustomizes = certService.queryCertAccountList(certRequest);
+        if (!CollectionUtils.isEmpty(certAccountListCustomizes)) {
+            List<CertAccountListCustomizeVO> voList = CommonUtils.convertBeanList(certAccountListCustomizes, CertAccountListCustomizeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/queryCertAccountListId")
+    public CertAccountListResponse queryCertAccountListId(@RequestBody CertRequest certRequest) {
+        CertAccountListResponse response = new CertAccountListResponse();
+        CertAccountListIdCustomize certAccountListIdCustomize = certService.queryCertAccountListId(certRequest);
+        response.setCertAccountListIdCustomizeVO(CommonUtils.convertBean(certAccountListIdCustomize,CertAccountListIdCustomizeVO.class));
+        return response;
+    }
+
+    @PostMapping("/getAccountListVOListByRequest")
+    public AccountListResponse getAccountListVOListByRequest(@RequestBody CertRequest certRequest) {
+        AccountListResponse response = new AccountListResponse();
+        List<AccountList> accountLists = certService.getAccountListVOListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(accountLists)) {
+            List<AccountListVO> voList = CommonUtils.convertBeanList(accountLists, AccountListVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/getBorrowRepayListByRequest")
+    public BorrowRepayResponse getBorrowRepayListByRequest(@RequestBody CertRequest certRequest) {
+        BorrowRepayResponse response = new BorrowRepayResponse();
+        List<BorrowRepay> borrowRepayList = certService.getBorrowRepayListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(borrowRepayList)) {
+            List<BorrowRepayVO> voList = CommonUtils.convertBeanList(borrowRepayList, BorrowRepayVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+    @PostMapping("/getBorrowRepayPlanListByRequest")
+    public BorrowRepayPlanResponse getBorrowRepayPlanListByRequest(@RequestBody CertRequest certRequest) {
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        List<BorrowRepayPlan> borrowRepayPlan = certService.getBorrowRepayPlanListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(borrowRepayPlan)) {
+            List<BorrowRepayPlanVO> voList = CommonUtils.convertBeanList(borrowRepayPlan, BorrowRepayPlanVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/getCouponRecoverListByCertRequest")
+    public CouponRecoverResponse getCouponRecoverListByCertRequest(@RequestBody CertRequest certRequest) {
+        CouponRecoverResponse response = new CouponRecoverResponse();
+        List<CouponRecover> couponRecoverList = certService.getCouponRecoverListByCertRequest(certRequest);
+        if (!CollectionUtils.isEmpty(couponRecoverList)) {
+            List<CouponRecoverVO> voList = CommonUtils.convertBeanList(couponRecoverList, CouponRecoverVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/getBorrowTenderCpnListByCertRequest")
+    public BorrowTenderCpnResponse getBorrowTenderCpnListByCertRequest(@RequestBody CertRequest certRequest) {
+        BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
+        List<BorrowTenderCpn> borrowTenderCpnList = certService.getBorrowTenderCpnListByCertRequest(certRequest);
+        if (!CollectionUtils.isEmpty(borrowTenderCpnList)) {
+            List<BorrowTenderCpnVO> voList = CommonUtils.convertBeanList(borrowTenderCpnList, BorrowTenderCpnVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/getCouponRealTenderListByCertRequest")
+    public CouponRealTenderResponse getCouponRealTenderListByCertRequest(@RequestBody CertRequest certRequest) {
+        CouponRealTenderResponse response = new CouponRealTenderResponse();
+        List<CouponRealTender> couponRealTenderList = certService.getCouponRealTenderListByCertRequest(certRequest);
+        if (!CollectionUtils.isEmpty(couponRealTenderList)) {
+            List<CouponRealTenderVO> voList = CommonUtils.convertBeanList(couponRealTenderList, CouponRealTenderVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+    @PostMapping("/selectBorrowRecoverListByRequest")
+    public BorrowRecoverResponse selectBorrowRecoverListByRequest(@RequestBody CertRequest certRequest) {
+        BorrowRecoverResponse response = new BorrowRecoverResponse();
+        List<BorrowRecover> borrowRecoverList = certService.selectBorrowRecoverListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(borrowRecoverList)) {
+            List<BorrowRecoverVO> voList = CommonUtils.convertBeanList(borrowRecoverList, BorrowRecoverVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+    @PostMapping("/getHjhDebtCreditRepayListByRequest")
+    public HjhDebtCreditRepayResponse getHjhDebtCreditRepayListByRequest(@RequestBody CertRequest certRequest) {
+        HjhDebtCreditRepayResponse response = new HjhDebtCreditRepayResponse();
+        List<HjhDebtCreditRepay> hjhDebtCreditRepayList = certService.getHjhDebtCreditRepayListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(hjhDebtCreditRepayList)) {
+            List<HjhDebtCreditRepayVO> voList = CommonUtils.convertBeanList(hjhDebtCreditRepayList, HjhDebtCreditRepayVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+    @PostMapping("/getCreditRepayListByRequest")
+    public CreditRepayResponse getCreditRepayListByRequest(@RequestBody CertRequest certRequest) {
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> creditRepayList = certService.getCreditRepayListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(creditRepayList)) {
+            List<CreditRepayVO> voList = CommonUtils.convertBeanList(creditRepayList, CreditRepayVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+    @PostMapping("/selectBorrowRecoverPlanListByRequest")
+    public BorrowRecoverPlanResponse selectBorrowRecoverPlanListByRequest(@RequestBody CertRequest certRequest) {
+        BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
+        List<BorrowRecoverPlan> couponRealTenderList = certService.selectBorrowRecoverPlanListByRequest(certRequest);
+        if (!CollectionUtils.isEmpty(couponRealTenderList)) {
+            List<BorrowRecoverPlanVO> voList = CommonUtils.convertBeanList(couponRealTenderList, BorrowRecoverPlanVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/getHjhDebtCreditRepayListByRepayOrdId")
+    public HjhDebtCreditRepayResponse getHjhDebtCreditRepayListByRepayOrdId(@RequestBody CertRequest certRequest) {
+        HjhDebtCreditRepayResponse response = new HjhDebtCreditRepayResponse();
+        List<HjhDebtCreditRepay> hjhDebtCreditRepayList = certService.getHjhDebtCreditRepayListByRepayOrdId(certRequest);
+        if (!CollectionUtils.isEmpty(hjhDebtCreditRepayList)) {
+            List<HjhDebtCreditRepayVO> voList = CommonUtils.convertBeanList(hjhDebtCreditRepayList, HjhDebtCreditRepayVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @PostMapping("/getCreditRepayListByRepayOrdId")
+    public CreditRepayResponse getCreditRepayListByRepayOrdId(@RequestBody CertRequest certRequest) {
+        CreditRepayResponse response = new CreditRepayResponse();
+        List<CreditRepay> creditRepayList = certService.getCreditRepayListByRepayOrdId(certRequest);
+        if (!CollectionUtils.isEmpty(creditRepayList)) {
+            List<CreditRepayVO> voList = CommonUtils.convertBeanList(creditRepayList, CreditRepayVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+}

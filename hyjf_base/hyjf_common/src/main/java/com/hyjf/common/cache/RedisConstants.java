@@ -161,17 +161,17 @@ public class RedisConstants {
      * admin单点登陆用户(admin:$username)
      */
     public static final String ADMIN_REQUEST = "admin:";
-    
+
     /**
      * 协议模板---协议前台展示名称的别名+$aliasName
      */
     public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_alias:";
-    
+
     /**
      * 协议模板---协议文件存储Redis前缀+$protocolId
      */
     public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
-    
+
 
     /**
      * 用户token令牌前缀（token:token）
@@ -276,36 +276,6 @@ public class RedisConstants {
      * 群发短信--短信余额
      */
     public static final String REMAIN_MONEY = "remain_money:";
-
-    /**
-     * 上海大屏幕运营数据
-     */
-    public static final String SH_OPERATIONAL_DATA = "sh_operational_data:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计出借人
-     */
-    public static final String STATISTICAL_INVESTOR = "statistical_investor:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计出借（statistical_investment:$String）
-     */
-    public static final String STATISTICAL_INVESTMENT = "statistical_investment:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计充值（statistical_recharge:$String）
-     */
-    public static final String STATISTICAL_RECHARGE = "statistical_recharge:";
-
-    /**
-     * 上海大屏幕运营数据 : 注册人统计(SH_OPERATIONAL_DATA+REGISTRANT_STATISTICS+1或2)
-     */
-    public static final String REGISTRANT_STATISTICS = "registrant_statistics:";
-
-    /**
-     * 上海大屏幕运营数据 : 公司动态列表
-     */
-    public static final String ARTICLE_LIST = "article_list:";
 
     /**
      * 协议模板二期---动态展示协议前台展示名称
@@ -489,6 +459,18 @@ public class RedisConstants {
      * 关联计划 borrowissue + creditNid/borrowNid
      */
     public final static String BORROW_ISSUE ="borrowissue:";
+    /**
+     * 北互金历史上报定时任务执行开关(0:关闭；1：开启)
+     */
+    public static final String BIFA_HISTORY_OPEN_FLAG = "bifa_history_open_flag";
+    /**
+     * 北互金历史上报定时任务开始时间
+     */
+    public static final String BIFA_HISTORY_START_YYYYMMDD = "bifa_history_start_yyyymmdd";
+    /**
+     * 北互金历史上报定时任务结束时间
+     */
+    public static final String BIFA_HISTORY_END_YYYYMMDD = "bifa_history_end_yyyymmdd";
 
     /**
      * 邮件发送key
@@ -544,6 +526,19 @@ public class RedisConstants {
      * 纳觅返现活动
      */
     public static final String RETURN_CASH_ACTIVITY = "RETURN_CASH_ACTIVITY:";
+
+    /**合规数据上报 CERT 批次号自增 序列号*/
+    public static final String CERT_BATCH_NUMBER_SEQ_ID = "CERT_BATCH_NUMBER_SEQ_ID";
+    /**合规数据上报 CERT 是否初始化标的  没有 就是没初始化*/
+    public static final String CERT_BATCH_IS_INIT_BORROW= "CERT_BATCH_IS_INIT_BORROW";
+
+    /**合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报*/
+    public static final String CERT_CAN_RUN= "CERT_CAN_RUN";
+
+    /**
+     * 逾期原因
+     */
+    public static final String LATER_REPAY_REASON = "NIFA:LATER_REPAY_REASON";
     /**
      * 推送表的消息唯一标识
      */

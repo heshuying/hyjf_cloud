@@ -13,12 +13,18 @@ import org.springframework.web.client.RestTemplate;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
+import com.hyjf.am.response.admin.CertReportLogResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -261,5 +267,143 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public void holidays() {
 		restTemplate.getForEntity("http://AM-CONFIG/am-config/holidays/save", String.class);
+	}
+
+	/**
+	 * 获取待处理的异常
+	 *
+	 * @return
+	 */
+	@Override
+	public List<CertErrLogVO> getCertErrLogs() {
+		String url = "http://AM-CONFIG/am-config/certError/getCertErrLogs";
+		CertErrLogResponse response = restTemplate.getForEntity(url,CertErrLogResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 应急中心 查找上报记录
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public List<CertLogVO> selectCertReportLogList(){
+		CertReportLogResponse reportLogResponse =
+				restTemplate.getForEntity("http://AM-CONFIG/am-config/certLog/selectCertReportLogList", CertReportLogResponse.class).getBody();
+		if (reportLogResponse != null && Response.SUCCESS.equals(reportLogResponse.getRtn())) {
+			return reportLogResponse.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 应急中心 根据id查找报送日志
+	 * @param logId
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public CertLogVO selectCertReportLogById(int logId){
+		CertReportLogResponse reportLogResponse =
+				restTemplate.getForEntity("http://AM-CONFIG/am-config/certLog/selectCertReportLogById/"+logId, CertReportLogResponse.class).getBody();
+		if (reportLogResponse != null && Response.SUCCESS.equals(reportLogResponse.getRtn())) {
+			return reportLogResponse.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 应急中心 更新操作日志
+	 * @param request
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public int updateCertLog(CertLogRequestBean request){
+		IntegerResponse response =
+				restTemplate.postForEntity("http://AM-CONFIG/am-config/certLog/updateCertLog", request,IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResultInt().intValue();
+		}
+		return 0;
+	}
+
+
+	/**
+	 * 插入发送记录表
+	 *
+	 * @param certLog
+	 * @return
+	 */
+	@Override
+	public boolean insertCertLog(CertLogVO certLog) {
+		String url = "http://AM-CONFIG/am-config/certLog/insertCertLog";
+		BooleanResponse response = restTemplate.postForEntity(url,certLog,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 插入错误日志表
+	 *
+	 * @param errLog
+	 */
+	@Override
+	public boolean insertCertErrorLog(CertErrLogVO errLog) {
+		String url = "http://AM-CONFIG/am-config/certError/insertCertErrorLog";
+		BooleanResponse response = restTemplate.postForEntity(url,errLog,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 根据订单号删除错误日志
+	 *
+	 * @param oldLogOrdId
+	 */
+	@Override
+	public boolean deleteCertErrByLogOrdId(String oldLogOrdId) {
+		String url = "http://AM-CONFIG/am-config/certError/deleteCertErrByLogOrdId/"+oldLogOrdId;
+		BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 修改错误次数加1
+	 *
+	 */
+	@Override
+	public boolean updateErrorLogCount(CertErrLogVO logVO) {
+		String url = "http://AM-CONFIG/am-config/certError/updateErrorLogCount";
+		BooleanResponse response = restTemplate.postForEntity(url,logVO,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 应急中心 查询待异步查询的日志数量
+	 * add by nxl
+	 * @return
+	 */
+	@Override
+	public int selectCertLogLength(){
+		IntegerResponse reportLogResponse =
+				restTemplate.getForEntity("http://AM-CONFIG/am-config/certLog/selectCertLogLength", IntegerResponse.class).getBody();
+		if (reportLogResponse != null && Response.SUCCESS.equals(reportLogResponse.getRtn())) {
+			return reportLogResponse.getResultInt();
+		}
+		return 0;
 	}
 }

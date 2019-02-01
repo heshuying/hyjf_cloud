@@ -15,6 +15,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
 import com.hyjf.admin.utils.ConvertUtils;
@@ -31,6 +33,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -69,6 +72,8 @@ public class PlanListController extends BaseController{
 	private PlanListService planListService;
 	@Autowired
 	private SystemConfig systemConfig;
+	@Autowired
+	private CommonProducer commonProducer;
 	
     /** 权限 */	
 	public static final String PERMISSIONS = "planlist";
@@ -419,6 +424,15 @@ public class PlanListController extends BaseController{
 				//success();
 				jsonObject.put("status", SUCCESS);
 				jsonObject.put("statusDesc", SUCCESS_DESC);
+				// 新增成功发送mq到互金上报数据add by liushouyi
+				try {
+					JSONObject params = new JSONObject();
+					params.put("planNid", planNid);
+					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.HJHPLAN_ADD_TAG, UUID.randomUUID().toString(), params),
+							MQConstant.HG_REPORT_DELAY_LEVEL);
+				} catch (Exception e) {
+					logger.error("新加智投发送mq消息到合规数据上报失败！planNid : " + planNid ,e);
+				}
 			} else {
 				//fail("");
 				jsonObject.put("status", FAIL);

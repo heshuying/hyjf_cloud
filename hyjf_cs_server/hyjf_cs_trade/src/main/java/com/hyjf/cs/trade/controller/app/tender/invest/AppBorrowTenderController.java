@@ -100,15 +100,7 @@ public class AppBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String isPrincipal,
                                                                        @RequestParam String account) {
         logger.info("APP端散标出借获取投标成功结果，logOrdId{}", logOrdId);
-        WebResult<Map<String, Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
-        Map<String, Object> resultMap = result.getData();
-        if(resultMap!=null&&resultMap.containsKey("appIncome")){
-            // 如果是代金券 并且是app
-            resultMap.remove("income");
-            resultMap.put("income",result.getData().get("appIncome"));
-            result.setData(resultMap);
-        }
-        return result;
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
     }
 
     @ApiOperation(value = "APP端获取出借信息", notes = "APP端获取出借信息")

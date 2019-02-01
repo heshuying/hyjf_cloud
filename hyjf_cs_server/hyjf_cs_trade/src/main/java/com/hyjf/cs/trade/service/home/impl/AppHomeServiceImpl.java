@@ -246,12 +246,12 @@ public class AppHomeServiceImpl implements AppHomeService {
         //美国上市
         createModule(moduleList, platform, "android_module2", "ios_module2", HOST);
         //运营数据
-        AppAdsCustomizeVO appAdsCustomize = getOperationalDataUrl(platform, "android_module3", "ios_module3", HOST);
-        String url = "";
-        if(appAdsCustomize != null){
-            url = appAdsCustomize.getUrl();
-        }
-        info.put("operationalDataURL",url);
+//        AppAdsCustomizeVO appAdsCustomize = getOperationalDataUrl(platform, "android_module3", "ios_module3", HOST);
+//        String url = "";
+//        if(appAdsCustomize != null){
+//            url = appAdsCustomize.getUrl();
+//        }
+        info.put("operationalDataURL",HOST + "/operationalData");
         //关于我们
         createModule(moduleList, platform, "android_module4", "ios_module4", HOST);
 
@@ -291,6 +291,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         String privacyPolicyUrl = systemConfig.getAppPrivacyPolicyUrl();
         info.put("serviceAgreementUrl",HOST + serviceAgreementUrl);//服务协议
         info.put("privacyPolicyUrl",HOST + privacyPolicyUrl);//隐私政策
+
+        // add by liushouyi 新增固定发标时间提醒 start
+        info.put("staticIssueTime","散标更新时间  10:00  15:00");
+        info.put("staticHjhIssueTime","智投服务更新时间  10:00");
+        // add by liushouyi 新增固定发标时间提醒 end
 
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
