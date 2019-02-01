@@ -63,6 +63,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
@@ -6583,6 +6584,16 @@ public class AmTradeClientImpl implements AmTradeClient {
     public BigDecimal sumBorrowUserMoneyTopOne() {
         String url = "http://AM-TRADE/am-trade/bifaDataReport/sumBorrowUserMoneyTopOne";
         return restTemplate.getForEntity(url,BigDecimal.class).getBody();
+    }
+
+    @Override
+    public CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest request) {
+        String url = urlBase + "cert/queryCertAccountListId";
+        CertAccountListResponse response = restTemplate.postForEntity(url, request, CertAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getCertAccountListIdCustomizeVO();
+        }
+        return null;
     }
 
     /**

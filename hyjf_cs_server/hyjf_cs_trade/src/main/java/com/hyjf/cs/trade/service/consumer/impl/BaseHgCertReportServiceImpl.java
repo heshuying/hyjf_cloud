@@ -85,7 +85,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
             e.printStackTrace();
         }
         Map<String, String> params = getBankParam(bean);
-        // todo 插入mongo
+        // 插入mongo
         this.insertCertReport(bean);
         String rtnMsg = CertSendUtils.postRequest(bean.getUrl(), params );
         logger.info("返回结果为:"+rtnMsg);
@@ -170,8 +170,6 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         }
         bean.setRetMess(rtnMsg);
         // 操作数据库 修改
-        // todo 修改mongo
-
         CertReportEntitRequest certReportEntitRequest = new CertReportEntitRequest();
         BeanUtils.copyProperties(bean,certReportEntitRequest);
         certReportEntitRequest.setResp(resp.toJSONString());

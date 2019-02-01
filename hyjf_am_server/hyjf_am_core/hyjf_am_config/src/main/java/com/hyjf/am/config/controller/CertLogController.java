@@ -103,4 +103,22 @@ public class CertLogController extends BaseConfigController{
         }
         return response;
     }
+
+    /**
+     * 查询待异步查询的日志数量
+     *
+     * @return
+     */
+    @GetMapping("/selectCertLogLength")
+    public IntegerResponse selectCertLogLength() {
+        IntegerResponse response = new IntegerResponse();
+        response.setRtn(Response.FAIL);
+        response.setResultInt(0);
+        int length = certLogService.selectCertLogLength();
+        if (length > 0) {
+            response.setRtn(Response.SUCCESS);
+            response.setResultInt(length);
+        }
+        return response;
+    }
 }

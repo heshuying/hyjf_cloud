@@ -31,7 +31,7 @@ import java.util.List;
  * @Date 2019/1/21 10:23
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_USER_INFO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_USER_INFO_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_USER_INFO_TAG, consumerGroup = MQConstant.CERT_USER_INFO_GROUP)
 public class CertUserInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(CertUserInfoMessageConsumer.class);
 
