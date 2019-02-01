@@ -46,14 +46,10 @@ public class AppPushManageServiceImpl implements AppPushManageService {
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy())){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStartDiy()));
-                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEndDiy()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
+            String timeStart = pushManageRequest.getTimeStartDiy() + " 00:00:00";
+            String timeEnd = pushManageRequest.getTimeEndDiy() + " 23:59:59";
+            criteria.andCreateTimeBetween(GetDate.stringToDate(timeStart), GetDate.stringToDate(timeEnd));
         }
 
         return appPushManageMapper.countByExample(example);
