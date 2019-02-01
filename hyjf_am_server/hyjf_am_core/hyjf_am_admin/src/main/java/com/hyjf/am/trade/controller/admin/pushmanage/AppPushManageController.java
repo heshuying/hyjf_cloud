@@ -4,11 +4,11 @@ import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.AppPushManageRequest;
-import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AppPushManage;
 import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
 import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
@@ -43,28 +43,18 @@ public class AppPushManageController extends BaseController {
         // 获取推送的总条数
         Integer count = this.appPushManageService.getCountList(pushManageRequest);
         if (count > 0){
+//            Paginator paginator = new Paginator(pushManageRequest.getCurrPage(),count, pushManageRequest.getPageSize());
+            Paginator paginator = new Paginator(pushManageRequest.getCurrPage(),count, pushManageRequest.getPageSize());
+            // 获取所有的列表
+            List<AppPushManage> pushManageList = this.appPushManageService.getAllList(pushManageRequest, paginator);
 
-            // 分页配置
-            if (pushManageRequest.getCurrPage() > 0){
-                Paginator paginator = new Paginator(pushManageRequest.getCurrPage(), count);
-                pushManageRequest.setLimitStart(paginator.getOffset());
-                if (pushManageRequest.getPageSize() > 0){
-                    pushManageRequest.setLimitEnd(pushManageRequest.getPageSize());
-                }else {
-                    pushManageRequest.setLimitEnd(paginator.getLimit());
-                }
+            if (!CollectionUtils.isEmpty(pushManageList)){
+                pushManageResponse.setResultList(CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class));
+                pushManageResponse.setRtn(Response.SUCCESS);
             }
         }
 
-        // 获取所有的列表
-        List<AppPushManage> pushManageList = this.appPushManageService.getAllList(pushManageRequest);
-
-        if (!CollectionUtils.isEmpty(pushManageList)){
-            pushManageResponse.setResultList(CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class));
-            pushManageResponse.setCount(count);
-            pushManageResponse.setRtn(Response.SUCCESS);
-        }
-
+        pushManageResponse.setCount(count);
         return pushManageResponse;
     }
 

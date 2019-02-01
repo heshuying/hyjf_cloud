@@ -6,10 +6,7 @@ package com.hyjf.am.trade.controller.hgreportdata.nifa;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaReportLogResponse;
-import com.hyjf.am.response.hgreportdata.nifa.NifaContractEssenceResponse;
-import com.hyjf.am.response.hgreportdata.nifa.NifaContractStatusResponse;
-import com.hyjf.am.response.hgreportdata.nifa.NifaReceivedPaymentsResponse;
-import com.hyjf.am.response.hgreportdata.nifa.NifaRepayInfoResponse;
+import com.hyjf.am.response.hgreportdata.nifa.*;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
@@ -82,8 +79,8 @@ public class NifaFileDealController extends BaseController {
      * @return
      */
     @GetMapping("/selectNifaReportLogByFileName/{fileName}")
-    public NifaReportLogResponse selectNifaReportLogByFileName(@PathVariable String fileName) {
-        NifaReportLogResponse response = new NifaReportLogResponse();
+    public NifaFileReportLogResponse selectNifaReportLogByFileName(@PathVariable String fileName) {
+        NifaFileReportLogResponse response = new NifaFileReportLogResponse();
         List<NifaReportLog> nifaReportLogs = nifaFileDealService.selectNifaReportLogByFileName(fileName);
         if (!CollectionUtils.isEmpty(nifaReportLogs)) {
             List<NifaReportLogVO> voList = CommonUtils.convertBeanList(nifaReportLogs, NifaReportLogVO.class);
