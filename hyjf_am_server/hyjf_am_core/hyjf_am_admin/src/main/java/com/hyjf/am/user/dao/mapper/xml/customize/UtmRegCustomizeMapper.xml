@@ -60,7 +60,7 @@
 				and del_flag =  #{delFlag}
 			</if>
 		</where>
-		 <if test="limitStart != null and limitEnd !=null" >
+		 <if test="limitStart != null and limitStart >0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
 	</sql>
@@ -412,7 +412,7 @@
 		<include refid="Where_Clause2" />
 		ORDER BY
 			mm.invest_time DESC
-		<if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+		<if test="limitStart != null and limitStart >0" >
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>
 	
@@ -575,7 +575,7 @@
         <include refid="Where_Clause2" />
         ORDER BY
         mm.invest_time DESC
-        <if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+        <if test="limitStart != null and limitStart >0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
     </select>
@@ -718,7 +718,7 @@
 		<include refid="Where_Clause_Hjh" />
 		ORDER BY
 			mm.invest_time DESC
-		<if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+		<if test="limitStart != null and limitStart >0" >
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>
 	</select>
@@ -826,7 +826,7 @@
         <include refid="Where_Clause_Hjh" />
         ORDER BY
         mm.invest_time DESC
-        <if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+        <if test="limitStart != null and limitStart >0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
     </select>
@@ -924,7 +924,7 @@
         </if>
 
         order by tmp.invest_time desc
-        <if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+        <if test="limitStart != null and limitStart >0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
 	</select>
@@ -1022,7 +1022,7 @@
 		</if>
 
 		order by tmp.invest_time desc
-		<if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+		<if test="limitStart != null and limitStart >0" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
     </select>
@@ -1138,7 +1138,7 @@
         <if test="investEndTime != null">
             AND tmp.invest_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
         </if> order by tmp.invest_time desc
-        <if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+        <if test="limitStart != null and limitStart >0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
 	</select>
@@ -1254,7 +1254,7 @@
 		<if test="investEndTime != null">
 			AND tmp.invest_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
 		</if> order by tmp.invest_time desc
-		<if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
+		<if test="limitStart != null and and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
