@@ -223,8 +223,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
-
-        return utmRegCustomizeMapper.selectPcChannelReconciliationRecordCount(request);
+        Integer result = utmRegCustomizeMapper.selectPcChannelReconciliationRecordCount(request);
+        return result==null?0:result;
     }
 
     @Override
@@ -250,8 +250,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
-
-        return utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjhCount(request);
+        Integer result = utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjhCount(request);
+        return result==null?0:result;
     }
 
     @Override
@@ -283,7 +283,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         if (Objects.equals(firstFlag, 0)) {
             request.setFirstFlag(1);
         }
-        return utmRegCustomizeMapper.selectAppChannelReconciliationRecordCount(request);
+        Integer result = utmRegCustomizeMapper.selectAppChannelReconciliationRecordCount(request);
+        return result == null? 0:result;
     }
 
     @Override
@@ -315,7 +316,8 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         if (Objects.equals(firstFlag, 0)) {
             request.setFirstFlag(1);
         }
-        return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjhCount(request);
+        Integer result = utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjhCount(request);
+        return result==null?0:result;
     }
 
     @Override
