@@ -31,7 +31,7 @@ import java.util.Map;
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.ISSUE_INVESTED_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.ISSUE_INVESTED_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP_INVESTED)
 public class CertBorrowStatusMessageConsumerInved implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerInved.class);
