@@ -108,14 +108,14 @@ public class BorrowRecoverController extends BaseController {
         copyForm.setPageSize(defaultRowMaxCount);
         copyForm.setCurrPage(1);
         // 查询
- 
+
         Integer totalCount = this.borrowRecoverService.countBorrowRecover(copyForm);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
+        helper.export(workbook, sheetName + "_第0页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         if (totalCount == 0) {
-
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
         for (int i = 1; i < sheetCount; i++) {
@@ -125,7 +125,7 @@ public class BorrowRecoverController extends BaseController {
             // 查询
             List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
             if (resultList != null && resultList.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i ) + "页";
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
             } else {
                 break;
