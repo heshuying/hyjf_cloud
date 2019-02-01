@@ -1123,7 +1123,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      */
     private boolean selectNifaReportLogByFileName(String fileName) {
         String url = baseTradeUrl + "selectNifaReportLogByFileName/" + fileName;
-        NifaReportLogResponse response = this.baseClient.getExe(url, NifaReportLogResponse.class);
+        NifaFileReportLogResponse response = this.baseClient.getExe(url, NifaFileReportLogResponse.class);
         List<NifaReportLogVO> nifaReportLogVOList = response.getResultList();
         if (CollectionUtils.isEmpty(nifaReportLogVOList)) {
             return false;

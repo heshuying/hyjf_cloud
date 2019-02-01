@@ -15,7 +15,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -257,7 +256,6 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
-        request.setCurrPage(0);
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -290,7 +288,6 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
-        request.setCurrPage(0);
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);

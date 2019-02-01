@@ -61,6 +61,10 @@
         COUNT(1)
         FROM
         ht_borrow_finman_new_charge c
+        LEFT JOIN
+        ht_borrow_project_type t ON t.borrow_class = c.project_type
+        LEFT JOIN ht_hjh_inst_config hic ON c.inst_code = hic.inst_code
+        LEFT JOIN ht_hjh_asset_type hat on c.inst_code = hat.inst_code AND c.asset_type = hat.asset_type
         <include refid="Where_Clause" />
     </select>
 
