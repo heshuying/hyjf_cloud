@@ -66,12 +66,8 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request.setSourceId(request.getUtmPlat()[0]);
         }
-        // 投资信息
-        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationCount(request);
-        if (response != null) {
-            return response.getCount();
-        }
-        return 0;
+        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecord(request);
+        return response.getCount();
     }
     @Override
     public ChannelReconciliationResponse searchAppHJHAction(ChannelReconciliationRequest request) {

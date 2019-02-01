@@ -930,7 +930,7 @@
 	</select>
 
     <select id="selectAppChannelReconciliationRecordCount" parameterType="com.hyjf.am.resquest.admin.ChannelReconciliationRequest" resultType="java.lang.Integer">
-        select count(*) from (
+		select count(1) from (
 		SELECT
 		a.user_id,
 		r.user_name as user_name,
@@ -1144,7 +1144,7 @@
 	</select>
 
 	<select id="selectAppChannelReconciliationRecordHjhCount" parameterType="com.hyjf.am.resquest.admin.ChannelReconciliationRequest" resultType="java.lang.Integer">
-        select count(*) from (
+		select count(1) from (
 		SELECT
 		a.user_id,
 		r.user_name as user_name,
