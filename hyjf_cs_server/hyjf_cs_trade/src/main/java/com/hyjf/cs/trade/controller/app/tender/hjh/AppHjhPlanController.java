@@ -63,7 +63,7 @@ public class AppHjhPlanController extends BaseTradeController {
             if(resultMap!=null&&resultMap.containsKey("appEarnings")){
                 // 如果是代金券 并且是app
                 resultMap.remove("earnings");
-                resultMap.put("earnings",result.getData().get("appEarnings"));
+                resultMap.put("earnings",resultMap.get("appEarnings"));
                 result.setData(resultMap);
             }
 
