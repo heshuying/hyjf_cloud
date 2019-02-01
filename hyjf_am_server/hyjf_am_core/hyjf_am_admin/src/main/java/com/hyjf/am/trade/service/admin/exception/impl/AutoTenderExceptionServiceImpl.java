@@ -910,6 +910,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             return creditTenderFlag;
         }
 
+        int a = 1/0;
+
         // 删除临时表 OK
         deleteHjhPlanBorrowTmpByAccedeBorrow(credit.getCreditNid(), hjhAccede.getAccedeOrderId());
 
