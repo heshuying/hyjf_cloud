@@ -105,7 +105,7 @@ public class AppBorrowTenderController extends BaseTradeController {
         if(resultMap!=null&&resultMap.containsKey("appIncome")){
             // 如果是代金券 并且是app
             resultMap.remove("income");
-            resultMap.put("income",result.getData().get("appIncome"));
+            resultMap.put("income",resultMap.get("appIncome"));
             result.setData(resultMap);
         }
         return result;
