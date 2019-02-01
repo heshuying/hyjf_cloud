@@ -22,6 +22,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,7 +76,7 @@ public class BorrowRecoverController extends BaseController {
         result.setData(bean);
         return result;
     }
-
+    private Logger _log = LoggerFactory.getLogger(BorrowRecoverController.class);
     /**
      * 带条件导出
      * 1.无法指定相应的列的顺序，
@@ -115,6 +117,8 @@ public class BorrowRecoverController extends BaseController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         helper.export(workbook, sheetName + "_第0页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        _log.info("totalCount"+totalCount);
+        _log.info("sheetCount"+sheetCount);
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
