@@ -60,7 +60,7 @@
 				and del_flag =  #{delFlag}
 			</if>
 		</where>
-		 <if test="limitStart != null and limitStart >0" >
+		 <if test="limitStart != null and limitStart >= 0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
 	</sql>
