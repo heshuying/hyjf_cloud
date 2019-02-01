@@ -256,6 +256,10 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -289,6 +293,10 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -322,6 +330,10 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -354,6 +366,10 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
