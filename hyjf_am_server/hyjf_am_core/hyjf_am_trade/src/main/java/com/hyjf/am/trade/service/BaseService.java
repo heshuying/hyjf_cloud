@@ -225,7 +225,16 @@ public interface BaseService {
 	 */
 	HjhPlanAsset selectPlanAsset(String assetId, String instCode);
 
-    /**
+
+	/**
+	 * 根据标的号和机构编号获取资产
+	 * @param borrowNid
+	 * @param instCode
+	 * @return
+	 */
+	HjhPlanAsset selectPlanAssetByBorrowNidAndInstCode(String borrowNid, String instCode);
+
+	/**
      * 获取系统邮件收件地址， 测试生产不一致
      * @return
      */
