@@ -74,4 +74,31 @@ public interface RealTimeBorrowLoanService extends BaseService {
 
 	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
 
+	/**
+	 * 调用银行实时放款接口成功时，更新业务数据
+	 * @param borrowApicron
+	 */
+	void updWhenLoanSuccessed(BorrowApicron borrowApicron);
+
+	/**
+	 * 放款成功后，更新每笔投资相关信息
+	 * @param apicron
+	 * @param borrow
+	 * @param borrowInfo
+	 * @param serviceFee
+	 * @param borrowTender
+	 * @return
+	 * @throws Exception
+	 */
+	Map updateTenderInfo(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception;
+
+	/**
+	 * 更新借款人相关信息
+	 * @param apicron
+	 * @param borrow
+	 * @param borrowInfo
+	 * @param recoverInterestSum
+	 * @throws Exception
+	 */
+	void updateBorrowerInfo(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal recoverInterestSum) throws Exception;
 }

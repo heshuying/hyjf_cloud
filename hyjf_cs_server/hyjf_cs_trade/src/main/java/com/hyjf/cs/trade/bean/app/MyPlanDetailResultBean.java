@@ -303,6 +303,17 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		// 债转订单号
 		private String nid = "";
 
+		/**法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功*/
+		private int fddStatus;
+
+		public int getFddStatus() {
+			return fddStatus;
+		}
+
+		public void setFddStatus(int fddStatus) {
+			this.fddStatus = fddStatus;
+		}
+
 		public String getNid() {
 			return nid;
 		}

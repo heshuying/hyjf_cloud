@@ -257,6 +257,15 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         userEvalationResult.setEvalType((String) returnMap.get("evalType"));
         userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 用户信息修改（风险测评）
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                MQConstant.HG_REPORT_DELAY_LEVEL);
+        // add 合规数据上报 埋点 liubin 20181122 end
+
         return returnMap;
         // 发放优惠券 end
     }

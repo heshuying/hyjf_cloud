@@ -762,6 +762,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 ontimeCheckBean.setNowtime(GetDate.getNowTime10());
                 return ontimeCheckBean;
             }
+
+            // 定时标发标成功推送消息到mq合规上报数据
+            // 5.web端散标自动发标页面触发
+            JSONObject params = new JSONObject();
+            params.put("borrowNid", borrowVO.getBorrowNid());
+            params.put("userId", borrowVO.getUserId());
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+
             logger.info("定时标的【" + borrowNid + "】发标完成。（web）");
 
             //设定  redis的标的定时状态 为 0 标的状态修改成功开标(有效期同batch执行周期，5分钟)

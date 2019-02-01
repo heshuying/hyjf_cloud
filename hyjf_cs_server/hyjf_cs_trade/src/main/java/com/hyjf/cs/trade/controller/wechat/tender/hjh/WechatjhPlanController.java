@@ -71,10 +71,17 @@ public class WechatjhPlanController extends BaseTradeController {
         // 从payload里面获取预置属性
         String presetProps = tender.getPresetProps();
         // 神策数据统计 add by liuyang 20180726 end
-        WebResult result = new WebResult();
+        WebResult<Map<String, Object>> result = new WebResult();
         WeChatResult weChatResult = new WeChatResult();
         try {
             result = hjhTenderService.joinPlan(tender);
+            Map<String, Object> resultMap = result.getData();
+            if(resultMap!=null&&resultMap.containsKey("appEarnings")){
+                // 如果是代金券 并且是app
+                resultMap.remove("earnings");
+                resultMap.put("earnings",resultMap.get("appEarnings"));
+                result.setData(resultMap);
+            }
             HjhPlanVO plan =  hjhTenderService.getPlanByNid(tender.getBorrowNid());
             String lockPeriod = plan.getLockPeriod().toString();
             String dayOrMonth="";

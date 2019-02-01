@@ -6,14 +6,18 @@ package com.hyjf.admin.controller.extensioncenter;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.promotion.PcChannelStatisticsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.resquest.admin.PcChannelStatisticsRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -40,10 +44,30 @@ import java.util.Map;
 public class PcChannelStatisticsController extends BaseController {
     @Autowired
     private PcChannelStatisticsService pcChannelStatisticsService;
+    @Autowired
+    private AdminUtmReadPermissionsService adminUtmReadPermissionsService;
 
     @ApiOperation(value = "查询pc渠道统计", notes = "查询pc渠道统计")
     @PostMapping("/search")
-    public AdminResult searchAction(@RequestBody PcChannelStatisticsRequest request) {
+    public AdminResult searchAction(@RequestBody PcChannelStatisticsRequest request, HttpServletRequest httpRequest) {
+        AdminSystemVO loginUser=getUser(httpRequest);
+        String userId = loginUser.getId();
+        // 根据用户Id查询渠道账号管理
+        AdminUtmReadPermissionsVO permissionsVO = adminUtmReadPermissionsService.selectAdminUtmReadPermissions(userId);
+        if (permissionsVO != null) {
+            request.setUtmIds(permissionsVO.getUtmIds());
+        }
+        // 渠道
+        String[] utmIds = new String[]{};
+        if (Validator.isNotNull(request.getUtmIds())) {
+            if (request.getUtmIds().contains(StringPool.COMMA)) {
+                utmIds = request.getUtmIds().split(StringPool.COMMA);
+                request.setUtmIdsSrch(utmIds);
+            } else {
+                utmIds = new String[]{request.getUtmIds()};
+                request.setUtmIdsSrch(utmIds);
+            }
+        }
         PcChannelStatisticsResponse response = pcChannelStatisticsService.searchPcChannelStatistics(request);
         return new AdminResult(response);
     }

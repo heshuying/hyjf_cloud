@@ -69,6 +69,25 @@ public class UserManagerCustomize {
     private String instCode;
     /** 用户来源名称--展示用 */
     private String instName;
+    /** 户籍所在地 */
+    public String areaByIdCard;
+    /** 年龄 */
+    public String age;
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+    public String getAreaByIdCard() {
+        return areaByIdCard;
+    }
+
+    public void setAreaByIdCard(String areaByIdCard) {
+        this.areaByIdCard = areaByIdCard;
+    }
 
     public String getUserId() {
         return userId;

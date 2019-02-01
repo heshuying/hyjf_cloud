@@ -758,7 +758,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 6){//出借利率
 							resultMap.put("borrowApr", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 7){//融资用途
-							resultMap.put("financePurpose", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("financePurpose", this.getValue2(hssfRow.getCell(1)));
 						}else if(rowNum == 8){//月薪收入
 							resultMap.put("monthlyIncome", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 9){//还款来源
@@ -1777,6 +1777,37 @@ public class BorrowCommonController extends BaseController {
 				return "";
 		}
 	}
+	private String getValue2(HSSFCell hssfCell) {
+		if (hssfCell == null) {
+			return "";
+		}
+		switch (hssfCell.getCellTypeEnum()) {
+			case BOOLEAN:
+				// 返回布尔类型的值
+				return String.valueOf(hssfCell.getBooleanCellValue());
+			case NUMERIC:
+				// 返回数值类型的值
+				String s = String.valueOf(hssfCell.getNumericCellValue());
+				if(s.equals("99.0")) {
+					return s.replace(".0", "");
+				}
+				return "0"+ s.replace(".0", "");
+			case FORMULA:
+				// 单元格为公式类型时
+				if (CellType.NUMERIC == hssfCell.getCachedFormulaResultTypeEnum()) {
+					// 返回数值类型的值
+					return String.valueOf(hssfCell.getNumericCellValue());
+				} else {
+					// 返回字符串类型的值
+					return String.valueOf(hssfCell.getStringCellValue());
+				}
+			case STRING:
+				// 返回字符串类型的值
+				return String.valueOf(hssfCell.getStringCellValue());
+			default:
+				return "";
+		}
+	}
 	/**
      * 迁移到详细画面
      *
@@ -2152,13 +2183,14 @@ public class BorrowCommonController extends BaseController {
 	        map.put("borrowNid", "项目编号");
 	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
-	        map.put("username", "用户名");
+	        map.put("username", "借款人用户名");
 //	        map.put("applicant", "项目申请人");
 	        map.put("projectName", "项目名称");
 	        map.put("borrowProjectTypeName", "项目类型");
 	        map.put("instName", "资产来源");
 	        map.put("account", "借款金额");
-	        map.put("borrowApr", "年化利率");
+	        map.put("borrowPeriod", "借款期限");
+	        map.put("borrowApr", "出借利率");
 	        map.put("borrowStyle", "还款方式");
 	        map.put("borrowServiceScale", "放款服务费率");
 	        map.put("borrowManagerScale", "还款服务费率");
@@ -2172,22 +2204,23 @@ public class BorrowCommonController extends BaseController {
 	        map.put("ontime", "定时发标时间");
 	        map.put("bookingBeginTime", "预约开始时间");
 	        map.put("bookingEndTime", "预约截止时间");
-	        map.put("verifyTime", "实际发标时间");
-	        map.put("borrowValidTime", "投稿截止时间");
+	        map.put("verifyTime2", "实际发标时间");
+	        map.put("borrowValidTime", "出借截止时间");
 	        map.put("borrowFullTime", "满标时间");
 	        map.put("reverifyTime", "复审通过时间");
 	        map.put("recoverLastTime", "放款完成时间");
 	        map.put("repayLastTime", "最后还款日");
 	        map.put("registTime", "备案时间");
-	        map.put("reverifyUserName", "复审人员");
+	      //  map.put("reverifyUserName", "复审人员");
 	        map.put("location", "所在地区");
 	        map.put("borrowerName", "借款人姓名");
 	        map.put("attribute", "属性");
 	        map.put("entrustedFlg", "是否受托支付");
 	        map.put("entrustedUsername", "收款人用户名");
-	        map.put("createUserName", "账户操作人");
-	        map.put("registUserName", "备案人员");
 	        map.put("labelNameSrch", "标签名称");
+//	        map.put("createUserName", "账户操作人");
+//	        map.put("registUserName", "备案人员");
+	        
 	        map.put("remark", "备注");
 	        map.put("createname", "添加标的人员");
 	        map.put("registname", "标的备案人员");

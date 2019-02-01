@@ -158,6 +158,7 @@ public class BorrowCommonCustomizeVO implements Serializable {
     private String bookingBeginTime;
     private String bookingEndTime;
     private String verifyTime;
+    private String verifyTime2;
     private String borrowValidTime;
     private String borrowFullTime;
     private String reverifyTime;
@@ -188,11 +189,20 @@ public class BorrowCommonCustomizeVO implements Serializable {
     //ADD BY LIUSHOUYI 合规检查 END
 
     //ADD BY ZHANGYK  增加查询条件 start
+    
     /**
      * 初审时间段 开始
      */
     private String verifyTimeStartSrch;
-    /**
+    public String getVerifyTime2() {
+		return verifyTime;
+	}
+
+	public void setVerifyTime2(String verifyTime2) {
+		this.verifyTime2 = verifyTime2;
+	}
+
+	/**
      * 初审时间段 结束
      */
     private String verifyTimeEndSrch;

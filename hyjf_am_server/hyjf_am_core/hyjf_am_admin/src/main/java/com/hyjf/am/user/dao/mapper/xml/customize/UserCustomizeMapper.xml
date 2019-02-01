@@ -113,4 +113,28 @@
 		WHERE
 		u.user_id =#{userId,jdbcType=INTEGER}
 	</select>
+
+	<select id="countUserNames" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(user_name) from ht_user_portrait
+		WHERE user_name IN
+		<foreach collection="userNames" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 批量导入当前拥有人-->
+	<update id="importBatch" parameterType="java.util.List">
+		UPDATE ht_user_portrait
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="current_owner=case" suffix="end">
+				<foreach collection="userPortraits" item="item" index="index">
+					when user_name = #{item.userName} THEN #{item.currentOwner,jdbcType=VARCHAR}
+				</foreach>
+			</trim>
+		</trim>
+		where user_name in
+		<foreach collection="userPortraits" index="index" item="item" separator="," open="(" close=")">
+			#{item.userName,jdbcType=VARCHAR}
+		</foreach>
+	</update>
 </mapper>

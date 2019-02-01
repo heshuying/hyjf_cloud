@@ -1,8 +1,11 @@
 package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.config.DebtConfigResponse;
+import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -107,4 +110,63 @@ public interface AmConfigClient {
 	SmsConfigVO findSmsConfig();
 
 	void holidays();
+
+	/**
+	 * 获取待处理的异常
+	 * @return
+	 */
+    List<CertErrLogVO> getCertErrLogs();
+
+	/**
+	 * 应急中心 查找上报记录
+	 * add by nxl
+	 * @return
+	 */
+	List<CertLogVO> selectCertReportLogList();
+
+	/**
+	 * 应急中心 根据id查找报送日志
+	 * @param logId
+	 * add by nxl
+	 * @return
+	 */
+	CertLogVO selectCertReportLogById(int logId);
+
+	/**
+	 * 应急中心 更新操作日志
+	 * @param request
+	 * add by nxl
+	 * @return
+	 */
+	int updateCertLog(CertLogRequestBean request);
+
+	/**
+	 * 插入发送记录表
+	 * @param certLog
+	 * @return
+	 */
+	boolean insertCertLog(CertLogVO certLog);
+
+	/**
+	 * 插入错误日志表
+	 * @param errLog
+	 */
+	boolean insertCertErrorLog(CertErrLogVO errLog);
+
+	/**
+	 * 根据订单号删除错误日志
+	 * @param oldLogOrdId
+	 */
+	boolean deleteCertErrByLogOrdId(String oldLogOrdId);
+
+	/**
+	 * 修改错误次数加1
+	 */
+	boolean updateErrorLogCount(CertErrLogVO logVO);
+	/**
+	 * 应急中心 查询待异步查询的日志数量
+	 * add by nxl
+	 * @return
+	 */
+	int selectCertLogLength();
 }

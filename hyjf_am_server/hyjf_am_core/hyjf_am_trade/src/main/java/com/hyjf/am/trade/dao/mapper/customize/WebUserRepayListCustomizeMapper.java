@@ -15,6 +15,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -59,4 +60,29 @@ public interface WebUserRepayListCustomizeMapper {
 	 * @return
 	 */
 	List<WebUserRepayTransferCustomize> selectUserRepayTransferListByCreditTender(Map<String, Object> paraMap);
+
+	/**
+	 * 查询借款人非分期待还管理服务费
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getWaitRepayManageFee(Integer userId);
+	/**
+	 * 查询借款人借款分期待还管理服务费
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getWaitRepayPlanManageFee(Integer userId);
+	/**
+	 * 查询垫付机构非分期待还管理服务费
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getOrgWaitRepayManageFee(Integer userId);
+	/**
+	 * 查询垫付机构分期待还管理服务费
+	 * @auther wgx
+	 * @date 2018/11/10
+	 */
+	BigDecimal getOrgWaitRepayPlanManageFee(Integer userId);
 }
