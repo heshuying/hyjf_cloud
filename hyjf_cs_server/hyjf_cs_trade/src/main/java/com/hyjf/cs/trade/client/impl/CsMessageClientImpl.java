@@ -163,8 +163,8 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
-    public BifaBorrowStatusEntityVO getBifaBorrowStatusFromMongoDB(String nid, Integer status) {
-        String url = "http://CS-MESSAGE/cs-message/bifaDataReport/getBifaBorrowStatusFromMongoDB/"+nid+"/"+status;
+    public BifaBorrowStatusEntityVO getBifaBorrowStatusFromMongoDB(String borrowNid, Integer status) {
+        String url = "http://CS-MESSAGE/cs-message/bifaDataReport/getBifaBorrowStatusFromMongoDB/"+borrowNid+"/"+status;
         BifaBorrowStatusEntityResponse response=restTemplate.getForEntity(url,BifaBorrowStatusEntityResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResult();
@@ -356,7 +356,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     /**
      * 更新sha256表中用户对应状态
-     * @param userList
+     * @param userId
      * @param dataType
      */
     @Override

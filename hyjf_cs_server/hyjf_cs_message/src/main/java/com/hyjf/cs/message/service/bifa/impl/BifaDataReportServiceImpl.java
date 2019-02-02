@@ -141,7 +141,7 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
     }
 
     @Override
-    public BifaBorrowStatusEntity getBifaBorrowStatusFromMongoDB(String nid, Integer status) {
+    public BifaBorrowStatusEntity getBifaBorrowStatusFromMongoDB(String borrowNid, Integer status) {
         String statusStr = "";
         switch (status){
             case 4:
@@ -156,7 +156,7 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
                 break;
         }
         //失败的情况留给batch处理
-        return bifaBorrowStatusDao.findOne(new Query(Criteria.where("source_product_code").is(nid).and("product_status").is(statusStr)));
+        return bifaBorrowStatusDao.findOne(new Query(Criteria.where("source_product_code").is(borrowNid).and("product_status").is(statusStr)));
     }
 
     /**

@@ -133,8 +133,8 @@
 		hdpa.send_status,
 		hdpa.commission_status,
 		hdpa.available_invest_account,
-		date_format(hdpa.commission_count_time,'%Y-%c-%d %h:%i:%s') AS commission_count_time,
-		date_format(hdpa.create_time,'%Y-%c-%d %h:%i:%s') AS create_time,
+		IFNULL(FROM_UNIXTIME( IF(hdpa.commission_count_time=0,NULL,hdpa.commission_count_time), '%Y-%m-%d %H:%i' ),'') AS commission_count_time,
+		hdpa.create_time,
 		hdpa.create_time AS add_time_long,
 		hdpa.invite_user_name AS invite_name
 		FROM
