@@ -356,7 +356,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     /**
      * 更新sha256表中用户对应状态
-     * @param userList
+     * @param userId
      * @param dataType
      */
     @Override
