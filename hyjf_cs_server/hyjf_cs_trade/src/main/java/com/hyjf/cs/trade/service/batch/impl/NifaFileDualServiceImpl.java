@@ -544,30 +544,31 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
 //        List<NifaTenderInfoVO> nifaTenderInfoEntities = this.nifaTenderInfoDao.find(queryTender);
         List<NifaTenderInfoVO> nifaTenderInfoEntities = selectNifaTenderInfo(listQuery);
         if (null == nifaTenderInfoEntities || nifaTenderInfoEntities.size() <= 0) {
-            logger.error("【互金上传文件】统计二期标获取出借人信息失败！！");
-            result = false;
-        }
-        // list类型转换
-        List<Object> listTIE = toObject(nifaTenderInfoEntities);
-        // 导出csv文件
-        logger.info("【互金上传文件】统计二期标的信息生成txt！！");
-        try {
-            re = createTxtFile(listTIE, null, UPLOAD_PATH, CustomConstants.NIFA_LENDER_INFO_TYPE, "|");
-            if (re) {
-                sb.append(UPLOAD_PATH).append(CustomConstants.NIFA_LENDER_INFO_TYPE).append(".txt,");
-                // 导出到文件后处理数据库数据为1:处理成功
+            logger.error("【互金上传文件】统计二期标获取出借人信息失败！！" + listQuery);
+            return false;
+        } else {
+            // list类型转换
+            List<Object> listTIE = toObject(nifaTenderInfoEntities);
+            // 导出csv文件
+            logger.info("【互金上传文件】统计二期标的信息生成txt！！");
+            try {
+                re = createTxtFile(listTIE, null, UPLOAD_PATH, CustomConstants.NIFA_LENDER_INFO_TYPE, "|");
+                if (re) {
+                    sb.append(UPLOAD_PATH).append(CustomConstants.NIFA_LENDER_INFO_TYPE).append(".txt,");
+                    // 导出到文件后处理数据库数据为1:处理成功
 //                Update update = new Update();
 //                update.set("reportStatus", "1").set("updateTime", new Date());
 //                nifaTenderInfoDao.updateAll(queryTender, update);
-                updateTenderInfo(listQuery);
-            } else {
+                    updateTenderInfo(listQuery);
+                } else {
+                    result = false;
+                    logger.info("【互金上传文件】:互联网债权类融资出借人信息导出TXT失败！");
+                }
+            } catch (IOException e) {
                 result = false;
-                logger.info("【互金上传文件】:互联网债权类融资出借人信息导出TXT失败！");
+                e.printStackTrace();
+                logger.error("【互金上传文件】统计二期标的信息生成txt失败！！");
             }
-        } catch (IOException e) {
-            result = false;
-            e.printStackTrace();
-            logger.error("【互金上传文件】统计二期标的信息生成txt失败！！");
         }
 
         // --> 获取借款人信息
@@ -592,6 +593,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 e.printStackTrace();
                 logger.error("【互金上传文件】统计二期标的信息生成txt失败！！");
             }
+        } else {
+            logger.error("【互金上传文件】统计二期标获取投资人信息失败！！" + listQuery);
+            return false;
         }
 
         // 上传日志增加记录
