@@ -63,8 +63,8 @@ public class NifaFileDealController extends BaseController {
      * @return
      */
     @GetMapping("/selectNifaReportLogList")
-    public NifaReportLogResponse selectNifaReportLogList() {
-        NifaReportLogResponse response = new NifaReportLogResponse();
+    public NifaFileReportLogResponse selectNifaReportLogList() {
+        NifaFileReportLogResponse response = new NifaFileReportLogResponse();
         List<NifaReportLog> nifaReportLogs = nifaFileDealService.selectNifaReportLogList();
         if (!CollectionUtils.isEmpty(nifaReportLogs)) {
             List<NifaReportLogVO> voList = CommonUtils.convertBeanList(nifaReportLogs, NifaReportLogVO.class);

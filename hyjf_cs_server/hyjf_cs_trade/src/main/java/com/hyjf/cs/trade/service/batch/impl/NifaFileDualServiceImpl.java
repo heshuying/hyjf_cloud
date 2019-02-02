@@ -1107,7 +1107,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
     @Override
     public List<NifaReportLogVO> selectNifaReportLogList() {
         String url = baseTradeUrl + "selectNifaReportLogList";
-        NifaReportLogResponse response = this.baseClient.getExe(url, NifaReportLogResponse.class);
+        NifaFileReportLogResponse response = this.baseClient.getExe(url, NifaFileReportLogResponse.class);
         List<NifaReportLogVO> nifaReportLogVOList = response.getResultList();
         if (CollectionUtils.isEmpty(nifaReportLogVOList)) {
             return null;
