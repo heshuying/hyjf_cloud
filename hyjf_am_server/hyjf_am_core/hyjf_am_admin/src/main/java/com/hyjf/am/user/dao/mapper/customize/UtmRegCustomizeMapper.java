@@ -145,28 +145,28 @@ public interface UtmRegCustomizeMapper {
 	 * @param request
 	 * @return
 	 */
-    int selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+	Integer selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
 
     /**
      * 查询pc统计明细散标数量
      * @param request
      * @return
      */
-    int selectPcChannelReconciliationRecordCount(ChannelReconciliationRequest request);
+	Integer selectPcChannelReconciliationRecordCount(ChannelReconciliationRequest request);
 
     /**
      * 查询pc统计明细计划数量
      * @param request
      * @return
      */
-    int selectPcChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+    Integer selectPcChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
 
     /**
      * 查询app统计明细数量
      * @param request
      * @return
      */
-    int selectAppChannelReconciliationRecordCount(ChannelReconciliationRequest request);
+    Integer selectAppChannelReconciliationRecordCount(ChannelReconciliationRequest request);
 
 	/**
 	 * 根据条件查询符合条件的sourceId集合
