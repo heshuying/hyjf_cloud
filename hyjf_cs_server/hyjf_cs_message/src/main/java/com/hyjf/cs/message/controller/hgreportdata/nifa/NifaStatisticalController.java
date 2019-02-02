@@ -186,7 +186,7 @@ public class NifaStatisticalController extends BaseController {
      * @param projectNo
      * @return
      */
-    @PostMapping("/selectNifaTenderInfo")
+    @GetMapping("/selectNifaTenderInfo/{projectNo}")
     public NifaTenderInfoResponse selectNifaTenderInfo(@PathVariable List<String> projectNo) {
         NifaTenderInfoResponse response = new NifaTenderInfoResponse();
         List<NifaTenderInfoEntity> list = nifaStatisticalService.selectNifaTenderInfo(projectNo);
@@ -202,7 +202,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/updateTenderInfo")
+    @GetMapping("/updateTenderInfo/{projectNo}")
     public BooleanResponse updateTenderInfo(@PathVariable List<String> projectNo) {
         nifaStatisticalService.updateTenderInfo(projectNo);
         return new BooleanResponse(true);
@@ -214,7 +214,7 @@ public class NifaStatisticalController extends BaseController {
      * @param projectNo
      * @return
      */
-    @PostMapping("/selectNifaBorrowerInfo")
+    @GetMapping("/selectNifaBorrowerInfo/{projectNo}")
     public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@PathVariable List<String> projectNo) {
         NifaBorrowerInfoResponse response = new NifaBorrowerInfoResponse();
         List<NifaBorrowerInfoEntity> list = nifaStatisticalService.selectNifaBorrowerInfo(projectNo);
@@ -230,7 +230,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/updateBorrowerInfo")
+    @GetMapping("/updateBorrowerInfo/{projectNo}")
     public BooleanResponse updateBorrowerInfo(@PathVariable List<String> projectNo) {
         nifaStatisticalService.updateBorrowerInfo(projectNo);
         return new BooleanResponse(true);
@@ -271,7 +271,7 @@ public class NifaStatisticalController extends BaseController {
      * @param projectNo
      * @return
      */
-    @PostMapping("/selectNifaCreditTransfer")
+    @GetMapping("/selectNifaCreditTransfer/{projectNo}")
     public NifaCreditTransferResponse selectNifaCreditTransfer(@PathVariable List<String> projectNo) {
         NifaCreditTransferResponse response = new NifaCreditTransferResponse();
         List<NifaCreditTransferEntity> list = nifaStatisticalService.selectNifaCreditTransfer(projectNo);
@@ -287,7 +287,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/updateCreditTransfer")
+    @GetMapping("/updateCreditTransfer/{projectNo}")
     public BooleanResponse updateCreditTransfer(@PathVariable List<String> projectNo) {
         nifaStatisticalService.updateCreditTransfer(projectNo);
         return new BooleanResponse(true);
