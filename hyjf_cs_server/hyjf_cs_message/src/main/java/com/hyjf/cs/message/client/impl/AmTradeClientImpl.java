@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,16 @@ public class AmTradeClientImpl implements AmTradeClient {
                 tradeList.retainAll(userList);
             }
 			return tradeList;
+		}
+		return null;
+	}
+
+	@Override
+	public HjhPlanVO getHjhPlan(String planNid) {
+		com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlan/gethjhplan/"+planNid,
+				com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResult();
 		}
 		return null;
 	}
