@@ -108,7 +108,12 @@
 		<!--匹配期-->
 		<result column="matchDates" property="matchDates"  />
 		<!--计划名称-->
-		<result column="debtPlanName" property="debtPlanName"  />
+		<result column="borrow_nid" property="borrowNid"  />
+		<result column="status" property="status"  />
+		<result column="is_last" property="isLast"  />
+		<result column="resp_code" property="respCode"  />
+		<result column="resp_desc" property="respDesc"  />
+		<result column="update_time" property="updateTime"  />
 	</resultMap>
 
 	<select id="selectAccedeExceptionList" resultMap="BaseResultMap" parameterType="Map">
@@ -136,11 +141,19 @@
 		IFNULL(FROM_UNIXTIME( IF(hdpa.commission_count_time=0,NULL,hdpa.commission_count_time), '%Y-%m-%d %H:%i' ),'') AS commission_count_time,
 		hdpa.create_time,
 		hdpa.create_time AS add_time_long,
-		hdpa.invite_user_name AS invite_name
+		hdpa.invite_user_name AS invite_name,
+		tmp.borrow_nid as borrow_nid,
+		tmp.status as status,
+		tmp.is_last as is_last,
+		tmp.resp_code as resp_code,
+		tmp.resp_desc as resp_desc,
+		tmp.update_time as update_time
 		FROM
 		ht_hjh_accede hdpa
 		LEFT JOIN
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+		LEFT JOIN
+		ht_hjh_plan_borrow_tmp tmp ON hdpa.accede_order_id = tmp.accede_order_id
 		<where>
 			<if test="debtPlanNid != null and debtPlanNid != ''">
 				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNid}, '%')
@@ -150,9 +163,6 @@
 			</if>
 			<if test="userName != null and userName != ''">
 				AND hdpa.user_name LIKE CONCAT(#{userName},'%')
-			</if>
-			<if test="refereeName != null and refereeName != ''">
-				AND hydui.username LIKE CONCAT(#{refereeName},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
@@ -169,7 +179,7 @@
 		</where>
 		ORDER BY
 		add_time_long DESC
-		<if test="limitStart != null and limitStart >= 0" >
+		<if test="limitStart != null and limitStart > 0" >
 			limit #{limitStart} , #{limitEnd}
 		</if>
 	</select>
@@ -189,9 +199,6 @@
 			</if>
 			<if test="userName != null and userName != ''">
 				AND hdpa.user_name LIKE CONCAT(#{userName},'%')
-			</if>
-			<if test="refereeName != null and refereeName != ''">
-				AND hydui.username LIKE CONCAT(#{refereeName},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}

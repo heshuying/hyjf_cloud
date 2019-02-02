@@ -311,12 +311,16 @@ public class AutoTenderExceptionController extends BaseController {
 	        }else {
 	            // 当前下载数据超过一页上限
 	            if(defaultRowMaxCount < resultList.size()) {
-                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, defaultRowMaxCount));
-                 for (int i = 1; i < sheetCount; i++) {
-                     sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                     helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-                 }
-             } else {
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, defaultRowMaxCount));
+                    for (int i = 1; i < sheetCount; i++) {
+                        sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                        int intLongestSize = defaultRowMaxCount * (i + 1);
+                        if(intLongestSize>resultList.size()){
+                            intLongestSize = resultList.size();
+                        }
+                        helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(defaultRowMaxCount * i, intLongestSize));
+                    }
+                } else {
                  helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, resultList.size()));
              }
          }
@@ -331,13 +335,17 @@ public class AutoTenderExceptionController extends BaseController {
 	        map.put("userName", "用户名");
 	        map.put("accedeAccount", "授权服务金额");
 	        map.put("alreadyInvest", "已出借金额(元)");
-	        map.put("waitTotal", "待还总额(元)");
+	        /*map.put("waitTotal", "待还总额(元)");
 	        map.put("waitCaptical", "待还本金(元)");
-	        map.put("waitInterest", "待还利息(元)");
+	        map.put("waitInterest", "待还利息(元)");*/
 	        map.put("platform", "操作平台");
 	        map.put("orderStatus", "订单状态");
 	        map.put("countInterestTime", "开始计息时间");
-	        map.put("createTime", "授权服务时间");
+            map.put("createTime", "授权服务时间");
+            map.put("borrowNid", "项目编号");
+            map.put("isLast", "是否标的的最后一笔投资/承接");
+            map.put("respCode", "返回状态码");
+            map.put("respDesc", "返回错误信息");
 	        return map;
 	    }
 	    private Map<String, IValueFormatter> buildValueAdapter() {
@@ -382,8 +390,23 @@ public class AutoTenderExceptionController extends BaseController {
 	             
 	            }
 	        };
+            IValueFormatter isLastAdapter = new IValueFormatter() {
+                @Override
+                public String format(Object object) {
+                    String isLast = (String) object;
+                    if (0 == Integer.parseInt(isLast)) {
+                        return"非最后一笔";
+                    } else if (1 == Integer.parseInt(isLast)) {
+                        return"最后一笔";
+                    } else{
+                        return isLast;
+                    }
+
+                }
+            };
 	        mapAdapter.put("platform", platformAdapter);
-	        mapAdapter.put("orderStatus", orderStatusAdapter);
+            mapAdapter.put("orderStatus", orderStatusAdapter);
+            mapAdapter.put("isLast", isLastAdapter);
 	        return mapAdapter;
 	    }
 }
