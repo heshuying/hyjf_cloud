@@ -4,13 +4,14 @@
 package com.hyjf.cs.message.service.bifa.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.bifa.BifaOperationDataEntityVO;
-import com.hyjf.am.vo.trade.bifa.UserInfoSHA256EntityVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SHA256Util;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
 import com.hyjf.cs.message.bean.mc.hgdatareport.bifa.*;
+import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
 import com.hyjf.cs.message.mongo.mc.bifa.*;
 import com.hyjf.cs.message.service.bifa.BifaDataReportService;
@@ -44,7 +45,8 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
     private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
     @Autowired
     private BifaOperationDataDao bifaOperationDataDao;
-
+    @Autowired
+    private AmTradeClient amTradeClient;
     /**
      * 出借=0的用户  未开户用户不报送
      */
@@ -141,7 +143,7 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
     }
 
     @Override
-    public BifaBorrowStatusEntity getBifaBorrowStatusFromMongoDB(String nid, Integer status) {
+    public BifaBorrowStatusEntity getBifaBorrowStatusFromMongoDB(String borrowNid, Integer status) {
         String statusStr = "";
         switch (status){
             case 4:
@@ -156,7 +158,7 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
                 break;
         }
         //失败的情况留给batch处理
-        return bifaBorrowStatusDao.findOne(new Query(Criteria.where("source_product_code").is(nid).and("product_status").is(statusStr)));
+        return bifaBorrowStatusDao.findOne(new Query(Criteria.where("source_product_code").is(borrowNid).and("product_status").is(statusStr)));
     }
 
     /**
@@ -165,10 +167,32 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
      */
     @Override
     public synchronized void insertBorrowStatusReportData(BifaBorrowStatusEntity data) {
-        BifaBorrowStatusEntity resultMongoDB = bifaBorrowStatusDao.findOne(
-                new Query(Criteria.where("source_product_code").is(data.getSource_product_code()).and("product_status").is(data.getProduct_status())));
-        if (resultMongoDB == null){
+        //校验是否智投
+        boolean isHjh = this.isHjh(data.getSource_product_code());
+        if (!isHjh){
+            //散标
+            BifaBorrowStatusEntity resultMongoDB = bifaBorrowStatusDao.findOne(
+                    new Query(Criteria.where("source_product_code").is(data.getSource_product_code()).and("product_status").is(data.getProduct_status())));
+            if (resultMongoDB == null){
+                bifaBorrowStatusDao.insert(data);
+            }
+        }else {
+            //智投下的标的
             bifaBorrowStatusDao.insert(data);
+        }
+    }
+
+    /**
+     * 校验是否智投
+     * @param source_product_code
+     * @return
+     */
+    private boolean isHjh(String planNid) {
+        HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
+        if (hjhPlanVO != null){
+            return true;
+        }else {
+            return false;
         }
     }
 

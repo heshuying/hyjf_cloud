@@ -134,13 +134,8 @@ public class BifaBorrowStatusServiceImpl extends BaseHgDateReportServiceImpl imp
 
     @Override
     public BifaBorrowStatusEntityVO getBifaBorrowStatusFromMongoDB(BorrowAndInfoVO borrowAndInfoVO) {
-        String nid = "";
-        if (StringUtils.isEmpty(borrowAndInfoVO.getPlanNid())){
-            nid = borrowAndInfoVO.getBorrowNid();
-        }else {
-            nid = borrowAndInfoVO.getPlanNid();
-        }
-        return csMessageClient.getBifaBorrowStatusFromMongoDB(nid,borrowAndInfoVO.getStatus());
+        //这里只校验散标放款和最后一笔还款结束是否上报，不校验智投下的标的放款和最后一笔还款结束是否上报
+        return csMessageClient.getBifaBorrowStatusFromMongoDB(borrowAndInfoVO.getBorrowNid(),borrowAndInfoVO.getStatus());
     }
 
     @Override
