@@ -186,8 +186,7 @@ public class NifaFileController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            logger.error("------【互金上传文件】上传失败------");
-            e.printStackTrace();
+            logger.error("------【互金上传文件】上传失败------", e);
             return false;
         } finally {
             logger.info("------【互金上传文件】上传结束------");
@@ -247,8 +246,7 @@ public class NifaFileController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            logger.info("------【互金下载反馈文件】处理失败------");
-            e.printStackTrace();
+            logger.info("------【互金下载反馈文件】处理失败------", e);
             return false;
         }
         logger.info("------【互金下载反馈文件】处理结束------");

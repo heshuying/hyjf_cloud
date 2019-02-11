@@ -229,10 +229,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-    @Override
-    public void countRegist() {
-        restTemplate.getForEntity("http://AM-USER/am-user/batch/registrantChangeStatistics", String.class);
-    }
 	@Override
 	public void fddCertificate() {
 		restTemplate.getForEntity("http://AM-USER/am-user/batch/fddCertificate", String.class);
@@ -784,6 +780,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int insertUserCard(BankCardRequest request) {
+		logger.info("方法insertUserCard请求参数：" + request);
 		int result = restTemplate
 				.postForEntity(userService+"/card/insertUserCard", request, Integer.class).getBody();
 		return result;

@@ -28,7 +28,7 @@ import java.util.Map;
  * @Date 2019/1/21 10:23
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_SCATTER_INVEST_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_SCATTER_INVEST_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_SCATTER_INVEST_TAG, consumerGroup = MQConstant.CERT_SCATTER_INVEST_GROUP)
 public class CertScatterInvestMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(CertScatterInvestMessageConsumer.class);
 

@@ -39,8 +39,6 @@ public class BifaHjhHistoryDataServiceImpl extends BaseHgDateReportServiceImpl i
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
 
     @Autowired
-    CsMessageClient csMessageClient;
-    @Autowired
     AmTradeClient amTradeClient;
 
     @Override

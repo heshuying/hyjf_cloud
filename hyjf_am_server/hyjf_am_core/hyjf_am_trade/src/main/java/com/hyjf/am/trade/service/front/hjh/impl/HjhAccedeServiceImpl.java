@@ -146,10 +146,13 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
 
         // 获取发生异常且开始计息时间为空的的数据并更新其匹配期 add by huanghui start
         // 投资异常
-        this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(80, 82);
+        // this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(80, 82);
 
         // 复投异常
-        this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(90, 92);
+        // this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(90, 92);
+
+        // 新增 70 状态,  将更新时的状态改为大于 10 的都定义为异常数据,需要更新其匹配期
+        this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(10);
 
         // 获取发生异常且开始计息时间为空的的数据并更新其匹配期 add by huanghui end
         return firstUpdate;

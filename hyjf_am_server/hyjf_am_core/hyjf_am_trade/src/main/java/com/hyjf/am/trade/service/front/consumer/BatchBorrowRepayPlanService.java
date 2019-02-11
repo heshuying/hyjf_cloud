@@ -14,21 +14,13 @@ public interface BatchBorrowRepayPlanService extends BaseService {
 	/**
 	 * 更新借款API任务表
 	 * 
-	 * @param borrowNid
-	 * @param batchNo
+	 * @param borrowApicron
+	 * @param status
 	 *
 	 * @return
 	 * @throws Exception 
 	 */
 	boolean updateBorrowApicron(BorrowApicron borrowApicron,int status) throws Exception;
-
-	/**
-	 * 取出账户信息
-	 *
-	 * @param userId
-	 * @return
-	 */
-	Account getAccountByUserId(Integer userId);
 
 	/**
 	 * 查询批次还款状态
@@ -53,7 +45,7 @@ public interface BatchBorrowRepayPlanService extends BaseService {
 	 * @param apicron
 	 * @return
 	 */
-	boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
+	int reapyBatchDetailsUpdate(BorrowApicron apicron);
 
 	/**
 	 * 查询相应的放款明细
@@ -64,7 +56,7 @@ public interface BatchBorrowRepayPlanService extends BaseService {
 
 	BorrowApicron selApiCronByPrimaryKey(int id);
 
-	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
+	int updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
 
 	boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, HjhDebtCreditRepay creditRepay, JSONObject assignRepayDetail)
 			throws Exception;

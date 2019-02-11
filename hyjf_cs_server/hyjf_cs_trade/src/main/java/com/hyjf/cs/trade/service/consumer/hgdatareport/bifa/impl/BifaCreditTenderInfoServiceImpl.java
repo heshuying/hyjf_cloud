@@ -33,8 +33,7 @@ public class BifaCreditTenderInfoServiceImpl extends BaseHgDateReportServiceImpl
 
     @Autowired
     AmTradeClient amTradeClient;
-    @Autowired
-    CsMessageClient csMessageClient;
+
     @Autowired
     AmUserClient amUserClient;
 

@@ -9,6 +9,7 @@ import java.util.Map;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.BorrowVO;
@@ -73,6 +74,15 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		return JSONArray.parseArray(JSON.toJSONString(list));
 	}
 
+	@Override
+	public CertAccountListIdCustomizeVO queryCertAccountListId(Map<String, Object> param) {
+		CertRequest certRequest=new CertRequest();
+		certRequest.setMinId((String) param.get("minId"));
+		certRequest.setLimitStart((Integer) param.get("limitStart"));
+		certRequest.setLimitEnd((Integer) param.get("limitEnd"));
+		return amTradeClient.queryCertAccountListId(certRequest);
+	}
+
 	private void createParam(CertAccountListCustomizeVO accountList,List<Map<String, Object>> list) throws Exception {
 
 		switch (accountList.getTrade()) {
@@ -100,12 +110,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//还款 发送18还款本金  19还款利息  5交易手续费（还款服务费）
 		case "repay_success":
 			repaySuccess(accountList,list);
-			
 			break;
 			//优惠券回款 上送41红包
 		case "increase_interest_profit":
 			increaseInerestProfit(accountList,list);
-
 				break;
 		//优惠券回款 上送41红包
 		case "experience_profit":
@@ -125,7 +133,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//承接债权 散标债转发送17承接 
 		case "creditassign":
 			creditAssign(accountList,list);
-			
 			break;
 		//自动承接债权 计划自动承接债转发送17承接 
 		case "accede_assign":

@@ -312,6 +312,22 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	private Integer acctualPaymentTime;
 
 	private Date endDate;
+	/**
+	 * 项目编号
+	 */
+	private String borrowNid;
+	/**
+	 * 状态
+	 */
+	private String status;
+	/**
+	 * 是否标的的最后一笔投资
+	 */
+	private String isLast;
+	/**
+	 * 更新时间
+	 */
+	private String updateTime;
 	
 	public String getAttribute() {
 		return attribute;
@@ -827,5 +843,37 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getBorrowNid() {
+		return borrowNid;
+	}
+
+	public void setBorrowNid(String borrowNid) {
+		this.borrowNid = borrowNid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getIsLast() {
+		return isLast;
+	}
+
+	public void setIsLast(String isLast) {
+		this.isLast = isLast;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 }

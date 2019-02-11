@@ -10,6 +10,7 @@ import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -46,6 +47,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -261,11 +263,17 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         }
         // 更新account表的电子帐户号
         Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
+
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         if (user != null) {
             user.setBankOpenAccount(true);
             UserVO userVO = this.amUserClient.findUserById(userId);
+            //update by cwyang 2019-01-30
+            if(saveResult == 0){
+                sendMqToSaveAccount(userId,userVO.getUsername(),bean.getAccountId());
+            }
+            //end
             // add by liuyang 神策数据统计追加 20180927 start
             if ("10000000".equals(userVO.getInstCode())) {
                 if (!RedisUtils.exists(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId)) {
@@ -316,6 +324,60 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         result.setMessage("开户成功");
         logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId(),bean.getLogClient());
         return result;
+    }
+
+    /**
+     * 开户更新account表异常，再次插入账户表
+     *
+     * @param userId
+     * @throws MQException
+     */
+    private void sendMqToSaveAccount(int userId, String userName,String accountID) {
+        AccountVO account = new AccountVO();
+        account.setUserId(userId);
+        account.setUserName(userName);
+        // 银行存管相关
+        account.setPlanAccedeBalance(BigDecimal.ZERO);
+        account.setPlanAccedeFrost(BigDecimal.ZERO);
+        account.setBankBalance(BigDecimal.ZERO);
+        account.setBankBalanceCash(BigDecimal.ZERO);
+        account.setBankFrost(BigDecimal.ZERO);
+        account.setBankFrostCash(BigDecimal.ZERO);
+        account.setBankInterestSum(BigDecimal.ZERO);
+        account.setBankInvestSum(BigDecimal.ZERO);
+        account.setBankWaitCapital(BigDecimal.ZERO);
+        account.setBankWaitInterest(BigDecimal.ZERO);
+        account.setBankWaitRepay(BigDecimal.ZERO);
+        account.setBankTotal(BigDecimal.ZERO);
+        account.setBankAwaitCapital(BigDecimal.ZERO);
+        account.setBankAwaitInterest(BigDecimal.ZERO);
+        account.setBankAwait(BigDecimal.ZERO);
+        account.setBankWaitRepayOrg(BigDecimal.ZERO);
+        account.setBankAwaitOrg(BigDecimal.ZERO);
+        account.setAccountId(accountID);
+        // 汇付相关
+        account.setTotal(BigDecimal.ZERO);
+        account.setBalance(BigDecimal.ZERO);
+        account.setBalanceCash(BigDecimal.ZERO);
+        account.setBalanceFrost(BigDecimal.ZERO);
+        account.setFrost(BigDecimal.ZERO);
+        account.setAwait(BigDecimal.ZERO);
+        account.setRepay(BigDecimal.ZERO);
+        account.setPlanAccedeTotal(BigDecimal.ZERO);
+        account.setPlanBalance(BigDecimal.ZERO);
+        account.setPlanFrost(BigDecimal.ZERO);
+        account.setPlanAccountWait(BigDecimal.ZERO);
+        account.setPlanCapitalWait(BigDecimal.ZERO);
+        account.setPlanInterestWait(BigDecimal.ZERO);
+        account.setPlanRepayInterest(BigDecimal.ZERO);
+
+        logger.info("开户更新account表异常，再次插入account：{}", JSON.toJSONString(account));
+        try {
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), account));
+        } catch (MQException e) {
+            logger.error("开户更新account表异常，推送account——mq失败.... user_id is :{}", userId);
+//            throw new RuntimeException("开户更新account表异常，推送account——mq失败...");
+        }
     }
 
     /**

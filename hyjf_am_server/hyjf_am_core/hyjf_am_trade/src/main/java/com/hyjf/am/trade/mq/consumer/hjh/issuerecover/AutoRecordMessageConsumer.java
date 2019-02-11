@@ -215,7 +215,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 				// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
 				commonProducer.messageSendDelay(
 						new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
-								MQConstant.AUTO_BORROW_PREAUDIT_ASSET_RECORD_TAG, borrow.getBorrowNid(), requestParams),
+								MQConstant.AUTO_BORROW_PREAUDIT_BORROW_RECORD_TAG, borrow.getBorrowNid(), requestParams),
 						2);
 			} catch (MQException e) {
 				logger.error("发送【审核保证金队列】MQ失败...");

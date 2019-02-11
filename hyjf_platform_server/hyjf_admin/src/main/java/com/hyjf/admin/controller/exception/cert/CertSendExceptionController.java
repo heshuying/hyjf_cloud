@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.exception.cert;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -14,11 +13,8 @@ import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CertErrorReportLogResponse;
-import com.hyjf.am.response.admin.CertReportLogResponse;
 import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
-import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -39,7 +35,7 @@ import java.util.UUID;
 /**
  * 合规数据上报 CERT 应急中心上报记录
  */
-@Api(value = "数据中心_应急中心错误日志", tags = "数据中心_应急中心错误日志")
+@Api(value = "数据中心-应急中心错误日志", tags = "数据中心-应急中心错误日志")
 @RestController
 @RequestMapping("/hyjf-admin/exception/certsendexception")
 public class CertSendExceptionController extends BaseController{
@@ -68,7 +64,7 @@ public class CertSendExceptionController extends BaseController{
         if(null!=response.getResultList()&&response.getResultList().size()>0){
             certLogVOS = CommonUtils.convertBeanList(response.getResultList(),CertErrLogVO.class);
         }
-        return new AdminResult<ListResult<CertErrLogVO>>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
+        return new AdminResult<>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
     }
 
     /**
@@ -91,7 +87,7 @@ public class CertSendExceptionController extends BaseController{
      * 发送MQ
      * @return
      */
-    @ApiOperation(value = "重新跑批", notes = "重新跑批")
+    @ApiOperation(value = "发送MQ", notes = "发送MQ")
     @PostMapping("/doSendMq")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult doSendMQ(HttpServletRequest request, String dataType, String mqValue) {
@@ -99,21 +95,23 @@ public class CertSendExceptionController extends BaseController{
             _log.info("应急中心掉单处理，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】");
             if("1".equals(dataType)){
                 // 用户数据同步
-               commonProducer.messageSend(new MessageContent(MQConstant.CERT_USER_INFO_TOPIC, UUID.randomUUID().toString(), mqValue));
+               commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_USER_INFO_TAG, UUID.randomUUID().toString(), mqValue));
             }
             if("2".equals(dataType)){
                 // 散标数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.CERT_SCATTER_INVEST_TOPIC ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_SCATTER_INVEST_TAG ,UUID.randomUUID().toString(), mqValue));
             }
             if("6".equals(dataType)){
                 // 散标状态数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_SCATTER_INVEST_TAG ,UUID.randomUUID().toString(), mqValue));
             }
             if("81".equals(dataType)){
                 // 还款计划数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG ,UUID.randomUUID().toString(), mqValue));
             }
             if("82".equals(dataType)){
                 // 债权信息数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.CERT_TENDER_INFO_TOPIC ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC ,MQConstant.LOAN_SUCCESS_TAG ,UUID.randomUUID().toString(), mqValue));
             }
             if("83".equals(dataType)){
                 // 转让项目数据同步
@@ -123,6 +121,7 @@ public class CertSendExceptionController extends BaseController{
             }
             if("85".equals(dataType)){
                 // 承接信息数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC ,MQConstant.TRANSFER_SUCCESS_TAG ,UUID.randomUUID().toString(), mqValue));
             }
             if("4".equals(dataType)){
                 // 交易流水数据同步

@@ -200,6 +200,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
         // 删除临时表
         this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId());
+        logger.info("删除临时表：hjhPlanBorrowTmp，（BorrowNid：" + borrow.getBorrowNid() + "，AccedeOrderId：" + hjhAccede.getOrderStatus() + "）");
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
@@ -672,6 +673,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
         // 删除临时表 OK
         this.hjhPlanBorrowTmpService.deleteHjhPlanBorrowTmpByAccedeBorrow(credit.getCreditNid(), hjhAccede.getAccedeOrderId());
+        logger.info("删除临时表：hjhPlanBorrowTmp，（CreditNid：" + credit.getCreditNid() + "，AccedeOrderId：" + hjhAccede.getOrderStatus() + "）");
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);

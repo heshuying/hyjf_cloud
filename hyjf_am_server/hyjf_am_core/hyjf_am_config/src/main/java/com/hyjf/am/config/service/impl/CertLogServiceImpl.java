@@ -74,4 +74,20 @@ public class CertLogServiceImpl implements CertLogService {
         return certLogMapper.updateByPrimaryKeySelective(certLog);
     }
 
+
+    /**
+     * 查询待异步查询的日志数量
+     * @return
+     */
+    @Override
+    public int selectCertLogLength(){
+        CertLogExample example = new CertLogExample();
+        CertLogExample.Criteria creteria = example.createCriteria();
+        // 查询上报结果成功
+        creteria.andSendStatusEqualTo(1);
+        // 查询结果为初始
+        creteria.andQueryResultEqualTo(0);
+        int intCount = certLogMapper.countByExample(example);
+        return intCount;
+    }
 }

@@ -44,7 +44,7 @@ public class NifaStatisticalController {
      */
     @GetMapping(value = "/select_borrow_man_info_count/{username}")
     public IntegerResponse selectBorrowManInfoCount(@PathVariable String username) {
-        Integer count = nifaStatisticalService.selectBorrowUsersCount(username);
+        Integer count = nifaStatisticalService.selectBorrowManInfoCount(username);
         return new IntegerResponse(count);
     }
 }

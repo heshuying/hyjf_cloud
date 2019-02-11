@@ -33,6 +33,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -191,6 +192,12 @@ public interface AmTradeClient {
      * @author liubin
      */
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
 
     /**
      * 根据加入计划订单，取得加入订单
@@ -2777,5 +2784,7 @@ public interface AmTradeClient {
      */
     void uploadFile();
 
+
+    CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
 }
 

@@ -78,10 +78,10 @@ public class BifaDataReportController extends BaseController {
         bifaDataReportService.insertHjhPlanInfoReportData(data);
     }
 
-    @GetMapping("/getBifaBorrowStatusFromMongoDB/{nid}/{status}")
-    public BifaBorrowStatusEntityResponse getBifaBorrowStatusFromMongoDB(@PathVariable String nid, @PathVariable Integer status){
+    @GetMapping("/getBifaBorrowStatusFromMongoDB/{borrowNid}/{status}")
+    public BifaBorrowStatusEntityResponse getBifaBorrowStatusFromMongoDB(@PathVariable String borrowNid, @PathVariable Integer status){
         BifaBorrowStatusEntityResponse response = new BifaBorrowStatusEntityResponse();
-        BifaBorrowStatusEntity entityMd=bifaDataReportService.getBifaBorrowStatusFromMongoDB(nid,status);
+        BifaBorrowStatusEntity entityMd=bifaDataReportService.getBifaBorrowStatusFromMongoDB(borrowNid,status);
         if (entityMd!=null){
             response.setResult(CommonUtils.convertBean(entityMd,BifaBorrowStatusEntityVO.class));
             response.setRtn(Response.SUCCESS);
