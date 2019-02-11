@@ -375,10 +375,11 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignServiceApr","债转服务费率");
 		map.put("assignServiceFee","债转服务费(元)");
 		map.put("tenderType", "复投承接(是/否)");
-		map.put("assignPeriod", "项目期数");
+		map.put("periodView", "项目期数");
 
 		return map;
 	}
+
 	private Map<String, IValueFormatter> buildValueAdapter() {
 		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
 		return mapAdapter;

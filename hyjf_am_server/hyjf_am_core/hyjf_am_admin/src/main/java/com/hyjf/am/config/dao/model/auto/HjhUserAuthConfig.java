@@ -73,6 +73,10 @@ public class HjhUserAuthConfig implements Serializable {
      * @mbggenerated
      */
     private Date createTime;
+    /**
+     * ip地址
+     */
+    private String ip;
 
     /**
      * 最后修改时间
@@ -169,5 +173,13 @@ public class HjhUserAuthConfig implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

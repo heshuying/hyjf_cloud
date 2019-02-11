@@ -2,9 +2,12 @@ package com.hyjf.am.trade.service.front.config.impl;
 
 import com.hyjf.am.resquest.admin.FinmanChargeNewRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowFinmanNewChargeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.FinmanNewChargeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewCharge;
 import com.hyjf.am.trade.dao.model.auto.BorrowFinmanNewChargeExample;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
+import com.hyjf.am.trade.dao.model.auto.BorrowProjectTypeExample;
 import com.hyjf.am.trade.service.front.config.FinmanChargeNewService;
 import com.hyjf.am.vo.trade.borrow.BorrowFinmanNewChargeVO;
 import com.hyjf.common.util.GetDate;
@@ -12,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +31,8 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
     private FinmanNewChargeCustomizeMapper finmanNewChargeCustomizeMapper;
     @Autowired
     private BorrowFinmanNewChargeMapper borrowFinmanNewChargeMapper;
+    @Autowired
+    private BorrowProjectTypeMapper borrowProjectTypeMapper;
 
     @Override
     public  int countRecordTotal(FinmanChargeNewRequest adminRequest){
@@ -119,4 +125,21 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
         return borrowFinmanNewChargeMapper.countByExample(example);
     }
 
+    /**
+     *
+     * 根据borrowCd查询borrowClass
+     * @author xiehuili
+     * @return
+     */
+    @Override
+    public String getBorrowClass(String borrowCd){
+        String borrowClass="";
+        BorrowProjectTypeExample example=new BorrowProjectTypeExample();
+        example.createCriteria().andBorrowCdEqualTo(Integer.valueOf(borrowCd));
+        List<BorrowProjectType>  list = borrowProjectTypeMapper.selectByExample(example);
+        if(!CollectionUtils.isEmpty(list)){
+            borrowClass=list.get(0).getBorrowClass();
+        }
+        return borrowClass;
+    }
 }

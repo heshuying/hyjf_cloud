@@ -55,7 +55,7 @@ public class SmsConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
                 case MessageConstant.SMS_SEND_FOR_USERS_NO_TPL:
                     try {
                         smsHandler.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
-                                smsMessage.getServiceType(), null, smsMessage.getChannelType());
+                                smsMessage.getServiceType(), null, smsMessage.getChannelType(), smsMessage.getIsDisplay());
                     } catch (Exception e) {
                         logger.error("send sms error....");
                     }

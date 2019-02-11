@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.admin.pushmanage;
 
 import com.hyjf.am.resquest.admin.AppPushManageRequest;
 import com.hyjf.am.trade.dao.model.auto.AppPushManage;
+import com.hyjf.common.paginator.Paginator;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface AppPushManageService {
      * @param pushManageRequest
      * @return
      */
-    List<AppPushManage> getAllList(AppPushManageRequest pushManageRequest);
+    List<AppPushManage> getAllList(AppPushManageRequest pushManageRequest, Paginator paginator);
 
     /**
      * 写入单条记录

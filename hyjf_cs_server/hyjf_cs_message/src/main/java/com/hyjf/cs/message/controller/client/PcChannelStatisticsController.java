@@ -42,13 +42,15 @@ public class PcChannelStatisticsController extends BaseController {
     @PostMapping("/search")
     public PcChannelStatisticsResponse search(@RequestBody PcChannelStatisticsRequest request) {
         PcChannelStatisticsResponse response = new PcChannelStatisticsResponse();
-        List<PcChannelStatistics> list = channelStatisticsService.searchPcChannelStatisticsList(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            List<PcChannelStatisticsVO> voList = CommonUtils.convertBeanList(list, PcChannelStatisticsVO.class);
-            response.setResultList(voList);
+        int count = channelStatisticsService.selectCount(request);
+        if (count>0) {
+            List<PcChannelStatistics> list = channelStatisticsService.searchPcChannelStatisticsList(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<PcChannelStatisticsVO> voList = CommonUtils.convertBeanList(list, PcChannelStatisticsVO.class);
+                response.setResultList(voList);
+            }
         }
         // 查询符合条件的数量
-        int count = channelStatisticsService.selectCount(request);
         response.setCount(count);
         return response;
     }

@@ -202,72 +202,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         return null;
     }
 
-
-    /**
-     * 保存开户掉单Account数据
-     * @param requestBean
-     * @return
-     */
-    public OpenAccountEnquiryResponse updateAccount(OpenAccountEnquiryDefineRequest requestBean) {
-        OpenAccountEnquiryDefineResultBeanVO resultBean= new OpenAccountEnquiryDefineResultBeanVO();
-        OpenAccountEnquiryResponse response =  new OpenAccountEnquiryResponse();
-        Integer userId = Integer.parseInt(requestBean.getUserid());
-        // 获取用户信息
-        User user = userService.findUserByUserId(userId);
-        // 更新trade  的  account表的电子帐户号
-        boolean tradeAccountFlag = accountDetailService.updateAccountNumberByUserId(userId,requestBean.getAccountId()) > 0 ? true : false;
-        logger.info("开户掉单  更新 trade 的account 结果{}",tradeAccountFlag);
-        // 插入江西银行关联表
-        BankOpenAccount openAccount = new BankOpenAccount();
-        openAccount.setUserId(userId);
-        openAccount.setUserName(user.getUsername());
-        openAccount.setAccount(requestBean.getAccountId());
-        //openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-        openAccount.setCreateUserId(userId);
-        boolean openAccountFlag = userService.insertBankOpenAccount(openAccount)> 0 ? true : false;
-        if (!openAccountFlag) {
-            logger.error("插入用户开户表失败！");
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("插入用户开户表失败!");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-
-        BankCard card = userService.getBankCardByUserId(userId);
-        if(card==null){
-            logger.info("开始保存银行卡信息。。。");
-            BankCallBean bean = new BankCallBean();
-            bean.setAccountId(requestBean.getAccountId());
-            bean.setLogUserId(requestBean.getUserid());
-            bean.setMobile(requestBean.getMobile());
-            updateCardNoToBank(bean,user);
-        }
-
-        // 开户更新开户渠道统计开户时间
-        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-        if (appUtmReg != null) {
-            User appUtmRegUser =  new User();
-            BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
-            appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-            userService.updateUser(appUtmRegUser);
-        }
-        // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
-        // 加入到消息队列
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        params.put("userId", String.valueOf(userId));
-        try {
-            logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
-
-            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
-        } catch (Exception e) {
-            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
-        }
-        resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y);
-        resultBean.setResult("开户掉单同步成功!");
-        response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-        return response;
-    }
     /**
      * 保存开户(User)的数据
      */
@@ -289,14 +223,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             return response;
         }
         Integer userId = Integer.parseInt(requestBean.getUserid());
-       /* boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+        boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
         if (!deleteLogFlag) {
             logger.error("删除用户开户日志表失败，用户userId:" + userId);
             resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("删除用户开户日志表失败");
             response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
             return response;
-        }*/
+        }
         // 查询返回的电子账号是否已开户
         boolean result = checkAccountByAccountId(requestBean.getAccountId());
         if (result) {
@@ -402,6 +336,18 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
             appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
             userService.updateUser(appUtmRegUser);
+        }
+        // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
+        // 加入到消息队列
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        params.put("userId", String.valueOf(userId));
+        try {
+            logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
+
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
+        } catch (Exception e) {
+            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
         }
         resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y);
         resultBean.setResult("开户掉单同步用户成功!");

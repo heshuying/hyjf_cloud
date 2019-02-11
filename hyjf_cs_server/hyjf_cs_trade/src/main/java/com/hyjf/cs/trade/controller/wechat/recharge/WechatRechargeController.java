@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
@@ -66,7 +66,7 @@ public class WechatRechargeController extends BaseTradeController{
 		String mobile = request.getParameter("mobile");
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		if (!this.authService.checkPaymentAuthStatus(userId)) {
-			throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		// 拼装参数 调用江西银行
 		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&txAmount="+money;
@@ -80,14 +80,14 @@ public class WechatRechargeController extends BaseTradeController{
         directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
 		if (null == bean) {
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		Map<String,Object> map = new HashMap<>();
 		try {
 			map = BankCallUtils.callApiMap(bean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		result.setData(map);
 		return result;

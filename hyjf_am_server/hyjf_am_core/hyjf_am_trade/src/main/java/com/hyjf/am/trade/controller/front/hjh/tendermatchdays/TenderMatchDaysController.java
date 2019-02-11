@@ -36,7 +36,7 @@ public class TenderMatchDaysController extends BaseController {
                     logger.error("计算自动出借的匹配期(每日)任务 失败。 ");
                 }
             } catch (Exception e) {
-                logger.error("计算自动出借的匹配期(每日)任务 异常。 ");
+                logger.error("计算自动出借的匹配期(每日)任务 异常。 ", e);
                 e.printStackTrace();
             }
             logger.info("计算自动出借的匹配期(每日)任务 结束。 ");

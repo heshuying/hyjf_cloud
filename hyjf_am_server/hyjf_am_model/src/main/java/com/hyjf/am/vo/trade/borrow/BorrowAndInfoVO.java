@@ -489,6 +489,26 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
     private String repayLastTimeStr;
 
     private String investLevel;
+    //用户姓名
+    private String truename;
+    //身份证号
+    private String idCard;
+
+    public String getTruename() {
+        return truename;
+    }
+
+    public void setTruename(String truename) {
+        this.truename = truename;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
 
     private static final long serialVersionUID = 1L;
 

@@ -762,6 +762,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 ontimeCheckBean.setNowtime(GetDate.getNowTime10());
                 return ontimeCheckBean;
             }
+
+            // 定时标发标成功推送消息到mq合规上报数据
+            // 5.web端散标自动发标页面触发
+            JSONObject params = new JSONObject();
+            params.put("borrowNid", borrowVO.getBorrowNid());
+            params.put("userId", borrowVO.getUserId());
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+
             logger.info("定时标的【" + borrowNid + "】发标完成。（web）");
 
             //设定  redis的标的定时状态 为 0 标的状态修改成功开标(有效期同batch执行周期，5分钟)
@@ -1107,12 +1116,19 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("setPwdFlag", userVO.getIsSetPassword()); // 是否设置交易密码
                 result.put("isUserValid", userVO.getStatus());
                 //update by jijun 2018/04/09 合规接口改造一期
-                //自动投标授权
-                result.put("autoTenderAuthStatus", "");
-                //自动债转授权
-                result.put("autoCreditAuthStatus", "");
-                //缴费授权
-                result.put("paymentAuthStatus", "");
+                HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+                //自动投标授权状态 0未授权  1已授权
+                result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                //自动债转授权状态
+                result.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+                //服务费授权状态
+                result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+                //是否开启自动投标授权校验 0未开启 1已开启
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                //是否进行自动债转~~
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                //是否进行缴费~~
+                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 UserInfoVO userInfoVO = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 result.put("roleId",userInfoVO  !=null ? userInfoVO.getRoleId() : "");
 
@@ -1124,16 +1140,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 风险测评标识
                 result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
                 // 风险测评改造 mod by liuyang 20180111 end
-            } else {
-                result.put("loginFlag", "0");// 判断是否登录
-                result.put("openFlag", "0");
-                result.put("loginFlag", "0");
-                result.put("setPwdFlag", "0");
-                result.put("isUserValid", "0");
-                result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+                } else {
+                    result.put("loginFlag", "0");// 判断是否登录
+                    result.put("openFlag", "0");
+                    result.put("loginFlag", "0");
+                    result.put("setPwdFlag", "0");
+                    result.put("isUserValid", "0");
+                    result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+                }
+            } catch (Exception e) {
+                logger.warn("散标专区债权转让详情异常:["+ e +"]");
             }
-        } catch (Exception e) {
-        }
         webResult.setData(result);
         return webResult;
     }
@@ -1269,11 +1286,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 阀值
         Integer threshold = 1000;
         result.put("threshold", threshold);
-        // 缴费授权
-        //update by jijun 2018/04/09 合规接口改造一期
-        result.put("autoTenderAuthStatus", "");
-        result.put("autoCreditAuthStatus", "");
-        result.put("paymentAuthStatus", "");
 
         //加入总人数
         Map<String, Object> params = new HashMap<String, Object>();
@@ -1465,23 +1477,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     //服务费授权状态
                     result.put("paymentAuthStatus", "0");
                 }
-                //是否开启自动投标授权校验 0未开启 1已开启
-                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-                //是否进行自动债转~~
-                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
-                //是否进行缴费~~
-                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
-
                 // 合规三期
                 result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
                 result.put("autoTenderAuthStatus", "0");
-                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
                 result.put("autoCreditAuthStatus", "0");
-                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
                 result.put("paymentAuthStatus", "0");
-                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 //状态位用于判断tab的是否可见
                 result.put("loginFlag", "0");//登录状态 0未登陆 1已登录
                 result.put("openFlag", "0"); //开户状态 0未开户 1已开户
@@ -1490,6 +1492,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
                 result.put("forbiddenFlag", "0");//是否禁用 0未禁用 1已禁用
             }
+            //是否开启自动投标授权校验 0未开启 1已开启
+            result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         }
         webResult.setData(result);
         return webResult;

@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.mq.base.CommonProducer;
@@ -1529,5 +1530,26 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             return usersList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 获取最近七天开户的用户
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    @Override
+    public List<BifaIndexUserInfoBean> getBankOpenedAccountUsers(Integer startDate, Integer endDate) {
+        return bifaUserCustomizeMapper.getBankOpenedAccountUsers(startDate, endDate);
+    }
+
+    /**
+     *  获取借款人信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public BifaIndexUserInfoBean getBifaIndexUserInfo(Integer userId) {
+        return bifaUserCustomizeMapper.selectUserCorpInfoByUserId(userId);
     }
 }

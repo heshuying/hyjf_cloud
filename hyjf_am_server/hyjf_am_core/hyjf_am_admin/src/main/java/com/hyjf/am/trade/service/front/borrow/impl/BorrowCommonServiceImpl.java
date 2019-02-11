@@ -870,19 +870,28 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId,borrow.getId());
 
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
-							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
-								//成功后到关联计划队列 RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE
-								try {
-									JSONObject params = new JSONObject();
-									params.put("borrowNid", borrow.getBorrowNid());
-									// modify by yangchangwei
-									// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
-											MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
-											2);
-								} catch (MQException e) {
-									logger.error("发送【关联计划队列】MQ失败...");
+							if(Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
+								if (bwb.getIsEngineUsed().equals(1)) {
+									//成功后到关联计划队列 RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE
+									try {
+										JSONObject params = new JSONObject();
+										params.put("borrowNid", borrow.getBorrowNid());
+										// modify by yangchangwei
+										// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+										commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+														MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
+												2);
+									} catch (MQException e) {
+										logger.error("发送【关联计划队列】MQ失败...");
+									}
 								}
+								// 发送消息队列到合规上报数据
+								// 2.common借款详情展示页面提交发标
+								JSONObject params = new JSONObject();
+								params.put("borrowNid", borrow.getBorrowNid());
+								params.put("userId", borrow.getUserId());
+								commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+										MQConstant.HG_REPORT_DELAY_LEVEL);
 							}
 						}
 

@@ -108,4 +108,11 @@ public interface HjhDebtCreditService {
      * @date 2018/8/9 14:04
      */
     List<ProjectUndertakeListVO> selectProjectUndertakeList(Map<String,Object> params);
+
+    /**
+     * 根据债转编号查询债转信息(从写库)
+     * @author liubin
+     * @date 2019/1/31 11:04
+     */
+    HjhDebtCredit doSelectHjhDebtCreditByCreditNid(String creditNid);
 }

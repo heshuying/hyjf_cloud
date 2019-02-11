@@ -165,6 +165,15 @@ public class AppRiskAssesmentController extends BaseUserController {
         // 是否已经参加过测评（true：已测评过，false：测评）
         UserEvalationResultVO userEvalationResult = evaluationService.answerAnalysis(userAnswerRequestBean.getUserAnswer(), userId,null);
         evaluationService.updateUser(userId);
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 用户信息修改（风险测评）
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                MQConstant.HG_REPORT_DELAY_LEVEL);
+        // add 合规数据上报 埋点 liubin 20181122 end
+
         response.setResultStatus("1");
         // userEvalationResult 测评结果
         response.setResultType(userEvalationResult.getEvalType());

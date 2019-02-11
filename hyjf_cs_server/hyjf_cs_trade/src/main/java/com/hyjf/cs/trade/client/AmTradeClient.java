@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
+import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -31,6 +32,8 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -41,12 +44,14 @@ import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
+import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
+import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -60,6 +65,7 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,6 +192,12 @@ public interface AmTradeClient {
      * @author liubin
      */
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
 
     /**
      * 根据加入计划订单，取得加入订单
@@ -2532,16 +2544,6 @@ public interface AmTradeClient {
     BooleanResponse updateMatchDays();
 
     /**
-     * 互金下载反馈文件
-     */
-    void downloadFile();
-
-    /**
-     * 互金上传文件上报数据
-     */
-    void uploadFile();
-
-    /**
      * 互金拉取逾期和完全债转数据更新合同状态
      */
     void updateRepayInfo();
@@ -2593,5 +2595,196 @@ public interface AmTradeClient {
      * @param borrowApicronVO
      */
     void updateFddPush(BorrowApicronVO borrowApicronVO);
+
+    /**
+     * 北互金获取借款人信息
+     * @param borrowNid
+     * @param companyOrPersonal
+     * @return
+     */
+    BifaBorrowUserInfoVO getBorrowUserInfo(String borrowNid, String companyOrPersonal);
+
+    /**
+     * 服务费=放款服务费+还款服务费
+     * @param borrowNid
+     * @return
+     */
+    String selectServiceCostSum(String borrowNid);
+
+    /**
+     * 散标转让服务费
+     * @param creditNid
+     * @return
+     */
+    BigDecimal getBorrowCreditFeeSumByCreditNid(String creditNid);
+
+    /**
+     * 智投转让服务费
+     * @param creditNid
+     * @return
+     */
+    BigDecimal getHjhCreditFeeSumByCreditNid(String creditNid);
+
+    /**
+     * 获取智投数
+     * @param nid
+     * @return
+     */
+    int countHjhPlan(String planNid);
+
+    /**
+     * 获取智投列表
+     * @return
+     */
+    List<HjhPlanVO> selectHjhPlanInfoList();
+
+    /**
+     * 已开户且出借>0的用户
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<UserIdAccountSumBeanVO> getBorrowTenderAccountSum(Integer startDate, Integer endDate);
+
+    /**
+     * 获取借款人信息
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<BorrowAndInfoVO> selectBorrowUserInfo(Integer startDate, Integer endDate);
+
+    /**
+     * 借贷笔数
+     * @param time
+     * @return
+     */
+    int getLoanNum(Date time);
+
+    /**
+     * 累计借贷余额
+     * @param time
+     * @return
+     */
+    BigDecimal getWillPayMoney(Date time);
+
+    /**
+     * 累计借贷余额笔数
+     * @param time
+     * @return
+     */
+    int getTotalLoanBalanceNum(Date time);
+
+    /**
+     * 累计借款人
+     * @return
+     */
+    Integer countBorrowUser();
+
+    /**
+     * 累计投资人数
+     * @param time
+     * @return
+     */
+    int getTenderCount(Date time);
+
+    /**
+     * 当前借款人
+     * @return
+     */
+    Integer countCurrentBorrowUser();
+
+    /**
+     * 查询用户借款笔数(企业)
+     *
+     * @param username
+     * @return
+     */
+    Integer selectBorrowUsersCount(String username);
+
+    /**
+     * 查询用户借款笔数(个人)
+     *
+     * @param username
+     * @return
+     */
+    Integer selectBorrowManInfoCount(String username);
+    /**
+     * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+     *
+     * @param borrowRecoverVO
+     * @return
+     */
+    BorrowRecoverVO getRecoverDateByTenderNid(BorrowRecoverVO borrowRecoverVO);
+    /**
+     * 获取投资红包金额
+     * add by nxl
+     * @param realTenderId
+     * @return
+     */
+    BigDecimal getRedPackageSum(String realTenderId);
+
+    List<CertAccountListCustomizeVO> queryCertAccountList(CertRequest request);
+
+    List<AccountListVO> getAccountListVOListByRequest(CertRequest certTransactRequest);
+
+    List<BorrowRepayVO> getBorrowRepayListByRequest(CertRequest certRequest);
+
+    List<BorrowRepayPlanVO> getBorrowRepayPlanListByRequest(CertRequest certRequest);
+
+    List<CouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest);
+
+    List<BorrowTenderCpnVO> getBorrowTenderCpnListByCertRequest(CertRequest certRequest);
+
+    List<CouponRealTenderVO> getCouponRealTenderListByCertRequest(CertRequest certRequest);
+
+    List<BorrowRecoverVO> selectBorrowRecoverListByRequest(CertRequest certRequest);
+
+    List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRequest(CertRequest certRequest);
+
+    List<CreditRepayVO> getCreditRepayListByRequest(CertRequest certRequest);
+
+    List<BorrowRecoverPlanVO> selectBorrowRecoverPlanListByRequest(CertRequest certRequest);
+
+    List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    List<CreditRepayVO> getCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    /**
+     * 当前出借人
+     * @return
+     */
+    Integer countCurrentTenderUser();
+
+    /**
+     * 平台前十大融资人融资待还余额占比
+     * @return
+     */
+    BigDecimal sumBorrowUserMoneyTopTen();
+
+    /**
+     * 代还总金额
+     * @return
+     */
+    BigDecimal sumBorrowUserMoney();
+
+    /**
+     * 平台单一融资人最大融资待还余额占比
+     * @return
+     */
+    BigDecimal sumBorrowUserMoneyTopOne();
+
+    /**
+     * 互金下载反馈文件
+     */
+    void downloadFile();
+
+    /**
+     * 互金上传文件上报数据
+     */
+    void uploadFile();
+
+
+    CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
 }
 

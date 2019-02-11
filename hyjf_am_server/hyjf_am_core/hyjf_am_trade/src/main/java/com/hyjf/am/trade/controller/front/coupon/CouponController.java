@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.front.coupon;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.CoupUserResponse;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -243,4 +245,19 @@ public class CouponController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 获取投资红包金额
+     * add by nxl
+     * @param realTenderId
+     * @return
+     */
+    @RequestMapping("/getRedPackageSum/{realTenderId}")
+    public BigDecimalResponse getRedPackageSum(@PathVariable String realTenderId) {
+        BigDecimalResponse response = new BigDecimalResponse();
+        BigDecimal sumPack = couponService.getRedPackageSum(realTenderId);
+        response.setResultDec(sumPack);
+        return response;
+    }
+
 }

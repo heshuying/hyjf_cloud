@@ -1,12 +1,13 @@
 package com.hyjf.cs.message.client;
 
-import java.util.List;
-
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -111,4 +112,10 @@ public interface AmTradeClient {
 	 */
 	List<String> queryUser(SmsCodeUserRequest requestBean);
 
+	/**
+	 * 北互金根据条件获取智投数
+	 * @param planNid
+	 * @return
+	 */
+	HjhPlanVO getHjhPlan(String planNid);
 }

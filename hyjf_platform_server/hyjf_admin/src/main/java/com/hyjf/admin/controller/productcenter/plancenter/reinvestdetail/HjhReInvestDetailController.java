@@ -165,7 +165,7 @@ public class HjhReInvestDetailController extends BaseController {
      */
     @ApiOperation(value = "复投原始标的列表导出", notes = "复投详情列表导出")
     @PostMapping(value = "/exportAction")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhReInvestDetailRequestBean requestBean) throws Exception {
 
         if (StringUtils.isEmpty(requestBean.getDate())){
             logger.error("复投原始标的列表导出日期为空无法导出!");
@@ -205,8 +205,9 @@ public class HjhReInvestDetailController extends BaseController {
         List<HjhReInvestDetailVO> resultList = null;
 
         HjhReInvestDetailResponse resultResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(hjhReInvestDetailCustomize);
-
+        logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount());
         if (resultResponse.getCount() > 0) {
+            logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount() + ";列表:" + resultResponse.getResultList().get(0).toString());
             resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhReInvestDetailVO.class);
         }
 
@@ -258,6 +259,42 @@ public class HjhReInvestDetailController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter userAttributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "无主单";
+                } else if ("1".equals(value)) {
+                    return "有主单";
+                } else if ("2".equals(value)) {
+                    return "线下员工";
+                } else if ("3".equals(value)) {
+                    return "线上员工";
+                }else {
+                    return value;
+                }
+            }
+        };
+
+        IValueFormatter investTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "手动投标";
+                } else if ("1".equals(value)) {
+                    return "预约投标";
+                } else if ("2".equals(value)) {
+                    return "自动投标";
+                }else {
+                    return value;
+                }
+            }
+        };
+
+        mapAdapter.put("userAttribute", userAttributeAdapter);
+        mapAdapter.put("investType", investTypeAdapter);
         return mapAdapter;
     }
 

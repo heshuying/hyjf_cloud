@@ -635,6 +635,20 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 	}
 
 	@Override
+	public HjhPlanAsset selectPlanAssetByBorrowNidAndInstCode(String borrowNid, String instCode) {
+		HjhPlanAssetExample example = new HjhPlanAssetExample();
+		HjhPlanAssetExample.Criteria crt = example.createCriteria();
+		if (StringUtils.isNotBlank(borrowNid)) {
+			crt.andBorrowNidEqualTo(borrowNid);
+		}
+		if (StringUtils.isNotBlank(instCode)) {
+			crt.andInstCodeEqualTo(instCode);
+		}
+		List<HjhPlanAsset> list = hjhPlanAssetMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(list) ? null : list.get(0);
+	}
+
+	@Override
 	public String getSystemEmailList() {
 		return env_test ? emailList1 : emailList2;
 	}

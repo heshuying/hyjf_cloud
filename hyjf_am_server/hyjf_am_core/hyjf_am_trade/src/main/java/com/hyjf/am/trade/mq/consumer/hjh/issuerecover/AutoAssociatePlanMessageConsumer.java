@@ -124,7 +124,7 @@ public class AutoAssociatePlanMessageConsumer
 			return;
 		}
 		// 第三方资产
-		HjhPlanAsset asset = autoIssueMessageService.selectPlanAsset(borrow.getBorrowNid(), borrowInfo.getInstCode());
+		HjhPlanAsset asset = autoIssueMessageService.selectPlanAssetByBorrowNidAndInstCode(borrow.getBorrowNid(), borrowInfo.getInstCode());
 		if (asset != null) {
 			if (StringUtils.isNotBlank(asset.getPlanNid()) || asset.getLabelId() == null
 					|| asset.getLabelId().intValue() == 0) {

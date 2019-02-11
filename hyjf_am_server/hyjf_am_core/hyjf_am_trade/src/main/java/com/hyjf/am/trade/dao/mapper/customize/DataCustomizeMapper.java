@@ -55,16 +55,6 @@ public interface DataCustomizeMapper {
 	Map<String, Object> selectTendMoneyInfo();
 
 	/**
-	 * @return
-	 * @method: selectData
-	 * @description: 出借相关统计信息
-	 * @return: Map<String,Object>
-	 * @mender: zhouxiaoshuai
-	 * @date: 2016年7月8日 上午11:53:12
-	 */
-	Map<String, Object> selectData();
-
-	/**
 	 * @param type 0出借 1债转出借
 	 * @return
 	 * @method: selectTenderListMap

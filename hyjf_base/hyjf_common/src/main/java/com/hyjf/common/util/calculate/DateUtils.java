@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -611,6 +612,30 @@ public class DateUtils {
 		else
 			retStr = "" + i;
 		return retStr;
+	}
+
+	/**
+	 * 字符日期格式比较
+	 * @return
+	 */
+	public static Boolean compareDateToString(String startDate,String endDate) {
+		DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		Boolean isBefore = false;
+		try {
+			Date d1 = dateFormat.parse(startDate);
+			Date d2 = dateFormat.parse(endDate);
+			if(d1.before(d2)){
+				System.out.println(startDate+"在"+endDate+"之前");
+				isBefore = true;
+			}else if(d1.after(d2)){
+				System.out.println(startDate+"在"+endDate+"之后");
+				isBefore = false;
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return  isBefore;
 	}
 
 	public static void main(String[] args) {
