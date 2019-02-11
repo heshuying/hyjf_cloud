@@ -861,6 +861,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                         resultBean.setStatusDesc("已开户，无需再次开户");
 
                         // 已开户的用户，需要返回电子账号和银联行号
+                        if(null == users.getUserId()){
+                            logger.info("定位一下错误，请勿删除 -> userId:[{}]",users.getUserId());
+                        }
                         BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(users.getUserId());
                         resultBean.setAccountId(bankOpenAccountVO.getAccount());
                         BankCardVO bankCardVO = amUserClient.getBankCardByUserId(users.getUserId());

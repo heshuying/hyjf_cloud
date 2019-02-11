@@ -110,6 +110,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 // 取得债权出让人的用户在汇付天下的客户号
                                 BankOpenAccountVO sellerBankAccount = this.amTradeClient.getBankOpenAccount(sellerUserId);
                                 // 取得承接债转的用户在汇付天下的客户号
+                                if(userId == null){
+                                    logger.info("定位一下错误，请勿删除 -> userId:[{}]",userId);
+                                }
                                 BankOpenAccountVO assignBankAccount = this.amTradeClient.getBankOpenAccount(userId);
                                 //查询债转承接掉单的数据
                                 List<CreditTenderLogVO> creditTenderLogVOs=this.amTradeClient.getCreditTenderLogs(logOrderId, userId);
@@ -118,20 +121,20 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 UserInfoVO userInfo = null;
                                 List<BorrowCreditVO> borrowCreditList = null;
                                 if(CollectionUtils.isNotEmpty(creditTenderLogVOs) && creditTenderLogVOs.size() == 1) {
-                                	CreditTenderLogVO creditTenderLogVO = creditTenderLogVOs.get(0);
-                                	// 债转编号
-                        			String creditNid = creditTenderLogVO.getCreditNid();
-                        			// 原始出借订单号
-                        			String tenderOrderId = creditTenderLog.getCreditTenderNid();
-                        			// 获取会转让标的列表
+                                    CreditTenderLogVO creditTenderLogVO = creditTenderLogVOs.get(0);
+                                    // 债转编号
+                                    String creditNid = creditTenderLogVO.getCreditNid();
+                                    // 原始出借订单号
+                                    String tenderOrderId = creditTenderLog.getCreditTenderNid();
+                                    // 获取会转让标的列表
                                     borrowCreditList = this.amTradeClient.getBorrowCreditList(creditNid,sellerUserId,tenderOrderId);
-                        			if(CollectionUtils.isNotEmpty(borrowCreditList) && borrowCreditList.size()==1){
+                                    if(CollectionUtils.isNotEmpty(borrowCreditList) && borrowCreditList.size()==1){
                                         BorrowCreditVO borrowCreditVO=borrowCreditList.get(0);
                                         webUser=this.amUserClient.findUserById(borrowCreditVO.getCreditUserId());
                                         userInfo=this.amUserClient.findUsersInfoById(borrowCreditVO.getCreditUserId());
                                     }
 
-                        			
+
                                 }
 
 
@@ -326,7 +329,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
      * @param userId
      * @return
      */
-        private BankCallBean creditInvestQuery(String assignOrderId, Integer userId) {
+    private BankCallBean creditInvestQuery(String assignOrderId, Integer userId) {
+        if(userId == null){
+            logger.info("定位一下错误，请勿删除 -> userId:[{}]",userId);
+        }
         // 承接人用户Id
         BankOpenAccountVO tenderOpenAccount = this.amTradeClient.getBankOpenAccount(userId);
         BankCallBean bean = new BankCallBean();
