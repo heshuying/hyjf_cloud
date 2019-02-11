@@ -175,7 +175,9 @@ var TaskInfo = {
 				{field:'jobDescription',title:'JobDescription',width:120},
 				{field:'jobStatus',title:'JobStatus',width:50},
 				{field:'cronExpression',title:'CronExpression',width:60},
-				{field:'createTime',title:'CreateTime',width:70},
+                {field:'prevFireTime',title:'prevFireTime',width:50},
+                {field:'nextFireTime',title:'nextFireTime',width:50},
+				{field:'createTime',title:'CreateTime',width:50},
 				{field:'Opr',title:'Opr',width:40,formatter:function(v,r,i){
 						var val = '';
 						if(r.jobStatus == 'NORMAL') {
