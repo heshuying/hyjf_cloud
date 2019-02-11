@@ -30,6 +30,26 @@ public class TaskInfo implements Serializable {
 
 	private String createTime;
 
+	private String nextFireTime;
+
+	private String prevFireTime;
+
+	public String getNextFireTime() {
+		return nextFireTime;
+	}
+
+	public void setNextFireTime(String nextFireTime) {
+		this.nextFireTime = nextFireTime;
+	}
+
+	public String getPrevFireTime() {
+		return prevFireTime;
+	}
+
+	public void setPrevFireTime(String prevFireTime) {
+		this.prevFireTime = prevFireTime;
+	}
+
 	public String getJobName() {
 		return jobName;
 	}

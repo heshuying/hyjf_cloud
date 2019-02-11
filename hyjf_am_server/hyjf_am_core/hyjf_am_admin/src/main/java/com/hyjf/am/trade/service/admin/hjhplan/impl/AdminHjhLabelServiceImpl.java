@@ -18,6 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 	@Override
 	public Integer countRecordTotal(HjhLabelRequest request) {
 		List<HjhLabel> list = null;
+		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		HjhLabelExample example = new HjhLabelExample();
 		HjhLabelExample.Criteria crt = example.createCriteria();
         // 标签名称搜索
@@ -78,12 +81,17 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         }
         // 使用状态(DB中已经没有 isEngine 字段了)
 
-        
         if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch()) && StringUtils.isNotEmpty(request.getCreateTimeEndSrch())) {
-        	crt.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeStartSrch()), "yyyy-MM-dd HH:mm:ss"));
-        }
-        if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
-        	crt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeEndSrch()), "yyyy-MM-dd HH:mm:ss"));
+            String strStart = request.getCreateTimeStartSrch() + " 00:00:00";
+            String strEnd = request.getCreateTimeEndSrch() + " 23:59:59";
+            try {
+				Date start = smp.parse(strStart);
+				Date end = smp.parse(strEnd);
+                crt.andCreateTimeGreaterThanOrEqualTo(start);
+                crt.andCreateTimeLessThanOrEqualTo(end);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
         }
 		// 传入排序
 		example.setOrderByClause("create_time Desc");

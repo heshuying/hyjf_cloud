@@ -341,6 +341,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     creditTender = list.get(0);
                 }
                 if (creditTender != null) {
+                    //承接债转时获取原始投资订单号
+                    tenderNid = creditTender.getCreditTenderNid();
                     // 2. 出借信息(承接标的出借信息)
                     this.setCreditTenderInfoToResult(detailBeansList, creditTender);
                     // 3.回款计划(承接标的)

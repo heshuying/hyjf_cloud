@@ -12,12 +12,15 @@ import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -57,6 +60,15 @@ public class CertController extends BaseController {
         }
         return response;
     }
+
+    @PostMapping("/queryCertAccountListId")
+    public CertAccountListResponse queryCertAccountListId(@RequestBody CertRequest certRequest) {
+        CertAccountListResponse response = new CertAccountListResponse();
+        CertAccountListIdCustomize certAccountListIdCustomize = certService.queryCertAccountListId(certRequest);
+        response.setCertAccountListIdCustomizeVO(CommonUtils.convertBean(certAccountListIdCustomize,CertAccountListIdCustomizeVO.class));
+        return response;
+    }
+
     @PostMapping("/getAccountListVOListByRequest")
     public AccountListResponse getAccountListVOListByRequest(@RequestBody CertRequest certRequest) {
         AccountListResponse response = new AccountListResponse();

@@ -20,14 +20,12 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -171,19 +169,22 @@ public class AppPushManageController extends BaseController {
 
     /**
      * 更新单条记录的状态
-     * @param ids
+     * @param requestBean
      * @return
      */
     @ApiOperation(value = "根据ID 更新 单条信息状态", notes = "根据ID 更新 单条信息状态")
     @PostMapping("/updatePushManageStatusById")
-    public AdminResult<AppPushManageVO> updatePushManageStatusById(Integer ids){
+    public AdminResult<AppPushManageVO> updatePushManageStatusById(@RequestBody AppPushManageRequestBean requestBean){
 
         // ID必须不为空
-        if (ids == null){
+        if (requestBean.getIds() == null){
             return new AdminResult<>(FAIL, "ID必须不为空!");
         }
 
+        Integer ids = Integer.valueOf(requestBean.getIds());
+
         logger.info("updatePushManageStatusById:更新但单条推送数据状态的ID:" + ids);
+
         boolean pushManageResponse = appPushManageService.updatePushManageStatusById(ids);
 
         if (pushManageResponse){

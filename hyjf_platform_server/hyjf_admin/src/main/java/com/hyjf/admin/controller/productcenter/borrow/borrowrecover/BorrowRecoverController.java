@@ -13,6 +13,7 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BorrowRecoverCustomizeVO;
+import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -22,6 +23,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,7 +77,7 @@ public class BorrowRecoverController extends BaseController {
         result.setData(bean);
         return result;
     }
-
+    private Logger _log = LoggerFactory.getLogger(BorrowRecoverController.class);
     /**
      * 带条件导出
      * 1.无法指定相应的列的顺序，
@@ -108,27 +111,26 @@ public class BorrowRecoverController extends BaseController {
         copyForm.setPageSize(defaultRowMaxCount);
         copyForm.setCurrPage(1);
         // 查询
- 
+
         Integer totalCount = this.borrowRecoverService.countBorrowRecover(copyForm);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }
-        for (int i = 1; i < sheetCount; i++) {
-
-            copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i);
-            // 查询
-            List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-            if (resultList != null && resultList.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i ) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
-            } else {
-                break;
+        }else {
+            for (int i = 1; i <= sheetCount; i++) {
+                copyForm.setPageSize(defaultRowMaxCount);
+                copyForm.setCurrPage(i);
+                // 查询
+                List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
+                if (resultList != null && resultList.size()> 0) {
+                    sheetNameTmp = sheetName + "_第" + (i) + "页";
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
+                } else {
+                    break;
+                }
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);

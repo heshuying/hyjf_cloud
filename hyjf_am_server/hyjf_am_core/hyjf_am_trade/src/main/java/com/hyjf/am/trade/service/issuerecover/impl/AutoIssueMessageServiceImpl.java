@@ -65,11 +65,14 @@ public class AutoIssueMessageServiceImpl extends BaseServiceImpl implements Auto
 
 		// 更新资产表
 		if(hjhPlanAsset != null){
+			logger.info("==========更新资产表计划编号:" + borrow.getBorrowNid() + ",计划编号：" + planNid);
 			hjhPlanAsset.setPlanNid(planNid);
 			// 获取当前时间
 			hjhPlanAsset.setUpdateTime(new Date());
 			hjhPlanAsset.setUpdateUserId(1);
 			hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset);
+		}else{
+			logger.info("==========更新资产表计划编号时，资产为空！:" + borrow.getBorrowNid() + ",计划编号：" + planNid);
 		}
 
 		// 增加redis相应计划可投金额

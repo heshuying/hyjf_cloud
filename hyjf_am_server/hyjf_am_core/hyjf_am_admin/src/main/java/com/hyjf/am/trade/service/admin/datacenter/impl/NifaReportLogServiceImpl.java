@@ -37,6 +37,7 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
         NifaReportLogExample example = new NifaReportLogExample();
         NifaReportLogExample.Criteria creteria = example.createCriteria();
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        example.setOrderByClause(" history_date desc");
         Date dateStart = null;
         Date dateEnd = null;
 

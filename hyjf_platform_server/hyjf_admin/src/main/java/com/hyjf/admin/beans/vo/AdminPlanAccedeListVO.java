@@ -338,8 +338,27 @@ public class AdminPlanAccedeListVO {
 	 * 计算用已出借金额
 	 */
 	private BigDecimal jalreadyInvest;
-	
-	
+
+	/**
+	 * 项目编号
+	 */
+	@ApiModelProperty(value = "项目编号")
+	private String borrowNid;
+	/**
+	 * 状态
+	 */
+	@ApiModelProperty(value = "状态")
+	private String status;
+	/**
+	 * 是否标的的最后一笔投资
+	 */
+	@ApiModelProperty(value = "是否标的的最后一笔投资/承接(0:非最后一笔；1:最后一笔)")
+	private String isLast;
+	/**
+	 * 更新时间
+	 */
+	@ApiModelProperty(value = "更新时间")
+	private String updateTime;
 	
 	public String getAttribute() {
 		return attribute;
@@ -839,5 +858,37 @@ public class AdminPlanAccedeListVO {
 	}
 	public void setSumFairValue(String sumFairValue) {
 		this.sumFairValue = sumFairValue;
+	}
+
+	public String getBorrowNid() {
+		return borrowNid;
+	}
+
+	public void setBorrowNid(String borrowNid) {
+		this.borrowNid = borrowNid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getIsLast() {
+		return isLast;
+	}
+
+	public void setIsLast(String isLast) {
+		this.isLast = isLast;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 }
