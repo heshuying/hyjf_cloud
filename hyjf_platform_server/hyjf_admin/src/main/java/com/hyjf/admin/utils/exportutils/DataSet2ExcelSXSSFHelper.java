@@ -226,9 +226,9 @@ public class DataSet2ExcelSXSSFHelper<T> {
             workbook.write(out);
             out.flush();
             out.close();
-           // workbook.dispose();
-            deleteSXSSFTempFiles(workbook);
-        } catch (IOException | NoSuchFieldException | IllegalAccessException e) {
+            workbook.dispose();
+           // deleteSXSSFTempFiles(workbook);
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (out != null) {
