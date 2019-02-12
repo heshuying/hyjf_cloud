@@ -95,7 +95,7 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
             //累计借贷余额
             bifaOperationDataEntity.setTotal_loan_balance_money(df.format(this.getWillPayMoney(cal)));
             //累计借贷余额笔数
-            bifaOperationDataEntity.setTotal_loan_balance_num(this.getTotalLoanBalanceNum(cal));
+            bifaOperationDataEntity.setTotal_loan_balance_num(this.getTotalLoanBalanceNum());
 
             // 累计借款人（定义：系统累计到现在进行过发表的底层借款人数量）
             Integer countBorrowUser = this.countBorrowUser();
@@ -226,8 +226,8 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
        return amTradeClient.countBorrowUser();
     }
 
-    private String getTotalLoanBalanceNum(Calendar cal) {
-        return String.valueOf(amTradeClient.getTotalLoanBalanceNum(cal.getTime()));
+    private String getTotalLoanBalanceNum() {
+        return String.valueOf(amTradeClient.getTotalLoanBalanceNum());
     }
 
     /**

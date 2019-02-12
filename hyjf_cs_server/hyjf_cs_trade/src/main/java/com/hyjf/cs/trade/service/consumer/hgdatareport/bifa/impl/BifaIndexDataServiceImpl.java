@@ -70,8 +70,12 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
         // 取得当前日期为基准日期
         Integer stdDate = GetDate.getDayStart10(new Date());
         //结束时间为当前时间的前一天的23:59:59
-        //生产用
-        Integer endDate = stdDate - 1;
+
+        //生产用 前一天的23：59：59
+        //Integer endDate = stdDate - 1;
+        //测试用 当天的23：59：59
+        Integer endDate = GetDate.getDayEnd10(new Date());
+
         //查询最近一周的索引数据
         Integer startDate = GetDate.countDate(stdDate, 5, -7);
         //输出上报时间范围
