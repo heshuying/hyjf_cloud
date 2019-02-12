@@ -106,11 +106,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         //汇计划加入订单号
         String accedeOrderId = hjhAccede.getAccedeOrderId();
+        // 计划订单加入计划金额
+        BigDecimal accedeAccount = hjhAccede.getAccedeAccount();
+        // 计划订单可投金额
+        BigDecimal ketouplanAmoust = hjhAccede.getAvailableInvestAccount();
+
         //银行交易前，异常订单状态设定，和系统异常
         final Integer ORDER_STATUS_ERR = hjhAccede.getOrderStatus() + 90;
         //银行交易后，异常订单状态设定
         final Integer ORDER_STATUS_FAIL = hjhAccede.getOrderStatus() + 80;
-        //银行交易后，异常订单状态设定
+        //银行交易前，初始订单状态设定
         final Integer ORDER_STATUS_INIT = hjhAccede.getOrderStatus() + 70;
         //一个计划订单的连续失败次数
         int serialFaileCount = 0;
@@ -120,27 +125,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         int diversifyCount = -1; //非分散出借
         //已出借笔数
         int investCountForLog = hjhAccede.getInvestCounts();
-        // add 汇计划三期 汇计划自动出借(分散出借) liu0180515 end
-
-        if (hjhAccede.getOrderStatus() == 0) {
-            //0自动投标中
-            logger.info("****" + logMsgHeader + "开始自动出借,订单状态:" + hjhAccede.getOrderStatus() + "****");
-            // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
-            diversifyCount = 0; //初始分散出借 （只有出借原始标的（非复投）时，使用分散出借）
-            // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
-        } else {
-            //2自动投标成功或者3锁定中
-            logger.info("****" + logMsgHeader + "开始自动复投,订单状态:" + hjhAccede.getOrderStatus() + "****");
-        }
-
-        /** 0. 取得计划信息 */
-        HjhPlanVO hjhPlan = amTradeClient.getPlanByNid(hjhAccede.getPlanNid());
-        // 计划订单加入计划金额
-        BigDecimal accedeAccount = hjhAccede.getAccedeAccount();
-        // 计划订单可投金额
-        BigDecimal ketouplanAmoust = hjhAccede.getAvailableInvestAccount();
-
-        // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
         // 每组可投金额（分散出借的最小分散金额）
         BigDecimal groupAmoust = ketouplanAmoust;
         // 最小分散组数
@@ -152,7 +136,20 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
         // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
+        if (hjhAccede.getOrderStatus() == 0) {
+            //0自动投标中
+            logger.info("****" + logMsgHeader + "开始自动出借,订单状态:" + hjhAccede.getOrderStatus() + "****");
+            // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
+            diversifyCount = 0; //初始分散出借 （只有出借原始标的（非复投）时，使用分散出借）
+            // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
+        } else {
+            //2自动投标成功或者3锁定中
+            logger.info("****" + logMsgHeader + "开始自动复投,订单状态:" + hjhAccede.getOrderStatus() + "****");
+        }
         logger.info(logMsgHeader + "加入计划金额：" + accedeAccount.toString()+ "，初始可投金额：" + ketouplanAmoust.toString());
+
+        /** 0. 取得计划信息 */
+        HjhPlanVO hjhPlan = amTradeClient.doGetPlanByNid(hjhAccede.getPlanNid());
 
         /** 1. 取得出借人信息（授权账户等） */
         //获取出借授权码
@@ -185,7 +182,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         String tenderUsrcustid = bankOpenAccount.getAccount();//获取江西银行电子账号
 
         /** 2. 有可投金额循环出借	 */
-        // 计划订单的可投金额 >= minAccountEnable 进行出借/复投
+        // 计划订单的可投金额 >= minAccountEnable 进行出借(0.01)/复投(10.00)
         // 计划订单的可投金额 < minAccountEnable 该计划订单出借/复投结束
         BigDecimal minAccountEnable = getMinAccountEnable(hjhAccede);
         while (ketouplanAmoust.compareTo(minAccountEnable) >= 0) {
@@ -456,7 +453,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     /** 5.2. 获取标的详情	 */
                     //根据borrowNid查询borrow表
-                    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(redisBorrow.getBorrowNid());
+                    BorrowAndInfoVO borrow = amTradeClient.doSelectBorrowByNid(redisBorrow.getBorrowNid());
                     if (borrow == null) {
                         logger.error(logMsgHeader + "标的号不存在 " + redisBorrow.getBorrowNid());
                         noPushRedis = true;
