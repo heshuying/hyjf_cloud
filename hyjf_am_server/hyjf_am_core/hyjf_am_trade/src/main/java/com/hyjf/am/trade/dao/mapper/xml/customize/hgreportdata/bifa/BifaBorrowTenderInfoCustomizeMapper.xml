@@ -15,14 +15,16 @@
 		FROM
 			ht_credit_tender
 		WHERE
-			create_time BETWEEN  #{startDate}  AND  #{endDate}
+			create_time <![CDATA[>=]]> FROM_UNIXTIME(#{startDate},'%Y-%m-%d %H:%i:%s')
+			AND create_time <![CDATA[<=]]> FROM_UNIXTIME(#{endDate},'%Y-%m-%d %H:%i:%s')
 		UNION
 		SELECT DISTINCT
 			user_id
 		FROM
 			ht_hjh_debt_credit_tender
 		WHERE
-			create_time BETWEEN  #{startDate}  AND  #{endDate}
+			create_time <![CDATA[>=]]> FROM_UNIXTIME(#{startDate},'%Y-%m-%d %H:%i:%s')
+			and create_time <![CDATA[<=]]> FROM_UNIXTIME(#{endDate},'%Y-%m-%d %H:%i:%s')
 	</select>
 
 </mapper>
