@@ -234,7 +234,7 @@
 
 <!-- 	借贷笔数 -->
 	<select  id="getLoanNum"  parameterType="java.util.Date" resultType="int">
-		select count(*) from ht_borrow where create_time &lt;= #{0}
+		select count(*) from ht_borrow where create_time &lt;= #{0} and status in(4,5)
 	</select>
 <!-- 	人均出借金额 -->
 	<select id="getPerInvestTotal" resultType="java.math.BigDecimal">

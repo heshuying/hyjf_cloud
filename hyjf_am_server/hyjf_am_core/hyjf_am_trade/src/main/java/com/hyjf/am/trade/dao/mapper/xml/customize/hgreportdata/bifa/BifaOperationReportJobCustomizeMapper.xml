@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.BifaOperationReportJobCustomizeMapper">
 
 	<select id="getLoanBalanceNum" parameterType="java.util.Date" resultType="int">
-		select count(*) from  ht_borrow where create_time &lt;=UNIX_TIMESTAMP(#{0}) and status = 4
+		select count(*) from  ht_borrow where create_time &lt;= #{0} and status = 4
 	</select>
 
 </mapper>
