@@ -313,7 +313,6 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             // groupByDate  旧数据上报排序 按月用yyyy-MM
             String groupByDate = "";
             try {
-                logger.info("-----"+JSONObject.toJSONString(borrow));
                 if (borrow.getVerifyStatus().equals(3)) {
                     // 定时标
                     groupByDate = GetDate.times10toStrYYYYMM(borrow.getOntime()+"");
