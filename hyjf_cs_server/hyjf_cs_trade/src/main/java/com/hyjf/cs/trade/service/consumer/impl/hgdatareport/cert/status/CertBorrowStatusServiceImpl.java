@@ -70,7 +70,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
                     //发标时间
-                    productDate = dateFormatTransformation(borrow.getVerifyTime());
+                    productDate = dateFormatTransformation(borrow.getVerifyTime()+"");
 
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {

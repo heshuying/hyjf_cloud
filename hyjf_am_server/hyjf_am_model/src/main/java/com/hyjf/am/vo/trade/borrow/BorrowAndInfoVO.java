@@ -290,7 +290,7 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String verifyUserName;
 
-    private String verifyTime;
+    private Integer verifyTime;
 
     private Integer verifyTimeInteger;
 
@@ -1616,12 +1616,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.verifyUserName = verifyUserName == null ? null : verifyUserName.trim();
     }
 
-    public String getVerifyTime() {
+    public Integer getVerifyTime() {
         return verifyTime;
     }
 
-    public void setVerifyTime(String verifyTime) {
-        this.verifyTime = verifyTime == null ? null : verifyTime.trim();
+    public void setVerifyTime(Integer verifyTime) {
+        this.verifyTime = verifyTime;
     }
 
     public String getVerifyRemark() {

@@ -51,7 +51,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
         // 判断是否已经上送
         Map<String, Object> param = new LinkedHashMap<String, Object>();
         // 查询数据库 start
-        BorrowAndInfoVO borrow = borrowClient.getBorrowByNid(borrowNid);
+        BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
         List<BorrowProjectTypeVO> borrowProjectTypes = borrowClient.selectBorrowProjectByBorrowCd(borrow.getProjectType().toString());
         CertUserVO certUser = this.getCertUserByUserIdBorrowNid(borrow.getUserId(),borrowNid);
         if(certUser ==null){
@@ -186,7 +186,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
                     // 定时标
                     groupByDate = GetDate.times10toStrYYYYMM(borrow.getOntime()+"");
                 } else {
-                    groupByDate = GetDate.times10toStrYYYYMM(borrow.getVerifyTime());
+                    groupByDate = GetDate.times10toStrYYYYMM(borrow.getVerifyTimeInteger()+"");
                 }
                 if(null==groupByDate||"".equals(groupByDate)||"0".equals(groupByDate)){
                     groupByDate = GetDate.times10toStrYYYYMM(borrow.getAddtime());
