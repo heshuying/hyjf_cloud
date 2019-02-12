@@ -1070,9 +1070,11 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         if(isNewUser){
             if(!CollectionUtils.isEmpty(projectList)){
+                logger.info("============app首页推荐标的获取新手标不为空--------");
                 AppProjectListCustomizeVO project = projectList.get(0);
                 if (list.size() == 0) {
                     list.add(project);
+                    logger.info("============app首页推荐标的获取新手标不为空，并且返回可显示标的--------");
                 }
                 info.put("sprogExist", "1");
                 info.put("sprogBorrowApr", project.getBorrowApr());
@@ -1087,6 +1089,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 }
                 info.put("borrowExtraYield", project.getBorrowExtraYield());
             }else {
+                logger.info("============app首页推荐标的获取新手标为空--------");
                 info.put("sprogExist", "0");
                 info.put("sprogBorrowApr", "");
                 info.put("sprogBorrowPeriod", "");

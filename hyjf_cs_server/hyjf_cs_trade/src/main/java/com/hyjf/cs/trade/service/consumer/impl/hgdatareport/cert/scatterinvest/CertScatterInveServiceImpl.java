@@ -74,7 +74,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
                 // 定时标
                 productStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getOntime()+"");
             } else {
-                productStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
+                productStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTimeInteger()+"");
             }
             if(null==productStartTime||"".equals(productStartTime)||"0".equals(productStartTime)){
                 productStartTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getAddtime());

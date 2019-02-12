@@ -3,8 +3,10 @@ package com.hyjf.admin.utils.exportutils;
 import com.google.common.collect.Lists;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.streaming.SheetDataWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.Collection;
@@ -222,6 +227,7 @@ public class DataSet2ExcelSXSSFHelper<T> {
             out.flush();
             out.close();
             workbook.dispose();
+           // deleteSXSSFTempFiles(workbook);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -234,5 +240,33 @@ public class DataSet2ExcelSXSSFHelper<T> {
                 }
             }
         }
+    }
+    public static void deleteSXSSFTempFiles(SXSSFWorkbook workbook)
+            throws NoSuchFieldException, IllegalAccessException {
+        int numberOfSheets = workbook.getNumberOfSheets();
+        // iterate through all sheets (each sheet as a temp file)
+        for (int i = 0; i <= numberOfSheets; i++) {
+            Sheet sheetAt = workbook.getSheetAt(i);
+            // delete only if the sheet is written by stream
+            if (sheetAt instanceof SXSSFSheet) {
+                SheetDataWriter sdw = (SheetDataWriter) getPrivateAttribute(sheetAt, "_writer");
+                File f = (File) getPrivateAttribute(sdw, "_fd");
+                try {
+                    f.delete();
+                } catch (Exception ex) {
+                    // could not delete the file
+                }
+            }
+        }
+    }
+    public static Object getPrivateAttribute(
+            Object containingClass, String fieldToGet)
+            throws NoSuchFieldException, IllegalAccessException 
+    {
+        // get the field of the containingClass instance
+        Field declaredField = containingClass.getClass().getDeclaredField(fieldToGet);
+        declaredField.setAccessible(true); // access it
+        Object get = declaredField.get(containingClass); // return it!
+        return get;
     }
 }
