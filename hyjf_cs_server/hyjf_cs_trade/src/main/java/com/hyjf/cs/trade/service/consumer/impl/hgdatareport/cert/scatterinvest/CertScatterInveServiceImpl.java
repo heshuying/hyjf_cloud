@@ -186,7 +186,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
                     // 定时标
                     groupByDate = GetDate.times10toStrYYYYMM(borrow.getOntime()+"");
                 } else {
-                    groupByDate = GetDate.times10toStrYYYYMM(borrow.getVerifyTime());
+                    groupByDate = GetDate.times10toStrYYYYMM(borrow.getVerifyTime()+"");
                 }
                 if(null==groupByDate||"".equals(groupByDate)||"0".equals(groupByDate)){
                     groupByDate = GetDate.times10toStrYYYYMM(borrow.getAddtime());
