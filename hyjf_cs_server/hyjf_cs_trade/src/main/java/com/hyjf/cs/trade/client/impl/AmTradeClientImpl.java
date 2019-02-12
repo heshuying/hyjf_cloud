@@ -94,6 +94,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
@@ -2023,6 +2024,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+        logger.info(ReflectUtils.getSuperiorClass(3));
         BankOpenAccountResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
         if (response != null) {
