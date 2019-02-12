@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.hgreportdata.bifa.BifaUserCustomizeMapper">
 
 	<!-- 0普通用户 1企业用户' -->
-	<select id="getBankOpenedAccountUsers" resultType="com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean" parameterType="java.lang.Integer">
+	<select id="getBankOpenedAccountUsers" resultType="com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean">
 		SELECT
 			hu.user_id userId,
 			hui.truename trueName,
