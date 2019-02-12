@@ -6757,9 +6757,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public int getTotalLoanBalanceNum(Date time) {
+    public int getTotalLoanBalanceNum() {
         String url = "http://AM-TRADE/am-trade/bifaDataReport/getTotalLoanBalanceNum";
-        return restTemplate.postForEntity(url,time,Integer.class).getBody();
+        return restTemplate.getForEntity(url,Integer.class).getBody();
     }
 
     /**

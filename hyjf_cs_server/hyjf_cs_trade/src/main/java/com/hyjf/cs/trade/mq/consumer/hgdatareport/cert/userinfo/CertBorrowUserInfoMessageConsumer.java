@@ -8,6 +8,8 @@ import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.scatterinvest.CertScatterInveService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.status.CertBorrowStatusService;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.userinfo.CertUserInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 合规数据上报 CERT 用户数据推送上报（延时队列）
@@ -31,15 +34,21 @@ import java.util.List;
  * @Date 2019/1/21 10:23
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_USER_INFO_TAG, consumerGroup = MQConstant.CERT_USER_INFO_GROUP)
-public class CertUserInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
-    private static final Logger logger = LoggerFactory.getLogger(CertUserInfoMessageConsumer.class);
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.ISSUE_INVESTING_TAG, consumerGroup = MQConstant.ISSUE_INVESTING_GROUP)
+public class CertBorrowUserInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+    private static final Logger logger = LoggerFactory.getLogger(CertBorrowUserInfoMessageConsumer.class);
 
     private String thisMessName = "用户数据推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
     private CertUserInfoService certUserInfoService;
+
+    @Autowired
+    private CertScatterInveService certScatterInveService;
+
+    @Autowired
+    private CertBorrowStatusService certBorrowStatusService;
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
@@ -145,6 +154,41 @@ public class CertUserInfoMessageConsumer implements RocketMQListener<MessageExt>
                     item.setUserName(users.getUsername());
                     item.setLogOrdId(entity.getLogOrdId());
                     certUserInfoService.insertCertUser(item);
+                }
+            }
+
+            // 上报标的信息 tradedate是空的话  是手动处理
+
+            if(borrowNid!=null&&!"".equals(borrowNid)&&
+                    (tradeDate==null||"".equals(tradeDate))){
+                logger.info(logHeader+"开始上报标的信息，borrowNid:"+borrowNid);
+                // 上送数据
+                CertReportEntityVO entityBorrow = new CertReportEntityVO("散标数据推送", CertCallConstant.CERT_INF_TYPE_SCATTER_INVEST, borrowNid, data);
+                try {
+                    // 掉单用
+                    if(tradeDate!=null&&!"".equals(tradeDate)){
+                        entityBorrow.setTradeDate(tradeDate);
+                    }
+                    entityBorrow = certScatterInveService.insertAndSendPost(entityBorrow);
+                } catch (Exception e) {
+                    throw e;
+                }
+                logger.info(logHeader+"开始上报散标状态，borrowNid:"+borrowNid);
+
+                JSONArray listRepay = new JSONArray();
+                Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false, false);
+                listRepay.add(mapParam);
+                logger.info("数据：" + listRepay);
+                // 上送数据
+                CertReportEntityVO entityState = new CertReportEntityVO("散标状态信息推送", CertCallConstant.CERT_INF_TYPE_STATUS, borrowNid, listRepay);
+                try {
+                    // 掉单用
+                    if (tradeDate != null && !"".equals(tradeDate)) {
+                        entityState.setTradeDate(tradeDate);
+                    }
+                    certBorrowStatusService.insertAndSendPost(entityState);
+                } catch (Exception e) {
+                    throw e;
                 }
             }
             return;

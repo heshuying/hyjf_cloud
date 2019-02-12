@@ -36,7 +36,7 @@ public class CertBorrowStatusMessageConsumerLoan implements RocketMQListener<Mes
 
     Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerLoan.class);
 
-    private String thisMessName = "散标状态信息推送";
+    private String thisMessName = "散标状态信息推送_放款成功";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Override
