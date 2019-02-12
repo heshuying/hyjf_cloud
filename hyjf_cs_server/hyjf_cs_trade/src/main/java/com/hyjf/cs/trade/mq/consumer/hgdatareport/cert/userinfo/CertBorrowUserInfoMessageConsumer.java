@@ -162,8 +162,14 @@ public class CertBorrowUserInfoMessageConsumer implements RocketMQListener<Messa
             if(borrowNid!=null&&!"".equals(borrowNid)&&
                     (tradeDate==null||"".equals(tradeDate))){
                 logger.info(logHeader+"开始上报标的信息，borrowNid:"+borrowNid);
+                // --> 调用service组装数据
+                JSONArray dataBorrow = new JSONArray();
+                Map<String, Object> param = certScatterInveService.getSendData(borrowNid,"");
+                param.remove("groupByDate");
+                dataBorrow.add(param);
+                logger.info(logHeader+"组装数据为："+dataBorrow.toString());
                 // 上送数据
-                CertReportEntityVO entityBorrow = new CertReportEntityVO("散标数据推送", CertCallConstant.CERT_INF_TYPE_SCATTER_INVEST, borrowNid, data);
+                CertReportEntityVO entityBorrow = new CertReportEntityVO("散标数据推送", CertCallConstant.CERT_INF_TYPE_SCATTER_INVEST, borrowNid, dataBorrow);
                 try {
                     // 掉单用
                     if(tradeDate!=null&&!"".equals(tradeDate)){
