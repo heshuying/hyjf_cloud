@@ -977,7 +977,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertSendUserVO getCertSendUserByUserId(int userId) {
 		CertSendUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertSendUserByUserId/" + userId,
+				userService+"/certUser/getCertSendUserByUserId/" + userId,
 				CertSendUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1040,7 +1040,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertUserVO getCertUserByUserIdBorrowNid(int userId, String borrowNid) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUserByUserIdBorrowNid/" + userId+"/"+borrowNid,
+				userService+"/certUser/getCertUserByUserIdBorrowNid/" + userId+"/"+borrowNid,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1057,7 +1057,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertUserVO getCertUserByUserId(Integer userId) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUserByUserId/" + userId ,
+				userService+"/certUser/getCertUserByUserId/" + userId ,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1074,7 +1074,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertUserVO getCertUserByUserIdcardHash(String userIdcardHash) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUserByUserIdcardHash/" + userIdcardHash ,
+				userService+"/certUser/getCertUserByUserIdcardHash/" + userIdcardHash ,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1091,7 +1091,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<CertUserVO> getCertUsersByUserId(int userId) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUsersByUserId/" + userId ,
+				userService+"/certUser/getCertUsersByUserId/" + userId ,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();

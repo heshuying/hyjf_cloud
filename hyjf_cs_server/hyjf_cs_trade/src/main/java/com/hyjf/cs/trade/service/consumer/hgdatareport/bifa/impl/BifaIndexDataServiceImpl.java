@@ -76,17 +76,17 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
         Integer startDate = GetDate.countDate(stdDate, 5, -7);
         //输出上报时间范围
         logger.info(logHeader + "上报时间范围:" + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(startDate) + "~" + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(endDate));
-
-        this.executeIndexDataReport(startDate, endDate);
+        //准备索引数据
+        this.prepareIndexData(startDate, endDate);
 
     }
 
     /**
-     * 进行上报流程
+     * 准备索引数据
      * @param startDate
      * @param endDate
      */
-    private void executeIndexDataReport(Integer startDate, Integer endDate) {
+    private void prepareIndexData(Integer startDate, Integer endDate) {
         //清空上报文件集合
         reportFiles.clear();
         // 执行已开户用户索引数据上报
@@ -142,7 +142,8 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
                     endDate = GetDate.countDate(start, 2, i) - 1;
                 }
                 logger.info(logHeader + "历史上报时间范围 " + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(startDate) + "~" + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(endDate));
-                this.executeIndexDataReport(startDate, endDate);
+                //准备索引数据
+                this.prepareIndexData(startDate, endDate);
             }
             logger.info(logHeader + "定时任务处理成功。");
         } catch (Exception e) {
