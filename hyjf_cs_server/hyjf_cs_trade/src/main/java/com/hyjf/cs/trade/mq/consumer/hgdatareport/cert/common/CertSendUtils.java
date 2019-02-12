@@ -61,7 +61,7 @@ public class CertSendUtils {
 	}
 
 	public static String postRequest(String certCrtpath,String url, Map<String,String> param ) {
-
+		logger.info("certCrtpath:"+certCrtpath);
 		CertSSLProtocolSocketFactory certSSLProtocolSocketFactory = new CertSSLProtocolSocketFactory();
 		CertSSLProtocolSocketFactory.crtPath = certCrtpath ;
 		Protocol myhttps = new Protocol("https",certSSLProtocolSocketFactory , 443);
@@ -101,6 +101,7 @@ public class CertSendUtils {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream(), "utf-8"));
 			String tmp = null;
 			while ((tmp = reader.readLine()) != null) {
+				logger.info(tmp+"----");
 				strResult += tmp + "\r\n";
 			}
 		} catch (Exception e) {
