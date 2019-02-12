@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.status;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -63,14 +64,14 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     //放款后（报送5还款中）
                     productStatus = "5";
                     //放款时间
-                    productDate = dateFormatTransformation(borrow.getRecoverLastTime().toString());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getRecoverLastTime().toString());
                     productStatusDesc = "放款后（报送5还款中）";
                 } else if (borrow.getStatus() == 2) {
                     //投资中
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
                     //发标时间
-                    productDate = dateFormatTransformation(borrow.getVerifyTime());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
 
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {
@@ -85,21 +86,16 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     //放款（报送9放款）
                     productStatus = "9";
                     //放款时间
-                    productDate = dateFormatTransformation(borrow.getRecoverLastTime().toString());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getRecoverLastTime().toString());
                     productStatusDesc = "放款（报送9放款）";
                 } else if (borrow.getStatus() == 3 && borrow.getBorrowFullStatus() == 1) {
                     //满标
                     //满标时候（报送1满标）
                     productStatus = "1";
-                    productDate = dateFormatTransformation(borrow.getBorrowFullTime().toString());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getBorrowFullTime().toString());
                     productStatusDesc = "满标时候（报送1满标）";
                 }
                 param = putParamObject(borrowNid, productStatus, productDate, productStatusDesc);
-                if (isOld) {
-                    //是否是历史数据
-                    // groupByDate  旧数据上报排序 按月用
-                    param.put("groupByDate", getOrderByDate(productDate));
-                }
                 return param;
 
             }
@@ -163,37 +159,8 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
      */
     private String getLastRepayTime(BorrowRepayVO borrowRepay) {
         if (null != borrowRepay) {
-            String repayTime = dateFormatTransformation(String.valueOf(borrowRepay.getRepayActionTime()));
+            String repayTime = GetDate.timestamptoStrYYYYMMDDHHMMSS(String.valueOf(borrowRepay.getRepayActionTime()));
             return repayTime;
-        }
-        return null;
-    }
-
-    /**
-     * 格式化放款时间
-     *
-     * @param borrowRecover
-     * @return
-     */
-    private String getRecoverTime(BorrowRecoverVO borrowRecover) {
-        if (null != borrowRecover) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateStr = sdf.format(borrowRecover.getCreateTime());
-            return dateStr;
-        }
-        return null;
-    }
-
-    /**
-     * 获取排序时间的年月
-     *
-     * @param date
-     * @return
-     */
-    private String getOrderByDate(String date) {
-        if (StringUtils.isNotBlank(date)) {
-            String strDate = date.substring(0, 7);
-            return strDate;
         }
         return null;
     }

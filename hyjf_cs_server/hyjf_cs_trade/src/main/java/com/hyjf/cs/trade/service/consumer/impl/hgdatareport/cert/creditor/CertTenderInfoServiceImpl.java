@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -163,6 +164,7 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
     public String dateFormatTransformation(Date dateRapay, String flg) {
         if (flg.equals("H")) {
             //代表获取有时分秒
+            GetDate
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateStr = sdf.format(dateRapay);
             return dateStr;
