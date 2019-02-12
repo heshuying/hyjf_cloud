@@ -13,7 +13,7 @@ public class ReflectUtils {
      * 通过堆栈信息获取上级调用的类名
      * 1:本类第19行调用，2：上级调用，3：上上级调用;以此类推
      * @auth sunpeikai
-     * @param level 1:本类第19行调用，2：上级调用，3：上上级调用;以此类推
+     * @param level 1:本类方法调用堆栈，2：上级调用，3：上上级调用;以此类推
      * @return
      */
     public static String getSuperiorClass(int level){
