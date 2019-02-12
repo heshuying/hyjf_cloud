@@ -73,26 +73,21 @@
 
     <!--查询需要上报的用户信息-->
     <select id="getCertSendUserByUserId" resultMap="certOldUserMap">
-		SELECT
-		DISTINCT
-		  a.*, b.role_id role_id,
-		  b.truename true_name,
-		  b.idcard idcard,
-		  c.account account,
-		  d.bank bank,
-		  d.card_no card_no,
-		  e.type eval_type,
-		  f.mobile cert_mobile,
-		  f.salt hash_salt,
-		  f.phoneHash phone_hash
-		FROM
-		  huiyingdai_users a
-		LEFT JOIN huiyingdai_users_info b ON a.user_id = b.user_id
-		LEFT JOIN hyjf_bank_open_account c ON c.user_id = a.user_id
-		LEFT JOIN hyjf_bank_card d ON d.user_id = a.user_id AND d. STATUS = 1
-		LEFT JOIN huiyingdai_user_evalation_result e ON e.user_id = a.user_id
-		LEFT JOIN ht_cert_mobile_hash f ON f.user_id = a.user_id
-
+		SELECT DISTINCT
+            a.*, b.role_id role_id,
+            b.truename true_name,
+            b.idcard idcard,
+            c.account account,
+            d.bank bank,
+            d.card_no card_no,
+            e.eval_type eval_type
+        FROM
+            ht_user a
+        LEFT JOIN ht_user_info b ON a.user_id = b.user_id
+        LEFT JOIN ht_bank_open_account c ON c.user_id = a.user_id
+        LEFT JOIN ht_bank_card d ON d.user_id = a.user_id
+        AND d. STATUS = 1
+        LEFT JOIN ht_user_evalation_result e ON e.user_id = a.user_id
 		WHERE
 		a.user_id = #{userId} and
 		   a.bank_open_account = 1
