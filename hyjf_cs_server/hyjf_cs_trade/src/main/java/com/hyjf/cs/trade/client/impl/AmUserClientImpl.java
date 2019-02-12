@@ -23,6 +23,7 @@ import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.trade.client.AmUserClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -659,6 +660,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		logger.info(ReflectUtils.getSuperiorClass(3));
 		String url = urlBase + "bankopen/selectById/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
