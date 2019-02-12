@@ -36,7 +36,7 @@ public class CertBorrowStatusMessageConsumerInving implements RocketMQListener<M
 
     Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerInving.class);
 
-    private String thisMessName = "散标状态信息推送";
+    private String thisMessName = "散标状态信息推送_投资中";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Override
