@@ -593,7 +593,12 @@ public class BankCallController extends BaseController {
                 // 发送前插入日志记录
                 this.payLogService.insertChinapnrSendLog(bean);
                 String result = api.callChinaPnrApi(bean);
-
+                // mod by nixiaoling 20140128 优化pay工程出现504 时候不报空指针，打出error级别日志 start
+                if(StringUtils.isEmpty(result)) {
+                    logger.error("txtCode：" + bean.getTxCode()+",订单号："+logOrderId);
+                    return ret;
+                }
+                //mod by nixiaoling 20140128 优化pay工程出现504 时候不报空指针，打出error级别日志 end
                 Map<String, String> mapParam;
                 try {
                     mapParam = new ObjectMapper().readValue(result, new TypeReference<Map<String, String>>() {

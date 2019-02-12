@@ -622,45 +622,33 @@ public class NewAgreementController extends BaseTradeController{
                         //下载老版本协议
                         isAgreements = true;
                     }
-                    if (isAgreements) {
-                        NewAgreementBean newAgreementBean = new NewAgreementBean("《债权转让协议》" + hjhDebtCreditTender.getAssignOrderDate(),
-                                /*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +*/
-                                systemConfig.getAppFrontHost() +
-                                        TRANS_FER_AGREEMENT_PATH + "?nid=" + hjhDebtCreditTender.getId() + "&borrowType=" + borrowType + "&userId=" + userId);
-
-                        list.add(newAgreementBean);
-                    }
-                    if (!hjhDebtCreditTender.getInvestOrderId().equals(hjhDebtCreditTender.getSellOrderId())) {
-                        // 债转承接信息
-                        hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(hjhDebtCreditTender.getSellOrderId());
-                    } else {
-                        investOrderId = hjhDebtCreditTender.getInvestOrderId();
-                    }
+                }
+                if (isAgreements) {
                     NewAgreementBean newAgreementBean = new NewAgreementBean("《债权转让协议》" + hjhDebtCreditTender.getAssignOrderDate(),
                             /*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +*/
                             systemConfig.getAppFrontHost() +
                                     TRANS_FER_AGREEMENT_PATH + "?nid=" + hjhDebtCreditTender.getId() + "&borrowType=" + borrowType + "&userId=" + userId);
 
                     list.add(newAgreementBean);
-                    if (!hjhDebtCreditTender.getInvestOrderId().equals(hjhDebtCreditTender.getSellOrderId())) {
-                        // 债转承接信息
-                        hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(hjhDebtCreditTender.getSellOrderId());
-                    } else {
-                        investOrderId = hjhDebtCreditTender.getInvestOrderId();
-                    }
+                }
+                if (!hjhDebtCreditTender.getInvestOrderId().equals(hjhDebtCreditTender.getSellOrderId())) {
+                    // 债转承接信息
+                    hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(hjhDebtCreditTender.getSellOrderId());
+                } else {
+                    investOrderId = hjhDebtCreditTender.getInvestOrderId();
                 }
             }
             
             /*原 BorrowTender borrowTender=agreementService.getBorrowTenderByNid(investOrderId); 使用 criteria.andNidEqualTo(nid);*/
             //现 获取用户出借信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
-            List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(investOrderId);
+            List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(investOrderId);//居间协议
             BorrowTenderVO borrowTender = null;
             if(CollectionUtils.isNotEmpty(tenderList)){
             	borrowTender = tenderList.get(0);
             } 
             if(borrowTender != null){
                 boolean isAgreementsBorrow = false;//是否生成居间协议
-                List<TenderAgreementVO> tenderAgreementsNid = createAgreementService.selectTenderAgreementByNid(nid);//债权转让协议
+                List<TenderAgreementVO> tenderAgreementsNid = createAgreementService.selectTenderAgreementByNid(investOrderId);//居间协议
                 if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
                     TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
                     Integer fddStatus = tenderAgreement.getStatus();
@@ -669,7 +657,7 @@ public class NewAgreementController extends BaseTradeController{
                         isAgreementsBorrow = true;
                     }
                 }else{
-                    BorrowRecoverVO borrowRecoverVO = nifaContractEssenceMessageService.selectBorrowRecover(nid);
+                    BorrowRecoverVO borrowRecoverVO = nifaContractEssenceMessageService.selectBorrowRecover(investOrderId);
                     int addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
                     logger.info("---------------------------------------居间协议addTime:"+addTime);
                     /**
@@ -744,7 +732,7 @@ public class NewAgreementController extends BaseTradeController{
             } 
             if(borrowTender != null){
                 boolean isAgreementsBorrow = false;//是否生成居间协议
-                List<TenderAgreementVO> tenderAgreementsBo = createAgreementService.selectTenderAgreementByNid(nid);//债权转让协议
+                List<TenderAgreementVO> tenderAgreementsBo = createAgreementService.selectTenderAgreementByNid(creditTender.getCreditTenderNid());//居间协议
                 if(tenderAgreementsBo!=null && tenderAgreementsBo.size()>0){
                     TenderAgreementVO tenderAgreement = tenderAgreementsBo.get(0);
                     Integer fddStatus = tenderAgreement.getStatus();
@@ -753,7 +741,7 @@ public class NewAgreementController extends BaseTradeController{
                         isAgreementsBorrow = true;
                     }
                 }else{
-                    BorrowRecoverVO borrowRecoverVO = nifaContractEssenceMessageService.selectBorrowRecover(nid);
+                    BorrowRecoverVO borrowRecoverVO = nifaContractEssenceMessageService.selectBorrowRecover(creditTender.getCreditTenderNid());
                     int addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
                     logger.info("---------------------------------------居间协议addTime:"+addTime);
                     /**
