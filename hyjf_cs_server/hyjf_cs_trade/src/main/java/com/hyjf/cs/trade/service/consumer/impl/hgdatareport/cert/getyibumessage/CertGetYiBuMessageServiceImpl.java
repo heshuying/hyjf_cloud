@@ -61,7 +61,7 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
         strUrl.append("&batchNum=");
         strUrl.append(entity.getBatchNum());
         //get 请求方式
-        String rtnMsg = CertSendUtils.getReq(strUrl.toString());
+        String rtnMsg = CertSendUtils.getReq(systemConfig.getCertCrtpath(),strUrl.toString());
         logger.info("[查询批次数据入库消息] 的返回结果为:"+rtnMsg);
         CertLogVO certLog =getCertLogById(certLogId);
         CertLogRequestBean requestBean = new CertLogRequestBean();
