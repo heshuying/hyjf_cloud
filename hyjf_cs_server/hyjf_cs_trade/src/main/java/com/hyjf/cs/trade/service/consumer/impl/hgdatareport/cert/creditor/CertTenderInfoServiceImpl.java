@@ -164,7 +164,6 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
     public String dateFormatTransformation(Date dateRapay, String flg) {
         if (flg.equals("H")) {
             //代表获取有时分秒
-//            GetDate
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateStr = sdf.format(dateRapay);
             return dateStr;
@@ -177,28 +176,6 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
         }
         return null;
     }
-    /**
-     * 获取放款信息
-     *
-     * @param tenderNid
-     * @param borrowNid
-     * @return
-     */
-/*    private BorrowRecover getRecoverDateByTenderNid(String tenderNid, String borrowNid,String accedeOrderId) {
-        BorrowRecoverExample example = new BorrowRecoverExample();
-        BorrowRecoverExample.Criteria cra = example.createCriteria();
-        cra.andBorrowNidEqualTo(borrowNid);
-        cra.andNidEqualTo(tenderNid);
-        if(StringUtils.isNotBlank(accedeOrderId)){
-            cra.andAccedeOrderIdEqualTo(accedeOrderId);
-        }
-        List<BorrowRecover> borrowRecoverList = borrowRecoverMapper.selectByExample(example);
-        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
-            return borrowRecoverList.get(0);
-        }
-        return null;
-    }*/
-
 
     /**
      * 计息日+30天

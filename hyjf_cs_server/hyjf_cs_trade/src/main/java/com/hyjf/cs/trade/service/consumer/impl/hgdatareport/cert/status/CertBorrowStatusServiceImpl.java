@@ -14,8 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +54,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
             //标的还款信息
             BorrowRepayVO borrowRepay = amTradeClient.getBorrowRepay(borrowNid);
             //标的放款信息
-            BorrowRecoverVO borrowRecover =amTradeClient.selectBorrowRecoverByNid(borrowNid);
+            //BorrowRecoverVO borrowRecover =amTradeClient.selectBorrowRecoverByNid(borrowNid);
             if (null != borrow) {
                 Map<String, Object> param = new HashMap<String, Object>();
                 //判断标的状态 = 9 的,再报送一次 添加判断=9
@@ -72,7 +70,6 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productStatus = "6";
                     //发标时间
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
-
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {
                     //已还款
@@ -132,23 +129,6 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
         param.put("productDate", productDate);
         return param;
 
-    }
-
-    /**
-     * 日期转换,数据存的int10的时间戳
-     *
-     * @param repayTime
-     * @return
-     */
-    private String dateFormatTransformation(String repayTime) {
-        if (StringUtils.isNotBlank(repayTime)) {
-            long intT = Long.parseLong(repayTime) * 1000;
-            Date dateRapay = new Date(intT);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String dateStr = sdf.format(dateRapay);
-            return dateStr;
-        }
-        return null;
     }
 
     /**
