@@ -221,6 +221,7 @@ public class DataSet2ExcelSXSSFHelper<T> {
             workbook.write(out);
             out.flush();
             out.close();
+            workbook.dispose();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
