@@ -163,8 +163,8 @@ public class BorrowUserServiceImpl extends BaseServiceImpl implements BorrowUser
 	 * @return
 	 */
 	@Override
-	public int getTotalLoanBalanceNum(Date time) {
-		return bifaOperationReportJobCustomizeMapper.getLoanBalanceNum(time);
+	public int getTotalLoanBalanceNum() {
+		return bifaOperationReportJobCustomizeMapper.getLoanBalanceNum();
 	}
 
 	/**

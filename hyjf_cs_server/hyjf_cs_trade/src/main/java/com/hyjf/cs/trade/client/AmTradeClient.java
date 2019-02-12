@@ -2670,10 +2670,9 @@ public interface AmTradeClient {
 
     /**
      * 累计借贷余额笔数
-     * @param time
      * @return
      */
-    int getTotalLoanBalanceNum(Date time);
+    int getTotalLoanBalanceNum();
 
     /**
      * 累计借款人

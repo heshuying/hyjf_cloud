@@ -147,9 +147,9 @@ public class BifaDataReportController extends BaseController {
      * 累计借贷余额笔数
      * @return
      */
-    @PostMapping("/getTotalLoanBalanceNum")
-    public int getTotalLoanBalanceNum(@RequestBody Date time){
-        return borrowUserService.getTotalLoanBalanceNum(time);
+    @GetMapping("/getTotalLoanBalanceNum")
+    public int getTotalLoanBalanceNum(){
+        return borrowUserService.getTotalLoanBalanceNum();
     }
 
     /**
