@@ -155,6 +155,13 @@ public class BatchBorrowRecoverRequest extends BasePage{
      */
     private String nameClass;
 
+    /*------------add by LSY START----------------------------*/
+    /**
+     * 资产来源 检索条件
+     */
+    private String instCodeSrch;
+    /*------------add by LSY START----------------------------*/
+
     /*---add by LSY START-----*/
     /***
      * 资产来源
@@ -206,6 +213,14 @@ public class BatchBorrowRecoverRequest extends BasePage{
     private Integer limitStart;
 
     private Integer limitEnd;
+
+    public String getInstCodeSrch() {
+        return instCodeSrch;
+    }
+
+    public void setInstCodeSrch(String instCodeSrch) {
+        this.instCodeSrch = instCodeSrch;
+    }
 
     public Integer getLimitStart() {
         return limitStart;
