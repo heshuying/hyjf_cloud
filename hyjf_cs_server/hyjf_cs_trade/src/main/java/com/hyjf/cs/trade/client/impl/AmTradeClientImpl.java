@@ -370,6 +370,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public BorrowAndInfoVO doSelectBorrowByNid(String borrowNid) {
+        String url = urlBase + "borrow/doGetBorrow/" + borrowNid;
+        BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
     /**
      * 取得自动出借用加入计划列表
      *
@@ -519,6 +529,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanVO getPlanByNid(String borrowNid) {
         String url = urlBase + "hjhPlan/getHjhPlanByPlanNid/" + borrowNid;
+        com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResult();
+    }
+
+    /**
+     * 根据标的编号，查询汇计划信息
+     * @return
+     * @author liubin
+     */
+    @Override
+    public HjhPlanVO doGetPlanByNid(String borrowNid) {
+        String url = urlBase + "hjhPlan/doGetHjhPlanByPlanNid/" + borrowNid;
         com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;

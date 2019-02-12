@@ -125,6 +125,13 @@ public interface AmTradeClient {
     BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
+     * 取得borrow数据（主库）
+     * @param borrowNid
+     * @return
+     */
+    BorrowAndInfoVO doSelectBorrowByNid(String borrowNid);
+
+    /**
      * 取得自动出借用加入计划列表
      * @author liubin
      * @return
@@ -186,6 +193,13 @@ public interface AmTradeClient {
      * @return
      */
     HjhPlanVO getPlanByNid(String borrowNid) ;
+
+    /**
+     * 根据标的编号，查询汇计划信息(主库)
+     * @author liubin
+     * @return
+     */
+    HjhPlanVO doGetPlanByNid(String borrowNid) ;
 
     /**
      * 根据creditNid查询债转信息
