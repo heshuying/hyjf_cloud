@@ -82,7 +82,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
             // 设置共通参数
             bean = setCommonParam(bean);
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error("设置参数失败",e);
         }
         Map<String, String> params = getBankParam(bean);
         // 插入mongo
