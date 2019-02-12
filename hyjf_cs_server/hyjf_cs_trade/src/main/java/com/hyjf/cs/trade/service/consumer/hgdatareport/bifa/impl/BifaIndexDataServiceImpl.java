@@ -305,7 +305,6 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
 
     private BifaIndexUserInfoBeanVO buildBifaIndexUserInfoBean(BorrowAndInfoVO bean) {
         BifaIndexUserInfoBeanVO result = new BifaIndexUserInfoBeanVO();
-        result.setUserId(bean.getUserId());
         result.setTrueName(bean.getTruename());
         result.setIdCard(bean.getIdCard());
         result.setBorrowBeginDate(GetDate.times10toStrYYYYMMDD(bean.getRecoverLastTime()));
