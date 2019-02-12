@@ -49,6 +49,9 @@ import java.util.UUID;
 @Service
 public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoTenderService {
     private String logHeader = "【智投自动出借任务】";
+    private static final Integer OK = 1; // 投资结果是否成功(1：出借成功)
+    private static final Integer FAIL = 2;// 投资结果是否成功(2：出借失败)
+    private static final Integer NO_TENDER = 0;// 投资结果是否成功(0:未出借)
 
     @Value("${hyjf.bank.instcode}")
     private String instCode;
@@ -100,8 +103,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * @return
      */
     @Override
-    public boolean autoTenderForOneAccede(HjhAccedeVO hjhAccede) {
+    public Integer autoTenderForOneAccede(HjhAccedeVO hjhAccede) {
         String logMsgHeader = logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId() + "]";
+
         //汇计划加入订单号
         String accedeOrderId = hjhAccede.getAccedeOrderId();
         //银行交易前，异常订单状态设定，和系统异常
@@ -157,17 +161,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(hjhAccede.getUserId());
         if (hjhUserAuth == null || StringUtils.isEmpty(hjhUserAuth.getAutoOrderId())) {
             logger.error(logMsgHeader + "未获取到出借授权码  " + hjhAccede.getUserId());
-            return false;
+            return FAIL;
         }
         if (StringUtils.isEmpty(hjhUserAuth.getAutoCreditOrderId())) {
             logger.error(logMsgHeader + "未获取到债转授权码  " + hjhAccede.getUserId());
-            return false;
+            return FAIL;
         }
         //获取出借账户
         BankOpenAccountVO bankOpenAccount = this.amUserClient.selectBankAccountById(hjhAccede.getUserId());
         if (bankOpenAccount == null) {
             logger.error(logMsgHeader + "用户没开户 " + hjhAccede.getUserId());
-            return false;
+            return FAIL;
         }
 
         UserInfoVO usersInfo = amUserClient.findUsersInfoById(hjhAccede.getUserId());
@@ -176,7 +180,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
                 if (usersInfo.getRoleId() != 1) {// 非出借用户
                     logger.error(logMsgHeader + "仅限出借人进行出借 " + hjhAccede.getUserId());
-                    return false;
+                    return FAIL;
                 }
             }
         }
@@ -210,7 +214,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             // 连续10次出投人相同后，换个计划订单投
             if (serialFaileCount >= CustomConstants.HJH_SERIAL_FAILE_COUNT) {
                 logger.error(logMsgHeader + "借款人/出让人和计划订单的出借人连续相同次数超过" + CustomConstants.HJH_SERIAL_FAILE_COUNT + "次,跳过该计划订单");
-                return false;
+                return NO_TENDER;
             }
             logger.info(logMsgHeader + "连续相同次数" + serialFaileCount + "次");
             // 取债转标的（优先） (连续5次不能投债转标时,取原始标的)
@@ -253,7 +257,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
             // 没有可出借标的
             if (borrowStr == null || borrowFlag == null) {
-                return false;
+                return NO_TENDER;
             }
 
             // 转为borrow对象
@@ -262,17 +266,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             // 标的编号为空
             if (redisBorrow.getBorrowNid() == null) {
                 logger.error(logMsgHeader + "队列的标的编号为空！");
-                return false;
+                return FAIL;
             }
 
             // 标的无可投余额
             if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) <= 0) {
                 logger.error(logMsgHeader + redisBorrow.getBorrowNid() + " 标的可投金额为 " + redisBorrow.getBorrowAccountWait());
-                return false;
+                return FAIL;
             }
             /*******************************************/
 
-            boolean result = false;
+            boolean noPushRedis = false;
             boolean isLast = false;
             String borrowNidForCredit = "";
             try {
@@ -295,7 +299,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     HjhDebtCreditVO credit = this.amTradeClient.doSelectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid()); // 从主库
                     if (credit == null) {
                         logger.error(logMsgHeader + "债转号不存在 " + redisBorrow.getBorrowNid());
-                        return false;
+                        return FAIL;
                     }
 
                     /** 4.3. 校验是否可以债转	 */
@@ -305,7 +309,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         String redisStr = JSON.toJSONString(redisBorrow);
                         RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的出借。
                         serialFaileCount++;
-                        result = true;
+                        noPushRedis = true;
                         continue;
                     }
 
@@ -313,7 +317,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     if (credit.getCreditStatus().compareTo(3) == 0) {
                         //3承接终止
                         logger.warn(logMsgHeader + "债转标的" + redisBorrow.getBorrowNid() + "被停止债转，不再推回队列。");
-                        result = true;
+                        noPushRedis = true;
                         continue;
                     }
 
@@ -322,7 +326,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     if (!tranactionSetFlag) {//设置失败
                         //承接终止
                         logger.warn(logMsgHeader + "债转标的" + redisBorrow.getBorrowNid() + "发生还款（Redis），被停止债转，不再推回队列。");
-                        result = true;
+                        noPushRedis = true;
                         continue;
                     }
 
@@ -332,7 +336,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     BankOpenAccountVO sellerBankOpenAccount = this.amUserClient.selectBankAccountById(credit.getUserId());
                     if (sellerBankOpenAccount == null) {
                         logger.error(logMsgHeader + "转出用户没开户 " + credit.getUserId());
-                        return false;
+                        return FAIL;
                     }
                     String sellerUsrcustid = sellerBankOpenAccount.getAccount();//出让用户的江西银行电子账号
 
@@ -363,7 +367,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.error(logMsgHeader + " 承接支付金额" + assignPay + ">当前计划订单的剩余可投金额" + hjhAccedeCheck.getAvailableInvestAccount()
                                 + "，承接操作不可，承接失败！");
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
-                        return false;
+                        return FAIL;
                     }
 
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
@@ -380,16 +384,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回空,债转编号：" + credit.getBorrowNid() + "银行订单号：" + orderId);
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
-                        result = true;
-                        return false;
+                        noPushRedis = true;
+                        return FAIL;
                     }
                     if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回 " + bean.getRetCode()
                                 + " 债转编号：" + credit.getBorrowNid() + " 出借订单号：" + bean.getLogOrderId());
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
-                        result = true;
-                        return false;
+                        noPushRedis = true;
+                        return FAIL;
                     }
                     logger.info(logMsgHeader + " 银行自动购买债权接口成功调用后  " + credit.getBorrowNid());
 
@@ -410,7 +414,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "承后的可承金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可承余额：" + redisBorrow.getBorrowAccountWait());
                     // 不再操作队列
-                    result = true;
+                    noPushRedis = true;
 
                     /** 4.6. 更新同步数据库	 */
                     try {
@@ -421,7 +425,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
                                 , e);
-                        return false;
+                        return FAIL;
                     }
 
                     /** 4.7. 完全承接时，结束债券  */
@@ -474,7 +478,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(redisBorrow.getBorrowNid());
                     if (borrow == null) {
                         logger.error(logMsgHeader + "标的号不存在 " + redisBorrow.getBorrowNid());
-                        result = true;
+                        noPushRedis = true;
                         continue;
                     }
 
@@ -484,7 +488,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.warn(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "已经投资完成。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
                                 + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
-                        result = true;
+                        noPushRedis = true;
                         continue;
                     }
 
@@ -492,7 +496,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.error(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "DB和redis可投金额不一致。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
                                 + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
-                        result = true;
+                        noPushRedis = true;
                         throw new Exception(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "DB和redis可投金额不一致。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
                                 + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
@@ -504,7 +508,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         String redisStr = JSON.toJSONString(redisBorrow);
                         RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的出借。
                         serialFaileCount++;
-                        result = true;
+                        noPushRedis = true;
                         continue;
                     }
                     //防止钱不够也出借校验
@@ -513,7 +517,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.error(logMsgHeader + " 出借支付金额" + realAmoust + ">当前计划订单的剩余可投金额" + hjhAccedeCheck.getAvailableInvestAccount()
                                 + "，出借操作不可，出借失败！");
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
-                        return false;
+                        return FAIL;
                     }
 
                     /** 5.4. 调用银行自动投标申请接口	 */
@@ -529,16 +533,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回空,标的编号：" + borrow.getBorrowNid());
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
-                        result = true;
-                        return false;
+                        noPushRedis = true;
+                        return FAIL;
                     }
                     if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回 " + bean.getRetCode()
                                 + " 标的编号：" + borrow.getBorrowNid() + " 出借订单号：" + bean.getLogOrderId());
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
-                        result = true;
-                        return false;
+                        noPushRedis = true;
+                        return FAIL;
                     }
 
                     logger.info(logMsgHeader + " 银行自动投标申请接口成功调用后  " + borrow.getBorrowNid());
@@ -577,7 +581,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "投后的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     // 不再操作队列
-                    result = true;
+                    noPushRedis = true;
 
                     /** 5.6. 更新同步数据库	 */
                     // 单笔标的出借
@@ -588,21 +592,21 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
                                 , e);
-                        return false;
+                        return FAIL;
                     }
                 } else {
                     logger.error(logMsgHeader + "该计划没有可投标的！");
-                    return false;
+                    return FAIL;
                 }
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                 logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
                         , e);
-                return false;
+                return FAIL;
             } finally {
                 //删除债转中的redis，可以还款
                 RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNidForCredit);
-                if (result) {
+                if (noPushRedis) {
                 } else {
                     String redisStr = JSON.toJSONString(redisBorrow);
                     RedisUtils.rightpush(queueName, redisStr);//redis相应计划//可能放两遍
@@ -622,7 +626,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             // 1复投 不更新
         }
 
-        return true;
+        return OK;
     }
 
     /**

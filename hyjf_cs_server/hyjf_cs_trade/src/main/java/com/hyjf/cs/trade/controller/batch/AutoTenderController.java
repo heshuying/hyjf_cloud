@@ -48,14 +48,14 @@ public class AutoTenderController extends BaseTradeController {
 
         // ********变量定义
         logger.info(logHeader + "start...");
-        boolean flag = false; // 执行结果是否成功
+        Integer result = 0; // 投资结果是否成功(0:未出借，1：出借成功，2：出借失败)
         List noAssetsPlanList = new ArrayList(); // 无资产的智投List
 
         // ********取得自动出借用加入计划列表（改用消息队列要防止重复拉去）
         List<HjhAccedeVO> hjhAccedes = this.autoTenderService.selectPlanJoinList();
         if (hjhAccedes == null) {
             logger.info(logHeader + "无智投订单 end...");
-            return new BooleanResponse(flag);
+            return new BooleanResponse(true);
         }
         logger.info(logHeader + "取得智投订单数:" + hjhAccedes.size());
 
@@ -83,18 +83,20 @@ public class AutoTenderController extends BaseTradeController {
             try {
                 logger.info(logMsgHeader + " 智投出借开始。");
                 // 汇计划加入订单 自动出借/复投
-                flag = this.autoTenderService.autoTenderForOneAccede(hjhAccede);
-                if (!flag) {
-                    logger.error(logMsgHeader + " 智投出借失败！");
-                } else {
+                result = this.autoTenderService.autoTenderForOneAccede(hjhAccede);
+                if (result.compareTo(0) == 0) {
+                    logger.warn(logMsgHeader + " 智投未出借。");
+                } else if(result.compareTo(1) == 0){
                     logger.info(logMsgHeader + " 智投出借成功。");
+                } else {
+                    logger.error(logMsgHeader + " 智投出借失败！");
                 }
             } catch (Exception e) {
                 logger.error(logMsgHeader + " 智投出借异常！", e);
             }
         }
         logger.info(logHeader + "end...");
-        return new BooleanResponse(flag);
+        return new BooleanResponse(true);
     }
 
     /**
