@@ -156,7 +156,7 @@ public class BifaDataReportController extends BaseController {
      * 累计借款人
      * @return
      */
-    @PostMapping("/countBorrowUser")
+    @GetMapping("/countBorrowUser")
     public int countBorrowUser(){
         return borrowUserService.countBorrowUser();
     }

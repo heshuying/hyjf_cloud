@@ -5,6 +5,7 @@ package com.hyjf.batch.frame.service;
 
 import com.hyjf.batch.frame.exception.ServiceException;
 import com.hyjf.batch.frame.pojo.TaskInfo;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -37,6 +38,7 @@ public class TaskService {
 	 */
 	public List<TaskInfo> list() {
 		List<TaskInfo> list = new ArrayList<>();
+		String df = "yyyy-MM-dd HH:mm:ss";
 
 		try {
 			for (String groupJob : scheduler.getJobGroupNames()) {
@@ -69,6 +71,18 @@ public class TaskService {
 							info.setJobStatus(triggerState.name());
 							info.setCronExpression(cronExpression);
 							info.setCreateTime(createTime);
+
+							if (trigger.getNextFireTime()!=null){
+								info.setNextFireTime(GetDate.formatDate(trigger.getNextFireTime(),df));
+							}else {
+								info.setNextFireTime("--");
+							}
+
+							if (trigger.getPreviousFireTime()!=null){
+								info.setPrevFireTime(GetDate.formatDate(trigger.getPreviousFireTime(),df));
+							}else {
+								info.setPrevFireTime("--");
+							}
 
 							list.add(info);
 						} catch (Exception e) {

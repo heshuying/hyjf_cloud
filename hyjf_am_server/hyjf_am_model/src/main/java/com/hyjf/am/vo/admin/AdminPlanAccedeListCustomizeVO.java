@@ -306,8 +306,23 @@ public class AdminPlanAccedeListCustomizeVO {
 	 * 计算用已出借金额
 	 */
 	private BigDecimal jalreadyInvest;
-	
-	
+
+	/**
+	 * 项目编号
+	 */
+	private String borrowNid;
+	/**
+	 * 状态
+	 */
+	private String status;
+	/**
+	 * 是否标的的最后一笔投资
+	 */
+	private String isLast;
+	/**
+	 * 更新时间
+	 */
+	private String updateTime;
 	
 	public String getAttribute() {
 		return attribute;
@@ -809,16 +824,49 @@ public class AdminPlanAccedeListCustomizeVO {
 		this.sumFairValue = sumFairValue;
 	}
 	public String getDebtLockPeriodExcel() {
-		String dateUnit="";
-        if (isMonth==0){
-            dateUnit="天";
-        }else if(isMonth==1){
-            dateUnit="个月";
-        }
-		return debtLockPeriod+dateUnit;
+		String dateUnit = "";
+		if (null != isMonth) {
+			if (isMonth == 0) {
+				dateUnit = "天";
+			} else if (isMonth == 1) {
+				dateUnit = "个月";
+			}
+		}
+		return debtLockPeriod + dateUnit;
 	}
 	public void setDebtLockPeriodExcel(String debtLockPeriodExcel) {
 		this.debtLockPeriodExcel = debtLockPeriodExcel;
 	}
-	
+
+	public String getBorrowNid() {
+		return borrowNid;
+	}
+
+	public void setBorrowNid(String borrowNid) {
+		this.borrowNid = borrowNid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getIsLast() {
+		return isLast;
+	}
+
+	public void setIsLast(String isLast) {
+		this.isLast = isLast;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
+	}
 }
