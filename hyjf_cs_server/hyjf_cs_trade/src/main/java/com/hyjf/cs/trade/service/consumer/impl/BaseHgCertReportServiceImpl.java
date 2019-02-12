@@ -87,7 +87,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         Map<String, String> params = getBankParam(bean);
         // 插入mongo
         this.insertCertReport(bean);
-        String rtnMsg = CertSendUtils.postRequest(bean.getUrl(), params );
+        String rtnMsg = CertSendUtils.postRequest(systemConfig.getCertCrtpath(),bean.getUrl(), params );
         logger.info("返回结果为:"+rtnMsg);
         bean = setResult(bean,rtnMsg);
         // 如果错误的话  保存到错误表里面

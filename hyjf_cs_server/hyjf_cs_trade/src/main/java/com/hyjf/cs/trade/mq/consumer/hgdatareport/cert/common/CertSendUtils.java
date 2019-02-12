@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common;
 
-import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
@@ -23,13 +23,14 @@ import java.util.Set;
 public class CertSendUtils {
 
 	static Logger logger = LoggerFactory.getLogger(CertSendUtils.class);
-
+	private static String thisMessName = "应急中心数据上报";
+	private static String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 	public static PoolingHttpClientConnectionManager  poolConnManager=null;
 
-	public static String getReq(String url) {
-		SystemConfig systemConfig = new SystemConfig();
+
+	public static String getReq(String certCrtpath,String url) {
 		CertSSLProtocolSocketFactory certSSLProtocolSocketFactory = new CertSSLProtocolSocketFactory();
-		CertSSLProtocolSocketFactory.crtPath = systemConfig.getCertCrtpath();
+		CertSSLProtocolSocketFactory.crtPath = certCrtpath;
 		Protocol myhttps = new Protocol("https",certSSLProtocolSocketFactory , 443);
 		Protocol.registerProtocol("https", myhttps);
 		String strResult = "";
@@ -59,10 +60,10 @@ public class CertSendUtils {
 		return removeSlash(strResult);
 	}
 
-	public static String postRequest(String url, Map<String,String> param ) {
-		SystemConfig systemConfig = new SystemConfig();
+	public static String postRequest(String certCrtpath,String url, Map<String,String> param ) {
+
 		CertSSLProtocolSocketFactory certSSLProtocolSocketFactory = new CertSSLProtocolSocketFactory();
-		CertSSLProtocolSocketFactory.crtPath = systemConfig.getCertCrtpath();
+		CertSSLProtocolSocketFactory.crtPath = certCrtpath ;
 		Protocol myhttps = new Protocol("https",certSSLProtocolSocketFactory , 443);
 		Protocol.registerProtocol("https", myhttps);
 		String strResult = "";
@@ -103,8 +104,7 @@ public class CertSendUtils {
 				strResult += tmp + "\r\n";
 			}
 		} catch (Exception e) {
-
-			e.printStackTrace();
+			logger.info(logHeader,e);
 		}
 		return removeSlash(strResult);
 	}
