@@ -36,9 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 自动出借
@@ -270,7 +268,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             }
 
             // 标的无可投余额
-            if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) <= 0) {
+            if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) < 0) {
                 logger.error(logMsgHeader + redisBorrow.getBorrowNid() + " 标的可投金额为 " + redisBorrow.getBorrowAccountWait());
                 return FAIL;
             }
@@ -339,6 +337,14 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         return FAIL;
                     }
                     String sellerUsrcustid = sellerBankOpenAccount.getAccount();//出让用户的江西银行电子账号
+
+                    /** 4.7. 完全承接时，结束债券  */
+                    if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
+                        requestHjhCreditEnd(accedeOrderId, redisBorrow.getBorrowNid(), sellerUsrcustid);
+                        logger.info(logMsgHeader + "被承接标的" + redisBorrow.getBorrowNid() + "银行结束债权成功。");
+                        noPushRedis = true;
+                        continue;
+                    }
 
                     // 生成承接日志
                     String orderId = GetOrderIdUtils.getOrderId2(hjhAccede.getUserId());
@@ -430,33 +436,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     /** 4.7. 完全承接时，结束债券  */
                     if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
-                        // add 合规数据上报 埋点 liubin 20181122 start
-                        // 推送数据到MQ 承接（完全）
-                        params = new JSONObject();
-                        params.put("creditNid", credit.getCreditNid());
-                        params.put("flag", "2"); //1（散）2（智投）
-                        params.put("status", "2"); //2承接（完全）
-                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
-                                MQConstant.HG_REPORT_DELAY_LEVEL);
-                        // add 合规数据上报 埋点 liubin 20181122 end
-
-                        //获取出让人投标成功的授权号
-                        String sellerAuthCode = this.amTradeClient.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
-                        if (sellerAuthCode == null) {
-                            logger.info(logMsgHeader + "未取得出让人" + credit.getUserId() + "的债权类型" +
-                                    credit.getSourceType() + "(1原始0原始)的授权码，结束债权失败。");
-                        }
-                        //调用银行结束债权接口
-                        boolean ret = this.amTradeClient.requestDebtEnd(credit, sellerUsrcustid, sellerAuthCode) > 0 ? true : false;
-                        if (!ret) {
-                            logger.info(logMsgHeader + "被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权失败。");
-                        }
-                        logger.info(logMsgHeader + "被承接标的" + redisBorrow.getBorrowNid() + "被完全承接，银行结束债权成功。");
-                        //银行结束债权后，更新债权表为完全承接
-                        ret = this.amTradeClient.updateHjhDebtCreditForEnd(credit) > 0 ? true : false;
-                        if (!ret) {
-                            logger.info(logMsgHeader + "银行结束债权后，更新债权表为完全承接失败。");
-                        }
+                        requestHjhCreditEnd(accedeOrderId, credit.getCreditNid(), sellerUsrcustid);
+                        logger.info(logMsgHeader + "被承接标的" + credit.getCreditNid() + "银行结束债权成功。");
                     }
                 } else if (borrowFlag.equals(RedisConstants.HJH_BORROW_INVEST)) {
                     /** 5. 自动出借原始标的（出借）	 */
@@ -881,5 +862,56 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
         hjhPlanBorrowTmpVO.setUpdateTime(GetDate.getDate());
         return this.amTradeClient.updateHjhPlanBorrowTmp(hjhPlanBorrowTmpVO) > 0 ? true : false;
+    }
+
+    /**
+     * 请求结束债权（插入结束债权任务）
+     * @param accedeOrderId
+     * @param creditNid
+     * @param sellerUsrcustid
+     * @throws Exception
+     */
+    private void requestHjhCreditEnd(String accedeOrderId, String creditNid, String sellerUsrcustid) throws Exception {
+        String logMsgHeader = "【请求结束债权(智投完全承接)】";
+        logger.info(logMsgHeader + "----------开始--------- 债转号：" + creditNid);
+
+        // 1.获取债转详情	 */
+        HjhDebtCreditVO credit = this.amTradeClient.doSelectHjhDebtCreditByCreditNid(creditNid); // 从主库
+        if (credit == null) {
+            throw new RuntimeException(logMsgHeader + "债转号不存在 "+creditNid);
+        }
+        if (credit.getCreditAccountWait().compareTo(BigDecimal.ZERO) != 0){ // 待承接金额不为0时
+            throw new RuntimeException(logMsgHeader + "债转号" + creditNid + "未被完全承接，不能结束债权。未被承接金额： " + credit.getCreditAccountWait());
+        }
+
+        // 2.获取出让人投标成功的授权号
+        String sellerAuthCode = this.amTradeClient.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
+        if (sellerAuthCode == null) {
+            throw new RuntimeException(logMsgHeader + "未取得出让人" + credit.getUserId() + "的债权类型" +
+                    credit.getSourceType() + "(0非原始 1原始)的授权码，结束债权失败。");
+        }
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 承接（完全）
+        JSONObject params = new JSONObject();
+        params.put("creditNid", credit.getCreditNid());
+        params.put("flag", "2"); //1（散）2（智投）
+        params.put("status", "2"); //2承接（完全）
+        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                MQConstant.HG_REPORT_DELAY_LEVEL);
+        // add 合规数据上报 埋点 liubin 20181122 end
+
+        // 3.插入结束债权任务
+        boolean ret = this.amTradeClient.requestDebtEnd(credit, sellerUsrcustid, sellerAuthCode) > 0 ? true : false;
+        if (!ret) {
+            logger.info(logMsgHeader + "被承接标的" + credit.getCreditNid() + "被完全承接，银行结束债权失败。");
+        }
+
+        // 4.更新债权表为完全承接
+        ret = this.amTradeClient.updateHjhDebtCreditForEnd(credit) > 0 ? true : false;
+        if (!ret) {
+            logger.info(logMsgHeader + "银行结束债权后，更新债权表为完全承接失败。");
+        }
+        logger.info(logMsgHeader + "被承接标的" + credit.getCreditNid() + "被完全承接，银行结束债权成功。");
     }
 }
