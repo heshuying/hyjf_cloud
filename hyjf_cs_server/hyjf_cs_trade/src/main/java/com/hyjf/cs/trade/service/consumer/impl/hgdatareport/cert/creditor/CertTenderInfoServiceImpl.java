@@ -164,7 +164,7 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
     public String dateFormatTransformation(Date dateRapay, String flg) {
         if (flg.equals("H")) {
             //代表获取有时分秒
-            GetDate
+//            GetDate
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String dateStr = sdf.format(dateRapay);
             return dateStr;
