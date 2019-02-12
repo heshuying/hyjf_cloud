@@ -474,6 +474,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.error(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "DB和redis可投金额不一致。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
                                 + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
+                        String redisStr = JSON.toJSONString(redisBorrow);
+                        logger.error(logMsgHeader + "对应：1.确认金额不一致原因后，redis的"+queueName+"插入“"+redisStr+"”。2.智投订单状态 90改成0");
                         noPushRedis = true;
                         throw new Exception(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "DB和redis可投金额不一致。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
