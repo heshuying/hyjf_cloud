@@ -101,7 +101,7 @@ public class BifaDataReportController extends BaseController {
      * @return
      */
     @GetMapping("/getBorrowTenderAccountSum/{startDate}/{endDate}")
-    public UserIdAccountSumBeanResponse getBorrowTenderAccountSum(Integer startDate, Integer endDate){
+    public UserIdAccountSumBeanResponse getBorrowTenderAccountSum(@PathVariable Integer startDate,@PathVariable Integer endDate){
         UserIdAccountSumBeanResponse response = new UserIdAccountSumBeanResponse();
         List<UserIdAccountSumBean> recordList = borrowUserService.getBorrowTenderAccountSum(startDate,endDate);
         if (CollectionUtils.isNotEmpty(recordList)){
@@ -115,7 +115,7 @@ public class BifaDataReportController extends BaseController {
      * 借款人信息
      */
     @GetMapping("/selectBorrowUserInfo/{startDate}/{endDate}")
-    public BorrowResponse selectBorrowUserInfo(Integer startDate, Integer endDate){
+    public BorrowResponse selectBorrowUserInfo(@PathVariable Integer startDate,@PathVariable Integer endDate){
         BorrowResponse response = new BorrowResponse();
         List<BorrowAndInfoVO> recordList = borrowUserService.selectBorrowUserInfo(startDate,endDate);
         if (CollectionUtils.isNotEmpty(recordList)){
