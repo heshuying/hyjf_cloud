@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.status;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -11,6 +11,8 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.status.CertBorrowStatusService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import java.util.Map;
 
 @Service
 public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl implements CertBorrowStatusService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CertBorrowStatusServiceImpl.class);
     @Autowired
     AmTradeClient amTradeClient;
     @Autowired
@@ -37,10 +41,12 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
      * @return
      */
     @Override
-    public Map<String, Object> selectBorrowByBorrowNid(String borrowNid, String statusAfter, boolean isUserInfo, boolean isOld) {
+    public Map<String, Object> selectBorrowByBorrowNid(String borrowNid, String statusAfter, boolean isUserInfo) {
+        logger.info("散标状态请求的参数为:borrowNid="+borrowNid+",statusAfter="+statusAfter+"isUserInfo="+isUserInfo);
         //标的信息
         try {
             BorrowAndInfoVO borrow =amTradeClient.selectBorrowByNid(borrowNid);
+            logger.info("散标状态上报,标的信息为:"+JSONObject.toJSONString(borrow));
             if (null == borrow) {
                 throw new Exception("散标状态推送,标的信息为空！！borrowNid:" + borrowNid);
             }
@@ -49,6 +55,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
             String productStatusDesc = "";
             // 如果是用户信息保送完完毕后,保送投资中
             if (isUserInfo) {
+                logger.info("用户信息报送完毕,报送散标状态");
                 borrow.setStatus(2);
             }
             //标的还款信息
@@ -65,12 +72,14 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getRecoverLastTime().toString());
                     productStatusDesc = "放款后（报送5还款中）";
                 } else if (borrow.getStatus() == 2) {
+                    logger.info("投资中");
                     //投资中
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
                     //发标时间
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
+                    logger.info("productStatus:"+productStatus+",productDate:"+productDate+",productStatusDesc:"+productStatusDesc);
                 } else if (borrow.getStatus() == 5) {
                     //已还款
                     //最后一笔还款完成（报送3还款结束）
@@ -92,7 +101,9 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getBorrowFullTime().toString());
                     productStatusDesc = "满标时候（报送1满标）";
                 }
+                logger.info("borrowNid:"+borrowNid+",productStatus:"+productStatus+",productDate"+productDate+",productStatusDesc:"+productStatusDesc);
                 param = putParamObject(borrowNid, productStatus, productDate, productStatusDesc);
+                logger.info("散标状态上报,组装数据完毕,数据为:"+ JSONObject.toJSONString(param));
                 return param;
 
             }
