@@ -457,6 +457,18 @@ public class DateUtils {
 		return calendar.getTime();
 	}
 	/**
+	 * 设置时间（秒）加当前系统时间
+	 * @param loginLockTime
+	 * @return
+	 */
+	public static String nowDateAddSecond(int loginLockTime) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.SECOND, loginLockTime);
+		int time = calendar.get(Calendar.HOUR_OF_DAY); // 获取当前小时
+		int min = calendar.get(Calendar.MINUTE); // 获取当前分钟
+		return time + ":" + min;
+	}
+	/**
 	 * 获取当前月的结束日期
 	 * @param date 2018-01-01:当前日日期
 	 * @return  2018-01-31
@@ -636,9 +648,5 @@ public class DateUtils {
 			e.printStackTrace();
 		}
 		return  isBefore;
-	}
-
-	public static void main(String[] args) {
-		System.out.println(differentDaysByString("1552442106","1555120506"));
 	}
 }

@@ -180,13 +180,23 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
      */
     @Override
     public int updateBankCreditEndForBatch(BankCreditEnd bankCreditEnd) {
+        int result = 0;
         BankCreditEndExample example = new BankCreditEndExample();
         example.createCriteria().andStatusEqualTo(0); // 初始
         example.setLimitStart(0);
         example.setLimitEnd(500);// 记录数限制
         example.setOrderByClause("order by id ");
-        bankCreditEnd.setUpdateTime(GetDate.getDate());
-        return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
+        // update by wgx 2019/01/31 结束债权按照主键逐条更新
+        List<BankCreditEnd> bankCreditEndList = this.bankCreditEndMapper.selectByExample(example);
+        if(bankCreditEndList == null || bankCreditEndList.size() == 0){
+            return result;
+        }
+        for(BankCreditEnd creditEnd : bankCreditEndList){
+            bankCreditEnd.setId(creditEnd.getId());
+            this.bankCreditEndMapper.updateByPrimaryKeySelective(bankCreditEnd);
+            result++;
+        }
+        return result;
     }
 
     /**
@@ -205,15 +215,24 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
 
     @Override
     public int updateBankCreditEndForStatus(String batchNo, String txDate, Integer txCounts, int status) {
+        int result = 0;
         BankCreditEndExample example = new BankCreditEndExample();
         example.createCriteria().andBatchNoEqualTo(batchNo);//批次号
         example.createCriteria().andTxDateEqualTo(txDate);//日期
-
+        // update by wgx 2019/01/31 结束债权按照主键逐条更新
+        List<BankCreditEnd> bankCreditEndList = bankCreditEndMapper.selectByExample(example);
+        if(bankCreditEndList == null || bankCreditEndList.size() == 0){
+            return result;
+        }
         BankCreditEnd bankCreditEnd = new BankCreditEnd();
         bankCreditEnd.setTxCounts(txCounts);// 添加结束债权交易总笔数 create by wgx 2018/11/16
         bankCreditEnd.setStatus(status);//批次状态
-        bankCreditEnd.setUpdateTime(GetDate.getDate());
-        return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
+        for(BankCreditEnd creditEnd: bankCreditEndList){
+            bankCreditEnd.setId(creditEnd.getId());
+            this.bankCreditEndMapper.updateByPrimaryKeySelective(bankCreditEnd);
+            result++;
+        }
+        return result;
     }
 
     /**
