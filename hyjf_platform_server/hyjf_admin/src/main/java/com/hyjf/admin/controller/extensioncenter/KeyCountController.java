@@ -83,7 +83,7 @@ public class KeyCountController extends BaseController {
 
 	}
 
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody KeyCountRequest form) throws Exception {
+/*	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody KeyCountRequest form) throws Exception {
 		// 表格sheet名称
 		String sheetName = "关键词统计";
 		// 文件名称
@@ -151,7 +151,7 @@ public class KeyCountController extends BaseController {
 		// 导出
 		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 
-	}
+	}*/
 	@ApiOperation(value = "数据导出--关键词设计", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/exportAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -180,9 +180,7 @@ public class KeyCountController extends BaseController {
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}/* else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
-		}*/
+		}
 
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
