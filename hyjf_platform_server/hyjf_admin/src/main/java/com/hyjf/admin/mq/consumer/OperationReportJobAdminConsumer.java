@@ -51,8 +51,8 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         bean.setCityGroup(cityGroup);
         List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));
         bean.setSexGroup(sexGroup);
-        List<OperationReportJobVO> ageRangeUserIds = amAdminClient.getTenderAgeByRangeList(getLastDay(cal));
-        bean.setAgeRangeUserIds(ageRangeUserIds);
+/*        List<OperationReportJobVO> ageRangeUserIds = amAdminClient.getTenderAgeByRangeList(getLastDay(cal));
+        bean.setAgeRangeUserIds(ageRangeUserIds);*/
         // 月交易金额
         bean.setAccountMonth(amAdminClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
         // 月交易笔数
