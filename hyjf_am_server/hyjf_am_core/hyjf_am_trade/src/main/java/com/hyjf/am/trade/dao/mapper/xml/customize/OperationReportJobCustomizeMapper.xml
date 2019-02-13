@@ -118,12 +118,12 @@
 	<!-- 	统计出借人总数，截至日期为上个月的最后一天 -->
 	<select id="getTenderCount"  parameterType="java.util.Date" resultType="int">
 <!-- 		select count(*) from ht_users where reg_time &lt;= unix_timestamp(#{date}) -->
-		select count(*) from(
-			SELECT user_id FROM ht_borrow_tender where create_time &lt;=#{date}
+		select count(*) from (
+			SELECT user_id FROM ht_borrow_tender where create_time &lt;=#{date} and status = 1
 			UNION
 			SELECT user_id FROM ht_credit_tender where create_time &lt;=#{date}
 			UNION
-			SELECT user_id  FROM ht_borrow_tender_cpn WHERE create_time &lt;=#{date}
+			SELECT user_id  FROM ht_borrow_tender_cpn WHERE create_time &lt;=#{date} and status = 1
 			UNION
 			SELECT user_id  FROM ht_hjh_accede  WHERE create_time &lt;=#{date}
 		) as tmp

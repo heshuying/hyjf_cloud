@@ -46,9 +46,11 @@ public class ChannelStatisticsDetailServiceImpl implements ChannelStatisticsDeta
         IntegerResponse count = this.amAdminClient.countList(request);
         if (count.getResultInt()!=null&&count.getResultInt() > 0) {
             total = count.getResultInt();
-            Paginator paginator = new Paginator(request.getCurrPage(), count.getResultInt(),request.getPageSize()==0?10:request.getPageSize());
-            request.setLimitStart(paginator.getOffset());
-            request.setLimitEnd(paginator.getLimit());
+            if(request.getLimitStart()>=0) {
+                Paginator paginator = new Paginator(request.getCurrPage(), count.getResultInt(), request.getPageSize() == 0 ? 10 : request.getPageSize());
+                request.setLimitStart(paginator.getOffset());
+                request.setLimitEnd(paginator.getLimit());
+            }
             ChannelStatisticsDetailResponse channelStatisticsDetailResponse = this.amAdminClient.searchAction(request);
             list = channelStatisticsDetailResponse.getResultList();
         }
