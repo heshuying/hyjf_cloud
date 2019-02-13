@@ -172,7 +172,8 @@ public class AutoAssociatePlanMessageConsumer
 			return;
 		}
 
-		HjhDebtCredit credit = autoIssueMessageService.getCreditByNid(creditNid);
+
+		HjhDebtCredit credit = autoIssueMessageService.serchCreditByNid(creditNid);
 		if (credit == null) {
 			logger.warn(creditNid + " 该债转在表里不存在");
 			return;

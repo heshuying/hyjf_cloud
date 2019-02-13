@@ -38,7 +38,7 @@ public interface AutoIssueMessageService extends BaseService{
      * @Param creditNid 债转ID
      * @return
      */
-    HjhDebtCredit getCreditByNid(String creditNid);
+    HjhDebtCredit serchCreditByNid(String creditNid);
 
     /**
      * @Author walter.limeng
