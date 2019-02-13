@@ -65,7 +65,7 @@ public class CertTransactBatchController {
             params.put("minId", minId);
             params.put("maxId", maxId);
             try{
-                producer.messageSend(new MessageContent(MQConstant.CERT_TRANSACT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONString(params)));
+                producer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), JSONObject.toJSONString(params)));
             }catch (Exception e){}
             RedisUtils.set("certTransactOtherMaxId", maxId);
             page=page+1;
