@@ -89,7 +89,7 @@ public class AccessFilter extends ZuulFilter {
             Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
             if (!appKeyIgnoreUrls.contains(originalRequestPath)) {
                 if (sign == null) {
-                    logger.error("sign is empty");
+                    logger.warn("sign is empty");
                     // 不对其进行路由
                     return this.buildErrorRequestContext(ctx, STATUS_SUCCESS, this.buildNoneSignResponseResult());
                 }
@@ -128,7 +128,7 @@ public class AccessFilter extends ZuulFilter {
     private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
         SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
         if (signValue == null) {
-            logger.error("sign is invalid");
+            logger.warn("sign is invalid, sign is: {}", sign);
             // 不对其进行路由
             return this.buildErrorRequestContext(ctx, STATUS_SUCCESS, this.buildNoneSignResponseResult());
         }
@@ -278,7 +278,7 @@ public class AccessFilter extends ZuulFilter {
 
         // 需要安全访问的请求，token空不路由，否则直接返回
         if (StringUtils.isBlank(token)) {
-            logger.error("token is empty...");
+            logger.warn("token is empty...");
             return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WEB_CHANNEL);
         }
 
@@ -287,18 +287,18 @@ public class AccessFilter extends ZuulFilter {
         try {
             accessToken = JwtHelper.parseToken(token);
         } catch (Exception e) {
-            logger.error("jwt parse token error...", e);
+            logger.warn("jwt parse token error...", e);
         }
 
         if (accessToken == null) {
-            logger.error("user is not exist...");
+            logger.warn("user is not exist, token is : {}...", token);
             return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WEB_CHANNEL);
         } else {
             Integer userId = accessToken.getUserId();
             WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
             if (user == null) {
                 // 登陆过期
-                logger.error("login is invalid...");
+                logger.warn("login is invalid, token is : {}...", token);
                 return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WEB_CHANNEL);
             }
 
@@ -306,7 +306,7 @@ public class AccessFilter extends ZuulFilter {
             Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, Integer.class);
             if (value == null) {
                 // 登陆过期
-                logger.error("accessToken is timeout...");
+                logger.warn("accessToken is timeout, token is : {}...", token);
                 return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WEB_CHANNEL);
             }
             // 每次操作，延长超时时间
@@ -330,7 +330,7 @@ public class AccessFilter extends ZuulFilter {
     private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean isNecessary) {
         Integer userId = SecretUtil.getUserId(sign);
         if (userId == null) {
-            logger.error("sign invalid...");
+            logger.warn("sign invalid, sign is:{}...", sign);
             return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.APP_CHANNEL);
         }
         ctx.addZuulRequestHeader("userId", userId + "");
@@ -354,7 +354,7 @@ public class AccessFilter extends ZuulFilter {
             // 获取用户ID
             AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
             if (appUserToken == null || appUserToken.getUserId() == null) {
-                logger.error("token invalid...");
+                logger.warn("sign invalid, sign is: {}...", sign);
                 return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WECHAT_CHANNEL);
             }
             logger.info("appUserToken:" + appUserToken.getUserId());

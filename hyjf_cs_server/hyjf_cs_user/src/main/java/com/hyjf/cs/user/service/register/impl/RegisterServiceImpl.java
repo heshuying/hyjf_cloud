@@ -213,14 +213,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             ret.put(CustomConstants.APP_STATUS_DESC, "必须包含数字、字母、符号至少两种");
             return ret;
         }
-        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
-        if (cnt == 0) {
-            ret.put(CustomConstants.APP_STATUS, 1);
-            ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
-            return ret;
-        }
         String reffer = registerRequest.getReffer();
         if (StringUtils.isNotEmpty(reffer)) {
             //无效推荐人
@@ -229,6 +221,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 ret.put(CustomConstants.APP_STATUS_DESC, "推荐人无效");
                 return ret;
             }
+        }
+        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
+        if (cnt == 0) {
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
+            return ret;
         }
         return ret;
     }
@@ -770,7 +770,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     /**
      * 组装 userVO
      *
-     * @param userVO
+     * @param
      * @return
      */
     private WebViewUserVO assembleWebViewUserVO(UserVO paramUser) {
