@@ -70,12 +70,12 @@ public class KeyCountRequest extends BasePage implements Serializable {
     /**
      * 检索条件 limitStart
      */
-    private int limitStart = -1;
+    private int limitStart;
 
     /**
      * 检索条件 limitEnd
      */
-    private int limitEnd = -1;
+    private int limitEnd;
 
     /**
      * sourceName

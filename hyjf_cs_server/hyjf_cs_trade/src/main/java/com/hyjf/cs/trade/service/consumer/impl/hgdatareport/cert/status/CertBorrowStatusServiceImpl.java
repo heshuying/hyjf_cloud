@@ -43,7 +43,6 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
     @Override
     public Map<String, Object> selectBorrowByBorrowNid(String borrowNid, String statusAfter, boolean isUserInfo) {
         //标的信息
-        logger.info("散标状态上报,标的编号为:"+borrowNid);
         try {
             BorrowAndInfoVO borrow =amTradeClient.selectBorrowByNid(borrowNid);
             logger.info("散标状态上报,标的信息为:"+JSONObject.toJSONString(borrow));
@@ -71,11 +70,14 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getRecoverLastTime().toString());
                     productStatusDesc = "放款后（报送5还款中）";
                 } else if (borrow.getStatus() == 2) {
+                    logger.info("投资中");
                     //投资中
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
                     //发标时间
-                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
+                    logger.info("发标时间 borrow.getVerifyTime():"+borrow.getVerifyTime().toString());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime().toString());
+                    logger.info("发标时间 productDate:"+productDate);
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {
                     //已还款
@@ -98,8 +100,8 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getBorrowFullTime().toString());
                     productStatusDesc = "满标时候（报送1满标）";
                 }
+                logger.info("borrowNid:"+borrowNid+",productStatus:"+productStatus+",productDate"+productDate+",productStatusDesc:"+productStatusDesc);
                 param = putParamObject(borrowNid, productStatus, productDate, productStatusDesc);
-                logger.info("散标状态上报,组装数据完毕,数据为:"+ JSONObject.toJSONString(param));
                 return param;
 
             }

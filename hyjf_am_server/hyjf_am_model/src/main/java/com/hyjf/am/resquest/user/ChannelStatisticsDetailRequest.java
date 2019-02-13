@@ -42,9 +42,9 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 
 	private String[] utmIdsSrch;
 
-	protected int limitStart = -1;
+	protected int limitStart;
 
-	protected int limitEnd = -1;
+	protected int limitEnd;
 
 	public String getSourceIdSrch() {
 		return sourceIdSrch;
