@@ -6746,9 +6746,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BigDecimal getWillPayMoney(Date time) {
+    public BigDecimal getWillPayMoney() {
         String url = "http://AM-TRADE/am-trade/bifaDataReport/getWillPayMoney";
-        return restTemplate.postForEntity(url,time,BigDecimal.class).getBody();
+        return restTemplate.getForEntity(url,BigDecimal.class).getBody();
     }
 
     /**

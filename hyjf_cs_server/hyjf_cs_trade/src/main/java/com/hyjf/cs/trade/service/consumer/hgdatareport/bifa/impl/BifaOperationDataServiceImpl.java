@@ -93,7 +93,7 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
             //累计借款笔数(只统计放款之后的标的)
             bifaOperationDataEntity.setTotal_loan_num(this.getLoanNum(cal));
             //累计借贷余额
-            bifaOperationDataEntity.setTotal_loan_balance_money(df.format(this.getWillPayMoney(cal)));
+            bifaOperationDataEntity.setTotal_loan_balance_money(df.format(this.getWillPayMoney()));
             //累计借贷余额笔数
             bifaOperationDataEntity.setTotal_loan_balance_num(this.getTotalLoanBalanceNum());
 
@@ -229,11 +229,10 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
 
     /**
      * 累计借贷余额
-     * @param cal
      * @return
      */
-    private BigDecimal getWillPayMoney(Calendar cal) {
-        return amTradeClient.getWillPayMoney(cal.getTime());
+    private BigDecimal getWillPayMoney() {
+        return amTradeClient.getWillPayMoney();
     }
 
     /**
