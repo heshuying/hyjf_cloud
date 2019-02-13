@@ -144,6 +144,9 @@ public enum MsgEnum implements MsgCode {
 	//资金-转账相关错误信息ERR_AMT_TRANSFER_
 	ERR_AMT_TRANSFER("EAM000401","转账发生异常"),
 
+	//资金-还款相关错误信息ERR_AMT_REPAY_
+	ERR_AMT_REPAY_AUTO_CREDIT("EAM000501","系统正在处理项目债转，请{0}后发起还款！"),
+
 	//授权相关错误信息ERR_AUTHORIZE_
 	ERR_AUTHORIZE_REPEAT("EAU000001","用户已授权,无需重复授权"),
 	ERR_AUTHORIZE_STATE("EAU000002","授权状态查询接口失败"),
