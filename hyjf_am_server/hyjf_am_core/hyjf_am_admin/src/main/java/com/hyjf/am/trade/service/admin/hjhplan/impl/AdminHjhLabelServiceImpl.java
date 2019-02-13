@@ -340,6 +340,14 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		}
 		// 画面有，标的是否发生债转 非空
 		hjhLabel.setIsCredit(request.getIsCredit());
+		
+		// 标签债转次数  画面有，可以为空
+		if(request.getCreditSumMax()!=null){
+			hjhLabel.setCreditSumMax(request.getCreditSumMax());
+		} else {
+			hjhLabel.setCreditSumMax(null);
+		}
+		
 		// 画面有，标的是否逾期 非空
 		hjhLabel.setIsLate(request.getIsLate());
 		// 画面有， 推送时间节点(可为空)
@@ -372,12 +380,12 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		// 画面无但传，取当时更新者
 		hjhLabel.setUpdateUserId(request.getUpdateUserId());
 
+		
 		// 更新前自查    更新不需要更的信息
 		HjhLabel hjhLabelSrch =  hjhLabelMapper.selectByPrimaryKey(request.getId());//主键查询不能为空，更新业务
 		hjhLabel.setCreateUserId(hjhLabelSrch.getCreateUserId());
 		hjhLabel.setCreateTime(hjhLabelSrch.getCreateTime());
 		hjhLabel.setDelFlag(hjhLabelSrch.getDelFlag());
-		hjhLabel.setCreditSumMax(hjhLabelSrch.getCreditSumMax());
 		
 		int flg = hjhLabelMapper.updateByPrimaryKey(hjhLabel);// 如果传空也更为空
 	    /*int flg = hjhLabelMapper.updateByPrimaryKeySelective(hjhLabel); request如果传空则不更*/
