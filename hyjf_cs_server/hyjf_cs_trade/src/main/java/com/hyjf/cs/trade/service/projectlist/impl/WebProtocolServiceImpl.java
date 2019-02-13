@@ -393,7 +393,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                                 tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间
                                 if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
                                     tenderAgreement = tenderAgreementsNid.get(0);
-                                    if(tenderAgreement!=null){
+                                    if(tenderAgreement!=null ){
                                         files = this.createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
                                     }
                                 }
@@ -409,7 +409,6 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                         List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(assignNid);//hyjf_hjh_debt_credit_tender
                         if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0){
                             HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
-                            System.out.println("调用下载计划债转协议的方法 ---------------------:"+assignNid);
                             //调用下载计划债转协议的方法
                             /**
                              * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
@@ -458,7 +457,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                                 //根据订单号获取用户放款信息
                                 BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
                                 if(borrowRecoverVO != null){
-                                    addTime = borrowRecoverVO.getCreditTime();
+                                    addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
                                 }
                                 if (addTime > ADD_TIME328) {
                                     logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
@@ -627,17 +626,19 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
             tenderAgreement = tenderAgreementsAss.get(0);
             //下载法大大协议--债转
-            if(tenderAgreement!=null){
+            if(tenderAgreement!=null && tenderAgreement.getStatus()==3){
                 /** 脱敏规则三期
                  *  出借债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                logger.info("调用下载法大大协议--债转 ---------------------:"+tenderAgreement);
                 files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
             }
             //下载法大大协议--居间
             if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
                 tenderAgreement = tenderAgreementsNid.get(0);
-                if(tenderAgreement!=null){
+                if(tenderAgreement!=null && tenderAgreement.getStatus()==3){
                     /** 脱敏规则三期
                      *  出借债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                    logger.info("调用下载法大大协议--居间 ---------------------:"+tenderAgreement);
                     files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
                 }
             }
@@ -655,7 +656,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     int addTime = ADD_TIME;
                     BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
                     if(borrowRecoverVO != null){
-                        addTime = borrowRecoverVO.getCreditTime();
+                        addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
                     }
                     if (addTime < ADD_TIME328) {
                         ProtocolRequest userInvestListBean = new ProtocolRequest();

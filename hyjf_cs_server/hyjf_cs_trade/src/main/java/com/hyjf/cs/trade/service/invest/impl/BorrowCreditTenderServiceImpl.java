@@ -613,7 +613,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             // 差异费率
             BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
             // 初审时间
-            int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : Integer.parseInt(borrow.getVerifyTime());
+            int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();
             // 是否月标(true:月标, false:天标)
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);

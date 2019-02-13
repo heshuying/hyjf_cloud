@@ -481,7 +481,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         // 差异费率
         BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
         // 初审时间
-        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : Integer.parseInt(borrow.getVerifyTime());
+        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();
         // 检查优惠券是否重复放款
         if (checkCouponRecoverFirst(ordId)) {
             return null;

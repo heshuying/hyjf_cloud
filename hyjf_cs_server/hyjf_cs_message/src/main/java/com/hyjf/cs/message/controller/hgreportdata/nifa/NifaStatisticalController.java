@@ -41,9 +41,9 @@ public class NifaStatisticalController extends BaseController {
         NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
         String projectNo = nifaBorrowInfoVO.getProjectNo();
         String msgBody = nifaBorrowInfoVO.getMessage();
-        NifaBorrowInfoEntity list = nifaStatisticalService.selectNifaBorrowInfoByProjectNo(projectNo, msgBody);
-        if (null != list) {
-            NifaBorrowInfoVO result = CommonUtils.convertBean(list, NifaBorrowInfoVO.class);
+        NifaBorrowInfoEntity re = nifaStatisticalService.selectNifaBorrowInfoByProjectNo(projectNo, msgBody);
+        if (null != re) {
+            NifaBorrowInfoVO result = CommonUtils.convertBean(re, NifaBorrowInfoVO.class);
             response.setResult(result);
         }
         return response;
@@ -121,9 +121,9 @@ public class NifaStatisticalController extends BaseController {
     public NifaCreditInfoResponse selectNifaCreditInfoByCreditNid(@RequestBody @Valid NifaCreditInfoVO nifaCreditInfoVO) {
         NifaCreditInfoResponse response = new NifaCreditInfoResponse();
         String projectNo = nifaCreditInfoVO.getProjectNo();
-        NifaCreditInfoEntity list = nifaStatisticalService.selectNifaCreditInfoByCreditNid(projectNo);
-        if (null != list) {
-            NifaCreditInfoVO result = CommonUtils.convertBean(list, NifaCreditInfoVO.class);
+        NifaCreditInfoEntity re = nifaStatisticalService.selectNifaCreditInfoByCreditNid(projectNo);
+        if (null != re) {
+            NifaCreditInfoVO result = CommonUtils.convertBean(re, NifaCreditInfoVO.class);
             response.setResult(result);
         }
         return response;
@@ -163,8 +163,8 @@ public class NifaStatisticalController extends BaseController {
         NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
         List<NifaBorrowInfoEntity> list = nifaStatisticalService.selectNifaBorrowInfoByHistoryDate(nifaBorrowInfoVO);
         if (null != list && list.size()>0) {
-            NifaBorrowInfoVO result = CommonUtils.convertBean(list, NifaBorrowInfoVO.class);
-            response.setResult(result);
+            List<NifaBorrowInfoVO> result = CommonUtils.convertBeanList(list, NifaBorrowInfoVO.class);
+            response.setResultList(result);
         }
         return response;
     }
@@ -186,13 +186,13 @@ public class NifaStatisticalController extends BaseController {
      * @param projectNo
      * @return
      */
-    @PostMapping("/selectNifaTenderInfo")
+    @GetMapping("/selectNifaTenderInfo/{projectNo}")
     public NifaTenderInfoResponse selectNifaTenderInfo(@PathVariable List<String> projectNo) {
         NifaTenderInfoResponse response = new NifaTenderInfoResponse();
         List<NifaTenderInfoEntity> list = nifaStatisticalService.selectNifaTenderInfo(projectNo);
         if (null != list && list.size()>0) {
-            NifaTenderInfoVO result = CommonUtils.convertBean(list, NifaTenderInfoVO.class);
-            response.setResult(result);
+            List<NifaTenderInfoVO> result = CommonUtils.convertBeanList(list, NifaTenderInfoVO.class);
+            response.setResultList(result);
         }
         return response;
     }
@@ -202,7 +202,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/updateTenderInfo")
+    @GetMapping("/updateTenderInfo/{projectNo}")
     public BooleanResponse updateTenderInfo(@PathVariable List<String> projectNo) {
         nifaStatisticalService.updateTenderInfo(projectNo);
         return new BooleanResponse(true);
@@ -214,13 +214,13 @@ public class NifaStatisticalController extends BaseController {
      * @param projectNo
      * @return
      */
-    @PostMapping("/selectNifaBorrowerInfo")
+    @GetMapping("/selectNifaBorrowerInfo/{projectNo}")
     public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@PathVariable List<String> projectNo) {
         NifaBorrowerInfoResponse response = new NifaBorrowerInfoResponse();
         List<NifaBorrowerInfoEntity> list = nifaStatisticalService.selectNifaBorrowerInfo(projectNo);
         if (null != list && list.size()>0) {
-            NifaBorrowerInfoVO result = CommonUtils.convertBean(list, NifaBorrowerInfoVO.class);
-            response.setResult(result);
+            List<NifaBorrowerInfoVO> result = CommonUtils.convertBeanList(list, NifaBorrowerInfoVO.class);
+            response.setResultList(result);
         }
         return response;
     }
@@ -230,7 +230,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/updateBorrowerInfo")
+    @GetMapping("/updateBorrowerInfo/{projectNo}")
     public BooleanResponse updateBorrowerInfo(@PathVariable List<String> projectNo) {
         nifaStatisticalService.updateBorrowerInfo(projectNo);
         return new BooleanResponse(true);
@@ -247,8 +247,8 @@ public class NifaStatisticalController extends BaseController {
         NifaCreditInfoResponse response = new NifaCreditInfoResponse();
         List<NifaCreditInfoEntity> list = nifaStatisticalService.selectNifaCreditInfo(nifaCreditInfoVO);
         if (null != list && list.size()>0) {
-            NifaCreditInfoVO result = CommonUtils.convertBean(list, NifaCreditInfoVO.class);
-            response.setResult(result);
+            List<NifaCreditInfoVO> result = CommonUtils.convertBeanList(list, NifaCreditInfoVO.class);
+            response.setResultList(result);
         }
         return response;
     }
@@ -271,13 +271,13 @@ public class NifaStatisticalController extends BaseController {
      * @param projectNo
      * @return
      */
-    @PostMapping("/selectNifaCreditTransfer")
+    @GetMapping("/selectNifaCreditTransfer/{projectNo}")
     public NifaCreditTransferResponse selectNifaCreditTransfer(@PathVariable List<String> projectNo) {
         NifaCreditTransferResponse response = new NifaCreditTransferResponse();
         List<NifaCreditTransferEntity> list = nifaStatisticalService.selectNifaCreditTransfer(projectNo);
         if (null != list && list.size()>0) {
-            NifaCreditTransferVO result = CommonUtils.convertBean(list, NifaCreditTransferVO.class);
-            response.setResult(result);
+            List<NifaCreditTransferVO> result = CommonUtils.convertBeanList(list, NifaCreditTransferVO.class);
+            response.setResultList(result);
         }
         return response;
     }
@@ -287,7 +287,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @PostMapping("/updateCreditTransfer")
+    @GetMapping("/updateCreditTransfer/{projectNo}")
     public BooleanResponse updateCreditTransfer(@PathVariable List<String> projectNo) {
         nifaStatisticalService.updateCreditTransfer(projectNo);
         return new BooleanResponse(true);

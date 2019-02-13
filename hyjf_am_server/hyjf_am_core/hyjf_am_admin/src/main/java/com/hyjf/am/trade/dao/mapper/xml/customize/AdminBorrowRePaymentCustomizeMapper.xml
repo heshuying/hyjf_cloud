@@ -576,32 +576,31 @@
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
 			select sum(nid) from (
 		SELECT
-		count( 1 ) AS nid
-		FROM ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo  on b.borrow_nid=binfo.borrow_nid
-		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
-		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
-		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
-		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
-		<include refid="RepaymentInfoList_Where_Clause" />
+		count(1) nid
+        FROM
+        ht_borrow AS b
+        INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid
+        INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
+        LEFT JOIN ht_r_user u ON b.user_id = u.user_id
+        LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_apicron as ba ON b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+        LEFT JOIN ht_hjh_inst_config hic ON hbi.inst_code = hic.inst_code
+		<include refid="Where_Clause_New" />
 		AND b.borrow_style in ('end','endday')
 		UNION ALL
 		SELECT
-		count( 1 ) AS nid
-		from
-		ht_borrow_repay_plan AS rp
-		INNER JOIN ht_borrow AS b ON
-		rp.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_info AS binfo  on b.borrow_nid=binfo.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on
-		b.borrow_style=bs.nid
-		LEFT JOIN ht_r_user u ON b.user_id =
-		u.user_id
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		<include refid="RepaymentInfoList_Where_Clause" />
-		AND b.borrow_style in ('principal','month','endmonth')
+		count(1) nid
+        FROM
+        ht_borrow_repay_plan AS rp
+        INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
+        LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
+        LEFT JOIN ht_r_user u ON b.user_id = u.user_id
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = hbi.inst_code
+        LEFT JOIN ht_borrow_repay br ON br.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		<include refid="Where_Clause1" />
 		) as count
 	</select>
 
@@ -705,12 +704,13 @@
 	</sql>
 	<select id="exportRepayClkActBorrowRepaymentInfoList" resultMap="searchBorrowRepaymentPlanListResultMap"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
+        select  * from (
 		SELECT
 		br.nid AS nid,
 		br.borrow_nid AS borrowNid,
 		u.user_id AS userId,
 		u.username AS borrowUserName,
-		b. NAME AS borrowName,
+        hbi. NAME AS borrowName,
 		hic.inst_name AS instName,
 		bpt.borrow_name AS projectTypeName,
 		CASE
@@ -783,13 +783,15 @@
 		) AS repayMoneySource,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
-		FROM ht_borrow AS b
-		INNER JOIN ht_borrow_repay AS br ON b.borrow_nid=br.borrow_nid
-		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
-		LEFT JOIN ht_borrow_style AS bs ON b.borrow_style=bs.nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN ht_borrow_apicron as ba ON b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
-		LEFT JOIN ht_hjh_inst_config hic ON b.inst_code = hic.inst_code
+        FROM
+        ht_borrow AS b
+        INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid
+        INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
+        LEFT JOIN ht_r_user u ON b.user_id = u.user_id
+        LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+        LEFT JOIN ht_borrow_apicron as ba ON b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+        LEFT JOIN ht_hjh_inst_config hic ON hbi.inst_code = hic.inst_code
 		<include refid="Where_Clause_New" />
 		AND b.borrow_style in ('end','endday')
 		UNION ALL
@@ -798,7 +800,7 @@
 		b.borrow_nid AS borrowNid,
 		u.user_id AS userId,
 		u.username AS borrowUserName,
-		b. NAME AS borrowName,
+        hbi. NAME AS borrowName,
 		hic.inst_name AS instName,
 		bpt.borrow_name AS projectTypeName,
 		CONCAT(b.borrow_period, '个月') AS borrowPeriod,
@@ -859,15 +861,17 @@
 		) AS repayMoneySource,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
-		FROM ht_borrow_repay_plan AS rp
-		INNER JOIN ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
-		LEFT JOIN ht_borrow_repay br ON br.borrow_nid = b.borrow_nid
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+        FROM
+        ht_borrow_repay_plan AS rp
+        INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
+        LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
+        LEFT JOIN ht_r_user u ON b.user_id = u.user_id
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = hbi.inst_code
+        LEFT JOIN ht_borrow_repay br ON br.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		<include refid="Where_Clause1" />
-		ORDER BY verify_time ASC,borrowNid ASC, repayPeriod+0 ASC;
+		ORDER BY verify_time ASC,borrowNid ASC, repayPeriod+0 ASC) t
 		<if test="limitStart >= 0">
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>

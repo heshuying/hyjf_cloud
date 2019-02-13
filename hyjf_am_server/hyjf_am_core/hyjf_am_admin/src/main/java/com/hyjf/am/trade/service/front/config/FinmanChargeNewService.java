@@ -49,4 +49,12 @@ public interface FinmanChargeNewService {
      */
     public int countRecordByProjectType(FinmanChargeNewRequest adminRequest);
 
+    /**
+     *
+     * 根据borrowCd查询borrowClass
+     * @author xiehuili
+     * @return
+     */
+    String getBorrowClass(String borrowCd);
+
 }

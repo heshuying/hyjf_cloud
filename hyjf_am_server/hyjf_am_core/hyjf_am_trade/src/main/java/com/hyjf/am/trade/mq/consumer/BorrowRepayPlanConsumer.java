@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 /**
- * 计划类标的还款消费处理
+ * 智投类标的还款消费处理
  * @author dxj
  * @version BorrowRepayPlanConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
@@ -55,7 +55,7 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 
 	@Override
 	public void onMessage(MessageExt messageExt) {
-		logger.info("计划还款请求 收到消息，开始处理....");
+		logger.info("【智投还款】收到消息，开始处理....");
 		BorrowApicron borrowApicron = null;
 		try{
 			try {
@@ -63,7 +63,7 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 				borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
 				if(borrowApicron == null || borrowApicron.getId() == null || StringUtils.isBlank(borrowApicron.getBorrowNid())
 						|| borrowApicron.getTxDate() == null || StringUtils.isBlank(borrowApicron.getBatchNo()) ){
-					logger.info("计划还款请求 收到消息，解析为空");
+					logger.info("【智投还款】收到消息，解析为空");
 					return;
 				}
 			} catch (Exception e1) {
@@ -73,12 +73,12 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 
 			String borrowNid = borrowApicron.getBorrowNid();// 借款编号
 			int borrowUserId = borrowApicron.getUserId();// 借款人userId
-			logger.info("标的编号："+borrowNid+"，计划类开始还款！");
+            logger.info("【智投还款】借款编号：{}，开始还款。", borrowNid);
 			// 生成任务key 校验并发请求
 			String redisKey = RedisConstants.PLAN_REPAY_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
 			boolean result = RedisUtils.tranactionSet(redisKey, 300);
 			if(!result){
-				logger.error("计划类还款请求中....");
+                logger.error("【智投还款】借款编号：{}，还款请求中...", borrowNid);
 				return;
 			}
 			try{
@@ -86,83 +86,85 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 				borrowApicron = batchBorrowRepayPlanService.selApiCronByPrimaryKey(borrowApicron.getId());
 				// 如果已经发生过相应的还款请求，则查询相应的状态
 				if (borrowApicron.getStatus() == 6) {
-					throw new Exception(borrowNid+" 还款已经成功，状态有误");
+                    logger.error("【智投还款】借款编号：{}，还款已经成功，状态有误！", borrowNid);
 				}
 				// 还款序列号
 				String bankSeqNo = borrowApicron.getBankSeqNo();
 				// 查询批次还款状态
 				BankCallBean batchResult = batchBorrowRepayPlanService.batchQuery(borrowApicron);
 				if (batchResult == null) {
-					throw new Exception("调用接口查询还款状态失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+                    throw new Exception("调用接口查询还款状态失败！[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
 				}
 				// 批次还款状态
 				String batchState = batchResult.getBatchState();
 				if (StringUtils.isBlank(batchState)) {
-					throw new Exception("批次还款状态查询居然为空！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+					throw new Exception("批次还款状态查询居然为空！[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
 				}
-				logger.info("标的编号："+borrowNid+"，批次查询状态："+batchState);
+                logger.info("【智投还款】借款编号：{}，批次查询状态：{}", borrowNid, batchState);
 				// 如果是批次处理失败
 				if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
 					// 失败原因
 					String failMsg = batchResult.getFailMsg();
-					logger.info("标的编号："+borrowNid+"，批次处理失败: "+failMsg);
-
-					if (StringUtils.isNotBlank(failMsg)) {
+                    logger.info("【智投还款】借款编号：{}，批次处理失败：{}", borrowNid, failMsg);
+                    if (StringUtils.isNotBlank(failMsg)) {
 						borrowApicron.setData(failMsg);
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 更新任务API状态
 						boolean apicronResultFlag = batchBorrowRepayPlanService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
 						if (!apicronResultFlag) {
-							throw new Exception("更新状态为（还款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+                            throw new Exception("批次还款任务表(ht_borrow_apicron)更新状态(还款失败)失败！[用户ID：" + borrowUserId + "]，[借款编号：" + borrowNid + "]");
 						}
 					} else {
 						// 查询批次交易明细，进行后续操作
-						boolean batchDetailFlag = batchBorrowRepayPlanService.reapyBatchDetailsUpdate(borrowApicron);
+						int batchDetailStatus = batchBorrowRepayPlanService.reapyBatchDetailsUpdate(borrowApicron);
 						// 进行后续失败的还款的还款请求
-						if (!batchDetailFlag) {
-							throw new Exception("还款失败后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-						}
+                        if (CustomConstants.BANK_BATCH_STATUS_SUCCESS != batchDetailStatus) {
+                            String statusStr = CustomConstants.BANK_BATCH_STATUS_PART_FAIL == batchDetailStatus ? "部分成功" : "失败";
+                            throw new Exception("批次查询成功后，还款明细更新" + statusStr + "。[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
+                        }
 					}
 				}
 				// 如果是批次处理成功
 				else if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_SUCCESS)) {
-					logger.info("标的编号："+borrowNid+"，批次处理状态查询成功，开始明细数据更新");
+                    logger.info("【智投还款】借款编号：{}，批次处理状态查询成功，开始还款明细数据更新。", borrowNid);
 					// 查询批次交易明细，进行后续操作
-					boolean batchDetailFlag = batchBorrowRepayPlanService.reapyBatchDetailsUpdate(borrowApicron);
-					logger.info("标的编号："+borrowNid+"，查询批次交易明细，进行后续操作，操作结果："+batchDetailFlag);
-					if (!batchDetailFlag) {
-						throw new Exception("还款成功后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-					}
+					int batchDetailStatus = batchBorrowRepayPlanService.reapyBatchDetailsUpdate(borrowApicron);
+                    logger.info("【智投还款】借款编号：{}，还款明细数据更新操作结果：{}", borrowNid, batchDetailStatus);
+                    if (CustomConstants.BANK_BATCH_STATUS_SUCCESS != batchDetailStatus) {
+                        String statusStr = CustomConstants.BANK_BATCH_STATUS_PART_FAIL == batchDetailStatus ? "部分成功" : "失败";
+                        throw new Exception("批次查询成功后，还款明细更新" + statusStr + "。[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
+                    }
 					try {
 						JSONObject param = new JSONObject();
 						param.put("borrowNid", borrowApicron.getBorrowNid());
 						param.put("repayPeriod", borrowApicron.getPeriodNow());
 						commonProducer.messageSendDelay(new MessageContent(MQConstant.NIFA_REPAY_INFO_TOPIC,UUID.randomUUID().toString(),param),2);
 					} catch (Exception e) {
-						logger.error("发送mq到生成互金还款相关信息失败,放款标的:" + borrowApicron.getBorrowNid());
+                        logger.error("【智投还款】借款编号：{}，发送mq到生成互金还款相关信息失败！", borrowApicron.getBorrowNid(), e);
 					}
-
-					// add 合规数据上报 埋点 liubin 20181122 start
-					JSONObject params = new JSONObject();
-					params.put("borrowNid", borrowApicron.getBorrowNid());
-					params.put("repayPeriod", borrowApicron.getPeriodNow());
-					// 推送数据到MQ 还款（每期）
-					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
-							MQConstant.HG_REPORT_DELAY_LEVEL);
-
-					// 最后一期
-					if(borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())){
-						params = new JSONObject();
-						params.put("borrowNid", borrowApicron.getBorrowNid());
-						params.put("flag", "2"); //1（散）2（智投）
-						// status=5标的已还款
-						params.put("status", "5"); //5(标的已还款)
-						commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
-								MQConstant.HG_REPORT_DELAY_LEVEL);
-					}
+                    try {
+                        // add 合规数据上报 埋点 liubin 20181122 start
+                        JSONObject params = new JSONObject();
+                        params.put("borrowNid", borrowApicron.getBorrowNid());
+                        params.put("repayPeriod", borrowApicron.getPeriodNow());
+                        // 推送数据到MQ 还款（每期）
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                        // 最后一期
+                        if(borrowApicron.getBorrowPeriod().equals(borrowApicron.getPeriodNow())){
+                            params = new JSONObject();
+                            params.put("borrowNid", borrowApicron.getBorrowNid());
+                            params.put("flag", "2"); //1（散）2（智投）
+                            // status=5标的已还款
+                            params.put("status", "5"); //5(标的已还款)
+                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                        }
+                    } catch (Exception e) {
+                        logger.error("【智投还款】借款编号：{}，合规数据上报发生系统异常！", borrowNid, e);
+                    }
 					// add 合规数据上报 埋点 liubin 20181122 end
-
-					logger.info("标的编号："+borrowNid+"，还款成功！");
+                    logger.info("【智投还款】借款编号：{}，还款成功！", borrowNid);
 				}
 			}catch(Exception e){
 				// 消息队列指令不消费
@@ -182,21 +184,20 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 				msg.append("详细错误信息：<br/>").append(sbError.toString());
 				try {
 					if(toMail == null) {
-						throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
+						throw new Exception("未配置收件人！[借款编号：" + borrowNid + "]");
 					}
 					MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
 							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), mailMessage));
 				} catch (Exception e2) {
-					logger.error("发送邮件失败..", e2);
+					logger.error("【智投还款】发送邮件失败..", e2);
 				}
 				return;
 			}
 			RedisUtils.del(redisKey);
-			logger.info("--------------计划还款结束--------------------");
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 		} catch (Exception e) {
-			logger.error("【计划还款】消费异常!", e);
+			logger.error("【智投还款】消费异常!", e);
 			return;
 		}
 		return;
@@ -214,6 +215,6 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 		defaultMQPushConsumer.setConsumeTimeout(30);
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-		logger.info("====计划还款业务消费启动=====");
+		logger.info("====智投还款业务消费启动=====");
 	}
 }

@@ -37,17 +37,18 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
         NifaReportLogExample example = new NifaReportLogExample();
         NifaReportLogExample.Criteria creteria = example.createCriteria();
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        example.setOrderByClause(" history_date desc");
         Date dateStart = null;
         Date dateEnd = null;
 
         if (null != request) {
             try {
-                if (StringUtils.isNotEmpty(request.getCreateTimeStart())) {
-                    dateStart = smp.parse(request.getCreateTimeStart()+" 00:00:00");
+                if (StringUtils.isNotEmpty(request.getUploadImeStart())) {
+                    dateStart = smp.parse(request.getUploadImeStart()+" 00:00:00");
                     creteria.andCreateTimeGreaterThanOrEqualTo(dateStart);
                 }
-                if (StringUtils.isNotEmpty(request.getCreateTimeEnd())) {
-                    dateEnd = smp.parse(request.getCreateTimeEnd()+" 23:59:59");
+                if (StringUtils.isNotEmpty(request.getUploadImeEnd())) {
+                    dateEnd = smp.parse(request.getUploadImeEnd()+" 23:59:59");
                     creteria.andCreateTimeLessThanOrEqualTo(dateEnd);
                 }
             } catch (ParseException e) {

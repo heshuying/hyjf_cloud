@@ -40,6 +40,7 @@ public interface BatchHjhAccedeCustomizeMapper {
 	// add 汇计划三期 计算匹配期处理 liubin 20180515 end
 
 	// 计算匹配期处理 潜在问题修复 huanghui start
-	int updateMatchDatesTwo(@Param("start") Integer start, @Param("end") Integer end);
+//	int updateMatchDatesTwo(@Param("start") Integer start, @Param("end") Integer end);
+	int updateMatchDatesTwo(@Param("start") Integer start);
 	// 计算匹配期处理 潜在问题修复 huanghui end
 }

@@ -19,11 +19,6 @@ public class OperationalUserServiceImpl implements OperationalUserService {
     private AmUserClient amUserClient;
 
     @Override
-    public void countRegist() {
-        amUserClient.countRegist();
-    }
-
-    @Override
     public void fddCertificate() {
         amUserClient.fddCertificate();
     }

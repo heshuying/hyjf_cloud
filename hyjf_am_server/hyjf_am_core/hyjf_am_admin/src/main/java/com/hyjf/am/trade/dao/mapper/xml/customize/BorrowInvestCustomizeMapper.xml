@@ -422,7 +422,7 @@
 		FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
 		CASE
 		WHEN ( b.`status` = 0 )  OR ( b.`status` = 0 AND b.verify_status = 0 )  THEN '初审中'
-		WHEN ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 )   THEN '待发布'
+		WHEN ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ))   THEN '待发布'
 		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '出借中'
 		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'

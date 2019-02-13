@@ -64,6 +64,7 @@ public class FinmanChargeNewController extends BaseController {
             BorrowFinmanNewCharge charge = this.finmanChargeNewService.getRecordInfo(manChargeCd);
             if (null != charge) {
                 BorrowFinmanNewChargeVO chargeVO = CommonUtils.convertBean(charge, BorrowFinmanNewChargeVO.class);
+                chargeVO.setProjectType(String.valueOf(chargeVO.getAssetType()));
                 response.setResult(chargeVO);
                 response.setRtn(Response.SUCCESS);
             }
@@ -80,6 +81,14 @@ public class FinmanChargeNewController extends BaseController {
     public FinmanChargeNewResponse insertFinmanChargeNew(@RequestBody FinmanChargeNewRequest adminRequest) {
         logger.info("费率配置 添加..." + JSONObject.toJSON(adminRequest));
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
+        String borrowClass = getBorrowClass(adminRequest.getProjectType());
+        if(StringUtils.isBlank(borrowClass)){
+            logger.debug("标识符是："+adminRequest.getProjectType()+"的项目类型不存在。");
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+            return response;
+        }
+        adminRequest.setProjectType(borrowClass);
         int count = this.finmanChargeNewService.insertFinmanChargeNew(adminRequest);
         if (count > 0) {
             response.setRtn(Response.SUCCESS);
@@ -99,6 +108,14 @@ public class FinmanChargeNewController extends BaseController {
     public FinmanChargeNewResponse updateFinmanChargeNew(@RequestBody FinmanChargeNewRequest adminRequest) {
         logger.info("费率配置 修改..." + JSONObject.toJSON(adminRequest));
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
+        String borrowClass = getBorrowClass(adminRequest.getProjectType());
+        if(StringUtils.isBlank(borrowClass)){
+            logger.debug("标识符是："+adminRequest.getProjectType()+"的项目类型不存在。");
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+            return response;
+        }
+        adminRequest.setProjectType(borrowClass);
         int count = this.finmanChargeNewService.updateFinmanChargeNew(adminRequest);
         if (count > 0) {
             response.setRtn(Response.SUCCESS);
@@ -138,6 +155,16 @@ public class FinmanChargeNewController extends BaseController {
     @RequestMapping("/countRecordByProjectType")
     public int countRecordByProjectType(@RequestBody  FinmanChargeNewRequest adminRequest){
         return finmanChargeNewService.countRecordByProjectType(adminRequest);
+    }
+
+    /**
+     *
+     * 根据borrowCd查询borrowClass
+     * @author xiehuili
+     * @return
+     */
+    public String getBorrowClass(String borrowCd){
+        return finmanChargeNewService.getBorrowClass(borrowCd);
     }
 
 }

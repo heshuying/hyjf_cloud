@@ -1,15 +1,9 @@
 package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.exception;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.exception.CertSendExceptionService;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.scatterinvest.CertScatterInveService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -23,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Description 合规数据上报 CERT 上报失败异常处理
@@ -81,8 +74,12 @@ public class CertSendErrorMessageConsumer implements RocketMQListener<MessageExt
             // --> 调用service组装数据
             // 查询待处理的异常
             List<CertErrLogVO> errLogs = certSendExceptionService.getCertErrLogs();
-            for (CertErrLogVO item: errLogs) {
-                certSendExceptionService.insertData(item);
+            if(errLogs!=null && errLogs.size()>0){
+                for (CertErrLogVO item: errLogs) {
+                    certSendExceptionService.insertData(item);
+                }
+            }else {
+                logger.info(logHeader+" 无需要处理的数据~~");
             }
             return;
         } catch (Exception e) {

@@ -217,12 +217,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			String accountId = (String) map.get("accountId");
 			String txAmount = (String) map.get("txAmountSum");
 			String feeAmount = (String) map.get("serviceFeeSum");
-			// 此处更新没意义，先注释掉
-			// 更新任务API状态为进行中
-//			boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
-//			if (!apicronFlag) {
-//				throw new Exception("更新放款任务为进行中失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-//			}
+
 			// 调用放款接口
 			BankCallBean loanBean = new BankCallBean();
 			loanBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
@@ -265,35 +260,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					}
 				}
 			} else {
-				
-				//重新查询处理结果
+				//放款异常，更新放款任务表状态为放款失败
 				logger.error(borrowNid+" 实时放款请求异常: " + loanResult);
-				String oldOrdid = apicron.getOrdid();
-				if(StringUtils.isNotBlank(oldOrdid)){
-					loanBean.setOrderId(oldOrdid);
-				}
-				
-				boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-				
-//				BankCallBean result = queryAutoLendResult(loanBean);
-//				if (result != null) {
-//					// 更新任务API状态
-//					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-//					if (apicronResultFlag) {
-//						loanResult.setRetCode(BankCallConstant.RESPCODE_SUCCESS);
-//						return loanResult;
-//					} else {
-//						throw new Exception("更新状态为（放款处理成功）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-//					}
-//				}else{
-//					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SEND_FAIL);
-//					if (apicronResultFlag) {
-//						return loanResult;
-//					} else {
-//						throw new Exception("更新状态为（放款处理请求失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
-//					}
-//				}
-				
+				this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
 			}
 		
 		} catch (Exception e) {
@@ -2055,9 +2024,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			recoverTime = interestInfo.getRepayTime(); // 估计还款时间
 			recoverFee = interestInfo.getFee(); // 总管理费
 		}
-		// 写入还款明细表(huiyingdai_borrow_recover)
+		// 写入还款明细表(ht_borrow_recover)
 		BorrowRecover borrowRecover = new BorrowRecover();
-		borrowRecover.setStatus(0); // 状态
+		borrowRecover.setStatus(1); // 状态
+		borrowRecover.setLoanBatchNo(apicron.getBatchNo());
 		borrowRecover.setUserId(borrowTender.getUserId()); // 出借人
 		borrowRecover.setUserName(borrowTender.getUserName());
 		borrowRecover.setBorrowNid(borrowNid); // 借款编号
@@ -2092,7 +2062,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrowRecover.setAccedeOrderId(accedeOrderId);// 出借人还款明细加入计划订单号
 		boolean borrowRecoverFlag = borrowRecoverMapper.insertSelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new RuntimeException("还款明细表(ht_borrow_tender)写入失败!" + "[出借订单号：" + ordId + "]");
+			throw new RuntimeException("还款明细表(ht_borrow_recover)写入失败!" + "[出借订单号：" + ordId + "]");
 		}
 		// 更新出借详情表
 		borrowTender.setLoanOrdid(loanOrderId);
@@ -2105,13 +2075,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrowTender.setLoanAmount(account.subtract(serviceFee)); // 实际放款金额
 		borrowTender.setLoanFee(serviceFee); // 服务费
 		borrowTender.setRecoverFee(recoverFee);// 管理费
-		borrowTender.setStatus(0); // 状态
-		// 0，未放款，1，已放款
-		// borrowTender.setTenderStatus(0); // 出借状态
-		// // 0，未放款，1，已放款
-		// borrowTender.setApiStatus(0); // 放款状态
-		// // 0，未放款，1，已放款
-		// borrowTender.setWeb(0); // 写入网站收支明细
+		borrowTender.setStatus(1); // 状态
 		boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 		if (!borrowTenderFlag) {
 			throw new RuntimeException("出借详情(ht_borrow_tender)更新失败!" + "[出借订单号：" + ordId + "]");
@@ -2122,8 +2086,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrow.setRepayAccountInterest(borrow.getRepayAccountInterest().add(borrowRecover.getRecoverInterest())); // 总还款利息
 		borrow.setRepayAccountCapital(borrow.getRepayAccountCapital().add(borrowRecover.getRecoverCapital())); // 总还款本金
 		borrow.setRepayAccountWait(borrow.getRepayAccountWait().add(borrowRecover.getRecoverAccount())); // 未还款总额
-		borrow.setRepayAccountInterestWait(
-				borrow.getRepayAccountInterestWait().add(borrowRecover.getRecoverInterest())); // 未还款利息
+		borrow.setRepayAccountInterestWait(borrow.getRepayAccountInterestWait().add(borrowRecover.getRecoverInterest())); // 未还款利息
 		borrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().add(borrowRecover.getRecoverCapital())); // 未还款本金
 		borrow.setRepayLastTime(DateUtils.getRepayDate(borrowStyle, new Date(), borrowPeriod, borrowPeriod)); // 最后还款时间
 		borrow.setRepayNextTime(recoverTime); // 下次还款时间
@@ -2149,7 +2112,6 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrowRepay.setRepayStatus(0); // 还款状态
 			borrowRepay.setRepayPeriod(isMonth ? borrowPeriod : 1); // 还款期数
 			borrowRepay.setRepayTime(recoverTime); // 估计还款时间
-			// borrowRepay.setRepayYestime(""); // 实际还款时间
 			borrowRepay.setRepayAccountAll(BigDecimal.ZERO); // 还款总额，加上费用
 			borrowRepay.setRepayAccount(BigDecimal.ZERO); // 预还金额
 			borrowRepay.setRepayInterest(BigDecimal.ZERO); // 预还利息
@@ -2160,23 +2122,13 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrowRepay.setRepayCapitalYes(BigDecimal.ZERO); // 实还本金
 			borrowRepay.setRepayCapitalWait(BigDecimal.ZERO);// 未还本金
 			borrowRepay.setRepayInterestWait(BigDecimal.ZERO); // 未还利息
-			// borrowRepay.setRepayWeb(0); // 网站待还
-			// borrowRepay.setRepayWebTime(""); //
-			// borrowRepay.setRepayWebStep(0); // 提前还款
-			// borrowRepay.setRepayWebAccount(BigDecimal.ZERO); // 网站垫付金额
-			// borrowRepay.setRepayVouch(0); // 担保人还款
 			borrowRepay.setAdvanceStatus(0); // 进展
-			// borrowRepay.setLateRepayStatus(0); // 是否逾期还款
 			borrowRepay.setLateDays(0); // 逾期天数
 			borrowRepay.setLateInterest(BigDecimal.ZERO); // 逾期利息
-			// borrowRepay.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-			// borrowRepay.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
 			borrowRepay.setDelayDays(0); // 逾期天数
 			borrowRepay.setDelayInterest(BigDecimal.ZERO); // 逾期利息
 			borrowRepay.setDelayRemark(""); // 备注
-			// borrowRepay.setAddtime(String.valueOf(nowTime)); // 发标时间
 			borrowRepay.setAddIp(borrow.getAddIp()); // 发标ip
-			// borrowRepay.setCreateTime(nowTime); // 创建时间
 			borrowRepay.setChargeDays(0);
 			borrowRepay.setChargeInterest(BigDecimal.ZERO);
 		}
@@ -2203,7 +2155,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				for (int j = 0; j < interestInfo.getListMonthly().size(); j++) {
 					monthly = interestInfo.getListMonthly().get(j);
 					recoverPlan = new BorrowRecoverPlan();
-					recoverPlan.setStatus(0); // 状态
+					recoverPlan.setAuthCode(authCode);
+					recoverPlan.setLoanBatchNo(apicron.getBatchNo());
+					recoverPlan.setStatus(1); // 状态
 					recoverPlan.setUserId(tenderUserId); // 出借人id
 					recoverPlan.setUserName(borrowTender.getUserName());
 					recoverPlan.setBorrowNid(borrowNid); // 借款订单id
@@ -2228,21 +2182,14 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					recoverPlan.setRecoverInterestWait(monthly.getRepayAccountInterest()); // 未还利息
 					recoverPlan.setRecoverType("wait"); // 等待
 					recoverPlan.setRecoverLateFee(BigDecimal.ZERO); // 逾期管理费
-					// recoverPlan.setRecoverWeb(0); // 网站待还
-					// recoverPlan.setRecoverWebTime(""); //
-					// recoverPlan.setRecoverVouch(0); // 担保人还款
 					recoverPlan.setAdvanceStatus(0); //
-					// recoverPlan.setAheadDays(0); // 提前还款天数
 					recoverPlan.setChargeDays(0); // 罚息天数
 					recoverPlan.setChargeInterest(BigDecimal.ZERO); // 罚息总额
 					recoverPlan.setLateDays(0); // 逾期天数
 					recoverPlan.setLateInterest(BigDecimal.ZERO); // 逾期利息
-					// recoverPlan.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-					// recoverPlan.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
 					recoverPlan.setDelayDays(0); // 延期天数
 					recoverPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
 					recoverPlan.setDelayRate(BigDecimal.ZERO); // 延期费率
-					// recoverPlan.setCreateTime(nowTime); // 创建时间
 					recoverPlan.setAddIp(borrowTender.getAddIp());
 					recoverPlan.setSendmail(0);
 					recoverPlan.setAccedeOrderId(accedeOrderId);
@@ -2264,13 +2211,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						repayPlan.setNid(nid); // 标识
 						repayPlan.setRepayType("wait"); // 还款类型
 						repayPlan.setRepayFee(BigDecimal.ZERO); // 还款费用
-						// repayPlan.setRepayDays(""); // 还款时间间距
-						// repayPlan.setRepayStep(0); // 还款步骤
 						repayPlan.setRepayActionTime(""); // 执行还款的时间
 						repayPlan.setRepayStatus(0); // 还款状态
 						repayPlan.setRepayPeriod(j + 1); // 还款期数
 						repayPlan.setRepayTime(recoverPlan.getRecoverTime()); // 估计还款时间
-						// repayPlan.setRepayYestime(""); // 实际还款时间
 						repayPlan.setRepayAccountAll(BigDecimal.ZERO); // 还款总额，加上费用
 						repayPlan.setRepayAccount(BigDecimal.ZERO); // 预还金额
 						repayPlan.setRepayInterest(BigDecimal.ZERO); // 预还利息
@@ -2280,24 +2224,14 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						repayPlan.setRepayCapitalYes(BigDecimal.ZERO); // 实还本金
 						repayPlan.setRepayCapitalWait(BigDecimal.ZERO); // 未还本金
 						repayPlan.setRepayInterestWait(BigDecimal.ZERO); // 未还利息
-						// repayPlan.setRepayWeb(0); // 网站待还
-						// repayPlan.setRepayWebTime("");
-						// repayPlan.setRepayWebStep(0); // 提前还款
-						// repayPlan.setRepayWebAccount(BigDecimal.ZERO); // 网站垫付金额
-						// repayPlan.setRepayVouch(0); // 担保人还款
 						repayPlan.setAdvanceStatus(0); // 进展
-						// repayPlan.setLateRepayStatus(0); // 是否逾期还款
 						repayPlan.setLateDays(0); // 逾期天数
 						repayPlan.setLateInterest(BigDecimal.ZERO); // 逾期利息
-						// repayPlan.setLateForfeit(BigDecimal.ZERO); // 逾期滞纳金
-						// repayPlan.setLateReminder(BigDecimal.ZERO); // 逾期崔收费
 						repayPlan.setLateRepayDays(0); // 逾期还款天数
 						repayPlan.setDelayDays(0); // 延期天数
 						repayPlan.setDelayInterest(BigDecimal.ZERO); // 延期利息
 						repayPlan.setDelayRemark(""); // 延期备注
-						// repayPlan.setAddtime(String.valueOf(nowTime)); // 借款成功时间
 						repayPlan.setAddIp(borrowTender.getAddIp());
-						// repayPlan.setCreateTime(nowTime); // 创建时间
 						repayPlan.setChargeDays(0);
 						repayPlan.setChargeInterest(BigDecimal.ZERO);
 					}
@@ -2505,14 +2439,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		accountList.setBalance(accountTender.getBalance()); // 出借人可用金额
 		accountList.setFrost(accountTender.getFrost()); // 出借人冻结金额
 		accountList.setAwait(accountTender.getAwait()); // 出借人待收金额
-		// accountList.setCreateTime(nowTime); // 创建时间
-		// accountList.setBaseUpdate(nowTime); // 更新时间
 		accountList.setOperator(CustomConstants.OPERATOR_AUTO_LOANS); // 操作者
 		accountList.setIp(borrow.getAddIp()); // 操作IP
 		accountList.setRemark(borrowNid);
-		// accountList.setIsUpdate(0);
-		// accountList.setBaseUpdate(0);
-		// accountList.setInterest(BigDecimal.ZERO); // 利息
 		accountList.setWeb(0); // PC
 		accountList.setPlanFrost(accountTender.getPlanFrost());
 		accountList.setPlanBalance(accountTender.getPlanBalance());
@@ -2569,7 +2498,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				logger.error("智投标的发送网站收支MQ异常，标的:" + borrowNid, e);
 			}
 		}
-		logger.info("-----------放款结束，放款成功---" + borrowNid + "---------出借订单号" + ordId);
+		logger.info("-----------放款投资业务数据更新成功：---" + borrowNid + "---------出借订单号" + ordId);
 	}
 
 	/**
@@ -2665,7 +2594,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrowAccount.setBankWaitInterest(BigDecimal.ZERO);// 待还利息
 			boolean borrowAccountFlag = this.adminAccountCustomizeMapper.updateOfLoansBorrow(borrowAccount) > 0 ? true : false;
 			if (!borrowAccountFlag) {
-				throw new RuntimeException("受托支付指定收款子账户资金记录(huiyingdai_account)更新失败!" + "[项目编号：" + borrowNid + "]");
+				throw new RuntimeException("受托支付指定收款子账户资金记录(ht_account)更新失败!" + "[项目编号：" + borrowNid + "]");
 			}
 			Account borrowuserAccount = new Account();
 			borrowuserAccount.setUserId(borrowUserId);
@@ -2677,7 +2606,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrowuserAccount.setBankBalanceCash(BigDecimal.ZERO);// 江西银行可用余额
 			boolean accountFlag = this.adminAccountCustomizeMapper.updateOfLoansBorrow(borrowuserAccount) > 0 ? true : false;
 			if (!accountFlag) {
-				throw new RuntimeException("借款人账户资金记录(huiyingdai_account)更新失败!" + "[项目编号：" + borrowNid + "]");
+				throw new RuntimeException("借款人账户资金记录(ht_account)更新失败!" + "[项目编号：" + borrowNid + "]");
 			}
 		} else {
 			borrowAccount.setUserId(userId);
@@ -2689,7 +2618,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrowAccount.setBankBalanceCash(realAcmount);// 江西银行可用余额
 			boolean borrowAccountFlag = this.adminAccountCustomizeMapper.updateOfLoansBorrow(borrowAccount) > 0 ? true : false;
 			if (!borrowAccountFlag) {
-				throw new RuntimeException("借款人资金记录(huiyingdai_account)更新失败!" + "[项目编号：" + borrowNid + "]");
+				throw new RuntimeException("借款人资金记录(ht_account)更新失败!" + "[项目编号：" + borrowNid + "]");
 			}
 		}
 		// 取得借款人账户信息

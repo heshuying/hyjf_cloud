@@ -50,6 +50,14 @@ public interface HjhPlanService {
     HjhPlan getHjhPlanByNid(String planNid);
 
     /**
+     * @Description 根据计划编号查询计划
+     * @Author liubin
+     * @Version v0.1
+     * @Date 2018/6/19 14:08
+     */
+    HjhPlan doGetHjhPlanByNid(String planNid);
+
+    /**
      * 取得全部汇计划列表
      * @return
      */

@@ -6,8 +6,10 @@ package com.hyjf.am.trade.service.hgreportdata.cert.impl;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
+import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetDateUtils;
 import org.springframework.stereotype.Service;
@@ -140,5 +142,15 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         example.createCriteria().andCreditRepayOrderIdEqualTo(certRequest.getRepayOrdid());
         List<CreditRepay> creditRepays=creditRepayMapper.selectByExample(example);
         return creditRepays;
+    }
+
+    @Override
+    public CertAccountListIdCustomize queryCertAccountListId(CertRequest certRequest) {
+        Map<String, Object> param =  new HashMap<String, Object>();
+        param.put("minId", certRequest.getMinId());
+        param.put("limitStart", certRequest.getLimitStart());
+        param.put("limitEnd", certRequest.getLimitEnd());
+        CertAccountListIdCustomize customize=certMapper.queryCertAccountListId(param);
+        return customize;
     }
 }

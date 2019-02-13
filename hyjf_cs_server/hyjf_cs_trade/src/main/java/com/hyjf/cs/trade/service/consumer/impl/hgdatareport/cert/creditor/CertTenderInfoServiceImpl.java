@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -175,28 +176,6 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
         }
         return null;
     }
-    /**
-     * 获取放款信息
-     *
-     * @param tenderNid
-     * @param borrowNid
-     * @return
-     */
-/*    private BorrowRecover getRecoverDateByTenderNid(String tenderNid, String borrowNid,String accedeOrderId) {
-        BorrowRecoverExample example = new BorrowRecoverExample();
-        BorrowRecoverExample.Criteria cra = example.createCriteria();
-        cra.andBorrowNidEqualTo(borrowNid);
-        cra.andNidEqualTo(tenderNid);
-        if(StringUtils.isNotBlank(accedeOrderId)){
-            cra.andAccedeOrderIdEqualTo(accedeOrderId);
-        }
-        List<BorrowRecover> borrowRecoverList = borrowRecoverMapper.selectByExample(example);
-        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
-            return borrowRecoverList.get(0);
-        }
-        return null;
-    }*/
-
 
     /**
      * 计息日+30天

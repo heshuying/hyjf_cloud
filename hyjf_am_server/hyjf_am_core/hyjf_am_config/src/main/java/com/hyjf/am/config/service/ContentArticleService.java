@@ -139,14 +139,6 @@ public interface ContentArticleService {
     ContentArticleCustomize getContentArticleFlip(Map<String, Object> params, String offset);
 
     /**
-     * 获取指定Type的文章列表
-     * @param type
-     * @return
-     * @Author : huanghui
-     */
-    List<ContentArticle> getContentArticListByType(String type);
-
-    /**
      * 获取公司公告件数
      * @param noticeType
      * @return

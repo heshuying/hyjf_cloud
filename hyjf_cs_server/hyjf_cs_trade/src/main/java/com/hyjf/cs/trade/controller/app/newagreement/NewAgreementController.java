@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -25,6 +26,8 @@ import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.bean.newagreement.NewCreditAssignedBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.agreement.CreateAgreementService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -63,12 +66,21 @@ public class NewAgreementController extends BaseTradeController{
     
 	@Autowired
 	private NewAgreementService agreementService;
-	
-/*    @Autowired
-    BankWithdrawService bankWithdrawService;*/
-	
+
+   @Autowired
+   private CreateAgreementService createAgreementService;
+
+    @Autowired
+   private NifaContractEssenceMessageService nifaContractEssenceMessageService;
+
 	@Autowired
-    SystemConfig systemConfig;
+    private SystemConfig systemConfig;
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
 	
     /**
      * 
@@ -560,11 +572,6 @@ public class NewAgreementController extends BaseTradeController{
     
     /**
      * app 我的计划-计划详情-资产列表-协议（转让）列表
-     * @param nid
-     * @param sign
-     * @param userId
-     * @param version
-     * @param borrowType
      * @return
      */
     @ApiOperation(value = "协议列表内容的获取", httpMethod = "POST", notes = "协议列表内容的获取")
@@ -595,55 +602,127 @@ public class NewAgreementController extends BaseTradeController{
             // 债转承接信息
             HjhDebtCreditTenderVO hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(nid);
             while (hjhDebtCreditTender!=null && investOrderId==null) {
-            	NewAgreementBean newAgreementBean=new NewAgreementBean("《债权转让协议》"+hjhDebtCreditTender.getAssignOrderDate(), 
-                		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +*/
-                		systemConfig.getAppFrontHost() +
-                        TRANS_FER_AGREEMENT_PATH + "?nid="+hjhDebtCreditTender.getId()+"&borrowType="+borrowType+"&userId="+userId);
-                
-                list.add(newAgreementBean);
-                if(!hjhDebtCreditTender.getInvestOrderId().equals(hjhDebtCreditTender.getSellOrderId())){
+                boolean isAgreements = false;//是否下载债转协议
+                List<TenderAgreementVO> tenderAgreementsAss = createAgreementService.selectTenderAgreementByNid(nid);//债权转让协议
+                if (tenderAgreementsAss != null && tenderAgreementsAss.size() > 0) {
+                    TenderAgreementVO tenderAgreement = tenderAgreementsAss.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if (fddStatus.equals(3)) {
+                        isAgreements = true;
+                    }
+                } else {
+                    int addTime = (hjhDebtCreditTender.getCreateTime() == null ? 0 : GetDate.getTime10(hjhDebtCreditTender.getCreateTime()));
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    if (addTime < ADD_TIME328) {
+                        //下载老版本协议
+                        isAgreements = true;
+                    }
+                }
+                if (isAgreements) {
+                    NewAgreementBean newAgreementBean = new NewAgreementBean("《债权转让协议》" + hjhDebtCreditTender.getAssignOrderDate(),
+                            /*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL) +*/
+                            systemConfig.getAppFrontHost() +
+                                    TRANS_FER_AGREEMENT_PATH + "?nid=" + hjhDebtCreditTender.getId() + "&borrowType=" + borrowType + "&userId=" + userId);
+
+                    list.add(newAgreementBean);
+                }
+                if (!hjhDebtCreditTender.getInvestOrderId().equals(hjhDebtCreditTender.getSellOrderId())) {
                     // 债转承接信息
                     hjhDebtCreditTender = this.agreementService.getHjhDebtCreditTenderByAssignOrderId(hjhDebtCreditTender.getSellOrderId());
-                }else{
-                    investOrderId=hjhDebtCreditTender.getInvestOrderId();
+                } else {
+                    investOrderId = hjhDebtCreditTender.getInvestOrderId();
                 }
             }
             
             /*原 BorrowTender borrowTender=agreementService.getBorrowTenderByNid(investOrderId); 使用 criteria.andNidEqualTo(nid);*/
             //现 获取用户出借信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
-            List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(investOrderId);
+            List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(investOrderId);//居间协议
             BorrowTenderVO borrowTender = null;
             if(CollectionUtils.isNotEmpty(tenderList)){
             	borrowTender = tenderList.get(0);
             } 
             if(borrowTender != null){
-                NewAgreementBean newAgreementBean=new NewAgreementBean("《居间服务借款协议》", 
-                		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
-                		systemConfig.getAppFrontHost() +
-                        SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
-                        "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
-                list.add(newAgreementBean);
-                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
-                newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
-                newAgreementResultBean.setList(list); 
+                boolean isAgreementsBorrow = false;//是否生成居间协议
+                List<TenderAgreementVO> tenderAgreementsNid = createAgreementService.selectTenderAgreementByNid(investOrderId);//居间协议
+                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if(fddStatus.equals(3)){
+                        isAgreementsBorrow = true;
+                    }
+                }else{
+                    BorrowRecoverVO borrowRecoverVO = nifaContractEssenceMessageService.selectBorrowRecover(investOrderId);
+                    int addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                    logger.info("---------------------------------------居间协议addTime:"+addTime);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    if (addTime < ADD_TIME328) {
+                        //下载老版本协议
+                        isAgreementsBorrow = true;
+                    }
+                }
+                if(isAgreementsBorrow) {
+                    NewAgreementBean newAgreementBean = new NewAgreementBean("《居间服务借款协议》",
+                            /*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+                            systemConfig.getAppFrontHost() +
+                                    SERVICE_LOAN_AGREEMENT_PATH + "?tenderNid=" + borrowTender.getNid() +
+                                    "&borrowNid=" + borrowTender.getBorrowNid() + "&userId=" + userId);
+                    list.add(newAgreementBean);
+                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                    newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                    newAgreementResultBean.setList(list);
+                }
             }
         }else{
             List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
             // 原 债转承接信息  criteria.andAssignNidEqualTo(nid);
             /*CreditTender creditTender = this.agreementService.getCreditTenderByCreditNid(nid);*/
             CreditTenderVO creditTender = this.agreementService.getCreditTenderByAssignNid(nid);
-            
-            
-            NewAgreementBean newAgreementBean=new NewAgreementBean("《债权转让协议》", 
-            		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
-            		systemConfig.getAppFrontHost() +
-                    TRANS_FER_AGREEMENT_PATH+"?bidNid="+creditTender.getBidNid()+
-                    "&creditNid="+creditTender.getCreditNid()+
-                    "&creditTenderNid="+creditTender.getCreditTenderNid()+
-                    "&assignNid="+creditTender.getAssignNid()+
-                    "&sign="+sign+
-                    "&borrowType="+borrowType);
-            list.add(newAgreementBean);
+            boolean isAgreements = false;//是否承接协议
+            List<TenderAgreementVO> tenderAgreementsNid = createAgreementService.selectTenderAgreementByNid(nid);//债权转让协议
+            if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                Integer fddStatus = tenderAgreement.getStatus();
+                //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                if(fddStatus.equals(3)){
+                    isAgreements = true;
+                }
+            }else{
+                int addTime = (creditTender.getCreateTime() == null? 0 : GetDate.getTime10(creditTender.getCreateTime()));
+
+                /**
+                 * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                 * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                 * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                 */
+                if (addTime < ADD_TIME328) {
+                    logger.info("1---------------------------------------债转承接信息addTime:"+addTime);
+                    //下载老版本协议
+                    isAgreements = true;
+                }
+                logger.info("2---------------------------------------债转承接信息addTime:"+addTime);
+            }
+            if(isAgreements) {
+                NewAgreementBean newAgreementBean = new NewAgreementBean("《债权转让协议》",
+                        /*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+                        systemConfig.getAppFrontHost() +
+                                TRANS_FER_AGREEMENT_PATH + "?bidNid=" + creditTender.getBidNid() +
+                                "&creditNid=" + creditTender.getCreditNid() +
+                                "&creditTenderNid=" + creditTender.getCreditTenderNid() +
+                                "&assignNid=" + creditTender.getAssignNid() +
+                                "&sign=" + sign +
+                                "&borrowType=" + borrowType);
+                list.add(newAgreementBean);
+            }
             /*原BorrowTender borrowTender=agreementService.getBorrowTenderByNid(creditTender.getCreditTenderNid());  criteria.andNidEqualTo(nid)*/
             //现 获取用户出借信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
             List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(creditTender.getCreditTenderNid());
@@ -652,15 +731,40 @@ public class NewAgreementController extends BaseTradeController{
             	borrowTender = tenderList.get(0);
             } 
             if(borrowTender != null){
-                NewAgreementBean newAgreementBean1=new NewAgreementBean("《居间服务借款协议》", 
-                		/*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
-                		systemConfig.getAppFrontHost() +
-                        SERVICE_LOAN_AGREEMENT_PATH+"?tenderNid="+borrowTender.getNid()+
-                        "&borrowNid="+borrowTender.getBorrowNid()+"&userId="+userId);
-                list.add(newAgreementBean1);
-                newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
-                newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
-                newAgreementResultBean.setList(list);
+                boolean isAgreementsBorrow = false;//是否生成居间协议
+                List<TenderAgreementVO> tenderAgreementsBo = createAgreementService.selectTenderAgreementByNid(creditTender.getCreditTenderNid());//居间协议
+                if(tenderAgreementsBo!=null && tenderAgreementsBo.size()>0){
+                    TenderAgreementVO tenderAgreement = tenderAgreementsBo.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if(fddStatus.equals(3)){
+                        isAgreementsBorrow = true;
+                    }
+                }else{
+                    BorrowRecoverVO borrowRecoverVO = nifaContractEssenceMessageService.selectBorrowRecover(creditTender.getCreditTenderNid());
+                    int addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                    logger.info("---------------------------------------居间协议addTime:"+addTime);
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    if (addTime < ADD_TIME328) {
+                        //下载老版本协议
+                        isAgreementsBorrow = true;
+                    }
+                }
+                if(isAgreementsBorrow) {
+                    NewAgreementBean newAgreementBean1 = new NewAgreementBean("《居间服务借款协议》",
+                            /*PropUtils.getSystem(CustomConstants.HYJF_WEB_URL)+*/
+                            systemConfig.getAppFrontHost() +
+                                    SERVICE_LOAN_AGREEMENT_PATH + "?tenderNid=" + borrowTender.getNid() +
+                                    "&borrowNid=" + borrowTender.getBorrowNid() + "&userId=" + userId);
+                    list.add(newAgreementBean1);
+                    newAgreementResultBean.setStatus(BaseResultBeanFrontEnd.SUCCESS);
+                    newAgreementResultBean.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
+                    newAgreementResultBean.setList(list);
+                }
             }
         }
         logger.info("get newAgreementResultBean is: {}",JSONObject.toJSON(newAgreementResultBean));
