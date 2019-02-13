@@ -306,7 +306,7 @@ public class AccessFilter extends ZuulFilter {
             Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, Integer.class);
             if (value == null) {
                 // 登陆过期
-                logger.error("accessToken is timeout...");
+                logger.error("accessToken:【{}】 is timeout...", token);
                 return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WEB_CHANNEL);
             }
             // 每次操作，延长超时时间
