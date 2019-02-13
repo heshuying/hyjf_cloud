@@ -45,15 +45,14 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
     @Override
     public void onMessage(MessageExt  message) {
         OperationReportJobBean bean = JSONObject.parseObject(message.getBody(), OperationReportJobBean.class);
-        logger.info("====OperationReportJobAdminConsumer consumeMessage=====" + JSONObject.toJSONString(bean));
         int lastMonth = bean.getLastMonth();
         Calendar cal = bean.getCalendar();
         List<OperationReportJobVO> cityGroup = amAdminClient.getTenderCityGroupByList(getLastDay(cal));
         bean.setCityGroup(cityGroup);
         List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));
         bean.setSexGroup(sexGroup);
-        List<OperationReportJobVO> ageRangeUserIds = amAdminClient.getTenderAgeByRangeList(getLastDay(cal));
-        bean.setAgeRangeUserIds(ageRangeUserIds);
+/*        List<OperationReportJobVO> ageRangeUserIds = amAdminClient.getTenderAgeByRangeList(getLastDay(cal));
+        bean.setAgeRangeUserIds(ageRangeUserIds);*/
         // 月交易金额
         bean.setAccountMonth(amAdminClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
         // 月交易笔数
@@ -160,6 +159,7 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         try {
             //成功
             bean.setStatus("success");
+            logger.info("====OperationReportJobAdminConsumer consumeMessage=====" + JSONObject.toJSONString(bean));
             commonProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_TOPIC,
                     System.currentTimeMillis() + "", bean));
         } catch (MQException e) {

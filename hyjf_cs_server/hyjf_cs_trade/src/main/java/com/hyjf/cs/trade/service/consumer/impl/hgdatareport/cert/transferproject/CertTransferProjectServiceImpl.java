@@ -6,13 +6,17 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
+import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.transferproject.CertTransferProjectMessageConsumer;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.transferproject.CertTransferProjectService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +38,11 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 	AmUserClient amUserClient;
 	@Autowired
 	SystemConfig systemConfig;
+
+	Logger logger = LoggerFactory.getLogger(CertTransferProjectServiceImpl.class);
+	private String thisMessName = "转让状态信息上报";
+	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
 	@Override
 	public JSONArray createDate(String creditNid,String flag) {
 		
@@ -72,13 +81,14 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						param.put("floatMoney", 
 								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))));
 						//转让项目发布的日期
-						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getAddTime()));
+						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getCreditTerm()));
 						//转让债权信息的链接URL
 						param.put("sourceProductUrl", systemConfig.getWebHost() + "/bank/user/credit/webcredittender.do?creditNid="+credit.getCreditNid());
 						list.add(param);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// 错误时，以下日志必须出力（预警捕捉点）
+					logger.error(logHeader , e);
 				}
 			}
 		}else{
@@ -122,12 +132,12 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						list.add(param);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// 错误时，以下日志必须出力（预警捕捉点）
+					logger.error(logHeader , e);
 				}
 
 			}
 		}
-
 		return JSONArray.parseArray(JSON.toJSONString(list));
 	}
 
