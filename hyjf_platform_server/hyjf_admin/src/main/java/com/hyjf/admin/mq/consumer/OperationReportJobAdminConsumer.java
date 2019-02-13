@@ -45,7 +45,6 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
     @Override
     public void onMessage(MessageExt  message) {
         OperationReportJobBean bean = JSONObject.parseObject(message.getBody(), OperationReportJobBean.class);
-        logger.info("====OperationReportJobAdminConsumer consumeMessage=====" + JSONObject.toJSONString(bean));
         int lastMonth = bean.getLastMonth();
         Calendar cal = bean.getCalendar();
         List<OperationReportJobVO> cityGroup = amAdminClient.getTenderCityGroupByList(getLastDay(cal));
@@ -160,6 +159,7 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         try {
             //成功
             bean.setStatus("success");
+            logger.info("====OperationReportJobAdminConsumer consumeMessage=====" + JSONObject.toJSONString(bean));
             commonProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_TOPIC,
                     System.currentTimeMillis() + "", bean));
         } catch (MQException e) {
