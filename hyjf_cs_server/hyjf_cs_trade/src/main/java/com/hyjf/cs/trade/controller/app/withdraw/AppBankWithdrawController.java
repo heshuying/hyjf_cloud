@@ -206,7 +206,7 @@ public class AppBankWithdrawController extends BaseTradeController {
                     balance = CommonUtils.formatAmount(version, transAmt);
 
                     // 大额支付需要传开户行号
-                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50000)) >= 0)) {
+                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50001)) >= 0)) {
                         // 是否是大额提现表示 0:非 1:是
                         result.setIsDisplay("1");
                         // 开户行号

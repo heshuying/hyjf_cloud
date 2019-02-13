@@ -101,12 +101,11 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
             return;
         }
         commisionUserId = userInfoCommision.getUserId();
-        //如果有用户信息，用户ID肯定不为空
-//        if(commisionUserId == null){
-//            logger.info("汇计划提成：查询出的用户信息的userid为空！");
-//            statusUpdate(record, 1);
-//            return;
-//        }
+        if(commisionUserId == null){
+            logger.info("汇计划提成：查询出的用户信息的userid为空！");
+            statusUpdate(record, 1);
+            return;
+        }
 
 //        if(userInfoCommision.getAttribute() != 3 && userInfoCommision.getIs51() ==1 && pushMoney51.getRewardSend() == 0){
 //            logger.info("汇计划提成：查询出的用户信息的用户类型不符合条件！");

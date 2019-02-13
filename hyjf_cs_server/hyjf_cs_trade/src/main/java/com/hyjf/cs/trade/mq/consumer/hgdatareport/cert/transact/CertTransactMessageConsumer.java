@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @Date
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_CERT_TRANSACT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_CERT_TRANSACT_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_TRANSACT_TAG, consumerGroup = MQConstant.CERT_TRANSACT_GROUP)
 public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(CertTransactMessageConsumer.class);
 
