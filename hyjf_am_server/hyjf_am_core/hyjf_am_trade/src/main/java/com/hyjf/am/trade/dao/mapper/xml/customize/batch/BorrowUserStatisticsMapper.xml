@@ -10,7 +10,7 @@
 				ht_borrow b
 			JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
 			WHERE
-				b.`status` > 1
+				b.`status` >= 4
 			AND 5 >= b.`status`
 		) + (
 			SELECT
@@ -22,7 +22,7 @@
 				ht_borrow b
 			JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
 			WHERE
-				b.`status` > 1
+				b.`status` >= 4
 			AND 5 >= b.`status`
 		)
     </select>
@@ -35,8 +35,7 @@
 				ht_borrow b
 			JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
 			WHERE
-				b.`status` > 1
-			AND 5 > b.`status`
+				b.`status` = 4
 		) + (
 			SELECT
 				IFNULL(
@@ -47,8 +46,7 @@
 				ht_borrow b
 			JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
 			WHERE
-				b.`status` > 1
-			AND 5 > b.`status`
+				b.`status` = 4
 		)
     </select>
 
