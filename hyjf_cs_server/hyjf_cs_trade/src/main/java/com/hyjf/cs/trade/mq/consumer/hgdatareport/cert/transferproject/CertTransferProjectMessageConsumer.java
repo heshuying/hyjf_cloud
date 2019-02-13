@@ -86,6 +86,11 @@ public class CertTransferProjectMessageConsumer implements RocketMQListener<Mess
 
             // --> 调用service组装数据
             JSONArray data =certTransferProjectService.createDate(creditNid,flag);
+            if(data==null){
+                logger.info(logHeader + "参数异常请重新查询");
+                logger.info(logHeader + "msgBody："+ msgBody);
+                return;
+            }
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_TRANSFER_PROJECT, creditNid, data);
             try {
