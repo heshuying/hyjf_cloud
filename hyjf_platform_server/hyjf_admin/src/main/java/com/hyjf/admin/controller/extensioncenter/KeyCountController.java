@@ -189,6 +189,7 @@ public class KeyCountController extends BaseController {
             form.setPageSize(defaultRowMaxCount);
             form.setCurrPage(i+1);
             // 封装查询条件
+			form.setLimitStart(-1);
             KeyCountResponse keyCountResponse2 = keyCountService.searchAction(form);
             List<KeyCountVO> recordList2 = keyCountResponse2.getResultList();
             if (recordList2 != null && recordList2.size()> 0) {
