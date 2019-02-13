@@ -93,8 +93,12 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             //法大大协议信息
             if(recordList!=null && recordList.size()>0){
                 for (CurrentHoldObligatoryRightListCustomizeVO currentHoldObligatoryRightListCustomize : recordList) {
-                    String nid = currentHoldObligatoryRightListCustomize.getNid();
                     //法大大居间服务协议（type=2时候，为债转协议）
+                    String nid = currentHoldObligatoryRightListCustomize.getNid();//出借订单号
+                    if("2".equals(currentHoldObligatoryRightListCustomize.getType())){
+                        nid = currentHoldObligatoryRightListCustomize.getCreditTenderNid();//债转投标单号
+                    }
+                    //法大大居间服务协议（type=1时候，为债转协议）
                     List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
                     if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
                         TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
@@ -371,7 +375,6 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                     hjhInvistDetailVO.setFddStatus(2);
                 }
             }else {
-
                 /**
                  * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
                  * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
