@@ -15,7 +15,7 @@ import org.quartz.JobExecutionException;
  * @date 2018/8/15 16:22
  */
 @DisallowConcurrentExecution
-public class HjhOrderInvestExceptionCheckJob extends BaseJob implements Job {
+public class HjhOrderInvestRepairCheckJob extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

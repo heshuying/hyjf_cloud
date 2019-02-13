@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.exception.credittenderexception;
+package com.hyjf.batch.job.repair.credittenderrepair;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -11,13 +11,13 @@ import org.quartz.JobExecutionException;
  * @since 20180619	
  */
 @DisallowConcurrentExecution
-public class BankCreditTenderExceptionJob extends BaseJob implements Job{
+public class BankCreditTenderRepairJob extends BaseJob implements Job{
 	
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("BankCreditTenderExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("BankCreditTenderRepairJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/creditTenderExceptionHandle", String.class).getBody();
-        logger.info("BankCreditTenderExceptionJob execute end...");
+        logger.info("BankCreditTenderRepairJob execute end...");
     }
 
 }

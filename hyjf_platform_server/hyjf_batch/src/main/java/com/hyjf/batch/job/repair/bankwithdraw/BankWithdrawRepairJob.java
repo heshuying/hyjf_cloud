@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.exception.bankwithdraw;
+package com.hyjf.batch.job.repair.bankwithdraw;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -12,12 +12,12 @@ import org.quartz.JobExecutionException;
  * @date 2018年6月14日
  */
 @DisallowConcurrentExecution
-public class BankWithdrawExceptionJob extends BaseJob implements Job {
+public class BankWithdrawRepairJob extends BaseJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info(".................BankWithdrawExceptionJob: {} execute.................", context.getJobDetail().getKey().getName());
+        logger.info(".................BankWithdrawRepairJob: {} execute.................", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/bankWithdrawExceptionHandle", String.class);
-        logger.info(".................BankWithdrawExceptionJob execute end.................");
+        logger.info(".................BankWithdrawRepairJob execute end.................");
     }
 }
