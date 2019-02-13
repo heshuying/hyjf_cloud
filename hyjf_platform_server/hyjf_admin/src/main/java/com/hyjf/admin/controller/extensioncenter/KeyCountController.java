@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -173,7 +174,7 @@ public class KeyCountController extends BaseController {
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
 		Integer totalCount = keyCountResponse.getCount();
-
+		List<KeyCountVO> recordList = keyCountResponse.getResultList();
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
 				: totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
@@ -181,9 +182,10 @@ public class KeyCountController extends BaseController {
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}/* else {
+		}else {
+			logger.info(JSONObject.toJSONString(recordList));
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
-		}*/
+		}
 
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条

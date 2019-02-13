@@ -69,8 +69,8 @@ public class WechatRechargeController extends BaseTradeController{
 			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
 		// 拼装参数 调用江西银行
-		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&txAmount="+money;
-		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&txAmount="+money;
+		String retUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/failed/?sign="+sign+"&money="+money;
+		String successfulUrl = systemConfig.getWeiFrontHost()+"/user/bank/recharge/result/success/?sign="+sign+"&money="+money;
 		String bgRetUrl = "http://CS-TRADE/hyjf-wechat/wx/recharge/bgreturn?phone="+mobile;
 		//String successfulUrl = systemConfig.getWeiFrontHost()+"/user/rechargeSuccess?money="+money;
 		directRechargeBean.setRetUrl(retUrl);
