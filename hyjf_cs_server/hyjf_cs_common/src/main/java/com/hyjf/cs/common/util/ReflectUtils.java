@@ -17,8 +17,13 @@ public class ReflectUtils {
      * @return
      */
     public static String getSuperiorClass(int level){
-        StackTraceElement[] temp = Thread.currentThread().getStackTrace();
-        StackTraceElement element = (StackTraceElement)temp[level];
-        return "from --- >> " + element.getClassName() + " ------>>>>> " + element.getMethodName() + " ------>>>>>> " + element.getLineNumber();
+        try{
+            StackTraceElement[] temp = Thread.currentThread().getStackTrace();
+            StackTraceElement element = (StackTraceElement)temp[level];
+            return "from --- >> " + element.getClassName() + " ------>>>>> " + element.getMethodName() + " ------>>>>>> " + element.getLineNumber();
+        }catch (Exception e){
+            return level + "级别调用，抛出异常：" + e.getLocalizedMessage();
+        }
+
     }
 }
