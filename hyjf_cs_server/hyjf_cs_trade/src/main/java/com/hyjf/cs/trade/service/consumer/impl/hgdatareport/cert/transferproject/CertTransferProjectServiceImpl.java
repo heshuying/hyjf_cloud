@@ -90,7 +90,8 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						list.add(param);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// 错误时，以下日志必须出力（预警捕捉点）
+					logger.error(logHeader , e);
 				}
 			}
 		}else{
