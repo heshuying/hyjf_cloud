@@ -70,13 +70,13 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getRecoverLastTime().toString());
                     productStatusDesc = "放款后（报送5还款中）";
                 } else if (borrow.getStatus() == 2) {
-                    logger.info("投资中");
                     //投资中
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
+                    logger.info("标的状态 productStatus:"+productStatus);
                     //发标时间
-                    logger.info("发标时间 borrow.getVerifyTime():"+borrow.getVerifyTime().toString());
-                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime().toString());
+                    logger.info("发标时间 borrow.getVerifyTime:"+borrow.getVerifyTimeInteger());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTimeInteger().toString());
                     logger.info("发标时间 productDate:"+productDate);
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {
@@ -100,7 +100,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getBorrowFullTime().toString());
                     productStatusDesc = "满标时候（报送1满标）";
                 }
-                logger.info("borrowNid:"+borrowNid+",productStatus:"+productStatus+",productDate"+productDate+",productStatusDesc:"+productStatusDesc);
+                logger.info("borrowNid:"+borrowNid+",productStatus:"+productStatus+",productDate:"+productDate+",productStatusDesc:"+productStatusDesc);
                 param = putParamObject(borrowNid, productStatus, productDate, productStatusDesc);
                 return param;
 
