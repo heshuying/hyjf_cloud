@@ -32,6 +32,22 @@ public interface BaseService {
 	BorrowInfo getBorrowInfoByNid(String borrowNid);
 
 	/**
+	 * 根据标的编号检索标的借款信息
+	 *
+	 * @param borrowNid
+	 * @return
+	 */
+	Borrow doGetBorrowByNid(String borrowNid);
+
+	/**
+	 * 根据标的编号检索标的借款详情
+	 *
+	 * @param borrowNid
+	 * @return
+	 */
+	BorrowInfo doGetBorrowInfoByNid(String borrowNid);
+
+	/**
 	 * 获取用户的账户信息
 	 * 
 	 * @param userId

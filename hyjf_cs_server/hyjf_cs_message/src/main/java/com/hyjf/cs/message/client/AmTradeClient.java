@@ -4,9 +4,11 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +38,15 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	CreditTenderResponse getCreditTender(int userId, int begin, int end);
+
+	/**
+	 *出借人按照年龄分布 返回符合条件所有用户
+	 *
+	 * @param date 上个月的最后一天
+	 * @return
+	 */
+	List<OperationReportJobVO>  getTenderAgeByRangeList(Date date);
+
 
 	/**
 	 * 获取汇计划预计
