@@ -12,9 +12,8 @@ public interface BifaOperationReportJobCustomizeMapper {
 
 	/**
 	 * 累计借贷余额笔数
-	 * @param time
 	 * @return
 	 */
-	int getLoanBalanceNum(Date time);
+	int getLoanBalanceNum();
 
 }

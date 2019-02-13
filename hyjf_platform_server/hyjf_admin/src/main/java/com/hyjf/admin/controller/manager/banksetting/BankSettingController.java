@@ -89,7 +89,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD})
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/info");
 

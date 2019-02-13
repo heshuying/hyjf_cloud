@@ -36,7 +36,7 @@ public class CertBorrowStatusMessageConsumerLoan implements RocketMQListener<Mes
 
     Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerLoan.class);
 
-    private String thisMessName = "散标状态信息推送";
+    private String thisMessName = "散标状态信息推送_放款成功";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Override
@@ -91,7 +91,7 @@ public class CertBorrowStatusMessageConsumerLoan implements RocketMQListener<Mes
         try {
             // --> 调用service组装数据
             JSONArray listRepay = new JSONArray();
-            Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false, false);
+            Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false);
             listRepay.add(mapParam);
             logger.info("数据：" + listRepay);
             // 上送数据
@@ -111,7 +111,7 @@ public class CertBorrowStatusMessageConsumerLoan implements RocketMQListener<Mes
             if (productStatus.equals("9")) {
                 // --> 调用service组装数据
                 JSONArray listRepayAfter = new JSONArray();
-                Map<String, Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, productStatus, false, false);
+                Map<String, Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, productStatus, false);
                 listRepayAfter.add(mapParamAfter);
                 logger.info("数据：" + listRepayAfter);
                 // 上送数据

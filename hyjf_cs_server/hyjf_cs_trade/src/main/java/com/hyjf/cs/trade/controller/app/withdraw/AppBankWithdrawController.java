@@ -168,7 +168,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             // 卡号
             String cardNo = bankCard.getCardNo();
             result.setCardNo(cardNo);
-            result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
+            result.setCardNo_info(BankCardUtil.getFormatCardNo(cardNo));
             JxBankConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                 result.setLogo(systemConfig.getAppFrontHost() + banksConfig.getBankIcon());
@@ -206,7 +206,7 @@ public class AppBankWithdrawController extends BaseTradeController {
                     balance = CommonUtils.formatAmount(version, transAmt);
 
                     // 大额支付需要传开户行号
-                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50000)) >= 0)) {
+                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50001)) >= 0)) {
                         // 是否是大额提现表示 0:非 1:是
                         result.setIsDisplay("1");
                         // 开户行号
