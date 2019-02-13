@@ -2799,5 +2799,9 @@ public interface AmTradeClient {
 
 
     CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
 }
 

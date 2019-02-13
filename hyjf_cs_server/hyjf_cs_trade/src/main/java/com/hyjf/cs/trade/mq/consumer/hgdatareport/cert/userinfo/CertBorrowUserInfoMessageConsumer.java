@@ -183,7 +183,6 @@ public class CertBorrowUserInfoMessageConsumer implements RocketMQListener<Messa
 
                 JSONArray listBorrowStatus = new JSONArray();
                 Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, true);
-                logger.info("散标状态数据前：" + JSONObject.toJSONString(mapParam));
                 listBorrowStatus.add(mapParam);
                 logger.info("散标状态数据：" + listBorrowStatus.toString());
                 // 上送数据

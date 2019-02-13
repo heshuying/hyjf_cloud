@@ -372,7 +372,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
 
-                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动购买债权接口" + credit.getCreditNid()+ "########");
+                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动购买债权接口（承接）" + credit.getCreditNid()+ "########");
 
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
@@ -503,10 +503,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     /** 5.4. 调用银行自动投标申请接口	 */
+                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "########");
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
-                    logger.info(logMsgHeader + " 银行自动投标申请接口调用前  " + borrow.getBorrowNid());
                     // 调用同步银行接口（出借）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
 

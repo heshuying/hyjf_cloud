@@ -40,7 +40,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 	SystemConfig systemConfig;
 
 	Logger logger = LoggerFactory.getLogger(CertTransferProjectServiceImpl.class);
-	private String thisMessName = "转让状态信息上报";
+	private String thisMessName = "转让项目信息上报";
 	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
 	@Override
@@ -49,7 +49,6 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if("1".equals(flag)){
 			List<BorrowCreditVO> creditList=amTradeClient.getBorrowCreditListByCreditNid(creditNid);
-			logger.info(logHeader + " creditList.size():"+creditList.size());
 			if(creditList!=null&&creditList.size()>0){
 				BorrowCreditVO credit=creditList.get(0);
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(credit.getCreditUserId());
@@ -82,19 +81,21 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						param.put("floatMoney", 
 								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))));
 						//转让项目发布的日期
-						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getAddTime()));
+						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getCreditTerm()));
 						//转让债权信息的链接URL
 						param.put("sourceProductUrl", systemConfig.getWebHost() + "/bank/user/credit/webcredittender.do?creditNid="+credit.getCreditNid());
 						list.add(param);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// 错误时，以下日志必须出力（预警捕捉点）
+					logger.error(logHeader , e);
 				}
 			}
 		}else{
 			HjhDebtCreditRequest request=new HjhDebtCreditRequest();
 			request.setCreditNid(creditNid);
-			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditList(request);
+			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByCreditNid(creditNid);
+			logger.info(logHeader + "hjhDebtCreditList.size()"+hjhDebtCreditList.size());
 			if(hjhDebtCreditList!=null&&hjhDebtCreditList.size()>0){
 				HjhDebtCreditVO hjhDebtCredit=hjhDebtCreditList.get(0);
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(hjhDebtCredit.getUserId());
@@ -132,12 +133,12 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						list.add(param);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// 错误时，以下日志必须出力（预警捕捉点）
+					logger.error(logHeader , e);
 				}
 
 			}
 		}
-
 		return JSONArray.parseArray(JSON.toJSONString(list));
 	}
 

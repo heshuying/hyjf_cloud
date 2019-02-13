@@ -180,9 +180,8 @@ public class BanksConfigController extends BaseConfigController{
         if(!CollectionUtils.isEmpty(listBankConfig)){
             listBanksConfig = CommonUtils.convertBeanList(listBankConfig, BankConfigVO.class);
             response.setResultList(listBanksConfig);
-            return response;
         }
-        return null;
+        return response;
     }
 
     @GetMapping("/getParamNameList/{nameClass}")
@@ -222,17 +221,7 @@ public class BanksConfigController extends BaseConfigController{
         //查询保证金配置条数
         int total = bankConfigService.selectBankConfigCount(vo,-1,-1);
         if(total>0){
-//            BeanUtils.copyProperties(listBankConfig,listRes);
-//            for(BanksConfigVO banksConfig : listRes) {
-//                // 不支持快捷支付
-//                if (0 == banksConfig.getQuickPayment()) {
-//                    banksConfig.setMonthCardQuota(new BigDecimal(0));
-//                }
-//            }
             Paginator paginator = new Paginator(adminRequest.getCurrPage(),total,adminRequest.getPageSize() == 0 ?10:adminRequest.getPageSize() );
-//            BanksConfigVO bc=new BanksConfigVO();
-//            bc.setBankName(adminRequest.getBankName());
-//            bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
             List<BankConfig> listBankConfig = bankConfigService.selectBankConfigListByPage(vo, paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(listBankConfig)){
                 List<BankConfigVO> banksConfigVOList =CommonUtils.convertBeanList(listBankConfig,BankConfigVO.class);
@@ -258,9 +247,8 @@ public class BanksConfigController extends BaseConfigController{
             List<BankConfigVO> res=CommonUtils.convertBeanList(list,BankConfigVO.class);
             response.setResultList(res);
             response.setRecordTotal(res.size());
-            return response;
         }
-        return null;
+        return response;
     }
 
     /**

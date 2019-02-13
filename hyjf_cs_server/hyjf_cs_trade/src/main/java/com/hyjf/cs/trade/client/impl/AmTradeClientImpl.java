@@ -6623,6 +6623,28 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid) {
+        HjhDebtCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditListByCreditNid/" + creditNid ,
+                HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid) {
+        HjhDebtCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditListByBorrowNid/" + borrowNid ,
+                HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     /**
      * 获取借款用户信息
      * @param borrowNid
@@ -6753,7 +6775,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * 累计借贷余额笔数
-     * @param time
      * @return
      */
     @Override
