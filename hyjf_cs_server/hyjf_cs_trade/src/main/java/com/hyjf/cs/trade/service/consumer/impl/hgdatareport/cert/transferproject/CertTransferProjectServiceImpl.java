@@ -6,13 +6,17 @@ import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
+import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.transferproject.CertTransferProjectMessageConsumer;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.transferproject.CertTransferProjectService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,12 +38,18 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 	AmUserClient amUserClient;
 	@Autowired
 	SystemConfig systemConfig;
+
+	Logger logger = LoggerFactory.getLogger(CertTransferProjectServiceImpl.class);
+	private String thisMessName = "转让状态信息上报";
+	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
 	@Override
 	public JSONArray createDate(String creditNid,String flag) {
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if("1".equals(flag)){
 			List<BorrowCreditVO> creditList=amTradeClient.getBorrowCreditListByCreditNid(creditNid);
+			logger.info(logHeader + " creditList.size():"+creditList.size());
 			if(creditList!=null&&creditList.size()>0){
 				BorrowCreditVO credit=creditList.get(0);
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(credit.getCreditUserId());
