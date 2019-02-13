@@ -96,16 +96,17 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         // 计算提成用户id
         UserInfoVO userInfoCommision = hjhLockVo.getCommissioUserInfoVO();
         if(userInfoCommision == null){
-            logger.info("汇计划提成：计算提成用户id未获取到相应用户信息！");
+            logger.info("汇计划：" + hjhLockVo.getAccedeOrderId() + "提成---计算提成用户id为空或者未获取到相应用户信息！");
             statusUpdate(record, 1);
             return;
         }
         commisionUserId = userInfoCommision.getUserId();
-        if(commisionUserId == null){
-            logger.info("汇计划提成：查询出的用户信息的userid为空！");
-            statusUpdate(record, 1);
-            return;
-        }
+        //如果有用户信息，用户ID肯定不为空
+//        if(commisionUserId == null){
+//            logger.info("汇计划提成：查询出的用户信息的userid为空！");
+//            statusUpdate(record, 1);
+//            return;
+//        }
 
 //        if(userInfoCommision.getAttribute() != 3 && userInfoCommision.getIs51() ==1 && pushMoney51.getRewardSend() == 0){
 //            logger.info("汇计划提成：查询出的用户信息的用户类型不符合条件！");
