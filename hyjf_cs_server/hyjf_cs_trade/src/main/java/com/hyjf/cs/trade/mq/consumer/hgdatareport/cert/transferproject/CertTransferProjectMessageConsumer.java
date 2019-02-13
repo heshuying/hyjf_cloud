@@ -29,7 +29,7 @@ import java.util.Map;
  * @Date
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_CERT_TRANSFER_PROJECT_GROUP, selectorExpression = "*", consumerGroup = MQConstant.CERT_CERT_TRANSFER_PROJECT_TOPIC)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_TRANSFER_PROJECT_TAG, consumerGroup = MQConstant.CERT_TRANSFER_PROJECT_GROUP)
 public class CertTransferProjectMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(CertTransferProjectMessageConsumer.class);
 
