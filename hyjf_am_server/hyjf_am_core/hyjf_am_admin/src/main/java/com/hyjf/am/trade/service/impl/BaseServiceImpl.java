@@ -73,6 +73,41 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         return null;
     }
 
+    /**
+     * 根据标的编号检索标的信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Borrow doGetBorrow(String borrowNid) {
+        BorrowExample example = new BorrowExample();
+        BorrowExample.Criteria criteria = example.createCriteria();
+        criteria.andBorrowNidEqualTo(borrowNid);
+        List<Borrow> list = this.borrowMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据标的编号检索标的借款详情
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoWithBLOBs doGetBorrowInfoByNid(String borrowNid) {
+        BorrowInfoExample example = new BorrowInfoExample();
+        BorrowInfoExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<BorrowInfoWithBLOBs> list=this.borrowInfoMapper.selectByExampleWithBLOBs(example);
+        if (CollectionUtils.isNotEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
     @Override
     public BorrowAndInfoVO getBorrowAndInfoByNid(String borrowNid) {
         if(StringUtils.isNotBlank(borrowNid)){

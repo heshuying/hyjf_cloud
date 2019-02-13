@@ -104,7 +104,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("warning", "市场有风险 出借需谨慎");
 
         // 合规自查 - 注册协议及隐私政策弹窗 add by huanghui 20181123 start
-        String privacyAgreementContent = "在您注册成为汇盈金服用户的过程中，您需要完成我们的注册流程，并通过点击同意的形式在线签署以下的协议，请您务必仔细阅读、充分理解协议中的条款内容后，再点击同意：\n" +
+        String privacyAgreementContent = "【审慎阅读】在您注册成为汇盈金服用户的过程中，您需要完成我们的注册流程，并通过点击同意的形式在线签署以下的协议，请您务必仔细阅读、充分理解协议中的条款内容后，再点击同意：\n" +
                 "《注册协议》\n" +
                 "《平台隐私条款》\n" +
                 "\n" +
@@ -1070,9 +1070,11 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         if(isNewUser){
             if(!CollectionUtils.isEmpty(projectList)){
+                logger.info("============app首页推荐标的获取新手标不为空--------");
                 AppProjectListCustomizeVO project = projectList.get(0);
                 if (list.size() == 0) {
                     list.add(project);
+                    logger.info("============app首页推荐标的获取新手标不为空，并且返回可显示标的--------");
                 }
                 info.put("sprogExist", "1");
                 info.put("sprogBorrowApr", project.getBorrowApr());
@@ -1087,6 +1089,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 }
                 info.put("borrowExtraYield", project.getBorrowExtraYield());
             }else {
+                logger.info("============app首页推荐标的获取新手标为空--------");
                 info.put("sprogExist", "0");
                 info.put("sprogBorrowApr", "");
                 info.put("sprogBorrowPeriod", "");

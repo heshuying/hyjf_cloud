@@ -31,12 +31,12 @@ import java.util.Map;
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.ISSUE_INVESTING_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP_INVEST)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_BORROW_STATUS_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP_INVEST)
 public class CertBorrowStatusMessageConsumerInving implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerInving.class);
 
-    private String thisMessName = "散标状态信息推送";
+    private String thisMessName = "散标状态信息推送_投资中";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Override
@@ -91,7 +91,7 @@ public class CertBorrowStatusMessageConsumerInving implements RocketMQListener<M
         try {
             // --> 调用service组装数据
             JSONArray listRepay = new JSONArray();
-            Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false, false);
+            Map<String, Object> mapParam = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, null, false);
             listRepay.add(mapParam);
             logger.info("数据：" + listRepay);
             // 上送数据
@@ -111,7 +111,7 @@ public class CertBorrowStatusMessageConsumerInving implements RocketMQListener<M
             if (productStatus.equals("9")) {
                 // --> 调用service组装数据
                 JSONArray listRepayAfter = new JSONArray();
-                Map<String, Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, productStatus, false, false);
+                Map<String, Object> mapParamAfter = certBorrowStatusService.selectBorrowByBorrowNid(borrowNid, productStatus, false);
                 listRepayAfter.add(mapParamAfter);
                 logger.info("数据：" + listRepayAfter);
                 // 上送数据

@@ -3,12 +3,12 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.hgreportdata.bifa.BifaUserCustomizeMapper">
 
 	<!-- 0普通用户 1企业用户' -->
-	<select id="getBankOpenedAccountUsers" resultType="com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean" parameterType="java.lang.Integer">
+	<select id="getBankOpenedAccountUsers" resultType="com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean">
 		SELECT
 			hu.user_id userId,
 			hui.truename trueName,
 			hui.idcard idCard,
-			FROM_UNIXTIME( hu.reg_time, '%Y-%m-%d' ) regDate
+			DATE_FORMAT( hu.reg_time, '%Y-%m-%d' ) regDate
 		FROM
 			ht_bank_open_account hbo
 			JOIN ht_user hu ON hbo.user_id = hu.user_id
@@ -22,7 +22,7 @@
 			hu.user_id userId,
 			"" trueName,
 			hbo.busi_code idCard,
-			FROM_UNIXTIME( hu.reg_time, '%Y-%m-%d' ) regDate
+			DATE_FORMAT( hu.reg_time, '%Y-%m-%d' ) regDate
 		FROM
 			ht_corp_open_account_record hbo
 			JOIN ht_user hu ON hbo.user_id = hu.user_id

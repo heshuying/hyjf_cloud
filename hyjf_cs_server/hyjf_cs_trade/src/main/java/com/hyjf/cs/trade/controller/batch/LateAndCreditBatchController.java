@@ -16,13 +16,13 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/lateAndCredit")
+@RequestMapping("/cs-trade/lateandcredit")
 public class LateAndCreditBatchController {
 
     @Autowired
     private LateAndCreditService lateAndCreditService;
 
-    @RequestMapping("/updateRepayInfo")
+    @RequestMapping("/updaterepayinfo")
     public void updateRepayInfo() {
         lateAndCreditService.updateRepayInfo();
     }
