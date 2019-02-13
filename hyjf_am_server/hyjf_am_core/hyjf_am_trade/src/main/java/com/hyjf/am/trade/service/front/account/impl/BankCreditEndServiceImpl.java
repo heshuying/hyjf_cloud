@@ -185,7 +185,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         example.createCriteria().andStatusEqualTo(0); // 初始
         example.setLimitStart(0);
         example.setLimitEnd(500);// 记录数限制
-        example.setOrderByClause("order by id ");
+        example.setOrderByClause("id");
         // update by wgx 2019/01/31 结束债权按照主键逐条更新
         List<BankCreditEnd> bankCreditEndList = this.bankCreditEndMapper.selectByExample(example);
         if(bankCreditEndList == null || bankCreditEndList.size() == 0){
