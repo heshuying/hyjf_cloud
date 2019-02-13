@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.exception.investall;
+package com.hyjf.batch.job.repair.investall;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -12,13 +12,13 @@ import org.quartz.JobExecutionException;
  * @since 20180619	
  */
 @DisallowConcurrentExecution
-public class BatchBankInvestAllExceptionJob extends BaseJob implements Job{
+public class BatchBankInvestAllRepairJob extends BaseJob implements Job{
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("BatchBankInvestAllExceptionJob: {} execute start...", context.getJobDetail().getKey().getName());
+        logger.info("BatchBankInvestAllRepairJob: {} execute start...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/investAllExceptionHandle", String.class);
-        logger.info("BatchBankInvestAllExceptionJob execute end...");
+        logger.info("BatchBankInvestAllRepairJob execute end...");
     }
 }
 

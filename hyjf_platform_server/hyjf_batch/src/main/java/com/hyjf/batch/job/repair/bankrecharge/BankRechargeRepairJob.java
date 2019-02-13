@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.exception.bankrecharge;
+package com.hyjf.batch.job.repair.bankrecharge;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -10,7 +10,7 @@ import org.quartz.JobExecutionException;
  * 充值掉单定时任务 create by jijun 20180612
  */
 @DisallowConcurrentExecution
-public class BankRechargeExceptionJob extends BaseJob implements Job {
+public class BankRechargeRepairJob extends BaseJob implements Job {
 
     /**
      * 执行定时任务
@@ -19,8 +19,8 @@ public class BankRechargeExceptionJob extends BaseJob implements Job {
      */
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("BankRechargeExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("BankRechargeRepairJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/recharge", String.class);
-        logger.info("BankRechargeExceptionJob execute end...");
+        logger.info("BankRechargeRepairJob execute end...");
     }
 }
