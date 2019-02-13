@@ -280,10 +280,15 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
      * @param endDate
      * @return
      */
-    private List<BifaIndexUserInfoBeanVO> getBorrowUserInfo(Integer startDate, Integer endDate) {
+    private List<BifaIndexUserInfoBeanVO> getBorrowUserInfo(Integer startDate, Integer endDate) throws Exception {
         List<BifaIndexUserInfoBeanVO> result = new ArrayList<BifaIndexUserInfoBeanVO>();
         //获取近七天添加的标的信息
         List<BorrowAndInfoVO> borrowAndInfos = amTradeClient.selectBorrowUserInfo(startDate, endDate);
+        //判空
+        if (null == borrowAndInfos) {
+            throw new Exception(logHeader + "获取借款人信息失败!!!");
+        }
+
         for (BorrowAndInfoVO bean : borrowAndInfos) {
             if ("1".equals(bean.getCompanyOrPersonal()) && StringUtils.isEmpty(bean.getIdCard())) {
                 //借款主体为公司时,公司的统一社会信用代码不能为空
@@ -305,7 +310,6 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
 
     private BifaIndexUserInfoBeanVO buildBifaIndexUserInfoBean(BorrowAndInfoVO bean) {
         BifaIndexUserInfoBeanVO result = new BifaIndexUserInfoBeanVO();
-        result.setUserId(bean.getUserId());
         result.setTrueName(bean.getTruename());
         result.setIdCard(bean.getIdCard());
         result.setBorrowBeginDate(GetDate.times10toStrYYYYMMDD(bean.getRecoverLastTime()));
@@ -471,7 +475,6 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
             String dataType = BifaCommonConstants.DATATYPE_1005;
             //获取最近七天开户的用户
             List<BifaIndexUserInfoBeanVO> bifaIndexUserInfoBeans = this.getBankOpenedAccountUsers(startDate, endDate);
-            logger.info(bifaIndexUserInfoBeans.size()+"");
             if (null == bifaIndexUserInfoBeans) {
                 throw new Exception(logHeader + "获取开户用户失败!!!");
             }

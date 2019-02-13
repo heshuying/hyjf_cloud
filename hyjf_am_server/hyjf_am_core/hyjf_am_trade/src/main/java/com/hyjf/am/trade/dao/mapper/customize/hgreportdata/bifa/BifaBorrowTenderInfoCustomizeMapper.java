@@ -6,6 +6,7 @@ package com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa;
 
 import com.hyjf.am.trade.dao.model.bifa.UserIdAccountSumBean;
 import com.hyjf.am.trade.dao.model.customize.BorrowTenderInfoCustomize;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -19,5 +20,5 @@ public interface BifaBorrowTenderInfoCustomizeMapper {
 	 * @param endDate
 	 * @return
 	 */
-    List<UserIdAccountSumBean> getBorrowTenderAccountSum(Integer startDate, Integer endDate);
+    List<UserIdAccountSumBean> getBorrowTenderAccountSum(@Param("startDate") Integer startDate,@Param("endDate") Integer endDate);
 }

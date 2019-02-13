@@ -132,6 +132,22 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	@GetMapping("/doGetBorrow/{borrowNid}")
+	public BorrowResponse doGetBorrow(@PathVariable String borrowNid) {
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.doGetBorrow(borrowNid);
+		BorrowInfo borrowInfo = borrowService.doGetBorrowInfoByNid(borrowNid);
+		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
+		if (Validator.isNotNull(borrow)){
+			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
+		}
+		if (Validator.isNotNull(borrowInfo)){
+			borrowVO.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(borrowVO);
+		return response;
+	}
+
 	@RequestMapping("/selectRecentPaymentList/{userId}")
 	public RecentPaymentListCustomizeResponse selectRecentPaymentList(@PathVariable int userId){
 		Map<String, Object> paraMap=new HashMap<String, Object>();

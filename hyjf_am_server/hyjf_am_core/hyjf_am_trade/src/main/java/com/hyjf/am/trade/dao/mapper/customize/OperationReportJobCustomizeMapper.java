@@ -92,4 +92,9 @@ public interface OperationReportJobCustomizeMapper {
 	 */
 	double getInvestLastDate(Date date);
 
+	/**
+	 * 北互金累计借贷余额
+	 * @return
+	 */
+	BigDecimal getWillPayMoney(Date date);
 }

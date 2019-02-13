@@ -355,6 +355,20 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		hjhLabel.setCreditSumMax(request.getCreditSumMax());
 		hjhLabel.setPushTimeStart(request.getPushTimeStart());
 		hjhLabel.setPushTimeEnd(request.getPushTimeEnd());
+		
+		
+		if(request.getPushTimeStart()!= null){
+			hjhLabel.setPushTimeStart(request.getPushTimeStart());
+		}else{
+			hjhLabel.setPushTimeStart(null);
+		}
+		
+		if(request.getPushTimeEnd()!= null){
+			hjhLabel.setPushTimeEnd(request.getPushTimeEnd());
+		} else {
+			hjhLabel.setPushTimeEnd(null);
+		}
+		
 		if(request.getRemainingDaysStart()!= null){
 			hjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
 		}else{

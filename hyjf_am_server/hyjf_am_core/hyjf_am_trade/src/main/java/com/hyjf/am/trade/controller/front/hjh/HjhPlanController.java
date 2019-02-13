@@ -98,6 +98,21 @@ public class HjhPlanController extends BaseController {
     }
 
     /**
+     * @Description 根据计划编号查询计划(主库查)
+     * @Author liubin
+     * @Version v0.1
+     * @Date 2018/6/19 14:04
+     */
+    @RequestMapping("/doGetHjhPlanByPlanNid/{planNid}")
+    public com.hyjf.am.response.user.HjhPlanResponse doGetHjhPlanByPlanNid(@PathVariable String planNid) {
+        com.hyjf.am.response.user.HjhPlanResponse response = new com.hyjf.am.response.user.HjhPlanResponse();
+        HjhPlan plan = hjhPlanService.doGetHjhPlanByNid(planNid);
+        HjhPlanVO result = CommonUtils.convertBean(plan, HjhPlanVO.class);
+        response.setResult(result);
+        return response;
+    }
+
+    /**
      * 插入计划明细表
      * @param planAccede
      * @return

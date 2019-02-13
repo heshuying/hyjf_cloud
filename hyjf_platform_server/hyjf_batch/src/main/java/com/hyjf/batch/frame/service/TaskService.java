@@ -71,13 +71,13 @@ public class TaskService {
 							info.setJobStatus(triggerState.name());
 							info.setCronExpression(cronExpression);
 							info.setCreateTime(createTime);
-
+							//下次触发时间加入判空处理
 							if (trigger.getNextFireTime()!=null){
 								info.setNextFireTime(GetDate.formatDate(trigger.getNextFireTime(),df));
 							}else {
 								info.setNextFireTime("--");
 							}
-
+                            //上次触发时间加入判空处理
 							if (trigger.getPreviousFireTime()!=null){
 								info.setPrevFireTime(GetDate.formatDate(trigger.getPreviousFireTime(),df));
 							}else {
