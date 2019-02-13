@@ -5,8 +5,10 @@ import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.annotation.Cilent;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,6 +66,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return response;
 	}
 
+	@Override
+	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date){
+		OperationReportJobRequest request = new OperationReportJobRequest();
+		request.setDate(date);
+		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/report/operationreportjob/tenderagebyrangelist",request, OperationReportJobResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 	@Override
 	public HjhAccedeResponse getAccede(int userId, int begin, int end) {
 		HjhAccedeResponse response = restTemplate

@@ -43,10 +43,8 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
     @Override
     public Map<String, Object> selectBorrowByBorrowNid(String borrowNid, String statusAfter, boolean isUserInfo) {
         //标的信息
-        logger.info("散标状态上报,标的编号为:"+borrowNid);
         try {
             BorrowAndInfoVO borrow =amTradeClient.selectBorrowByNid(borrowNid);
-            logger.info("散标状态上报,标的信息为:"+JSONObject.toJSONString(borrow));
             if (null == borrow) {
                 throw new Exception("散标状态推送,标的信息为空！！borrowNid:" + borrowNid);
             }
@@ -75,7 +73,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
                     //发标时间
-                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTimeInteger().toString());
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {
                     //已还款
@@ -99,7 +97,6 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     productStatusDesc = "满标时候（报送1满标）";
                 }
                 param = putParamObject(borrowNid, productStatus, productDate, productStatusDesc);
-                logger.info("散标状态上报,组装数据完毕,数据为:"+ JSONObject.toJSONString(param));
                 return param;
 
             }
