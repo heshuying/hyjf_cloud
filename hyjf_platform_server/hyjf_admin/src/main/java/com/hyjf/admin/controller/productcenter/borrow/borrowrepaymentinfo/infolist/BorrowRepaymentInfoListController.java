@@ -53,8 +53,6 @@ import java.util.Map;
 public class BorrowRepaymentInfoListController {
     @Autowired
     private BorrowRepaymentInfoListService borrowRepaymentInfoListService;
-    /** 查看权限 */
-    public static final String PERMISSIONS = "borrowrepaymentlist";
 
     @Autowired
     SystemConfig systemConfig;
@@ -65,7 +63,6 @@ public class BorrowRepaymentInfoListController {
      */
     @ApiOperation(value = "还款明细列表", notes = "还款明细列表页面查询初始化")
     @PostMapping(value = "/searchAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowRepaymentInfoListBean> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRepaymentInfoListRequestBean form) {
         BorrowRepaymentInfoListRequset copyForm=new BorrowRepaymentInfoListRequset();
         BeanUtils.copyProperties(form, copyForm);
@@ -268,7 +265,6 @@ public class BorrowRepaymentInfoListController {
      */
     @ApiOperation(value = "数据导出--还款详情导出数据", notes = "带条件导出EXCEL")
     @PostMapping(value = "/exportAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRepaymentInfoListRequestBean form) throws Exception {
 
         BorrowRepaymentInfoListRequset copyForm=new BorrowRepaymentInfoListRequset();

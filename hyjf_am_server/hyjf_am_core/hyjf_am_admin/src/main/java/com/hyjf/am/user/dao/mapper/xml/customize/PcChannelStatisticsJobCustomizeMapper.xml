@@ -137,63 +137,34 @@
 		FROM
 		(
 		SELECT
-		a.utm_source,
-		a.utm_id,
-		a.source_id,
+		DISTINCT a.utm_source,a.utm_id,a.source_id,
 		(
-		(
-		SELECT
-		COUNT(reg.id) regid
-		FROM
-		( SELECT reg.id,
-		reg.utm_id FROM hyjf_user.ht_utm_reg reg
-		<where>
-			<if test="dayStart != null and dayStart != ''">
-				AND reg.create_time <![CDATA[>=]]> #{dayStart}
-			</if>
-			<if test="dayEnd != null and dayEnd != ''">
-				AND reg.create_time <![CDATA[<=]]> #{dayEnd}
-			</if>
-		</where>
-		) reg
-		where reg.utm_id = a.utm_id
+		(SELECT COUNT(reg.id) regid FROM hyjf_user.ht_utm_reg reg where reg.utm_id = a.utm_id
+		<if test="dayStart != null and dayStart != ''">
+			AND reg.create_time <![CDATA[>=]]> #{dayStart}
+		</if>
+		<if test="dayEnd != null and dayEnd != ''">
+			AND reg.create_time <![CDATA[<=]]> #{dayEnd}
+		</if>
 		)
 		+
 		(
-		SELECT
-		COUNT(reg.id) regid
-		FROM
-		( SELECT * FROM hyjf_user.ht_user_plat reg
-		<where>
-			reg.pid = '26'
-			<if test="dayStart != null and dayStart != ''">
-				AND reg.create_time <![CDATA[>=]]> #{dayStart}
-			</if>
-			<if test="dayEnd != null and dayEnd != ''">
-				AND reg.create_time <![CDATA[<=]]> #{dayEnd}
-			</if>
-		</where>
-		) reg
-		INNER JOIN hyjf_user.ht_account_chinapnr nr ON nr.user_id = reg.user_id
-		WHERE
-		a.utm_source = '投之家'
+		SELECT COUNT(reg.id) regid FROM hyjf_user.ht_user_plat reg
+		INNER JOIN hyjf_user.ht_account_chinapnr nr ON nr.user_id = reg.user_id WHERE a.utm_source = '投之家' and reg.pid = '26'
+		<if test="dayStart != null and dayStart != ''">
+			AND reg.create_time <![CDATA[>=]]> #{dayStart}
+		</if>
+		<if test="dayEnd != null and dayEnd != ''">
+			AND reg.create_time <![CDATA[<=]]> #{dayEnd}
+		</if>
 		)
 		) AS regist_number
-		FROM
-		(
-		SELECT DISTINCT
-		utm.utm_source,
-		utm.utm_id,
-		utm.source_id
-		FROM
-		hyjf_user.ht_utm utm
+		FROM hyjf_user.ht_utm a
 		<if test="sourceId != null and sourceId != ''">
-			WHERE utm.source_id= #{sourceId}
+			WHERE a.source_id= #{sourceId}
 		</if>
-		) a
 		) b
-		GROUP BY
-		b.source_id
+		GROUP BY b.source_id
 	</select>
 	
 	<select id="getOpenAccountNumber" resultType="INTEGER" parameterType="map">

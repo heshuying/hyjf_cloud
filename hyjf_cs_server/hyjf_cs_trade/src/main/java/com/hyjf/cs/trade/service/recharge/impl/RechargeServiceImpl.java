@@ -442,7 +442,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		BankCardVO bankCard = amUserClient.selectBankCardByUserId(userId);
 
 		if (bankCard != null) {
-			cardNo = BankCardUtil.getCardNo(bankCard.getCardNo());
+			cardNo = BankCardUtil.getFormatCardNo(bankCard.getCardNo());
 			cardId = String.valueOf(bankCard.getId());
 			bank = bankCard.getBank();
 			isBundCardFlag = 1;

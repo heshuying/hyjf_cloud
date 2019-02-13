@@ -138,13 +138,13 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         if (hjhAccede.getOrderStatus() == 0) {
             //0自动投标中
-            logger.info("****" + logMsgHeader + "开始自动出借,订单状态:" + hjhAccede.getOrderStatus() + "****");
+            logger.info("****" + logMsgHeader + "开始自动出借,订单状态:" + hjhAccede.getOrderStatus() + "************");
             // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
             diversifyCount = 0; //初始分散出借 （只有出借原始标的（非复投）时，使用分散出借）
             // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
         } else {
             //2自动投标成功或者3锁定中
-            logger.info("****" + logMsgHeader + "开始自动复投,订单状态:" + hjhAccede.getOrderStatus() + "****");
+            logger.info("****" + logMsgHeader + "开始自动复投,订单状态:" + hjhAccede.getOrderStatus() + "************");
         }
         logger.info(logMsgHeader + "加入计划金额：" + accedeAccount.toString()+ "，初始可投金额：" + ketouplanAmoust.toString());
 
@@ -187,7 +187,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         BigDecimal minAccountEnable = getMinAccountEnable(hjhAccede);
         while (ketouplanAmoust.compareTo(minAccountEnable) >= 0) {
             // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 start
-            logger.info(logMsgHeader + "投前累计出借笔数：" + investCountForLog + "====");
+            logger.info(logMsgHeader + "投前累计出借笔数：" + investCountForLog + "============");
             investCountForLog += 1;
             // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 end
 
@@ -201,17 +201,15 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             RedisBorrow redisBorrow = null;
 
             String borrowStr = null;//标的的JsonString
-            // del 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
-            //String queueName = null;//标的队列名称
-            // del 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
             String borrowFlag = null;//标的类型（债转标，原始标）
 
+            // 出让人/出借人相同的校验
+            logger.info(logMsgHeader + "连续相同次数" + serialFaileCount + "次");
             // 连续10次出投人相同后，换个计划订单投
             if (serialFaileCount >= CustomConstants.HJH_SERIAL_FAILE_COUNT) {
                 logger.error(logMsgHeader + "借款人/出让人和计划订单的出借人连续相同次数超过" + CustomConstants.HJH_SERIAL_FAILE_COUNT + "次,跳过该计划订单");
                 return NO_TENDER;
             }
-            logger.info(logMsgHeader + "连续相同次数" + serialFaileCount + "次");
             // 取债转标的（优先） (连续5次不能投债转标时,取原始标的)
             if (serialFaileCount < CustomConstants.HJH_ASSIGN_SERIAL_FAILE_COUNT) {
                 queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
@@ -271,13 +269,13 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             }
             /*******************************************/
 
-            boolean noPushRedis = false;
-            boolean isLast = false;
+            boolean noPushRedis = false; //finally不再推回队列
+            boolean isLast = false; // 是否是最后一笔
             String borrowNidForCredit = "";
             try {
                 if (borrowFlag.equals(RedisConstants.HJH_BORROW_CREDIT)) {
                     /** 4. 自动出借债转标的（承接）	 */
-                    logger.info(logMsgHeader + "自动承接债转标的" + redisBorrow.getBorrowNid());
+                    logger.info(logMsgHeader + "自动承接债转标的" + redisBorrow.getBorrowNid() + "--------");
                     logger.info(logMsgHeader + "承前的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     /** 4.1. 债转用金额计算	 */
@@ -303,6 +301,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.warn(logMsgHeader + "债权的转让人(" + credit.getUserId() + ")和计划订单的出借人(" + hjhAccede.getUserId() + ")不能相同");
                         String redisStr = JSON.toJSONString(redisBorrow);
                         RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的出借。
+                        logger.info(logMsgHeader + "Redis:" + queueName + "(l)<<<<<<<<<<<<<<<<<<<<<<<<<<" + redisStr);
                         serialFaileCount++;
                         noPushRedis = true;
                         continue;
@@ -438,7 +437,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
                 } else if (borrowFlag.equals(RedisConstants.HJH_BORROW_INVEST)) {
                     /** 5. 自动出借原始标的（出借）	 */
-                    logger.info(logMsgHeader + "==投前 自动出借原始标的" + redisBorrow.getBorrowNid());
+                    logger.info(logMsgHeader + "投前 自动出借原始标的" + redisBorrow.getBorrowNid()+"--------");
                     logger.info(logMsgHeader + "投前的可投金额：" + ketouplanAmoust + "，" + "投前的本组金额：" + groupAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     /** 5.1. 出借用金额计算	 */
@@ -487,6 +486,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.info(logMsgHeader + "借款人(" + borrow.getUserId() + ")和计划订单的出借人(" + hjhAccede.getUserId() + ")不能相同");
                         String redisStr = JSON.toJSONString(redisBorrow);
                         RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的出借。
+                        logger.info(logMsgHeader + "Redis:" + queueName + "(l)<<<<<<<<<<<<<<<<<<<<<<<<<<" + redisStr);
                         serialFaileCount++;
                         noPushRedis = true;
                         continue;
@@ -590,6 +590,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 } else {
                     String redisStr = JSON.toJSONString(redisBorrow);
                     RedisUtils.rightpush(queueName, redisStr);//redis相应计划//可能放两遍
+                    logger.info(logMsgHeader + "Redis:" + queueName + "(r)<<<<<<<<<<<<<<<<<<<<<<<<<<" + redisStr);
                     logger.info(logMsgHeader + "剩余金额推回redis" + redisStr);
 //				    break;
                 }
@@ -644,10 +645,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             String redisStr = JSON.toJSONString(redisBorrow);
             if ("R".equals(pushFlag.toUpperCase())) {
                 RedisUtils.rightpush(queueName, redisStr);
-                logger.info("推回队列的尾部[" + queueName + "]r" + " : " + redisStr);
+                logger.info(logHeader + "Redis:" + queueName + "(r)<<<<<<<<<<<<<<<<<<<<<<<<<<" + redisStr);
             } else {
                 RedisUtils.leftpush(queueName, redisStr);
-                logger.info("推回队列的头部l[" + queueName + "]" + " : " + redisStr);
+                logger.info(logHeader + "Redis:" + queueName + "(l)<<<<<<<<<<<<<<<<<<<<<<<<<<" + redisStr);
             }
 
         }
@@ -683,9 +684,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         String borrowStr = null;//标的内容JsonString
         borrowStr = RedisUtils.rpop(queueName);
         if (borrowStr == null) {
-            logger.info("队列" + queueName + "中没有标的");
+            logger.info("Redis:" + queueName + "(r)>>>>>>>>>>>>>>>>>>>>>>>>>>没有标的");
         } else {
-            logger.info("队列" + queueName + "中取得标的");
+            logger.info("Redis:" + queueName + "(r)>>>>>>>>>>>>>>>>>>>>>>>>>>" + borrowStr);
         }
         return borrowStr;
     }
