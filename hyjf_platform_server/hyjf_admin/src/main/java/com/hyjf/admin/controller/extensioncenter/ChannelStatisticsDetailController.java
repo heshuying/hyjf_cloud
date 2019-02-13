@@ -232,6 +232,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE
 				+ GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
+		form.setLimitStart(-1);
 		JSONObject json = channelStatisticsDetailService.searchAction(form);
 		List<ChannelStatisticsDetailVO> recordList = (List<ChannelStatisticsDetailVO>) json.get("recordList");
 		// sheet默认最大行数
