@@ -10,13 +10,12 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
-import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.auth.AuthService;
+import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -44,7 +43,9 @@ import java.util.Map;
 public class AemsMergeAuthPagePlusController extends BaseUserController {
 
     @Autowired
-    private AuthService authService;
+    SystemConfig systemConfig;
+    @Autowired
+    private AemsAuthService authService;
 
     /**
      * 外部服务接口:缴费授权 @RequestMapping
@@ -59,90 +60,60 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
      */
     public static final String RETURL_ASY_ACTION = "/bgReturn";
 
-    @Autowired
-    SystemConfig systemConfig;
-
 
     @ApiOperation(value = "AEMS系统:多合一授权", notes = "AEMS系统:多合一授权")
     @PostMapping(value = "/mergeAuth", produces = "application/json; charset=utf-8")
     public ModelAndView mergeAuthPage(@RequestBody @Valid AemsMergeAuthPagePlusRequestBean requestBean, HttpServletRequest request) {
-        logger.info("AEMS系统请求页面多合一授权, AemsMergeAuthPagePlusRequestBean is :{}", JSONObject.toJSONString(requestBean));
+        logger.info("AEMS系统请求页面多合一授权[开始], 接口路径:["+ REQUEST_MAPPING +"]", "请求参数:["+ requestBean.toString() +"]");
 
-        ModelAndView modelAndView = new ModelAndView();
+        ModelAndView modelAndView;
+        // 入参校验
         Map<String, String> paramMap = authService.checkAemsParam(requestBean);
 
+        // 数据校验不通过
         paramMap.put("callBackAction", requestBean.getRetUrl());
         if (!"1".equals(paramMap.get("status"))) {
             return callbackErrorView(paramMap);
         }
-        // 根据电子账户号查询用户ID
-        BankOpenAccountVO bankOpenAccount = this.authService.getBankOpenAccountByAccount(requestBean.getAccountId());
-        // 检查用户是否存在
-        UserVO user = authService.getUsersById(bankOpenAccount.getUserId());//用户ID
-        // 拼装参数 调用江西银行
-        // 同步调用路径
-        String retUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
-                + requestBean.getAuthType() + "&callback="
-                + requestBean.getRetUrl().replace("#", "*-*-*");
-        // 异步调用路
-        String bgRetUrl = "http://CS-USER" + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
-                + requestBean.getAuthType() + "&callback="
-                + requestBean.getNotifyUrl().replace("#", "*-*-*");
-        UserInfoVO usersInfo = authService.getUserInfo(user.getUserId());
+
+        AuthBean authBean = new AuthBean();
+        // 根据用户ID生成订单ID
+        String orderId = GetOrderIdUtils.getOrderId2(authBean.getUserId());
+
+        // 打包参数
+        authBean = paramPackage(request, requestBean, authBean, orderId);
+
+        // 校验用户角色和授权类型是否一致
+        paramMap = authService.checkUserRoleAndAuthType(authBean, requestBean.getAuthType());
+        if (!"1".equals(paramMap.get("status"))) {
+            return callbackErrorView(paramMap);
+        }
+
         try {
-            // 用户ID
-            AuthBean authBean = new AuthBean();
-            authBean.setUserId(user.getUserId());
-            authBean.setIp(CustomUtil.getIpAddr(request));
-            authBean.setAccountId(bankOpenAccount.getAccount());
-            // 同步 异步
-            authBean.setRetUrl(retUrl);
-            authBean.setNotifyUrl(bgRetUrl);
-            // 0：PC 1：微官网 2：Android 3：iOS 4：其他
-            authBean.setPlatform(requestBean.getPlatform());
-            authBean.setAuthType(requestBean.getAuthType());
-            authBean.setChannel(requestBean.getChannel());
-            authBean.setForgotPwdUrl(requestBean.getForgotPwdUrl());
-            authBean.setName(usersInfo.getTruename());
-            authBean.setIdNo(usersInfo.getIdcard());
-            authBean.setIdentity(usersInfo.getRoleId() + "");
-            authBean.setUserType(user.getUserType());
-            String orderId = GetOrderIdUtils.getOrderId2(authBean.getUserId());
-            authBean.setOrderId(orderId);
+            // 补充数据，请求银行
             modelAndView = authService.getApiCallbankMV(authBean);
-            String type = "0";
-            if (AuthBean.AUTH_TYPE_AUTO_BID.equals(requestBean.getAuthType())) {
-                type = "1";
-            } else if (AuthBean.AUTH_TYPE_AUTO_CREDIT.equals(requestBean.getAuthType())) {
-                type = "4";
-            } else if (AuthBean.AUTH_TYPE_PAYMENT_AUTH.equals(requestBean.getAuthType())) {
-                type = "5";
-            } else if (AuthBean.AUTH_TYPE_REPAY_AUTH.equals(requestBean.getAuthType())) {
-                type = "6";
-            }
-            authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), type);
-            logger.info("多合一授权页面end");
+
+            // 判断授权类型，保存至授权日志表
+            authService.saveUserAuthLog(authBean, orderId);
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("多合一授权页面异常,异常信息:[" + e.toString() + "]");
+            logger.info("AEMS多合一授权页面异常,异常信息:[" + e.toString() + "]");
             return null;
         }
+        logger.info("AEMS系统请求页面多合一授权[结束]");
         return modelAndView;
     }
 
-    /**
-     * 第三方多合一授权同步跳转地址
-     *
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "第三方端多合一授权同步回调", notes = "多合一授权")
-    @RequestMapping(value = "/return")
-    public ModelAndView returnPage(HttpServletRequest request,BankCallBean bean) {
+
+    @ApiOperation(value = "AEMS多合一授权[同步回调]", notes = "AEMS多合一授权[同步回调]")
+    @RequestMapping(RETURL_SYN_ACTION)
+    public ModelAndView returnPage(HttpServletRequest request, BankCallBean bean) {
+        logger.info("AEMS多合一授权[同步回调]开始, 接口路径:["+ "/hyjf-api/aems/mergeauth"+RETURL_SYN_ACTION +"]", "请求参数:["+ bean.toString() +"]");
+
+        String authType = request.getParameter("authType");
         String isSuccess = request.getParameter("isSuccess");
-        String url = request.getParameter("callback").replace("*-*-*", "#");
-        String authType=request.getParameter("authType");
         logger.info("第三方端授权同步请求,isSuccess:{}", isSuccess);
+        String url = request.getParameter("callback").replace("*-*-*", "#");
+
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         if (isSuccess == null || !"1".equals(isSuccess)) {
@@ -151,7 +122,9 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
             resultMap.put("statusDesc", "多合一授权失败,调用银行接口失败");
             resultMap.put("acqRes", request.getParameter("acqRes"));
             resultMap.put("callBackAction", url);
+            logger.info("AEMS多合一授权[同步回调],调用银行接口失败!");
             return callbackErrorView(resultMap);
+
         } else {
             if(authService.checkDefaultConfig(bean, authType)){
                 authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
@@ -159,34 +132,30 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
                 resultMap.put("statusDesc", "多合一授权申请失败,失败原因：授权期限过短或额度过低，<br>请重新授权！");
                 resultMap.put("acqRes", request.getParameter("acqRes"));
                 resultMap.put("callBackAction", url);
+                logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低，请重新授权！");
                 return callbackErrorView(resultMap);
             }
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
             resultMap.put("status", "多合一授权成功");
             resultMap.put("deadline", bean.getDeadline());
+            logger.info("AEMS多合一授权[同步回调]结束");
             return callbackErrorView(resultMap);
         }
     }
 
-    /**
-     * 多合一授权异步处理
-     *
-     * @param bean
-     * @return
-     */
-    @ApiOperation(value = "页面授权处理", notes = "页面授权处理")
-    @RequestMapping("/bgReturn")
+
+    @ApiOperation(value = "AEMS多合一授权[异步回调]", notes = "AEMS多合一授权[异步回调]")
+    @RequestMapping(RETURL_ASY_ACTION)
     @ResponseBody
     public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
-        logger.info("多合一授权异步回调start");
+        logger.info("AEMS多合一授权[异步回调]开始, 接口路径:["+ "/hyjf-api/aems/mergeauth"+RETURL_ASY_ACTION +"]", "请求参数:["+ bean.toString() +"]");
+
+        Map<String, String> params = new HashMap<>();
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
-        Map<String, String> params = new HashMap<String, String>();
-        String message = "";
-        String status = "";
 
         if (bean == null) {
-            logger.info("调用江西银行多合一授权接口,银行异步返回空");
+            logger.warn("调用江西银行多合一授权接口,银行异步返回空");
             params.put("status", BaseResultBean.STATUS_FAIL);
             resultBean.setStatusForResponse(BaseResultBean.STATUS_FAIL);
             params.put("statusDesc", "多合一授权失败,调用银行接口失败");
@@ -202,19 +171,24 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         int userId = Integer.parseInt(bean.getLogUserId());
         // 查询用户
         UserVO user = this.authService.getUsersById(userId);
-        String authType=request.getParameter("authType");
+        String authType = request.getParameter("authType");
         if(authService.checkDefaultConfig(bean, authType)){
             logger.info("[用户合并授权完成后,回调结束]");
             result.setMessage("合并授权成功");
             result.setStatus(true);
             return result;
         }
-        // 更新签约状态和日志表
+
+        String status;
+        String message;
         try {
-            if (user != null&& bean != null
-                    && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE)))) {
+            if (user != null
+                && bean != null
+                && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE)))
+                ) {
                 bean.setOrderId(bean.getLogOrderId());
-                this.authService.updateUserAuth(userId,bean,authType);
+                // 更新签约状态和日志表
+                this.authService.updateUserAuth(userId, bean, authType);
                 message = "多合一授权成功";
                 status = ErrorCodeConstant.SUCCESS;
             }else{
@@ -223,24 +197,87 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("多合一授权出错,userId:【"+userId+"】错误原因："+e.getMessage());
+            logger.error("多合一授权出错, userId:["+ userId +"]错误原因：" + e.getMessage());
             message = "多合一授权失败";
             status = ErrorCodeConstant.STATUS_CE999999;
         }
         // 返回值
-        params.put("accountId", bean.getAccountId());
         params.put("status", status);
-        params.put("statusDesc",message);
-        params.put("deadline", bean.getDeadline());
+        params.put("statusDesc", message);
         resultBean.setStatusForResponse(status);
+        params.put("deadline", bean.getDeadline());
+        params.put("accountId", bean.getAccountId());
         params.put("chkValue", resultBean.getChkValue());
         params.put("acqRes",request.getParameter("acqRes"));
-        logger.info("多合一授权第三方返回参数："+JSONObject.toJSONString(params));
+        // 自动投标授权
+        params.put("autoBidAuth", bean.getAutoBid());
+        params.put("autoBidDeadline", bean.getAutoBidDeadline());
+        params.put("autoBidMaxAmt", bean.getAutoBidMaxAmt());
+        // 自动债转授权
+        params.put("autoCreditAuth", bean.getAutoCredit());
+        params.put("autoCreditDeadline", bean.getAutoCreditDeadline());
+        params.put("autoCreditMaxAmt", bean.getAutoCreditMaxAmt());
+        // 缴费授权
+        params.put("paymentAuth", bean.getPaymentAuth());
+        params.put("paymentDeadline", bean.getPaymentDeadline());
+        params.put("paymentMaxAmt", bean.getPaymentMaxAmt());
+        // 还款授权
+        params.put("repayAuth", bean.getRepayAuth());
+        params.put("repayDeadline", bean.getRepayDeadline());
+        params.put("repayMaxAmt", bean.getRepayMaxAmt());
+        logger.info("AEMS多合一授权[异步回调]，第三方返回参数:["+ JSONObject.toJSONString(params) +"]");
+
         CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*","#"), params);
-        logger.info("多合一授权异步回调end");
+        logger.info("AEMS多合一授权[异步回调]结束");
         result.setMessage("多合一授权权成功");
         result.setStatus(true);
         return result;
+    }
+
+
+    /**
+     *  AEMS多合一授权-封装参数
+     * @param request
+     * @param requestBean
+     * @param authBean
+     * @param orderId
+     * @return
+     */
+    private AuthBean paramPackage(HttpServletRequest request, AemsMergeAuthPagePlusRequestBean requestBean, AuthBean authBean, String orderId){
+        // 拼装参数 调用江西银行
+        // 同步调用路径
+        String retUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
+                + requestBean.getAuthType() + "&callback="
+                + requestBean.getRetUrl().replace("#", "*-*-*");
+        // 异步调用路
+        String bgRetUrl = "http://CS-USER" + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
+                + requestBean.getAuthType() + "&callback="
+                + requestBean.getNotifyUrl().replace("#", "*-*-*");
+
+        // 查询开户信息通过电子账号
+        BankOpenAccountVO bankOpenAccount = this.authService.getBankOpenAccountByAccount(requestBean.getAccountId());
+        // 查询用户信息通过用户ID
+        UserVO user = authService.getUsersById(bankOpenAccount.getUserId());//用户ID
+        UserInfoVO usersInfo = authService.getUserInfo(user.getUserId());
+
+        // 用户ID
+        authBean.setUserId(user.getUserId());
+        authBean.setUserType(user.getUserType());
+        authBean.setIp(CustomUtil.getIpAddr(request));
+        authBean.setAccountId(bankOpenAccount.getAccount());
+        // 同步 异步
+        authBean.setRetUrl(retUrl);
+        authBean.setNotifyUrl(bgRetUrl);
+        authBean.setIdNo(usersInfo.getIdcard());
+        authBean.setName(usersInfo.getTruename());
+        authBean.setChannel(requestBean.getChannel());
+        // 0：PC 1：微官网 2：Android 3：iOS 4：其他
+        authBean.setPlatform(requestBean.getPlatform());
+        authBean.setAuthType(requestBean.getAuthType());
+        authBean.setForgotPwdUrl(requestBean.getForgotPwdUrl());
+        authBean.setIdentity(String.valueOf(usersInfo.getRoleId()));
+        authBean.setOrderId(orderId);
+
+        return authBean;
     }
 }
