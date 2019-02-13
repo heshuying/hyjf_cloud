@@ -94,7 +94,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 		}else{
 			HjhDebtCreditRequest request=new HjhDebtCreditRequest();
 			request.setCreditNid(creditNid);
-			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditList(request);
+			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByCreditNid(creditNid);
 			logger.info(logHeader + "hjhDebtCreditList.size()"+hjhDebtCreditList.size());
 			if(hjhDebtCreditList!=null&&hjhDebtCreditList.size()>0){
 				HjhDebtCreditVO hjhDebtCredit=hjhDebtCreditList.get(0);
