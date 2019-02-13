@@ -168,7 +168,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             // 卡号
             String cardNo = bankCard.getCardNo();
             result.setCardNo(cardNo);
-            result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
+            result.setCardNo_info(BankCardUtil.getFormatCardNo(cardNo));
             JxBankConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                 result.setLogo(systemConfig.getAppFrontHost() + banksConfig.getBankIcon());
