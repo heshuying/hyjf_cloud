@@ -183,7 +183,6 @@ public class KeyCountController extends BaseController {
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 		}else {
-			logger.info(JSONObject.toJSONString(recordList));
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
 		}
 
