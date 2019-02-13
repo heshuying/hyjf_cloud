@@ -137,7 +137,8 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 
 			}
 		}
-
+		logger.info(logHeader + " list.size():"+list.size());
+		logger.info(logHeader + " JSONArray.parseArray(JSON.toJSONString(list)):"+JSONArray.parseArray(JSON.toJSONString(list)));
 		return JSONArray.parseArray(JSON.toJSONString(list));
 	}
 
