@@ -15,6 +15,6 @@ public interface CertBorrowStatusService extends BaseHgCertReportService {
      * @param borrwoNid
      * @return
      */
-    Map<String,Object> selectBorrowByBorrowNid(String borrwoNid, String statusAfter, boolean isUserInfo, boolean isOld);
+    Map<String,Object> selectBorrowByBorrowNid(String borrwoNid, String statusAfter, boolean isUserInfo);
 
 }
