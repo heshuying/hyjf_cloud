@@ -4,22 +4,26 @@
 
 	<select id="getBorrowTenderAccountSum" resultType="com.hyjf.am.trade.dao.model.bifa.UserIdAccountSumBean">
 		SELECT DISTINCT
-			user_id
+			user_id userId
 		FROM
 			ht_borrow_tender
 		WHERE
 			loan_order_date BETWEEN DATE_FORMAT( FROM_UNIXTIME( #{startDate} ), '%Y%m%d' ) AND DATE_FORMAT( FROM_UNIXTIME( #{endDate} ), '%Y%m%d' )
+
 		UNION
+
 		SELECT DISTINCT
-			user_id
+			user_id userId
 		FROM
 			ht_credit_tender
 		WHERE
 			create_time <![CDATA[>=]]> FROM_UNIXTIME(#{startDate},'%Y-%m-%d %H:%i:%s')
 			AND create_time <![CDATA[<=]]> FROM_UNIXTIME(#{endDate},'%Y-%m-%d %H:%i:%s')
+
 		UNION
+
 		SELECT DISTINCT
-			user_id
+			user_id userId
 		FROM
 			ht_hjh_debt_credit_tender
 		WHERE
