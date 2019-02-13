@@ -87,6 +87,25 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
     }
 
     /**
+     * @param planNid
+     * @Description 根据计划编号查询计划(主库)
+     * @Author sunss
+     * @Version v0.1
+     * @Date 2018/6/19 14:08
+     */
+    @Override
+    public HjhPlan doGetHjhPlanByNid(String planNid) {
+        HjhPlanExample example = new HjhPlanExample();
+        HjhPlanExample.Criteria cra = example.createCriteria();
+        cra.andPlanNidEqualTo(planNid);
+        List<HjhPlan> list = this.hjhPlanMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
      * 取得全部汇计划列表
      * @return
      */

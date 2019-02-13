@@ -32,4 +32,10 @@ public interface CertLogService {
      * @return
      */
     int updateCertLog(CertLog certLog);
+
+    /**
+     * 查询待异步查询的日志数量
+     * @return
+     */
+    int selectCertLogLength();
 }

@@ -63,6 +63,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
@@ -93,6 +94,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
@@ -368,6 +370,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public BorrowAndInfoVO doSelectBorrowByNid(String borrowNid) {
+        String url = urlBase + "borrow/doGetBorrow/" + borrowNid;
+        BorrowResponse response = restTemplate.getForEntity(url, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
     /**
      * 取得自动出借用加入计划列表
      *
@@ -525,6 +537,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据标的编号，查询汇计划信息
+     * @return
+     * @author liubin
+     */
+    @Override
+    public HjhPlanVO doGetPlanByNid(String borrowNid) {
+        String url = urlBase + "hjhPlan/doGetHjhPlanByPlanNid/" + borrowNid;
+        com.hyjf.am.response.user.HjhPlanResponse response = restTemplate.getForEntity(url, com.hyjf.am.response.user.HjhPlanResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResult();
+    }
+
+    /**
      * 查询资产状态
      *
      * @param request
@@ -550,6 +577,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid) {
         String url = urlBase + "hjhDebtCredit/selectHjhDebtCreditByCreditNid/" + creditNid;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url, HjhDebtCreditResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResult();
+    }
+
+    /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    @Override
+    public HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid) {
+        String url = urlBase + "hjhDebtCredit/doSelectHjhDebtCreditByCreditNid/" + creditNid;
         HjhDebtCreditResponse response = restTemplate.getForEntity(url, HjhDebtCreditResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return null;
@@ -2008,6 +2049,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
+        logger.info(ReflectUtils.getSuperiorClass(3));
         BankOpenAccountResponse response = restTemplate
                 .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
         if (response != null) {
@@ -6571,6 +6613,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.getForEntity(url,BigDecimal.class).getBody();
     }
 
+    @Override
+    public CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest request) {
+        String url = urlBase + "cert/queryCertAccountListId";
+        CertAccountListResponse response = restTemplate.postForEntity(url, request, CertAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getCertAccountListIdCustomizeVO();
+        }
+        return null;
+    }
+
     /**
      * 获取借款用户信息
      * @param borrowNid
@@ -6705,9 +6757,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public int getTotalLoanBalanceNum(Date time) {
+    public int getTotalLoanBalanceNum() {
         String url = "http://AM-TRADE/am-trade/bifaDataReport/getTotalLoanBalanceNum";
-        return restTemplate.postForEntity(url,time,Integer.class).getBody();
+        return restTemplate.getForEntity(url,Integer.class).getBody();
     }
 
     /**

@@ -6,6 +6,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
+import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertSendUtils;
@@ -37,6 +38,8 @@ public class CertSendExceptionServiceImpl extends BaseHgCertReportServiceImpl im
     AmConfigClient amConfigClient;
     @Autowired
     CsMessageClient csMessageClient;
+    @Autowired
+    SystemConfig systemConfig;
 
 
     /**
@@ -68,7 +71,7 @@ public class CertSendExceptionServiceImpl extends BaseHgCertReportServiceImpl im
         this.insertCertReport(entity);
         // 开始上报数据
         Map<String, String> params = getBankParam(entity);
-        String rtnMsg = CertSendUtils.postRequest(entity.getUrl(), params);
+        String rtnMsg = CertSendUtils.postRequest(systemConfig.getCertCrtpath(),entity.getUrl(), params);
         updateResult(rtnMsg,entity,item.getSendCount(),item.getLogOrdId());
     }
 

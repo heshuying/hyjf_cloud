@@ -93,11 +93,11 @@ public interface CsMessageClient {
 
     /**
      * mongo中获取产品状态更新
-     * @param nid
+     * @param borrowNid
      * @param status
      * @return
      */
-    BifaBorrowStatusEntityVO getBifaBorrowStatusFromMongoDB(String nid, Integer status);
+    BifaBorrowStatusEntityVO getBifaBorrowStatusFromMongoDB(String borrowNid, Integer status);
 
     /**
      * 产品状态更新上报数据保存本地mongo

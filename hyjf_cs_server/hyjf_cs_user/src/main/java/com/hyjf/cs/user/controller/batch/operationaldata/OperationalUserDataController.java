@@ -14,7 +14,7 @@ import springfox.documentation.annotations.ApiIgnore;
 /**
  * @author yaoyong
  * @version OperationalUserDataController, v0.1 2018/12/18 17:20
- * 注册人变化统计 - 上海大屏幕使用
+ * 法大大电子签章批量做CA认证
  */
 @RestController
 @ApiIgnore
@@ -24,11 +24,6 @@ public class OperationalUserDataController {
     @Autowired
     private OperationalUserService operationalUserService;
     private static final Logger logger = LoggerFactory.getLogger(OperationalUserDataController.class);
-
-    @RequestMapping("/registrantChangeStatistics")
-    public void countRegist() {
-        operationalUserService.countRegist();
-    }
 
     @RequestMapping("/fddCertificate")
     public void fddCertificate() {

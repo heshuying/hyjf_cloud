@@ -50,8 +50,8 @@ public class CertUserController extends BaseController {
 	 * 根据userId查询需要上报的用户信息
 	 * @return
 	 */
-	@GetMapping("/getCertSendUserByUserId")
-	public CertSendUserResponse getCertSendUserByUserId(Integer userId) {
+	@GetMapping("/getCertSendUserByUserId/{userId}")
+	public CertSendUserResponse getCertSendUserByUserId(@PathVariable("userId") Integer userId) {
 		CertSendUserCustomize certUsers = certUserService.getCertSendUserByUserId(userId);
 		CertSendUserResponse response = new CertSendUserResponse();
 		if (null != certUsers) {

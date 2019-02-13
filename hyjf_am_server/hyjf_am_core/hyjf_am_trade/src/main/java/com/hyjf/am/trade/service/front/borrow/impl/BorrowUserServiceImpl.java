@@ -148,23 +148,22 @@ public class BorrowUserServiceImpl extends BaseServiceImpl implements BorrowUser
 	}
 
 	/**
-	 * 累计借贷余额
+	 * 北互金累计借贷余额
 	 * @param time
 	 * @return
 	 */
 	@Override
 	public BigDecimal getWillPayMoney(Date time) {
-		return operationReportJobCustomizeMapper.getRepayTotal(time);
+		return operationReportJobCustomizeMapper.getWillPayMoney(time);
 	}
 
 	/**
 	 * 累计借贷余额笔数
-	 * @param time
 	 * @return
 	 */
 	@Override
-	public int getTotalLoanBalanceNum(Date time) {
-		return bifaOperationReportJobCustomizeMapper.getLoanBalanceNum(time);
+	public int getTotalLoanBalanceNum() {
+		return bifaOperationReportJobCustomizeMapper.getLoanBalanceNum();
 	}
 
 	/**

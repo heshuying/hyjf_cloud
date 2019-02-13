@@ -22,6 +22,9 @@ public class CertRequest implements Serializable {
     private String investOrderId;
     private Integer period;
 
+    private Integer limitStart;
+    private Integer limitEnd;
+
     public String getMinId() {
         return minId;
     }
@@ -108,5 +111,21 @@ public class CertRequest implements Serializable {
 
     public void setPeriod(Integer period) {
         this.period = period;
+    }
+
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public Integer getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(Integer limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

@@ -151,7 +151,13 @@ public class WechatBorrowTenderController extends BaseTradeController {
         logger.info("wechat端-请求获取出借结果接口，logOrdId{}",logOrdId);
         WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
         WeChatResult weChatResult = new WeChatResult();
-        weChatResult.setObject(result.getData());
+        Map<String,Object>  resultMap = result.getData();
+        if(resultMap!=null&&resultMap.containsKey("appIncome")){
+            // 如果是代金券 并且是app
+            resultMap.remove("income");
+            resultMap.put("income",resultMap.get("appIncome"));
+        }
+        weChatResult.setObject(resultMap);
         return  weChatResult;
     }
 

@@ -607,10 +607,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND hct.create_time <![CDATA[>=]]> #{timeStartSrch}
+                AND hct.create_time <![CDATA[>=]]> CONCAT(#{timeStartSrch},' 00:00:00')
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND hct.create_time <![CDATA[<=]]> #{timeEndSrch}
+                AND hct.create_time <![CDATA[<=]]> CONCAT(#{timeEndSrch},' 23:59:59')
             </if>
         </where>
     </sql>

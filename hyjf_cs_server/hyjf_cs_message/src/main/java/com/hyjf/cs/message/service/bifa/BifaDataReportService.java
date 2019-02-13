@@ -27,7 +27,7 @@ public interface BifaDataReportService extends BaseService {
 
     void insertHjhPlanInfoReportData(BifaHjhPlanInfoEntity data);
 
-    BifaBorrowStatusEntity getBifaBorrowStatusFromMongoDB(String nid, Integer status);
+    BifaBorrowStatusEntity getBifaBorrowStatusFromMongoDB(String borrowNid, Integer status);
 
     void insertBorrowStatusReportData(BifaBorrowStatusEntity data);
 

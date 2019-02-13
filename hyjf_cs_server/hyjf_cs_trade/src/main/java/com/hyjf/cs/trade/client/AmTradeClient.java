@@ -33,6 +33,7 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -124,6 +125,13 @@ public interface AmTradeClient {
     BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
+     * 取得borrow数据（主库）
+     * @param borrowNid
+     * @return
+     */
+    BorrowAndInfoVO doSelectBorrowByNid(String borrowNid);
+
+    /**
      * 取得自动出借用加入计划列表
      * @author liubin
      * @return
@@ -187,10 +195,23 @@ public interface AmTradeClient {
     HjhPlanVO getPlanByNid(String borrowNid) ;
 
     /**
+     * 根据标的编号，查询汇计划信息(主库)
+     * @author liubin
+     * @return
+     */
+    HjhPlanVO doGetPlanByNid(String borrowNid) ;
+
+    /**
      * 根据creditNid查询债转信息
      * @author liubin
      */
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
 
     /**
      * 根据加入计划订单，取得加入订单
@@ -2663,10 +2684,9 @@ public interface AmTradeClient {
 
     /**
      * 累计借贷余额笔数
-     * @param time
      * @return
      */
-    int getTotalLoanBalanceNum(Date time);
+    int getTotalLoanBalanceNum();
 
     /**
      * 累计借款人
@@ -2777,5 +2797,7 @@ public interface AmTradeClient {
      */
     void uploadFile();
 
+
+    CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
 }
 
