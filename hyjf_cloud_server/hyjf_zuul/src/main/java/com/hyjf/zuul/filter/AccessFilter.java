@@ -241,7 +241,7 @@ public class AccessFilter extends ZuulFilter {
         } else {
             if (ctx.get(TOKEN_IS_NULL) != null){
                 result.put("status", "999");
-                result.put("statusDesc", "用户未登录");
+                result.put("statusDesc", "请先登录！");
             }else{
                 result.put("status", "999");
                 result.put("statusDesc", "登录过期，请重新登录");
