@@ -1,14 +1,5 @@
 package com.hyjf.cs.trade.client.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
@@ -23,16 +14,25 @@ import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.trade.client.AmUserClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description 
@@ -660,6 +660,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		logger.info(ReflectUtils.getSuperiorClass(3));
 		String url = urlBase + "bankopen/selectById/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
@@ -976,7 +977,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertSendUserVO getCertSendUserByUserId(int userId) {
 		CertSendUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertSendUserByUserId/" + userId,
+				userService+"/certUser/getCertSendUserByUserId/" + userId,
 				CertSendUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1039,7 +1040,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertUserVO getCertUserByUserIdBorrowNid(int userId, String borrowNid) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUserByUserIdBorrowNid/" + userId+"/"+borrowNid,
+				userService+"/certUser/getCertUserByUserIdBorrowNid/" + userId+"/"+borrowNid,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1056,7 +1057,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertUserVO getCertUserByUserId(Integer userId) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUserByUserId/" + userId ,
+				userService+"/certUser/getCertUserByUserId/" + userId ,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1073,7 +1074,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public CertUserVO getCertUserByUserIdcardHash(String userIdcardHash) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUserByUserIdcardHash/" + userIdcardHash ,
+				userService+"/certUser/getCertUserByUserIdcardHash/" + userIdcardHash ,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1090,7 +1091,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public List<CertUserVO> getCertUsersByUserId(int userId) {
 		CertUserResponse response = restTemplate.getForEntity(
-				userService+"certUser/getCertUsersByUserId/" + userId ,
+				userService+"/certUser/getCertUsersByUserId/" + userId ,
 				CertUserResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();

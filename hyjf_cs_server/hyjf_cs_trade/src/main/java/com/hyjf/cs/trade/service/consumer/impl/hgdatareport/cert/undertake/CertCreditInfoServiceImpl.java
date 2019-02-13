@@ -8,6 +8,7 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -15,7 +16,6 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.undertake.CertCreditInfoService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,24 +69,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
     }
 
     /**
-     * 日期转换,数据存的int10的时间戳
-     *
-     * @param repayTime
-     * @return
-     */
-    private String dateFormatTransformation(String repayTime) {
-        if (StringUtils.isNotBlank(repayTime)) {
-            long intT = Long.parseLong(repayTime) * 1000;
-            Date dateRapay = new Date(intT);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String dateStr = sdf.format(dateRapay);
-            return dateStr;
-        }
-        return null;
-    }
-
-    /**
-     * 日期转换,数据存的int10的时间戳
+     * 日期转换
      *
      * @param repayTime
      * @return
@@ -136,8 +119,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     String rate = CertCallUtil.convertLoanRate(borrow.getBorrowApr(), borrow.getBorrowPeriod(), borrow.getBorrowStyle());
                     //8.承接时间：系统记录的承接时间
                     //代表获取有时分秒
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    String tenderDate = sdf.format(creditTender.getCreateTime());
+                    String tenderDate = dateFormatTransformationDate(creditTender.getCreateTime(),"H");
                     //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
                     //获取优惠券信息
                     BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(creditTender.getAssignNid());
@@ -168,14 +150,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
                     param.put("redpackage", bigDecimalCouponQuota.toString());
                     //10.封闭截至时间：散标报送 到期日  智投报送承接日
-                    param.put("lockTime", dateFormatTransformation(String.valueOf(borrow.getRepayLastTime())));
-                    //是否是历史数据
-                /*if (isOld) {
-                    //是否是历史数据
-                    // groupByDate  旧数据上报排序 按月用
-                    String groupByDate = tenderDate.split("-")[0] + "-" + tenderDate.split("-")[1];
-                    param.put("groupByDate", groupByDate);
-                }*/
+                    param.put("lockTime", GetDate.times10toStrYYYYMMDD(borrow.getRepayLastTime()));
                     json.add(param);
                 }
             }
@@ -238,13 +213,6 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     param.put("redpackage", "0");
                     //10.封闭截至时间：散标报送 到期日  智投报送承接日
                     param.put("lockTime", lockTime);
-                    //是否是历史数据
-                /*if (isOld) {
-                    //是否是历史数据
-                    // groupByDate  旧数据上报排序 按月用
-                    String groupByDate = takeTime.split("-")[0] + "-" + takeTime.split("-")[1];
-                    param.put("groupByDate", groupByDate);
-                }*/
                     json.add(param);
                 }
 

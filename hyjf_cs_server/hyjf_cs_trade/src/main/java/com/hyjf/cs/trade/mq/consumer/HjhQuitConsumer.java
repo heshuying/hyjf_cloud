@@ -127,13 +127,17 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
             Integer pushMoneyOnline = amTradeClient.getCommisionConfig(map);
 //                map.put("userType","51老用户");
 //                Integer pushMoney51 = amTradeClient.getCommisionConfig(map);
+            //获取提成用户ID
             Integer commissionUserID = getCommissionUser(hjhAccedeVO, pushMoneyOnline, null, inverestUserInfo);
             UserInfoVO commissioUserInfoVO = null;
+            BankOpenAccountVO bankOpenAccountVO = null;
+            List<UserInfoCustomizeVO> userInfoCustomizeVOS = null;
+            //提成用户不为空时，获取提成用户相关信息用于更新提成信息
             if(commissionUserID != null && commissionUserID > 0 ){
                 commissioUserInfoVO = amUserClient.selectUserInfoByUserId(commissionUserID);
+                bankOpenAccountVO = amUserClient.selectBankAccountById(commissionUserID);
+                userInfoCustomizeVOS = amUserClient.queryDepartmentInfoByUserId(commissionUserID);
             }
-            BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(commissionUserID);
-            List<UserInfoCustomizeVO> userInfoCustomizeVOS = amUserClient.queryDepartmentInfoByUserId(commissionUserID);
             amTradeClient.updateForLock(accedeOrderId,inverestUserInfo,commissioUserInfoVO,bankOpenAccountVO,userInfoCustomizeVOS);
         }
     }

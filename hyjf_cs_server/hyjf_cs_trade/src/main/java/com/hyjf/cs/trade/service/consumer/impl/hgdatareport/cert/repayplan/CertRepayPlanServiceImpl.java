@@ -1,24 +1,20 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.repayplan;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.repayplan.CertRepayPlanService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +37,6 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
     AmUserClient amUserClient;
     @Autowired
     SystemConfig systemConfig;
-/*    @Autowired
-    private CertUserInfoService certUserInfoService;
-    @Autowired
-    private CertBorrowStatusService certBorrowStatusService;*/
-
     /**
      * 获取标的的还款信息
      *
@@ -54,7 +45,6 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
      */
     @Override
     public JSONArray getBorrowReyapPlan(String borrowNid, JSONArray json, boolean isOld) {
-        //JSONArray json = new JSONArray();
         //根据标的编号查找标的信息
         try {
             //获取还款信息
@@ -73,14 +63,18 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
             String userIdcardHash = "";
-            /*//借款人信息
-            CertUserVO certUser = certUserInfoService.getCertUserByUserId(borrow.getUserId());
-            //如果借款人未上报,则从用户信息表中获取用户idCard
-            if (null != certUser) {
-                userIdcardHash = certUser.getUserIdCardHash();
-            } else {
-                userIdcardHash = certUserInfoService.getUserHashValue(borrow);
-            }*/
+
+            //借款人信息
+            List<CertUserVO> certUserVOList = amUserClient.getCertUsersByUserId(borrow.getUserId());
+            if(null!=certUserVOList&&certUserVOList.size()>0) {
+                CertUserVO certUser = certUserVOList.get(0);
+                //如果借款人未上报,则从用户信息表中获取用户idCard
+                if (null != certUser) {
+                    userIdcardHash = certUser.getUserIdCardHash();
+                } else {
+                    userIdcardHash = getUserHashValue(borrow);
+                }
+            }
             //如果标的信息不为空,而且标的状态为放款中,即标的放款成功
             if (borrow.getStatus() != 4) {
                 throw new Exception(logHeader + "标的未放款成功！！borrowNid:" + borrowNid);
@@ -116,21 +110,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                         param.put("curInterest", borrowRepayPlan.getRepayInterest());
                         //当期应还款时间点
                         //当期应还时间点：报送当期应还日期23:59:59
-                       // param.put("repayTime", dateFormatTransformation(borrowRepayPlan.getRepayTime()) + " 23:59:59");
-                        //是否是历史数据
-                        /*if (isOld) {
-                            //是否是历史数据
-                            // groupByDate  旧数据上报排序 按月用
-                            List<BorrowRecoverVO> borrowRecoverVOList =amTradeClient.selectBorrowRecoverByBorrowNid(borrowNid);
-                            if(null!=borrowRecoverVOList&&borrowRecoverVOList.size()>0){
-                                BorrowRecoverVO borrowRecover=borrowRecoverVOList.get(0);
-                                // groupByDate  旧数据上报排序 按月用
-                                String groupByDateStr = dateFormatTransformation(borrowRecover.getAddtime());
-                                String groupByDate = groupByDateStr.split("-")[0] + "-" + groupByDateStr.split("-")[1];
-                                param.put("groupByDate", groupByDate);
-                            }
-
-                        }*/
+                        param.put("repayTime",GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
                         json.add(param);
                     }
                 }
@@ -159,17 +139,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                 param.put("curInterest", borrow.getRepayAccountInterest());
                 //当期应还款时间点
                 //当期应还时间点：报送当期应还日期23:59:59
-                param.put("repayTime", dateFormatTransformation(String.valueOf(repay.getRepayTime())) + " 23:59:59");
-                //是否是历史数据
-               /* if (isOld) {
-                    //是否是历史数据
-                    // groupByDate  旧数据上报排序 按月用
-                    BorrowRecover borrowRecover = certBorrowStatusService.selectBorrowRecover(borrowNid);
-                    // groupByDate  旧数据上报排序 按月用
-                    String groupByDateStr = dateFormatTransformation(borrowRecover.getAddtime());
-                    String groupByDate = groupByDateStr.split("-")[0] + "-" + groupByDateStr.split("-")[1];
-                    param.put("groupByDate", groupByDate);
-                }*/
+                param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
                 json.add(param);
             }
 
@@ -180,19 +150,30 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
     }
 
     /**
-     * 日期转换,数据存的int10的时间戳
-     *
-     * @param repayTime
+     * 获取标的的哈希值
+     * @param borrow
      * @return
+     * @throws Exception
      */
-    private String dateFormatTransformation(String repayTime) {
-        if (StringUtils.isNotBlank(repayTime)) {
-            long intT = Long.parseLong(repayTime) * 1000;
-            Date dateRapay = new Date(intT);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String dateStr = sdf.format(dateRapay);
-            return dateStr;
+    public String getUserHashValue(BorrowAndInfoVO borrow) throws Exception {
+        String userIdcard = "";
+        if (borrow != null) {
+            if ("1".equals(borrow.getCompanyOrPersonal())) {
+                // 公司
+                BorrowUserVO borrowUsers = getBorrowUsers(borrow.getBorrowNid());
+                // 统一社会信用代码
+                userIdcard = borrowUsers.getSocialCreditCode();
+                if (borrowUsers.getSocialCreditCode() == null || "".equals(borrowUsers.getSocialCreditCode())) {
+                    // 注册号
+                    userIdcard = borrowUsers.getRegistCode();
+                }
+            } else {
+                // 个人
+                BorrowManinfoVO borrowManinfo = getBorrowManInfo(borrow.getBorrowNid());
+                // 身份证号
+                userIdcard = borrowManinfo.getCardNo();
+            }
         }
-        return null;
+        return tool.idCardHash(userIdcard);
     }
 }

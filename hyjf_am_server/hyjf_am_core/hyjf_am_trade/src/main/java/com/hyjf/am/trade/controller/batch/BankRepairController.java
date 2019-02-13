@@ -32,7 +32,7 @@ import java.util.List;
 @Api(value = "江西银行充值掉单异常处理定时任务")
 @RestController
 @RequestMapping("/am-trade/bankException")
-public class BankExceptionController extends BaseController {
+public class BankRepairController extends BaseController {
 
     @Autowired
     private BankRechargeService bankRechargeService;

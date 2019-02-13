@@ -95,17 +95,14 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
             //累计借贷余额
             bifaOperationDataEntity.setTotal_loan_balance_money(df.format(this.getWillPayMoney(cal)));
             //累计借贷余额笔数
-            bifaOperationDataEntity.setTotal_loan_balance_num(this.getTotalLoanBalanceNum(cal));
+            bifaOperationDataEntity.setTotal_loan_balance_num(this.getTotalLoanBalanceNum());
 
-            // 累计借款人（定义：系统累计到现在进行过发表的底层借款人数量）
-            Integer countBorrowUser = this.countBorrowUser();
-            //累計借款人數
-            bifaOperationDataEntity.setTotal_borrow_users(String.valueOf(countBorrowUser));
+            //累計借款人數（定义：系统累计到现在进行过发表的底层借款人数量）
+            bifaOperationDataEntity.setTotal_borrow_users(String.valueOf(this.countBorrowUser()));
             //累計投資人數
             bifaOperationDataEntity.setTotal_invest_users(this.getTenderCount(cal));
             // 当前借款人（定义：当前有尚未结清债权的底层借款人数量）
-            Integer countBorrowUserCurrent = this.countCurrentBorrowUser();
-            bifaOperationDataEntity.setCur_borrow_users(String.valueOf(countBorrowUserCurrent));
+            bifaOperationDataEntity.setCur_borrow_users(String.valueOf(this.countCurrentBorrowUser()));
 
             // 当前投资人（定义：当前代还金额不为0的用户数量）
             Integer countCurrentTenderUser = this.countCurrentTenderUser();
@@ -226,8 +223,8 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
        return amTradeClient.countBorrowUser();
     }
 
-    private String getTotalLoanBalanceNum(Calendar cal) {
-        return String.valueOf(amTradeClient.getTotalLoanBalanceNum(cal.getTime()));
+    private String getTotalLoanBalanceNum() {
+        return String.valueOf(amTradeClient.getTotalLoanBalanceNum());
     }
 
     /**

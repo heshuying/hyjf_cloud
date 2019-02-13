@@ -36,7 +36,7 @@ public class IssueBorrowOfTimingController extends BaseController {
 
 
     /**
-     * 散标定时发标 - 拆分标的
+     * 汇计划自动发标任务
      * @return
      */
     @RequestMapping("/split_borrow")
@@ -44,7 +44,7 @@ public class IssueBorrowOfTimingController extends BaseController {
         try {
             issueBorrowOfTimingService.issueSplitBorrowOfTiming();
         } catch (Exception e) {
-            logger.error("拆分标的定时发标失败....", e);
+            logger.error("汇计划自动发标任务发标失败....", e);
             return "fail";
         }
 

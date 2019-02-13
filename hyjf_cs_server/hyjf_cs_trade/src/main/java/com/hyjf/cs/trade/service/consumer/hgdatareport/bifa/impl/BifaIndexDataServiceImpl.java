@@ -70,23 +70,27 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
         // 取得当前日期为基准日期
         Integer stdDate = GetDate.getDayStart10(new Date());
         //结束时间为当前时间的前一天的23:59:59
-        //生产用
-        Integer endDate = stdDate - 1;
+
+        //生产用 前一天的23：59：59
+        //Integer endDate = stdDate - 1;
+        //测试用 当天的23：59：59
+        Integer endDate = GetDate.getDayEnd10(new Date());
+
         //查询最近一周的索引数据
         Integer startDate = GetDate.countDate(stdDate, 5, -7);
         //输出上报时间范围
         logger.info(logHeader + "上报时间范围:" + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(startDate) + "~" + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(endDate));
-
-        this.executeIndexDataReport(startDate, endDate);
+        //准备索引数据
+        this.prepareIndexData(startDate, endDate);
 
     }
 
     /**
-     * 进行上报流程
+     * 准备索引数据
      * @param startDate
      * @param endDate
      */
-    private void executeIndexDataReport(Integer startDate, Integer endDate) {
+    private void prepareIndexData(Integer startDate, Integer endDate) {
         //清空上报文件集合
         reportFiles.clear();
         // 执行已开户用户索引数据上报
@@ -142,7 +146,8 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
                     endDate = GetDate.countDate(start, 2, i) - 1;
                 }
                 logger.info(logHeader + "历史上报时间范围 " + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(startDate) + "~" + GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(endDate));
-                this.executeIndexDataReport(startDate, endDate);
+                //准备索引数据
+                this.prepareIndexData(startDate, endDate);
             }
             logger.info(logHeader + "定时任务处理成功。");
         } catch (Exception e) {
@@ -275,10 +280,15 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
      * @param endDate
      * @return
      */
-    private List<BifaIndexUserInfoBeanVO> getBorrowUserInfo(Integer startDate, Integer endDate) {
+    private List<BifaIndexUserInfoBeanVO> getBorrowUserInfo(Integer startDate, Integer endDate) throws Exception {
         List<BifaIndexUserInfoBeanVO> result = new ArrayList<BifaIndexUserInfoBeanVO>();
         //获取近七天添加的标的信息
         List<BorrowAndInfoVO> borrowAndInfos = amTradeClient.selectBorrowUserInfo(startDate, endDate);
+        //判空
+        if (null == borrowAndInfos) {
+            throw new Exception(logHeader + "获取借款人信息失败!!!");
+        }
+
         for (BorrowAndInfoVO bean : borrowAndInfos) {
             if ("1".equals(bean.getCompanyOrPersonal()) && StringUtils.isEmpty(bean.getIdCard())) {
                 //借款主体为公司时,公司的统一社会信用代码不能为空
@@ -300,7 +310,6 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
 
     private BifaIndexUserInfoBeanVO buildBifaIndexUserInfoBean(BorrowAndInfoVO bean) {
         BifaIndexUserInfoBeanVO result = new BifaIndexUserInfoBeanVO();
-        result.setUserId(bean.getUserId());
         result.setTrueName(bean.getTruename());
         result.setIdCard(bean.getIdCard());
         result.setBorrowBeginDate(GetDate.times10toStrYYYYMMDD(bean.getRecoverLastTime()));
@@ -466,7 +475,6 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
             String dataType = BifaCommonConstants.DATATYPE_1005;
             //获取最近七天开户的用户
             List<BifaIndexUserInfoBeanVO> bifaIndexUserInfoBeans = this.getBankOpenedAccountUsers(startDate, endDate);
-            logger.info(bifaIndexUserInfoBeans.size()+"");
             if (null == bifaIndexUserInfoBeans) {
                 throw new Exception(logHeader + "获取开户用户失败!!!");
             }

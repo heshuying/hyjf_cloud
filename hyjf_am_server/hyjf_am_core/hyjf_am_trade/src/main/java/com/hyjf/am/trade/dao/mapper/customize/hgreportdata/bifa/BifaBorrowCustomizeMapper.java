@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa;
 
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface BifaBorrowCustomizeMapper {
      * @param endDate
      * @return
      */
-    List<BorrowAndInfoVO> selectBorrowUserInfo(Integer startDate, Integer endDate);
+    List<BorrowAndInfoVO> selectBorrowUserInfo(@Param("startDate") Integer startDate,@Param("endDate") Integer endDate);
 }

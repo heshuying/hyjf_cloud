@@ -85,10 +85,11 @@ public class KeyCountController extends BaseController {
 
 	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody KeyCountRequest form) throws Exception {
 		// 表格sheet名称
-		String sheetName = "关键词统计";
+		String sheetName = "关键词统计1";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
+		form.setLimitStart(-1);
 		KeyCountResponse keyCountResponse = keyCountService.searchAction(form);
 		List<KeyCountVO> recordList = keyCountResponse.getResultList();
 		// 列头
@@ -162,8 +163,8 @@ public class KeyCountController extends BaseController {
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
+        form.setLimitStart(-1);
 		KeyCountResponse keyCountResponse = keyCountService.searchAction(form);
-		List<KeyCountVO> recordList = keyCountResponse.getResultList();
 		// sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 
@@ -180,9 +181,9 @@ public class KeyCountController extends BaseController {
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		} else {
+		}/* else {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
-		}
+		}*/
 
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
