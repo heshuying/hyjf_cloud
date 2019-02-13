@@ -33,7 +33,7 @@ import java.util.Map;
 public class CertTransferProjectMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(CertTransferProjectMessageConsumer.class);
 
-    private String thisMessName = "转让状态信息上报";
+    private String thisMessName = "转让项目信息上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
 
