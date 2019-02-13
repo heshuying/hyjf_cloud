@@ -52,7 +52,9 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 			logger.info(logHeader + " creditList.size():"+creditList.size());
 			if(creditList!=null&&creditList.size()>0){
 				BorrowCreditVO credit=creditList.get(0);
+				logger.info(logHeader + " credit.getCreditNid():"+credit.getCreditNid());
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(credit.getCreditUserId());
+				logger.info(logHeader + " usersInfo.getUserId():"+usersInfo.getUserId());
 				try {
 					for (int i = 0; i < 1; i++) {
 						Map<String, Object> param = new LinkedHashMap<String, Object>();
