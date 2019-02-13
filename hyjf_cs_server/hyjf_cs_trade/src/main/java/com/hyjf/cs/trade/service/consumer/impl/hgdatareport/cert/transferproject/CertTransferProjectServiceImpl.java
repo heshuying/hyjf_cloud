@@ -49,12 +49,9 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if("1".equals(flag)){
 			List<BorrowCreditVO> creditList=amTradeClient.getBorrowCreditListByCreditNid(creditNid);
-			logger.info(logHeader + " creditList.size():"+creditList.size());
 			if(creditList!=null&&creditList.size()>0){
 				BorrowCreditVO credit=creditList.get(0);
-				logger.info(logHeader + " credit.getCreditNid():"+credit.getCreditNid());
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(credit.getCreditUserId());
-				logger.info(logHeader + " usersInfo.getUserId():"+usersInfo.getUserId());
 				try {
 					for (int i = 0; i < 1; i++) {
 						Map<String, Object> param = new LinkedHashMap<String, Object>();
@@ -84,7 +81,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						param.put("floatMoney", 
 								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))));
 						//转让项目发布的日期
-						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getAddTime()));
+						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getCreditTerm()));
 						//转让债权信息的链接URL
 						param.put("sourceProductUrl", systemConfig.getWebHost() + "/bank/user/credit/webcredittender.do?creditNid="+credit.getCreditNid());
 						list.add(param);
@@ -135,13 +132,12 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						list.add(param);
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
+					// 错误时，以下日志必须出力（预警捕捉点）
+					logger.error(logHeader , e);
 				}
 
 			}
 		}
-		logger.info(logHeader + " list.size():"+list.size());
-		logger.info(logHeader + " JSONArray.parseArray(JSON.toJSONString(list)):"+JSONArray.parseArray(JSON.toJSONString(list)));
 		return JSONArray.parseArray(JSON.toJSONString(list));
 	}
 
