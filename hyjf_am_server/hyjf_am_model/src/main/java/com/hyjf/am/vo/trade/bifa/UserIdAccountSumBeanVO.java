@@ -14,8 +14,6 @@ public class UserIdAccountSumBeanVO implements Serializable {
 
     //出借人userId
     private Integer userId;
-    //出借金額
-    private BigDecimal account;
 
     public Integer getUserId() {
         return userId;
@@ -25,11 +23,4 @@ public class UserIdAccountSumBeanVO implements Serializable {
         this.userId = userId;
     }
 
-    public BigDecimal getAccount() {
-        return account;
-    }
-
-    public void setAccount(BigDecimal account) {
-        this.account = account;
-    }
 }

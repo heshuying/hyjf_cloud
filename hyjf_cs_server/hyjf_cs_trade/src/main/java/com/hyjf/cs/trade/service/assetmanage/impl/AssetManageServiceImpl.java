@@ -93,8 +93,12 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             //法大大协议信息
             if(recordList!=null && recordList.size()>0){
                 for (CurrentHoldObligatoryRightListCustomizeVO currentHoldObligatoryRightListCustomize : recordList) {
-                    String nid = currentHoldObligatoryRightListCustomize.getNid();
                     //法大大居间服务协议（type=2时候，为债转协议）
+                    String nid = currentHoldObligatoryRightListCustomize.getNid();//出借订单号
+                    if("2".equals(currentHoldObligatoryRightListCustomize.getType())){
+                        nid = currentHoldObligatoryRightListCustomize.getCreditTenderNid();//债转投标单号
+                    }
+                    //法大大居间服务协议（type=1时候，为债转协议）
                     List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
                     if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
                         TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
@@ -104,11 +108,26 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                             currentHoldObligatoryRightListCustomize.setFddStatus(1);
                         }else {
                             //隐藏下载按钮
-                            currentHoldObligatoryRightListCustomize.setFddStatus(0);
+                            currentHoldObligatoryRightListCustomize.setFddStatus(2);
                         }
                     }else {
-                        //下载老版本协议
-                        currentHoldObligatoryRightListCustomize.setFddStatus(1);
+                        /**
+                         * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                         * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                         * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                         */
+                        BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
+                        int addTime = ADD_TIME;
+                        if(borrowRecoverVO != null){
+                            addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                        }
+                        if (addTime<ADD_TIME328) {
+                            //下载老版本协议
+                            currentHoldObligatoryRightListCustomize.setFddStatus(1);
+                        }else{
+                            //隐藏下载按钮
+                            currentHoldObligatoryRightListCustomize.setFddStatus(0);
+                        }
                     }
                 }
             }
@@ -356,7 +375,6 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                     hjhInvistDetailVO.setFddStatus(2);
                 }
             }else {
-
                 /**
                  * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
                  * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
@@ -374,11 +392,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                     //隐藏下载按钮
                     hjhInvistDetailVO.setFddStatus(0);
                 }
-                //下载老版本协议
-                //System.out.println("******************3法大大协议状态：2");
-                hjhInvistDetailVO.setFddStatus(1);
             }
-
             // add 汇计划二期前端优化 持有中计划详情修改锁定期和实际退出时间 nxl 20180419 start
             SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
             Date datePeriod = null;
@@ -480,50 +494,44 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             tmpList = response.getResultList();
             if(tmpList!=null && tmpList.size()>0){
                 for (UserHjhInvistListCustomizeVO userHjhInvistListCustomize : tmpList) {
-                    String nid = userHjhInvistListCustomize.getNid();//居间
-                    String investOrderId = userHjhInvistListCustomize.getInvestOrderId();//债转
+                    String nid = userHjhInvistListCustomize.getNid();
+                    //1是债转
+                    if("1".equals(userHjhInvistListCustomize.getType())){
+                        nid = userHjhInvistListCustomize.getInvestOrderId();
+                    }
                     //法大大居间服务协议（type=2时候，为债转协议）
                     List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
-                    List<TenderAgreementVO> tenderAgreementsOrderId= amTradeClient.selectTenderAgreementByNid(investOrderId);//债转协议
-                   // List<TenderAgreement> tenderAgreementsOrderId= fddGenerateContractService.selectByExample(investOrderId);//债转协议
-                    if("0".equals(userHjhInvistListCustomize.getType())){//居间协议
-                        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
-                            TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
-                            Integer fddStatus = tenderAgreement.getStatus();
-                            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                            //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
-                            if(fddStatus.equals(3)){
-                                userHjhInvistListCustomize.setFddStatus(1);
-                            }else {
-                                //隐藏下载按钮
-                                //System.out.println("******************2法大大协议状态：0");
-                                userHjhInvistListCustomize.setFddStatus(0);
-                            }
-                        }else {
-                            //下载老版本协议
-                            //System.out.println("******************3法大大协议状态：2");
+                    if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                        TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                        Integer fddStatus = tenderAgreement.getStatus();
+                        //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                        //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
+                        if(fddStatus.equals(3)){
                             userHjhInvistListCustomize.setFddStatus(1);
+                        }else {
+                            //隐藏下载按钮
+                            //System.out.println("******************2法大大协议状态：0");
+                            userHjhInvistListCustomize.setFddStatus(2);
                         }
-                    }else{//债转协议
-                        if(tenderAgreementsOrderId!=null && tenderAgreementsOrderId.size()>0){
-                            TenderAgreementVO tenderAgreement = tenderAgreementsOrderId.get(0);
-                            Integer fddStatus = tenderAgreement.getStatus();
-                            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                            //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
-                            if(fddStatus.equals(3)){
-                                userHjhInvistListCustomize.setFddStatus(1);
-                            }else {
-                                //隐藏下载按钮
-                                //System.out.println("******************2法大大协议状态：0");
-                                userHjhInvistListCustomize.setFddStatus(0);
-                            }
-                        }else {
+                    }else {
+                        /**
+                         * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                         * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                         * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                         */
+                        BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(nid);
+                        int addTime = ADD_TIME;
+                        if(borrowRecoverVO != null){
+                            addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                        }
+                        if (addTime<ADD_TIME328) {
                             //下载老版本协议
-                            //System.out.println("******************3法大大协议状态：2");
                             userHjhInvistListCustomize.setFddStatus(1);
+                        }else{
+                            //隐藏下载按钮
+                            userHjhInvistListCustomize.setFddStatus(0);
                         }
                     }
-
                 }
             }
         }
