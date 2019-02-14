@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.bifa.exceptiondata;
+package com.hyjf.batch.job.bifa.repairdata;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -12,11 +12,11 @@ import org.quartz.JobExecutionException;
 
 /** 禁止并发执行 */
 @DisallowConcurrentExecution
-public class BifaExceptionDataJob extends BaseJob implements Job {
+public class BifaRepairDataJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("BifaExceptionDataJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bifaExceptionData/reportAgain", null);
-        logger.info("BifaExceptionDataJob execute end...");
+        logger.info("BifaRepairDataJob: {} execute...", context.getJobDetail().getKey().getName());
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bifaRepairData/reportAgain", null);
+        logger.info("BifaRepairDataJob execute end...");
     }
 }

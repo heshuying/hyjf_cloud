@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.batch.job.cert.exception;
+package com.hyjf.batch.job.cert.repair;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -17,14 +17,14 @@ import org.slf4j.LoggerFactory;
  * @Date 2019/1/30 14:57
  */
 @DisallowConcurrentExecution
-public class CertSendExceptionJob extends BaseJob implements Job {
+public class CertSendRepairJob extends BaseJob implements Job {
 
-    private static final Logger logger = LoggerFactory.getLogger(CertSendExceptionJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(CertSendRepairJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("CertSendExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("CertSendRepairJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/certException/doException", String.class).getBody();
-        logger.info("CertSendExceptionJob execute end...");
+        logger.info("CertSendRepairJob execute end...");
     }
 }

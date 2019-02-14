@@ -1,4 +1,4 @@
-package com.hyjf.batch.job.exception.banktendercancel;
+package com.hyjf.batch.job.repair.banktendercancel;
 
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
@@ -14,15 +14,15 @@ import org.slf4j.LoggerFactory;
  * @since 20180625
  */
 @DisallowConcurrentExecution
-public class BankTenderCancelExceptionJob extends BaseJob implements Job{
+public class BankTenderCancelRepairJob extends BaseJob implements Job{
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("BankTenderCancelExceptionJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("BankTenderCancelRepairJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/bankTenderCancelExceptionHandle", String.class).getBody();
-        logger.info("BankTenderCancelExceptionJob execute end...");
+        logger.info("BankTenderCancelRepairJob execute end...");
     }
 }
 

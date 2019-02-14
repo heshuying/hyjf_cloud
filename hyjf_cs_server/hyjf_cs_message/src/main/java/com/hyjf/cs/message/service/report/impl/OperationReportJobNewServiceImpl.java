@@ -8,6 +8,7 @@ import com.hyjf.common.enums.DateEnum;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.bean.ic.report.*;
+import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.BorrowUserStatisticMongDao;
 import com.hyjf.cs.message.mongo.ic.report.OperationMongDao;
@@ -35,6 +36,8 @@ import java.util.*;
 public class OperationReportJobNewServiceImpl extends StatisticsOperationReportBase implements OperationReportJobNewService {
     @Autowired
     private AmUserClient amUserClient;
+    @Autowired
+    AmTradeClient amTradeClient;
     @Autowired
     private OperationMongoGroupDao operationMongoGroupDao;
     @Autowired
@@ -126,7 +129,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         // 出借人按照年龄分布
         Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
         //代码拆分先查出所有符合条件的用户
-        List<OperationReportJobVO> ageRangeUserIds = bean.getAgeRangeUserIds();
+        List<OperationReportJobVO> ageRangeUserIds =  amTradeClient.getTenderAgeByRangeList(getLastDay(cal));
         if(!CollectionUtils.isEmpty(ageRangeUserIds)){
             int age = amUserClient.getTenderAgeByRange(getLastDay(cal), 0,
                     OperationGroupReport.ageRange1, ageRangeUserIds);

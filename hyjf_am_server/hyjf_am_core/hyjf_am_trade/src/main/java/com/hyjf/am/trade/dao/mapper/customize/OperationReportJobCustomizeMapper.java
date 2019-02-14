@@ -96,5 +96,5 @@ public interface OperationReportJobCustomizeMapper {
 	 * 北互金累计借贷余额
 	 * @return
 	 */
-	BigDecimal getWillPayMoney(Date date);
+	BigDecimal getWillPayMoney();
 }

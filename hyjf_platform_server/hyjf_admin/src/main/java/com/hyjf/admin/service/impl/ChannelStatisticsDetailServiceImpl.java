@@ -46,8 +46,8 @@ public class ChannelStatisticsDetailServiceImpl implements ChannelStatisticsDeta
         IntegerResponse count = this.amAdminClient.countList(request);
         if (count.getResultInt()!=null&&count.getResultInt() > 0) {
             total = count.getResultInt();
-            if(request.getLimitStart()>=0) {
                 Paginator paginator = new Paginator(request.getCurrPage(), count.getResultInt(), request.getPageSize() == 0 ? 10 : request.getPageSize());
+            if(request.getLimitStart()!=-1  ) {
                 request.setLimitStart(paginator.getOffset());
                 request.setLimitEnd(paginator.getLimit());
             }

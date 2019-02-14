@@ -225,13 +225,13 @@ public class BorrowFlowController extends BaseController {
             return "自动备案不能为空，请重新操作！";
         }
         //自动保证金
-        if(null == form.getAutoBail()){
-            return "自动保证金不能为空，请重新操作！";
-        }
-        //自动初审
-//        if(null == form.getAutoAudit()){
-//            return "自动初审不能为空，请重新操作！";
+//        if(null == form.getAutoBail()){
+//            return "自动保证金不能为空，请重新操作！";
 //        }
+        //自动初审
+        if(null == form.getAutoAudit()){
+            return "自动初审不能为空，请重新操作！";
+        }
         //自动复审
         if(null == form.getAutoReview()){
             return "自动复审不能为空，请重新操作！";

@@ -21,14 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- *
- * @author Zha Daojian
- * @date 2019/2/14 9:13
- * @param
- * api端-第三方-批次放款
- * @return
- **/
-@Api(value = "api端-第三方-批次放款")
+ * @Auther:yangchangwei
+ * modify by zha daojian
+ * 后台列表的批次放款已挪到am_admin 处理，此处由 zhadaojian 负责后期维护
+ * @Date:2018/7/7
+ * @Description: api查询批次放款
+ */
+@Api(value = "api查询批次放款")
 @RestController
 @RequestMapping("/am-trade/apiBatchBorrowRecover")
 public class ApiBatchBorrowRecoverController extends BaseController {
