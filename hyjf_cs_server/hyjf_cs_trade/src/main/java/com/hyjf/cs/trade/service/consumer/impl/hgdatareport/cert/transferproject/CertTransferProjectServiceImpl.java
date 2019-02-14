@@ -95,7 +95,6 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 			HjhDebtCreditRequest request=new HjhDebtCreditRequest();
 			request.setCreditNid(creditNid);
 			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByCreditNid(creditNid);
-			logger.info(logHeader + "hjhDebtCreditList.size()"+hjhDebtCreditList.size());
 			if(hjhDebtCreditList!=null&&hjhDebtCreditList.size()>0){
 				HjhDebtCreditVO hjhDebtCredit=hjhDebtCreditList.get(0);
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(hjhDebtCredit.getUserId());
@@ -136,7 +135,6 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 					// 错误时，以下日志必须出力（预警捕捉点）
 					logger.error(logHeader , e);
 				}
-
 			}
 		}
 		return JSONArray.parseArray(JSON.toJSONString(list));
