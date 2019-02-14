@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.front.user.impl;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
+import com.hyjf.am.user.dao.mapper.customize.UtmPlatCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.AppUtmRegExample;
 import com.hyjf.am.user.service.front.user.AppUtmRegService;
@@ -23,6 +24,8 @@ import java.util.List;
 public class AppUtmRegServiceImpl implements AppUtmRegService {
 	@Resource
 	private AppUtmRegMapper appUtmRegMapper;
+	@Resource
+    private UtmPlatCustomizeMapper utmPlatCustomizeMapper;
 
 	@Override
 	public AppUtmReg findByUserId(Integer userId) {
@@ -60,7 +63,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 	}
 
 	@Override
-	public List<AppUtmReg> getAppUtmRegVO(AppChannelStatisticsRequest request) {
+	public int getAppUtmRegVOCount(AppChannelStatisticsRequest request) {
 		AppUtmRegExample example = new AppUtmRegExample();
 		AppUtmRegExample.Criteria criteria = example.createCriteria();
 
@@ -98,7 +101,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 		if (StringUtils.isNotBlank(sourceId)) {
 			criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
 		}
-		return appUtmRegMapper.selectByExample(example);
+		return appUtmRegMapper.countByExample(example);
 
 	}
 
@@ -137,6 +140,98 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 		return appUtmRegMapper.selectByExample(appUtmRegExample);
 
 	}
+
+	@Override
+	public int getOpenAccountAttrCount(AppChannelStatisticsRequest request) {
+
+        List<Integer> uesrIdList = utmPlatCustomizeMapper.selectUsersInfo();
+        if (CollectionUtils.isEmpty(uesrIdList)) {
+            return 0;
+        }
+
+        AppUtmRegExample example = new AppUtmRegExample();
+        AppUtmRegExample.Criteria criteria = example.createCriteria();
+
+        String timeStartSrch = request.getTimeStartSrch();
+        String timeEndSrch = request.getTimeEndSrch();
+        String sourceId = request.getSourceId();
+
+        if ("registerTime".equals(request.getSourceIdSrch())) {
+            // 开始时间查询
+            if (StringUtils.isNotBlank(timeStartSrch)) {
+                criteria.andRegisterTimeGreaterThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
+            }
+            // 结束时间查询
+            if (StringUtils.isNotBlank(timeEndSrch)) {
+                criteria.andRegisterTimeLessThanOrEqualTo(GetDate.stringToDate(timeEndSrch));
+            }
+        }
+        if ("openAccountTime".equals(request.getSourceIdSrch())) {
+            // 开始时间查询
+            if (StringUtils.isNotBlank(timeStartSrch)) {
+                criteria.andOpenAccountTimeGreaterThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
+            }
+            // 结束时间查询
+            if (StringUtils.isNotBlank(timeEndSrch)) {
+                criteria.andOpenAccountTimeLessThanOrEqualTo(GetDate.stringToDate(timeEndSrch));
+            }
+        }
+        if (StringUtils.isNotBlank(sourceId)) {
+            criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
+        }
+        List<AppUtmReg> appUtmRegList = appUtmRegMapper.selectByExample(example);
+        int i = 0;
+        for(AppUtmReg vo : appUtmRegList){
+            boolean flag = uesrIdList.contains(vo.getUserId());
+            if(flag){
+                i++;
+            }
+        }
+
+        return i;
+	}
+
+    @Override
+    public List<AppUtmReg> getAppUtmRegVO(AppChannelStatisticsRequest request) {
+		AppUtmRegExample example = new AppUtmRegExample();
+		AppUtmRegExample.Criteria criteria = example.createCriteria();
+
+		String timeStartSrch = request.getTimeStartSrch();
+		String timeEndSrch = request.getTimeEndSrch();
+		String sourceId = request.getSourceId();
+
+		if ("registerTime".equals(request.getSourceIdSrch())) {
+
+			// 开始时间查询
+			if (StringUtils.isNotBlank(timeStartSrch)) {
+				criteria.andRegisterTimeGreaterThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
+			}
+
+			// 结束时间查询
+			if (StringUtils.isNotBlank(timeEndSrch)) {
+				criteria.andRegisterTimeLessThanOrEqualTo(GetDate.stringToDate(timeEndSrch));
+			}
+		}
+
+		if ("openAccountTime".equals(request.getSourceIdSrch())) {
+
+			// 开始时间查询
+			if (StringUtils.isNotBlank(timeStartSrch)) {
+				criteria.andOpenAccountTimeGreaterThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
+			}
+
+			// 结束时间查询
+			if (StringUtils.isNotBlank(timeEndSrch)) {
+				criteria.andOpenAccountTimeLessThanOrEqualTo(GetDate.stringToDate(timeEndSrch));
+			}
+
+		}
+
+		if (StringUtils.isNotBlank(sourceId)) {
+			criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
+		}
+		return appUtmRegMapper.selectByExample(example);
+    }
 
 
 }
