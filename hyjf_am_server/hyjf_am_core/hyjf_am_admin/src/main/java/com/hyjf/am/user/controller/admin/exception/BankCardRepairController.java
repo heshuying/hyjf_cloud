@@ -27,8 +27,8 @@ import java.util.List;
  * @version: BankCardRepairController, v0.1 2018/8/14 15:01
  */
 @Api(value = "江西银行卡异常",tags = "江西银行卡异常")
-@RestController(value = "userBankCardExceptionController")
-@RequestMapping(value = "/am-user/bankcardexception")
+@RestController(value = "userBankCardRepairController")
+@RequestMapping(value = "/am-user/bankcardrepair")
 public class BankCardRepairController extends BaseController {
 
     @Autowired
@@ -40,7 +40,7 @@ public class BankCardRepairController extends BaseController {
      * @param
      * @return
      */
-    @PostMapping(value = "/getBankCardExceptionCount")
+    @PostMapping(value = "/getBankCardRepairCount")
     public AdminBankCardExceptionResponse getBankCardExceptionCount(@RequestBody BankCardExceptionRequest request){
         AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
         int count = bankCardRepairService.getBankCardExceptionCount(request);
@@ -55,7 +55,7 @@ public class BankCardRepairController extends BaseController {
      * @param
      * @return
      */
-    @PostMapping(value = "/searchBankCardExceptionList")
+    @PostMapping(value = "/searchBankCardRepairList")
     public AdminBankCardExceptionResponse searchBankCardExceptionList(@RequestBody BankCardExceptionRequest request){
         AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
         Integer count = bankCardRepairService.getBankCardExceptionCount(request);
@@ -65,7 +65,7 @@ public class BankCardRepairController extends BaseController {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
-        logger.info("searchBankCardExceptionList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
+        logger.info("searchBankCardRepairList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
         List<AdminBankCardExceptionCustomize> bankCardExceptionCustomizeList = bankCardRepairService.searchBankCardExceptionList(request);
         if(!CollectionUtils.isEmpty(bankCardExceptionCustomizeList)){
             List<AdminBankCardExceptionCustomizeVO> bankCardExceptionCustomizeVOList = CommonUtils.convertBeanList(bankCardExceptionCustomizeList,AdminBankCardExceptionCustomizeVO.class);

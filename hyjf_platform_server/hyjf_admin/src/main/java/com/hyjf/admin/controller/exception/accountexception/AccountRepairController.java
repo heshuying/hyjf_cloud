@@ -42,7 +42,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 @RestController
 @RequestMapping("/hyjf-admin/exception/accountexception")
 @Api(value = "异常中心-汇付对账",tags = "异常中心-汇付对账")
-public class AccountExceptionController extends BaseController {
+public class AccountRepairController extends BaseController {
 
     @Autowired
     private AccountExceptionService accountExceptionService;

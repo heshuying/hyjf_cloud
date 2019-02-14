@@ -31,15 +31,18 @@ import com.netflix.zuul.context.RequestContext;
 /**
  * @author xiasq
  * @version AccessFilter, v0.1 2018/4/25 16:40 渠道过滤器，包含app pc api-web wechat
- *          功能：url增加前缀，区分渠道（按照域名）; 必要参数检查(渠道特有)
+ * 功能：url增加前缀，区分渠道（按照域名）; 必要参数检查(渠道特有)
  */
 @SuppressWarnings("unchecked")
 public class AccessFilter extends ZuulFilter {
-	private static final String TOKEN_IS_NULL = "tokenIsNull";
-	private static final int STATUS_SUCCESS = 200;
 	private static Logger logger = LoggerFactory.getLogger(AccessFilter.class);
+
+	private static final String TOKEN_IS_NULL = "tokenIsNull";
+
 	@Value("${ignore.urls.app.key}")
 	private String appKeyIgnoreUrls;
+
+	private static final int STATUS_SUCCESS = 200;
 
 	@Override
 	public String filterType() {
@@ -68,7 +71,7 @@ public class AccessFilter extends ZuulFilter {
 		String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
 		logger.info("原始请求地址originalRequestPath:" + originalRequestPath);
 
-		// 1.访问url是不是需要判断登录 true-需要登录访问，比如我的主页 false-无需登录访问，比如首页
+		// 访问url是不是需要判断登录
 		Map<String, Object> map = RedisUtils.getObj(RedisConstants.ZUUL_ROUTER_CONFIG_KEY, Map.class);
 		if (CollectionUtils.isEmpty(map)) {
 			// 不对其进行路由
@@ -76,8 +79,9 @@ public class AccessFilter extends ZuulFilter {
 		}
 		boolean secureVisitFlag = isSecureVisit(map, originalRequestPath);
 
-		// 2.执行不同渠道转发逻辑
+		// 执行不同渠道转发逻辑
 		if (originalRequestPath.contains(GatewayConstant.APP_CHANNEL)) {
+
 			// app 共同参数
 			String version = request.getParameter(GatewayConstant.VERSION);
 			String sign = request.getParameter(GatewayConstant.SIGN);
@@ -91,9 +95,8 @@ public class AccessFilter extends ZuulFilter {
 				}
 				this.appNomalRequestProcess(request, ctx, sign);
 
-				if (secureVisitFlag) {
-					this.appSetUserIdProcess(ctx, sign);
-				}
+				this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
+
 			} else {
 				// app打开初始化操作
 				this.initServer(request, ctx);
@@ -101,15 +104,11 @@ public class AccessFilter extends ZuulFilter {
 
 			this.addCommonResponse(ctx, version);
 		} else if (originalRequestPath.contains(GatewayConstant.WECHAT_CHANNEL)) {
-			if (secureVisitFlag) {
-				this.wechatSetUserIdProcess(request, ctx);
-			}
+			this.wechatSetUserIdProcess(request, ctx, secureVisitFlag);
 		} else if (originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
-			if (secureVisitFlag) {
-				this.setUserIdByToken(request, ctx, GatewayConstant.WEB_CHANNEL);
-			}
+			this.setUserIdByToken(request, ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
 		} else if (originalRequestPath.contains(GatewayConstant.API_CHANNEL)) {
-			// do nothing api使用签名，没有用户认证
+			//do nothing api使用签名，没有用户认证
 		} else {
 			logger.error("error channel...");
 			// 不对其进行路由
@@ -265,10 +264,12 @@ public class AccessFilter extends ZuulFilter {
 	 *
 	 * @param request
 	 * @param ctx
+	 * @param secureVisitFlag true 登录才能访问 false 登录不登录均可访问
 	 * @param channel
 	 * @return
 	 */
-	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, String channel) {
+	private RequestContext setUserIdByToken(HttpServletRequest request, RequestContext ctx, boolean secureVisitFlag,
+											String channel) {
 		String token = "";
 		if (GatewayConstant.APP_CHANNEL.equals(channel)) {
 			token = request.getParameter(GatewayConstant.TOKEN);
@@ -278,8 +279,10 @@ public class AccessFilter extends ZuulFilter {
 
 		// 需要安全访问的请求，token空不路由，否则直接返回
 		if (StringUtils.isBlank(token)) {
-			logger.warn("token is empty...");
-			return this.redirectLoginPage(ctx, channel);
+			if(secureVisitFlag){
+				logger.warn("token is empty...");
+			}
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
 		}
 
 		// jwt解析token
@@ -292,7 +295,7 @@ public class AccessFilter extends ZuulFilter {
 
 		if (accessToken == null) {
 			logger.warn("user is not exist, token is : {}...", token);
-			return this.redirectLoginPage(ctx, GatewayConstant.WEB_CHANNEL);
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
 		}
 
 		Integer userId = accessToken.getUserId();
@@ -300,7 +303,7 @@ public class AccessFilter extends ZuulFilter {
 		if (user == null) {
 			// 登陆过期
 			logger.warn("login is invalid, token is : {}...", token);
-			return this.redirectLoginPage(ctx, GatewayConstant.WEB_CHANNEL);
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
 		}
 
 		// 页面不活动30分钟过期
@@ -308,7 +311,7 @@ public class AccessFilter extends ZuulFilter {
 		if (value == null) {
 			// 登陆过期
 			logger.warn("accessToken is timeout, token is : {}...", token);
-			return this.redirectLoginPage(ctx, GatewayConstant.WEB_CHANNEL);
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
 		}
 		// 每次操作，延长超时时间
 		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, user.getUserId(), 30 * 60);
@@ -319,6 +322,7 @@ public class AccessFilter extends ZuulFilter {
 		return ctx;
 	}
 
+
 	/**
 	 * app查找用户
 	 *
@@ -327,11 +331,11 @@ public class AccessFilter extends ZuulFilter {
 	 * @param secureVisitFlag
 	 * @return
 	 */
-	private Object appSetUserIdProcess(RequestContext ctx, String sign) {
+	private Object appSetUserIdProcess(RequestContext ctx, String sign, boolean secureVisitFlag) {
 		Integer userId = SecretUtil.getUserId(sign);
 		if (userId == null) {
 			logger.warn("sign invalid, sign is:{}...", sign);
-			return this.redirectLoginPage(ctx, GatewayConstant.APP_CHANNEL);
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.APP_CHANNEL);
 		}
 		ctx.addZuulRequestHeader("userId", userId + "");
 		return ctx;
@@ -344,7 +348,7 @@ public class AccessFilter extends ZuulFilter {
 	 * @param ctx
 	 * @return
 	 */
-	private RequestContext wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx) {
+	private RequestContext wechatSetUserIdProcess(HttpServletRequest request, RequestContext ctx, boolean secureVisitFlag) {
 		String sign = request.getParameter(GatewayConstant.SIGN);
 		if (StringUtils.isBlank(sign)) {
 			sign = (String) request.getAttribute(GatewayConstant.SIGN);
@@ -352,15 +356,15 @@ public class AccessFilter extends ZuulFilter {
 		if (StringUtils.isBlank(sign)) {
 			// 加入标志位，区分token是失效还是null，进行不同场景提示信息返回
 			ctx.set(TOKEN_IS_NULL, "1");
-			return this.redirectLoginPage(ctx, GatewayConstant.WECHAT_CHANNEL);
-		}
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WECHAT_CHANNEL);
 
+		}
 		logger.info("sign:" + sign);
 		// 获取用户ID
 		AppUserToken appUserToken = SecretUtil.getAppUserToken(sign);
 		if (appUserToken == null || appUserToken.getUserId() == null) {
 			logger.warn("sign invalid, sign is: {}...", sign);
-			return this.redirectLoginPage(ctx, GatewayConstant.WECHAT_CHANNEL);
+			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WECHAT_CHANNEL);
 		}
 		logger.info("appUserToken:" + appUserToken.getUserId());
 		Integer userId = appUserToken.getUserId();
@@ -403,4 +407,21 @@ public class AccessFilter extends ZuulFilter {
 		logger.info(originalRequestPath + " : secureVisitFlag: " + secureVisitFlag);
 		return secureVisitFlag;
 	}
+
+
+	/**
+	 * token无效情况下判断是否安全访问执行不同策略
+	 *
+	 * @param ctx
+	 * @param secureVisitFlag
+	 * @return
+	 */
+	private RequestContext executeResultOfTokenInvalid(RequestContext ctx, boolean secureVisitFlag, String channel) {
+		if (secureVisitFlag) {
+			// 不对其进行路由
+			this.redirectLoginPage(ctx, channel);
+		}
+		return ctx;
+	}
+
 }

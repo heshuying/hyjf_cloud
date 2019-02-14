@@ -35,7 +35,7 @@ import java.util.Map;
  * @author: sunpeikai
  * @version: BorrowRegistRepairServiceImpl, v0.1 2018/7/3 15:07
  */
-@Service(value = "tradeBorrowRegistExceptionServiceImpl")
+@Service(value = "tradeBorrowRegistRepairServiceImpl")
 public class BorrowRegistRepairServiceImpl extends BaseServiceImpl implements BorrowRegistRepairService {
 
     @Autowired
