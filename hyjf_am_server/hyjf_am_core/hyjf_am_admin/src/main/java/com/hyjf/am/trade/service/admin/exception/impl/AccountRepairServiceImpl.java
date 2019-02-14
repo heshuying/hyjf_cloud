@@ -22,7 +22,7 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountRepairServiceImpl, v0.1 2018/7/11 15:22
  */
-@Service(value = "tradeAccountExceptionServiceImpl")
+@Service(value = "tradeAccountRepairServiceImpl")
 public class AccountRepairServiceImpl extends BaseServiceImpl implements AccountRepairService {
 
     @Autowired

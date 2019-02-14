@@ -1,5 +1,9 @@
 package com.hyjf.cs.message.client;
 
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
@@ -124,4 +128,43 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer countAllUser();
+
+	/**
+	 * 查询所有app渠道
+	 * @param type
+	 * @return
+	 */
+    List<UtmVO> selectUtmPlatList(String type);
+
+	/**
+	 * 获取注册数
+	 * @param request
+	 * @return
+	 */
+	int getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request);
+
+    /**
+     * 获取注册数
+     * @param request
+     * @return
+     */
+    List<AppUtmRegVO> getAppChannelStatisticsDetailVOList(AppChannelStatisticsRequest request);
+
+	/**
+	 * 查询相应的app渠道无主单开户数
+	 * @param request
+	 * @return
+	 */
+	int getOpenAccountAttrCount(AppChannelStatisticsRequest request);
+
+    List<Integer> getUsersList(String source);
+
+    List<Integer> getUsersInfoList();
+
+	/**
+	 * 查询app渠道相关统计信息
+	 * @param request
+	 * @return
+	 */
+	AppUtmRegResponse getAppUtmRegResponse(AppChannelStatisticsRequest request);
 }
