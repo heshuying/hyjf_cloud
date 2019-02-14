@@ -135,12 +135,11 @@ public class BifaDataReportController extends BaseController {
 
     /**
      * 累计借贷余额
-     * @param time
      * @return
      */
-    @PostMapping("/getWillPayMoney")
-    public BigDecimal getWillPayMoney(@RequestBody Date time){
-        return borrowUserService.getWillPayMoney(time);
+    @GetMapping("/getWillPayMoney")
+    public BigDecimal getWillPayMoney(){
+        return borrowUserService.getWillPayMoney();
     }
 
     /**

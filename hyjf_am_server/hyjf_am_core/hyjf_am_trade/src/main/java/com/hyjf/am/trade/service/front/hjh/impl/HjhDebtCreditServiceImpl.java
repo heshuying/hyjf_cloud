@@ -253,4 +253,21 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         }
         return null;
     }
+
+    @Override
+    public List<HjhDebtCredit> getHjhDebtCreditListByCreditNid(String creditNid) {
+        HjhDebtCreditExample borrowCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andCreditNidEqualTo(creditNid);
+        List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCredit;
+    }
+    @Override
+    public List<HjhDebtCredit> getHjhDebtCreditListByBorrowNid(String borrowNid) {
+        HjhDebtCreditExample borrowCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andBorrowNidEqualTo(borrowNid);
+        List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCredit;
+    }
 }

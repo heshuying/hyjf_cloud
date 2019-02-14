@@ -2677,10 +2677,9 @@ public interface AmTradeClient {
 
     /**
      * 累计借贷余额
-     * @param time
      * @return
      */
-    BigDecimal getWillPayMoney(Date time);
+    BigDecimal getWillPayMoney();
 
     /**
      * 累计借贷余额笔数
@@ -2799,5 +2798,9 @@ public interface AmTradeClient {
 
 
     CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
 }
 
