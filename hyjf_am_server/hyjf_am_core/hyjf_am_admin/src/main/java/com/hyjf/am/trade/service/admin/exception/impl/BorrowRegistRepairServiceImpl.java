@@ -12,7 +12,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowStyleMapper;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
-import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
+import com.hyjf.am.trade.service.admin.exception.BorrowRegistRepairService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -33,10 +33,10 @@ import java.util.Map;
 
 /**
  * @author: sunpeikai
- * @version: BorrowRegistExceptionServiceImpl, v0.1 2018/7/3 15:07
+ * @version: BorrowRegistRepairServiceImpl, v0.1 2018/7/3 15:07
  */
 @Service(value = "tradeBorrowRegistExceptionServiceImpl")
-public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements BorrowRegistExceptionService {
+public class BorrowRegistRepairServiceImpl extends BaseServiceImpl implements BorrowRegistRepairService {
 
     @Autowired
     private BorrowProjectTypeMapper borrowProjectTypeMapper;

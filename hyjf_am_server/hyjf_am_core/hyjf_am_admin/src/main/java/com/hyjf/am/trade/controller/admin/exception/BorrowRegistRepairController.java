@@ -15,7 +15,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
-import com.hyjf.am.trade.service.admin.exception.BorrowRegistExceptionService;
+import com.hyjf.am.trade.service.admin.exception.BorrowRegistRepairService;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
@@ -33,16 +33,16 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BorrowRegistExceptionController, v0.1 2018/7/3 15:05
+ * @version: BorrowRegistRepairController, v0.1 2018/7/3 15:05
  * 异常中心-标的备案掉单
  */
 @Api(value = "异常中心-标的备案掉单",tags ="异常中心-标的备案掉单")
 @RestController(value = "tradeBorrowRegistExceptionController")
 @RequestMapping("/am-trade/borrow_regist_exception")
-public class BorrowRegistExceptionController extends BaseController {
+public class BorrowRegistRepairController extends BaseController {
 
     @Autowired
-    private BorrowRegistExceptionService borrowRegistExceptionService;
+    private BorrowRegistRepairService borrowRegistRepairService;
 
     /**
      * 获取项目类型,筛选条件展示
@@ -54,7 +54,7 @@ public class BorrowRegistExceptionController extends BaseController {
     @RequestMapping("/select_borrow_project")
     public BorrowProjectTypeResponse selectBorrowProjectList() {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
-        List<BorrowProjectType> borrowProjectTypeList = borrowRegistExceptionService.selectBorrowProjectList();
+        List<BorrowProjectType> borrowProjectTypeList = borrowRegistRepairService.selectBorrowProjectList();
         if (!CollectionUtils.isEmpty(borrowProjectTypeList)) {
             List<BorrowProjectTypeVO> voList = CommonUtils.convertBeanList(borrowProjectTypeList, BorrowProjectTypeVO.class);
             response.setResultList(voList);
@@ -72,7 +72,7 @@ public class BorrowRegistExceptionController extends BaseController {
     @RequestMapping("/select_borrow_style")
     public BorrowStyleResponse selectBorrowStyleList() {
         BorrowStyleResponse response = new BorrowStyleResponse();
-        List<BorrowStyle> borrowStyleList = borrowRegistExceptionService.selectBorrowStyleList();
+        List<BorrowStyle> borrowStyleList = borrowRegistRepairService.selectBorrowStyleList();
         if (!CollectionUtils.isEmpty(borrowStyleList)) {
             List<BorrowStyleVO> voList = CommonUtils.convertBeanList(borrowStyleList, BorrowStyleVO.class);
             response.setResultList(voList);
@@ -89,7 +89,7 @@ public class BorrowRegistExceptionController extends BaseController {
     @ApiOperation(value = "获取标的列表count", notes = "获取标的列表count,用于前端分页展示")
     @RequestMapping("/get_regist_count")
     public Integer getRegistCount(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
-        return borrowRegistExceptionService.getRegistCount(borrowRegistListRequest);
+        return borrowRegistRepairService.getRegistCount(borrowRegistListRequest);
     }
 
     /**
@@ -102,14 +102,14 @@ public class BorrowRegistExceptionController extends BaseController {
     @RequestMapping("/select_borrow_regist_list")
     public BorrowRegistCustomizeResponse selectBorrowRegistList(@RequestBody @Valid BorrowRegistListRequest borrowRegistListRequest) {
         BorrowRegistCustomizeResponse response = new BorrowRegistCustomizeResponse();
-        Integer recordTotal = borrowRegistExceptionService.getRegistCount(borrowRegistListRequest);
+        Integer recordTotal = borrowRegistRepairService.getRegistCount(borrowRegistListRequest);
         logger.info("selectBorrowRegistList::::::::::recordTotal=[{}]",recordTotal);
         Paginator paginator = new Paginator(borrowRegistListRequest.getCurrPage(), recordTotal,borrowRegistListRequest.getPageSize());
         borrowRegistListRequest.setLimitStart(paginator.getOffset());
         borrowRegistListRequest.setLimitEnd(paginator.getLimit());
         logger.info("selectBorrowRegistList::::::::::limitStart=[{}],limitEnd=[{}]",borrowRegistListRequest.getLimitStart(),borrowRegistListRequest.getLimitEnd());
 
-        List<BorrowRegistCustomize> borrowRegistCustomizeList = borrowRegistExceptionService.selectBorrowRegistList(borrowRegistListRequest);
+        List<BorrowRegistCustomize> borrowRegistCustomizeList = borrowRegistRepairService.selectBorrowRegistList(borrowRegistListRequest);
         if (!CollectionUtils.isEmpty(borrowRegistCustomizeList)) {
             List<BorrowRegistCustomizeVO> voList = CommonUtils.convertBeanList(borrowRegistCustomizeList, BorrowRegistCustomizeVO.class);
             response.setResultList(voList);
@@ -128,7 +128,7 @@ public class BorrowRegistExceptionController extends BaseController {
     public BorrowResponse searchBorrowByBorrowNid(@PathVariable String borrowNid){
         logger.info("handleBorrowRegistException::::::::::borrowNid=[{}]",borrowNid);
         BorrowResponse borrowResponse = new BorrowResponse();
-        BorrowAndInfoVO borrowVO = borrowRegistExceptionService.searchBorrowByBorrowNid(borrowNid);
+        BorrowAndInfoVO borrowVO = borrowRegistRepairService.searchBorrowByBorrowNid(borrowNid);
         if(borrowVO != null){
             borrowResponse.setResult(borrowVO);
             borrowResponse.setRtn(Response.SUCCESS);
@@ -145,7 +145,7 @@ public class BorrowRegistExceptionController extends BaseController {
     @ApiOperation(value = "根据受托支付userId查询stAccountId", notes = "根据受托支付userId查询stAccountId")
     @GetMapping(value = "/get_staccountid_by_entrusteduserid/{entrusteduserid}")
     public String getStAccountIdByEntrustedUserId(@PathVariable Integer entrustUserId){
-        return  borrowRegistExceptionService.getStAccountIdByEntrustedUserId(entrustUserId);
+        return  borrowRegistRepairService.getStAccountIdByEntrustedUserId(entrustUserId);
     }
 
     /**
@@ -158,7 +158,7 @@ public class BorrowRegistExceptionController extends BaseController {
     @PostMapping(value = "/update_borrowregist_by_type")
     public Boolean updateBorrowRegistByType(@RequestBody BorrowRegistUpdateRequest registUpdateRequest){
         logger.debug(JSON.toJSONString(registUpdateRequest));
-        return borrowRegistExceptionService.updateBorrowRegistByType(registUpdateRequest);
+        return borrowRegistRepairService.updateBorrowRegistByType(registUpdateRequest);
     }
 
     /**
@@ -170,7 +170,7 @@ public class BorrowRegistExceptionController extends BaseController {
     @ApiOperation(value = "更新标的资产信息如果关联计划的话", notes = "更新标的资产信息如果关联计划的话")
     @PostMapping(value = "/update_borrowasset/{status}")
     public Boolean updateBorrowAsset(@RequestBody BorrowAndInfoVO borrowVO,@PathVariable Integer status){
-        return  borrowRegistExceptionService.updateBorrowAsset(borrowVO,status);
+        return  borrowRegistRepairService.updateBorrowAsset(borrowVO,status);
     }
 
 
