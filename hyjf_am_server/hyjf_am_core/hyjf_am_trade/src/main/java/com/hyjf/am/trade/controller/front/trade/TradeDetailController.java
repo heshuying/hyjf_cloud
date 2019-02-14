@@ -166,7 +166,7 @@ public class TradeDetailController extends BaseController {
         logger.info("请求参数:" +JSONObject.toJSON(request));
         TenderDetailResponse response = new TenderDetailResponse();
         int count = this.tradeDetailService.countAppTradeDetailListRecordTotal(request);
-
+        logger.info("count:" +count);
         response.setAppTradeDetailListCount(count);
         return response;
     }

@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch.bifa;
 
-import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaExceptionDataService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaRepairDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,14 +16,14 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/bifaExceptionData")
-public class BifaExceptionDataController {
+@RequestMapping("/cs-trade/bifaRepairData")
+public class BifaRepairDataController {
 
     @Autowired
-    private BifaExceptionDataService bifaExceptionDataService;
+    private BifaRepairDataService bifaRepairDataService;
 
     @GetMapping("/reportAgain")
     public void reportAgain() {
-        bifaExceptionDataService.reportAgain();
+        bifaRepairDataService.reportAgain();
     }
 }
