@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: AccountExceptionService, v0.1 2018/7/11 15:21
+ * @version: AccountRepairService, v0.1 2018/7/11 15:21
  */
-public interface AccountExceptionService {
+public interface AccountRepairService {
 
     /**
      * 查询汇付对账异常count

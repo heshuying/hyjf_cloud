@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BindCardExceptionService, v0.1 2018/10/9 11:28
+ * @version: BindCardRepairService, v0.1 2018/10/9 11:28
  */
-public interface BindCardExceptionService extends BaseService {
+public interface BindCardRepairService extends BaseService {
     /**
      * 列表数量
      * @auth sunpeikai

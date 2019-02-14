@@ -118,7 +118,6 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
         AppTradeDetailBean appTradeDetailBean=new AppTradeDetailBean();
         // 统计相应的用户出借项目总数
         int recordTotal = this.amTradeClient.countAppTradeDetailListRecordTotal(trade);
-        logger.info("recordTotal:"+recordTotal);
         Page page = Page.initPage(trade.getCurrPage(), trade.getPageSize());
         page.setTotal(recordTotal);
         trade.setLimitStart(page.getOffset());

@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BankCardExceptionService, v0.1 2018/8/14 15:02
+ * @version: BankCardRepairService, v0.1 2018/8/14 15:02
  */
-public interface BankCardExceptionService extends BaseService {
+public interface BankCardRepairService extends BaseService {
 
     /**
      * 银行卡异常count
