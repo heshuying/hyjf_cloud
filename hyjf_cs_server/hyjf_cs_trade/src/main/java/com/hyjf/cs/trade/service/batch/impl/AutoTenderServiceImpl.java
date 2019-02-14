@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -361,8 +362,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "承接用计算完成\n"
                             + resultVO.toLog());
 
-                    logger.info(logMsgHeader + " 银行自动购买债权接口调用前  " + credit.getCreditNid());
-
                     //防止钱不够也承接校验
                     HjhAccedeVO hjhAccedeCheck = this.amTradeClient.getHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
                     if (assignPay.compareTo(hjhAccedeCheck.getAvailableInvestAccount()) == 1) {
@@ -371,6 +370,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                         return FAIL;
                     }
+
+
+                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动购买债权接口（承接）" + credit.getCreditNid()+ "########");
 
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
@@ -501,10 +503,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     /** 5.4. 调用银行自动投标申请接口	 */
+                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "########");
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
-                    logger.info(logMsgHeader + " 银行自动投标申请接口调用前  " + borrow.getBorrowNid());
                     // 调用同步银行接口（出借）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
 
@@ -578,9 +580,15 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.error(logMsgHeader + "该计划没有可投标的！");
                     return FAIL;
                 }
+
+//            } catch (HttpClientErrorException e) {
+//                this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
+//                logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 原子调用异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
+//                        , e);
+//                return FAIL;
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
-                logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
+                logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 未知异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
                         , e);
                 return FAIL;
             } finally {

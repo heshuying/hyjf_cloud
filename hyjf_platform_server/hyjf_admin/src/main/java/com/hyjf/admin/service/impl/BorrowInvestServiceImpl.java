@@ -449,10 +449,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 
         if (msg == null) {
             return new AdminResult();
-        } else if (!"系统异常".equals(msg)) {
-            return new AdminResult(BaseResult.FAIL, msg);
         } else {
-            return new AdminResult(BaseResult.FAIL, "异常纪录，请刷新后重试");
+            return new AdminResult(BaseResult.FAIL, msg);
         }
     }
 
@@ -478,10 +476,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 
         if (msg == null) {
             return new AdminResult();
-        } else if (!"系统异常".equals(msg)) {
-            return new AdminResult(BaseResult.FAIL, msg);
         } else {
-            return new AdminResult(BaseResult.FAIL, "异常纪录，请刷新后重试");
+            return new AdminResult(BaseResult.FAIL, msg);
         }
     }
 
@@ -653,7 +649,12 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     int updateResult = amTradeClient.updateBorrowRecover(borrowInvestRequest);
                     if (updateResult > 0) {
                         return null;
+                    } else {
+                        return "发送邮件失败，请重试";
                     }
+                } else {
+                    logger.error("出借明细发送协议失败, 未查询到出借明细，出借订单号:"+ nid);
+                    return "出借明细发送协议失败，未查询到出借明细";
                 }
             } else {
                 logger.error("出借明细发送协议失败，出借订单号：" + nid);
@@ -661,8 +662,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             }
         } catch (Exception e) {
             logger.error("发送协议失败:", e);
+            return "系统异常";
         }
-        return "系统异常";
     }
 
     /**

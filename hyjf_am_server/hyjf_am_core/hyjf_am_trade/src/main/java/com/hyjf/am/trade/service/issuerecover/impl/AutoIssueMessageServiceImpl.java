@@ -88,7 +88,7 @@ public class AutoIssueMessageServiceImpl extends BaseServiceImpl implements Auto
 	}
 
 	@Override
-	public HjhDebtCredit getCreditByNid(String creditNid) {
+	public HjhDebtCredit serchCreditByNid(String creditNid) {
 		HjhDebtCreditExample example = new HjhDebtCreditExample();
 		HjhDebtCreditExample.Criteria criteria = example.createCriteria();
 		criteria.andCreditNidEqualTo(creditNid);

@@ -190,7 +190,7 @@
 				t.recover_time,
 				SUM(
 					IFNULL(t.recover_interest, 0)
-				) AS interest_sum
+				) AS recover_interest
 			FROM
 				(
 					SELECT

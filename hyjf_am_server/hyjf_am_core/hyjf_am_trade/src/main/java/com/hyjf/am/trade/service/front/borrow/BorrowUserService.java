@@ -86,10 +86,9 @@ public interface BorrowUserService extends BaseService {
 
     /**
      * 累计借贷余额
-     * @param time
      * @return
      */
-    BigDecimal getWillPayMoney(Date time);
+    BigDecimal getWillPayMoney();
 
     /**
      * 累计借贷余额笔数
