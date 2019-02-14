@@ -39,7 +39,7 @@ public class CertReportLogController extends BaseController{
     private CertReportLogService certReportLogService;
     Logger _log = LoggerFactory.getLogger(CertReportLogController.class);
 
-    private static final String PERMISSIONS = "certreportlog";
+    private static final String PERMISSIONS = "certlog";
 
 
     @ApiOperation(value = "应急中心日志列表显示", notes = "应急中心日志列表显示")
