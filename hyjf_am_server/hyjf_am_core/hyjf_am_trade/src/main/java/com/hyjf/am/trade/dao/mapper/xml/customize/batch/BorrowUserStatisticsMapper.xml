@@ -56,8 +56,8 @@
 		FROM
 			ht_account a
 		WHERE
-			a.bank_wait_capital > 0
-		OR a.plan_account_wait > 0
+			a.bank_await > 0
+			OR a.plan_account_wait > 0
     </select>
     
     <select id="sumBorrowUserMoney" resultType="java.math.BigDecimal" parameterType="java.util.Date">

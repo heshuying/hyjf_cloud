@@ -10,7 +10,7 @@ import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
-import com.hyjf.am.trade.service.admin.exception.TenderCancelExceptionService;
+import com.hyjf.am.trade.service.admin.exception.TenderCancelRepairService;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderTmpVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.common.paginator.Paginator;
@@ -25,15 +25,15 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: TenderCancelExceptionController, v0.1 2018/7/11 10:38
+ * @version: TenderCancelRepairController, v0.1 2018/7/11 10:38
  */
-@RestController(value = "tradeTenderCancelExceptionController")
-@RequestMapping("/am-trade/tendercancelexception")
+@RestController(value = "tradeTenderCancelRepairController")
+@RequestMapping("/am-trade/tendercancelrepair")
 @Api(value = "异常中心-银行出借撤销异常",tags = "异常中心-银行出借撤销异常")
-public class TenderCancelExceptionController extends BaseController {
+public class TenderCancelRepairController extends BaseController {
 
     @Autowired
-    private TenderCancelExceptionService tenderCancelExceptionService;
+    private TenderCancelRepairService tenderCancelRepairService;
 
     /**
      * 根据筛选条件查询银行出借撤销异常的数据count
@@ -42,9 +42,9 @@ public class TenderCancelExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据筛选条件查询银行出借撤销异常的数据count", notes = "根据筛选条件查询银行出借撤销异常的数据count")
-    @PostMapping(value = "/gettendercancelexceptioncount")
+    @PostMapping(value = "/gettendercancelrepaircount")
     public Integer getTenderCancelExceptionCount(@RequestBody TenderCancelExceptionRequest request){
-        return tenderCancelExceptionService.getTenderCancelExceptionCount(request);
+        return tenderCancelRepairService.getTenderCancelExceptionCount(request);
     }
 
     /**
@@ -54,10 +54,10 @@ public class TenderCancelExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据筛选条件查询银行出借撤销异常list", notes = "根据筛选条件查询银行出借撤销异常list")
-    @PostMapping(value = "/searchtendercancelexceptionlist")
+    @PostMapping(value = "/searchtendercancelrepairlist")
     public BorrowTenderTmpResponse searchTenderCancelExceptionList(@RequestBody TenderCancelExceptionRequest request){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
-        Integer count = tenderCancelExceptionService.getTenderCancelExceptionCount(request);
+        Integer count = tenderCancelRepairService.getTenderCancelExceptionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
@@ -65,7 +65,7 @@ public class TenderCancelExceptionController extends BaseController {
             request.setLimitEnd(paginator.getLimit());
         }
         logger.info("searchPlatformTransferList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
-        List<BorrowTenderTmp> borrowTenderTmpList = tenderCancelExceptionService.searchTenderCancelExceptionList(request);
+        List<BorrowTenderTmp> borrowTenderTmpList = tenderCancelRepairService.searchTenderCancelExceptionList(request);
         if(!CollectionUtils.isEmpty(borrowTenderTmpList)){
             List<BorrowTenderTmpVO> borrowTenderTmpVOList = CommonUtils.convertBeanList(borrowTenderTmpList,BorrowTenderTmpVO.class);
             response.setResultList(borrowTenderTmpVOList);
@@ -84,7 +84,7 @@ public class TenderCancelExceptionController extends BaseController {
     @GetMapping(value = "/searchborrowtenderbyorderid/{orderId}")
     public BorrowTenderResponse searchBorrowTenderByOrderId(@PathVariable String orderId){
         BorrowTenderResponse response = new BorrowTenderResponse();
-        List<BorrowTender> borrowTenderList = tenderCancelExceptionService.searchBorrowTenderByOrderId(orderId);
+        List<BorrowTender> borrowTenderList = tenderCancelRepairService.searchBorrowTenderByOrderId(orderId);
         if(!CollectionUtils.isEmpty(borrowTenderList)){
             List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
             response.setResultList(borrowTenderVOList);
@@ -103,7 +103,7 @@ public class TenderCancelExceptionController extends BaseController {
     @GetMapping(value = "/searchborrowtenderbyboorownid/{borrowNid}")
     public BorrowTenderResponse searchBorrowTenderByBorrowNid(@PathVariable String borrowNid){
         BorrowTenderResponse response = new BorrowTenderResponse();
-        List<BorrowTender> borrowTenderList = tenderCancelExceptionService.searchBorrowTenderByBorrowNid(borrowNid);
+        List<BorrowTender> borrowTenderList = tenderCancelRepairService.searchBorrowTenderByBorrowNid(borrowNid);
         if(!CollectionUtils.isEmpty(borrowTenderList)){
             List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
             response.setResultList(borrowTenderVOList);
@@ -122,7 +122,7 @@ public class TenderCancelExceptionController extends BaseController {
     @GetMapping(value = "/searchborrowtendertmpbyorderid/{orderId}")
     public BorrowTenderTmpResponse searchBorrowTenderTmpByOrderId(@PathVariable String orderId){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
-        List<BorrowTenderTmp> borrowTenderList = tenderCancelExceptionService.searchBorrowTenderTmpByOrderId(orderId);
+        List<BorrowTenderTmp> borrowTenderList = tenderCancelRepairService.searchBorrowTenderTmpByOrderId(orderId);
         if(!CollectionUtils.isEmpty(borrowTenderList)){
             BorrowTenderTmp borrowTenderTmp = borrowTenderList.get(0);
             BorrowTenderTmpVO borrowTenderTmpVO = CommonUtils.convertBean(borrowTenderTmp,BorrowTenderTmpVO.class);
@@ -141,7 +141,7 @@ public class TenderCancelExceptionController extends BaseController {
     @ApiOperation(value = "根据id删除BorrowTenderTmp", notes = "根据id删除BorrowTenderTmp")
     @GetMapping(value = "/deleteborrowtendertmpbyid/{id}")
     public Integer deleteBorrowTenderTmpById(@PathVariable Integer id){
-        return tenderCancelExceptionService.deleteBorrowTenderTmpById(id);
+        return tenderCancelRepairService.deleteBorrowTenderTmpById(id);
     }
     /**
      * 根据id删除BorrowTenderTmp
@@ -152,7 +152,7 @@ public class TenderCancelExceptionController extends BaseController {
     @ApiOperation(value = "根据id删除BorrowTenderTmp", notes = "根据id删除BorrowTenderTmp")
     @GetMapping(value = "/insertfreezehistory")
     public Integer insertFreezeHistory(@PathVariable Integer id){
-        return tenderCancelExceptionService.deleteBorrowTenderTmpById(id);
+        return tenderCancelRepairService.deleteBorrowTenderTmpById(id);
     }
 
 }

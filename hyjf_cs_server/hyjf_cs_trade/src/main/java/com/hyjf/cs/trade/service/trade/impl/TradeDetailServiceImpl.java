@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.trade.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;

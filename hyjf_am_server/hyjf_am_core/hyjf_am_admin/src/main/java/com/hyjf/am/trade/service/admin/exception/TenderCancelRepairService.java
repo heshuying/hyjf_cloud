@@ -12,9 +12,9 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: TenderCancelExceptionService, v0.1 2018/7/11 10:42
+ * @version: TenderCancelRepairService, v0.1 2018/7/11 10:42
  */
-public interface TenderCancelExceptionService {
+public interface TenderCancelRepairService {
     /**
      * 根据筛选条件查询银行出借撤销异常的数据count
      * @auth sunpeikai

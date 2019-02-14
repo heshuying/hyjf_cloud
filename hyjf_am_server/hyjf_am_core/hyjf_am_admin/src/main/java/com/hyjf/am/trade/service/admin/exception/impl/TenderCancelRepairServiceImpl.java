@@ -8,7 +8,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpMapper;
 import com.hyjf.am.trade.dao.mapper.auto.FreezeHistoryMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.admin.exception.TenderCancelExceptionService;
+import com.hyjf.am.trade.service.admin.exception.TenderCancelRepairService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.FreezeHistoryVO;
 import com.hyjf.common.util.CommonUtils;
@@ -22,10 +22,10 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: TenderCancelExceptionServiceImpl, v0.1 2018/7/11 10:42
+ * @version: TenderCancelRepairServiceImpl, v0.1 2018/7/11 10:42
  */
-@Service(value = "tradeTenderCancelExceptionServiceImpl")
-public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements TenderCancelExceptionService {
+@Service(value = "tradeTenderCancelRepairServiceImpl")
+public class TenderCancelRepairServiceImpl extends BaseServiceImpl implements TenderCancelRepairService {
 
     @Autowired
     private BorrowTenderTmpMapper borrowTenderTmpMapper;

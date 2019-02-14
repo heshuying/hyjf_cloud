@@ -8,10 +8,10 @@
 			AND hydal.is_show = 0
 
 			<if test="tradeYear != null and tradeYear != '' ">
-				AND DATE_FORMAT(hydal.create_time,'%Y')  = #{tradeYear,jdbcType=INTEGER}
+				AND CAST(DATE_FORMAT(hydal.create_time,'%Y') AS SIGNED)  = #{tradeYear,jdbcType=INTEGER}
 			</if>
 			<if test="tradeMonth != null and tradeMonth != '' ">
-				AND DATE_FORMAT(hydal.create_time,'%m')  = #{tradeMonth,jdbcType=INTEGER}
+				AND CAST(DATE_FORMAT(hydal.create_time,'%m') AS SIGNED)  = #{tradeMonth,jdbcType=INTEGER}
 			</if>
 
 			<if test="startDate != null and startDate != ''">

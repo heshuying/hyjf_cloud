@@ -372,7 +372,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
 
-                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动购买债权接口（承接）" + credit.getCreditNid()+ "########");
+                    logger.info(logMsgHeader + "#### 开始 调用银行自动购买债权接口（承接）" + credit.getCreditNid() + "####");
 
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
@@ -399,7 +399,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         noPushRedis = true;
                         return FAIL;
                     }
-                    logger.info(logMsgHeader + " 银行自动购买债权接口成功调用后  " + credit.getBorrowNid());
+                    logger.info(logMsgHeader + "#### 成功 调用银行自动购买债权接口（承接）" + credit.getBorrowNid() + "####");
 
                     // add 合规数据上报 埋点 liubin 20181122 start
                     JSONObject params = new JSONObject();
@@ -503,7 +503,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     /** 5.4. 调用银行自动投标申请接口	 */
-                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "########");
+                    logger.info(logMsgHeader + "#### 开始 调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "####");
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
@@ -527,7 +527,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         return FAIL;
                     }
 
-                    logger.info(logMsgHeader + " 银行自动投标申请接口成功调用后  " + borrow.getBorrowNid());
+                    logger.info(logMsgHeader + "#### 成功 调用银行自动投标申请接口（出借）" + borrow.getBorrowNid() + "####");
 
                     // add by liushouyi nifa2 20181204 start
                     if(redisBorrow.getBorrowAccountWait().compareTo(realAmoust) == 0){

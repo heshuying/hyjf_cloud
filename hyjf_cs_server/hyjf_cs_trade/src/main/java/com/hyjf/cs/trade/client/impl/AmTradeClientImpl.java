@@ -1384,9 +1384,23 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:24
      */
     @Override
-//	@Cached(name="appProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-//	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+	@Cached(name="appProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
+        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * app端获取散标出借项目列表 无缓存版
+     * @author cwyang
+     * @date 2018/6/20 17:24
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> searchAppProjectListNoCash(AppProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
@@ -4457,7 +4471,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 */
 	@Override
 	public Integer deleteBorrowTenderTmp(String orgOrderId) {
-		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmp/" + orgOrderId;
+		String url = "http://AM-TRADE/am-trade/tendercancelrepair/deleteBorrowTenderTmp/" + orgOrderId;
 		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -4472,7 +4486,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 */
 	@Override
 	public int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId) {
-		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
+		String url = "http://AM-TRADE/am-trade/tendercancelrepair/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
 		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;

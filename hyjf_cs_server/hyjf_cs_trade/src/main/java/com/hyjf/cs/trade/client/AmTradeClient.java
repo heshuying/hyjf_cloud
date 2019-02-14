@@ -586,6 +586,13 @@ public interface AmTradeClient {
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request);
 
     /**
+     * app端获取散标出借项目列表 无缓存版
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> searchAppProjectListNoCash(AppProjectListRequest request);
+
+    /**
      *  app端查询债权转让所有分页总数
      * @author zhangyk
      * @date 2018/6/19 16:39

@@ -39,7 +39,9 @@ public class FeerateModifyLogServiceImpl implements FeerateModifyLogService {
         }
         record.setCreateUserId(form.getCreateUserId());
         record.setUpdateUserId(form.getCreateUserId());
-        record.setBorrowApr(new BigDecimal(form.getAutoBorrowApr()));
+        if (form.getAutoBorrowApr() != null) {
+            record.setBorrowApr(new BigDecimal(form.getAutoBorrowApr()));
+        }
         record.setServiceFee(form.getChargeRate());
         record.setManageFee(form.getManChargeRate());
         record.setRevenueDiffRate(form.getReturnRate());
