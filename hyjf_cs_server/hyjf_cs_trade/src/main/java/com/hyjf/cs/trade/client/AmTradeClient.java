@@ -843,6 +843,12 @@ public interface AmTradeClient {
     List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
 
     List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid);
+    /**
+     * 判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+     * @param borrow
+     * @return
+     */
+    Boolean getOverDueFlag(RightBorrowVO borrow);
 
     List<CreditTenderLogVO> selectCreditTenderLogs();
 

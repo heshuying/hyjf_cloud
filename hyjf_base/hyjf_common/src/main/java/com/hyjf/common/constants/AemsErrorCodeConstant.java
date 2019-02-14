@@ -191,6 +191,7 @@ public class AemsErrorCodeConstant implements MessageConstants, PropertiesConsta
      * 该机构未推送标的或标的未放款
      */
     public static final String STATUS_HK000003 = "HK000003";
+
     /**
      * 查询类型:0:待还款 1:已还款
      * 查询类型不能为空
@@ -206,6 +207,46 @@ public class AemsErrorCodeConstant implements MessageConstants, PropertiesConsta
      * 资产编号不能为空
      */
     public static final String STATUS_HK000006 = "STATUS_HK000006";
+
+    /**
+     * 用户信息不存在
+     */
+    public static final String STATUS_HK000007 = "HK000007";
+
+    /**
+     * 用户在银行未开户
+     */
+    public static final String STATUS_HK000008 = "HK000008";
+
+    /**
+     * 项目正在还款中
+     */
+    public static final String STATUS_HK000009 = "HK000009";
+
+    /**
+     * 项目正在还款中
+     */
+    public static final String STATUS_HK000010 = "HK000010";
+
+    /**
+     * 请求参数缺失
+     */
+    public static final String STATUS_HK000011 = "HK000011";
+
+    /**
+     * 验签失败
+     */
+    public static final String STATUS_HK000012 = "HK000012";
+
+    /**
+     * 验签失败
+     */
+    public static final String STATUS_HK000013 = "HK000013";
+
+    /**
+     * 其他错误
+     */
+    public static final String STATUS_HK999999 = "HK999999";
     /*********************还款接口  end***********************/
     
     /********************受托支付接口    start***********************/

@@ -1874,6 +1874,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+     * @param borrow
+     * @return
+     */
+    @Override
+    public Boolean getOverDueFlag(RightBorrowVO borrow){
+        BooleanResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/borrowRepayPlan/getOverDueFlag", borrow,
+                BooleanResponse.class).getBody();
+        if (response != null) {
+            return response.getResultBoolean();
+        }
+        return null;
+    }
+
+    /**
      * 查询债转承接掉单的数据
      *
      * @return

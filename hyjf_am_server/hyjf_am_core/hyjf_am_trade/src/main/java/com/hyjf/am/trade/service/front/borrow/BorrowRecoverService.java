@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.front.borrow;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
+import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.service.BaseService;
 
 import java.util.List;
@@ -47,4 +48,10 @@ public interface BorrowRecoverService extends BaseService {
      * @return
      */
     BorrowRecoverPlan getPlanByBidTidPeriod(String bidNid, String creditTenderNid, Integer periodNow);
+    /**
+     * 根据用户id和borrowNid查询
+     * @param userId,borrowNid
+     * @return
+     */
+    BorrowRepay getRepayPlanByUserIdAndBorrowNid(Integer userId, String borrowNid);
 }

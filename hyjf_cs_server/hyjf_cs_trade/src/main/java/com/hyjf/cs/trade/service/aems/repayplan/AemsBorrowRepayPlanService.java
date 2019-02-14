@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.service.aems.repayplan;
 
 import com.hyjf.am.vo.trade.AemsBorrowRepayPlanCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.AemsBorrowRepayPlanRequestBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -49,4 +50,10 @@ public interface AemsBorrowRepayPlanService extends BaseTradeService {
      * @return
      */
     List<BorrowRepayPlanVO> selectBorrowRepayPlanByBorrowNid(String borrowNid);
+    /**
+     * 判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+     * @param userId,borrowNid
+     * @return
+     */
+    Boolean getFlag(RightBorrowVO borrowNid);
 }

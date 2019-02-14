@@ -5,9 +5,9 @@ package com.hyjf.cs.trade.service.aems.repayplan.impl;
 
 import com.hyjf.am.vo.trade.AemsBorrowRepayPlanCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.trade.bean.AemsBorrowRepayPlanRequestBean;
-import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.cs.trade.service.aems.repayplan.AemsBorrowRepayPlanService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -117,5 +117,14 @@ public class AemsBorrowRepayPlanServiceImpl extends BaseTradeServiceImpl impleme
     @Override
     public List<BorrowRepayPlanVO> selectBorrowRepayPlanByBorrowNid(String borrowNid) {
         return this.amTradeClient.getBorrowRepayPlansByBorrowNid(borrowNid);
+    }
+    /**
+     * 判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+     * @param borrow
+     * @return
+     */
+    @Override
+    public Boolean getFlag(RightBorrowVO borrow){
+        return this.amTradeClient.getOverDueFlag(borrow);
     }
 }
