@@ -22,10 +22,12 @@ import java.util.List;
 
 /**
  * @Auther:yangchangwei
+ * modify by zha daojian
+ * 后台列表的批次放款已挪到am_admin 处理，此处由 zhadaojian 负责后期维护
  * @Date:2018/7/7
- * @Description: 后台列表-批次放款
+ * @Description: api查询批次放款
  */
-@Api(value = "批次中心-批次放款")
+@Api(value = "api查询批次放款")
 @RestController
 @RequestMapping("/am-trade/apiBatchBorrowRecover")
 public class ApiBatchBorrowRecoverController extends BaseController {
