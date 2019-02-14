@@ -3,13 +3,10 @@
  */
 package com.hyjf.am.trade.service.front.borrow;
 
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.service.BaseService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

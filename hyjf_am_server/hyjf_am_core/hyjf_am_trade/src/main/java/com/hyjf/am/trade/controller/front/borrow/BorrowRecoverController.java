@@ -13,7 +13,6 @@ import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.service.front.borrow.BorrowRecoverService;
-import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
@@ -40,8 +39,6 @@ public class BorrowRecoverController extends BaseController {
 
 	@Autowired
 	BorrowRecoverService borrowRecoverService;
-	@Autowired
-	BorrowService borrowService;
 
 	@GetMapping("/selectBorrowRecoverByTenderNid/{tenderAgreementID}")
 	public BorrowRecoverResponse selectBorrowRecoverByTenderNid(@PathVariable String tenderAgreementID){
