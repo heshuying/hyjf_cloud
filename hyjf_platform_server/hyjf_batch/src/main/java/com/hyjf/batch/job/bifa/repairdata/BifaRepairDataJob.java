@@ -16,7 +16,7 @@ public class BifaRepairDataJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BifaRepairDataJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bifaExceptionData/reportAgain", null);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bifaRepairData/reportAgain", null);
         logger.info("BifaRepairDataJob execute end...");
     }
 }

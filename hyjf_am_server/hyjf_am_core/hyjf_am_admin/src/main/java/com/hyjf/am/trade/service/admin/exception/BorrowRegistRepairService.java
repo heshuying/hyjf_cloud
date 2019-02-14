@@ -14,9 +14,9 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BorrowRegistExceptionService, v0.1 2018/7/3 15:06
+ * @version: BorrowRegistRepairService, v0.1 2018/7/3 15:06
  */
-public interface BorrowRegistExceptionService {
+public interface BorrowRegistRepairService {
 
     /**
      * 获取项目类型,筛选条件展示

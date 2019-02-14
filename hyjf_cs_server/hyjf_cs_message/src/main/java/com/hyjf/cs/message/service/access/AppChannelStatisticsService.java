@@ -11,5 +11,13 @@ import java.util.List;
  */
 public interface AppChannelStatisticsService {
 
+    /**
+     * 根据开始时间、结束时间和来源查询数据
+     * @param request
+     * @return
+     */
     List<AppAccesStatisticsVO> getAppAccesStatisticsVO(AppChannelStatisticsRequest request);
+
+    void insertStatistics();
+
 }

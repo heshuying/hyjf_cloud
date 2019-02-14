@@ -35,7 +35,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 @RestController
 @RequestMapping("/hyjf-admin/exception/borrow_regist_exception")
 @Api(value = "异常中心-标的备案掉单",tags = "异常中心-标的备案掉单")
-public class BorrowRegistExceptionController extends BaseController {
+public class BorrowRegistRepairController extends BaseController {
 
     @Autowired
     private BorrowRegistExceptionService borrowRegistExceptionService;

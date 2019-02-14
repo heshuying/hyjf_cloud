@@ -47,9 +47,9 @@ public class BifaDataReportController extends BaseController {
     @PostMapping("/selectUserIdToSHA256")
     public UserInfoSHA256EntityResponse selectUserIdToSHA256(@RequestBody JSONObject jsonObject){
         UserInfoSHA256EntityResponse response = new UserInfoSHA256EntityResponse();
-        UserInfoSHA256Entity entityMd = bifaDataReportService.selectUserIdToSHA256(jsonObject);
+        BifaUserInfoSHA256Entity entityMd = bifaDataReportService.selectUserIdToSHA256(jsonObject);
         if (entityMd!=null){
-            response.setResult(CommonUtils.convertBean(entityMd,UserInfoSHA256EntityVO.class));
+            response.setResult(CommonUtils.convertBean(entityMd,BifaUserInfoSHA256EntityVO.class));
             response.setRtn(Response.SUCCESS);
         }
         return response;
@@ -293,9 +293,9 @@ public class BifaDataReportController extends BaseController {
     @GetMapping("/getUserInfoSHA256/{isOpenUp}/{isLenderZeroUp}/{isLenderOneUp}")
     public UserInfoSHA256EntityResponse getUserInfoSHA256(@PathVariable String isOpenUp,@PathVariable String isLenderZeroUp,@PathVariable String isLenderOneUp){
         UserInfoSHA256EntityResponse response = new UserInfoSHA256EntityResponse();
-        List<UserInfoSHA256Entity> recordList=bifaDataReportService.getUserInfoSHA256(isOpenUp,isLenderZeroUp,isLenderOneUp);
+        List<BifaUserInfoSHA256Entity> recordList=bifaDataReportService.getUserInfoSHA256(isOpenUp,isLenderZeroUp,isLenderOneUp);
         if (CollectionUtils.isNotEmpty(recordList)){
-            response.setResultList(CommonUtils.convertBeanList(recordList,UserInfoSHA256EntityVO.class));
+            response.setResultList(CommonUtils.convertBeanList(recordList,BifaUserInfoSHA256EntityVO.class));
             response.setRtn(Response.SUCCESS);
         }
         return response;
