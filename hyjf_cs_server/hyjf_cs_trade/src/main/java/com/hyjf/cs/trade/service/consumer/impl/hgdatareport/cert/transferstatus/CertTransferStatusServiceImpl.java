@@ -261,9 +261,8 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 				map.put("productDate", GetDate.timestamptoStrYYYYMMDDHHMMSS((list.get(0).getRepayActionTime()+"")));
 				return map;
 			}
-			HjhDebtCreditRequest hjhDebtCreditRequest=new HjhDebtCreditRequest();
-			hjhDebtCreditRequest.setCreditNid(creditNid);
-			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditList(hjhDebtCreditRequest);
+
+			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByCreditNid(creditNid);
 			if(hjhDebtCreditList==null||hjhDebtCreditList.size()==0){
 				return map;
 			}
