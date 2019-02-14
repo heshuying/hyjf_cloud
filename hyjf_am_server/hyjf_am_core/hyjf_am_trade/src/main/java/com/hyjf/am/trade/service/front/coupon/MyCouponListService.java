@@ -42,6 +42,8 @@ public interface MyCouponListService {
      */
     List<CouponUserForAppCustomizeVO> getMyCouponByPage(MyCouponListRequest requestBean);
 
+    int updateCouponReadFlag(Integer userId, Integer readFlag);
+
     /**
      * APP,PC,wechat散标出借查询优惠券列表
      * @param requestBean userId:用户ID，money：出借金额，borrowNid:出借标的，platform：出借平台
