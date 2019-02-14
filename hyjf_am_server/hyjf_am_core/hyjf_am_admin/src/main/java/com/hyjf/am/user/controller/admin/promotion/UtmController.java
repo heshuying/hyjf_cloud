@@ -317,13 +317,15 @@ public class UtmController extends BaseController {
     @RequestMapping("/select_app_channel_reconciliation_record")
     public ChannelReconciliationResponse selectAppChannelReconciliationRecord(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = new ChannelReconciliationResponse();
-        // 查询app统计明细
-        List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            response.setResultList(list);
+        int count = utmService.selectAppChannelReconciliationCount(request);
+        if (count > 0) {
+            // 查询app统计明细
+            List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecord(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+            }
         }
         // 查询符合条件的数量
-        int count = utmService.selectAppChannelReconciliationCount(request);
         response.setCount(count);
         return response;
     }
