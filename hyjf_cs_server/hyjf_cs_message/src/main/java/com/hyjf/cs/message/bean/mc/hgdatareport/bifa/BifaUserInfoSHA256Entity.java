@@ -1,21 +1,18 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.trade.bifa;
+package com.hyjf.cs.message.bean.mc.hgdatareport.bifa;
 
-import com.hyjf.am.vo.BaseVO;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author jun
- * @version UserInfoSHA256EntityVO, v0.1 2019/1/15 15:41
+ * @author PC-LIUSHOUYI
+ * @version UserInfoSHA256Entity, v0.1 2018/12/7 15:03
  */
-public class UserInfoSHA256EntityVO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+@Document(collection = "ht_bifa_user_info_sha256")
+public class BifaUserInfoSHA256Entity {
     /**
      * 平台用户编号
      */
@@ -52,6 +49,7 @@ public class UserInfoSHA256EntityVO implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
 
     public Integer getUserId() {
         return userId;

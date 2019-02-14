@@ -70,7 +70,7 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
     }
 
     @Override
-    public UserInfoSHA256Entity selectUserIdToSHA256(JSONObject jsonObject) {
+    public BifaUserInfoSHA256Entity selectUserIdToSHA256(JSONObject jsonObject) {
         Integer userId = jsonObject.getInteger("userId");
         String trueName = jsonObject.getString("trueName");
         String idCard = jsonObject.getString("idCard");
@@ -83,11 +83,11 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
             criteria = Criteria.where("trueName").is(trueName).and("idCard").is(idCard);
         }
         query.addCriteria(criteria);
-        UserInfoSHA256Entity userInfoSHA256Entity = this.userInfoSHA256Dao.findOne(query);
+        BifaUserInfoSHA256Entity userInfoSHA256Entity = this.userInfoSHA256Dao.findOne(query);
         // 取到返回、未取到初始化后入库
         if (null == userInfoSHA256Entity) {
             // 未取到数据重新加密传入
-            userInfoSHA256Entity = new UserInfoSHA256Entity();
+            userInfoSHA256Entity = new BifaUserInfoSHA256Entity();
             String input = trueName.concat(idCard);
             String output = SHA256Util.getSHA256(input);
             // 主键
@@ -395,11 +395,11 @@ public class BifaDataReportServiceImpl extends BaseServiceImpl implements BifaDa
      * @return
      */
     @Override
-    public List<UserInfoSHA256Entity> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp) {
+    public List<BifaUserInfoSHA256Entity> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp) {
         Query query = new Query();
         Criteria criteria = Criteria.where("isOpenUp").is(isOpenUp).and("isLenderZeroUp").is(isLenderZeroUp).and("isLenderOneUp").is(isLenderOneUp);
         query.addCriteria(criteria);
-        List<UserInfoSHA256Entity> userInfoSHA256EntityList = this.userInfoSHA256Dao.find(query);
+        List<BifaUserInfoSHA256Entity> userInfoSHA256EntityList = this.userInfoSHA256Dao.find(query);
         return userInfoSHA256EntityList;
     }
 
