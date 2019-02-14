@@ -17,8 +17,7 @@ import com.hyjf.common.util.DigitalUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.CsMessageClient;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaExceptionDataService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaRepairDataService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +35,9 @@ import java.util.List;
  * @version BifaExceptionDataServiceImpl, v0.1 2019/1/18 9:41
  */
 @Service
-public class BifaExceptionDataServiceImpl extends BaseHgDateReportServiceImpl implements BifaExceptionDataService {
+public class BifaRepairDataServiceImpl extends BaseHgDateReportServiceImpl implements BifaRepairDataService {
 
-    public Logger logger = LoggerFactory.getLogger(BifaExceptionDataServiceImpl.class);
+    public Logger logger = LoggerFactory.getLogger(BifaRepairDataServiceImpl.class);
 
     private static final String thisMessName = "定时任务处理上报失败数据";
     public static final String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
