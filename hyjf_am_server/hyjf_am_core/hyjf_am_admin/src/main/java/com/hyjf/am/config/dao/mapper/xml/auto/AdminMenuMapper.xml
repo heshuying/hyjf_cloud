@@ -120,12 +120,12 @@
       menu_name, menu_sort, menu_url, 
       menu_hide, menu_tip, del_flag, 
       create_user_id, update_user_id, create_time, 
-      update_time)
+      update_time,menu_uuid)
     values (#{menuPuuid,jdbcType=VARCHAR}, #{menuCtrl,jdbcType=VARCHAR}, #{menuIcon,jdbcType=VARCHAR}, 
       #{menuName,jdbcType=VARCHAR}, #{menuSort,jdbcType=INTEGER}, #{menuUrl,jdbcType=VARCHAR}, 
       #{menuHide,jdbcType=TINYINT}, #{menuTip,jdbcType=VARCHAR}, #{delFlag,jdbcType=TINYINT}, 
       #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP},#{menuUuid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.AdminMenu" >
     <selectKey resultType="java.lang.String" keyProperty="menuUuid" order="AFTER" >

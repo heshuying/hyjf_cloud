@@ -37,8 +37,8 @@ import java.util.List;
  * 异常中心-标的备案掉单
  */
 @Api(value = "异常中心-标的备案掉单",tags ="异常中心-标的备案掉单")
-@RestController(value = "tradeBorrowRegistExceptionController")
-@RequestMapping("/am-trade/borrow_regist_exception")
+@RestController(value = "tradeBorrowRegistRepairController")
+@RequestMapping("/am-trade/borrow_regist_repair")
 public class BorrowRegistRepairController extends BaseController {
 
     @Autowired

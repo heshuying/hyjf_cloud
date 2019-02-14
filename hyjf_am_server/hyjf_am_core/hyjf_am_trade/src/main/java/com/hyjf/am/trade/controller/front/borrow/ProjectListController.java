@@ -105,6 +105,34 @@ public class ProjectListController extends BaseController {
             BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(vo.getBorrowExtraYield())?vo.getBorrowExtraYield():"0");
             boolean booleanVal = Validator.isIncrease(intFlg, dbYield);
             vo.setIsIncrease(String.valueOf(booleanVal));
+            // upd by liushouyi nifa2 20190214 start
+            // 处理借款用途
+            if(StringUtils.isNotBlank(vo.getFinancePurpose())){
+                switch (vo.getFinancePurpose()) {
+                    case "01":
+                        vo.setFinancePurpose("个人消费");
+                        break;
+                    case "02":
+                        vo.setFinancePurpose("个人经营");
+                        break;
+                    case "03":
+                        vo.setFinancePurpose("个人资金周转");
+                        break;
+                    case "04":
+                        vo.setFinancePurpose("房贷");
+                        break;
+                    case "05":
+                        vo.setFinancePurpose("企业经营");
+                        break;
+                    case "06":
+                        vo.setFinancePurpose("企业周转");
+                        break;
+                    default:
+                        vo.setFinancePurpose("其他");
+                        break;
+                }
+            }
+            // upd by liushouyi nifa2 20190214 end
         }
         // add by nxl 判断是否为产品加息 end
         response.setResult(vo);

@@ -320,7 +320,7 @@
 		'1'
 		ELSE
 		'0'
-		END is_first #    CASE  WHEN a.order_code = ttt.nid THEN  '1'  ELSE  '0'  END is_first
+		END is_first
 		FROM
 		(
 		SELECT
@@ -407,7 +407,6 @@
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
 		) AS a
-		LEFT JOIN ht_user u ON a.utm_id = u.user_id
 		) mm
 		<include refid="Where_Clause2" />
 		ORDER BY
@@ -483,7 +482,7 @@
         '1'
         ELSE
         '0'
-        END is_first #    CASE  WHEN a.order_code = ttt.nid THEN  '1'  ELSE  '0'  END is_first
+        END is_first
         FROM
         (
         SELECT
@@ -570,7 +569,6 @@
             AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
         </if>
         ) AS a
-        LEFT JOIN ht_user u ON a.utm_id = u.user_id
         ) mm
         <include refid="Where_Clause2" />
         ORDER BY
@@ -924,7 +922,7 @@
         </if>
 
         order by tmp.invest_time desc
-        <if test="limitStart != null and limitStart >0" >
+        <if test="limitStart != null and limitStart >= 0" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
 	</select>
