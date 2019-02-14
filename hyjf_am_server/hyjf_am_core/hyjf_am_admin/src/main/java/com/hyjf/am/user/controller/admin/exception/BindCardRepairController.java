@@ -23,14 +23,14 @@ import java.util.List;
  * @author: sunpeikai
  * @version: BindCardRepairController, v0.1 2018/10/9 11:27
  */
-@RestController(value = "userBindCardExceptionController")
-@RequestMapping(value = "/am-user/bindcardexception")
+@RestController(value = "userBindCardRepairController")
+@RequestMapping(value = "/am-user/bindcardrepair")
 public class BindCardRepairController extends BaseController {
 
     @Autowired
     private BindCardRepairService bindCardRepairService;
 
-    @PostMapping(value = "/getBindCardExceptionCount")
+    @PostMapping(value = "/getBindCardRepairCount")
     public AdminBindCardExceptionResponse getBindCardExceptionCount(@RequestBody BindCardExceptionRequest request){
         AdminBindCardExceptionResponse response = new AdminBindCardExceptionResponse();
         int count = bindCardRepairService.getBindCardExceptionCount(request);
@@ -39,7 +39,7 @@ public class BindCardRepairController extends BaseController {
         return response;
     }
 
-    @PostMapping(value = "/searchBindCardExceptionList")
+    @PostMapping(value = "/searchBindCardRepairList")
     public AdminBindCardExceptionResponse searchBindCardExceptionList(@RequestBody BindCardExceptionRequest request){
         AdminBindCardExceptionResponse response = new AdminBindCardExceptionResponse();
         Integer count = bindCardRepairService.getBindCardExceptionCount(request);
@@ -49,7 +49,7 @@ public class BindCardRepairController extends BaseController {
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
-        logger.info("searchBankCardExceptionList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
+        logger.info("searchBankCardRepairList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
         List<BindCardExceptionCustomizeVO> bindCardExceptionCustomizeVOList = bindCardRepairService.searchBindCardExceptionList(request);
         if(!CollectionUtils.isEmpty(bindCardExceptionCustomizeVOList)){
             response.setResultList(bindCardExceptionCustomizeVOList);

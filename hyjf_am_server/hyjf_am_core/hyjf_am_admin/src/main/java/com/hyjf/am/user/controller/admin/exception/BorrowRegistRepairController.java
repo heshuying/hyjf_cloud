@@ -4,6 +4,7 @@
 package com.hyjf.am.user.controller.admin.exception;
 
 import com.hyjf.am.response.user.BankOpenAccountResponse;
+import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.admin.exception.BorrowRegistRepairService;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import io.swagger.annotations.Api;
@@ -18,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: sunpeikai
  * @version: BorrowRegistRepairController, v0.1 2018/7/3 17:58
  */
-@RestController(value = "userBorrowRegistExceptionController")
-@RequestMapping("/am-user/borrow_regist_exception")
+@RestController(value = "userBorrowRegistRepairController")
+@RequestMapping("/am-user/borrow_regist_repair")
 @Api(value = "异常中心-标的备案掉单",tags ="异常中心-标的备案掉单")
-public class BorrowRegistRepairController {
+public class BorrowRegistRepairController extends BaseController {
 
     @Autowired
     private BorrowRegistRepairService borrowRegistRepairService;
