@@ -334,8 +334,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 // 当前时间
                 int nowTime = GetDate.getNowTime10();
                 record.setRecieveTime(nowTime);
-                record.setCreateTime(nowTime);
-                record.setUpdateTime(nowTime);
+                record.setCreateTime(new Date());
+                record.setUpdateTime(new Date());
 
                 // 默认系统用户
                 record.setCreateUserId(1);
@@ -720,8 +720,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
                 int nowTime = GetDate.getNowTime10(); // 当前时间
                 record.setRecieveTime(nowTime);
-                record.setCreateTime(nowTime);
-                record.setUpdateTime(nowTime);
+                record.setCreateTime(new Date());
+                record.setUpdateTime(new Date());
                 record.setCreateUserId(1);// 默认系统用户
                 record.setUpdateUserId(1);
 
@@ -831,7 +831,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     record.setInstCode(pushRequestBean.getInstCode());
                     record.setAssetType(pushRequestBean.getAssetType());
                     //0：个人，1：企业
-                    record.setBorrowType("1");
+                    record.setBorrowType(1);
                     record.setAssetId(pushBean.getAssetId());
                     record.setBorrowPeriod(pushBean.getBorrowPeriod());
                     record.setBorrowStyle(pushBean.getBorrowStyle());

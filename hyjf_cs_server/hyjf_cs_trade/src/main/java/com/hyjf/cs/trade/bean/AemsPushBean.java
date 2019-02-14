@@ -71,7 +71,7 @@ public class AemsPushBean implements Serializable {
 	 */
     private String workCity;
 	/**
-	 * 岗位职责
+	 * 职业类型
 	 */
     private String position;
 	/**
@@ -214,6 +214,9 @@ public class AemsPushBean implements Serializable {
 
 	//涉诉情况
 	private String litigation;
+
+	//资产属性 1:抵押标 2:质押标 3:信用标
+	private Integer assetAttributes;
 
 	public String getBorrowType() {
 		return borrowType;
@@ -647,9 +650,17 @@ public class AemsPushBean implements Serializable {
         this.corporateCode = corporateCode;
     }
 
+	public Integer getAssetAttributes() {
+		return assetAttributes;
+	}
+
+	public void setAssetAttributes(Integer assetAttributes) {
+		this.assetAttributes = assetAttributes;
+	}
+
 	@Override
 	public String toString() {
-		return "PushBean{" +
+		return "AemsPushBean{" +
 				"assetId='" + assetId + '\'' +
 				", truename='" + truename + '\'' +
 				", idcard='" + idcard + '\'' +
@@ -684,6 +695,9 @@ public class AemsPushBean implements Serializable {
 				", isOverdue='" + isOverdue + '\'' +
 				", isComplaint='" + isComplaint + '\'' +
 				", isPunished='" + isPunished + '\'' +
+				", address='" + address + '\'' +
+				", registrationAddress='" + registrationAddress + '\'' +
+				", corporateCode='" + corporateCode + '\'' +
 				", borrowType='" + borrowType + '\'' +
 				", recievetime=" + recievetime +
 				", userName='" + userName + '\'' +
@@ -699,7 +713,7 @@ public class AemsPushBean implements Serializable {
 				", overdueTimes='" + overdueTimes + '\'' +
 				", overdueAmount='" + overdueAmount + '\'' +
 				", litigation='" + litigation + '\'' +
+				", assetAttributes=" + assetAttributes +
 				'}';
 	}
-
 }

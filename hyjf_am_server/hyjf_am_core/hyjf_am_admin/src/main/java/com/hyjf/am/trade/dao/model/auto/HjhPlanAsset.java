@@ -6,119 +6,481 @@ import java.util.Date;
 public class HjhPlanAsset implements Serializable {
     private Integer id;
 
+    /**
+     * 资产编号
+     *
+     * @mbggenerated
+     */
     private String assetId;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 机构产品类型
+     *
+     * @mbggenerated
+     */
     private Integer assetType;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 借款用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 借款用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 江西银行电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 真实姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
     private String idcard;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private Long account;
 
+    /**
+     * 默认0 天标，1 月标
+     *
+     * @mbggenerated
+     */
     private Integer isMonth;
 
+    /**
+     * 借款期限
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 审核状态
+     *
+     * @mbggenerated
+     */
     private Integer verifyStatus;
 
+    /**
+     * 项目状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 推送时间
+     *
+     * @mbggenerated
+     */
     private Integer recieveTime;
 
+    /**
+     * 标签ID
+     *
+     * @mbggenerated
+     */
     private Integer labelId;
 
+    /**
+     * 标签名字
+     *
+     * @mbggenerated
+     */
     private String labelName;
 
+    /**
+     * 性别
+     *
+     * @mbggenerated
+     */
     private Integer sex;
 
+    /**
+     * 年龄
+     *
+     * @mbggenerated
+     */
     private Integer age;
 
+    /**
+     * 婚姻状况
+     *
+     * @mbggenerated
+     */
     private Integer marriage;
 
+    /**
+     * 受托支付标志
+     *
+     * @mbggenerated
+     */
     private Integer entrustedFlg;
 
+    /**
+     * 受托支付用户ID
+     *
+     * @mbggenerated
+     */
     private Integer entrustedUserId;
 
+    /**
+     * 受托支付用户名
+     *
+     * @mbggenerated
+     */
     private String entrustedUserName;
 
+    /**
+     * 受托支付电子账号
+     *
+     * @mbggenerated
+     */
     private String entrustedAccountId;
 
+    /**
+     * 工作城市
+     *
+     * @mbggenerated
+     */
     private String workCity;
 
+    /**
+     * 岗位职业
+     *
+     * @mbggenerated
+     */
     private String position;
 
+    /**
+     * 户籍地
+     *
+     * @mbggenerated
+     */
     private String domicile;
 
+    /**
+     * 信用评级
+     *
+     * @mbggenerated
+     */
     private String creditLevel;
 
+    /**
+     * 借款用途
+     *
+     * @mbggenerated
+     */
     private String useage;
 
+    /**
+     * 月薪收入
+     *
+     * @mbggenerated
+     */
     private String monthlyIncome;
 
+    /**
+     * 第一还款来源
+     *
+     * @mbggenerated
+     */
     private String firstPayment;
 
+    /**
+     * 第二还款来源
+     *
+     * @mbggenerated
+     */
     private String secondPayment;
 
+    /**
+     * 费用说明
+     *
+     * @mbggenerated
+     */
     private String costIntrodution;
 
+    /**
+     * 在平台逾期次数
+     *
+     * @mbggenerated
+     */
     private String overdueTimes;
 
+    /**
+     * 在平台逾期金额
+     *
+     * @mbggenerated
+     */
     private String overdueAmount;
 
+    /**
+     * 涉诉情况
+     *
+     * @mbggenerated
+     */
     private String litigation;
 
+    /**
+     * 项目信息
+     *
+     * @mbggenerated
+     */
     private String assetInfo;
 
+    /**
+     * 个人年收入:10万以内；10万以上
+     *
+     * @mbggenerated
+     */
     private String annualIncome;
 
+    /**
+     * 征信报告逾期情况:暂未提供；无；已处理
+     *
+     * @mbggenerated
+     */
     private String overdueReport;
 
+    /**
+     * 重大负债状况:无
+     *
+     * @mbggenerated
+     */
     private String debtSituation;
 
+    /**
+     * 其他平台借款情况:无
+     *
+     * @mbggenerated
+     */
     private String otherBorrowed;
 
+    /**
+     * 借款资金运用情况：不正常,正常
+     *
+     * @mbggenerated
+     */
     private String isFunds;
 
+    /**
+     * 借款人经营状况及财务状况：不正常,正常
+     *
+     * @mbggenerated
+     */
     private String isManaged;
 
+    /**
+     * 借款人还款能力变化情况：不正常,正常
+     *
+     * @mbggenerated
+     */
     private String isAbility;
 
+    /**
+     * 借款人逾期情况：暂无,有
+     *
+     * @mbggenerated
+     */
     private String isOverdue;
 
+    /**
+     * 借款人涉诉情况：暂无,有
+     *
+     * @mbggenerated
+     */
     private String isComplaint;
 
+    /**
+     * 借款人受行政处罚情况：暂无,有
+     *
+     * @mbggenerated
+     */
     private String isPunished;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 借款人地址
+     *
+     * @mbggenerated
+     */
     private String address;
 
+    /**
+     * 企业组织机构代码
+     *
+     * @mbggenerated
+     */
     private String corporateCode;
 
+    /**
+     * 企业注册地
+     *
+     * @mbggenerated
+     */
     private String registrationAddress;
+
+    /**
+     * 借款类型 0:个人;1:企业
+     *
+     * @mbggenerated
+     */
+    private Integer borrowType;
+
+    /**
+     * 借款企业名称
+     *
+     * @mbggenerated
+     */
+    private String borrowCompanyName;
+
+    /**
+     * 财务状况
+     *
+     * @mbggenerated
+     */
+    private String financialSituation;
+
+    /**
+     * 法人
+     *
+     * @mbggenerated
+     */
+    private String legalPerson;
+
+    /**
+     * 注册地区
+     *
+     * @mbggenerated
+     */
+    private String registrationArea;
+
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
+    private String registrationDate;
+
+    /**
+     * 主营业务
+     *
+     * @mbggenerated
+     */
+    private String mainBusiness;
+
+    /**
+     * 统一社会信用代码
+     *
+     * @mbggenerated
+     */
+    private String unifiedSocialCreditCode;
+
+    /**
+     * 注册资本
+     *
+     * @mbggenerated
+     */
+    private String registeredCapital;
+
+    /**
+     * 所属行业
+     *
+     * @mbggenerated
+     */
+    private String industryInvolved;
+
+    /**
+     * 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
+     *
+     * @mbggenerated
+     */
+    private Integer assetAttributes;
 
     private static final long serialVersionUID = 1L;
 
@@ -584,5 +946,93 @@ public class HjhPlanAsset implements Serializable {
 
     public void setRegistrationAddress(String registrationAddress) {
         this.registrationAddress = registrationAddress == null ? null : registrationAddress.trim();
+    }
+
+    public Integer getBorrowType() {
+        return borrowType;
+    }
+
+    public void setBorrowType(Integer borrowType) {
+        this.borrowType = borrowType;
+    }
+
+    public String getBorrowCompanyName() {
+        return borrowCompanyName;
+    }
+
+    public void setBorrowCompanyName(String borrowCompanyName) {
+        this.borrowCompanyName = borrowCompanyName == null ? null : borrowCompanyName.trim();
+    }
+
+    public String getFinancialSituation() {
+        return financialSituation;
+    }
+
+    public void setFinancialSituation(String financialSituation) {
+        this.financialSituation = financialSituation == null ? null : financialSituation.trim();
+    }
+
+    public String getLegalPerson() {
+        return legalPerson;
+    }
+
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson == null ? null : legalPerson.trim();
+    }
+
+    public String getRegistrationArea() {
+        return registrationArea;
+    }
+
+    public void setRegistrationArea(String registrationArea) {
+        this.registrationArea = registrationArea == null ? null : registrationArea.trim();
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate == null ? null : registrationDate.trim();
+    }
+
+    public String getMainBusiness() {
+        return mainBusiness;
+    }
+
+    public void setMainBusiness(String mainBusiness) {
+        this.mainBusiness = mainBusiness == null ? null : mainBusiness.trim();
+    }
+
+    public String getUnifiedSocialCreditCode() {
+        return unifiedSocialCreditCode;
+    }
+
+    public void setUnifiedSocialCreditCode(String unifiedSocialCreditCode) {
+        this.unifiedSocialCreditCode = unifiedSocialCreditCode == null ? null : unifiedSocialCreditCode.trim();
+    }
+
+    public String getRegisteredCapital() {
+        return registeredCapital;
+    }
+
+    public void setRegisteredCapital(String registeredCapital) {
+        this.registeredCapital = registeredCapital == null ? null : registeredCapital.trim();
+    }
+
+    public String getIndustryInvolved() {
+        return industryInvolved;
+    }
+
+    public void setIndustryInvolved(String industryInvolved) {
+        this.industryInvolved = industryInvolved == null ? null : industryInvolved.trim();
+    }
+
+    public Integer getAssetAttributes() {
+        return assetAttributes;
+    }
+
+    public void setAssetAttributes(Integer assetAttributes) {
+        this.assetAttributes = assetAttributes;
     }
 }
