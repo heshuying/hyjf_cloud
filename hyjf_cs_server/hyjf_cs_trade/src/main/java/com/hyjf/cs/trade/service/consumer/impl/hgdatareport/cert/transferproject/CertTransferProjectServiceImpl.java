@@ -40,7 +40,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 	SystemConfig systemConfig;
 
 	Logger logger = LoggerFactory.getLogger(CertTransferProjectServiceImpl.class);
-	private String thisMessName = "转让状态信息上报";
+	private String thisMessName = "转让项目信息上报";
 	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
 	@Override
@@ -94,7 +94,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 		}else{
 			HjhDebtCreditRequest request=new HjhDebtCreditRequest();
 			request.setCreditNid(creditNid);
-			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditList(request);
+			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByCreditNid(creditNid);
 			if(hjhDebtCreditList!=null&&hjhDebtCreditList.size()>0){
 				HjhDebtCreditVO hjhDebtCredit=hjhDebtCreditList.get(0);
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(hjhDebtCredit.getUserId());
@@ -135,7 +135,6 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 					// 错误时，以下日志必须出力（预警捕捉点）
 					logger.error(logHeader , e);
 				}
-
 			}
 		}
 		return JSONArray.parseArray(JSON.toJSONString(list));

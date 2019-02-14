@@ -9,7 +9,7 @@ import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
 import com.hyjf.am.user.dao.mapper.customize.AdminBankCardExceptionCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.AdminBankCardExceptionCustomize;
-import com.hyjf.am.user.service.admin.exception.BankCardExceptionService;
+import com.hyjf.am.user.service.admin.exception.BankCardRepairService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.common.util.GetCilentIP;
@@ -32,12 +32,12 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BankCardExceptionServiceImpl, v0.1 2018/8/14 15:03
+ * @version: BankCardRepairServiceImpl, v0.1 2018/8/14 15:03
  */
-@Service(value = "userBankCardExceptionServiceImpl")
-public class BankCardExceptionServiceImpl extends BaseServiceImpl implements BankCardExceptionService {
+@Service(value = "userBankCardRepairServiceImpl")
+public class BankCardRepairServiceImpl extends BaseServiceImpl implements BankCardRepairService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BankCardExceptionServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BankCardRepairServiceImpl.class);
 
     @Autowired
     private AdminBankCardExceptionCustomizeMapper adminBankCardExceptionCustomizeMapper;

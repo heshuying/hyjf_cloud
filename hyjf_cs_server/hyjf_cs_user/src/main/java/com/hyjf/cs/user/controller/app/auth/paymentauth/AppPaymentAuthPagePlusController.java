@@ -94,7 +94,7 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
         String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH+"&platform="+platform;;
         String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH+"&platform="+platform;;
         //异步地址
-        String bgRetUrl = "http://CS-USER"+APP_PAYMENT_CLASS_NAME+APP_PAYMENT_AUTH;
+        String bgRetUrl = "http://CS-USER"+APP_PAYMENT_CLASS_NAME+APP_PAYMENT_BG_AUTH;
 
         logger.info("缴费授权-->同步路径成功:["+successUrl+"]");
         logger.info("缴费授权-->同步路径失败:["+retUrl+"]");

@@ -131,7 +131,7 @@ public class CsMessageClientImpl implements CsMessageClient {
      * @return
      */
     @Override
-    public UserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject) {
+    public BifaUserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject) {
         String url = "http://CS-MESSAGE/cs-message/bifaDataReport/selectUserIdToSHA256";
         UserInfoSHA256EntityResponse response = restTemplate.postForEntity(url,jsonObject,UserInfoSHA256EntityResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -373,7 +373,7 @@ public class CsMessageClientImpl implements CsMessageClient {
      * @return
      */
     @Override
-    public List<UserInfoSHA256EntityVO> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp) {
+    public List<BifaUserInfoSHA256EntityVO> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp) {
         String url = "http://CS-MESSAGE/cs-message/bifaDataReport/getUserInfoSHA256/"+isOpenUp+"/"+isLenderZeroUp+"/"+isLenderOneUp;
         UserInfoSHA256EntityResponse response=restTemplate.getForEntity(url,UserInfoSHA256EntityResponse.class).getBody();
         if (Response.isSuccess(response)){
