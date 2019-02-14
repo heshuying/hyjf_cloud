@@ -30,11 +30,11 @@ import java.util.Map;
  * @Date
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_CERT_TRANSFER_STATUS_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_CERT_TRANSFER_STATUS_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_TRANSFER_STATUS_TAG, consumerGroup = MQConstant.CERT_TRANSFER_STATUS_GROUP)
 public class CertTransferStatusMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(CertTransferStatusMessageConsumer.class);
 
-    private String thisMessName = "转让项目信息";
+    private String thisMessName = "转让状态信息";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
 

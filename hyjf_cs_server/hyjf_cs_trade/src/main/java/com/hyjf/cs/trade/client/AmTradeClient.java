@@ -586,6 +586,13 @@ public interface AmTradeClient {
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request);
 
     /**
+     * app端获取散标出借项目列表 无缓存版
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> searchAppProjectListNoCash(AppProjectListRequest request);
+
+    /**
      *  app端查询债权转让所有分页总数
      * @author zhangyk
      * @date 2018/6/19 16:39
@@ -2677,10 +2684,9 @@ public interface AmTradeClient {
 
     /**
      * 累计借贷余额
-     * @param time
      * @return
      */
-    BigDecimal getWillPayMoney(Date time);
+    BigDecimal getWillPayMoney();
 
     /**
      * 累计借贷余额笔数
@@ -2799,5 +2805,9 @@ public interface AmTradeClient {
 
 
     CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
 }
 

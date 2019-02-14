@@ -149,12 +149,11 @@ public class BorrowUserServiceImpl extends BaseServiceImpl implements BorrowUser
 
 	/**
 	 * 北互金累计借贷余额
-	 * @param time
 	 * @return
 	 */
 	@Override
-	public BigDecimal getWillPayMoney(Date time) {
-		return operationReportJobCustomizeMapper.getWillPayMoney(time);
+	public BigDecimal getWillPayMoney() {
+		return operationReportJobCustomizeMapper.getWillPayMoney();
 	}
 
 	/**

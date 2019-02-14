@@ -31,6 +31,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.MD5;
 import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
@@ -94,6 +95,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 普通用户管理费总待还
+     *
      * @param userId
      * @return
      */
@@ -104,6 +106,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 担保机构管理费总待还
+     *
      * @param userId
      * @return
      */
@@ -114,6 +117,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 担保机构待还
+     *
      * @param userId
      * @return
      */
@@ -146,8 +150,8 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean) {
-        List<RepayListCustomizeVO> resultList =  amTradeClient.repayList(requestBean);
-        if(resultList == null){
+        List<RepayListCustomizeVO> resultList = amTradeClient.repayList(requestBean);
+        if (resultList == null) {
             return new ArrayList<RepayListCustomizeVO>();
         }
         return resultList;
@@ -162,7 +166,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean) {
         List<RepayListCustomizeVO> resultList = amTradeClient.orgRepayList(requestBean);
-        if(resultList == null){
+        if (resultList == null) {
             return new ArrayList<RepayListCustomizeVO>();
         }
         return resultList;
@@ -170,6 +174,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 垫付机构本期应还总额
+     *
      * @param requestBean
      * @return
      */
@@ -187,7 +192,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean) {
         List<RepayListCustomizeVO> resultList = amTradeClient.orgRepayedList(requestBean);
-        if(resultList == null){
+        if (resultList == null) {
             return new ArrayList<RepayListCustomizeVO>();
         }
         return resultList;
@@ -244,160 +249,154 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean) {
         JSONObject result = amTradeClient.getRepayDetailData(requestBean);
-        if(result == null){
+        if (result == null) {
             result = new JSONObject();
         }
         return result;
     }
 
-   /**
-    * 还款申请校验
-    * @auther: hesy
-    * @date: 2018/7/10
-    */
+    /**
+     * 还款申请校验
+     *
+     * @auther: hesy
+     * @date: 2018/7/10
+     */
     @Override
-    public void checkForRepayRequest(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean){
-        if(StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)){
+    public void checkForRepayRequest(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean) {
+        if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)) {
             throw new CheckException(MsgEnum.ERR_PARAM_NUM);
         }
         // 平台密码校验
         UserVO userVO = getUserByUserId(user.getUserId());
         String mdPassword = MD5Utils.MD5(password + userVO.getSalt());
         if (!mdPassword.equals(userVO.getPassword())) {
-            throw  new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
+            throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
         }
-
         // 开户校验
-        if(!user.isBankOpenAccount()){
-            throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        if (!user.isBankOpenAccount()) {
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
-        if(borrow == null){
-            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        if (borrow == null) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
         repayBean.setRepayUserId(user.getUserId());
-
         // 服务费授权
         boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
         if (!isPaymentAuth) {
-            throw  new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
-        if (!tranactionSetFlag) {//设置失败
-            throw  new CheckException(MsgEnum.ERR_SYSTEM_BUSY);
-        }
-
         AccountVO accountVO = getAccountByUserId(user.getUserId());
         if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
             // ** 用户符合还款条件，可以还款 *//*
             // 查询用户在银行电子账户的余额
-            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
             if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
                 // ** 用户符合还款条件，可以还款 *//*
             } else {
                 // 银行账户余额不足
-                throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
         } else {
             // 平台账户余额不足
-            throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
-
-
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
+        if (!tranactionSetFlag) {//设置失败
+            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+            String dateStr = DateUtils.nowDateAddSecond((int) retTime);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+        }
     }
 
-
     @Override
-    public void checkForRepayRequestOrg(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean, int flag){
-        if(StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)){
+    public void checkForRepayRequestOrg(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean, int flag) {
+        if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)) {
             throw new CheckException(MsgEnum.ERR_PARAM_NUM);
         }
         // 平台密码校验
         UserVO userVO = getUserByUserId(user.getUserId());
         String mdPassword = MD5.toMD5Code(password + userVO.getSalt());
         if (!mdPassword.equals(userVO.getPassword())) {
-            throw  new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
+            throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
         }
-        // 服务费授权和还款授权校验
+        // 服务费授权校验
         boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
         if (!isPaymentAuth) {
-            throw  new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         // 开户校验
-        if(!user.isBankOpenAccount()){
-            throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        if (!user.isBankOpenAccount()) {
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
-        if(borrow == null){
-            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        if (borrow == null) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
-        if (!tranactionSetFlag) {//设置失败
-            throw  new CheckException(MsgEnum.ERR_SYSTEM_BUSY);
-        }
-
         AccountVO accountVO = getAccountByUserId(user.getUserId());
         // 一次性还款
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
             if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
                 // ** 垫付机构符合还款条件，可以还款 *//*
                 // 查询用户在银行的电子账户
-                BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+                BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
                 // 获取用户在银行的电子账户余额
                 if (flag == 1) {//垫付机构批量还款
                     repayBean.setRepayUserId(user.getUserId());// 垫付机构id
-                }else{
+                } else {
                     if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
                         // ** 垫付机构符合还款条件，可以还款 *//*
                         repayBean.setRepayUserId(user.getUserId());// 垫付机构id
                     } else {
                         // 银行账户余额不足
-                        throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+                        logger.error("【担保机构还款校验】银行账户余额不足！担保机构用户名：{}", user.getUsername());
+                        throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
                     }
                 }
-
             } else {
                 // 用户平台账户余额不足
-                throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+                logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", user.getUsername());
+                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
-        } // 分期还款
-        else {
+        } else { // 分期还款
             repayBean.setRepayUserId(user.getUserId());// 垫付机构id
-
-            if (flag ==1) {
-                //垫付机构批量还款 ，不验证总额
-                ;
-            }else {
-
-                if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
-                    // ** 垫付机构符合还款条件，可以还款 *//*
-                    // 查询用户在银行的电子账户
-                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),user.getBankAccount());
+            if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
+                // ** 垫付机构符合还款条件，可以还款 *//*
+                // 查询用户在银行的电子账户
+                if (flag == 1) {
+                    //垫付机构批量还款 ，不验证银行账户余额
+                    ;
+                } else {
+                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
                     if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
                         // ** 用户符合还款条件，可以还款 *//*
                         ;
                     } else {
                         // 银行账户余额不足
-                        throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+                        logger.error("【担保机构还款校验】银行账户余额不足！担保机构用户名：{}", user.getUsername());
+                        throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
                     }
-                } else {
-                    // 用户平台账户余额不足
-                    throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
                 }
-
+            } else {
+                // 用户平台账户余额不足
+                logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", user.getUsername());
+                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
-
-
+        }
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
+        if (!tranactionSetFlag) {//设置失败
+            logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
+            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+            String dateStr = DateUtils.nowDateAddSecond((int) retTime);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
         }
         // 如果有正在出让的债权,先去把出让状态停止
-        this.updateBorrowCreditStautus(borrow.getBorrowNid());
-
+        //this.updateBorrowCreditStautus(borrow.getBorrowNid()); // svn40463 未把此处注掉 update by wgx 2019/02/13
     }
 
     @Override
     public RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay) {
-        Map<String,String> paraMap = new HashMap<>();
+        Map<String, String> paraMap = new HashMap<>();
         paraMap.put("userId", String.valueOf(userId));
         paraMap.put("roleId", roleId);
         paraMap.put("borrowNid", borrowNid);
@@ -408,11 +407,12 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 还款申请回调数据更新
+     *
      * @auther: hesy
      * @date: 2018/7/10
      */
     @Override
-    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay){
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay) {
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
@@ -422,6 +422,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 如果有正在出让的债权,先去把出让状态停止
+     *
      * @param borrowNid
      * @return
      */
@@ -432,6 +433,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 校验重复还款
+     *
      * @param userId
      * @param borrowNid
      * @return
@@ -439,7 +441,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public boolean checkRepayInfo(Integer userId, String borrowNid) {
         BankRepayFreezeLogVO log = amTradeClient.getFreezeLogValid(userId, borrowNid);
-        if(log != null){
+        if (log != null) {
             return false;
         }
         List<BankRepayOrgFreezeLogVO> orgList = amTradeClient.getBankRepayOrgFreezeLogList(borrowNid);
@@ -451,12 +453,13 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 添加冻结日志
+     *
      * @auther: hesy
      * @date: 2018/7/10
      */
     @Override
     public Integer addFreezeLog(Integer userId, String orderId, String account, String borrowNid, BigDecimal repayTotal,
-                                String userName){
+                                String userName) {
         BankRepayFreezeLogRequest requestBean = new BankRepayFreezeLogRequest();
         requestBean.setBorrowNid(borrowNid);
         requestBean.setAccount(account);
@@ -469,12 +472,13 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 删除冻结日志
+     *
      * @auther: hesy
      * @date: 2018/7/10
      */
     @Override
-    public Integer deleteFreezeLogByOrderId(String orderId){
-        if(StringUtils.isBlank(orderId)){
+    public Integer deleteFreezeLogByOrderId(String orderId) {
+        if (StringUtils.isBlank(orderId)) {
             return 0;
         }
         return amTradeClient.deleteFreezeLogByOrderId(orderId);
@@ -482,6 +486,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 更新借款API任务表
+     *
      * @return
      */
     @Override
@@ -495,6 +500,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 根据bankSeqNo检索
+     *
      * @param bankSeqNO
      * @return
      */
@@ -505,6 +511,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 批次状态查询
+     *
      * @param apicron
      * @return
      */
@@ -561,11 +568,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     public File createAgreementPDFFileRepay(HttpServletRequest request, HttpServletResponse response, String borrowNid, String nid, String flag, Integer userId) {
         logger.info("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）");
         if (StringUtils.isBlank(borrowNid)) {
-           logger.error("borrowNid为空,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+            logger.error("borrowNid为空,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
             return null;
         }
         // 查询借款人用户名
-        Map<String,Object> paraMap = new HashMap<>();
+        Map<String, Object> paraMap = new HashMap<>();
         paraMap.put("borrowNidSrch", borrowNid);
         BorrowCommonCustomizeVO borrowCommonCustomize = new BorrowCommonCustomizeVO();
         // 借款编码
@@ -573,16 +580,16 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         List<BorrowCustomizeVO> recordList1 = amTradeClient.searchBorrowList(paraMap);
         // 出让人userid
         TenderAgreementVO tenderAgreement = new TenderAgreementVO();
-        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
-        File filePdf= null;
+        List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+        File filePdf = null;
         // 下载法大大协议--居间
-        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+        if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
             tenderAgreement = tenderAgreementsNid.get(0);
-            if(tenderAgreement!=null){
+            if (tenderAgreement != null) {
                 filePdf = createFaddPDFImgFileOne(tenderAgreement);//下载脱敏
             }
             return filePdf;
-        }else {
+        } else {
             // 老版协议下载
             List<BorrowCustomizeVO> recordList = recordList1;
             BorrowCustomizeVO borrowCustomizeVO = recordList.get(0);
@@ -594,12 +601,12 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             //根据订单号获取用户放款信息
             //放款记录创建时间（放款时间）
             int addTime = ADD_TIME;
-            if(borrowCustomizeVO != null){
+            if (borrowCustomizeVO != null) {
                 //放款记录创建时间（放款时间）
-                addTime = (borrowCustomizeVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowCustomizeVO.getCreateTime()));
+                addTime = (borrowCustomizeVO.getCreateTime() == null ? 0 : GetDate.getTime10(borrowCustomizeVO.getCreateTime()));
                 if (addTime > ADD_TIME328) {
                     logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）,协议未生成");
-                    return  null;
+                    return null;
                 }
             }
             Map<String, Object> contents = new HashMap<String, Object>();
@@ -618,39 +625,39 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
             // 借款人用户名
             int userIds = recordList.get(0).getUserId();
-            UserInfoVO userInfo= amUserClient.findUserInfoById(userIds);
+            UserInfoVO userInfo = amUserClient.findUserInfoById(userIds);
             String borrowUsername = userInfo.getTruename();
-            logger.info("2221------------------------idCard:"+userInfo.getIdcard());
-            if(flag!=null && flag=="1"){
+            logger.info("2221------------------------idCard:" + userInfo.getIdcard());
+            if (flag != null && flag == "1") {
                 List<WebUserInvestListCustomizeVO> tzList = selectUserInvestList(borrowNid);
                 if (tzList != null && tzList.size() > 0) {
                     WebUserInvestListCustomizeVO userInvest = tzList.get(0);
-                    if(userInvest.getUserId().equals(String.valueOf(userId))){
+                    if (userInvest.getUserId().equals(String.valueOf(userId))) {
 
-                        userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
-                        userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
-                        userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                        userInvest.setRealName(userInvest.getRealName().substring(0, 1) + "**");
+                        userInvest.setUsername(userInvest.getUsername().substring(0, 1) + "*****");
+                        userInvest.setIdCard(userInvest.getIdCard().substring(0, 4) + "**************");
                     }
                     contents.put("userInvest", userInvest);
-                }else {
+                } else {
                     return null;
                 }
             } else {
                 List<WebUserInvestListCustomizeVO> tzList = selectUserInvestList(borrowNid);
                 if (tzList != null && tzList.size() > 0) {
                     WebUserInvestListCustomizeVO userInvest = tzList.get(0);
-                    if(userInvest.getUserId().equals(String.valueOf(userId))){
-                        userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
-                        userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
-                        userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                    if (userInvest.getUserId().equals(String.valueOf(userId))) {
+                        userInvest.setRealName(userInvest.getRealName().substring(0, 1) + "**");
+                        userInvest.setUsername(userInvest.getUsername().substring(0, 1) + "*****");
+                        userInvest.setIdCard(userInvest.getIdCard().substring(0, 4) + "**************");
                     }
                     contents.put("userInvest", userInvest);
-                }else {
+                } else {
                     return null;
                 }
             }
-            if(!(userId+"").equals(userInfo.getUserId()+"") ){
-                borrowUsername = borrowUsername.substring(0,1)+"**";
+            if (!(userId + "").equals(userInfo.getUserId() + "")) {
+                borrowUsername = borrowUsername.substring(0, 1) + "**";
 
             }
             contents.put("borrowUsername", borrowUsername);
@@ -661,19 +668,19 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 BigDecimal earnings = new BigDecimal("0");
                 // 收益率
 
-                String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
+                String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr()) ? "0.00" : recordList.get(0).getBorrowApr().replace("%", "");
                 BigDecimal borrowApr = new BigDecimal(borrowAprString);
                 //出借金额
-                String accountString = StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
+                String accountString = StringUtils.isEmpty(recordList.get(0).getAccount()) ? "0.00" : recordList.get(0).getAccount().replace(",", "");
                 BigDecimal account = new BigDecimal(accountString);
                 // 周期
-                String borrowPeriodString = StringUtils.isEmpty(recordList.get(0).getBorrowPeriod())?"0":recordList.get(0).getBorrowPeriod();
-                String regEx="[^0-9]";
+                String borrowPeriodString = StringUtils.isEmpty(recordList.get(0).getBorrowPeriod()) ? "0" : recordList.get(0).getBorrowPeriod();
+                String regEx = "[^0-9]";
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(borrowPeriodString);
                 borrowPeriodString = m.replaceAll("").trim();
                 Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
-                if (org.apache.commons.lang.StringUtils.equals("endday", borrowStyle)){
+                if (org.apache.commons.lang.StringUtils.equals("endday", borrowStyle)) {
                     // 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*年化收益÷365*锁定期；
                     earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                 } else {
@@ -684,7 +691,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 contents.put("earnings", earnings);
                 if ("month".equals(borrowStyle) || "principal".equals(borrowStyle)
                         || "endmonth".equals(borrowStyle)) {
-                    Map<String,Object> paraBean = new HashMap<>();
+                    Map<String, Object> paraBean = new HashMap<>();
                     paraBean.put("userId", userId);
                     paraBean.put("borrowNid", borrowNid);
                     paraBean.put("nid", nid);
@@ -705,11 +712,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             // 导出PDF文件
             try {
                 String flag1 = flag;
-                if(flag1!=null && flag1=="1"){
-                    File file  =  PdfGenerator.generatePdfFile(request, response, borrowNid + "_" + nid + ".pdf",
+                if (flag1 != null && flag1 == "1") {
+                    File file = PdfGenerator.generatePdfFile(request, response, borrowNid + "_" + nid + ".pdf",
                             CustomConstants.TENDER_CONTRACT, contents);
                     return file;
-                }else {
+                } else {
                     PdfGenerator.generatePdf(request, response, borrowNid + "_" + nid + ".pdf",
                             CustomConstants.TENDER_CONTRACT, contents);
                 }
@@ -725,7 +732,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     public File createFaddPDFImgFileOne(TenderAgreementVO tenderAgreement) {
-        SFTPParameter para = new SFTPParameter() ;
+        SFTPParameter para = new SFTPParameter();
         String ftpIP = systemConfig.getHyjfFtpIp();
         String port = systemConfig.getHyjfFtpPort();
         String basePathImage = systemConfig.getHyjfFtpBasepathImg();
@@ -737,29 +744,29 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         para.passWord = password;//ftp服务器密码
         para.port = Integer.valueOf(port);//ftp服务器端口
         para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
-        para.fileName=tenderAgreement.getTenderNid();
+        para.fileName = tenderAgreement.getTenderNid();
         String imgUrl = tenderAgreement.getImgUrl();
         String pdfUrl = tenderAgreement.getPdfUrl();
-        if(org.apache.commons.lang.StringUtils.isNotBlank(pdfUrl)){
+        if (org.apache.commons.lang.StringUtils.isNotBlank(pdfUrl)) {
             //获取文件目录
             int index = pdfUrl.lastIndexOf("/");
-            String pdfPath = pdfUrl.substring(0,index);
+            String pdfPath = pdfUrl.substring(0, index);
             //文件名称
-            String pdfName = pdfUrl.substring(index+1);
+            String pdfName = pdfUrl.substring(index + 1);
             para.downloadPath = basePathPdf + "/" + pdfPath;
             para.sftpKeyFile = pdfName;
 
-        }else if(org.apache.commons.lang.StringUtils.isNotBlank(imgUrl)){
+        } else if (org.apache.commons.lang.StringUtils.isNotBlank(imgUrl)) {
             int index = imgUrl.lastIndexOf("/");
-            String imgPath = imgUrl.substring(0,index);
+            String imgPath = imgUrl.substring(0, index);
             //文件名称
-            String imgName = imgUrl.substring(index+1);
+            String imgName = imgUrl.substring(index + 1);
             para.downloadPath = "/" + basePathImage + "/" + imgPath;
             para.sftpKeyFile = imgName;
-        }else{
+        } else {
             return null;
         }
-        File file =  FavFTPUtil.downloadDirectory(para);
+        File file = FavFTPUtil.downloadDirectory(para);
         return file;
     }
 
@@ -773,6 +780,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 获取银行错误返回码
+     *
      * @param retCode
      * @return
      */
@@ -783,6 +791,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 插入垫付机构冻结表日志
+     *
      * @author wgx
      * @date 2018/10/11
      */
@@ -825,6 +834,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 查询垫付机构冻结列表
+     *
      * @author wgx
      * @date 2018/10/11
      */
@@ -838,6 +848,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 删除垫付机构临时日志,外部调用
+     *
      * @author wgx
      * @date 2018/10/11
      */
@@ -851,6 +862,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 单笔还款申请冻结查询
+     *
      * @auther: wgx
      * @date: 2018/10/11
      */
@@ -895,13 +907,15 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             return false;
         }
     }
+
     /**
      * 还款申请冻结资金
+     *
      * @auther: wgx
      * @date: 2018/10/16
      */
     @Override
-    public  WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult, boolean isAllRepay) {
+    public WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult, boolean isAllRepay) {
         Integer userId = userVO.getUserId();
         String userName = userVO.getUsername();
         String ip = repayBean.getIp();
@@ -934,17 +948,17 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         }
         //还款后变更数据
         boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
-        if(updateResult){
+        if (updateResult) {
             updateResult = this.updateBorrowCreditStautus(borrowNid);
-            if(!updateResult){
+            if (!updateResult) {
                 webResult.setStatus(WebResult.ERROR);
                 webResult.setStatusDesc("还款失败，请稍后再试...");
-            }else {
+            } else {
                 webResult.setStatus(WebResult.SUCCESS);
                 webResult.setStatusDesc(WebResult.SUCCESS_DESC);
                 return webResult;
             }
-        }else {
+        } else {
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("还款失败，请稍后再试...");
         }
@@ -953,6 +967,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 代偿冻结（合规要求）
+     *
      * @auther: wgx
      * @date: 2018/10/11
      */
@@ -990,7 +1005,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         //    BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         //    bean.setSuccessfulUrl(successfulUrl + "/repaySuccess?borrowNid=" + borrowNid + "&borrowName=" + borrowInfo.getName());
         //}else{
-            bean.setSuccessfulUrl(successfulUrl + "/batchSuccess");// 批次成功页面
+        bean.setSuccessfulUrl(successfulUrl + "/batchSuccess");// 批次成功页面
         //}
         bean.setNotifyUrl(bgRetUrl + "?orderId=" + orderId + "&isBatchRepay=" + StringUtils.isBlank(borrowNid));// 页面异步返回URL(必须)
         try {
@@ -1004,6 +1019,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 开始批量还款
+     *
      * @auther: wgx
      * @date: 2018/10/16
      */
@@ -1064,6 +1080,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
     /**
      * 获取标的信息
+     *
      * @param borrowNid
      * @return
      * @Author : huanghui

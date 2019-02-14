@@ -739,7 +739,6 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
-            logger.info("leftpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -766,7 +765,6 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
-            logger.info("rightpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -1007,7 +1005,7 @@ public class RedisUtils {
             moveCount += 1;//移动成员数+1
             // 队列中无From成员时
             if (moveCount == 1) {
-                logger.info("l[" + queueNameFrom + "]→[" + queueNameTo + "]r" + " : ");
+                logger.info("Redis:" + queueNameFrom + "(l)>>>>>>>>>>>>>>>>>>>>>>>>>>" + queueNameTo + "(r)" + " : ");
             }
             logger.info("   (" + moveCount + ") " + queueValue);
         }

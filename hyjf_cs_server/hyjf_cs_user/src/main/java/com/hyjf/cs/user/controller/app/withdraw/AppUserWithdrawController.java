@@ -43,7 +43,7 @@ public class AppUserWithdrawController extends BaseUserController {
     /**
      * 卡片描述
      */
-    private final String CARD_DESC = "限额:{0}{1}{2}";
+    private final String CARD_DESC = "充值限额:{0}{1}{2}";
     /**
      * 温馨提示URL
      */

@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.status;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -11,6 +11,8 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.status.CertBorrowStatusService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ import java.util.Map;
 
 @Service
 public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl implements CertBorrowStatusService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CertBorrowStatusServiceImpl.class);
     @Autowired
     AmTradeClient amTradeClient;
     @Autowired
@@ -37,7 +41,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
      * @return
      */
     @Override
-    public Map<String, Object> selectBorrowByBorrowNid(String borrowNid, String statusAfter, boolean isUserInfo, boolean isOld) {
+    public Map<String, Object> selectBorrowByBorrowNid(String borrowNid, String statusAfter, boolean isUserInfo) {
         //标的信息
         try {
             BorrowAndInfoVO borrow =amTradeClient.selectBorrowByNid(borrowNid);
@@ -69,7 +73,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
                     //标的状态投资中报送筹标中（报送6筹标中）
                     productStatus = "6";
                     //发标时间
-                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTime());
+                    productDate = GetDate.timestamptoStrYYYYMMDDHHMMSS(borrow.getVerifyTimeInteger().toString());
                     productStatusDesc = "标的状态投资中报送筹标中（报送6筹标中）";
                 } else if (borrow.getStatus() == 5) {
                     //已还款

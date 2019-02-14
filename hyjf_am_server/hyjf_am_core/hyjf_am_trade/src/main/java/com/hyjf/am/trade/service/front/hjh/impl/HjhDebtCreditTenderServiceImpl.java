@@ -28,10 +28,18 @@ public class HjhDebtCreditTenderServiceImpl implements HjhDebtCreditTenderServic
     public List<HjhDebtCreditTender> getHjhDebtCreditTenderList(HjhDebtCreditTenderRequest request) {
         HjhDebtCreditTenderExample creditTenderExample = new HjhDebtCreditTenderExample();
         HjhDebtCreditTenderExample.Criteria creditTenderCra = creditTenderExample.createCriteria();
-        creditTenderCra.andBorrowNidEqualTo(request.getBorrowNid());
-        creditTenderCra.andCreditNidEqualTo(request.getCreditNid());
-        creditTenderCra.andInvestOrderIdEqualTo(request.getInvestOrderId());
-        creditTenderCra.andAssignOrderIdEqualTo(request.getAssignOrderId());
+        if (request.getBorrowNid() != null) {
+            creditTenderCra.andBorrowNidEqualTo(request.getBorrowNid());
+        }
+        if (request.getCreditNid() != null) {
+            creditTenderCra.andCreditNidEqualTo(request.getCreditNid());
+        }
+        if (request.getInvestOrderId() != null) {
+            creditTenderCra.andInvestOrderIdEqualTo(request.getInvestOrderId());
+        }
+        if (request.getAssignOrderId() != null) {
+            creditTenderCra.andAssignOrderIdEqualTo(request.getAssignOrderId());
+        }
 		List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(creditTenderExample);
         return creditTenderList;
     }

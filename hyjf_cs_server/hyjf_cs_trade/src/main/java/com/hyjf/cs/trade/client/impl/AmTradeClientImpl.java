@@ -1395,6 +1395,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * app端获取散标出借项目列表 无缓存版
+     * @author cwyang
+     * @date 2018/6/20 17:24
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> searchAppProjectListNoCash(AppProjectListRequest request) {
+        AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      *  app端查询债权转让所有分页总数
      * @author zhangyk
      * @date 2018/6/19 16:39
@@ -6623,6 +6637,28 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid) {
+        HjhDebtCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditListByCreditNid/" + creditNid ,
+                HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid) {
+        HjhDebtCreditResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditListByBorrowNid/" + borrowNid ,
+                HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     /**
      * 获取借款用户信息
      * @param borrowNid
@@ -6746,14 +6782,13 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BigDecimal getWillPayMoney(Date time) {
+    public BigDecimal getWillPayMoney() {
         String url = "http://AM-TRADE/am-trade/bifaDataReport/getWillPayMoney";
-        return restTemplate.postForEntity(url,time,BigDecimal.class).getBody();
+        return restTemplate.getForEntity(url,BigDecimal.class).getBody();
     }
 
     /**
      * 累计借贷余额笔数
-     * @param time
      * @return
      */
     @Override

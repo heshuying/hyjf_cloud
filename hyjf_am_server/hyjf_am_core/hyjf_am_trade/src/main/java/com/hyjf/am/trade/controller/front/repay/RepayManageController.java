@@ -198,7 +198,6 @@ public class RepayManageController extends BaseController {
         projectBean.setRoleId(requestBean.getRoleId());
         projectBean.setBorrowNid(requestBean.getBorrowNid());
         responseBean.setResultStr(JSON.toJSONString(projectBean));
-
         try {
             projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
             logger.info("加载的还款详情数据：" + JSON.toJSONString(projectBean));
@@ -210,9 +209,7 @@ public class RepayManageController extends BaseController {
             responseBean.setMessage("还款申请详情页面异常");
             return responseBean;
         }
-
     }
-
     /**
      * 还款申请更新
      * @auther: hesy
@@ -298,7 +295,6 @@ public class RepayManageController extends BaseController {
         String userId = paraMap.get("userId");
         boolean isAllRepay = Boolean.valueOf(paraMap.get("isAllRepay"));
         logger.info("获取计算完的还款Bean开始：{}", paraMap);
-
         try {
             Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
             Account account = repayManageService.getAccount(Integer.parseInt(userId));
@@ -337,7 +333,6 @@ public class RepayManageController extends BaseController {
             responseBean.setResultStr(JSON.toJSONString(repayByTerm));
             return responseBean;
         }
-
         logger.info("计算完的还款bean数据：{}", JSON.toJSONString(repayByTerm));
         responseBean.setResultStr(JSON.toJSONString(repayByTerm));
         return responseBean;

@@ -16,6 +16,8 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -153,7 +155,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         int total = userTradeDetailCustomizeMapper.countUserWithdrawRecordTotal(params);
         return total;
     }
-
+    private Logger _log = LoggerFactory.getLogger(TradeDetailServiceImpl.class);
     @Override
     public List<AppTradeListCustomize> searchAppTradeDetailList(AppTradeDetailBeanRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -163,7 +165,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         params.put("tradeMonth", request.getMonth());
         params.put("limitStart", request.getLimitStart());
         params.put("limitEnd", request.getLimitEnd());
-
+        _log.info("params："+JSONObject.toJSONString(params));
         List<AppTradeListCustomize> tradeList = userTradeDetailCustomizeMapper.searchAppTradeDetailList(params);
         List<AppTradeListCustomize> list = new ArrayList<AppTradeListCustomize>();
         Calendar cal = Calendar.getInstance();
@@ -234,7 +236,8 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         params.put("tradeType", request.getTradeType());
         params.put("tradeYear", request.getYear());
         params.put("tradeMonth", request.getMonth());
-        return userTradeDetailCustomizeMapper.countTradeDetailListRecordTotal(params);
+        int total =userTradeDetailCustomizeMapper.countTradeDetailListRecordTotal(params);
+        return total;
     }
 
     @Override

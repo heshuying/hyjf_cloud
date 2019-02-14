@@ -6,8 +6,8 @@ package com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoEntityVO;
+import com.hyjf.am.vo.trade.bifa.BifaUserInfoSHA256EntityVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
-import com.hyjf.am.vo.trade.bifa.UserInfoSHA256EntityVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -18,7 +18,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaCommonConstants;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaIndexDataService;
 import org.apache.commons.lang3.StringUtils;
@@ -220,7 +219,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
                 jsonObject.put("userId",bean.getUserId());
                 jsonObject.put("trueName",bean.getTrueName());
                 jsonObject.put("idCard",bean.getIdCard());
-                UserInfoSHA256EntityVO sha256Entity = this.selectUserIdToSHA256(jsonObject);
+                BifaUserInfoSHA256EntityVO sha256Entity = this.selectUserIdToSHA256(jsonObject);
                 BifaIndexUserInfoEntityVO resultFromMongo = csMessageClient.getBorrowUserInfoFromMongo(bean.getBorrowNid());
                 if (resultFromMongo == null) {
                     //已开户的用户没有上报时 才执行上报操作
@@ -326,7 +325,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
             String isOpenUp = "1";
             String isLenderZeroUp = "0";
             String isLenderOneUp = "0";
-            List<UserInfoSHA256EntityVO> userInfoSHA256EntityList = csMessageClient.getUserInfoSHA256(isOpenUp,isLenderZeroUp,isLenderOneUp);
+            List<BifaUserInfoSHA256EntityVO> userInfoSHA256EntityList = csMessageClient.getUserInfoSHA256(isOpenUp,isLenderZeroUp,isLenderOneUp);
 
             String currDate = GetDate.formatDate();
 
@@ -345,7 +344,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
             List<Integer> userList = new ArrayList<>();
 
             for (int i = 0; i < userInfoSHA256EntityList.size(); i++) {
-                UserInfoSHA256EntityVO entity = userInfoSHA256EntityList.get(i);
+                BifaUserInfoSHA256EntityVO entity = userInfoSHA256EntityList.get(i);
                 //出借等于0的用户的注册时间
                 UserVO users = this.getUserByUserId(entity.getUserId());
                 //没有上报
@@ -415,7 +414,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
                 jsonObject.put("userId",bean.getUserId());
                 jsonObject.put("trueName",bifaIndexUserInfoBean.getTrueName());
                 jsonObject.put("idCard",bifaIndexUserInfoBean.getIdCard());
-                UserInfoSHA256EntityVO userInfoSHA256Entity = this.selectUserIdToSHA256(jsonObject);
+                BifaUserInfoSHA256EntityVO userInfoSHA256Entity = this.selectUserIdToSHA256(jsonObject);
                 //出借大于0的用户
                 //判断借款大于0的用户是否上报
                 if ("0".equals(userInfoSHA256Entity.getIsLenderOneUp())) {
@@ -494,7 +493,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
                 jsonObject.put("userId",bean.getUserId());
                 jsonObject.put("trueName",bean.getTrueName());
                 jsonObject.put("idCard",bean.getIdCard());
-                UserInfoSHA256EntityVO sha256Entity = this.selectUserIdToSHA256(jsonObject);
+                BifaUserInfoSHA256EntityVO sha256Entity = this.selectUserIdToSHA256(jsonObject);
                 if ("0".equals(sha256Entity.getIsOpenUp())) {
                     //已开户的用户没有上报时 才执行上报操作
                     sb.append(sha256Entity.getSha256() + "," + bean.getRegDate() + "\r\n");

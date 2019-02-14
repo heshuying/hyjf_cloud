@@ -41,7 +41,7 @@
 		 CASE WHEN hu.user_type = 0 THEN hui.idcard
 		 WHEN hu.user_type = 1 THEN hcoar.busi_code
 		 ELSE '' END idCard,
-		 FROM_UNIXTIME(hu.reg_time,'%Y-%m-%d') regDate
+		 DATE_FORMAT(hu.reg_time,'%Y-%m-%d') regDate
 		  from ht_user hu
 		  left join ht_user_info hui on hu.user_id = hui.user_id
 		  left join ht_corp_open_account_record hcoar on hu.user_id = hcoar.user_id

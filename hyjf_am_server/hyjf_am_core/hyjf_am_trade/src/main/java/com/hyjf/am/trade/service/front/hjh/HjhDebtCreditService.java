@@ -115,4 +115,8 @@ public interface HjhDebtCreditService {
      * @date 2019/1/31 11:04
      */
     HjhDebtCredit doSelectHjhDebtCreditByCreditNid(String creditNid);
+
+    List<HjhDebtCredit> getHjhDebtCreditListByCreditNid(String creditNid);
+
+    List<HjhDebtCredit> getHjhDebtCreditListByBorrowNid(String borrowNid);
 }

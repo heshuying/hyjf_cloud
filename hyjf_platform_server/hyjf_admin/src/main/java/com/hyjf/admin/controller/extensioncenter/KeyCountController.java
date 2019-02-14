@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -85,10 +86,11 @@ public class KeyCountController extends BaseController {
 
 	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody KeyCountRequest form) throws Exception {
 		// 表格sheet名称
-		String sheetName = "关键词统计";
+		String sheetName = "关键词统计1";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
+		form.setLimitStart(-1);
 		KeyCountResponse keyCountResponse = keyCountService.searchAction(form);
 		List<KeyCountVO> recordList = keyCountResponse.getResultList();
 		// 列头
@@ -162,8 +164,8 @@ public class KeyCountController extends BaseController {
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 查询
+        form.setLimitStart(-1);
 		KeyCountResponse keyCountResponse = keyCountService.searchAction(form);
-		List<KeyCountVO> recordList = keyCountResponse.getResultList();
 		// sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 
@@ -172,7 +174,7 @@ public class KeyCountController extends BaseController {
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
 		Integer totalCount = keyCountResponse.getCount();
-
+		List<KeyCountVO> recordList = keyCountResponse.getResultList();
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
 				: totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
@@ -180,7 +182,7 @@ public class KeyCountController extends BaseController {
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		} else {
+		}else {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
 		}
 
