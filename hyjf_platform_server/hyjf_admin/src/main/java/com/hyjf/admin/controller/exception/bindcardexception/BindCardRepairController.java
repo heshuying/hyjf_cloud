@@ -33,7 +33,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 @Api(value = "异常中心-江西银行卡异常",tags = "异常中心-江西银行卡异常")
 @RestController
 @RequestMapping(value = "/hyjf-admin/exception/bindcardexception")
-public class BindCardExceptionController extends BaseController {
+public class BindCardRepairController extends BaseController {
 
     @Autowired
     private BindCardExceptionService bindCardExceptionService;

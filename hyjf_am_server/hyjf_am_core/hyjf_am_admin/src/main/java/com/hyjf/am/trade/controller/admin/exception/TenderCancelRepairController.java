@@ -27,8 +27,8 @@ import java.util.List;
  * @author: sunpeikai
  * @version: TenderCancelRepairController, v0.1 2018/7/11 10:38
  */
-@RestController(value = "tradeTenderCancelExceptionController")
-@RequestMapping("/am-trade/tendercancelexception")
+@RestController(value = "tradeTenderCancelRepairController")
+@RequestMapping("/am-trade/tendercancelrepair")
 @Api(value = "异常中心-银行出借撤销异常",tags = "异常中心-银行出借撤销异常")
 public class TenderCancelRepairController extends BaseController {
 
@@ -42,7 +42,7 @@ public class TenderCancelRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据筛选条件查询银行出借撤销异常的数据count", notes = "根据筛选条件查询银行出借撤销异常的数据count")
-    @PostMapping(value = "/gettendercancelexceptioncount")
+    @PostMapping(value = "/gettendercancelrepaircount")
     public Integer getTenderCancelExceptionCount(@RequestBody TenderCancelExceptionRequest request){
         return tenderCancelRepairService.getTenderCancelExceptionCount(request);
     }
@@ -54,7 +54,7 @@ public class TenderCancelRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据筛选条件查询银行出借撤销异常list", notes = "根据筛选条件查询银行出借撤销异常list")
-    @PostMapping(value = "/searchtendercancelexceptionlist")
+    @PostMapping(value = "/searchtendercancelrepairlist")
     public BorrowTenderTmpResponse searchTenderCancelExceptionList(@RequestBody TenderCancelExceptionRequest request){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();
         Integer count = tenderCancelRepairService.getTenderCancelExceptionCount(request);

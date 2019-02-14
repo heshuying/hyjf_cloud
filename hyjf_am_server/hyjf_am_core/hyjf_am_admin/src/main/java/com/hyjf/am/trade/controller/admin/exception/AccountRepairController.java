@@ -24,8 +24,8 @@ import java.util.List;
  * @author: sunpeikai
  * @version: AccountRepairController, v0.1 2018/7/11 15:19
  */
-@RestController(value = "tradeAccountExceptionController")
-@RequestMapping("/am-trade/accountexception")
+@RestController(value = "tradeAccountRepairController")
+@RequestMapping("/am-trade/accountrepair")
 @Api(value = "异常中心-汇付对账",tags = "异常中心-汇付对账")
 public class AccountRepairController extends BaseController {
 
@@ -39,7 +39,7 @@ public class AccountRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "查询汇付对账异常count", notes = "查询汇付对账异常count")
-    @PostMapping(value = "/getaccountexceptioncount")
+    @PostMapping(value = "/getaccountrepaircount")
     public Integer getAccountExceptionCount(@RequestBody AccountExceptionRequest request){
         return accountRepairService.getAccountExceptionCount(request);
     }
@@ -51,7 +51,7 @@ public class AccountRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "查询汇付对账异常列表", notes = "查询汇付对账异常列表")
-    @PostMapping(value = "/searchaccountexceptionlist")
+    @PostMapping(value = "/searchaccountrepairlist")
     public AccountExceptionResponse searchAccountExceptionList(@RequestBody AccountExceptionRequest request){
         AccountExceptionResponse response = new AccountExceptionResponse();
         Integer count = accountRepairService.getAccountExceptionCount(request);
@@ -78,7 +78,7 @@ public class AccountRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据id查询汇付对账异常信息", notes = "根据id查询汇付对账异常信息")
-    @GetMapping(value = "/searchaccountexceptionbyid/{id}")
+    @GetMapping(value = "/searchaccountrepairbyid/{id}")
     public AccountExceptionResponse searchAccountExceptionById(@PathVariable Integer id){
         AccountExceptionResponse response = new AccountExceptionResponse();
         AccountException accountException = accountRepairService.searchAccountExceptionById(id);
@@ -95,7 +95,7 @@ public class AccountRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "更新汇付对账异常", notes = "更新汇付对账异常")
-    @PostMapping(value = "/updateaccountexception")
+    @PostMapping(value = "/updateaccountrepair")
     public Integer updateAccountException(@RequestBody AccountExceptionVO accountExceptionVO){
         return accountRepairService.updateAccountException(accountExceptionVO);
     }
@@ -107,7 +107,7 @@ public class AccountRepairController extends BaseController {
      * @return
      */
     @ApiOperation(value = "删除汇付对账异常", notes = "删除汇付对账异常")
-    @GetMapping(value = "/deleteaccountexceptionbyid/{id}")
+    @GetMapping(value = "/deleteaccountrepairbyid/{id}")
     public Integer deleteAccountExceptionById(@PathVariable Integer id){
         return accountRepairService.deleteAccountExceptionById(id);
     }
