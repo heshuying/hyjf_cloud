@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.trade.bean.repay.RepayBean;
@@ -165,12 +164,11 @@ public class BorrowRecoverController extends BaseController {
 				flag =this.calculateRecover(repay, borrow, repayTimeStr, delayDays,flag);
 			}catch (Exception e){
 				logger.info("判断用户是否逾期失败......");
-				response.setRtn(Response.FAIL);
-				response.setMessage(Response.FAIL_MSG);
-				return response;
+				e.printStackTrace();
+				return null;
 			}
-			response.setResultBoolean(flag);
 		}
+		response.setResultBoolean(flag);
 		return response;
 	}
 
