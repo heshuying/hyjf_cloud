@@ -236,9 +236,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         params.put("tradeType", request.getTradeType());
         params.put("tradeYear", request.getYear());
         params.put("tradeMonth", request.getMonth());
-        _log.info("params："+JSONObject.toJSONString(params));
         int total =userTradeDetailCustomizeMapper.countTradeDetailListRecordTotal(params);
-        _log.info("total："+total);
         return total;
     }
 
