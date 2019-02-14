@@ -4471,7 +4471,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 */
 	@Override
 	public Integer deleteBorrowTenderTmp(String orgOrderId) {
-		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmp/" + orgOrderId;
+		String url = "http://AM-TRADE/am-trade/tendercancelrepair/deleteBorrowTenderTmp/" + orgOrderId;
 		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
@@ -4486,7 +4486,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 */
 	@Override
 	public int deleteBorrowTenderTmpByParam(int userId, String borrowNid, String orderId) {
-		String url = "http://AM-TRADE/am-trade/tendercancelexception/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
+		String url = "http://AM-TRADE/am-trade/tendercancelrepair/deleteBorrowTenderTmpByParam/" + userId + "/" + borrowNid + "/" + orderId;
 		IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;

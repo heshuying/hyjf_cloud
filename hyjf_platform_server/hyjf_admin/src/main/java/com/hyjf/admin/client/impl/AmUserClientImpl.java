@@ -193,7 +193,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
-		String url = "http://AM-ADMIN/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
+		String url = "http://AM-ADMIN/am-user/borrow_regist_repair/searchbankopenaccount/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -1974,7 +1974,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int getBankCardExceptionCount(BankCardExceptionRequest request) {
-		String url = "http://AM-ADMIN/am-user/bankcardexception/getBankCardExceptionCount";
+		String url = "http://AM-ADMIN/am-user/bankcardrepair/getBankCardRepairCount";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();
@@ -1990,7 +1990,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
-		String url = "http://AM-ADMIN/am-user/bankcardexception/searchBankCardExceptionList";
+		String url = "http://AM-ADMIN/am-user/bankcardrepair/searchBankCardRepairList";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -2006,7 +2006,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
-		String url = "http://AM-ADMIN/am-user/bankcardexception/updateAccountBankByUserId";
+		String url = "http://AM-ADMIN/am-user/bankcardrepair/updateAccountBankByUserId";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultMsg();

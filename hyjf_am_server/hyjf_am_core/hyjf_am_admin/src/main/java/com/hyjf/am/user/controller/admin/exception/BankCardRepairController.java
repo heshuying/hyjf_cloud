@@ -8,7 +8,7 @@ import com.hyjf.am.response.admin.AdminBankCardExceptionResponse;
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.customize.AdminBankCardExceptionCustomize;
-import com.hyjf.am.user.service.admin.exception.BankCardExceptionService;
+import com.hyjf.am.user.service.admin.exception.BankCardRepairService;
 import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -24,15 +24,15 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BankCardExceptionController, v0.1 2018/8/14 15:01
+ * @version: BankCardRepairController, v0.1 2018/8/14 15:01
  */
 @Api(value = "江西银行卡异常",tags = "江西银行卡异常")
-@RestController(value = "userBankCardExceptionController")
-@RequestMapping(value = "/am-user/bankcardexception")
-public class BankCardExceptionController extends BaseController {
+@RestController(value = "userBankCardRepairController")
+@RequestMapping(value = "/am-user/bankcardrepair")
+public class BankCardRepairController extends BaseController {
 
     @Autowired
-    private BankCardExceptionService bankCardExceptionService;
+    private BankCardRepairService bankCardRepairService;
 
     /**
      * 银行卡异常count
@@ -40,10 +40,10 @@ public class BankCardExceptionController extends BaseController {
      * @param
      * @return
      */
-    @PostMapping(value = "/getBankCardExceptionCount")
+    @PostMapping(value = "/getBankCardRepairCount")
     public AdminBankCardExceptionResponse getBankCardExceptionCount(@RequestBody BankCardExceptionRequest request){
         AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
-        int count = bankCardExceptionService.getBankCardExceptionCount(request);
+        int count = bankCardRepairService.getBankCardExceptionCount(request);
         response.setCount(count);
         response.setRtn(Response.SUCCESS);
         return response;
@@ -55,18 +55,18 @@ public class BankCardExceptionController extends BaseController {
      * @param
      * @return
      */
-    @PostMapping(value = "/searchBankCardExceptionList")
+    @PostMapping(value = "/searchBankCardRepairList")
     public AdminBankCardExceptionResponse searchBankCardExceptionList(@RequestBody BankCardExceptionRequest request){
         AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
-        Integer count = bankCardExceptionService.getBankCardExceptionCount(request);
+        Integer count = bankCardRepairService.getBankCardExceptionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
-        logger.info("searchBankCardExceptionList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
-        List<AdminBankCardExceptionCustomize> bankCardExceptionCustomizeList = bankCardExceptionService.searchBankCardExceptionList(request);
+        logger.info("searchBankCardRepairList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
+        List<AdminBankCardExceptionCustomize> bankCardExceptionCustomizeList = bankCardRepairService.searchBankCardExceptionList(request);
         if(!CollectionUtils.isEmpty(bankCardExceptionCustomizeList)){
             List<AdminBankCardExceptionCustomizeVO> bankCardExceptionCustomizeVOList = CommonUtils.convertBeanList(bankCardExceptionCustomizeList,AdminBankCardExceptionCustomizeVO.class);
             response.setResultList(bankCardExceptionCustomizeVOList);
@@ -84,7 +84,7 @@ public class BankCardExceptionController extends BaseController {
     @PostMapping(value = "/updateAccountBankByUserId")
     public AdminBankCardExceptionResponse updateAccountBankByUserId(@RequestBody BankCardExceptionRequest request){
         AdminBankCardExceptionResponse response = new AdminBankCardExceptionResponse();
-        String resultMsg = bankCardExceptionService.updateAccountBankByUserId(request);
+        String resultMsg = bankCardRepairService.updateAccountBankByUserId(request);
         response.setResultMsg(resultMsg);
         response.setRtn(Response.SUCCESS);
         return response;

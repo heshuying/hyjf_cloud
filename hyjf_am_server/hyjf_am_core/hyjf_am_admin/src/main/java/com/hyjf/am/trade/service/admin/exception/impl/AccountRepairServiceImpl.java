@@ -7,7 +7,7 @@ import com.hyjf.am.resquest.admin.AccountExceptionRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountExceptionMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountException;
 import com.hyjf.am.trade.dao.model.auto.AccountExceptionExample;
-import com.hyjf.am.trade.service.admin.exception.AccountExceptionService;
+import com.hyjf.am.trade.service.admin.exception.AccountRepairService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AccountExceptionVO;
 import com.hyjf.common.util.CommonUtils;
@@ -20,10 +20,10 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: AccountExceptionServiceImpl, v0.1 2018/7/11 15:22
+ * @version: AccountRepairServiceImpl, v0.1 2018/7/11 15:22
  */
-@Service(value = "tradeAccountExceptionServiceImpl")
-public class AccountExceptionServiceImpl extends BaseServiceImpl implements AccountExceptionService {
+@Service(value = "tradeAccountRepairServiceImpl")
+public class AccountRepairServiceImpl extends BaseServiceImpl implements AccountRepairService {
 
     @Autowired
     private AccountExceptionMapper accountExceptionMapper;

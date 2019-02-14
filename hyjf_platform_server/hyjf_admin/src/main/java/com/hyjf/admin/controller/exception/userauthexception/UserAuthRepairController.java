@@ -35,7 +35,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 @RestController
 @RequestMapping("/hyjf-admin/exception/user_auth_exception")
 @Api(value = "异常中心-自动出借债转授权异常",tags = "异常中心-自动出借债转授权异常")
-public class UserAuthExceptionController extends BaseController {
+public class UserAuthRepairController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -72,7 +72,7 @@ public class UserAuthExceptionController extends BaseController {
     public AdminResult synUserAuth(@RequestBody AdminUserAuthListRequest request){
         Integer userId = Integer.valueOf(request.getUserId());
         Integer type = request.getType();
-        logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
+        //logger.info("同步用户[{}]的授权状态,同步类型[{}]",userId,type);
         AdminUserAuthListResponse response = userAuthExceptionService.synUserAuth(userId, type);
 
         if(AdminResponse.isSuccess(response)){
