@@ -8,7 +8,7 @@ import com.hyjf.am.response.admin.AccountExceptionResponse;
 import com.hyjf.am.resquest.admin.AccountExceptionRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.AccountException;
-import com.hyjf.am.trade.service.admin.exception.AccountExceptionService;
+import com.hyjf.am.trade.service.admin.exception.AccountRepairService;
 import com.hyjf.am.vo.admin.AccountExceptionVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -22,15 +22,15 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: AccountExceptionController, v0.1 2018/7/11 15:19
+ * @version: AccountRepairController, v0.1 2018/7/11 15:19
  */
 @RestController(value = "tradeAccountExceptionController")
 @RequestMapping("/am-trade/accountexception")
 @Api(value = "异常中心-汇付对账",tags = "异常中心-汇付对账")
-public class AccountExceptionController extends BaseController {
+public class AccountRepairController extends BaseController {
 
     @Autowired
-    private AccountExceptionService accountExceptionService;
+    private AccountRepairService accountRepairService;
 
     /**
      * 查询汇付对账异常count
@@ -41,7 +41,7 @@ public class AccountExceptionController extends BaseController {
     @ApiOperation(value = "查询汇付对账异常count", notes = "查询汇付对账异常count")
     @PostMapping(value = "/getaccountexceptioncount")
     public Integer getAccountExceptionCount(@RequestBody AccountExceptionRequest request){
-        return accountExceptionService.getAccountExceptionCount(request);
+        return accountRepairService.getAccountExceptionCount(request);
     }
 
     /**
@@ -54,7 +54,7 @@ public class AccountExceptionController extends BaseController {
     @PostMapping(value = "/searchaccountexceptionlist")
     public AccountExceptionResponse searchAccountExceptionList(@RequestBody AccountExceptionRequest request){
         AccountExceptionResponse response = new AccountExceptionResponse();
-        Integer count = accountExceptionService.getAccountExceptionCount(request);
+        Integer count = accountRepairService.getAccountExceptionCount(request);
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
@@ -62,7 +62,7 @@ public class AccountExceptionController extends BaseController {
             request.setLimitEnd(paginator.getLimit());
         }
         logger.info("searchAccountExceptionList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
-        List<AccountException> accountExceptionList = accountExceptionService.searchAccountExceptionList(request);
+        List<AccountException> accountExceptionList = accountRepairService.searchAccountExceptionList(request);
         if(!CollectionUtils.isEmpty(accountExceptionList)){
             List<AccountExceptionVO> accountExceptionVOList = CommonUtils.convertBeanList(accountExceptionList,AccountExceptionVO.class);
             response.setResultList(accountExceptionVOList);
@@ -81,7 +81,7 @@ public class AccountExceptionController extends BaseController {
     @GetMapping(value = "/searchaccountexceptionbyid/{id}")
     public AccountExceptionResponse searchAccountExceptionById(@PathVariable Integer id){
         AccountExceptionResponse response = new AccountExceptionResponse();
-        AccountException accountException = accountExceptionService.searchAccountExceptionById(id);
+        AccountException accountException = accountRepairService.searchAccountExceptionById(id);
         AccountExceptionVO accountExceptionVO = CommonUtils.convertBean(accountException,AccountExceptionVO.class);
         response.setResult(accountExceptionVO);
         response.setRtn(Response.SUCCESS);
@@ -97,7 +97,7 @@ public class AccountExceptionController extends BaseController {
     @ApiOperation(value = "更新汇付对账异常", notes = "更新汇付对账异常")
     @PostMapping(value = "/updateaccountexception")
     public Integer updateAccountException(@RequestBody AccountExceptionVO accountExceptionVO){
-        return accountExceptionService.updateAccountException(accountExceptionVO);
+        return accountRepairService.updateAccountException(accountExceptionVO);
     }
 
     /**
@@ -109,7 +109,7 @@ public class AccountExceptionController extends BaseController {
     @ApiOperation(value = "删除汇付对账异常", notes = "删除汇付对账异常")
     @GetMapping(value = "/deleteaccountexceptionbyid/{id}")
     public Integer deleteAccountExceptionById(@PathVariable Integer id){
-        return accountExceptionService.deleteAccountExceptionById(id);
+        return accountRepairService.deleteAccountExceptionById(id);
     }
 
 }

@@ -7,7 +7,7 @@ import com.hyjf.am.resquest.admin.BindCardExceptionRequest;
 import com.hyjf.am.user.dao.mapper.customize.BindCardExceptionCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankCardExample;
-import com.hyjf.am.user.service.admin.exception.BindCardExceptionService;
+import com.hyjf.am.user.service.admin.exception.BindCardRepairService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BindCardExceptionCustomizeVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -21,12 +21,12 @@ import java.util.List;
 
 /**
  * @author: sunpeikai
- * @version: BindCardExceptionServiceImpl, v0.1 2018/10/9 11:29
+ * @version: BindCardRepairServiceImpl, v0.1 2018/10/9 11:29
  */
-@Service(value = "userBindCardExceptionServiceImpl")
-public class BindCardExceptionServiceImpl extends BaseServiceImpl implements BindCardExceptionService {
+@Service(value = "userBindCardRepairServiceImpl")
+public class BindCardRepairServiceImpl extends BaseServiceImpl implements BindCardRepairService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BindCardExceptionServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BindCardRepairServiceImpl.class);
 
     @Autowired
     private BindCardExceptionCustomizeMapper bindCardExceptionCustomizeMapper;
