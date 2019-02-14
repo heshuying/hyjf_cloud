@@ -1138,7 +1138,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setType("4");
         request.setHost(host);
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectListNoCash(request);
+        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectList(request);
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
@@ -1154,7 +1154,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         String statusNewOnTime = "14";
         request.setStatus(statusNewOnTime);
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewOnTime = amTradeClient.searchAppProjectListNoCash(request);
+        List<AppProjectListCustomizeVO> listNewOnTime = amTradeClient.searchAppProjectList(request);
         if (listNewOnTime != null && listNewOnTime.size() > 0) {
             for (int i = 0; i < listNewOnTime.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
@@ -1169,7 +1169,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         //复审
         String status = "16";
         request.setStatus(status);
-        List<AppProjectListCustomizeVO> reviewList = amTradeClient.searchAppProjectListNoCash(request);
+        List<AppProjectListCustomizeVO> reviewList = amTradeClient.searchAppProjectList(request);
         if (reviewList != null && reviewList.size() > 0) {
             for (int i = 0; i < reviewList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = reviewList.get(i);
@@ -1183,7 +1183,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         //还款
         status = "17";
         request.setStatus(status);
-        List<AppProjectListCustomizeVO> repaymentList = amTradeClient.searchAppProjectListNoCash(request);
+        List<AppProjectListCustomizeVO> repaymentList = amTradeClient.searchAppProjectList(request);
         if (repaymentList != null && repaymentList.size() > 0) {
             for (int i = 0; i < repaymentList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = repaymentList.get(i);
