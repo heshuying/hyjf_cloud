@@ -5,7 +5,8 @@ package com.hyjf.cs.trade.controller.api.aems.repayplan;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.AemsBorrowRepayPlanCustomizeVO;
-import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.ProjectBeanVO;
+import com.hyjf.am.vo.trade.ProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
@@ -19,11 +20,12 @@ import com.hyjf.cs.trade.bean.AemsBorrowRepayPlanRequestBean;
 import com.hyjf.cs.trade.bean.AemsBorrowRepayPlanResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.aems.repayplan.AemsBorrowRepayPlanService;
+import com.hyjf.cs.trade.service.repay.RepayService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.SignUtil;
-import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +53,9 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
 
     @Autowired
     private AemsBorrowRepayPlanService aemsBorrowRepayPlanService;
+
+    @Autowired
+    private RepayService repayService;
     /**
      * 查询还款计划
      *
@@ -94,11 +100,12 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
 
             // 根据机构获取标的还款
             Integer totalCounts = this.aemsBorrowRepayPlanService.selectBorrowRepayPlanCountsByInstCode(requestBean);
+            logger.info("instCode"+instCode+"----repayStatus"+requestBean.getRepayType()+"----asset_id"+requestBean.getProductId());
             if (totalCounts == 0) {
-                logger.info("该机构未推送标的,或标的未放款");
+                logger.info("该资产不存在,或标的未放款/未还款");
                 resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000003);
                 resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000003);
-                resultBean.setStatusDesc("该机构未推送标的,或标的未放款");
+                resultBean.setStatusDesc("该资产不存在,或标的未放款/未还款");
                 return resultBean;
             }
             // 获取标的列表
@@ -175,10 +182,10 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
             // 根据机构获取标的还款
             Integer totalCounts = this.aemsBorrowRepayPlanService.selectBorrowRepayPlanCountsByInstCode(requestBean);
             if (totalCounts == 0) {
-                logger.info("该机构未推送标的,或标的未放款");
+                logger.info("该资产不存在,或标的未放款/未还款");
                 resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000003);
                 resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000003);
-                resultBean.setStatusDesc("该机构未推送标的,或标的未放款");
+                resultBean.setStatusDesc("该资产不存在,或标的未放款/未还款");
                 return resultBean;
             }
             // 获取标的列表
@@ -221,9 +228,24 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
                     if (!isMonth) {
                         continue;
                     }
+                    //查询各期提前还款减息
+                    ProjectBeanVO form =new  ProjectBeanVO();
+                    form.setBorrowNid(borrowNid);
+                    form.setUserId(borrow.getUserId()+"");
+                    //查询各期提前还款减息
+                    ProjectBeanVO repayProject=null;
+                    List<ProjectRepayVO> projectRepayBean=null;
                     // 根据标的编号查询还款计划
                     List<BorrowRepayPlanVO> repayPlanList = this.aemsBorrowRepayPlanService.selectBorrowRepayPlanByBorrowNid(borrowNid);
                     if (repayPlanList != null && repayPlanList.size() > 0) {
+                        //判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+                        Boolean flag=aemsBorrowRepayPlanService.getFlag(borrow);
+                        if(flag){
+                            //true
+                            repayProject = repayService.getRepayProjectDetail(form);
+                            projectRepayBean = repayProject.getUserRepayList();
+                        }
+                        int ii=0;
                         // 循环还款计划
                         for (BorrowRepayPlanVO borrowRepayPlan : repayPlanList) {
                             AemsBorrowRepayPlanCustomizeVO result = new AemsBorrowRepayPlanCustomizeVO();
@@ -251,8 +273,50 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
                             result.setRepayAccount(String.valueOf(borrowRepayPlan.getRepayAccountAll()));
                             // 还款状态
                             result.setRepayStatus(String.valueOf(borrowRepayPlan.getRepayStatus()));
-                            // 本期应还金额
-                            result.setPlanRepayTotal(String.valueOf(borrowRepayPlan.getRepayAccount().add(borrowRepayPlan.getRepayFee())));
+
+                            // 本期应还总额
+                            result.setPlanRepayTotal(String.valueOf(borrowRepayPlan.getRepayCapital().add(borrowRepayPlan.getRepayInterest()).add(borrowRepayPlan.getRepayFee())));
+                            // 本期实际还款本息
+                            result.setRepayAccount(String.valueOf(borrowRepayPlan.getRepayCapitalYes().add(borrowRepayPlan.getRepayInterestYes())));
+
+                            //  本期实还本金
+                            result.setRepayCapitalYes(String.valueOf(borrowRepayPlan.getRepayCapitalYes()));
+                            // 本期实还利息
+                            result.setRepayInterestYes(String.valueOf(borrowRepayPlan.getRepayInterestYes()));
+                            // 本期实还服务费
+                            if(borrowRepayPlan.getRepayStatus() != null&&borrowRepayPlan.getRepayStatus().intValue()==1){
+                                result.setManageFeeYes(StringUtil.valueOf(borrowRepayPlan.getRepayFee()));
+                            }else{
+                                result.setManageFeeYes("0.00");
+                            }
+                            // 还款服务费
+                            result.setRepayFee(StringUtil.valueOf(borrowRepayPlan.getRepayFee()));
+                            // 提前还款减息
+                            result.setReduceInterest(StringUtil.valueOf(borrowRepayPlan.getChargeInterest()));
+                            // 逾期违约金
+                            result.setLateInterest(StringUtil.valueOf(borrowRepayPlan.getLateInterest()));
+                            BigDecimal repay=borrowRepayPlan.getRepayCapital().add(borrowRepayPlan.getRepayInterest());
+                            if(borrowRepayPlan.getRepayAccount().compareTo(repay) == 1){
+                                result.setLateInterest(StringUtil.valueOf(borrowRepayPlan.getRepayAccount().subtract(repay)));
+                            }
+                            // 逾期天
+                            result.setLateDays(borrowRepayPlan.getLateDays());
+                            //实还总额=本期实际还款本息+本期实还服务费+本期逾期违约金-本期提前还款减息+延期）（已还款返回
+                            BigDecimal repayTotal = borrowRepayPlan.getRepayAccount().add(borrowRepayPlan.getRepayFee()).add(borrowRepayPlan.getLateInterest())
+                                    .add(borrowRepayPlan.getChargeInterest()).add(borrowRepayPlan.getDelayInterest());
+                            if(borrowRepayPlan.getRepayStatus() != null&&borrowRepayPlan.getRepayStatus().intValue()==1){
+                                result.setRepayTotal(StringUtil.valueOf(repayTotal));
+                            }else{
+                                result.setRepayTotal("0.00");
+                            }
+                            if(!CollectionUtils.isEmpty(projectRepayBean)&&projectRepayBean.size() >0){
+                                //获取提前还款间隙
+                                if(StringUtils.isNotEmpty(projectRepayBean.get(ii).getStatus())&&"0".equals(projectRepayBean.get(ii).getStatus())){
+                                    result.setReduceInterest(projectRepayBean.get(ii).getChargeInterest());
+                                }
+                            }
+                            ii++;
+
                             detailList.add(result);
                         }
                     }
@@ -274,4 +338,5 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
         }
         return resultBean;
     }
+
 }

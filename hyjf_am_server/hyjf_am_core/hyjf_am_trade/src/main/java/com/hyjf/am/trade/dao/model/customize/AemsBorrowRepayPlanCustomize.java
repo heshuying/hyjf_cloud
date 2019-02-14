@@ -12,7 +12,22 @@ import java.io.Serializable;
  * @version AemsBorrowRepayPlanCustomize, v0.1 2018/10/16 19:04
  */
 public class AemsBorrowRepayPlanCustomize implements Serializable{
-
+    // 逾期服务费
+    private Integer lateDays;
+    // 逾期服务费
+    private String lateInterest;
+    // 还款服务费
+    private String repayFee;
+    // 实还本金
+    private String repayCapitalYes;
+    // 实还利息
+    private String repayInterestYes;
+    // 借到金额
+    private String borrowAccountYes;
+    // 实还服务费
+    private String manageFeeYes;
+    // 提前还款减息
+    private String reduceInterest;
     // 标的编号
     private String borrowNid;
     // 借款金额
@@ -39,7 +54,7 @@ public class AemsBorrowRepayPlanCustomize implements Serializable{
     private String manageFee;
     // 本期实际还款本息
     private String repayAccount;
-    // 还款状态 0：未还款 1：已还款
+    // 资产状态 0：未还款 1：已还款
     private String repayStatus;
     // 本期应还金额
     private String planRepayTotal;
@@ -192,5 +207,69 @@ public class AemsBorrowRepayPlanCustomize implements Serializable{
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public Integer getLateDays() {
+        return lateDays;
+    }
+
+    public void setLateDays(Integer lateDays) {
+        this.lateDays = lateDays;
+    }
+
+    public String getLateInterest() {
+        return lateInterest;
+    }
+
+    public void setLateInterest(String lateInterest) {
+        this.lateInterest = lateInterest;
+    }
+
+    public String getRepayFee() {
+        return repayFee;
+    }
+
+    public void setRepayFee(String repayFee) {
+        this.repayFee = repayFee;
+    }
+
+    public String getRepayCapitalYes() {
+        return repayCapitalYes;
+    }
+
+    public void setRepayCapitalYes(String repayCapitalYes) {
+        this.repayCapitalYes = repayCapitalYes;
+    }
+
+    public String getRepayInterestYes() {
+        return repayInterestYes;
+    }
+
+    public void setRepayInterestYes(String repayInterestYes) {
+        this.repayInterestYes = repayInterestYes;
+    }
+
+    public String getBorrowAccountYes() {
+        return borrowAccountYes;
+    }
+
+    public void setBorrowAccountYes(String borrowAccountYes) {
+        this.borrowAccountYes = borrowAccountYes;
+    }
+
+    public String getManageFeeYes() {
+        return manageFeeYes;
+    }
+
+    public void setManageFeeYes(String manageFeeYes) {
+        this.manageFeeYes = manageFeeYes;
+    }
+
+    public String getReduceInterest() {
+        return reduceInterest;
+    }
+
+    public void setReduceInterest(String reduceInterest) {
+        this.reduceInterest = reduceInterest;
     }
 }
