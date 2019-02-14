@@ -19,7 +19,7 @@ public interface BifaDataReportService extends BaseService {
 
     BifaBorrowInfoEntity getBifaBorrowInfoFromMongoDB(String borrowNid);
 
-    UserInfoSHA256Entity selectUserIdToSHA256(JSONObject jsonObject);
+    BifaUserInfoSHA256Entity selectUserIdToSHA256(JSONObject jsonObject);
 
     void insertBorrowInfoReportData(BifaBorrowInfoEntity data);
 
@@ -61,7 +61,7 @@ public interface BifaDataReportService extends BaseService {
 
     void updateUserIndexReportStatus(Integer userId, String dataType);
 
-    List<UserInfoSHA256Entity> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp);
+    List<BifaUserInfoSHA256Entity> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp);
 
     BifaIndexUserInfoEntity getBorrowUserInfoFromMongo(String borrowNid);
 
