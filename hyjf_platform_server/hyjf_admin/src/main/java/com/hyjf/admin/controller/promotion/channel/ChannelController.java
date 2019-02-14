@@ -228,7 +228,7 @@ public class ChannelController extends BaseController {
 
         }
         if (record.getUtmReferrer() != null && record.getUtmReferrer() != 0) {
-            strBuf.append("&utm_referrer=");
+            strBuf.append("&refferUserId=");
             strBuf.append(record.getUtmReferrer());
 
         }
