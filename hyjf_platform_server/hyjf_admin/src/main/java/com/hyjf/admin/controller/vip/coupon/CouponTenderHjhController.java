@@ -196,7 +196,7 @@ public class CouponTenderHjhController extends BaseController {
                 break;
             }
         }
-        DataSet2ExcelSXSSFHelper.write2Response(request, response, URLEncoder.encode(fileName, CustomConstants.UTF8), workbook);
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
     private Map<String, String> buildMap() {
