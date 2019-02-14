@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.trade.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
@@ -117,6 +118,7 @@ public class TradeDetailServiceImpl extends BaseTradeServiceImpl implements Trad
         AppTradeDetailBean appTradeDetailBean=new AppTradeDetailBean();
         // 统计相应的用户出借项目总数
         int recordTotal = this.amTradeClient.countAppTradeDetailListRecordTotal(trade);
+        logger.info("recordTotal:"+recordTotal);
         Page page = Page.initPage(trade.getCurrPage(), trade.getPageSize());
         page.setTotal(recordTotal);
         trade.setLimitStart(page.getOffset());
