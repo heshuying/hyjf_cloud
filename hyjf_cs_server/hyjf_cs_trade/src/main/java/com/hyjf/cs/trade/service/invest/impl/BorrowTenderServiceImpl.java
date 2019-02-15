@@ -2138,16 +2138,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 该项目只能新手出借
             if (!isNew) {
                 logger.error("该项目只能新手出借  {} ",JSONObject.toJSONString(bean));
+                try {
+                    boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
+                    if (!flag) {
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                    }
+                } catch (Exception ee) {
+                    logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                }
                 throw new CheckException(MsgEnum.ERR_TRADE_NEW_USER);
             }
         }
         BigDecimal amount = new BigDecimal(txAmount);
         // 出借金额大于0时候才执行
         if(amount.compareTo(BigDecimal.ZERO)==1){
-            // redis扣减
-            redisTender(userId, borrowNid, txAmount);
             // 操作数据库表
             try{
+                // redis扣减
+                redisTender(userId, borrowNid, txAmount);
+                logger.info("userId:{}   borrowNid:{}   redis减扣成功，开始进行投资",userId,borrowNid);
                 this.borrowTender(borrow, bean);
             }catch (Exception e){
                 // 回滚redis
