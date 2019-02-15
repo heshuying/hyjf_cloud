@@ -10,13 +10,17 @@ import java.util.List;
  */
 
 public interface AppBorrowImageService {
-
+    /**
+     * 查询条数
+     * @return
+     */
+    Integer getCount();
     /**
      * 获取列表
      *
      * @return
      */
-    public List<AppBorrowImage> getRecordList(AppBorrowImage config, int limitStart, int limitEnd);
+    public List<AppBorrowImage> getRecordList( int limitStart, int limitEnd);
 
     /**
      * 获取单个

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * AEMSY用户
+ * AEMS用户
  *
  * @author liuyang
  * @version AemsUserRegisterController, v0.1 2018/12/6 9:58
