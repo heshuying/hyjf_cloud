@@ -124,6 +124,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 	public void deleteById(Integer id){
 		WhereaboutsPageConfig record = new WhereaboutsPageConfig();
 		record.setDelFlag(CustomConstants.FALG_DEL);
+		record.setId(id);
 		// 操作时间
 		record.setUpdateTime(GetDate.getDate());
 		whereaboutsPageConfigMapper.updateByPrimaryKey(record);
