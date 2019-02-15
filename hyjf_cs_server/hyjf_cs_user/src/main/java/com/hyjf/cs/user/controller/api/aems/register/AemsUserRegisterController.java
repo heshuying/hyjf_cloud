@@ -4,8 +4,9 @@
 package com.hyjf.cs.user.controller.api.aems.register;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.user.bean.AemsUserRegisterRequestBean;
 import com.hyjf.cs.user.bean.AemsUserRegisterResultBean;
@@ -16,7 +17,6 @@ import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * AEMS用户
@@ -56,6 +57,10 @@ public class AemsUserRegisterController extends BaseUserController {
         aemsUserRegisterService.apiCheckParam(registerRequest);
         //获取ip
         String ip = GetCilentIP.getIpAddr(request);
+        // 身份证号
+        String idCard = aemsUserRegisterRequestBean.getIdCard();
+        // 真实姓名
+        String trueName = aemsUserRegisterRequestBean.getTrueName();
         //验证手机号是否已被注册
         UserVO user = aemsUserRegisterService.getUsersByMobile(registerRequest.getMobile());
         if (null != user) {
@@ -64,9 +69,17 @@ public class AemsUserRegisterController extends BaseUserController {
             result.setStatusDesc(MsgEnum.STATUS_ZC000005.getMsg());
             result.setIsOpenAccount(String.valueOf(user.getBankOpenAccount()));
             if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
-                BankOpenAccountVO bankOpenAccount = aemsUserRegisterService.getBankOpenAccount(user.getUserId());
-                if (bankOpenAccount != null && StringUtils.isNotEmpty(bankOpenAccount.getAccount())) {
-                    result.setAccount(bankOpenAccount.getAccount());
+                UserInfoVO usersInfo = aemsUserRegisterService.getUserInfo(user.getUserId());
+                if (StringUtils.isNotBlank(idCard) && StringUtils.isNotBlank(trueName) &&
+                        Objects.equals(usersInfo.getTruename(), trueName) && Objects.equals(usersInfo.getIdcard(), idCard)) {
+                    result.setStatus(AemsErrorCodeConstant.SUCCESS);
+                    result.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
+                    result.setStatusDesc("注册成功");
+                    return result;
+                } else if (StringUtils.isNotBlank(idCard) && StringUtils.isNotBlank(trueName)){
+                    result.setStatusForResponse(AemsErrorCodeConstant.STATUS_ZC000026);
+                    result.setStatusDesc("身份校验不通过");
+                    return result;
                 }
             }
             if (user.getIsSetPassword() != null) {
