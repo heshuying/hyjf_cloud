@@ -6274,6 +6274,10 @@ public class AmTradeClientImpl implements AmTradeClient {
                 "http://AM-TRADE/am-trade/aems/repayplan/selectBorrowRepayPlanCountsByInstCode", param, AemsBorrowRepayPlanCustomizeResponse.class);
         if (response != null) {
             return response.getCount();
+        }
+        return 0;
+    }
+
     @Override
     public BooleanResponse updateHjhPlanJoinOff() {
         String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOff";
@@ -6645,9 +6649,15 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public List<AemsBorrowRepayPlanCustomizeVO> selectBorrowRepayPlanList(Map<String, Object> param) {
         String url = "http://AM-TRADE/am-trade/aems/repayplan/selectBorrowRepayPlanList";
-        AemsBorrowRepayPlanCustomizeResponse response = restTemplate.postForEntity(url,param,AemsBorrowRepayPlanCustomizeResponse.class).getBody();
-        if (Response.isSuccess(response)){
-     * 当前出借人
+        AemsBorrowRepayPlanCustomizeResponse response = restTemplate.postForEntity(url, param, AemsBorrowRepayPlanCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+            /** 当前出借人
      * @return
      */
     @Override
@@ -6713,14 +6723,12 @@ public class AmTradeClientImpl implements AmTradeClient {
                 "http://AM-TRADE/am-trade/hjhDebtCredit/getHjhDebtCreditListByBorrowNid/" + borrowNid ,
                 HjhDebtCreditResponse.class).getBody();
         if (response != null) {
->>>>>>> origin/master
             return response.getResultList();
         }
         return null;
     }
 
     /**
-<<<<<<< HEAD
      * 根据标的编号查询资产推送表
      *
      * @param borrowNid
@@ -6729,9 +6737,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhPlanAssetVO selectHjhPlanAssetByBorrowNid(String borrowNid) {
         HjhPlanAssetResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectHjhPlanAssetByBorrowNid/" + borrowNid , HjhPlanAssetResponse.class).getBody();
+                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectHjhPlanAssetByBorrowNid/" + borrowNid, HjhPlanAssetResponse.class).getBody();
         if (response != null) {
-     * 获取借款用户信息
+            return response.getResult();
+        }
+        return null;
+    }
+            /** 获取借款用户信息
      * @param borrowNid
      * @param companyOrPersonal
      * @return

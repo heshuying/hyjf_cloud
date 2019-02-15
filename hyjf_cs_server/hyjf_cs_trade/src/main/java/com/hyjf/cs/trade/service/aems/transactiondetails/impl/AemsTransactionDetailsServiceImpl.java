@@ -1,5 +1,11 @@
 package com.hyjf.cs.trade.service.aems.transactiondetails.impl;
 
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.vo.trade.ApiTransactionDetailsCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -9,13 +15,6 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.aems.transactiondetails.AemsTransactionDetailsService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.service.transactiondetails.TransactionDetailsService;
-import org.apache.xmlbeans.impl.validator.ValidatorUtil;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Aems交易明细查询

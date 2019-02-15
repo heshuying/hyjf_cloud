@@ -50,7 +50,7 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/20 9:19
      */
-    public BigDecimal getBankBalancePay(Integer userId, String accountId);
+    BigDecimal getBankBalancePay(Integer userId, String accountId);
 
     /**
      * @Description 检查风险测评到期时间
@@ -58,14 +58,14 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/20 11:43
      */
-    public void checkEvaluation(UserVO user);
+    void checkEvaluation(UserVO user);
 
     /**
      * 检查用户是否是新手 true 是  false 不是
      * @param userId
      * @return
      */
-    public boolean checkIsNewUserCanInvest(Integer userId);
+    boolean checkIsNewUserCanInvest(Integer userId);
 
     AccountVO getAccountByUserId(Integer userId);
 
@@ -113,7 +113,7 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     RightBorrowVO selectBorrowByBorrowNid(String borrowNid);
-     * 获取标的还款信息
+     /** 获取标的还款信息
      *
      * @param borrowNid
      * @return

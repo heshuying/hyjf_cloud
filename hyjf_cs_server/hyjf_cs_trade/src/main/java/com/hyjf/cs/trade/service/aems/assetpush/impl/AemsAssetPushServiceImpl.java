@@ -1,17 +1,15 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.service.borrow.impl;
+package com.hyjf.cs.trade.service.aems.assetpush.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhAssetBorrowTypeVO;
-import com.hyjf.am.vo.trade.hjh.HjhLabelVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -20,20 +18,20 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.DigitalUtils;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.assetpush.PushBean;
-import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
-import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
-import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.bean.AemsPushBean;
+import com.hyjf.cs.trade.bean.AemsPushRequestBean;
+import com.hyjf.cs.trade.bean.AemsPushResultBean;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.service.aems.assetpush.AemsAssetPushService;
 import com.hyjf.cs.trade.service.auth.AuthService;
-import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.hyjf.cs.trade.util.*;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -45,39 +43,38 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * @author fuqiang
- * @version ApiAssetPushServcieImpl, v0.1 2018/6/11 18:06
- */
+ *
+ * @author Zha Daojian
+ * @date 2018/12/19 16:42
+ * @param 
+ * @return 
+ **/
 @Service
-public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements ApiAssetPushService {
+public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements AemsAssetPushService {
 
-    private Logger logger = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
+    private Logger logger = LoggerFactory.getLogger(AemsAssetPushServiceImpl.class);
 
     private static final Long MAX_ASSET_MONEY = 1000000L;
-
-    @Autowired
-    private AmTradeClient autoSendClient;
 
     @Autowired
     private CommonProducer commonProducer;
     @Autowired
     private AuthService authService;
-    @Override
-    public void sendToMQ(HjhPlanAssetVO hjhPlanAsset) {
+
+    private void sendToMQ(HjhPlanAssetVO hjhPlanAsset) {
         JSONObject params = new JSONObject();
         params.put("mqMsgId", GetCode.getRandomCode(10));
         params.put("assetId", hjhPlanAsset.getAssetId());
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
             //modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-            commonProducer.messageSendDelay(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), params),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ISSUE_RECOVER_TOPIC, UUID.randomUUID().toString(), params),2);
         } catch (MQException e) {
             logger.error("自动录标发送消息失败...", e);
         }
@@ -95,9 +92,9 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
-    public PushResultBean assetPush(PushRequestBean pushRequestBean) {
+    public AemsPushResultBean assetPush(AemsPushRequestBean pushRequestBean) {
 
-        PushResultBean resultBean = new PushResultBean();
+        AemsPushResultBean resultBean = new AemsPushResultBean();
         // 查看机构表是否存在
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
@@ -124,7 +121,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         List<BorrowProjectRepayVO> projectRepays = amTradeClient.selectProjectRepay(assetBorrow.getBorrowCd() + "");
 
         // 检查请求资产总参数
-        List<PushBean> assets = pushRequestBean.getReqData();
+        List<AemsPushBean> assets = pushRequestBean.getReqData();
         if (CollectionUtils.isEmpty(assets)) {
             resultBean.setStatusDesc("推送资产不能为空");
             return resultBean;
@@ -135,15 +132,61 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
             return resultBean;
         }
         // 返回结果
-        List<PushBean> retassets = new ArrayList<>();
+        List<AemsPushBean> retassets = new ArrayList<>();
 
-        for (PushBean pushBean : assets) {
+        for (AemsPushBean pushBean : assets) {
             try {
                 String truename = pushBean.getTruename();
                 String idcard = pushBean.getIdcard();
 
                 // 返回结果，下面的修改应该会返回到这里
                 retassets.add(pushBean);
+
+                //资产编号判空
+                if(Validator.isNull(pushBean.getAssetId())){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                    pushBean.setRetMsg("资产编号不能为空");
+                    continue;
+                }
+                //资产编号判重
+                int count = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId()).size();
+                if (count>0){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                    pushBean.setRetMsg("资产已存在");
+                    continue;
+                }
+
+                //职业类型 不能为空
+                String position = PositionEnum.getJob(pushBean.getPosition());
+                if(org.apache.commons.lang.StringUtils.isEmpty(position)){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                    pushBean.setRetMsg("职业类型为空or不存在");
+                    continue;
+                }
+
+                //融资用途 不能为空
+                String use = UseageEnum.getUse(pushBean.getUseage());
+                if(org.apache.commons.lang.StringUtils.isEmpty(use)){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                    pushBean.setRetMsg("融资用途为空or不存在");
+                    continue;
+                }
+
+                //借款人信用等级 不能为空
+                String level = CreditLevelEnum.getKey(pushBean.getCreditLevel());
+                if(org.apache.commons.lang.StringUtils.isEmpty(level)){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                    pushBean.setRetMsg("信用等级为空or不存在");
+                    continue;
+                }
+
+                //资产属性 不能为空
+                String asset = AssetAttributesEnum.getAsset(pushBean.getAssetAttributes());
+                if(org.apache.commons.lang.StringUtils.isEmpty(asset)){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                    pushBean.setRetMsg("资产属性为空or不存在");
+                    continue;
+                }
 
                 // 金额不是100以及100的整数倍时将通过接口拒绝接收资产
                 if (pushBean.getAccount() == null || (pushBean.getAccount() % 10) != 0 || pushBean.getBorrowPeriod() == null ||
@@ -245,9 +288,9 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 //                }
 //
                 //update by wj 2018-05-24 年收入，月收入非空校验 start
-                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getAnnualIncome())){
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getAnnualIncome()) || !DigitalUtils.isNumber(pushBean.getAnnualIncome())){
                     pushBean.setRetCode("ZT000013");
-                    pushBean.setRetMsg("年收入为空");
+                    pushBean.setRetMsg("年收入为空or不为数字");
                     continue;
                 }
                 if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getMonthlyIncome())){
@@ -319,6 +362,10 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 record.setSex(sexInt);
                 // 年纪，如果没传，用身份证的，从user表获取
                 record.setAge(IdCard15To18.getAgeById(idcard));
+                record.setPosition(position);//岗位职业
+                record.setUseage(use);//融资用途
+                record.setCreditLevel(pushBean.getCreditLevel());//借款人信用等级
+                record.setAssetAttributes(pushBean.getAssetAttributes());//资产属性 1:抵押标 2:质押标 3:信用标
                 record.setInstCode(pushRequestBean.getInstCode());
                 record.setAssetType(pushRequestBean.getAssetType());
                 record.setUserId(userInfo.getUserId());
@@ -346,16 +393,14 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     record.setEntrustedFlg(1);
                     record.setEntrustedUserId(stzAccount.getStUserId());
                     record.setEntrustedUserName(stzAccount.getStUserName());
-                    record.setEntrustedAccountId(stzAccount.getStAccountid());
+                    record.setEntrustedAccountId(stzAccount.getStAccountId());
                 }
 
                 // 平台直接默认填写：写死字段
-                record.setCreditLevel("AA");
                 record.setCostIntrodution("加入费用0元");
                 record.setLitigation("无或已处理");
                 record.setOverdueTimes("0");
                 record.setOverdueAmount("0");
-                record.setUseage("个人资金周转");
                 record.setFirstPayment("个人收入");
                 record.setSecondPayment("第三方保障");
 
@@ -409,172 +454,16 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         return resultBean;
     }
 
-    public PushResultBean fallBackAssetPush(PushRequestBean pushRequestBean) {
-        logger.info("==================已进入 个人资产推送(api) fallBackAssetPush 方法================");
-        return new PushResultBean();
-    }
-
-    @Override
-    public HjhLabelVO getLabelId(BorrowAndInfoVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
-
-        HjhLabelVO resultLabel = null;
-
-        List<HjhLabelVO> list = autoSendClient.seleHjhLabel(borrowVO.getBorrowStyle());
-        if (list != null && list.size() <= 0) {
-            logger.info(borrowVO.getBorrowStyle()+" 该原始标还款方式 没有一个标签");
-            return resultLabel;
-        }
-        // continue过滤输入了但是不匹配的标签，如果找到就是第一个
-        for (HjhLabelVO hjhLabelVO : list) {
-            // 标的期限
-//			int score = 0;
-            if(hjhLabelVO.getLabelTermEnd() != null && hjhLabelVO.getLabelTermEnd().intValue()>0 && hjhLabelVO.getLabelTermStart()!=null
-                    && hjhLabelVO.getLabelTermStart().intValue()>0){
-                if(borrowVO.getBorrowPeriod() >= hjhLabelVO.getLabelTermStart() && borrowVO.getBorrowPeriod() <= hjhLabelVO.getLabelTermEnd()){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else if ((hjhLabelVO.getLabelTermEnd() != null && hjhLabelVO.getLabelTermEnd().intValue()>0) ||
-                    (hjhLabelVO.getLabelTermStart()!=null && hjhLabelVO.getLabelTermStart().intValue()>0)) {
-                if(borrowVO.getBorrowPeriod().equals(hjhLabelVO.getLabelTermStart()) || borrowVO.getBorrowPeriod().equals(hjhLabelVO.getLabelTermEnd())){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else{
-                continue;
-            }
-            // 标的实际利率
-            if(hjhLabelVO.getLabelAprStart() != null && hjhLabelVO.getLabelAprStart().compareTo(BigDecimal.ZERO)>0 &&
-                    hjhLabelVO.getLabelAprEnd()!=null && hjhLabelVO.getLabelAprEnd().compareTo(BigDecimal.ZERO)>0){
-                if(borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprStart())>=0 && borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprEnd())<=0){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else if (hjhLabelVO.getLabelAprStart() != null && hjhLabelVO.getLabelAprStart().compareTo(BigDecimal.ZERO)>0) {
-                if(borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprStart())==0 ){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-
-            }else if (hjhLabelVO.getLabelAprEnd()!=null && hjhLabelVO.getLabelAprEnd().compareTo(BigDecimal.ZERO)>0 ) {
-                if(borrowVO.getBorrowApr().compareTo(hjhLabelVO.getLabelAprEnd())==0){
-//					score = score+1;
-                }else {
-                    continue;
-                }
-            }
-            // 标的实际支付金额
-            if(hjhLabelVO.getLabelPaymentAccountStart() != null && hjhLabelVO.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO)>0 &&
-                    hjhLabelVO.getLabelPaymentAccountEnd()!=null && hjhLabelVO.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO)>0){
-                if(borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountStart())>=0 && borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountEnd())<=0){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else if (hjhLabelVO.getLabelPaymentAccountStart() != null && hjhLabelVO.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO)>0) {
-                if(borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountStart())==0 ){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-
-            }else if (hjhLabelVO.getLabelPaymentAccountEnd()!=null && hjhLabelVO.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO)>0 ) {
-                if(borrowVO.getAccount().compareTo(hjhLabelVO.getLabelPaymentAccountEnd())==0){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }
-            // 资产来源
-            if(StringUtils.isNotBlank(hjhLabelVO.getInstCode())){
-                if(hjhLabelVO.getInstCode().equals(borrowVO.getInstCode())){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }
-            // 产品类型
-            if(hjhLabelVO.getAssetType() != null && hjhLabelVO.getAssetType().intValue() > 0){
-                if(hjhLabelVO.getAssetType().equals(borrowVO.getAssetType())){
-                    ;
-                }else{
-                    continue;
-                }
-            }
-            // 项目类型
-            if(hjhLabelVO.getProjectType() != null && hjhLabelVO.getProjectType().intValue() > 0){
-                if(hjhLabelVO.getProjectType().equals(borrowVO.getProjectType())){
-                    ;
-                }else{
-                    continue;
-                }
-            }
-
-            // 推送时间节点
-            if(hjhPlanAssetVO != null && hjhPlanAssetVO.getRecieveTime() != null && hjhPlanAssetVO.getRecieveTime().intValue() > 0){
-                Date reciveDate = GetDate.getDate(hjhPlanAssetVO.getRecieveTime());
-
-                if(hjhLabelVO.getPushTimeStart() != null && hjhLabelVO.getPushTimeEnd()!=null){
-                    if(reciveDate.getTime() >= hjhLabelVO.getPushTimeStart().getTime() &&
-                            reciveDate.getTime() <= hjhLabelVO.getPushTimeEnd().getTime()){
-//						score = score+1;
-                    }else{
-                        continue;
-                    }
-                }else if (hjhLabelVO.getPushTimeStart() != null) {
-                    if(reciveDate.getTime() == hjhLabelVO.getPushTimeStart().getTime() ){
-//						score = score+1;
-                    }else{
-                        continue;
-                    }
-
-                }else if (hjhLabelVO.getPushTimeEnd()!=null) {
-                    if(reciveDate.getTime() == hjhLabelVO.getPushTimeEnd().getTime() ){
-//						score = score+1;
-                    }else{
-                        continue;
-                    }
-                }
-
-            }
-
-            // 如果找到返回最近的一个
-            return hjhLabelVO;
-
-        }
-
-        return resultLabel;
-    }
-
-    @Override
-    public void sendToMQ(HjhPlanAssetVO hjhPlanAssetVO, String mqGroup) {
-
-        // 加入到消息队列
-        JSONObject params = new JSONObject();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        params.put("assetId", hjhPlanAssetVO.getAssetId());
-        params.put("instCode", hjhPlanAssetVO.getInstCode());
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(),params));
-        } catch (MQException e) {
-            e.printStackTrace();
-            logger.error("自动备案送消息失败...", e);
-        }
-    }
-
     /**
      * 企业资产推送
      *
      * @param pushRequestBean
      * @return
      */
+
     @Override
-    public PushResultBean companyAssetPush(PushRequestBean pushRequestBean) {
-        PushResultBean resultBean = new PushResultBean();
+    public AemsPushResultBean companyAssetPush(AemsPushRequestBean pushRequestBean) {
+        AemsPushResultBean resultBean = new AemsPushResultBean();
 
         // 查看机构表是否存在
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(),pushRequestBean.getAssetType());
@@ -603,7 +492,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         List<BorrowProjectRepayVO> projectRepays = amTradeClient.selectProjectRepay(assetBorrow.getBorrowCd()+"");
 
         // 检查请求资产总参数
-        List<PushBean>  reqData = pushRequestBean.getReqData();
+        List<AemsPushBean>  reqData = pushRequestBean.getReqData();
         if (CollectionUtils.isEmpty(reqData)) {
             resultBean.setStatusDesc("推送资产不能为空");
             return resultBean;
@@ -615,11 +504,11 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         }
 
         // 返回结果
-        List<PushBean> retassets = new ArrayList<>();
+        List<AemsPushBean> retassets = new ArrayList<>();
         //定义判断标识
         boolean flag = false;
 
-        for (PushBean pushBean : reqData) {
+        for (AemsPushBean pushBean : reqData) {
             try {
 				/*if (pushBean.getAccount() > MAX_ASSET_MONEY) {
 					pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000006);
@@ -730,7 +619,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     record.setEntrustedFlg(1);
                     record.setEntrustedUserId(stzAccount.getStUserId());
                     record.setEntrustedUserName(stzAccount.getStUserName());
-                    record.setEntrustedAccountId(stzAccount.getStAccountid());
+                    record.setEntrustedAccountId(stzAccount.getStAccountId());
                 }
 
                 // 平台默认字段
@@ -988,7 +877,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
      * @param pushBean
      * @return
      */
-    private boolean checkCompanyPushInfo(PushBean pushBean){
+    private boolean checkCompanyPushInfo(AemsPushBean pushBean){
         if(StringUtils.isBlank(pushBean.getBorrowCompanyName()) || StringUtils.isBlank(pushBean.getAssetId()) || pushBean.getBorrowPeriod() == null ||
            pushBean.getIsMonth() == null || StringUtils.isBlank(pushBean.getBorrowStyle()) || StringUtils.isBlank(pushBean.getUserName()) ||
            StringUtils.isBlank(pushBean.getIndustryInvolved()) || StringUtils.isBlank(pushBean.getOverdueTimes()) ||

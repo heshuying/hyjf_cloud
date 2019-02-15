@@ -618,26 +618,20 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			//自动债转
 			endTime = nowTime+1;
 			status = hjhUserAuth.getAutoCreditStatus();
-
-			// 0是未授权
 			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
-				creditflag=true;
+				return false;
 			}
 			//自动投标
 			endTime = hjhUserAuth.getAutoBidEndTime()==null?"0":hjhUserAuth.getAutoBidEndTime();
 			status = hjhUserAuth.getAutoInvesStatus();
-			// 0是未授权
 			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
-				invesflag=true;
-
+				return false;
 			}
 			//服务费授权
 			endTime = hjhUserAuth.getAutoPaymentEndTime()==null?"0":hjhUserAuth.getAutoPaymentEndTime();
 			status = hjhUserAuth.getAutoPaymentStatus();
-			// 0是未授权
 			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
-				paymentflag=true;
-
+				return false;
 			}
 		}else{
 			//单个授权
