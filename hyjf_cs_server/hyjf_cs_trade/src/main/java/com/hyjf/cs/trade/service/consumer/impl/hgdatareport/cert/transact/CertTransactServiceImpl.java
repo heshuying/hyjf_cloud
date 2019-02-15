@@ -12,7 +12,6 @@ import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;

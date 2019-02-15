@@ -7,6 +7,7 @@ import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -17,6 +18,7 @@ import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -28,6 +30,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -73,6 +76,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 
     @Autowired
     SystemConfig systemConfig;
+
+	@Value("${aems.notify.url}")
+    private String aemsNotifyUrl;
+
 
 	@Override
 	public boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception {
@@ -1780,9 +1787,61 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				logger.error("【智投还款/出借人】发送网站收支明细时发生系统异常！", e);
 			}
 		}
-		logger.info("【智投还款/出借人】更新出借人的还款数据结束。借款编号：{}，还款订单号：{}，智投加入订单号：{}，判断复投时间：{}", apicron.getBorrowNid(), repayOrderId, accedeOrderId, dateStr);
+
+
+		// ames用户还款通知
+		aemsRepayNotify(periodNow, borrowNid, borrowRepay, recoverFee, recoverCapitalWait, recoverInterestWait, lateInterest, chargeInterest, repayAccount);
+
+		logger.info("还款结束---" + apicron.getBorrowNid() + "---------" + repayOrderId);
+		logger.info("还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",判断复投结束时间:" + dateStr + "-----------");
+//		logger.info("---------------------还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",是否复投.是否冻结:" + isForstTime(hjhAccede.getEndDate()) + "-----------");
 		return true;
 	}
+
+	/**
+	 * ames用户还款通知
+	 * @param borrowPeriod
+	 * @param borrowNid
+	 * @param borrowRepay
+	 * @param recoverFee
+	 * @param recoverCapitalWait
+	 * @param recoverInterestWait
+	 * @param lateInterest
+	 * @param chargeInterest
+	 * @param repayAccount
+	 */
+	private void aemsRepayNotify(Integer borrowPeriod, String borrowNid, BorrowRepay borrowRepay, BigDecimal recoverFee, BigDecimal recoverCapitalWait, BigDecimal recoverInterestWait, BigDecimal lateInterest, BigDecimal chargeInterest, BigDecimal repayAccount) {
+        logger.info("aems还款异步回调开始......borrowNid is {}", borrowNid);
+		Integer userId = borrowRepay.getUserId();
+		RUser user = getRUser(userId);
+		if (user != null) {
+			Map<String, String> params = new HashMap<>();
+			params.put("status", "000");
+			params.put("statusDesc", "还款成功");
+			// 项目编号
+			params.put("productId", borrowNid);
+			// 用户电子账户
+			params.put("accountId", getAccount(userId).getAccountId());
+			// 还款成功期数
+			params.put("periods", borrowPeriod.toString());
+			// 应还本金
+			params.put("repayAccount", recoverCapitalWait.toString());
+			// 应还利息
+			params.put("repayAccountInterest", recoverInterestWait.toString());
+			// 应还服务费
+			params.put("serviceFee", recoverFee.toString());
+			// 提前还款减息
+			params.put("reduceInterest", chargeInterest.toString());
+			// 逾期违约金
+			params.put("dueServiceFee", lateInterest.toString());
+			// 还款总额
+			params.put("repayAccountAll", repayAccount.toString());
+            logger.info("aems还款异步回调......params is {}", JSONObject.toJSONString(params));
+            HttpDeal.postJson(aemsNotifyUrl + "/aems/api/user_repay/async_callback", JSONObject.toJSONString(params));
+		}
+	}
+
+
 
 	/**
 	 * 判断还款是否需要放到订单冻结金额中
@@ -1798,352 +1857,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			return true;
 		}
 		return false;
-	}
-
-	private void updatePlanData(HjhAccede hjhAccede, HjhRepay hjhRepay) {
-		BigDecimal waitTotal = hjhAccede.getShouldPayTotal();//智投加入待收总额
-		BigDecimal waitCaptical = hjhAccede.getWaitCaptical();//智投加入待收本金
-		BigDecimal waitInterest = hjhAccede.getWaitInterest();//智投加入待收利息
-		//智投实收金额
-		BigDecimal repayTotal = hjhRepay.getRepayTotal();
-		BigDecimal repayCapital = hjhRepay.getPlanRepayCapital();
-		BigDecimal repayInterest = hjhRepay.getPlanRepayInterest();
-		String planNid = hjhAccede.getPlanNid();
-		HjhPlanExample example = new HjhPlanExample();
-		example.createCriteria().andPlanNidEqualTo(planNid);
-		List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
-		if (planList != null && planList.size() > 0) {
-			HjhPlan hjhPlan = planList.get(0);
-			hjhPlan.setRepayWaitAll(hjhPlan.getRepayWaitAll().subtract(waitTotal));
-			hjhPlan.setPlanWaitCaptical(hjhPlan.getPlanWaitCaptical().subtract(waitCaptical));
-			hjhPlan.setPlanWaitInterest(hjhPlan.getPlanWaitInterest().subtract(waitInterest));
-			hjhPlan.setRepayTotal(hjhPlan.getRepayTotal().add(repayTotal));
-			hjhPlan.setPlanRepayCapital(hjhPlan.getPlanRepayCapital().add(repayCapital));
-			hjhPlan.setPlanRepayInterest(hjhPlan.getPlanRepayInterest().add(repayInterest));
-			int count = this.hjhPlanMapper.updateByPrimaryKey(hjhPlan);
-			if (count > 0) {
-				logger.info("===============智投加入订单:" + hjhAccede.getAccedeOrderId() + "对应的智投:" + planNid + "相关待还应收金额维护成功!待还减少:" + waitTotal + ",应收增加:" + repayTotal);
-			}
-		}
-	}
-
-	private void couponRepay(HjhAccede hjhAccede) {
-		// add by cwyang 优惠券还款请求加入到消息队列 start
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        // 借款借款编号
-        params.put("orderId", hjhAccede.getAccedeOrderId());
-
-		try {
-			logger.info("发送优惠券还款队列---" + hjhAccede.getAccedeOrderId());
-			commonProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error("智投还款中发生系统", e);
-        }
-		//核对请求参数
-//        rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_COUPONREPAY_HJH, JSONObject.toJSONString(params));
-        // add by cwyang 优惠券还款请求加入到消息队列 end
-	}
-
-	/**
-	 *  智投退出推送消息
-	 * 
-	 * @param hjhRepay
-	 * @author Administrator
-	 */
-	private void sendMessage(HjhRepay hjhRepay) {
-		int userId = hjhRepay.getUserId();
-		BigDecimal amount = hjhRepay.getRepayTotal();
-		String planNid = hjhRepay.getPlanNid();
-		HjhPlanExample example = new HjhPlanExample();
-		example.createCriteria().andPlanNidEqualTo(planNid);
-		List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
-		HjhPlan hjhPlan = planList.get(0);
-		String planName = hjhPlan.getPlanName();
-		Map<String, String> msg = new HashMap<String, String>();
-		msg.put(VAL_AMOUNT, amount.toString());// 待收金额
-		msg.put(VAL_USERID, String.valueOf(userId));
-		msg.put(VAL_HJH_TITLE, planName);
-		
-		if (Validator.isNotNull(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT)) && new BigDecimal(msg.get(VAL_AMOUNT)).compareTo(BigDecimal.ZERO) > 0) {
-			// 推送消息队列
-			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
-			try {
-				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-						smsMessage));
-			} catch (MQException e) {
-				logger.error("发送app消息失败..", e);
-			}
-			
-		}
-		
-	}
-	
-	/**
-	 *  发送短信(智投还款成功)
-	 *
-	 * @param hjhRepay
-	 */
-	private void sendSms(HjhRepay hjhRepay) {
-		int userId = hjhRepay.getUserId();
-		String planNid = hjhRepay.getPlanNid();
-		HjhPlanExample example = new HjhPlanExample();
-		example.createCriteria().andPlanNidEqualTo(planNid);
-		List<HjhPlan> planList = this.hjhPlanMapper.selectByExample(example);
-		HjhPlan hjhPlan = planList.get(0);
-		String planName = hjhPlan.getPlanName();
-		String userName = hjhRepay.getUserName();
-		BigDecimal repayTotal = hjhRepay.getRepayTotal();
-		Map<String, String> msg = new HashMap<String, String>();
-		msg.put(VAL_NAME, userName);
-		msg.put(VAL_AMOUNT, repayTotal.toString());
-		msg.put(VAL_USERID, String.valueOf(userId));
-		msg.put(VAL_HJH_TITLE, planName);
-		
-		logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,待收金额" + msg.get(VAL_AMOUNT));
-		
-		SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
-				CustomConstants.CHANNEL_TYPE_NORMAL);
-		try {
-			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
-		} catch (MQException e2) {
-			logger.error("发送邮件失败..", e2);
-		}
-	}
-
-	/**
-	 * 退出智投更新还款信息表
-	 * @param hjhAccede
-	 */
-	private HjhRepay updateHjhLastRepayInfo(HjhAccede hjhAccede) {
-		String accedeOrderId = hjhAccede.getAccedeOrderId();
-		HjhRepayExample example = new HjhRepayExample();
-		example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
-		List<HjhRepay> repayList = this.hjhRepayMapper.selectByExample(example);
-		if (repayList != null && repayList.size() > 0) {
-			HjhRepay hjhRepay = repayList.get(0);
-			hjhRepay.setRepayStatus(2);//已回款
-			hjhRepay.setOrderStatus(7);//已退出
-			hjhRepay.setRepayActualTime(GetDate.getNowTime10());
-//			hjhRepay.setUpdateTime(GetDate.getNowTime10());
-			hjhRepay.setWaitTotal(BigDecimal.ZERO);
-			int count = this.hjhRepayMapper.updateByPrimaryKey(hjhRepay);
-			if (count > 0) {
-				logger.info("=============cwyang 智投退出还款信息更新成功!,加入订单号:" + accedeOrderId + ",还款信息总还款金额:" + hjhRepay.getRepayTotal());
-			}
-			return hjhRepay;
-		}
-		return null;
-	}
-
-	private int getTxDate(){
-		Date date = new Date();        
-		SimpleDateFormat format = new SimpleDateFormat();
-		//调整相应格式 yyyy-年 MM-月  dd-日 HH-时 mm-分 ss-秒
-		format.applyPattern("yyyyMMdd");
-		String day = format.format(date);
-		return  Integer.parseInt(day);
-	}
-	
-	private int getTxTime(){
-		Date date = new Date();        
-		SimpleDateFormat format = new SimpleDateFormat();
-		//调整相应格式 yyyy-年 MM-月  dd-日 HH-时 mm-分 ss-秒
-		format.applyPattern("HHmmss");
-		String day = format.format(date);
-		return  Integer.parseInt(day);
-	}
-	/**
-	 * 变更智投出借账户金额
-	 * @param hjhAccede
-	 * @param hjhRepay
-	 */
-	private void updatePlanTenderAccount(HjhAccede hjhAccede, HjhRepay hjhRepay) {
-		BigDecimal repayTotal = hjhRepay.getRepayTotal();
-//		BigDecimal repayCapital = hjhRepay.getPlanRepayCapital();
-//		BigDecimal repayInterest = hjhRepay.getPlanRepayInterest();
-		BigDecimal waitTotal = hjhAccede.getWaitTotal();//智投加入待收总额
-		BigDecimal waitCaptical = hjhAccede.getWaitCaptical();//智投加入待收本金
-		BigDecimal waitInterest = hjhAccede.getWaitInterest();//智投加入待收利息
-		BigDecimal accountForst = hjhAccede.getFrostAccount();//账户实际收到冻结金额
-		BigDecimal availableInvestAccount = hjhAccede.getAvailableInvestAccount();//剩余订单可用金额
-		accountForst = accountForst.add(availableInvestAccount);//剩余订单可用金额也放到账户金额中
-		BigDecimal accountInterest = accountForst.subtract(hjhAccede.getAccedeAccount());//计算账户订单利息
-		//实际年化收益率
-		BigDecimal reallyApr = getAccedeReallyApr(accountForst,hjhAccede.getAccedeAccount(),hjhAccede.getPlanNid(),hjhAccede.getLockPeriod(),hjhAccede.getAccedeOrderId());
-		BigDecimal lqdServiceFee = hjhAccede.getLqdServiceFee();//清算服务费
-		//获得出借服务费率
-		BigDecimal tenderFeeRate = getTenderFeeRate(lqdServiceFee,hjhAccede.getAccedeAccount());
-		//智投加入明细金额变更
-		hjhAccede.setActualApr(reallyApr);
-		hjhAccede.setWaitTotal(new BigDecimal(0));
-		hjhAccede.setWaitCaptical(new BigDecimal(0));
-		hjhAccede.setWaitInterest(new BigDecimal(0));
-		hjhAccede.setOrderStatus(7);//已退出
-		hjhAccede.setReceivedTotal(accountForst);//已收总额
-		hjhAccede.setReceivedInterest(accountInterest);//已收利息
-		hjhAccede.setReceivedCapital(hjhAccede.getAccedeAccount());//已收本金
-		hjhAccede.setAcctualPaymentTime(GetDate.getNowTime10());//实际回款时间
-		hjhAccede.setFrostAccount(BigDecimal.ZERO);//智投订单冻结金额更新
-		hjhAccede.setAvailableInvestAccount(BigDecimal.ZERO);//智投订单可用金额
-		hjhAccede.setFairValue(accountForst);//订单退出时重新计算公允价值
-		hjhAccede.setInvestServiceApr(tenderFeeRate);//更新出借服务费率
-		hjhAccede.setLqdProgress(BigDecimal.ONE);//已退出时更新清算进度为 100%
-		int count = this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
-		if (count > 0) {
-			logger.info("================cwyang 智投退出更新智投加入明细成功!智投加入订单号: " + hjhAccede.getAccedeOrderId());
-		}
-		
-		HjhRepay newRepay = hjhRepayMapper.selectByPrimaryKey(hjhRepay.getId());
-		newRepay.setRepayTotal(accountForst);
-		newRepay.setRepayAlready(accountForst);
-		newRepay.setActualRevenue(accountInterest);//实际收益
-		newRepay.setActualPayTotal(accountForst);//实际回款总额
-		newRepay.setPlanRepayCapital(hjhAccede.getAccedeAccount());
-		newRepay.setPlanRepayInterest(accountInterest);
-		this.hjhRepayMapper.updateByPrimaryKey(newRepay);
-		//账户金额变更
-		Integer userId = hjhAccede.getUserId();
-		Account bankOpenAccount = this.getAccount(userId);
-		AccountExample example = new AccountExample();
-		example.createCriteria().andUserIdEqualTo(userId);
-		List<Account> accountLists = this.accountMapper.selectByExample(example);
-		if (accountLists !=null && accountLists.size() > 0) {
-			Account account = accountLists.get(0);
-			BigDecimal total = accountForst.subtract(waitTotal);//冻结金额 - 已还总额
-			repayTotal = accountForst;
-			//明细数据取值
-			BigDecimal detailTotal = account.getBankTotal().add(total);
-			BigDecimal detailBalance = account.getBankBalance().add(repayTotal);
-			BigDecimal detailPlanBalance = account.getPlanBalance().subtract(availableInvestAccount);
-			BigDecimal detailPlanFrost = account.getPlanFrost().subtract(repayTotal.subtract(availableInvestAccount));
-			account.setBankTotal(total);
-			account.setBankBalance(repayTotal);
-			account.setPlanAccountWait(waitTotal);
-			account.setPlanCapitalWait(waitCaptical);
-			account.setPlanInterestWait(waitInterest);
-			account.setBankInterestSum(repayTotal.subtract(waitCaptical));
-			account.setPlanFrost(repayTotal.subtract(availableInvestAccount));
-			account.setPlanBalance(availableInvestAccount);
-			boolean investaccountFlag = this.adminAccountCustomizeMapper.updateOfPlanRepayAccount(account) > 0 ? true : false;
-			if (investaccountFlag) {
-				logger.info("====================cwyang 智投退出更新账户资金成功,智投加入订单号: " + hjhAccede.getAccedeOrderId());
-			}
-			AccountList accountList = new AccountList();
-			/** 出借人银行相关 */
-			accountList.setBankAwait(account.getBankAwait());
-			accountList.setBankAwaitCapital(account.getBankAwaitCapital());
-			accountList.setBankAwaitInterest(account.getBankAwaitInterest());
-			accountList.setBankBalance(detailBalance);
-			accountList.setBankFrost(account.getBankFrost());
-			accountList.setBankInterestSum(account.getBankInterestSum());
-			accountList.setBankInvestSum(account.getBankInvestSum());
-			accountList.setBankTotal(detailTotal);
-			accountList.setBankWaitCapital(account.getBankWaitCapital());
-			accountList.setBankWaitInterest(account.getBankWaitInterest());
-			accountList.setBankWaitRepay(account.getBankWaitRepay());
-			accountList.setAccountId(bankOpenAccount.getAccountId());
-			accountList.setCheckStatus(1);
-			accountList.setTradeStatus(1);
-			accountList.setIsBank(1);
-			accountList.setTxDate(getTxDate());
-			accountList.setTxTime(getTxTime());
-			accountList.setAccedeOrderId(hjhAccede.getAccedeOrderId());
-			/** 出借人非银行相关 */
-			accountList.setUserId(userId); // 出借人
-			accountList.setAmount(repayTotal); // 出借本金
-			accountList.setType(1); // 1收入
-			accountList.setTrade("hjh_quit"); // 退出智投
-			accountList.setTradeCode("balance"); // 余额操作
-			accountList.setTotal(account.getTotal()); // 出借人资金总额
-			accountList.setBalance(BigDecimal.ZERO); // 出借人银行可用金额
-			accountList.setFrost(account.getFrost()); // 出借人冻结金额
-			accountList.setAwait(account.getAwait()); // 出借人待收金额
-			accountList.setOperator(CustomConstants.OPERATOR_AUTO_LOANS); // 操作者
-			accountList.setRemark("智投结束");
-			accountList.setPlanBalance(detailPlanBalance);
-			accountList.setPlanFrost(detailPlanFrost);
-			accountList.setWeb(0); // PC
-			int insertCount = this.accountListMapper.insertSelective(accountList);
-			if (insertCount > 0) {
-				logger.info("===================cwyang 插入智投加入明细成功!加入订单号:" + hjhAccede.getAccedeOrderId());
-			}
-			
-		}
-
-		// 退出智投累加统计数据
-		logger.info("退出智投累加统计数据...");
-		JSONObject params1 = new JSONObject();
-		params1.put("interestSum", accountInterest);
-		try {
-			commonProducer
-					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
-							MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG, UUID.randomUUID().toString(),
-							params1));
-		} catch (MQException e) {
-			logger.error("退出智投累加统计数", e);
-		}
-
-		// 更新运营数据智投收益
-		logger.info("退出智投更新运营数据智投收益...");
-		JSONObject params = new JSONObject();
-		params.put("type", 2);// 智投收益
-		params.put("recoverInterestAmount", accountInterest);
-        try {
-			commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
-        }catch (MQException e){
-            logger.error("发送运营数据更新MQ失败,智投还款订单:" + hjhAccede.getAccedeOrderId());
-        }
-	}
-
-	/**
-	 * 获得出借服务费率
-	 *
-	 * @param lqdServiceFee
-	 * 清算服务费
-	 * @param accedeAccount
-	 * 订单加入金额
-	 * @return
-	 */
-	private BigDecimal getTenderFeeRate(BigDecimal lqdServiceFee, BigDecimal accedeAccount) {
-		if(lqdServiceFee.compareTo(BigDecimal.ZERO) > 0){
-			BigDecimal lqdRate = lqdServiceFee.divide(accedeAccount, 4, BigDecimal.ROUND_DOWN);
-			return lqdRate;
-		}
-		return BigDecimal.ZERO;
-	}
-
-	/**
-	 * 获得订单的实际年化收益率
-	 * @param accountForst
-	 * @param accedeAccount
-	 * @param planNid
-	 * @param lockPeriod
-	 * @param accedeOrderId
-	 * @return
-	 */
-	private BigDecimal getAccedeReallyApr(BigDecimal accountForst, BigDecimal accedeAccount, String planNid, Integer lockPeriod, String accedeOrderId) {
-		HjhPlanExample example = new HjhPlanExample();
-		example.createCriteria().andPlanNidEqualTo(planNid);
-		List<HjhPlan> hjhPlans = this.hjhPlanMapper.selectByExample(example);
-		BigDecimal reallyApr = new BigDecimal(0);
-		if(hjhPlans != null && hjhPlans.size() == 1){
-			HjhPlan hjhPlan = hjhPlans.get(0);
-			Integer isMonth = hjhPlan.getIsMonth();
-			if(1 == isMonth){//按月计息
-				reallyApr = (accountForst.subtract(accedeAccount)).divide(accedeAccount,8,BigDecimal.ROUND_DOWN)
-						.divide(new BigDecimal(lockPeriod),8,BigDecimal.ROUND_DOWN)
-						.multiply(new BigDecimal(12)).multiply(new BigDecimal(100));
-			}else if(0 == isMonth){//按日计息
-				reallyApr = (accountForst.subtract(accedeAccount)).divide(accedeAccount,8,BigDecimal.ROUND_DOWN)
-						.divide(new BigDecimal(lockPeriod),8,BigDecimal.ROUND_DOWN)
-						.multiply(new BigDecimal(360)).multiply(new BigDecimal(100));
-			}
-		}
-		reallyApr = reallyApr.setScale(4,BigDecimal.ROUND_DOWN);
-		logger.info("--------------------开始计算订单实际年化收益率，订单号:" + accedeOrderId + ",accountForst：" + accountForst
-				+ ",accedeAccount:" + accedeAccount + ",lockperiod:" + lockPeriod + ",实际年化收益率：" + reallyApr.toString());
-		return reallyApr;
 	}
 
 	/**

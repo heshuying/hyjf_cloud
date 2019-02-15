@@ -3,6 +3,9 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -47,7 +50,7 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/20 9:19
      */
-    public BigDecimal getBankBalancePay(Integer userId, String accountId);
+    BigDecimal getBankBalancePay(Integer userId, String accountId);
 
     /**
      * @Description 检查风险测评到期时间
@@ -55,14 +58,14 @@ public interface BaseTradeService extends BaseService{
      * @Version v0.1
      * @Date 2018/6/20 11:43
      */
-    public void checkEvaluation(UserVO user);
+    void checkEvaluation(UserVO user);
 
     /**
      * 检查用户是否是新手 true 是  false 不是
      * @param userId
      * @return
      */
-    public boolean checkIsNewUserCanInvest(Integer userId);
+    boolean checkIsNewUserCanInvest(Integer userId);
 
     AccountVO getAccountByUserId(Integer userId);
 
@@ -105,7 +108,12 @@ public interface BaseTradeService extends BaseService{
     boolean checkIsNewUserCanInvest2(Integer userId);
 
     /**
-     * 获取标的还款信息
+     * 根据标的编号查询Borrow信息
+     * @param borrowNid
+     * @return
+     */
+    RightBorrowVO selectBorrowByBorrowNid(String borrowNid);
+     /** 获取标的还款信息
      *
      * @param borrowNid
      * @return
