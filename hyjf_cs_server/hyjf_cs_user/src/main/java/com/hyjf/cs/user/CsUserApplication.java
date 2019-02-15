@@ -1,7 +1,6 @@
 package com.hyjf.cs.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyjf.cs.common.util.ApiSignUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -34,6 +33,5 @@ public class CsUserApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsUserApplication.class, args);
-		ApiSignUtil.verifyByRSA("11000001", "", "15411111129110000011550218304");
 	}
 }
