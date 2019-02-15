@@ -442,11 +442,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 将字符串格式的image转为二进制流（biye[])的decodedBytes
         byte[] decodedBytes = decoder.decodeBuffer(image);
         logger.info("头像转成二进制大小:[{}]",decodedBytes.length);
-       // String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
+        String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
         // 实际物理路径前缀2
         String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
         // 如果文件夹(前缀+后缀)不存在,则新建文件夹
-        String logoRealPathDir = fileUploadTempPath;
+        String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
         File logoSaveFile = new File(logoRealPathDir);
         if (!logoSaveFile.exists()) {
             logoSaveFile.mkdirs();
@@ -455,7 +455,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         String fileRealName = String.valueOf(System.currentTimeMillis());
         fileRealName = "appIconImg_" + userId + fileRealName + ".png";
         // 指定图片要存放的位置
-        String imgFilePath = systemConfig.getFileDomainUrl()+logoSaveFile + File.separator + fileRealName;
+        String imgFilePath = logoSaveFile + File.separator + fileRealName;
         // 新建一个文件输出器，并为它指定输出位置imgFilePath
         try{
             logger.info("开始将头像写入硬盘 -> fileName:[{}]",fileRealName);
@@ -471,6 +471,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        imgFilePath = systemConfig.getFileDomainUrl()+fileUploadTempPath+fileRealName;
         return imgFilePath;
     }
 
