@@ -139,9 +139,6 @@ public class ApiSignUtil {
 	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
 		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
 	}
-	public static String getHyjfReqPubKeyPath() {
-		return HYJF_REQ_PUB_KEY_PATH;
-	}
 	@Value("${hyjf.req.pri.key}")
 	public void setHyjfReqPriKeyPath(String hyjfReqPriKeyPath) {
 		HYJF_REQ_PRI_KEY_PATH = hyjfReqPriKeyPath;
