@@ -1503,6 +1503,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		return resultMap;
 	}
 
+	/**
 	 * 获得所有协议类型
 	 * @return
 	 */

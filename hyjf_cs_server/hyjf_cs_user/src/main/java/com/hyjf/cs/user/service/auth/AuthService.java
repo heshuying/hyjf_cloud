@@ -141,7 +141,8 @@ public interface AuthService extends BaseUserService {
      * @return
      */
     Map<String,String> checkAemsParam(@Valid AemsMergeAuthPagePlusRequestBean requestBean);
-     * 获得所有协议类型
+
+    /** * 获得所有协议类型
      * @return
      */
     List<ProtocolTemplateVO> getProtocolTypes();
