@@ -59,9 +59,9 @@ public class AemsUserRegisterController extends BaseUserController {
         //验证手机号是否已被注册
         UserVO user = aemsUserRegisterService.getUsersByMobile(registerRequest.getMobile());
         if (null != user) {
-            result.setStatus(MsgEnum.STATUS_ZC000005.getCode());
-            result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getMsg());
-            result.setStatusDesc("手机号已在平台注册");
+            //result.setStatus(MsgEnum.STATUS_ZC000005.getCode());
+            result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getCode());
+            result.setStatusDesc(MsgEnum.STATUS_ZC000005.getMsg());
             result.setIsOpenAccount(String.valueOf(user.getBankOpenAccount()));
             if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
                 BankOpenAccountVO bankOpenAccount = aemsUserRegisterService.getBankOpenAccount(user.getUserId());
@@ -80,7 +80,7 @@ public class AemsUserRegisterController extends BaseUserController {
         user = aemsUserRegisterService.apiRegister(aemsUserRegisterRequestBean, registerRequest, ip);
         if (user != null) {
             logger.info("api端注册成功, userId is :{}", user.getUserId());
-            result.setStatus(ErrorCodeConstant.SUCCESS);
+            //result.setStatus(ErrorCodeConstant.SUCCESS);
             result.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             result.setStatusDesc("注册成功");
             // 用户Id
@@ -90,7 +90,7 @@ public class AemsUserRegisterController extends BaseUserController {
             result.setIsOpenAccount("0");
         } else {
             logger.error("api端注册失败...");
-            result.setStatus(MsgEnum.STATUS_CE999999.getCode());
+            result.setStatusForResponse(MsgEnum.STATUS_CE999999.getCode());
             result.setStatusDesc(MsgEnum.ERR_USER_REGISTER.getMsg());
         }
         return result;
