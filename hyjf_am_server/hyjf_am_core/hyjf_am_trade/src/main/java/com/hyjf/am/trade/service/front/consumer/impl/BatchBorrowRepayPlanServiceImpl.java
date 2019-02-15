@@ -19,6 +19,7 @@ import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -30,6 +31,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -78,6 +80,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	
 	@Autowired
 	CommisionComputeService commisionComputeService;
+
+	@Value("${aems.notify.url}")
+    private String aemsNotifyUrl;
 
 	@Override
 	public List<BorrowApicron> getBorrowApicronList(Integer apiType) {
@@ -2172,14 +2177,58 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!apicronSuccessFlag) {
 			throw new Exception("批次放款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
 		}
+
+		// ames用户还款通知
+		aemsRepayNotify(periodNow, borrowNid, borrowRepay, recoverFee, recoverCapitalWait, recoverInterestWait, lateInterest, chargeInterest, repayAccount);
+
 		logger.info("还款结束---" + apicron.getBorrowNid() + "---------" + repayOrderId);
 		logger.info("还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",判断复投结束时间:" + dateStr + "-----------");
 //		logger.info("---------------------还款标的:" + borrowNid + ",订单号:" + accedeOrderId + ",是否复投.是否冻结:" + isForstTime(hjhAccede.getEndDate()) + "-----------");
 		return true;
 	}
-	
-	
-	
+
+	/**
+	 * ames用户还款通知
+	 * @param borrowPeriod
+	 * @param borrowNid
+	 * @param borrowRepay
+	 * @param recoverFee
+	 * @param recoverCapitalWait
+	 * @param recoverInterestWait
+	 * @param lateInterest
+	 * @param chargeInterest
+	 * @param repayAccount
+	 */
+	private void aemsRepayNotify(Integer borrowPeriod, String borrowNid, BorrowRepay borrowRepay, BigDecimal recoverFee, BigDecimal recoverCapitalWait, BigDecimal recoverInterestWait, BigDecimal lateInterest, BigDecimal chargeInterest, BigDecimal repayAccount) {
+        logger.info("aems还款异步回调开始......borrowNid is {}", borrowNid);
+		Integer userId = borrowRepay.getUserId();
+		RUser user = getRUser(userId);
+		if (user != null) {
+			Map<String, String> params = new HashMap<>();
+			params.put("status", "000");
+			params.put("statusDesc", "还款成功");
+			// 项目编号
+			params.put("productId", borrowNid);
+			// 用户电子账户
+			params.put("accountId", getAccount(userId).getAccountId());
+			// 还款成功期数
+			params.put("periods", borrowPeriod.toString());
+			// 应还本金
+			params.put("repayAccount", recoverCapitalWait.toString());
+			// 应还利息
+			params.put("repayAccountInterest", recoverInterestWait.toString());
+			// 应还服务费
+			params.put("serviceFee", recoverFee.toString());
+			// 提前还款减息
+			params.put("reduceInterest", chargeInterest.toString());
+			// 逾期违约金
+			params.put("dueServiceFee", lateInterest.toString());
+			// 还款总额
+			params.put("repayAccountAll", repayAccount.toString());
+            logger.info("aems还款异步回调......params is {}", JSONObject.toJSONString(params));
+            HttpDeal.postJson(aemsNotifyUrl + "/aems/api/user_repay/async_callback", JSONObject.toJSONString(params));
+		}
+	}
 
 	/**
 	 * 判断还款是否需要放到订单冻结金额中
