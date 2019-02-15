@@ -80,7 +80,7 @@ public class ApiSignUtil {
 			RSAHelper signHelper = new RSAHelper(ru.getPublicKey());
 			b = signHelper.verify(dataText, signText);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("验签出错  ",e);
 		}
 		return b;
 	}
@@ -138,6 +138,9 @@ public class ApiSignUtil {
 	@Value("${hyjf.req.pub.key}")
 	public void setHyjfReqPubKeyPath(String hyjfReqPubKeyPath) {
 		HYJF_REQ_PUB_KEY_PATH = hyjfReqPubKeyPath;
+	}
+	public static String getHyjfReqPubKeyPath() {
+		return HYJF_REQ_PUB_KEY_PATH;
 	}
 	@Value("${hyjf.req.pri.key}")
 	public void setHyjfReqPriKeyPath(String hyjfReqPriKeyPath) {

@@ -243,12 +243,16 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
                         if(flag){
                             //true
                             repayProject = repayService.getRepayProjectDetail(form);
-                            projectRepayBean = repayProject.getUserRepayList();
+                            if(null !=repayProject){
+                                projectRepayBean = repayProject.getUserRepayList();
+                            }
                         }
                         int ii=0;
                         // 循环还款计划
                         for (BorrowRepayPlanVO borrowRepayPlan : repayPlanList) {
                             AemsBorrowRepayPlanCustomizeVO result = new AemsBorrowRepayPlanCustomizeVO();
+                            //资产机构编号
+                            result.setInstCode(instCode);
                             // 资产编号
                             result.setProductId(productId);
                             // 标的号

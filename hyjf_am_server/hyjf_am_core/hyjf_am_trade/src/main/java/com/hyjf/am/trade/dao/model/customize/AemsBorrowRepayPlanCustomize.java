@@ -65,6 +65,9 @@ public class AemsBorrowRepayPlanCustomize implements Serializable{
     // 资产编号
     private String productId;
 
+    //第三方接口机构编号
+    private String instCode;
+
     public String getBorrowNid() {
         return borrowNid;
     }
@@ -271,5 +274,13 @@ public class AemsBorrowRepayPlanCustomize implements Serializable{
 
     public void setReduceInterest(String reduceInterest) {
         this.reduceInterest = reduceInterest;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
     }
 }
