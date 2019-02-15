@@ -281,4 +281,23 @@ public class AssetPushController extends BaseController {
         }
         return new IntegerResponse(result);
     }
+
+    /**
+     *  根据标的编号查询资产推送表
+     *
+     * @param borrowNid
+     * @return
+     */
+    @RequestMapping("/selectHjhPlanAssetByBorrowNid/{borrowNid}")
+    public HjhPlanAssetResponse selectHjhPlanAssetByBorrowNid(@PathVariable String borrowNid) {
+        HjhPlanAssetResponse response = new HjhPlanAssetResponse();
+        HjhPlanAsset hjhPlanAsset = assetPushService.selectHjhPlanAssetByBorrowNid(borrowNid);
+        if (hjhPlanAsset != null) {
+            HjhPlanAssetVO hjhPlanAssetVO = new HjhPlanAssetVO();
+            BeanUtils.copyProperties(hjhPlanAsset, hjhPlanAssetVO);
+            response.setResult(hjhPlanAssetVO);
+        }
+        return response;
+    }
+
 }

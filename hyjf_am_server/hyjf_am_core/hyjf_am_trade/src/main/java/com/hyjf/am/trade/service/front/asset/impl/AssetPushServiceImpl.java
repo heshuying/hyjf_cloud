@@ -206,4 +206,22 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     public Integer insertBorrowBail(BorrowBail borrowBail) {
         return this.borrowBailMapper.insertSelective(borrowBail);
     }
+
+    /**
+     * 根据标的编号查询资产推送表
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid) {
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        HjhPlanAssetExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        List<HjhPlanAsset> list = this.hjhPlanAssetMapper.selectByExample(example);
+        if (list != null && list.size() != 0) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

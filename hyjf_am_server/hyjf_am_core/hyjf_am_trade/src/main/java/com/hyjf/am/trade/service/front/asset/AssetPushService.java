@@ -112,4 +112,12 @@ public interface AssetPushService extends BaseService {
      * @return
      */
     Integer insertBorrowBail(BorrowBail borrowBail);
+
+    /**
+     * 根据标的编号查询资产推送表
+     *
+     * @param borrowNid
+     * @return
+     */
+    HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid);
 }
