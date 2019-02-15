@@ -294,35 +294,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Override
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
-        BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(bean.getCreditNid());        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
-        if (appChannelStatisticsDetails != null) {
-            logger.info("更新app渠道统计表, userId is: {}", userId);
-            Map<String, Object> params = new HashMap<String, Object>();
-            // 认购本金
-            params.put("accountDecimal", bean.getAssignPrice());
-            // 出借时间
-            params.put("investTime", GetDate.getNowTime10());
-            // 项目类型
-            params.put("projectType", "智投");
-            // 首次投标项目期限
-            String investProjectPeriod = "";
-            investProjectPeriod = borrowCredit.getCreditTerm() + "天";
-            params.put("investProjectPeriod", investProjectPeriod);
-            //根据investFlag标志位来决定更新哪种出借
-            params.put("investFlag", checkIsNewUserCanInvest2(userId));
-            // 用户id
-            params.put("userId", userId);
-            //压入消息队列
-            try {
-                commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
-            } catch (MQException e) {
-                e.printStackTrace();
-                logger.error("渠道统计用户累计出借推送消息队列失败！！！");
-            }
-        }
-
-
         Map<String, Object> data = new HashedMap();
         if(bean!=null){
             // 出借金额
@@ -939,6 +910,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
                     logger.info("开始更新运营数据等 updateUtm ");
                     updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
+                    logger.info("开始更新app渠道统计数据 ht_app_utm_reg ");
+                    updateAppChannel(userId, borrowCredit, creditTenderLog);
                     // 网站累计出借追加
                     // 出借、收益统计表
                     JSONObject params = new JSONObject();
@@ -1004,6 +977,40 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             }
         }
         return true;
+    }
+
+    /**
+     * 更新app渠道统计表
+     * @param userId
+     * @param borrowCredit
+     * @param creditTenderLog
+     */
+    private void updateAppChannel(Integer userId, BorrowCreditVO borrowCredit, CreditTenderLogVO creditTenderLog) {
+        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appChannelStatisticsDetails != null) {
+            logger.info("更新app渠道统计表, userId is: {}", userId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            // 认购本金
+            params.put("accountDecimal", creditTenderLog.getAssignCapital());
+            // 出借时间
+            params.put("investTime", GetDate.getNowTime10());
+            // 项目类型
+            params.put("projectType", "汇转让");
+            // 首次投标项目期限
+            params.put("investProjectPeriod", borrowCredit.getCreditTerm() + "天");
+            //根据investFlag标志位来决定更新哪种出借
+            params.put("investFlag", checkIsNewUserCanInvest2(userId));
+            // 用户id
+            params.put("userId", userId);
+            //压入消息队列
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                e.printStackTrace();
+                logger.error("渠道统计用户累计出借推送消息队列失败！！！");
+            }
+        }
     }
 
     /**
