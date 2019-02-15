@@ -11,7 +11,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.batch.CouponExpiredPushService;
@@ -37,8 +36,6 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
     @Autowired
     private AmTradeClient couponUserClient;
     @Autowired
-    private AmUserClient couponConfigClient;
-    @Autowired
     private CommonProducer commonProducer;
 
     @Override
@@ -52,7 +49,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
         int yestodayBeginDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, -1));
         int yestodayEndDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf));
 
-        // 取得体验金投资（无真实投资）的还款列表
+        // 取得体验金出借（无真实出借）的还款列表
         List<CouponUserVO> couponUsers = couponUserClient.selectCouponUser(nowBeginDate, nowEndDate);
 
         if (!CollectionUtils.isEmpty(couponUsers)) {

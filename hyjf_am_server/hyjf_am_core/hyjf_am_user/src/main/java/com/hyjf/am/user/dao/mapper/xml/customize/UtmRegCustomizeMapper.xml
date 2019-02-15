@@ -9,7 +9,7 @@
 		invest_time = #{investTime},
 		invest_project_period = #{investProjectPeriod}
 		WHERE
-			id = #{id,jdbcType=BIGINT}
+			user_id = #{userId,jdbcType=BIGINT}
   	</update>
 
 	<resultMap id="UtmBaseResultMap" type="com.hyjf.am.vo.admin.UtmVO" >

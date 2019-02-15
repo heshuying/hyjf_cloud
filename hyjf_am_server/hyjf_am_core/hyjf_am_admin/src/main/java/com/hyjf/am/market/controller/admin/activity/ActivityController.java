@@ -5,6 +5,7 @@ import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
@@ -22,9 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -87,8 +86,8 @@ public class ActivityController {
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), recordCount);
         }
-        List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
         if(recordCount>0){
+            List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(activityLists)) {
                 List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activityLists, ActivityListVO.class);
                 response.setResultList(activityListVOS);
@@ -159,24 +158,6 @@ public class ActivityController {
         return response;
     }
 
-
-
-
-    /**
-     * 查询条件设置
-     *
-     * @param activityListRequest
-     * @return
-     */
-    private Map<String, Object> paramSet(ActivityListRequest activityListRequest) {
-        Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("title", activityListRequest.getTitle());
-        mapParam.put("startTime", activityListRequest.getStartTime());
-        mapParam.put("endTime", activityListRequest.getEndTime());
-        mapParam.put("startCreate",activityListRequest.getStartCreate());
-        mapParam.put("endCreate", activityListRequest.getEndCreate());
-        return mapParam;
-    }
 
     /**
      * @auth walter.limeng
@@ -263,6 +244,25 @@ public class ActivityController {
             activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
             response.setResult(activityListVO);
         }
+        return response;
+    }
+    @GetMapping("/checkActivityIfAvailable/{id}")
+    public StringResponse checkActivityIfAvailable(@PathVariable Integer id){
+        StringResponse response = new StringResponse();
+        ActivityList activityList = activityService.getActivityInfo(id);
+        if (activityList == null) {
+            response.setResultStr("104");
+            return response;
+        }
+        if (activityList.getTimeStart() > GetDate.getNowTime10()) {
+            response.setResultStr("101");
+            return response;
+        }
+        if (activityList.getTimeEnd() < GetDate.getNowTime10()) {
+            response.setResultStr("102");
+            return response;
+        }
+        response.setResultStr("000");
         return response;
     }
 }

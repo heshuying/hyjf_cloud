@@ -47,7 +47,7 @@ public class BankCallStatusConstant extends BankCallParamConstant implements Ser
 	public static final String RESPCODE_NOTEXIST = "070";
 	/** 状态 107:重复交易 */
 	public static final String RESPCODE_REPEAT_DEAL = "107";
-	/** 状态 334:已放款金额加本次放款金额超过投资人原单中的投资金额 */
+	/** 状态 334:已放款金额加本次放款金额超过出借人原单中的出借金额 */
 	public static final String RESPCODE_ACCOUNT_OUT = "334";
 	/** 状态 349:本次还款金额加上已还款金额超过还款总额 */
 	public static final String RESPCODE_REPAY_OUT = "349";
@@ -108,7 +108,7 @@ public class BankCallStatusConstant extends BankCallParamConstant implements Ser
 	/** 余额不足 */
     public static final String RETCODE_YUE_FAIL = "CA51";
 	
-	/**投资记录不存在*/
+	/**出借记录不存在*/
 	public static final String RETCODE_BIDAPPLY_NOT_EXIST1 ="CA110112";
 	/**投标申请记录不存在*/
 	public static final String RETCODE_BIDAPPLY_NOT_EXIST2 ="JX900141";
@@ -122,9 +122,9 @@ public class BankCallStatusConstant extends BankCallParamConstant implements Ser
 	/**只能撤销状态是投标中的投标申请*/
 	public static final String RETCODE_UNFREEZE_ALREADY ="JX900662";
 
-	/** 投资是否冻结 0不冻结 */
+	/** 出借是否冻结 0不冻结 */
 	public static final String DEBT_FRZFLAG_UNFREEZE = "0";
-	/** 投资是否冻结 1冻结 */
+	/** 出借是否冻结 1冻结 */
 	public static final String DEBT_FRZFLAG_FREEZE = "1";
 
 	/** 批次处理状态 A待处理 */
@@ -144,5 +144,11 @@ public class BankCallStatusConstant extends BankCallParamConstant implements Ser
 	public static final String BATCH_TXSTATE_TYPE_SUCCESS = "S";
 	/** 批次详情交易状态 F失败 */
 	public static final String BATCH_TXSTATE_TYPE_FAIL = "F";
+
+	/** 同步开户点单处理结果 n失败 */
+	public static final String BANKOPEN_USER_ACCOUNT_N = "n";
+
+	/** 同步开户点单处理结果 Y成功 */
+	public static final String BANKOPEN_USER_ACCOUNT_Y = "y";
 
 }

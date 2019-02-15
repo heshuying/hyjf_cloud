@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.*;
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
@@ -38,7 +37,8 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -102,7 +102,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     /*承接列表sum*/
     public static final String TENDER_SUM_URL = BASE_URL + "/creditTender/getTenderSum";
 
-    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-ADMIN/am-user/borrow_regist_exception/searchbankopenaccount/";
+    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-ADMIN/am-user/borrow_regist_repair/searchbankopenaccount/";
 
     public static final String BORROW_URL = BASE_URL + "/borrow/getBorrow/";
 
@@ -215,12 +215,12 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         CreditUserInfoBean userInfo = new CreditUserInfoBean();
         if (accountVO != null) {
             String accountId = accountVO.getAccount();
-            // 调用江西银行查询单笔投资人投标申请接口
+            // 调用江西银行查询单笔出借人投标申请接口
             BankCallBean bankCallBean = bidApplyQuery(userId, assignNid, accountId);
             if (bankCallBean != null) {
                 userInfo = CommonUtils.convertBean(bankCallBean, CreditUserInfoBean.class);
             } else {
-                logger.error("调用江西银行查询单笔投资人投标申请接口异常");
+                logger.error("调用江西银行查询单笔出借人投标申请接口异常");
             }
         }
         result.setData(userInfo);
@@ -242,7 +242,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         String borrowNid = request.getBorrowNid();
         // 承接订单号
         String assignNid = request.getAssignNid();
-        // 原始投资订单号
+        // 原始出借订单号
         String creditTenderNid = request.getCreditTenderNid();
         // 债转编号
         String creditNid = request.getCreditNid();
@@ -307,7 +307,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         bean.setSeqNo(seqNo);
         bean.setChannel(channel);
         bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);
-        bean.setAccountId(accountId);// 投资人电子账户号
+        bean.setAccountId(accountId);// 出借人电子账户号
         bean.setOrgOrderId(orderId);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId0(Integer.parseInt(userId)));
         bean.setLogUserId(userId);
@@ -320,7 +320,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public AdminResult pdfPreview(BorrowCreditTenderPDFSignReq req) {
         String nid = req.getNid();
         CheckUtil.check(StringUtils.isNotBlank(nid),MsgEnum.ERR_OBJECT_REQUIRED,"nid");
-        // 根据订单号查询用户投资协议记录表
+        // 根据订单号查询用户出借协议记录表
         TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
         if (tenderAgreement != null && org.apache.commons.lang3.StringUtils.isNotBlank(tenderAgreement.getImgUrl())) {
             JSONObject responseBean = new JSONObject();
@@ -336,7 +336,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             responseBean.put("fileDomainUrl",fileDomainUrl);
             return new AdminResult(responseBean);
         } else {
-            return new AdminResult(BaseResult.FAIL, "未查询到用户投资协议");
+            return new AdminResult(BaseResult.FAIL, "未查询到用户出借协议");
         }
     }
 

@@ -160,7 +160,7 @@ public class SensorsDataCreditSerivceImpl extends BaseServiceImpl implements Sen
                 properties.put("PlatformType", "iOS");
             }
 
-            // 获取投资时推荐人部门等信息
+            // 获取出借时推荐人部门等信息
             // 根据用户ID 查询用户推荐人信息
             SpreadsUserVO spreadsUsers = this.amUserClient.querySpreadsUsersByUserId(userId);
             // 用户没有推荐人
@@ -249,13 +249,13 @@ public class SensorsDataCreditSerivceImpl extends BaseServiceImpl implements Sen
                 return;
             }
 
-            // 原始投资订单号
+            // 原始出借订单号
             String tenderNid = borrowCredit.getTenderNid();
             BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
             borrowTenderRequest.setTenderNid(tenderNid);
             BorrowTenderVO borrowTenderVO = this.amTradeClient.selectBorrowTender(borrowTenderRequest);
             if (borrowTenderVO == null) {
-                logger.error("根据投资订单号查询投资记录不存在,投资订单号:[" + tenderNid + "].");
+                logger.error("根据出借订单号查询出借记录不存在,出借订单号:[" + tenderNid + "].");
                 return;
             }
 
@@ -292,7 +292,7 @@ public class SensorsDataCreditSerivceImpl extends BaseServiceImpl implements Sen
             properties.put("project_repayment_type", borrowStyle.getName());
             // 当前期次
             properties.put("current_period", borrowCredit.getCreditPeriod());
-            // 投资时间
+            // 出借时间
             properties.put("invest_time", GetDate.getDateTimeMyTimeInMillis(borrowTenderVO.getCreateTime()));
             // 转让本金
             properties.put("transfer_money", borrowCredit.getCreditCapital());

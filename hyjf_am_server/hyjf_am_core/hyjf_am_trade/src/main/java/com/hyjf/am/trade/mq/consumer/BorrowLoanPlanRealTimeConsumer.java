@@ -111,6 +111,14 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                         }
                         // 发送mq到生成互金合同要素信息
                         sendMQ(borrowApicron);
+
+                        // add 合规数据上报 埋点 liubin 20181122 start
+                        // 推送数据到MQ 放款成功
+                        JSONObject params = new JSONObject();
+                        params.put("borrowNid",borrowNid);
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                        // add 合规数据上报 埋点 liubin 20181122 end
                     }
                 }else if(loanStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
                     //放款成功
@@ -149,7 +157,7 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                         throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
                     }
                     MailMessage mailmessage = new MailMessage(null, null, "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail, null,
-                            MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+                            MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                     commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, mailmessage));
                 } catch (Exception e2) {
                     logger.error("发送邮件失败..", e2);

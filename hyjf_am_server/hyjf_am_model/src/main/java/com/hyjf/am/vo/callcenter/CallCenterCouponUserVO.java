@@ -37,10 +37,10 @@ public class CallCenterCouponUserVO extends BaseVO implements Serializable {
     //优惠券适用产品类型
     private String projectType;
 
-    //投资额度条件
+    //出借额度条件
     private String tenderQuota;
 
-    //投资项目期限条件
+    //出借项目期限条件
     private String projectExpirationType;
 
     //活动id

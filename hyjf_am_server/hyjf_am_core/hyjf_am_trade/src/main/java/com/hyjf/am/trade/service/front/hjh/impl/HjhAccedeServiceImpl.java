@@ -42,7 +42,7 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
         return null;
     }
     /**
-     * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * 判断用户是否有持有中的计划。如果有，则不能解除出借授权和债转授权
      * @param userId
      * @return
      */
@@ -111,7 +111,7 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
         HjhAccedeExample hjhAccedeExample = new HjhAccedeExample();
         HjhAccedeExample.Criteria criteria = hjhAccedeExample.createCriteria();
         criteria.andMatchDatesGreaterThanOrEqualTo(2);
-        // 订单状态处于自动投资中和自动投资成功(0,2) 2018年6月27日14:16:05
+        // 订单状态处于自动出借中和自动投标成功(0,2) 2018年6月27日14:16:05
         criteria.andOrderStatusIn(Arrays.asList(0,2));
         List<HjhAccede> accedeList = hjhAccedeMapper.selectByExample(hjhAccedeExample);
         return accedeList;
@@ -119,7 +119,7 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
 
 
     /**
-     * 订单投资异常短信预警
+     * 订单出借异常短信预警
      * @author zhangyk
      * @date 2018/8/15 16:26
      */
@@ -137,7 +137,25 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
      */
     @Override
     public boolean updateMatchDays() {
-        return this.batchHjhAccedeCustomizeMapper.updateMatchDates() >= 0 ? true : false;
+        // 更新计算匹配期
+        /**
+         * 1,先更新正常数据, order_status 状态为 0,1,2 的数据
+         * 2,读取 order_status 状态为 80,81,82,90,91,92 并且 count_interest_time 开始计息时间为空的数据进行更新.
+         */
+        Boolean firstUpdate = this.batchHjhAccedeCustomizeMapper.updateMatchDates() >= 0 ? true : false;
+
+        // 获取发生异常且开始计息时间为空的的数据并更新其匹配期 add by huanghui start
+        // 投资异常
+        // this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(80, 82);
+
+        // 复投异常
+        // this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(90, 92);
+
+        // 新增 70 状态,  将更新时的状态改为大于 10 的都定义为异常数据,需要更新其匹配期
+        this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(10);
+
+        // 获取发生异常且开始计息时间为空的的数据并更新其匹配期 add by huanghui end
+        return firstUpdate;
     }
 
     /**

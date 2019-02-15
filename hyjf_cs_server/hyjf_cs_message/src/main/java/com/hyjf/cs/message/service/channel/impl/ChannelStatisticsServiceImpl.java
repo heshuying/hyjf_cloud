@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -49,7 +48,6 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         String timeStartSrch = request.getTimeStartSrch();
         String timeEndSrch = request.getTimeEndSrch();
         String[] utmIdsSrch = request.getUtmIdsSrch();
-        Query query = new Query();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(timeStartSrch) && StringUtils.isNotBlank(timeEndSrch)) {
             Integer begin = GetDate.dateString2Timestamp(timeStartSrch + " 00:00:00");
@@ -111,31 +109,67 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
 
     @Override
     public List<PcChannelStatistics> searchPcChannelStatisticsList(PcChannelStatisticsRequest request) {
-        Query query = new Query();
+        /*Query query = new Query();
         Criteria criteria = new Criteria();
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
+        String[] utmIdsSrch = request.getUtmIdsSrch();
         if (startTime != null && endTime != null) {
             criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
-        query.addCriteria(criteria);
-        if (request.getCurrPage() > 0) {
-            int currPage = request.getCurrPage();
-            int pageSize = request.getPageSize();
-            int limitStart = (currPage - 1) * pageSize;
-            query.skip(limitStart).limit(pageSize);
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
+            List<String> sourceIds = Arrays.asList(utmIdsSrch);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
         }
-        query.with(new Sort(Sort.Direction.DESC, "_id"));
-        return pcChannelStatisticsDao.find(query);
+      *//*  query.addCriteria(criteria);
+
+        int currPage = request.getCurrPage();
+        int pageSize = request.getPageSize();
+        int limitStart = (currPage - 1) * pageSize;
+        query.skip(limitStart).limit(pageSize);
+
+        query.with(new Sort(Sort.Direction.DESC, "_id"));*//*
+        return pcChannelStatisticsDao.find(query);*/
+        return pcChannelStatisticsDao.searchPcChannelStatisticsList(request);
+
     }
 
     @Override
     public int selectCount(PcChannelStatisticsRequest request) {
-        request.setCurrPage(0);
-        List<PcChannelStatistics> list = searchPcChannelStatisticsList(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        Date startTime = request.getStartTime();
+        Date endTime = request.getEndTime();
+        String[] utmIdsSrch = request.getUtmIdsSrch();
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (startTime != null && endTime != null) {
+            criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
-        return 0;
+        if (utmIdsSrch != null && utmIdsSrch.length > 0) {
+            List<Integer> listInt = new ArrayList<>();
+            List<String> sourceIds = Arrays.asList(utmIdsSrch);
+            org.apache.commons.collections.CollectionUtils.collect(sourceIds, new Transformer() {
+                @Override
+                public Object transform(Object o) {
+                    return Integer.valueOf(String.valueOf(o));
+                }
+            },listInt);
+            criteria.and("sourceId").in(listInt);
+        }
+        Aggregation aggregation = Aggregation.newAggregation(
+                match(criteria),
+                Aggregation.group("sourceId").count().as("count")
+        );
+        AggregationResults<Map> ar = appChannelStatisticsDao.countChannelStatistics(aggregation);
+        List<Map> result = ar.getMappedResults();
+        int count = result.size();
+        return count;
+
     }
 }

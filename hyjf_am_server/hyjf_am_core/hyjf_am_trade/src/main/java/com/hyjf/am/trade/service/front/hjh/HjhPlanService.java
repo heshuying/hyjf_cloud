@@ -50,6 +50,14 @@ public interface HjhPlanService {
     HjhPlan getHjhPlanByNid(String planNid);
 
     /**
+     * @Description 根据计划编号查询计划
+     * @Author liubin
+     * @Version v0.1
+     * @Date 2018/6/19 14:08
+     */
+    HjhPlan doGetHjhPlanByNid(String planNid);
+
+    /**
      * 取得全部汇计划列表
      * @return
      */
@@ -64,7 +72,7 @@ public interface HjhPlanService {
     int insertHJHPlanAccede(HjhAccedeVO planAccede, Account userAccount);
 
     /**
-     * 获取汇计划投资详情
+     * 获取汇计划出借详情
      * @param params
      * @return
      */

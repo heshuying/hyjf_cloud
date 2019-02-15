@@ -1,5 +1,5 @@
 /**
- * Description:按照用户名/手机号查询投资明细（直投产品）用实体类
+ * Description:按照用户名/手机号查询出借明细（直投产品）用实体类
  * Copyright: Copyright (HYJF Corporation)2017
  * Company: HYJF Corporation
  * @author: 刘彬

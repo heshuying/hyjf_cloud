@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 神策数据统计:计划投资相关Service实现类
+ * 神策数据统计:计划出借相关Service实现类
  *
  * @author liuyang
  * @version SensorsDataHjhInvestServiceImpl, v0.1 2018/10/23 9:44
@@ -88,7 +88,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
             return;
         }
 
-        // 投资人用户ID
+        // 出借人用户ID
         Integer userId = hjhAccede.getUserId();
 
         // 计划编号
@@ -136,7 +136,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
             properties.put("PlatformType", "iOS");
         }
 
-        // 投资金额
+        // 出借金额
         properties.put("tender_amount", hjhAccede.getAccedeAccount());
         // 历史回报率
         properties.put("project_apr", hjhAccede.getExpectApr().divide(new BigDecimal("100")));
@@ -145,7 +145,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
         // 支付方式
         properties.put("pay_method", "余额支付");
 
-        // 获取投资时推荐人部门等信息
+        // 获取出借时推荐人部门等信息
         // 根据用户ID 查询用户推荐人信息
         SpreadsUserVO spreadsUsers = this.amUserClient.querySpreadsUsersByUserId(userId);
         // 用户没有推荐人
@@ -198,14 +198,14 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
         // 根据加入订单号查询此笔加入是否使用优惠券
         CouponRealTenderVO couponRealTender = this.amTradeClient.selectCouponRealTenderByOrderId(orderId);
         if (couponRealTender != null) {
-            // 优惠券投资ID
+            // 优惠券出借ID
             String couponTenderId = couponRealTender.getCouponTenderId();
-            logger.info("此笔加入使用了优惠券:优惠券投资ID:[" + couponTenderId + "],计划加入订单号:[" + orderId + "].");
+            logger.info("此笔加入使用了优惠券:优惠券出借ID:[" + couponTenderId + "],计划加入订单号:[" + orderId + "].");
 
-            // 根据优惠券投资ID查询优惠券投资
+            // 根据优惠券出借ID查询优惠券出借
             CouponTenderVO couponTender = this.amTradeClient.selectCouponTenderByCouponTenderId(couponTenderId);
             if (couponTender == null) {
-                logger.error("根据优惠券投资ID获取优惠券投资情况失败,优惠券投资ID:[" + couponTenderId + "].");
+                logger.error("根据优惠券出借ID获取优惠券出借情况失败,优惠券出借ID:[" + couponTenderId + "].");
                 return;
             }
             // 优惠券ID
@@ -226,11 +226,11 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
                 logger.error("根据优惠券编号查询优惠券配置信息失败,优惠券信息:[" + couponCode + "].");
                 return;
             }
-            // 根据优惠券投资订单号查询优惠券投资信息
+            // 根据优惠券出借订单号查询优惠券出借信息
             BorrowTenderCpnVO borrowTenderCpn = this.amTradeClient.selectBorrowTenderCpnByCouponTenderId(couponRealTender.getCouponTenderId());
 
             if (borrowTenderCpn == null) {
-                logger.error("根据优惠券投资订单号查询优惠券投资信息失败,优惠券投资订单号:[" + couponRealTender.getCouponTenderId() + "].");
+                logger.error("根据优惠券出借订单号查询优惠券出借信息失败,优惠券出借订单号:[" + couponRealTender.getCouponTenderId() + "].");
                 return;
             }
 
@@ -327,13 +327,11 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
             // 项目期限限制
             properties.put("project_duration_limit", createProjectExpiration(couponConfig.getProjectExpirationLength(),
                     couponConfig.getProjectExpirationLengthMin(), couponConfig.getProjectExpirationLengthMax(), couponConfig.getProjectExpirationType(), hjhPlan.getIsMonth()));
-            // 适用投资产品
+            // 适用出借产品
             properties.put("product_suitable", createProjectTypeString(couponConfig.getProjectType()));
-            // 投资金额限制
+            // 出借金额限制
             properties.put("tender_amount_limit", createCouponTenderMoney(couponConfig.getTenderQuotaType(), couponConfig.getTenderQuotaMin(), couponConfig.getTenderQuotaMax(), couponConfig.getTenderQuota()));
-            // 奖励券创建时间 TODO CouponUserVO add_time 字段变更
             properties.put("coupon_createtime", couponUser.getCreateTime());
-            // 奖励券到期时间 TODO CouponUserVO end_time 字段变更
             properties.put("coupon_endtime", GetDate.getDateTimeMyTime(couponUser.getEndTime()));
             // 是否用券
             properties.put("use_coupon", true);
@@ -364,9 +362,9 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
             properties.put("expect_project_award_income", BigDecimal.ZERO);
             // 项目期限限制
             properties.put("project_duration_limit", "");
-            // 适用投资产品
+            // 适用出借产品
             properties.put("product_suitable", "");
-            // 投资金额限制
+            // 出借金额限制
             properties.put("tender_amount_limit", "");
             // 是否用券
             properties.put("use_coupon", false);
@@ -395,7 +393,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
     private BigDecimal getInterestTYJ(BigDecimal account, BigDecimal borrowApr, Integer couponProfitTime) {
         BigDecimal interest = BigDecimal.ZERO;
         // 保留两位小数（去位）
-        // 应回款=体验金面值*投资标的年化/365*收益期限（体验金发行配置）
+        // 应回款=体验金面值*出借标的年化/365*收益期限（体验金发行配置）
         interest = account.multiply(borrowApr.divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP))
                 .divide(new BigDecimal(365), 6, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(couponProfitTime))
                 .setScale(2, BigDecimal.ROUND_DOWN);
@@ -498,7 +496,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
 
 
     /**
-     * 获取优惠券投资金额限定
+     * 获取优惠券出借金额限定
      *
      * @param tenderQuotaType
      * @param tenderQuotaMin
@@ -508,7 +506,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
      */
     private String createCouponTenderMoney(Integer tenderQuotaType, Integer tenderQuotaMin, Integer tenderQuotaMax, Integer tenderQuota) {
         if (tenderQuotaType == 0 || tenderQuotaType == null) {
-            return ("投资金额不限");
+            return ("出借金额不限");
         } else if (tenderQuotaType == 1) {
             String tenderQuotaMinStr = tenderQuotaMin + "";
             if (tenderQuotaMin >= 10000 && tenderQuotaMin % 10000 == 0) {

@@ -28,7 +28,7 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_CE000008 = "CE000008";
     // 请勿重复操作
     public static final String STATUS_CE000009 = "CE000009";
-    // 用户为投资账户
+    // 用户为出借账户
     public static final String STATUS_CE000010 = "CE000010";
     // 未进行缴费授权
     public static final String STATUS_CE000011 = "CE000011";

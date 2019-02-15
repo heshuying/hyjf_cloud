@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 
 /**
- * @Description 投资请求参数
+ * @Description 出借请求参数
  * @Author sss
  * @Version v0.1
  * @Date 2018/6/19 9:37
@@ -31,31 +31,31 @@ public class TenderRequest extends BaseVO {
     /**
      * 项目编号
      */
-    @ApiModelProperty(value = "项目编号 投资 加入计划用")
+    @ApiModelProperty(value = "项目编号 出借 加入计划用")
     private String borrowNid ;
     /**
      * 防止重复加入计划
      */
     @ApiModelProperty(value = "防止重复加入计划")
     private String tenderToken;
-    // 投资Ip
+    // 出借Ip
     private String ip;
     /**
-     * 投资平台
+     * 出借平台
      */
-    @ApiModelProperty(value = "投资平台 app需要上送")
+    @ApiModelProperty(value = "出借平台 app需要上送")
     private String platform;
     // 登录的userId
     private Integer userId;
     // 当前登录user对象
     private UserVO user;
     /**
-     * 投资金额
+     * 出借金额
      */
-    @ApiModelProperty(value = "投资金额")
+    @ApiModelProperty(value = "出借金额")
     private String account;
 
-    @ApiModelProperty(value = "投资金额App用")
+    @ApiModelProperty(value = "出借金额App用")
     private String money;
 
     @ApiModelProperty(value = "优惠券ID  App用")
@@ -85,12 +85,12 @@ public class TenderRequest extends BaseVO {
     // 预期收益
     private BigDecimal earnings;
 
-    // 投资金额
+    // 出借金额
     private BigDecimal accountDecimal;
 
     private Integer nowTime;
 
-    // 优惠券投资  排他校验用
+    // 优惠券出借  排他校验用
     private Integer couponOldTime;
 
     private String mainTenderNid;
@@ -121,12 +121,12 @@ public class TenderRequest extends BaseVO {
     private String randomString;
 
     /**
-     * 投资人用户名
+     * 出借人用户名
      */
     private String userName;
 
     /**
-     * 投资来源
+     * 出借来源
      * @return
      */
     private String tenderFrom;

@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.evaluation.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.AnswerRequest;
@@ -32,7 +31,6 @@ import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.soa.apiweb.CommonParamBean;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,19 +128,12 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         // String
         String result = StringUtils.EMPTY;
         if (StringUtils.isEmpty(resultActivity) && StringUtils.isEmpty(resultPlatform)) {
-            CommonParamBean couponParamBean = new CommonParamBean();
-            // 用户编号
-            couponParamBean.setUserId(String.valueOf(userId));
-            // 评测送加息券
-            couponParamBean.setSendFlg(1);
             // 发放优惠券（1张加息券）
             try {
                 JSONObject params = new JSONObject();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("userId", String.valueOf(userId));
                 params.put("sendFlg", "11");
-                String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
-                params.put("sign", signValue);
                 commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                         UUID.randomUUID().toString(), params));
             } catch (MQException e) {
@@ -228,7 +219,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             if (StringUtils.isNotEmpty(result)) {
                 JSONObject resultObj = JSONObject.parseObject(result);
                 if (resultObj.getIntValue("status") == 0 && resultObj.getIntValue("couponCount") > 0) {
-                    String sendResult = "恭喜您获得"+resultObj.getIntValue("couponCount")+"张加息券，体验投资流程，获取高额收益，可在我的账户-优惠券中查看";
+                    String sendResult = "恭喜您获得"+resultObj.getIntValue("couponCount")+"张加息券，体验出借流程，获取高额收益，可在我的账户-优惠券中查看";
                     int sendCount = resultObj.getIntValue("couponCount");
                     returnMap.put("sendCount", sendCount);
                     returnMap.put("sendResult", sendResult);
@@ -260,12 +251,21 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                 default:
                     revaluation_money = "0";
             }
-            returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+            returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
             returnMap.put("evalType", eval_type);
         }
         userEvalationResult.setEvalType((String) returnMap.get("evalType"));
         userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 用户信息修改（风险测评）
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                MQConstant.HG_REPORT_DELAY_LEVEL);
+        // add 合规数据上报 埋点 liubin 20181122 end
+
         return returnMap;
         // 发放优惠券 end
     }

@@ -469,7 +469,7 @@ public class HjhLabelController extends BaseController{
             try {
             	if(StringUtils.isNotEmpty(viewRequest.getPushTimeStartString())){
             		request.setPushTimeStart(sdf.parse(viewRequest.getPushTimeStartString()));
-            	}
+            	} 
             	if(StringUtils.isNotEmpty(viewRequest.getPushTimeEndString())){
             		request.setPushTimeEnd(sdf.parse(viewRequest.getPushTimeEndString()));
             	}
@@ -535,7 +535,7 @@ public class HjhLabelController extends BaseController{
 			return jsonObject;
 		}
 		// 准备插表--拼装info画面参数
-		infoRequest = setInfoParam(jsonObject,viewRequest);
+		infoRequest = setInfoParamForUpdate(jsonObject,viewRequest);
 		infoRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 		// 前端必须传入标签编号
 		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
@@ -593,42 +593,190 @@ public class HjhLabelController extends BaseController{
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest infoRequest = new HjhLabelInfoRequest();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
+		
 		// 前端必须传入标签编号
 		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
 			// 修改状态
 			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(viewRequest.getLabelId()));
+			// 通过传入的labelId查询标签表
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListById(hjhLabelRequest);
 			if (list != null && list.size() > 0) {
 				HjhLabelCustomizeVO resultVO = list.get(0);
+				//labelState启用状态 0：停用 1：启用
 				if(resultVO.getLabelState() == 1){
+					// 如果是启用，则改为停用
 					infoRequest.setLabelState(0);
-					// LabelName 用来检索
-					infoRequest.setLabelName(resultVO.getLabelName());
+					// 设置主键
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
-					
-					infoRequest.setLabelTermType(resultVO.getLabelTermType());
-					infoRequest.setIsCredit(resultVO.getIsCredit());
-					infoRequest.setIsLate(resultVO.getIsLate());
-					
+					// 更新者
+					infoRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 				} else {
+					// 如果是停用，则改为启用
 					infoRequest.setLabelState(1);
-					// LabelName 用来检索
-					infoRequest.setLabelName(resultVO.getLabelName());
+					// 设置主键
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
-					
-					infoRequest.setLabelTermType(resultVO.getLabelTermType());
-					infoRequest.setIsCredit(resultVO.getIsCredit());
-					infoRequest.setIsLate(resultVO.getIsLate());
-					
+					// 更新者
+					infoRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 				}
-				int flg = this.labelService.updateHjhLabelRecord(infoRequest);
+				// 使用主键更新
+				/*int flg = this.labelService.updateHjhLabelRecord(infoRequest);*/
+				int flg = this.labelService.updateHjhLabelRecordByIdAndLabelState(infoRequest);
 				if(flg > 0){
 					jsonObject.put("status", SUCCESS);
 				} else {
 					jsonObject.put("status", FAIL);
 				}
+			}else{
+				jsonObject.put("status", FAIL);
+				jsonObject.put("statusDesc", FAIL_DESC);
+				jsonObject.put("errorMsg", "通过传入的labelId未能查询到标签列表！"  );
 			}
+		} else {
+			jsonObject.put("status", FAIL);
+			jsonObject.put("statusDesc", FAIL_DESC);
+			jsonObject.put("errorMsg", "未获取到前端传入的labelId！");
 		}
 		return jsonObject;
 	}
+	
+	
+	/**
+	 * 拼裝info參數
+	 *
+	 * @param request
+	 * @return 进入标签配置列表页面
+	 */
+	private HjhLabelInfoRequest setInfoParamForUpdate(JSONObject jsonObject ,HjhLabelViewRequest viewRequest) {
+		HjhLabelInfoRequest request = new HjhLabelInfoRequest();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		if (null != viewRequest) {
+			// 标签名称
+        	if (StringUtils.isNotEmpty(viewRequest.getLabelName())){
+        		request.setLabelName(viewRequest.getLabelName());
+        	} 
+        	//标的期限最小
+        	if (viewRequest.getLabelTermStart()!= null) {
+        		request.setLabelTermStart(Integer.valueOf(viewRequest.getLabelTermStart()));
+        	} else {
+        		request.setLabelTermStart(null);
+        	}
+        	//标的期限最大
+        	if (viewRequest.getLabelTermEnd()!= null) {
+        		request.setLabelTermEnd(Integer.valueOf(viewRequest.getLabelTermEnd()));
+        	} else {
+        		request.setLabelTermEnd(null);
+        	}
+        	// 日/月
+        	if (StringUtils.isNotEmpty(viewRequest.getLabelTermType())) {
+        		request.setLabelTermType(viewRequest.getLabelTermType());
+        	}
+        	// 标的实际利率最小
+        	if (viewRequest.getLabelAprStart()!= null) {
+        		request.setLabelAprStart(new BigDecimal(viewRequest.getLabelAprStart()));
+        	} else {
+        		request.setLabelAprStart(null);
+        	}
+        	// 标的实际利率最大
+        	if (viewRequest.getLabelAprEnd()!= null) {
+        		request.setLabelAprEnd(new BigDecimal(viewRequest.getLabelAprEnd()));
+        	} else {
+        		request.setLabelAprEnd(null);
+        	}
+        	// 还款方式
+        	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyle())) {
+        		request.setBorrowStyle(viewRequest.getBorrowStyle());
+        	}
+        	// 还款方式名称
+        	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyleName())) {
+        		request.setBorrowStyleName(viewRequest.getBorrowStyleName());
+        	}
+        	// 标的实际支付金额最小
+        	if (viewRequest.getLabelPaymentAccountStart()!= null) {
+        		request.setLabelPaymentAccountStart(new BigDecimal(viewRequest.getLabelPaymentAccountStart()));
+        	} else {
+        		request.setLabelPaymentAccountStart(null);
+        	}
+        	// 标的实际支付金额最大
+        	if (viewRequest.getLabelPaymentAccountEnd()!= null) {
+        		request.setLabelPaymentAccountEnd(new BigDecimal(viewRequest.getLabelPaymentAccountEnd()));
+        	} else {
+        		request.setLabelPaymentAccountEnd(null);
+        	}
+        	// 资产来源Code
+        	if (StringUtils.isNotEmpty(viewRequest.getInstCode())) {
+        		request.setInstCode(viewRequest.getInstCode());
+        	}
+        	// 资产来源名称
+        	if (StringUtils.isNotEmpty(viewRequest.getInstName())) {
+        		request.setInstName(viewRequest.getInstName());
+        	}
+        	// 产品类型Code
+        	if (StringUtils.isNotEmpty(viewRequest.getAssetType())) {
+        		request.setAssetType(Integer.valueOf(viewRequest.getAssetType()));
+        	}
+        	// 产品类型名称
+        	if (StringUtils.isNotEmpty(viewRequest.getAssetTypeName())) {
+        		request.setAssetTypeName(viewRequest.getAssetTypeName());
+        	}
+        	// 项目类型Code
+        	if (StringUtils.isNotEmpty(viewRequest.getProjectType())) {
+        		request.setProjectType(Integer.valueOf(viewRequest.getProjectType()));
+        	}
+        	// 项目类型名称
+        	if (StringUtils.isNotEmpty(viewRequest.getProjectTypeName())) {
+        		request.setProjectTypeName(viewRequest.getProjectTypeName());
+        	}
+        	// 标的是否发生债转
+        	if (StringUtils.isNotEmpty(viewRequest.getIsCredit())) {
+        		request.setIsCredit(Integer.valueOf(viewRequest.getIsCredit()));
+        	}
+        	// 债转次数不超过
+        	if (StringUtils.isNotEmpty(viewRequest.getCreditSumMax())) {
+        		request.setCreditSumMax(Integer.valueOf(viewRequest.getCreditSumMax()));
+        	}
+        	// 标的是否逾期
+           	if (StringUtils.isNotEmpty(viewRequest.getIsLate())) {
+        		request.setIsLate(Integer.valueOf(viewRequest.getIsLate()));
+        	}
+           	
+           	// 推送时间节点
+            try {
+            	if(StringUtils.isNotEmpty(viewRequest.getPushTimeStartString())){
+            		request.setPushTimeStart(sdf.parse(viewRequest.getPushTimeStartString()));
+            	} else {
+            		request.setPushTimeStart(null);
+            	}
+            	if(StringUtils.isNotEmpty(viewRequest.getPushTimeEndString())){
+            		request.setPushTimeEnd(sdf.parse(viewRequest.getPushTimeEndString()));
+            	} else {
+            		request.setPushTimeEnd(null);
+            	}
+            } catch (ParseException e) {
+                jsonObject.put("errorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
+            }
+            
+            // 剩余最小天数
+           	if (viewRequest.getRemainingDaysStart()!= null) {
+        		request.setRemainingDaysStart(Integer.valueOf(viewRequest.getRemainingDaysStart()));
+        	} else {
+        		request.setRemainingDaysStart(null);
+        	}
+            // 剩余最大天数
+           	if (viewRequest.getRemainingDaysEnd()!= null) {
+        		request.setRemainingDaysEnd(Integer.valueOf(viewRequest.getRemainingDaysEnd()));
+        	} else {
+        		request.setRemainingDaysEnd(null);
+        	}
+           	// 标签状态
+           	if (StringUtils.isNotEmpty(viewRequest.getLabelState())) {
+        		request.setLabelState(Integer.valueOf(viewRequest.getLabelState()));
+        	}
+           	if(viewRequest.getCreateUserId()!= null){
+           		request.setCreateUserId(viewRequest.getCreateUserId());
+           	}	
+		}
+		return request;
+	}
+	
+	
 }

@@ -71,7 +71,19 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     private Date updateTime;
 
+    private String availableInvestAccountNew;
+
+    private String investLevel;
+
     private static final long serialVersionUID = 1L;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
 
     public Integer getId() {
         return id;
@@ -317,5 +329,13 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     public void setLockPeriodView(String lockPeriodView) {
         this.lockPeriodView = lockPeriodView;
+    }
+
+    public String getAvailableInvestAccountNew() {
+        return availableInvestAccountNew;
+    }
+
+    public void setAvailableInvestAccountNew(String availableInvestAccountNew) {
+        this.availableInvestAccountNew = availableInvestAccountNew;
     }
 }

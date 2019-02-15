@@ -18,6 +18,7 @@ import com.hyjf.cs.market.bean.ContentArticleBean;
 import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.AppFindService;
+import com.hyjf.cs.market.util.CdnUrlUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -44,9 +45,6 @@ public class AboutUsController extends BaseController {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 
-	@Value("${hyjf.web.host}")
-	private String webUrl;
-
 	@Autowired
 	private AboutUsService aboutUsService;
 	@Autowired
@@ -62,7 +60,7 @@ public class AboutUsController extends BaseController {
 		try {
 			ContentArticleVO aboutus = aboutUsService.getAboutUs();
 			String contents = aboutus.getContent();
-			// 获取累计投资金额
+			// 获取累计出借金额
 			String totalInvestmentAmount = aboutUsService.getTotalInvestmentAmount();
 			totalInvestmentAmount = StringUtils.isBlank(totalInvestmentAmount) ? "0.00"
 					: DF_FOR_VIEW.format(new BigDecimal(totalInvestmentAmount));
@@ -313,11 +311,11 @@ public class AboutUsController extends BaseController {
 	public WebResult<TotalMessageVO> noviceGuide(@RequestHeader(value = "userId" ,required = false) Integer userId ) {
 
 		TotalMessageVO totalMessageVO = new TotalMessageVO();
-		//投资总额(亿元) tenderSum
+		//出借总额(亿元) tenderSum
 		String tenderSum = aboutUsService.selectTenderSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
 		//收益总额(亿元) interestSum
 		String interestSum = aboutUsService.selectInterestSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
-		//累计投资人数(万人) totalTenderSum
+		//累计出借人数(万人) totalTenderSum
 		int totalTenderSum = aboutUsService.selectTotalTenderSum() / 10000;
 		//当前时间 date
 		String date = GetDate.getDataString(GetDate.date_sdf_wz);
@@ -392,9 +390,9 @@ public class AboutUsController extends BaseController {
 		}
 		if (mediaReport != null) {
 			if (mediaReport.getContent().contains("../../../..")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()));
 			}
 		}
 		webResult = new WebResult(mediaReport);
@@ -417,9 +415,9 @@ public class AboutUsController extends BaseController {
 		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
 		if (mediaReport != null) {
 			if (mediaReport.getContent().contains("../../../..")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()) );
 			}
 		}
 
@@ -446,11 +444,11 @@ public class AboutUsController extends BaseController {
 		List<ContentArticleVO> companyDynamicsList = response.getResultList();
 		for (ContentArticleVO companyDynamics : companyDynamicsList) {
 			if (companyDynamics.getContent().contains("../../../..")) {
-				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", webUrl));
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (companyDynamics.getContent().contains("src=\"/")) {
 				companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/",
-						"src=\"" + webUrl)
-						+ "//");
+						"src=\"" + CdnUrlUtil.getCdnUrl())
+						);
 			}
 		}
 		webResult = new WebResult(companyDynamicsList);

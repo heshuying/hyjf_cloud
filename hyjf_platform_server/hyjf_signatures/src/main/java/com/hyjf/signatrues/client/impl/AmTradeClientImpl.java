@@ -1,93 +1,21 @@
 package com.hyjf.signatrues.client.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.app.AppNewAgreementResponse;
-import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
-import com.hyjf.am.response.app.AppProjectListResponse;
-import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
-import com.hyjf.am.response.config.AppReapyCalendarResponse;
-import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.HjhPlanDetailResponse;
-import com.hyjf.am.response.trade.HjhPlanResponse;
-import com.hyjf.am.response.trade.account.*;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
-import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.response.wdzj.BorrowDataResponse;
-import com.hyjf.am.response.wdzj.PreapysListResponse;
-import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
-import com.hyjf.am.resquest.api.ApiRepayListRequest;
-import com.hyjf.am.resquest.api.AutoTenderComboRequest;
-import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
-import com.hyjf.am.resquest.assetpush.InfoBean;
-import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
-import com.hyjf.am.resquest.user.BankAccountBeanRequest;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.admin.AppPushManageVO;
-import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
-import com.hyjf.am.vo.app.AppNewAgreementVO;
-import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
-import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
-import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.market.AppAdsCustomizeVO;
-import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
-import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
-import com.hyjf.am.vo.trade.account.*;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
-import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
-import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.*;
-import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
-import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.signatrues.bean.*;
 import com.hyjf.signatrues.client.AmTradeClient;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -267,7 +195,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据承接订单号查询债转投资表
+     * 根据承接订单号查询债转出借表
      * @param assignNid
      * @return
      */
@@ -369,7 +297,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -385,7 +313,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     *查询汇计划债转投资表
+     *查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -404,7 +332,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     *  更新投资协议信息
+     *  更新出借协议信息
      * @return
      */
     @Override
@@ -418,7 +346,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 通过主键获取投资协议信息
+     * 通过主键获取出借协议信息
      * @param tenderAgreementID
      * @return
      */
@@ -456,6 +384,29 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowCreditResponse response=restTemplate.postForEntity(url,request1,BorrowCreditResponse.class).getBody();
         if (Validator.isNotNull(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据条件获取还款计划分期信息
+     * add by yangchangwei 20181227
+     * @param borrowNid
+     * @param nid
+     * @param period
+     * @return
+     */
+    @Override
+    public BorrowRecoverPlanVO getBorrowRecoverPlanByNidandPeriod(String borrowNid, String nid, Integer period) {
+
+        BorrowRecoverPlanVO info = new BorrowRecoverPlanVO();
+        info.setBorrowNid(borrowNid);
+        info.setNid(nid);
+        info.setRecoverPeriod(period);
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/getBorrowRecoverPlanByNidandPeriod";
+        BorrowRecoverPlanResponse response = restTemplate.postForEntity(url, info, BorrowRecoverPlanResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
         }
         return null;
     }

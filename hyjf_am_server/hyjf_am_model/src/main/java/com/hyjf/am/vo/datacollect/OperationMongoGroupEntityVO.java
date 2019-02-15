@@ -130,7 +130,7 @@ public class OperationMongoGroupEntityVO {
     }
 
     /**
-     * 整理投资人区域信息，按照由小到大排列
+     * 整理出借人区域信息，按照由小到大排列
      *
      * @param cityMap
      */

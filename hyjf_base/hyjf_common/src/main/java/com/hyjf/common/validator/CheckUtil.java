@@ -64,37 +64,13 @@ public class CheckUtil {
 	 * @param params
 	 */
 	private static void throwCheckErrMsg(MsgCode msgCode, Object... params) {
+		logger.warn("check is not pass, code is: {}, msg is: {}", msgCode.getCode(), msgCode.getMsg());
 		if (data != null) {
 			throw new CheckException(msgCode.getCode(), StringUtil.getEnumMessage(msgCode, params), data);
 		}else {
 			throw new CheckException(msgCode.getCode(), StringUtil.getEnumMessage(msgCode, params));
 		}
 	}
-//	/**
-//     * 验证结果为false时，抛出自定义Check异常(适用 信息码和信息在properties中)
-//     * @param condition	验证结果
-//     * @param errKey	信息key
-//     * @param params    信息用参数集
-//     */
-//    public static void check(boolean condition, String errKey, Object... params) {
-//    	if (!condition) {
-//    		throwCheckErrMsg(errKey, params);
-//    	}
-//    }
-
-//    /**
-//     * 抛出自定义Check异常(适用 信息码和信息在properties中)
-//     * @param errKey
-//     * @param params
-//     */
-//    private static void throwCheckErrMsg(String errKey, Object... params) {
-//    	if (data != null) {
-//    		throw new CheckException(errKey, getErrorMessage(errKey, params), data);
-//    	}else {
-//    		throw new CheckException(errKey, getErrorMessage(errKey, params));
-//    	}
-//    }
-
 
 	public static void checkNull(Object o , String errMsg){
 		if (isEmpty(o)){

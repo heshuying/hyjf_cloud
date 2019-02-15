@@ -14,7 +14,7 @@ public interface WeeklyService {
 
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param userid
      * @param begin
      * @param end
@@ -23,7 +23,7 @@ public interface WeeklyService {
     List<BorrowTender> getBorrowTender(int userid, int begin, int end);
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param userid
      * @param begin
      * @param end

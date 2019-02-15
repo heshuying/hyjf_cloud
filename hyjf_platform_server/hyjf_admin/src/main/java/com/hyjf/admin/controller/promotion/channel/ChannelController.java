@@ -228,7 +228,7 @@ public class ChannelController extends BaseController {
 
         }
         if (record.getUtmReferrer() != null && record.getUtmReferrer() != 0) {
-            strBuf.append("&utm_referrer=");
+            strBuf.append("&refferUserId=");
             strBuf.append(record.getUtmReferrer());
 
         }
@@ -281,7 +281,7 @@ public class ChannelController extends BaseController {
             ReadExcel readExcel = new ReadExcel();
             List<JSONObject> lists = new ArrayList<>();
             try {
-                lists = readExcel.readExcel(fileRealName, nameMaps);
+                lists = readExcel.readExcel(fileRealName, nameMaps,null);
 
                 List<ChannelCustomizeVO> voList = new ArrayList<>();
 

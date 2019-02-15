@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
-import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
@@ -61,8 +61,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     @Autowired
     AmTradeClient amTradeClient;
     @Autowired
-    private AmConfigClient amConfigClient;
-    @Autowired
     private CommonProducer commonProducer;
 
     /**
@@ -81,7 +79,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         String num = requestBean.getNum();
         if (Integer.parseInt(num)==1){
             // 手机号
-            return seachByMobile(currUser,requestBean);
+            return seachByMobile(requestBean);
         }
         if (Integer.parseInt(num)==2){
 
@@ -91,11 +89,12 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
 
     /**
      * 根据手机号查询开户掉单
-     * @param currUser
+     * @author Zha Daojian
+     * @date 2019/1/22 9:44
      * @param requestBean
-     * @return
-     */
-    private OpenAccountEnquiryDefineResultBean seachByMobile(AdminSystemVO currUser, OpenAccountEnquiryDefineRequestBean requestBean) {
+     * @return com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean
+     **/
+    private OpenAccountEnquiryDefineResultBean seachByMobile(OpenAccountEnquiryDefineRequestBean requestBean) {
         OpenAccountEnquiryDefineResultBean result = new OpenAccountEnquiryDefineResultBean();
         String phone =  requestBean.getLastname().trim();
         //手机号格式check
@@ -194,26 +193,37 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         String channel =requestBean.getChannel();
         String accountId = requestBean.getAccountId();
         if(StringUtils.isEmpty(userid)){
-            resultBean.setStatus("n");
+            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("用户id不能为空");
             return resultBean;
         }
         if(StringUtils.isEmpty(channel)){
-            resultBean.setStatus("n");
+            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("交易渠道不能为空");
             return resultBean;
         }
         if(StringUtils.isEmpty(accountId)){
-            resultBean.setStatus("n");
+            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("电子账号不能为空");
             return resultBean;
         }
-        return updateUserAccount(requestBean);
+        //同步保存user信息
+        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
+        if(openAccountEnquiryDefineRequestBeanVO !=null){
+            ////同步保存user信息成
+            if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
+                //同步保存Account信息
+                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+            }
+        }
+        BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
+        return requestBean;
     }
     /**
      * 保存开户的数据
+     * 此处事务不起作用，此方法已经挪到 am-admin,Zhadaojian 2019-01-22
      */
-    public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
+  /*  public OpenAccountEnquiryDefineResultBean updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
         String idCard = requestBean.getIdcard();
         String platform = requestBean.getPlatform();//开户平台
@@ -353,7 +363,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         resultBean.setResult("开户掉单同步成功!");
         return resultBean;
 
-    }
+    }*/
 
     /**
      * 保存银行卡信息

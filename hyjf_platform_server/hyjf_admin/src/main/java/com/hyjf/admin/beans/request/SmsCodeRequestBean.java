@@ -44,17 +44,17 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
     private String re_time_end;
 
     /**
-     * 投资日期段开始时间
+     * 出借日期段开始时间
      */
     private String add_time_begin;
 
     /**
-     * 投资日期段结束时间
+     * 出借日期段结束时间
      */
     private String add_time_end;
 
     /**
-     * 累计投资金额
+     * 累计出借金额
      */
     private String add_money_count;
 
@@ -80,6 +80,11 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
      * 定时发送时间
      */
     private String on_time;
+
+    /**
+     * 短信内容是否显示
+     */
+    private Integer isDisplay;
 
     /**
      * @return the sender
@@ -225,5 +230,13 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
 
     public void setOn_time(String on_time) {
         this.on_time = on_time;
+    }
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
     }
 }

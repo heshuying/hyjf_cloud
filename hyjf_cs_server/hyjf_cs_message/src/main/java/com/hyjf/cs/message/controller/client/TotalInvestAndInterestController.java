@@ -19,7 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/totalinvestandinterest")
+@RequestMapping("/cs-message/totalInvestAndInterest")
 public class TotalInvestAndInterestController extends BaseController {
     @Autowired
     private TotalInvestAndInterestService service;
@@ -31,7 +31,7 @@ public class TotalInvestAndInterestController extends BaseController {
 
 
     /**
-     * 累计投资总额
+     * 累计出借总额
      * @return
      */
     @RequestMapping("/selectTenderSum")
@@ -49,7 +49,7 @@ public class TotalInvestAndInterestController extends BaseController {
     }
 
     /**
-     * 累计投资笔数
+     * 累计出借笔数
      * @return
      */
     @RequestMapping("/selectTotalTenderSum")

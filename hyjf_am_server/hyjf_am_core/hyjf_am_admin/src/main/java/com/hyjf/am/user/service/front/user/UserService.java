@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.front.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -102,7 +103,7 @@ public interface UserService extends BaseService {
     UserLoginLog selectByPrimaryKey(Integer userId);
 
 	/**
-	 * 根据垫付机构用户名检索垫付机构用户
+	 * 根据担保机构用户名检索担保机构用户
 	 * @param repayOrgName
 	 * @return
 	 */
@@ -131,7 +132,7 @@ public interface UserService extends BaseService {
     UtmReg findUtmRegByUserId(Integer userId);
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      * @param bean
      * @return
      */
@@ -144,7 +145,7 @@ public interface UserService extends BaseService {
 	boolean insertVipUserTender(JSONObject para);
 
 	/**
-	 * 查询用户投资次数
+	 * 查询用户出借次数
 	 * @param userId
 	 * @return
 	 */
@@ -254,4 +255,12 @@ public interface UserService extends BaseService {
 	int updateHjhUserAuthLog(HjhUserAuthLog hjhUserAuthLog);
 
 	int isExistsUser(String userId);
+
+	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	UserUtmInfoCustomize getUserUtmInfo(Integer userId);
 }

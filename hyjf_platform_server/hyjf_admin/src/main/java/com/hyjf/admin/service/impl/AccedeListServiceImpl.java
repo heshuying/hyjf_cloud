@@ -107,7 +107,6 @@ public class AccedeListServiceImpl implements AccedeListService{
 	 */
 	@Override
 	public String resendMessageAction(String userid, String planOrderId, String debtPlanNid, String sendEmail) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -205,7 +204,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 	}
 
 	/**
-	 * 查询用户投资详情
+	 * 查询用户出借详情
 	 * @param request
 	 */
 	@Override

@@ -373,7 +373,6 @@ public class ChinapnrController extends BaseController {
                     try {
                         bean.set("uuid", record.getUuid());
                         if (Validator.isNull(callBackUrl)) {
-                            // TODO: 2018/7/12 暂时没有，不处理
                             // 用户绑卡回调
                             if (ChinaPnrConstant.CMDID_USER_BIND_CARD.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
@@ -408,7 +407,7 @@ public class ChinapnrController extends BaseController {
                             else if (ChinaPnrConstant.CMDID_USR_ACCT_PAY.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }
-                            // 用户投资
+                            // 用户出借
                             else if (ChinaPnrConstant.CMDID_INITIATIVE_TENDER.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }
@@ -436,8 +435,6 @@ public class ChinapnrController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, value = "/bindReturn")
     public ModelAndView bindResult(@RequestBody ChinapnrBean bean) {
         ModelAndView modelAndView = new ModelAndView();
-        // TODO: 2018/7/12 暂时没有，不处理
-        String methodName = "result";
         logger.info("[交易完成后,回调开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         // 参数转换成Map
         if(null==bean){

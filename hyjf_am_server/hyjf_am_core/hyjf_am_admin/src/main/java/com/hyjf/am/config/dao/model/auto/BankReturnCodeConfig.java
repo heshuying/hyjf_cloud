@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BankReturnCodeConfig implements Serializable {
+    /**
+     * 自增主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 接口代码
+     *
+     * @mbggenerated
+     */
     private String txCode;
 
+    /**
+     * 接口方法名
+     *
+     * @mbggenerated
+     */
     private String methodName;
 
+    /**
+     * 银行返回码
+     *
+     * @mbggenerated
+     */
     private String retCode;
 
+    /**
+     * 银行返回描述
+     *
+     * @mbggenerated
+     */
     private String retMsg;
 
+    /**
+     * 平台错误描述
+     *
+     * @mbggenerated
+     */
     private String errorMsg;
 
+    /**
+     * 保留字段：page标记
+     *
+     * @mbggenerated
+     */
     private String pageKey;
 
+    /**
+     * 状态：0 禁用；1 启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

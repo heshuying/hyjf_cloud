@@ -50,7 +50,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "分页显示", notes = "分页显示")
     @PostMapping("/search")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW })
     public AdminResult<ListResult<ProtocolTemplateCommonVO>> search(@RequestBody AdminProtocolRequest request){
         AdminProtocolResponse response = new AdminProtocolResponse();
         response = protocolService.searchPage(request);
@@ -294,8 +294,8 @@ public class ProtocolController extends BaseController{
         bean2.setName("《平台隐私条款》");
         selectList.add(bean2);
         ProtocolSelectBean bean3 = new ProtocolSelectBean();
-        bean3.setCode("《投资咨询与管理服务协议》");
-        bean3.setName("《投资咨询与管理服务协议》");
+        bean3.setCode("《出借咨询与管理服务协议》");
+        bean3.setName("《出借咨询与管理服务协议》");
         selectList.add(bean3);
         ProtocolSelectBean bean4 = new ProtocolSelectBean();
         bean4.setCode("《用户授权协议》");
@@ -306,33 +306,41 @@ public class ProtocolController extends BaseController{
         bean5.setName("《居间服务借款协议》");
         selectList.add(bean5);
         ProtocolSelectBean bean6 = new ProtocolSelectBean();
-        bean6.setCode("《投资风险确认书》");
-        bean6.setName("《投资风险确认书》");
+        bean6.setCode("《散标风险揭示书》");
+        bean6.setName("《散标风险揭示书》");
         selectList.add(bean6);
         ProtocolSelectBean bean7 = new ProtocolSelectBean();
         bean7.setCode("《债权转让协议》");
         bean7.setName("《债权转让协议》");
         selectList.add(bean7);
-        ProtocolSelectBean bean8 = new ProtocolSelectBean();
-        bean8.setCode("《风险确认书》");
-        bean8.setName("《风险确认书》");
-        selectList.add(bean8);
         ProtocolSelectBean bean9 = new ProtocolSelectBean();
         bean9.setCode("《开户协议》");
         bean9.setName("《开户协议》");
         selectList.add(bean9);
         ProtocolSelectBean bean10 = new ProtocolSelectBean();
-        bean10.setCode("《投资服务协议》");
-        bean10.setName("《投资服务协议》");
+        bean10.setCode("《智投服务协议》");
+        bean10.setName("《智投服务协议》");
         selectList.add(bean10);
         ProtocolSelectBean bean11 = new ProtocolSelectBean();
-        bean11.setCode("《服务协议》");
-        bean11.setName("《服务协议》");
+        bean11.setCode("《智投风险揭示书》");
+        bean11.setName("《智投风险揭示书》");
         selectList.add(bean11);
         ProtocolSelectBean bean12 = new ProtocolSelectBean();
-        bean12.setCode("《隐私政策》");
-        bean12.setName("《隐私政策》");
+        bean12.setCode("《自动投标授权》");
+        bean12.setName("《自动投标授权》");
         selectList.add(bean12);
+        ProtocolSelectBean bean13 = new ProtocolSelectBean();
+        bean13.setCode("《自动债转授权》");
+        bean13.setName("《自动债转授权》");
+        selectList.add(bean13);
+        ProtocolSelectBean bean14 = new ProtocolSelectBean();
+        bean14.setCode("《缴费授权》");
+        bean14.setName("《缴费授权》");
+        selectList.add(bean14);
+        ProtocolSelectBean bean15 = new ProtocolSelectBean();
+        bean15.setCode("《还款授权》");
+        bean15.setName("《还款授权》");
+        selectList.add(bean15);
         return selectList;
     }
 

@@ -270,15 +270,16 @@ public class RedisUtils {
      * @param expireSeconds(过期时间，秒)
      * @return value
      */
-    public static Long set(String key, String value, int expireSeconds) {
-        Long result = null;
+    public static String set(String key, String value, int expireSeconds) {
+        String result = null;
         JedisPool pool = null;
         Jedis jedis = null;
         try {
             pool = getPool();
             jedis = pool.getResource();
-            jedis.set(key, value);
-            result = jedis.expire(key, expireSeconds);
+
+            result = jedis.set(key, value);
+            jedis.expire(key, expireSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -290,6 +291,18 @@ public class RedisUtils {
 
         return result;
     }
+
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
+     * @param expireSeconds 过期时间: 秒
+     * @return
+     */
+	public static String set(String key, String value, long expireSeconds) {
+		return set(key, value, new Long(expireSeconds).intValue());
+	}
+
 
     /**
      * 设置过期时间
@@ -403,15 +416,15 @@ public class RedisUtils {
      * @param expireSeconds  过期时间 秒
      * @return
      */
-    public static Long setObjEx(String key, Object value, int expireSeconds) {
-        Long result = null;
+    public static String setObjEx(String key, Object value, int expireSeconds) {
+        String result = null;
         JedisPool pool = null;
         Jedis jedis = null;
         try {
             pool = getPool();
             jedis = pool.getResource();
-            jedis.set(key, JSONObject.toJSONString(value));
-            result = jedis.expire(key, expireSeconds);
+			result = jedis.set(key, JSONObject.toJSONString(value));
+			jedis.expire(key, expireSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -420,10 +433,18 @@ public class RedisUtils {
             // 返还到连接池
             returnResource(pool, jedis);
         }
-
         return result;
     }
-
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
+     * @param expireSeconds  过期时间 秒
+     * @return
+     */
+    public static String setObjEx(String key, Object value, long expireSeconds) {
+        return setObjEx(key, value, new Long(expireSeconds).intValue());
+    }
 
     /**
      * 赋值数据
@@ -718,7 +739,6 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
-            logger.info("leftpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -745,7 +765,6 @@ public class RedisUtils {
             // 释放
             // 返还到连接池
             returnResource(pool, jedis);
-            logger.info("rightpush：" + key + "：" + values.toString());
         }
         return result;
     }
@@ -785,7 +804,7 @@ public class RedisUtils {
         Calendar tommorowDate = new GregorianCalendar(curDate
                 .get(Calendar.YEAR), curDate.get(Calendar.MONTH), curDate
                 .get(Calendar.DATE) + 1, 0, 0, 0);
-        return (int)(tommorowDate.getTimeInMillis() - curDate .getTimeInMillis()) / 1000;
+        return new Long((tommorowDate.getTimeInMillis() - curDate .getTimeInMillis()) / 1000).intValue();
     }
 
     /**
@@ -966,7 +985,7 @@ public class RedisUtils {
         }
         return result;
     }
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
     /**
      * Redis中From队列中的成员移动到To队列中（队头→队尾）
      * @param queueNameFrom
@@ -986,13 +1005,13 @@ public class RedisUtils {
             moveCount += 1;//移动成员数+1
             // 队列中无From成员时
             if (moveCount == 1) {
-                logger.info("l[" + queueNameFrom + "]→[" + queueNameTo + "]r" + " : ");
+                logger.info("Redis:" + queueNameFrom + "(l)>>>>>>>>>>>>>>>>>>>>>>>>>>" + queueNameTo + "(r)" + " : ");
             }
             logger.info("   (" + moveCount + ") " + queueValue);
         }
         return moveCount;
     }
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
     /**
      * 并发情况下, 对key值进行加减
@@ -1043,7 +1062,6 @@ public class RedisUtils {
 
     /**
      * 分布式锁(可以在并发中使用的不可重复设置锁，
-     * PS：前面那个分布式锁的还有BUG，千万不要用，因为 unwatch()是取消所有key的监视 )
      * @param rediskey
      * @param value
      * @param seconds

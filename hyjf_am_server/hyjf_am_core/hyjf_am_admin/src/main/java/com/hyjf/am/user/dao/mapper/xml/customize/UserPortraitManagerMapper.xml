@@ -46,7 +46,7 @@
 	<sql id="Where_Clause_UserPortrait">
 		<where>
 			<if test="userName != null and userName !='' ">
-				AND hup.user_name LIKE CONCAT( #{userName}, '%')
+				AND hup.user_name = #{userName}
 			</if>
 			<if test="mobile != null and mobile !='' ">
 				AND hup.mobile = #{mobile}
@@ -102,7 +102,7 @@
 		COUNT(hup.user_id)
 		FROM
 		ht_user_portrait hup
-		LEFT JOIN ht_user hydur ON hydur.user_id = hup.user_id
+		 inner JOIN ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
 	</select>
 	<!--查询用户画像记录 -->
@@ -157,9 +157,9 @@
 		hup.bank_frost
 		FROM
 		ht_user_portrait hup
-		LEFT JOIN hyjf_user.ht_user hydur ON hydur.user_id = hup.user_id
+		inner JOIN ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
-		ORDER BY hydur.reg_time DESC,hup.user_id DESC
+		ORDER BY hydur.reg_time DESC
 		<if test="limitStart != null and limitEnd !=null ">
 			limit #{limitStart},#{limitEnd}
 		</if>

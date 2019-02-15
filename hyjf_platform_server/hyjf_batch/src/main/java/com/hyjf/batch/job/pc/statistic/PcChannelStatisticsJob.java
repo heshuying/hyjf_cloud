@@ -3,7 +3,6 @@
  */
 package com.hyjf.batch.job.pc.statistic;
 
-import com.hyjf.am.response.StringResponse;
 import com.hyjf.batch.job.BaseJob;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -20,9 +19,8 @@ public class PcChannelStatisticsJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("PcChannelStatisticsJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		String result = restTemplate
-				.getForObject("http://CS-MARKET/cs-market/pcchannelstatistics/insertStatistics", StringResponse.class)
-				.getResultStr();
-		logger.info("PcChannelStatisticsJob execute end...result is {}", result);
+		restTemplate
+				.getForObject("http://CS-MARKET/cs-market/pcChannelStatistics/insertStatistics", String.class);
+		logger.info("PcChannelStatisticsJob execute end...result is {}");
 	}
 }

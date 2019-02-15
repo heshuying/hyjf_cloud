@@ -23,7 +23,7 @@ public class DataInfoJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("DataInfoJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/calculate_invest_interest", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/dataInfo", String.class).getBody();
         logger.info("DataInfoJob execute end...");
     }
 }

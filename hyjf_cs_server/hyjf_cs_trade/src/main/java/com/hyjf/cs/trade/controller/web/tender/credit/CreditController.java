@@ -20,7 +20,7 @@ import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,7 +38,7 @@ import java.util.UUID;
  * @Author sss
  * @Date 2018/6/29 13:59
  */
-@Api(tags = "web端-债转投资")
+@Api(tags = "web端-债转出借")
 @RestController
 @RequestMapping("/hyjf-web/credit")
 public class CreditController {
@@ -46,8 +46,6 @@ public class CreditController {
     private static final Logger logger = LoggerFactory.getLogger(CreditController.class);
     @Autowired
     private MyCreditListService creditListService;
-    @Autowired
-    NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
     private CommonProducer commonProducer;
     /**
@@ -76,7 +74,7 @@ public class CreditController {
         return result;
     }
 
-    @ApiOperation(value = "用户中心查询投资可债转详情", notes = "点击列表的转让按钮")
+    @ApiOperation(value = "用户中心查询出借可债转详情", notes = "点击列表的转让按钮")
     @PostMapping(value = "/tenderToCreditDetail", produces = "application/json; charset=utf-8")
     public WebResult tenderToCreditDetail(@RequestBody CreditDetailsRequestBean request,
                                     @RequestHeader(value = "userId",required = false) Integer userId){
@@ -84,7 +82,7 @@ public class CreditController {
         return result;
     }
 
-    @ApiOperation(value = "用户中心验证投资人当天是否可以债转 每天三次", notes = "用户中心验证投资人当天是否可以债转")
+    @ApiOperation(value = "用户中心验证出借人当天是否可以债转 每天三次", notes = "用户中心验证出借人当天是否可以债转")
     @PostMapping(value = "/tenderAbleToCredit", produces = "application/json; charset=utf-8")
     public WebResult tenderAbleToCredit(@RequestBody CreditDetailsRequestBean request,
                                           @RequestHeader(value = "userId",required = false) Integer userId){
@@ -107,7 +105,7 @@ public class CreditController {
         request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
         WebResult result =  creditListService.saveTenderToCredit(request,userId);
         //保存用户日志mq
-        BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(request.getBorrowNid());
+        BorrowAndInfoVO borrow = creditListService.getBorrowByNid(request.getBorrowNid());
         boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
 

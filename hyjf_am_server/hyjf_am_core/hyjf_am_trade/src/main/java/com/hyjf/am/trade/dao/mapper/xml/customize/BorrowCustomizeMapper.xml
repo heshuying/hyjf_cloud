@@ -149,7 +149,8 @@
 		hydb.recover_last_time,
 		'%Y年%m月%d日'
 		)  recoverLastTime,
-		hbi.borrow_level  borrowLevel
+		hbi.borrow_level  borrowLevel,
+		hydb.invest_level investLevel
 FROM
 		ht_borrow hydb
 LEFT JOIN ht_borrow_project_type
@@ -581,7 +582,7 @@ WHERE
 		  <!-- 期限类型 -->
 		  <result column="borrow_period_type" property="borrowPeriodType"
 		   jdbcType="VARCHAR" />
-		  <!-- 项目最小投资金额 万 -->
+		  <!-- 项目最小出借金额 万 -->
 		  <result column="tender_account_min_wan" property="tenderAccountMinWan"
 		   jdbcType="VARCHAR" />
 		  <!-- 倍增金额 increaseMoney -->
@@ -720,7 +721,7 @@ WHERE
 		 </select>
 
 
-     <!--清算日前一天查询处于投资中或者复审中的原始标的，进行预警-->
+     <!--清算日前一天查询处于出借中或者复审中的原始标的，进行预警-->
 	<select id="selectUnDealBorrowBeforeLiquidate" resultMap="selectBorrowListMap" >
 		<!--  散标和计划标的 -->
 		SELECT b.borrow_nid, b.`status`
@@ -1075,7 +1076,7 @@ WHERE
 			CASE
 			WHEN ( ( b.`status` = 0 ) OR ( b.`status` = 0 AND b.verify_status = 0 ) ) THEN '初审中'
 			WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 )) ) THEN '待发布'
-			WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+			WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '出借中'
 			WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 			WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
 			WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
@@ -1119,7 +1120,7 @@ WHERE
 		<if test="statusSrch == '10'.toString()">
 			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) ) )
 		</if>
-		<!-- 投资中 -->
+		<!-- 出借中 -->
 		<if test="statusSrch == '12'.toString()">
 			AND (
 			b.`status` = 1
@@ -1235,7 +1236,7 @@ WHERE
 		CASE
 		WHEN ( ( b.`status` = 0 ) OR ( b.`status` = 0 AND b.verify_status = 0 ) ) THEN '初审中'
 		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 )  ) ) THEN '待发布'
-		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '出借中'
 		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
@@ -1538,7 +1539,7 @@ WHERE
 		CASE
 		WHEN ( ( b.`status` = 0 ) OR ( b.`status` = 0 AND b.verify_status = 0 ) ) THEN '初审中'
 		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) ) ) THEN '待发布'
-		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
+		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '出借中'
 		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 1 ) THEN '已还款'
@@ -1582,7 +1583,7 @@ WHERE
 		<if test="statusSrch == '10'.toString()">
 			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) ) )
 		</if>
-		<!-- 投资中 -->
+		<!-- 出借中 -->
 		<if test="statusSrch == '12'.toString()">
 			AND (
 			b.`status` = 1

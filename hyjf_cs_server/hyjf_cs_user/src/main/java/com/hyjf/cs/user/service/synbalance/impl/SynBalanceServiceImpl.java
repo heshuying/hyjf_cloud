@@ -15,15 +15,18 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.*;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.DateDistance;
+import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.cs.user.bean.BankResultBean;
+import com.hyjf.cs.user.bean.BaseResultBean;
+import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
-import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -186,13 +189,13 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
     }
 
     @Override
-    public SynBalanceResultBean synBalance(SynBalanceRequestBean synBalanceRequestBean, String ip) {
+    public SynBalanceResultBean synBalance(String accountId, String ip) {
         SynBalanceResultBean resultBean = new SynBalanceResultBean();
         //根据账号找出用户ID
-        BankOpenAccountVO bankOpenAccount = getBankOpenAccount(synBalanceRequestBean.getAccountId());
+        BankOpenAccountVO bankOpenAccount = getBankOpenAccount(accountId);
         if(bankOpenAccount == null){
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000004);
-            logger.info("没有根据电子银行卡找到用户 "+synBalanceRequestBean.getAccountId());
+            logger.info("没有根据电子银行卡找到用户 "+accountId);
             resultBean.setStatusDesc("没有根据电子银行卡找到用户 ");
             return resultBean;
         }
@@ -210,6 +213,9 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         }
         //用户可用余额
         AccountVO accountUser = getAccount(user.getUserId());
+        if(accountUser==null){
+            accountUser = new AccountVO();
+        }
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
         if(systemConfig.isHyjfEnvTest()){
@@ -362,7 +368,7 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
                 }
             }
         }
-        logger.info("-------------------"+synBalanceRequestBean.getUserId()+"同步余额结束--------------------");
+        logger.info("{}同步余额结束--------------------", accountId);
         accountUser = getAccount(user.getUserId());
         resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
         resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());

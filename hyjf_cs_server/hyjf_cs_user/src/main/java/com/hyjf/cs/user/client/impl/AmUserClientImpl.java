@@ -18,8 +18,10 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -30,7 +32,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.UnsupportedEncodingException;
@@ -43,8 +44,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @version AmUserClientImpl, v0.1 2018/4/19 12:44
  */
 
-@Service
-@SuppressWarnings("unchecked")
+@Cilent
 public class AmUserClientImpl implements AmUserClient {
 	private static Logger logger = getLogger(AmUserClient.class);
 
@@ -178,6 +178,22 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+		String url = userService + "/user/getUserUtmInfo/" + userId;
+		UserUtmInfoResponse response = restTemplate.getForEntity(url, UserUtmInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 	@Override
 	public UserInfoVO findUserInfoById(int userId) {
 		UserInfoResponse response = restTemplate
@@ -213,6 +229,21 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public void fddCertificate() {
+		restTemplate.getForEntity("http://AM-USER/am-user/batch/fddCertificate", String.class);
+	}
+
+	@Override
+	public void updateEntey() {
+		restTemplate.getForEntity("http://AM-USER//am-user/batch/entryupdate", String.class);
+	}
+
+	@Override
+	public void updateUserLeave() {
+		restTemplate.getForEntity("http://AM-USER/am-user/batch/leaveupdate", String.class);
+	}
+
 	/**
 	 * 保存验证码
 	 * @param mobile
@@ -224,6 +255,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
+		logger.debug("短信验证码入库, mobile is:　{}", mobile);
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(checkCode);
@@ -231,10 +263,11 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(status);
 		request.setPlatform(platform);
 		SmsCodeResponse response = restTemplate
-				.postForEntity(userService+"/smsCode/save", request, SmsCodeResponse.class).getBody();
+				.postForEntity(userService + "/smsCode/save", request, SmsCodeResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getCnt();
 		} else {
+			logger.warn("response is null, send fail....");
 			throw new RuntimeException("发送验证码失败...");
 		}
 	}
@@ -543,6 +576,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public BankOpenAccountVO selectById(int userId) {
+		logger.info(ReflectUtils.getSuperiorClass(3));
 		BankOpenAccountResponse response = restTemplate
 				.getForEntity(userService+"/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
@@ -747,6 +781,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int insertUserCard(BankCardRequest request) {
+		logger.info("方法insertUserCard请求参数：" + request);
 		int result = restTemplate
 				.postForEntity(userService+"/card/insertUserCard", request, Integer.class).getBody();
 		return result;
@@ -1166,6 +1201,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO selectBankAccountById(Integer userId) {
+		logger.info(ReflectUtils.getSuperiorClass(3));
 		String url = "http://AM-USER/am-user/bankopen/selectById/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {

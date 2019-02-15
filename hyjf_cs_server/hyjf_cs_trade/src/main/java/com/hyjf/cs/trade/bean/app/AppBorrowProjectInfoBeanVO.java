@@ -83,7 +83,7 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	private String status;
 
 	/**
-	 * 项目进度状态 0:审核 1:信息发布 2:投资 3:计息 4:回款
+	 * 项目进度状态 0:审核 1:信息发布 2:出借 3:计息 4:回款
 	 * number
 	 * example: 2
 	 */
@@ -123,6 +123,16 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	 * example: 等额本息
 	 */
 	private String repayStyle;
+
+	private String investLevel;
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
 
 	public AppBorrowProjectInfoBeanVO() {
 		super();

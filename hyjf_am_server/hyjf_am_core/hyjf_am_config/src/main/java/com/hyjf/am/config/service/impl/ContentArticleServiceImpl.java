@@ -399,22 +399,4 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         }
         return null;
     }
-
-    /**
-     * 获取指定Type的文章
-     * @param type
-     * @return
-     * @Author : huanghui
-     */
-    @Override
-    public List<ContentArticle> getContentArticListByType(String type) {
-        ContentArticleExample example = new ContentArticleExample();
-        ContentArticleExample.Criteria criteria = example.createCriteria();
-        criteria.andTypeEqualTo(type);
-        example.setLimitStart(0);
-        example.setLimitStart(5);
-        example.setOrderByClause("id DESC");
-        List<ContentArticle> list = contentArticleMapper.selectByExample(example);
-        return list;
-    }
 }

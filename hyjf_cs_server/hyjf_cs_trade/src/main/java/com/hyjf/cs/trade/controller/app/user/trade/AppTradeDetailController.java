@@ -14,6 +14,8 @@ import com.hyjf.cs.trade.service.trade.TradeDetailService;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +48,7 @@ public class  AppTradeDetailController extends BaseTradeController {
         return info;
 
     }
+    private Logger _log = LoggerFactory.getLogger(AppTradeDetailController.class);
     /**
      * 用户收支明细
      *

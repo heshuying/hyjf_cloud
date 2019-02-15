@@ -21,7 +21,7 @@ public interface CouponTenderCustomizeMapper {
      */
     Integer countRecord(CouponTenderRequest request);
     /**
-     * 汇直投根据条件获取投资总金额
+     * 汇直投根据条件获取出借总金额
      * @param request 查询条件对象
      * @return String
      */
@@ -55,7 +55,7 @@ public interface CouponTenderCustomizeMapper {
      */
     Integer countHjhRecord(CouponTenderRequest request);
     /**
-     * 汇计划根据条件获取投资总金额
+     * 汇计划根据条件获取出借总金额
      * @param request 查询条件对象
      * @return String
      */
@@ -200,4 +200,10 @@ public interface CouponTenderCustomizeMapper {
      * @return List<CouponTenderCustomize>
      */
     Integer selectCouponTenderListCount (CouponTenderRequest request);
+    /**
+     * 合规数据上报 CERT add by nxl 根据订单号查询优惠券利息
+     * @param couponTenderId
+     * @return
+     */
+    String sunRecoverInterest(String couponTenderId);
 }

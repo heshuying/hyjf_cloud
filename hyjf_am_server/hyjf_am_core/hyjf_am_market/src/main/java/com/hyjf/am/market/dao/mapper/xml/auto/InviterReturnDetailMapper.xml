@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.auto.InviterReturnDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.auto.InviterReturnDetail" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="true_name" property="trueName" jdbcType="VARCHAR" />
+    <result column="return_performance" property="returnPerformance" jdbcType="DECIMAL" />
+    <result column="return_amount" property="returnAmount" jdbcType="DECIMAL" />
+    <result column="tender_name" property="tenderName" jdbcType="VARCHAR" />
+    <result column="tender_no" property="tenderNo" jdbcType="VARCHAR" />
+    <result column="tender_amount" property="tenderAmount" jdbcType="DECIMAL" />
+    <result column="term" property="term" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="product_no" property="productNo" jdbcType="VARCHAR" />
+    <result column="join_time" property="joinTime" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="debt_id" property="debtId" jdbcType="INTEGER" />
+    <result column="debt_name" property="debtName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, user_name, true_name, return_performance, return_amount, tender_name, tender_no, 
+    tender_amount, term, product_type, product_no, join_time, create_time, debt_id, debt_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_inviter_return_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_inviter_return_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_inviter_return_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetailExample" >
+    delete from ht_inviter_return_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_inviter_return_detail (user_name, true_name, return_performance, 
+      return_amount, tender_name, tender_no, 
+      tender_amount, term, product_type, 
+      product_no, join_time, create_time, 
+      debt_id, debt_name)
+    values (#{userName,jdbcType=VARCHAR}, #{trueName,jdbcType=VARCHAR}, #{returnPerformance,jdbcType=DECIMAL}, 
+      #{returnAmount,jdbcType=DECIMAL}, #{tenderName,jdbcType=VARCHAR}, #{tenderNo,jdbcType=VARCHAR}, 
+      #{tenderAmount,jdbcType=DECIMAL}, #{term,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{productNo,jdbcType=VARCHAR}, #{joinTime,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{debtId,jdbcType=INTEGER}, #{debtName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetail" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_inviter_return_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="trueName != null" >
+        true_name,
+      </if>
+      <if test="returnPerformance != null" >
+        return_performance,
+      </if>
+      <if test="returnAmount != null" >
+        return_amount,
+      </if>
+      <if test="tenderName != null" >
+        tender_name,
+      </if>
+      <if test="tenderNo != null" >
+        tender_no,
+      </if>
+      <if test="tenderAmount != null" >
+        tender_amount,
+      </if>
+      <if test="term != null" >
+        term,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="productNo != null" >
+        product_no,
+      </if>
+      <if test="joinTime != null" >
+        join_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="debtId != null" >
+        debt_id,
+      </if>
+      <if test="debtName != null" >
+        debt_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="trueName != null" >
+        #{trueName,jdbcType=VARCHAR},
+      </if>
+      <if test="returnPerformance != null" >
+        #{returnPerformance,jdbcType=DECIMAL},
+      </if>
+      <if test="returnAmount != null" >
+        #{returnAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="tenderName != null" >
+        #{tenderName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderNo != null" >
+        #{tenderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAmount != null" >
+        #{tenderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productNo != null" >
+        #{productNo,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTime != null" >
+        #{joinTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="debtId != null" >
+        #{debtId,jdbcType=INTEGER},
+      </if>
+      <if test="debtName != null" >
+        #{debtName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetailExample" resultType="java.lang.Integer" >
+    select count(*) from ht_inviter_return_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_inviter_return_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trueName != null" >
+        true_name = #{record.trueName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.returnPerformance != null" >
+        return_performance = #{record.returnPerformance,jdbcType=DECIMAL},
+      </if>
+      <if test="record.returnAmount != null" >
+        return_amount = #{record.returnAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.tenderName != null" >
+        tender_name = #{record.tenderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderNo != null" >
+        tender_no = #{record.tenderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tenderAmount != null" >
+        tender_amount = #{record.tenderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.term != null" >
+        term = #{record.term,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productType != null" >
+        product_type = #{record.productType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productNo != null" >
+        product_no = #{record.productNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.joinTime != null" >
+        join_time = #{record.joinTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.debtId != null" >
+        debt_id = #{record.debtId,jdbcType=INTEGER},
+      </if>
+      <if test="record.debtName != null" >
+        debt_name = #{record.debtName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_inviter_return_detail
+    set id = #{record.id,jdbcType=INTEGER},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      true_name = #{record.trueName,jdbcType=VARCHAR},
+      return_performance = #{record.returnPerformance,jdbcType=DECIMAL},
+      return_amount = #{record.returnAmount,jdbcType=DECIMAL},
+      tender_name = #{record.tenderName,jdbcType=VARCHAR},
+      tender_no = #{record.tenderNo,jdbcType=VARCHAR},
+      tender_amount = #{record.tenderAmount,jdbcType=DECIMAL},
+      term = #{record.term,jdbcType=VARCHAR},
+      product_type = #{record.productType,jdbcType=VARCHAR},
+      product_no = #{record.productNo,jdbcType=VARCHAR},
+      join_time = #{record.joinTime,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      debt_id = #{record.debtId,jdbcType=INTEGER},
+      debt_name = #{record.debtName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetail" >
+    update ht_inviter_return_detail
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="trueName != null" >
+        true_name = #{trueName,jdbcType=VARCHAR},
+      </if>
+      <if test="returnPerformance != null" >
+        return_performance = #{returnPerformance,jdbcType=DECIMAL},
+      </if>
+      <if test="returnAmount != null" >
+        return_amount = #{returnAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="tenderName != null" >
+        tender_name = #{tenderName,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderNo != null" >
+        tender_no = #{tenderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="tenderAmount != null" >
+        tender_amount = #{tenderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="term != null" >
+        term = #{term,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="productNo != null" >
+        product_no = #{productNo,jdbcType=VARCHAR},
+      </if>
+      <if test="joinTime != null" >
+        join_time = #{joinTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="debtId != null" >
+        debt_id = #{debtId,jdbcType=INTEGER},
+      </if>
+      <if test="debtName != null" >
+        debt_name = #{debtName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.market.dao.model.auto.InviterReturnDetail" >
+    update ht_inviter_return_detail
+    set user_name = #{userName,jdbcType=VARCHAR},
+      true_name = #{trueName,jdbcType=VARCHAR},
+      return_performance = #{returnPerformance,jdbcType=DECIMAL},
+      return_amount = #{returnAmount,jdbcType=DECIMAL},
+      tender_name = #{tenderName,jdbcType=VARCHAR},
+      tender_no = #{tenderNo,jdbcType=VARCHAR},
+      tender_amount = #{tenderAmount,jdbcType=DECIMAL},
+      term = #{term,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      product_no = #{productNo,jdbcType=VARCHAR},
+      join_time = #{joinTime,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      debt_id = #{debtId,jdbcType=INTEGER},
+      debt_name = #{debtName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

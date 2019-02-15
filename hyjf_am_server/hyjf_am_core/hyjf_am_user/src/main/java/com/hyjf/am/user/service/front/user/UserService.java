@@ -3,6 +3,8 @@ package com.hyjf.am.user.service.front.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -88,6 +90,14 @@ public interface UserService extends BaseService {
     void updateUserAuthInves(BankRequest bean);
 
 	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	UserUtmInfoCustomize getUserUtmInfo(Integer userId);
+
+	/**
 	 * 修改用户表By主键
 	 * @param record
 	 * @return int
@@ -144,7 +154,7 @@ public interface UserService extends BaseService {
     UtmReg findUtmRegByUserId(Integer userId);
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      * @param bean
      * @return
      */
@@ -157,7 +167,7 @@ public interface UserService extends BaseService {
 	boolean insertVipUserTender(JSONObject para);
 
 	/**
-	 * 查询用户投资次数
+	 * 查询用户出借次数
 	 * @param userId
 	 * @return
 	 */
@@ -263,7 +273,7 @@ public interface UserService extends BaseService {
 	 * 查询千乐渠道用户
 	 * @return
 	 */
-	List<Integer> getQianleUser();
+	List<Integer> getQianleUser(String sourceId);
 	/**
 	 * 更新ht_hjh_user_auth_log
 	 * @param hjhUserAuthLog
@@ -303,4 +313,19 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     User updateUserByUserId(Integer userId);
+
+	/**
+	 * 获取最近七天开户的用户
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	List<BifaIndexUserInfoBean> getBankOpenedAccountUsers(Integer startDate, Integer endDate);
+
+	/**
+	 * 获取借款人信息
+	 * @param userId
+	 * @return
+	 */
+    BifaIndexUserInfoBean getBifaIndexUserInfo(Integer userId);
 }

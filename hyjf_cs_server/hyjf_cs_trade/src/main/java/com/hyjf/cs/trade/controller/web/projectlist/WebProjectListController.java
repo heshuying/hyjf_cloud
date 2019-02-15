@@ -8,6 +8,7 @@ import com.hyjf.am.resquest.trade.ProjectListRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,8 +35,11 @@ public class WebProjectListController extends BaseTradeController {
      @Autowired
      private WebProjectListService webProjectListService;
 
+     @Autowired
+     private CacheService cacheService;
+
     /**
-     * 获取首页散标推荐列表(散标推荐和散标专区的散标投资，通用接口)(可能没有用了 ，后期废掉)
+     * 获取首页散标推荐列表(散标推荐和散标专区的散标出借，通用接口)(可能没有用了 ，后期废掉)
      * @param request
      * @return
      */
@@ -63,12 +67,12 @@ public class WebProjectListController extends BaseTradeController {
     }
 
     /**
-     * 散标专区散标投资列表
+     * 散标专区散标出借列表
      * @param request
      * @return
      * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchBorrowList()
      */
-    @ApiOperation(value = "获取散标专区散标投资列表", notes = "获取散标专区散标投资列表")
+    @ApiOperation(value = "获取散标专区散标出借列表", notes = "获取散标专区散标出借列表")
     @PostMapping(value = "/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object borrowProjectList(@RequestBody @Valid ProjectListRequest request){
         // controller 不做业务处理
@@ -103,15 +107,15 @@ public class WebProjectListController extends BaseTradeController {
 
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @author zhangyk
      * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectInvestList()
      * @date 2018/8/20 14:06
      */
-    @ApiOperation(value = "新手标和散标标的详情:投资记录" , notes = "新手标和散标标的详情:投资记录")
+    @ApiOperation(value = "新手标和散标标的详情:出借记录" , notes = "新手标和散标标的详情:出借记录")
     @PostMapping(value = "/getBorrowInvest" , produces = "application/json; charset=utf-8")
     public Object getBorrowInvest(@RequestBody BorrowInvestReqBean form, @RequestHeader(value = "userId",required = false ) String userId){
-        WebResult result = webProjectListService.getBorrowInvest(form,userId);
+        WebResult result = cacheService.getBorrowInvest(form,userId);
         return result;
     }
 
@@ -252,12 +256,12 @@ public class WebProjectListController extends BaseTradeController {
 
 
     /**
-     * 计划详情标的组成：投资记录
+     * 计划详情标的组成：出借记录
      * @author zhangyk
      * 原接口：com.hyjf.web.hjhdetail.HjhDetailController.searchBorrowUndertakeList()
      * @date 2018/8/24 10:13
      */
-    @ApiOperation(value = "计划详情标的组成：投资记录" , notes = "计划详情标的组成：投资记录")
+    @ApiOperation(value = "计划详情标的组成：出借记录" , notes = "计划详情标的组成：出借记录")
     @PostMapping(value = "/hjh/getBorrowUndertake", produces = "application/json; charset=utf-8")
     public Object getPlanBorrowUndertake(@RequestBody  WebBorrowRequestBean requestBean){
         WebResult result  = webProjectListService.getPlanBorrowUndertake(requestBean);

@@ -6,6 +6,8 @@ package com.hyjf.admin.beans.response;
 import com.hyjf.admin.beans.vo.*;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Map;
+
 /**
  * @author nxl
  * @version UserDetailInfoResponseBean, v0.1 2018/7/16 13:51
@@ -36,6 +38,18 @@ public class UserDetailInfoResponseBean {
     //文件服务器
     @ApiModelProperty(value = "文件服务器")
     private String hostUrl;
+
+    // 邀请信息
+    @ApiModelProperty(value = "邀请信息")
+    private Map<String, String> invitationInformation;
+
+    public Map<String, String> getInvitationInformation() {
+        return invitationInformation;
+    }
+
+    public void setInvitationInformation(Map<String, String> invitationInformation) {
+        this.invitationInformation = invitationInformation;
+    }
 
     public UserManagerDetailCustomizeVO getUserManagerDetailVO() {
         return userManagerDetailVO;

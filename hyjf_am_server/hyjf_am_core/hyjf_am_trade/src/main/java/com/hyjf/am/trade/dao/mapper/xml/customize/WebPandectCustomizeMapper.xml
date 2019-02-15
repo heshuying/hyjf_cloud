@@ -119,7 +119,7 @@
 		AND status=0
 	</select>
 
-	<!-- 累计投资金额  -->
+	<!-- 累计出借金额  -->
  	<select id="queryInvestTotal" resultType="java.math.BigDecimal"
 		parameterType="java.lang.Integer">
 		SELECT

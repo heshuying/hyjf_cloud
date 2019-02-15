@@ -139,7 +139,7 @@
 		hhp.plan_name,
 		<!-- hhp.plan_nid AS projectNid, -->
 		hhp.plan_name AS projectNid,
-		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		CONCAT(hha.expect_apr, '%') borrow_apr,
 		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
 		hha.last_payment_time,
 		5 AS type,
@@ -156,7 +156,7 @@
 		UNION ALL SELECT
 		hhp.plan_name,
 		hhp.plan_name AS projectNid,
-		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		CONCAT(hha.expect_apr, '%') borrow_apr,
 		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
 		hha.last_payment_time,
 		5 AS type,
@@ -264,12 +264,12 @@
 		WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
 		ELSE 0 END type,
 		CASE
-		WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '投资中'
+		WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '出借中'
 		ELSE
 		CASE
 		WHEN cast(hbc.credit_status AS CHAR)=0 THEN '转让中'
 		WHEN cast(hbc.credit_status AS CHAR)=1 THEN '部分债转'
-		ELSE '现金投资' END
+		ELSE '现金出借' END
 		END AS DATA,
 		0 coupon_type,
 		IF(borrow.repay_last_time='','--',
@@ -834,7 +834,7 @@
 		WHEN hbr.credit_amount > 0 THEN
 		'部分债转'
 		ELSE
-		'现金投资'
+		'现金出借'
 		END AS DATA,
 		0 coupon_type,
 		hbt.account groupaccount
@@ -1184,10 +1184,10 @@
 		0 type,
 		CASE
 		WHEN hdp.debt_plan_status = 4
-		<!-- mod by nxl 智投服务修改 投资中->智能投标中-->
-		<!--THEN '投资中'-->
+		<!-- mod by nxl 智投服务修改 出借中->智能投标中-->
+		<!--THEN '出借中'-->
 		THEN '智能投标中'
-		ELSE '现金投资'
+		ELSE '现金出借'
 		END AS DATA,
 		0 coupon_type
 		FROM ht_debt_plan_accede hdpa
@@ -1220,10 +1220,10 @@
 		1 type,
 		CASE
 		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 )
-		<!-- mod by nxl 智投服务修改 投资中->智能投标中-->
-		<!--THEN '投资中'-->
+		<!-- mod by nxl 智投服务修改 出借中->智能投标中-->
+		<!--THEN '出借中'-->
 		THEN '智能投标中'
-		ELSE '现金投资'
+		ELSE '现金出借'
 		END AS DATA,
 		0 coupon_type
 		FROM ht_hjh_accede hha
@@ -1374,7 +1374,7 @@
 		FROM_UNIXTIME(hdp.liquidate_fact_time, '%Y-%m-%d' ) liquidate_fact_time,
 		hdp.liquidate_fact_time orderby_liquidate_fact_time,
 		0 type,
-		'现金投资' DATA,
+		'现金出借' DATA,
 		0 coupon_type
 		FROM ht_debt_plan_accede hdpa
 		INNER JOIN ht_debt_plan hdp ON hdpa.plan_nid=hdp.debt_plan_nid
@@ -1398,7 +1398,7 @@
 		'--',FROM_UNIXTIME( hha.acctual_payment_time, '%Y-%m-%d' )) AS quit_time,
 		hha.acctual_payment_time orderby_quit_time,
 		1 type,
-		'现金投资' AS DATA,
+		'现金出借' AS DATA,
 		0 coupon_type
 		FROM ht_hjh_accede hha
 		LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
@@ -2262,7 +2262,7 @@
 	</select>
 
 
-	<!-- 获取可转让的投资列表 -->
+	<!-- 获取可转让的出借列表 -->
 	<select id="selectTenderToCreditListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
 		SELECT
 		count(*)
@@ -2273,7 +2273,7 @@
 		INNER JOIN ht_borrow_info hbinfo ON hbinfo.borrow_nid = hb.borrow_nid
 		<include refid="TenderToCredit_Where_Clause" />
 	</select>
-	<!-- 获取可转让的投资查询条件 -->
+	<!-- 获取可转让的出借查询条件 -->
 	<sql id="TenderToCredit_Where_Clause">
 		<where>
 			<if test="borrowNid != null and borrowNid != ''">
@@ -2297,8 +2297,6 @@
 			AND (hbr.recover_capital-credit_amount) <![CDATA[>=]]> 1000
 			AND hbr.create_time <![CDATA[<=]]> date_sub(#{nowDate}, INTERVAL 30 DAY)
 			AND hbr.recover_time <![CDATA[>=]]> (#{nowTime} + 24 * 3600 * 3)
-			<!-- todo 原sql为addtime 现在字段已经删除 条件暂时删除-->
-			<!-- AND hbr.create_time <![CDATA[<=]]> (#{nowTime} - 24 * 3600 * 3)-->
 			AND CAST(IFNULL(hbr.repay_orddate,0) AS SIGNED)  <![CDATA[<]]> FROM_UNIXTIME((#{nowTime} - 24 * 3600 * 3),'%Y%m%d')
 			AND hbr.user_id = #{userId}
 			<!-- 分期标提前还款该月不允许债转 -->
@@ -2427,7 +2425,7 @@
 		hha.create_time as order_by_addtime,
 
 		CASE
-		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
+		WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '出借中'
 		ELSE ''
 		END AS statusName,
 		0 coupon_type,
@@ -2836,7 +2834,7 @@
 		hhp.plan_name,
 		<!-- hhp.plan_nid AS borrow_nid, -->
 		hhp.plan_name AS borrow_nid,
-		CONCAT(hhp.expect_apr, '%') borrow_apr,
+		CONCAT(hha.expect_apr, '%') borrow_apr,
 		IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
 		hha.last_payment_time,
 		5 AS type,
@@ -3019,7 +3017,7 @@
 		<result column="recover_status" property="recoveStatus" />
 	</resultMap>
 
-	<!-- 获取当前持有现金投资不分期还款计划列表 -->
+	<!-- 获取当前持有现金出借不分期还款计划列表 -->
 	<select id="realInvestmentRepaymentPlanNoStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
 		SELECT
 			hbr.borrow_nid borrow_nid,
@@ -3047,7 +3045,7 @@
 		<result column="borrow_nid" property="borrowNid" />
 	</resultMap>
 
-	<!-- 获取当前持有现金投资不分期还款计划详情 -->
+	<!-- 获取当前持有现金出借不分期还款计划详情 -->
 	<select id="realInvestmentRepaymentPlanNoStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
 		SELECT
 			hbr.recover_account_wait recover_account_wait,
@@ -3063,7 +3061,7 @@
 			hbr.nid = #{nid}
 	</select>
 
-	<!-- 获取当前持有现金投资分期还款计划列表 -->
+	<!-- 获取当前持有现金出借分期还款计划列表 -->
 	<select id="realInvestmentRepaymentPlanStagesList" resultMap="creditorRepayMentPlanMap" parameterType="java.util.Map">
 		SELECT
 			hbr.borrow_nid borrow_nid,
@@ -3081,7 +3079,7 @@
 			hbr.nid = #{nid}
 	</select>
 
-	<!-- 获取当前持有现金投资分期还款计划详情 -->
+	<!-- 获取当前持有现金出借分期还款计划详情 -->
 	<select id="realInvestmentRepaymentPlanStagesDetails" resultMap="creditorRepayMentPlanDetailsMap" parameterType="java.util.Map">
 		SELECT
 			hbr.recover_account_wait recover_account_wait,

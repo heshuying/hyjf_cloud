@@ -73,7 +73,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
     }
 
     /**
-     * 查看该用户在投资表和标的放款记录中是否存在
+     * 查看该用户在出借表和标的放款记录中是否存在
      * @param userId
      * @auther: nxl
      * @return

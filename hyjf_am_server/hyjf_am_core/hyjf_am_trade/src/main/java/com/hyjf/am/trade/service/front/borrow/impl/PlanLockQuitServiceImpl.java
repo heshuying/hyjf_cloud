@@ -99,7 +99,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         BorrowTenderExample example = new BorrowTenderExample();
         example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
-        //根据计划订单号获得所有投资标的并且投资总额 = 计划加入总额
+        //根据计划订单号获得所有出借标的并且出借总额 = 计划加入总额
         //判断是否除本标的外还存在复审中的标的,如果没有则确定是最后一笔放款
         List<String> borrowList = new ArrayList<>();
         if (tenderList != null && tenderList.size() > 0) {
@@ -108,7 +108,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 borrowList.add(borrowTender.getBorrowNid());
             }
         }
-        //判断原始投资是否还款或被清算
+        //判断原始出借是否还款或被清算
         for (int i = 0; i < borrowList.size(); i++) {
             String borrowNid = borrowList.get(i);
             BorrowExample borrowExample = new BorrowExample();
@@ -304,7 +304,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     }
 
     /**
-     * 变更计划投资账户金额
+     * 变更计划出借账户金额
      *
      * @param hjhAccede
      * @param hjhRepay
@@ -329,7 +329,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         //实际年化收益率
         BigDecimal reallyApr = getAccedeReallyApr(accountForst,hjhAccede.getAccedeAccount(),hjhAccede.getPlanNid(),hjhAccede.getLockPeriod(),hjhAccede.getAccedeOrderId());
         BigDecimal lqdServiceFee = hjhAccede.getLqdServiceFee();//清算服务费
-        //获得投资服务费率
+        //获得出借服务费率
         BigDecimal tenderFeeRate = getTenderFeeRate(lqdServiceFee,hjhAccede.getAccedeAccount());
         //计划加入明细金额变更
         hjhAccede.setActualApr(reallyApr);
@@ -352,7 +352,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         //计划订单可用金额
         hjhAccede.setAvailableInvestAccount(BigDecimal.ZERO);
         hjhAccede.setFairValue(accountForst);//订单退出时重新计算公允价值
-        hjhAccede.setInvestServiceApr(tenderFeeRate);//更新投资服务费率
+        hjhAccede.setInvestServiceApr(tenderFeeRate);//更新出借服务费率
         hjhAccede.setLqdProgress(BigDecimal.ONE);//已退出时更新清算进度为 100%
         int count = this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
         if (count > 0) {
@@ -396,7 +396,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 logger.info("==================== 计划退出更新账户资金成功,计划加入订单号: " + hjhAccede.getAccedeOrderId());
             }
             AccountList accountList = new AccountList();
-            // 投资人银行相关
+            // 出借人银行相关
             accountList.setBankAwait(account.getBankAwait());
             accountList.setBankAwaitCapital(account.getBankAwaitCapital());
             accountList.setBankAwaitInterest(account.getBankAwaitInterest());
@@ -415,10 +415,10 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             accountList.setTxDate(getTxDate());
             accountList.setTxTime(getTxTime());
             accountList.setAccedeOrderId(hjhAccede.getAccedeOrderId());
-            //投资人非银行相关
-            // 投资人
+            //出借人非银行相关
+            // 出借人
             accountList.setUserId(userId);
-            // 投资本金
+            // 出借本金
             accountList.setAmount(repayTotal);
             // 1收入
             accountList.setType(1);
@@ -426,13 +426,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             accountList.setTrade("hjh_quit");
             // 余额操作
             accountList.setTradeCode("balance");
-            // 投资人资金总额
+            // 出借人资金总额
             accountList.setTotal(account.getTotal());
-            // 投资人银行可用金额
+            // 出借人银行可用金额
             accountList.setBalance(BigDecimal.ZERO);
-            // 投资人冻结金额
+            // 出借人冻结金额
             accountList.setFrost(account.getFrost());
-            // 投资人待收金额
+            // 出借人待收金额
             accountList.setAwait(account.getAwait());
             // 操作者
             accountList.setOperator(CustomConstants.OPERATOR_AUTO_LOANS);
@@ -469,14 +469,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
         }catch (MQException e){
-            logger.error("=================发送运营数据更新MQ失败,投资订单号:" + hjhAccede.getAccedeOrderId());
+            logger.error("=================发送运营数据更新MQ失败,出借订单号:" + hjhAccede.getAccedeOrderId());
         }
     }
 
 
 
     /**
-     * 获得投资服务费率
+     * 获得出借服务费率
      *
      * @param lqdServiceFee
      * 清算服务费
@@ -658,7 +658,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 汇计划二期 复投的标的不进行进入锁定期操作
         example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId).andTenderTypeEqualTo(0);
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
-        //根据计划订单号获得所有投资标的并且投资总额 = 计划加入总额
+        //根据计划订单号获得所有出借标的并且出借总额 = 计划加入总额
         //判断是否除本标的外还存在复审中的标的,如果没有则确定是最后一笔放款
         List<String> borrowList = new ArrayList<>();
         if (tenderList != null && tenderList.size() > 0) {
@@ -671,7 +671,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         List<HjhAccede> accedeList = this.hjhAccedeMapper.selectByExample(accedeExample);
         boolean isLastBorrow = true;
         HjhAccede hjhAccede = null;
-        //汇计划最小投资额
+        //汇计划最小出借额
         BigDecimal tenderMin = CustomConstants.HJH_RETENDER_MIN_ACCOUNT;
         if (accedeList != null && accedeList.size() > 0) {
             hjhAccede = accedeList.get(0);
@@ -697,7 +697,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 Integer status = borrow.getStatus();
                 if (4 > status) {
                     isLastBorrow = false;
-                    logger.info("================= 订单号:" + hjhAccede.getAccedeOrderId() + "投资标的未放款，标的号："+ borrowNid );
+                    logger.info("================= 订单号:" + hjhAccede.getAccedeOrderId() + "出借标的未放款，标的号："+ borrowNid );
                 }
             }
         }
@@ -729,14 +729,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 logger.error("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId(), e);
             }
             try {
-                //生成并签署加入计划投资服务协议
+                //生成并签署加入计划出借服务协议
                 sendPlanContract(hjhAccede.getUserId(), hjhAccede.getAccedeOrderId(), hjhAccede.getQuitTime(), hjhAccede.getCountInterestTime(), hjhAccede.getWaitTotal());
                 //优惠券放款
                 couponLoan(hjhAccede);
                 // 双十二活动删除
                 //actBalloonTender(hjhAccede);
             } catch (Exception e) {
-                logger.error("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId(), e);
+                logger.error("=================优惠券放款失败,出借订单号:" + hjhAccede.getAccedeOrderId(), e);
             }
         }
     }
@@ -793,9 +793,9 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         hjhAccede.setWaitTotal(interest.add(account));
         boolean tenderFlag = this.batchHjhAccedeCustomizeMapper.updateInterest(hjhAccede) > 0 ? true : false;
         if (!tenderFlag) {
-            throw new RuntimeException("更新(hyjf_hjh_accede)写入失败!" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+            throw new RuntimeException("更新(hyjf_hjh_accede)写入失败!" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
         }
-        logger.info("============更新(hyjf_hjh_accede)待收收益，待收本金，待收总额成功:interest：[" + interest + "]，account：[" + account + "]   WaitTotal：[" + interest.add(account) + "][投资人ID：" + hjhAccede.getUserId() + "]，" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+        logger.info("============更新(hyjf_hjh_accede)待收收益，待收本金，待收总额成功:interest：[" + interest + "]，account：[" + account + "]   WaitTotal：[" + interest.add(account) + "][出借人ID：" + hjhAccede.getUserId() + "]，" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
         return interest;
     }
 
@@ -871,7 +871,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
 //				planWaitCaptical = planWaitCaptical.add(borrowRecover.getRecoverCapital());
 //				planWaitInterest = planWaitInterest.add(borrowRecover.getRecoverInterest());
 //				waitTotal = waitTotal.add(borrowRecover.getRecoverAccount());
-                logger.info("============= 开始更新汇计划相关还款信息,加入订单号:" + accedeOrderId + ",第" + i + "次投资金额: " + borrowRecover.getRecoverAccount());
+                logger.info("============= 开始更新汇计划相关还款信息,加入订单号:" + accedeOrderId + ",第" + i + "次出借金额: " + borrowRecover.getRecoverAccount());
                 serviceFee = serviceFee.add(borrowRecover.getRecoverServiceFee());
             }
         }
@@ -983,7 +983,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      * @param hjhAccede
      */
     private void updateUserAccount(HjhAccede hjhAccede) {
-        logger.info("============开始更新资金明细WaitInterest:[" + hjhAccede.getWaitInterest() + "]，[投资人ID：" + hjhAccede.getUserId() + "]，" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+        logger.info("============开始更新资金明细WaitInterest:[" + hjhAccede.getWaitInterest() + "]，[出借人ID：" + hjhAccede.getUserId() + "]，" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
         Account accountTender = new Account();
         accountTender.setUserId(hjhAccede.getUserId());
         accountTender.setBankTotal(hjhAccede.getWaitInterest());
@@ -992,12 +992,12 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accountTender.setPlanCapitalWait(hjhAccede.getWaitCaptical());
         boolean investaccountFlag = this.adminAccountCustomizeMapper.updateBankTotalForLockPlan(accountTender) > 0 ? true : false;
         if (!investaccountFlag) {
-            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+            throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败!" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
         }
-        // 取得账户信息(投资人)
+        // 取得账户信息(出借人)
         accountTender = this.getAccountByUserId(hjhAccede.getUserId());
         if (Validator.isNull(accountTender)) {
-            throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + hjhAccede.getUserId() + "]，" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+            throw new RuntimeException("出借人账户信息不存在。[出借人ID：" + hjhAccede.getUserId() + "]，" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
         }
         //牵扯到跨库问题 用account表中的account_id代替原先bank_open_account的account
 //        Account tenderOpenAccount = this.getAccountByUserId(hjhAccede.getUserId());
@@ -1006,7 +1006,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         int nowTime = GetDate.getNowTime10();
         // 写入收支明细
         AccountList accountList = new AccountList();
-        // 投资人银行相关
+        // 出借人银行相关
         accountList.setBankAwait(accountTender.getBankAwait());
         accountList.setBankAwaitCapital(accountTender.getBankAwaitCapital());
         accountList.setBankAwaitInterest(accountTender.getBankAwaitInterest());
@@ -1024,25 +1024,25 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accountList.setIsBank(1);
         accountList.setTxDate(Integer.parseInt(txDate));
         accountList.setTxTime(Integer.parseInt(txTime));
-        // 投资人非银行相关
-        // 投资订单号
+        // 出借人非银行相关
+        // 出借订单号
         accountList.setNid(hjhAccede.getAccedeOrderId());
-        // 投资人
+        // 出借人
         accountList.setUserId(hjhAccede.getUserId());
-        //accountList.setAmount(tenderAccount); // 投资本金
+        //accountList.setAmount(tenderAccount); // 出借本金
         // 收支类型1收入2支出3冻结
         accountList.setType(1);
-        // 投资成功
+        // 投标成功
         accountList.setTrade("hjh_lock");
         // 余额操作
         accountList.setTradeCode("balance");
-        // 投资人资金总额
+        // 出借人资金总额
         accountList.setTotal(accountTender.getTotal());
-        // 投资人可用金额
+        // 出借人可用金额
         accountList.setBalance(accountTender.getBalance());
-        // 投资人冻结金额
+        // 出借人冻结金额
         accountList.setFrost(accountTender.getFrost());
-        // 投资人待收金额
+        // 出借人待收金额
         accountList.setAwait(accountTender.getAwait());
 //        accountList.setCreateTime(nowTime); // 创建时间
 //        accountList.setBaseUpdate(nowTime); // 更新时间
@@ -1058,9 +1058,9 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         accountList.setIsShow(1);
         boolean tenderAccountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
         if (!tenderAccountListFlag) {
-            throw new RuntimeException("投资人收支明细(huiyingdai_account_list)写入失败!" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+            throw new RuntimeException("出借人收支明细(huiyingdai_account_list)写入失败!" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
         }
-        logger.info("============结束更新资金明细bank_total:[" + accountTender.getBankTotal() + "]，[投资人ID：" + hjhAccede.getUserId() + "]，" + "[投资订单号：" + hjhAccede.getAccedeOrderId() + "]");
+        logger.info("============结束更新资金明细bank_total:[" + accountTender.getBankTotal() + "]，[出借人ID：" + hjhAccede.getUserId() + "]，" + "[出借订单号：" + hjhAccede.getAccedeOrderId() + "]");
     }
 
     /**
@@ -1158,7 +1158,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
     }
 
     /**
-     * 发送短信(计划投资成功)
+     * 发送短信(计划投标成功)
      *
      * @param hjhAccede
      */
@@ -1191,17 +1191,4 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             logger.error("发送邮件失败..", e2);
         }
     }
-
-    private Borrow getBorrowByNid(String borrowNid) {
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list = borrowMapper.selectByExample(example);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
-        return null;
-    }
-
-
 }

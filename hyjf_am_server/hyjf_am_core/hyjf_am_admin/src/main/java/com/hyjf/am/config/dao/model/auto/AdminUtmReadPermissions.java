@@ -4,18 +4,53 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AdminUtmReadPermissions implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 系统用户id
+     *
+     * @mbggenerated
+     */
     private Integer adminUserId;
 
+    /**
+     * 系统用户名
+     *
+     * @mbggenerated
+     */
     private String adminUserName;
 
+    /**
+     * 渠道id
+     *
+     * @mbggenerated
+     */
     private String utmIds;
 
+    /**
+     * 关键字
+     *
+     * @mbggenerated
+     */
     private String keyCode;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

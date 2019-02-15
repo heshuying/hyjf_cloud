@@ -21,7 +21,7 @@ public class BatchAutoReviewBorrowTask extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BatchAutoReviewBorrowTask: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://AM-TRADE/batch/borrowautoreview/autoreview", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/autoReviewBorrow/taskReviewBorrowAssign", String.class);
 
         logger.info("BatchAutoReviewBorrowTask execute end...");
     }

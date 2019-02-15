@@ -70,7 +70,7 @@ public interface BorrowService extends BaseService {
     List<BorrowAndInfoVO> selectBorrowList();
 
     /**
-     * 投资之前插入tmp表
+     * 出借之前插入tmp表
      * @param tenderRequest
      * @return
      */
@@ -103,19 +103,19 @@ public interface BorrowService extends BaseService {
     WebProjectPersonDetailVO getProjectPerson(String borrowNid);
 
     /**
-     * 投资异步修改表
+     * 出借异步修改表
      * @param tenderBg
      */
     void updateTenderAfter(TenderBgVO tenderBg);
 
     /**
-     * 修改散标投资异步返回结果
+     * 修改散标出借异步返回结果
      * @param tenderRetMsg
      */
     void updateTenderResult(TenderRetMsg tenderRetMsg);
 
     /**
-     * 获取散标投资异步返回结果
+     * 获取散标出借异步返回结果
      * @param userId
      * @param logOrdId
      * @param borrowNid
@@ -124,7 +124,7 @@ public interface BorrowService extends BaseService {
     String getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 
     /**
-     * 根据userId获取用户总投资笔数
+     * 根据userId获取用户总出借笔数
      * @author zhangyk
      * @date 2018/7/5 17:35
      */
@@ -159,7 +159,7 @@ public interface BorrowService extends BaseService {
 
 
 	/**
-	 * 查询计划还款日前一天，处于投资中和复审中的原始标的，发送邮件预警
+	 * 查询计划还款日前一天，处于出借中和复审中的原始标的，发送邮件预警
 	 * @author zhangyk
 	 * @date 2018/8/20 16:25
 	 */

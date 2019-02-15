@@ -50,8 +50,12 @@ public class LoanCoverServiceImpl implements LoanCoverService {
             List<LoanCoverUserVO> loanCoverUserVOList = loanCoverUserResponse.getResultList();
             if(null!=loanCoverUserVOList&&loanCoverUserVOList.size()>0){
                 for(LoanCoverUserVO loanCoverUserVO :loanCoverUserVOList){
-                    loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
-                    loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+                	if(loanCoverUserVO.getCreateTime()!=null) {
+                		 loanCoverUserVO.setStrCreateTime(sdf.format(loanCoverUserVO.getCreateTime()));
+                	}
+                	if(loanCoverUserVO.getUpdateTime()!=null) {
+                		 loanCoverUserVO.setStrUpdateTime(sdf.format(loanCoverUserVO.getUpdateTime()));
+                	}
                 }
             }
 

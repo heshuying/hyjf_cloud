@@ -10,10 +10,7 @@ import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
@@ -68,7 +65,7 @@ public interface AmTradeClient {
     List<AccountVO> getAccountByUserIds(List<Integer> ids);
 
     /**
-     * 获取投资人本金信息
+     * 获取出借人本金信息
      * @param productSearchForPage
      * @return
      */
@@ -148,7 +145,7 @@ public interface AmTradeClient {
 
 
     /**
-     * 查询用户投资次数 包含直投类、债转、汇添金
+     * 查询用户出借次数 包含直投类、债转、汇添金
      * @param userId
      * @return
      */
@@ -341,7 +338,7 @@ public interface AmTradeClient {
     HjhInstConfigVO selectHjhInstConfig(String instcode);
 
     /**
-     * 根据标的ID查询可投资标的信息
+     * 根据标的ID查询可出借标的信息
      * @param borrowNid
      * @return
      */
@@ -355,7 +352,7 @@ public interface AmTradeClient {
     CouponConfigVO getCouponByCouponCode(String couponCode);
 
     /**
-     *获取某天投资情况汇总
+     *获取某天出借情况汇总
      * @param date
      * @return
      */
@@ -376,15 +373,15 @@ public interface AmTradeClient {
     WrbAccountResponse getCouponInfo(String userId);
 
     /**
-     * 投资记录查询
+     * 出借记录查询
      * @param request
-     * @return 投资记录
+     * @return 出借记录
      * @throws Exception
      */
     WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request);
 
     /**
-     * 获取投资记录回款计划
+     * 获取出借记录回款计划
      * @param userId
      * @param investRecordId 流水号
      * @param borrowNid
@@ -392,7 +389,7 @@ public interface AmTradeClient {
      */
     wrbInvestRecoverPlanResponse getRecoverPlan(String userId, String investRecordId, String borrowNid);
     /**
-     * 获取某天投资情况
+     * 获取某天出借情况
      * @param invest_date
      * @param limit
      * @param page
@@ -401,7 +398,7 @@ public interface AmTradeClient {
     List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page);
 
     /**
-     * 查询标的投资情况
+     * 查询标的出借情况
      * @param borrowNid
      * @param investTime
      * @return
@@ -409,7 +406,7 @@ public interface AmTradeClient {
     List<WrbBorrowTenderCustomizeVO> selectWrbBorrowTender(String borrowNid, Date investTime);
 
     /**
-     * 根据标的号和投资时间查询投资情况
+     * 根据标的号和出借时间查询出借情况
      * @param borrowNid
      * @param investTime
      * @return
@@ -424,4 +421,13 @@ public interface AmTradeClient {
      * 获取正确的额borrowVo对象
      */
     RightBorrowVO getRightBorrowByNid(String borrowId);
+
+    Integer selectMyCouponCount(MyCouponListRequest requestBean);
+    BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
+
+    /**
+     * 获得所有协议类型
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTypes();
 }

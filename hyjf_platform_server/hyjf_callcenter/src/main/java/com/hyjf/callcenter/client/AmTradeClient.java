@@ -39,7 +39,7 @@ public interface AmTradeClient {
     List<CallCenterCouponBackMoneyVO> selectCouponBackMoneyList(CallCenterBaseRequest callCenterBaseRequest);
 
     /**
-     * 取得汇直投投资信息(汇计划)
+     * 取得汇直投出借信息(汇计划)
      * 同步另外文件BorrowInvestCustomizeMapper
      * @param callcenterHtjInvestRequest
      * @return
@@ -47,7 +47,7 @@ public interface AmTradeClient {
     List<CallcenterHtjInvestVO> selectBorrowInvestList(CallcenterHtjInvestRequest callcenterHtjInvestRequest);
 
     /**
-     * 取得汇直投投资信息
+     * 取得汇直投出借信息
      * 同步另外文件BorrowInvestCustomizeMapper
      * @param callcenterHztInvestRequest
      * @return

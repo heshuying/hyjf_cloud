@@ -3,6 +3,7 @@ package com.hyjf.am.vo.trade.hjh;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class DayCreditDetailVO extends BaseVO implements Serializable {
 
@@ -54,12 +55,12 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
     /**
      * 债权本金
      */
-    private String creditCapital;
+    private BigDecimal creditCapital;
 
     /**
      * 债权价值
      */
-    private String liquidationFairValue;
+    private BigDecimal liquidationFairValue;
 
     /**
      * 预计实际收益率
@@ -69,12 +70,12 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
     /**
      * 已转让本金
      */
-    private String assignCapital;
+    private BigDecimal assignCapital;
 
     /**
      * 已转让垫付利息-垫付利息
      */
-    private String assignAdvanceInterest;
+    private BigDecimal assignAdvanceInterest;
 
 
     /**
@@ -83,7 +84,7 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
     private String assignAccount;
 
     /**
-     * 待承接总金额-在投资金(ADD)
+     * 待承接总金额-在出借金(ADD)
      */
 
     private String creditAccountWait;
@@ -204,19 +205,19 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
         this.repayStyleName = repayStyleName;
     }
 
-    public String getCreditCapital() {
+    public BigDecimal getCreditCapital() {
         return creditCapital;
     }
 
-    public void setCreditCapital(String creditCapital) {
+    public void setCreditCapital(BigDecimal creditCapital) {
         this.creditCapital = creditCapital;
     }
 
-    public String getLiquidationFairValue() {
+    public BigDecimal getLiquidationFairValue() {
         return liquidationFairValue;
     }
 
-    public void setLiquidationFairValue(String liquidationFairValue) {
+    public void setLiquidationFairValue(BigDecimal liquidationFairValue) {
         this.liquidationFairValue = liquidationFairValue;
     }
 
@@ -228,19 +229,19 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
         this.actualApr = actualApr;
     }
 
-    public String getAssignCapital() {
+    public BigDecimal getAssignCapital() {
         return assignCapital;
     }
 
-    public void setAssignCapital(String assignCapital) {
+    public void setAssignCapital(BigDecimal assignCapital) {
         this.assignCapital = assignCapital;
     }
 
-    public String getAssignAdvanceInterest() {
+    public BigDecimal getAssignAdvanceInterest() {
         return assignAdvanceInterest;
     }
 
-    public void setAssignAdvanceInterest(String assignAdvanceInterest) {
+    public void setAssignAdvanceInterest(BigDecimal assignAdvanceInterest) {
         this.assignAdvanceInterest = assignAdvanceInterest;
     }
 

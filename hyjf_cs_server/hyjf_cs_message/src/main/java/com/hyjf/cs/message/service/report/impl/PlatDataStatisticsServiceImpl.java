@@ -1,18 +1,17 @@
 package com.hyjf.cs.message.service.report.impl;
 
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.BasicQuery;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -92,16 +91,6 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
         query.limit(12);
         query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
         return operationMongDao.find(query);
-    }
-
-    @Override
-    public OperationReport findOneOperationMongDaoByMonth(int month){
-
-        Query query = new Query();
-        Criteria criteria = Criteria.where("statisticsMonth").is(month);
-        query.addCriteria(criteria);
-        OperationReport oe = operationMongDao.findOne(query);
-        return oe;
     }
 
 }

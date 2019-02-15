@@ -1,19 +1,19 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
-import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
+import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -30,22 +30,28 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
+import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
+import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -59,6 +65,7 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +127,14 @@ public interface AmTradeClient {
     BorrowAndInfoVO selectBorrowByNid(String borrowNid);
 
     /**
-     * 取得自动投资用加入计划列表
+     * 取得borrow数据（主库）
+     * @param borrowNid
+     * @return
+     */
+    BorrowAndInfoVO doSelectBorrowByNid(String borrowNid);
+
+    /**
+     * 取得自动出借用加入计划列表
      * @author liubin
      * @return
      */
@@ -148,7 +162,7 @@ public interface AmTradeClient {
     boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean, String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO);
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      * @author liubin
      * @return
      */
@@ -183,10 +197,23 @@ public interface AmTradeClient {
     HjhPlanVO getPlanByNid(String borrowNid) ;
 
     /**
+     * 根据标的编号，查询汇计划信息(主库)
+     * @author liubin
+     * @return
+     */
+    HjhPlanVO doGetPlanByNid(String borrowNid) ;
+
+    /**
      * 根据creditNid查询债转信息
      * @author liubin
      */
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
+     * 根据creditNid查询债转信息
+     * @author liubin
+     */
+    HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
 
     /**
      * 根据加入计划订单，取得加入订单
@@ -203,19 +230,19 @@ public interface AmTradeClient {
     int updateHjhAccedeByPrimaryKey(HjhAccedeVO hjhAccedeVO);
 
     /**
-     * 插入汇计划自动投资临时表
+     * 插入汇计划自动出借临时表
      * @author liubin
      */
     int insertHjhPlanBorrowTmp(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 
     /**
-     * 删除汇计划自动投资临时表
+     * 删除汇计划自动出借临时表
      * @author liubin
      */
     int deleteHjhPlanBorrowTmp(HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO);
 
     /**
-     * 根据主键，更新汇计划自动投资临时表
+     * 根据主键，更新汇计划自动出借临时表
      * @param hjhPlanBorrowTmpVO
      * @return
      */
@@ -236,7 +263,7 @@ public interface AmTradeClient {
     int updateCreditEndForBatch(BankCreditEndVO bankCreditEndVO);
 
     /**
-     * APP,PC,wechat散标投资获取优惠券列表
+     * APP,PC,wechat散标出借获取优惠券列表
      * @param requestBean
      * @return
      */
@@ -286,7 +313,7 @@ public interface AmTradeClient {
     BorrowInfoVO getBorrowInfoByNid(String borrowNid);
 
     /**
-     * 投资异常处理定时任务处理
+     * 出借异常处理定时任务处理
      * @param request
      * @return
      */
@@ -297,13 +324,63 @@ public interface AmTradeClient {
      * @return
      */
 	List<BorrowTenderTmpVO> getBorrowTenderTmpList();
+    /**
+     * 投资全部掉单异常处理
+     */
+    public void recharge();
 
 	/**
 	 * 获取BatchBorrowTenderCustomizeVO列表
 	 * @return
 	 */
 	List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList();
+    /**
+     * 自动放款复审任务开始
+     * @return
+     */
+    void hjhautoreview();
 
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    public void hjhOpenAccountCheck();
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     * @return
+     */
+    public void hjhOrderExitCheck();
+    /**
+     * 汇计划自动计算计划订单公允价值
+     * @return
+     */
+    public void hjhCalculateFairValue();
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    public boolean hjhOrderInvestExceptionCheck();
+
+    /**
+     * hjh订单匹配期超过两天短信预警
+     * @return
+     */
+    public void hjhOrderMatchPeriodCheck();
+    /**
+     *手续费分账明细插入定时
+     * @return
+     */
+    public void poundage();
+    /**
+     * 汇计划自动结束转让定时任务
+     * @return
+     */
+    public void hjhAutoEndCredit();
+
+    /**
+     *  汇计划自动清算
+     * @return
+     */
+    public void hjhAutoCredit();
 	/**
 	 * @param list
 	 */
@@ -400,7 +477,7 @@ public interface AmTradeClient {
     int updatUserBankWithdrawHandler(BankWithdrawBeanRequest bankWithdrawBeanRequest);
 
     /**
-     * 查询用户标的投资数量
+     * 查询用户标的出借数量
      * @param userId
      * @return
      */
@@ -497,18 +574,25 @@ public interface AmTradeClient {
     /* ************************  app start  **************************************/
 
     /**
-     *  app端获取散标投资项目count
+     *  app端获取散标出借项目count
      * @author zhangyk
      * @date 2018/6/20 17:23
      */
     public Integer countAppProjectList(ProjectListRequest request);
 
     /**
-     * app端获取散标投资项目列表
+     * app端获取散标出借项目列表
      * @author zhangyk
      * @date 2018/6/20 17:24
      */
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request);
+
+    /**
+     * app端获取散标出借项目列表 无缓存版
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> searchAppProjectListNoCash(AppProjectListRequest request);
 
     /**
      *  app端查询债权转让所有分页总数
@@ -645,7 +729,7 @@ public interface AmTradeClient {
     List<BorrowTenderVO> getBorrowTenderListByNid(String nid);
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      * @param tenderNid
      * @return
      */
@@ -695,13 +779,13 @@ public interface AmTradeClient {
     RightBorrowVO getRightBorrowByNid(String borrowId) ;
 
     /**
-     * 投资之前插入tmp表
+     * 出借之前插入tmp表
      * @param request
      */
     boolean updateBeforeChinaPnR(TenderRequest request);
 
     /**
-     * 用户投资散标操作表
+     * 用户出借散标操作表
      * @param tenderBg
      * @return
      */
@@ -718,7 +802,7 @@ public interface AmTradeClient {
     boolean updateTenderResult(String logUserId, String logOrderId, String respCode, String retMsg, String productId);
 
     /**
-     * 获取投资异步结果
+     * 获取出借异步结果
      * @param userId
      * @param logOrdId
      * @param borrowNid
@@ -735,14 +819,14 @@ public interface AmTradeClient {
     public BorrowStyleVO getBorrowStyle(String borrowStyle);
 
     /**
-     * 会计划投资详情
+     * 会计划出借详情
      * @param params
      * @return
      */
     public UserHjhInvistDetailCustomizeVO selectUserHjhInvistDetail(Map<String, Object> params);
 
     /**
-     * 根据用户id获取总投资笔数
+     * 根据用户id获取总出借笔数
      * @author zhangyk
      * @date 2018/7/5 18:04
      */
@@ -804,7 +888,7 @@ public interface AmTradeClient {
 
 
     /**
-     * 查询债转投资数目
+     * 查询债转出借数目
      * @author zhangyk
      * @date 2018/6/29 14:36
      */
@@ -950,7 +1034,7 @@ public interface AmTradeClient {
     int countCreditRecordTotal(AssetManageBeanRequest request);
 
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -1045,14 +1129,14 @@ public interface AmTradeClient {
     List<WebUserWithdrawListCustomizeVO> searchUserWithdrawList(TradeDetailBeanRequest form);
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      * @param couponTenderNid
      * @return
      */
     BorrowTenderCpnVO getCouponTenderInfo(String couponTenderNid);
 
     /**
-     * 获取用户优惠券投资信息
+     * 获取用户优惠券出借信息
      * @param userId
      * @param borrowNid
      * @param logOrdId
@@ -1079,7 +1163,7 @@ public interface AmTradeClient {
     CouponUserVO getCouponUser(Integer couponGrantId, Integer userId);
 
     /**
-     * 优惠券投资
+     * 优惠券出借
      * @param couponTender
      * @return
      */
@@ -1087,7 +1171,7 @@ public interface AmTradeClient {
 
     /**
      * @Author walter.limeng
-     * @Description  获取汇计划投资列表（优惠券）
+     * @Description  获取汇计划出借列表（优惠券）
      * @Date 10:37 2018/7/17
      * @Param orderId 订单ID
      * @return
@@ -1096,7 +1180,7 @@ public interface AmTradeClient {
 
     /**
      * @Author walter.limeng
-     * @Description  优惠券单独投资时用
+     * @Description  优惠券单独出借时用
      * @Date 10:47 2018/7/17
      * @Param couponOrderId
      * @return
@@ -1116,7 +1200,7 @@ public interface AmTradeClient {
      * @Author walter.limeng
      * @Description  更新还款期
      * @Date 14:15 2018/7/17
-     * @Param tenderNid 投资订单编号
+     * @Param tenderNid 出借订单编号
      * @Param currentRecoverFlg 0:非还款期，1;还款期
      * @Param period 期数
      * @return
@@ -1154,7 +1238,7 @@ public interface AmTradeClient {
 
     /**
      * @Author walter.limeng
-     * @Description  根据优惠券投资订单编号，取得优惠券信息
+     * @Description  根据优惠券出借订单编号，取得优惠券信息
      * @Date 11:51 2018/7/17
      * @Param ordId
      * @return
@@ -1183,7 +1267,7 @@ public interface AmTradeClient {
 
     /**
      * @Author walter.limeng
-     * @Description  更新账户信息(投资人)
+     * @Description  更新账户信息(出借人)
      * @Date 14:47 2018/7/17
      * @Param account
      * @return
@@ -1272,14 +1356,14 @@ public interface AmTradeClient {
     ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
 
     /**
-     * 验证投资人当天是否可以债转
+     * 验证出借人当天是否可以债转
      * @param userId
      * @return
      */
     Integer tenderAbleToCredit(Integer userId);
 
     /**
-     * 根据投资订单号检索已债转还款信息
+     * 根据出借订单号检索已债转还款信息
      * @param tenderId
      * @return
      */
@@ -1301,7 +1385,7 @@ public interface AmTradeClient {
     Integer insertCredit(BorrowCreditVO borrowCredit);
 
     /**
-     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * 前端Web页面出借可债转输入出借金额后收益提示 用户未登录 (包含查询条件)
      * @param creditNid
      * @param assignCapital
      * @param userId
@@ -1383,7 +1467,7 @@ public interface AmTradeClient {
     List<BorrowTenderTmpVO> getBorrowTenderTmpsForTenderCancel();
 
     /**
-     * 查询汇计划债转投资表
+     * 查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -1400,6 +1484,8 @@ public interface AmTradeClient {
     int orgRepayCount(RepayListRequest requestBean);
 
     int orgRepayedCount(RepayListRequest requestBean);
+
+    BigDecimal orgRepayWaitTotalCurrent(RepayListRequest requestBean);
 
     Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
 
@@ -1420,14 +1506,14 @@ public interface AmTradeClient {
     QueryMyProjectVO selectWechatRepayMentPlanList(WechatMyProjectRequest request);
 
     /**
-     * 获取投资协议集合
+     * 获取出借协议集合
      * @param tenderNid
      * @return
      */
     List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 
     /**
-     * 通过主键获取投资协议
+     * 通过主键获取出借协议
      * @param tenderAgreementID
      * @return
      */
@@ -1445,7 +1531,7 @@ public interface AmTradeClient {
 
 
     /**
-     * 散标投资记录数
+     * 散标出借记录数
      * @param params
      * @return
      */
@@ -1459,7 +1545,7 @@ public interface AmTradeClient {
     String countMoneyByBorrowId(Map<String,Object> params);
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @param params
      * @return
      */
@@ -1555,7 +1641,7 @@ public interface AmTradeClient {
     List<AppTenderCreditInvestListCustomizeVO> searchTenderCreditInvestList(Map<String,Object> params);
 
     /**
-     * 获取债转投资人次和已债转金额
+     * 获取债转出借人次和已债转金额
      * @param transferId
      * @return
      */
@@ -1742,7 +1828,7 @@ public interface AmTradeClient {
     MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
     
     /**
-     * 获取投资协议集合BYtenderNid
+     * 获取出借协议集合BYtenderNid
      * @param tenderNid
      * @return
      */
@@ -1796,19 +1882,19 @@ public interface AmTradeClient {
 
 	/**
 	 *
-	 * 投资预插入
+	 * 出借预插入
 	 * @author Administrator
 	 * @throws Exception
 	 */
     /**
-     * api: 查询投资记录列表
+     * api: 查询出借记录列表
      * @author zhangyk
      * @date 2018/8/27 13:59
      */
     List<InvestListCustomizeVO> searchInvestListNew(Map<String,Object> params);
 
     /**
-     * 獲取銀行開戶信息(根据投资信息查询)
+     * 獲取銀行開戶信息(根据出借信息查询)
      * @author wenxin
      * @date 2018/8/27 13:00
      */
@@ -1816,7 +1902,7 @@ public interface AmTradeClient {
 
     /**
      *
-     * 投资预插入
+     * 出借预插入
      *
      * @return
      * @author Administrator
@@ -1832,7 +1918,7 @@ public interface AmTradeClient {
     Integer deleteBorrowTenderTmp(String orgOrderId);
 
     /**
-     * 投资失败,删除投资临时表
+     * 出借失败,删除出借临时表
      * @param borrowNid
      * @param userId
      * @param orderId
@@ -1896,7 +1982,7 @@ public interface AmTradeClient {
     Integer insertBorrowBail(BorrowBailVO borrowBail);
 
     /**
-     * 根据userId和tenderNid查询投资记录
+     * 根据userId和tenderNid查询出借记录
      * @author zhangyk
      * @date 2018/8/30 10:51
      */
@@ -1910,7 +1996,7 @@ public interface AmTradeClient {
     public String getBorrowCreditTenderServiceFee(String creditNid);
 
     /**
-     * 根据creditNid查询投资记录
+     * 根据creditNid查询出借记录
      * @author zhangyk
      * @date 2018/8/30 10:51
      */
@@ -1979,27 +2065,6 @@ public interface AmTradeClient {
     List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean resultBean);
 
     /**
-     * 取得检证数据
-     * @param id
-     * @return
-     */
-    ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id);
-
-    /**
-     * 将状态更新成[2:处理中]
-     * @param record
-     * @return
-     */
-    int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record);
-
-    /**
-     * 取得成功时的信息
-     * @param ordId
-     * @return
-     */
-    List<ChinapnrLogVO> getChinapnrLog(String ordId);
-
-    /**
      * 汇付提现后处理
      * @param chinaPnrWithdrawRequest
      * @return
@@ -2013,15 +2078,9 @@ public interface AmTradeClient {
      */
     void updateAccountWithdrawByOrdId(String ordId, String reason);
 
-    /**
-     * 更新状态
-     * @param uuid
-     * @param status
-     */
-    void updateChinapnrExclusiveLogStatus(long uuid, String status);
 
     /**
-     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     * 根据放款编号获取该标的的出借信息 add by liushouyi
      *
      * @param borrowNid
      * @return
@@ -2060,7 +2119,7 @@ public interface AmTradeClient {
     List<BorrowStyleVO> selectBorrowStyleWithBLOBs(String borrowStyle);
 
     /**
-     * 获取用户投资订单还款详情
+     * 获取用户出借订单还款详情
      *
      * @param nid
      * @return
@@ -2076,7 +2135,7 @@ public interface AmTradeClient {
     Integer insertNifaContractEssence(NifaContractEssenceVO nifaContractEssenceVO);
 
     /**
-     * 查询用户投资次数 包含直投类、债转、汇添金
+     * 查询用户出借次数 包含直投类、债转、汇添金
      * @auth sunpeikai
      * @param
      * @return
@@ -2117,7 +2176,11 @@ public interface AmTradeClient {
      * @return
      */
     IncreaseInterestInvestVO getIncreaseInterestInvestByOrdId(String orderId);
-
+    /**
+     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * @return
+     */
+    Boolean alermBeforeLiquidateCheck();
     /**
      * 查询产品加息信息
      * @auth sunpeikai
@@ -2215,7 +2278,7 @@ public interface AmTradeClient {
     String handleRechargeInfo(HandleAccountRechargeRequest rechargeRequest);
 
     /**
-     * 获取用户投资数量
+     * 获取用户出借数量
      * @param userId
      * @return
      */
@@ -2307,7 +2370,7 @@ public interface AmTradeClient {
     List<AccountRechargeVO> selectRechargeListByUserId(Integer userId);
 
     /**
-     * 根据用户ID查询用户投资记录
+     * 根据用户ID查询用户出借记录
      *
      * @param userId
      * @return
@@ -2339,7 +2402,7 @@ public interface AmTradeClient {
     CreditTenderVO selectCreditTenderByAssignOrderId(String assignOrderId);
 
     /**
-     * 根据加入订单号查询优惠券投资记录
+     * 根据加入订单号查询优惠券出借记录
      *
      * @param orderId
      * @return
@@ -2347,7 +2410,7 @@ public interface AmTradeClient {
     CouponRealTenderVO selectCouponRealTenderByOrderId(String orderId);
 
     /**
-     * 根据优惠券投资ID查询优惠券投资
+     * 根据优惠券出借ID查询优惠券出借
      *
      * @param couponTenderId
      * @return
@@ -2363,7 +2426,7 @@ public interface AmTradeClient {
     CouponUserVO selectCouponUserById(Integer couponGrantId);
 
     /**
-     * 根据优惠券投资ID获取优惠券投资信息
+     * 根据优惠券出借ID获取优惠券出借信息
      *
      * @param couponTenderId
      * @return
@@ -2371,7 +2434,7 @@ public interface AmTradeClient {
     BorrowTenderCpnVO selectBorrowTenderCpnByCouponTenderId(String couponTenderId);
 
     /**
-     * 根据投资订单号查询投资信息
+     * 根据出借订单号查询出借信息
      * @param orderId
      * @return
      */
@@ -2394,7 +2457,7 @@ public interface AmTradeClient {
     List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanList(AppHomePageRequest request);
 
     /**
-     * 查询首页定时发标,投资中,复审中的项目
+     * 查询首页定时发标,出借中,复审中的项目
      * @Author yangchangwei 2018/10/16
      * @param request
      * @return
@@ -2430,15 +2493,6 @@ public interface AmTradeClient {
     List<AppPushManageVO> getAnnouncements();
 
     List<BorrowCustomizeVO> searchBorrowCustomizeList(BorrowCommonCustomizeVO borrowCommonCustomize);
-
-    /**
-     * 根据contract_id查询垫付协议生成详情
-     * @author Zha Daojian
-     * @date 2018/8/23 15:47
-     * @param contractId
-     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
-     **/
-    List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId);
 
     List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String,Object> param);
 
@@ -2481,6 +2535,20 @@ public interface AmTradeClient {
      */
     WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
 
+    /**
+     * 转让通知借款人 统计
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    Integer getUserRepayDetailAjaxCount(WebUserRepayTransferRequest repayTransferRequest);
+
+    /**
+     * 转让通知借款人 列表
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
     List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
     /**
      * 根据机构编号,查询还款计划数量
@@ -2505,5 +2573,274 @@ public interface AmTradeClient {
      * @return
      */
     HjhPlanAssetVO selectHjhPlanAssetByBorrowNid(String borrowNid);
+
+    /**
+     * 计划定时关闭任务
+     * @return
+     */
+    BooleanResponse updateHjhPlanJoinOff();
+
+    /**
+     * 计划定时开启任务
+     * @return
+     */
+    BooleanResponse updateHjhPlanJoinOn();
+
+    /**
+     * 自动发标修复
+     */
+    void autoIssueRecover();
+
+    /**
+     * 计算自动投资的匹配期(每日)
+     * @return
+     */
+    BooleanResponse updateMatchDays();
+
+    /**
+     * 互金拉取逾期和完全债转数据更新合同状态
+     */
+    void updateRepayInfo();
+
+    /**
+     * 资金变化统计
+     */
+    void countRechargeMoney();
+
+    void updateDayMarkLine();
+
+    void taskAssign();
+
+    void taskRepayAssign();
+
+    void taskReviewBorrowAssign();
+
+    void taskAssignLoans();
+
+    void taskAssignRepay();
+
+    void noneSplitBorrow();
+
+    void hjhBorrow();
+
+    void splitBorrow();
+
+    void couponExpired();
+
+    void dataInfo();
+
+    void downloadRedFile();
+
+    /** 用户测评配置 */
+    List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
+
+    /** 测评获取冻结金额和代收本经明细 */
+    CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId);
+
+    /**
+     * 获取需要推送法大大协议的标的
+     * add by yangchangwei 2018-12-26
+     * @return
+     */
+    List<BorrowApicronVO> getFddPushBorrowList();
+
+    /**
+     * 开始推送法大大协议
+     * @param borrowApicronVO
+     */
+    void updateFddPush(BorrowApicronVO borrowApicronVO);
+
+    /**
+     * 北互金获取借款人信息
+     * @param borrowNid
+     * @param companyOrPersonal
+     * @return
+     */
+    BifaBorrowUserInfoVO getBorrowUserInfo(String borrowNid, String companyOrPersonal);
+
+    /**
+     * 服务费=放款服务费+还款服务费
+     * @param borrowNid
+     * @return
+     */
+    String selectServiceCostSum(String borrowNid);
+
+    /**
+     * 散标转让服务费
+     * @param creditNid
+     * @return
+     */
+    BigDecimal getBorrowCreditFeeSumByCreditNid(String creditNid);
+
+    /**
+     * 智投转让服务费
+     * @param creditNid
+     * @return
+     */
+    BigDecimal getHjhCreditFeeSumByCreditNid(String creditNid);
+
+    /**
+     * 获取智投数
+     * @param nid
+     * @return
+     */
+    int countHjhPlan(String planNid);
+
+    /**
+     * 获取智投列表
+     * @return
+     */
+    List<HjhPlanVO> selectHjhPlanInfoList();
+
+    /**
+     * 已开户且出借>0的用户
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<UserIdAccountSumBeanVO> getBorrowTenderAccountSum(Integer startDate, Integer endDate);
+
+    /**
+     * 获取借款人信息
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    List<BorrowAndInfoVO> selectBorrowUserInfo(Integer startDate, Integer endDate);
+
+    /**
+     * 借贷笔数
+     * @param time
+     * @return
+     */
+    int getLoanNum(Date time);
+
+    /**
+     * 累计借贷余额
+     * @return
+     */
+    BigDecimal getWillPayMoney();
+
+    /**
+     * 累计借贷余额笔数
+     * @return
+     */
+    int getTotalLoanBalanceNum();
+
+    /**
+     * 累计借款人
+     * @return
+     */
+    Integer countBorrowUser();
+
+    /**
+     * 累计投资人数
+     * @param time
+     * @return
+     */
+    int getTenderCount(Date time);
+
+    /**
+     * 当前借款人
+     * @return
+     */
+    Integer countCurrentBorrowUser();
+
+    /**
+     * 查询用户借款笔数(企业)
+     *
+     * @param username
+     * @return
+     */
+    Integer selectBorrowUsersCount(String username);
+
+    /**
+     * 查询用户借款笔数(个人)
+     *
+     * @param username
+     * @return
+     */
+    Integer selectBorrowManInfoCount(String username);
+    /**
+     * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+     *
+     * @param borrowRecoverVO
+     * @return
+     */
+    BorrowRecoverVO getRecoverDateByTenderNid(BorrowRecoverVO borrowRecoverVO);
+    /**
+     * 获取投资红包金额
+     * add by nxl
+     * @param realTenderId
+     * @return
+     */
+    BigDecimal getRedPackageSum(String realTenderId);
+
+    List<CertAccountListCustomizeVO> queryCertAccountList(CertRequest request);
+
+    List<AccountListVO> getAccountListVOListByRequest(CertRequest certTransactRequest);
+
+    List<BorrowRepayVO> getBorrowRepayListByRequest(CertRequest certRequest);
+
+    List<BorrowRepayPlanVO> getBorrowRepayPlanListByRequest(CertRequest certRequest);
+
+    List<CouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest);
+
+    List<BorrowTenderCpnVO> getBorrowTenderCpnListByCertRequest(CertRequest certRequest);
+
+    List<CouponRealTenderVO> getCouponRealTenderListByCertRequest(CertRequest certRequest);
+
+    List<BorrowRecoverVO> selectBorrowRecoverListByRequest(CertRequest certRequest);
+
+    List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRequest(CertRequest certRequest);
+
+    List<CreditRepayVO> getCreditRepayListByRequest(CertRequest certRequest);
+
+    List<BorrowRecoverPlanVO> selectBorrowRecoverPlanListByRequest(CertRequest certRequest);
+
+    List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    List<CreditRepayVO> getCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    /**
+     * 当前出借人
+     * @return
+     */
+    Integer countCurrentTenderUser();
+
+    /**
+     * 平台前十大融资人融资待还余额占比
+     * @return
+     */
+    BigDecimal sumBorrowUserMoneyTopTen();
+
+    /**
+     * 代还总金额
+     * @return
+     */
+    BigDecimal sumBorrowUserMoney();
+
+    /**
+     * 平台单一融资人最大融资待还余额占比
+     * @return
+     */
+    BigDecimal sumBorrowUserMoneyTopOne();
+
+    /**
+     * 互金下载反馈文件
+     */
+    void downloadFile();
+
+    /**
+     * 互金上传文件上报数据
+     */
+    void uploadFile();
+
+
+    CertAccountListIdCustomizeVO queryCertAccountListId(CertRequest certRequest);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
+
+    List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
 }
 

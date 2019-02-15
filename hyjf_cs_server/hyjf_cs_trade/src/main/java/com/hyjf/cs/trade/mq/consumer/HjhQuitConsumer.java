@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,37 +57,37 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
 
     @Override
     public void onMessage(MessageExt msg) {
-        // --> 消息检查
-        if(msg == null || msg.getBody() == null){
-            logger.error("【汇计划计划进入锁定期/退出计划】接收到的消息为null");
-            return;
-        }
-
-        // --> 消息转换
-        String msgBody = new String(msg.getBody());
-        logger.info("【汇计划计划进入锁定期/退出计划】接收到的消息：" + msgBody);
-
         HjhAccedeVO mqHjhAccede;
+        //转换队列消息
         try {
+            // --> 消息检查
+            if(msg == null || msg.getBody() == null){
+                logger.error("【汇计划计划进入锁定期/退出计划】接收到的消息为null");
+                return;
+            }
+
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            logger.info("【汇计划计划进入锁定期/退出计划】接收到的消息：" + msgBody);
+
             mqHjhAccede = JSONObject.parseObject(msgBody, HjhAccedeVO.class);
             if(mqHjhAccede == null || mqHjhAccede.getAccedeOrderId() == null || mqHjhAccede.getOrderStatus() == null ||mqHjhAccede.getCreditCompleteFlag() == null){
                 logger.info("解析为空：" + msgBody);
                 return;
             }
         } catch (Exception e1) {
-            logger.error("计划锁定/退出参数解释失败：" + msgBody, e1);
+            logger.error("计划锁定/退出参数解释失败：", e1);
             return;
         }
+        //业务处理
+        String accedeOrderId = mqHjhAccede.getAccedeOrderId();
+        Integer orderStatus = mqHjhAccede.getOrderStatus();
+        Integer creditCompleteFlag = mqHjhAccede.getCreditCompleteFlag();
         try {
-            String accedeOrderId = mqHjhAccede.getAccedeOrderId();
-            Integer orderStatus = mqHjhAccede.getOrderStatus();
-            Integer creditCompleteFlag = mqHjhAccede.getCreditCompleteFlag();
-
             // 生成任务key 校验并发请求
             String redisKey = RedisConstants.PLAN_REPAY_TASK + accedeOrderId;
             boolean result = RedisUtils.tranactionSet(redisKey, 300);
             if (!result) {
-                RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
                 logger.error("计划订单号：" + accedeOrderId + " 锁定/退出中....");
                 return;
             }
@@ -102,7 +103,6 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
                 amTradeClient.updateForQuit(accedeOrderId);
             }
 
-            RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
             RedisUtils.del(redisKey);
             logger.info("--------------计划订单号：" + accedeOrderId + "，锁定/退出结束------");
 
@@ -110,12 +110,14 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
         } catch (Exception e){
             logger.error("计划锁定/退出失败：" + mqHjhAccede.getAccedeOrderId(), e);
             return;
+        } finally {
+            RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
         }
     }
 
     private void updateForLock(String accedeOrderId) {
         List<HjhAccedeVO> accedeVOS = amTradeClient.selectHjhAccedeListByOrderId(accedeOrderId);
-        if(accedeVOS != null){
+        if(!CollectionUtils.isEmpty(accedeVOS)){
             HjhAccedeVO hjhAccedeVO = accedeVOS.get(0);
             UserInfoVO inverestUserInfo = amUserClient.selectUserInfoByUserId(hjhAccedeVO.getInviteUserId());
 
@@ -125,13 +127,17 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
             Integer pushMoneyOnline = amTradeClient.getCommisionConfig(map);
 //                map.put("userType","51老用户");
 //                Integer pushMoney51 = amTradeClient.getCommisionConfig(map);
+            //获取提成用户ID
             Integer commissionUserID = getCommissionUser(hjhAccedeVO, pushMoneyOnline, null, inverestUserInfo);
             UserInfoVO commissioUserInfoVO = null;
+            BankOpenAccountVO bankOpenAccountVO = null;
+            List<UserInfoCustomizeVO> userInfoCustomizeVOS = null;
+            //提成用户不为空时，获取提成用户相关信息用于更新提成信息
             if(commissionUserID != null && commissionUserID > 0 ){
                 commissioUserInfoVO = amUserClient.selectUserInfoByUserId(commissionUserID);
+                bankOpenAccountVO = amUserClient.selectBankAccountById(commissionUserID);
+                userInfoCustomizeVOS = amUserClient.queryDepartmentInfoByUserId(commissionUserID);
             }
-            BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(commissionUserID);
-            List<UserInfoCustomizeVO> userInfoCustomizeVOS = amUserClient.queryDepartmentInfoByUserId(commissionUserID);
             amTradeClient.updateForLock(accedeOrderId,inverestUserInfo,commissioUserInfoVO,bankOpenAccountVO,userInfoCustomizeVOS);
         }
     }

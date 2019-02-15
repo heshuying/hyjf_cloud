@@ -14,13 +14,13 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * @Description 优惠券投资相关
+ * @Description 优惠券出借相关
  * @Author sunss
  * @Date 2018/6/23 11:52
  */
 public interface CouponService {
     /**
-     * 加入计划  体验金投资
+     * 加入计划  体验金出借
      * @param request
      * @param plan
      * @param cuc
@@ -28,7 +28,7 @@ public interface CouponService {
     void couponTender(TenderRequest request, HjhPlanVO plan, CouponUserVO cuc,Integer userId);
 
     /**
-     * 优惠券投资校验
+     * 优惠券出借校验
      * @param userId
      * @param accountStr
      * @param couponGrantId
@@ -39,7 +39,7 @@ public interface CouponService {
     Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period,String config,String nowType);
 
     /**
-     * 散标投资优惠券使用
+     * 散标出借优惠券使用
      * @param couponGrantId
      * @param borrow
      * @param bean

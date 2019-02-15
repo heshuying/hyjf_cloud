@@ -108,7 +108,7 @@
 		<result column="invite_name" property="inviteName" />
 		<!-- 加入金额 -->
 		<result column="accede_account" property="accedeAccount" />
-		<!-- 已投资金额 -->
+		<!-- 已出借金额 -->
 		<result column="already_invest" property="alreadyInvest" />
 		<!-- 平台 0PC，1微信，2安卓APP，3IOS，4其他'-->
 		<result column="client" property="platform" />
@@ -132,9 +132,9 @@
 		<!-- <result column="expect_apr" property="expectApr" /> -->
 		<!-- 优惠券 -->
 		<result column="coupon_code" property="couponCode" />
-		<!-- 投资状态 -->
+		<!-- 出借状态 -->
 		<result column="plan_invest_status" property="debtPlanStatus" />
-		<!-- 投资类型 -->
+		<!-- 出借类型 -->
 		<result column="tender_type" property="tenderType" />
 		<!-- 待(收)还总额 -->
 		<result column="wait_total" property="waitTotal" />
@@ -175,13 +175,13 @@
 		<result column="expectApr" property="expectApr"  />
 		<!--计算用加入金额-->
 		<result column="jAccedeAccount" property="jAccedeAccount"  />
-		<!--计算用已投资金额-->
+		<!--计算用已出借金额-->
 		<result column="jalreadyInvest" property="jalreadyInvest"  />
 		<!--公允价值-->
 		<result column="fairValue" property="fairValue"  />
-		<!--实际年化收益率-->
+		<!--实际出借利率-->
 		<result column="actualApr" property="actualApr"  />
-		<!--投资笔数-->
+		<!--出借笔数-->
 		<result column="investCounts" property="investCounts"  />
 		<!--匹配期-->
 		<result column="matchDates" property="matchDates"  />
@@ -385,7 +385,7 @@
 	<resultMap id="SumResultMap" type="com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO">
 		<!-- 加入金额 -->
 		<result column="accede_account" property="sumAccedeAccount" />
-		<!-- 已投资金额 -->
+		<!-- 已出借金额 -->
 		<result column="already_invest" property="sumAlreadyInvest" />
 		<!-- 待(收)还总额 -->
 		<result column="wait_total" property="sumWaitTotal" />
@@ -523,7 +523,7 @@
 				hhp.plan_nid plan_nid,
 				hhp.plan_name plan_name,
 				hha.accede_order_id accede_order_id,
-				CONCAT(hhp.expect_apr, '%') expect_apr,
+				CONCAT(hha.expect_apr, '%') expect_apr,
 				CASE
 					WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
 					ELSE CONCAT(hhp.lock_period,'个月')

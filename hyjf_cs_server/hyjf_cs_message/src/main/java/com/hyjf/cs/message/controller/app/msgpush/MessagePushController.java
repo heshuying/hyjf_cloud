@@ -10,7 +10,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.MsgPushBean;
+import com.hyjf.cs.message.bean.mc.MsgPushVO;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistoryNew;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
@@ -125,7 +125,7 @@ public class MessagePushController extends BaseController {
 		//int count = msgPushService.countMsgHistoryRecord(0, userId, null);
 
 		// 返回列表
-		List<MsgPushBean> msgPushList = new ArrayList<MsgPushBean>();
+		List<MsgPushVO> msgPushList = new ArrayList<MsgPushVO>();
 		int limitStart = pageSize * (page - 1);
 		try {
 			List<MessagePushMsgHistory> list = msgPushService.getMsgHistoryList(0, userId, null, limitStart, pageSize);
@@ -134,26 +134,26 @@ public class MessagePushController extends BaseController {
 				firstFlag = true;
 			}
 			for (MessagePushMsgHistory msg : list) {
-				MsgPushBean msgbean = new MsgPushBean();
-				msgbean.setMsgTitle(msg.getMsgTitle());
-				msgbean.setMsgContent(msg.getMsgContent().replaceAll("</?[^>]+>", ""));
-				msgbean.setActionUrl(msg.getMsgActionUrl());
-				msgbean.setMsgId(String.valueOf(msg.getId()));
-				msgbean.setMsgAction(String.valueOf(msg.getMsgAction()));
+				MsgPushVO msgPushVO = new MsgPushVO();
+				msgPushVO.setMsgTitle(msg.getMsgTitle());
+				msgPushVO.setMsgContent(msg.getMsgContent().replaceAll("</?[^>]+>", ""));
+				msgPushVO.setActionUrl(msg.getMsgActionUrl());
+				msgPushVO.setMsgId(String.valueOf(msg.getId()));
+				msgPushVO.setMsgAction(String.valueOf(msg.getMsgAction()));
 				// 如果发送时间大于 时间戳 则为今天的数据
-				msgbean.setTime(GetDate.timestamptoStrYYYYMMDDHHMM(msg.getSendTime().toString()));
-				msgbean.setMsgType(String.valueOf(msg.getMsgDestinationType()));
+				msgPushVO.setTime(GetDate.timestamptoStrYYYYMMDDHHMM(msg.getSendTime().toString()));
+				msgPushVO.setMsgType(String.valueOf(msg.getMsgDestinationType()));
 
 				// 标识第一条通知数据返回大图片
 				if (firstFlag) {
 					String webhost = UploadFileUtils.getDoPath(webHost) + "/hyjf-app".substring(1, "/hyjf-app".length())
 							+ "/";
 					webhost = webhost.substring(0, webhost.length() - 1);
-					msgbean.setImgUrl(webhost + msg.getMsgImageUrl());
+					msgPushVO.setImgUrl(webhost + msg.getMsgImageUrl());
 					firstFlag = false;
 				}
 				// 屏蔽了原始代码，这里统一设置已读标志为已读
-				msgbean.setReadFlag("1");
+				msgPushVO.setReadFlag("1");
 				// if(msg.getMsgReadCountAndroid() > 0){
 				// msgbean.setReadFlag("1");
 				// }else if(msg.getMsgReadCountIos() > 0){
@@ -161,7 +161,7 @@ public class MessagePushController extends BaseController {
 				// }else{
 				// msgbean.setReadFlag("0");
 				// }
-				msgPushList.add(msgbean);
+				msgPushList.add(msgPushVO);
 			}
 		} catch (Exception e) {
 			ret.put("status", "1");
@@ -172,7 +172,7 @@ public class MessagePushController extends BaseController {
 		// ret.put("count", count);
 		// ret.put("msgList", msgPushList);
 		ret.put("count", 0);
-		ret.put("msgList", new ArrayList<MsgPushBean>());
+		ret.put("msgList", new ArrayList<MsgPushVO>());
 		return ret;
 	}
 

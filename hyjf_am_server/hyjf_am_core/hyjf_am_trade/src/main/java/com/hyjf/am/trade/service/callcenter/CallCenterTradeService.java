@@ -34,6 +34,14 @@ public interface CallCenterTradeService {
      */
      List<CallCenterAccountDetailCustomize> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest);
 
+     /**
+     * 测评获取冻结金额和代收本经明细
+     * @param userId
+     * @return CallCenterAccountDetailCustomize
+     * @author wangjun
+     */
+     CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId);
+
     /**
      * 查询充值明细
      * @param centerBaseRequest
@@ -51,7 +59,7 @@ public interface CallCenterTradeService {
     List<CallCenterWithdrawCustomize> getWithdrawRecordList(CallCenterBaseRequest centerBaseRequest);
     
     /**
-     * 查询投资明细(汇直投)
+     * 查询出借明细(汇直投)
      * @param centerBaseRequest
      * @return List<CallCenterRechargeCustomize>
      * @author libin
@@ -97,7 +105,7 @@ public interface CallCenterTradeService {
     List<CallCenterCouponBackMoneyCustomize> getUserCouponBackMoneyList(CallCenterBaseRequest centerBaseRequest);
     
     /**
-     * 查询投资明细(汇添金)
+     * 查询出借明细(汇添金)
      * @param centerBaseRequest
      * @return List<CallCenterCouponBackMoneyCustomize>
      * @author libin

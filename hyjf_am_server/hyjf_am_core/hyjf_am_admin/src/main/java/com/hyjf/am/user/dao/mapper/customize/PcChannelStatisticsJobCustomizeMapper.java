@@ -90,7 +90,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
                                  @Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 查询投资人数
+	 * 查询出借人数
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -100,7 +100,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 								 @Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 查询累计投资金额
+	 * 查询累计出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -110,7 +110,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 							@Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 查询汇直投投资金额
+	 * 查询汇直投出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -120,7 +120,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 								 @Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 查询汇消费投资金额
+	 * 查询汇消费出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -130,7 +130,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 								 @Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 查询汇天利投资金额
+	 * 查询汇天利出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -140,7 +140,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 								 @Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 查询汇添金投资金额
+	 * 查询汇添金出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -149,7 +149,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 	BigDecimal getHtjTenderPrice(@Param("sourceId") Integer sourceId, @Param("dayStart") String dayStart,
 								 @Param("dayEnd") String dayEnd, @Param("type") String type);
 	/**
-	 * 查询融金宝投资金额
+	 * 查询融金宝出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -160,7 +160,7 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 
 
 	/**
-	 * 查询汇转让投资金额
+	 * 查询汇转让出借金额
 	 *
 	 * @param sourceId 账户推广平台
 	 * @param type 0无主单1有主单
@@ -219,4 +219,32 @@ public interface PcChannelStatisticsJobCustomizeMapper {
 	 * @return
 	 */
 	List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+	/**
+	 * 查询pc统计明细散标数量
+	 * @param request
+	 * @return
+	 */
+    int selectPcChannelReconciliationRecordCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询pc统计明细计划数量
+     * @param request
+     * @return
+     */
+	int selectPcChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细散标数量
+     * @param request
+     * @return
+     */
+    int selectAppChannelReconciliationRecordCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细计划数量
+     * @param request
+     * @return
+     */
+    int selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
 }

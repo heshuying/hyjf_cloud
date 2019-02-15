@@ -52,7 +52,7 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
      */
     @Override
     public Boolean insertAssetException(AssetExceptionRequest assetExceptionRequest) {
-        // 借款编号
+        // 项目编号
         String borrowNid = assetExceptionRequest.getBorrowNid();
         // 获取借款详情
         Borrow borrow = getBorrow(borrowNid);
@@ -112,14 +112,14 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
      */
     @Override
     public String isExistsBorrow(String borrowNid) {
-        // 查询该借款编号是否存在借款表中
+        // 查询该项目编号是否存在借款表中
         Borrow borrow = this.getBorrow(borrowNid);
         if (null == borrow) {
-            return "借款编号不存在！";
+            return "项目编号不存在！";
         }
-        // 投资或投资之后状态的标的无法添加
+        // 出借或出借之后状态的标的无法添加
         if (borrow.getStatus() != 0 && borrow.getStatus() != 1) {
-            return "已进入投资或投资之后状态的标的无法添加。";
+            return "已进入出借或出借之后状态的标的无法添加。";
         }
         // 判断是否已经添加到异常表中
         BorrowDeleteExample example = new BorrowDeleteExample();

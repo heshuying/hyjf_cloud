@@ -105,6 +105,34 @@ public class ProjectListController extends BaseController {
             BigDecimal dbYield = new BigDecimal(StringUtils.isNotBlank(vo.getBorrowExtraYield())?vo.getBorrowExtraYield():"0");
             boolean booleanVal = Validator.isIncrease(intFlg, dbYield);
             vo.setIsIncrease(String.valueOf(booleanVal));
+            // upd by liushouyi nifa2 20190214 start
+            // 处理借款用途
+            if(StringUtils.isNotBlank(vo.getFinancePurpose())){
+                switch (vo.getFinancePurpose()) {
+                    case "01":
+                        vo.setFinancePurpose("个人消费");
+                        break;
+                    case "02":
+                        vo.setFinancePurpose("个人经营");
+                        break;
+                    case "03":
+                        vo.setFinancePurpose("个人资金周转");
+                        break;
+                    case "04":
+                        vo.setFinancePurpose("房贷");
+                        break;
+                    case "05":
+                        vo.setFinancePurpose("企业经营");
+                        break;
+                    case "06":
+                        vo.setFinancePurpose("企业周转");
+                        break;
+                    default:
+                        vo.setFinancePurpose("其他");
+                        break;
+                }
+            }
+            // upd by liushouyi nifa2 20190214 end
         }
         // add by nxl 判断是否为产品加息 end
         response.setResult(vo);
@@ -207,7 +235,7 @@ public class ProjectListController extends BaseController {
     // --------------------------------------web end------------------------------------------
     //---------------------------------------app start------------------------------------------
     /**
-     * App端获取散标投资
+     * App端获取散标出借
      * @param request
      * @return
      */
@@ -224,7 +252,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * app端散标投资count
+     * app端散标出借count
      * @param request
      * @return
      */
@@ -237,7 +265,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * App端获取债转投资list
+     * App端获取债转出借list
      * @param request
      * @return
      */
@@ -253,7 +281,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * app端获取债转投资count
+     * app端获取债转出借count
      * @param request
      * @return
      */
@@ -302,7 +330,7 @@ public class ProjectListController extends BaseController {
 
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @return
      */
     @RequestMapping("/app/selectProjectInvestList")

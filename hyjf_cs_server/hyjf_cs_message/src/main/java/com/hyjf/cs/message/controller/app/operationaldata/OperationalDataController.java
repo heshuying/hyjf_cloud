@@ -3,8 +3,8 @@ package com.hyjf.cs.message.controller.app.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
@@ -104,7 +104,7 @@ public class OperationalDataController {
 	}
 
 	/**
-	 * 获取借款&&投资数据
+	 * 获取借款&&出借数据
 	 * 
 	 * @return
 	 */
@@ -129,11 +129,11 @@ public class OperationalDataController {
 				detail.put("fullScaleHour", oe.getHour(time));
 				detail.put("fullScaleMinute", oe.getMinutes(time));
 				detail.put("fullScaleSecond", oe.getSeconds(time));
-				detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
-				detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
-				detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
-				detail.put("MaxBorrowerRate", oe.getBorrowuserMoneyTopone());
-				detail.put("Top10BorrowerRate", oe.getBorrowuserMoneyTopten());
+				detail.put("TotalBorrower", oe.getBorrowUserCountTotal());
+				detail.put("NowBorrower", oe.getBorrowUserCountCurrent());
+				detail.put("CurrentInvestor", oe.getTenderUserCountCurrent());
+				detail.put("MaxBorrowerRate", oe.getBorrowUserMoneyTopOne());
+				detail.put("Top10BorrowerRate", oe.getBorrowUserMoneyTopTen());
 			}
 
 			detail.put("relationshipTotal", 0);
@@ -155,7 +155,7 @@ public class OperationalDataController {
 	}
 
 	/**
-	 * 获取投资人地域分布数据
+	 * 获取出借人地域分布数据
 	 * 
 	 * @return
 	 */
@@ -173,7 +173,7 @@ public class OperationalDataController {
 				result.put("statusDesc", "暂无任何数据");
 				return result;
 			}
-			// 获取投资人区域信息
+			// 获取出借人区域信息
 			Map<Integer, String> cityMap = oe.getInvestorRegionMap();
 			List<SubEntity> list = oe.orgnizeData(cityMap);
 			List<SubEntity> sublist=oe.formatList(list);
@@ -190,7 +190,7 @@ public class OperationalDataController {
 	}
 
 	/**
-	 * 获取投资人性别&&年龄数据
+	 * 获取出借人性别&&年龄数据
 	 * 
 	 * @return
 	 */
@@ -210,7 +210,7 @@ public class OperationalDataController {
 				result.put("statusDesc", "暂无任何数据");
 				return result;
 			}
-			// 投资人性别的分布
+			// 出借人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
 			int maleCount = sexMap.get(OperationGroupReport.MALE);
 			int femaleCount = sexMap.get(OperationGroupReport.FEMALE);
@@ -219,7 +219,7 @@ public class OperationalDataController {
 			info.put("InvestorRegionMenRate", oe.formatDate(malePer) + "%");
 			info.put("InvestorRegionWoMenRate", oe.formatDate(femalePer) + "%");
 
-			// 投资人年龄分布
+			// 出借人年龄分布
 			Map<Integer, Integer> ageMap = oe.getInvestorAgeMap();
 			int r1 = ageMap.get(OperationGroupReport.ageRange1);
 			int r2 = ageMap.get(OperationGroupReport.ageRange2);
@@ -248,18 +248,6 @@ public class OperationalDataController {
 		return result;
 	}
 
-
-	/**
-	 * 查询投资人年龄分布
-	 * 
-	 * @param startAge
-	 * @param endAge
-	 * @return
-	 */
-	private String getAgeRate(int startAge, int endAge) {
-		String rate = "25.00";
-		return rate;
-	}
 
 	/**
 	 * 转化数字格式的日期

@@ -22,7 +22,7 @@ public class DownloadFileJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("DownloadFileJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/downloadFiles", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/downloadRedFile", String.class);
         logger.info("DownloadFileJob execute end...");
     }
 }

@@ -6,9 +6,9 @@ import com.hyjf.am.vo.BasePage;
 public class TradeDetailBeanRequest extends BasePage {
     // 用户id
     public String userId;
-    // 投资开始值
+    // 出借开始值
     public String startDate;
-    // 投资结束值
+    // 出借结束值
     public String endDate;
     // 交易类型
     public String trade;

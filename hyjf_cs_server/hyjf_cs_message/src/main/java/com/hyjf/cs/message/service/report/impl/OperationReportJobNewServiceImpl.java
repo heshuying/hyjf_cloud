@@ -7,10 +7,12 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.*;
+import com.hyjf.cs.message.bean.ic.report.*;
+import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.mc.BorrowUserStatisticMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
+import com.hyjf.cs.message.mongo.ic.BorrowUserStatisticMongDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.OperationReportJobNewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ import java.util.*;
 public class OperationReportJobNewServiceImpl extends StatisticsOperationReportBase implements OperationReportJobNewService {
     @Autowired
     private AmUserClient amUserClient;
+    @Autowired
+    AmTradeClient amTradeClient;
     @Autowired
     private OperationMongoGroupDao operationMongoGroupDao;
     @Autowired
@@ -68,11 +72,11 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         oe.setTradeCountMonth(bean.getTradeCountMonth());
         //借贷笔数
         oe.setLoanNum(bean.getLoanNum());
-        //人均投资金额
+        //人均出借金额
         oe.setPerInvest(bean.getPerInvest());
         //平均满标时间
         oe.setFullBillTimeCurrentMonth(bean.getFullBillTimeCurrentMonth());
-        //投资人总数
+        //出借人总数
         oe.setTenderCount(bean.getTenderCount());
 //		System.out.println(sdf.format(cal.getTime()));
         //代偿金额
@@ -83,15 +87,15 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         logger.info("BorrowUserStatistic is: {}", JSONObject.toJSONString(borrowUserStatistic));
         if(borrowUserStatistic!=null) {
             // 累计借款人
-            oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
-            // 当前投资人
-            oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
-            // 当前投资人
-            oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
+            oe.setBorrowUserCountTotal(borrowUserStatistic.getBorrowUserCountTotal());
+            // 当前出借人
+            oe.setBorrowUserCountCurrent(borrowUserStatistic.getBorrowUserCountCurrent());
+            // 当前出借人
+            oe.setTenderUserCountCurrent(borrowUserStatistic.getTenderUserCountCurrent());
             // 最大单一借款人待还金额占比
-            oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            oe.setBorrowUserMoneyTopOne(borrowUserStatistic.getBorrowUserMoneyTopOne().divide(borrowUserStatistic.getBorrowUserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
             // 前十大借款人待还金额占比
-            oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            oe.setBorrowUserMoneyTopTen(borrowUserStatistic.getBorrowUserMoneyTopTen().divide(borrowUserStatistic.getBorrowUserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
         logger.info("借款数据....  oe is :{}", oe);
         operationMongDao.save(oe);
@@ -111,21 +115,21 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         sdf = new SimpleDateFormat("yyyyMM");
         oegroup.setStatisticsMonth(transferDateToInt(cal, sdf));
 
-        // 投资人按照地域分布
+        // 出借人按照地域分布
         //查询出所有符合条件用户
         List<OperationReportJobVO> cityGroup = bean.getCityGroup();
         Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
         oegroup.setInvestorRegionMap(cityMap);
 
-        // 投资人按照性别分布
+        // 出借人按照性别分布
         List<OperationReportJobVO> sexGroup = bean.getSexGroup();
         Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
         oegroup.setInvestorSexMap(sexMap);
 
-        // 投资人按照年龄分布
+        // 出借人按照年龄分布
         Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
         //代码拆分先查出所有符合条件的用户
-        List<OperationReportJobVO> ageRangeUserIds = bean.getAgeRangeUserIds();
+        List<OperationReportJobVO> ageRangeUserIds =  amTradeClient.getTenderAgeByRangeList(getLastDay(cal));
         if(!CollectionUtils.isEmpty(ageRangeUserIds)){
             int age = amUserClient.getTenderAgeByRange(getLastDay(cal), 0,
                     OperationGroupReport.ageRange1, ageRangeUserIds);
@@ -322,7 +326,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 1, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 1, bean, currentMonthDealMoney);
     }
 
@@ -376,7 +380,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationMonthlyReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        monthlyOperationReportMapper.insert(monthlyOperationReport);
-        monthlyOperationReportMongDao.insert(operationMonthlyReport);
+        operationMonthlyReportMongDao.insert(operationMonthlyReport);
 
     }
 
@@ -517,7 +521,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 2, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 2, bean, quarterDealMoney);
     }
 
@@ -580,7 +584,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationQuarterReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        quarterOperationReportMapper.insert(quarterOperationReport);
-        quarterOperationReportMongDao.insert(operationQuarterReport);
+        operationQuarterReportMongDao.insert(operationQuarterReport);
     }
 
     //保存半年度运营报告
@@ -678,7 +682,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 3, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 3, bean, halfYearDealMoney);
     }
 
@@ -688,7 +692,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationHalfYearReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        halfYearOperationReportMapper.insert(halfYearOperationReport);
-        halfYearOperationReportMongDao.insert(operationHalfYearReport);
+        operationHalfYearReportMongDao.insert(operationHalfYearReport);
     }
 
     /**
@@ -830,7 +834,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 4, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 4, bean, yearDealMoney);
     }
 
@@ -875,7 +879,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationYearReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        yearOperationReportMapper.insert(YearOperationReport);
-        yearOperationReportMongDao.insert(operationYearReport);
+        operationYearReportMongDao.insert(operationYearReport);
     }
 
 }

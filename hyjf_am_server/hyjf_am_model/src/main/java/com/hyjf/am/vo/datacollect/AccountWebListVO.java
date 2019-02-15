@@ -23,7 +23,7 @@ public class AccountWebListVO extends BasePage implements Serializable {
     private String endDate;
     @ApiModelProperty(value = "用户名")
     private String usernameSearch;
-    @ApiModelProperty(value = "真是姓名")
+    @ApiModelProperty(value = "真实姓名")
     private String truenameSearch;
     /**收支类型  1：收入  2：支出*/
     @ApiModelProperty(value = "收支类型")

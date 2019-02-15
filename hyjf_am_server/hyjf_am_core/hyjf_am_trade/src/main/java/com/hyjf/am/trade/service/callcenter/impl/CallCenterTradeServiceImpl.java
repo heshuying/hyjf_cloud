@@ -97,6 +97,20 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     /**
      *
+     * 测评获取冻结金额和代收本经明细
+     * @author wenxin
+     * @param userId
+     * @return
+     */
+    @Override
+    public CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId) {
+        CallCenterAccountDetailRequest callCenterAccountDetailRequest = new CallCenterAccountDetailRequest();
+        callCenterAccountDetailRequest.setUserId(userId);
+        return callCenterAccountDetailCustomizeMapper.queryAccountEvalDetail(callCenterAccountDetailRequest);
+    }
+
+    /**
+     *
      * 查询充值明细
      * @author wangjun
      * @param centerBaseRequest
@@ -135,7 +149,7 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
     }
     
     /**
-     * 查询投资明细(汇直投)
+     * 查询出借明细(汇直投)
      * @author libin
      * @param centerBaseRequest
      * @return

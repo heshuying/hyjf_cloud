@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.web.safe;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -17,6 +18,7 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
@@ -56,6 +58,9 @@ public class WebSafeController extends BaseUserController {
     @Autowired
     private CommonProducer commonProducer;
 
+    @Autowired
+    SystemConfig systemConfig;
+
     /**
      * 账户设置查询
      *
@@ -70,6 +75,17 @@ public class WebSafeController extends BaseUserController {
         UserVO user = safeService.getUsersById(userId);
         CheckUtil.check(user!=null,MsgEnum.STATUS_ZT000001);
         Map<String, Object> result = safeService.safeInit(user);
+
+        // 合规需求 分享链接增加渠道信息 add by huanghui
+        String inviteLink = null;
+        UserUtmInfoCustomizeVO userUtmInfo = safeService.getUserUtmInfo(userId);
+        if (userUtmInfo != null){
+            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+        }else {
+            inviteLink = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+        }
+        result.put("inviteLink", inviteLink);
+
         if (null == result) {
             response.setStatus(ApiResult.FAIL);
             response.setStatusDesc("账户设置查询失败");
@@ -262,7 +278,6 @@ public class WebSafeController extends BaseUserController {
     @PostMapping(value = "/updateSmsConfig", produces = "application/json; charset=utf-8")
     public WebResult updateSmsConfig(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<>();
-        String token = request.getHeader("token");
         String key = param.get("key");
         String value = param.get("value");
         // 加入验证
@@ -313,12 +328,12 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "上传头像", notes = "上传头像")
     @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
-    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
-        logger.info("用户上传头像 -> userId::[{}]",userId);
+    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param){
+        logger.debug("用户上传头像 -> param::[{}]",param);
+        logger.info("上传头像开始。。。。。。。。。。。");
         WebResult<Object> result = new WebResult<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
         String image = param.get("image");
-        String token = request.getHeader("HttpServletRequest request");
         try {
             UserVO user = safeService.queryUserByUserId(userId);
             String imgFilePath = safeService.uploadAvatar(user, userId, image);

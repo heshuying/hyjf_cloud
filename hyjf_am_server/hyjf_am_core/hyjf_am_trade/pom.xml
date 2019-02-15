@@ -62,6 +62,12 @@
 			<groupId>com.hyjf</groupId>
 			<artifactId>hyjf_am_model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.hyjf</groupId>
+					<artifactId>hyjf_common</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

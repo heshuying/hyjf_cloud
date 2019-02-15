@@ -243,7 +243,7 @@ public class BankCallParamConstant extends BankCallMethodConstant implements Ser
 	public static final String PARAM_TSFAMOUNT = "tsfAmount";
 	/** 原交易金额 卖出方投标的原交易金额（或卖出方购买债权的原交易金额） */
 	public static final String PARAM_ORGTXAMOUNT = "orgTxAmount";
-	/** 对手电子账号:投资人账号 */
+	/** 对手电子账号:出借人账号 */
 	public static final String PARAM_FORACCOUNTID = "forAccountId";
 	/** 标的号 */
 	public static final String PARAM_PRODUCTID = "productId";
@@ -330,7 +330,7 @@ public class BankCallParamConstant extends BankCallMethodConstant implements Ser
 
 	public static final String PARAM_DESLINE = "desLine";
 
-	/** 批次放款投资手续费 */
+	/** 批次放款出借手续费 */
 	public static final String PARAM_BIDFEE = "bidFee";
 	/** 批次放款融资手续费 */
 	public static final String PARAM_DEBTFEE = "debtFee";

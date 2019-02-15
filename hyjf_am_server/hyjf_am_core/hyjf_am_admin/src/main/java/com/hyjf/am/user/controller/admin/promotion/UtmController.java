@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.admin.promotion;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
@@ -278,13 +279,15 @@ public class UtmController extends BaseController {
     @RequestMapping("/select_pc_channel_reconciliation_record")
     public ChannelReconciliationResponse selectPcChannelReconciliationRecord(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = new ChannelReconciliationResponse();
-        // 查询pc统计明细
-        List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            response.setResultList(list);
-        }
         // 查询符合条件的数量
         int count = utmService.selectPcChannelReconciliationCount(request);
+        if (count > 0) {
+            // 查询pc统计明细
+            List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecord(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+            }
+        }
         response.setCount(count);
         return response;
     }
@@ -314,13 +317,15 @@ public class UtmController extends BaseController {
     @RequestMapping("/select_app_channel_reconciliation_record")
     public ChannelReconciliationResponse selectAppChannelReconciliationRecord(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = new ChannelReconciliationResponse();
-        // 查询app统计明细
-        List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            response.setResultList(list);
+        int count = utmService.selectAppChannelReconciliationCount(request);
+        if (count > 0) {
+            // 查询app统计明细
+            List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecord(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+            }
         }
         // 查询符合条件的数量
-        int count = utmService.selectAppChannelReconciliationCount(request);
         response.setCount(count);
         return response;
     }
@@ -407,6 +412,21 @@ public class UtmController extends BaseController {
         UtmResponse response = new UtmResponse();
         Integer total = utmService.getBySourceIdAndTerm(sourceId,utmTerm,utmId);
         response.setRecordTotal(total);
+        return response;
+    }
+
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    @RequestMapping("/searchUserIdList/{sourceType}")
+    public Response searchUserIdList(@PathVariable int sourceType) {
+        Response response = new Response();
+        List<Integer> list = utmService.searchUserIdList(sourceType);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
         return response;
     }
 }

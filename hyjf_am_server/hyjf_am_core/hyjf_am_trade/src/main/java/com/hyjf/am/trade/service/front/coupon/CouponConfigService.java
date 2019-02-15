@@ -53,27 +53,6 @@ public interface CouponConfigService {
     CouponConfig getCouponConfig(int id);
 
     /**
-     * 保存编辑信息
-     * @param couponConfig
-     * @return
-     */
-    int saveCouponConfig(CouponConfig couponConfig);
-
-    /**
-     * 添加发行优惠券信息
-     * @param couponConfig
-     * @return
-     */
-    int insertAction(CouponConfig couponConfig);
-
-    /**
-     *删除发行信息
-     * @param id
-     * @return
-     */
-    int deleteCouponConfig(int id);
-
-    /**
      * 查询优惠券已发行数量
      * @param couponCode
      * @return
@@ -86,18 +65,9 @@ public interface CouponConfigService {
 
     /**
      * @Author walter.limeng
-     * @Description   根据tenderNid查询放款优惠券总数
-     * @Date 14:00 2018/7/17
-     * @Param tenderNid
-     * @return
-     */
-    Integer countByTenderId(String tenderNid);
-
-    /**
-     * @Author walter.limeng
      * @Description  更新还款期
      * @Date 14:15 2018/7/17
-     * @Param tenderNid 投资订单编号
+     * @Param tenderNid 出借订单编号
      * @Param currentRecoverFlg 0:非还款期，1;还款期
      * @Param period 期数
      * @return

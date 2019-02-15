@@ -14,5 +14,4 @@ import java.util.List;
 public interface AmMarketClient {
 
 	List<InvitePrizeConfVO> getListByGroupCode(String groupCode);
-
 }

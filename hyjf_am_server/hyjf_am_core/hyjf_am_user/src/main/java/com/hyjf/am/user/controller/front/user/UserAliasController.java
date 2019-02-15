@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.front.user;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserAliasResponse;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
@@ -84,6 +85,7 @@ public class UserAliasController extends BaseController {
 
 	@PostMapping("/updateMobileCode")
 	public int updateAliases(@RequestBody UserAlias userAlias) {
+		logger.debug("updateMobileCode, userAlias is : {}", JSONObject.toJSONString(userAlias));
 		return userAliasService.updateAliases(userAlias);
 	}
 

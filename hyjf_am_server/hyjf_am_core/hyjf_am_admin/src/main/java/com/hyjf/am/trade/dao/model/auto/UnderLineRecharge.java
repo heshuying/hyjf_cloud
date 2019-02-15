@@ -6,18 +6,53 @@ import java.util.Date;
 public class UnderLineRecharge implements Serializable {
     private Integer id;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * 交易类型说明
+     *
+     * @mbggenerated
+     */
     private String explain;
 
+    /**
+     * 操作人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 添加者用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 状态:0,启用;1,禁用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

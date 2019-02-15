@@ -15,15 +15,11 @@ import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.DailyAutoSendService;
-
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +100,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         String sheetName = "销售数据日报表";
         String[] titles = new String[]{"序号", "一级分部", "二级分部", "门店数量", "本月累计规模业绩", "本月累计已还款", "上月对应累计规模业绩", "环比增速",
                 "本月累计提现", "提现占比", "本月累计充值", "本月累计年化业绩", "上月累计年化业绩", "环比增速", "昨日规模业绩", "昨日还款", "昨日年化业绩", "昨日提现", "昨日充值",
-                "昨日净资金流（充值-提现）", "当日待还", "昨日注册数", "其中充值≥3000人数", "其中投资≥3000人数", "本月累计投资3000以上新客户数"};
+                "昨日净资金流（充值-提现）", "当日待还", "昨日注册数", "其中充值≥3000人数", "其中出借≥3000人数", "本月累计出借3000以上新客户数"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -139,7 +135,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
                     if (drawOrder == 2 && "惠众".equals(sellDaily.getPrimaryDivision())) {
                         Row row = sheet.createRow(++rowNum);
                         HSSFCellStyle sumOCCellStyle = createTotalCellStyle(row, sheet, workbook, "运营中心汇总", rowNum,
-                                HSSFColor.GOLD.index);
+                                IndexedColors.GOLD.index);
                         SellDailyVO sumOCSellDaily = getSumSellDaily(1);
                         for (int celLength = 3; celLength < titles.length; celLength++) {
                             // 创建相应的单元格
@@ -163,7 +159,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
                 // 3. 插入一级分部合计行
                 Row row = sheet.createRow(++rowNum);
                 HSSFCellStyle sumPrimaryDivisionCellStyle = createTotalCellStyle(row, sheet, workbook,
-                        concatPrimaryDivisionTotalTitle(drawOrder), rowNum, HSSFColor.LIGHT_TURQUOISE.index);
+                        concatPrimaryDivisionTotalTitle(drawOrder), rowNum, IndexedColors.LIGHT_TURQUOISE.index);
                 SellDailyVO sumPrimaryDivisionSellDaily = getSumSellDaily(2, drawOrder);
                 // 第三列到第24列计算合计数据
                 for (int i = 3; i < titles.length; i++) {
@@ -176,7 +172,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
             // 4. 插入总合计行
             Row row = sheet.createRow(++rowNum);
             HSSFCellStyle allTotalCellStyle = createTotalCellStyle(row, sheet, workbook, "合计", rowNum,
-                    HSSFColor.YELLOW.index);
+                    IndexedColors.YELLOW.index);
             SellDailyVO allTotalSellDaily = getSumSellDaily(3);
             for (int i = 3; i < titles.length; i++) {
                 Cell totalCell = row.createCell(i);
@@ -214,9 +210,9 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         // ----------------标题样式---------------------
         // 标题样式
         HSSFCellStyle titleStyle = workbook.createCellStyle();
-        titleStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        Font ztFont = workbook.createFont();
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+        titleStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        HSSFFont ztFont = workbook.createFont();
         // 字体设置
         ztFont.setColor(Font.COLOR_NORMAL);
         // 将字体大小设置为18px
@@ -224,23 +220,23 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         // 将“宋体”字体应用到当前单元格上
         ztFont.setFontName("宋体");
         // 加粗
-        ztFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        ztFont.setBold(true);
         titleStyle.setFont(ztFont);
 
         // 设置前景填充样式
-        titleStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         // 淡黄色 https://www.cnblogs.com/caiyun/archive/2012/08/22/2650239.html 颜色对比
-        titleStyle.setFillForegroundColor(HSSFColor.LEMON_CHIFFON.index);
+        titleStyle.setFillForegroundColor(IndexedColors.LEMON_CHIFFON.index);
 
         // ----------------单元格样式----------------------------------
         // 表格样式
         HSSFCellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        cellStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
         Font cellFont = workbook.createFont();
         // 字体设置
         cellFont.setColor(Font.COLOR_NORMAL);
@@ -248,13 +244,13 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         cellFont.setFontHeightInPoints((short) 10);
         // 字体应用到当前单元格上
         cellFont.setFontName("宋体");
-        cellFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        cellFont.setBold(true);
         cellStyle.setFont(cellFont);
         // 设置自动换行
         cellStyle.setWrapText(true);
         // 设置前景填充样式
-        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-        cellStyle.setFillForegroundColor(HSSFColor.LIGHT_GREEN.index);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.index);
 
         // ----------------------创建第一行---------------
         // 在sheet里创建第一行，参数为行索引(excel的行)，可以是0～65535之间的任何一个
@@ -362,7 +358,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
      */
     private HSSFCellStyle createNomalCellStyle(HSSFWorkbook workbook) {
         HSSFCellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
         return cellStyle;
     }
 
@@ -384,9 +380,9 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 2));
         cell.setCellValue(cellValue);
         HSSFCellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
         // 设置前景填充样式
-        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         // 淡黄色 https://www.cnblogs.com/caiyun/archive/2012/08/22/2650239.html 颜色对比
         cellStyle.setFillForegroundColor(color);
 

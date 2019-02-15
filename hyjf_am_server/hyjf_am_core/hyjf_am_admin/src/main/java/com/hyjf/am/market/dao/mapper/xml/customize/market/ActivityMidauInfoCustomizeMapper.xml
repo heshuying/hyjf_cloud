@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.ActivityMidauInfoCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.market.dao.model.customize.ActivityMidauInfo" >
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="reward_name" property="rewardName" jdbcType="VARCHAR" />
+		<result column="reward_id" property="rewardId" jdbcType="VARCHAR" />
+		<result column="reward_type" property="rewardType" jdbcType="VARCHAR" />
+		<result column="invest_money" property="investMoney" jdbcType="DECIMAL" />
+		<result column="product_type" property="productType" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="product_style" property="productStyle" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="distribution_status" property="distributionStatus" jdbcType="TINYINT" />
+		<result column="reward_status" property="rewardStatus" jdbcType="TINYINT" />
+		<result column="invest_time" property="investTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="queryTenderList" resultMap="BaseResultMap"
+			parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+        SELECT
+		te.account AS investMoney,
+		te.borrow_nid AS borrowNid,
+		te.create_time AS investTime,
+		te.user_id as userId,
+		te.nid as orderId,
+		CASE
+		WHEN bn.borrow_style = 'endday' THEN
+		CONCAT(bn.borrow_period, '天')
+		ELSE
+		CONCAT(bn.borrow_period, '个月')
+		END AS productStyle
+		FROM
+		hyjf_trade.ht_borrow_tender te
+		LEFT JOIN hyjf_trade.ht_borrow bn ON te.borrow_nid = bn.borrow_nid
+		WHERE
+		te.nid = #{orderid,jdbcType=VARCHAR} and te.user_id = #{userid,jdbcType=INTEGER};
+	</select>
+
+
+	<select id="queryTenderRecoverList" resultType="com.hyjf.am.market.dao.model.customize.ActivityMidauInfo"
+			parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+				SELECT
+		te.account AS investMoney,
+		te.borrow_nid AS borrowNid,
+		br.create_time AS investTime,
+		te.user_id as userId,
+		te.nid as orderId,
+		CASE
+		WHEN bn.borrow_style = 'endday' THEN
+		CONCAT(bn.borrow_period, '天')
+		ELSE
+		CONCAT(bn.borrow_period, '个月')
+		END AS productStyle
+		FROM
+		hyjf_trade.ht_borrow_tender te
+		LEFT JOIN hyjf_trade.ht_borrow_recover br ON br.borrow_nid = te.borrow_nid AND br.nid = te.nid
+		LEFT JOIN hyjf_trade.ht_borrow bn ON te.borrow_nid = bn.borrow_nid
+		WHERE
+		te.nid = #{orderid,jdbcType=VARCHAR} and te.user_id = #{userid,jdbcType=INTEGER};
+	</select>
+	<select id="queryPlanList" resultType="com.hyjf.am.market.dao.model.customize.ActivityMidauInfo"
+			parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
+			SELECT
+			hdpa.accede_account AS investMoney,
+		hdpa.plan_nid as borrowNid,
+		hdpa.user_id as userId,
+		hdpa.accede_order_id as orderId,
+			CASE
+		WHEN hdp.is_month = '0' THEN
+			CONCAT(hdpa.lock_period, '天')
+		WHEN hdp.is_month = '1' THEN
+			CONCAT(hdpa.lock_period, '个月')
+		END AS productStyle,
+		 hdpa.create_time AS investTime
+		FROM
+			hyjf_trade.ht_hjh_accede hdpa
+		LEFT JOIN hyjf_trade.ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+		WHERE
+			hdpa.user_id = #{userid,jdbcType=INTEGER}
+		AND hdpa.accede_order_id = #{orderid,jdbcType=VARCHAR};
+	</select>
+
+</mapper>

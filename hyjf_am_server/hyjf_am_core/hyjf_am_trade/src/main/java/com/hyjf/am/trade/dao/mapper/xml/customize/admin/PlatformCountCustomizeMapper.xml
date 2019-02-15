@@ -118,7 +118,7 @@
 		) htj_tender_price ON pn.client = htj_tender_price.client
 		LEFT JOIN
 		(
-		<!-- 汇计划投资金额修改 20180613 mod by nxl-->
+		<!-- 汇计划出借金额修改 20180613 mod by nxl-->
 		select  ss.client,sum(sumAcount) amount  from (
 				SELECT  accede.client,sum(temp.account) sumAcount FROM ht_hjh_accede accede
 				inner JOIN ht_borrow_tender temp ON  accede.accede_order_id = temp.accede_order_id

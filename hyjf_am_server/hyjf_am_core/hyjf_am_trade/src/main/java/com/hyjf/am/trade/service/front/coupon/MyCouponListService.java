@@ -42,16 +42,18 @@ public interface MyCouponListService {
      */
     List<CouponUserForAppCustomizeVO> getMyCouponByPage(MyCouponListRequest requestBean);
 
+    int updateCouponReadFlag(Integer userId, Integer readFlag);
+
     /**
-     * APP,PC,wechat散标投资查询优惠券列表
-     * @param requestBean userId:用户ID，money：投资金额，borrowNid:投资标的，platform：投资平台
+     * APP,PC,wechat散标出借查询优惠券列表
+     * @param requestBean userId:用户ID，money：出借金额，borrowNid:出借标的，platform：出借平台
      * @return JSONObject
      */
     JSONObject getBorrowCoupon(MyCouponListRequest requestBean);
 
     /**
      * APP,PC,wechat加入计划查询优惠券列表
-     * @param requestBean userId:用户ID，money：投资金额，planNid:投资标的，platform：投资平台
+     * @param requestBean userId:用户ID，money：出借金额，planNid:出借标的，platform：出借平台
      * @return JSONObject
      */
     JSONObject getPlanCouponoupon(MyCouponListRequest requestBean);

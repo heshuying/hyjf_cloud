@@ -33,13 +33,16 @@ public class MessageConstant {
 	/** 根据消息发送 */
 	public static final String APP_MS_SEND_FOR_MSG = "app_ms_send_for_msg";
 
+	/** 推送失败补偿 */
+	public static final String APP_MS_SEND_REPEAT = "app_ms_send_repeat";
+
 	/** 给指定用户发邮件 */
 	public static final String MAIL_SEND_FOR_USER = "mail_send_for_user";
 
 	/** 给指定邮件地址发邮件 */
 	public static final String MAIL_SEND_FOR_MAILING_ADDRESS = "mail_send_for_mailing_address";
 
-	/** 给指定邮件地址发邮件 */
+	/** 批量给邮件地址发送邮件信息 */
 	public static final String MAIL_SEND_FOR_MAILING_ADDRESS_MSG = "mail_send_for_mailing_address_msg";
 
 	/** 发送销售日报邮件 */

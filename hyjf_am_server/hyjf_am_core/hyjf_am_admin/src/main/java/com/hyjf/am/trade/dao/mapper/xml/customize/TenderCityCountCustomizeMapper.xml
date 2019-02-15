@@ -14,7 +14,7 @@
 	</resultMap>
 
 
-	<!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+	<!-- 	出借人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
 	<select  id="getTenderCityGroupBy" parameterType="java.util.Date" resultMap="cityResultMap">
 		SELECT
 		a.p AS citycode, a.counts AS count, b.area AS cityname
@@ -57,7 +57,7 @@
 		ORDER BY a.counts DESC;
 	</select>
 
-	<!-- 	投资人性别分布 -->
+	<!-- 	出借人性别分布 -->
 	<select  id="getTenderSexGroupBy"  resultMap="ageResultMap">
 		SELECT
 		ui.sex as sex,count(1) as count
@@ -100,7 +100,7 @@
 		group by ui.sex;
 	</select>
 
-	<!-- 	投资人年龄分布 -->
+	<!-- 	出借人年龄分布 -->
 	<select id="getTenderAgeByRange"   resultType="int">
 		SELECT
 		count(t.user_id)
@@ -223,7 +223,7 @@
 		select count(*) from ht_borrow where create_time &lt;=#{date}
 	</select>
 
-	<!-- 	获取截至日期的投资金额 -->
+	<!-- 	获取截至日期的出借金额 -->
 	<select id="getInvestLastDate" parameterType="java.util.Date" resultType="java.math.BigDecimal"  >
 		select sum(count) from(
 		select sum(already_invest) as count from ht_hjh_accede where  create_time &lt;= #{date} union all
@@ -231,7 +231,7 @@
 		select sum(account) from ht_borrow_tender where create_time &lt;= #{date}) as tmp
 	</select>
 
-	<!-- 	统计投资人总数，截至日期为上个月的最后一天 -->
+	<!-- 	统计出借人总数，截至日期为上个月的最后一天 -->
 	<select id="getTenderCount"  parameterType="java.util.Date" resultType="int">
 		select count(*) from(
 			SELECT user_id FROM ht_borrow_tender where create_time &lt;=#{date}

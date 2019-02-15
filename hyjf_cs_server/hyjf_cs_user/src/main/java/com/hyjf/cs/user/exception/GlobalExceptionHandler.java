@@ -50,6 +50,7 @@ public class GlobalExceptionHandler {
 		CheckException e = (CheckException)ex;
 		BaseResult<?> result = new BaseResult<>(e.getData());
 		result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
+		logger.warn("catch chech exception, result is: {}", result);
 		return result;
 	}
 

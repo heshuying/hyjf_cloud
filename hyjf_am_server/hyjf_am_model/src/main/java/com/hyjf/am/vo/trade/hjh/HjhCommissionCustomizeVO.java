@@ -22,7 +22,7 @@ public class HjhCommissionCustomizeVO extends TenderCommissionVO implements Seri
 
     // 查询用
     private String borrowNameSearch; // 项目标题
-    private String usernameSearch; // 投资人
+    private String usernameSearch; // 出借人
     private String clientTypeSearch; // 客户端类型
     private String referernameSearch; // 提成人
     private String is51Search; // 0:否，1:是， 9：all
@@ -85,7 +85,7 @@ public class HjhCommissionCustomizeVO extends TenderCommissionVO implements Seri
      */
     private String referername;
     /**
-     * 投资人用户名
+     * 出借人用户名
      */
     private String username;
     /**
@@ -116,7 +116,7 @@ public class HjhCommissionCustomizeVO extends TenderCommissionVO implements Seri
      */
     private String attributeTender;
     /**
-     * 投资时间
+     * 出借时间
      */
     private String tenderTimeView;
     /**

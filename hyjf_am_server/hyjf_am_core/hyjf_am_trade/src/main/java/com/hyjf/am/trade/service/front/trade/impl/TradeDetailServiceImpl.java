@@ -1,16 +1,23 @@
 package com.hyjf.am.trade.service.front.trade.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample;
 import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
 import com.hyjf.am.trade.service.front.trade.TradeDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -128,10 +135,11 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         List<WebUserWithdrawListCustomize> list = userTradeDetailCustomizeMapper.selectUserWithdrawList(params);
         for (WebUserWithdrawListCustomize customize:list) {
             customize.setBankFlag(CacheUtil.getParamName("BANK_TYPE",customize.getBankFlag()));
-            customize.setStatus(CacheUtil.getParamName("'WITHDRAW_STATUS'",customize.getStatus()));
+            customize.setStatus(CacheUtil.getParamName("WITHDRAW_STATUS",customize.getStatus()));
         }
         return list;
     }
+
 
     @Override
     public int countUserWithdrawRecordTotal(TradeDetailBeanRequest request) {
@@ -147,7 +155,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         int total = userTradeDetailCustomizeMapper.countUserWithdrawRecordTotal(params);
         return total;
     }
-
+    private Logger _log = LoggerFactory.getLogger(TradeDetailServiceImpl.class);
     @Override
     public List<AppTradeListCustomize> searchAppTradeDetailList(AppTradeDetailBeanRequest request) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -157,7 +165,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         params.put("tradeMonth", request.getMonth());
         params.put("limitStart", request.getLimitStart());
         params.put("limitEnd", request.getLimitEnd());
-
+        _log.info("params："+JSONObject.toJSONString(params));
         List<AppTradeListCustomize> tradeList = userTradeDetailCustomizeMapper.searchAppTradeDetailList(params);
         List<AppTradeListCustomize> list = new ArrayList<AppTradeListCustomize>();
         Calendar cal = Calendar.getInstance();
@@ -228,6 +236,18 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         params.put("tradeType", request.getTradeType());
         params.put("tradeYear", request.getYear());
         params.put("tradeMonth", request.getMonth());
-        return userTradeDetailCustomizeMapper.countTradeDetailListRecordTotal(params);
+        int total =userTradeDetailCustomizeMapper.countTradeDetailListRecordTotal(params);
+        return total;
+    }
+
+    @Override
+    public List<EvaluationConfigVO> selectEvaluationConfigList(EvaluationConfigVO request) {
+        EvaluationConfigExample example = new EvaluationConfigExample();
+        List<EvaluationConfigVO> configVO = null;
+        List<EvaluationConfig> config = evaluationConfigMapper.selectByExample(example);
+        if(config != null && config.size() > 0){
+            configVO = CommonUtils.convertBeanList(config, EvaluationConfigVO.class);
+        }
+        return configVO;
     }
 }

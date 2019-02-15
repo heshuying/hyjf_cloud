@@ -74,7 +74,7 @@ public class AccedeListRequest extends BasePage implements Serializable{
 	private String matchDatesSrch;
 	
 	/**
-	 * 投资笔数查询
+	 * 出借笔数查询
 	 */
 	private String investCountsSrch;
 

@@ -57,9 +57,9 @@ public class CheckCouponServiceImpl implements CheckCouponService {
     private ChannelCustomizeMapper channelCustomizeMapper;
 
     @Value("${release.coupon.accesskey}")
-    public static String SOA_COUPON_KEY;
+    public String SOA_COUPON_KEY;
     @Value("${hyjf.api.web.url}")
-    public static String HYJF_API_WEB_URL;
+    public String HYJF_API_WEB_URL;
 
     @Override
     public JSONObject batchInsertUserCoupon(Map<String, Object> map) throws Exception {

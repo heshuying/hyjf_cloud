@@ -36,6 +36,14 @@ public interface AmUserClient {
 	UserVO findUserById(int userId);
 
 	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
+
+	/**
 	 * 根据用户名或者手机号查询user
 	 * @param loginUserName
 	 * @return
@@ -580,4 +588,16 @@ public interface AmUserClient {
 	 * @return
 	 */
     UserVO updateUsersById(Integer userId);
+
+	public void fddCertificate();
+
+	/**
+	 * 员工入职修改客户属性
+	 */
+	void updateEntey();
+
+	/**
+	 * 员工离职，修改客户属性
+	 */
+	void updateUserLeave();
 }

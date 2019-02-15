@@ -4,32 +4,102 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class MessagePushTag implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 标签名称
+     *
+     * @mbggenerated
+     */
     private String tagName;
 
+    /**
+     * 标签编码
+     *
+     * @mbggenerated
+     */
     private String tagCode;
 
+    /**
+     * 简介
+     *
+     * @mbggenerated
+     */
     private String introduction;
 
+    /**
+     * icon图标
+     *
+     * @mbggenerated
+     */
     private String iconUrl;
 
+    /**
+     * 是否登录查看  0登录查看 1不登录查看
+     *
+     * @mbggenerated
+     */
     private Integer isLogin;
 
+    /**
+     * 状态 0 新建 1启用 2 禁用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer sortId;
 
+    /**
+     * 创建人用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建人用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 最后修改人用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 最后修改人用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -4,14 +4,39 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HolidaysConfigNew implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * yyyymmdd
+     *
+     * @mbggenerated
+     */
     private Date dayTime;
 
+    /**
+     * 节假日标识: 工作日-0, 休息日-1, 节假日-2
+     *
+     * @mbggenerated
+     */
     private Integer holidayFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

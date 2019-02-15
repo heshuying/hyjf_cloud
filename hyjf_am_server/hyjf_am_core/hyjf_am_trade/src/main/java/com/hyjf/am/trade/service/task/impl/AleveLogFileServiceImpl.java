@@ -110,40 +110,6 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
     }
 
     /**
-     * aleveLog表数据插入
-     * @param aleveLog
-     */
-    @Override
-    public void insertAleveLog(AleveLog aleveLog){
-        aleveLog.setCreateTime(GetDate.getNowTime());
-        aleveLog.setCreateUserId(1);
-        aleveLog.setDelFlag(0);
-        aleveLog.setUpdFlag(0);
-        aleveLogMapper.insert(aleveLog);
-    }
-
-    /**
-     * eveLog表数据插入
-     * @param eveLog
-     */
-    @Override
-    public void insertEveLog(EveLog eveLog){
-        eveLog.setCreateTime(GetDate.getNowTime());
-        eveLog.setCreateUserId(1);
-        eveLog.setDelFlag(0);
-        eveLogMapper.insert(eveLog);
-    }
-
-    /**
-     * aleveErrorLog表数据插入
-     * @param aleveErrorLog
-     */
-    @Override
-    public void insertAleveErrorLog(AleveErrorLog aleveErrorLog){
-        aleveErrorLogMapper.insert(aleveErrorLog);
-    }
-
-    /**
      * 检查导入的ALEVE数据中是否含有利息相关记录
      * @param tranStype
      * @return
@@ -286,7 +252,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
         accountList.setBankAwait(account.getBankAwait());// 银行待收总额
         accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
         accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
         accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
         accountList.setPlanFrost(account.getPlanFrost());

@@ -28,7 +28,7 @@ public class InvestorDebtBean implements Serializable {
     @ApiModelProperty(value = "用户ID")
     private String userId;
 
-    @ApiModelProperty(value = "投资订单号")
+    @ApiModelProperty(value = "出借订单号")
     private String nid;
 
     @ApiModelProperty(value = "投标日期")
@@ -40,7 +40,7 @@ public class InvestorDebtBean implements Serializable {
     @ApiModelProperty(value = "交易金额")
     private BigDecimal txAmount;
 
-    @ApiModelProperty(value = "预期年化收益率")
+    @ApiModelProperty(value = "预期出借利率")
     private BigDecimal yield;
 
     @ApiModelProperty(value = "预期收益")

@@ -5,44 +5,144 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class SubCommission implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 转出用户电子账户号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 收款方用户ID
+     *
+     * @mbggenerated
+     */
     private Integer receiveUserId;
 
+    /**
+     * 收款用户名
+     *
+     * @mbggenerated
+     */
     private String receiveUserName;
 
+    /**
+     * 收款方电子账户号
+     *
+     * @mbggenerated
+     */
     private String receiveAccountId;
 
+    /**
+     * 转账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 转入姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 交易状态(0:初始 1:成功 2:失败 )
+     *
+     * @mbggenerated
+     */
     private Integer tradeStatus;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 错误信息
+     *
+     * @mbggenerated
+     */
     private String errorMsg;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 创建用户ID
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户ID
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

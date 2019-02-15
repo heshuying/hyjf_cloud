@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.controller.app.bankopen;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -70,6 +69,9 @@ public class AppBankOpenController extends BaseUserController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
+            // 合规审批 用以区分企业用户或者个人用户已达到企业用户跳转开户指南画面 add by huanghui start
+            result.put("userType", String.valueOf(userVO.getUserType()));
+            // 合规审批 用以区分企业用户或者个人用户已达到企业用户跳转开户指南画面 add by huanghui end
             result.put("phone",mobile);
             result.put("status","000");
             result.put("statusDesc","操作成功");
@@ -94,6 +96,18 @@ public class AppBankOpenController extends BaseUserController {
         // 获取登录信息
         UserVO user = bankOpenService.getUsersById(userId);
         UserInfoVO userInfoVO = bankOpenService.getUserInfo(userId);
+        
+        // modify by libin start
+        if(userInfoVO==null){
+        	logger.error("使用"+ userId + "查询用户详情信息为空！");
+        	throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
+        }
+        if(userInfoVO.getRoleId()==null){
+        	logger.error("该用户" + userId + "角色为空！");
+        	throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
+        }
+        // modify by libin end
+       
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
 

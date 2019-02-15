@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
 import com.hyjf.am.resquest.trade.SensorsDataBean;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 神策数据统计:散标投资相关Service实现类
+ * 神策数据统计:散标出借相关Service实现类
  *
  * @author liuyang
  * @version SensorsDataHztInvestServiceImpl, v0.1 2018/10/23 16:23
@@ -68,17 +67,17 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
         // 初始化神策SDK
         SensorsAnalytics sa = new SensorsAnalytics(new SensorsAnalytics.ConcurrentLoggingConsumer(logFilePath + "sensorsData.log"));
 
-        // 投资订单号
+        // 出借订单号
         String orderId = sensorsDataBean.getOrderId();
         if (StringUtils.isBlank(orderId)) {
-            logger.error("投资订单号为空");
+            logger.error("出借订单号为空");
             return;
         }
-        // 根据投资订单号查询用户投资记录
+        // 根据出借订单号查询用户出借记录
         BorrowTenderVO borrowTender = this.amTradeClient.selectBorrowTenderByOrderId(orderId);
 
         if (borrowTender == null) {
-            logger.info("根据投资订单号查询用户投资记录失败,投资订单号:[" + orderId + "].");
+            logger.info("根据出借订单号查询用户出借记录失败,出借订单号:[" + orderId + "].");
             return;
         }
         // 标的编号
@@ -95,7 +94,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
             logger.error("根据标的编号查询标的详情信息失败,标的编号:[" + borrowNid + "].");
             return;
         }
-        // 投资用户ID
+        // 出借用户ID
         Integer userId = borrowTender.getUserId();
         // 事件属性
         Map<String, Object> properties = new HashMap<String, Object>();
@@ -166,7 +165,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
         BorrowStyleVO borrowStyle = this.amTradeClient.getBorrowStyle(borrow.getBorrowStyle());
         // 还款方式
         properties.put("project_repayment_type", borrowStyle.getName());
-        // 投资金额
+        // 出借金额
         properties.put("tender_amount", borrowTender.getAccount());
         // 项目剩余投金额
         properties.put("project_rest_amount", borrow.getBorrowAccountWait());
@@ -177,7 +176,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
         // 支付方式
         properties.put("pay_method", "余额支付");
 
-        // 获取投资时推荐人部门等信息
+        // 获取出借时推荐人部门等信息
         // 根据用户ID 查询用户推荐人信息
         SpreadsUserVO spreadsUsers = this.amUserClient.querySpreadsUsersByUserId(userId);
         // 用户没有推荐人
@@ -233,19 +232,19 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
         if (couponRealTender != null) {
             // 使用优惠券
             properties.put("use_coupon", true);
-            // 优惠券投资ID
+            // 优惠券出借ID
             String couponTenderId = couponRealTender.getCouponTenderId();
-            logger.info("此笔投资使用了优惠券:优惠券投资ID:[" + couponTenderId + "],投资订单号:[" + orderId + "].");
-//            // 根据优惠券投资ID检索优惠券放款信息
+            logger.info("此笔出借使用了优惠券:优惠券出借ID:[" + couponTenderId + "],出借订单号:[" + orderId + "].");
+//            // 根据优惠券出借ID检索优惠券放款信息
 //            CouponRecover couponRecover = this.selectCouponRecoverByCouponTenderId(couponTenderId);
 //            if (couponRecover == null) {
-//                _log.error("根据优惠券投资ID查询优惠券放款信息失败,优惠券投资ID:[" + couponTenderId + "].");
+//                _log.error("根据优惠券出借ID查询优惠券放款信息失败,优惠券出借ID:[" + couponTenderId + "].");
 //                return;
 //            }
-            // 根据优惠券投资ID查询优惠券投资
+            // 根据优惠券出借ID查询优惠券出借
             CouponTenderVO couponTender = this.amTradeClient.selectCouponTenderByCouponTenderId(couponTenderId);
             if (couponTender == null) {
-                logger.error("根据优惠券投资ID获取优惠券投资情况失败,优惠券投资ID:[" + couponTenderId + "].");
+                logger.error("根据优惠券出借ID获取优惠券出借情况失败,优惠券出借ID:[" + couponTenderId + "].");
                 return;
             }
             // 优惠券ID
@@ -267,18 +266,18 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
                 return;
             }
 
-            // 根据优惠券投资订单号查询优惠券投资信息
+            // 根据优惠券出借订单号查询优惠券出借信息
             BorrowTenderCpnVO borrowTenderCpn = this.amTradeClient.selectBorrowTenderCpnByCouponTenderId(couponRealTender.getCouponTenderId());
             if (borrowTenderCpn == null) {
-                logger.error("根据优惠券投资订单号查询优惠券投资信息失败,优惠券投资订单号:[" + couponRealTender.getCouponTenderId() + "].");
+                logger.error("根据优惠券出借订单号查询优惠券出借信息失败,优惠券出借订单号:[" + couponRealTender.getCouponTenderId() + "].");
                 return;
             }
             try {
                 // 体验金
                 if (couponConfig.getCouponType() == 1) {
                     String tenderNid = borrowTenderCpn.getNid();
-                    // 优惠券投资订单号
-                    logger.info("投资订单号:[" + tenderNid + "].");
+                    // 优惠券出借订单号
+                    logger.info("出借订单号:[" + tenderNid + "].");
                     // 取得体验金收益期限
                     Integer couponProfitTime = this.amTradeClient.getCouponProfitTime(tenderNid);
                     // 计算体验金收益
@@ -321,7 +320,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.info("计算优惠券利息错误,投资订单号:[" + orderId + "].");
+                logger.info("计算优惠券利息错误,出借订单号:[" + orderId + "].");
             }
             // 预计加息金额
             properties.put("expect_add_apr_income", interestTender);
@@ -359,16 +358,14 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
             // 项目期限限制
             properties.put("project_duration_limit", createProjectExpiration(couponConfig.getProjectExpirationLength(),
                     couponConfig.getProjectExpirationLengthMin(), couponConfig.getProjectExpirationLengthMax(), couponConfig.getProjectExpirationType(), isMonth));
-            // 适用投资产品
+            // 适用出借产品
             properties.put("product_suitable", createProjectTypeString(couponConfig.getProjectType()));
-            // 投资金额限制
+            // 出借金额限制
             properties.put("tender_amount_limit", createCouponTenderMoney(couponConfig.getTenderQuotaType(), couponConfig.getTenderQuotaMin(), couponConfig.getTenderQuotaMax(), couponConfig.getTenderQuota()));
-            // 奖励券创建时间 TODO CouponUserVO add_time 字段变更
             properties.put("coupon_createtime", couponUser.getCreateTime());
-            // 奖励券到期时间 TODO CouponUserVO end_time 字段变更
             properties.put("coupon_endtime", GetDate.getDateTimeMyTime(couponUser.getEndTime()));
         } else {
-            // 此笔投资未使用优惠券
+            // 此笔出借未使用优惠券
             properties.put("use_coupon", false);
             // 优惠券id
             properties.put("coupon_id", "");
@@ -403,7 +400,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
     private BigDecimal getInterestTYJ(BigDecimal account, BigDecimal borrowApr, Integer couponProfitTime) {
         BigDecimal interest = BigDecimal.ZERO;
         // 保留两位小数（去位）
-        // 应回款=体验金面值*投资标的年化/365*收益期限（体验金发行配置）
+        // 应回款=体验金面值*出借标的年化/365*收益期限（体验金发行配置）
         interest = account.multiply(borrowApr.divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP))
                 .divide(new BigDecimal(365), 6, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(couponProfitTime))
                 .setScale(2, BigDecimal.ROUND_DOWN);
@@ -504,7 +501,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
 
 
     /**
-     * 获取优惠券投资金额限定
+     * 获取优惠券出借金额限定
      *
      * @param tenderQuotaType
      * @param tenderQuotaMin
@@ -514,7 +511,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
      */
     private String createCouponTenderMoney(Integer tenderQuotaType, Integer tenderQuotaMin, Integer tenderQuotaMax, Integer tenderQuota) {
         if (tenderQuotaType == 0 || tenderQuotaType == null) {
-            return ("投资金额不限");
+            return ("出借金额不限");
         } else if (tenderQuotaType == 1) {
             String tenderQuotaMinStr = tenderQuotaMin + "";
             if (tenderQuotaMin >= 10000 && tenderQuotaMin % 10000 == 0) {

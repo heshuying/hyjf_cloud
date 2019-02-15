@@ -12,7 +12,6 @@
     <result column="author" property="author" jdbcType="VARCHAR" />
     <result column="thumb" property="thumb" jdbcType="VARCHAR" />
     <result column="summary" property="summary" jdbcType="VARCHAR" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
     <result column="seo_title" property="seoTitle" jdbcType="VARCHAR" />
     <result column="seo_keyword" property="seoKeyword" jdbcType="VARCHAR" />
     <result column="seo_description" property="seoDescription" jdbcType="VARCHAR" />
@@ -23,6 +22,9 @@
     <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.config.dao.model.auto.Content" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -83,10 +85,32 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `type`, title, cate_id, code, `status`, `source`, author, thumb, summary, content, 
-    seo_title, seo_keyword, seo_description, `order`, hits, out_link, create_user_id, 
-    update_user_id, create_time, update_time
+    id, `type`, title, cate_id, code, `status`, `source`, author, thumb, summary, seo_title, 
+    seo_keyword, seo_description, `order`, hits, out_link, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.ContentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ht_content
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.ContentExample" >
     select
     <if test="distinct" >
@@ -104,9 +128,11 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from ht_content
     where id = #{id,jdbcType=INTEGER}
   </select>
@@ -127,17 +153,17 @@
     insert into ht_content (`type`, title, cate_id, 
       code, `status`, `source`, 
       author, thumb, summary, 
-      content, seo_title, seo_keyword, 
-      seo_description, `order`, hits, 
-      out_link, create_user_id, update_user_id, 
-      create_time, update_time)
+      seo_title, seo_keyword, seo_description, 
+      `order`, hits, out_link, 
+      create_user_id, update_user_id, create_time, 
+      update_time, content)
     values (#{type,jdbcType=TINYINT}, #{title,jdbcType=VARCHAR}, #{cateId,jdbcType=INTEGER}, 
       #{code,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{source,jdbcType=VARCHAR}, 
       #{author,jdbcType=VARCHAR}, #{thumb,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
-      #{content,jdbcType=VARCHAR}, #{seoTitle,jdbcType=VARCHAR}, #{seoKeyword,jdbcType=VARCHAR}, 
-      #{seoDescription,jdbcType=VARCHAR}, #{order,jdbcType=INTEGER}, #{hits,jdbcType=INTEGER}, 
-      #{outLink,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{seoTitle,jdbcType=VARCHAR}, #{seoKeyword,jdbcType=VARCHAR}, #{seoDescription,jdbcType=VARCHAR}, 
+      #{order,jdbcType=INTEGER}, #{hits,jdbcType=INTEGER}, #{outLink,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.Content" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -172,9 +198,6 @@
       <if test="summary != null" >
         summary,
       </if>
-      <if test="content != null" >
-        content,
-      </if>
       <if test="seoTitle != null" >
         seo_title,
       </if>
@@ -205,6 +228,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="content != null" >
+        content,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="type != null" >
@@ -233,9 +259,6 @@
       </if>
       <if test="summary != null" >
         #{summary,jdbcType=VARCHAR},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
       </if>
       <if test="seoTitle != null" >
         #{seoTitle,jdbcType=VARCHAR},
@@ -266,6 +289,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -308,9 +334,6 @@
       <if test="record.summary != null" >
         summary = #{record.summary,jdbcType=VARCHAR},
       </if>
-      <if test="record.content != null" >
-        content = #{record.content,jdbcType=VARCHAR},
-      </if>
       <if test="record.seoTitle != null" >
         seo_title = #{record.seoTitle,jdbcType=VARCHAR},
       </if>
@@ -341,7 +364,37 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update ht_content
+    set id = #{record.id,jdbcType=INTEGER},
+      `type` = #{record.type,jdbcType=TINYINT},
+      title = #{record.title,jdbcType=VARCHAR},
+      cate_id = #{record.cateId,jdbcType=INTEGER},
+      code = #{record.code,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=TINYINT},
+      `source` = #{record.source,jdbcType=VARCHAR},
+      author = #{record.author,jdbcType=VARCHAR},
+      thumb = #{record.thumb,jdbcType=VARCHAR},
+      summary = #{record.summary,jdbcType=VARCHAR},
+      seo_title = #{record.seoTitle,jdbcType=VARCHAR},
+      seo_keyword = #{record.seoKeyword,jdbcType=VARCHAR},
+      seo_description = #{record.seoDescription,jdbcType=VARCHAR},
+      `order` = #{record.order,jdbcType=INTEGER},
+      hits = #{record.hits,jdbcType=INTEGER},
+      out_link = #{record.outLink,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      content = #{record.content,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -358,7 +411,6 @@
       author = #{record.author,jdbcType=VARCHAR},
       thumb = #{record.thumb,jdbcType=VARCHAR},
       summary = #{record.summary,jdbcType=VARCHAR},
-      content = #{record.content,jdbcType=VARCHAR},
       seo_title = #{record.seoTitle,jdbcType=VARCHAR},
       seo_keyword = #{record.seoKeyword,jdbcType=VARCHAR},
       seo_description = #{record.seoDescription,jdbcType=VARCHAR},
@@ -403,9 +455,6 @@
       <if test="summary != null" >
         summary = #{summary,jdbcType=VARCHAR},
       </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
-      </if>
       <if test="seoTitle != null" >
         seo_title = #{seoTitle,jdbcType=VARCHAR},
       </if>
@@ -436,7 +485,34 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.config.dao.model.auto.Content" >
+    update ht_content
+    set `type` = #{type,jdbcType=TINYINT},
+      title = #{title,jdbcType=VARCHAR},
+      cate_id = #{cateId,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=TINYINT},
+      `source` = #{source,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      thumb = #{thumb,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      seo_title = #{seoTitle,jdbcType=VARCHAR},
+      seo_keyword = #{seoKeyword,jdbcType=VARCHAR},
+      seo_description = #{seoDescription,jdbcType=VARCHAR},
+      `order` = #{order,jdbcType=INTEGER},
+      hits = #{hits,jdbcType=INTEGER},
+      out_link = #{outLink,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.Content" >
@@ -450,7 +526,6 @@
       author = #{author,jdbcType=VARCHAR},
       thumb = #{thumb,jdbcType=VARCHAR},
       summary = #{summary,jdbcType=VARCHAR},
-      content = #{content,jdbcType=VARCHAR},
       seo_title = #{seoTitle,jdbcType=VARCHAR},
       seo_keyword = #{seoKeyword,jdbcType=VARCHAR},
       seo_description = #{seoDescription,jdbcType=VARCHAR},

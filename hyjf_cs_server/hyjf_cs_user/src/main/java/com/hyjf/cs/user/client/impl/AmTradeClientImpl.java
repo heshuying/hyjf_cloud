@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -16,13 +17,11 @@ import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
@@ -42,12 +41,14 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.cs.user.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -59,7 +60,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AmTradeClientImpl, v0.1 2018/6/20 12:45
  */
-@Service
+@Cilent
 public class AmTradeClientImpl implements AmTradeClient {
     @Autowired
     private RestTemplate restTemplate;
@@ -843,5 +844,55 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 统计总的优惠券数
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer selectMyCouponCount(MyCouponListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/coupon/myCouponCount";
+        IntegerResponse response = restTemplate.postForEntity(url, requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 统计总的奖励金额
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/reward/myRewardTotal";
+        BigDecimalResponse response = restTemplate.postForEntity(url, requestBean, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * 获得所有协议类型
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getProtocolTypes() {
+        ResponseEntity<Response<ProtocolTemplateVO>> response =
+                restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo", HttpMethod.GET,
+                        null, new ParameterizedTypeReference<Response<ProtocolTemplateVO>>() {});
+
+        List<ProtocolTemplateVO> vo = null;
+        if(response.getBody().getResultList().size() > 0){
+
+            vo =  response.getBody().getResultList();
+        }
+        return vo;
     }
 }

@@ -5,24 +5,74 @@ import java.io.Serializable;
 public class MspBlackdata implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 报送/公开日期
+     *
+     * @mbggenerated
+     */
     private String createdate;
 
+    /**
+     * 最近逾期开始日期
+     *
+     * @mbggenerated
+     */
     private String lastoverduedate;
 
+    /**
+     * 借款地点
+     *
+     * @mbggenerated
+     */
     private String creditaddress;
 
+    /**
+     * 欠款总额
+     *
+     * @mbggenerated
+     */
     private String arrears;
 
+    /**
+     * 逾期天数
+     *
+     * @mbggenerated
+     */
     private String overduedays;
 
+    /**
+     * 电话
+     *
+     * @mbggenerated
+     */
     private String phone;
 
+    /**
+     * 邮箱
+     *
+     * @mbggenerated
+     */
     private String email;
 
+    /**
+     * 户籍地址
+     *
+     * @mbggenerated
+     */
     private String residenceaddress;
 
+    /**
+     * 现居地址
+     *
+     * @mbggenerated
+     */
     private String currentaddress;
 
     private static final long serialVersionUID = 1L;

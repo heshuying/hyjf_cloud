@@ -170,11 +170,11 @@ public class AccountRechargeController extends BaseController {
         userRoleMap.put("key", " ");
         userRoleMap.put("value", "全部");
         userRoleMap2.put("key", 1);
-        userRoleMap2.put("value", "投资人");
+        userRoleMap2.put("value", "出借人");
         userRoleMap3.put("key", 2);
         userRoleMap3.put("value", "借款人");
         userRoleMap4.put("key", 3);
-        userRoleMap4.put("value", "垫付机构");
+        userRoleMap4.put("value", "担保机构");
 
         userRoleList.add(userRoleMap);
         userRoleList.add(userRoleMap2);
@@ -223,10 +223,14 @@ public class AccountRechargeController extends BaseController {
         List<String> perm = (List<String>) request.getSession().getAttribute("permission");
         //判断权限
         boolean isShow = false;
-        for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
+        try {
+            for (String string : perm) {
+                if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                    isShow = true;
+                }
             }
+        }catch (NullPointerException e){
+            logger.error("Admin - 充值管理未获取到当前用户的权限列表!", e.getMessage());
         }
 
         //初始化返回List
@@ -330,8 +334,18 @@ public class AccountRechargeController extends BaseController {
 
         AccountRechargeCustomizeResponse isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
 
-        jsonObject.put("status", isAccountUpdate.getRtn());
-        jsonObject.put("statusDesc", isAccountUpdate.getMessage());
+        String backStatus = null;
+        String backMsg = null;
+        if (isAccountUpdate != null){
+            backStatus = BaseResult.SUCCESS;
+            backMsg = BaseResult.SUCCESS_DESC;
+        }else {
+            backStatus = BaseResult.FAIL;
+            backMsg = BaseResult.FAIL_DESC;
+        }
+
+        jsonObject.put("status", backStatus);
+        jsonObject.put("statusDesc", backMsg);
         return jsonObject;
     }
 
@@ -414,9 +428,8 @@ public class AccountRechargeController extends BaseController {
         map.put("cardid", "银行卡号");
         map.put("money", "充值金额");
         map.put("fee", "手续费");
-        map.put("dianfufee", "垫付手续费");
         map.put("balance", "到账金额");
-        map.put("status", "充值状态");
+        map.put("statusName", "充值状态");
         map.put("client", "充值平台");
         map.put("createTime", "充值时间");
         map.put("txDate", "发送日期");
@@ -459,22 +472,7 @@ public class AccountRechargeController extends BaseController {
                 }
             }
         };
-        IValueFormatter statusAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                // 充值类型
-                String status = (String) object;
-                if ("1".equals(status)) {
-                    return "充值中";
-                } else if ("2".equals(status)) {
-                    return "充值成功";
-                } else if ("3".equals(status)) {
-                    return "充值失败";
-                } else {
-                    return status;
-                }
-            }
-        };
+
         IValueFormatter moneyAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -486,16 +484,14 @@ public class AccountRechargeController extends BaseController {
             @Override
             public String format(Object object) {
                 BigDecimal fee = (BigDecimal) object;
-                return fee != null ? (fee + "") : (0 + "");
+                return fee != null ? (fee + "") : (0.00 + "");
             }
         };
         mapAdapter.put("userAttribute", userAttributeAdapter);
         mapAdapter.put("gateType", gateTypeAdapter);
         mapAdapter.put("money", moneyAdapter);
         mapAdapter.put("fee", feeAdapter);
-        mapAdapter.put("fianfuFee", feeAdapter);
         mapAdapter.put("balance", moneyAdapter);
-        mapAdapter.put("status", statusAdapter);
         return mapAdapter;
     }
 

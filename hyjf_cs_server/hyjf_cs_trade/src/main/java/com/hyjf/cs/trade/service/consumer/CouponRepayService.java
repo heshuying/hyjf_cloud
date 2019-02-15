@@ -51,7 +51,7 @@ public interface CouponRepayService {
     void updateCouponRecoverMoney(String borrowNid, Integer periodNow, CouponTenderCustomizeVO ct) throws Exception;
 
     /**
-     * 优惠券单独投资放款
+     * 优惠券单独出借放款
      * @return
      */
     List<String> selectNidForCouponOnly();

@@ -132,6 +132,22 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	@GetMapping("/doGetBorrow/{borrowNid}")
+	public BorrowResponse doGetBorrow(@PathVariable String borrowNid) {
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.doGetBorrow(borrowNid);
+		BorrowInfo borrowInfo = borrowService.doGetBorrowInfoByNid(borrowNid);
+		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
+		if (Validator.isNotNull(borrow)){
+			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
+		}
+		if (Validator.isNotNull(borrowInfo)){
+			borrowVO.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(borrowVO);
+		return response;
+	}
+
 	@RequestMapping("/selectRecentPaymentList/{userId}")
 	public RecentPaymentListCustomizeResponse selectRecentPaymentList(@PathVariable int userId){
 		Map<String, Object> paraMap=new HashMap<String, Object>();
@@ -244,7 +260,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 投资之前插入tmp表
+	 * 出借之前插入tmp表
 	 * @param tenderRequest
 	 * @return
 	 */
@@ -263,7 +279,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 散标投资操作数据库表
+	 * 散标出借操作数据库表
 	 * @param tenderBg
 	 * @return
 	 */
@@ -282,7 +298,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 散标投资异步返回结果
+	 * 散标出借异步返回结果
 	 * @param tenderRetMsg
 	 * @return
 	 */
@@ -297,7 +313,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 获取散标投资异步结果
+	 * 获取散标出借异步结果
 	 * @param borrowNid
 	 * @return
 	 */
@@ -311,7 +327,7 @@ public class BorrowController extends BaseController {
 
 
     /**
-     * 根据用户id获取用户总投资笔数
+     * 根据用户id获取用户总出借笔数
      * @author zhangyk
      * @date 2018/7/5 18:00
      */

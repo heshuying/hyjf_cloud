@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.trade.bean.repay.RepayBean;
@@ -23,6 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
 
@@ -59,8 +61,8 @@ public class BorrowRecoverController extends BaseController {
 		return response;
 	}
 
-	@RequestMapping("/select_by_borrownid/{borrowNid}")
-	public BorrowRecoverResponse selectByBorrowNid(String borrowNid) {
+	@GetMapping("/select_by_borrownid/{borrowNid}")
+	public BorrowRecoverResponse selectByBorrowNid(@PathVariable String borrowNid) {
 		BorrowRecoverResponse response = new BorrowRecoverResponse();
 		List<BorrowRecover> recoverList=borrowRecoverService.selectByBorrowNid(borrowNid);
 		if (recoverList != null){
@@ -172,6 +174,7 @@ public class BorrowRecoverController extends BaseController {
 		return response;
 	}
 
+
 	public  Boolean calculateRecover(RepayBean repay, RightBorrowVO borrow, Integer repayTimeStr, int delayDays, Boolean flag)throws ParseException {
 		int time = GetDate.getNowTime10();
 		// 用户计划还款时间
@@ -185,4 +188,32 @@ public class BorrowRecoverController extends BaseController {
 		}
 		return flag;
 	}
+
+	/**
+	 * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+	 * add by nxl(应急中心)
+	 * @param borrowRecoverRequest
+	 * @return
+	 */
+	@PostMapping("getRecoverDateByTenderNid")
+	public BorrowRecoverResponse getRecoverDateByTenderNid(@RequestBody BorrowRecoverVO borrowRecoverRequest) {
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		response.setRtn(Response.FAIL);
+		BorrowRecover borrowRecover = borrowRecoverService.getRecoverDateByTenderNid(borrowRecoverRequest.getNid(),borrowRecoverRequest.getBorrowNid(),borrowRecoverRequest.getAccedeOrderId());
+		if(Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
+			response.setRtn(Response.SUCCESS);
+		}
+		return response;
+	}
+
+	/**
+	 * 服务费=放款服务费+还款服务费
+	 */
+	@GetMapping("/selectServiceCostSum/{borrowNid}")
+	public String selectServiceCostSum(@PathVariable String borrowNid){
+		BigDecimal serviceFee=borrowRecoverService.selectServiceCostSum(borrowNid);
+		return serviceFee.toString();
+	}
+
 }

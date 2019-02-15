@@ -3,7 +3,6 @@ package com.hyjf.admin.controller.user;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ChangeLogService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -18,12 +17,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 
@@ -67,19 +60,27 @@ public class ChangeLogController extends BaseController {
 		clr.setRecommendUser(map.get("recommendUser"));
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
-		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
-		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
-		clr.setAttribute(map.get("attribute"));
-		//add by nxl 添加邮箱查询
+		if (map.get("currPage") != null) {
+            clr.setCurrPage(Integer.valueOf(map.get("currPage")));
+        } else {
+            clr.setCurrPage(1);
+        }
+        if (map.get("pageSize") != null) {
+            clr.setPageSize(Integer.valueOf(map.get("pageSize")));
+        } else {
+            clr.setPageSize(10);
+        }
+        clr.setAttribute(map.get("attribute"));
+        //add by nxl 添加邮箱查询
         clr.setEmail(map.get("email"));
-		ChangeLogResponse prs=changeLogService.getChangeLogList(clr);
-		if (prs == null) {
-			return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(new ArrayList<ChangeLogVO>(), 0));
-		}
-		if (!AdminResponse.isSuccess(prs)) {
-			return new AdminResult<>(FAIL, prs.getMessage());
-		}
-		return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
+        ChangeLogResponse prs = changeLogService.getChangeLogList(clr);
+        if (prs == null) {
+            return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(new ArrayList<ChangeLogVO>(), 0));
+        }
+        if (!AdminResponse.isSuccess(prs)) {
+            return new AdminResult<>(FAIL, prs.getMessage());
+        }
+        return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
 
 	}
 
@@ -166,7 +167,7 @@ public class ChangeLogController extends BaseController {
                     }
                     // 用户角色
                     else if (celLength == 4) {
-                        cell.setCellValue(changeLog.getRole()==null?"":changeLog.getRole()==1?"投资人":"借款人");
+                        cell.setCellValue(changeLog.getRole()==null?"":changeLog.getRole()==1?"出借人":"借款人");
                     }
                     // 用户属性
                     else if (celLength == 5) {
@@ -284,6 +285,7 @@ public class ChangeLogController extends BaseController {
         map.put("changeUser", "修改人");
         map.put("changeTime", "修改时间");
         map.put("remark", "说明");
+        map.put("email", "邮箱");
         return map;
     }
 
@@ -301,7 +303,7 @@ public class ChangeLogController extends BaseController {
             @Override
             public String format(Object object) {
                 Integer role = (Integer) object;
-                return role==null?"":role==1?"投资人":"借款人";
+                return role==null?"":role==1?"出借人":"借款人";
             }
         };
 

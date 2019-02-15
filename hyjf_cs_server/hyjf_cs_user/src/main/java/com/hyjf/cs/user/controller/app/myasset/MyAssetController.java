@@ -98,9 +98,8 @@ public class MyAssetController extends BaseUserController {
 				ret.put("recoverInterest", moneyFormat.format(account.getBankInterestSum()));
 				ret.put("waitInterest", moneyFormat.format(account.getBankAwaitInterest().add(account.getPlanInterestWait())));
 				ret.put("investTotal", moneyFormat.format(account.getBankInvestSum()));
-				if (userinfo.getRoleId() == 1) {// 投资人
+				if (userinfo.getRoleId() == 1) {// 出借人
 					ret.put("accountType", "1");
-					// TODO
 					ret.put("total", moneyFormat.format(account.getBankTotal()));
 				} else if (userinfo.getRoleId() == 2) {// 借款人
 					ret.put("accountType", "2");

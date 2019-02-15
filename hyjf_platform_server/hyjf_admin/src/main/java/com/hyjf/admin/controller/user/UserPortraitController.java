@@ -13,6 +13,7 @@ import com.hyjf.admin.service.UserPortraitService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.vo.user.UserPortraitVO;
@@ -104,7 +105,7 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "初始化用户画像修改页面", notes = "初始化用户画像修改页面")
     @PostMapping(value = "/initUserPortraitEdit")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<UserPortraitCustomizeVO> initUserPortraitEdit(HttpServletRequest request, @RequestBody int userId) {
         UserPortraitVO userPortraitVO = userPortraitService.selectUsersPortraitByUserId(userId);
         UserPortraitCustomizeVO userPortraitCustomizeVO = new UserPortraitCustomizeVO();
@@ -138,6 +139,30 @@ public class UserPortraitController extends BaseController {
     }
 
     /**
+     * 导入当前拥有人
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "导入当前拥有人", notes = "导入当前拥有人")
+    @PostMapping(value = "/importCurrentOwner")
+    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_IMPORT)
+    public AdminResult importCurrentOwner(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        logger.info("当前拥有人数据导入开始......");
+        StringResponse stringResponse = userPortraitService.importBatch(request);
+        if (stringResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(stringResponse)) {
+            return new AdminResult<>(FAIL, stringResponse.getMessage());
+        }
+        logger.info("当前拥有人数据导入结束......");
+        return new AdminResult(stringResponse);
+    }
+
+    /**
      * 导出功能
      *
      * @param request
@@ -159,9 +184,9 @@ public class UserPortraitController extends BaseController {
             loanCoverUserVOList = responseUserPortrait.getResultList();
         }
 
-        String[] titles = new String[]{"用户名", "手机号","年龄", "性别", "学历", "职业", "地域", "爱好","账户总资产（元）","账户可用金额（元）","账户待还金额（元）", "账户冻结金额（元）", "资金存留比（%）","客均收益率（%）", "累计收益（元）", "累计年化投资金额（元）", "累计充值金额（元）",
-                "累计提取金额（元）", "登录活跃", "客户来源", "最后一次登录至今时长（天）", "最后一次充值至今时长（天）", "最后一次提现至今时长（天）","最后一笔回款时间", "同时投资平台数", "投龄",
-                "交易笔数", "当前拥有人", "是否加微信", "投资进程", "客户投诉", "邀约客户数","邀约注册客户数","邀约充值客户数","邀约投资客户数","是否有主单","注册时间"};
+        String[] titles = new String[]{"用户名", "手机号","年龄", "性别", "学历", "职业", "地域", "爱好","账户总资产（元）","账户可用金额（元）","账户待还金额（元）", "账户冻结金额（元）", "资金存留比（%）","客均收益率（%）", "累计收益（元）", "累计年化出借金额（元）", "累计充值金额（元）",
+                "累计提取金额（元）", "登录活跃", "客户来源", "最后一次登录至今时长（天）", "最后一次充值至今时长（天）", "最后一次提现至今时长（天）","最后一笔回款时间", "同时出借平台数", "投龄",
+                "交易笔数", "当前拥有人", "是否加微信", "出借进程", "客户投诉", "邀约客户数","邀约注册客户数","邀约充值客户数","邀约出借客户数","是否有主单","注册时间"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -218,7 +243,7 @@ public class UserPortraitController extends BaseController {
                             cell.setCellValue(usersPortrait.getYield()!=null ?usersPortrait.getYield().toString() :  "");
                         } else if (celLength == 14) {// 累计收益
                             cell.setCellValue(usersPortrait.getInterestSum()!=null ?usersPortrait.getInterestSum().toString() :  "");
-                        } else if (celLength == 15) {// 累计年化投资金额
+                        } else if (celLength == 15) {// 累计年化出借金额
                             cell.setCellValue(usersPortrait.getInvestSum()!=null ?usersPortrait.getInvestSum().toString() :  "");
                         } else if (celLength == 16) {// 累计充值金额
                             cell.setCellValue(usersPortrait.getRechargeSum()!=null ?usersPortrait.getRechargeSum().toString() :  "");
@@ -236,7 +261,7 @@ public class UserPortraitController extends BaseController {
                             cell.setCellValue(usersPortrait.getLastWithdrawTime() != null ?usersPortrait.getLastWithdrawTime().toString() : "");
                         }else if (celLength == 23) {// 最后一笔回款时间
                             cell.setCellValue(StringUtils.isNoneBlank(usersPortrait.getLastRepayTimeS()) ?usersPortrait.getLastRepayTimeS() : "");
-                        }else if (celLength == 24) {// 同时投资平台数
+                        }else if (celLength == 24) {// 同时出借平台数
                             cell.setCellValue(usersPortrait.getInvestPlatform() != null ?usersPortrait.getInvestPlatform().toString(): "");
                         } else if (celLength == 25) {// 投龄
                             cell.setCellValue(usersPortrait.getInvestAge() != null ?usersPortrait.getInvestAge().toString() : "");
@@ -246,7 +271,7 @@ public class UserPortraitController extends BaseController {
                             cell.setCellValue(StringUtils.isNoneBlank(usersPortrait.getCurrentOwner()) ?usersPortrait.getCurrentOwner() : "");
                         } else if (celLength == 28) {// 是否加微信
                             cell.setCellValue(StringUtils.isNoneBlank(usersPortrait.getAddWechat())?usersPortrait.getAddWechat() : "");
-                        } else if (celLength == 29) {// 投资进程
+                        } else if (celLength == 29) {// 出借进程
                             cell.setCellValue(StringUtils.isNoneBlank(usersPortrait.getInvestProcess())?usersPortrait.getInvestProcess() : "");
                         } else if (celLength == 30) {// 客户投诉
                             cell.setCellValue(StringUtils.isNoneBlank(usersPortrait.getCustomerComplaint())?usersPortrait.getCustomerComplaint() : "");
@@ -256,7 +281,7 @@ public class UserPortraitController extends BaseController {
                             cell.setCellValue(usersPortrait.getInviteRegist() != null ?usersPortrait.getInviteRegist().toString() : "");
                         }else if (celLength == 33) {//  "邀约充值客户数"
                             cell.setCellValue(usersPortrait.getInviteRecharge() != null ?usersPortrait.getInviteRecharge().toString() :"");
-                        }else if (celLength == 34) {//  ""邀约投资客户数
+                        }else if (celLength == 34) {//  ""邀约出借客户数
                             cell.setCellValue(usersPortrait.getInviteTender() != null ?usersPortrait.getInviteTender().toString() : "");
                         }else if (celLength == 35) {//  ""是否有主单"
                             cell.setCellValue(usersPortrait.getAttribute() != null ?usersPortrait.getAttribute().toString() : "");
@@ -359,7 +384,7 @@ public class UserPortraitController extends BaseController {
                 userPortraitVO.setCurrentOwner(StringUtils.isNoneBlank(userPortraitVO.getCurrentOwner()) ?userPortraitVO.getCurrentOwner() : "");
                 // 是否加微信
                 userPortraitVO.setAddWechat(StringUtils.isNoneBlank(userPortraitVO.getAddWechat())?userPortraitVO.getAddWechat() : "");
-                // 投资进程
+                // 出借进程
                 userPortraitVO.setInvestProcess(StringUtils.isNoneBlank(userPortraitVO.getInvestProcess())?userPortraitVO.getInvestProcess() : "");
                 // 客户投诉
                 userPortraitVO.setCustomerComplaint(StringUtils.isNoneBlank(userPortraitVO.getCustomerComplaint())?userPortraitVO.getCustomerComplaint() : "");
@@ -398,7 +423,7 @@ public class UserPortraitController extends BaseController {
                     userPortraitVO.setCurrentOwner(StringUtils.isNoneBlank(userPortraitVO.getCurrentOwner()) ?userPortraitVO.getCurrentOwner() : "");
                     // 是否加微信
                     userPortraitVO.setAddWechat(StringUtils.isNoneBlank(userPortraitVO.getAddWechat())?userPortraitVO.getAddWechat() : "");
-                    // 投资进程
+                    // 出借进程
                     userPortraitVO.setInvestProcess(StringUtils.isNoneBlank(userPortraitVO.getInvestProcess())?userPortraitVO.getInvestProcess() : "");
                     // 客户投诉
                     userPortraitVO.setCustomerComplaint(StringUtils.isNoneBlank(userPortraitVO.getCustomerComplaint())?userPortraitVO.getCustomerComplaint() : "");
@@ -432,7 +457,7 @@ public class UserPortraitController extends BaseController {
         map.put("fundRetention", "资金存留比（%）");
         map.put("yield", "客均收益率（%）");
         map.put("interestSum", "累计收益（元）");
-        map.put("investSum", "累计年化投资金额（元）");
+        map.put("investSum", "累计年化出借金额（元）");
         map.put("rechargeSum", "累计充值金额（元）");
         map.put("withdrawSum", "累计提取金额（元）");
         map.put("loginActive", "登录活跃");
@@ -441,17 +466,17 @@ public class UserPortraitController extends BaseController {
         map.put("lastRechargeTime", "最后一次充值至今时长（天）");
         map.put("lastWithdrawTime", "最后一次提现至今时长（天）");
         map.put("lastRepayTimeS", "最后一笔回款时间");
-        map.put("investPlatform", "同时投资平台数");
+        map.put("investPlatform", "同时出借平台数");
         map.put("investAge", "投龄");
         map.put("tradeNumber", "交易笔数");
         map.put("currentOwner", "当前拥有人");
         map.put("addWechat", "是否加微信");
-        map.put("investProcess", "投资进程");
+        map.put("investProcess", "出借进程");
         map.put("customerComplaint", "客户投诉");
         map.put("inviteCustomer", "邀约客户数");
         map.put("inviteRegist", "邀约注册客户数");
         map.put("inviteRecharge", "邀约充值客户数");
-        map.put("inviteTender", "邀约投资客户数");
+        map.put("inviteTender", "邀约出借客户数");
         map.put("attribute", "是否有主单");
         map.put("regTime", "注册时间");
         return map;
@@ -530,7 +555,7 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("interestSum", interestSumAdapter);
-        // 累计年化投资金额
+        // 累计年化出借金额
         IValueFormatter investSumAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -584,7 +609,7 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("lastWithdrawTime", lastWithdrawTimeAdapter);
-        // 同时投资平台数
+        // 同时出借平台数
         IValueFormatter investPlatformAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -638,7 +663,7 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("inviteRecharge", inviteRechargeAdapter);
-        //  ""邀约投资客户数
+        //  ""邀约出借客户数
         IValueFormatter inviteTenderAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -742,7 +767,7 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("interestSum", interestSumAdapter);
-        // 累计年化投资金额
+        // 累计年化出借金额
         IValueFormatter investSumAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -796,7 +821,7 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("lastWithdrawTime", lastWithdrawTimeAdapter);
-        // 同时投资平台数
+        // 同时出借平台数
         IValueFormatter investPlatformAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -850,7 +875,7 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("inviteRecharge", inviteRechargeAdapter);
-        //  ""邀约投资客户数
+        //  ""邀约出借客户数
         IValueFormatter inviteTenderAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {

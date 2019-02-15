@@ -115,20 +115,20 @@ public class AppRiskAssesmentController extends BaseUserController {
             // 测评金额上限增加（获取评分标准对应的上限金额并拼接）
             switch (ueResult.getEvalType()){
                 case "保守型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE))));
+                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                            RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
                     break;
                 case "稳健型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS))));
+                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                            RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
                     break;
                 case "成长型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH))));
+                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                            RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
                     break;
                 case "进取型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)  == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE))));
+                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                            RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)  == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
                     break;
                 default:
                     response.setRevaluationMoney("0");
@@ -165,26 +165,35 @@ public class AppRiskAssesmentController extends BaseUserController {
         // 是否已经参加过测评（true：已测评过，false：测评）
         UserEvalationResultVO userEvalationResult = evaluationService.answerAnalysis(userAnswerRequestBean.getUserAnswer(), userId,null);
         evaluationService.updateUser(userId);
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 用户信息修改（风险测评）
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.USERINFO_CHANGE_TAG, UUID.randomUUID().toString(), params),
+                MQConstant.HG_REPORT_DELAY_LEVEL);
+        // add 合规数据上报 埋点 liubin 20181122 end
+
         response.setResultStatus("1");
         // userEvalationResult 测评结果
         response.setResultType(userEvalationResult.getEvalType());
         // 测评金额上限增加（获取评分标准对应的上限金额并拼接）
         switch (userEvalationResult.getEvalType()){
             case "保守型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE))));
+                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                        RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
                 break;
             case "稳健型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS))));
+                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                        RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
                 break;
             case "成长型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH))));
+                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                        RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
                 break;
             case "进取型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE))));
+                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                        RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
                 break;
             default:
                 response.setRevaluationMoney("0");

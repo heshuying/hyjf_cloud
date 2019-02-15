@@ -2,6 +2,7 @@ package com.hyjf.cs.market.controller.app.sharenews;
 
 import com.hyjf.am.response.market.ShareNewsResponse;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.cs.market.config.SystemConfig;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.ShareNewsService;
@@ -35,8 +36,19 @@ public class ShareNewsController extends BaseMarketController {
 
         ShareNewsBeanVO shareNewsBean = this.shareNewsService.queryShareNews();
         if (shareNewsBean.getTitle() != null) {
+
+            // 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+            // 合规自查添加 add by huanghui
+            UserUtmInfoCustomizeVO userUtmInfo = shareNewsService.getUserUtmInfo(userId);
+
             try {
-                response.setLinkUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", userId+""));
+                String linkUrl = null;
+                if (userUtmInfo != null){
+                    linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+                }else {
+                    linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+                }
+                response.setLinkUrl(linkUrl);
             } catch (Exception e) {
                 response.setStatus("708");
                 response.setStatusDesc("获取分享信息失败");

@@ -46,7 +46,7 @@
             </if>
             <!-- 操作人 -->
             <if test="userNameSrch != null and userNameSrch != ''">
-                AND hfml.create_user_id in(select hui.user_id from hyjf_config.ht_r_user hui where hui.truename LIKE CONCAT( 'admin', '%'))
+                AND hfml.create_user_id in(select hui.id from hyjf_config.ht_admin hui where hui.truename LIKE CONCAT( #{userNameSrch}, '%'))
             </if>
             <!-- 操作时间 -->
             <if test="recieveTimeStartSrch != null and recieveTimeStartSrch != ''">
@@ -80,17 +80,9 @@
         `status`,modify_type,create_user_id,create_time,update_user_id,update_time,del_flag,
         (select distinct inst_name from hyjf_trade.ht_hjh_inst_config hhic where hfml.inst_code=hhic.inst_code) inst_name,
         (select distinct asset_type_name from hyjf_trade.ht_hjh_asset_type hhat where hfml.inst_code=hhat.inst_code and hfml.asset_type=hhat.asset_type) asset_type_name,
-        (
-        SELECT DISTINCT truename FROM hyjf_config.ht_r_user hui
-        WHERE
-        hfml.create_user_id = hui.user_id
-        ) true_name,
-        FROM_UNIXTIME(
-        hfml.create_time,
-        '%Y-%m-%d %H:%i:%s'
-        ) AS create_time_string
-        FROM
-        hyjf_config.ht_feerate_modify_log hfml
+        ( SELECT DISTINCT truename FROM hyjf_config.ht_admin hui WHERE hfml.create_user_id = hui.id ) true_name,
+        FROM_UNIXTIME( hfml.create_time,'%Y-%m-%d %H:%i:%s' ) AS create_time_string
+        FROM hyjf_config.ht_feerate_modify_log hfml
         <include refid="Where_Clause" />
         ORDER BY create_time DESC
         <if test="limitStart != null and limitStart >= 0">

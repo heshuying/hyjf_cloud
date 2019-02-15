@@ -60,7 +60,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		if (StringUtils.isNotEmpty(request.getLockPeriodSrch())) {
 			cra.andLockPeriodEqualTo(Integer.valueOf(request.getLockPeriodSrch()));
 		}
-		// 传入查询投资状态
+		// 传入查询出借状态
 		if (StringUtils.isNotEmpty(request.getPlanStatusSrch())) {		
 			cra.andPlanInvestStatusEqualTo(Integer.valueOf(request.getPlanStatusSrch()));
 		}
@@ -107,7 +107,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		if (StringUtils.isNotEmpty(request.getLockPeriodSrch())) {
 			cra.andLockPeriodEqualTo(Integer.valueOf(request.getLockPeriodSrch()));
 		}
-		// 传入查询投资状态
+		// 传入查询出借状态
 		if (StringUtils.isNotEmpty(request.getPlanStatusSrch())) {		
 			cra.andPlanInvestStatusEqualTo(Integer.valueOf(request.getPlanStatusSrch()));
 		}
@@ -159,7 +159,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		if (StringUtils.isNotEmpty(request.getLockPeriodSrch())) {
 			PlanListCustomizeRequest.setLockPeriodSrch(Integer.valueOf(request.getLockPeriodSrch()));
 		}
-		// 传入查询投资状态
+		// 传入查询出借状态
 		if (StringUtils.isNotEmpty(request.getPlanStatusSrch())) {		
 			PlanListCustomizeRequest.setPlanStatusSrch(Integer.valueOf(request.getPlanStatusSrch()));
 		}
@@ -349,17 +349,17 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 					// 锁定期天、月
 					plan.setIsMonth(Integer.parseInt(form.getIsMonth()));
 				}
-				// 预期年化收益率
+				// 预期出借利率
 				plan.setExpectApr(StringUtils.isEmpty(form.getExpectApr()) ? BigDecimal.ZERO : new BigDecimal(form.getExpectApr()));
-				// 最低投资金额
+				// 最低出借金额
 				plan.setMinInvestment(new BigDecimal(form.getDebtMinInvestment()));
-				// 最高可投资金额
+				// 最高可出借金额
 				plan.setMaxInvestment(StringUtils.isEmpty(form.getDebtMaxInvestment()) ? BigDecimal.ZERO : new BigDecimal(form.getDebtMaxInvestment()));
-				// 投资增量
+				// 出借增量
 				plan.setInvestmentIncrement(new BigDecimal(form.getDebtInvestmentIncrement()));
 				// 可用券配置
 				plan.setCouponConfig(form.getCouponConfig());
-				// 投资状态
+				// 出借状态
 				plan.setPlanInvestStatus(StringUtils.isEmpty(form.getDebtPlanStatus()) ? 0 : Integer.parseInt(form.getDebtPlanStatus()));
 				// 显示状态
 				plan.setPlanDisplayStatus(StringUtils.isEmpty(form.getPlanDisplayStatusSrch()) ? 0 : Integer.parseInt(form.getPlanDisplayStatusSrch()));
@@ -373,12 +373,15 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setMarginMeasures(StringUtils.isEmpty(form.getMarginMeasures()) ? "" : form.getMarginMeasures());
 				// 常见问题
 				plan.setNormalQuestions(StringUtils.isEmpty(form.getNormalQuestion()) ? "" : form.getNormalQuestion());
-				// 最小投资比数
+				// 最小出借比数
 				plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
 				// 更新时间
 				plan.setUpdateTime(new Date());
 				// 更新用户ID
 				plan.setUpdateUser(form.getUserid());
+				// 计划风险投资
+				plan.setInvestLevel(StringUtils.isEmpty(form.getInvestLevel()) ? "" : form.getInvestLevel());
+
 				// 跟新汇计划表
 				count1 = this.hjhPlanMapper.updateByPrimaryKeySelective(plan);
 				
@@ -441,23 +444,23 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 			// 锁定期天、月
 			plan.setIsMonth(Integer.parseInt(form.getIsMonth()));
 		}
-		// 预期年化收益率
+		// 预期出借利率
 		plan.setExpectApr(new BigDecimal(form.getExpectApr()));
-		// 最低投资金额
+		// 最低出借金额
 		plan.setMinInvestment(new BigDecimal(form.getDebtMinInvestment()));
-		// 最高可投资金额(非必须入力)
+		// 最高可出借金额(非必须入力)
 		plan.setMaxInvestment(StringUtils.isEmpty(form.getDebtMaxInvestment()) ? BigDecimal.ZERO : new BigDecimal(form.getDebtMaxInvestment()));
-		// 投资增量
+		// 出借增量
 		plan.setInvestmentIncrement(new BigDecimal(form.getDebtInvestmentIncrement()));
 		// 计划可投金额
 		plan.setAvailableInvestAccount(BigDecimal.ZERO);
 		// 待还总额
 		plan.setRepayWaitAll(BigDecimal.ZERO);
-		// 投资状态
+		// 出借状态
 		plan.setPlanInvestStatus(Integer.valueOf(form.getDebtPlanStatus()));
 		// 显示状态
 		plan.setPlanDisplayStatus(Integer.valueOf(form.getPlanDisplayStatusSrch()));
-        // 最小投资比数
+        // 最小出借比数
         plan.setMinInvestCounts(StringUtils.isEmpty(form.getMinInvestCounts()) ? 0 : Integer.parseInt(form.getMinInvestCounts()));
         // 添加时间
 		plan.setAddTime(GetDate.getMyTimeInMillis());
@@ -493,6 +496,9 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		plan.setCreateTime(new Date());
 		// 删除标识
 		plan.setDelFlag(0);
+		// 计划风险投资
+		plan.setInvestLevel(StringUtils.isEmpty(form.getInvestLevel()) ? "" : form.getInvestLevel());
+
 		int success = this.hjhPlanMapper.insertSelective(plan);
 		if(success > 0){
 			return success;
@@ -517,7 +523,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		if (StringUtils.isNotEmpty(request.getLockPeriodSrch())) {
 			cra.andLockPeriodEqualTo(Integer.valueOf(request.getLockPeriodSrch()));
 		}
-		// 传入查询投资状态
+		// 传入查询出借状态
 		if (StringUtils.isNotEmpty(request.getPlanStatusSrch())) {		
 			cra.andPlanInvestStatusEqualTo(Integer.valueOf(request.getPlanStatusSrch()));
 		}

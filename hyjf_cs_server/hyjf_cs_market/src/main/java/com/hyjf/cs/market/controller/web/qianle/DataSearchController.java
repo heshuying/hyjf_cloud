@@ -1,21 +1,5 @@
 package com.hyjf.cs.market.controller.web.qianle;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
@@ -33,9 +17,23 @@ import com.hyjf.cs.market.bean.DataSearchBean;
 import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.qianle.DataSearchService;
-
+import com.hyjf.cs.market.util.ExportExcel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * @author lisheng
@@ -211,9 +209,9 @@ public class DataSearchController {
         List<DataSearchCustomizeVO> resultList = result.getResultList();
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]
-                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "投资类型",
-                        "项目/智投编号",  "投资金额", "投资期限","年化金额"
-                        ,"佣金7%","投资时间"
+                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "出借类型",
+                        "项目/智投编号",  "出借金额", "出借期限","年化金额"
+                        ,"佣金7%","出借时间"
                 };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -264,22 +262,22 @@ public class DataSearchController {
                         cell.setCellValue(record.getReffername());//推荐人姓名
                     }
                     else if (celLength == 6) {
-                        cell.setCellValue(record.getType());//投资类型
+                        cell.setCellValue(record.getType());//出借类型
                     }
                     else if (celLength == 7) {
                         cell.setCellValue(record.getPlannid());//项目/计划编号
                     }
                     else if (celLength == 8) {
-                        cell.setCellValue(record.getAccount());//投资金额
+                        cell.setCellValue(record.getAccount());//出借金额
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(record.getBorrow_period());//投资期限
+                        cell.setCellValue(record.getBorrow_period());//出借期限
                     }else if (celLength == 10) {
                         cell.setCellValue(record.getYearAccount());//年化金额
                     }else if (celLength == 11) {
                         cell.setCellValue(record.getMoney());//佣金7%
                     }else if (celLength == 12) {
-                        cell.setCellValue(record.getAddtimesT());//投资日期
+                        cell.setCellValue(record.getAddtimesT());//出借日期
                     }
                 }
             }

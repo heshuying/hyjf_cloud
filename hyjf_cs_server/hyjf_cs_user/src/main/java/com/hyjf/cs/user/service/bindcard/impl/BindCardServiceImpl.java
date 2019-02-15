@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.bindcard.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankCardLogRequest;
@@ -423,6 +424,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		callBean.setLogUserId(String.valueOf(bean.getLogUserId()));
 		// 调用汇付接口 4.4.11 银行卡查询接口
 		BankCallBean bankCallBean = BankCallUtils.callApiBg(callBean);
+		logger.info("请求银行接口cardBindDetailsQuery返回：" + JSON.toJSONString(bankCallBean));
 		String respCode = bankCallBean == null ? "" : bankCallBean.getRetCode();
 		// 如果接口调用成功
 		if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {

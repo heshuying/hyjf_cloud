@@ -147,7 +147,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		Integer time = GetDate.getMyTimeInMillis();
 		// 发放人ID
 		Integer userId = commission.getUserId();
-		// 投资人ID
+		// 出借人ID
 		Integer tenderUserId = commission.getTenderUserId();
 		// 操作者用户名
 		String operator = commission.getLoginUserName();
@@ -246,7 +246,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
         accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
         accountList.setBankAwait(account.getBankAwait());// 银行待收总额
         accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
         accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
         accountList.setPlanBalance(account.getPlanBalance());
         accountList.setPlanFrost(account.getPlanFrost());
@@ -278,14 +278,14 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		/*5.插入网站收支明细记录 改为插入mongo库*/
 		AccountWebListVO accountWebList = new AccountWebListVO();
 		accountWebList.setOrdid(accountList.getNid());// 订单号
-		accountWebList.setUserId(accountList.getUserId()); // 投资者
+		accountWebList.setUserId(accountList.getUserId()); // 出借者
 		accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
 		accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
-		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
-		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
+		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
+		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
 		accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
-		//TODO: 网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
+		//网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
 		/*原ret += insertAccountWebList(accountWebList);*/
 		try {
 			logger.info("发送收支明细---" + request.getAccount() + "---------" + accountList.getAmount());
@@ -339,7 +339,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		        bankMerchantAccountList.setCreateUserName(request.getUserName());
 		        /*原bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());*/
 		        bankMerchantAccountList.setUpdateUserName(request.getUserName());
-		        bankMerchantAccountList.setRemark("投资推广提成");
+		        bankMerchantAccountList.setRemark("出借推广提成");
 		        this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
 		    }
 		}
@@ -407,7 +407,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 	}
 	
 	/**
-	 * 根据投资订单号取投资编号
+	 * 根据出借订单号取出借编号
 	 *
 	 * @param ordId
 	 * @return

@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -97,6 +98,18 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+		UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
+		return userUtmInfoCustomizeVO;
+	}
+
+	/**
 	 * @param userId
 	 * @Description 根据userid查询用户（查询主库）
 	 * @Author sunss
@@ -127,7 +140,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		}
 
 		if (BaseDefine.METHOD_BORROW_AUTH_INVES.equals(methodName)) {
-			// 自动投资 增强
+			// 自动出借 增强
 			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId() + bean.getSmsCode() + bean.getTimestamp();
 		} else if (BaseDefine.METHOD_BORROW_AUTH_STATE.equals(methodName)) {
@@ -139,7 +152,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			OrganizationStructureRequestBean bean = (OrganizationStructureRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getTimestamp();
 		}else if(BaseDefine.METHOD_BORROW_AUTH_SEND_SMS.endsWith(methodName)){
-			// 自动投资 债转  短信验证码
+			// 自动出借 债转  短信验证码
 			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getSendType() + bean.getTimestamp();
 		}else if (BaseDefine.METHOD_SAVE_USER_EVALUATION_RESULTS.equals(methodName)) {
@@ -290,6 +303,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		BankCallBean retBean = null;
 		try {
 			retBean  = BankCallUtils.callApiBg(bean);
+			logger.info("请求银行验证码接口返回：" + JSON.toJSONString(retBean));
 		} catch (Exception e) {
 			logger.info("请求银行接口失败", e);
 			return null;
@@ -408,11 +422,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			TrusteePayRequestBean bean = (TrusteePayRequestBean) paramBean;
 			sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
 		}else if (BaseDefine.METHOD_BORROW_AUTH_SEND_SMS.equals(methodName)) {
-			// 自动投资 债转  短信验证码
+			// 自动出借 债转  短信验证码
 			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getSendType() + bean.getTimestamp();
 		}else if (BaseDefine.METHOD_BORROW_AUTH_INVES.equals(methodName)) {
-			// 自动投资 增强
+			// 自动出借 增强
 			AutoPlusRequestBean bean = (AutoPlusRequestBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId() + bean.getSmsCode() + bean.getTimestamp();
 		}else if (BaseDefine.METHOD_BORROW_AUTH_CREDIT.equals(methodName)) {

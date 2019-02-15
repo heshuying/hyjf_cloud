@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
@@ -38,10 +37,10 @@ import java.util.*;
  */
 @Service
 public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implements RealTimeBorrowLoanPlanService {
-    
+
 	@Autowired
 	private CommonProducer commonProducer;
-	
+
 	/**
 	 * 请求放款
 	 * @param apicron
@@ -64,7 +63,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			Borrow borrow = this.getBorrowByNid(borrowNid);
 			// 取得借款详情
 			BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
-			
+
 			if (borrow == null || borrowInfo == null) {
 				throw new Exception("借款详情不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 			}
@@ -97,16 +96,16 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate());
 			String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
 			BigDecimal curServiceFee = BigDecimal.ZERO;
-			// 取得投资详情列表
+			// 取得出借详情列表
 			List<BorrowTender> tenderList = this.getBorrowTenderList(borrowNid);
 			if (tenderList != null && tenderList.size() > 0) {
 				int txCounts = tenderList.size();// 交易笔数
 				BigDecimal txAmountSum = BigDecimal.ZERO;// 交易总金额
 				BigDecimal serviceFeeSum = BigDecimal.ZERO;// 交易总服务费
 				Map map = new HashMap<>();
-				map.put("accountId", borrowAccountId);		
+				map.put("accountId", borrowAccountId);
 				boolean isLast= false;
-				/** 循环投资详情列表 */
+				/** 循环出借详情列表 */
 				for (int i = 0; i < tenderList.size(); i++) {
 					// 放款信息
 					BorrowTender borrowTender = tenderList.get(i);
@@ -127,7 +126,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						serviceFee = getUserFee(serviceFeeRate, txAmount, borrowStyle, borrowPeriod);
 					}
 					logger.info("借款编号：" + borrowNid + "当前收服务费: "+serviceFee+" 当前已收："+curServiceFee);
-					
+
 					serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
 				}
 				map.put("txAmountSum", txAmountSum.toString());
@@ -171,8 +170,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * 根据主键从主库查询apicron 表
 	 * 这里不加select是想直接从主库查询
@@ -183,8 +182,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	public BorrowApicron selApiCronByPrimaryKey(int id) {
 		return borrowApicronMapper.selectByPrimaryKey(id);
 	}
-	
-	
+
+
 	/**
 	 * 自动扣款（放款）(调用江西银行满标接口)
 	 * @param apicron
@@ -232,7 +231,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			loanBean.setChannel(channel);
 			loanBean.setAccountId(accountId);//借款人电子账号
 			loanBean.setOrderId(logOrderId);
-			loanBean.setTxAmount(txAmount);//投资总额
+			loanBean.setTxAmount(txAmount);//出借总额
 			loanBean.setFeeAmount(feeAmount);//手续费金额
 			loanBean.setRiskAmount("0");//风险准备金
 			loanBean.setProductId(borrowNid);//标的号
@@ -246,7 +245,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				String retCode = loanResult.getRetCode();
 				logger.info(borrowNid+" 实时放款请求银行返回: " + retCode);
 				if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || BankCallConstant.RESPCODE_REALTIMELOAN_REPEAT.equals(retCode)
-						|| "CA110629".equals(retCode)) {//放款成功 
+						|| "CA110629".equals(retCode)) {//放款成功
 					// 更新任务API状态
 					boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
 					if (apicronResultFlag) {
@@ -264,16 +263,16 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					}
 				}
 			} else {
-				
+
 				//重新查询处理结果
 				logger.error(borrowNid+" 实时放款请求异常: " + loanResult);
 				String oldOrdid = apicron.getOrdid();
 				if(StringUtils.isNotBlank(oldOrdid)){
 					loanBean.setOrderId(oldOrdid);
 				}
-				
+
 				boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-				
+
 //				BankCallBean result = queryAutoLendResult(loanBean);
 //				if (result != null) {
 //					// 更新任务API状态
@@ -292,9 +291,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //						throw new Exception("更新状态为（放款处理请求失败）失败。[用户ID：" + userId + "]," + "[借款编号：" + borrowNid + "]");
 //					}
 //				}
-				
+
 			}
-		
+
 		} catch (Exception e) {
 			logger.error("==============标的号:" + borrowNid + "cwyang 放款异常:" + e.getMessage());
 		}
@@ -304,15 +303,15 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //		} catch (Exception e) {
 //			logger.error("==============标的号:" + borrowNid + "cwyang 更新放款订单号异常!:" + e.getMessage());
 //		}
-		 
+
 		return null;
 	}
 
 	/**
 	 * 更新放款订单号//TODO:这个方法需要改动
 	 * @param apicron
-	 * @param logOrderId 
-	 * @throws Exception 
+	 * @param logOrderId
+	 * @throws Exception
 	 */
 	private void updateBorrowApicronOrdid(BorrowApicron apicron, String logOrderId) throws Exception {
 		if (StringUtils.isBlank(logOrderId)) {
@@ -333,16 +332,16 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			}else{
 				logger.info("-----------------标的号:" + apicron.getBorrowNid() + "----放款订单号已更新,不予重复插入!------");
 			}
-			
+
 		}
-		
+
 	}
 
 	/**
 	 * 查询满标自动放款结果
 	 * @param bean
 	 * @return
-	 */ 
+	 */
 	private BankCallBean queryAutoLendResult(BankCallBean bean) {
 		String txDate = GetOrderIdUtils.getTxDate();
 		String txTime = GetOrderIdUtils.getTxTime();
@@ -387,10 +386,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		String borrowNid = apicron.getBorrowNid();// 項目编号
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
-		
+
 		// 放款成功后后续操作
 		try {
-			// 更新每个投资人信息，如还款计划，资金信息
+			// 更新每个出借人信息，如还款计划，资金信息
 			logger.info(" 放款请求后数据变更开始: " + borrowNid);
 			boolean loanFlag = this.borrowLoans(apicron, borrow, borrowInfo, bean);
 			if (loanFlag) {
@@ -440,7 +439,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			queryBorrowStyle = "month";
 		}
 		//确定是否自动还款
-		
+
 		// 获取标的费率信息
 		String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType());
 		BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass,borrowInfo.getInstCode(),borrowInfo.getAssetType(),queryBorrowStyle,borrow.getBorrowPeriod());
@@ -448,28 +447,28 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			logger.info("获取标的费率信息失败。[用户ID：" + borrowInfo.getUserId() + "]," + "[借款编号：" + borrowNid + "]"+borrowClass);
 			throw new RuntimeException("获取标的费率信息失败。[用户ID：" + borrowInfo.getUserId() + "]," + "[借款编号：" + borrowInfo.getUserId() + "]");
 		}
-		// 取得投资详情列表
+		// 取得出借详情列表
 		List<BorrowTender> tenderList = this.getBorrowTenderList(borrowNid);
-		BigDecimal curServiceFee = BigDecimal.ZERO;		
+		BigDecimal curServiceFee = BigDecimal.ZERO;
 		boolean isLast= false;
 		BigDecimal recoverInterestSum = BigDecimal.ZERO;
 		int tenderChkCnt = 0;
 		if (tenderList != null && tenderList.size() > 0) {
 			for (int i = 0; i < tenderList.size(); i++) {
 				try {
-					// 投资明细
+					// 出借明细
 					BorrowTender borrowTender = tenderList.get(i);
-					String tenderOrderId = borrowTender.getNid();// 投资订单号
+					String tenderOrderId = borrowTender.getNid();// 出借订单号
 					if (bean == null) {//放款失败
-						// 更新投资详情表
+						// 更新出借详情表
 						borrowTender.setStatus(2); // 状态 0，未放款，1，已放款 2放款失败
-//						borrowTender.setTenderStatus(2); // 投资状态 0，未放款，1，已放款 2放款失败
+//						borrowTender.setTenderStatus(2); // 出借状态 0，未放款，1，已放款 2放款失败
 //						borrowTender.setApiStatus(2); // 放款状态 0，未放款，1，已放款 2放款失败
 						boolean borrowTenderFlag = this.borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 						if (!borrowTenderFlag) {
-							throw new Exception("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+							throw new Exception("出借详情(huiyingdai_borrow_tender)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 						}
-						logger.info("-----------放款结束，放款失败---" + borrowNid + "--------投资订单号" + tenderOrderId);
+						logger.info("-----------放款结束，放款失败---" + borrowNid + "--------出借订单号" + tenderOrderId);
 					}else{
 						if(i == tenderList.size() -1){
 							isLast = true;
@@ -480,7 +479,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate());
 						String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
 						Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
-						// 投资金额
+						// 出借金额
 						BigDecimal account = borrowTender.getAccount();
 						BigDecimal serviceFee = BigDecimal.ZERO;
 						// 每笔服务费都按照服务费率单独计算与服务费总额做比较，小于的情况下服务费按照比
@@ -489,38 +488,38 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						}else{
 							serviceFee = getUserFee(serviceFeeRate, account, borrowStyle, borrowPeriod);
 						}
-						
+
 						logger.info("借款编号：" + borrowNid + "当前收服务费: "+serviceFee+" 当前已收："+curServiceFee);
 						curServiceFee = curServiceFee.add(borrowTender.getLoanFee());
-						
-					
+
+
 						Map result = ((RealTimeBorrowLoanPlanService)AopContext.currentProxy()).updateTenderMuti(apicron, borrow, borrowInfo, serviceFee, borrowTender);
-						
+
 						if(result.get("areadySuccess") == null) {
 
 							BigDecimal recoverInterest = (BigDecimal) result.get("recoverInterest");
 							recoverInterestSum = recoverInterestSum.add(recoverInterest);
-							 
+
 							logger.info("放款成功：" + borrowNid + " 订单: "+tenderOrderId+" 应收利息 "+recoverInterest);
-							
-							// 生成投资人居间服务协议
-							createTenderGenerateContract(borrow, borrowInfo, borrowTender, recoverInterest);
-							
+
+							// 生成出借人居间服务协议 modify by yangchangwei 2018-12-29 改由放款后batch任务主动推送
+//							createTenderGenerateContract(borrow, borrowInfo, borrowTender, recoverInterest);
+
 						}else {
 							logger.info("放款已经成功：" + borrowNid + " 订单: "+tenderOrderId);
 						}
-						
-						// 累加成功的投资更新
+
+						// 累加成功的出借更新
 						tenderChkCnt = tenderChkCnt + 1;
 					}
 				} catch (Exception e) {
-					logger.info("================cwyang 放款变更投资人数据异常!异常:" + e.getMessage());
+					logger.info("================cwyang 放款变更出借人数据异常!异常:" + e.getMessage());
 					continue;
 				}
 			}
 
 			//逻辑单独处理
-			// 汇计划二期去掉平台累计投资 在加入计划时候 12-8
+			// 汇计划二期去掉平台累计出借 在加入计划时候 12-8
 			/*List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
 			if (calculates != null && calculates.size() > 0) {
 				CalculateInvestInterest calculateNew = new CalculateInvestInterest();
@@ -529,7 +528,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
 			}*/
 
-			logger.info("======== 放款变更投资人数据共" + tenderList.size() + "正常笔数："+tenderChkCnt);
+			logger.info("======== 放款变更出借人数据共" + tenderList.size() + "正常笔数："+tenderChkCnt);
 			// 全部失败，部分成功不更新借款人数据
 			if(tenderChkCnt == tenderList.size()) {
 				return true;
@@ -537,33 +536,33 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				return false;
 			}
 		} else {
-			logger.info("未查询到相应的投资记录，项目编号:" + borrowNid + "]");
+			logger.info("未查询到相应的出借记录，项目编号:" + borrowNid + "]");
 			return false;
 		}
 	}
 
 
-	//TODO: 处理tender,判定成功状态，recover 无需要重复获取
+	//处理tender,判定成功状态，recover 无需要重复获取
 	@Override
 	public Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception {
-		
+
         Map result = new HashMap<>();
-		
+
 		// 如果更新已经成功则认为成功
 		if(borrowTender.getStatus().intValue() == 1) {
 			result.put("areadySuccess", true);
 			return result;
 		}
-		
-		//生成每个投资人的还款计划
+
+		//生成每个出借人的还款计划
 		boolean repayFlag = this.upsertRepayPlanInfo(borrow, borrowInfo, borrowTender,serviceFee);
-		
-		// 更新投资人的账户，资金明细信息  生成投资人居间服务协议
+
+		// 更新出借人的账户，资金明细信息  生成出借人居间服务协议
 		result = this.upsertLoansAccount(apicron, borrow, borrowInfo, borrowTender);
-		
+
 		return result;
 	}
-	
+
 
 	/**
 	 * 更新放款完成状态
@@ -591,11 +590,11 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		Integer entrustedFlg = null;
 		Integer entrustedUserId = null;
 		if (borrowInfo.getEntrustedFlg() != null) {
-			entrustedFlg = borrowInfo.getEntrustedFlg(); 
+			entrustedFlg = borrowInfo.getEntrustedFlg();
 			entrustedUserId = borrowInfo.getEntrustedUserId();//受托支付userID
 		}
-		
-		 
+
+
 		//end
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
@@ -644,7 +643,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				}
 				isEntrusted = true;
 			}
-			
+
 			// 更新借款人账户表(原复审业务)
 			Account borrowAccount = new Account();
 			Integer userId = borrowUserId;
@@ -696,7 +695,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			accountList.setBankAwaitInterest(borrowAccount.getBankAwaitInterest());
 			accountList.setBankBalance(borrowAccount.getBankBalance());
 			accountList.setBankFrost(borrowAccount.getBankFrost());
-			// 12-8修改加入计划时候更新累计投资金额
+			// 12-8修改加入计划时候更新累计出借金额
 			// accountList.setBankInterestSum(borrowAccount.getBankInterestSum());
 			accountList.setBankTotal(borrowAccount.getBankTotal());
 			accountList.setBankWaitCapital(borrowAccount.getBankWaitCapital());
@@ -822,7 +821,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				logger.info("====================cwyang 变更对应资产表状态完成!资产标的号:" + borrowNid);
 			}
 		}
-		
+
 	}
 
 	/**
@@ -860,26 +859,26 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
 		// 服务费率
 		BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate());
-		// 投资人的账户信息
+		// 出借人的账户信息
 		int tenderUserId = borrowTender.getUserId();
-		// 投资金额
+		// 出借金额
 		BigDecimal account = borrowTender.getAccount();
 		// 借款人的账户信息
 		Account tenderAccount = this.getAccountByUserId(tenderUserId);
 		if (tenderAccount == null || tenderAccount.getAccountId() == null) {
-			throw new RuntimeException("投资人未开户。[投资人ID：" + borrowTender.getUserId() + "]，" + "[投资订单号：" + borrowTender.getNid() + "]");
+			throw new RuntimeException("出借人未开户。[出借人ID：" + borrowTender.getUserId() + "]，" + "[出借订单号：" + borrowTender.getNid() + "]");
 		}
-		String ordId = borrowTender.getNid();// 投资订单号
-		
+		String ordId = borrowTender.getNid();// 出借订单号
+
 		String accedeOrderId = borrowTender.getAccedeOrderId();
 		// 取出冻结订单信息
 		FreezeList freezeList = getFreezeList(ordId);
 		if (Validator.isNull(freezeList)) {
-			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)查询失败！, " + "投资订单号[" + ordId + "]");
+			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)查询失败！, " + "出借订单号[" + ordId + "]");
 		}
 		// 若此笔订单已经解冻
 		if (freezeList.getStatus() == 1) {
-			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)已经解冻！, " + "投资订单号[" + ordId + "]");
+			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)已经解冻！, " + "出借订单号[" + ordId + "]");
 		}
 		// 放款订单号
 		String loanOrderId = GetOrderIdUtils.getOrderId2(borrowTender.getUserId());
@@ -911,13 +910,13 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		// 写入还款明细表(huiyingdai_borrow_recover)
 		BorrowRecover borrowRecover = new BorrowRecover();
 		borrowRecover.setStatus(0); // 状态
-		borrowRecover.setUserId(borrowTender.getUserId()); // 投资人
+		borrowRecover.setUserId(borrowTender.getUserId()); // 出借人
 		borrowRecover.setUserName(borrowTender.getUserName());
 		borrowRecover.setBorrowNid(borrowNid); // 借款编号
-		borrowRecover.setNid(ordId); // 投资订单号
+		borrowRecover.setNid(ordId); // 出借订单号
 		borrowRecover.setBorrowUserid(borrowUserid); // 借款人
 		borrowRecover.setBorrowUserName(borrow.getBorrowUserName());
-		borrowRecover.setTenderId(borrowTender.getId()); // 投资表主键ID
+		borrowRecover.setTenderId(borrowTender.getId()); // 出借表主键ID
 		borrowRecover.setRecoverStatus(0); // 还款状态
 		borrowRecover.setRecoverPeriod(isMonth ? borrowPeriod : 1); // 还款期数
 		borrowRecover.setRecoverTime(recoverTime); // 估计还款时间
@@ -949,12 +948,12 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrowRecover.setAddIp(borrowTender.getAddIp());
 		borrowRecover.setAuthCode(authCode);
 		borrowRecover.setRecoverServiceFee(serviceFee);
-		borrowRecover.setAccedeOrderId(accedeOrderId);//投资人还款明细加入计划订单号
+		borrowRecover.setAccedeOrderId(accedeOrderId);//出借人还款明细加入计划订单号
 		boolean borrowRecoverFlag = borrowRecoverMapper.insertSelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new RuntimeException("还款明细表(huiyingdai_borrow_tender)写入失败!" + "[投资订单号：" + ordId + "]");
+			throw new RuntimeException("还款明细表(huiyingdai_borrow_tender)写入失败!" + "[出借订单号：" + ordId + "]");
 		}
-		// 更新投资详情表
+		// 更新出借详情表
 		borrowTender.setLoanOrdid(loanOrderId);
 		borrowTender.setLoanOrderDate(loanOrderDate);
 		borrowTender.setRecoverAccountWait(borrowRecover.getRecoverAccount()); // 待收总额
@@ -967,14 +966,14 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrowTender.setRecoverFee(recoverFee);// 管理费
 		borrowTender.setStatus(0); // 状态
 									// 0，未放款，1，已放款
-//		borrowTender.setTenderStatus(0); // 投资状态
+//		borrowTender.setTenderStatus(0); // 出借状态
 //											// 0，未放款，1，已放款
 //		borrowTender.setApiStatus(0); // 放款状态
 //										// 0，未放款，1，已放款
 //		borrowTender.setWeb(0); // 写入网站收支明细
 		boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 		if (!borrowTenderFlag) {
-			throw new RuntimeException("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + ordId + "]");
+			throw new RuntimeException("出借详情(huiyingdai_borrow_tender)更新失败!" + "[出借订单号：" + ordId + "]");
 		}
 		// 更新借款表
 		borrow = this.getBorrowByNid(borrowNid);
@@ -986,10 +985,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		borrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().add(borrowRecover.getRecoverCapital())); // 未还款本金
 		borrow.setRepayLastTime(DateUtils.getRepayDate(borrowStyle, new Date(), borrowPeriod, borrowPeriod)); // 最后还款时间
 		borrow.setRepayNextTime(recoverTime); // 下次还款时间
-//		borrow.setRepayEachTime("每月" + GetDate.getServerDateTime(15, new Date()) + "日");// 每次还款的时间 
+//		borrow.setRepayEachTime("每月" + GetDate.getServerDateTime(15, new Date()) + "日");// 每次还款的时间
 		boolean borrowFlags = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (!borrowFlags) {
-			throw new RuntimeException("借款详情(huiyingdai_borrow)更新失败!" + "[投资订单号：" + ordId + "]");
+			throw new RuntimeException("借款详情(huiyingdai_borrow)更新失败!" + "[出借订单号：" + ordId + "]");
 		}
 		boolean isInsert = false;
 		// 插入每个标的总的还款信息
@@ -1052,7 +1051,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			borrowRepayFlag = this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
 		}
 		if (!borrowRepayFlag) {
-			throw new RuntimeException("每个标的总的还款信息(huiyingdai_borrow_repay)" + (isInsert ? "插入" : "更新") + "失败!" + "[投资订单号：" + ordId + "]");
+			throw new RuntimeException("每个标的总的还款信息(huiyingdai_borrow_repay)" + (isInsert ? "插入" : "更新") + "失败!" + "[出借订单号：" + ordId + "]");
 		}
 		// 是否分期
 		if (isMonth) {
@@ -1064,10 +1063,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					monthly = interestInfo.getListMonthly().get(j);
 					recoverPlan = new BorrowRecoverPlan();
 					recoverPlan.setStatus(0); // 状态
-					recoverPlan.setUserId(tenderUserId); // 投资人id
+					recoverPlan.setUserId(tenderUserId); // 出借人id
 					recoverPlan.setUserName(borrowTender.getUserName());
 					recoverPlan.setBorrowNid(borrowNid); // 借款订单id
-					recoverPlan.setNid(ordId); // 投资订单号
+					recoverPlan.setNid(ordId); // 出借订单号
 					recoverPlan.setBorrowUserid(borrowUserid); // 借款人ID
 					recoverPlan.setBorrowUserName(borrow.getBorrowUserName());
 					recoverPlan.setTenderId(borrowTender.getId()); // 借款人ID
@@ -1108,7 +1107,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					recoverPlan.setAccedeOrderId(accedeOrderId);
 					boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.insertSelective(recoverPlan) > 0 ? true : false;
 					if (!borrowRecoverPlanFlag) {
-						throw new RuntimeException("分期还款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
+						throw new RuntimeException("分期还款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[出借订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
 					}
 					// 更新总的还款计划表(huiyingdai_borrow_repay_plan)
 					isInsert = false;
@@ -1171,24 +1170,24 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 						repayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(repayPlan) > 0 ? true : false;
 					}
 					if (!repayPlanFlag) {
-						throw new RuntimeException("总的还款计划表(huiyingdai_borrow_repay_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
+						throw new RuntimeException("总的还款计划表(huiyingdai_borrow_repay_plan)写入失败!" + "[出借订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
 					}
 					logger.info("借款编号：" + borrowNid + "开始插入:hyjf_hjh_debt_detail ");
 					// 汇计划二期更新 分期的hyjf_hjh_debt_detail  12-8
 					HjhDebtDetail debtDetail = new HjhDebtDetail();
-					debtDetail.setUserId(borrowTender.getUserId());// 投资人用户ID
-                    debtDetail.setUserName(borrowTender.getUserName());//投资人用户名
+					debtDetail.setUserId(borrowTender.getUserId());// 出借人用户ID
+                    debtDetail.setUserName(borrowTender.getUserName());//出借人用户名
                     debtDetail.setBorrowUserId(borrowUserid);// 原标的的用户ID
                     debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标的借款人用户名
                     debtDetail.setBorrowNid(borrowNid);// 原标标的编号
                     debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
                     debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 加入计划订单号 borrow_tender表的accede_order_id
-                    debtDetail.setInvestOrderId(ordId);// 投资订单日期
-                    debtDetail.setOrderId(ordId);// 投资订单号
+                    debtDetail.setInvestOrderId(ordId);// 出借订单日期
+                    debtDetail.setOrderId(ordId);// 出借订单号
                     debtDetail.setOrderDate(borrowTender.getOrderDate());// 订单日期
-                    debtDetail.setOrderType(0);// 订单类型 0 直投项目投资 1 债权承接
+                    debtDetail.setOrderType(0);// 订单类型 0 直投项目出借 1 债权承接
                     debtDetail.setSourceType(1);// 是否原始债权 0非原始 1原始
-                    debtDetail.setAccount(monthly.getRepayAccountCapital());// 投资金额或债转承接金额
+                    debtDetail.setAccount(monthly.getRepayAccountCapital());// 出借金额或债转承接金额
                     debtDetail.setLoanCapital(monthly.getRepayAccountCapital());// 放款本金(应还本金)
                     debtDetail.setLoanInterest(monthly.getRepayAccountInterest());// 放款利息(应还利息)
                     debtDetail.setRepayPeriod(j + 1);// 还款期数
@@ -1216,7 +1215,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 					debtDetail.setCreditTimes(0);// 出让次数
                     boolean debtDetailFlag = hjhDebtDetailMapper.insertSelective(debtDetail) > 0 ? true : false;
                     if (!debtDetailFlag) {
-                        throw new RuntimeException("投资人债权记录(hyjf_hjh_debt_detail)分期插入失败!第" + (j + 1) + "期[专属标投资订单号：" + ordId + "]");
+                        throw new RuntimeException("出借人债权记录(hyjf_hjh_debt_detail)分期插入失败!第" + (j + 1) + "期[专属标出借订单号：" + ordId + "]");
                     }
                     logger.info("借款编号：" + borrowNid + "结束插入:hyjf_hjh_debt_detail 结果："+debtDetailFlag);
 				}
@@ -1226,17 +1225,17 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		    // 汇计划二期更新 不分期的hyjf_hjh_debt_detail  12-8
 		    logger.info("借款编号：" + borrowNid + "开始插入:hyjf_hjh_debt_detail ");
             HjhDebtDetail debtDetail =new HjhDebtDetail();
-            debtDetail.setUserId(borrowTender.getUserId()); // 投资人用户ID
-            debtDetail.setUserName(borrowTender.getUserName());// 投资人用户名
+            debtDetail.setUserId(borrowTender.getUserId()); // 出借人用户ID
+            debtDetail.setUserName(borrowTender.getUserName());// 出借人用户名
             debtDetail.setBorrowUserId(borrowUserid);// 原标借款人用户ID
             debtDetail.setBorrowUserName(borrowInfo.getBorrowUserName());// 原标借款人用户名
             debtDetail.setBorrowNid(borrowNid);// 原标标的编号
             debtDetail.setPlanNid(borrow.getPlanNid());// 计划编号
             debtDetail.setPlanOrderId(borrowTender.getAccedeOrderId());// 计划订单号 borrow_tender表的accede_order_id
-            debtDetail.setInvestOrderId(ordId);// 投资订单号
-            debtDetail.setOrderId(ordId);// 投资订单号
-            debtDetail.setOrderDate(borrowTender.getOrderDate());// 投资订单日期
-            debtDetail.setOrderType(0);// 订单类型 0 直投项目投资 1 债权承接
+            debtDetail.setInvestOrderId(ordId);// 出借订单号
+            debtDetail.setOrderId(ordId);// 出借订单号
+            debtDetail.setOrderDate(borrowTender.getOrderDate());// 出借订单日期
+            debtDetail.setOrderType(0);// 订单类型 0 直投项目出借 1 债权承接
             debtDetail.setSourceType(1);// 是否原始债权 0非原始 1原始
             debtDetail.setAccount(accountTender);// 放款总额(应还总额)
             debtDetail.setLoanCapital(capitalTender); // 放款本金(应还本金)
@@ -1265,17 +1264,17 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
             debtDetail.setDelFlag(0);// 清算标识 0未清算 1清算
             boolean debtDetailFlag = hjhDebtDetailMapper.insertSelective(debtDetail) > 0 ? true : false;
             if (!debtDetailFlag) {
-                throw new RuntimeException("投资人债权记录(hyjf_hjh_debt_detail)插入失败!" + "[专属标投资订单号：" + ordId + "]");
+                throw new RuntimeException("出借人债权记录(hyjf_hjh_debt_detail)插入失败!" + "[专属标出借订单号：" + ordId + "]");
             }
             logger.info("借款编号：" + borrowNid + "结束插入:hyjf_hjh_debt_detail 结果："+debtDetailFlag);
 		}
-	
+
 		loanFlag = true;
 		return loanFlag;
 	}
-	
+
 	/**
-	 * 更新投资人相关信息
+	 * 更新出借人相关信息
 	 * @param apicron
 	 * @param borrow
 	 * @param borrowTender
@@ -1293,10 +1292,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		String txTime = Validator.isNotNull(apicron.getTxTime()) ? String.valueOf(apicron.getTxTime()) : null;// 批次时间hhmmss
 		String seqNo = Validator.isNotNull(apicron.getSeqNo()) ? String.valueOf(apicron.getSeqNo()) : null;// 流水号
 		String bankSeqNo = Validator.isNotNull(apicron.getBankSeqNo()) ? String.valueOf(apicron.getBankSeqNo()) : null;// 银行唯一订单号
-		String tenderOrderId = borrowTender.getNid();// 投资订单号
-		int tenderUserId = borrowTender.getUserId();// 投资人userId
+		String tenderOrderId = borrowTender.getNid();// 出借订单号
+		int tenderUserId = borrowTender.getUserId();// 出借人userId
 		BigDecimal serviceFee = borrowTender.getLoanFee();// 服务费
-		BigDecimal tenderAccount = borrowTender.getAccount();// 投资金额
+		BigDecimal tenderAccount = borrowTender.getAccount();// 出借金额
 		String authCode = borrowTender.getAuthCode();//授权码
 		/** 标的基本数据 */
 		String borrowStyle = borrow.getBorrowStyle();// 还款方式
@@ -1307,31 +1306,31 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 
 		//start
 
-		logger.info("----------放款状态为成功,开始处理,[投资订单号：" + tenderOrderId + "]--项目编号" + borrowNid);
+		logger.info("----------放款状态为成功,开始处理,[出借订单号：" + tenderOrderId + "]--项目编号" + borrowNid);
 		// 取出冻结订单信息
 		FreezeList freezeList = getFreezeList(tenderOrderId);
 		if (Validator.isNull(freezeList)) {
-			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)查询失败！, " + "投资订单号[" + tenderOrderId + "]");
+			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)查询失败！, " + "出借订单号[" + tenderOrderId + "]");
 		}
 		// 若此笔订单已经解冻
 		if (freezeList.getStatus() == 1) {
-			logger.info("-----------订单已解冻,开始处理,[投资订单号：" + tenderOrderId + "]--项目编号" + borrowNid);
+			logger.info("-----------订单已解冻,开始处理,[出借订单号：" + tenderOrderId + "]--项目编号" + borrowNid);
 			result.put("result", true);
 			return result;
 		}
 		freezeList.setStatus(1);
 		boolean flag = this.freezeListMapper.updateByPrimaryKeySelective(freezeList) > 0 ? true : false;// 更新订单为已经解冻
 		if (!flag) {
-			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("冻结订单表(huiyingdai_freezeList)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 写入还款明细表(huiyingdai_borrow_recover)
 		BorrowRecover borrowRecover = this.selectBorrowRecover(tenderOrderId);
 		if (Validator.isNull(borrowRecover)) {
-			throw new RuntimeException("未查詢到相应的放款明细总表(borrowRecover)!" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("未查詢到相应的放款明细总表(borrowRecover)!" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 如果放款状态已经更新
 		if (borrowRecover.getStatus() == 1) {
-			logger.info("--------------订单放款状态已更新,开始处理,[投资订单号：" + tenderOrderId + "]--项目编号" + borrowNid);
+			logger.info("--------------订单放款状态已更新,开始处理,[出借订单号：" + tenderOrderId + "]--项目编号" + borrowNid);
 			result.put("result", true);
 			return result;
 		}
@@ -1343,7 +1342,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //		borrowRecover.setAddtime(String.valueOf(nowTime));
 		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new RuntimeException("放款明细表(huiyingdai_borrow_recover)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("放款明细表(huiyingdai_borrow_recover)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// [principal: 等额本金, month:等额本息,month:等额本息,end:先息后本]
 		if (isMonth) {
@@ -1357,20 +1356,20 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			recoverPlanExample.createCriteria().andNidEqualTo(tenderOrderId);
 			boolean recoverPlanFlag = this.borrowRecoverPlanMapper.updateByExampleSelective(recoverPlan, recoverPlanExample) > 0 ? true : false;
 			if (!recoverPlanFlag) {
-				throw new RuntimeException("分期放款计划表(huiyingdai_borrow_recover_plan)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+				throw new RuntimeException("分期放款计划表(huiyingdai_borrow_recover_plan)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 			}
 		}
-		// 更新投资详情表
+		// 更新出借详情表
 		BorrowTender borrowTenderForUPdate = new BorrowTender();
 		borrowTenderForUPdate.setId(borrowTender.getId());
 		borrowTenderForUPdate.setStatus(1); // 状态 0，未放款，1，已放款
-//		borrowTender.setTenderStatus(1); // 投资状态 0，未放款，1，已放款
+//		borrowTender.setTenderStatus(1); // 出借状态 0，未放款，1，已放款
 //		borrowTender.setApiStatus(1); // 放款状态 0，未放款，1，已放款
 //		borrowTender.setWeb(2); // 写入网站收支明细
 		boolean borrowTenderFlag = this.borrowTenderMapper.updateByPrimaryKeySelective(borrowTenderForUPdate) > 0 ? true : false;
 		if (!borrowTenderFlag) {
-			logger.error("[特殊更新失败 投资订单号：" + tenderOrderId + "]");
-			throw new RuntimeException("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+			logger.error("[特殊更新失败 出借订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("出借详情(huiyingdai_borrow_tender)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 写入借款满标日志(原复审业务)
 		boolean isInsert = false;
@@ -1405,9 +1404,9 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			accountBorrowFlag = this.accountBorrowMapper.updateByPrimaryKeySelective(accountBorrow) > 0 ? true : false;
 		}
 		if (!accountBorrowFlag) {
-			throw new RuntimeException("借款满标日志(huiyingdai_account_borrow)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("借款满标日志(huiyingdai_account_borrow)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 		}
-		// 更新账户信息(投资人)
+		// 更新账户信息(出借人)
 		Account accountTender = new Account();
 		accountTender.setUserId(tenderUserId);
 		// 汇计划二期更新注释
@@ -1415,22 +1414,22 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		accountTender.setPlanFrost(tenderAccount);//汇计划冻结金额
 		boolean investaccountFlag = this.adminAccountCustomizeMapper.updateOfPlanLoansTender(accountTender) > 0 ? true : false;
 		if (!investaccountFlag) {
-			throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
 		}
-		// 取得账户信息(投资人)
+		// 取得账户信息(出借人)
 		accountTender = this.getAccountByUserId(tenderUserId);
 		if (Validator.isNull(accountTender) || accountTender.getAccountId() == null) {
-			throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + tenderUserId + "]，" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("出借人账户信息不存在。[出借人ID：" + tenderUserId + "]，" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 写入收支明细
 		AccountList accountList = new AccountList();
-		/** 投资人银行相关 */
+		/** 出借人银行相关 */
 		accountList.setBankAwait(accountTender.getBankAwait());
 		accountList.setBankAwaitCapital(accountTender.getBankAwaitCapital());
 		accountList.setBankAwaitInterest(accountTender.getBankAwaitInterest());
 		accountList.setBankBalance(accountTender.getBankBalance());
 		accountList.setBankFrost(accountTender.getBankFrost());
-		// 12-8修改加入计划时候更新累计投资金额
+		// 12-8修改加入计划时候更新累计出借金额
 		//accountList.setBankInterestSum(accountTender.getBankInterestSum());
 		accountList.setBankInvestSum(accountTender.getBankInvestSum());
 		accountList.setBankTotal(accountTender.getBankTotal());
@@ -1445,17 +1444,17 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		accountList.setTxTime(Integer.parseInt(txTime));
 		accountList.setSeqNo(seqNo);
 		accountList.setBankSeqNo(bankSeqNo);
-		/** 投资人非银行相关 */
-		accountList.setNid(tenderOrderId); // 投资订单号
-		accountList.setUserId(tenderUserId); // 投资人
-		accountList.setAmount(tenderAccount); // 投资本金
+		/** 出借人非银行相关 */
+		accountList.setNid(tenderOrderId); // 出借订单号
+		accountList.setUserId(tenderUserId); // 出借人
+		accountList.setAmount(tenderAccount); // 出借本金
 		accountList.setType(2); // 2支出
-		accountList.setTrade("hjh_tender_success"); // 投资成功
+		accountList.setTrade("hjh_tender_success"); // 投标成功
 		accountList.setTradeCode("balance"); // 余额操作
-		accountList.setTotal(accountTender.getTotal()); // 投资人资金总额
-		accountList.setBalance(accountTender.getBalance()); // 投资人可用金额
-		accountList.setFrost(accountTender.getFrost()); // 投资人冻结金额
-		accountList.setAwait(accountTender.getAwait()); // 投资人待收金额
+		accountList.setTotal(accountTender.getTotal()); // 出借人资金总额
+		accountList.setBalance(accountTender.getBalance()); // 出借人可用金额
+		accountList.setFrost(accountTender.getFrost()); // 出借人冻结金额
+		accountList.setAwait(accountTender.getAwait()); // 出借人待收金额
 //		accountList.setCreateTime(nowTime); // 创建时间
 //		accountList.setBaseUpdate(nowTime); // 更新时间
 		accountList.setOperator(CustomConstants.OPERATOR_AUTO_LOANS); // 操作者
@@ -1470,16 +1469,16 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		accountList.setIsShow(1);
 		boolean tenderAccountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
 		if (!tenderAccountListFlag) {
-			throw new RuntimeException("投资人收支明细(huiyingdai_account_list)写入失败!" + "[投资订单号：" + tenderOrderId + "]");
+			throw new RuntimeException("出借人收支明细(huiyingdai_account_list)写入失败!" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 汇计划二期  修改计划订单冻结金额 表hyjf_hjh_accede
 		HjhAccede accede = getHjhAccede(borrowTender.getAccedeOrderId());
-		logger.info("--------------计划订单冻结金额,开始处理(表hyjf_hjh_accede),[投资订单号：" + tenderOrderId + "]--原金额：" + accede.getFrostAccount()+"---投资金额："+tenderAccount);
+		logger.info("--------------计划订单冻结金额,开始处理(表hyjf_hjh_accede),[出借订单号：" + tenderOrderId + "]--原金额：" + accede.getFrostAccount()+"---出借金额："+tenderAccount);
 		//计划订单冻结金额
 		accede.setFrostAccount(tenderAccount);
 		boolean frostAccountFlag = this.batchHjhAccedeCustomizeMapper.updateOfPlanLoansTender(accede) > 0 ? true : false;
         if (!frostAccountFlag) {
-            throw new RuntimeException("计划订单冻结金额 (hyjf_hjh_accede)更新失败!" + "[投资订单号：" + tenderOrderId + "]");
+            throw new RuntimeException("计划订单冻结金额 (hyjf_hjh_accede)更新失败!" + "[出借订单号：" + tenderOrderId + "]");
         }
 
 
@@ -1488,8 +1487,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			// 插入网站收支明细记录
 			AccountWebListVO accountWebList = new AccountWebListVO();
 			accountWebList.setOrdid(tenderOrderId);// 订单号
-			accountWebList.setBorrowNid(borrowNid); // 投资编号
-			accountWebList.setUserId(borrowTender.getUserId()); // 投资者
+			accountWebList.setBorrowNid(borrowNid); // 出借编号
+			accountWebList.setUserId(borrowTender.getUserId()); // 出借者
 			accountWebList.setAmount(Double.valueOf(serviceFee.toString())); // 服务费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入2支出
 			accountWebList.setTrade(CustomConstants.TRADE_LOANFEE); // 服务费
@@ -1504,7 +1503,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
             } catch (MQException e) {
 	            logger.error("计划放款系统异常", e);
             }
-			
+
 		}
 		apicron.setSucCounts(apicron.getSucCounts() + 1);
 		if (serviceFee.compareTo(BigDecimal.ZERO) > 0) {
@@ -1519,7 +1518,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		if (!apicronSuccessFlag) {
 			throw new RuntimeException("批次放款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
 		}
-		logger.info("-----------放款结束，放款成功---" + borrowNid + "---------投资订单号" + tenderOrderId);
+		logger.info("-----------放款结束，放款成功---" + borrowNid + "---------出借订单号" + tenderOrderId);
 		result.put("result", true);
 		result.put("recoverInterest", awaitInterest);
 		return result;
@@ -1583,8 +1582,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	}
 
 	/**
-	 * 根据投资订单号查询相应的放款信息
-	 * 
+	 * 根据出借订单号查询相应的放款信息
+	 *
 	 * @param orderId
 	 * @return
 	 */
@@ -1597,7 +1596,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		}
 		return null;
 	}
-	
+
 
 	/**
 	 * 取出账户信息
@@ -1614,10 +1613,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 项目类型
-	 * 
+	 *
 	 * @return
 	 * @author Administrator
 	 */
@@ -1633,10 +1632,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 根据项目类型，期限，获取借款利率
-	 * 
+	 *
 	 * @return
 	 */
 	private BorrowFinmanNewCharge selectBorrowApr(String projectType,String instCode, Integer instProjectType, String borrowStyle,Integer chargetime) {
@@ -1648,14 +1647,14 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		cra.andManChargeTimeTypeEqualTo(borrowStyle);
 		cra.andManChargeTimeEqualTo(chargetime);
 		cra.andStatusEqualTo(0);
-		
+
 		List<BorrowFinmanNewCharge> list = this.borrowFinmanNewChargeMapper.selectByExample(example);
 		if (list != null && list.size() > 0) {
 			return list.get(0);
 		}
-		
+
 		return null;
-		
+
 	}
 
 	/**
@@ -1718,7 +1717,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 取得服务费,按金额算
 	 *
@@ -1746,7 +1745,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		} else {
 			userFee = serviceFeeRate.multiply(account).setScale(2, BigDecimal.ROUND_DOWN);
 		}
-		
+
 		BigDecimal tmpFee = curServiceFee.add(userFee);
 		// 最后一笔的情况
 		if(isLast){
@@ -1760,7 +1759,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //					userFee = userFee;
 				}
 			}
-			
+
 		}else{
 			if(tmpFee.compareTo(totalServiceFee) >=0){
 				userFee = totalServiceFee.subtract(curServiceFee);
@@ -1769,7 +1768,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 
 		return userFee;
 	}
-	
+
 	/**
 	 * 取得服务费（服务费不四舍五入） 去尾
 	 *
@@ -1816,13 +1815,13 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	}
 
 	/**
-	 * 生成投资居间服务协议
+	 * 生成出借居间服务协议
 	 * @param borrow
 	 * 标的信息
 	 * @param borrowTender
 	 * @param recoverInterest
 	 */
-	private void createTenderGenerateContract(Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender, BigDecimal recoverInterest) {
+	/*private void createTenderGenerateContract(Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender, BigDecimal recoverInterest) {
 		String nid = borrowTender.getNid();
 		try {
 			Integer userId = borrowTender.getUserId();
@@ -1840,11 +1839,11 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
 			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
                     MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
-			
+
 		}catch (Exception e){
 			logger.info("-----------------生成计划居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());
 		}
-	}
+	}*/
 
 	/**
 	 * 变更保证金少放款相关金额

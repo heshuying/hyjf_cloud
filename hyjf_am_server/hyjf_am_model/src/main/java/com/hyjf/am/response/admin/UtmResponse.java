@@ -17,21 +17,21 @@ public class UtmResponse<T> extends AdminResponse  {
     private Integer registNumber;
     /** 开户数 */
     private Integer openAccountNumber;
-    /** 投资人数 */
+    /** 出借人数 */
     private Integer tenderNumber;
     /** 累计充值 */
     private BigDecimal cumulativeRecharge;
-    /** 汇直投投资金额 */
+    /** 汇直投出借金额 */
     private BigDecimal hztTenderPrice;
-    /** 汇消费投资金额 */
+    /** 汇消费出借金额 */
     private BigDecimal hxfTenderPrice;
-    /** 汇天利投资金额 */
+    /** 汇天利出借金额 */
     private BigDecimal htlTenderPrice;
-    /** 汇添金投资金额 */
+    /** 汇添金出借金额 */
     private BigDecimal htjTenderPrice;
-    /** 汇金理财投资金额 */
+    /** 汇金理财出借金额 */
     private BigDecimal rtbTenderPrice;
-    /** 汇转让投资金额 */
+    /** 汇转让出借金额 */
     private BigDecimal hzrTenderPrice;
     /** app渠道Ios开户数 */
     private Integer accountNumberIos;

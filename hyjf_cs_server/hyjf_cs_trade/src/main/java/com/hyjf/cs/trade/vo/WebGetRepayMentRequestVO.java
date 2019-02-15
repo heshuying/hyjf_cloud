@@ -13,10 +13,10 @@ public class WebGetRepayMentRequestVO {
     @ApiModelProperty(value = "标的编号")
     private String borrowNid;
 
-    @ApiModelProperty(value = "投资订单号")
+    @ApiModelProperty(value = "出借订单号")
     private String nid;
 
-    @ApiModelProperty(value = "投资记录类型  0现金投资，1部分债转，2债权承接，3优惠券投资，4 融通宝产品加息")
+    @ApiModelProperty(value = "出借记录类型  0现金出借，1部分债转，2债权承接，3优惠券出借，4 融通宝产品加息")
     private String typeStr;
 
     public String getBorrowNid() {

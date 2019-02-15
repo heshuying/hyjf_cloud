@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = "com.hyjf")
+@ComponentScan(basePackages = {"com.hyjf.am.trade","com.hyjf.common","com.hyjf.pay.lib"})
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class AmTradeApplication {
 

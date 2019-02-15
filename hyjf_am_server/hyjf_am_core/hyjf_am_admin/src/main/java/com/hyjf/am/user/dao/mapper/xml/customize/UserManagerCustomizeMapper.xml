@@ -259,7 +259,7 @@
         hydu.user_id,
         hydu.username AS user_name,
         -- hydui.nickname AS user_nick_name,
-        -- hydu.iconUrl AS icon_url,
+        hydu.icon_url AS icon_url,
 --         from_unixtime(
 --         hydui.vip_exp_date,
 --         '%Y-%m-%d %H:%i:%s'
@@ -281,11 +281,8 @@
         hydac.create_time,
         '%Y-%m-%d %H:%i:%s'
         ) AS open_account_time,
---         hydu.login_ip AS last_login_ip,
---         from_unixtime(
---         hydu.login_time,
---         '%Y-%m-%d %H:%i:%s'
---        ) AS last_login_time,
+        hull.last_ip AS last_login_ip,
+        hull.last_time AS last_login_time,
         hyduc.rl_name AS em_name,
         hyduc.relation AS em_relation,
         hyduc.rl_phone AS em_phone,
@@ -315,6 +312,7 @@
         LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
         LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
         LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
+        LEFT JOIN ht_user_login_log hull ON  hydu.user_id = hull.user_id
         WHERE
         hydu.user_id =#{userId,jdbcType=INTEGER}
     </select>

@@ -63,7 +63,7 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	 */
 	private String accedeAccount;
 	/**
-	 * 已投资金额
+	 * 已出借金额
 	 */
 	private String alreadyInvest;
 	/**
@@ -107,11 +107,11 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	 */
 	private String expectApr;
 	/**
-	 * 投资状态
+	 * 出借状态
 	 */
 	private String debtPlanStatus;
 	/**
-	 * 投资类型
+	 * 出借类型
 	 */
 	private String tenderType;
 	/**
@@ -157,7 +157,7 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	private String inviteUserBranchname1;
 	private String inviteUserDepartmentname1;
 	/**
-	 * 投资人当前信息
+	 * 出借人当前信息
 	 */
 	private String inviteUserRegionname2;
 	private String inviteUserBranchname2;
@@ -183,7 +183,7 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	private String sumAccedeAccount;
 	
 	/**
-	 * 已投资金额
+	 * 已出借金额
 	 */
 	private String sumAlreadyInvest;
 	
@@ -290,7 +290,7 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	private String actualApr;
 	
 	/**
-	 * 投资笔数
+	 * 出借笔数
 	 */
 	private String investCounts;
 	
@@ -305,13 +305,29 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	private BigDecimal jAccedeAccount;
 	
 	/**
-	 * 计算用已投资金额
+	 * 计算用已出借金额
 	 */
 	private BigDecimal jalreadyInvest;
 
 	private Integer acctualPaymentTime;
 
 	private Date endDate;
+	/**
+	 * 项目编号
+	 */
+	private String borrowNid;
+	/**
+	 * 状态
+	 */
+	private String status;
+	/**
+	 * 是否标的的最后一笔投资
+	 */
+	private String isLast;
+	/**
+	 * 更新时间
+	 */
+	private String updateTime;
 	
 	public String getAttribute() {
 		return attribute;
@@ -827,5 +843,37 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getBorrowNid() {
+		return borrowNid;
+	}
+
+	public void setBorrowNid(String borrowNid) {
+		this.borrowNid = borrowNid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getIsLast() {
+		return isLast;
+	}
+
+	public void setIsLast(String isLast) {
+		this.isLast = isLast;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 }

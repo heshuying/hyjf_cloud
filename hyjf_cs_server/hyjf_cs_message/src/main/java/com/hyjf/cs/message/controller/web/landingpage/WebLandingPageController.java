@@ -60,12 +60,12 @@ public class WebLandingPageController extends BaseController {
                 InterceptorDefine.HYJF_WEB_DOMAIN_NAMES_LIST.get(0));*/
         CalculateInvestInterest calculateInvestInterest = this.landingPageService.getTenderSum();
         if(calculateInvestInterest != null){
-            //投资总额(亿元)
+            //出借总额(亿元)
             jsonObject.put("tenderSum", calculateInvestInterest.getTenderSum()==null?new BigDecimal(0):calculateInvestInterest.getTenderSum());
             //收益总额(亿元)
             jsonObject.put("interestSum", calculateInvestInterest.getInterestSum()==null?new BigDecimal(0):calculateInvestInterest.getInterestSum());
         }else{
-            //投资总额(亿元)
+            //出借总额(亿元)
             jsonObject.put("tenderSum", "0.00");
             //收益总额(亿元)
             jsonObject.put("interestSum", "0.00");

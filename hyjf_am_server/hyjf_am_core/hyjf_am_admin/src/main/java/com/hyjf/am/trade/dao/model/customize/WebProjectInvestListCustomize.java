@@ -15,11 +15,11 @@ public class WebProjectInvestListCustomize {
     private String vipLevel;
 	//用户名
 	public String userName;
-	//投资金额
+	//出借金额
 	public String account;
-	//投资时间
+	//出借时间
 	public String investTime;
-	//投资来源
+	//出借来源
 	public String client;
 	//是否有红包
 	public String redbag;

@@ -6,9 +6,11 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowRecoverService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -111,6 +113,7 @@ public class BorrowRecoverServiceImpl extends BaseServiceImpl implements BorrowR
         }
         return list.get(0);
     }
+    
     /**
      * 根据用户id和borrowNid查询还款总表
      * @param userId,borrowNid
@@ -130,5 +133,33 @@ public class BorrowRecoverServiceImpl extends BaseServiceImpl implements BorrowR
             return null;
         }
     }
+
+    /**
+     * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+     *
+     * @param tenderNid
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRecover getRecoverDateByTenderNid(String tenderNid, String borrowNid,String accedeOrderId) {
+        BorrowRecoverExample example = new BorrowRecoverExample();
+        BorrowRecoverExample.Criteria cra = example.createCriteria();
+        cra.andBorrowNidEqualTo(borrowNid);
+        cra.andNidEqualTo(tenderNid);
+        if(StringUtils.isNotBlank(accedeOrderId)){
+            cra.andAccedeOrderIdEqualTo(accedeOrderId);
+        }
+        List<BorrowRecover> borrowRecoverList = borrowRecoverMapper.selectByExample(example);
+        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
+            return borrowRecoverList.get(0);
+        }
+        return null;
+    }
+    @Override
+    public BigDecimal selectServiceCostSum(String borrowNid) {
+        return bifaBorrowRecoverCustomizeMapper.selectServiceCostSum(borrowNid);
+    }
+
 
 }

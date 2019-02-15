@@ -39,32 +39,6 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
     @Autowired
     private CommonProducer commonProducer;
 
-    @Override
-    public ChinapnrExclusiveLogWithBLOBs selectChinapnrExclusiveLog(long id) {
-        return chinapnrExclusiveLogMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBs record) {
-        ChinapnrExclusiveLogExample example = new ChinapnrExclusiveLogExample();
-        example.createCriteria().andIdEqualTo(record.getId()).andUpdatetimeEqualTo(record.getUpdatetime()).andUpdateuserNotEqualTo("callback2");
-        record.setUpdatetime(String.valueOf(GetDate.getMyTimeInMillis()));
-        record.setUpdateuser("callback2");
-        return chinapnrExclusiveLogMapper.updateByExampleSelective(record, example);
-    }
-
-    @Override
-    public List<ChinapnrLog> getChinapnrLog(String ordId) {
-        List<String> respCode = new ArrayList<String>();
-        respCode.add(ChinaPnrConstant.RESPCODE_SUCCESS);
-        respCode.add(ChinaPnrConstant.RESPCODE_CHECK);
-        ChinapnrLogExample example = new ChinapnrLogExample();
-        example.createCriteria().andOrdidEqualTo(ordId).andMsgTypeEqualTo("Cash").andRespCodeIn(respCode);
-        example.setOrderByClause(" resp_code ");
-        List<ChinapnrLog> list = chinapnrLogMapper.selectByExampleWithBLOBs(example);
-        return list;
-    }
-
     /**
      * 更新提现表
      *
@@ -79,19 +53,6 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
         accountWithdrawExample.createCriteria().andNidEqualTo(ordId);
         int ret = this.accountWithdrawMapper.updateByExampleSelective(record, accountWithdrawExample);
         return ret;
-    }
-
-    /**
-     * 更新检证状态
-     *
-     * @return
-     */
-    @Override
-    public int updateChinapnrExclusiveLogStatus(long uuid, String status) {
-        ChinapnrExclusiveLogWithBLOBs record = new ChinapnrExclusiveLogWithBLOBs();
-        record.setId(uuid);
-        record.setStatus(status);
-        return chinapnrExclusiveLogMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

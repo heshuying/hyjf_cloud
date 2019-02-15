@@ -31,7 +31,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/sms_log")
+@RequestMapping("/cs-message/smsLog")
 public class SmsLogController extends BaseController {
 
 	@Autowired
@@ -76,7 +76,7 @@ public class SmsLogController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/query_time")
+	@RequestMapping("/queryTime")
 	public SmsOntimeResponse queryTime(@RequestBody SmsLogRequest request) {
 		SmsOntimeResponse response = new SmsOntimeResponse();
 		List<SmsOntime> list = smsLogService.queryTime(request);
@@ -115,7 +115,7 @@ public class SmsLogController extends BaseController {
 					if (vo.getReTimeEnd() != null && !vo.getReTimeEnd().equals("")) {
 						re_time_end = vo.getReTimeEnd();
 					}
-					vo.setMobile("筛选会员:" + member + ",累计投资金额：" + money + ",用户投资日期段：" + add_time_begin + "-"
+					vo.setMobile("筛选会员:" + member + ",累计出借金额：" + money + ",用户出借日期段：" + add_time_begin + "-"
 							+ add_time_end + ",用户注册日期段：" + re_time_begin + "-" + re_time_end);
 				}
 				vo.setPostString(
@@ -134,7 +134,7 @@ public class SmsLogController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/query_log_count")
+	@RequestMapping("/queryLogCount")
 	public SmsLogResponse queryLogCount(@RequestBody SmsLogRequest request) {
 		SmsLogResponse response = new SmsLogResponse();
 		Integer logCount = smsLogService.queryLogCount(request);

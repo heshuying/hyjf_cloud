@@ -23,4 +23,6 @@ public interface InviteService extends BaseUserService {
      * 我的邀请记录总数
      */
     Integer selectMyInviteCount(String userId);
+
+    Map<String,String> selectInvitePageData(String userId);
 }

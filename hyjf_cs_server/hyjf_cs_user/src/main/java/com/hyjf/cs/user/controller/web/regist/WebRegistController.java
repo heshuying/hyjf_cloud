@@ -85,7 +85,6 @@ public class WebRegistController extends BaseUserController {
 
 
     /**
-     * @param request
      * @Author: zhangqingqing
      * @Desc :注册
      * @Param: * @param registerVO
@@ -94,9 +93,8 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public WebResult register(@RequestBody RegisterRequest registerRequest,HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        logger.info("ip地址："+registerRequest.getIp());
         WebResult result = new WebResult();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);
@@ -106,7 +104,7 @@ public class WebRegistController extends BaseUserController {
         registService.checkParam(registerRequest);
         WebViewUserVO webViewUserVO = registService.register(registerRequest.getMobile(),
                 registerRequest.getVerificationCode(), registerRequest.getPassword(),
-                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request));
+                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request), registerRequest.getUserType());
 
         if (webViewUserVO != null) {
             // add by liuyang 神策数据统计追加 20181029 start

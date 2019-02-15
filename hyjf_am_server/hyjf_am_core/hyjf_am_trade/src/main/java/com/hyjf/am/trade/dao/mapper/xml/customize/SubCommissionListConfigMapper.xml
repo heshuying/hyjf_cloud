@@ -84,7 +84,7 @@
         id, user_id, username, truename,
         <!-- CASE role_name
        WHEN '1' THEN
-           '投资人'
+           '出借人'
        WHEN '2' THEN
            '借款人'
        WHEN ' 3 ' THEN

@@ -82,16 +82,6 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 
-	@Override
-	public ContentArticleVO getNoticeInfo(Integer id) {
-		ContentArticleResponse response = restTemplate
-				.getForObject("http://AM-CONFIG/am-config/article/getarticlebyid/" + id, ContentArticleResponse.class);
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
 	/**
 	 * 根据ID获取公司历程详情
 	 * @param id

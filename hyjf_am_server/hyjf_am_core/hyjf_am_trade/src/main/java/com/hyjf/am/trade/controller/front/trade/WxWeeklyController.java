@@ -32,7 +32,7 @@ public class WxWeeklyController {
 
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param begin
      * @param end
      * @param userId
@@ -49,7 +49,7 @@ public class WxWeeklyController {
 
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param userid
      * @param begin
      * @param end
@@ -162,7 +162,7 @@ public class WxWeeklyController {
     }
 
     /**
-     * 查询投资百分比
+     * 查询出借百分比
      * @param percentage
      * @param begin
      * @param end

@@ -115,6 +115,8 @@
 		CASE
 		WHEN cu.coupon_source = 1 THEN
 			cu.content
+		WHEN cu.coupon_source = 2 THEN
+			IFNULL(al.title, IFNULL(cu.content, ''))
 		ELSE
 			IFNULL(cu.content, '')
 		END AS coupon_content,
@@ -143,7 +145,7 @@
 		 cc.project_type AS project_type,
 		 CASE
 		WHEN cc.tender_quota_type = 0 THEN
-			'投资金额不限'
+			'出借金额不限'
 		WHEN cc.tender_quota_type = 1 THEN
 			CONCAT(
 				cc.tender_quota_min,
@@ -163,7 +165,7 @@
 				'元（含）内可用'
 			)
 		ELSE
-			'投资金额不限'
+			'出借金额不限'
 		END tender_quota,
 		 CASE
 		WHEN cc.project_expiration_type = 0 THEN
@@ -201,6 +203,7 @@
 			ht_coupon_user cu
 		LEFT JOIN hyjf_user.ht_user u ON cu.user_id = u.user_id
 		LEFT JOIN ht_coupon_config cc ON cu.coupon_code = cc.coupon_code AND cc.del_flag = 0
+		LEFT JOIN hyjf_market.ht_activity_list al ON cu.activity_id = al.id
 		<include refid="Where_Clause" />
 		ORDER BY cu.id DESC
 		<if test="limitStart !=null and limitStart >= 0" >
@@ -245,12 +248,27 @@
 
 	<select id="selectCouponUserListForApp" resultMap="selectCouponUserMapForApp" parameterType="java.util.Map">
 		SELECT
-			cu.id,cc.coupon_name,CASE cc.coupon_type WHEN 1 THEN '体验金' WHEN 2 THEN '加息券' WHEN 3 THEN '代金券' ELSE '' END AS coupon_type, cc.coupon_type AS coupon_type_origin,
-			CASE cc.coupon_type WHEN 2 THEN CONCAT(cc.coupon_quota,'%')  ELSE FORMAT(cc.coupon_quota, 0) END AS coupon_quota,cc.coupon_quota AS coupon_quota_origin,
-			CONCAT(FROM_UNIXTIME(cu.create_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS end_time, cc.project_type as project_type,cc.coupon_system as coupon_system,
-			cc.tender_quota as tender_quota_origin,cc.project_expiration_length as project_expiration_length,cc.tender_quota_min as tender_quota_min,cc.tender_quota_max as tender_quota_max,
-			cc.project_expiration_type as project_expiration_type,cc.project_expiration_length_min as project_expiration_length_min,
-			cc.project_expiration_length_max as project_expiration_length_max,cc.tender_quota_type as tender_quota_type,
+			cu.id,cc.coupon_name,
+		CASE cc.coupon_type
+			WHEN 1 THEN '体验金'
+			WHEN 2 THEN '加息券'
+			WHEN 3 THEN '代金券'
+			ELSE '' END AS coupon_type,
+			cc.coupon_type AS coupon_type_origin,
+			CASE cc.coupon_type
+			WHEN 2 THEN CONCAT(cc.coupon_quota,'%')
+			ELSE FORMAT(cc.coupon_quota, 0) END AS coupon_quota,
+			cc.coupon_quota AS coupon_quota_origin,
+			CONCAT(FROM_UNIXTIME(cu.create_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS end_time,
+			cc.project_type as project_type,cc.coupon_system as coupon_system,
+			cc.tender_quota as tender_quota_origin,
+			cc.project_expiration_length as project_expiration_length,
+			cc.tender_quota_min as tender_quota_min,
+			cc.tender_quota_max as tender_quota_max,
+			cc.project_expiration_type as project_expiration_type,
+			cc.project_expiration_length_min as project_expiration_length_min,
+			cc.project_expiration_length_max as project_expiration_length_max,
+			cc.tender_quota_type as tender_quota_type,
 			CONCAT(FROM_UNIXTIME(cu.create_time, '%Y.%m.%d'), '-', FROM_UNIXTIME(cu.end_time, '%Y.%m.%d'))AS time,
 			CASE
 			WHEN cc.tender_quota_type = 0 THEN

@@ -23,7 +23,7 @@ public interface TzjCustomizeMapper {
 			@Param("endTime") Date endTime);
 
 	/**
-	 * 查询投资人数、投资金额
+	 * 查询出借人数、出借金额
 	 * 
 	 * @param tzjUserIds
 	 * @param startTime

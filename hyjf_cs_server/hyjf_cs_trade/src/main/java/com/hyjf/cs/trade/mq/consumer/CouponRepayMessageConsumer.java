@@ -42,7 +42,7 @@ public class CouponRepayMessageConsumer implements RocketMQListener<MessageExt>,
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info("====CouponRepayHjhMessageConsumer start=====");
+        logger.info("====CouponRepayMessageConsumer start=====");
     }
 
     @Override

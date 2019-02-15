@@ -290,7 +290,7 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String verifyUserName;
 
-    private String verifyTime;
+    private Integer verifyTime;
 
     private Integer verifyTimeInteger;
 
@@ -488,7 +488,37 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String repayLastTimeStr;
 
+    private String investLevel;
+    //用户姓名
+    private String truename;
+    //身份证号
+    private String idCard;
+
+    public String getTruename() {
+        return truename;
+    }
+
+    public void setTruename(String truename) {
+        this.truename = truename;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
     private static final long serialVersionUID = 1L;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
 
     public Integer getId() {
         return id;
@@ -1586,12 +1616,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.verifyUserName = verifyUserName == null ? null : verifyUserName.trim();
     }
 
-    public String getVerifyTime() {
+    public Integer getVerifyTime() {
         return verifyTime;
     }
 
-    public void setVerifyTime(String verifyTime) {
-        this.verifyTime = verifyTime == null ? null : verifyTime.trim();
+    public void setVerifyTime(Integer verifyTime) {
+        this.verifyTime = verifyTime;
     }
 
     public String getVerifyRemark() {

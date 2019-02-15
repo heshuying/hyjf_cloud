@@ -2,13 +2,14 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
 
 public interface BatchHjhAccedeCustomizeMapper {
 	/**
-	 * 取得汇计划自动投资的计划订单列表
+	 * 取得汇计划自动出借的计划订单列表
 	 * @param paramMap
 	 * @return
 	 */
@@ -37,4 +38,9 @@ public interface BatchHjhAccedeCustomizeMapper {
 	 */
 	int updateMatchDates();
 	// add 汇计划三期 计算匹配期处理 liubin 20180515 end
+
+	// 计算匹配期处理 潜在问题修复 huanghui start
+//	int updateMatchDatesTwo(@Param("start") Integer start, @Param("end") Integer end);
+	int updateMatchDatesTwo(@Param("start") Integer start);
+	// 计算匹配期处理 潜在问题修复 huanghui end
 }

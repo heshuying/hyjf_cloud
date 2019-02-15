@@ -12,7 +12,6 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SmsCodeService;
-import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -25,7 +24,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,12 +55,9 @@ public class SmsCodeController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(STATUS, SUCCESS);
         jsonObject.put("statusDesc", SUCCESS_DESC);
-        // 在筛选条件下查询出用户
-        List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(requestBean);
-        jsonObject.put("user_number", 0);
-		if (!CollectionUtils.isEmpty(msgs)) {
-			jsonObject.put("user_number", msgs.size());
-		}
+        // 在筛选条件下查询出用户数量
+        int count = smsCodeService.countUser(requestBean);
+		jsonObject.put("user_number",count);
         jsonObject.put("smsCode", requestBean);
         BigDecimal remain_money = BigDecimal.ZERO;
         int remain_number = 0;
@@ -75,7 +70,7 @@ public class SmsCodeController extends BaseController {
             }else{
                 Client c = SmsUtil.getClient();
                 remain_number = (int) c.getBalance() * 10;
-                remain_money = BigDecimal.valueOf(remain_number).multiply(BigDecimal.valueOf(0.06));
+                remain_money = BigDecimal.valueOf(remain_number).multiply(BigDecimal.valueOf(0.04));
                 RedisUtils.set(RedisConstants.REMAIN_NUMBER, remain_number + "", 5 * 60);
                 RedisUtils.set(RedisConstants.REMAIN_MONEY, remain_money.toString(), 5 * 60);
             }
@@ -152,6 +147,7 @@ public class SmsCodeController extends BaseController {
         String send_message = form.getMessage();
         String channelType = form.getChannelType();
         String sendType = form.getSendType();
+        Integer isDisplay = (form.getIsDisplay() == null ? 0 : form.getIsDisplay());
         form.setIp(GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest()));
         if (sendType == null) {
             jsonObject.put("msg", "请选择发送类型");
@@ -195,7 +191,7 @@ public class SmsCodeController extends BaseController {
                     return jsonObject;
                 }
                 // 在筛选条件下查询出用户
-                List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(form);
+                List<String> msgs = smsCodeService.queryUser(form);
                 // 用户数
                 jsonObject.put("user_number", msgs.size());
                 // 用户未手写手机号码
@@ -204,7 +200,7 @@ public class SmsCodeController extends BaseController {
                     int i = msgs.size() / number;
                     for (int j = 0; j <= i; j++) {
                         int tosize = (j + 1) * number;
-                        List<SmsCodeCustomizeVO> smslist;
+                        List<String> smslist;
                         if (tosize > msgs.size()) {
                             smslist = msgs.subList(j * number, msgs.size());
                         } else {
@@ -212,18 +208,18 @@ public class SmsCodeController extends BaseController {
                         }
                         String phones = "";
                         for (int z = 0; z < smslist.size(); z++) {
-                            if (StringUtils.isNotEmpty(smslist.get(z).getUser_phones())
-                                    && Validator.isPhoneNumber(smslist.get(z).getUser_phones())) {
+                            if (StringUtils.isNotEmpty(smslist.get(z))
+                                    && Validator.isPhoneNumber(smslist.get(z))) {
                                 if (z < smslist.size() - 1) {
-                                    phones += smslist.get(z).getUser_phones() + ",";
+                                    phones += smslist.get(z) + ",";
                                 } else {
-                                    phones += smslist.get(z).getUser_phones();
+                                    phones += smslist.get(z);
                                 }
                             }
                         }
                         try {
                             SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
-                                    MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+                                    MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType, isDisplay);
                             commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                     smsMessage));
                         } catch (Exception e) {
@@ -245,7 +241,7 @@ public class SmsCodeController extends BaseController {
                             mbl = mbl.substring(0, mbl.length() - 1);
                         }
                         SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
-                                MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
+                                MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType, isDisplay);
                         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                 smsMessage));
                     }

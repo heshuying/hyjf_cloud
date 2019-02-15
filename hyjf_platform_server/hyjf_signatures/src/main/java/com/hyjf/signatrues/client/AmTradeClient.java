@@ -1,59 +1,12 @@
 package com.hyjf.signatrues.client;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.MyCreditListQueryResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
-import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
-import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
-import com.hyjf.am.resquest.api.ApiRepayListRequest;
-import com.hyjf.am.resquest.api.AutoTenderComboRequest;
-import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
-import com.hyjf.am.resquest.assetpush.InfoBean;
-import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
-import com.hyjf.am.resquest.user.BankAccountBeanRequest;
-import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.admin.AppPushManageVO;
-import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
-import com.hyjf.am.vo.app.AppNewAgreementVO;
-import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
-import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
-import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
-import com.hyjf.am.vo.bank.BankCallBeanVO;
-import com.hyjf.am.vo.market.AppAdsCustomizeVO;
-import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
-import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
-import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
-import com.hyjf.am.vo.trade.account.*;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
-import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
-import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
-import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
-import com.hyjf.am.vo.trade.repay.*;
-import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
-import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
-import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.signatrues.bean.*;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +48,7 @@ public interface AmTradeClient {
     public int updateTenderAgreement(TenderAgreementVO tenderAgreement);
 
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -109,14 +62,14 @@ public interface AmTradeClient {
     public BorrowStyleVO getBorrowStyle(String borrowStyle);
 
     /**
-     * 获取投资协议集合
+     * 获取出借协议集合
      * @param tenderNid
      * @return
      */
     List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 
     /**
-     * 会计划投资详情
+     * 会计划出借详情
      * @param params
      * @return
      */
@@ -133,7 +86,7 @@ public interface AmTradeClient {
     public List<HjhDebtCreditTenderVO> selectHjhCreditTenderListByAssignOrderId(String assignOrderId);
 
     /**
-     * 查询汇计划债转投资表
+     * 查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -177,7 +130,7 @@ public interface AmTradeClient {
     BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
 
     /**
-     * 通过主键获取投资协议
+     * 通过主键获取出借协议
      * @param tenderAgreementID
      * @return
      */
@@ -190,4 +143,13 @@ public interface AmTradeClient {
     List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1);
 
 
+    /**
+     * 根据条件获取还款计划分期信息
+     * add by yangchangwei
+     * @param borrowNid
+     * @param nid
+     * @param period
+     * @return
+     */
+    BorrowRecoverPlanVO getBorrowRecoverPlanByNidandPeriod(String borrowNid, String nid, Integer period);
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.hgreportdata.bifa.BifaUserCustomizeMapper">
+
+	<!-- 0普通用户 1企业用户' -->
+	<select id="getBankOpenedAccountUsers" resultType="com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean">
+		SELECT
+			hu.user_id userId,
+			hui.truename trueName,
+			hui.idcard idCard,
+			DATE_FORMAT( hu.reg_time, '%Y-%m-%d' ) regDate
+		FROM
+			ht_bank_open_account hbo
+			JOIN ht_user hu ON hbo.user_id = hu.user_id
+			JOIN ht_user_info hui ON hbo.user_id = hui.user_id
+		WHERE
+			hbo.create_time BETWEEN from_unixtime( #{startDate} ) AND from_unixtime( #{endDate} )
+			AND hu.bank_open_account = 1
+			AND hu.user_type = 0
+		UNION
+		SELECT
+			hu.user_id userId,
+			"" trueName,
+			hbo.busi_code idCard,
+			DATE_FORMAT( hu.reg_time, '%Y-%m-%d' ) regDate
+		FROM
+			ht_corp_open_account_record hbo
+			JOIN ht_user hu ON hbo.user_id = hu.user_id
+		WHERE
+			hbo.create_time BETWEEN from_unixtime( #{startDate} ) AND from_unixtime( #{endDate} )
+			AND hu.bank_open_account = 1
+			AND hu.user_type = 1
+	</select>
+
+	<select id="selectUserCorpInfoByUserId" resultType="com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean">
+		select
+		hu.user_id userId,
+		CASE WHEN hu.user_type = 0 THEN hui.truename
+		 WHEN hu.user_type = 1 THEN ''
+		 ELSE '' END trueName,
+		 CASE WHEN hu.user_type = 0 THEN hui.idcard
+		 WHEN hu.user_type = 1 THEN hcoar.busi_code
+		 ELSE '' END idCard,
+		 DATE_FORMAT(hu.reg_time,'%Y-%m-%d') regDate
+		  from ht_user hu
+		  left join ht_user_info hui on hu.user_id = hui.user_id
+		  left join ht_corp_open_account_record hcoar on hu.user_id = hcoar.user_id
+		  where hu.user_id = #{userId,jdbcType=INTEGER}
+	</select>
+
+</mapper>

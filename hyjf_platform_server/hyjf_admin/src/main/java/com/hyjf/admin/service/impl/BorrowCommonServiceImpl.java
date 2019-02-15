@@ -5,22 +5,29 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author GOGTZ-Z
  * @version V1.0  
@@ -162,4 +169,34 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 		return result;
 	}
 
+	/**
+	 * 获取标的投资风险测评等级
+	 *
+	 * @param borrowLevel
+	 * @return
+	 */
+	@Override
+	public String getBorrowLevelAction(@Valid String borrowLevel) {
+		String investLevel = this.amTradeClient.getBorrowLevelAction(borrowLevel);
+		return investLevel;
+	}
+
+	/**
+	 * map转ParamNameVO
+	 *
+	 * @param map
+	 * @return
+	 */
+	@Override
+	public List<ParamNameVO> mapToParamNameVO(Map<String, String> map) {
+		List<ParamNameVO> paramNameVOList = new ArrayList<>();
+		//遍历map中的键
+		for (String key : map.keySet()) {
+			ParamNameVO paramNameVO = new ParamNameVO();
+			paramNameVO.setNameCd(key);
+			paramNameVO.setName(StringUtils.isNotBlank(map.get(key)) ? map.get(key) : "" );
+			paramNameVOList.add(paramNameVO);
+		}
+		return paramNameVOList;
+	}
 }

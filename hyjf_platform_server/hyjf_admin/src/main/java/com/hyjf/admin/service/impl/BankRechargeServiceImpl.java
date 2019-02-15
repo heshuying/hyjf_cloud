@@ -28,17 +28,6 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      */
     @Override
     public AdminBankRechargeConfigResponse bankRechargeInit(AdminBankRechargeConfigRequest adminRequest){
-//        AdminBankRechargeConfigResponse response =bankRechargeConfigClient.bankRechargeInit(adminRequest);
-//        if(response != null && !CollectionUtils.isEmpty(response.getResultList()) ){
-//            for(int i=0;i<response.getResultList().size();i++){
-//                List<BankConfigVO> bankConfigVOS = getBankRecordList();
-//                if(!CollectionUtils.isEmpty(bankConfigVOS)&&response.getResult() != null){
-//                    //设置银行列表（快捷卡）
-//                    response.getResultList().get(i).setBankConfigs(bankConfigVOS);
-//                }
-//            }
-//        }
-
         return amConfigClient.bankRechargeInit(adminRequest);
     }
     /**

@@ -101,9 +101,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.STATUS_ZC000003);
 
-        // TODO: 2018/6/23 原代码平台推荐人未作处理
+        // 2018/6/23 原代码平台推荐人未作处理
         if (StringUtils.isNotEmpty(reffer)) {
-            // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
+             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
     }
 
@@ -213,14 +213,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             ret.put(CustomConstants.APP_STATUS_DESC, "必须包含数字、字母、符号至少两种");
             return ret;
         }
-        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
-        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
-                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
-        if (cnt == 0) {
-            ret.put(CustomConstants.APP_STATUS, 1);
-            ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
-            return ret;
-        }
         String reffer = registerRequest.getReffer();
         if (StringUtils.isNotEmpty(reffer)) {
             //无效推荐人
@@ -229,6 +221,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 ret.put(CustomConstants.APP_STATUS_DESC, "推荐人无效");
                 return ret;
             }
+        }
+        String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
+        int cnt = amUserClient.checkMobileCode(mobile, smsCode, verificationType, registerRequest.getPlatform(),
+                CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED, true);
+        if (cnt == 0) {
+            ret.put(CustomConstants.APP_STATUS, 1);
+            ret.put(CustomConstants.APP_STATUS_DESC, "验证码错误");
+            return ret;
         }
         return ret;
     }
@@ -245,6 +245,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param utmId
      * @param platform
      * @param ip
+     * @param userType 0:普通用户;1:企业用户;
      * @return
      * @throws ReturnMessageException
      */
@@ -262,9 +263,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
           @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50")})
-    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
+    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType)
             throws ReturnMessageException {
-        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform, userType);
         registerUserRequest.setLoginIp(ip);
 
         //add by libin 用户注册时通过ip获得用户所在的省，市 start
@@ -315,7 +316,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * 默认fallback
      * @return
      */
-    private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip) {
+    private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType) {
         logger.info("==================已进入 用户注册(三端) fallBackRegister 方法================");
         return null;
     }
@@ -749,8 +750,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
-            String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
-            params.put("sign", signValue);
             commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                     UUID.randomUUID().toString(), params));
         } catch (Exception e) {
@@ -771,10 +770,18 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     /**
      * 组装 userVO
      *
-     * @param userVO
+     * @param
      * @return
      */
-    private WebViewUserVO assembleWebViewUserVO(UserVO userVO) {
+    private WebViewUserVO assembleWebViewUserVO(UserVO paramUser) {
+
+        // 此时userVO只包含传递参数数据，数据库初始化的数据(非空字段有默认值)并不包含，所以调用一次查询
+        UserVO userVO = amUserClient.findUserById(paramUser.getUserId());
+        if(userVO == null){
+            userVO = new UserVO();
+            BeanUtils.copyProperties(paramUser, userVO);
+        }
+
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(userVO, webViewUserVO);
         UserInfoVO usersInfo = amUserClient.findUserInfoById(userVO.getUserId());

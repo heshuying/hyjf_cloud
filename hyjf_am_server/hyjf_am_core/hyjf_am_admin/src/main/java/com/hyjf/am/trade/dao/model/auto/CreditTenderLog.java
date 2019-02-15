@@ -7,80 +7,270 @@ import java.util.Date;
 public class CreditTenderLog implements Serializable {
     private Integer assignId;
 
+    /**
+     * 用户名称
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 承接人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 出让人id
+     *
+     * @mbggenerated
+     */
     private Integer creditUserId;
 
+    /**
+     * 出让人用户名
+     *
+     * @mbggenerated
+     */
     private String creditUserName;
 
+    /**
+     * 原标标号
+     *
+     * @mbggenerated
+     */
     private String bidNid;
 
+    /**
+     * 借款人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserId;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 债转标号
+     *
+     * @mbggenerated
+     */
     private String creditNid;
 
+    /**
+     * 债转投标单号
+     *
+     * @mbggenerated
+     */
     private String creditTenderNid;
 
+    /**
+     * 认购单号
+     *
+     * @mbggenerated
+     */
     private String assignNid;
 
+    /**
+     * 投资本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignCapital;
 
+    /**
+     * 回收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignAccount;
 
+    /**
+     * 债转利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignInterest;
 
+    /**
+     * 垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignInterestAdvance;
 
+    /**
+     * 购买价格
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignPrice;
 
+    /**
+     * 支付金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignPay;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayAccount;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayCapital;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayInterest;
 
+    /**
+     * 最后还款日
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayEndTime;
 
+    /**
+     * 上次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayLastTime;
 
+    /**
+     * 下次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayNextTime;
 
+    /**
+     * 最终实际还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayYesTime;
 
+    /**
+     * 还款期数
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayPeriod;
 
+    /**
+     * 认购日期
+     *
+     * @mbggenerated
+     */
     private Integer assignCreateDate;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditFee;
 
+    /**
+     * 客户端
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 购买债权订单号
+     *
+     * @mbggenerated
+     */
     private String logOrderId;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer seqNo;
 
+    /**
+     * 交易日期+交易时间+交易流水号
+     *
+     * @mbggenerated
+     */
     private String bankSeqNo;
 
+    /**
+     * 银行电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 银行返回码
+     *
+     * @mbggenerated
+     */
     private String retCode;
 
+    /**
+     * 银行返回码描述
+     *
+     * @mbggenerated
+     */
     private String retMsg;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

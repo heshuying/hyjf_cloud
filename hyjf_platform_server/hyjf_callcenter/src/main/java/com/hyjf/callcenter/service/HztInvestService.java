@@ -6,7 +6,7 @@ import com.hyjf.am.vo.user.UserVO;
 import java.util.List;
 
 /**
- * 呼叫中心:查询投资明细(直投产品)HztInvestService
+ * 呼叫中心:查询出借明细(直投产品)HztInvestService
  * @author libin
  * @version v1.0
  * @since v1.0 2018年6月16日

@@ -63,7 +63,7 @@ public interface AdminTransferExceptionLogService extends BaseAdminService{
 	public CouponRecoverVO getCouponRecover(Integer recoverId);
 
 	/**
-	 * 取得优惠券投资信息
+	 * 取得优惠券出借信息
 	 * @param tenderId
 	 * @return
 	 */

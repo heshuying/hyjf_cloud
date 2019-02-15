@@ -137,7 +137,7 @@ public class BorrowController extends BaseController {
 	@GetMapping("/getBorrow/{borrowNid}")
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
-		Borrow borrow = borrowService.getBorrow(borrowNid);
+		Borrow borrow = borrowService.getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
 		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)) {
@@ -154,6 +154,27 @@ public class BorrowController extends BaseController {
 		}
 		if (Validator.isNotNull(borrowInfo)){
 			borrowVO.setInstCode(borrowInfo.getInstCode());
+			borrowVO.setCompanyOrPersonal(borrowInfo.getCompanyOrPersonal() + "");
+			borrowVO.setBorrowLevel(borrowInfo.getBorrowLevel());
+			borrowVO.setProjectName(borrowInfo.getProjectName());
+			borrowVO.setAssetAttributes(borrowInfo.getAssetAttributes());
+			borrowVO.setFinancePurpose(borrowInfo.getFinancePurpose());
+		}
+		response.setResult(borrowVO);
+		return response;
+	}
+
+	@GetMapping("/doGetBorrow/{borrowNid}")
+	public BorrowResponse doGetBorrow(@PathVariable String borrowNid) {
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.doGetBorrowByNid(borrowNid);
+		BorrowInfo borrowInfo = borrowService.doGetBorrowInfoByNid(borrowNid);
+		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
+		if (Validator.isNotNull(borrowInfo)){
+			borrowVO=CommonUtils.convertBean(borrowInfo,BorrowAndInfoVO.class);
+		}
+		if (Validator.isNotNull(borrow)){
+			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
 		}
 		response.setResult(borrowVO);
 		return response;
@@ -210,7 +231,7 @@ public class BorrowController extends BaseController {
 	@GetMapping("/getBorrowByNid/{borrowId}")
 	public BorrowResponse getBorrowByNid(@PathVariable String borrowId){
 		BorrowResponse response = new BorrowResponse();
-		Borrow borrow = borrowService.getBorrow(borrowId);
+		Borrow borrow = borrowService.getBorrowByNid(borrowId);
 		BorrowInfo borrowInfo=borrowService.getBorrowInfoByNid(borrowId);
 		BorrowAndInfoVO borrowAndInfoVo = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
@@ -231,7 +252,7 @@ public class BorrowController extends BaseController {
 	@GetMapping("/getRightBorrowByNid/{borrowId}")
 	public RightBorrowResponse getRightBorrowByNid(@PathVariable String borrowId){
 		RightBorrowResponse response = new RightBorrowResponse();
-		Borrow borrow = borrowService.getBorrow(borrowId);
+		Borrow borrow = borrowService.getBorrowByNid(borrowId);
 		if (Validator.isNotNull(borrow)){
 			response.setResult(CommonUtils.convertBean(borrow,RightBorrowVO.class));
 		}
@@ -290,7 +311,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 投资之前插入tmp表
+	 * 出借之前插入tmp表
 	 * @param tenderRequest
 	 * @return
 	 */
@@ -309,29 +330,29 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 散标投资操作数据库表
+	 * 散标出借操作数据库表
 	 * @param tenderBg
 	 * @return
 	 */
 	@PostMapping("/borrowTender")
 	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
-		logger.info("原子层  散标投资 开始操作数据库表");
+		logger.info("原子层  散标出借 开始操作数据库表");
 		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
 			result.setResultInt(1);
-			logger.info("原子层  散标投资 操作数据库表成功");
+			logger.info("原子层  散标出借 操作数据库表成功");
 			return result;
 		}catch (Exception e){
-			logger.error("散标投资   原子层操作失败  ",e);
+			logger.error("散标出借   原子层操作失败  ",e);
 			result.setResultInt(0);
-			logger.info("原子层  散标投资 操作数据库表失败");
+			logger.info("原子层  散标出借 操作数据库表失败");
 			return result;
 		}
 	}
 
 	/**
-	 * 散标投资异步返回结果
+	 * 散标出借异步返回结果
 	 * @param tenderRetMsg
 	 * @return
 	 */
@@ -346,7 +367,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 获取散标投资异步结果
+	 * 获取散标出借异步结果
 	 * @param borrowNid
 	 * @return
 	 */
@@ -360,7 +381,7 @@ public class BorrowController extends BaseController {
 
 
     /**
-     * 根据用户id获取用户总投资笔数
+     * 根据用户id获取用户总出借笔数
      * @author zhangyk
      * @date 2018/7/5 18:00
      */

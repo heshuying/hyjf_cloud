@@ -1,19 +1,15 @@
 package com.hyjf.admin.client;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -22,6 +18,9 @@ import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -139,7 +138,7 @@ public interface AmUserClient {
     EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId);
 
     /**
-     * 查询自动投资债转异常列表
+     * 查询自动出借债转异常列表
      *
      * @param
      * @return
@@ -150,7 +149,7 @@ public interface AmUserClient {
     /**
      * 同步用户授权状态
      *
-     * @param type 1自动投资授权  2债转授权
+     * @param type 1自动出借授权  2债转授权
      * @return
      * @auth sunpeikai
      */
@@ -470,7 +469,7 @@ public interface AmUserClient {
     /**
      * 导出根据参数查询用户画像信息
      *
-     * @param mapParam
+     * @param userPortraitRequest
      * @return
      */
     UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest);
@@ -1040,7 +1039,7 @@ public interface AmUserClient {
      * @param requestBean
      * @return
      */
-    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
+    List<String> queryUser(SmsCodeRequestBean requestBean);
 
 	/**
      * 获取用户账户信息byaccountId
@@ -1254,7 +1253,7 @@ public interface AmUserClient {
      */
     HjhUserAuthResponse selectUserPayAuthByUserId(int userId);
     /**
-     * 查看该用户在投资表和标的放款记录中是否存在
+     * 查看该用户在出借表和标的放款记录中是否存在
      * @param userId
      * @auther: nxl
      * @return
@@ -1351,4 +1350,51 @@ public interface AmUserClient {
      * @return
      */
     int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest);
+
+    /**
+     * 在筛选条件下查询出用户数量
+     * @param requestBean
+     * @return
+     */
+    int countUser(SmsCodeRequestBean requestBean);
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
+
+    /***
+     * 开户掉单，保存开户User数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateUser(OpenAccountEnquiryDefineResultBean requestBean);
+
+    /***
+     * 开户掉单，保存开户Account数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateAccount(OpenAccountEnquiryDefineResultBean requestBean);
+
+    /**
+     * 查询用户名不在表中数量
+     * @param request
+     * @return
+     */
+    int countUserNames(UserPortraitCustomizeRequest request);
+
+    /**
+     * 批量插入用户画像表
+     * @param request
+     * @return
+     */
+    int updateBatch(UserPortraitCustomizeRequest request);
 }

@@ -15,11 +15,11 @@ import java.util.List;
 public class OperationReportJobBean implements Serializable {
 
     private String status;
-    //投资人按照地域分布
+    //出借人按照地域分布
     private List<OperationReportJobVO> cityGroup;
-    // 投资人按照性别分布
+    // 出借人按照性别分布
     private List<OperationReportJobVO> sexGroup;
-    // 投资人按照年龄分布
+    // 出借人按照年龄分布
     private  List<OperationReportJobVO> ageRangeUserIds;
     //去年三个月成交金额
     private  List<OperationReportJobVO> listLastMonthDealMoney;
@@ -40,10 +40,10 @@ public class OperationReportJobBean implements Serializable {
 
     private int intervalMonth;
 
-    //获取截至日期的投资金额
+    //获取截至日期的出借金额
     private double investLastDate;
 
-    // 投资人总数
+    // 出借人总数
     private int tenderCount;
 
     // 待偿还金额
@@ -67,16 +67,16 @@ public class OperationReportJobBean implements Serializable {
     private List<OperationReportJobVO> listAgeDistribute;
     //金额分布
     private List<OperationReportJobVO> listMoneyDistribute;
-    //十大投资人投资金额
+    //十大出借人出借金额
     private List<OperationReportJobVO> listTenMostMoney;
     //地区
     private String area;
     //大赢家，收益最高
     private List<OperationReportJobVO> listOneInterestsMost;
-    //超活跃，投资笔数最多
+    //超活跃，出借笔数最多
     private List<OperationReportJobVO> listtOneInvestMost;
     private Calendar calendar;
-    //人均投资金额
+    //人均出借金额
     private int perInvest;
 
     public List<OperationReportJobVO> getCityGroup() {

@@ -20,7 +20,7 @@ public class HjhAutoEndCreditJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("HjhAutoEndCreditJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoEndCredit/hjhAutoEndCredit", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/hjhAutoEndCredit/hjhAutoEndCredit", String.class);
         logger.info("HjhAutoEndCreditJob execute end...");
     }
 }

@@ -1,23 +1,22 @@
 package com.hyjf.cs.message.controller.client;
 
-import com.hyjf.am.response.admin.MessagePushHistoryResponse;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
-import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
-import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.config.MessagePushTagVO;
-import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
-import com.hyjf.cs.message.bean.mc.MessagePushTag;
-import com.hyjf.cs.message.service.MessagePushHistoryService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
+import com.hyjf.am.response.admin.MessagePushHistoryResponse;
+import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
+import com.hyjf.cs.message.service.MessagePushHistoryService;
+
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author lisheng
@@ -25,7 +24,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/history_message")
+@RequestMapping("/cs-message/historyMessage")
 public class MessagePushHistoryController {
     @Autowired
     MessagePushHistoryService messagePushHistoryService;
@@ -37,7 +36,7 @@ public class MessagePushHistoryController {
      * @param request
      * @return
      */
-    @RequestMapping("/get_message_list")
+    @RequestMapping("/getMessageList")
     public MessagePushHistoryResponse getMessageList(@RequestBody MessagePushHistoryRequest request) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         Integer count = messagePushHistoryService.getRecordCount(request);
@@ -53,27 +52,4 @@ public class MessagePushHistoryController {
         }
         return response;
     }
-
-
-
-
-
-    /**
-     * 获取标签列表
-     *
-     * @return
-     */
-    @RequestMapping("/get_push_tag")
-    public MessagePushTagResponse getPushTagList() {
-        MessagePushTagResponse response = new MessagePushTagResponse();
-        List<MessagePushTag> list = messagePushHistoryService.getTagList();
-        if (!CollectionUtils.isEmpty(list)) {
-            List<MessagePushTagVO> voList = CommonUtils.convertBeanList(list,
-                    MessagePushTagVO.class);
-            response.setResultList(voList);
-        }
-        return response;
-    }
-
-
 }

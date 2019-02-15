@@ -4,48 +4,158 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class DebtDeleteLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 项目标题
+     *
+     * @mbggenerated
+     */
     private String borrowName;
 
+    /**
+     * 借款人人名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 借贷总金额
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 已借到的金额
+     *
+     * @mbggenerated
+     */
     private String borrowAccountYes;
 
+    /**
+     * 剩余金额
+     *
+     * @mbggenerated
+     */
     private String borrowAccountWait;
 
+    /**
+     * 借贷的完成率
+     *
+     * @mbggenerated
+     */
     private String borrowAccountScale;
 
+    /**
+     * 还款方式
+     *
+     * @mbggenerated
+     */
     private String borrowStyle;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String borrowStyleName;
 
+    /**
+     * 0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标
+     *
+     * @mbggenerated
+     */
     private Integer projectType;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String projectTypeName;
 
+    /**
+     * 借款期限
+     *
+     * @mbggenerated
+     */
     private String borrowPeriod;
 
+    /**
+     * 借款利率
+     *
+     * @mbggenerated
+     */
     private String borrowApr;
 
+    /**
+     * 项目状态
+     *
+     * @mbggenerated
+     */
     private String status;
 
+    /**
+     * 满标时间
+     *
+     * @mbggenerated
+     */
     private String borrowFullTime;
 
+    /**
+     * 放款完成时间
+     *
+     * @mbggenerated
+     */
     private String recoverLastTime;
 
+    /**
+     * 保证金
+     *
+     * @mbggenerated
+     */
     private Long bailNum;
 
+    /**
+     * 操作人
+     *
+     * @mbggenerated
+     */
     private Integer operaterUid;
 
+    /**
+     * 操作人名称
+     *
+     * @mbggenerated
+     */
     private String operaterUser;
 
+    /**
+     * 操作时间
+     *
+     * @mbggenerated
+     */
     private Integer operaterTime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

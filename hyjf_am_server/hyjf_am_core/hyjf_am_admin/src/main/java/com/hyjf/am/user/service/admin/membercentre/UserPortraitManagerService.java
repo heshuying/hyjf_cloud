@@ -55,4 +55,18 @@ public interface UserPortraitManagerService extends BaseService {
      * @return
      */
     List<UserPortraitScoreCustomize> selectUserPortraitScoreList(Map<String, Object> userPortrait, UserPortraitScoreRequest request, int limitStart, int limitEnd);
+
+    /**
+     * 查询在用户名在表中不存在的数量
+     * @param userNames
+     * @return
+     */
+    int countUserNames(List<String> userNames);
+
+    /**
+     * 批量导入当前拥有人
+     * @param userPortraits
+     * @return
+     */
+    int importBatch(List<UserPortrait> userPortraits);
 }

@@ -14,6 +14,8 @@ import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
+import com.hyjf.cs.market.util.CdnUrlUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,7 +76,18 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     @Override
     public ContentArticleVO getNoticeInfo(Integer id) {
-        return amConfigClient.getNoticeInfo(id);
+        ContentArticleVO contentArticle = amConfigClient.getContentArticleById(id);
+        String cdnUrl = CdnUrlUtil.getCdnUrl();
+        String content = contentArticle.getContent();
+        if (StringUtils.isNotBlank(content)) {
+            int start = content.indexOf("http");
+            int end = content.indexOf(".com");
+            if (start >=0 && end >=0) {
+                String imgUrl = content.substring(start, end + 4);
+                contentArticle.setContent(content.replaceAll(imgUrl, cdnUrl));
+            }
+        }
+        return contentArticle;
     }
 
     /**
@@ -129,7 +142,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     /**
-     * 累计投资总额
+     * 累计出借总额
      * @return
      */
     @Override
@@ -145,7 +158,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
         return amDataCollectClient.selectInterestSum();
     }
     /**
-     * 累计投资笔数
+     * 累计出借笔数
      * @return
      */
     @Override

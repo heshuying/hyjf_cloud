@@ -58,14 +58,14 @@ public class TradeSubConfigServiceImpl implements TradeSubConfigService {
     public int insertSubConfigRecord(AdminSubConfigRequest form){
         SubCommissionListConfig record = new SubCommissionListConfig();
         form.setCreateUserId(form.getUserId());
-//       用户角色1,'投资人'     2, '借款人'    3,'垫付机构'
+//       用户角色1,'出借人'     2, '借款人'    3,'担保机构'
         if(StringUtils.isNotBlank(form.getRoleName())){
             if (form.getRoleName().equals("1")){
-                form.setRoleName("投资人");
+                form.setRoleName("出借人");
             }else if(form.getRoleName().equals("2")){
                 form.setRoleName("借款人");
             }else{
-                form.setRoleName("垫付机构");
+                form.setRoleName("担保机构");
             }
         }
         //       用户类型0,'个人用户'     1, '企业用户'
@@ -89,14 +89,14 @@ public class TradeSubConfigServiceImpl implements TradeSubConfigService {
     public int updateSubConfigRecord(AdminSubConfigRequest form){
         SubCommissionListConfig record = new SubCommissionListConfig();
         form.setUpdateUserId(form.getUserId());
-        //       用户角色1,'投资人'     2, '借款人'    3,'垫付机构'
+        //       用户角色1,'出借人'     2, '借款人'    3,'担保机构'
         if(StringUtils.isNotBlank(form.getRoleName())){
             if (form.getRoleName().equals("1")){
-                form.setRoleName("投资人");
+                form.setRoleName("出借人");
             }else if(form.getRoleName().equals("2")){
                 form.setRoleName("借款人");
             }else{
-                form.setRoleName("垫付机构");
+                form.setRoleName("担保机构");
             }
         }
         //       用户类型0,'个人用户'     1, '企业用户'

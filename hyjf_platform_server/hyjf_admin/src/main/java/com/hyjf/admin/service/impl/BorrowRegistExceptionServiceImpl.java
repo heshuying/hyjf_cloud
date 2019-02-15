@@ -105,7 +105,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     /**
      * 备案异常处理
      * @auth sunpeikai
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @param loginUserId 当前登录用户id
      * @return
      */
@@ -222,7 +222,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                 }else if (debtDetails.size() == 1) {
                                     logger.debug("debtDetails.size == 1");
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
-                                    // TODO:这里state是2
+                                    // 这里state是2
                                     String state = debtDetail.getString(BankCallConstant.PARAM_STATE);
                                     if ("9".equals(state)) {
                                         logger.debug("@@7@@");
@@ -284,6 +284,9 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                 result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                             }
                                         }
+                                    }else{
+                                        result.put("success", "1");
+                                        result.put("msg", "在银行方此标的状态为:" + state + "，暂时无法备案");
                                     }
                                 } else {
                                     logger.debug("@@20@@");

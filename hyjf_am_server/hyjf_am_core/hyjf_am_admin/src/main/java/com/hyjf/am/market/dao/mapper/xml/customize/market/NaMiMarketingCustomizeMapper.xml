@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.NaMiMarketingCustomizeMapper">
+    <sql id="Where_Clause">
+        <where>
+            <if test="username != null and username != ''">
+                AND d.user_name = #{username}
+            </if>
+            <if test="truename != null and truename != ''">
+                AND d.true_name  = #{truename}
+            </if>
+            <if test="refferName != null and refferName != ''">
+                AND d.reffer_name = #{refferName}
+            </if>
+
+            <if test="tenderName != null and tenderName != ''">
+                AND d.tender_name = #{tenderName}
+            </if>
+
+            <if test="productType != null and productType != ''">
+                AND d.product_type = #{productType}
+            </if>
+            <if test="productNo != null and productNo != ''">
+                AND d.product_no  = #{productNo}
+            </if>
+            <if test="joinTimeStart != null and joinTimeStart != ''">
+                AND d.join_time <![CDATA[>=]]> #{joinTimeStart}
+            </if>
+            <if test="joinTimeEnd != null and joinTimeEnd != ''">
+                AND d.join_time <![CDATA[<=]]> #{joinTimeEnd}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="Where_Clause1">
+            <if test="username != null and username != ''">
+                AND d.user_name = #{username}
+            </if>
+            <if test="truename != null and truename != ''">
+                AND d.true_name  = #{truename}
+            </if>
+            <if test="refferName != null and refferName != ''">
+                AND d.reffer_name = #{refferName}
+            </if>
+
+            <if test="tenderName != null and tenderName != ''">
+                AND d.tender_name = #{tenderName}
+            </if>
+
+            <if test="productType != null and productType != ''">
+                AND d.product_type = #{productType}
+            </if>
+            <if test="productNo != null and productNo != ''">
+                AND d.product_no  = #{productNo}
+            </if>
+            <if test="joinTimeStart != null and joinTimeStart != ''">
+                AND d.join_time <![CDATA[>=]]> #{joinTimeStart}
+            </if>
+            <if test="joinTimeEnd != null and joinTimeEnd != ''">
+                AND d.join_time <![CDATA[<=]]> #{joinTimeEnd}
+            </if>
+    </sql>
+    <resultMap id="PerfanceResult"
+               type="com.hyjf.am.vo.admin.NaMiMarketingVO">
+        <result column="id" property="id" />
+        <result column="user_name" property="username" />
+        <result column="true_name" property="truename" />
+        <result column="reffer_name" property="refferName" />
+        <result column="join_time" property="regTime" />
+        <result column="tender_no" property="tenderNo" />
+        <result column="tender_amount" property="tenderAmount" />
+        <result column="term" property="term" />
+        <result column="product_type" property="productType" />
+        <result column="product_no" property="productNo" />
+        <result column="return_performance" property="returnPerformance" />
+        <result column="return_amount" property="returnAmount" />
+
+        <result column="debt_name" property="debtName" />
+        <result column="debt_id" property="debtId" />
+    </resultMap>
+
+    <select id="selectId0List"  resultType="com.hyjf.am.user.dao.model.auto.User"  parameterType="com.hyjf.am.market.dao.model.auto.ActivityList">
+        select s.user_id userId,s.username from hyjf_user.ht_user s inner join ht_nm_user n on s.username = n.user_name
+    </select>
+
+    <select id="selectRefferIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+       select u.user_id from hyjf_user.ht_user u where u.username = #{refferName}
+    </select>
+
+    <select id="selectIdList" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select a.user_id from
+        (
+        select
+        s1.user_id,s1.username as username,su.spreads_user_id referrer,s1.reg_time as reg_time
+        from hyjf_user.ht_user s1
+        INNER JOIN hyjf_user.ht_spreads_user su on s1.user_id=su.user_id
+        where su.spreads_user_id in
+        <foreach collection="id0"  open="(" close=")" separator="," item="user">
+            #{user.userId}
+        </foreach>
+        and s1.user_id not in
+        <foreach collection="id0"  open="(" close=")" separator="," item="user">
+            #{user.userId}
+        </foreach>
+        and s1.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s1.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
+        UNION
+        select
+        s2.user_id,s2.username as username,su.spreads_user_id referrer,s2.reg_time as reg_time
+        from hyjf_user.ht_user s2
+        INNER JOIN hyjf_user.ht_spreads_user su on s2.user_id=su.user_id
+        inner JOIN hyjf_user.ht_user s1 ON su.spreads_user_id = s1.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su2 on s1.user_id=su2.user_id
+        where su2.spreads_user_id in
+        <foreach collection="id0"  open="(" close=")" separator="," item="user">
+            #{user.userId}
+        </foreach>
+        and s2.user_id not in
+        <foreach collection="id0"  open="(" close=")" separator="," item="user">
+            #{user.userId}
+        </foreach>
+        and s1.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s1.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
+        and s2.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
+        UNION
+        select
+        s3.user_id,s3.username as username,su.spreads_user_id referrer,s3.reg_time as reg_time
+        from hyjf_user.ht_user s3
+        INNER JOIN hyjf_user.ht_spreads_user su on s3.user_id=su.user_id
+        inner JOIN hyjf_user.ht_user s2 ON su.spreads_user_id = s2.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su2 on s2.user_id=su2.user_id
+        inner JOIN hyjf_user.ht_user s1 ON su2.spreads_user_id = s1.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su3 on s1.user_id=su3.user_id
+        where su3.spreads_user_id in
+        <foreach collection="id0"  open="(" close=")" separator="," item="user">
+            #{user.userId}
+        </foreach>
+        and s3.user_id not in
+        <foreach collection="id0"  open="(" close=")" separator="," item="user">
+            #{user.userId}
+        </foreach>
+        and s1.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s1.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
+        and s2.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
+        and s3.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s3.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
+        ) a
+        left join hyjf_user.ht_user_info i on a.user_id=i.user_id
+        where 1=1
+        <if test="username != null and username != '' ">
+            and a.username= #{username}
+        </if>
+        <if test="truename != null and truename != '' ">
+            and i.truename= #{truename}
+        </if>
+        <if test="refferId != null and refferId != '' ">
+            and a.referrer= #{refferId}
+        </if>
+        order by reg_time
+        <if test="sort == null ">
+            DESC
+        </if>
+        <if test="sort != null ">
+            ${sort}
+        </if>
+    </select>
+
+    <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
+        select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
+        (select u1.username from hyjf_user.ht_user u1 where u1.user_id=su.spreads_user_id) as refferName ,
+        u.reg_time as regTime
+        from hyjf_user.ht_user u
+        INNER JOIN hyjf_user.ht_spreads_user su on u.user_id=su.user_id
+        left join hyjf_user.ht_user_info u2 on u.user_id=u2.user_id
+        where u.user_id in
+        <foreach collection="ids"  open="(" close=")" separator="," item="userId">
+            #{userId}
+        </foreach>
+        order by u.reg_time
+        <if test="sort == null ">
+            DESC,
+        </if>
+        <if test="sort != null ">
+            ${sort},
+        </if>
+        u.user_id desc
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectNaMiMarketingPerfanceCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select count(d.id)
+        from ht_performance_return_detail d
+        where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
+        <include refid="Where_Clause1"/>
+    </select>
+
+    <select id="selectNaMiMarketingPerfanceList" resultMap="PerfanceResult" parameterType="java.util.HashMap">
+        select d.id,d.user_name,d.true_name,d.reffer_name,d.tender_no,ifnull(d.tender_amount,0.00) as tender_amount,
+        d.term,d.product_type,d.product_no,ifnull(d.return_performance,0) as return_performance,
+        ifnull(d.return_amount,0.00)as return_amount,d.join_time
+        from ht_performance_return_detail d
+        where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
+        <include refid="Where_Clause1"/>
+        ORDER BY d.join_time
+        <if test="sort == null ">
+            DESC
+        </if>
+        <if test="sort != null ">
+            ${sort}
+        </if>
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectReturnDetail" resultType="com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail" parameterType="java.lang.String">
+        select d.username userName,u.username refferName
+        from hyjf_user.ht_user d left JOIN hyjf_user.ht_spreads_user d1 on d1.user_id=d.user_id
+	    left  JOIN   hyjf_user.ht_user u on d1.spreads_user_id=u.user_id
+        where d.username =#{referName}
+        limit 1
+    </select>
+
+    <select id="selectNaMiMarketingRefferCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select count(d.id)
+        from ht_inviter_return_detail d
+        where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
+        <include refid="Where_Clause1"/>
+    </select>
+
+    <select id="selectNaMiMarketingRefferList" resultMap="PerfanceResult" parameterType="java.util.HashMap">
+        select d.user_name,d.true_name,ifnull(d.return_performance,0.00) as return_performance,ifnull(d.return_amount,0.00) as return_amount,d.tender_name as reffer_name,d.tender_no,
+        ifnull(d.tender_amount,0.00) as tender_amount,d.term,d.product_type,d.product_no,d.join_time
+        from ht_inviter_return_detail d
+        where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
+        <include refid="Where_Clause1"/>
+        ORDER BY d.join_time
+        <if test="sort == null ">
+            DESC
+        </if>
+        <if test="sort != null ">
+            ${sort}
+        </if>
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectNaMiMarketingRefferTotalCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select count(m.user_name)
+        from (select d.user_name from ht_inviter_return_detail d
+        where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
+        <include refid="Where_Clause1"/>
+        group by d.user_name,left(d.join_time,7)
+        )m
+    </select>
+
+    <select id="selectNaMiMarketingRefferTotalList" resultMap="PerfanceResult" parameterType="java.util.HashMap">
+        select d.user_name,d.true_name,d.debt_name,d.debt_id,ifnull(sum(d.return_amount),0.00) as return_amount,left(d.join_time,7) join_time
+        from ht_inviter_return_detail d
+        where d.join_time is not null and d.join_time != ''
+        <include refid="Where_Clause1"/>
+        group by d.user_name,left(d.join_time,7)
+        ORDER BY
+        <if test="sort == null|| sort ==  ''">
+            join_time DESC,return_amount desc
+        </if>
+        <if test="sort != null and sort != '' and col == 'return_amount'">
+            ${col} ${sort},join_time DESC
+        </if>
+        <if test="sort != null and sort != '' and col == 'join_time'">
+            ${col} ${sort},return_amount desc
+        </if>
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="selectNaMiMarketingRefferTotalAmount" resultType="java.math.BigDecimal" parameterType="java.util.HashMap">
+        select ifnull(sum(d.return_amount),0.00) as totalAmount
+        from ht_inviter_return_detail d
+        where d.join_time is not null and d.join_time != ''
+        <include refid="Where_Clause1"/>
+    </select>
+
+    <select id="selectMonthList" resultType="java.lang.String" >
+        select left(d.join_time,7) join_time from ht_inviter_return_detail d WHERE join_time is not null group by left(d.join_time,7) order by join_time desc
+    </select>
+</mapper>
+

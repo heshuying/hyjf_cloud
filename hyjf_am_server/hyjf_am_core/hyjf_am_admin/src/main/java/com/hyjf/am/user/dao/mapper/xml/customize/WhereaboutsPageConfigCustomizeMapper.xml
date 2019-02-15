@@ -18,7 +18,7 @@
 	<sql id="Where_Clause">
 		<where>
 			hwpc.del_flag = 0
-			<!-- 投资订单号 -->
+			<!-- 出借订单号 -->
 			<if test="utmName != null and utmName != ''">
 				AND utm.utm_source LIKE CONCAT( #{utmName}, '%')
 			</if>

@@ -21,11 +21,11 @@ public interface HjhAccedeService extends BaseService {
      */
     List<HjhAccede> selectWaitQuitHjhList();
     /**
-     * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * 判断用户是否有持有中的计划。如果有，则不能解除出借授权和债转授权
      * @param userId
      * @return
      */
-	public boolean canCancelAuth(int userId);
+	boolean canCancelAuth(int userId);
 
     /**
      * 
@@ -40,7 +40,7 @@ public interface HjhAccedeService extends BaseService {
      * @author zhangyk
      * @date 2018/6/27 19:10
      */
-    public int countAccede(String planNid);
+    int countAccede(String planNid);
 
     List<PlanDetailCustomize> getPlanDetail(String planNid);
 
@@ -55,7 +55,7 @@ public interface HjhAccedeService extends BaseService {
 
 
     /**
-     * 订单投资异常短信预警
+     * 订单出借异常短信预警
      * @author zhangyk
      * @date 2018/8/15 16:25
      */

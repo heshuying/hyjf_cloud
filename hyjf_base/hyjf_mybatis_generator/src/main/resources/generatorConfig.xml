@@ -515,6 +515,7 @@
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
 			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+			<columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1473,7 +1474,6 @@
         </table>
 
         <table tableName="ht_admin_menu" domainObjectName="AdminMenu">
-            <generatedKey column="menu_uuid" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="menu_hide" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
@@ -1953,6 +1953,10 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <table tableName="ht_sell_daily" domainObjectName="SellDaily">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
         <table tableName="ht_app_push_manage" domainObjectName="AppPushManage">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="jump_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1969,6 +1973,40 @@
 
         <table tableName="ht_hjh_asset_risk_info" domainObjectName="HjhAssetRiskInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!--纳觅用户表-->
+        <table tableName="ht_nm_user" domainObjectName="NmUser">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!--业绩返现详情-->
+        <table tableName="ht_performance_return_detail" domainObjectName="PerformanceReturnDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!--邀请人返现明细-->
+        <table tableName="ht_inviter_return_detail" domainObjectName="InviterReturnDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <table tableName="ht_evaluation_config" domainObjectName="EvaluationConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_evaluation_config_log" domainObjectName="EvaluationConfigLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
     </context>

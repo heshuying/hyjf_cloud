@@ -1,8 +1,8 @@
 package com.hyjf.cs.message.service.operationlog;
 
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.ic.UserOperationLog;
-import com.hyjf.cs.message.mongo.mc.UserOperationLogMongDao;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationLog;
+import com.hyjf.cs.message.mongo.ic.userbehaviourn.UserOperationLogMongDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -40,8 +40,8 @@ public class OperationLogServiceImpl  implements OperationLogService {
 			criteria.and("operationTime").gte(operationTimeStart).lte(operationTimeEnd);
 		}
 		query.addCriteria(criteria);
-		List<UserOperationLog> list = userOperationLogMongDao.find(query);
-        return list.size();
+		int count = userOperationLogMongDao.count(query).intValue();
+        return count;
     }
 
 	@Override

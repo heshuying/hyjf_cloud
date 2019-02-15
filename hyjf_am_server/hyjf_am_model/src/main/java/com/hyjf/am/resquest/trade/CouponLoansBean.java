@@ -16,7 +16,7 @@ public class CouponLoansBean {
      */
     Integer userId;
     /**
-     * 投资编号
+     * 出借编号
      */
     String nid;
 
@@ -26,7 +26,7 @@ public class CouponLoansBean {
     String orderId;
 
     /**
-     * 优惠券投资订单号
+     * 优惠券出借订单号
      */
     String orderIdCoupon;
 

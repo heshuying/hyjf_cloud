@@ -1,6 +1,9 @@
 package com.hyjf.am.user.service.front.sms;
 
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.user.service.BaseService;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -44,4 +47,11 @@ public interface SmsService extends BaseService{
      * @return
      */
     int checkQianleMobileCode(String phone, String code);
+
+    /**
+     * 筛选符合条件的用户id
+     * @param request
+     * @return
+     */
+    List<String> queryUser(SmsCodeUserRequest request);
 }

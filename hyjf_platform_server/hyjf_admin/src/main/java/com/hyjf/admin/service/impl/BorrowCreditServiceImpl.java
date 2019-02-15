@@ -42,7 +42,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class BorrowCreditServiceImpl implements BorrowCreditService {
@@ -254,6 +258,27 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         } catch (MQException e) {
             logger.error("apppush消息发送异常:{}",e);
         }
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        //停止债转并且没有被承接过
+        if (credit.getCreditCapitalAssigned().equals("0")) {
+            params = new HashMap<String, String>();
+            params.put("creditNid", credit.getCreditNid()+"");
+            params.put("flag", "1");//1（散）2（智投）
+            params.put("status", "3"); //3承接（失败）
+            // 推送数据到MQ 承接（失败）散
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_FAIL_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+        }else{
+            // 推送数据到MQ 承接（完全）散
+            params = new HashMap<String, String>();
+            params.put("creditNid", credit.getCreditNid()+"");
+            params.put("flag", "1"); //1（散）2（智投）
+            params.put("status", "2"); //2承接（成功）
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+        }
+        // add 合规数据上报 埋点 liubin 20181122 end
         return result;
     }
 

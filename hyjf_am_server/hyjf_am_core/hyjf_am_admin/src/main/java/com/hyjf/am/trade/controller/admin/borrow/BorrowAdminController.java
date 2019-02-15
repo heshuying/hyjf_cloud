@@ -91,7 +91,13 @@ public class BorrowAdminController  {
 		// 标签名称 new added
 		corrowCommonCustomize.setLabelNameSrch(form.getLabelNameSrch());
 		corrowCommonCustomize.setSort(form.getSort());
-		corrowCommonCustomize.setCol(form.getCol());
+		if(form.getCol()!= null &&form.getCol().equals("recoverLastTime")) {
+			corrowCommonCustomize.setCol("b.recover_last_time");
+		}else {
+			corrowCommonCustomize.setCol(form.getCol());
+		}
+		
+		
 		corrowCommonCustomize.setBorrowPeriod(form.getBorrowPeriod());
 		// 计划编号
 		corrowCommonCustomize.setPlanNidSrch(form.getPlanNidSrch());
@@ -110,6 +116,7 @@ public class BorrowAdminController  {
 			corrowCommonCustomize.setLimitEnd(paginator.getLimit());
 			List<BorrowCustomizeVO> recordList = this.borrowService.selectBorrowList(corrowCommonCustomize);
 			mcr.setResultList(recordList);
+			mcr.setSumAccount(this.borrowService.sumAccount(corrowCommonCustomize));
 		}
 		return mcr;
 	}

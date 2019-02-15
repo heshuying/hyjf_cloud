@@ -5,14 +5,39 @@ import java.io.Serializable;
 public class MspQuerydetail implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 查询日期
+     *
+     * @mbggenerated
+     */
     private String querydate;
 
+    /**
+     * 会员类型
+     *
+     * @mbggenerated
+     */
     private String membertype;
 
+    /**
+     * 查询类别
+     *
+     * @mbggenerated
+     */
     private String querytype;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

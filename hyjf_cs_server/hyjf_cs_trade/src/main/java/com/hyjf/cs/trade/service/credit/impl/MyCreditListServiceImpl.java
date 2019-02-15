@@ -173,7 +173,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     }
 
     /**
-     * 用户中心查询投资可债转详情
+     * 用户中心查询出借可债转详情
      *
      * @param request
      * @param userId
@@ -206,7 +206,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         creditResultBean.setMobile(user.getMobile());
         Integer nowTime = GetDate.getNowTime10();
         if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
-            // 转让失败,无法获取借款和投资编号
+            // 转让失败,无法获取借款和出借编号
             throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
         TenderCreditCustomizeVO tenderToCreditDetail = amTradeClient.selectTenderToCreditDetail(userId, request.getBorrowNid(),
@@ -254,7 +254,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     }
 
     /**
-     * 用户中心验证投资人当天是否可以债转  每天三次
+     * 用户中心验证出借人当天是否可以债转  每天三次
      *
      * @param request
      * @param userId
@@ -264,7 +264,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     public WebResult tenderAbleToCredit(CreditDetailsRequestBean request, Integer userId) {
         WebResult webResult = new WebResult();
         if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
-            // 转让失败,无法获取借款和投资编号
+            // 转让失败,无法获取借款和出借编号
             throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
 
@@ -286,7 +286,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     public WebResult checkCanCredit(CreditDetailsRequestBean request, Integer userId) {
         WebResult webResult = new WebResult();
         if (StringUtils.isEmpty(request.getBorrowNid()) || StringUtils.isEmpty(request.getTenderNid())) {
-            // 转让失败,无法获取借款和投资编号
+            // 转让失败,无法获取借款和出借编号
             throw  new CheckException(MsgEnum.ERROR_CREDIT_PARAM);
         }
         Integer creditedNum = amTradeClient.tenderAbleToCredit(userId);
@@ -316,7 +316,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 债转保存
         try{
             logger.info("开始插入债转表---userId:{}  ",userId);
-            insertTenderToCredit(userId, request);
+            Integer creditNid = insertTenderToCredit(userId, request);
             logger.info("插入债转表结束---userId:{} ",userId);
             Map data = new HashedMap();
             // 结束日期
@@ -347,6 +347,16 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                     e.printStackTrace();
                 }
             }
+
+            // add 合规数据上报 埋点 liubin 20181122 start
+            // 推送数据到MQ 转让 散
+            JSONObject params = new JSONObject();
+            params.put("creditNid", creditNid+"");
+            params.put("flag", "1"); //1（散）2（智投）
+            params.put("status", "0"); //0转让
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.TRANSFER_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add 合规数据上报 埋点 liubin 20181122 end
 
         }catch (Exception e){
         	e.printStackTrace();
@@ -619,7 +629,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         borrowCredit.setEndTime(nowTime + 24 * 3600 * 3);
         // 认购时间
         borrowCredit.setAssignTime(0);
-        // 投资次数
+        // 出借次数
         borrowCredit.setAssignNum(0);
         // 还款状态 0还款中、1已还款、2还款失败
         borrowCredit.setRepayStatus(0);
@@ -711,10 +721,10 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
-                assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
                 // 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
                 expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
-                        .subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+                        .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrow.getBorrowPeriod());
@@ -727,7 +737,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
-                assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
                 // 预计到账金额 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
                 expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
                         .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
@@ -735,7 +745,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         }
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-            // 根据投资订单号检索已债转还款信息
+            // 根据出借订单号检索已债转还款信息
             List<CreditRepayVO> creditRepayList = amTradeClient.selectCreditRepayList(borrowRecover.getTenderId());
             int lastDays = 0;
             List<BorrowRepayPlanVO> borrowRepayPlans = this.amTradeClient.selectBorrowRepayPlan(borrow.getBorrowNid(), 0);
@@ -765,14 +775,14 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 }
             }
             creditInterest = borrowRecover.getRecoverInterestWait().subtract(creditRepayInterestWait);
-            // 垫付利息 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+            // 垫付利息 垫息总额=出借人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
             assignInterestAdvance = BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(creditCapital, creditCapital, yearRate, interest, new BigDecimal(lastDays + ""));
             // 债转利息
             assignPayInterest = creditInterest;
             // 实付金额 承接本金*（1-折价率）+应垫付利息
             assignPay = creditPrice.add(assignInterestAdvance);
             // 预计收益 承接人债转本息—实付金额
-            assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+            assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
             // 预计到账金额 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
             expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
                     .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));

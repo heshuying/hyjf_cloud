@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -77,6 +78,9 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             String sumAccount = amTradeClient.sumBorrowFirstAccount(borrowFirstRequest);
             borrowFirstResponseBean.setRecordList(adminList);
             borrowFirstResponseBean.setSumAccount(sumAccount);
+        } else {
+            //没数据时初始化
+            borrowFirstResponseBean.setRecordList(new ArrayList<>());
         }
         return borrowFirstResponseBean;
     }
@@ -186,18 +190,30 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             return onTimeResult;
         } else {
             //初审成功 && 是计划标的 && 立即发标 发送关联计划MQ
-            if (borrowVO.getIsEngineUsed().equals(1) && verifyStatus.equals("4")) {
-                // 成功后到关联计划队列
+            if (verifyStatus.equals("4")) {
+                if (borrowVO.getIsEngineUsed().equals(1)) {
+                    // 成功后到关联计划队列
+                    JSONObject params = new JSONObject();
+                    params.put("borrowNid", borrowVO.getBorrowNid());
+                    try {
+                        //自动关联计划
+                        //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+                        commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+                                MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_ISSUE_TAG, borrowVO.getBorrowNid(), params), 2);
+                        logger.info("标的编号：" + borrowNid + "-----已发送至自动关联计划MQ");
+                    } catch (Exception e) {
+                        logger.error("标的编号：" + borrowNid + "-----发送自动关联计划MQ异常", e);
+                    }
+                }
+
+                // 发送消息队列到合规上报数据
+                // 1.初审list->弹出框->发标
                 JSONObject params = new JSONObject();
                 params.put("borrowNid", borrowVO.getBorrowNid());
-                try {
-                    //自动关联计划
-                    //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                    commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
-                    logger.info("标的编号：" + borrowNid + "-----已发送至自动关联计划MQ");
-                } catch (Exception e){
-                    logger.error("标的编号：" + borrowNid + "-----发送自动关联计划MQ异常", e);
-                }
+                params.put("userId", borrowVO.getUserId());
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+                logger.info("标的编号：" + borrowNid + "-----已发送至合规上送发标数据MQ");
             }
             return onTimeResult;
         }

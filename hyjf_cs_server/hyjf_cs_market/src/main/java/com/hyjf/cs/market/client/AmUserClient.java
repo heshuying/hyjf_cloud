@@ -2,8 +2,9 @@ package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -54,7 +55,7 @@ public interface AmUserClient {
      * 得到千乐渠道用户
      * @return
      */
-    List<Integer> getQianleUser();
+    List<Integer> getQianleUser(String sourceId);
 
     /**
      * 保存短信信息
@@ -80,5 +81,18 @@ public interface AmUserClient {
      */
     List<String> selectTwoDivisionByPrimaryDivision(String nmzxDivisionName);
 
+    /**
+     * 获取评分标准列表
+     * @return
+     */
+    List<EvalationCustomizeVO> getEvalationRecord();
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
 
 }

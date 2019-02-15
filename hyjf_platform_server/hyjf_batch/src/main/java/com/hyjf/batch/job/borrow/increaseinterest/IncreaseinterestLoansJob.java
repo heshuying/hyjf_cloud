@@ -22,8 +22,8 @@ public class IncreaseinterestLoansJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("IncreaseinterestLoansJob: {} execute...", context.getJobDetail().getKey().getName());
         
-        ResponseEntity<String> result = restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseinterestLoans", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/increaseinterest/taskAssignLoans", String.class);
         
-        logger.info("IncreaseinterestLoansJob execute end..."+result.getBody());
+        logger.info("IncreaseinterestLoansJob execute end...");
     }
 }

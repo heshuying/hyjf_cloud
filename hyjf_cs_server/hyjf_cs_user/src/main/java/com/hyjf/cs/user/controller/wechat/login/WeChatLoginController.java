@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.wechat.login;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
@@ -74,7 +73,6 @@ public class WeChatLoginController extends BaseUserController {
     @PostMapping(value = "/doLogin.do")
     public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
-        long start = System.currentTimeMillis();
         LoginResultBean result = new LoginResultBean();
         // 从payload里面获取预置属性
         String presetProps = getStringFromStream(request);
@@ -83,16 +81,12 @@ public class WeChatLoginController extends BaseUserController {
         if (!"1".equals(env) && !"2".equals(env)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
-        logger.info("从payload里面获取预置属性===================:"+(System.currentTimeMillis()-start));
-        long startt = System.currentTimeMillis();
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // weChat 只支持手机号登录
         if (!CommonUtils.isMobile(userName)) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
         }
-        logger.info("密码解密===================:"+(System.currentTimeMillis()-startt));
-
         //判断用户输入的密码错误次数---开始
         Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI);
         if (!errorInfo.isEmpty()){
@@ -102,11 +96,8 @@ public class WeChatLoginController extends BaseUserController {
             return result;
         }
         //判断用户输入的密码错误次数---结束
-        long start1 = System.currentTimeMillis();
         WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
-        logger.info("wechat登录操作===================:"+(System.currentTimeMillis()-start1));
         if (userVO != null) {
-            logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
             // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
             // 登录成功后,将用户ID返回给前端
             result.setUserId(String.valueOf(userVO.getUserId()));
@@ -141,20 +132,22 @@ public class WeChatLoginController extends BaseUserController {
                 logger.error("保存用户日志失败", e);
             }
             if (StringUtils.isNotBlank(env)) {
-                //登录成功之后风车理财的特殊标记，供后续投资使用
+                //登录成功之后风车理财的特殊标记，供后续出借使用
                 RedisUtils.del("loginFrom" + userVO.getUserId());
                 RedisUtils.set("loginFrom" + userVO.getUserId(), env, 1800);
             }
             // 登录完成返回值
             result.setStatus(ResultEnum.SUCCESS.getStatus());
             result.setStatusDesc("登录成功");
+
+            // Add by huanghui 用户开户区分企业用户或个人用户
+            result.setUserType(userVO.getUserType());
             result.setSign(userVO.getToken());
         } else {
             logger.error("weChat端登录失败...");
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
-        logger.info("总时间===================:"+(System.currentTimeMillis()-start));
         return result;
     }
 

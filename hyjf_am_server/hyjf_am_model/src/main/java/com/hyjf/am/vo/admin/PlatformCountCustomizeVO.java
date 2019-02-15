@@ -39,7 +39,7 @@ public class PlatformCountCustomizeVO extends BaseVO implements Serializable {
     private String accountNumber;
 
     /**
-     * 投资人数
+     * 出借人数
      */
     private String tenderNumber;
 
@@ -49,34 +49,34 @@ public class PlatformCountCustomizeVO extends BaseVO implements Serializable {
     private String rechargePrice;
 
     /**
-     * 累计投资
+     * 累计出借
      */
     private String tenderPrice;
 
     /**
-     * 汇直投投资金额
+     * 汇直投出借金额
      */
     private String hztTenderPrice;
 
     /**
-     * 汇消费投资金额
+     * 汇消费出借金额
      */
     private String hxfTenderPrice;
 
     /**
-     * 汇天利投资金额
+     * 汇天利出借金额
      */
     private String htlTenderPrice;
     /**
-     * 汇天金投资金额
+     * 汇天金出借金额
      */
     private String htjTenderPrice;
     /**
-     * 汇计划投资金额
+     * 汇计划出借金额
      */
     private String hjhTenderPrice;
     /**
-     * 汇转让投资金额
+     * 汇转让出借金额
      */
     private String hzrTenderPrice;
 

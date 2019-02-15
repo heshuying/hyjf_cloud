@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.smscode.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -50,38 +49,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     SystemConfig systemConfig;
 
     /**
-     * 1. 验证码发送前校验 2. 生成验证码 3. 保存验证码 4. 发送短信
-     *
-     * @param validCodeType
-     * @param mobile
-     * @param ip
-     * @throws MQException
-     */
-    @Override
-    public void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws MQException {
-
-        // 生成验证码
-        String checkCode = GetCode.getRandomSMSCode(6);
-
-        if(systemConfig.isHyjfEnvTest()){
-            // 测试环境验证码111111
-            checkCode = "111111";
-        }
-        logger.info("手机号: {}, 短信验证码: {}", mobile, checkCode);
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("val_code", checkCode);
-
-        // 保存短信验证码
-        amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CommonConstant.CKCODE_NEW, platform);
-
-        SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
-                validCodeType, CustomConstants.CHANNEL_TYPE_NORMAL);
-
-        // 发送
-        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
-    }
-
-    /**
      * 参数检查
      *
      * @param validCodeType
@@ -120,9 +87,10 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
 
         // 判断发送间隔时间
         String intervalTime = RedisUtils.get(mobile + ":" + validCodeType + ":IntervalTime");
-        logger.info(mobile + ":" + validCodeType + "----------IntervalTime-----------" + intervalTime);
+
+        logger.info("mobile is: {}, validCodeType is: {}, IntervalTime is: {}", mobile, validCodeType, intervalTime);
         CheckUtil.check(StringUtils.isBlank(intervalTime), MsgEnum.ERR_SMSCODE_SEND_TOO_FAST);
-        String ipCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
+		String ipCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT + ip);
         if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
             ipCount = "0";
             RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0", 24 * 60 * 60);
@@ -183,6 +151,38 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         // 发送checkCode最大时间间隔，默认60秒
         RedisUtils.set(mobile + ":" + validCodeType + ":IntervalTime", mobile,
                 smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime());
+    }
+
+    /**
+     * 1. 验证码发送前校验 2. 生成验证码 3. 保存验证码 4. 发送短信
+     *
+     * @param validCodeType
+     * @param mobile
+     * @param ip
+     * @throws Exception
+     */
+    @Override
+    public void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws Exception {
+
+        // 生成验证码
+        String checkCode = GetCode.getRandomSMSCode(6);
+
+        if(systemConfig.isHyjfEnvTest()){
+            // 测试环境验证码111111
+            checkCode = "111111";
+        }
+        logger.info("手机号: {}, 短信验证码: {}", mobile, checkCode);
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("val_code", checkCode);
+
+        // 保存短信验证码
+        amUserClient.saveSmsCode(mobile, checkCode, validCodeType, CommonConstant.CKCODE_NEW, platform);
+
+        SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
+                validCodeType, CustomConstants.CHANNEL_TYPE_NORMAL);
+
+        // 发送
+        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
     }
 
     /**
@@ -344,6 +344,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     @Override
     public boolean existUser(String mobile) {
         UserVO userVO = amUserClient.findUserByMobile(mobile);
+        logger.info("手机号为："+mobile+"；user信息："+(userVO==null));
         return userVO == null ? false : true;
     }
 

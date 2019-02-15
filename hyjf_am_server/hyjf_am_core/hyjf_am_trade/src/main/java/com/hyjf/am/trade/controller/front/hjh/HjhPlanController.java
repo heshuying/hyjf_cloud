@@ -26,7 +26,7 @@ import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,6 +92,21 @@ public class HjhPlanController extends BaseController {
     public com.hyjf.am.response.user.HjhPlanResponse getHjhPlanByPlanNid(@PathVariable String planNid) {
         com.hyjf.am.response.user.HjhPlanResponse response = new com.hyjf.am.response.user.HjhPlanResponse();
         HjhPlan plan = hjhPlanService.getHjhPlanByNid(planNid);
+        HjhPlanVO result = CommonUtils.convertBean(plan, HjhPlanVO.class);
+        response.setResult(result);
+        return response;
+    }
+
+    /**
+     * @Description 根据计划编号查询计划(主库查)
+     * @Author liubin
+     * @Version v0.1
+     * @Date 2018/6/19 14:04
+     */
+    @RequestMapping("/doGetHjhPlanByPlanNid/{planNid}")
+    public com.hyjf.am.response.user.HjhPlanResponse doGetHjhPlanByPlanNid(@PathVariable String planNid) {
+        com.hyjf.am.response.user.HjhPlanResponse response = new com.hyjf.am.response.user.HjhPlanResponse();
+        HjhPlan plan = hjhPlanService.doGetHjhPlanByNid(planNid);
         HjhPlanVO result = CommonUtils.convertBean(plan, HjhPlanVO.class);
         response.setResult(result);
         return response;

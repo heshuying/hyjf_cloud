@@ -72,10 +72,10 @@ public class SystemConfig {
     @Value("${file.upload.real.path}")
     public String fileUploadRealPath;
 
-    @Value("hyjf.notice.status")
+    @Value("${hyjf.notice.status}")
     public String noticeStatus;
 
-    @Value("hyjf.notice.requesturl.ios")
+    @Value("${hyjf.notice.requesturl.ios}")
     public String iosNoticeRequestUrl;
 
     @Value("${hyjf.notice.ios.version}")
@@ -265,6 +265,49 @@ public class SystemConfig {
 
     @Value("${hyjf.wechat.invite.url}")
     private String wechatInviteUrl;
+
+    @Value("${hyjf.online.type}")
+    private String hyjfOnlineType;
+
+    @Value("${hyjf.cdn.domain.url}")
+    private String hyjfCdnDomainUrl;
+
+    //国家应急中心配置文件添加 add by nxl start
+    /** //合规数据上报 CERT 国家互联网应急中心 请求地址 https://api.ifcert.org.cn * 正式地址和测试地址区别 去掉【/test】 例 p2p/userInfo/test**/
+    @Value("${hyjf.cert.sever.path}")
+    public String certSeverPath;
+    /** //合规数据上报 CERT 国家互联网应急中心是否测试环境 true 测试环境 false 生产环境 */
+    @Value("${hyjf.cert.is.test}")
+    public  String certIsTest ;
+    /** //合规数据上报 CERT 国家互联网应急中心 企业自己的sourceCode*/
+    @Value("${hyjf.cert.source.code}")
+    public  String certSourceCode;
+    /** //合规数据上报 CERT 国家互联网应急中心 企业自己的apiKey */
+    @Value("${hyjf.cert.api.key}")
+    public  String certApiKey;
+    /**合规数据上报 CERT 国家互联网应急中心 金协议地址*/
+    @Value("${hyjf.cert.crt.path}")
+    public  String certCrtpath;
+    /** 查询批次数据入库消息 */
+    @Value("${hyjf.cert.yibu.path}")
+    public  String certWebYibu;
+    //国家应急中心配置文件添加 add by nxl end
+
+    public String getHyjfOnlineType() {
+        return hyjfOnlineType;
+    }
+
+    public void setHyjfOnlineType(String hyjfOnlineType) {
+        this.hyjfOnlineType = hyjfOnlineType;
+    }
+
+    public String getHyjfCdnDomainUrl() {
+        return hyjfCdnDomainUrl;
+    }
+
+    public void setHyjfCdnDomainUrl(String hyjfCdnDomainUrl) {
+        this.hyjfCdnDomainUrl = hyjfCdnDomainUrl;
+    }
 
     public String getAppForgetpassword() {
         return appForgetpassword;
@@ -845,5 +888,53 @@ public class SystemConfig {
 
     public String getAppPrivacyPolicyUrl() {
         return appPrivacyPolicyUrl;
+    }
+
+    public String getCertSeverPath() {
+        return certSeverPath;
+    }
+
+    public void setCertSeverPath(String certSeverPath) {
+        this.certSeverPath = certSeverPath;
+    }
+
+    public String getCertIsTest() {
+        return certIsTest;
+    }
+
+    public void setCertIsTest(String certIsTest) {
+        this.certIsTest = certIsTest;
+    }
+
+    public String getCertSourceCode() {
+        return certSourceCode;
+    }
+
+    public void setCertSourceCode(String certSourceCode) {
+        this.certSourceCode = certSourceCode;
+    }
+
+    public String getCertApiKey() {
+        return certApiKey;
+    }
+
+    public void setCertApiKey(String certApiKey) {
+        this.certApiKey = certApiKey;
+    }
+
+    public String getCertCrtpath() {
+        return certCrtpath;
+    }
+
+    public void setCertCrtpath(String certCrtpath) {
+        this.certCrtpath = certCrtpath;
+    }
+
+    public String getCertWebYibu() {
+        return certWebYibu;
+    }
+
+    public void setCertWebYibu(String certWebYibu) {
+        this.certWebYibu = certWebYibu;
     }
 }

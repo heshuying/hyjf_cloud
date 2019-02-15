@@ -28,13 +28,13 @@ public class HjhUserAuthConfigLogCustomizeVO extends BasePage implements Seriali
     private String ip;
     @ApiModelProperty(value = "mac地址")
     private String mac;
-
+    @ApiModelProperty(value = "创建人userId")
     private Integer createUser;
-
+    @ApiModelProperty(value = "创建人名称")
     private String createUserStr;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "创建时间字符串")
     private String  createTimeStr;
 
     /**

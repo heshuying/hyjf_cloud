@@ -72,7 +72,7 @@ public interface AutoTenderExceptionService extends BaseService{
      */
     BorrowAndInfoVO selectBorrowByNid(String borrowNid);
     /**
-     * 更新投资数据
+     * 更新出借数据
      *
      * @return
      * @author nxl

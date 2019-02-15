@@ -59,6 +59,14 @@ public class AppHjhPlanController extends BaseTradeController {
         WebResult<Map<String, Object>> result = null;
         try {
             result = hjhTenderService.joinPlan(tender);
+            Map<String, Object> resultMap = result.getData();
+            if(resultMap!=null&&resultMap.containsKey("appEarnings")){
+                // 如果是代金券 并且是app
+                resultMap.remove("earnings");
+                resultMap.put("earnings",resultMap.get("appEarnings"));
+                result.setData(resultMap);
+            }
+
         } catch (CheckException e) {
             throw e;
         } finally {
@@ -94,7 +102,7 @@ public class AppHjhPlanController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "APP端获取计划投资信息", notes = "APP端获取计划投资信息")
+    @ApiOperation(value = "APP端获取计划出借信息", notes = "APP端获取计划出借信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = true) Integer userId, @RequestBody @Valid TenderRequest tender) {
         tender.setUserId(userId);

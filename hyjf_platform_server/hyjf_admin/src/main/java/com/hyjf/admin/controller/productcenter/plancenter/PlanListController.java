@@ -15,8 +15,11 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
@@ -24,10 +27,13 @@ import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -51,10 +57,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author libin
@@ -69,6 +72,8 @@ public class PlanListController extends BaseController{
 	private PlanListService planListService;
 	@Autowired
 	private SystemConfig systemConfig;
+	@Autowired
+	private CommonProducer commonProducer;
 	
     /** 权限 */	
 	public static final String PERMISSIONS = "planlist";
@@ -161,6 +166,7 @@ public class PlanListController extends BaseController{
     	PlanListRequest form = new PlanListRequest();
     	// 将画面请求request赋值给原子层 request
     	BeanUtils.copyProperties(viewRequest, form);
+
 		String planNid = form.getDebtPlanNid();
 		if (StringUtils.isNotBlank(planNid) && planNid.length() < 3
 				&& !"HJH".equals(planNid.substring(0, 3))) {
@@ -201,17 +207,17 @@ public class PlanListController extends BaseController{
 		form.setLockPeriod(this.getValue(String.valueOf(vo.getLockPeriod())));
 		// 锁定期天、月
 		form.setIsMonth(this.getValue(String.valueOf(vo.getIsMonth())));
-		// 预期年化收益率
+		// 预期出借利率
 		form.setExpectApr(this.getValue(String.valueOf(vo.getExpectApr())));
 		// 最低加入金额
 		form.setDebtMinInvestment(this.getValue(String.valueOf(vo.getMinInvestment())));
 		// 最高加入金额
 		form.setDebtMaxInvestment(this.getValue(String.valueOf(vo.getMaxInvestment())));
-		// 投资增量
+		// 出借增量
 		form.setDebtInvestmentIncrement(this.getValue(String.valueOf(vo.getInvestmentIncrement())));
 		// 可用券配置
 		form.setCouponConfig(this.getValue(String.valueOf(vo.getCouponConfig())));
-		// 投资状态
+		// 出借状态
 		form.setDebtPlanStatus(this.getValue(String.valueOf(vo.getPlanInvestStatus())));
 		// 显示状态
 		form.setPlanDisplayStatusSrch(this.getValue(String.valueOf(vo.getPlanDisplayStatus())));
@@ -227,8 +233,10 @@ public class PlanListController extends BaseController{
 		form.setNormalQuestion(this.getValue(String.valueOf(vo.getNormalQuestions())));
 		// 添加时间
 		form.setAddTime(this.getValue(String.valueOf(vo.getAddTime())));
-		// 最小投资笔数
+		// 最小出借笔数
 		form.setMinInvestCounts(this.getValue(String.valueOf(vo.getMinInvestCounts())));
+		// 风险投资等级
+		form.setInvestLevel(this.getValue(String.valueOf(vo.getInvestLevel())));
 	}
 	
 	private String getValue(String value) {
@@ -401,17 +409,34 @@ public class PlanListController extends BaseController{
 			// (修改请求)更新操作
 			int flg = this.planListService.updateRecord(form);
 			if(flg > 0){
-				success();
+				//success();
+				jsonObject.put("status", SUCCESS);
+				jsonObject.put("statusDesc", SUCCESS_DESC);
 			} else {
-				fail("");
+				//fail("");
+				jsonObject.put("status", FAIL);
+				jsonObject.put("statusDesc", FAIL_DESC);
 			}
 		} else {
 			// (新增请求)插入操作
 			int flag = this.planListService.insertRecord(form);
 			if(flag > 0){
-				success();
+				//success();
+				jsonObject.put("status", SUCCESS);
+				jsonObject.put("statusDesc", SUCCESS_DESC);
+				// 新增成功发送mq到互金上报数据add by liushouyi
+				try {
+					JSONObject params = new JSONObject();
+					params.put("planNid", planNid);
+					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.HJHPLAN_ADD_TAG, UUID.randomUUID().toString(), params),
+							MQConstant.HG_REPORT_DELAY_LEVEL);
+				} catch (Exception e) {
+					logger.error("新加智投发送mq消息到合规数据上报失败！planNid : " + planNid ,e);
+				}
 			} else {
-				fail("");
+				//fail("");
+				jsonObject.put("status", FAIL);
+				jsonObject.put("statusDesc", FAIL_DESC);
 			}
 		}
 		return jsonObject;
@@ -452,21 +477,21 @@ public class PlanListController extends BaseController{
 		if(StringUtils.isEmpty(form.getBorrowStyle())){
 			jsonObject.put("errorMsg", "请输入还款方式！");
 		}
-		// 预期年化收益
+		// 预期出借利率
 		AdminValidatorFieldCheckUtil.validateSignlessNumLength(jsonObject, "expectApr", form.getExpectApr(), 2, 2, true);
 		// 原 最低加入金额
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
 		/*this.validateDecimal(jsonObject,"最低加入金额",form.getDebtMinInvestment(), 10);*/
-		// 原 投资增量
+		// 原 出借增量
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtInvestmentIncrement", form.getDebtInvestmentIncrement(), 10, true);
-		/*this.validateDecimal(jsonObject,"投资增量",form.getDebtInvestmentIncrement(), 10);*/
+		/*this.validateDecimal(jsonObject,"出借增量",form.getDebtInvestmentIncrement(), 10);*/
 		// 可用券配置
 		if(StringUtils.isEmpty(form.getCouponConfig())){
 			jsonObject.put("errorMsg", "请输入可用券配置！");
 		}
-		// 投资状态
+		// 出借状态
 		if(StringUtils.isEmpty(form.getDebtPlanStatus())){
-			jsonObject.put("errorMsg", "请输入投资状态！");
+			jsonObject.put("errorMsg", "请输入出借状态！");
 		}
 		// 计划介绍
 		if(StringUtils.isEmpty(form.getPlanConcept())){
@@ -491,7 +516,7 @@ public class PlanListController extends BaseController{
 		// 表格sheet名称
 		String sheetName = "计划列表";
 		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期年化收益率","最低加入金额（元）","最高加入金额（元）","投资增量（元）", "最小投资笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
+		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期出借利率率","最低加入金额（元）","最高加入金额（元）","出借增量（元）", "最小出借笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -550,7 +575,7 @@ public class PlanListController extends BaseController{
 							cell.setCellValue(hjhPlan.getLockPeriod()+ "个月");
 						}
 					}
-					// 预期年化收益率
+					// 预期出借利率率
 					else if (celLength == 5) {
 						cell.setCellValue( hjhPlan.getExpectApr() + "%");
 					}
@@ -571,7 +596,7 @@ public class PlanListController extends BaseController{
 							cell.setCellValue("0.00");
 						}
 					}
-					// 投资增量（元）
+					// 出借增量（元）
 					else if (celLength == 8) {
 						if(hjhPlan.getInvestmentIncrement() != null){
 							cell.setCellValue(hjhPlan.getInvestmentIncrement().toString());
@@ -579,7 +604,7 @@ public class PlanListController extends BaseController{
 							cell.setCellValue("0.00");
 						}
 					}
-					// 最小投资笔数
+					// 最小出借笔数
 					else if (celLength == 9) {
 						if(hjhPlan.getMinInvestCounts() != null){
 							cell.setCellValue(hjhPlan.getMinInvestCounts().toString());
@@ -683,8 +708,8 @@ public class PlanListController extends BaseController{
 		map.put("expectApr", "参考年回报率");
 		map.put("minInvestment", "最低授权服务金额（元）");
 		map.put("maxInvestment", "最高授权服务金额（元）");
-		map.put("investmentIncrement", "投资增量（元）");
-		map.put("minInvestCounts", "最小投资笔数");
+		map.put("investmentIncrement", "出借增量（元）");
+		map.put("minInvestCounts", "最小出借笔数");
 		map.put("availableInvestAccount", "开放额度（元）");
 		map.put("joinTotal", "累计授权服务金额（元）");
 		map.put("repayWaitAll", "待还总额（元）");
@@ -744,5 +769,16 @@ public class PlanListController extends BaseController{
 		mapAdapter.put("planInvestStatus", planInvestStatusAdapter);
 		mapAdapter.put("addTime", addTimeAdapter);
 		return mapAdapter;
+	}
+
+
+	public List<Integer> mapToList( Map<String, String> map){
+		List<Integer> result = new ArrayList<>();
+		Iterator iterator = map.keySet().iterator();
+		while(iterator.hasNext()){
+			String key =iterator.next().toString();
+			result.add(Integer.parseInt(key));
+		}
+		return result;
 	}
 }

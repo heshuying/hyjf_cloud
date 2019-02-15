@@ -1,11 +1,16 @@
 package com.hyjf.cs.message.client;
 
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,7 +28,7 @@ public interface AmUserClient {
 	UserVO findUserByMobile(final String mobile);
 
 	/**
-	 * 投资人按照年龄分布
+	 * 出借人按照年龄分布
 	 *
 	 * @param date 上个月的最后一天
 	 * @param firstAge  年龄下限
@@ -41,7 +46,7 @@ public interface AmUserClient {
 	List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list);
 
 	/**
-	 * 十大投资人拆分
+	 * 十大出借人拆分
 	 *
 	 * @param list 多个用户id
 	 * @return
@@ -116,14 +121,6 @@ public interface AmUserClient {
 	 */
 	 UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId);
 
-	/**
-	 * 通过手机号获取设备标识码
-	 *
-	 * @param mobile
-	 * @return
-	 */
-	AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
-
 
 	/**
 	 * 获取用户表总记录数
@@ -133,22 +130,41 @@ public interface AmUserClient {
 	Integer countAllUser();
 
 	/**
-	 * 查询用户utm信息
-	 * @param userId
+	 * 查询所有app渠道
+	 * @param type
 	 * @return
 	 */
-    UtmRegVO findUtmRegByUserId(Integer userId);
+    List<UtmVO> selectUtmPlatList(String type);
 
 	/**
-	 * 检查用户是不是新手
-	 * @param userId
+	 * 获取注册数
+	 * @param request
 	 * @return
 	 */
-	int countNewUserTotal(Integer userId);
+	int getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request);
+
+    /**
+     * 获取注册数
+     * @param request
+     * @return
+     */
+    List<AppUtmRegVO> getAppChannelStatisticsDetailVOList(AppChannelStatisticsRequest request);
 
 	/**
-	 * 更新用户首次投资信息
-	 * @param params
+	 * 查询相应的app渠道无主单开户数
+	 * @param request
+	 * @return
 	 */
-	Integer updateFirstUtmReg(HashMap<String,Object> params);
+	int getOpenAccountAttrCount(AppChannelStatisticsRequest request);
+
+    List<Integer> getUsersList(String source);
+
+    List<Integer> getUsersInfoList();
+
+	/**
+	 * 查询app渠道相关统计信息
+	 * @param request
+	 * @return
+	 */
+	AppUtmRegResponse getAppUtmRegResponse(AppChannelStatisticsRequest request);
 }

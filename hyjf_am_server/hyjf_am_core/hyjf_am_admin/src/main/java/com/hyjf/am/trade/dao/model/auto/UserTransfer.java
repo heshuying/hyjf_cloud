@@ -5,40 +5,130 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class UserTransfer implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 订单编号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 转出账户id
+     *
+     * @mbggenerated
+     */
     private Integer outUserId;
 
+    /**
+     * 转出账户
+     *
+     * @mbggenerated
+     */
     private String outUserName;
 
+    /**
+     * 转入账户id
+     *
+     * @mbggenerated
+     */
     private Integer inUserId;
 
+    /**
+     * 转入账户
+     *
+     * @mbggenerated
+     */
     private String inUserName;
 
+    /**
+     * 转账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal transferAmount;
 
+    /**
+     * 转账链接
+     *
+     * @mbggenerated
+     */
     private String transferUrl;
 
+    /**
+     * 转账时间
+     *
+     * @mbggenerated
+     */
     private Date transferTime;
 
+    /**
+     * 转让状态 0 待转账 1 转帐中 2 转账成功 3 转账失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 转账类型 0 用户转给平台
+     *
+     * @mbggenerated
+     */
     private Integer transferType;
 
+    /**
+     * 转账说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 充值手续费对账标识
+     *
+     * @mbggenerated
+     */
     private String reconciliationId;
 
+    /**
+     * 创建者用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新者用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,9 @@ public class BorrowFullServiceImpl implements BorrowFullService {
             accountMap.put("sumBorrowAccountYes", sumAccount.getSumBorrowAccountYes());
             accountMap.put("sumServiceScale", sumAccount.getSumServiceScale());
             borrowFullResponseBean.setSumAccount(accountMap);
+        } else {
+            //没数据时初始化
+            borrowFullResponseBean.setRecordList(new ArrayList<>());
         }
         return borrowFullResponseBean;
     }
@@ -166,14 +170,14 @@ public class BorrowFullServiceImpl implements BorrowFullService {
     }
 
     private String updateReverifyRecord(BorrowFullRequest borrowFullRequest) {
-        // 借款编号
+        // 项目编号
         String borrowNid = borrowFullRequest.getBorrowNidSrch();
         //查询标的信息
         BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
 
         if (borrow == null || borrowInfo == null) {
-            return "标的信息不存在。[借款编号：" + borrowNid + "]";
+            return "标的信息不存在。[项目编号：" + borrowNid + "]";
         } else {
             //如果标的未复审
             if (borrow.getReverifyStatus() == 0) {
@@ -183,12 +187,12 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                 // 取得借款人账户信息
                 AccountVO borrowAccount = amTradeClient.getAccountByUserId(borrowUserId);
                 if (borrowAccount == null) {
-                    return "借款人账户不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]";
+                    return "借款人账户不存在。[用户ID：" + borrowUserId + "]," + "[项目编号：" + borrowNid + "]";
                 }
                 // 获取借款人开户信息
                 BankOpenAccountVO borrowerAccount = amUserClient.getBankOpenAccountByUserId(borrowUserId);
                 if (borrowerAccount == null) {
-                    return "借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]";
+                    return "借款人未开户。[用户ID：" + borrowUserId + "]," + "[项目编号：" + borrowNid + "]";
                 } else {
                     //账户
                     borrowFullRequest.setAccountId(borrowerAccount.getAccount());
@@ -202,10 +206,10 @@ public class BorrowFullServiceImpl implements BorrowFullService {
                         return updateResult.getStatusDesc();
                     }
                 } else {
-                    return "[借款编号：" + borrowNid + "]复审异常";
+                    return "[项目编号：" + borrowNid + "]复审异常";
                 }
             } else {
-                return "[借款编号：" + borrowNid + "]" + "已经复审，请确认";
+                return "[项目编号：" + borrowNid + "]" + "已经复审，请确认";
             }
         }
     }

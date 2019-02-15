@@ -90,6 +90,38 @@ public class HjhDebtCreditController extends BaseController {
     }
 
     /**
+     * @Author pcc
+     * @Version v0.1
+     * @Date
+     */
+    @GetMapping("/getHjhDebtCreditListByCreditNid/{creditNid}")
+    public HjhDebtCreditResponse getHjhDebtCreditListByCreditNid(@PathVariable String creditNid){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        List<HjhDebtCredit> hjhDebtCredits = hjhDebtCreditService.getHjhDebtCreditListByCreditNid(creditNid);
+        if(hjhDebtCredits != null){
+            List<HjhDebtCreditVO> hjhDebtCreditVOS = CommonUtils.convertBeanList(hjhDebtCredits,HjhDebtCreditVO.class);
+            response.setResultList(hjhDebtCreditVOS);
+        }
+        return response;
+    }
+
+    /**
+     * @Author pcc
+     * @Version v0.1
+     * @Date
+     */
+    @GetMapping("/getHjhDebtCreditListByBorrowNid/{borrowNid}")
+    public HjhDebtCreditResponse getHjhDebtCreditListByBorrowNid(@PathVariable String borrowNid){
+        HjhDebtCreditResponse response = new HjhDebtCreditResponse();
+        List<HjhDebtCredit> hjhDebtCredits = hjhDebtCreditService.getHjhDebtCreditListByBorrowNid(borrowNid);
+        if(hjhDebtCredits != null){
+            List<HjhDebtCreditVO> hjhDebtCreditVOS = CommonUtils.convertBeanList(hjhDebtCredits,HjhDebtCreditVO.class);
+            response.setResultList(hjhDebtCreditVOS);
+        }
+        return response;
+    }
+
+    /**
      * 根据债转编号查询债转信息
      * @author zhangyk
      * @date 2018/6/30 11:19
@@ -111,6 +143,19 @@ public class HjhDebtCreditController extends BaseController {
     public HjhDebtCreditResponse selectHjhDebtCreditByCreditNid(@PathVariable String creditNid){
         HjhDebtCreditResponse response =  new HjhDebtCreditResponse();
         HjhDebtCredit hjhDebtCredit = hjhDebtCreditService.selectHjhDebtCreditByCreditNid(creditNid);
+        response.setResult(CommonUtils.convertBean(hjhDebtCredit, HjhDebtCreditVO.class));
+        return response;
+    }
+
+    /**
+     * 根据债转编号查询债转信息(从写库)
+     * @author liubin
+     * @date 2018/6/30 11:19
+     */
+    @GetMapping("/doSelectHjhDebtCreditByCreditNid/{creditNid}")
+    public HjhDebtCreditResponse doSelectHjhDebtCreditByCreditNid(@PathVariable String creditNid){
+        HjhDebtCreditResponse response =  new HjhDebtCreditResponse();
+        HjhDebtCredit hjhDebtCredit = hjhDebtCreditService.doSelectHjhDebtCreditByCreditNid(creditNid);
         response.setResult(CommonUtils.convertBean(hjhDebtCredit, HjhDebtCreditVO.class));
         return response;
     }
@@ -155,7 +200,7 @@ public class HjhDebtCreditController extends BaseController {
 
 
     /**
-     * 获取hjh投资列表信息
+     * 获取hjh出借列表信息
      * @return
      */
     @PostMapping("/getUserHjhInvestList")
@@ -169,7 +214,7 @@ public class HjhDebtCreditController extends BaseController {
     }
 
     /**
-     * 获取hjh投资列表信息count
+     * 获取hjh出借列表信息count
      * @return
      */
     @PostMapping("/getUserHjhInvestCount")

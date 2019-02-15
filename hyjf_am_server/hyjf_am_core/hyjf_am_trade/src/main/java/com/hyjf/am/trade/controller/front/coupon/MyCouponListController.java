@@ -12,6 +12,7 @@ import com.hyjf.am.trade.service.front.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -85,7 +86,6 @@ public class MyCouponListController extends BaseController {
      */
     @RequestMapping(value = "/countAvaliableCoupon", method = RequestMethod.POST)
     public MyBestCouponListResponse countAvaliableCoupon(@RequestBody @Valid MyCouponListRequest requestBean) {
-        // TODO: 2018/9/29 接口有问题
         MyBestCouponListResponse responseBean = new MyBestCouponListResponse();
         Integer count = myCouponListService.countAvaliableCoupon(requestBean);
         responseBean.setCouponCount(count);
@@ -115,6 +115,9 @@ public class MyCouponListController extends BaseController {
         CouponResponseForCoupon responseBean = new CouponResponseForCoupon();
 
         List<CouponUserForAppCustomizeVO> resultList = myCouponListService.getMyCouponByPage(requestBean);
+        if(resultList != null && !resultList.isEmpty()){
+            myCouponListService.updateCouponReadFlag(Integer.parseInt(requestBean.getUserId()), CustomConstants.USER_COUPON_STATUS_USED);
+        }
         responseBean.setResultList(resultList);
 
         return responseBean;
@@ -151,7 +154,7 @@ public class MyCouponListController extends BaseController {
     }
 
     /**
-     * APP,PC,wechat散标投资查询优惠券列表
+     * APP,PC,wechat散标出借查询优惠券列表
      * @author walter.limeng
      * @date 2018/7/10 10:36
      */

@@ -98,7 +98,7 @@ public class HjhPlanController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
+    @ApiOperation(value = "web获取计划出借信息", notes = "web获取计划出借信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
         tender.setUserId(userId);
@@ -106,7 +106,7 @@ public class HjhPlanController extends BaseTradeController {
         return  hjhTenderService.getInvestInfo(tender);
     }
 
-    @ApiOperation(value = "web计划投资校验", notes = "web计划投资校验")
+    @ApiOperation(value = "web计划出借校验", notes = "web计划出借校验")
     @PostMapping(value = "/planCheck", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> planCheck(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
         tender.setUserId(userId);
@@ -119,6 +119,8 @@ public class HjhPlanController extends BaseTradeController {
             TenderInfoResult tenderInfo = new TenderInfoResult();
             tenderInfo.setStatus(false);
             tenderInfo.setEvalType((String) resultMap.get("evalType"));
+            tenderInfo.setInvestLevel((String) resultMap.get("investLevel"));
+            tenderInfo.setEvalFlagType((String) resultMap.get("evalFlagType"));
             tenderInfo.setRevaluationMoney((String) resultMap.get("revaluationMoney"));
             tenderInfo.setRiskTested((String) resultMap.get("riskTested"));
             tenderInfo.setMessage((String) resultMap.get("message"));
@@ -133,13 +135,17 @@ public class HjhPlanController extends BaseTradeController {
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000004.getCode());
                     //tenderInfo.setStatus(MsgEnum.STATUS_EV000004.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
-                    //计划类判断用户类型为稳健型以上才可以投资
+                    //计划类判断用户类型为稳健型以上才可以出借
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000007.getCode());
                     //tenderInfo.setStatus(MsgEnum.STATUS_EV000007.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                     //金额对比判断（校验金额 大于 设置测评金额）
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000005.getCode());
                     //tenderInfo.setStatus(MsgEnum.STATUS_EV000005.getCode());
+                }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL.equals(riskTested)){
+                    //金额对比判断（校验金额 大于 设置测评金额）代收本金
+                    resultWebResult.setStatus(MsgEnum.STATUS_EV000008.getCode());
+                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000008.getCode());
                 }
             }
             resultWebResult.setData(tenderInfo);

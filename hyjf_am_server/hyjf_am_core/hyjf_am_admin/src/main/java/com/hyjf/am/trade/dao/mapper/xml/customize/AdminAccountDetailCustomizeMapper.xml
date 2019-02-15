@@ -53,10 +53,7 @@
 		IFNULL(l.plan_balance, 0) AS planBalance,
 		IFNULL(l.plan_frost, 0) AS planFrost,
 		l.remark,
-		date_format(
-		l.create_time,
-		'%Y-%c-%d %H:%i:%s'
-		) AS 'create_time',
+		DATE_FORMAT(l.create_time, '%Y-%m-%d %H:%i:%s') AS create_time,
 		l.account_id,
 		l.is_bank,
 		l.seq_no,
@@ -66,27 +63,52 @@
 		l.trade_status,
 		l.check_status
 		FROM
-		ht_account_list l
+		 <choose>
+            <when test='whereFlag == "0"'>
+                (SELECT * FROM ht_account_list l
+				where 1=1
+                <include refid="where-all-page-condition"/>
+                ORDER BY id DESC
+                <if test="limitStart != null and limitEnd !=null">
+                    LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+                </if>
+                ) l
+            </when>
+            <otherwise>
+                ht_account_list l
+            </otherwise>
+        </choose>
 		LEFT JOIN ht_account_trade t ON l.trade = t.`value`
 		LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
-		LEFT JOIN ht_r_user hsu ON l.user_id = hsu.user_id
-		LEFT JOIN ht_r_user hu2 on hsu.spreads_user_id = hu2.user_id
+		LEFT JOIN ht_r_user hu2 on hu.spreads_user_id = hu2.user_id
 		WHERE 1=1
-		<include refid="where-all-page-condition"/>
-		ORDER BY l.create_time DESC, l.id DESC
-		<if test="limitStart >= 0 and limitEnd > 0" >
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
-		</if>
+		<if test='whereFlag != "0"'>
+			<include refid="where-all-page-condition"/>
+			ORDER BY l.id DESC
+			<if test="limitStart >= 0 and limitEnd > 0" >
+				LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+			</if>
+        </if>
 	</select>
 	<select id="queryAccountDetailCount" resultType="java.lang.Integer" parameterType="java.util.Map">
-		SELECT COUNT(1)
-		FROM ht_account_list l
-		LEFT JOIN ht_account_trade t ON l.trade= t.`value`
-		LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
-		LEFT JOIN ht_r_user hsu ON l.user_id = hsu.user_id
-		LEFT JOIN ht_r_user hu2 on hsu.spreads_user_id = hu2.user_id
-		WHERE 1=1
-		<include refid="where-all-page-condition"/>
+	 <choose>
+            <when test='whereFlag == "0"'>
+				SELECT COUNT(1)
+				FROM ht_account_list l
+				where 1=1
+				<include refid="where-all-page-condition"/>
+            </when>
+            <otherwise>
+				SELECT COUNT(1)
+				FROM ht_account_list l
+				LEFT JOIN ht_account_trade t ON l.trade= t.`value`
+				LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
+				LEFT JOIN ht_r_user hu2 on hu.spreads_user_id = hu2.user_id
+				WHERE 1=1
+				<include refid="where-all-page-condition"/>
+            </otherwise>
+        </choose>
+		
 	</select>
 	<sql id="where-all-page-condition">
 		<if test="userId != null and userId != 0">

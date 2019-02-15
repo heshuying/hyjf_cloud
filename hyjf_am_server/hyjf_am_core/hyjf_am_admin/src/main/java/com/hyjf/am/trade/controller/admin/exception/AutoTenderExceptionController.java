@@ -90,7 +90,10 @@ public class AutoTenderExceptionController  extends BaseController {
         mapParam.put("searchStartDate",request.getSearchStartDate());
         mapParam.put("searchEndDate",request.getSearchEndDate());
         // 订单状态
-        mapParam.put("orderStatus", 80);
+        //银行交易前，异常订单状态设定，和系统异常 90系列;
+        //银行交易后，异常订单状态设定  80 系列;
+        //银行交易前，初始订单状态设定  70 系列;
+        mapParam.put("orderStatus", 70);
         return mapParam;
     }
 
@@ -162,7 +165,7 @@ public class AutoTenderExceptionController  extends BaseController {
         return mapReturn;
     }
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param request
      * @return
@@ -218,7 +221,7 @@ public class AutoTenderExceptionController  extends BaseController {
         String sellerUsrcustid = request.getSellerUsrcustid();
         HjhCreditCalcResultVO resultVO = request.getResultVO();
         BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
-        //银行自动投资成功后，更新投资数据
+        //银行自动投标成功后，更新出借数据
         boolean result = this.autoTenderExceptionService.updateCreditForAutoTender(
                 creditNid, accedeOrderId, planNid, bean,
                 tenderUsrcustid, sellerUsrcustid, resultVO

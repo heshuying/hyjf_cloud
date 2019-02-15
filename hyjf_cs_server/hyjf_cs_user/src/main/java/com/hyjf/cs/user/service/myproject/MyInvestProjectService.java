@@ -1,5 +1,5 @@
 /**
- * Description:我的投资service接口
+ * Description:我的出借service接口
  * Copyright: Copyright (HYJF Corporation) 2015
  * Company: HYJF Corporation
  * @author: 王坤
@@ -32,7 +32,7 @@ import java.util.Map;
 public interface MyInvestProjectService extends BaseService {
 
 	/**
-	 * 我的投资（已回款）
+	 * 我的出借（已回款）
 	 *
 	 * @param params
 	 * @return
@@ -40,7 +40,7 @@ public interface MyInvestProjectService extends BaseService {
 	List<AppAlreadyRepayListCustomizeVO> selectAlreadyRepayList(AssetManageBeanRequest request);
 
 	/**
-	 * 统计我的投资（已回款）项目总数
+	 * 统计我的出借（已回款）项目总数
 	 *
 	 * @param params
 	 * @return
@@ -94,7 +94,7 @@ public interface MyInvestProjectService extends BaseService {
 
 	/**
 	 *
-	 * 优惠券投资项目详情
+	 * 优惠券出借项目详情
 	 *
 	 * @author liuyang
 	 * @param params
@@ -104,7 +104,7 @@ public interface MyInvestProjectService extends BaseService {
 
 	/**
 	 *
-	 * 获取投资中的项目详情
+	 * 获取出借中的项目详情
 	 *
 	 * @author liuyang
 	 * @param params
@@ -114,7 +114,7 @@ public interface MyInvestProjectService extends BaseService {
 
 	/**
 	 *
-	 * 获取投资中的优惠券项目详情
+	 * 获取出借中的优惠券项目详情
 	 *
 	 * @author liuyang
 	 * @param params

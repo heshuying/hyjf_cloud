@@ -590,7 +590,7 @@ public class CouponUserController extends BaseController {
         CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
         List<CouponUserCustomizeVO> resultList = customizeResponse.getResultList();
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[]{"序号", "优惠券类别编号", "优惠券用户编号", "用户名", "发券时属性", "注册渠道", "优惠券类型", "面值", "投资限额", "有效期", "来源", "操作平台", "项目类型", "项目期限", "使用状态", "获得时间"};
+        String[] titles = new String[]{"序号", "优惠券类别编号", "优惠券用户编号", "用户名", "发券时属性", "注册渠道", "优惠券类型", "面值", "出借限额", "有效期", "来源", "操作平台", "项目类型", "项目期限", "使用状态", "获得时间"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -731,6 +731,9 @@ public class CouponUserController extends BaseController {
         String sheetName = "优惠券用户列表";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
@@ -738,13 +741,19 @@ public class CouponUserController extends BaseController {
         //请求第一页5000条
         beanRequest.setPageSize(defaultRowMaxCount);
         beanRequest.setCurrPage(1);
+
+        // 如果未加时间条件则只返回空excel
+        if(!(StringUtils.isNotBlank(beanRequest.getTimeStartAddSrch()) && StringUtils.isNotBlank(beanRequest.getTimeEndAddSrch())) || (StringUtils.isNotBlank(beanRequest.getTimeStartSrch()) && StringUtils.isNotBlank(beanRequest.getTimeEndSrch()))){
+            // 导出
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+            return;
+        }
+
         // 需要输出的结果列表
         CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
         Integer totalCount = customizeResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
-        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = sheetName + "_第1页";
+
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         } else {
@@ -824,7 +833,7 @@ public class CouponUserController extends BaseController {
         map.put("channel", "注册渠道");
         map.put("couponType", "优惠券类型");
         map.put("couponQuota", "面值");
-        map.put("tenderQuota", "投资限额");
+        map.put("tenderQuota", "出借限额");
         map.put("endTime", "有效期");
         map.put("couponSource", "来源");
         map.put("couponSystem", "操作平台");

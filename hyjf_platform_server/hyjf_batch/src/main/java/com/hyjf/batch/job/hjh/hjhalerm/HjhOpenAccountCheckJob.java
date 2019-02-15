@@ -21,8 +21,8 @@ public class HjhOpenAccountCheckJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("HjhOpenAccountCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        BooleanResponse result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOpenAccountCheck", BooleanResponse.class).getBody();
+        restTemplate.getForEntity(
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOpenAccountCheck", BooleanResponse.class).getBody();
 
         logger.info("HjhOpenAccountCheckJob execute end...");
     }

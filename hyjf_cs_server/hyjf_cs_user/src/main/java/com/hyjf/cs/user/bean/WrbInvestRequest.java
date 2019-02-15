@@ -10,7 +10,7 @@ import java.util.Date;
  * @version WrbInvestRequest, v0.1 2018/9/26 9:40
  */
 public class WrbInvestRequest {
-    /** 投资日期 */
+    /** 出借日期 */
     private String invest_date;
 
     /** 条数 */
@@ -20,7 +20,7 @@ public class WrbInvestRequest {
     private Integer page;
 
     /**
-     * 投资日期
+     * 出借日期
      */
     private Date date;
 

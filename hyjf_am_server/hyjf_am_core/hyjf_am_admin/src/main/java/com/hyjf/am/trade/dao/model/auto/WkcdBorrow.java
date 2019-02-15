@@ -7,46 +7,146 @@ import java.util.Date;
 public class WkcdBorrow implements Serializable {
     private Integer id;
 
+    /**
+     * 微可唯一标识
+     *
+     * @mbggenerated
+     */
     private String wkcdId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 借款人姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAmount;
 
+    /**
+     * 车牌
+     *
+     * @mbggenerated
+     */
     private String carNo;
 
+    /**
+     * 车型
+     *
+     * @mbggenerated
+     */
     private String carType;
 
+    /**
+     * 所属门店
+     *
+     * @mbggenerated
+     */
     private String carShop;
 
+    /**
+     * 微可还款方式
+     *
+     * @mbggenerated
+     */
     private String wkcdRepayType;
 
+    /**
+     * 借款周期（月）
+     *
+     * @mbggenerated
+     */
     private Integer wkcdBorrowPeriod;
 
+    /**
+     * 微可审核状态 
+     *
+     * @mbggenerated
+     */
     private String wkcdStatus;
 
+    /**
+     * 汇盈审核状态  0未审核/1已审核-通过/2已审核-不通过
+     *
+     * @mbggenerated
+     */
     private Integer htStatus;
 
+    /**
+     * 审批意见
+     *
+     * @mbggenerated
+     */
     private String checkDesc;
 
+    /**
+     * hyjf审核人id
+     *
+     * @mbggenerated
+     */
     private Integer checkUser;
 
+    /**
+     * 汇盈审核时间
+     *
+     * @mbggenerated
+     */
     private Integer checkTime;
 
+    /**
+     * 对应项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 年化率
+     *
+     * @mbggenerated
+     */
     private BigDecimal apr;
 
+    /**
+     * 0：实鑫车贷没有记录还款计划  1：实鑫车贷已经记录还款计划
+     *
+     * @mbggenerated
+     */
     private Integer sync;
 
     private Integer createUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

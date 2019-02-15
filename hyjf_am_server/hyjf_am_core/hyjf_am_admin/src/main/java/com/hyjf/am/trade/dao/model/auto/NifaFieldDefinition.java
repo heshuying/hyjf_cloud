@@ -4,26 +4,81 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class NifaFieldDefinition implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 借款用途限制
+     *
+     * @mbggenerated
+     */
     private String borrowingRestrictions;
 
+    /**
+     * 借款放款日判断依据
+     *
+     * @mbggenerated
+     */
     private String judgmentsBased;
 
+    /**
+     * 还款日规则说明
+     *
+     * @mbggenerated
+     */
     private String repayDateRule;
 
+    /**
+     * 逾期定义
+     *
+     * @mbggenerated
+     */
     private String overdueDefinition;
 
+    /**
+     * 逾期还款责任
+     *
+     * @mbggenerated
+     */
     private String overdueResponsibility;
 
+    /**
+     * 逾期还款流程
+     *
+     * @mbggenerated
+     */
     private String overdueProcess;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -17,7 +17,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
+import com.hyjf.cs.user.service.wrb.WrbInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +30,7 @@ import java.util.List;
  * @version WrbNoticeinfoSericeImpl, v0.1 2018/9/20 15:43
  */
 @Service
-public class WrbInfoSericeImpl implements WrbInfoServcie {
+public class WrbInfoSericeImpl implements WrbInfoService {
     @Autowired
     AmConfigClient amConfigClient;
     @Autowired
@@ -60,7 +60,7 @@ public class WrbInfoSericeImpl implements WrbInfoServcie {
 
     @Override
     public List<WrbBorrowTenderCustomizeVO> searchBorrowTenderByNidAndTime(String borrowNid, Date investTime) {
-        // 查询标的投资情况
+        // 查询标的出借情况
         List<WrbBorrowTenderCustomizeVO> list = amTradeClient.selectWrbBorrowTender(borrowNid, investTime);
         if (!CollectionUtils.isEmpty(list)) {
             for (WrbBorrowTenderCustomizeVO vo : list) {

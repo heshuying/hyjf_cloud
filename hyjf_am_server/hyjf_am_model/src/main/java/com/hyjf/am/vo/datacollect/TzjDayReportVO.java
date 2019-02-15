@@ -24,7 +24,7 @@ public class TzjDayReportVO extends BaseVO implements Serializable {
     /** 每日新充人数 */
     private int rechargeNewCount;
 
-    /** 每日投资人数 */
+    /** 每日出借人数 */
 	private int tenderCount;
     /** 每日新投人数 - 新用户，当天注册 */
 	private int tenderNewCount;
@@ -33,7 +33,7 @@ public class TzjDayReportVO extends BaseVO implements Serializable {
     /** 每日复投人数 */
 	private int tenderAgainCount;
 
-    /** 每日投资金额 */
+    /** 每日出借金额 */
 	private BigDecimal tenderMoney;
     /** 每日首投金额  */
 	private BigDecimal tenderFirstMoney;

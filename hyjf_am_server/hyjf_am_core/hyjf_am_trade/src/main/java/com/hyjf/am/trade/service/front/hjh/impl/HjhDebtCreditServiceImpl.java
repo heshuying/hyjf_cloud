@@ -242,4 +242,32 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         List<ProjectUndertakeListVO> list = borrowCreditCustomizeMapper.selectProjectUndertakeList(params);
         return list;
     }
+
+    @Override
+    public HjhDebtCredit doSelectHjhDebtCreditByCreditNid(String creditNid) {
+        HjhDebtCreditExample example = new HjhDebtCreditExample();
+        example.createCriteria().andCreditNidEqualTo(creditNid);
+        List<HjhDebtCredit> list = this.hjhDebtCreditMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List<HjhDebtCredit> getHjhDebtCreditListByCreditNid(String creditNid) {
+        HjhDebtCreditExample borrowCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andCreditNidEqualTo(creditNid);
+        List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCredit;
+    }
+    @Override
+    public List<HjhDebtCredit> getHjhDebtCreditListByBorrowNid(String borrowNid) {
+        HjhDebtCreditExample borrowCreditExample = new HjhDebtCreditExample();
+        HjhDebtCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
+        borrowCreditCra.andBorrowNidEqualTo(borrowNid);
+        List<HjhDebtCredit> borrowCredit = this.hjhDebtCreditMapper.selectByExample(borrowCreditExample);
+        return borrowCredit;
+    }
 }

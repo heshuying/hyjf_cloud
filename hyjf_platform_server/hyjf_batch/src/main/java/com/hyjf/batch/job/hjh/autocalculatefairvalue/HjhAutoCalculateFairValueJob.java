@@ -21,7 +21,7 @@ public class HjhAutoCalculateFairValueJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("HjhAutoCalculateFairValueJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCalculateFairValue/hjhCalculateFairValue", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/hjhAutoCalculateFairValue/hjhCalculateFairValue", String.class);
         logger.info("HjhAutoCalculateFairValueJob execute end...");
     }
 }

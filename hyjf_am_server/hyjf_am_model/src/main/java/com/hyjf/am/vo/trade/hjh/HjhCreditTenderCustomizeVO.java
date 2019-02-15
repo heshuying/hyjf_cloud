@@ -137,7 +137,11 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 	 * 债转服务费率
 	 */
 	private String assignServiceApr;
-	
+	/**
+	 * 项目期数
+	 */
+	private String projectPeriod;
+
 	/**
 	 * 构造方法
 	 */
@@ -345,5 +349,17 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 
 	public void setAssignServiceApr(String assignServiceApr) {
 		this.assignServiceApr = assignServiceApr;
+	}
+
+    public void setProjectPeriod(String projectPeriod) {
+        this.projectPeriod = projectPeriod;
+    }
+
+    public String getProjectPeriod() {
+        return projectPeriod;
+    }
+
+    public String getPeriodView(){
+		return this.getAssignPeriod() + "/" + this.getBorrowPeriod();
 	}
 }

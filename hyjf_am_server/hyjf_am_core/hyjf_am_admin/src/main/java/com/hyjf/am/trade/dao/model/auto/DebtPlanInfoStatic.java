@@ -7,56 +7,186 @@ import java.util.Date;
 public class DebtPlanInfoStatic implements Serializable {
     private Integer id;
 
+    /**
+     * 待成交资产-专属资产
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitInvest;
 
+    /**
+     * 待成交资产-债权转让
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitCredit;
 
+    /**
+     * 已成交资产数量-专属资产
+     *
+     * @mbggenerated
+     */
     private Integer yesInvest;
 
+    /**
+     * 已成交资产数量-债权转让
+     *
+     * @mbggenerated
+     */
     private Integer yesCredit;
 
+    /**
+     * 持有债权待还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal waitRepay;
 
+    /**
+     * 持有债权已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal yesRepay;
 
+    /**
+     * 应还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayWait;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planRepayYes;
 
+    /**
+     * 投资人加入总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal planAccedeAll;
 
+    /**
+     * 到期公允价值总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal expireFairValue;
 
+    /**
+     * 待成交资产-汇添金专属资产-期限分布-一月
+     *
+     * @mbggenerated
+     */
     private Integer investPeriodOne;
 
+    /**
+     * 待成交资产-汇添金专属资产-期限分布-2-4月
+     *
+     * @mbggenerated
+     */
     private Integer investPeriodTwoFour;
 
+    /**
+     * 待成交资产-汇添金专属资产-期限分布-5-8月
+     *
+     * @mbggenerated
+     */
     private Integer investPeriodFiveEight;
 
+    /**
+     * 待成交资产-汇添金专属资产-期限分布-9-12月
+     *
+     * @mbggenerated
+     */
     private Integer investPeriodNineTwel;
 
+    /**
+     * 待成交资产-汇添金专属资产-期限分布-12-24月
+     *
+     * @mbggenerated
+     */
     private Integer investPeriodTwelTf;
 
+    /**
+     * 待成交资产-汇添金专属资产-期限分布-24-月
+     *
+     * @mbggenerated
+     */
     private Integer investPeriodTf;
 
+    /**
+     * 待成交资产-债权转让-期限分布-一月
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriodOne;
 
+    /**
+     * 待成交资产-债权转让-期限分布-2-4月
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriodTwoFour;
 
+    /**
+     * 待成交资产-债权转让-期限分布-5-8月
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriodFiveEight;
 
+    /**
+     * 待成交资产-债权转让-期限分布-9-12月
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriodNineTwel;
 
+    /**
+     * 待成交资产-债权转让-期限分布-12-24月
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriodTwelTf;
 
+    /**
+     * 待成交资产-债权转让-期限分布-24-月
+     *
+     * @mbggenerated
+     */
     private Integer creditPeriodTf;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 日期
+     *
+     * @mbggenerated
+     */
     private String dataDate;
 
+    /**
+     * 统计数据月份
+     *
+     * @mbggenerated
+     */
     private String dataMonth;
 
+    /**
+     * 统计数据小时
+     *
+     * @mbggenerated
+     */
     private String dataHour;
 
     private static final long serialVersionUID = 1L;

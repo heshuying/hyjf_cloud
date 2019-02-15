@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.api.borrowrecover;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
@@ -21,10 +22,12 @@ import java.util.List;
 
 /**
  * @Auther:yangchangwei
+ * modify by zha daojian
+ * 后台列表的批次放款已挪到am_admin 处理，此处由 zhadaojian 负责后期维护
  * @Date:2018/7/7
- * @Description: 后台列表-批次放款
+ * @Description: api查询批次放款
  */
-@Api(value = "批次中心-批次放款")
+@Api(value = "api查询批次放款")
 @RestController
 @RequestMapping("/am-trade/apiBatchBorrowRecover")
 public class ApiBatchBorrowRecoverController extends BaseController {
@@ -32,18 +35,10 @@ public class ApiBatchBorrowRecoverController extends BaseController {
     @Autowired
     private BatchCenterBorrowRecoverService batchBorrowRecoverService;
 
-
-
-    /**
-     *
-     * @param request
-     * @return
-     */
     @ApiOperation(value = "放款列表查询总件数")
     @PostMapping("/getListTotal")
-    public Integer getListTotal(@RequestBody BatchBorrowRecoverRequest request) {
-        Integer count = batchBorrowRecoverService.getListTotal(request);
-        return count;
+    public IntegerResponse getListTotal(@RequestBody BatchBorrowRecoverRequest request) {
+        return new IntegerResponse(batchBorrowRecoverService.getListTotal(request));
     }
 
     @ApiOperation(value = "放款列表查询")
@@ -52,7 +47,7 @@ public class ApiBatchBorrowRecoverController extends BaseController {
 
         logger.info("BatchBorrowRecoverRequest:::::::[{}]", JSON.toJSONString(request));
         BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
-        Integer total = getListTotal(request);
+        Integer total = batchBorrowRecoverService.getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
         if(request.getPageSize() ==0){
             paginator = new Paginator(request.getCurrPage(), total);

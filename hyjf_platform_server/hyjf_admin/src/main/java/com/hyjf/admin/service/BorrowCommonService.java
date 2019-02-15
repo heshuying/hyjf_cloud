@@ -6,13 +6,16 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author GOGTZ-Z
@@ -30,7 +33,7 @@ public interface BorrowCommonService {
 	 * @param form
 	 * @return
 	 */
-	public BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
+	BorrowCommonResponse moveToInfoAction(BorrowCommonRequest borrowCommonRequest);
 
 	/**
 	 * 添加信息
@@ -40,9 +43,9 @@ public interface BorrowCommonService {
 	 * @return
 	 * @throws Exception
 	 */
-	public BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception;
+	BorrowCommonResponse insertAction(BorrowCommonRequest borrowCommonRequest) throws Exception;
 
-	public LinkResponse getLinks();
+	LinkResponse getLinks();
 
 	/**
 	 * 用户是否存在
@@ -50,7 +53,7 @@ public interface BorrowCommonService {
 	 * @param request
 	 * @return
 	 */
-	public int isExistsUser(String userId);
+	int isExistsUser(String userId);
 
 	/**
 	 * 项目申请人是否存在
@@ -59,7 +62,7 @@ public interface BorrowCommonService {
 	 * @return
 	 */
 
-	public AdminSystemResponse isExistsApplicant(String applicant);
+	AdminSystemResponse isExistsApplicant(String applicant);
 
 	/**
 	 * 获取最新的借款预编码
@@ -68,7 +71,7 @@ public interface BorrowCommonService {
 	 * @return
 	 */
 
-	public String getBorrowPreNid();
+	String getBorrowPreNid();
 
 	/**
 	 * 获取现金贷的借款预编号
@@ -76,7 +79,7 @@ public interface BorrowCommonService {
 	 * @param request
 	 * @return
 	 */
-	public String getXJDBorrowPreNid();
+	String getXJDBorrowPreNid();
 
 	/**
 	 * 借款预编码是否存在
@@ -84,15 +87,15 @@ public interface BorrowCommonService {
 	 * @param request
 	 * @return
 	 */
-	public boolean isExistsBorrowPreNidRecord(String borrowPreNid);
+	boolean isExistsBorrowPreNidRecord(String borrowPreNid);
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param request
 	 * @return
 	 */
-	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
+	BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
 	/**
 	 * 根据资产编号查询该资产下面的产品类型
@@ -102,7 +105,7 @@ public interface BorrowCommonService {
 	 * @param instCode
 	 * @return
 	 */
-	public BorrowCommonResponse getProductTypeAction(String instCode);
+	BorrowCommonResponse getProductTypeAction(String instCode);
 
 	/**
 	 * 受托用户是否存在
@@ -111,24 +114,40 @@ public interface BorrowCommonService {
 	 * @return
 	 */
 
-	public int isEntrustedExistsUser(String userName);
+	int isEntrustedExistsUser(String userName);
 
-	public List<UserVO> selectUserByUsername(String repayOrgName);
+	List<UserVO> selectUserByUsername(String repayOrgName);
 
-	public UserInfoVO findUserInfoById(@PathVariable int userId);
+	UserInfoVO findUserInfoById(@PathVariable int userId);
 
-	public boolean isBorrowUserCACheck(String name);
+	boolean isBorrowUserCACheck(String name);
 
-	public boolean isCAIdNoCheck(String param, String name);
-	public BorrowCustomizeResponse init(BorrowBeanRequest form);
+	boolean isCAIdNoCheck(String param, String name);
+	BorrowCustomizeResponse init(BorrowBeanRequest form);
 	/**
 	 * 列表导出
 	 * 
 	 * @param borrowCustomize
 	 * @return
 	 */
-	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
-	public UserVO getUserByUserName(String userName);
+	BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
+	UserVO getUserByUserName(String userName);
 
 	List<BorrowCommonCustomizeVO> paging(BorrowBeanRequest request, List<BorrowCommonCustomizeVO> result);
+
+	/**
+	 * 获取标的投资的等级
+	 *
+	 * @param borrowLevel
+	 * @return
+	 */
+	String getBorrowLevelAction(@Valid String borrowLevel);
+
+	/**
+	 * map转ParamNameVO
+	 *
+	 * @param map
+	 * @return
+	 */
+    List<ParamNameVO> mapToParamNameVO(Map<String,String> map);
 }

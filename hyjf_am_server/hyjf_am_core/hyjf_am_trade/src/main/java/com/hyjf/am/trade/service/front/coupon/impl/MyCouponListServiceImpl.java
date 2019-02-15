@@ -4,20 +4,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
 import com.hyjf.am.trade.dao.mapper.customize.MyCouponListCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
-import com.hyjf.am.trade.dao.model.auto.HjhPlan;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowInfoService;
 import com.hyjf.am.trade.service.front.borrow.BorrowProjectTypeService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.coupon.MyCouponListService;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,7 @@ import java.util.*;
  * @version MyCouponListServiceImpl, v0.1 2018/6/22 19:15
  */
 @Service
-public class MyCouponListServiceImpl implements MyCouponListService {
+public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCouponListService {
     Logger logger = LoggerFactory.getLogger(MyCouponListServiceImpl.class);
     @Resource
     MyCouponListCustomizeMapper myCouponListCustomizeMapper;
@@ -115,7 +114,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         String platform = request.getPlatform();
         map.put("userId", userId);
         // 查询项目信息
-        Borrow borrow = borrowService.getBorrow(borrowNid);
+        Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
         String style = borrow.getBorrowStyle();
@@ -193,7 +192,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
         // 查询项目信息
-        Borrow borrow = borrowService.getBorrow(borrowNid);
+        Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
         Integer couponFlg = borrowInfo.getBorrowInterestCoupon();
@@ -481,6 +480,18 @@ public class MyCouponListServiceImpl implements MyCouponListService {
     }
 
     @Override
+    public int updateCouponReadFlag(Integer userId, Integer readFlag){
+        CouponUser couponUser = new CouponUser();
+        couponUser.setReadFlag(readFlag);
+
+        CouponUserExample example = new CouponUserExample();
+        CouponUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId).andUsedFlagEqualTo(CustomConstants.USER_COUPON_STATUS_UNUSED).andDelFlagEqualTo(Integer.parseInt(CustomConstants.FLAG_NORMAL));
+
+        return couponUserMapper.updateByExampleSelective(couponUser, example);
+    }
+
+    @Override
     public JSONObject getBorrowCoupon(MyCouponListRequest requestBean) {
         JSONObject jsonObject = new JSONObject();
         String userId = requestBean.getUserId();
@@ -493,7 +504,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         map.put("userId", userId);
         map.put("usedFlag", "0");
         // 查询项目信息
-        Borrow borrow = borrowService.getBorrow(borrowNid);
+        Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
         String style = borrow.getBorrowStyle();
@@ -714,7 +725,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
     /**
      * 处理校验优惠券平台
      * @param couponSystem 优惠券适用平台
-     * @param platform 投资平台
+     * @param platform 出借平台
      * @return
      */
     public boolean dealCheckCouponSystem(String couponSystem,String platform){

@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.market.service;
 
-import com.hyjf.am.vo.app.AppContentArticleVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 
 /**
  * @author dangzw
@@ -15,5 +15,5 @@ public interface AppContentArticleService {
      * @param contentArticleId
      * @return
      */
-    AppContentArticleVO getContentArticleById(Integer contentArticleId);
+    ContentArticleVO getContentArticleById(Integer contentArticleId);
 }

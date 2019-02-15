@@ -56,7 +56,7 @@ public class HjhAccountBalanceRequest  implements Serializable {
     @ApiModelProperty(value = "债转资产交易额(元)查询条件")
     public java.math.BigDecimal creditAccountSer;
 
-    @ApiModelProperty(value = "复投资金额(元)查询条件")
+    @ApiModelProperty(value = "复出借金额(元)查询条件")
     public java.math.BigDecimal reinvestAccountSer;
 
     @ApiModelProperty(value = "新加入资金额(元)查询条件")

@@ -15,7 +15,7 @@ import java.util.List;
 public class VipDetailListRequest extends BasePage {
      /** vip用户id */
      public String userId;
-    /** 投资标的号 */
+    /** 出借标的号 */
     public String tenderNid;
 
     public List<BorrowTenderVO> borrowTenderList;

@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -121,12 +120,8 @@ public class SmsLogServiceImpl implements SmsLogService {
 			criteria.and("status").is(status);
 		}
 		query.addCriteria(criteria);
-		List<SmsLog> list = smsLogDao.find(query);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
-		} else {
-			return 0;
-		}
+		long count = smsLogDao.count(query);
+		return Math.toIntExact(count);
 	}
 
 	@Override
@@ -136,11 +131,26 @@ public class SmsLogServiceImpl implements SmsLogService {
 
 	@Override
 	public int queryOntimeCount(SmsLogRequest request) {
-		request.setCurrPage(0);
-		List<SmsOntime> list = queryTime(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
+		String mobile = request.getMobile();
+		String postTimeBegin = request.getPostTimeBegin();
+		String postTimeEnd = request.getPostTimeEnd();
+		Integer status = request.getStatus();
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if (StringUtils.isNotBlank(mobile)) {
+			criteria.and("mobile").is(mobile);
 		}
-		return 0;
+		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
+			criteria.and("endtime").gte(begin).lte(end);
+		}
+
+		if (status != null) {
+			criteria.and("status").is(status);
+		}
+		query.addCriteria(criteria);
+		query.with(new Sort(Sort.Direction.DESC, "posttime"));
+		return smsOntimeMongoDao.count(query).intValue();
 	}
 }

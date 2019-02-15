@@ -48,7 +48,7 @@ public class AccountRechargeRequestBean extends BasePage {
     @ApiModelProperty(value = "充值手续费收取方式:0,向用户收取.1,向商户收取")
     private String getfeefromSearch;
 
-    @ApiModelProperty(value = "用户角色:1,投资人.2,借款人.3,垫付机构.")
+    @ApiModelProperty(value = "用户角色:1,出借人.2,借款人.3,担保机构.")
     private String roleIdSearch;
 
 //    @ApiModelProperty(value = "订单号")

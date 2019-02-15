@@ -1,9 +1,9 @@
 package com.hyjf.cs.message.bean.mc;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
+import java.util.Date;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author xiasq
@@ -19,7 +19,7 @@ public class SmsLog implements Serializable {
 
     private String ip;
 
-    @Indexed
+    // @Indexed dba维护索引
     private Integer posttime;
 
     private Integer status;
@@ -39,6 +39,8 @@ public class SmsLog implements Serializable {
     private String mobile;
 
     private String content;
+
+    private Integer isDisplay;
 
     private static final long serialVersionUID = 1L;
 
@@ -146,4 +148,11 @@ public class SmsLog implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
+    }
 }

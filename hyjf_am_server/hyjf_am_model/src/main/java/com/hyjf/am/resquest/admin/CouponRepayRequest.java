@@ -55,14 +55,14 @@ public class CouponRepayRequest extends BasePage implements Serializable {
 	@ApiModelProperty(value = "渠道")
 	private String utmIdSrch;
 	/**
-	 * 投资时间 检索条件
+	 * 出借时间 检索条件
 	 */
-	@ApiModelProperty(value = "投资时间 开始")
+	@ApiModelProperty(value = "出借时间 开始")
 	private String timeStartSrch;
 	/**
-	 * 投资时间 检索条件
+	 * 出借时间 检索条件
 	 */
-	@ApiModelProperty(value = "投资时间 结束")
+	@ApiModelProperty(value = "出借时间 结束")
 	private String timeEndSrch;
 	/**
 	 * 检索条件 limitStart

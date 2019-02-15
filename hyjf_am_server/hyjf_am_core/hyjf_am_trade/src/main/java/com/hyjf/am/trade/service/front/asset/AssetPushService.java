@@ -55,14 +55,6 @@ public interface AssetPushService extends BaseService {
     void insertRiskInfo(List<InfoBean> infobeans);
 
     /**
-     * 查询资产表
-     * @param assetId
-     * @param instCode
-     * @return
-     */
-    HjhPlanAsset selectPlanAsset(String assetId, String instCode);
-
-    /**
      * 更新资产表
      * @param planAssetVO
      */

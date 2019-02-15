@@ -29,20 +29,20 @@ public class AppInvestListCustomizeVO extends BaseVO implements Serializable {
 	private String borrowApr;
 	// 项目期限
 	private String period;
-	// 投资金额
+	// 出借金额
 	private String account;
 	// 项目进度
 	private String borrowSchedule;
 	// 项目详情url
 	private String borrowUrl = "";
-	// 优惠券投资时的优惠券类型，费优惠券投资则为空字符串
+	// 优惠券出借时的优惠券类型，费优惠券出借则为空字符串
 	private String label;
 	// RTB
 	private String projectType;
-	// 投资时间
+	// 出借时间
 	private int addTime;
 
-	// 投资订单号
+	// 出借订单号
 	private String orderId;
 
 	private String couponType;

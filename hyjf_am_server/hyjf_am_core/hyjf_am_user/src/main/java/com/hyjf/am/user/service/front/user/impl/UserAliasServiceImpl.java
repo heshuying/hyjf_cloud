@@ -77,7 +77,9 @@ public class UserAliasServiceImpl extends BaseServiceImpl implements UserAliasSe
 
 	@Override
 	public int updateAliases(UserAlias userAlias) {
-		int cnt = userAliasMapper.updateByPrimaryKeySelective(userAlias);
+		UserAliasExample example = new UserAliasExample();
+		example.createCriteria().andUserIdEqualTo(userAlias.getUserId());
+		int cnt = userAliasMapper.updateByExampleSelective(userAlias, example);
 		return cnt;
 	}
 

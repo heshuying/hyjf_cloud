@@ -33,10 +33,6 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND hba.borrow_nid = #{borrowNid}
         </if>
-        <!-- 资产来源 -->
-        <if test="instCodeSrch != null and instCodeSrch != ''">
-            AND bi.inst_code = #{instCodeSrch}
-        </if>
         <if test="batchNo != null and batchNo != ''">
             AND hba.batch_no = #{batchNo}
         </if>
@@ -53,6 +49,12 @@
             <!-- 优化sql(字段类型转换) timestamp-->
             AND hba.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{submitTimeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
+        <!-- add by LSY START -->
+        <!-- 资产来源 -->
+        <if test="instCodeSrch != null and instCodeSrch != ''">
+            AND bi.inst_code = #{instCodeSrch}
+        </if>
+        <!-- add by LSY END -->
     </sql>
 
     <select id="countBorrowBatchCenterListTotal" resultType="java.lang.Integer"

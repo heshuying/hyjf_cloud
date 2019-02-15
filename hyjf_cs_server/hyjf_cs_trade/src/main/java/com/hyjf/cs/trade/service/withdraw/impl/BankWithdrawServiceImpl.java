@@ -27,7 +27,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -188,7 +187,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
         int nowTime = GetDate.getNowTime10(); // 当前时间
-        // TODO
         Date nowDate = new Date();
         List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
 
@@ -364,7 +362,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         String userRoId = userInfoVO.getRoleId() + "";
         //用户的可用金额
         BigDecimal bankBalance = account.getBankBalance();
-        //查询用户投资记录
+        //查询用户出借记录
         int borrowTender = amTradeClient.getBorrowTender(userId);
         if (StringUtils.equals("1", userRoId)) {
             if (borrowTender <= 0) {
@@ -626,7 +624,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     private BankWithdrawBeanRequest createBankWithdrawBeanRequest(AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee, BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
         BankWithdrawBeanRequest bankWithdrawBeanRequest = new BankWithdrawBeanRequest();
-        // TODO
         Date nowDate = new Date();
         bankWithdrawBeanRequest.setUserId(userId);
         bankWithdrawBeanRequest.setTransAmt(transAmt);
@@ -695,14 +692,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     public UserVO checkUserWithdrawMessage(UserVO user, String transAmt, String cardNo, String payAllianceCode){
         if (user == null) {
-            throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_RETRY);
+            throw new CheckException(MsgEnum.ERR_USER_LOGIN_RETRY);
         }
         // 检查数据是否完整
         if (Validator.isNull(transAmt)) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
+            throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT);
         }
         if (Validator.isNull(cardNo)) {
-            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
+            throw new CheckException(MsgEnum.ERR_PARAM);
         }
 
         // 检查参数(交易金额是否大于0)
@@ -712,43 +709,43 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             feetmp = "1";
         }
         if (account.compareTo(new BigDecimal(feetmp)) <= 0) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE);
+            throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_AMOUNT_GREATER_THAN_ONE);
         }
         // 检查参数(可能使用特殊开头(如04)的银行卡,所以不再使用是否是数字进行判断)
        /* if (Validator.isNotNull(cardNo) && !StringUtils.isNumeric(cardNo)) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_CARD);
+            throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_CARD);
         }*/
         UserVO users= amUserClient.findUserById(user.getUserId());
         if (users.getBankOpenAccount()==0) {
-            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         // 判断用户是否设置过交易密码
         if (users.getIsSetPassword() == 0) {
-            throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+            throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
         if ((account.compareTo(new BigDecimal(50000)) > 0) && StringUtils.isBlank(payAllianceCode)) {
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
+            throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
         }
 
         BankCardVO bankCard = this.amUserClient.queryUserCardValid(user.getUserId()+"", cardNo);
         if (bankCard == null || Validator.isNull(bankCard.getCardNo())) {
-            throw new ReturnMessageException(MsgEnum.ERR_CARD_NOT_BIND);
+            throw new CheckException(MsgEnum.ERR_CARD_NOT_BIND);
         }
 //
         // 取得用户当前余额
         AccountVO accountVO = amUserClient.getAccount(user.getUserId());
         // 提现金额大于可用余额
         if (null==accountVO) {
-            throw new ReturnMessageException(MsgEnum.ERR_USER_UNUSUAL);
+            throw new CheckException(MsgEnum.ERR_USER_UNUSUAL);
         }
         // 提现金额大于可用余额
         if(account.compareTo(accountVO.getBankBalance()) > 0){
-            throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE);
+            throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE);
         }
         // 服务费授权状态
-        if(!checkPaymentAuthStatus(user.getUserId())){
-            throw new ReturnMessageException("请先进行服务费授权。");
+        if(!authService.checkPaymentAuthStatus(user.getUserId())){
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         //服务费收取
         return users;
@@ -1745,8 +1742,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setCardNo((cardNo==null || "".equals(cardNo))?"银行卡已删除":cardNo);
             result.setBank(accountWithdrawVO.getBank());
             result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
-            //TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
-            // result.setWithdrawTime(accountWithdrawVO.getAddtime());
+            result.setWithdrawTime(String.valueOf(accountWithdrawVO.getCreateTime()));
             result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
             resultList.add(result);
         }

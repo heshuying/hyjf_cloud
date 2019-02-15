@@ -9,6 +9,8 @@ import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.RechargeManagementCustomize;
 import com.hyjf.am.trade.service.admin.finance.RechargeManagementService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @Service
 public class RechargeManagementServiceImpl implements RechargeManagementService {
+
+    Logger logger = LoggerFactory.getLogger(RechargeManagementServiceImpl.class);
 
     @Autowired
     private AccountRechargeCustomizeMapper accountRechargeCustomizeMapper;
@@ -82,13 +86,15 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
         criteria.andUserIdEqualTo(userId);
         criteria.andNidEqualTo(nid);
         criteria.andStatusEqualTo(RECHARGE_STATUS_FAIL);
+        logger.info("修改充值状态:userId" + userId + ";Nid:" + nid + ";Status:" + RECHARGE_STATUS_FAIL);
         List<AccountRecharge> rechargeList = accountRechargeMapper.selectByExample(accountRechargeExample);
-
+        logger.info("Size:" + rechargeList.size() + ";修改充值状态的充值信息:" + rechargeList.get(0).toString());
         if (rechargeList != null && rechargeList.size() ==1){
             AccountRecharge recharge = rechargeList.get(0);
             // 将充值状态改为充值中
             recharge.setStatus(RECHARGE_STATUS_WAIT);
             boolean isUpdateFlag = accountRechargeMapper.updateByPrimaryKeySelective(recharge) > 0 ? true : false;
+            logger.info("充值记录状态修改为:" + RECHARGE_STATUS_WAIT + ";修改状态:" + isUpdateFlag);
             if (!isUpdateFlag){
                 return false;
             }
@@ -112,7 +118,7 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
         Account account = this.getAccountByUserId(userId);
         // 根据充值订单号查询用户充值信息
         AccountRecharge accountRecharge = this.getAccountRecharge(nid, userId);
-
+        logger.info("充值掉单后Fix时根据订单号查询到的订单为:" + accountRecharge);
         if (accountRecharge != null) {
             // 更新提现记录状态:更新为充值成功
             accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);
@@ -157,7 +163,7 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
             accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
             accountList.setBankAwait(account.getBankAwait());// 银行待收总额
             accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
             accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
             accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
             accountList.setPlanFrost(account.getPlanFrost());
@@ -180,6 +186,7 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
             accountList.setTradeStatus(1);// 成功状态
             // 插入交易明细
             boolean isAccountListUpdateFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
+            logger.info("充值掉单处理后的状态为:" + isAccountListUpdateFlag + ";数据条件:" + accountList.toString());
             if (!isAccountListUpdateFlag) {
                 throw new Exception("手动处理充值掉单,插入用户交易明细失败~~,用户ID:" + userId);
             }
@@ -201,11 +208,13 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
 
         // 根据订单号,用户ID查询用户充值订单
         AccountRecharge accountRecharge = this.getAccountRecharge(nid, userId);
+        logger.info("充值失败后Fix时根据订单号查询到的订单为:" + accountRecharge);
         if (accountRecharge != null){
             if (accountRecharge.getStatus() == RECHARGE_STATUS_WAIT){
                 accountRecharge.setStatus(RECHARGE_STATUS_FAIL);
                 isUpdateRechargeFalse = this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge) > 0 ? true : false;
             }
+            logger.info("Fix 充值失败后状态由:" + RECHARGE_STATUS_WAIT + ";更新为:" + RECHARGE_STATUS_FAIL + ";更新装填为:" + isUpdateRechargeFalse + ";");
         }
         return isUpdateRechargeFalse;
     }

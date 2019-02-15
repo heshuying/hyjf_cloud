@@ -20,9 +20,9 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +30,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -173,6 +171,19 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/orgrepay_waittotal_current")
+    public BigDecimalResponse orgRepayWaitTotalCurrent(@RequestBody @Valid RepayListRequest requestBean) {
+        BigDecimalResponse responseBean = new BigDecimalResponse();
+        BigDecimal result = repayManageService.selectOrgRepayWaitCurrent(requestBean);
+        responseBean.setResultDec(result);
+        return responseBean;
+    }
+
+    /**
      * 还款详情页面数据获取
      * @param requestBean
      * @return
@@ -187,7 +198,6 @@ public class RepayManageController extends BaseController {
         projectBean.setRoleId(requestBean.getRoleId());
         projectBean.setBorrowNid(requestBean.getBorrowNid());
         responseBean.setResultStr(JSON.toJSONString(projectBean));
-
         try {
             projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
             logger.info("加载的还款详情数据：" + JSON.toJSONString(projectBean));
@@ -199,9 +209,7 @@ public class RepayManageController extends BaseController {
             responseBean.setMessage("还款申请详情页面异常");
             return responseBean;
         }
-
     }
-
     /**
      * 还款申请更新
      * @auther: hesy
@@ -287,9 +295,8 @@ public class RepayManageController extends BaseController {
         String userId = paraMap.get("userId");
         boolean isAllRepay = Boolean.valueOf(paraMap.get("isAllRepay"));
         logger.info("获取计算完的还款Bean开始：{}", paraMap);
-
         try {
-            Borrow borrow = repayManageService.getBorrow(borrowNid);
+            Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
             Account account = repayManageService.getAccount(Integer.parseInt(userId));
             // 担保机构
             if(roleId.equals("3")){
@@ -326,7 +333,6 @@ public class RepayManageController extends BaseController {
             responseBean.setResultStr(JSON.toJSONString(repayByTerm));
             return responseBean;
         }
-
         logger.info("计算完的还款bean数据：{}", JSON.toJSONString(repayByTerm));
         responseBean.setResultStr(JSON.toJSONString(repayByTerm));
         return responseBean;
@@ -361,6 +367,20 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 转让通知借款人 统计
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    @PostMapping(value = "/getUserRepayDetailAjaxCount", produces = "application/json; charset=utf-8")
+    public IntegerResponse getUserRepayDetailAjaxCount(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
+        IntegerResponse responseBean = new IntegerResponse();
+        Integer listCount = repayManageService.selectUserRepayTransferDetailListTotal(repayTransferRequest.getBorrowNid(), repayTransferRequest.getVerificationFlag());
+        responseBean.setResultInt(listCount);
+        return responseBean;
+    }
+
+    /**
      * 获取列表
      * @param repayTransferRequest
      * @return
@@ -371,20 +391,9 @@ public class RepayManageController extends BaseController {
         repayTransferRequest.setBorrowNid(repayTransferRequest.getBorrowNid());
         repayTransferRequest.setVerificationFlag(repayTransferRequest.getVerificationFlag());
 
-        // 总条数
-        int listCount = repayManageService.selectUserRepayTransferDetailListTotal(repayTransferRequest.getBorrowNid(), repayTransferRequest.getVerificationFlag());
+        List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
 
-        if (listCount > 0){
-
-            if(repayTransferRequest.getCurrPage()>0){
-                Paginator paginator = new Paginator(repayTransferRequest.getCurrPage(), listCount);
-                repayTransferRequest.setLimitStart(paginator.getOffset());
-                repayTransferRequest.setLimitEnd(paginator.getLimit());
-            }
-
-
-            List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
-
+        if(null != repayList && repayList.size() > 0){
             // 数据格式化的格式 10,000.00
             DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
 
@@ -393,16 +402,18 @@ public class RepayManageController extends BaseController {
                 re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
                 re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
                 re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
+                re.setAssignOrderDateStr(GetDateUtils.formatDate(re.getAssignOrderDate()));
             }
-            String returnCode = "0";
-            List<WebUserRepayTransferCustomizeVO> voList = null;
-            if (CollectionUtils.isNotEmpty(repayList)){
-                voList = CommonUtils.convertBeanList(repayList, WebUserRepayTransferCustomizeVO.class);
-            }
-            repayTransferCustomizeResponse.setCount(listCount);
-            repayTransferCustomizeResponse.setRtn(returnCode);
-            repayTransferCustomizeResponse.setResultList(voList);
         }
+
+        String returnCode = "0";
+        List<WebUserRepayTransferCustomizeVO> voList = null;
+        if (CollectionUtils.isNotEmpty(repayList)){
+            voList = CommonUtils.convertBeanList(repayList, WebUserRepayTransferCustomizeVO.class);
+        }
+        repayTransferCustomizeResponse.setRtn(returnCode);
+        repayTransferCustomizeResponse.setResultList(voList);
+
         return repayTransferCustomizeResponse;
     }
 }

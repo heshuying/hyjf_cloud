@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author yaoy
@@ -36,7 +37,7 @@ public class CouponExpiredServiceImpl implements CouponExpiredService {
         int nowTime = GetDate.getNowTime10();
         //yyyy-MM-dd 的时间戳
         int nowDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf));
-        // 取得体验金投资（无真实投资）的还款列表
+        // 取得体验金出借（无真实出借）的还款列表
         CouponUserExample example = new CouponUserExample();
         CouponUserExample.Criteria criteria = example.createCriteria();
         criteria.andDelFlagEqualTo(0);
@@ -47,7 +48,7 @@ public class CouponExpiredServiceImpl implements CouponExpiredService {
         CouponUser couponUser = new CouponUser();
         // 已失效
         couponUser.setUsedFlag(4);
-        couponUser.setUpdateTime(GetDate.str2Date(GetDate.timestamptoStrYYYYMMDDHHMMSS(nowTime),sdf) );
+        couponUser.setUpdateTime(new Date());
         int count = couponUserMapper.updateByExampleSelective(couponUser, example);
         if (count > 0) {
             logger.info("优惠券过期失效更新成功，共有{}张优惠券过期", count);

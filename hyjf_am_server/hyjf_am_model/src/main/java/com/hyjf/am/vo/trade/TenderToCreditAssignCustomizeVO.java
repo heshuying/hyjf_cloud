@@ -1,5 +1,5 @@
 /**
- * Description:前端WEB用户投资债转认购债券实体类
+ * Description:前端WEB用户出借债转认购债券实体类
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: Administrator
@@ -16,7 +16,7 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 
 /**
- * @Description 债转投资相关
+ * @Description 债转出借相关
  * @Author sunss
  * @Date 2018/7/3 16:56
  */
@@ -37,7 +37,7 @@ public class TenderToCreditAssignCustomizeVO extends BaseVO implements Serializa
      */
     private String creditNid;
     /**
-     * 投资编号
+     * 出借编号
      */
     private String tenderNid;
     /**

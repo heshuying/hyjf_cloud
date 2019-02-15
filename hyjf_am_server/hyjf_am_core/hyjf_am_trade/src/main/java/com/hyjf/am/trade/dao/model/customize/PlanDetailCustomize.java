@@ -47,11 +47,11 @@ public class PlanDetailCustomize implements Serializable {
 	private String planName;
 	
 	private String couponConfig;
-	//最低投资金额
+	//最低出借金额
 	private String debtMinInvestment;
-	//投资增量
+	//出借增量
 	private String debtInvestmentIncrement;
-	//最高投资金额
+	//最高出借金额
 	private String debtMaxInvestment;
 	//倒计时
 	private String timer;
@@ -75,6 +75,16 @@ public class PlanDetailCustomize implements Serializable {
 	private String borrowStyleName;
 	// 默认0 天标，1 月标
 	private String isMonth;
+	// 标的状态
+	private String investLevel;
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
 	
 	public PlanDetailCustomize() {
 		super();

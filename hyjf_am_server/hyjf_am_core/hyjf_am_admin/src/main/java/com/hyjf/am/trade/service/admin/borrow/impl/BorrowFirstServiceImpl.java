@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author wangjun
@@ -95,7 +94,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         List<Borrow> borrowList = this.borrowMapper.selectByExample(example);
         if (borrowList != null && borrowList.size() == 1) {
             Borrow borrow = borrowList.get(0);
-            // 该借款编号没有交过保证金
+            // 该项目编号没有交过保证金
             BorrowBailExample exampleBail = new BorrowBailExample();
             BorrowBailExample.Criteria craBail = exampleBail.createCriteria();
             craBail.andBorrowNidEqualTo(borrow.getBorrowNid());
@@ -108,7 +107,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 if (StringUtils.isNotBlank(currUserId)) {
                     borrowBail.setOperaterUid(Integer.valueOf(currUserId));
                 }
-                // 借款编号
+                // 项目编号
                 borrowBail.setBorrowNid(borrow.getBorrowNid());
                 // 保证金数值  计算公式：保证金金额=借款金额×3％
                 BigDecimal bailPercent = new BigDecimal(this.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE));
@@ -162,7 +161,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 初审状态
                     borrow.setVerifyStatus(Integer.valueOf(borrowFireRequest.getVerifyStatus()));
                 }
-                // 发标方式为"立即发标 4"时，项目状态变为 投资中
+                // 发标方式为"立即发标 4"时，项目状态变为 出借中
                 else if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 4) {
                     // 是否可以进行借款
                     borrow.setBorrowStatus(1);
@@ -178,7 +177,6 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 根据此标的是否跑引擎操作redis ：0未使用 1使用
                     if (borrow.getIsEngineUsed() == 0) {
                         // borrowNid，借款的borrowNid,account借款总额
-                        //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
                         RedisUtils.set(RedisConstants.BORROW_NID + borrow.getBorrowNid(), borrow.getAccount().toString());
                     }
 
@@ -186,7 +184,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                         // 三方资产更新资产表状态
                         HjhPlanAsset hjhPlanAssetnew = this.selectHjhPlanAssetByBorrowNid(borrowNid);
                         if(hjhPlanAssetnew != null){
-                            //7 投资中
+                            //7 出借中
                             hjhPlanAssetnew.setStatus(7);
                             //获取当前时间
                             hjhPlanAssetnew.setUpdateTime(GetDate.getNowTime());
@@ -227,22 +225,22 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
     public void sendToMQAutoPreAudit(String borrowNid) {
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
         if (null == borrowInfo) {
-            logger.error("未能获取到借款详情、无法发送MQ自动初审！借款编号：" + borrowNid);
+            logger.error("未能获取到借款详情、无法发送MQ自动初审！项目编号：" + borrowNid);
             return;
         }
         HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(borrowInfo.getInstCode(), borrowInfo.getAssetType());
         if (null == hjhAssetBorrowType || null == hjhAssetBorrowType.getAutoBail()) {
-            logger.error("未能获取到流程配置、无法发送MQ自动初审！借款编号：" + borrowNid);
+            logger.error("未能获取到流程配置、无法发送MQ自动初审！项目编号：" + borrowNid);
             return;
         }
         // 判断是否设定自动初审
         if (hjhAssetBorrowType.getAutoAudit() == 1) {
             try {
                 JSONObject params = new JSONObject();
-                params.put("instCode",borrowInfo.getInstCode());
                 params.put("borrowNid", borrowNid);
-                commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
-                logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
+				commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+						MQConstant.AUTO_BORROW_PREAUDIT_ADMIN_BAIL_TAG, borrowNid, params));
+				logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
             } catch (Exception e) {
                 logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
                 e.printStackTrace();
@@ -255,7 +253,6 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
      * @param borrow
      */
     private void changeOntimeOfRedis(Borrow borrow) {
-        //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
             RedisUtils.set(RedisConstants.ONTIME + borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);

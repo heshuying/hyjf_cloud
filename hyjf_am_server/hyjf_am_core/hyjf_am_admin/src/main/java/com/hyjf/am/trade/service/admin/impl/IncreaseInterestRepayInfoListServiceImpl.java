@@ -41,7 +41,7 @@ public class IncreaseInterestRepayInfoListServiceImpl extends BaseServiceImpl im
         if (StringUtils.isNotEmpty(form.getUserNameSrch())) {
             param.put("userNameSrch", form.getUserNameSrch());
         }
-        // 投资Id
+        // 出借Id
         if (StringUtils.isNotEmpty(form.getInvestIdSrch())) {
             param.put("investIdSrch", form.getInvestIdSrch());
         }
@@ -75,7 +75,7 @@ public class IncreaseInterestRepayInfoListServiceImpl extends BaseServiceImpl im
         if (StringUtils.isNotEmpty(form.getUserNameSrch())) {
             param.put("userNameSrch", form.getUserNameSrch());
         }
-        // 投资Id
+        // 出借Id
         if (StringUtils.isNotEmpty(form.getInvestIdSrch())) {
             param.put("investIdSrch", form.getInvestIdSrch());
         }
@@ -111,7 +111,7 @@ public class IncreaseInterestRepayInfoListServiceImpl extends BaseServiceImpl im
         if (StringUtils.isNotEmpty(form.getUserNameSrch())) {
             param.put("userNameSrch", form.getUserNameSrch());
         }
-        // 投资Id
+        // 出借Id
         if (StringUtils.isNotEmpty(form.getInvestIdSrch())) {
             param.put("investIdSrch", form.getInvestIdSrch());
         }

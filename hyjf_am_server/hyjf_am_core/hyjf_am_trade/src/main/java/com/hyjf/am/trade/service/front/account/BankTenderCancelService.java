@@ -9,7 +9,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
 import java.util.List;
 
 /**
- * 投资撤销异常
+ * 出借撤销异常
  * @author jijun
  * @since 20180625
  */

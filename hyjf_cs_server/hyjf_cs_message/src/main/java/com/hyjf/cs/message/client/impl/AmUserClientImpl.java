@@ -2,28 +2,43 @@ package com.hyjf.cs.message.client.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
-import com.hyjf.am.response.user.*;
+import com.hyjf.am.response.user.UserAliasResponse;
+import com.hyjf.am.response.user.UserInfoCustomizeResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
  * @version AmUserClientImpl, v0.1 2018/4/19 12:44
  */
-@Service
+@Cilent
 public class AmUserClientImpl implements AmUserClient {
 
 	@Autowired
@@ -212,20 +227,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 通过手机号获取设备标识码
-	 *
-	 * @param mobile
-	 * @return
-	 */
-	@Override
-	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile) {
-		String url = "http://AM-USER/am-user/userInfo/getMobileCodeByNumber/" + mobile;
-		AdminMsgPushCommonCustomizeVO response = restTemplate.getForEntity(url,AdminMsgPushCommonCustomizeVO.class).getBody();
-		return response;
-	}
-
-
-	/**
 	 * 获取用户表总记录数
 	 *
 	 * @return
@@ -239,48 +240,75 @@ public class AmUserClientImpl implements AmUserClient {
 		return response.getCount();
 	}
 
-	/**
-	 * 根据userId查询用户推广链接注册
-	 *
-	 * @param userId
-	 * @return
-	 */
 	@Override
-	public UtmRegVO findUtmRegByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/user/findUtmRegByUserId/" + userId;
-		UtmRegResponse response = restTemplate.getForEntity(url, UtmRegResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
+	public List<UtmVO> selectUtmPlatList(String type) {
+		Map<String, Object> params = new HashMap<>();
+		if ("pc".equals(type)) {
+			params.put("sourceType", 0);// 渠道0 PC
+			params.put("flagType", 0);// 未删除
+		} else if ("app".equals(type)) {
+			params.put("sourceType", 1);// 渠道1 APP
+			params.put("flagType", 0);// 未删除
+		}
+//		UtmResponse response = restTemplate.postForObject("http://AM-USER/am-user/promotion/utm/getbypagelist",
+//				params,
+//				UtmResponse.class);
+		HttpEntity httpEntity = new HttpEntity(params);
+		ResponseEntity<UtmResponse<UtmVO>> response =
+				restTemplate.exchange("http://AM-USER/am-user/channel/getbypagelist",
+						HttpMethod.POST, httpEntity, new ParameterizedTypeReference<UtmResponse<UtmVO>>() {});
+
+		if (response.getBody() != null) {
+			return response.getBody().getResultListS();
 		}
 		return null;
 	}
 
-	/**
-	 * 检查用户是不是新手
-	 * @param userId
-	 * @return
-	 */
 	@Override
-	public int countNewUserTotal(Integer userId) {
-		Integer result = restTemplate
-				.getForEntity("http://AM-TRADE/am-trade/borrowTender/countNewUserTotal/" + userId,  Integer.class).getBody();
-		if (result != null) {
-			return result;
-		}
-		return 0;
+	public int getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getRegistNumberCount",
+				request, IntegerResponse.class);
+		return response.getResultInt();
 	}
 
-	/**
-	 * 更新用户首次投资信息
-	 *
-	 * @param params
-	 */
 	@Override
-	public Integer updateFirstUtmReg(HashMap<String, Object> params) {
-		IntegerResponse result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateFirstUtmReg",params,IntegerResponse.class).getBody();
-		if (IntegerResponse.isSuccess(result)) {
-			return result.getResultInt();
-		}
-		return 0;
+	public List<AppUtmRegVO> getAppChannelStatisticsDetailVOList(AppChannelStatisticsRequest request) {
+		AppUtmRegResponse response = restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getRegistNumber",
+				request, AppUtmRegResponse.class);
+		return response.getResultList();
 	}
+
+	@Override
+	public int getOpenAccountAttrCount(AppChannelStatisticsRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getOpenAccountAttrCount",
+				request, IntegerResponse.class);
+		return response.getResultInt();
+	}
+
+	@Override
+	public List<Integer> getUsersList(String source) {
+		IntegerResponse response = restTemplate
+				.getForObject("http://AM-USER/am-user/channel/getUsersList/"+source, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Integer> getUsersInfoList() {
+		IntegerResponse response = restTemplate
+				.getForObject("http://AM-USER/am-user/channel/getUsersInfoList", IntegerResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public AppUtmRegResponse getAppUtmRegResponse(AppChannelStatisticsRequest request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getRegistNumber",
+				request, AppUtmRegResponse.class);
+	}
+
 }

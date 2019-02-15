@@ -21,7 +21,7 @@ import java.util.Set;
 public interface AmTradeClient {
 
 	/**
-	 * 查询投之家每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+	 * 查询投之家每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
 	 * 
 	 * @param tzjUserIds
 	 * @param startTime
@@ -41,30 +41,6 @@ public interface AmTradeClient {
 	TzjDayReportVO queryTradeNewDataOnToday(Set<Integer> registerUserIds, Date startTime, Date endTime);
 
 	/**
-	 * 投资人按照地域分布
-	 * @param lastDay 一个月的最后一天
-	 * @return
-	 */
-	List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay);
-
-	/**
-	 * 投资人按照性别分布
-	 * @param lastDay
-	 * @return
-	 */
-	List<TenderSexCountVO> getTenderSexGroupBy(Date lastDay);
-
-	/**
-	 *
-	 * @param date 上个月的最后一天
-	 * @param firstAge  年龄下限
-	 * @param endAge	年龄上限
-	 * @return
-	 */
-	int getTenderAgeByRange(Date date,int firstAge,int endAge);
-
-
-	/**
 	 * 累计借款人（定义：系统累计到现在进行过发表的底层借款人数量）
 	 * @return
 	 */
@@ -77,7 +53,7 @@ public interface AmTradeClient {
 	Integer countCurrentBorrowUser();
 
 	/**
-	 * 当前投资人（定义：当前代还金额不为0的用户数量）
+	 * 当前出借人（定义：当前代还金额不为0的用户数量）
 	 * @return
 	 */
 	Integer countCurrentTenderUser();

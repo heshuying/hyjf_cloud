@@ -8,6 +8,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.calculate.*;
@@ -17,6 +19,7 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.bean.api.ApiBorrowDetail;
 import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.ApiProjectListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -35,7 +38,7 @@ import java.util.Map;
  * @date 2018/8/27 10:06
  */
 @Service
-public class ApiProjectListServiceImpl implements ApiProjectListService {
+public class ApiProjectListServiceImpl extends BaseTradeServiceImpl implements ApiProjectListService {
 
 
     @Autowired
@@ -58,7 +61,7 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
         commonSvrChkService.checkLimit(reqBean.getLimitStart(), reqBean.getLimitEnd());
         // 标的状态验证
         CheckUtil.check(Validator.isNotNull(reqBean.getBorrowStatus()), MsgEnum.STATUS_CE000001);
-        // 标的状态=2投资中 验证
+        // 标的状态=2出借中 验证
         CheckUtil.check(reqBean.getBorrowStatus().equals("2"), MsgEnum.ERR_OBJECT_VALUE, "borrowStatus");
 
         // 验签
@@ -111,7 +114,18 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
                 MsgEnum.ERR_SIGN);
         Map<String,Object> map  = new HashMap<>();
         map.put("borrowNid",borrowNid);
-        ProjectCustomeDetailVO projectCustomeDetailVO = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempProjectCustomeDetailVO = amTradeClient.searchProjectDetail(map);
+
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO projectCustomeDetailVO = CommonUtils.convertBean(tempProjectCustomeDetailVO,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (org.apache.commons.lang.StringUtils.isNotBlank(investAccount)){
+            projectCustomeDetailVO.setInvestAccount(investAccount);
+        }
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
+
         ApiBorrowDetail borrow = CommonUtils.convertBean(projectCustomeDetailVO,ApiBorrowDetail.class);
         //项目不存在
         CheckUtil.check(Validator.isNotNull(borrow), MsgEnum.STATUS_ZT000009);
@@ -219,29 +233,29 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
         BigDecimal earnings = new BigDecimal("0");
         String version = "2.1.0";
         if (!org.apache.commons.lang.StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
-            // 计算本金投资预期收益
+            // 计算本金出借预期收益
             switch (borrowStyle) {
-                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“: 预期收益=投资金额*年化收益÷360*天数；
+                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“: 预期收益=出借金额*年化收益÷360*天数；
                     earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);

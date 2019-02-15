@@ -40,7 +40,6 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -1148,7 +1147,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
     @Override
     public PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean) {
-        // 获取投资信息
+        // 获取出借信息
         PlatformCountCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-admin/platform_count/search_action", requestBean,
                 PlatformCountCustomizeResponse.class);
@@ -1159,7 +1158,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
     @Override
     public PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean) {
-        // 获取投资信息
+        // 获取出借信息
         PlatformUserCountCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-user/platform_count/get_info", requestBean,
                 PlatformUserCountCustomizeResponse.class);
@@ -1621,7 +1620,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public int getBindCardExceptionCount(BindCardExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-user/bindcardexception/getBindCardExceptionCount";
+        String url = "http://AM-ADMIN/am-user/bindcardrepair/getBindCardRepairCount";
         AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCount();
@@ -1637,7 +1636,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public List<BindCardExceptionCustomizeVO> searchBindCardExceptionList(BindCardExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-user/bindcardexception/searchBindCardExceptionList";
+        String url = "http://AM-ADMIN/am-user/bindcardrepair/searchBindCardRepairList";
         AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
@@ -1653,7 +1652,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public void updateBindCard(BindCardExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-user/bindcardexception/updateBindCard";
+        String url = "http://AM-ADMIN/am-user/bindcardrepair/updateBindCard";
         restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
     }
 
@@ -1702,7 +1701,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
-     * 根据条件查询垫付机构冻结日志
+     * 根据条件查询担保机构冻结日志
      */
     @Override
     public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId) {
@@ -1938,6 +1937,98 @@ public class AmAdminClientImpl implements AmAdminClient {
                         AppUtmRegResponse.class)
                 .getBody();
         if (response != null) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public NaMiMarketingResponse getNaMiMarketingList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/getNaMiMarketingList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInit",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInfo",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse selectNaMiMarketingRefferList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+    @Override
+    public  IntegerResponse selectNaMiMarketingRefferCount(NaMiMarketingRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferCount",
+                request,IntegerResponse.class).getBody();
+    }
+    @Override
+    public  IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalCount",
+                request,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public List<Integer> searchUserIdList(int sourceType) {
+        Response response = restTemplate.getForObject("http://AM-ADMIN/am-user/promotion/utm/searchUserIdList/" + sourceType, Response.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public  NaMiMarketingResponse selectMonthList(){
+        NaMiMarketingResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/namimarketing/selectMonthList", NaMiMarketingResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public void  updateJoinTime(String borrowNid,Integer nowTime){
+        String url = "http://AM-ADMIN/am-market/returncash/updatejointime/"+borrowNid+"/"+nowTime;
+        restTemplate.getForEntity(url,String.class);
+
+    }
+
+    @Override
+    public StringResponse checkActivityIfAvailable(Integer activityId){
+        String url = "http://AM-ADMIN/am-market/activity/checkActivityIfAvailable/"+activityId;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public IntegerResponse saveReturnCash(ReturnCashRequest returnCashRequest){
+        String url = "http://AM-ADMIN/am-market/returncash/saveReturnCash";
+       return restTemplate.postForEntity(url,returnCashRequest,IntegerResponse.class).getBody();
+    }
+
+    /**
+     * 查询汇计划装让列表的求和
+     * add by cwyang 2018-01-24
+     * @param request
+     * @return
+     */
+    @Override
+    public MapResponse queryHjhDebtCreditTotal(HjhDebtCreditListRequest request) {
+        MapResponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-trade/adminHjhDebtCredit/getListSum", request, MapResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;

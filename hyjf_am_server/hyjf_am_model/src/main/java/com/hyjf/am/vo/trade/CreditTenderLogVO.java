@@ -80,7 +80,7 @@ public class CreditTenderLogVO extends BaseVO implements Serializable {
     private String addIp;
 
     private Date createTime;
-    // 实际投资金额
+    // 实际出借金额
     private  BigDecimal tenderMoney;
 
     private static final long serialVersionUID = 1L;

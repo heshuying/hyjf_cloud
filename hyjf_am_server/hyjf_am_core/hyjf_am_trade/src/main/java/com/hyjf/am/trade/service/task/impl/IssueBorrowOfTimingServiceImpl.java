@@ -51,6 +51,13 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				if (!flag) {
 					throw new RuntimeException("标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 				}
+				// 散标自动发标成功发送mq到合规上报数据
+				// 3.自动发标batch 散标
+				JSONObject params = new JSONObject();
+				params.put("borrowNid", borrowCustomize.getBorrowNid());
+				params.put("userId", borrowCustomize.getUserId());
+				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+						MQConstant.HG_REPORT_DELAY_LEVEL);
 				logger.info("定时标的【" + borrowNid + "】发标完成。（batch）");
 			}
 		}
@@ -59,7 +66,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void issueSplitBorrowOfTiming() throws Exception {
-		logger.info("拆分标的的自动发标 OntimeSplitTenderTask.run Start... ");
+		logger.info("汇计划自动发标任务 issueSplitBorrowOfTiming Start... ");
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
 		// 获取所有待发布的标的
@@ -121,6 +128,14 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 					throw new RuntimeException("汇计划标的自动发标失败！" + "[借款编号：" + borrowNid + "]");
 				}
 
+				// 智投标的自动发标成功发送mq到合规上报数据
+				// 4.自动发标batch 计划
+				JSONObject params = new JSONObject();
+				params.put("borrowNid", borrowCustomize.getBorrowNid());
+				params.put("userId", borrowCustomize.getUserId());
+				commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+						MQConstant.HG_REPORT_DELAY_LEVEL);
+
 				if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
 					// 更新资产表
 					boolean result = this.updatePlanAsset(borrowCustomize.getBorrowNid());
@@ -130,19 +145,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				}
 				// 散标进计划
 				// 成功后到关联计划队列
-				try {
-					JSONObject params = new JSONObject();
-					params.put("borrowNid", borrowNid);
-					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
-				} catch (MQException e) {
-					logger.error("发送【散标进计划自动发标进入计划】MQ失败...");
-				}
+				this.sendAutoJoinPlanMessage(borrowNid);
 				logger.info(borrowNid + "已发送至MQ");
 
 				// 发送发标短信
 				this.AfterIssueBorrowSuccessSendSms(borrowCustomize.getBorrowNid(), "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB);
-
 				logger.info("汇计划定时标的【" + borrowNid + "】发标完成。（batch）");
 			}
 		}
@@ -188,11 +195,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 
 		// DB验证
-		// 有投资金额发生异常
+		// 有出借金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+			logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
 			return false;
 		}
 
@@ -205,7 +212,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setStatus(2);
 		// 初审时间
 		borrow.setVerifyTime(nowTime);
-		// 可投资金额
+		// 可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
@@ -259,11 +266,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
 		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
-		// 有投资金额发生异常
+		// 有出借金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+			logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
 			return false;
 		}
 
@@ -278,7 +285,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyTime(nowTime);
 		// 0未交保证金 1已交保证金 2暂不发布 3定时发标 4立即发标（立即发标状态的标的才能进汇计划）
 		borrow.setVerifyStatus(4);
-		// 剩余可投资金额
+		// 剩余可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean result = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if(result){
@@ -305,7 +312,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 		HjhPlanAsset hjhPlanAssetnew = list.get(0);
 		// 受托支付，更新为待授权
-		// 7 投资中
+		// 7 出借中
 		hjhPlanAssetnew.setStatus(7);
 		// 获取当前时间
 		hjhPlanAssetnew.setUpdateUserId(1);
@@ -406,7 +413,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyUserid("auto");
 		// 初审用户
 		borrow.setVerifyUserName("auto");
-		// 可投资金额
+		// 可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
@@ -420,18 +427,23 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 				logger.info("定时发标自动任务 " + String.valueOf(borrow.getBorrowNid()) + "标的已经自动发标！");
 			} else if ("1".equals(borrow.getIsEngineUsed())) {
 				// 进计划的拆分标发送加入计划消息队列
-				try {
-					JSONObject params = new JSONObject();
-					params.put("borrowNid", borrow.getBorrowNid());
-					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
-				} catch (MQException e) {
-					logger.error("发送【拆分标自动发标进入计划】MQ失败...");
-				}
+				this.sendAutoJoinPlanMessage(borrowNid);
 			}
 			return true;
 		} else {
 			throw new RuntimeException("自动发标失败，标号：" + borrow.getBorrowNid());
+		}
+	}
+
+	private void sendAutoJoinPlanMessage(String borrowNid){
+		try {
+			JSONObject params = new JSONObject();
+			params.put("borrowNid", borrowNid);
+			//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+					MQConstant.AUTO_ASSOCIATE_PLAN_JOB_TAG, borrowNid, params), 2);
+		} catch (MQException e) {
+			logger.error("发送【自动关联计划】消息失败...");
 		}
 	}
 

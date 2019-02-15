@@ -43,4 +43,16 @@ public class AdminHjhDebtCreditServiceImpl extends BaseServiceImpl implements Ad
         return list;
     }
 
+    /**
+     * 获取列表求和数据
+     * @param map
+     * @return
+     */
+    @Override
+    public Map getListSum(Map map) {
+
+        Map creditTotal = this.adminHjhDebtCreditCustomizeMapper.selectDebtCreditTotal(map);
+        return creditTotal;
+    }
+
 }

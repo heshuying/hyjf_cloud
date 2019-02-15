@@ -1,5 +1,5 @@
 /**
- * Description:用户投资 已回款vO
+ * Description:用户出借 已回款vO
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: 王坤

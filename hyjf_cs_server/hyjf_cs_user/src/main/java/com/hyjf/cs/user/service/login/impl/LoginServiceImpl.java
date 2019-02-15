@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.login.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
@@ -25,11 +24,8 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.bean.SynBalanceRequestBean;
-import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -46,6 +42,7 @@ import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -71,10 +68,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     private SynBalanceService synBalanceService;
 
 	// 服务费授权描述
-	private static final String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
+	private static final String paymentAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n服务费授权。";
 	//三合一授权描述
-	private static final String mergeAuthDesc = "智投服务需进行以下授权：\n自动投标，自动债转，服务费授权。";
-	private static final String checkUserRoleDesc = "仅限出借人进行投资";
+	private static final String mergeAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。";
+	private static final String checkUserRoleDesc = "仅限出借人进行出借";
 	@Autowired
 	private AmUserClient amUserClient;
 
@@ -107,7 +104,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel) {
-	    logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
+	    //logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
@@ -123,7 +120,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Override
 	public WebViewUserVO loginOperationOnly(UserVO userVO,String loginUserName,String ip,String channel) {
 		int userId = userVO.getUserId();
-		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		// 是否禁用
 		if (userVO.getStatus() == 1) {
 			throw new CheckException(MsgEnum.ERR_USER_INVALID);
@@ -133,18 +129,14 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		updateUserByUserId(userVO);
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
-		webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
+		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
 		BankOpenAccountVO account = this.getBankOpenAccount(userId);
 		String accountId = null;
 		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
-			UserVO user = synBalanceService.getUsersById(userId);
-			SynBalanceRequestBean bean = new SynBalanceRequestBean();
-			bean.setInstCode(user.getInstCode());
-			bean.setAccountId(accountId);
-            SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
+			synBalanceService.synBalance(accountId, ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
@@ -179,9 +171,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		if (password.equals(passwordDb)) {
 		webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
-            //调用前已经插入了Redis值   --------kdl
-			// 密码错误，增加错误次数
-//			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		return webViewUserVO;
@@ -422,7 +411,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					// vip等级显示图片
 					result.setVipJumpUrl(apphost + ClientConstants.APPLY_INIT + packageStr(request));
 				}
-				// 用户角色：1投资人2借款人3担保机构
+				// 用户角色：1出借人2借款人3担保机构
 				Integer roleId = userInfo.getRoleId();
 				result.setRoleId(roleId == null ? "" : String.valueOf(roleId));
 			} else {
@@ -605,18 +594,44 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 		}
 		{
-			if (StringUtils.isNotEmpty(result.getMobile())) {
+			UserVO userInfoVO = this.getUsersById(userId);
+
+			// 初始 用户类型
+			Integer userType = 0;
+
+			if (userInfoVO != null){
+				userType = userInfoVO.getUserType();
+			}
+
+			// 江西银行 开户 URL
+			String jxBankOpenUrl = "";
+			// 非企业用户开户地址
+			if (userType != 1) {
+				if (StringUtils.isNotEmpty(result.getMobile())) {
+					// 开户url
+					result.setHuifuOpenAccountUrl("");
+					// 江西银行开户url
+					jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request) + "&mobile=" + result.getMobile();
+					result.setOpenAccountUrl(jxBankOpenUrl);
+					logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
+				} else {
+					// 开户url
+					result.setHuifuOpenAccountUrl("");
+					// 江西银行开户url
+					jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request);
+					result.setOpenAccountUrl(jxBankOpenUrl);
+					logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
+				}
+			}
+			// 企业用户开户地址
+			else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
-				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
-						+ packageStr(request) + "&mobile=" + result.getMobile());
-			} else {
-				// 开户url
-				result.setHuifuOpenAccountUrl("");
-				// 江西银行开户url
-				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+				// 江西银行开户url add by huanghui
+				// 企业开户指南url 由前端提供.
+				jxBankOpenUrl = systemConfig.getAppFrontHost() +  "/open/enterpriseguide";
+				result.setOpenAccountUrl(jxBankOpenUrl);
+				logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
 			}
 		}
 		{
@@ -701,8 +716,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 		}
 		{
+			//通过用户ID 获取用户关联渠道 add by huanghui
+			String linkUrl = null;
+			UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
+			if (userUtmInfoCustomizeVO != null){
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
+			}else {
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+			}
 			// 二维码
-			result.setQrCodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
+			result.setQrCodeUrl(linkUrl);
 		}
 		{
 			// 风险测评结果
@@ -812,7 +835,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			HjhUserAuthConfigVO creditCconfig = authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);;
 			// 设置服务费授权开关
 			result.setPaymentAuthOn(paymenthCconfig.getEnabledStatus() + "");
-			// 设置自动投资授权开关
+			// 设置自动出借授权开关
 			result.setInvesAuthOn(invesCconfig.getEnabledStatus() + "");
 			// 设置自动债转授权开关
 			result.setCreditAuthOn(creditCconfig.getEnabledStatus() + "");
@@ -826,6 +849,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setMergeAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_MERGE_AUTH)+"");
 			//三合一授权过期标识0未授权，1正常，2即将过期，3已过期
 			result.setPaymentAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAYMENT_AUTH)+"");
+			//二合一授权过期标识（服务费授权、还款授权） 0未授权，1正常，2即将过期，3已过期
+			result.setPayRepayAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH)+"");
 			String imminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
 			String expireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
 			// 三合一授权描述
@@ -842,7 +867,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}else if("2".equals(result.getPaymentAuthExpire())){
 				result.setPaymentAuthDesc(imminentExpiryDesc);
 			}
+			// 二合一授权描述
+			if("3".equals(result.getPayRepayAuthExpire())){
+				result.setMergeAuthDesc(expireDesc);
+			}else if("2".equals(result.getPayRepayAuthExpire())){
+				result.setMergeAuthDesc(imminentExpiryDesc);
+			}
 			String sign=request.getParameter("sign");
+
+			/*
+			注释 By dangzw -->start
 			// 自动投标授权URL
 			result.setAutoInvesUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHMERGE);// 0:未授权
 			// 自动投标授权URL
@@ -851,6 +885,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setPaymentAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHPAYMENT);
 			// 还款授权URL
 			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHREPAY);
+			注释 By dangzw -->end
+			*/
 		}
 		// add by pcc app3.1.1追加 20180823 start
 		// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
@@ -875,7 +911,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	}
 
 	/**
-	 * 检查是否是新手(未登录或已登录未投资)
+	 * 检查是否是新手(未登录或已登录未出借)
 	 *
 	 * @param userId
 	 * @return
@@ -1116,11 +1152,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-				UserVO user = synBalanceService.getUsersById(userId);
-				SynBalanceRequestBean bean = new SynBalanceRequestBean();
-				bean.setInstCode(user.getInstCode());
-				bean.setAccountId(accountId);
-                SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ipAddr);
+                synBalanceService.synBalance(accountId,ipAddr);
 			}
 			String sign = SecretUtil.createToken(userId, usernameString, accountId);
 			r.put("sign", sign);

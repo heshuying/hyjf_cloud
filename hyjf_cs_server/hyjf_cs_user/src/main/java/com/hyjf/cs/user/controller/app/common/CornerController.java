@@ -20,13 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
  * @version CornerController, v0.1 2018/7/18 11:21
  */
-@Api(tags = "app端-汇天利资金中心接口")
+@Api(tags = "app端-基础信息设置")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
 public class CornerController extends BaseController {
@@ -47,11 +48,9 @@ public class CornerController extends BaseController {
      */
     @ApiOperation(value = "获取版本号",notes = "获取版本号")
     @PostMapping(value = "/getVersion")
-    public JSONObject getVersion(@RequestHeader(value = "key") String key, HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getVersion(@RequestHeader(value = "key") String key, HttpServletRequest request) {
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/getVersion");
-        // 唯一标识
-        String sign = request.getParameter("sign");
         // 平台
         String clientStr = request.getParameter("platform");
         //版本号
@@ -159,57 +158,44 @@ public class CornerController extends BaseController {
      */
     @ApiOperation(value = "接收设备唯一标识",notes = "接收设备唯一标识")
     @PostMapping(value = "/mobileCode")
-    public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject mobileCode(@RequestHeader(value = "userId") Integer userId,
+                                 @RequestHeader(value = "sign") String sign,
+                                 @RequestHeader(value = "platform") String platform,
+                                 @RequestHeader(value = "version") String version,
+                                 @RequestParam(value = "mobileCode") String alias) {
+        logger.debug("userId is : {}, alias is: {}", userId, alias);
+
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/mobileCode");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // 平台
-        String clientStr = request.getParameter("platform");
-        //设备标识码
-        String mobileCodeStr = request.getParameter("mobileCode");
-        //版本号
-        String versionStr = request.getParameter("version");
-        // 取得加密用的Key
-        if (Validator.isNull(key)) {
-            map.put("status", "1");
-            map.put("statusDesc", "请求参数非法");
-            return map;
-        }
-        if(StringUtils.isEmpty(mobileCodeStr)){
-            map.put("status","1");
-            map.put("statusDesc","请求参数非法");
-            return map;
-        }
-        //用户id
         map.put("status","0");
         map.put("statusDesc","请求成功");
 
         //版本号为  1.0.0.16  16为渠道号 不记版本
-        if(StringUtils.isNotEmpty(versionStr) ){
-            String vers[] = versionStr.split("\\.");
+        if(StringUtils.isNotEmpty(version) ){
+            String vers[] = version.split("\\.");
             if(vers != null && vers.length > 0){
-                versionStr = vers[3] ;
+                version = vers[3] ;
             }
         }
         try {
-            UserAliasVO mobileCode = amUserClient.findAliasesByUserId(userId);
-            if(mobileCode != null){
-                if(!mobileCode.getAlias().equals(mobileCodeStr)){
-                    mobileCode.setAlias(mobileCodeStr);
-                    mobileCode.setClient(clientStr);
-                    mobileCode.setPackageCode(versionStr);
-                    mobileCode.setSign(sign);
-                    amUserClient.updateAliases(mobileCode);
+            UserAliasVO userAliasVO = amUserClient.findAliasesByUserId(userId);
+            if(userAliasVO != null){
+                logger.debug("userAliasVO is : {}", JSONObject.toJSONString(userAliasVO));
+                if(!userAliasVO.getAlias().equals(alias)){
+                    userAliasVO.setAlias(alias);
+                    userAliasVO.setClient(platform);
+                    userAliasVO.setPackageCode(version);
+                    userAliasVO.setSign(sign);
+                    amUserClient.updateAliases(userAliasVO);
                 }
             }else{
-                mobileCode = new UserAliasVO();
-                mobileCode.setAlias(mobileCodeStr);
-                mobileCode.setUserId(userId);
-                mobileCode.setSign(sign);
-                mobileCode.setClient(clientStr);
-                mobileCode.setPackageCode(versionStr);
-                amUserClient.insertMobileCode(mobileCode);
+                userAliasVO = new UserAliasVO();
+                userAliasVO.setAlias(alias);
+                userAliasVO.setUserId(userId);
+                userAliasVO.setSign(sign);
+                userAliasVO.setClient(platform);
+                userAliasVO.setPackageCode(version);
+                amUserClient.insertMobileCode(userAliasVO);
             }
         } catch (Exception e) {
             map.put("status","1");
@@ -228,62 +214,18 @@ public class CornerController extends BaseController {
     @PostMapping(value = "/setCorner")
     public AppResult setCorner(HttpServletRequest request) {
         AppResult result = new AppResult();
-/*
-        Map<String,String> map = new HashMap<>();
-        map.put("request", "/hyjf-app/app/common/setCorner");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        //设备标识码
-        String mobileCodeStr = request.getParameter("mobileCode");
-        //角标
-        String cornerStr = request.getParameter("corner");
-        logger.info("key=[{}],sign=[{}],mobileCode=[{}],corner=[{}]",key,sign,mobileCodeStr,cornerStr);
-        // 取得加密用的Key
-        if (Validator.isNull(key)) {
-            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"key");
-            return result;
-        }
-        if(StringUtils.isEmpty(mobileCodeStr)){
-            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"mobileCode");
-            return result;
-        }
-        if(StringUtils.isEmpty(cornerStr)){
-            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"corner");
-            return result;
-        }
-
-        // 检查参数
-        try {
-            int corner = Integer.parseInt(cornerStr);
-            UserCornerVO cornerInfo = cornerService.getUserCornerBySign(sign);
-            if(cornerInfo != null){
-                cornerInfo.setCorner(corner);
-                cornerService.updateUserCorner(cornerInfo);
-            }else{
-                cornerInfo = new UserCornerVO();
-                cornerInfo.setCorner(corner);
-                cornerInfo.setSign(sign);
-                cornerService.insertUserCorner(cornerInfo);
-            }
-            result.setStatusInfo(BaseResult.SUCCESS,"设置成功");
-        } catch (Exception e) {
-            result.setStatusInfo(BaseResult.FAIL,"设置角标异常");
-        }
-        result.setData(map);*/
         result.setStatusInfo("0","设置成功");
         return result;
     }
 
     /**
      * 获取最新版本号下载地址
-     * @param request
-     * @param response
      * @return
      */
     @ApiOperation("获取最新版本号下载地址")
     @ResponseBody
     @PostMapping(value = "/getNewVersionURL")
-    public JSONObject getNewVersionURL(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getNewVersionURL() {
         JSONObject map = new JSONObject();
         map.put("status", "000");
         map.put("request", "/hyjf-app/app/common/getVersion");
@@ -293,4 +235,20 @@ public class CornerController extends BaseController {
         return map;
     }
 
+    /**
+     *
+     * ios下载页
+     * @return
+     */
+    @ApiOperation("ios下载页")
+    @GetMapping(value = "/iosinit")
+    public AppResult initIOS() {
+        AppResult result = new AppResult();
+        String downloadUrl = "itms-apps://itunes.apple.com/cn/app/id1044961717?mt=8";
+        Map<String,String> resultMap = new HashMap<>();
+        resultMap.put("downloadUrl",downloadUrl);
+        result.setData(resultMap);
+        result.setStatus("000");
+        return result;
+    }
 }

@@ -21,12 +21,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fq
@@ -46,18 +52,6 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
-        List<UtmVO> list = channelService.searchUtmList(1);
-        if (request.getUtmPlat() == null) {
-            List<String> utmList = new ArrayList<>();
-            for (UtmVO vo : list) {
-                if (Objects.equals(vo.getDelFlag(), 0)) {
-                    utmList.add(vo.getSourceId().toString());
-                }
-            }
-            String[] integers = new String[utmList.size()];
-            String[] array = utmList.toArray(integers);
-            request.setUtmPlat(array);
-        }
         ChannelReconciliationResponse response = channelService.searchAppAction(request);
         return new AdminResult(response);
     }
@@ -66,18 +60,6 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search_hjh")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
-        List<UtmVO> list = channelService.searchUtmList(1);
-        if (request.getUtmPlat() == null) {
-            List<String> utmList = new ArrayList<>();
-            for (UtmVO vo : list) {
-                if (Objects.equals(vo.getDelFlag(), 0)) {
-                    utmList.add(vo.getSourceId().toString());
-                }
-            }
-            String[] integers = new String[utmList.size()];
-            String[] array = utmList.toArray(integers);
-            request.setUtmPlat(array);
-        }
         ChannelReconciliationResponse response = channelService.searchAppHJHAction(request);
         return new AdminResult(response);
     }
@@ -104,20 +86,9 @@ public class AppChannelReconciliationRecordController extends BaseController {
         public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
             List<UtmVO> list = channelService.searchUtmList(1);
             // 表格sheet名称
-            String sheetName = "PC渠道对账-散标";
-            if (channelReconciliationRequest.getUtmPlat() == null) {
-                List<String> utmList = new ArrayList<>();
-                for (UtmVO vo : list) {
-                    if (Objects.equals(vo.getDelFlag(), 0)) {
-                        utmList.add(vo.getSourceId().toString());
-                    }
-                }
-                String[] integers = new String[utmList.size()];
-                String[] array = utmList.toArray(integers);
-                channelReconciliationRequest.setUtmPlat(array);
-            }
+            String sheetName = "app渠道对账-散标";
             //sheet默认最大行数
-            int defaultRowMaxCount = 2;
+            int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
             // 文件名称
             String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
             // 声明一个工作薄
@@ -153,12 +124,12 @@ public class AppChannelReconciliationRecordController extends BaseController {
 	        map.put("userName", "用户名");
 	        map.put("utmName", "渠道");
 	        map.put("registTime", "注册时间");
-	        map.put("orderCode", "投资订单");
-	        map.put("borrowNid", "借款编号");
+	        map.put("orderCode", "出借订单");
+	        map.put("borrowNid", "项目编号");
 	        map.put("borrowPeriod", "标的期限");
-	        map.put("investAmount", "投资金额");
+	        map.put("investAmount", "出借金额");
 	        map.put("firstFlag", "是否首投");
-	        map.put("investTime", "投资时间");
+	        map.put("investTime", "出借时间");
 
 	        return map;
 	    }
@@ -181,8 +152,6 @@ public class AppChannelReconciliationRecordController extends BaseController {
 	    }
 
 
-
-
     /**
      * 导出功能
      *
@@ -193,20 +162,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportHjhAction(HttpServletRequest request, HttpServletResponse response,@RequestBody  ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
         // 表格sheet名称
-        String sheetName = "PC渠道对账-智投服务";
-        List<UtmVO> list = channelService.searchUtmList(1);
-
-        if (channelReconciliationRequest.getUtmPlat() == null) {
-            List<String> utmList = new ArrayList<>();
-            for (UtmVO vo : list) {
-                if (Objects.equals(vo.getDelFlag(), 0)) {
-                    utmList.add(vo.getSourceId().toString());
-                }
-            }
-            String[] integers = new String[utmList.size()];
-            String[] array = utmList.toArray(integers);
-            channelReconciliationRequest.setUtmPlat(array);
-        }
+        String sheetName = "app渠道对账-智投服务";
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
@@ -248,7 +204,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
 		        map.put("borrowPeriod", "服务回报期限");
 		        map.put("investAmount", "授权服务金额");
 		        map.put("firstFlag", "是否首投");
-		        map.put("investTime", "投资时间");
+		        map.put("investTime", "出借时间");
 		        return map;
 		    }
 		    private Map<String, IValueFormatter> buildValueAdapter2() {

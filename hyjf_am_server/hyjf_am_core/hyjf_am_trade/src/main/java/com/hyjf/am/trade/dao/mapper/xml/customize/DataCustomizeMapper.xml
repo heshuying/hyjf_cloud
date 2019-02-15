@@ -235,31 +235,6 @@
 FROM
 	DUAL
 	</select>
-	<select id="selectData"  resultType="java.util.HashMap">
-	SELECT id,
-	tender_sum,
-	interest_sum,
-	seven_day_tender_sum,
-	seven_day_interest_sum,
-	borrow_zero_one,
-	borrow_one_three,
-	borrow_three_six,
-	borrow_six_twelve,
-	borrow_twelve_up,
-	invest_one_down,
-	invest_one_five,
-	invest_five_ten,
-	invest_ten_fifth,
-	invest_fifth_up,
-	bail_money,
-	update_time,
-	create_time
-	FROM
-		ht_calculate_invest_interest
-	ORDER BY
-		id DESC
-	LIMIT 1
-	</select>
 
 	<select id="selectTenderListMap" parameterType="java.lang.Integer" resultType="java.util.HashMap">
 			SELECT
@@ -635,11 +610,11 @@ FROM DUAL
 	<select id="selectHztTenderCount" resultType="java.lang.Integer">
 		SELECT count(*) FROM ht_borrow_tender
 	</select>
-	<!-- 汇添金投资总数 -->
+	<!-- 汇添金出借总数 -->
 	<select id="selectHtjTenderCount" resultType="java.lang.Integer">
 		SELECT count(*) FROM ht_debt_plan_accede
 	</select>
-	<!-- 汇转让投资总数 -->
+	<!-- 汇转让出借总数 -->
 	<select id="selectHzrTenderCount" resultType="java.lang.Integer">
 		SELECT count(*) FROM ht_credit_tender
 	</select>

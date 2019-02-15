@@ -182,7 +182,6 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }else {
             resultMap.put("iconUrl", "");
         }
-        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/landingPage/init.do?refferUserId=" + user.getUserId());
         return resultMap;
     }
 
@@ -205,7 +204,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 还款授权
         int repayAuth = valdateAuthState(auth.getAutoRepayStatus(), auth.getAutoRepayEndTime());
         auth.setAutoRepayStatus(repayAuth);
-        // 自动投资授权
+        // 自动出借授权
         int invesAuth = valdateAuthState(auth.getAutoInvesStatus(), auth.getAutoBidEndTime());
         auth.setAutoInvesStatus(invesAuth);
         return auth;
@@ -426,7 +425,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
             user.setWithdrawSms(smsValue);
         }
         if ("investSms".equals(smsKey)) {
-            //投资成功短信
+            //投标成功短信
             user.setInvestSms(smsValue);
         }
         if ("recieveSms".equals(smsKey)) {

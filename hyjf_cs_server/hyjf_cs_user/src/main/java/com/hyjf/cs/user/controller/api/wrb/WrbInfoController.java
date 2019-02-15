@@ -19,7 +19,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.bean.WrbNoticeinfoResponse.NoticeinfoDetail;
-import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
+import com.hyjf.cs.user.service.wrb.WrbInfoService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class WrbInfoController {
     public static final String datetimeFormat_key = "yyyy-MM-dd HH:mm:ss";
 
     @Autowired
-    private WrbInfoServcie wrbInvestServcie;
+    private WrbInfoService wrbInvestServcie;
 
     @RequestMapping("/notice_info")
     public WrbNoticeinfoResponse getNoticeinfoDetail(@RequestParam String param,
@@ -132,7 +132,7 @@ public class WrbInfoController {
             }
 
 
-            // 1. 查询投资明细
+            // 1. 查询出借明细
             List<WrbBorrowListCustomizeVO> investList = wrbInvestServcie.searchBorrowListByNid(borrowNid);
             response.setInvest_list(investList);
         } catch (Exception e) {
@@ -145,7 +145,7 @@ public class WrbInfoController {
     }
 
     /**
-     * 查询标的投资情况
+     * 查询标的出借情况
      *
      * @param param
      * @param sign
@@ -153,7 +153,7 @@ public class WrbInfoController {
     @RequestMapping("/bid_invest_list")
     public WrbBorrowInvestResponse getBorrowInvest(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
-        logger.info("查询标的投资情况, param is :{}, sign is :{}", param, sign);
+        logger.info("查询标的出借情况, param is :{}, sign is :{}", param, sign);
         WrbBorrowInvestResponse response = new WrbBorrowInvestResponse();
 
         WrbBorrowInvestRequest request = null;
@@ -177,7 +177,7 @@ public class WrbInfoController {
         // 字符串时间转换为时间
         Date investTime;
         borrowNid = request.getId();
-        // 投资开始时间
+        // 出借开始时间
         String startTime = request.getStart_time();
         if (isBlank(borrowNid)) {
             response.setRetcode(WrbResponse.FAIL_RETCODE);
@@ -203,12 +203,12 @@ public class WrbInfoController {
             return response;
         }
 
-        // 1. 查询投资明细
+        // 1. 查询出借明细
         List<WrbBorrowTenderCustomizeVO> investList = wrbInvestServcie.searchBorrowTenderByNidAndTime(borrowNid,
                 investTime);
         response.setInvest_list(this.copyBorrowTenderToResponse(investList) == null ? new ArrayList<WrbBorrowInvestResponse.InvestInfo>() : copyBorrowTenderToResponse(investList));
 
-        // 2. 查询投资汇总数据
+        // 2. 查询出借汇总数据
         WrbBorrowTenderSumCustomizeVO sumCustomize = wrbInvestServcie.searchBorrowTenderSumByNidAndTime(borrowNid,
                 investTime);
         if (sumCustomize != null) {
@@ -224,14 +224,14 @@ public class WrbInfoController {
     }
 
     /**
-     * 获取某天投资情况
+     * 获取某天出借情况
      * @return
      */
     @RequestMapping("/day_invest_list")
     public WrbInvestResponse getInvestDetail(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
 
-        logger.info("获取某天投资情况, param is :{}, sign is :{}", param, sign);
+        logger.info("获取某天出借情况, param is :{}, sign is :{}", param, sign);
 
         WrbInvestResponse response = new WrbInvestResponse();
 
@@ -274,7 +274,7 @@ public class WrbInfoController {
             return response;
         }
 
-        // 查询投资情况
+        // 查询出借情况
         List<BorrowTenderVO> borrowTenderList = wrbInvestServcie.getInvestDetail(invest_date, limit, page);
 
         WrbInvestResponse wrbInvestResponse = new WrbInvestResponse();
@@ -402,7 +402,7 @@ public class WrbInfoController {
 
 
     /**
-     * 查询投资记录
+     * 查询出借记录
      * @param param
      * @param sign
      * @return
@@ -410,7 +410,7 @@ public class WrbInfoController {
     @RequestMapping("/acc_invest")
     public WrbInvestRecordResponse getInvestRecord(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
-        logger.info("查询投资记录, param is :{}, sign is :{}", param, sign);
+        logger.info("查询出借记录, param is :{}, sign is :{}", param, sign);
         WrbInvestRecordResponse response = new WrbInvestRecordResponse();
 
         WrbInvestRecordRequest request = null;
@@ -457,9 +457,9 @@ public class WrbInfoController {
         Integer offset = request.getOffset();
         // 每页查询条数
         Integer limit = request.getLimit();
-        // 投资记录id
+        // 出借记录id
         String investRecordId = request.getInvest_record_id();
-        //投资状态
+        //出借状态
         Integer investStatus = request.getInvest_status();
         // 必填参数校验
         if (isBlank(userId) || offset == null || limit == null) {
@@ -469,14 +469,14 @@ public class WrbInfoController {
             return response;
         }
 
-        // 获取投资记录详情
+        // 获取出借记录详情
         try {
             response = wrbInvestServcie.getInvestRecord(request);
             response.setPf_user_id(userId);
         } catch (Exception e) {
-            logger.error("获取投资记录失败, param is :{}", param);
+            logger.error("获取出借记录失败, param is :{}", param);
             response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg("获取投资记录失败");
+            response.setRetmsg("获取出借记录失败");
             response.setPf_user_id(userId);
         }
 
@@ -484,7 +484,7 @@ public class WrbInfoController {
     }
 
     /**
-     * 投资记录回款计划查询
+     * 出借记录回款计划查询
      * @param param
      * @param sign
      * @return
@@ -492,7 +492,7 @@ public class WrbInfoController {
     @RequestMapping("/acc_back_list")
     public wrbInvestRecoverPlanResponse getRecoverPlan(@RequestParam String param,
                                                        @RequestParam(value = "sign", required = false) String sign) {
-        logger.info("投资记录回款计划, param is :{}, sign is :{}", param, sign);
+        logger.info("出借记录回款计划, param is :{}, sign is :{}", param, sign);
         wrbInvestRecoverPlanResponse response = new wrbInvestRecoverPlanResponse();
         WrbInvestRecoverPlanRequest request = null;
         try {
@@ -511,7 +511,7 @@ public class WrbInfoController {
         }
         // 平台用户id
         String userId = request.getPf_user_id();
-        // 投资记录id
+        // 出借记录id
         String investRecordId = request.getInvest_record_id();
         // 项目id
         String borrowNid = request.getBid_id();

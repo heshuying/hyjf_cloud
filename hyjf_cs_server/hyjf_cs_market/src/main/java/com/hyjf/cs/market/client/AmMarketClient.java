@@ -1,11 +1,13 @@
 package com.hyjf.cs.market.client;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -84,4 +86,16 @@ public interface AmMarketClient {
      * 计算第四、六、十列速率,第十六列净资金流
      */
     void calculateRate();
+
+    /**
+     * 进行中的活动列表状态变更定时
+     */
+    void callActivityEnd();
+
+    /**
+     * 查询首页banner
+     * @param ads
+     * @return
+     */
+    List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads);
 }

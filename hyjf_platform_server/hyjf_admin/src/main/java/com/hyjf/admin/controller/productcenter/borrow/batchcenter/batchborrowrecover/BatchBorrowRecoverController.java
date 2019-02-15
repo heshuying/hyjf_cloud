@@ -145,7 +145,7 @@ public class BatchBorrowRecoverController extends BaseController{
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("batchNo","批次号");
         map.put("borrowAccount", "借款金额");

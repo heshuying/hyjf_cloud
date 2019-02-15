@@ -30,7 +30,7 @@ public class UserPortraitRequestBean extends BaseRequest implements Serializable
     private String loginActive;
     @ApiModelProperty(value = "客户来源")
     private String customerSource;
-    @ApiModelProperty(value = "同时投资平台数")
+    @ApiModelProperty(value = "同时出借平台数")
     private Integer investPlatform;
     @ApiModelProperty(value = "投龄")
     private Integer investAge;
@@ -38,7 +38,7 @@ public class UserPortraitRequestBean extends BaseRequest implements Serializable
     private String currentOwner;
     @ApiModelProperty(value = "是否加微信：0否,1是")
     private String addWechat;
-    @ApiModelProperty(value = "投资进程")
+    @ApiModelProperty(value = "出借进程")
     private String investProcess;
     @ApiModelProperty(value = "客户投诉")
     private String customerComplaint;

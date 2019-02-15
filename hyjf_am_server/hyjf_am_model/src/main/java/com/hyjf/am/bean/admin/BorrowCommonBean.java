@@ -294,19 +294,19 @@ public class BorrowCommonBean implements Serializable {
 	 */
 	private String ontime;
 	/**
-	 * 可投资平台_PC
+	 * 可出借平台_PC
 	 */
 	private String canTransactionPc;
 	/**
-	 * 可投资平台_微网站
+	 * 可出借平台_微网站
 	 */
 	private String canTransactionWei;
 	/**
-	 * 可投资平台_IOS
+	 * 可出借平台_IOS
 	 */
 	private String canTransactionIos;
 	/**
-	 * 可投资平台_Android
+	 * 可出借平台_Android
 	 */
 	private String canTransactionAndroid;
 	/**
@@ -1073,6 +1073,12 @@ public class BorrowCommonBean implements Serializable {
 	 * 认证
 	 */
 	private String borrowAuthenJson;
+
+	/**
+	 * 标的投资风险测评等级
+	 *
+	 */
+	private String investLevel;
 
 	/**
 	 * borrowNameJson
@@ -3544,5 +3550,13 @@ public class BorrowCommonBean implements Serializable {
 
 	public void setIsRegistFlg(String isRegistFlg) {
 		this.isRegistFlg = isRegistFlg;
+	}
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
 	}
 }

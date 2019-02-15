@@ -18,6 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +52,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 	@Override
 	public Integer countRecordTotal(HjhLabelRequest request) {
 		List<HjhLabel> list = null;
+		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		HjhLabelExample example = new HjhLabelExample();
 		HjhLabelExample.Criteria crt = example.createCriteria();
         // 标签名称搜索
@@ -78,12 +81,17 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         }
         // 使用状态(DB中已经没有 isEngine 字段了)
 
-        
         if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch()) && StringUtils.isNotEmpty(request.getCreateTimeEndSrch())) {
-        	crt.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeStartSrch()), "yyyy-MM-dd HH:mm:ss"));
-        }
-        if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
-        	crt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayStart(request.getCreateTimeEndSrch()), "yyyy-MM-dd HH:mm:ss"));
+            String strStart = request.getCreateTimeStartSrch() + " 00:00:00";
+            String strEnd = request.getCreateTimeEndSrch() + " 23:59:59";
+            try {
+				Date start = smp.parse(strStart);
+				Date end = smp.parse(strEnd);
+                crt.andCreateTimeGreaterThanOrEqualTo(start);
+                crt.andCreateTimeLessThanOrEqualTo(end);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
         }
 		// 传入排序
 		example.setOrderByClause("create_time Desc");
@@ -258,15 +266,14 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 	@Override
 	public int updateHjhLabelRecord(HjhLabelInfoRequest request) {
 		HjhLabel hjhLabel  = new HjhLabel();
-		hjhLabel.setUpdateTime(new Date());
-		hjhLabel.setUpdateUserId(request.getUpdateUserId());
+		
+		//更新用主键(画面无操作必传)
 		hjhLabel.setId(request.getId());
-		
-		
+		// 标签名称(画面有，非空)
 		if(StringUtils.isNotEmpty(request.getLabelName())){
 			hjhLabel.setLabelName(request.getLabelName());
 		}
-		
+		// 标的期限(画面有，非空)
 		if(request.getLabelTermStart()!= null){
 			hjhLabel.setLabelTermStart(request.getLabelTermStart());
 		} else {
@@ -277,42 +284,26 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			hjhLabel.setLabelTermEnd(null);
 		}
-		
-		
-		if(StringUtils.isNotEmpty(request.getLabelTermType())){
-			hjhLabel.setLabelTermType(request.getLabelTermType());
-		}
-		
+		// 标的实际利率(画面有，可以改为空)
 		if(request.getLabelAprStart()!= null){
 			hjhLabel.setLabelAprStart(request.getLabelAprStart());
 		} else {
 			hjhLabel.setLabelAprStart(null);
 		}
-		
 		if(request.getLabelAprEnd()!=null){
 			hjhLabel.setLabelAprEnd(request.getLabelAprEnd());	
 		} else {
 			hjhLabel.setLabelAprEnd(null);
 		}
-		
-		if(request.getLabelPaymentAccountStart()!= null){
-			hjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
-		} else {
-			hjhLabel.setLabelPaymentAccountStart(null);
-		}
-		if(request.getLabelPaymentAccountEnd()!= null){
-			hjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
-		} else {
-			hjhLabel.setLabelPaymentAccountEnd(null);
-		}
-		
+		// 还款方式(画面传，非空)
 		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
 			hjhLabel.setBorrowStyle(request.getBorrowStyle());
 		}
+		// 还款方式名称(画面传，非空)
 		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
 			hjhLabel.setBorrowStyleName(request.getBorrowStyleName());
 		}
-		
+		// 标的实际支付金额(画面有，可以改为空)
 		if(request.getLabelPaymentAccountStart()!= null){
 			hjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
 		} else {
@@ -323,31 +314,54 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			hjhLabel.setLabelPaymentAccountEnd(null);
 		}
+		// 资产来源(画面有，下拉非空)
 		if(StringUtils.isNotEmpty(request.getInstCode())){
 			hjhLabel.setInstCode(request.getInstCode());
 		}
 		if(StringUtils.isNotEmpty(request.getInstName())){
 			hjhLabel.setInstName(request.getInstName());
 		}
-		hjhLabel.setAssetType(request.getAssetType());
+		if(StringUtils.isNotEmpty(request.getLabelTermType())){
+			hjhLabel.setLabelTermType(request.getLabelTermType());
+		}
+		// 画面有，产品类型下拉非空
+		if(request.getAssetType() !=null){
+			hjhLabel.setAssetType(request.getAssetType());
+		}
 		if(StringUtils.isNotEmpty(request.getAssetTypeName())){
 			hjhLabel.setAssetTypeName(request.getAssetTypeName());
 		}
-		hjhLabel.setProjectType(request.getProjectType());
-		
+		// 画面有，项目类型下拉非空
+		if(request.getProjectType()!=null){
+			hjhLabel.setProjectType(request.getProjectType());	
+		}
 		if(StringUtils.isNotEmpty(request.getProjectTypeName())){
 			hjhLabel.setProjectTypeName(request.getProjectTypeName());
 		}
-		
-
+		// 画面有，标的是否发生债转 非空
 		hjhLabel.setIsCredit(request.getIsCredit());
+		
+		// 标签债转次数  画面有，可以为空
+		if(request.getCreditSumMax()!=null){
+			hjhLabel.setCreditSumMax(request.getCreditSumMax());
+		} else {
+			hjhLabel.setCreditSumMax(null);
+		}
+		
+		// 画面有，标的是否逾期 非空
 		hjhLabel.setIsLate(request.getIsLate());
-		hjhLabel.setCreditSumMax(request.getCreditSumMax());
-		
-		hjhLabel.setPushTimeStart(request.getPushTimeStart());
-		hjhLabel.setPushTimeEnd(request.getPushTimeEnd());
-		
-		
+		// 画面有， 推送时间节点(可为空)
+		if(request.getPushTimeStart()!= null){
+			hjhLabel.setPushTimeStart(request.getPushTimeStart());
+		}else{
+			hjhLabel.setPushTimeStart(null);
+		}
+		if(request.getPushTimeEnd()!= null){
+			hjhLabel.setPushTimeEnd(request.getPushTimeEnd());
+		} else {
+			hjhLabel.setPushTimeEnd(null);
+		}
+		// 画面有，剩余天数(可为空)
 		if(request.getRemainingDaysStart()!= null){
 			hjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
 		}else{
@@ -358,33 +372,23 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			hjhLabel.setRemainingDaysEnd(null);
 		}
-		
+		// 画面有，标签状态不为空
 		hjhLabel.setLabelState(request.getLabelState());
-		hjhLabel.setUpdateUserId(request.getCreateUserId());
+		
+		// 画面无，取当时更新时间
 		hjhLabel.setUpdateTime(new Date());
+		// 画面无但传，取当时更新者
+		hjhLabel.setUpdateUserId(request.getUpdateUserId());
+
 		
-		hjhLabel.setDelFlag(0);
+		// 更新前自查    更新不需要更的信息
+		HjhLabel hjhLabelSrch =  hjhLabelMapper.selectByPrimaryKey(request.getId());//主键查询不能为空，更新业务
+		hjhLabel.setCreateUserId(hjhLabelSrch.getCreateUserId());
+		hjhLabel.setCreateTime(hjhLabelSrch.getCreateTime());
+		hjhLabel.setDelFlag(hjhLabelSrch.getDelFlag());
 		
-/*        if(hjhLabel.getAssetType()==null){
-        	hjhLabel.setAssetTypeName("");
-        }
-        if(hjhLabel.getProjectType()==null){
-        	hjhLabel.setProjectTypeName("");
-        }
-        if(StringUtils.isEmpty(hjhLabel.getInstCode())){
-        	hjhLabel.setInstName("");
-        }uo 
-		BeanUtils.copyProperties(request, hjhLabel);*/
-/*		HjhLabelExample example = new HjhLabelExample();
-		HjhLabelExample.Criteria crt = example.createCriteria();
-		crt.andIdEqualTo(hjhLabel.getId());
-		int flg = hjhLabelMapper.updateByExampleSelective(hjhLabel, example);*/
-		
-	    HjhLabelExample example = new HjhLabelExample();
-	    HjhLabelExample.Criteria crt = example.createCriteria();
-	    crt.andIdEqualTo(hjhLabel.getId());
-	    int flg = hjhLabelMapper.updateByExample(hjhLabel, example);
-	    
+		int flg = hjhLabelMapper.updateByPrimaryKey(hjhLabel);// 如果传空也更为空
+	    /*int flg = hjhLabelMapper.updateByPrimaryKeySelective(hjhLabel); request如果传空则不更*/
 		return flg;
 	}
 
@@ -538,14 +542,21 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 				}
 
 			}
-
 			// 如果找到返回最近的一个
 			return hjhLabel;
 
 		}
-
 		return resultLabel;
 	}
 
-
+	@Override
+	public int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request) {
+		HjhLabel hjhLabel  = new HjhLabel();
+		hjhLabel.setId(request.getId());
+		hjhLabel.setLabelState(request.getLabelState());
+		hjhLabel.setUpdateUserId(request.getUpdateUserId());
+		hjhLabel.setUpdateTime(new Date());
+		int flg = hjhLabelMapper.updateByPrimaryKeySelective(hjhLabel);
+		return flg;
+	}
 }

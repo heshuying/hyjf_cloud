@@ -56,7 +56,7 @@ public interface LateAndCreditService extends BaseService {
     boolean updateNifaContractStatusRecord(String thisMessName, Integer contractStatus, BorrowRepay borrowRepay, NifaContractStatus nifaContractStatusOld);
 
     /**
-     * 根据nid获取投资信息
+     * 根据nid获取出借信息
      *
      * @param nid
      * @return

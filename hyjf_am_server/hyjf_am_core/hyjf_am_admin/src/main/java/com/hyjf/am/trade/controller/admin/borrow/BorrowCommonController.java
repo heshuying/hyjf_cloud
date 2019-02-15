@@ -3,11 +3,13 @@ package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
@@ -26,11 +28,9 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import java.util.List;
 @RequestMapping("/am-trade/borrowcommon")
 public class BorrowCommonController extends BaseController {
 
-	// 机构属性 1-投资机构 0-借款机构
+	// 机构属性 1-出借机构 0-借款机构
 	private final int TENDER_INST_TYPE = 1;
 
 	@Autowired
@@ -125,19 +125,29 @@ public class BorrowCommonController extends BaseController {
         // 机构编号
         form.setInstCode(form.getInstCode() == null ? "10000000" : form.getInstCode());
 
+        // 获取风险测评等级配置
+		EvaluationConfig evaluationConfig = this.borrowCommonService.selectEvaluationConfig();
+		if(evaluationConfig!=null){
+			String investLevel = evaluationConfig.getAa1EvaluationProposal();
+			form.setInvestLevel(investLevel);
+		}else {
+			form.setInvestLevel("保守型");
+		}
+
+
         if (StringUtils.isNotEmpty(borrowNid)) {
             // 借款编码是否存在
             boolean isExistsRecord = this.borrowCommonService.isExistsRecord(borrowNid, StringUtils.EMPTY);
             if (isExistsRecord) {
                 this.borrowCommonService.getBorrow(form);
             } else {
-                // 设置标的的投资有效时间
+                // 设置标的的出借有效时间
                 form.setBorrowValidTime(this.borrowCommonService.getBorrowConfig("BORROW_VALID_TIME"));
                 // 设置标的的银行注册时间
                 form.setBankRegistDays(this.borrowCommonService.getBorrowConfig("BORROW_REGIST_DAYS"));
             }
         } else {
-            // 设置标的的投资有效时间
+            // 设置标的的出借有效时间
             form.setBorrowValidTime(this.borrowCommonService.getBorrowConfig("BORROW_VALID_TIME"));
             // 设置标的的银行注册时间
             form.setBankRegistDays(this.borrowCommonService.getBorrowConfig("BORROW_REGIST_DAYS"));
@@ -197,7 +207,7 @@ public class BorrowCommonController extends BaseController {
 		// 货币种类 配置表
 		// List<ParamName> list =
 		// this.borrowCommonService.getParamNameList(CustomConstants.CURRENCY_STATUS);
-		//TODO 暂时屏蔽 画面验证(信批需求新增字段无需校验)
+		// 暂时屏蔽 画面验证(信批需求新增字段无需校验)
 		//this.borrowCommonService.validatorFieldCheck( form, isExistsRecord, CustomConstants.HZT);
 		/*
 		 * HttpSession session = request.getSession(); String sessionToken
@@ -219,7 +229,7 @@ public class BorrowCommonController extends BaseController {
 //			List<BorrowProjectRepay> borrowStyleList = this.borrowCommonService.borrowProjectRepayList();
 //			modelAndView.addObject("borrowStyleList", borrowStyleList);
 
-//TODO放在配置里			// 房屋类型
+//放在配置里			// 房屋类型
 //			modelAndView.addObject("housesTypeList",
 //					this.borrowCommonService.getParamNameList(CustomConstants.HOUSES_TYPE));
 //
@@ -238,7 +248,7 @@ public class BorrowCommonController extends BaseController {
 
 
 			// add by xiashuqing 20171129 begin
-			// 定向发标 只获取投资端机构
+			// 定向发标 只获取出借端机构
 	        bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE),HjhInstConfigVO.class));
 		//	modelAndView.addObject("instConfigList", this.instConfigService.getInstConfigByType(TENDER_INST_TYPE));
 			// add by xiashuqing 20171129 end
@@ -516,7 +526,7 @@ public class BorrowCommonController extends BaseController {
 //	}
 
 //	/**TODO放在用户里
-//	 * 垫付机构用户名是否存在
+//	 * 担保机构用户名是否存在
 //	 *
 //	 * @param request
 //	 * @return
@@ -571,12 +581,12 @@ public class BorrowCommonController extends BaseController {
 	}
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param borrowCommonRequest
 	 * @return
 	 */
-	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
+	@ApiOperation(value = "获取放款服务费率 & 还款服务费率")
 	@RequestMapping("/getBorrowServiceScale")
 	public BorrowCommonVO getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);
@@ -785,4 +795,42 @@ public class BorrowCommonController extends BaseController {
 //		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_CA_IDNO_CHECK_ACTION);
 //		return ret;
 //	}
+
+	/**
+	 * 获取标的投资等级
+	 *
+	 * @param borrowLevel
+	 * @return
+	 */
+	@ApiOperation(value = "获取标的投资等级")
+	@RequestMapping("/getBorrowLevelAction/{borrowLevel}")
+	public StringResponse getBorrowLevelAction(@PathVariable String borrowLevel) {
+		StringResponse response = new StringResponse();
+		String investLevel = "保守型";
+		EvaluationConfig evaluationConfig = this.borrowCommonService.selectEvaluationConfig();
+		if (evaluationConfig != null) {
+			switch (borrowLevel) {
+				case "BBB":
+					investLevel = evaluationConfig.getBbbEvaluationProposal();
+					break;
+				case "A":
+					investLevel = evaluationConfig.getaEvaluationProposal();
+					break;
+				case "AA-":
+					investLevel = evaluationConfig.getAa0EvaluationProposal();
+					break;
+				case "AA":
+					investLevel = evaluationConfig.getAa1EvaluationProposal();
+					break;
+				case "AA+":
+					investLevel = evaluationConfig.getAa2EvaluationProposal();
+					break;
+				case "AAA":
+					investLevel = evaluationConfig.getAaaEvaluationProposal();
+					break;
+			}
+		}
+		response.setResultStr(investLevel);
+		return response;
+	}
 }

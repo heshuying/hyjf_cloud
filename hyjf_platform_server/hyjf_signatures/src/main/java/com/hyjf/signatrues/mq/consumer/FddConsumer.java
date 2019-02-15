@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
  * @version 20180627
  */
 
-//todo by xiashuqing  法大大消费代码报错，暂时先改成单线程普通队列
 @Service
 @RocketMQMessageListener(topic = MQConstant.FDD_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.FDD_GROUP)
 public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
@@ -47,6 +46,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		//设置线程数量
 		defaultMQPushConsumer.setConsumeThreadMin(1);
+
 		defaultMQPushConsumer.setConsumeThreadMax(1);
 		//设置最大重试次数
 		defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);

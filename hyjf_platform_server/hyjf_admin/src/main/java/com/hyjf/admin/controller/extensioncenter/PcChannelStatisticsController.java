@@ -6,22 +6,20 @@ package com.hyjf.admin.controller.extensioncenter;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.promotion.PcChannelStatisticsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.resquest.admin.PcChannelStatisticsRequest;
-import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.ExportExcel;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,10 +44,30 @@ import java.util.Map;
 public class PcChannelStatisticsController extends BaseController {
     @Autowired
     private PcChannelStatisticsService pcChannelStatisticsService;
+    @Autowired
+    private AdminUtmReadPermissionsService adminUtmReadPermissionsService;
 
     @ApiOperation(value = "查询pc渠道统计", notes = "查询pc渠道统计")
     @PostMapping("/search")
-    public AdminResult searchAction(@RequestBody PcChannelStatisticsRequest request) {
+    public AdminResult searchAction(@RequestBody PcChannelStatisticsRequest request, HttpServletRequest httpRequest) {
+        AdminSystemVO loginUser=getUser(httpRequest);
+        String userId = loginUser.getId();
+        // 根据用户Id查询渠道账号管理
+        AdminUtmReadPermissionsVO permissionsVO = adminUtmReadPermissionsService.selectAdminUtmReadPermissions(userId);
+        if (permissionsVO != null) {
+            request.setUtmIds(permissionsVO.getUtmIds());
+        }
+        // 渠道
+        String[] utmIds = new String[]{};
+        if (Validator.isNotNull(request.getUtmIds())) {
+            if (request.getUtmIds().contains(StringPool.COMMA)) {
+                utmIds = request.getUtmIds().split(StringPool.COMMA);
+                request.setUtmIdsSrch(utmIds);
+            } else {
+                utmIds = new String[]{request.getUtmIds()};
+                request.setUtmIdsSrch(utmIds);
+            }
+        }
         PcChannelStatisticsResponse response = pcChannelStatisticsService.searchPcChannelStatistics(request);
         return new AdminResult(response);
     }
@@ -108,15 +125,15 @@ public class PcChannelStatisticsController extends BaseController {
         map.put("accessNumber", "访问数");
         map.put("registNumber", "注册数");
         map.put("openAccountNumber", "开户数");
-        map.put("tenderNumber", "投资人数");
+        map.put("tenderNumber", "出借人数");
         map.put("cumulativeRecharge", "累计充值");
-        map.put("cumulativeInvestment", "累计投资");
-        map.put("hztTenderPrice", "汇直投投资金额");
-        map.put("hxfTenderPrice", "汇消费投资金额");
-        map.put("htlTenderPrice", "汇天利投资金额");
-        map.put("htjTenderPrice", "汇添金投资金额");
-        map.put("rtbTenderPrice", "汇金理财投资金额");
-        map.put("hzrTenderPrice", "汇转让投资金额");
+        map.put("cumulativeInvestment", "累计出借");
+        map.put("hztTenderPrice", "汇直投出借金额");
+        map.put("hxfTenderPrice", "汇消费出借金额");
+        map.put("htlTenderPrice", "汇天利出借金额");
+        map.put("htjTenderPrice", "汇添金出借金额");
+        map.put("rtbTenderPrice", "汇金理财出借金额");
+        map.put("hzrTenderPrice", "汇转让出借金额");
         return map;
     }
 

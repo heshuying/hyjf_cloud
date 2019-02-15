@@ -1,5 +1,5 @@
 /**
- * 投资信息
+ * 出借信息
  */
 
 package com.hyjf.am.trade.dao.mapper.customize;
@@ -26,7 +26,7 @@ public interface BorrowTenderInfoCustomizeMapper {
 	Integer getCouponProfitTime(Map<String, Object> paramMap);
 	
 	/**
-     * 根据borrowNid查询所发标的投资总金额
+     * 根据borrowNid查询所发标的出借总金额
      * @param params
      * @return
      */

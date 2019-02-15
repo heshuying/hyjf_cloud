@@ -168,7 +168,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             // 卡号
             String cardNo = bankCard.getCardNo();
             result.setCardNo(cardNo);
-            result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
+            result.setCardNo_info(BankCardUtil.getFormatCardNo(cardNo));
             JxBankConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
                 result.setLogo(systemConfig.getAppFrontHost() + banksConfig.getBankIcon());
@@ -206,7 +206,7 @@ public class AppBankWithdrawController extends BaseTradeController {
                     balance = CommonUtils.formatAmount(version, transAmt);
 
                     // 大额支付需要传开户行号
-                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50000)) >= 0)) {
+                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50001)) >= 0)) {
                         // 是否是大额提现表示 0:非 1:是
                         result.setIsDisplay("1");
                         // 开户行号
@@ -407,7 +407,7 @@ public class AppBankWithdrawController extends BaseTradeController {
     @ResponseBody
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+    public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         logger.info("app端提现接口, userId is :{}", userId);
         AppResult<Object> result = new AppResult<Object>();
         String transAmt = request.getParameter("total");// 交易金额
@@ -437,6 +437,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         logger.info("ipAddr is :{}", ipAddr);
         // (提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
+        retUrl += "?token=1&sign=" +sign;
         String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
         bgRetUrl=splicingParam(bgRetUrl,request);
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";

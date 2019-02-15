@@ -77,7 +77,7 @@
         CASE ui.attribute WHEN 0 THEN   d3. NAME WHEN 1 THEN   d3. NAME WHEN 2 THEN   dd3. NAME WHEN 3 THEN   dd3. NAME END AS three_division,
         CASE bt.client WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END client
         FROM  hyjf_trade.ht_borrow_tender bt
-        LEFT JOIN (SELECT borrow_nid,borrow_style,borrow_period FROM huiyingdai_borrow) AS b ON bt.borrow_nid = b.borrow_nid
+        LEFT JOIN (SELECT borrow_nid,borrow_style,borrow_period FROM ht_borrow) AS b ON bt.borrow_nid = b.borrow_nid
         LEFT JOIN hyjf_user.ht_user_info ui ON bt.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON bt.user_id = su.user_id
         LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_userid
@@ -677,7 +677,7 @@
           GROUP BY u.user_id) y ON z.user_id=y.user_id
     </sql>
 
-    <!-- 昨日注册用户投资≥3000人数 -->
+    <!-- 昨日注册用户出借≥3000人数 -->
     <select id="countInvestGt3000UserNum" resultMap="sumResultMap">
         SELECT count(1) AS invest_gt3000_user_num,
         primary_division AS primary_division,
@@ -696,7 +696,7 @@
         GROUP BY t.primary_division, t.two_division
     </select>
 
-    <!-- 本月累计投资3000以上新客户数 -->
+    <!-- 本月累计出借3000以上新客户数 -->
     <select id="countInvestGt3000MonthUserNum" resultMap="sumResultMap">
         SELECT count(1) AS invest_gt3000_month_user_num,
         primary_division AS primary_division,

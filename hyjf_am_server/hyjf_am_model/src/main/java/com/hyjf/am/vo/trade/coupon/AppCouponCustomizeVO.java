@@ -7,17 +7,17 @@ public class AppCouponCustomizeVO {
 	private String planNid;
 	// 计划名称
 	private String planName;
-	// 计划投资订单号
+	// 计划出借订单号
 	private String accedeOrderId;
 	// 计划年化收益率
 	private String planApr;
 	// 计划锁定期
 	private String planPeriod;
-	// 计划投资用户id
+	// 计划出借用户id
 	private String userId;
-	// 计划投资金额
+	// 计划出借金额
 	private String accedeAccount;
-	// 计划投资时间
+	// 计划出借时间
 	private String addTime;
 	// 计划待收本金
 	private String waitCaptical;
@@ -46,7 +46,7 @@ public class AppCouponCustomizeVO {
 	private String recoverAccountInterestWait;
 	// 待收本金
 	private String recoverAccountCapitalWait;
-	// 本金投资订单号
+	// 本金出借订单号
 	private String realTenderId;
 
 	public String getCouponType() {

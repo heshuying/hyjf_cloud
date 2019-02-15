@@ -33,7 +33,7 @@ public class WebUserTradeListCustomize {
 	private String isBank;
 	
 	/** * new added */
-	// 用户角色:1投资人2借款人3担保机构
+	// 用户角色:1出借人2借款人3担保机构
 	private String roleId;
 	// 标的号
 	private String borrowNid;

@@ -113,7 +113,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     }
 
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -137,12 +137,15 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             String sumAccount = amTradeClient.selectBorrowInvestAccount(borrowInvestRequest);
             responseBean.setRecordList(voList);
             responseBean.setSumAccount(sumAccount);
+        } else {
+            //没数据时初始化
+            responseBean.setRecordList(new ArrayList<>());
         }
         return responseBean;
     }
 
     /**
-     * 投资明细导出列表
+     * 出借明细导出列表
      *
      * @param borrowInvestRequest
      * @return
@@ -153,7 +156,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     }
 
     /**
-     * 投资人债权明细
+     * 出借人债权明细
      *
      * @param investorDebtBean
      * @return
@@ -303,7 +306,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));
                         //交易金额
                         info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT));
-                        //预期年化收益率
+                        //预期出借利率
                         info.setYield(loanDetail.getBigDecimal(BankCallConstant.PARAM_YIELD));
                         //预期收益
                         info.setForIncome(loanDetail.getBigDecimal(BankCallConstant.PARAM_FORINCOME));
@@ -345,7 +348,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
      */
     @Override
     public AdminResult pdfPreview(String nid) {
-        // 根据订单号查询用户投资协议记录表
+        // 根据订单号查询用户出借协议记录表
         TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
         if (tenderAgreement != null && StringUtils.isNotBlank(tenderAgreement.getImgUrl())) {
             BorrowInvestResponseBean responseBean = new BorrowInvestResponseBean();
@@ -358,7 +361,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             responseBean.setFileDomainUrl(fileDomainUrl);
             return new AdminResult(responseBean);
         } else {
-            return new AdminResult(BaseResult.FAIL, "未查询到用户投资协议");
+            return new AdminResult(BaseResult.FAIL, "未查询到用户出借协议");
         }
     }
 
@@ -378,7 +381,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         Integer userId = Integer.valueOf(investorDebtBean.getUserId());
         // 标的编号
         String borrowNid = investorDebtBean.getBorrowNid();
-        // 投资订单号
+        // 出借订单号
         String nid = investorDebtBean.getNid();
         // 获取标的放款记录
         BorrowRecoverVO br = amTradeClient.selectBorrowRecover(userId, borrowNid, nid);
@@ -398,7 +401,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         if (user == null) {
             return new AdminResult(BaseResult.FAIL, "用户信息不存在");
         }
-        // 获取用户投资协议记录
+        // 获取用户出借协议记录
         TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
         // 签署成功(status = 2)
         if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -446,10 +449,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 
         if (msg == null) {
             return new AdminResult();
-        } else if (!"系统异常".equals(msg)) {
-            return new AdminResult(BaseResult.FAIL, msg);
         } else {
-            return new AdminResult(BaseResult.FAIL, "异常纪录，请刷新后重试");
+            return new AdminResult(BaseResult.FAIL, msg);
         }
     }
 
@@ -475,22 +476,20 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 
         if (msg == null) {
             return new AdminResult();
-        } else if (!"系统异常".equals(msg)) {
-            return new AdminResult(BaseResult.FAIL, msg);
         } else {
-            return new AdminResult(BaseResult.FAIL, "异常纪录，请刷新后重试");
+            return new AdminResult(BaseResult.FAIL, msg);
         }
     }
 
     private String resendMessageAction(String userId, String nid, String borrowNid, String sendEmail) {
         try {
             PdfGenerator pdfGenerator = new PdfGenerator();
-            //投资列表查询类
+            //出借列表查询类
             BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
             borrowInvestRequest.setUserId(Integer.valueOf(userId));
             borrowInvestRequest.setBorrowNid(borrowNid);
             borrowInvestRequest.setNid(nid);
-            // 向投资人发送邮件
+            // 向投出借发送邮件
             if (Validator.isNotNull(userId) && NumberUtils.isCreatable(userId)) {
                 //查询用户
                 UserVO user = amUserClient.findUserById(Integer.valueOf(userId));
@@ -545,7 +544,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     contents.put("idCard", borrowerUserinfo.getIdcard());
                     // 本笔的放款完成时间 (协议签订日期)
                     contents.put("recoverTime", recordList.get(0).getRecoverLastTime());
-                    // 用户投资列表
+                    // 用户出借列表
                     List<WebUserInvestListCustomizeVO> tzList =
                             amTradeClient.selectUserInvestList(borrowInvestRequest);
                     if (tzList != null && tzList.size() > 0) {
@@ -553,8 +552,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         userInvest.setIdCard(borrowerUserinfo.getIdcard());
                         contents.put("userInvest", userInvest);
                     } else {
-                        logger.error("标的投资信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
-                        return "标的投资信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。";
+                        logger.error("标的出借信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+                        return "标的出借信息异常,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。";
                     }
                     // 如果是分期还款，查询分期信息
                     String borrowStyle = recordList.get(0).getBorrowStyle();
@@ -565,7 +564,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
 
                         String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr()) ? "0.00" : recordList.get(0).getBorrowApr().replace("%", "");
                         BigDecimal borrowApr = new BigDecimal(borrowAprString);
-                        //投资金额
+                        //出借金额
                         String accountString = StringUtils.isEmpty(recordList.get(0).getAccount()) ? "0.00" : recordList.get(0).getAccount().replace(",", "");
                         BigDecimal account = new BigDecimal(accountString);
                         // 周期
@@ -576,10 +575,10 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         borrowPeriodString = m.replaceAll("").trim();
                         Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
                         if (org.apache.commons.lang3.StringUtils.equals("endday", borrowStyle)) {
-                            // 还款方式为”按天计息，到期还本还息“：预期收益=投资金额*年化收益÷365*锁定期；
+                            // 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*出借利率÷365*锁定期；
                             earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                         } else {
-                            // 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
+                            // 还款方式为”按月计息，到期还本还息“：预期收益=出借金额*出借利率÷12*月数；
                             earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                         }
                         contents.put("earnings", earnings);
@@ -650,16 +649,21 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     int updateResult = amTradeClient.updateBorrowRecover(borrowInvestRequest);
                     if (updateResult > 0) {
                         return null;
+                    } else {
+                        return "发送邮件失败，请重试";
                     }
+                } else {
+                    logger.error("出借明细发送协议失败, 未查询到出借明细，出借订单号:"+ nid);
+                    return "出借明细发送协议失败，未查询到出借明细";
                 }
             } else {
-                logger.error("投资明细发送协议失败，投资订单号：" + nid);
-                return "投资明细发送协议失败";
+                logger.error("出借明细发送协议失败，出借订单号：" + nid);
+                return "出借明细发送协议失败";
             }
         } catch (Exception e) {
             logger.error("发送协议失败:", e);
+            return "系统异常";
         }
-        return "系统异常";
     }
 
     /**
@@ -679,7 +683,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                 return "邮箱格式不正确！";
             }
         }
-        //校验投资订单号与标的编号
+        //校验出借订单号与标的编号
         if (StringUtils.isBlank(investorRequest.getNid()) || StringUtils.isBlank(investorRequest.getBorrowNid())) {
             return "传递参数不正确！";
         }

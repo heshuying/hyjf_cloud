@@ -39,7 +39,7 @@ public class PlanInvestCustomizeVO extends BaseVO {
 	 */
 	private String borrowNid;
 	/**
-	 * 投资/承接订单号
+	 * 出借/承接订单号
 	 */
 	private String orderId;
 	/**
@@ -67,11 +67,11 @@ public class PlanInvestCustomizeVO extends BaseVO {
 	 */
 	private String borrowApr;
 	/**
-	 * 投资本金
+	 * 出借本金
 	 */
 	private String account;
 	/**
-	 * 投资状态
+	 * 出借状态
 	 */
 	private String status;
 	/**
@@ -138,6 +138,17 @@ public class PlanInvestCustomizeVO extends BaseVO {
 	 * 逾期利息
 	 */
 	private String lateInterest;
+
+	/**法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功*/
+	private int fddStatus;
+
+
+	public int getFddStatus() {
+		return fddStatus;
+	}
+	public void setFddStatus(int fddStatus) {
+		this.fddStatus = fddStatus;
+	}
 
 	public String getPlanOrderId() {
 		return planOrderId;

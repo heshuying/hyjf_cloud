@@ -87,7 +87,7 @@ public class HjhCommissionController extends BaseController{
 	private SystemConfig systemConfig;
 
 	/*权限*/
-	public static final String PERMISSIONS = "hjhcommission";
+	public static final String PERMISSIONS = "pushMoneyListHJH";
 
 	private static final Logger logger = LoggerFactory.getLogger(HjhCommissionController.class);
 	/*类名*/
@@ -110,7 +110,7 @@ public class HjhCommissionController extends BaseController{
 		List<HjhCommissionCustomizeVO> returnList = null;
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		// 默认为汇计划类的投资
+		// 默认为汇计划类的出借
 		form.setTenderType(2);
 		// 列表查询
 		HjhCommissionResponse response = hjhCommissionService.selectHjhCommissionList(form);
@@ -145,7 +145,7 @@ public class HjhCommissionController extends BaseController{
 		HjhCommissionRequest form = new HjhCommissionRequest();
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		// 默认为汇计划类的投资
+		// 默认为汇计划类的出借
 		form.setTenderType(2);
 		HjhCommissionResponse response = hjhCommissionService.selecthjhCommissionTotal(form);
 		if(response == null) {
@@ -256,7 +256,7 @@ public class HjhCommissionController extends BaseController{
 		List<HjhCommissionCustomizeVO> returnList = null;
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		// 默认为汇计划类的投资
+		// 默认为汇计划类的出借
 		form.setTenderType(2);
 		// 列表查询
 		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
@@ -265,8 +265,8 @@ public class HjhCommissionController extends BaseController{
 		}
 		// 列头
         String[] titles =
-                new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(投资时)", "投资人用户名",
-                		"投资人用户属性(投资时)",
+                new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期出借利率率", "提成人", "提成人真实姓名", "提成人用户属性(出借时)", "出借人用户名",
+                		"出借人用户属性(出借时)",
                 		"加入金额", "提成金额",
                         "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};
 		// 声明一个工作薄
@@ -336,14 +336,14 @@ public class HjhCommissionController extends BaseController{
 	                		}
 	                		cell.setCellValue(bean.getLockPeriod() + str);}
                     }
-                  //预期年化收益率
+                  //预期出借利率率
                     else if (celLength == 5) {
                     	cell.setCellValue( bean.getExpectApr().toString()+" %");
                     }
 
                    //提成人
                     else if (celLength == 6) {
-                    	//UsernameTender 是投资人用户名
+                    	//UsernameTender 是出借人用户名
                         *//*cell.setCellValue(bean.getUsernameTender());*//*
                         // Username是 提成人用户名
                         cell.setCellValue(bean.getUsername());
@@ -353,7 +353,7 @@ public class HjhCommissionController extends BaseController{
                     else if (celLength == 7) {
                     	cell.setCellValue(bean.getTrueNameTender());
                     }
-                  //提成人用户属性（投资时）
+                  //提成人用户属性（出借时）
                     else if (celLength == 8) {
                         String attribute = "";
                         if ("0".equals(bean.getAttribute())) {
@@ -367,11 +367,11 @@ public class HjhCommissionController extends BaseController{
                         }
                         cell.setCellValue(attribute);
                     }
-                    //投资人用户名
+                    //出借人用户名
                     else if (celLength == 9) {
                         cell.setCellValue(bean.getUsernameTender());
                     }
-                    //投资人用户属性(投资时)
+                    //出借人用户属性(出借时)
                     else if (celLength == 10) {
                         String attribute = "";
                         if ("0".equals(bean.getAttributeTender())) {
@@ -436,7 +436,7 @@ public class HjhCommissionController extends BaseController{
 		List<HjhCommissionCustomizeVO> returnList = null;
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		// 默认为汇计划类的投资
+		// 默认为汇计划类的出借
 		form.setTenderType(2);
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -494,9 +494,9 @@ public class HjhCommissionController extends BaseController{
 		map.put("expectApr", "参考年回报率");
 		map.put("username", "提成人");
 		map.put("trueNameTender", "提成人真实姓名");
-		map.put("attribute", "提成人用户属性(投资时)");
-		map.put("usernameTender", "投资人用户名");
-		map.put("attributeTender", "投资人用户属性(投资时)");
+		map.put("attribute", "提成人用户属性(出借时)");
+		map.put("usernameTender", "出借人用户名");
+		map.put("attributeTender", "出借人用户属性(出借时)");
 		map.put("accountTender", "授权服务金额");
 		map.put("commission", "提成金额");
 		map.put("statusName", "提成发放状态");
@@ -658,7 +658,7 @@ public class HjhCommissionController extends BaseController{
 		HjhCommissionRequest form = new HjhCommissionRequest();
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
-		// 默认为汇计划类的投资
+		// 默认为汇计划类的出借
 		form.setTenderType(2);
 		JSONObject ret = new JSONObject();
 		// 提成ID 主键查询提成表

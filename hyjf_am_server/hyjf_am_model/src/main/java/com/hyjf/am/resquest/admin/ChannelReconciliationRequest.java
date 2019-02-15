@@ -22,10 +22,10 @@ public class ChannelReconciliationRequest extends BasePage {
     private String orderCode;
     @ApiModelProperty(value = "标的编号")
     private String borrowNid;
-    @ApiModelProperty(value = "投资开始时间")
+    @ApiModelProperty(value = "出借开始时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date investStartTime;
-    @ApiModelProperty(value = "投资结束时间")
+    @ApiModelProperty(value = "出借结束时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date investEndTime;
     @ApiModelProperty(value = "是否首投 0:是 1:否")
@@ -38,6 +38,8 @@ public class ChannelReconciliationRequest extends BasePage {
     private Date registEndTime;
     @ApiModelProperty(value = "渠道")
     private String[] utmPlat;
+
+    private String sourceId;
 
     private int limitStart;
 
@@ -133,6 +135,15 @@ public class ChannelReconciliationRequest extends BasePage {
     public void setUtmPlat(String[] utmPlat) {
         this.utmPlat = utmPlat;
     }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
     // 用户id集合
     private List<Integer> userIdList;
 

@@ -29,6 +29,20 @@ public interface BaseService {
      */
     BorrowInfo getBorrowInfoByNid(String borrowNid);
 
+    /**
+     * 根据标的编号检索标的借款信息(主库)
+     * @param borrowNid
+     * @return
+     */
+    Borrow doGetBorrow(String borrowNid);
+
+    /**
+     * 根据标的编号检索标的借款详情(主库)
+     * @param borrowNid
+     * @return
+     */
+    BorrowInfo doGetBorrowInfoByNid(String borrowNid);
+
     BorrowAndInfoVO getBorrowAndInfoByNid(String borrowNid);
 
     /**
@@ -106,7 +120,7 @@ public interface BaseService {
     BigDecimal getBankBalance(Integer userId, String accountId);
 
     /**
-     * 根据借款编号查询资产信息
+     * 根据项目编号查询资产信息
      *
      * @param borrowNid
      * @return
@@ -129,4 +143,5 @@ public interface BaseService {
      * @Author : huanghui
      */
     boolean getIsRechargeTransType(String tranType);
+
 }

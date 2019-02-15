@@ -1,6 +1,7 @@
 package com.hyjf.cs.market.service;
 
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 
 /**
  * @Auther: walter.limeng
@@ -17,4 +18,12 @@ public interface ShareNewsService {
      * @return ShareNewsBeanVO
      */
     ShareNewsBeanVO queryShareNews();
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
 }

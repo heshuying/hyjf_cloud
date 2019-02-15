@@ -96,7 +96,7 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         // 计算提成用户id
         UserInfoVO userInfoCommision = hjhLockVo.getCommissioUserInfoVO();
         if(userInfoCommision == null){
-            logger.info("汇计划提成：计算提成用户id未获取到相应用户信息！");
+            logger.info("汇计划：" + hjhLockVo.getAccedeOrderId() + "提成---计算提成用户id为空或者未获取到相应用户信息！");
             statusUpdate(record, 1);
             return;
         }
@@ -133,7 +133,7 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         BigDecimal rateMonth = BigDecimal.ZERO;
         // 提成金额
         BigDecimal commission = BigDecimal.ZERO;
-        // 投资金额
+        // 出借金额
         BigDecimal accountTender = record.getAccedeAccount();
 
         if(userInfoCommision.getAttribute() == 3){
@@ -154,15 +154,15 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
 
         TenderCommission tenderCommission = new TenderCommission();
         tenderCommission.setCommission(commission);
-        // 投资人
+        // 出借人
         tenderCommission.setTenderUserId(record.getUserId());
-        // 投资金额
+        // 出借金额
         tenderCommission.setAccountTender(record.getAccedeAccount());
         // 项目编号
         tenderCommission.setBorrowNid(plan.getPlanNid());
-        // 投资ID
+        // 出借ID
         tenderCommission.setTenderId(record.getId());
-        // 投资时间
+        // 出借时间
         tenderCommission.setTenderTime(GetDate.getTime10(record.getCreateTime()));
         // 状态 0：未发放；1：已发放
         tenderCommission.setStatus(0);
@@ -248,16 +248,16 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(plan.getBorrowStyle())) {
             // 线上员工
             if (userInfoCommision.getAttribute() == 3) {
-                // 每笔提成= 投资金额*提成比例（天-线上员工）*融资天数
+                // 每笔提成= 出借金额*提成比例（天-线上员工）*融资天数
                 commission = accountTender.multiply(rateDay).multiply(new BigDecimal(record.getLockPeriod()));
             }
             //51老用户（非员工）
             else {
                 if (record.getLockPeriod() >= 50) {
-                    // 融资期限≥50天时，每笔提成=投资金额*提成比例（月-51老用户）
+                    // 融资期限≥50天时，每笔提成=出借金额*提成比例（月-51老用户）
                     commission = accountTender.multiply(rateMonth);
                 } else {
-                    // 融资期限＜50天时，每笔提成=投资金额*提成比例（天-51老用户）*天数
+                    // 融资期限＜50天时，每笔提成=出借金额*提成比例（天-51老用户）*天数
                     commission = accountTender.multiply(rateDay).multiply(new BigDecimal(record.getLockPeriod()));
                 }
             }
@@ -266,12 +266,12 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         else {
             // 线上员工
             if (userInfoCommision.getAttribute() == 3) {
-                // 每笔提成=投资金额*提成比例（月-线上员工）*融资月数
+                // 每笔提成=出借金额*提成比例（月-线上员工）*融资月数
                 commission = accountTender.multiply(rateMonth).multiply(new BigDecimal(record.getLockPeriod()));
             }
             //51老用户（非员工）
             else {
-                // 每笔提成= 投资金额*提成比例（月-51老用户）
+                // 每笔提成= 出借金额*提成比例（月-51老用户）
                 commission = accountTender.multiply(rateMonth);
             }
         }

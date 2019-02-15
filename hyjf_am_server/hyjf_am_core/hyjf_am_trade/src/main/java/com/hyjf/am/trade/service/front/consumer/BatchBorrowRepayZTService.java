@@ -22,14 +22,14 @@ public interface BatchBorrowRepayZTService extends BaseService {
 
 	BankCallBean batchQuery(BorrowApicron apicron);
 
-	boolean reapyBatchDetailsUpdate(BorrowApicron apicron);
+	int reapyBatchDetailsUpdate(BorrowApicron apicron);
 
 	BorrowApicron selApiCronByPrimaryKey(int id);
 
-	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
+	int updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
 
 	boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover,
-			JSONObject repayDetail) throws Exception;
+			JSONObject repayDetail, boolean creditEndAllFlag) throws Exception;
 
 	boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception;
 

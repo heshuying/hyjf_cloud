@@ -118,7 +118,7 @@ public class UserParameters {
 
 	private String newAutoCreditStatus; //自动债转授权状态 0: 未授权    1:已授权
 	// add by yaoyong 20171204 app2.1改版 end
-	// 用户角色：1投资人2借款人3担保机构
+	// 用户角色：1出借人2借款人3担保机构
 	private String roleId;
 	// 缴费授权状态  0: 未授权    1:已授权
 	private String paymentAuthStatus;
@@ -126,7 +126,7 @@ public class UserParameters {
 	private String paymentAuthUrl;
 	// 三合一授权Url
 	private String mergeAuthUrl;
-	// 自动投资授权是否开启  0未开启  1已开启
+	// 自动出借授权是否开启  0未开启  1已开启
 	private String invesAuthOn;
 	// 自动债转费授权是否开启  0未开启  1已开启
 	private String creditAuthOn;
@@ -148,6 +148,18 @@ public class UserParameters {
 	private String mergeAuthExpire;
 	//缴费授权过期标识0未授权，1正常，2即将过期，3已过期
 	private String paymentAuthExpire;
+	/**
+	 *二合一授权过期标识（服务费授权、还款授权） 0未授权，1正常，2即将过期，3已过期
+	 */
+	private String payRepayAuthExpire;
+
+	public String getPayRepayAuthExpire() {
+		return payRepayAuthExpire;
+	}
+
+	public void setPayRepayAuthExpire(String payRepayAuthExpire) {
+		this.payRepayAuthExpire = payRepayAuthExpire;
+	}
 	/**
 	 * 缴费授权固定消息
 	 */

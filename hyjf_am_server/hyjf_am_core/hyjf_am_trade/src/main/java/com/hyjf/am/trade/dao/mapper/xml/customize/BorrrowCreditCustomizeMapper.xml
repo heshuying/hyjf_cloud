@@ -97,7 +97,7 @@
         hbc.credit_status AS status,
         <!-- 债转本金 -->
         hbc.credit_capital AS creditCapital,
-        <!-- 项目剩余 可投资金额 -->
+        <!-- 项目剩余 可出借金额 -->
         (hbc.credit_capital - hbc.credit_capital_assigned) AS investAccount,
         <!-- 折价比率 -->
         hbc.credit_discount AS creditDiscount,
@@ -113,8 +113,10 @@
         FROM_UNIXTIME(hbc.end_time,'%Y-%m-%d %H:%i:%s') AS endTime,
         <!-- 成功时间 -->
         FROM_UNIXTIME(hbc.assign_time,'%Y-%m-%d %H:%i:%s') AS assignTime,
-        <!-- 投资进度 -->
-        truncate(hbc.credit_capital_assigned/hbc.credit_capital*100,2) AS borrowSchedule
+        <!-- 出借进度 -->
+        truncate(hbc.credit_capital_assigned/hbc.credit_capital*100,2) AS borrowSchedule,
+        <!-- 标的详情 -->
+        hb.invest_level AS investLevel
         FROM
         ht_borrow_credit hbc
         LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
@@ -366,7 +368,7 @@
         <result column="contract_number" property="contract_number"/>
         <!-- 承接人用户ID -->
         <result column="user_id" property="userId" jdbcType="INTEGER" />
-        <!-- 原始投资订单号 -->
+        <!-- 原始出借订单号 -->
         <result column="credit_tender_nid" property="creditTenderNid" jdbcType="VARCHAR" />
         <!--合同下载地址-->
         <result column="download_url" property="downloadUrl"  />

@@ -35,7 +35,7 @@ public enum  AdsTypeEnum {
 
     private String index;
     private String name;
-    private AdsTypeEnum(String index, String name){
+    AdsTypeEnum(String index, String name){
         this.name = name;
         this.index = index;
     }

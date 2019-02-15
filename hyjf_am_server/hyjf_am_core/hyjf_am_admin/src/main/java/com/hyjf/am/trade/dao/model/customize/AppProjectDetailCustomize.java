@@ -42,7 +42,7 @@ public class AppProjectDetailCustomize implements Serializable {
 	private String repayStyle;
 	/* 授信额度 borrowAccount */
 	private String borrowAccount;
-	/* 项目年化收益 borrowApr */
+	/* 项目出借利率 borrowApr */
 	private String borrowApr;
 	/* 项目期限 borrowPeriod */
 	private String borrowPeriod;
@@ -56,7 +56,7 @@ public class AppProjectDetailCustomize implements Serializable {
 	private String sendTime;
 	/* 满标时间 fullTime ------------ */
 	private String fullTime;
-	/* 项目状态 status 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 */
+	/* 项目状态 status 10 定时发标 11出借中 12复审中 13 还款中 14 已还款 15 已流标 */
 	private String status;
 	/* 倍增金额 increaseMoney ----------- */
 	private String increaseMoney;
@@ -64,9 +64,9 @@ public class AppProjectDetailCustomize implements Serializable {
 	private String interestCoupon;
 	/* 体验金 tasteMoney ----------- */
 	private String tasteMoney;
-	/* 最小投资金额 tenderAccountMin ----------- */
+	/* 最小出借金额 tenderAccountMin ----------- */
 	private String tenderAccountMin;
-	/* 最大投资金额 TenderAccountMax ----------- */
+	/* 最大出借金额 TenderAccountMax ----------- */
 	private String tenderAccountMax;
 	/* 融通宝项目编号 ----------- */
 	private String borrowAssetNumber;
@@ -88,7 +88,7 @@ public class AppProjectDetailCustomize implements Serializable {
 	private String contractPeriod;
 	/* 借款金额万 ----------- */
 	private String borrowAccountWan;
-	/* 投资金额万 ----------- */
+	/* 出借金额万 ----------- */
 	private String tenderAccountMinWan;
 	/* 期限类型 ----------- */
 	private String borrowPeriodType;

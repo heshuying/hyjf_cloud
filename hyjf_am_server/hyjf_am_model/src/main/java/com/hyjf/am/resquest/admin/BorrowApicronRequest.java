@@ -87,7 +87,17 @@ public class BorrowApicronRequest extends BaseVO {
 
     private String data;
 
+    private Integer agreementStatus;
+
     private static final long serialVersionUID = 1L;
+
+    public Integer getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(Integer agreementStatus) {
+        this.agreementStatus = agreementStatus;
+    }
 
     public Integer getId() {
         return id;

@@ -155,7 +155,7 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	
-	<!-- 计划放款后投资人金额变化  -->
+	<!-- 计划放款后出借人金额变化  -->
 	<!-- 汇计划二期去掉bank_frost_cash操作 bank_frost_cash = IFNULL(bank_frost_cash,0) - #{bankFrostCash,jdbcType=DECIMAL},-->
 	<update id="updateOfPlanLoansTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
@@ -214,7 +214,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<!-- 汇计划还款投资人金额变化 -->	
+	<!-- 汇计划还款出借人金额变化 -->
 	<update id="updateOfRepayPlanTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set
@@ -318,7 +318,7 @@
 		where
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<!--modify by cwyang 去除投资完成后对银行可提现账户余额bank_frost_cash的变更,此账户余额应该扣减  2017-4-28-->
+	<!--modify by cwyang 去除出借完成后对银行可提现账户余额bank_frost_cash的变更,此账户余额应该扣减  2017-4-28-->
 	<update id="updateOfTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set
@@ -674,7 +674,7 @@
 			user_id = #{userId,jdbcType=INTEGER}
 	</update>
 	
-	<!-- 债权迁移后,更新加息投资用户的待收总额,待收利息,账户总资产-->
+	<!-- 债权迁移后,更新加息出借用户的待收总额,待收利息,账户总资产-->
 	<update id="updateTenderUserAccount" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set
@@ -684,7 +684,7 @@
 		where
 			user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<!-- 债权迁移后,更新用户的累计投资 -->
+	<!-- 债权迁移后,更新用户的累计出借 -->
 	<update id="updateUserAccountInvestSum" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set
@@ -718,7 +718,7 @@
 		where
 			user_id = #{userId,jdbcType=INTEGER}
 	</update>
-	<!-- 债权迁移后,更新加息投资用户的待收总额,待收利息,账户总资产-->
+	<!-- 债权迁移后,更新加息出借用户的待收总额,待收利息,账户总资产-->
 	<update id="updateIncreaseInterestSubtract" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
 		update ht_account
 		set

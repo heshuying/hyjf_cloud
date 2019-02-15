@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 自动投资（原子层）
+ * 自动出借（原子层）
  *
  * @author liubin
  * @version AutoTenderController, v0.1 2018/6/28 19:08
@@ -46,7 +46,7 @@ public class AutoTenderController extends BaseController {
     private AutoTenderService autoTenderService;
 
     /**
-     * 取得自动投资用加入计划列表
+     * 取得自动出借用加入计划列表
      * @return
      */
     @RequestMapping("/selectPlanJoinList")
@@ -111,7 +111,7 @@ public class AutoTenderController extends BaseController {
     }
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param request
      * @return
@@ -148,7 +148,7 @@ public class AutoTenderController extends BaseController {
         String sellerUsrcustid = request.getSellerUsrcustid();
         HjhCreditCalcResultVO resultVO = request.getResultVO();
         BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
-        //银行自动投资成功后，更新投资数据
+        //银行自动投标成功后，更新出借数据
         boolean result = this.autoTenderService.updateCreditForAutoTender(
                 creditNid, accedeOrderId, planNid, bean,
                 tenderUsrcustid, sellerUsrcustid, resultVO

@@ -42,7 +42,7 @@ public class PlanListRequest extends BasePage implements Serializable{
 	 */
 	private String planNameSrch;
 	/**
-	 * 检索条件 投资状态 0 全部；1 启用；2 关闭；
+	 * 检索条件 出借状态 0 全部；1 启用；2 关闭；
 	 */
 	private String planStatusSrch;
 
@@ -212,7 +212,7 @@ public class PlanListRequest extends BasePage implements Serializable{
 	
 	
 	/**
-	 * 最大投资金额
+	 * 最大出借金额
 	 */
 	private String debtMaxInvestment;
 
@@ -236,7 +236,7 @@ public class PlanListRequest extends BasePage implements Serializable{
 	private String normalQuestion;
 	
 	/**
-	 * 最小自动投资笔数
+	 * 最小自动投标笔数
 	 */
 	private String minInvestCounts;
 
@@ -246,6 +246,15 @@ public class PlanListRequest extends BasePage implements Serializable{
 	 * 登陆者userid
 	 */
 	private int userid;
+
+	/**
+	 * 智投服务风险测评等级
+	 *
+	 */
+	private String investLevel;
+
+
+
 
 	public String getSort() {
 		return sort;
@@ -630,7 +639,16 @@ public class PlanListRequest extends BasePage implements Serializable{
 	public void setUserid(int userid) {
 		this.userid = userid;
 	}
-	
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
+
+
 	/**
 	 * 检索条件 计划类型 “配置中心-汇添金配置”中所有计划类型（暂时不用）
 	 */

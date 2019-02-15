@@ -56,7 +56,7 @@ public class AdminAccountDetailController {
         Map<String, Object> mapParam = paramSet(request);
         logger.info("---selectAccountDetailList by param---  " + JSONObject.toJSON(mapParam));
         int intCountAccountDetail = accountDetailService.countAccountDetail(mapParam);
-        Paginator paginator = new Paginator(request.getCurrPage(), intCountAccountDetail, request.getPageSize());
+        Paginator paginator = new Paginator(request.getCurrPage(),intCountAccountDetail,request.getPageSize());
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), intCountAccountDetail);
         }
@@ -87,9 +87,13 @@ public class AdminAccountDetailController {
      */
     private Map<String, Object> paramSet(AccountDetailRequest userRequest) {
         Map<String, Object> mapParam = new HashMap<String, Object>();
-        //
+        
+        if(userRequest.getUsername()==null&&userRequest.getReferrerName()==null&&userRequest.getTradeTypeSearch()==null) {
+        	mapParam.put("whereFlag",0);
+        }else {
+        	mapParam.put("whereFlag",1);
+        }
         mapParam.put("userId", userRequest.getUserId());
-        //
         mapParam.put("userName", userRequest.getUsername());
         mapParam.put("referrerName", userRequest.getReferrerName());
         mapParam.put("nid", userRequest.getNid());

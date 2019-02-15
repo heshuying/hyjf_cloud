@@ -121,7 +121,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         example.createCriteria().andIdEqualTo(borrowVO.getId()).andStatusEqualTo(borrowVO.getStatus()).andRegistStatusEqualTo(borrowVO.getRegistStatus());
         borrowVO.setRegistStatus(registStatus);
         borrowVO.setStatus(status);
-        borrowVO.setRegistUserId(1);//TODO:id写死1
+        borrowVO.setRegistUserId(1);
         borrowVO.setRegistUserName("AutoRecord");
         borrowVO.setRegistTime(nowDate);
         Borrow borrow = new Borrow();
@@ -174,7 +174,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 	}
 
     /**
-     * 投资之前插入tmp表
+     * 出借之前插入tmp表
      *
      * @param tenderRequest
      * @return
@@ -183,7 +183,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     public int insertBeforeTender(TenderRequest tenderRequest) {
         Integer userId = tenderRequest.getUserId();
 
-        Borrow borrow = getBorrow(tenderRequest.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderRequest.getBorrowNid());
         BorrowTenderTmp temp = new BorrowTenderTmp();
         temp.setUserId(userId);
         temp.setUserName(tenderRequest.getUserName());
@@ -217,7 +217,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (couponGrantId==null) {
             couponGrantId = 0;
         }
-        // 为投资完全掉单优惠券投资时修复做记录
+        // 为出借完全掉单优惠券出借时修复做记录
         temp.setCouponGrantId(couponGrantId);
         if (org.apache.commons.lang3.StringUtils.isNotBlank(tenderRequest.getTenderFrom())) {
             temp.setTenderFrom(tenderRequest.getTenderFrom());
@@ -225,8 +225,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         logger.info("开始插入temp表   {}",JSONObject.toJSONString(temp));
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
-            logger.error("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
-            throw new RuntimeException("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
+            logger.error("插入borrowTenderTmp表失败，出借订单号：" + tenderRequest.getOrderId());
+            throw new RuntimeException("插入borrowTenderTmp表失败，出借订单号：" + tenderRequest.getOrderId());
         }
         logger.info("完成插入temp表");
         BorrowTenderTmpinfo info = new BorrowTenderTmpinfo();
@@ -243,10 +243,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         info.setTmpArray(array);
         Boolean tenderTmpInfoFlag = borrowTenderTmpinfoMapper.insertSelective(info) > 0 ? true : false;
         if (!tenderTmpInfoFlag) {
-            logger.error("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
-            throw new RuntimeException("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
+            logger.error("插入borrowTenderTmpInfo表失败，出借订单号：" + tenderRequest.getOrderId());
+            throw new RuntimeException("插入borrowTenderTmpInfo表失败，出借订单号：" + tenderRequest.getOrderId());
         }
-        logger.info("完成投资前操作");
+        logger.info("完成出借前操作");
         return 1;
     }
 
@@ -266,13 +266,13 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 投资异步修改表
+     * 出借异步修改表
      *
      * @param tenderBg
      */
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
-        Borrow borrow = getBorrow(tenderBg.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderBg.getBorrowNid());
         BorrowInfo borrowInfo = getBorrowInfoByNid(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表
@@ -300,7 +300,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         record.setUnfreezeManual(0);
         boolean freezeFlag = freezeListMapper.insertSelective(record) > 0 ? true : false;
         if (!freezeFlag) {
-            logger.error("散标投资  插入freezeFlag表失败 ");
+            logger.error("散标出借  插入freezeFlag表失败 ");
             throw new RuntimeException("插入freezeFlag表失败");
         }
         // 插入BorrowTender表
@@ -342,11 +342,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteUserAttribute(tenderBg.getInviteUserAttribute());
         borrowTender.setTenderUserAttribute(tenderBg.getTenderUserAttribute());
         borrowTender.setInvestType(0);
-        // 单笔投资的融资服务费
+        // 单笔出借的融资服务费
         borrowTender.setLoanFee(tenderBg.getPerService());
-        //投资授权码
+        //出借授权码
         borrowTender.setAuthCode(tenderBg.getAuthCode());
-        borrowTender.setRemark("现金投资");
+        borrowTender.setRemark("现金出借");
         borrowTender.setBorrowUserId(borrow.getUserId());
         borrowTender.setBorrowUserName(borrow.getBorrowUserName());
         
@@ -365,18 +365,18 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             if (!increaseFlag) {
                 throw new RuntimeException("插入产品加息表失败！");
             }
-            logger.info("用户:" + userId + "******插入产品加息，投资订单号：" + borrowTender.getNid());
+            logger.info("用户:" + userId + "******插入产品加息，出借订单号：" + borrowTender.getNid());
         }
 
         // 更新用户账户余额表
         Account accountBean = new Account();
         accountBean.setUserId(userId);
-        // 投资人冻结金额增加
+        // 出借人冻结金额增加
         accountBean.setBankFrost(tenderBg.getAccountDecimal());
-        // 投资人可用余额扣减
+        // 出借人可用余额扣减
         accountBean.setBankBalance(tenderBg.getAccountDecimal());
         // 江西银行账户余额
-        // 此账户余额投资后应该扣减掉相应投资金额,sql已改
+        // 此账户余额出借后应该扣减掉相应出借金额,sql已改
         accountBean.setBankBalanceCash(tenderBg.getAccountDecimal());
         // 江西银行账户冻结金额
         accountBean.setBankFrostCash(tenderBg.getAccountDecimal());
@@ -422,7 +422,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         accountList.setRemark(tenderBg.getBorrowNid());
         accountList.setRepay(new BigDecimal(0));
         accountList.setTotal(account.getTotal());
-        accountList.setTrade("tender");// 投资
+        accountList.setTrade("tender");// 出借
         accountList.setTradeCode("frost");// 投标冻结后为frost
         accountList.setType(3);// 收支类型1收入2支出3冻结
         accountList.setUserId(userId);
@@ -453,12 +453,12 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             throw new RuntimeException("borrow表更新失败");
         }
 
-        // 投资成功后,发送CRM绩效统计
+        // 投标成功后,发送CRM绩效统计
         CrmInvestMsgBean crmInvestMsgBean = new CrmInvestMsgBean();
         crmInvestMsgBean.setInvestType(0);
         crmInvestMsgBean.setOrderId(borrowTender.getNid());
         //加入明细表插表成功的前提下，继续
-        //crm投资推送
+        //crm出借推送
         try {
             logger.info("投资成功后,发送CRM投资统计MQ:投资订单号:[" + borrowTender.getNid() + "].");
             commonProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), crmInvestMsgBean), 2);
@@ -466,8 +466,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             logger.error("发送CRM消息失败:" + e.getMessage());
         }
 
-        // 计算此时的剩余可投资金额
-        BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
+        // 计算此时的剩余可出借金额
+        BigDecimal accountWait = this.getBorrowByNid(tenderBg.getBorrowNid()).getBorrowAccountWait();
         String borrowNid = tenderBg.getBorrowNid();
         logger.info("标的{}  剩余可投为：{} ",borrowNid,accountWait);
         // 满标处理
@@ -510,6 +510,14 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 logger.error("发送短信失败");
             }
 
+            // add by liushouyi nifa2 20181204 start
+            // 发送满标状态埋点
+            // 发送发标成功的消息队列到互金上报数据
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("borrowNid", borrowNid);
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+            // add by liushouyi nifa2 20181204 end
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
@@ -524,7 +532,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         String ip = tenderBg.getIp();
         // 操作平台
         int client = borrowTender.getClient();
-        // 投资人id
+        // 出借人id
         Integer userId = borrowTender.getUserId();
         // 借款金额
         String account = tenderBg.getAccountDecimal().toString();
@@ -578,8 +586,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
             boolean incinvflag = increaseInterestInvestMapper.insertSelective(increaseInterestInvest) > 0 ? true : false;
             if (!incinvflag) {
-                logger.error("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
-                throw new RuntimeException("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+                logger.error("产品加息出借额外利息出借失败，插入额外出借信息失败,出借订单号:" + tenderOrderId);
+                throw new RuntimeException("产品加息出借额外利息出借失败，插入额外出借信息失败,出借订单号:" + tenderOrderId);
             }
             return incinvflag;
         }
@@ -587,7 +595,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 散标投资异步返回结果
+     * 散标出借异步返回结果
      *
      * @param tenderRetMsg
      */
@@ -608,7 +616,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 获取散标投资异步返回结果
+     * 获取散标出借异步返回结果
      *
      * @param userId
      * @param logOrdId
@@ -628,7 +636,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             BorrowTenderTmp borrowTenderTmp = list.get(0);
             result = borrowTenderTmp.getRetMsg();
         }
-        logger.info("散标投资获取失败结果：result：{} list.size():{}", result, (list == null ? 0 : list.size()));
+        logger.info("散标出借获取失败结果：result：{} list.size():{}", result, (list == null ? 0 : list.size()));
         return result;
     }
 
@@ -688,7 +696,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
 
     /**
-     * 查询计划还款日前一天，处于投资中和复审中的原始标的，发送邮件预警
+     * 查询计划还款日前一天，处于出借中和复审中的原始标的，发送邮件预警
      * @author zhangyk
      * @date 2018/8/20 16:26
      */
@@ -1563,7 +1571,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod);
                     borrowRepayPlanDeails.add(repayPlanDetail);
 
-                    // TODO: 累加以下值
                     repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
                     repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
                     repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
@@ -1638,8 +1645,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         for (int i = 0; i < borrowRecoverList.size(); i++) {
 
             BorrowRecover borrowRecover = borrowRecoverList.get(i);
-            String recoverNid = borrowRecover.getNid();// 投资订单号
-            int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+            String recoverNid = borrowRecover.getNid();// 出借订单号
+            int recoverUserId = borrowRecover.getUserId();// 出借用户userId
 
             BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -1650,8 +1657,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
             for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                 BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
 
                 if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
 
@@ -1660,7 +1667,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     userCapital = borrowRecoverPlan.getRecoverCapital();
                     userInterest = borrowRecoverPlan.getRecoverInterest();
                     userManageFee = borrowRecoverPlan.getRecoverFee();// 获取应还款管理费
-                    BigDecimal recoverUserCapital = borrowRecover.getRecoverCapital().subtract(borrowRecover.getRecoverCapitalYes()); // 原始投资本金
+                    BigDecimal recoverUserCapital = borrowRecover.getRecoverCapital().subtract(borrowRecover.getRecoverCapitalYes()); // 原始出借本金
 
                     // 给页面展示，就不计算了
                     repayRecoverPlanBean.setRecoverAccountOld(userAccount);
@@ -1757,7 +1764,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
-                                    creditRepayBean.setChargeDays(3);// TODO:默认是3天
+                                    creditRepayBean.setChargeDays(3);// 默认是3天
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
                                     userAccount = userAccount.subtract(assignAccount);
@@ -2058,8 +2065,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2069,8 +2076,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     BigDecimal userOverdueInterest = BigDecimal.ZERO;// 计算用户逾期还款利息
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         userAccount = borrowRecoverPlan.getRecoverAccount();
                         userCapital = borrowRecoverPlan.getRecoverCapital();
                         userInterest = borrowRecoverPlan.getRecoverInterest();
@@ -2378,8 +2385,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2387,8 +2394,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                             userAccount = borrowRecoverPlan.getRecoverAccount();// 获取应还款本息
@@ -2623,8 +2630,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2633,8 +2640,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     BigDecimal userDelayInterest = BigDecimal.ZERO;// 计算用户提前还款利息
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                             userAccount = borrowRecoverPlan.getRecoverAccount();
@@ -2914,8 +2921,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2926,8 +2933,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                             userAccount = borrowRecoverPlan.getRecoverAccount();// 获取应还款本息
@@ -3168,7 +3175,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 根据项目编号，投资用户，订单号获取用户的放款总记录
+     * 根据项目编号，出借用户，订单号获取用户的放款总记录
      *
      * @param borrowNid
      * @return
@@ -3503,7 +3510,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 userAccount = borrowRecover.getRecoverAccount();
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -3713,7 +3720,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 查询投资用户分期的详情
+     * 查询出借用户分期的详情
      *
      * @param borrowNid
      * @param period
@@ -3901,7 +3908,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 userAccount = borrowRecover.getRecoverAccount();// 计算用户实际获得的本息和
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -3912,7 +3919,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
                 if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
                     if(Validator.isNull(borrowRecover.getAccedeOrderId())){
-                        // 投资项目还款
+                        // 出借项目还款
                         List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, 1, 0);
                         if (creditRepayList != null && creditRepayList.size() > 0) {
                             List<RepayCreditRepayBean> creditRepayBeanList = new ArrayList<RepayCreditRepayBean>();
@@ -4098,7 +4105,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 userAccount = borrowRecover.getRecoverAccount();// 获取未还款前用户能够获取的本息和
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -4365,11 +4372,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 String recoverTime = GetDate.getDateTimeMyTimeInMillis(Integer.valueOf(borrowRecover.getRecoverTime()));
                 String createTime = GetDate.getDateTimeMyTimeInMillis(borrowRecover.getCreateTime());
                 int totalDays = GetDate.daysBetween(createTime, recoverTime);// 获取这两个时间之间有多少天
-                // 计算投资用户实际获得的本息和
+                // 计算出借用户实际获得的本息和
                 userAccount = borrowRecover.getRecoverAccount();
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -4426,7 +4433,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 CreditRepay creditRepay = creditRepayList.get(j);
                                 RepayCreditRepayBean creditRepayBean = new RepayCreditRepayBean();
-                                // 计算投资用户实际获得的本息和
+                                // 计算出借用户实际获得的本息和
                                 assignAccount = creditRepay.getAssignAccount();
                                 assignCapital = creditRepay.getAssignCapital();// 承接本金
                                 assignInterest = creditRepay.getAssignInterest();
@@ -4528,7 +4535,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
                                 HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
-                                // 计算投资用户实际获得的本息和
+                                // 计算出借用户实际获得的本息和
                                 assignAccount = creditRepay.getRepayAccount();
                                 assignCapital = creditRepay.getRepayCapital();// 承接本金
                                 assignInterest = creditRepay.getRepayInterest();
@@ -4706,3 +4713,4 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         return projectRepayList;
     }
 }
+

@@ -7,7 +7,6 @@ import com.hyjf.admin.beans.vo.AdminAssetListCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -30,10 +29,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,6 +156,9 @@ public class AssetListController extends BaseController {
 		List<AdminAssetListCustomizeVO> volist = null;
 		// 将画面检索参数request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
+		if(null != viewRequest.getUserTypeSrch()){
+			form.setUserTypeSrch(String.valueOf(viewRequest.getUserTypeSrch()));
+		}
 		// 查询不改动是因为多处有调用
         AssetListCustomizeResponse response = assetListService.findAssetList(form);
 		if(response == null) {

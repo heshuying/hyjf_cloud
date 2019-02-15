@@ -26,7 +26,7 @@ public class UserPortraitBatchController{
      * 用户画像定时任务
      * 由hyjf-batch调用
      * */
-    @GetMapping(value = "/user_portrait_batch", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/userPortraitBatch", produces = "application/json; charset=utf-8")
     public void userPortraitBatch() {
         userPortraitBatchService.userPortraitBatch(1);
     }

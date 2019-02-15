@@ -62,6 +62,9 @@ public class LoginController extends BaseController {
 	@Value("${hyjf.web.pdf.host}")
 	private String WEBURL;
 
+    @Value("${hyjf.env.test}")
+    private boolean hyjfEnvTest;
+
     /**
      * @Author: dongzeshan
      * @Desc :admin登陆验证密码
@@ -79,9 +82,12 @@ public class LoginController extends BaseController {
 		String password=map.get("password");
         String captcha =map.get("code");
         Long loginCaptcha = (Long) request.getSession().getAttribute("LoginCaptcha");
-        if (captcha == null || captcha.isEmpty() || loginCaptcha == null
-                || !loginCaptcha.toString().equals(captcha)) {
-        	return new AdminResult<>(FAIL, "验证码错误");
+        // 测试环境不进行验证
+        if (!hyjfEnvTest) {
+            if (captcha == null || captcha.isEmpty() || loginCaptcha == null
+                    || !loginCaptcha.toString().equals(captcha)) {
+                return new AdminResult<>(FAIL, "验证码错误");
+            }
         }
 		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
 		adminSystemRequest.setUsername(username);

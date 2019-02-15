@@ -28,7 +28,6 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,8 +57,6 @@ public class WechatjhPlanController extends BaseTradeController {
     @Autowired
     private HjhTenderService hjhTenderService;
     @Autowired
-    private NifaContractEssenceMessageService nifaContractEssenceMessageService;
-    @Autowired
     private CommonProducer commonProducer;
 
     @ApiOperation(value = "加入计划", notes = "加入计划")
@@ -74,10 +71,17 @@ public class WechatjhPlanController extends BaseTradeController {
         // 从payload里面获取预置属性
         String presetProps = tender.getPresetProps();
         // 神策数据统计 add by liuyang 20180726 end
-        WebResult result = new WebResult();
+        WebResult<Map<String, Object>> result = new WebResult();
         WeChatResult weChatResult = new WeChatResult();
         try {
             result = hjhTenderService.joinPlan(tender);
+            Map<String, Object> resultMap = result.getData();
+            if(resultMap!=null&&resultMap.containsKey("appEarnings")){
+                // 如果是代金券 并且是app
+                resultMap.remove("earnings");
+                resultMap.put("earnings",resultMap.get("appEarnings"));
+                result.setData(resultMap);
+            }
             HjhPlanVO plan =  hjhTenderService.getPlanByNid(tender.getBorrowNid());
             String lockPeriod = plan.getLockPeriod().toString();
             String dayOrMonth="";
@@ -139,7 +143,7 @@ public class WechatjhPlanController extends BaseTradeController {
         return weChatResult;
     }
 
-    @ApiOperation(value = "获取计划投资信息", notes = "获取计划投资信息")
+    @ApiOperation(value = "获取计划出借信息", notes = "获取计划出借信息")
     @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public WeChatResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId,TenderRequest tender) {
         tender.setUserId(userId);

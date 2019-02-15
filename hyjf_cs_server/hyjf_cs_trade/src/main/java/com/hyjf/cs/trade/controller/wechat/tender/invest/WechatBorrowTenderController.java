@@ -21,7 +21,6 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -40,9 +39,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * wechat端-散标投资
+ * wechat端-散标出借
  */
-@Api(tags = "weChat端-散标投资")
+@Api(tags = "weChat端-散标出借")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/bank/wechat/borrow")
 public class WechatBorrowTenderController extends BaseTradeController {
@@ -50,17 +49,15 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @Autowired
     private BorrowTenderService borrowTenderService;
     @Autowired
-    NifaContractEssenceMessageService nifaContractEssenceMessageService;
-    @Autowired
     private CommonProducer commonProducer;
     @Autowired
     private HjhTenderService hjhTenderService;
 
-    @ApiOperation(value = "散标投资", notes = "散标投资")
+    @ApiOperation(value = "散标出借", notes = "散标出借")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WeChatResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
-        logger.info("wechat端-请求投资接口");
+        logger.info("wechat端-请求出借接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
@@ -70,15 +67,15 @@ public class WechatBorrowTenderController extends BaseTradeController {
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
         try{
-            //如果是风车理财投资就将wrb插入到该表的tender_from中
+            //如果是风车理财出借就将wrb插入到该表的tender_from中
             Cookie cookie = CookieUtils.getCookieByName(request,CustomConstants.TENDER_FROM_TAG);
             if (cookie != null && cookie.getValue() != null){
                 String cookieValue = cookie.getValue();
-                logger.info("投资来源为 ：{}", cookieValue);
+                logger.info("出借来源为 ：{}", cookieValue);
                 tender.setTenderFrom(cookieValue);
             }
             result =  borrowTenderService.borrowTender(tender);
-            BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
+            BorrowAndInfoVO borrow = borrowTenderService.getBorrowByNid(tender.getBorrowNid());
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
 
@@ -108,10 +105,10 @@ public class WechatBorrowTenderController extends BaseTradeController {
             //用户测评校验状态转换
             if(result.getData()!=null){
                 if(result.getData().get("riskTested") != null && result.getData().get("riskTested") != ""){
-                    if(!CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(result.getData().get("riskTested"))){
+                    //if(!CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(result.getData().get("riskTested"))){
                         weChatResult.setStatus((String) result.getData().get("riskTested"));
                         weChatResult.setStatusDesc((String) result.getData().get("message"));
-                    }
+                    //}
                 }
             }
             weChatResult.setData(result.getData());
@@ -133,7 +130,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
-        logger.info("wechat端-散标投资异步处理start,userId:{}", bean.getLogUserId());
+        logger.info("wechat端-散标出借异步处理start,userId:{}", bean.getLogUserId());
         BankCallResult result ;
         try{
             bean.setLogClient(ClientConstants.WECHAT_CLIENT);
@@ -146,19 +143,25 @@ public class WechatBorrowTenderController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "散标投资获取投资结果", notes = "散标投资获取投资结果")
+    @ApiOperation(value = "散标出借获取出借结果", notes = "散标出借获取出借结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
     public WeChatResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid) {
-        logger.info("wechat端-请求获取投资结果接口，logOrdId{}",logOrdId);
+        logger.info("wechat端-请求获取出借结果接口，logOrdId{}",logOrdId);
         WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
         WeChatResult weChatResult = new WeChatResult();
-        weChatResult.setObject(result.getData());
+        Map<String,Object>  resultMap = result.getData();
+        if(resultMap!=null&&resultMap.containsKey("appIncome")){
+            // 如果是代金券 并且是app
+            resultMap.remove("income");
+            resultMap.put("income",resultMap.get("appIncome"));
+        }
+        weChatResult.setObject(resultMap);
         return  weChatResult;
     }
 
-    @ApiOperation(value = "散标投资获取投资成功结果", notes = "散标投资获取投资成功结果")
+    @ApiOperation(value = "散标出借获取投标成功结果", notes = "散标出借获取投标成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
     public WeChatResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
@@ -166,17 +169,17 @@ public class WechatBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String borrowNid,
                                                                        @RequestParam String isPrincipal,
                                                                        @RequestParam String account) {
-        logger.info("wechat端-散标投资获取投资成功结果，logOrdId{}", logOrdId);
+        logger.info("wechat端-散标出借获取投标成功结果，logOrdId{}", logOrdId);
         WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
         WeChatResult weChatResult = new WeChatResult();
         weChatResult.setObject(result.getData());
         return  weChatResult;
     }
 
-    @ApiOperation(value = "获取投资信息", notes = "获取投资信息")
+    @ApiOperation(value = "获取出借信息", notes = "获取出借信息")
     @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public WeChatResult getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
-        logger.info("wechat端-获取投资信息 userid:{}" , userId);
+        logger.info("wechat端-获取出借信息 userid:{}" , userId);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         WeChatResult result = new WeChatResult();

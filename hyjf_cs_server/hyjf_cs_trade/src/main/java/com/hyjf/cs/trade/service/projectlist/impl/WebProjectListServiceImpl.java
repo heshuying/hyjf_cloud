@@ -47,6 +47,7 @@ import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -104,6 +105,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
 
     @Autowired
+    private CacheService cacheService;
+
+
+    @Autowired
     private CommonProducer commonProducer;
 
     @Autowired
@@ -129,8 +134,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
-            logger.error("查询散标投资列表原子层count异常");
-            throw new RuntimeException("查询散标投资列表原子层count异常");
+            logger.error("查询散标出借列表原子层count异常");
+            throw new RuntimeException("查询散标出借列表原子层count异常");
         }
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
@@ -140,8 +145,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             List<WebProjectListCsVO> result = new ArrayList<>();
             List<WebProjectListCustomizeVO> list = amTradeClient.searchProjectList(request);
             if (CollectionUtils.isEmpty(list)) {
-                logger.error("查询散标投资列表原子层List异常");
-                throw new RuntimeException("查询散标投资列表原子层list数据异常");
+                logger.error("查询散标出借列表原子层List异常");
+                throw new RuntimeException("查询散标出借列表原子层list数据异常");
             }
             result = CommonUtils.convertBeanList(list, WebProjectListCsVO.class);
             resultBean.setList(result);
@@ -270,11 +275,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         ProjectListRequest request = new ProjectListRequest();
         // ① 先查出标的基本信息  ② 根据是否是新标的，进行参数组装
-        ProjectCustomeDetailVO projectCustomeDetail = amTradeClient.searchProjectDetail(map);
-        if (projectCustomeDetail == null) {
+        ProjectCustomeDetailVO tempProjectCustomeDetail = amTradeClient.searchProjectDetail(map);
+        if (tempProjectCustomeDetail == null) {
             CheckUtil.check(false, MsgEnum.STATUS_CE000013);
         }
-
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO projectCustomeDetail = CommonUtils.convertBean(tempProjectCustomeDetail,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (StringUtils.isNotBlank(investAccount)){
+            projectCustomeDetail.setInvestAccount(investAccount);
+        }
         ProjectCustomeDetailCsVO detailCsVO = CommonUtils.convertBean(projectCustomeDetail, ProjectCustomeDetailCsVO.class);
 
         UserVO userVO = null;
@@ -291,15 +302,24 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
 
+        other.put("autoTenderAuthStatus", "");
+        other.put("autoCreditAuthStatus", "");
         other.put("paymentAuthStatus", "");
 
         if (userId != null) {
             HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
-            // 服务费授权状态
-            other.put("paymentAuthStatus", hjhUserAuth == null ? "" : hjhUserAuth.getAutoPaymentStatus());
-            // 是否开启服务费授权 0未开启 1已开启
-            other.put("paymentAuthOn",
-                    authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            //自动投标授权状态 0未授权  1已授权
+            other.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+            //自动债转授权~~
+            other.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+            //服务费授权~~
+            other.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+            //是否开启自动投标授权校验 0未开启 1已开启
+            other.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            other.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            other.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
             other.put("isCheckUserRole",systemConfig.getRoleIsopen());
         }
         WebResult webResult = new WebResult();
@@ -338,7 +358,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 登录登录状态和基本信息
             other.put("loginFlag", "0");//登录状态 0未登陆 1已登录
             other.put("openFlag", "0"); //开户状态 0未开户 1已开户
-            other.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+            other.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             other.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
             other.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
         } else {
@@ -385,12 +405,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             } else {
                 other.put("openFlag", "0");
             }
-            // 用户是否投资项目
+            // 用户是否出借项目
             int count = amTradeClient.countUserInvest(userId, borrowNid);
             if (count > 0) {
-                other.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
+                other.put("investFlag", "1");//是否出借过该项目 0未出借 1已出借
             } else {
-                other.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                other.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             }
             //是否设置交易密码
             if (userVO.getIsSetPassword() == 1) {
@@ -481,9 +501,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             other.put(ProjectConstant.PARAM_BORROW_TYPE, borrow.getComOrPer());
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -589,33 +609,33 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private BigDecimal getInterest(String borrowStyle, Integer couponType, BigDecimal borrowApr, BigDecimal couponQuota, String money, Integer borrowPeriod) {
         BigDecimal earnings = new BigDecimal("0");
 
-        // 投资金额
+        // 出借金额
         BigDecimal accountDecimal = null;
         if (couponType == 1) {
-            // 体验金 投资资金=体验金面值
+            // 体验金 出借资金=体验金面值
             accountDecimal = couponQuota;
         } else if (couponType == 2) {
-            // 加息券 投资资金=真实投资资金
+            // 加息券 出借资金=真实出借资金
             accountDecimal = new BigDecimal(money);
             borrowApr = couponQuota;
         } else if (couponType == 3) {
-            // 代金券 投资资金=体验金面值
+            // 代金券 出借资金=体验金面值
             accountDecimal = couponQuota;
         }
         switch (borrowStyle) {
-            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
                 // 计算历史回报
                 earnings = DuePrincipalAndInterestUtils.getMonthInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷360*天数；
                 // 计算历史回报
                 earnings = DuePrincipalAndInterestUtils.getDayInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=出借金额*年化收益÷12*月数；
                 // 计算历史回报
                 earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=出借金额*年化收益÷12*月数；
                 // 计算历史回报
                 earnings = AverageCapitalPlusInterestUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
@@ -633,7 +653,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
 
     /**
-     * 获取新手标和散标详情：投资记录
+     * 获取新手标和散标详情：出借记录
      *
      * @author zhangyk
      * @date 2018/8/9 16:58
@@ -720,8 +740,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 return ontimeCheckBean;
             }
 
-            // Redis的投资余额校验
-            if (RedisUtils.get(borrowNid) != null) {
+            // Redis的出借余额校验
+            if (RedisUtils.get(RedisConstants.BORROW_NID + borrowNid) != null) {
                 logger.error(borrowNid + " 定时发标异常：标的编号在redis已经存在");
                 ontimeCheckBean.setStatus(-5);
                 ontimeCheckBean.setStatusInfo("定时标的状态异常");
@@ -742,6 +762,15 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 ontimeCheckBean.setNowtime(GetDate.getNowTime10());
                 return ontimeCheckBean;
             }
+
+            // 定时标发标成功推送消息到mq合规上报数据
+            // 5.web端散标自动发标页面触发
+            JSONObject params = new JSONObject();
+            params.put("borrowNid", borrowVO.getBorrowNid());
+            params.put("userId", borrowVO.getUserId());
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+
             logger.info("定时标的【" + borrowNid + "】发标完成。（web）");
 
             //设定  redis的标的定时状态 为 0 标的状态修改成功开标(有效期同batch执行周期，5分钟)
@@ -771,11 +800,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         int nowTime = GetDate.getNowTime10();
         RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(borrowNid);
         // DB验证
-        // 有投资金额发生异常
+        // 有出借金额发生异常
         BigDecimal zero = new BigDecimal("0");
         BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
         if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-            logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+            logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
             return false;
         }
         borrow.setBorrowEndTime(String.valueOf(nowTime + borrow.getBorrowValidTime() * 86400));
@@ -787,7 +816,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         borrow.setStatus(2);
         // 初审时间
         borrow.setVerifyTime(nowTime);
-        // 剩余可投资金额
+        // 剩余可出借金额
         borrow.setBorrowAccountWait(borrow.getAccount());
         boolean flag = amTradeClient.updateRightBorrowByBorrowNid(borrow);
         if (flag) {
@@ -975,10 +1004,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             result.put(ProjectConstant.PARAM_BORROW_TYPE, comOrPer);
             // 借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
 
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -1087,7 +1116,19 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("setPwdFlag", userVO.getIsSetPassword()); // 是否设置交易密码
                 result.put("isUserValid", userVO.getStatus());
                 //update by jijun 2018/04/09 合规接口改造一期
-                result.put("paymentAuthStatus", ""); // 缴费授权
+                HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+                //自动投标授权状态 0未授权  1已授权
+                result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                //自动债转授权状态
+                result.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+                //服务费授权状态
+                result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+                //是否开启自动投标授权校验 0未开启 1已开启
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                //是否进行自动债转~~
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                //是否进行缴费~~
+                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 UserInfoVO userInfoVO = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 result.put("roleId",userInfoVO  !=null ? userInfoVO.getRoleId() : "");
 
@@ -1099,16 +1140,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 风险测评标识
                 result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
                 // 风险测评改造 mod by liuyang 20180111 end
-            } else {
-                result.put("loginFlag", "0");// 判断是否登录
-                result.put("openFlag", "0");
-                result.put("loginFlag", "0");
-                result.put("setPwdFlag", "0");
-                result.put("isUserValid", "0");
-                result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+                } else {
+                    result.put("loginFlag", "0");// 判断是否登录
+                    result.put("openFlag", "0");
+                    result.put("loginFlag", "0");
+                    result.put("setPwdFlag", "0");
+                    result.put("isUserValid", "0");
+                    result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+                }
+            } catch (Exception e) {
+                logger.warn("散标专区债权转让详情异常:["+ e +"]");
             }
-        } catch (Exception e) {
-        }
         webResult.setData(result);
         return webResult;
     }
@@ -1244,9 +1286,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 阀值
         Integer threshold = 1000;
         result.put("threshold", threshold);
-        // 缴费授权
-        //update by jijun 2018/04/09 合规接口改造一期
-        result.put("paymentAuthStatus", "");
 
         //加入总人数
         Map<String, Object> params = new HashMap<String, Object>();
@@ -1265,7 +1304,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             throw new CheckException("未查询到对应的计划");
 
         }
-        // 最小投资金额(起投金额)-->计算最后一笔投资
+        // 最小出借金额(起投金额)-->计算最后一笔出借
         if (planDetail.getDebtMinInvestment() != null) {
             result.put("debtMinInvestment", new BigDecimal(planDetail.getDebtMinInvestment()).intValue());
         }
@@ -1387,7 +1426,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 if (count > 0) {
                     investFlag = "1";
                 } else {
-                    investFlag = "0";//是否投资过该项目 0未投资 1已投资
+                    investFlag = "0";//是否出借过该项目 0未出借 1已出借
                 }
                 result.put("investFlag", investFlag);
                 // 用户是否开户
@@ -1425,28 +1464,40 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 用户是否完成自动授权标识
                 HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
                 if (Validator.isNotNull(hjhUserAuth)) {
-                    String autoInvesFlag = hjhUserAuth.getAutoInvesStatus().toString();
-                    result.put("autoInvesFlag", autoInvesFlag);
+                    //自动投标授权状态 0未授权  1已授权
+                    result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                    //自动债转授权状态
+                    result.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+                    //服务费授权状态
+                    result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
                 } else {
-                    result.put("autoInvesFlag", "0");//自动投标授权状态 0: 未授权    1:已授权
+                    result.put("autoTenderAuthStatus", "0");
+                    //自动债转授权状态
+                    result.put("autoCreditAuthStatus", "0");
+                    //服务费授权状态
+                    result.put("paymentAuthStatus", "0");
                 }
                 // 合规三期
-                // 是否开启服务费授权 0未开启  1已开启
-                result.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
-                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
+                result.put("autoTenderAuthStatus", "0");
+                result.put("autoCreditAuthStatus", "0");
                 result.put("paymentAuthStatus", "0");
-                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 //状态位用于判断tab的是否可见
                 result.put("loginFlag", "0");//登录状态 0未登陆 1已登录
                 result.put("openFlag", "0"); //开户状态 0未开户 1已开户
-                result.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                result.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
                 result.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
                 result.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
                 result.put("forbiddenFlag", "0");//是否禁用 0未禁用 1已禁用
             }
+            //是否开启自动投标授权校验 0未开启 1已开启
+            result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         }
         webResult.setData(result);
         return webResult;
@@ -1575,7 +1626,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         for (BorrowAndInfoVO planAccede : list) {
             String borrowNid = planAccede.getBorrowNid();
             if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
-                BorrowUserVO borrowUser = amTradeClient.getBorrowUser(borrowNid);
+                BorrowUserVO borrowUser = cacheService.getCacheBorrowUser(borrowNid);
                 String trueName = borrowUser.getUsername();
                 String str = "******";
                 if (trueName != null && trueName != "") {
@@ -1589,7 +1640,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 planAccede.setBorrowUserName(trueName);
             } else if ("2".equals(planAccede.getCompanyOrPersonal())) {//类型是个人 huiyingdai_borrow_maninfo
                 //根据borrowNid查询查询个人的真实姓名
-                BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+                BorrowManinfoVO borrowManinfoVO =  cacheService.getCacheBorrowManInfo(borrowNid);
                 String trueName = borrowManinfoVO.getName();
                 String str = "**";
                 if (trueName != null && trueName != "") {
@@ -1662,12 +1713,20 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Map<String,Object> map = new HashMap<>();
         map.put("borrowNid",borrowNid);
         // 根据项目标号获取相应的项目信息
-        ProjectCustomeDetailVO borrowDetailVo = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrowDetailVo = amTradeClient.searchProjectDetail(map);
         //没有标的信息
-        if (borrowDetailVo == null) {
+        if (tempBorrowDetailVo == null) {
             throw  new CheckException("标的信息不存在！");
         }
-
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO borrowDetailVo = CommonUtils.convertBean(tempBorrowDetailVo,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (StringUtils.isNotBlank(investAccount)){
+            borrowDetailVo.setInvestAccount(investAccount);
+        }
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
         this.getPlanBorrowDetail(result,borrowDetailVo,userId);
         return result;
     }
@@ -1684,9 +1743,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         info.put("borrowType",borrowDetailVo.getComOrPer());
 
         //借款人企业信息
-        BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+        BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
         //借款人信息
-        BorrowManinfoVO borrowManinfo =amTradeClient.getBorrowManinfo(borrowNid);
+        BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
         //房产抵押信息
         List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
         //车辆抵押信息
@@ -1789,7 +1848,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         if(userId == null){
             info.put("loginFlag", "0");//登录状态 0未登陆 1已登录
             info.put("openFlag", "0"); //开户状态 0未开户 1已开户
-            info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+            info.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             info.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
             info.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
             info.put("viewableFlag", "0");// add by nxl 未登录不可见
@@ -1808,16 +1867,16 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 count = amTradeClient.countUserInvest(userId,borrowNid);
             }
             if (count > 0) {
-                info.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
+                info.put("investFlag", "1");//是否出借过该项目 0未出借 1已出借
             }else{
-                info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                info.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             }
 
             // add 汇计划二期前端优化  针对区分原始标与债转标 nxl 20180424 start
             /**
              * 查看标的详情
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
-             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有出借者和承接者可查看
              */
             String viewableFlag ="0";
             int intCount = 0;
@@ -1851,13 +1910,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 isDebt = true;
             }else {
                 //原始标
-                //复审中，还款中和已还款状态投资者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
+                //复审中，还款中和已还款状态出借者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
                 if(null != borrowDetailVo.getStatusOrginal() && (borrowDetailVo.getStatusOrginal() == 3 || borrowDetailVo.getStatusOrginal()== 4 || borrowDetailVo.getStatusOrginal() == 5)  ) {
                     if(count>0) {
                         //可以查看标的详情
                         viewableFlag ="1";
                     }else {
-                        //提示仅投资者可看
+                        //提示仅出借者可看
                         viewableFlag ="0";
                     }
                 }else {

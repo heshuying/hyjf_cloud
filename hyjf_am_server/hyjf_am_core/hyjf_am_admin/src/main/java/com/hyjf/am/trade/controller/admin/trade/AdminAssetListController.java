@@ -126,8 +126,8 @@ public class AdminAssetListController extends BaseController {
 		conditionMap.put("borrowNidSrch", borrowNidSrch);
 		conditionMap.put("planNidSrch", planNidSrch);
 		conditionMap.put("userNameSrch", userNameSrch);
-		// 1 保证金不足 21 新增授信额度不足 22 在贷余额额度不足
-		conditionMap.put("statusSrch", new int[]{1,21,22,23,24});
+		// 1 保证金不足 21 合作额度不足 22 在贷余额额度不足 23 日推标额度不足 24 月推标额度不足
+		conditionMap.put("statusSrch", new int[]{21,23,24});
 		return conditionMap;
 	}
 

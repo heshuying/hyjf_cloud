@@ -94,4 +94,47 @@
 			</if>
 		</where>
 	</select>
+
+	<!-- 用户渠道信息 合规自查添加  -->
+	<resultMap id="userUtmInfoMap" type="com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize">
+		<result column="utm_id" property="sourceId" jdbcType="INTEGER" />
+		<result column="utm_source" property="sourceName" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="getUserUtmInfo" resultMap="userUtmInfoMap" parameterType="java.lang.Integer">
+		SELECT
+		up.utm_id,
+		up.utm_source
+		FROM ht_user u
+		LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = u.user_id and ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+		LEFT JOIN ht_utm up ON up.utm_source = od3.`name`
+		WHERE
+		u.user_id =#{userId,jdbcType=INTEGER}
+	</select>
+
+	<select id="countUserNames" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(user_name) from ht_user_portrait
+		WHERE user_name IN
+		<foreach collection="userNames" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<!-- 批量导入当前拥有人-->
+	<update id="importBatch" parameterType="java.util.List">
+		UPDATE ht_user_portrait
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="current_owner=case" suffix="end">
+				<foreach collection="userPortraits" item="item" index="index">
+					when user_name = #{item.userName} THEN #{item.currentOwner,jdbcType=VARCHAR}
+				</foreach>
+			</trim>
+		</trim>
+		where user_name in
+		<foreach collection="userPortraits" index="index" item="item" separator="," open="(" close=")">
+			#{item.userName,jdbcType=VARCHAR}
+		</foreach>
+	</update>
 </mapper>

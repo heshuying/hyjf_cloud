@@ -14,16 +14,46 @@ public class ProductUser implements Serializable {
 
     private Integer validDays;
 
+    /**
+     * 赎回金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal redeemed;
 
+    /**
+     * 投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal restAmount;
 
+    /**
+     * 利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal interest;
 
+    /**
+     * 检查
+     *
+     * @mbggenerated
+     */
     private BigDecimal restAmountCheck;
 
+    /**
+     * 检查
+     *
+     * @mbggenerated
+     */
     private BigDecimal redeemedCheck;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private static final long serialVersionUID = 1L;

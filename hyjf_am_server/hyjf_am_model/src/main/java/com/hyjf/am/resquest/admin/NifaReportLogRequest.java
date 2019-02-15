@@ -14,10 +14,18 @@ import java.io.Serializable;
 public class NifaReportLogRequest extends BasePage implements Serializable{
 	//文件状态
 	private Integer fileUploadStatus;
-	//上传时间(开始)
+	//创建时间(开始)
 	private String createTimeStart;
-	//上传时间(结束)
+	//创建时间(结束)
 	private String createTimeEnd;
+	// 反馈文件状态
+	private Integer feedbackResult;
+	// 数据处理日期
+	private String historyDate;
+	// 上传时间（开始）
+	private String uploadImeStart;
+	// 上传时间（结束）
+	private String uploadImeEnd;
 
 	public Integer getFileUploadStatus() {
 		return fileUploadStatus;
@@ -41,5 +49,37 @@ public class NifaReportLogRequest extends BasePage implements Serializable{
 
 	public void setCreateTimeEnd(String createTimeEnd) {
 		this.createTimeEnd = createTimeEnd;
+	}
+
+	public Integer getFeedbackResult() {
+		return feedbackResult;
+	}
+
+	public void setFeedbackResult(Integer feedbackResult) {
+		this.feedbackResult = feedbackResult;
+	}
+
+	public String getHistoryDate() {
+		return historyDate;
+	}
+
+	public void setHistoryDate(String historyDate) {
+		this.historyDate = historyDate;
+	}
+
+	public String getUploadImeStart() {
+		return uploadImeStart;
+	}
+
+	public void setUploadImeStart(String uploadImeStart) {
+		this.uploadImeStart = uploadImeStart;
+	}
+
+	public String getUploadImeEnd() {
+		return uploadImeEnd;
+	}
+
+	public void setUploadImeEnd(String uploadImeEnd) {
+		this.uploadImeEnd = uploadImeEnd;
 	}
 }

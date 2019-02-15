@@ -20,7 +20,7 @@ public class TotalInvestAndInterestJob extends BaseJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("TotalInvestAndInterestJob: {} execute...",
                 jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/totalinvestandinterest/excute",
+        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/totalInvestAndInterest/excute",
                 Object.class);
         logger.info("TotalInvestAndInterestJob execute end...");
     }

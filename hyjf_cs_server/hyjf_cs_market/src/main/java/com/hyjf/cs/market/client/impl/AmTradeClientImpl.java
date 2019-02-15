@@ -12,8 +12,6 @@ import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-import com.hyjf.am.vo.trade.TenderCityCountVO;
-import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
@@ -36,7 +34,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	private RestTemplate restTemplate;
 
 	/**
-	 * 查询投之家每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+	 * 查询投之家每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
 	 * 
 	 * @param tzjUserIds
 	 * @param startTime
@@ -79,21 +77,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 			return response.getResult();
 		}
 		return null;
-	}
-
-	@Override
-	public List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay) {
-		return null;
-	}
-
-	@Override
-	public List<TenderSexCountVO> getTenderSexGroupBy(Date lastDay) {
-		return null;
-	}
-
-	@Override
-	public int getTenderAgeByRange(Date date, int firstAge, int endAge) {
-		return 0;
 	}
 
 	@Override
@@ -194,7 +177,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
 	/**
-	 *  汇直投投资总额
+	 *  汇直投出借总额
 	 */
 	@Override
 	public List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request) {
@@ -207,7 +190,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	}
 
 	/**
-	 *  汇转让投资总额
+	 *  汇转让出借总额
 	 */
 	@Override
 	public List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(AppChannelStatisticsRequest request) {

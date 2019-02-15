@@ -24,7 +24,7 @@ public interface BorrowTenderService {
     List<BorrowTender> getBorrowTenderListByNid(String nid);
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      * @param tenderNid
      * @return
      */
@@ -38,7 +38,7 @@ public interface BorrowTenderService {
     Integer saveCreditTenderAssignLog(CreditTenderLog bean);
 
     /**
-     * 获取utm注册用户投资次数
+     * 获取utm注册用户出借次数
      * @param list utm注册用户userid集合
      * @param type 类型:pc,ios,android,wechat
      * @return
@@ -46,21 +46,21 @@ public interface BorrowTenderService {
     Integer getUtmTenderNum(List<Integer> list, String type);
 
     /**
-     * 获取utm注册用户HZT投资额
+     * 获取utm注册用户HZT出借额
      * @param list utm注册用户userid集合
      * @return
      */
     BigDecimal getHztTenderPrice(List<Integer> list);
 
     /**
-     * 获取utm注册用户HXF投资额
+     * 获取utm注册用户HXF出借额
      * @param list utm注册用户userid集合
      * @return
      */
     BigDecimal getHxfTenderPrice(List<Integer> list);
 
     /**
-     * 获取utm注册用户RTB投资额
+     * 获取utm注册用户RTB出借额
      * @param list utm注册用户userid集合
      * @return
      */
@@ -68,7 +68,7 @@ public interface BorrowTenderService {
 
     /**
      * @Author walter.limeng
-     * @Description  取得优惠券投资信息
+     * @Description  取得优惠券出借信息
      * @Date 17:25 2018/7/17
      * @Param couponTenderNid
      * @return
@@ -101,14 +101,14 @@ public interface BorrowTenderService {
      */
     String countMoneyByBorrowId(Map<String, Object> params);
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      * @param repairStartDate
      * @param repairEndDate
      * @return
      */
     List<BorrowTender> selectBorrowTenderList(String repairStartDate, String repairEndDate);
     /**
-     * 更新标的投资详情表
+     * 更新标的出借详情表
      * @param borrowTender
      * @return
      */

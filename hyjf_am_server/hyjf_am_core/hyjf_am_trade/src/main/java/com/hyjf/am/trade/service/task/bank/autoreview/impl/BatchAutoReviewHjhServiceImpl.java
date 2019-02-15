@@ -59,9 +59,10 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
                     SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, borrowList.get(i).getBorrowNid(), CustomConstants.PARAM_TPL_XMDQ,
                             CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
-                    } catch (MQException e2) {
-                        logger.error("发送短信失败..", e2);
+                        logger.warn("未配置TPL_XMDQ, 不发送短信....");
+                        //commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
+                    } catch (Exception e) {
+                        logger.error("发送短信失败..", e);
                     }
             }
         }
@@ -131,7 +132,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
             // 满标审核状态
             int borrowFullStatus = borrow.getBorrowFullStatus();
             if (borrowFullStatus == 1) {
-                // 如果标的投资记录存在没有授权码的记录，则不进行放款
+                // 如果标的出借记录存在没有授权码的记录，则不进行放款
                 int countErrorTender = this.countBorrowTenderError(borrowNid);
                 if (countErrorTender == 0) {
                     // 判断满标时间
@@ -202,7 +203,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
     }
 
     /**
-     * 校验投资数据的合法性
+     * 校验出借数据的合法性
      * @param borrowNid
      * @return
      */

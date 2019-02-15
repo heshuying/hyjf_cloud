@@ -56,7 +56,7 @@ import java.util.Map;
  * @author nixiaoling
  * @version AutoTenderExceptionController, v0.1 2018/7/12 10:27
  */
-@Api(value = "异常中心-汇计划投资异常",tags = "异常中心-汇计划投资异常")
+@Api(value = "异常中心-汇计划出借异常",tags = "异常中心-汇计划出借异常")
 @RestController
 @RequestMapping("/hyjf-admin/autotenderexception")
 public class AutoTenderExceptionController extends BaseController {
@@ -69,7 +69,7 @@ public class AutoTenderExceptionController extends BaseController {
     private static final String PERMISSIONS = "accedelist";
 
 
-    @ApiOperation(value = "汇计划投资异常列表显示", notes = "汇计划投资异常列表显示")
+    @ApiOperation(value = "汇计划出借异常列表显示", notes = "汇计划出借异常列表显示")
     @PostMapping(value = "/selectAccedeRecordList")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -93,12 +93,12 @@ public class AutoTenderExceptionController extends BaseController {
     }
 
     /**
-     * 投资明细画面初始化
+     * 出借明细画面初始化
      *
      * @param request
      * @return
      */
-    @ApiOperation(value = "投资明细列表显示", notes = "投资明细列表显示")
+    @ApiOperation(value = "出借明细列表显示", notes = "出借明细列表显示")
     @PostMapping(value = "/tenderInfoAction")
     @ResponseBody
     public AdminResult<ListResult<AdminBorrowInvestCustomizeVO>> tenderInfoAction(HttpServletRequest request, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
@@ -142,7 +142,7 @@ public class AutoTenderExceptionController extends BaseController {
             resultList = autoTenderExceptionResponse.getResultList();
         }
         String[] titles = new String[] { "序号","智投订单号", "智投编号","服务回报期限", "用户名", "授权服务金额",
-                "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "开始计息时间", "授权服务时间" };
+                "已出借金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "开始计息时间", "授权服务时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -197,7 +197,7 @@ public class AutoTenderExceptionController extends BaseController {
                     else if (celLength == 5) {
                         cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getAccedeAccount()) ? StringUtils.EMPTY : planAccedeDetail.getAccedeAccount());
                     }
-                    // 已投资金额
+                    // 已出借金额
                     else if (celLength == 6) {
                         cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getAlreadyInvest()) ? StringUtils.EMPTY : planAccedeDetail.getAlreadyInvest());
                     }
@@ -239,7 +239,7 @@ public class AutoTenderExceptionController extends BaseController {
                         } else if (7 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
                             cell.setCellValue("已退出");
                         } else if (99 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
-                            cell.setCellValue("自动投资异常");
+                            cell.setCellValue("自动出借异常");
                         } else{
                             cell.setCellValue(planAccedeDetail.getOrderStatus());
                         }
@@ -278,7 +278,7 @@ public class AutoTenderExceptionController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
-    @ApiOperation(value = "汇计划投资异常记录列表导出", notes = "汇计划投资异常录列表导出")
+    @ApiOperation(value = "汇计划出借异常记录列表导出", notes = "汇计划出借异常录列表导出")
     @PostMapping(value = "/exportregist")
 	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AutoTenderExceptionRequestBean autoTenderExceptionRequestBean) throws Exception {
 	        //sheet默认最大行数
@@ -311,12 +311,16 @@ public class AutoTenderExceptionController extends BaseController {
 	        }else {
 	            // 当前下载数据超过一页上限
 	            if(defaultRowMaxCount < resultList.size()) {
-                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, defaultRowMaxCount));
-                 for (int i = 1; i < sheetCount; i++) {
-                     sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                     helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-                 }
-             } else {
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, defaultRowMaxCount));
+                    for (int i = 1; i < sheetCount; i++) {
+                        sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                        int intLongestSize = defaultRowMaxCount * (i + 1);
+                        if(intLongestSize>resultList.size()){
+                            intLongestSize = resultList.size();
+                        }
+                        helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(defaultRowMaxCount * i, intLongestSize));
+                    }
+                } else {
                  helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, resultList.size()));
              }
          }
@@ -330,14 +334,18 @@ public class AutoTenderExceptionController extends BaseController {
 	        map.put("debtLockPeriodExcel", "服务回报期限");
 	        map.put("userName", "用户名");
 	        map.put("accedeAccount", "授权服务金额");
-	        map.put("alreadyInvest", "已投资金额(元)");
-	        map.put("waitTotal", "待还总额(元)");
+	        map.put("alreadyInvest", "已出借金额(元)");
+	        /*map.put("waitTotal", "待还总额(元)");
 	        map.put("waitCaptical", "待还本金(元)");
-	        map.put("waitInterest", "待还利息(元)");
+	        map.put("waitInterest", "待还利息(元)");*/
 	        map.put("platform", "操作平台");
 	        map.put("orderStatus", "订单状态");
 	        map.put("countInterestTime", "开始计息时间");
-	        map.put("createTime", "授权服务时间");
+            map.put("createTime", "授权服务时间");
+            map.put("borrowNid", "项目编号");
+            map.put("isLast", "是否标的的最后一笔投资/承接");
+            map.put("respCode", "返回状态码");
+            map.put("respDesc", "返回错误信息");
 	        return map;
 	    }
 	    private Map<String, IValueFormatter> buildValueAdapter() {
@@ -375,15 +383,30 @@ public class AutoTenderExceptionController extends BaseController {
                     } else if (7 == Integer.parseInt(orderStatus)) {
                         return"已退出";
                     } else if (99 == Integer.parseInt(orderStatus)) {
-                        return"自动投资异常";
+                        return"自动出借异常";
                     } else{
                         return orderStatus;
                     }
 	             
 	            }
 	        };
+            IValueFormatter isLastAdapter = new IValueFormatter() {
+                @Override
+                public String format(Object object) {
+                    String isLast = (String) object;
+                    if (0 == Integer.parseInt(isLast)) {
+                        return"非最后一笔";
+                    } else if (1 == Integer.parseInt(isLast)) {
+                        return"最后一笔";
+                    } else{
+                        return isLast;
+                    }
+
+                }
+            };
 	        mapAdapter.put("platform", platformAdapter);
-	        mapAdapter.put("orderStatus", orderStatusAdapter);
+            mapAdapter.put("orderStatus", orderStatusAdapter);
+            mapAdapter.put("isLast", isLastAdapter);
 	        return mapAdapter;
 	    }
 }

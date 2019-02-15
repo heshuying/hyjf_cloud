@@ -52,7 +52,7 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "投标授权时间")
 	private String autoCreateTime;
 
-	@ApiModelProperty(value = "自动投资授权过期时间")
+	@ApiModelProperty(value = "自动出借授权过期时间")
 	private String autoInvesEndTime;
 
 	@ApiModelProperty(value = "自动债转授权过期时间")
@@ -93,7 +93,7 @@ public class AdminUserAuthListVO  extends BaseVO implements Serializable{
 	public void setTotalAmountAutomatic(String totalAmountAutomatic) {
 		this.totalAmountAutomatic = totalAmountAutomatic;
 	}
-	@ApiModelProperty(value = "自动投资单笔最高金额")
+	@ApiModelProperty(value = "自动出借单笔最高金额")
 	private String invesMaxAmt;
 
 	@ApiModelProperty(value = "自动债转单笔最大金额")

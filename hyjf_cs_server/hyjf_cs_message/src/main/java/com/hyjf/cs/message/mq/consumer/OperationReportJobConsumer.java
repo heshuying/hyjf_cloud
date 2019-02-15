@@ -57,7 +57,7 @@ public class OperationReportJobConsumer implements RocketMQListener<MessageExt>,
                 logger.info("重复插入，可忽略");
             }
 
-            // 插入投资类的信息
+            // 插入出借类的信息
             try {
                 operationReportJobNewService.insertOperationData(bean);
             } catch (org.springframework.dao.DuplicateKeyException e) {

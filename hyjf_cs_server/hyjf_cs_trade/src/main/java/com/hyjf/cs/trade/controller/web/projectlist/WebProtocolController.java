@@ -42,11 +42,11 @@ public class WebProtocolController extends BaseController {
     }
 
     /**
-     *债转被投资的协议PDF文件下载
+     *债转被出借的协议PDF文件下载
      * @author zhangyk
      * 原接口： com.hyjf.web.bank.web.user.repay.RepayController.downloadIntermediaryPdf()
      */
-    @ApiOperation(value = "债转投资协议",notes = "债转投资协议")
+    @ApiOperation(value = "债转出借协议",notes = "债转出借协议")
     @GetMapping(value = "/downloadIntermediaryPdf")
     public void downloadIntermediaryPdf(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response, @RequestHeader(value = "userId",required = false) Integer userId){
         webProtocolService.downloadIntermediaryPdf(form,userId,request,response);
@@ -67,11 +67,11 @@ public class WebProtocolController extends BaseController {
 
 
     /**
-     *  导出PDF文件 （汇盈金服互联网金融服务平台汇计划投资服务协议）
+     *  导出PDF文件 （汇盈金服互联网金融服务平台汇计划智投服务协议）
      * @author zhangyk
      * @date 2018/11/15 17:09
      */
-    @ApiOperation(value = "资产管理-智投-智投详情:投资服务协议" , notes = "资产管理-智投-智投详情:投资服务协议")
+    @ApiOperation(value = "资产管理-智投-智投详情:智投服务协议" , notes = "资产管理-智投-智投详情:智投服务协议")
     @GetMapping(value = "newHjhInvestPDF")
     public void newHjhInvestPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.newHjhInvestPDF(form,request,response);
@@ -79,12 +79,12 @@ public class WebProtocolController extends BaseController {
 
     /**
      * pcc
-     * 账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载
+     * 账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载
      * @param form
      * @param request
      * @param response
      */
-    @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", httpMethod = "GET", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
+    @ApiOperation(value = "账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载", httpMethod = "GET", notes = "账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载")
     @GetMapping(value = "intermediaryAgreementPDF")
     public void intermediaryAgreementPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.intermediaryAgreementPDF(form,request,response);

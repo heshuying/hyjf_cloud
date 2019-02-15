@@ -1,17 +1,17 @@
 package com.hyjf.am.config.controller;
 
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-
+import com.hyjf.am.config.service.HolidaysConfigNewService;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.config.service.HolidaysConfigNewService;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.trade.HolidaysConfigResponse;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -45,7 +45,7 @@ public class HolidaysConfigNewController extends BaseConfigController{
     public BooleanResponse selectFirstWorkdayOnMonth() {
         BooleanResponse response = new BooleanResponse();
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+        int currentMonth = Integer.parseInt(GetDate.getMonth());
         int firstWorkday = holidaysConfigNewService.selectFirstWorkdayOnMonth(currentYear, currentMonth);
         int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
          if (firstWorkday == currentDay) {

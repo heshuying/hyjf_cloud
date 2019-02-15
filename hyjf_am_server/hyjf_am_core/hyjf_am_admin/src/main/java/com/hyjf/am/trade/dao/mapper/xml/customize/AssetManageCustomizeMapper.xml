@@ -126,7 +126,7 @@
         hhp.plan_name,
         <!-- hhp.plan_nid AS projectNid, -->
         hhp.plan_name AS projectNid,
-        CONCAT(hhp.expect_apr, '%') borrow_apr,
+        CONCAT(hha.expect_apr, '%') borrow_apr,
         IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
         hha.last_payment_time,
         5 AS type,
@@ -229,12 +229,12 @@
         WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
         ELSE 0 END type,
         CASE
-        WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '投资中'
+        WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '出借中'
         ELSE
         CASE
         WHEN cast(hbc.credit_status AS CHAR)=0 THEN '转让中'
         WHEN cast(hbc.credit_status AS CHAR)=1 THEN '部分债转'
-        ELSE '现金投资' END
+        ELSE '现金出借' END
         END AS DATA,
         0 coupon_type,
         IF(borrow.repay_last_time='','--',
@@ -714,7 +714,7 @@
         WHEN hbr.credit_amount > 0 THEN
         '部分债转'
         ELSE
-        '现金投资'
+        '现金出借'
         END AS DATA,
         0 coupon_type,
         hbt.account groupaccount
@@ -1007,15 +1007,15 @@
         CONCAT(hdp.debt_lock_period,'个月') debt_lock_period,
         hdpa.user_id user_id,
         hdpa.accede_account accede_account,
-        hdpa.repay_account_wait repay_account_wait,
+        hdpa.repay_interest_wait repay_account_wait,
         IFNULL(FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d' ),'--') AS create_time,
         hdpa.create_time orderby_create_time,
         IFNULL(FROM_UNIXTIME( hdp.liquidate_should_time, '%Y-%m-%d' ),'--') AS liquidate_should_time,
         hdp.liquidate_should_time orderby_liquidate_should_time,
         0 type,
         CASE
-        WHEN hdp.debt_plan_status = 4 THEN '投资中'
-        ELSE '现金投资'
+        WHEN hdp.debt_plan_status = 4 THEN '出借中'
+        ELSE '现金出借'
         END AS DATA,
         0 coupon_type
         FROM ht_debt_plan_accede hdpa
@@ -1026,25 +1026,26 @@
         AND hdpa.user_id=#{userId}
 
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hha.accede_order_id accede_order_id,
-        CONCAT(hhp.expect_apr, '%') expect_apr,
+        CONCAT(hha.expect_apr, '%') expect_apr,
         CASE
         WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
         ELSE CONCAT(hhp.lock_period,'个月')
         END AS debt_lock_period,
         hha.user_id user_id,
         hha.accede_account accede_account,
-        IF(hha.wait_total=0,'--',hha.wait_total) wait_total,
+        IF(hha.wait_interest=0,'--',hha.wait_interest) wait_total,
         IFNULL(FROM_UNIXTIME( hha.create_time, '%Y-%m-%d' ),'--') AS add_time,
         hha.create_time orderby_add_time,
         IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'--') AS quit_time,
         hha.quit_time orderby_last_payment_time,
         1 type,
         CASE
-        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
-        ELSE '现金投资'
+        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '出借中'
+        ELSE '现金出借'
         END AS DATA,
         0 coupon_type
         FROM ht_hjh_accede hha
@@ -1052,7 +1053,9 @@
         WHERE
         hha.order_status <![CDATA[<>]]>7
         AND hha.user_id=#{userId}
+
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hbtc.nid nid,
@@ -1192,18 +1195,20 @@
         FROM_UNIXTIME(hdp.liquidate_fact_time, '%Y-%m-%d' ) liquidate_fact_time,
         hdp.liquidate_fact_time orderby_liquidate_fact_time,
         0 type,
-        '现金投资' DATA,
+        '现金出借' DATA,
         0 coupon_type
         FROM ht_debt_plan_accede hdpa
         INNER JOIN ht_debt_plan hdp ON hdpa.plan_nid=hdp.debt_plan_nid
         WHERE
         hdp.debt_plan_status =11
         AND hdpa.user_id=#{userId}
+
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hha.accede_order_id accede_order_id,
-        CONCAT(hhp.expect_apr, '%') expect_apr,
+        CONCAT(hha.expect_apr, '%') expect_apr,
         CASE
         WHEN hhp.borrow_style ='endday' THEN CONCAT(hhp.lock_period,'天')
         ELSE CONCAT(hhp.lock_period,'个月')
@@ -1216,14 +1221,16 @@
         '--',FROM_UNIXTIME( hha.acctual_payment_time, '%Y-%m-%d' )) AS quit_time,
         hha.acctual_payment_time orderby_quit_time,
         1 type,
-        '现金投资' AS DATA,
+        '现金出借' AS DATA,
         0 coupon_type
         FROM ht_hjh_accede hha
         LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
         WHERE
         hha.order_status = 7
         AND hha.user_id=#{userId}
+
         UNION ALL
+
         SELECT
         hhp.plan_name plan_name,
         hbtc.nid nid,
@@ -1935,7 +1942,7 @@
     </select>
 
 
-    <!-- 获取可转让的投资列表 -->
+    <!-- 获取可转让的出借列表 -->
     <select id="selectTenderToCreditListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
         SELECT
         *
@@ -1945,7 +1952,7 @@
         LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
         <include refid="TenderToCredit_Where_Clause" />
     </select>
-    <!-- 获取可转让的投资查询条件 -->
+    <!-- 获取可转让的出借查询条件 -->
     <sql id="TenderToCredit_Where_Clause">
         <where>
             <if test="borrowNid != null and borrowNid != ''">
@@ -2098,7 +2105,7 @@
         hha.create_time as order_by_addtime,
 
         CASE
-        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
+        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '出借中'
         ELSE ''
         END AS statusName,
         0 coupon_type,
@@ -2514,7 +2521,7 @@
         hhp.plan_name,
         <!-- hhp.plan_nid AS borrow_nid, -->
         hhp.plan_name AS borrow_nid,
-        CONCAT(hhp.expect_apr, '%') borrow_apr,
+        CONCAT(hha.expect_apr, '%') borrow_apr,
         IF(IFNULL(hha.quit_time,0)=0,'--',FROM_UNIXTIME(hha.quit_time, '%Y-%m-%d' )) AS quit_time,
         hha.last_payment_time,
         5 AS type,

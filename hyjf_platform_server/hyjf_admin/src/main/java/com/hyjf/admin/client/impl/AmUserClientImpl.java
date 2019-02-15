@@ -1,6 +1,7 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
@@ -33,6 +34,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -191,7 +193,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public BankOpenAccountVO searchBankOpenAccount(Integer userId) {
-		String url = "http://AM-ADMIN/am-user/borrow_regist_exception/searchbankopenaccount/" + userId;
+		String url = "http://AM-ADMIN/am-user/borrow_regist_repair/searchbankopenaccount/" + userId;
 		BankOpenAccountResponse response = restTemplate.getForEntity(url, BankOpenAccountResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
@@ -272,7 +274,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 查询自动投资债转异常列表
+	 * 查询自动出借债转异常列表
 	 *
 	 * @auth sunpeikai
 	 * @param
@@ -291,7 +293,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 *
 	 * @auth sunpeikai
 	 * @param type
-	 *            1自动投资授权 2债转授权
+	 *            1自动出借授权 2债转授权
 	 * @return
 	 */
 	@Override
@@ -1972,7 +1974,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int getBankCardExceptionCount(BankCardExceptionRequest request) {
-		String url = "http://AM-ADMIN/am-user/bankcardexception/getBankCardExceptionCount";
+		String url = "http://AM-ADMIN/am-user/bankcardrepair/getBankCardRepairCount";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getCount();
@@ -1988,7 +1990,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public List<AdminBankCardExceptionCustomizeVO> searchBankCardExceptionList(BankCardExceptionRequest request) {
-		String url = "http://AM-ADMIN/am-user/bankcardexception/searchBankCardExceptionList";
+		String url = "http://AM-ADMIN/am-user/bankcardrepair/searchBankCardRepairList";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request, AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultList();
@@ -2004,7 +2006,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public String updateAccountBankByUserId(BankCardExceptionRequest request) {
-		String url = "http://AM-ADMIN/am-user/bankcardexception/updateAccountBankByUserId";
+		String url = "http://AM-ADMIN/am-user/bankcardrepair/updateAccountBankByUserId";
 		AdminBankCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBankCardExceptionResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultMsg();
@@ -2059,21 +2061,17 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
-		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/sms_code/query_user",
-				requestBean, SmsCodeCustomizeResponse.class);
-		if (response != null) {
-			/*List<SmsCodeCustomizeVO> list = response.getResultList();
-			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_code/query_user",
-					requestBean, SmsCodeCustomizeResponse.class);
-			if (response1 != null) {
-				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
-				if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(list1)) {
-					list.retainAll(list1);
-					return list;
-				}
-			}*/
-			return response.getResultList();
+	public List<String> queryUser(SmsCodeRequestBean requestBean) {
+		Response tradeResponse = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/queryUser",
+				requestBean, Response.class);
+		Response userResponse = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/queryUser", requestBean, Response.class);
+		if (tradeResponse != null && userResponse != null) {
+			List<String> tradeList = tradeResponse.getResultList();
+			List<String> userList = userResponse.getResultList();
+			if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
+				tradeList.retainAll(userList);
+			}
+			return tradeList;
 		}
 		return null;
 	}
@@ -2569,7 +2567,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 	/**
-	 * 查看该用户在投资表和标的放款记录中是否存在
+	 * 查看该用户在出借表和标的放款记录中是否存在
 	 * @param userId
 	 * @auther: nxl
 	 * @return
@@ -2745,6 +2743,90 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest) {
 		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPayAuth/selectUserMemberCount", userPayAuthRequest, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	@Override
+	public int countUser(SmsCodeRequestBean requestBean) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/countUser",
+				requestBean, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+		String url = "http://AM-ADMIN/am-user/user/getUserUtmInfo/" + userId;
+		UserUtmInfoResponse response = restTemplate.getForEntity(url, UserUtmInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/***
+	 * 开户掉单，保存开户(User)数据
+	 * @author Zha Daojian
+	 * @date 2019/1/22 9:48
+	 * @param requestBean
+	 * @return openAccountEnquiryDefineRequestBeanVO
+	 **/
+	@Override
+	public OpenAccountEnquiryDefineResultBeanVO updateUser(OpenAccountEnquiryDefineResultBean requestBean){
+
+		OpenAccountEnquiryDefineRequest request = new OpenAccountEnquiryDefineRequest();
+		BeanUtils.copyProperties(requestBean, request);
+		OpenAccountEnquiryResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/updateUser", request, OpenAccountEnquiryResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return null;
+		}
+		return response.getOpenAccountEnquiryDefineResultBeanVO();
+	}
+
+	/***
+	 * 开户掉单，保存开户(Account)数据
+	 * @author Zha Daojian
+	 * @date 2019/1/22 9:48
+	 * @param requestBean
+	 * @return openAccountEnquiryDefineRequestBeanVO
+	 **/
+	@Override
+	public OpenAccountEnquiryDefineResultBeanVO updateAccount(OpenAccountEnquiryDefineResultBean requestBean){
+
+		OpenAccountEnquiryDefineRequest request = new OpenAccountEnquiryDefineRequest();
+		BeanUtils.copyProperties(requestBean, request);
+		OpenAccountEnquiryResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN//am-trade/bankOpenUpdateAccountLog/updateAccount", request, OpenAccountEnquiryResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return null;
+		}
+		return response.getOpenAccountEnquiryDefineResultBeanVO();
+	}
+
+    @Override
+    public int countUserNames(UserPortraitCustomizeRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPortraitManage/countUserNames",request, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+    }
+
+	@Override
+	public int updateBatch(UserPortraitCustomizeRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPortraitManage/importBatch", request, IntegerResponse.class);
 		if (response != null) {
 			return response.getResultInt();
 		}

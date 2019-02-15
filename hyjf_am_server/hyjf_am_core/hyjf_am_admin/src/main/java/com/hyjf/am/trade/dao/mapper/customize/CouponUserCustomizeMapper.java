@@ -54,7 +54,7 @@ public interface CouponUserCustomizeMapper {
 	 */
 	CouponConfigCustomizeV2 selectCouponConfigByGrantId(Map<String,Object> paramMap);
 	/**
-     * 根据优惠券投资nid（hyjf_borrow_tender_cpn）
+     * 根据优惠券出借nid（hyjf_borrow_tender_cpn）
      * @param paramMap
      * @return
      */

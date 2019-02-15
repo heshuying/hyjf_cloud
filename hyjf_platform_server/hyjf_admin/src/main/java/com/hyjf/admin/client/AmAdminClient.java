@@ -5,10 +5,7 @@ import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.response.AppPushManageResponse;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.EmailRecipientResponse;
-import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
@@ -28,7 +25,6 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -54,7 +50,7 @@ import java.util.List;
 public interface AmAdminClient {
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO> getTenderCityGroupByList(Date date);
@@ -64,7 +60,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getPerformanceSum();
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
@@ -121,7 +117,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getOneInterestsMost(int intervalMonth);
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -135,7 +131,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -143,7 +139,7 @@ public interface AmAdminClient {
     List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
 
     /**
-     * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
+     * 今年这个时候到手收益 和 去年这个时候到手收益 和  出借利率
      *
      * @param intervalMonth 今年间隔月份
      * @param startMonth    去年开始月份
@@ -160,12 +156,12 @@ public interface AmAdminClient {
     int getTradeCountByMonth(Date beginDate,Date endDate);
 
     /**
-     * 获取截至日期的投资金额
+     * 获取截至日期的出借金额
      */
     double getInvestLastDate(Date date);
 
     /**
-     * 统计投资人总数，截至日期为上个月的最后一天
+     * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
      */
@@ -186,7 +182,7 @@ public interface AmAdminClient {
      */
     BigDecimal getAccountByMonth(Date beginDate, Date endDate);
     /**
-     *投资人按照年龄分布 返回符合条件所有用户
+     *出借人按照年龄分布 返回符合条件所有用户
      *
      * @param date 上个月的最后一天
      * @return
@@ -240,7 +236,7 @@ public interface AmAdminClient {
     Integer getOpenAccountNumber(Integer sourceId, String type);
 
     /**
-     * 投资人数
+     * 出借人数
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -256,7 +252,7 @@ public interface AmAdminClient {
     BigDecimal getCumulativeRecharge(Integer sourceId, String type);
 
     /**
-     * 汇直投投资金额
+     * 汇直投出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -264,7 +260,7 @@ public interface AmAdminClient {
     BigDecimal getHztTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇消费投资金额
+     * 汇消费出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -272,7 +268,7 @@ public interface AmAdminClient {
     BigDecimal getHxfTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇天利投资金额
+     * 汇天利出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -280,7 +276,7 @@ public interface AmAdminClient {
     BigDecimal getHtlTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇添金投资金额
+     * 汇添金出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -288,7 +284,7 @@ public interface AmAdminClient {
     BigDecimal getHtjTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇金理财投资金额
+     * 汇金理财出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -296,7 +292,7 @@ public interface AmAdminClient {
     BigDecimal getRtbTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇转让投资金额
+     * 汇转让出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -1115,5 +1111,78 @@ public interface AmAdminClient {
      */
     AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
+    /**
+     * 查询邀请明细列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getNaMiMarketingList(NaMiMarketingRequest naMiMarketingRequest);
 
+    /**
+     *业绩返现列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     * 业绩返现详情列表
+     * @param request
+     * @return
+     */
+    NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request);
+
+
+    /**
+     * 查询邀请人返现明细 列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse  selectNaMiMarketingRefferList(NaMiMarketingRequest naMiMarketingRequest);
+
+    IntegerResponse selectNaMiMarketingRefferCount(NaMiMarketingRequest request);
+    IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request);
+    /**
+     * 查询邀请人返现统计 列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest);
+
+    NaMiMarketingResponse selectMonthList();
+
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    List<Integer> searchUserIdList(int sourceType);
+
+    /**
+     * 纳觅返现活动-修改加入时间
+     * @param borrowNid
+     * @param nowTime
+     */
+    void updateJoinTime(String borrowNid, Integer nowTime);
+
+    /**
+     * 纳觅返现活动-活动有效期校验
+     * @param activityId
+     * @return
+     */
+    StringResponse checkActivityIfAvailable(Integer activityId);
+
+    /**
+     * 纳觅返现活动-保存返现数据
+     * @param returnCashRequest
+     */
+    IntegerResponse saveReturnCash(ReturnCashRequest returnCashRequest);
+
+    /**
+     * 查询汇计划转让列表的求和
+     * add by cwyang 2019-01-24
+     * @param request
+     * @return
+     */
+    MapResponse queryHjhDebtCreditTotal(HjhDebtCreditListRequest request);
 }

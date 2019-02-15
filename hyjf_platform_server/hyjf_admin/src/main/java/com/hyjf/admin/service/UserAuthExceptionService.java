@@ -22,7 +22,7 @@ public interface UserAuthExceptionService {
      * 同步用户授权状态
      * @auth sunpeikai
      * @param userId 用户id
-     * @param type 1自动投资授权  2债转授权
+     * @param type 1自动出借授权  2债转授权
      * @return
      */
     AdminUserAuthListResponse synUserAuth(Integer userId,Integer type);

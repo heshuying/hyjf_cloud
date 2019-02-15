@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiModelProperty;
  * @version SmsCodeUserRequest, v0.1 2018/8/20 19:05
  */
 public class SmsCodeUserRequest extends BasePage {
-    private static final long serialVersionUID = 1L;
     /**
      * 用户手机号码，以英文逗号间隔
      */
@@ -43,21 +42,21 @@ public class SmsCodeUserRequest extends BasePage {
     private String re_time_end;
 
     /**
-     * 投资日期段开始时间
+     * 出借日期段开始时间
      */
-    @ApiModelProperty(value = "投资开始日期")
+    @ApiModelProperty(value = "出借开始日期")
     private String add_time_begin;
 
     /**
-     * 投资日期段结束时间
+     * 出借日期段结束时间
      */
-    @ApiModelProperty(value = "投资结束日期")
+    @ApiModelProperty(value = "出借结束日期")
     private String add_time_end;
 
     /**
-     * 累计投资金额
+     * 累计出借金额
      */
-    @ApiModelProperty(value = "累计投资金额")
+    @ApiModelProperty(value = "累计出借金额")
     private String add_money_count;
 
     /**

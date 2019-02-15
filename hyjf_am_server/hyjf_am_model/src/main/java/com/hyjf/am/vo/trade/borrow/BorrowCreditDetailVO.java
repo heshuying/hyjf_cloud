@@ -31,7 +31,7 @@ public class BorrowCreditDetailVO extends BaseVO {
      */
     private String creditNid;
     /**
-     * 投资编号
+     * 出借编号
      */
     private String tenderNid;
     /**
@@ -83,7 +83,7 @@ public class BorrowCreditDetailVO extends BaseVO {
      * 标的类型
      */
     private String type;
-    /* 项目状态 status 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 */
+    /* 项目状态 status 10 定时发标 11出借中 12复审中 13 还款中 14 已还款 15 已流标 */
     private String status;
     /* 项目区分 comOrPer 项目是个人项目还是企业项目 1企业 2个人 */
     private String comOrPer;

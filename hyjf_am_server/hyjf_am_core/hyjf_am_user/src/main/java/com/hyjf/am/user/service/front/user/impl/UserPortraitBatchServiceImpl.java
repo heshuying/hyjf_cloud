@@ -109,7 +109,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
             // bean转换
             UserPortrait userPortrait = CommonUtils.convertBean(userPortraitQueryVO,UserPortrait.class);
-            // 如果投资进程在trade上未赋值，说明不是投资或者充值
+            // 如果出借进程在trade上未赋值，说明不是出借或者充值
             if (userPortrait.getInvestProcess() == null) {
                 UserExample userExample = new UserExample();
                 userExample.createCriteria().andUserIdEqualTo(userId);

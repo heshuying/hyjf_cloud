@@ -75,11 +75,11 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
             // 循环有效债权信息
             for (HjhDebtDetail hjhDebtDetail : debtDetails) {
                 logger.info("计算加入订单的当前持有债权价值,智投编号:[" + hjhDebtDetail.getPlanNid() + "],计划加入订单号:" + hjhDebtDetail.getPlanOrderId() + "]," +
-                        "投资订单号或承接订单号:[" + hjhDebtDetail.getOrderId() + "].");
+                        "出借订单号或承接订单号:[" + hjhDebtDetail.getOrderId() + "].");
                 // 债权原标编号
                 String borrowNid = hjhDebtDetail.getBorrowNid();
                 // 根据标的号查询标的信息
-                Borrow borrow = this.getBorrow(borrowNid);
+                Borrow borrow = this.getBorrowByNid(borrowNid);
                 if (borrow == null) {
                     throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + borrowNid + "].");
                 }
@@ -94,7 +94,7 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
                 if (assignComplete != null) {
                     // 如果债权已被转让出去,就不进行转让,跳出此次循环
                     // 一笔加入订单 既有完全承接 又有正在还款的还款的债权,此时 不清算
-                    logger.info("债权已被清算出,债权投资订单号:[" + hjhDebtDetail.getInvestOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
+                    logger.info("债权已被清算出,债权出借订单号:[" + hjhDebtDetail.getInvestOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
                     continue;
                 }
                 // 不分期项目

@@ -22,7 +22,7 @@ public class BidApplyQueryBean implements Serializable{
 	@ApiModelProperty(value = "用户ID")
 	private Integer userId;
 	
-	@ApiModelProperty(value = "检索条件:电子账号 长度19 投资人电子账号")
+	@ApiModelProperty(value = "检索条件:电子账号 长度19 出借人电子账号")
 	private String accountId;
 	
 	@ApiModelProperty(value = "检索条件:原订单号  长度30 原投标订单号")

@@ -15,7 +15,6 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -204,45 +203,124 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     @Override
     public int selectPcChannelReconciliationCount(ChannelReconciliationRequest request) {
         request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectPcChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
         }
-        return 0;
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+        Integer result = utmRegCustomizeMapper.selectPcChannelReconciliationRecordCount(request);
+        return result==null?0:result;
     }
 
     @Override
     public int selectPcChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
         request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectPcChannelReconciliationRecordHjh(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
         }
-        return 0;
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+        Integer result = utmRegCustomizeMapper.selectPcChannelReconciliationRecordHjhCount(request);
+        return result==null?0:result;
     }
 
     @Override
     public int selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
-        request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectAppChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
         }
-        return 0;
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
+        }
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+        Integer firstFlag = request.getFirstFlag();
+        if (Objects.equals(firstFlag, 1)) {
+            request.setFirstFlag(0);
+        }
+        if (Objects.equals(firstFlag, 0)) {
+            request.setFirstFlag(1);
+        }
+        Integer result = utmRegCustomizeMapper.selectAppChannelReconciliationRecordCount(request);
+        return result == null? 0:result;
     }
 
     @Override
     public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
-        request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectAppChannelReconciliationRecordHjh(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        if (request.getInvestEndTime() != null) {
+            Date investEndTime = request.getInvestEndTime();
+            investEndTime = GetDate.getSomeDayEnd(investEndTime);
+            request.setInvestEndTime(investEndTime);
         }
-        return 0;
+        if (request.getRegistStartTime() != null) {
+            Date registStartTime = request.getRegistStartTime();
+            registStartTime = GetDate.getSomeDayStart(registStartTime);
+            request.setRegistStartTime(registStartTime);
+        }
+        if (request.getRegistEndTime() != null) {
+            Date registEndTime = request.getRegistEndTime();
+            registEndTime = GetDate.getSomeDayEnd(registEndTime);
+            request.setRegistEndTime(registEndTime);
+        }
+        Integer firstFlag = request.getFirstFlag();
+        if (Objects.equals(firstFlag, 1)) {
+            request.setFirstFlag(0);
+        }
+        if (Objects.equals(firstFlag, 0)) {
+            request.setFirstFlag(1);
+        }
+        Integer result = utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjhCount(request);
+        return result==null?0:result;
     }
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecord(ChannelReconciliationRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -275,6 +353,10 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
+        if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
+            request.setLimitStart((request.getCurrPage() - 1) * request.getPageSize());
+            request.setLimitEnd(request.getPageSize());
+        }
         if (request.getInvestStartTime() != null) {
             Date investStartTime = request.getInvestStartTime();
             investStartTime = GetDate.getSomeDayStart(investStartTime);
@@ -365,6 +447,11 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             }
         }
         return 0;
+    }
+
+    @Override
+    public List<Integer> searchUserIdList(int sourceType) {
+        return utmRegCustomizeMapper.searchUserIdList(sourceType);
     }
 
     /**

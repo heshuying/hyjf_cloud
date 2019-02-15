@@ -55,10 +55,10 @@ public class HjhReInvestDetailController extends BaseController {
     public JSONObject dropDownBox(){
         JSONObject jsonObject = new JSONObject();
 
-        //初始投资方式List
+        //初始出借方式List
         List<Object> investmentMethodList = new ArrayList<>();
 
-        //初始投资方式Map
+        //初始出借方式Map
         Map<String, Object> investmentMethodListMap1 = new HashedMap();
         Map<String, Object> investmentMethodListMap2 = new HashedMap();
         Map<String, Object> investmentMethodListMap3 = new HashedMap();
@@ -165,7 +165,7 @@ public class HjhReInvestDetailController extends BaseController {
      */
     @ApiOperation(value = "复投原始标的列表导出", notes = "复投详情列表导出")
     @PostMapping(value = "/exportAction")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhReInvestDetailRequestBean requestBean) throws Exception {
 
         if (StringUtils.isEmpty(requestBean.getDate())){
             logger.error("复投原始标的列表导出日期为空无法导出!");
@@ -205,8 +205,9 @@ public class HjhReInvestDetailController extends BaseController {
         List<HjhReInvestDetailVO> resultList = null;
 
         HjhReInvestDetailResponse resultResponse = this.hjhReInvestDetailService.getHjhReInvestDetailList(hjhReInvestDetailCustomize);
-
+        logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount());
         if (resultResponse.getCount() > 0) {
+            logger.info(HjhReInvestDetailController.class + ";defaultRowMaxCount:" + defaultRowMaxCount + ";总条数:" + resultResponse.getCount() + ";列表:" + resultResponse.getResultList().get(0).toString());
             resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhReInvestDetailVO.class);
         }
 
@@ -245,19 +246,55 @@ public class HjhReInvestDetailController extends BaseController {
         map.put("userName", "用户名");
         map.put("inviteUserName", "推荐人");
         map.put("userAttribute", "用户属性");
-        map.put("borrowNid", "借款编号");
+        map.put("borrowNid", "项目编号");
         map.put("expectApr", "年化利率");
         map.put("borrowPeriodView", "借款期限");
-        map.put("accedeAccount", "投资金额（元）");
+        map.put("accedeAccount", "出借金额（元）");
         map.put("borrowStyle", "还款方式");
-        map.put("investType", "投资方式");
+        map.put("investType", "出借方式");
         map.put("countInterestTime", "开始计息时间");
-        map.put("addTime", "投资时间");
+        map.put("addTime", "出借时间");
 
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter userAttributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "无主单";
+                } else if ("1".equals(value)) {
+                    return "有主单";
+                } else if ("2".equals(value)) {
+                    return "线下员工";
+                } else if ("3".equals(value)) {
+                    return "线上员工";
+                }else {
+                    return value;
+                }
+            }
+        };
+
+        IValueFormatter investTypeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if ("0".equals(value)) {
+                    return "手动投标";
+                } else if ("1".equals(value)) {
+                    return "预约投标";
+                } else if ("2".equals(value)) {
+                    return "自动投标";
+                }else {
+                    return value;
+                }
+            }
+        };
+
+        mapAdapter.put("userAttribute", userAttributeAdapter);
+        mapAdapter.put("investType", investTypeAdapter);
         return mapAdapter;
     }
 

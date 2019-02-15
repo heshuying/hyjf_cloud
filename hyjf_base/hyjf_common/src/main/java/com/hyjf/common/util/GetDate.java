@@ -925,6 +925,29 @@ public class GetDate extends PropertyEditorSupport {
 	}
 
 	/**
+	 * 获取当前时间
+	 * @return
+	 */
+    public static String getNowTimeYYYYMMDDHHMMSS() {
+		return yyyymmddhhmmss.format(new Date());
+    }
+
+	/**
+	 * 10位时间戳转换为字符串
+	 * @param timeParam
+	 * @return
+	 */
+	public static String timestamptoNUMStrYYYYMMDDHHMMSS2(Integer timeParam) {
+		Timestamp time = getTimestamp(Long.valueOf(timeParam) * 1000);
+		Date date = null;
+		if (null != time) {
+			date = new Date(time.getTime());
+			return date2Str(date, yyyymmddhhmmss);
+		}
+		return "";
+	}
+
+	/**
 	 * String类型 转换为Date, 如果参数长度为10 转换格式”yyyy-MM-dd“ 如果参数长度为19 转换格式”yyyy-MM-dd
 	 * HH:mm:ss“ * @param text String类型的时间值
 	 */
@@ -2065,7 +2088,7 @@ public class GetDate extends PropertyEditorSupport {
 		return Integer.parseInt(enddateStr);
 	}
 
-	// add 汇计划三期 汇计划自动投资 liubin 20180515 start
+	// add 汇计划三期 汇计划自动出借 liubin 20180515 start
 	/**
 	 * 根据HH:mm得到日期
 	 *
@@ -2196,9 +2219,57 @@ public class GetDate extends PropertyEditorSupport {
 		return getSomeDayEnd(calendar.getTime());
 	}
 
-	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
+	// add 汇计划三期 汇计划自动出借 liubin 20180515 end
 
 	public static void main(String[] args) {
 		System.out.println(getMillis10(new Date()));
+	}
+
+	/**
+	 * 时间戳转YYYYMM
+	 * @param timeParam
+	 * @return
+	 */
+	public static String times10toStrYYYYMM(String timeParam) {
+		Timestamp time = getTimestamp(Long.valueOf(timeParam) * 1000);
+		Date date = null;
+		if (null != time) {
+			date = new Date(time.getTime());
+			return date2Str(date, new SimpleDateFormat("yyyy-MM"));
+		}
+		return "";
+	}
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：年月日
+	 *
+	 */
+	public static String formatTime3() {
+		return new SimpleDateFormat("yyyyMMdd").format(getCalendar().getTime());
+	}
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：年月
+	 * @return
+	 */
+	public static String formatTimeYYYYMM() {
+		return new SimpleDateFormat("yyyyMM").format(getCalendar().getTime());
+	}
+
+	/**
+	 * 获得当前月有多少天
+	 * @param dateStr
+	 * @return
+	 */
+	public static String getDaysOfMonth(String dateStr) {
+		Date date = null;
+		try{
+			date =  new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)+"";
 	}
 }

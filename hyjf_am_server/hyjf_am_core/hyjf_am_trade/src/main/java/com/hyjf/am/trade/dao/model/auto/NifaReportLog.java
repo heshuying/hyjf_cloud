@@ -26,6 +26,13 @@ public class NifaReportLog implements Serializable {
     private Integer uploadTime;
 
     /**
+     * 数据处理日期
+     *
+     * @mbggenerated
+     */
+    private String historyDate;
+
+    /**
      * 文件上传状态 0：未处理 1：成功 2：失败
      *
      * @mbggenerated
@@ -119,6 +126,14 @@ public class NifaReportLog implements Serializable {
 
     public void setUploadTime(Integer uploadTime) {
         this.uploadTime = uploadTime;
+    }
+
+    public String getHistoryDate() {
+        return historyDate;
+    }
+
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate == null ? null : historyDate.trim();
     }
 
     public Integer getFileUploadStatus() {

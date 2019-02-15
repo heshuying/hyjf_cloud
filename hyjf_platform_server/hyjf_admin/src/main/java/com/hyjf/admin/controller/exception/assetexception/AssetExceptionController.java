@@ -19,7 +19,7 @@ import com.hyjf.am.vo.admin.AssetExceptionCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.ExportExcel;
+import com.hyjf.admin.utils.ExportExcel;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
@@ -233,7 +233,7 @@ public class AssetExceptionController extends BaseController {
             e.printStackTrace();
             logger.error("转码错误....", e);
         }
-        String[] titles = new String[]{"序号", "资产来源", "借款编号", "借款金额", "异常类型", "异常原因", "项目状态", "异常时间"};
+        String[] titles = new String[]{"序号", "资产来源", "项目编号", "借款金额", "异常类型", "异常原因", "项目状态", "异常时间"};
 
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -269,7 +269,7 @@ public class AssetExceptionController extends BaseController {
                     else if (celLength == 1) {
                         cell.setCellValue(record.getInstName());
                     }
-                    // 借款编号
+                    // 项目编号
                     else if (celLength == 2) {
                         cell.setCellValue(record.getBorrowNid());
                     }
@@ -348,7 +348,7 @@ public class AssetExceptionController extends BaseController {
 	    private Map<String, String> buildMap() {
 	        Map<String, String> map = Maps.newLinkedHashMap();
 	        map.put("instName", "资产来源");
-	        map.put("borrowNid", "借款编号");
+	        map.put("borrowNid", "项目编号");
 	        map.put("account", "借款金额");
 	        map.put("exceptionType", "异常类型");
 	        map.put("exceptionRemark", "异常原因");

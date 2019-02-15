@@ -6,32 +6,102 @@ import java.math.BigDecimal;
 public class DebtCarInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 品牌
+     *
+     * @mbggenerated
+     */
     private String brand;
 
+    /**
+     * 型号
+     *
+     * @mbggenerated
+     */
     private String model;
 
+    /**
+     * 车系
+     *
+     * @mbggenerated
+     */
     private String carseries;
 
+    /**
+     * 车牌号
+     *
+     * @mbggenerated
+     */
     private String number;
 
+    /**
+     * 颜色
+     *
+     * @mbggenerated
+     */
     private String color;
 
+    /**
+     * 出厂年份
+     *
+     * @mbggenerated
+     */
     private String year;
 
+    /**
+     * 产地
+     *
+     * @mbggenerated
+     */
     private String place;
 
+    /**
+     * 排量
+     *
+     * @mbggenerated
+     */
     private String volume;
 
+    /**
+     * 购买日期
+     *
+     * @mbggenerated
+     */
     private Integer buytime;
 
+    /**
+     * 1有保险2无保险
+     *
+     * @mbggenerated
+     */
     private Integer isSafe;
 
+    /**
+     * 购买价
+     *
+     * @mbggenerated
+     */
     private BigDecimal price;
 
+    /**
+     * 评估价
+     *
+     * @mbggenerated
+     */
     private BigDecimal toprice;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款预编号
+     *
+     * @mbggenerated
+     */
     private Integer borrowPreNid;
 
     private static final long serialVersionUID = 1L;

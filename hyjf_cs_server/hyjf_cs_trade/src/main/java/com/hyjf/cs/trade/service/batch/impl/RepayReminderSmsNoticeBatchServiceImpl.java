@@ -143,4 +143,28 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
         return this.amBorrowRepayClient.updateBorrowRepayPlan(borrowRepayPlanVO);
     }
 
+    @Override
+    public void taskAssign() {
+        amBorrowClient.taskAssign();
+    }
+
+    @Override
+    public void taskRepayAssign() {
+        amBorrowClient.taskRepayAssign();
+    }
+
+    @Override
+    public void taskReviewBorrowAssign() {
+        amBorrowClient.taskReviewBorrowAssign();
+    }
+
+    @Override
+    public void taskAssignLoans() {
+        amBorrowClient.taskAssignLoans();
+    }
+
+    @Override
+    public void taskAssignRepay() {
+        amBorrowClient.taskAssignRepay();
+    }
 }

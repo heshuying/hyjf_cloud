@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.auth;
 
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -11,6 +12,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 public interface AuthService extends BaseUserService {
@@ -90,7 +92,7 @@ public interface AuthService extends BaseUserService {
     Integer checkAuthExpire(Integer userId, String txcode);
     /**
      * 
-     * 检查自动投资授权状态
+     * 检查自动出借授权状态
      * @author pcc
      * @param userId
      * @return
@@ -139,4 +141,8 @@ public interface AuthService extends BaseUserService {
      * @return
      */
     Map<String,String> checkAemsParam(@Valid AemsMergeAuthPagePlusRequestBean requestBean);
+     * 获得所有协议类型
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTypes();
 }

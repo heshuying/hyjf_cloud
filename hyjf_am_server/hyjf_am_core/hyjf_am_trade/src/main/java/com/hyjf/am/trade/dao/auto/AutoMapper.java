@@ -137,19 +137,7 @@ public class AutoMapper {
     protected BorrowTenderTmpinfoMapper borrowTenderTmpinfoMapper;
 
     @Resource
-    protected BorrowTypeMapper borrowTypeMapper;
-
-    @Resource
     protected BorrowUserMapper borrowUserMapper;
-
-    @Resource
-    protected ChinapnrExclusiveLogMapper chinapnrExclusiveLogMapper;
-
-    @Resource
-    protected ChinapnrLogMapper chinapnrLogMapper;
-
-    @Resource
-    protected ChinapnrSendLogMapper chinapnrSendLogMapper;
 
     @Resource
     protected ConsumeMapper consumeMapper;

@@ -5,7 +5,6 @@ import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
@@ -26,6 +25,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -43,7 +43,10 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
+import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
@@ -63,7 +66,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class WechatProjectListServiceImpl implements WechatProjectListService {
+public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implements WechatProjectListService {
 
 
     private static Logger logger = LoggerFactory.getLogger(WechatProjectListServiceImpl.class);
@@ -84,6 +87,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     private AuthService authService;
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private CacheService cacheService;
 
 
     @Autowired
@@ -121,7 +127,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 if (users.getBankOpenAccount() != null && users.getBankOpenAccount() == 1) {
                     isOpened = true;
                 }
-                // 检查用户角色是否能投资  合规接口改造之后需要判断
+                // 检查用户角色是否能出借  合规接口改造之后需要判断
                 UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
                 roleId=userInfo.getRoleId();
                 String roleIsOpen = systemConfig.getRoleIsopen();
@@ -180,7 +186,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
         map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-        ProjectCustomeDetailVO borrow = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrow = amTradeClient.searchProjectDetail(map);
         // 获取还款信息 add by jijun 2018/04/27
         BorrowRepayVO borrowRepay = null;
         List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -200,7 +206,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         //角色认证是否打开
         userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
         userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
-        //自动投资开关
+        //自动出借开关
         userValidation.put("invesAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
         //自动债转开关
         userValidation.put("creditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
@@ -208,12 +214,22 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
         //获取标的信息
-        if (borrow == null) {
+        if (tempBorrow == null) {
             borrowDetailResultBean.put("status", "100");
             borrowDetailResultBean.put("statusDesc", "标的信息不存在");
             //weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
             return borrowDetailResultBean;
         } else {
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+            // 转换一次是排除业务操作对缓存的干扰
+            ProjectCustomeDetailVO borrow = CommonUtils.convertBean(tempBorrow,ProjectCustomeDetailVO.class);
+            // 添加缓存后希望能拿到实时的标的剩余金额
+            String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+            if (StringUtils.isNotBlank(investAccount)){
+                borrow.setInvestAccount(investAccount);
+            }
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
+
             borrowDetailResultBean.put("status", WeChatResult.SUCCESS);
             borrowDetailResultBean.put("statusDesc", WeChatResult.SUCCESS_DESC);
             borrowProjectInfoBean.setBorrowRemain(borrow.getInvestAccount());
@@ -222,13 +238,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
+            borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             if (StringUtils.isNotBlank(borrow.getIncreaseInterestFlag()) && borrow.getIncreaseInterestFlag().equals("1")){
                 borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
             }else{
                 borrowProjectInfoBean.setBorrowExtraYield("");
             }
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
-            //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
+            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
@@ -253,9 +270,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             //获取项目详情信息
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers =  cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
             //项目介绍
@@ -367,7 +384,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             /**
              * 查看标的详情
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
-             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有出借者和承接者可查看
              */
             int count = 0;
             if (userId != null){
@@ -409,14 +426,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 isDept = true;
             } else {
                 // 原始标
-                // 复审中，还款中和已还款状态投资者(可看)
+                // 复审中，还款中和已还款状态出借者(可看)
                 if ("3".equals(borrow.getStatus()) || "4".equals(borrow.getStatus())
                         || "5".equals(borrow.getStatus())) {
                     if (count > 0) {
                         // 可以查看标的详情
                         viewableFlag = true;
                     } else {
-                        // 提示仅投资者可看
+                        // 提示仅出借者可看
                         viewableFlag = false;
                     }
                 } else {
@@ -431,7 +448,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                         statusDescribe = "初审中";
                         break;
                     case "2":
-                        statusDescribe = "投资中";
+                        statusDescribe = "出借中";
                         break;
                     case "3":
                         statusDescribe = "复审中";
@@ -493,7 +510,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     }
 
     /**
-     * 散标投资记录列表
+     * 散标出借记录列表
      * @param info
      *
      */
@@ -727,7 +744,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     @Override
     public WechatHomePageResult getHomeIndexData(String userId) {
         WechatHomePageResult result = new WechatHomePageResult();
-        result.setWarning("市场有风险 投资需谨慎");
+        result.setWarning("市场有风险 出借需谨慎");
         if (StringUtils.isBlank(userId)) { // 未登录
             result.setTotalAssets("0.00");
             result.setAvailableBalance("0.00");
@@ -809,12 +826,12 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             }
         }
 
-        // 获取累计投资金额
+        // 获取累计出借金额
         //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestResponse res2 = amTradeClient.getTotalInvestAndInterestResponse();
         // modify by libin 加缓存
         if(res2 == null){
-        	logger.error("获取累计投资金额为空！");
+        	logger.error("获取累计出借金额为空！");
         }
         // modify by libin 加缓存
         
@@ -892,7 +909,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
                     //已开户
                 } else if (userType == 1) {
-                    //获取用户累计投资条数
+                    //获取用户累计出借条数
                     Integer count = amTradeClient.getTotalInverestCount(String.valueOf(userId));
                     if (count == null || count <= 0) {
                         //获取新手标
@@ -901,7 +918,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
-        result.setHomeXshProjectList(vo.getHomeXshProjectList());
+        result.setHomeXshProjectList(vo.getHomeXshProjectList() != null?vo.getHomeXshProjectList():new ArrayList<>());
         result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
         result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
@@ -946,7 +963,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         //去掉host前缀
-        request.setHost("");
+        String cdnDomainUrl = CdnUrlUtil.getCdnUrl();
+        request.setHost(cdnDomainUrl);
         String code = "wechat_banner";
         request.setCode(code);
         request.setPlatformType("3");
@@ -1119,6 +1137,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         // 计息时间
         projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
+        // 标的等级
+        projectInfo.setInvestLevel(customize.getInvestLevel());
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
@@ -1178,7 +1198,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
     /**
-     * 是否投资flag
+     * 是否出借flag
      *
      * @param userId
      * @param borrowNid
@@ -1220,7 +1240,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo, int currentPage, int pageSize, String showPlanFlag) {
 
-        List<WechatHomeProjectListVO> list = null;
         Map<String, Object> projectMap = new HashMap<String, Object>();
         // 汇盈金服app首页定向标过滤
         projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
@@ -1235,8 +1254,15 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             projectMap.put("showPlanFlag", showPlanFlag);
         }
         //WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
-        list = amTradeClient.getWechatProjectList(projectMap);
-        //list = response.getResultList();
+
+        List<WechatHomeProjectListVO> tempList  = amTradeClient.getWechatProjectList(projectMap);
+        List<WechatHomeProjectListVO> list = new ArrayList<>();
+        WechatHomeProjectListVO temp ;
+        for (WechatHomeProjectListVO vo1 : tempList){
+            temp = CommonUtils.convertBean(vo1,WechatHomeProjectListVO.class);
+            list.add(temp);
+        }
+
         if (!CollectionUtils.isEmpty(list)) {
             if (list.size() == (pageSize + 1)) {
                 list.remove(list.size() - 1);
@@ -1301,7 +1327,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                             wechatHomeProjectListCustomize.setOnTime(wechatHomeProjectListCustomize.getOnTime());
                             break;
                         case "11":
-                            wechatHomeProjectListCustomize.setOnTime("立即投资");
+                            wechatHomeProjectListCustomize.setOnTime("立即出借");
                             break;
                         case "12":
                             wechatHomeProjectListCustomize.setOnTime("复审中");
@@ -1358,7 +1384,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                             customize.setOnTime(project.getOnTime());
                             break;
                         case "11":
-                            customize.setOnTime("立即投资");
+                            customize.setOnTime("立即出借");
                             break;
                         case "12":
                             customize.setOnTime("复审中");
@@ -1403,7 +1429,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         List<AppProjectListCustomizeVO> listNewOnTime = amTradeClient.searchAppProjectList(request);
 
 
-        // 取得新手汇项目（投资中）
+        // 取得新手汇项目（出借中）
         String statusNewInvest = "15";
         request.setStatus(statusNewInvest);
         // 查询首页定时发标的项目
@@ -1417,7 +1443,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 projectList.add(newInvest);
             }
         }
-        // 新手汇项目（投资中）为空
+        // 新手汇项目（出借中）为空
         if (projectList.size() == 0) {
             if (listNewOnTime != null && listNewOnTime.size() > 0) {
                 for (int i = 0; i < listNewOnTime.size(); i++) {

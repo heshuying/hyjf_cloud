@@ -8,7 +8,7 @@ spring:
     config:
       server:
 #        native:
-#          searchLocations: D:/hyjf/git/1030/micro-deploy/src/main/resources
+#          searchLocations: I:/micro-deploy/src/main/resources
         git:
           uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
           searchPaths: src/main/resources

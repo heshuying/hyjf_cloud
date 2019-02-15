@@ -59,7 +59,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	/** 用户名 */
 	private static final String VAL_NAME = "val_name";
 
-	/** 投资订单号 */
+	/** 出借订单号 */
 	private static final String VAL_ORDER_ID = "order_id";
 
 	/** 性别 */
@@ -84,10 +84,10 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	/** 还款明细ID */
 	private static final String PARAM_BORROWRECOVERID = "param_borrowrecoverid";
 
-	/** 优惠券投资 */
+	/** 优惠券出借 */
 	private static final String COUPON_TYPE = "coupon_type";
 
-	/** 优惠券投资订单编号 */
+	/** 优惠券出借订单编号 */
 	private static final String TENDER_NID = "tender_nid";
 
 	/** 任务状态:未执行 */
@@ -130,7 +130,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //		Users borrowUser = this.getUsersByUserId(borrowUserid);
 		/** 标的基本数据 */
 		// 取得标的详情
-		Borrow borrow = getBorrow(borrowNid);
+		Borrow borrow = getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
 		Map<String, String> msg = new HashMap<String, String>();
 		retMsgList.add(msg);
@@ -159,9 +159,9 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 		// 是否月标(true:月标, false:天标)
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
-		// 投资人用户ID
+		// 出借人用户ID
 		Integer outUserId = borrowTender.getUserId();
-		// 投资费用
+		// 出借费用
 		BigDecimal tenderAccount = BigDecimal.ZERO;
 		// 利息
 		BigDecimal interestTender = BigDecimal.ZERO;
@@ -169,9 +169,9 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 		String loanOrderDate = GetOrderIdUtils.getOrderDate();
 		// 估计还款时间
 		Integer recoverTime = null;
-		// 投资订单号
+		// 出借订单号
 		String ordId = borrowTender.getOrderId();
-		// 投资金额
+		// 出借金额
 		tenderAccount = borrowTender.getAccount();
 		// 计算利息
 		InterestInfo interestInfo = CalculatesUtil.getInterestInfo(tenderAccount, borrowPeriod, extraYieldApr, borrowStyle, borrowSuccessTime, borrowMonthRate, borrowManagerScaleEnd, projectType,
@@ -183,12 +183,12 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 		}
 		// 写入还款明细表(hyjf_increase_interest_loan)
 		IncreaseInterestLoan increaseInterestLoan = new IncreaseInterestLoan();
-		increaseInterestLoan.setUserId(borrowTender.getUserId()); // 投资人
+		increaseInterestLoan.setUserId(borrowTender.getUserId()); // 出借人
 		increaseInterestLoan.setUserName(borrowTender.getCreateUserName());
 		increaseInterestLoan.setBorrowNid(borrowNid); // 借款编号
-		increaseInterestLoan.setInvestId(borrowTender.getId());// 投资id
-		increaseInterestLoan.setInvestOrderId(ordId); // 投资订单号
-		increaseInterestLoan.setInvestAccount(borrowTender.getAccount());// 投资金额
+		increaseInterestLoan.setInvestId(borrowTender.getId());// 出借id
+		increaseInterestLoan.setInvestOrderId(ordId); // 出借订单号
+		increaseInterestLoan.setInvestAccount(borrowTender.getAccount());// 出借金额
 		increaseInterestLoan.setBorrowUserId(borrowUserid); // 借款人
 		increaseInterestLoan.setBorrowUserName(borrow.getBorrowUserName()); // 借款人
 		increaseInterestLoan.setBorrowApr(borrowApr);
@@ -210,7 +210,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 		increaseInterestLoan.setAddIp(borrowTender.getAddIp());
 		boolean borrowRecoverFlag = this.insertBorrowRecover(increaseInterestLoan) > 0 ? true : false;
 		if (borrowRecoverFlag) {
-			// 更新投资详情表
+			// 更新出借详情表
 			IncreaseInterestInvest newIncreaseInterestInvest = new IncreaseInterestInvest();
 			newIncreaseInterestInvest.setId(borrowTender.getId()); // ID
 			newIncreaseInterestInvest.setLoanOrderId(loanOrderId);
@@ -272,7 +272,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 				int borrowRepayCnt = isInsert ? this.increaseInterestRepayMapper.insertSelective(increaseInterestRepay) : this.increaseInterestRepayMapper
 						.updateByPrimaryKeySelective(increaseInterestRepay);
 				Integer lastRecoverTime = recoverTime;
-				logger.info("------------加息放款获得最后一期还款时间，标的号：" + borrowNid +",投资订单号：" + ordId);
+				logger.info("------------加息放款获得最后一期还款时间，标的号：" + borrowNid +",出借订单号：" + ordId);
 				if (borrowRepayCnt > 0 ? true : false) {
 					// [principal: 等额本金, month:等额本息,
 					// month:等额本息,end:先息后本]
@@ -285,10 +285,10 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 								monthly = interestInfo.getListMonthly().get(j);
 								if(j+1 == borrowPeriod){//最后一期的数据
 									lastRecoverTime = monthly.getRepayTime();
-                                    logger.info("------------加息放款获得最后一期还款时间，标的号：" + borrowNid +",投资订单号：" + ordId + ",还款时间：" + lastRecoverTime);
+                                    logger.info("------------加息放款获得最后一期还款时间，标的号：" + borrowNid +",出借订单号：" + ordId + ",还款时间：" + lastRecoverTime);
                                 }
 								increaseInterestLoanDetail = new IncreaseInterestLoanDetail();
-								increaseInterestLoanDetail.setUserId(outUserId); // 投资人id
+								increaseInterestLoanDetail.setUserId(outUserId); // 出借人id
 								increaseInterestLoanDetail.setBorrowNid(borrowNid); // 借款订单id
 								increaseInterestLoanDetail.setUserName(borrowTender.getCreateUserName());
 								increaseInterestLoanDetail.setBorrowUserId(borrowUserid); // 借款人ID
@@ -354,27 +354,27 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 									int borrowRepayPlanCnt = isInsert ? this.increaseInterestRepayDetailMapper.insertSelective(increaseInterestRepayDetail) : this.increaseInterestRepayDetailMapper
 											.updateByPrimaryKeySelective(increaseInterestRepayDetail);
 									if (borrowRepayPlanCnt > 0 ? false : true) {
-										throw new Exception("分期还款计划表(increaseInterestRepayDetail)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
+										throw new Exception("分期还款计划表(increaseInterestRepayDetail)写入失败!" + "[出借订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
 									}
 
 								} else {
-									throw new Exception("分期放款款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[投资订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
+									throw new Exception("分期放款款计划表(huiyingdai_borrow_recover_plan)写入失败!" + "[出借订单号：" + ordId + "]，" + "[期数：" + j + 1 + "]");
 								}
 							}
 						}
 					}
-					// 更新账户信息(投资人)
+					// 更新账户信息(出借人)
 					Account account = new Account();
 					account.setUserId(borrowTender.getUserId());
-					// 投资人资金总额 + 利息
+					// 出借人资金总额 + 利息
 					account.setBankTotal(interestTender);
-					// 投资人待收金额 + 利息+ 本金
+					// 出借人待收金额 + 利息+ 本金
 					account.setBankAwait(interestTender);
-					// 投资人待收利息
+					// 出借人待收利息
 					account.setBankAwaitInterest(interestTender);
 					boolean investaccountFlag = this.adminAccountCustomizeMapper.updateOfRTBLoansTender(account) > 0 ? true : false;
 					if (!investaccountFlag) {
-						throw new Exception("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+						throw new Exception("出借人资金记录(huiyingdai_account)更新失败!" + "[出借订单号：" + ordId + "]");
 					}else{
 						Map<String, String> map = new HashMap<>();
 						map.put(VAL_PROFIT,interestTender.toString());
@@ -389,13 +389,13 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 						sendMessage(msgMap);
 					}
 				} else {
-					throw new Exception("的总的还款信息(increaseInterestRepay)" + (isInsert ? "插入" : "更新") + "失败!" + "[投资订单号：" + ordId + "]");
+					throw new Exception("的总的还款信息(increaseInterestRepay)" + (isInsert ? "插入" : "更新") + "失败!" + "[出借订单号：" + ordId + "]");
 				}
 			} else {
-				throw new Exception("投资详情(IncreaseInterestInvest)更新失败!" + "[投资订单号：" + ordId + "]");
+				throw new Exception("出借详情(IncreaseInterestInvest)更新失败!" + "[出借订单号：" + ordId + "]");
 			}
 		} else {
-			throw new Exception("总的放款明细表(increaseInterestLoan)写入失败!" + "[投资订单号：" + ordId + "]");
+			throw new Exception("总的放款明细表(increaseInterestLoan)写入失败!" + "[出借订单号：" + ordId + "]");
 		}
 		logger.info("-----------放款结束---" + apicron.getBorrowNid() + "---------" + borrowTender.getLoanOrderId());
 		return retMsgList;
@@ -419,22 +419,6 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	}
 
 	/**
-	 * 取得借款API任务表
-	 *
-	 * @return
-	 */
-	public List<BorrowApicron> getBorrowApicronListWithRepayStatus(Integer status, Integer apiType) {
-		BorrowApicronExample example = new BorrowApicronExample();
-		BorrowApicronExample.Criteria criteria = example.createCriteria();
-		criteria.andExtraYieldRepayStatusEqualTo(status);
-		criteria.andApiTypeEqualTo(apiType);
-		example.setOrderByClause(" id asc ");
-		List<BorrowApicron> list = this.borrowApicronMapper.selectByExample(example);
-
-		return list;
-	}
-
-	/**
 	 * 更新借款API任务表
 	 *
 	 * @param id
@@ -448,22 +432,6 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 		if (record.getWebStatus() == null) {
 			record.setWebStatus(0);
 		}
-//		record.setUpdateTime(GetDate.getMyTimeInMillis());
-		return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
-	}
-
-	/**
-	 * 更新借款API任务表
-	 *
-	 * @param id
-	 * @param status
-	 * @return
-	 */
-	public int updateBorrowApicronOfRepayStatus(Integer id, Integer status) {
-		BorrowApicron record = new BorrowApicron();
-		record.setId(id);
-		record.setExtraYieldRepayStatus(status);
-//		record.setUpdateTime(GetDate.getMyTimeInMillis());
 		return this.borrowApicronMapper.updateByPrimaryKeySelective(record);
 	}
 
@@ -532,23 +500,6 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 		criteria.andBorrowNidEqualTo(borrowNid);
 		criteria.andRepayPeriodEqualTo(period);
 		List<IncreaseInterestRepayDetail> list = this.increaseInterestRepayDetailMapper.selectByExample(example);
-
-		if (list != null && list.size() > 0) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * 取得满标日志
-	 *
-	 * @return
-	 */
-	public AccountBorrow getAccountBorrow(String borrowNid) {
-		AccountBorrowExample example = new AccountBorrowExample();
-		AccountBorrowExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<AccountBorrow> list = this.accountBorrowMapper.selectByExample(example);
 
 		if (list != null && list.size() > 0) {
 			return list.get(0);
@@ -636,7 +587,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	}
 
 	/**
-	 * 发送短信(投资成功)
+	 * 发送短信(投标成功)
 	 *
 	 * @param msgList
 	 */
@@ -675,152 +626,6 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 					}
 					
 //					smsProcesser.gather(smsMessage);
-				}
-			}
-		}
-	}
-
-	/**
-	 * 发送邮件(投资成功)
-	 *
-	 * @param borrowNid
-	 */
-	public void sendMail(List<Map<String, String>> msgList, String borrowNid) {
-		if (msgList != null && msgList.size() > 0 && Validator.isNotNull(borrowNid)) {
-			for (Map<String, String> msg : msgList) {
-				try {
-					// 向每个投资人发送邮件
-					if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
-						String userId = msg.get(VAL_USERID);
-						String orderId = msg.get(VAL_ORDER_ID);
-//						Users users = getUsersByUserId(Integer.valueOf(userId));
-//						if (users == null || Validator.isNull(users.getEmail())) {
-//							return;
-//						}
-//						String email = users.getEmail();
-//						msg.put(VAL_NAME, users.getUsername());
-//						UsersInfo usersInfo = this.getUsersInfoByUserId(Integer.valueOf(userId));
-//						if (Validator.isNotNull(usersInfo) && Validator.isNotNull(usersInfo.getSex())) {
-//							if (usersInfo.getSex() % 2 == 0) {
-//								msg.put(VAL_SEX, "女士");
-//							} else {
-//								msg.put(VAL_SEX, "先生");
-//							}
-//						}
-						String fileName = borrowNid + "_" + orderId + ".pdf";
-						String filePath = systemConfig.getHYJF_MAKEPDF_TEMPPATH() + "BorrowLoans_" + GetDate.getMillis() + StringPool.FORWARD_SLASH;
-						// 查询借款人用户名
-						BorrowCommonCustomizeVO borrowCommonCustomize = new BorrowCommonCustomizeVO();
-						// 借款编码
-						borrowCommonCustomize.setBorrowNidSrch(borrowNid);
-						List<BorrowCustomizeVO> recordList = this.selectBorrowList(borrowCommonCustomize);
-						if (recordList != null && recordList.size() == 1) {
-							Map<String, Object> contents = new HashMap<String, Object>();
-							 contents.put("record", recordList.get(0));
-							contents.put("borrowNid", borrowNid);
-							contents.put("nid", orderId);
-							// 借款人用户名
-							contents.put("borrowUsername", recordList.get(0).getUsername().substring(0,1)+"**");
-							// 本笔的放款完成时间 (协议签订日期)
-							contents.put("recoverTime", msg.get(VAL_LOAN_TIME));
-							// 用户投资列表
-							List<WebUserInvestListCustomize> userInvestList = this.selectUserInvestList(borrowNid, userId, orderId, -1, -1);
-							if (userInvestList != null && userInvestList.size() == 1) {
-								contents.put("userInvest", userInvestList.get(0));
-							} else {
-								logger.info("标的投资信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。投资订单号:" + orderId);
-								return;
-							}
-							// 如果是分期还款，查询分期信息
-							String borrowStyle = recordList.get(0).getBorrowStyle();// 还款模式
-							if (borrowStyle != null) {
-							  //计算预期收益
-		                        BigDecimal earnings = new BigDecimal("0");
-		                        // 收益率
-		                        
-		                        String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
-		                        BigDecimal borrowApr = new BigDecimal(borrowAprString);
-		                        //投资金额
-		                        String accountString = StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
-		                        BigDecimal account = new BigDecimal(accountString);
-		                       // 周期
-		                        String borrowPeriodString = StringUtils.isEmpty(recordList.get(0).getBorrowPeriod())?"0":recordList.get(0).getBorrowPeriod();
-		                        String regEx="[^0-9]";   
-		                        Pattern p = Pattern.compile(regEx);   
-		                        Matcher m = p.matcher(borrowPeriodString); 
-		                        borrowPeriodString = m.replaceAll("").trim();
-		                        Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
-		                        if (StringUtils.equals("endday", borrowStyle)){
-		                            // 还款方式为”按天计息，到期还本还息“：预期收益=投资金额*年化收益÷365*锁定期；
-		                            earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
-		                        } else {
-		                            // 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
-		                            earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
-
-		                        }
-		                        contents.put("earnings", earnings);
-								if ("month".equals(borrowStyle) || "principal".equals(borrowStyle) || "endmonth".equals(borrowStyle)) {
-									int recordTotal = this.countProjectRepayPlanRecordTotal(borrowNid, userId, orderId);
-									if (recordTotal > 0) {
-										Paginator paginator = new Paginator(1, recordTotal);
-										List<WebProjectRepayListCustomize> repayList = this.selectProjectRepayPlanList(borrowNid, userId, orderId, paginator.getOffset(), paginator.getLimit());
-										contents.put("paginator", paginator);
-										contents.put("repayList", repayList);
-									} else {
-										Paginator paginator = new Paginator(1, recordTotal);
-										contents.put("paginator", paginator);
-										contents.put("repayList", "");
-									}
-								}
-							}
-							String pdfUrl = new PdfGenerator().generateLocal(fileName, CustomConstants.TENDER_CONTRACT, contents);
-							if (StringUtils.isNotEmpty(pdfUrl)) {
-								File path = new File(filePath);
-								if (!path.exists()) {
-									path.mkdirs();
-								}
-								FileUtil.getRemoteFile(pdfUrl.substring(0, pdfUrl.length() - 1), filePath + fileName);
-							}
-//							String[] emails = { email };
-							String[] emails = null; //TODO: 却让你邮件功能是否有根据userId取出邮件地址
-							MailMessage message = new MailMessage(Integer.valueOf(userId), msg, "汇盈金服互联网金融服务平台居间服务协议", null, new String[] { filePath + fileName }, emails,
-									CustomConstants.EMAILPARAM_TPL_LOANS, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
-//							mailMessageProcesser.gather(message);
-							
-							try {
-								commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, userId, message));
-							} catch (Exception e2) {
-								logger.error("发送邮件失败..", e2);
-							}
-							
-							
-							// modify by zhangjp 优惠券放款相关 start
-							// 是否优惠券投资
-							if (StringUtils.equals(msg.get(COUPON_TYPE), "1")) {
-								CouponRecoverExample example = new CouponRecoverExample();
-								example.createCriteria().andTenderIdEqualTo(msg.get(TENDER_NID));
-								CouponRecover rc = new CouponRecover();
-								rc.setNoticeFlg(1);
-								// 将所有该笔投资的放款记录（分期或不分期）都改成通知状态
-								this.couponRecoverMapper.updateByExampleSelective(rc, example);
-							} else {
-								// 更新BorrowRecover邮件发送状态
-								String borrowRecoverId = msg.get(PARAM_BORROWRECOVERID);
-								if (Validator.isNotNull(borrowRecoverId) && NumberUtils.isCreatable(borrowRecoverId)) {
-									BorrowRecover borrowRecover = new BorrowRecover();
-									borrowRecover.setId(Integer.valueOf(borrowRecoverId));
-									borrowRecover.setSendmail(1);
-									this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover);
-								}
-							}
-							// modify by zhangjp 优惠券放款相关 end
-						} else {
-							logger.info("标的信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
-							return;
-						}
-					}
-				} catch (Exception e) {
-					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -909,7 +714,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 					String borrowNid = apicron.getBorrowNid();
 					// 借款人ID
 					Integer borrowUserId = apicron.getUserId();
-					// 取得投资详情列表
+					// 取得出借详情列表
 					List<IncreaseInterestInvest> listTender = getBorrowTenderList(borrowNid);
 					if (listTender != null && listTender.size() > 0) {
 						// 取得借款人账户信息
@@ -923,15 +728,15 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //							throw new Exception("借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 //						}
 						// 取得借款详情
-						Borrow borrow = getBorrow(borrowNid);
+						Borrow borrow = getBorrowByNid(borrowNid);
 						if (borrow == null) {
 							throw new Exception("借款详情不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 						}
-						// 投资信息
+						// 出借信息
 						IncreaseInterestInvest borrowTender = null;
-						// 投资总件数
+						// 出借总件数
 						int size = listTender.size();
-						/** 循环投资详情列表 */
+						/** 循环出借详情列表 */
 						for (int i = 0; i < size; i++) {
 							borrowTender = listTender.get(i);
 							try {

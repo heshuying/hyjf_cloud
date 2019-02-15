@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -456,6 +457,18 @@ public class DateUtils {
 		return calendar.getTime();
 	}
 	/**
+	 * 设置时间（秒）加当前系统时间
+	 * @param loginLockTime
+	 * @return
+	 */
+	public static String nowDateAddSecond(int loginLockTime) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.SECOND, loginLockTime);
+		int time = calendar.get(Calendar.HOUR_OF_DAY); // 获取当前小时
+		int min = calendar.get(Calendar.MINUTE); // 获取当前分钟
+		return time + ":" + min;
+	}
+	/**
 	 * 获取当前月的结束日期
 	 * @param date 2018-01-01:当前日日期
 	 * @return  2018-01-31
@@ -613,7 +626,27 @@ public class DateUtils {
 		return retStr;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(differentDaysByString("1552442106","1555120506"));
+	/**
+	 * 字符日期格式比较
+	 * @return
+	 */
+	public static Boolean compareDateToString(String startDate,String endDate) {
+		DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		Boolean isBefore = false;
+		try {
+			Date d1 = dateFormat.parse(startDate);
+			Date d2 = dateFormat.parse(endDate);
+			if(d1.before(d2)){
+				System.out.println(startDate+"在"+endDate+"之前");
+				isBefore = true;
+			}else if(d1.after(d2)){
+				System.out.println(startDate+"在"+endDate+"之后");
+				isBefore = false;
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return  isBefore;
 	}
 }

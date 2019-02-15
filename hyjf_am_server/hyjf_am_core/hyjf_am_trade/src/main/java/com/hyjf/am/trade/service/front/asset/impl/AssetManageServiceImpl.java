@@ -115,7 +115,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         Map<String, Object> mapParameter = createWechatParame(request);
         int total = assetManageCustomizeMapper.selectCurrentHoldObligatoryRightListTotal(mapParameter);
         if (total > 0) {
-            //update by jijun 按照投资时间排序
+            //update by jijun 按照出借时间排序
             List<CurrentHoldObligatoryRightListCustomize> lst = assetManageCustomizeMapper.selectCurrentHoldObligatoryRightList(mapParameter);
             for (CurrentHoldObligatoryRightListCustomize customize: lst) {
                 String capital = customize.getCapital();
@@ -319,7 +319,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
      */
     @Override
     public RepayPlanResponse getRepayPlanInfo(String borrowNid, String nid, String type){
-        //type 投资记录类型  0现金投资，1部分债转，2债权承接，3优惠券投资，4 融通宝产品加息
+        //type 出借记录类型  0现金出借，1部分债转，2债权承接，3优惠券出借，4 融通宝产品加息
         RepayPlanResponse response = new RepayPlanResponse();
         Borrow borrow = null;
         Map<String, Object> params = new HashMap<String, Object>();
@@ -327,21 +327,21 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         params.put("nid", nid);
         switch (type) {
             case "0":
-                borrow= this.getBorrow(borrowNid);
+                borrow= this.getBorrowByNid(borrowNid);
                 if(borrow == null){
                     logger.error("未查询到标的信息，标的编号:{}", borrowNid);
                     break;
                 }
                 if("endday".equals(borrow.getBorrowStyle())||"end".equals(borrow.getBorrowStyle())){
-                    //真实投资不分期还款计划查询
+                    //真实出借不分期还款计划查询
                     response = this.realInvestmentRepaymentPlanNoStages(params);
                 } else {
-                    //真实投资分期还款计划查询
+                    //真实出借分期还款计划查询
                     response = this.realInvestmentRepaymentPlanStages(params);
                 }
                 break;
             case "1":
-                borrow = this.getBorrow(borrowNid);
+                borrow = this.getBorrowByNid(borrowNid);
                 if(borrow == null){
                     logger.error("未查询到标的信息，标的编号:{}", borrowNid);
                     break;
@@ -364,7 +364,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 response = this.couponRepaymentPlan(params);
                 break;
             case "4":
-                borrow=this.getBorrow(borrowNid);
+                borrow=this.getBorrowByNid(borrowNid);
                 if(borrow == null){
                     logger.error("未查询到标的信息，标的编号:{}", borrowNid);
                     break;
@@ -382,27 +382,27 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
     }
 
     /**
-     * 真实投资不分期还款计划查询
+     * 真实出借不分期还款计划查询
      * @param params
      * @return
      */
     private RepayPlanResponse realInvestmentRepaymentPlanNoStages(Map<String, Object> params){
-        // 获取当前持有现金投资不分期还款计划列表
+        // 获取当前持有现金出借不分期还款计划列表
         List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.realInvestmentRepaymentPlanNoStagesList(params);
-        //获取当前持有现金投资不分期还款计划详情
+        //获取当前持有现金出借不分期还款计划详情
         CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.realInvestmentRepaymentPlanNoStagesDetails(params);
         return setResponse(list, details);
     }
 
     /**
-     * 真实投资分期还款计划查询
+     * 真实出借分期还款计划查询
      * @param params
      * @return
      */
     private RepayPlanResponse realInvestmentRepaymentPlanStages(Map<String, Object> params){
-        //获取当前持有现金投资分期还款计划列表
+        //获取当前持有现金出借分期还款计划列表
         List<CurrentHoldRepayMentPlanListCustomize> list = assetManageCustomizeMapper.realInvestmentRepaymentPlanStagesList(params);
-        //获取当前持有现金投资分期还款计划详情
+        //获取当前持有现金出借分期还款计划详情
         CurrentHoldRepayMentPlanDetailsCustomize details = assetManageCustomizeMapper.realInvestmentRepaymentPlanStagesDetails(params);
         return setResponse(list, details);
     }

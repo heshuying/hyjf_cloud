@@ -46,13 +46,7 @@ public class MongoSeachController extends BaseController {
     AccountWebListDao accountWebListDao;
 
     @Autowired
-    private CalculateInvestInterestDao calculateInvestInterestDao;
-
-    @Autowired
     private TotalInvestAndInterestMongoDao totalInvestAndInterestMongoDao;
-
-    @Autowired
-    private HjhPlanCapitalDao hjhPlanCapitalDao;
 
     @Autowired
     BankReturnConfig bankReturnConfig;
@@ -99,21 +93,24 @@ public class MongoSeachController extends BaseController {
     }
 
     @RequestMapping(value = "/queryWebCount")
-    public AccountWebListResponse queryWebList(@RequestBody AccountWebListVO accountWebList) {
-        AccountWebListResponse response = new AccountWebListResponse();
-        int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
-        if (recordTotal > 0) {
-            Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
-            List<AccountWebList> recordList = accountWebListDao.queryWebList(accountWebList, paginator.getOffset(), paginator.getLimit());
-            if (recordList != null) {
-                List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList, AccountWebListVO.class);
-                response.setResultList(voList);
-                response.setRecordTotal(recordTotal);
-                response.setRtn(Response.SUCCESS);
-            }
-        }
-        return response;
-    }
+	public AccountWebListResponse queryWebList(@RequestBody AccountWebListVO accountWebList) {
+		AccountWebListResponse response = new AccountWebListResponse();
+		int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
+		logger.debug("网站明细总条数recordTotal==" + recordTotal);
+		if (recordTotal > 0) {
+			Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,
+					accountWebList.getPageSize());
+			List<AccountWebList> recordList = accountWebListDao.queryWebList(accountWebList, paginator.getOffset(),
+					paginator.getLimit());
+			if (recordList != null) {
+				List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList, AccountWebListVO.class);
+				response.setResultList(voList);
+				response.setRecordTotal(recordTotal);
+				response.setRtn(Response.SUCCESS);
+			}
+		}
+		return response;
+	}
 
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(@RequestBody AccountWebListVO accountWebList){
@@ -123,7 +120,7 @@ public class MongoSeachController extends BaseController {
     }
 
     /**
-     * 获取累计投资金额
+     * 获取累计出借金额
      *
      * @return
      */
@@ -158,7 +155,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping(value = "/getassociatedrecordscount")
+    @PostMapping(value = "/getAssociatedRecordsCount")
     public AssociatedRecordListResponse getDirectionalTransferCount(@RequestBody AssociatedRecordListRequest request){
         AssociatedRecordListResponse response = new AssociatedRecordListResponse();
         long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
@@ -173,7 +170,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping("/searchassociatedrecordlist")
+    @PostMapping("/searchAssociatedRecordList")
     public AssociatedRecordListResponse searchDirectionalTransferList(@RequestBody AssociatedRecordListRequest request){
         AssociatedRecordListResponse response = new AssociatedRecordListResponse();
         Long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
@@ -199,7 +196,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping(value = "/getassociatedlogcount")
+    @PostMapping(value = "/getAssociatedLogCount")
     public BindLogResponse getDirectionalTransferLogCount(@RequestBody BindLogListRequest request){
         BindLogResponse response = new BindLogResponse();
         long count = directionalTransferAssociatedLogDao.getDirectionalTransferLogCount(request);
@@ -214,7 +211,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping("/searchassociatedloglist")
+    @PostMapping("/searchAssociatedLogList")
     public BindLogResponse searchDirectionalTransferLogList(@RequestBody BindLogListRequest request){
         BindLogResponse response = new BindLogResponse();
         Long count = directionalTransferAssociatedLogDao.getDirectionalTransferLogCount(request);

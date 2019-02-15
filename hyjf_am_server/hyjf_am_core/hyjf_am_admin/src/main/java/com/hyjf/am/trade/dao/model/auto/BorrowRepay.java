@@ -5,80 +5,270 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BorrowRepay implements Serializable {
+    /**
+     * ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 借款人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 标的编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 标识名(标的编号_借款人用户ID_1)放款时更新
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 实际还款人（借款人、担保机构、保证金）的用户ID
+     *
+     * @mbggenerated
+     */
     private Integer repayUserId;
 
+    /**
+     * 还款状态(wait,wait_yes)
+     *
+     * @mbggenerated
+     */
     private String repayType;
 
+    /**
+     * 还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayFee;
 
+    /**
+     * 执行还款的时间
+     *
+     * @mbggenerated
+     */
     private Integer repayActionTime;
 
+    /**
+     * 还款期数
+     *
+     * @mbggenerated
+     */
     private Integer repayPeriod;
 
+    /**
+     * 下期还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayTime;
 
+    /**
+     * 已经还款时间
+     *
+     * @mbggenerated
+     */
     private Integer repayYestime;
 
+    /**
+     * 还款总额，加上费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountAll;
 
+    /**
+     * 应还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccount;
 
+    /**
+     * 应还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterest;
 
+    /**
+     * 应还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapital;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccountYes;
 
+    /**
+     * 逾期的天数
+     *
+     * @mbggenerated
+     */
     private Integer lateRepayDays;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestYes;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalYes;
 
+    /**
+     * 未还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayCapitalWait;
 
+    /**
+     * 未还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayInterestWait;
 
+    /**
+     * 提前还款天数
+     *
+     * @mbggenerated
+     */
     private Integer chargeDays;
 
+    /**
+     * 提前还款减息
+     *
+     * @mbggenerated
+     */
     private BigDecimal chargeInterest;
 
+    /**
+     * 逾期天数
+     *
+     * @mbggenerated
+     */
     private Integer lateDays;
 
+    /**
+     * 逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal lateInterest;
 
+    /**
+     * 延期天数
+     *
+     * @mbggenerated
+     */
     private Integer delayDays;
 
+    /**
+     * 延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal delayInterest;
 
+    /**
+     * 延期备注说明
+     *
+     * @mbggenerated
+     */
     private String delayRemark;
 
+    /**
+     * 还款来源（1、借款人还款，2、机构垫付，3、保证金垫付）
+     *
+     * @mbggenerated
+     */
     private Integer repayMoneySource;
 
+    /**
+     * 还款短信提醒(0:未发送提醒,1:还款前三天提醒,2:还款当天提醒)
+     *
+     * @mbggenerated
+     */
     private Integer repaySmsReminder;
 
+    /**
+     * 状态(初始:0,放款成功后更新成:1)
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 是否自动还款 0:非自动还款 1:是自动还款
+     *
+     * @mbggenerated
+     */
     private Integer autoRepay;
 
+    /**
+     * 0:正常,1:提前,2:延期,3:逾期
+     *
+     * @mbggenerated
+     */
     private Integer advanceStatus;
 
+    /**
+     * 还款状态(0:未还款,1:已还款)
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 实际还款人（借款人、担保机构、保证金）的用户名
+     *
+     * @mbggenerated
+     */
     private String repayUsername;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

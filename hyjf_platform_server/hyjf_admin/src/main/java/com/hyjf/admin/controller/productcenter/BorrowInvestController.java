@@ -49,7 +49,7 @@ import java.util.Map;
  * @author wangjun
  * @version BorrowInvestController, v0.1 2018/7/10 9:06
  */
-@Api(value = "产品中心-汇直投-投资明细", tags = "产品中心-汇直投-投资明细")
+@Api(value = "产品中心-汇直投-出借明细", tags = "产品中心-汇直投-出借明细")
 @RestController
 @RequestMapping("/hyjf-admin/borrow_invest")
 public class BorrowInvestController extends BaseController {
@@ -68,11 +68,11 @@ public class BorrowInvestController extends BaseController {
     public static final String PERMISSIONS = "borrowinvest";
 
     /**
-     * 投资明细初始化
+     * 出借明细初始化
      *
      * @return
      */
-    @ApiOperation(value = "投资明细初始化", notes = "投资明细初始化")
+    @ApiOperation(value = "出借明细初始化", notes = "出借明细初始化")
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowInvestResponseBean> init() {
@@ -83,7 +83,7 @@ public class BorrowInvestController extends BaseController {
         //操作平台
         List<DropDownVO> clientList = adminCommonService.getParamNameList("CLIENT");
         responseBean.setClientList(clientList);
-        //投资方式
+        //出借方式
         List<DropDownVO> investTypeList = adminCommonService.getParamNameList("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         // 资产来源
@@ -96,12 +96,12 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 投资明细列表查询
+     * 出借明细列表查询
      *
      * @param borrowInvestRequestBean
      * @return
      */
-    @ApiOperation(value = "投资明细列表查询/运营记录-投资明细", notes = "投资明细列表查询/运营记录-投资明细")
+    @ApiOperation(value = "出借明细列表查询/运营记录-出借明细", notes = "出借明细列表查询/运营记录-出借明细")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowInvestResponseBean> getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
@@ -113,14 +113,14 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 投资明细列表导出
+     * 出借明细列表导出
      *
      * @param request
      * @param response
      * @param borrowInvestRequestBean
      * @throws Exception
      */
-    /*@ApiOperation(value = "投资明细列表导出", notes = "投资明细列表导出")
+    /*@ApiOperation(value = "出借明细列表导出", notes = "出借明细列表导出")
     @PostMapping("/export_list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportList(HttpServletRequest request, HttpServletResponse response, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) throws Exception {
@@ -128,14 +128,14 @@ public class BorrowInvestController extends BaseController {
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
         // 表格sheet名称
-        String sheetName = "投资明细";
+        String sheetName = "出借明细";
 
         List<BorrowInvestCustomizeVO> resultList = this.borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[]{"序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型", "借款期限", "年化利率", "还款方式", "投资订单号", "冻结订单号", "投资人用户名", "投资人ID", "投资人用户属性（当前）", "投资人所属一级分部（当前）", "投资人所属二级分部（当前）", "投资人所属团队（当前）", "推荐人（当前）", "推荐人ID（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）",
-                "投资人用户属性（投资时）", "推荐人用户属性（投资时）", "推荐人（投资时）", "推荐人ID（投资时）", "一级分部（投资时）", "二级分部（投资时）", "团队（投资时）", "投资金额", "操作平台", "投资方式", "投资时间", "合同编号", "合同状态", "合同名称", "模版编号", "合同生成时间", "合同签署时间", "复投投资(是/否)"};
+        String[] titles = new String[]{"序号", "项目编号", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型", "借款期限", "年化利率", "还款方式", "出借订单号", "冻结订单号", "出借人用户名", "出借人ID", "出借人用户属性（当前）", "出借人所属一级分部（当前）", "出借人所属二级分部（当前）", "出借人所属团队（当前）", "推荐人（当前）", "推荐人ID（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）",
+                "出借人用户属性（出借时）", "推荐人用户属性（出借时）", "推荐人（出借时）", "推荐人ID（出借时）", "一级分部（出借时）", "二级分部（出借时）", "团队（出借时）", "出借金额", "操作平台", "出借方式", "出借时间", "合同编号", "合同状态", "合同名称", "模版编号", "合同生成时间", "合同签署时间", "复投投标(是/否)"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -168,7 +168,7 @@ public class BorrowInvestController extends BaseController {
                     if (celLength == 0) {
                         cell.setCellValue(i + 1);
                     }
-                    // 借款编号
+                    // 项目编号
                     else if (celLength == 1) {
                         cell.setCellValue(record.getBorrowNid());
                     }
@@ -196,7 +196,7 @@ public class BorrowInvestController extends BaseController {
                     else if (celLength == 7) {
                         cell.setCellValue(record.getBorrowPeriod());
                     }
-                    // 年化收益
+                    // 出借利率
                     else if (celLength == 8) {
                         cell.setCellValue(record.getBorrowApr());
                     }
@@ -205,7 +205,7 @@ public class BorrowInvestController extends BaseController {
                         cell.setCellValue(record.getBorrowStyleName());
                     }
 
-                    // 投资订单号
+                    // 出借订单号
                     else if (celLength == 10) {
                         cell.setCellValue(record.getTenderOrderNum());
                     }
@@ -213,15 +213,15 @@ public class BorrowInvestController extends BaseController {
                     else if (celLength == 11) {
                         cell.setCellValue(record.getFreezeOrderNum());
                     }
-                    // 投资人用户名
+                    // 出借人用户名
                     else if (celLength == 12) {
                         cell.setCellValue(record.getTenderUsername());
                     }
-                    // 投资人ID
+                    // 出借人ID
                     else if (celLength == 13) {
                         cell.setCellValue(record.getTenderUserId());
                     }
-                    // 投资人用户属性（当前）
+                    // 出借人用户属性（当前）
                     else if (celLength == 14) {
                         if ("0".equals(record.getTenderUserAttributeNow())) {
                             cell.setCellValue("无主单");
@@ -233,15 +233,15 @@ public class BorrowInvestController extends BaseController {
                             cell.setCellValue("线上员工");
                         }
                     }
-                    // 投资人所属一级分部（当前）
+                    // 出借人所属一级分部（当前）
                     else if (celLength == 15) {
                         cell.setCellValue(record.getTenderRegionName());
                     }
-                    // 投资人所属二级分部（当前）
+                    // 出借人所属二级分部（当前）
                     else if (celLength == 16) {
                         cell.setCellValue(record.getTenderBranchName());
                     }
-                    // 投资人所属团队（当前）
+                    // 出借人所属团队（当前）
                     else if (celLength == 17) {
                         cell.setCellValue(record.getTenderDepartmentName());
                     }
@@ -269,37 +269,37 @@ public class BorrowInvestController extends BaseController {
                     else if (celLength == 23) {
                         cell.setCellValue(record.getReferrerDepartmentName());
                     }
-                    // 投资人用户属性（投资时）
+                    // 出借人用户属性（出借时）
                     else if (celLength == 24) {
                         cell.setCellValue(record.getTenderUserAttribute());
                     }
-                    // 推荐人用户属性（投资时）
+                    // 推荐人用户属性（出借时）
                     else if (celLength == 25) {
                         cell.setCellValue(
                                 "0".equals(record.getTenderReferrerUserId()) ? "" : record.getInviteUserAttribute());
                     }
-                    // 推荐人（投资时）
+                    // 推荐人（出借时）
                     else if (celLength == 26) {
                         cell.setCellValue(record.getTenderReferrerUsername());
                     }
-                    // 推荐人ID（投资时）
+                    // 推荐人ID（出借时）
                     else if (celLength == 27) {
                         cell.setCellValue(
                                 "0".equals(record.getTenderReferrerUserId()) ? "" : record.getTenderReferrerUserId());
                     }
-                    // 一级分部（投资时）
+                    // 一级分部（出借时）
                     else if (celLength == 28) {
                         cell.setCellValue(record.getDepartmentLevel1Name());
                     }
-                    // 二级分部（投资时）
+                    // 二级分部（出借时）
                     else if (celLength == 29) {
                         cell.setCellValue(record.getDepartmentLevel2Name());
                     }
-                    // 团队（投资时）
+                    // 团队（出借时）
                     else if (celLength == 30) {
                         cell.setCellValue(record.getTeamName());
                     }
-                    // 投资金额
+                    // 出借金额
                     else if (celLength == 31) {
                         cell.setCellValue(record.getAccount());
                     }
@@ -307,11 +307,11 @@ public class BorrowInvestController extends BaseController {
                     else if (celLength == 32) {
                         cell.setCellValue(record.getOperatingDeck());
                     }
-                    // 投资方式
+                    // 出借方式
                     else if (celLength == 33) {
                         cell.setCellValue(record.getInvestType());
                     }
-                    // 投资时间
+                    // 出借时间
                     else if (celLength == 34) {
                         cell.setCellValue(record.getCreateTime());
                     }
@@ -360,14 +360,14 @@ public class BorrowInvestController extends BaseController {
 
 
     /**
-     * 投资明细列表导出
+     * 出借明细列表导出
      *
      * @param request
      * @param response
      * @param borrowInvestRequestBean
      * @throws Exception
      */
-    @ApiOperation(value = "投资明细列表导出", notes = "投资明细列表导出")
+    @ApiOperation(value = "出借明细列表导出", notes = "出借明细列表导出")
     @PostMapping("/export_list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportList(HttpServletRequest request, HttpServletResponse response, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) throws Exception {
@@ -386,7 +386,7 @@ public class BorrowInvestController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "投资明细";
+        String sheetName = "出借明细";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
@@ -426,24 +426,24 @@ public class BorrowInvestController extends BaseController {
 
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid", "借款编号");
+        map.put("borrowNid", "项目编号");
         map.put("planNid", "智投编号");
         map.put("userId", "借款人ID");
         map.put("username", "借款人用户名");
-        map.put("borrowName", "借款标题");
+//        map.put("borrowName", "借款标题");
         map.put("borrowProjectTypeName", "项目类型");
-        map.put("borrowPeriod", "借款期限");
-        map.put("borrowApr", "年化利率");
+        map.put("borrowPeriod", "项目期限");
+        map.put("borrowApr", "出借利率");
         map.put("borrowStyleName", "还款方式");
-        map.put("tenderOrderNum", "投资订单号");
+        map.put("tenderOrderNum", "出借订单号");
         map.put("freezeOrderNum", "冻结订单号");
-        map.put("tenderUsername", "投资人用户名");
-        map.put("tenderUserId", "投资人ID");
-        map.put("tenderUserAttributeNow", "投资人用户属性（当前）");
+        map.put("tenderUsername", "出借人用户名");
+        map.put("tenderUserId", "出借人ID");
+        map.put("tenderUserAttributeNow", "出借人用户属性（当前）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("tenderRegionName", "投资人所属一级分部（当前）");
-            map.put("tenderBranchName", "投资人所属二级分部（当前）");
-            map.put("tenderDepartmentName", "投资人所属团队（当前）");
+            map.put("tenderRegionName", "出借人所属一级分部（当前）");
+            map.put("tenderBranchName", "出借人所属二级分部（当前）");
+            map.put("tenderDepartmentName", "出借人所属团队（当前）");
         }
         map.put("referrerName", "推荐人（当前）");
         map.put("referrerUserId", "推荐人ID（当前）");
@@ -453,26 +453,26 @@ public class BorrowInvestController extends BaseController {
             map.put("referrerBranchName", "推荐人所属二级分部（当前）");
             map.put("referrerDepartmentName", "推荐人所属团队（当前）");
         }
-        map.put("tenderUserAttribute", "投资人用户属性（投资时）");
-        map.put("inviteUserAttribute", "推荐人用户属性（投资时）");
-        map.put("tenderReferrerUsername", "推荐人（投资时）");
-        map.put("tenderReferrerUserId", "推荐人ID（投资时）");
+        map.put("tenderUserAttribute", "出借人用户属性（出借时）");
+        map.put("inviteUserAttribute", "推荐人用户属性（出借时）");
+        map.put("tenderReferrerUsername", "推荐人（出借时）");
+        map.put("tenderReferrerUserId", "推荐人ID（出借时）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("departmentLevel1Name", "一级分部（投资时）");
-            map.put("departmentLevel2Name", "二级分部（投资时）");
-            map.put("teamName", "团队（投资时）");
+            map.put("departmentLevel1Name", "一级分部（出借时）");
+            map.put("departmentLevel2Name", "二级分部（出借时）");
+            map.put("teamName", "团队（出借时）");
         }
-        map.put("account", "授权服务金额");
+        map.put("account", "出借金额");
         map.put("operatingDeck", "操作平台");
-        map.put("investType", "投资方式");
-        map.put("createTime", "投资时间");
+        map.put("investType", "投标方式");
+        map.put("createTime", "出借时间");
         map.put("contractNumber", "合同编号");
         map.put("contractStatus", "合同状态");
         map.put("contractName", "合同名称");
         map.put("templetId", "模版编号");
         map.put("contractCreateTime", "合同生成时间");
         map.put("contractSignTime", "合同签署时间");
-        map.put("tenderType", "复投投资(是/否)");
+        map.put("tenderType", "循环出借");
 
         return map;
     }
@@ -553,12 +553,12 @@ public class BorrowInvestController extends BaseController {
 
 
     /**
-     * 投资人债权明细
+     * 出借人债权明细
      *
      * @param request
      * @return
      */
-    @ApiOperation(value = "投资人债权明细", notes = "投资人债权明细")
+    @ApiOperation(value = "出借人债权明细", notes = "出借人债权明细")
     @PostMapping("/debt_info")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DEBTCHECK)
     public AdminResult<BorrowInvestResponseBean> debtInfo(@RequestBody BorrowInvestDebtInfoRequest request) {
@@ -574,7 +574,7 @@ public class BorrowInvestController extends BaseController {
      * @return
      */
     @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
-    @ApiImplicitParam(name = "nid", value = "投资订单号", required = true, dataType = "String", paramType = "path")
+    @ApiImplicitParam(name = "nid", value = "出借订单号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/pdf_preview/{nid}")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_PDF_PREVIEW)
     public AdminResult<BorrowInvestResponseBean> pdfPreview(@PathVariable String nid) {
@@ -623,12 +623,12 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 运营记录-投资明细
+     * 运营记录-出借明细
      *
      * @param requestBean
      * @return
      */
-    @ApiOperation(value = "运营记录-投资明细", notes = "运营记录-投资明细")
+    @ApiOperation(value = "运营记录-出借明细", notes = "运营记录-出借明细")
     @PostMapping("/optaction_init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowInvestResponseBean> optRecordTender(@RequestBody BorrowInvestRequestBean requestBean) {

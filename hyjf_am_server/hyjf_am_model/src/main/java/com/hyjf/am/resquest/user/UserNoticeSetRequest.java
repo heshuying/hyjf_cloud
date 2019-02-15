@@ -21,12 +21,12 @@ public class UserNoticeSetRequest extends BaseVO {
 	private Integer withdrawSms;
 
 	/**
-	 * 投资成功短信 0发送1不发送
+	 * 投标成功短信 0发送1不发送
 	 */
 	private Integer investSms;
 
 	/**
-	 * 是否发送投资协议邮件 0发送 1不发送
+	 * 是否发送出借协议邮件 0发送 1不发送
 	 */
 	private Integer isSmtp;
 	/**

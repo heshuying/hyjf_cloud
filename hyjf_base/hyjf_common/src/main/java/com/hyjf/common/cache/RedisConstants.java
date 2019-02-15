@@ -12,14 +12,14 @@ public class RedisConstants {
 
     // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ key通用常量 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ //
     /**
-     * 投资防重校验过期时间
+     * 出借防重校验过期时间
      */
     public static final Integer TENDER_OUT_TIME = 300;
 
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
     // _tmp
     public static final String HJH_SLASH_TMP = "_tmp";
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
     // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ key通用常量 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ //
     /**
@@ -69,12 +69,12 @@ public class RedisConstants {
     public static final String HJH_LOCK_REPEAT = "hjh_lockisrepeat:";
 
     /**
-     * 散标投资异步防重校验（tender_orderid:LogOrderId）
+     * 散标出借异步防重校验（tender_orderid:LogOrderId）
      */
     public static final String TENDER_ORDERID = "tender_orderid:";
 
     /**
-     * 投资优惠券使用rediskey(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300)  by sunss
+     * 出借优惠券使用rediskey(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300)  by sunss
      */
     public static final String COUPON_TENDER_KEY = "coupon_tender:";
 
@@ -106,11 +106,11 @@ public class RedisConstants {
 
     // 汇计划标的队列标识 债转（债转标的） (queue:credit:$creditNid)
     public static final String HJH_BORROW_CREDIT = "credit:";
-    // 汇计划标的队列标识 投资（原始标的） (queue:invest:$borrowNid)
+    // 汇计划标的队列标识 出借（原始标的） (queue:invest:$borrowNid)
     public static final String HJH_BORROW_INVEST = "invest:";
 
     /**
-     * 散标投资防重校验(borrow_tender_repeat:$userId)
+     * 散标出借防重校验(borrow_tender_repeat:$userId)
      */
     public static final String BORROW_TENDER_REPEAT = "borrow_tender_repeat:";
 
@@ -161,17 +161,17 @@ public class RedisConstants {
      * admin单点登陆用户(admin:$username)
      */
     public static final String ADMIN_REQUEST = "admin:";
-    
+
     /**
      * 协议模板---协议前台展示名称的别名+$aliasName
      */
     public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_alias:";
-    
+
     /**
      * 协议模板---协议文件存储Redis前缀+$protocolId
      */
     public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
-    
+
 
     /**
      * 用户token令牌前缀（token:token）
@@ -278,36 +278,6 @@ public class RedisConstants {
     public static final String REMAIN_MONEY = "remain_money:";
 
     /**
-     * 上海大屏幕运营数据
-     */
-    public static final String SH_OPERATIONAL_DATA = "sh_operational_data:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计投资人
-     */
-    public static final String STATISTICAL_INVESTOR = "statistical_investor:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计投资（statistical_investment:$String）
-     */
-    public static final String STATISTICAL_INVESTMENT = "statistical_investment:";
-
-    /**
-     * 上海大屏幕运营数据 : 统计充值（statistical_recharge:$String）
-     */
-    public static final String STATISTICAL_RECHARGE = "statistical_recharge:";
-
-    /**
-     * 上海大屏幕运营数据 : 注册人统计(SH_OPERATIONAL_DATA+REGISTRANT_STATISTICS+1或2)
-     */
-    public static final String REGISTRANT_STATISTICS = "registrant_statistics:";
-
-    /**
-     * 上海大屏幕运营数据 : 公司动态列表
-     */
-    public static final String ARTICLE_LIST = "article_list:";
-
-    /**
      * 协议模板二期---动态展示协议前台展示名称
      */
     public static final String PROTOCOL_PARAMS = "protocol_params:";
@@ -380,7 +350,7 @@ public class RedisConstants {
 
 
     /**
-     * 测评到期时间和测评结果投资金额上限用redis组
+     * 测评到期时间和测评结果出借金额上限用redis组
      */
     public static final String REVALUATION = "evaluation:";
 
@@ -409,6 +379,25 @@ public class RedisConstants {
      */
     public static final String REVALUATION_AGGRESSIVE =  REVALUATION  + "aggressive";
 
+    /**
+     * 保守型（代收本金）
+     */
+    public static final String REVALUATION_CONSERVATIVE_PRINCIPAL = REVALUATION  + "principalconservative";
+
+    /**
+     * 稳健型（代收本金）
+     */
+    public static final String REVALUATION_ROBUSTNESS_PRINCIPAL = REVALUATION  + "principalrobustness";
+
+    /**
+     * 成长型（代收本金）
+     */
+    public static final String REVALUATION_GROWTH_PRINCIPAL = REVALUATION  + "principalgrowth";
+
+    /**
+     * 进取型（代收本金）
+     */
+    public static final String REVALUATION_AGGRESSIVE_PRINCIPAL =  REVALUATION  + "principalaggressive";
 
     /**
      * 上传合同模板暂存地址(template_upload_url:templetId)
@@ -470,6 +459,18 @@ public class RedisConstants {
      * 关联计划 borrowissue + creditNid/borrowNid
      */
     public final static String BORROW_ISSUE ="borrowissue:";
+    /**
+     * 北互金历史上报定时任务执行开关(0:关闭；1：开启)
+     */
+    public static final String BIFA_HISTORY_OPEN_FLAG = "bifa_history_open_flag";
+    /**
+     * 北互金历史上报定时任务开始时间
+     */
+    public static final String BIFA_HISTORY_START_YYYYMMDD = "bifa_history_start_yyyymmdd";
+    /**
+     * 北互金历史上报定时任务结束时间
+     */
+    public static final String BIFA_HISTORY_END_YYYYMMDD = "bifa_history_end_yyyymmdd";
 
     /**
      * 邮件发送key
@@ -521,4 +522,25 @@ public class RedisConstants {
      */
     public static final String ADMIN_UNIQUE_ID = "admin@:";
 
+    /**
+     * 纳觅返现活动
+     */
+    public static final String RETURN_CASH_ACTIVITY = "RETURN_CASH_ACTIVITY:";
+
+    /**合规数据上报 CERT 批次号自增 序列号*/
+    public static final String CERT_BATCH_NUMBER_SEQ_ID = "CERT_BATCH_NUMBER_SEQ_ID";
+    /**合规数据上报 CERT 是否初始化标的  没有 就是没初始化*/
+    public static final String CERT_BATCH_IS_INIT_BORROW= "CERT_BATCH_IS_INIT_BORROW";
+
+    /**合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报*/
+    public static final String CERT_CAN_RUN= "CERT_CAN_RUN";
+
+    /**
+     * 逾期原因
+     */
+    public static final String LATER_REPAY_REASON = "NIFA:LATER_REPAY_REASON";
+    /**
+     * 推送表的消息唯一标识
+     */
+    public static final String MSG_PUSH_CODE = "MSG_PUSH_CODE:";
 }

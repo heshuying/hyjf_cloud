@@ -114,24 +114,28 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         BigDecimal interestWaitHoliday =  getInterestWaitHolidayTotal(interestWaitListProcessed);
         if(interestWaitHoliday.compareTo(BigDecimal.ZERO) == 0){
             for(int i=0; i<3; i++){
-                result.add(new BigDecimal(interestWaitListProcessed.get(i).getRecoverInterest()));
+                if(interestWaitListProcessed.get(i).getRecoverInterest() != null){
+                    result.add(new BigDecimal(interestWaitListProcessed.get(i).getRecoverInterest()));
+                }
             }
         }else {
             for(int i=0; i<3; i++){
-                String recoverTime = interestWaitListProcessed.get(i).getRecoverTime();
-                Calendar recoverTimeC = Calendar.getInstance();
-                recoverTimeC.setTime(GetDate.stringToDate3(recoverTime, DATE_FORMAT_2));
-                if(this.checkIsHoliday(recoverTimeC)){
-                    result.add(BigDecimal.ZERO);
-                    continue;
-                }else{
-                    BigDecimal sumToday = new BigDecimal(interestWaitListProcessed.get(i).getRecoverInterest());
-                    recoverTimeC.add(Calendar.DAY_OF_MONTH, 1);
-                    if(this.checkIsHoliday(recoverTimeC)){
-                        BigDecimal sumHoliday = this.getInterestWaitHoliday(interestWaitListProcessed, recoverTimeC);
-                        sumToday = sumToday.add(sumHoliday);
+                if(interestWaitListProcessed.get(i).getRecoverInterest() != null) {
+                    String recoverTime = interestWaitListProcessed.get(i).getRecoverTime();
+                    Calendar recoverTimeC = Calendar.getInstance();
+                    recoverTimeC.setTime(GetDate.stringToDate3(recoverTime, DATE_FORMAT_2));
+                    if (this.checkIsHoliday(recoverTimeC)) {
+                        result.add(BigDecimal.ZERO);
+                        continue;
+                    } else {
+                        BigDecimal sumToday = new BigDecimal(interestWaitListProcessed.get(i).getRecoverInterest());
+                        recoverTimeC.add(Calendar.DAY_OF_MONTH, 1);
+                        if (this.checkIsHoliday(recoverTimeC)) {
+                            BigDecimal sumHoliday = this.getInterestWaitHoliday(interestWaitListProcessed, recoverTimeC);
+                            sumToday = sumToday.add(sumHoliday);
+                        }
+                        result.add(sumToday);
                     }
-                    result.add(sumToday);
                 }
             }
         }
@@ -258,4 +262,11 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         return !amConfigClient.checkSomedayIsWorkDate(calendar.getTime());
     }
 
+    /**
+     * 日、月推标额度定时任务
+     */
+    @Override
+    public void updateDayMarkLine() {
+        amTradeClient.updateDayMarkLine();
+    }
 }

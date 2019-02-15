@@ -133,7 +133,7 @@ public interface BorrowCommonService extends BaseService {
 	public BorrowWithBLOBs getBorrowWithBLOBs(String borrowNid);
 
 	/**
-	 * 获取融资服务费率
+	 * 获取放款服务费率
 	 * @param projectType
 	 * @param chargeTimeType
 	 * @param instCode
@@ -143,7 +143,7 @@ public interface BorrowCommonService extends BaseService {
 	public String getBorrowServiceScale(Integer projectType, String chargeTimeType, String instCode, Integer chargeTime);
 
 	/**
-	 * 获取账户管理费
+	 * 获取还款服务费
 	 * @param projectType
 	 * @param borrowStyle
 	 * @param instCode
@@ -255,11 +255,11 @@ public interface BorrowCommonService extends BaseService {
 //	 * 项目申请人是否存在
 //	 * @param request
 //	 * @return
-//	 */TODO 放在配置am层
+//	 */ 放在配置am层
 //	public String isExistsApplicant(HttpServletRequest request);
 
 	/**
-	 * 垫付机构是否存在
+	 * 担保机构是否存在
 	 * @param request
 	 * @return 
 	 * TODO放在用户am层
@@ -268,14 +268,14 @@ public interface BorrowCommonService extends BaseService {
 
 //	/**
 //	 * 发标金额是否合法
-//	 * TODO 放在admin项目
+//	 * 放在admin项目
 //	 * @param request
 //	 * @return
 //	 */
 //	public String isAccountLegal(HttpServletRequest request);
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率 & 收益差率
+	 * 获取放款服务费率 & 还款服务费率 & 收益差率
 	 *
 	 * @param borrowPeriod
 	 * @param borrowStyle
@@ -286,7 +286,7 @@ public interface BorrowCommonService extends BaseService {
 	public BorrowCommonVO getBorrowServiceScale(BorrowCommonRequest borrowCommonRequest);
 
 	/**
-	 * 账户管理费率(最低，最高)
+	 * 还款服务费率(最低，最高)
 	 * @param projectType
 	 * @param borrowStyle
 	 * @param borrowPeriod
@@ -462,4 +462,11 @@ public interface BorrowCommonService extends BaseService {
 	 * @param borrowPreNid
 	 */
 	void isAutoRecord(String borrowPreNid);
+
+	/**
+	 * 获取风险测评配置
+	 *
+	 * @return
+	 */
+    EvaluationConfig selectEvaluationConfig();
 }

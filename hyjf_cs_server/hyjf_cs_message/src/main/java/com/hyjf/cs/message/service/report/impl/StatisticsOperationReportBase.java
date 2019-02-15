@@ -8,11 +8,13 @@ import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.OperationColumnReport;
-import com.hyjf.cs.message.bean.ic.OperationUserReport;
+import com.hyjf.cs.message.bean.ic.report.OperationColumnReport;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationTenthReport;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.mc.*;
+import com.hyjf.cs.message.mongo.ic.report.*;
+import com.hyjf.cs.message.mongo.ic.userbehaviourn.UserOperationReportMongDao;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,19 +42,19 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     @Autowired
     public OperationReportColumnMongDao operationReportColumnMongDao;//运营报告
     @Autowired
-    public HalfYearOperationReportMongDao halfYearOperationReportMongDao;//半年度度运营报告
+    public OperationHalfYearReportMongDao operationHalfYearReportMongDao;//半年度度运营报告
     @Autowired
-    public MonthlyOperationReportMongDao monthlyOperationReportMongDao;//月度运营报告
+    public OperationMonthlyReportMongDao operationMonthlyReportMongDao;//月度运营报告
     @Autowired
     public OperationReportActivityMongDao operationReportActivityMongDao;//运营报告活动
     @Autowired
-    public QuarterOperationReportMongDao quarterOperationReportMongDao;//季度运营报告
+    public OperationQuarterReportMongDao operationQuarterReportMongDao;//季度运营报告
     @Autowired
-    public TenthOperationReportMongDao tenthOperationReportMongDao;//运营报告十大投资
+    public OperationTenthReportMongDao operationTenthReportMongDao;//运营报告十大出借
     @Autowired
     public UserOperationReportMongDao userOperationReportMongDao;//用户分析报告
     @Autowired
-    public YearOperationReportMongDao yearOperationReportMongDao;//年度运营报告
+    public OperationYearReportMongDao operationYearReportMongDao;//年度运营报告
 
 
     public static BigDecimal bigHundred = new BigDecimal(100);
@@ -110,20 +112,20 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @param bean
      */
     public void saveUserOperationReport(String operationReportId, Integer type, OperationReportJobBean bean) throws Exception {
-        Integer manTenderNum = 0;//男性投资人数
-        Integer womanTenderNum = 0;//女性投资人数
-        Integer ageFirstStageTenderNum = 0;//18~29岁投资人数（人）
-        Integer ageSecondStageTenderNum = 0;//30~39岁投资人数（人）
-        Integer ageThirdStageTenderNum = 0;//40~49岁投资人数（人）
-        Integer ageFourthStageTenderNum = 0;//50~59岁投资人数（人）
-        Integer ageFirveStageTenderNum = 0;//60岁以上投资人数（人）
-        Integer ageTenderNumSum = 0;//年龄投资人数总
-        Integer amountFirstStageTenderNum = 0;//1万以下投资人数
-        Integer amountSecondStageTenderNum = 0;//1~5万投资人数
-        Integer amountThirdStageTenderNum = 0;//5~10万投资人数
-        Integer amountFourthStageTenderNum = 0;//10~50万投资人数
-        Integer amountFirveStageTenderNum = 0;//50万以上投资人数
-        Integer amountStageTenderNumSum = 0;//金额投资人数数总
+        Integer manTenderNum = 0;//男性出借人数
+        Integer womanTenderNum = 0;//女性出借人数
+        Integer ageFirstStageTenderNum = 0;//18~29岁出借人数（人）
+        Integer ageSecondStageTenderNum = 0;//30~39岁出借人数（人）
+        Integer ageThirdStageTenderNum = 0;//40~49岁出借人数（人）
+        Integer ageFourthStageTenderNum = 0;//50~59岁出借人数（人）
+        Integer ageFirveStageTenderNum = 0;//60岁以上出借人数（人）
+        Integer ageTenderNumSum = 0;//年龄出借人数总
+        Integer amountFirstStageTenderNum = 0;//1万以下出借人数
+        Integer amountSecondStageTenderNum = 0;//1~5万出借人数
+        Integer amountThirdStageTenderNum = 0;//5~10万出借人数
+        Integer amountFourthStageTenderNum = 0;//10~50万出借人数
+        Integer amountFirveStageTenderNum = 0;//50万以上出借人数
+        Integer amountStageTenderNumSum = 0;//金额出借人数数总
 
 
         UserOperationReportVO userOperationReport = new UserOperationReportVO();
@@ -140,10 +142,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 
             //校验 百分比是否等于100%
             bigflag = checkPercent(manTenderNum + womanTenderNum, manTenderNum, womanTenderNum);
-            userOperationReport.setManTenderNum(manTenderNum);//男性投资人数
-            userOperationReport.setManTenderNumProportion(assignCompute(manTenderNum, manTenderNum + womanTenderNum, bigflag));//男性投资人数占比(%)
-            userOperationReport.setWomanTenderNum(womanTenderNum);//女性投资人数
-            userOperationReport.setWomanTenderNumProportion(assignCompute(womanTenderNum, manTenderNum + womanTenderNum, bigflag));//女性投资人数占比(%)
+            userOperationReport.setManTenderNum(manTenderNum);//男性出借人数
+            userOperationReport.setManTenderNumProportion(assignCompute(manTenderNum, manTenderNum + womanTenderNum, bigflag));//男性出借人数占比(%)
+            userOperationReport.setWomanTenderNum(womanTenderNum);//女性出借人数
+            userOperationReport.setWomanTenderNumProportion(assignCompute(womanTenderNum, manTenderNum + womanTenderNum, bigflag));//女性出借人数占比(%)
         }
 
 
@@ -165,16 +167,16 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                     ageFourthStageTenderNum, ageFirveStageTenderNum);
 
             //set 年分布
-            userOperationReport.setAgeFirstStageTenderNum(ageFirstStageTenderNum);//18~29岁投资人数（人）
-            userOperationReport.setAgeFirstStageTenderProportion(assignCompute(ageFirstStageTenderNum, ageTenderNumSum, bigflag));//18~29岁投资人数占比（%）
-            userOperationReport.setAgeSecondStageTenderNum(ageSecondStageTenderNum);//30~39岁投资人数（人）
-            userOperationReport.setAgeSecondStageTenderProportion(assignCompute(ageSecondStageTenderNum, ageTenderNumSum, bigflag));//30~39岁投资人数占比（%）
-            userOperationReport.setAgeThirdStageTenderNum(ageThirdStageTenderNum);//40~49岁投资人数（人）
-            userOperationReport.setAgeThirdStageTenderProportion(assignCompute(ageThirdStageTenderNum, ageTenderNumSum, bigflag));//40~49岁投资人数占比（%）
-            userOperationReport.setAgeFourthStageTenderNum(ageFourthStageTenderNum);//50~59岁投资人数（人）
-            userOperationReport.setAgeFourthStageTenderProportion(assignCompute(ageFourthStageTenderNum, ageTenderNumSum, bigflag));//50~59岁投资人数占比（%）
-            userOperationReport.setAgeFirveStageTenderNum(ageFirveStageTenderNum);//60岁以上投资人数（人）
-            userOperationReport.setAgeFirveStageTenderProportion(assignCompute(ageFirveStageTenderNum, ageTenderNumSum, bigflag));//60岁以上投资人数占比（%）
+            userOperationReport.setAgeFirstStageTenderNum(ageFirstStageTenderNum);//18~29岁出借人数（人）
+            userOperationReport.setAgeFirstStageTenderProportion(assignCompute(ageFirstStageTenderNum, ageTenderNumSum, bigflag));//18~29岁出借人数占比（%）
+            userOperationReport.setAgeSecondStageTenderNum(ageSecondStageTenderNum);//30~39岁出借人数（人）
+            userOperationReport.setAgeSecondStageTenderProportion(assignCompute(ageSecondStageTenderNum, ageTenderNumSum, bigflag));//30~39岁出借人数占比（%）
+            userOperationReport.setAgeThirdStageTenderNum(ageThirdStageTenderNum);//40~49岁出借人数（人）
+            userOperationReport.setAgeThirdStageTenderProportion(assignCompute(ageThirdStageTenderNum, ageTenderNumSum, bigflag));//40~49岁出借人数占比（%）
+            userOperationReport.setAgeFourthStageTenderNum(ageFourthStageTenderNum);//50~59岁出借人数（人）
+            userOperationReport.setAgeFourthStageTenderProportion(assignCompute(ageFourthStageTenderNum, ageTenderNumSum, bigflag));//50~59岁出借人数占比（%）
+            userOperationReport.setAgeFirveStageTenderNum(ageFirveStageTenderNum);//60岁以上出借人数（人）
+            userOperationReport.setAgeFirveStageTenderProportion(assignCompute(ageFirveStageTenderNum, ageTenderNumSum, bigflag));//60岁以上出借人数占比（%）
         }
 
         //金额分布
@@ -193,19 +195,19 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             bigflag = checkPercent(amountStageTenderNumSum, amountFirstStageTenderNum, amountSecondStageTenderNum, amountThirdStageTenderNum,
                     amountFourthStageTenderNum, amountFirveStageTenderNum);
 
-            userOperationReport.setAmountFirstStageTenderNum(amountFirstStageTenderNum);//1万以下投资人数
-            userOperationReport.setAmountFirstStageTenderProportion(assignCompute(amountFirstStageTenderNum, amountStageTenderNumSum, bigflag));//1万以下投资人数占比（%）
-            userOperationReport.setAmountSecondStageTenderNum(amountSecondStageTenderNum);//1~5万投资人数
-            userOperationReport.setAmountSecondStageTenderProportion(assignCompute(amountSecondStageTenderNum, amountStageTenderNumSum, bigflag));//1~5万投资人数（%）
-            userOperationReport.setAmountThirdStageTenderNum(amountThirdStageTenderNum);//5~10万投资人数
-            userOperationReport.setAmountThirdStageTenderProportion(assignCompute(amountThirdStageTenderNum, amountStageTenderNumSum, bigflag));//5~10万投资人数（%）
-            userOperationReport.setAmountFourthStageTenderNum(amountFourthStageTenderNum);//10~50万投资人数
-            userOperationReport.setAmountFourthStageTenderProportion(assignCompute(amountFourthStageTenderNum, amountStageTenderNumSum, bigflag));//10~50万投资人数（%）
-            userOperationReport.setAmountFirveStageTenderNum(amountFirveStageTenderNum);//50万以上投资人数
-            userOperationReport.setAmountFirveStageTenderProportion(assignCompute(amountFirveStageTenderNum, amountStageTenderNumSum, bigflag));//50万以上投资人数（%）
+            userOperationReport.setAmountFirstStageTenderNum(amountFirstStageTenderNum);//1万以下出借人数
+            userOperationReport.setAmountFirstStageTenderProportion(assignCompute(amountFirstStageTenderNum, amountStageTenderNumSum, bigflag));//1万以下出借人数占比（%）
+            userOperationReport.setAmountSecondStageTenderNum(amountSecondStageTenderNum);//1~5万出借人数
+            userOperationReport.setAmountSecondStageTenderProportion(assignCompute(amountSecondStageTenderNum, amountStageTenderNumSum, bigflag));//1~5万出借人数（%）
+            userOperationReport.setAmountThirdStageTenderNum(amountThirdStageTenderNum);//5~10万出借人数
+            userOperationReport.setAmountThirdStageTenderProportion(assignCompute(amountThirdStageTenderNum, amountStageTenderNumSum, bigflag));//5~10万出借人数（%）
+            userOperationReport.setAmountFourthStageTenderNum(amountFourthStageTenderNum);//10~50万出借人数
+            userOperationReport.setAmountFourthStageTenderProportion(assignCompute(amountFourthStageTenderNum, amountStageTenderNumSum, bigflag));//10~50万出借人数（%）
+            userOperationReport.setAmountFirveStageTenderNum(amountFirveStageTenderNum);//50万以上出借人数
+            userOperationReport.setAmountFirveStageTenderProportion(assignCompute(amountFirveStageTenderNum, amountStageTenderNumSum, bigflag));//50万以上出借人数（%）
         }
 
-        OperationUserReport operationUserReport = new OperationUserReport();
+        UserOperationReport operationUserReport = new UserOperationReport();
         BeanUtils.copyProperties(userOperationReport, operationUserReport);
         operationUserReport.setOperationReportId(operationReportId);//运营报告ID
 
@@ -214,7 +216,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     }
 
     /**
-     * 保存 当月之最-十大投资人
+     * 保存 当月之最-十大出借人
      *
      * @param operationReportId
      * @param type              运营报告类型(1.月度2.季度3.上半年度4.年度)
@@ -222,9 +224,9 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @param sumTenderAmount   累计成交金额
      */
     public void saveTenthOperationReport(String operationReportId, Integer type,OperationReportJobBean bean, BigDecimal sumTenderAmount) {
-        BigDecimal tenderAmountSum = BigDecimal.ZERO;//十大投资人投资总和
-        String tenderUsername = null;//投资者用户名
-        BigDecimal tenderAmountMoney = BigDecimal.ZERO;//投资金额
+        BigDecimal tenderAmountSum = BigDecimal.ZERO;//十大出借人出借总和
+        String tenderUsername = null;//出借者用户名
+        BigDecimal tenderAmountMoney = BigDecimal.ZERO;//出借金额
         Integer userId = 0;//用户ID
 
         TenthOperationReportVO tenthOperationReport = new TenthOperationReportVO();
@@ -233,7 +235,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         tenthOperationReport.setCreateTime(GetDate.getNowTime10());
         tenthOperationReport.setCreateUserId(1);
 
-        //计算 十大投资人投资金额
+        //计算 十大出借人出借金额
         List<OperationReportJobVO> listTenMostMoney = this.getTenMostMoney(bean);
         if (!CollectionUtils.isEmpty(listTenMostMoney)) {
 
@@ -246,52 +248,52 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                         tenderAmountMoney = dto.getSumAccount();
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setFirstTenderUsername(dto.getUserName());//第1名用户名
-                        tenthOperationReport.setFirstTenderAmount(dto.getSumAccount());//第1名投资金额(元)
+                        tenthOperationReport.setFirstTenderAmount(dto.getSumAccount());//第1名出借金额(元)
                         break;
                     case 1:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setSecondTenderUsername(dto.getUserName());//第2名用户名
-                        tenthOperationReport.setSecondTenderAmount(dto.getSumAccount());//第2名投资金额(元)
+                        tenthOperationReport.setSecondTenderAmount(dto.getSumAccount());//第2名出借金额(元)
                         break;
                     case 2:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setThirdTenderUsername(dto.getUserName());//第3名用户名
-                        tenthOperationReport.setThirdTenderAmount(dto.getSumAccount());//第3名投资金额(元)
+                        tenthOperationReport.setThirdTenderAmount(dto.getSumAccount());//第3名出借金额(元)
                         break;
                     case 3:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setFourthTenderUsername(dto.getUserName());//第4名用户名
-                        tenthOperationReport.setFourthTenderAmount(dto.getSumAccount());//第4名投资金额(元)
+                        tenthOperationReport.setFourthTenderAmount(dto.getSumAccount());//第4名出借金额(元)
                         break;
                     case 4:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setFifthTenderUsername(dto.getUserName());//第5名用户名
-                        tenthOperationReport.setFifthTenderAmount(dto.getSumAccount());//第5名投资金额(元)
+                        tenthOperationReport.setFifthTenderAmount(dto.getSumAccount());//第5名出借金额(元)
                         break;
                     case 5:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setSixthTenderUsername(dto.getUserName());//第6名用户名
-                        tenthOperationReport.setSixthTenderAmount(dto.getSumAccount());//第6名投资金额(元)
+                        tenthOperationReport.setSixthTenderAmount(dto.getSumAccount());//第6名出借金额(元)
                         break;
                     case 6:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setSeventhTenderUsername(dto.getUserName());//第7名用户名
-                        tenthOperationReport.setSeventhTenderAmount(dto.getSumAccount());//第7名投资金额(元)
+                        tenthOperationReport.setSeventhTenderAmount(dto.getSumAccount());//第7名出借金额(元)
                         break;
                     case 7:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setEighthTenderUsername(dto.getUserName());//第8名用户名
-                        tenthOperationReport.setEighthTenderAmount(dto.getSumAccount());//第8名投资金额(元)
+                        tenthOperationReport.setEighthTenderAmount(dto.getSumAccount());//第8名出借金额(元)
                         break;
                     case 8:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setNinthTenderUsername(dto.getUserName());//第9名用户名
-                        tenthOperationReport.setNinthTenderAmount(dto.getSumAccount());//第9名投资金额(元)
+                        tenthOperationReport.setNinthTenderAmount(dto.getSumAccount());//第9名出借金额(元)
                         break;
                     case 9:
                         tenderAmountSum = tenderAmountSum.add(dto.getSumAccount());
                         tenthOperationReport.setTenthTenderUsername(dto.getUserName());//第10名用户名
-                        tenthOperationReport.setTenthTenderAmount(dto.getSumAccount());//第10名投资金额(元)
+                        tenthOperationReport.setTenthTenderAmount(dto.getSumAccount());//第10名出借金额(元)
                         break;
                     default:
                         break;
@@ -300,12 +302,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 
             }
 
-            //10大投资人金额之占比(%)
+            //10大出借人金额之占比(%)
             BigDecimal tenTenderProportion = tenderAmountSum.divide(sumTenderAmount, 4, BigDecimal.ROUND_HALF_UP).multiply(bigHundred);
-            tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大投资人金额之和(元)
-            tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大投资人金额之占比(%)
-            tenthOperationReport.setOtherTenderAmount(sumTenderAmount.subtract(tenderAmountSum));//其他投资人金额之和(元)
-            tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他投资人金额之和占比（%）
+            tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大出借人金额之和(元)
+            tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大出借人金额之占比(%)
+            tenthOperationReport.setOtherTenderAmount(sumTenderAmount.subtract(tenderAmountSum));//其他出借人金额之和(元)
+            tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他出借人金额之和占比（%）
 
             //查找 最多金用户的年龄和地区
             OperationReportJobVO UserAgeAndAreaDto = this.getUserAgeAndArea(userId);
@@ -315,7 +317,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                 tenthOperationReport.setMostTenderUserArea(UserAgeAndAreaDto.getTitle());//最多金用户地区
             }
             tenthOperationReport.setMostTenderUsername(tenderUsername);//最多金用户名
-            tenthOperationReport.setMostTenderAmount(tenderAmountMoney);//最多金投资金额（元）
+            tenthOperationReport.setMostTenderAmount(tenderAmountMoney);//最多金出借金额（元）
         }
 
         //大赢家，收益最高
@@ -334,13 +336,13 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             }
         }
 
-        //超活跃，投资笔数最多
+        //超活跃，出借笔数最多
         List<OperationReportJobVO> listtOneInvestMost =this.getOneInvestMost(bean);
         if (!CollectionUtils.isEmpty(listtOneInvestMost)) {
             OperationReportJobVO investMostDto = listtOneInvestMost.get(0);
             userId = investMostDto.getUserId();
             tenthOperationReport.setActiveTenderUsername(investMostDto.getUserName());//超活跃用户名
-            tenthOperationReport.setActiveTenderNum(Long.valueOf(investMostDto.getDealSum()));//超活跃用户投资次数
+            tenthOperationReport.setActiveTenderNum(Long.valueOf(investMostDto.getDealSum()));//超活跃用户出借次数
 
             //查找 最多金用户的年龄和地区
             OperationReportJobVO UserAgeAndAreaDto = this.getUserAgeAndArea(userId);
@@ -350,12 +352,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             }
         }
 
-        TenthOperationReportEntity tenthOperationReportEntity = new TenthOperationReportEntity();
-        BeanUtils.copyProperties(tenthOperationReport,tenthOperationReportEntity);
-        tenthOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationTenthReport operationTenthReport = new OperationTenthReport();
+        BeanUtils.copyProperties(tenthOperationReport, operationTenthReport);
+        operationTenthReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        tenthOperationReportMapper.insert(tenthOperationReport);
-        tenthOperationReportMongDao.insert(tenthOperationReportEntity);
+        operationTenthReportMongDao.insert(operationTenthReport);
     }
 
 
@@ -616,7 +618,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     }
 
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @return
      */
@@ -635,7 +637,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     }
 
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param bean 今年间隔月份
      * @return

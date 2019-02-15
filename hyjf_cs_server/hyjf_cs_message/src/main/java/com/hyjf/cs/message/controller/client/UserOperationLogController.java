@@ -9,7 +9,7 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.ic.UserOperationLog;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationLog;
 import com.hyjf.cs.message.service.operationlog.OperationLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Api(tags ="会员操作日志")
 @RestController
-@RequestMapping("/cs-message/manager/operationlog")
+@RequestMapping("/cs-message/manager/operationLog")
 public class UserOperationLogController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(UserOperationLogController.class);

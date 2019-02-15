@@ -97,12 +97,12 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_DEBT_REGISTER_CANCEL = "debtRegisterCancel";
 	/**
-	 * 投资人投标申请,页面浏览器方式 
+	 * 出借人投标申请,页面浏览器方式
 	 * https://xxxx.credit2go.cn/escrow/p2p/page/bidapply
 	 */
 	public static final String TXCODE_BID_APPLY = "bidApply";
 	/**
-	 * 投资人自动投标签约,页面浏览器方式 
+	 * 出借人自动投标签约,页面浏览器方式
 	 * 地址：https://xxxx.credit2go.cn/escrow/p2p/page/mobile
 	 */
 	public static final String TXCODE_AUTOBID_AUTH = "autoBidAuth";
@@ -127,7 +127,7 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_BID_CANCEL = "bidCancel";
 	/**
-	 * 投资人自动债权转让签约,页面浏览器方式
+	 * 出借人自动债权转让签约,页面浏览器方式
 	 *  地址：https://xxxx.credit2go.cn/escrow/p2p/page/mobile
 	 */
 	public static final String TXCODE_AUTO_CREDIT_INVEST_AUTH = "autoCreditInvestAuth";
@@ -136,12 +136,12 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_AUTO_CREDIT_INVEST_AUTH_CANCEL = "autoCreditInvestAuthCancel";
 	/**
-	 * 投资人自动投标签约增强,页面浏览器方式
+	 * 出借人自动投标签约增强,页面浏览器方式
 	 * 地址：https://xxxx.credit2go.cn/escrow/p2p/page/mobile/plus
 	 */
 	public static final String TXCODE_AUTOBID_AUTH_PLUS = "autoBidAuthPlus";
 	/**
-	 * 投资人自动债权转让签约增强,页面浏览器方式
+	 * 出借人自动债权转让签约增强,页面浏览器方式
 	 * 地址：https://xxxx.credit2go.cn/escrow/p2p/page/mobile/plus
 	 */
 	public static final String TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUS = "autoCreditInvestAuthPlus";
@@ -172,7 +172,7 @@ public class BankCallMethodConstant implements Serializable {
     public static final String TXCODE_USER_AUTH_BACK = "termsAuth";
 
 	/**
-	 * 投资人购买债权,页面浏览器方式 地址：https://xxxx.credit2go.cn/escrow/p2p/page/creditInvest
+	 * 出借人购买债权,页面浏览器方式 地址：https://xxxx.credit2go.cn/escrow/p2p/page/creditInvest
 	 */
 	public static final String TXCODE_CREDITINVEST = "creditInvest";
 	/**
@@ -220,7 +220,7 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_BATCH_CANCEL = "batchCancel";
 	/**
-	 * 批次投资人购买债权
+	 * 批次出借人购买债权
 	 */
 	public static final String TXCODE_BATCH_CREDIT_INVEST = "batchCreditInvest";
 	/**
@@ -249,7 +249,7 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_ACCOUNT_DETAILS_QUERY = "accountDetailsQuery2";
 	/**
-	 * 投资人债权明细查询
+	 * 出借人债权明细查询
 	 */
 	public static final String TXCODE_CREDIT_DETAILS_QUERY = "creditDetailsQuery";
 	/**
@@ -290,15 +290,15 @@ public class BankCallMethodConstant implements Serializable {
 	 */
 	public static final String TXCODE_BATCH_DETAILS_QUERY = "batchDetailsQuery";
 	/**
-	 * 投资人购买债权查询
+	 * 出借人购买债权查询
 	 */
 	public static final String TXCODE_CREDIT_INVEST_QUERY = "creditInvestQuery";
 	/**
-	 * 投资人投标申请查询
+	 * 出借人投标申请查询
 	 */
 	public static final String TXCODE_BID_APPLY_QUERY = "bidApplyQuery";
 	/**
-	 * 投资人签约状态查询
+	 * 出借人签约状态查询
 	 */
 	public static final String TXCODE_CREDIT_AUTH_QUERY = "creditAuthQuery";
 	/**
@@ -351,7 +351,7 @@ public class BankCallMethodConstant implements Serializable {
 
 
     /**
-     * 2.4.8.投资人自动债权转让签约增强
+     * 2.4.8.出借人自动债权转让签约增强
      */
     public static final String TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS = "autoCreditInvestAuthPlus";
     
@@ -366,7 +366,7 @@ public class BankCallMethodConstant implements Serializable {
     
     
     /**
-     * 2.4.4.投资人自动投标签约增强
+     * 2.4.4.出借人自动投标签约增强
      */
     public static final String TXCODE_AUTO_BID_AUTH_PLUS = "autoBidAuthPlus";
     

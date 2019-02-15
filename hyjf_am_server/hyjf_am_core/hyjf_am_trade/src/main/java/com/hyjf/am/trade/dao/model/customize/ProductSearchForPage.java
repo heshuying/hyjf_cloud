@@ -14,13 +14,13 @@ public class ProductSearchForPage implements Serializable{
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
-	//投资金额
+	//出借金额
 	    private BigDecimal amount;
 	//利息
 	    private BigDecimal interest;
-	//投资时间
+	//出借时间
 	    private String time;
-	//投资状态
+	//出借状态
 		private String status;
 	//用户id
 		private Integer userId;
@@ -32,7 +32,7 @@ public class ProductSearchForPage implements Serializable{
 	    private BigDecimal restInterest;
 	//已提取利息
 	    private BigDecimal alreadyInterest;
-		// 投资金额
+		// 出借金额
 	    private String amountStr;
 	//利息
 	    private String interestStr;

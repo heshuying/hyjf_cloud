@@ -24,7 +24,7 @@ public class CouponTenderVO extends BaseVO implements Serializable {
 
     private Integer updateTime;
 
-    // 优惠券投资用   start
+    // 优惠券出借用   start
 
     private BorrowTenderCpnVO borrowTenderCpn;
 
@@ -34,7 +34,7 @@ public class CouponTenderVO extends BaseVO implements Serializable {
 
     private CouponUserVO couponUser;
 
-    // 优惠券投资用   end
+    // 优惠券出借用   end
 
     private static final long serialVersionUID = 1L;
 
