@@ -29,7 +29,7 @@
 		<result column="money" property="money" /> <!-- 充值金额 -->
 		<result column="balance" property="balance" /> <!-- 可用金额 -->
 		<result column="fee" property="fee" /> <!-- 手续费 -->
-		<!--<result column="dianfuFee" property="dianfuFee" />--> <!-- 垫付手续费 -->
+		<!--<result column="dianfuFee" property="dianfuFee" /> --><!-- 垫付手续费 -->
 		<!--<result column="fee_from" property="feeFrom" /> &lt;!&ndash; 充值手续费收取方式 &ndash;&gt;-->
 		<result column="client" property="client" /> <!-- 客户端 -->
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" /> <!-- 交易时间 -->
@@ -148,10 +148,7 @@
 		t.statusName AS statusName,
 		t.message,
 		t.client,
-		date_format(
-		t.create_time,
-		'%Y-%c-%d %H:%i:%s'
-		) AS 'create_time',
+		date_format(t.create_time, '%Y-%c-%d %H:%i:%s') AS 'create_time',
 		t.bank_seq_no,
 		t.tx_date,
 		t.tx_time,
@@ -164,33 +161,11 @@
 		`od6`.`name` AS `referrer_region_name`,
 		`od5`.`name` AS `referrer_branch_name`,
 		`od4`.`name` AS `referrer_department_name`,
-		CASE u.role_id
-		WHEN 1 THEN
-		'出借人'
-		WHEN 2 THEN
-		'借款人'
-		WHEN 3 THEN
-		'担保机构'
-		END AS roleid,
+		CASE u.role_id WHEN 1 THEN '出借人'	WHEN 2 THEN	'借款人' WHEN 3 THEN '担保机构'	END AS roleid,
 		u.attribute AS user_attribute,
-		CASE
-		WHEN u.attribute = '1' THEN
-		`od6`.`name`
-		ELSE
-		`od3`.`name`
-		END `user_region_name`,
-		CASE
-		WHEN u.attribute = '1' THEN
-		`od5`.`name`
-		ELSE
-		`od2`.`name`
-		END `user_branch_name`,
-		CASE
-		WHEN u.attribute = '1' THEN
-		`od4`.`name`
-		ELSE
-		`od`.`name`
-		END `user_department_name`,
+		CASE WHEN u.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name`	END `user_region_name`,
+		CASE WHEN u.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name`	END `user_branch_name`,
+		CASE WHEN u.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`	END `user_department_name`,
 		t.cardid,
 		t.outtime,
 		t.status,
@@ -204,14 +179,8 @@
 		r.money, r.fee,
 		r.balance ,r.payment,
 		CASE r.`type` WHEN 0 THEN '线下充值' WHEN 1 THEN '线上充值' END AS type,
-		CASE r.`status` WHEN 1 THEN '转账中' WHEN 2
-		THEN '成功' WHEN 4 THEN '终止' ELSE '失败' END as
-		statusName ,
-		CASE r.client WHEN 0 THEN 'PC'
-		WHEN 1 THEN '微信' WHEN 2 THEN
-		'android' WHEN
-		3 THEN 'iOS' WHEN 4 THEN '线下充值' ELSE r.client
-		END AS client,
+		CASE r.`status` WHEN 1 THEN '转账中' WHEN 2	THEN '成功' WHEN 4 THEN '终止' ELSE '失败' END as statusName ,
+		CASE r.client WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'android' WHEN 3 THEN 'iOS' WHEN 4 THEN '线下充值' ELSE r.client END AS client,
 		r.id, r.cardid,r.message,
 		r.bank_seq_no,
 		DATE_FORMAT(r.tx_date,'%Y-%m-%d') as tx_date,

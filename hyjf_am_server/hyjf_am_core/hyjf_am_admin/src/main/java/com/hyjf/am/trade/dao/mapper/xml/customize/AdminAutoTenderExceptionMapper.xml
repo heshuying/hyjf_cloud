@@ -179,7 +179,7 @@
 		</where>
 		ORDER BY
 		add_time_long DESC
-		<if test="limitStart != null and limitStart > 0" >
+		<if test="limitStart != null and limitEnd > 0" >
 			limit #{limitStart} , #{limitEnd}
 		</if>
 	</select>

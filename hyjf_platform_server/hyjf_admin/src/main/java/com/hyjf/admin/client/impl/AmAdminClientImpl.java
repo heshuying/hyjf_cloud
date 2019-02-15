@@ -2012,9 +2012,9 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     @Override
-    public void saveReturnCash(ReturnCashRequest returnCashRequest){
+    public IntegerResponse saveReturnCash(ReturnCashRequest returnCashRequest){
         String url = "http://AM-ADMIN/am-market/returncash/saveReturnCash";
-        restTemplate.postForEntity(url,returnCashRequest,String.class);
+       return restTemplate.postForEntity(url,returnCashRequest,IntegerResponse.class).getBody();
     }
 
     /**
