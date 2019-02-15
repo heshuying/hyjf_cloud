@@ -83,6 +83,18 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "邮箱")
 	private String email;
 
+	@ApiModelProperty(value = "预计开始退出时间开始（检索）")
+	private String endDateStartSrch;
+
+	@ApiModelProperty(value = "预计开始退出时间结束（检索）")
+	private String endDateEndSrch;
+
+	@ApiModelProperty(value = "实际退出时间开始（检索）")
+	private String acctualPaymentTimeStartSrch;
+
+	@ApiModelProperty(value = "实际退出时间结束（检索）")
+	private String acctualPaymentTimeEndSrch;
+
 	public String getDebtPlanNidSrch() {
 		return debtPlanNidSrch;
 	}
@@ -241,5 +253,37 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 
 	public void setInvestCountsSrch(String investCountsSrch) {
 		this.investCountsSrch = investCountsSrch;
+	}
+
+	public String getEndDateStartSrch() {
+		return endDateStartSrch;
+	}
+
+	public void setEndDateStartSrch(String endDateStartSrch) {
+		this.endDateStartSrch = endDateStartSrch;
+	}
+
+	public String getEndDateEndSrch() {
+		return endDateEndSrch;
+	}
+
+	public void setEndDateEndSrch(String endDateEndSrch) {
+		this.endDateEndSrch = endDateEndSrch;
+	}
+
+	public String getAcctualPaymentTimeStartSrch() {
+		return acctualPaymentTimeStartSrch;
+	}
+
+	public void setAcctualPaymentTimeStartSrch(String acctualPaymentTimeStartSrch) {
+		this.acctualPaymentTimeStartSrch = acctualPaymentTimeStartSrch;
+	}
+
+	public String getAcctualPaymentTimeEndSrch() {
+		return acctualPaymentTimeEndSrch;
+	}
+
+	public void setAcctualPaymentTimeEndSrch(String acctualPaymentTimeEndSrch) {
+		this.acctualPaymentTimeEndSrch = acctualPaymentTimeEndSrch;
 	}
 }

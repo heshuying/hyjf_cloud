@@ -27,31 +27,22 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
     String REALPATH;
     @Value("${file.upload.temp.path}")
     String TEMPPATH;
+
+    @Override
+    public Integer getCount() {
+        AppBorrowImageExample example = new AppBorrowImageExample();
+        return appBorrowImageMapper.countByExample(example);
+    }
+
     /**
      * 获取列表
      *
      * @return
      */
     @Override
-    public List<AppBorrowImage> getRecordList(AppBorrowImage config, int limitStart, int limitEnd) {
+    public List<AppBorrowImage> getRecordList( int limitStart, int limitEnd) {
         AppBorrowImageExample example = new AppBorrowImageExample();
         AppBorrowImageExample.Criteria crt =example.createCriteria();
-        if (config.getStatus()!=null ) {
-            crt.andIdEqualTo(config.getStatus());
-        }
-        if (config.getStatus()!=null ) {
-            crt.andPageTypeEqualTo(config.getPageType());
-        }
-        if (config.getVersion()!=null ) {
-            crt.andVersionEqualTo(config.getVersion());
-        }
-        if (config.getVersionMax()!=null ) {
-            crt.andVersionMaxEqualTo(config.getVersionMax());
-        }
-        if (config.getId()!=null ) {
-            crt.andIdEqualTo(config.getId());
-        }
-
         if (limitStart != -1) {
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
@@ -83,7 +74,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
         //int nowTime = GetDate.getNowTime10();
         //record.setAddtime(nowTime);
         record.setCreateTime(new Date());
-        record.setBorrowImageUrl(this.moveUploadImage(record));
+        record.setBorrowImageUrl(record.getBorrowImageUrl());
         appBorrowImageMapper.insertSelective(record);
     }
 

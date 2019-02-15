@@ -1917,8 +1917,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayTotal(total.toString());
                         userRepayDetail.setStatus(creditRepay.getStatus().toString());
                         userRepayDetail.setUserId(creditRepay.getUserId().toString());
-                        String userName = this.getRUser(creditRepay.getUserId()).getUsername();
-                        String userNameStr = userName.substring(0, 1).concat("**");
+                        // userName直接取表中数据 update by wgx 2019/02/15
+                        String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
                         userRepayDetail.setUserName(userNameStr);
                         userRepayDetails.add(userRepayDetail);
                     }
@@ -1954,8 +1954,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayTotal(total.toString());
                         userRepayDetail.setStatus(creditRepay.getRepayStatus().toString());
                         userRepayDetail.setUserId(creditRepay.getUserId().toString());
-                        String userName = this.getRUser(creditRepay.getUserId()).getUsername();
-                        String userNameStr = userName.substring(0, 1).concat("**");
+                        // userName直接取表中数据 update by wgx 2019/02/15
+                        String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
                         userRepayDetail.setUserName(userNameStr);
                         userRepayDetails.add(userRepayDetail);
                     }
@@ -1989,8 +1989,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userRepayDetail.setRepayTotal(total.toString());
                     userRepayDetail.setStatus(userRecover.getRecoverStatus().toString());
                     userRepayDetail.setUserId(userRecover.getUserId().toString());
-                    String userName = this.getRUser(userRecover.getUserId()).getUsername();
-                    String userNameStr = userName.substring(0, 1).concat("**");
+                    // userName直接取表中数据 update by wgx 2019/02/15
+                    String userNameStr = userRecover.getUserName().substring(0, 1).concat("**");
                     userRepayDetail.setUserName(userNameStr);
                     userRepayDetails.add(userRepayDetail);
                 }
@@ -2022,6 +2022,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
         int totalPeriod = borrow.getBorrowPeriod() - period;
         if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
+            // 将calculateRecoverPlanAll的borrowRecoverList移到方法外查询 update by wgx 2019/02/15
+            List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
             // 用户实际还款额
             for (int i = 0; i < borrowRepayPlans.size(); i++) {
                 RepayDetailBean repayPlanDetail = new RepayDetailBean();
@@ -2056,7 +2058,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             totalPeriod = borrow.getBorrowPeriod() - period + 1;
                             // 计算还款期的数据
                             BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                            this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod);
+                            this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
                             borrowRepayPlanDeails.add(repayPlanDetail);
 
                             repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
@@ -2103,7 +2105,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
                     // 计算还款期的数据
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                    this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod);
+                    this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
                     borrowRepayPlanDeails.add(repayPlanDetail);
 
                     //  累加以下值
@@ -2137,7 +2139,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     /**
      * 统计分期还款用户正常还款的总标
      */
-    private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, Borrow borrow, int totalPeriod) {
+    private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, Borrow borrow, int totalPeriod, List<BorrowRecover> borrowRecoverList) {
 
         // 项目编号
         String borrowNid = borrow.getBorrowNid();
@@ -2155,8 +2157,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
         // ====> 是否分期最后一期
         boolean isLastPeriod = (borrowPeriod == repayPeriod ? true : false);
-
-        List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
+        // 将calculateRecoverPlanAll的borrowRecoverList移到方法外查询 update by wgx 2019/02/15
+        // List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
         List<BorrowRecoverPlan> borrowRecoverPlans = this.getBorrowRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
 
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
@@ -3812,8 +3814,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayTotal(total.toString());
                             userRepayDetail.setStatus(creditRepay.getStatus().toString());
                             userRepayDetail.setUserId(creditRepay.getUserId().toString());
-                            String userName = this.getRUser(creditRepay.getUserId()).getUsername();
-                            String userNameStr = userName.substring(0, 1).concat("**");
+                            // userName直接取表中数据 update by wgx 2019/02/15
+                            String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
                             userRepayDetail.setUserName(userNameStr);
                             userRepayDetails.add(userRepayDetail);
                         }
@@ -3851,8 +3853,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayTotal(total.toString());
                             userRepayDetail.setStatus(creditRepay.getRepayStatus().toString());
                             userRepayDetail.setUserId(creditRepay.getUserId().toString());
-                            String userName = this.getRUser(creditRepay.getUserId()).getUsername();
-                            String userNameStr = userName.substring(0, 1).concat("**");
+                            // userName直接取表中数据 update by wgx 2019/02/15
+                            String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
                             userRepayDetail.setUserName(userNameStr);
                             userRepayDetails.add(userRepayDetail);
                         }
@@ -3904,8 +3906,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayTotal(total.toString());
                         userRepayDetail.setStatus(recoverStatus.toString());
                         userRepayDetail.setUserId(userRecoverPlan.getUserId().toString());
-                        String userName = this.getRUser(userRecoverPlan.getUserId()).getUsername();
-                        String userNameStr = userName.substring(0, 1).concat("**");
+                        // userName直接取表中数据 update by wgx 2019/02/15
+                        String userNameStr = userRecoverPlan.getUserName().substring(0, 1).concat("**");
                         userRepayDetail.setUserName(userNameStr);
                         userRepayDetails.add(userRepayDetail);
                     }
@@ -4128,8 +4130,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayTotal(total.toString());
                             userRepayDetail.setStatus(creditRepay.getStatus().toString());
                             userRepayDetail.setUserId(creditRepay.getUserId().toString());
-                            String userName = this.getRUser(creditRepay.getUserId()).getUsername();
-                            String userNameStr = userName.substring(0, 1).concat("**");
+                            // userName直接取表中数据 update by wgx 2019/02/15
+                            String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
                             userRepayDetail.setUserName(userNameStr);
                             userRepayDetails.add(userRepayDetail);
                         }
@@ -4167,8 +4169,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayTotal(total.toString());
                             userRepayDetail.setStatus(creditRepay.getRepayStatus().toString());
                             userRepayDetail.setUserId(creditRepay.getUserId().toString());
-                            String userName = this.getRUser(creditRepay.getUserId()).getUsername();
-                            String userNameStr = userName.substring(0, 1).concat("**");
+                            // userName直接取表中数据 update by wgx 2019/02/15
+                            String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
                             userRepayDetail.setUserName(userNameStr);
                             userRepayDetails.add(userRepayDetail);
                         }
@@ -4216,8 +4218,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayTotal(total.toString());
                         userRepayDetail.setStatus(recoverStatus.toString());
                         userRepayDetail.setUserId(userRecoverPlan.getUserId().toString());
-                        String userName = this.getRUser(userRecoverPlan.getUserId()).getUsername();
-                        String userNameStr = userName.substring(0, 1).concat("**");
+                        // userName直接取表中数据 update by wgx 2019/02/15
+                        String userNameStr = userRecoverPlan.getUserName().substring(0, 1).concat("**");
                         userRepayDetail.setUserName(userNameStr);
                         userRepayDetails.add(userRepayDetail);
                     }
@@ -5431,8 +5433,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
     /**
      * 用户待还详情
-     * @param borrowNid
-     * @param verificationFlag 计划标的和非计划标的判断的Flag
+     * @param repayTransferRequest
      * @return
      */
     @Override

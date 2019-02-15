@@ -97,6 +97,21 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(form.getInvestCountsSrch())) {
 			param.put("investCountsSrch", form.getInvestCountsSrch());
 		}
+		//预计开始退出时间
+		if (StringUtils.isNotEmpty(form.getEndDateStartSrch())) {
+			param.put("endDateStartSrch", form.getEndDateStartSrch());
+		}
+		if (StringUtils.isNotEmpty(form.getEndDateEndSrch())) {
+			param.put("endDateEndSrch", form.getEndDateEndSrch());
+		}
+		//实际退出时间
+		if (StringUtils.isNotEmpty(form.getAcctualPaymentTimeStartSrch())) {
+			param.put("acctualPaymentTimeStartSrch", form.getAcctualPaymentTimeStartSrch());
+		}
+		if (StringUtils.isNotEmpty(form.getAcctualPaymentTimeEndSrch())) {
+			param.put("acctualPaymentTimeEndSrch", form.getAcctualPaymentTimeEndSrch());
+		}
+
 		int count = this.adminPlanAccedeListCustomizeMapper.countAccedeRecord(param);
 		return count;
 	}

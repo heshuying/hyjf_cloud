@@ -498,6 +498,16 @@ public class BorrowController extends BaseController {
 		 return null;
 	 }
 
+	@PostMapping("/getborrowByProductId")
+	public BorrowResponse getborrowByProductId(@RequestBody Map<String, Object> params) {
+		BorrowResponse response =  new BorrowResponse();
+		List<BorrowAndInfoVO> list = borrowService.getborrowByProductId(params);
+		if (Validator.isNotNull(list)){
+			response.setResultList(list);
+		}
+		return null;
+	}
+
 	@PostMapping("/selectOrgRepayProjectList")
 	public  WebUserRepayProjectListCustomizeResponse  selectOrgRepayProjectList(@RequestBody Map<String, Object> params) {
 		WebUserRepayProjectListCustomizeResponse  response = new WebUserRepayProjectListCustomizeResponse();

@@ -232,7 +232,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 							multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_HALF_DOWN));
 					if(credit.getCreditCapitalAssigned().compareTo(credit.getCreditCapital())==0){
 						//状态更新时间
-						map.put("productDate",  GetDate.formatDate((list.get(list.size()-1).getCreateTime()+"")));
+						map.put("productDate",  GetDate.formatDate(list.get(list.size()-1).getCreateTime()));
 					}else{
 						//状态更新时间
 						map.put("productDate",  GetDate.timestamptoStrYYYYMMDDHHMMSS(credit.getEndTime()+""));
