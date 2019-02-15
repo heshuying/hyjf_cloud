@@ -120,7 +120,7 @@ public class ChannelCustomize implements Serializable {
 			strBuf.append(URLEncoder.encode(this.utmCampaign, "UTF-8"));
 		}
 		if (StringUtils.isNotEmpty(this.utmReferrer) && !"0".equals(this.utmReferrer)) {
-			strBuf.append("&utm_referrer=");
+			strBuf.append("&refferUserId=");
 			strBuf.append(this.utmReferrer);
 		}
 		this.url = strBuf.toString();

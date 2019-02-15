@@ -12,6 +12,7 @@ import com.hyjf.am.trade.service.front.coupon.MyCouponListService;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
+import com.hyjf.common.util.CustomConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -114,6 +115,9 @@ public class MyCouponListController extends BaseController {
         CouponResponseForCoupon responseBean = new CouponResponseForCoupon();
 
         List<CouponUserForAppCustomizeVO> resultList = myCouponListService.getMyCouponByPage(requestBean);
+        if(resultList != null && !resultList.isEmpty()){
+            myCouponListService.updateCouponReadFlag(Integer.parseInt(requestBean.getUserId()), CustomConstants.USER_COUPON_STATUS_USED);
+        }
         responseBean.setResultList(resultList);
 
         return responseBean;

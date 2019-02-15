@@ -44,14 +44,15 @@ import java.util.UUID;
 
 /**
  * 合规四期-解绑银行卡
+ *
  * @author nxl
  * @version WebUnBindCardPageController, v0.1 2018/10/15 14:26
  */
-@Api(value = "app端-用户解绑卡接口(页面调用)",tags = "app端-用户解绑卡接口(页面调用)")
+@Api(value = "app端-用户解绑卡接口(页面调用)", tags = "app端-用户解绑卡接口(页面调用)")
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-app/bank/app/deleteCardPage")
-public class AppUnBindCardPageController extends BaseUserController{
+public class AppUnBindCardPageController extends BaseUserController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WebBindCardPageController.class);
 
     @Autowired
@@ -64,7 +65,7 @@ public class AppUnBindCardPageController extends BaseUserController{
 
     @PostMapping("/deleteCard")
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
-    public JSONObject getCashUrl(HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId") Integer userId) {
+    public JSONObject getCashUrl(HttpServletRequest request, HttpServletResponse response, @RequestHeader(value = "userId") Integer userId) {
         JSONObject ret = new JSONObject();
         // 版本号
         String version = request.getParameter("version");
@@ -120,15 +121,16 @@ public class AppUnBindCardPageController extends BaseUserController{
         // 用户余额大于零不让解绑
         AccountVO account = unBindCardService.getAccountByUserId(userId);
         // 用户在银行的账户余额
-        BigDecimal bankBalance = unBindCardService.queryBankBlance(userId,accountChinapnrTender.getAccount());
+        BigDecimal bankBalance = unBindCardService.queryBankBlance(userId, accountChinapnrTender.getAccount());
         if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
-                || ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
+                || ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))
+                || (Validator.isNotNull(account.getBankTotal()) && account.getBankTotal().compareTo(BigDecimal.ZERO) > 0)) {
             ret.put("status", "1");
             ret.put("statusDesc", "抱歉，银行卡解绑错误，请联系客服！");
             return ret;
         }
         // 根据银行卡Id获取用户的银行卡信息
-        BankCardVO bankCardVO =unBindCardService.queryUserCardValid(userId.toString(),cardNo);
+        BankCardVO bankCardVO = unBindCardService.queryUserCardValid(userId.toString(), cardNo);
         if (bankCardVO == null || StringUtils.isEmpty(bankCardVO.getCardNo())) {
             ret.put("status", "1");
             ret.put("statusDesc", "获取用户银行卡信息失败！");
@@ -137,7 +139,7 @@ public class AppUnBindCardPageController extends BaseUserController{
         try {
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
-            String RECHARGE_URL = super.getFrontHost(systemConfig,platform) + "/public/formsubmit?requestType="+ CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
+            String RECHARGE_URL = super.getFrontHost(systemConfig, platform) + "/public/formsubmit?requestType=" + CommonConstant.APP_BANK_REQUEST_TYPE_UNBINDCARD;
             StringBuffer sbUrl = new StringBuffer(RECHARGE_URL);
             sbUrl.append("&").append("version").append("=").append(version);
             sbUrl.append("&").append("netStatus").append("=").append(netStatus);
@@ -155,19 +157,20 @@ public class AppUnBindCardPageController extends BaseUserController{
         }
         return ret;
     }
+
     /**
      * 绑卡接口
      */
     @PostMapping("/deleteCardPage")
     @ApiOperation(value = "解绑银行卡接口页面", notes = "解绑银行卡接口页面")
-    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestParam(value = "sign") String sign,@RequestParam(value = "bankNumber") String bankNumber,HttpServletRequest request) {
+    public AppResult<Object> bindCardPage(@RequestHeader(value = "userId") Integer userId, @RequestParam(value = "sign") String sign, @RequestParam(value = "bankNumber") String bankNumber, HttpServletRequest request) {
         // 平台
         String platform = request.getParameter("platform");
         AppResult<Object> result = new AppResult<Object>();
         if (userId == null) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
-        if(StringUtils.isBlank(bankNumber)){
+        if (StringUtils.isBlank(bankNumber)) {
             throw new ReturnMessageException(MsgEnum.STATUS_ZC000009);
         }
         WebViewUserVO user = unBindCardService.getUserFromCache(userId);
@@ -189,9 +192,9 @@ public class AppUnBindCardPageController extends BaseUserController{
         // 根据用户id查找账户信息管理
         AccountVO accountVO = unBindCardService.getAccountByUserId(userId);
         // 根据银行卡Id获取用户的银行卡信息
-        BankCardVO bankCardVO =unBindCardService.queryUserCardValid(userId.toString(),bankNumber);
+        BankCardVO bankCardVO = unBindCardService.queryUserCardValid(userId.toString(), bankNumber);
         // 条件校验
-        unBindCardService.checkParamUnBindCardPage(user,accountChinapnrTender,accountVO,bankCardVO);
+        unBindCardService.checkParamUnBindCardPage(user, accountChinapnrTender, accountVO, bankCardVO);
         //获取用户info信息
         UserInfoVO userInfoVO = unBindCardService.getUserInfo(user.getUserId());
         // 异步调用路
@@ -206,7 +209,7 @@ public class AppUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         deleteCardPageBean.setPlatform(request.getParameter("platform"));
         //调用解绑银行卡接口
-        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_APP,sign,request);
+        Map<String, Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean, BankCallConstant.CHANNEL_APP, sign, request);
         result.setStatus(BaseResult.SUCCESS);
         result.setData(data);
         return result;
@@ -214,6 +217,7 @@ public class AppUnBindCardPageController extends BaseUserController{
 
     /**
      * 绑卡异步回调
+     *
      * @param bean
      * @param request
      * @return
@@ -228,7 +232,7 @@ public class AppUnBindCardPageController extends BaseUserController{
         int userId = Integer.parseInt(bean.getLogUserId());
         // 绑卡后处理
         try {
-            if(BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())){
+            if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
                 logger.info("app端删除银行卡成功");
                 // 删除银行卡信息
                 unBindCardService.updateAfterUnBindCard(bean, userId);
@@ -241,20 +245,20 @@ public class AppUnBindCardPageController extends BaseUserController{
         return result;
     }
 
-     /**
+    /**
      * @Description 调用银行失败原因
      * @Author
      */
     @ApiOperation(value = "调用银行失败原因", notes = "查询调用银行失败原因")
     @PostMapping("/searchFiledMess")
-    @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
+    @ApiImplicitParam(name = "param", value = "{logOrdId:String}", dataType = "Map")
     @ResponseBody
-    public WebResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+    public WebResult<Object> searchFiledMess(@RequestBody Map<String, String> param) {
         logger.info("调用银行失败原因start,logOrdId:{}", param);
         WebResult<Object> result = new WebResult<Object>();
         String retMsg = unBindCardService.getFailedMess(param.get("logOrdId"));
-        Map<String,String> map = new HashMap<>();
-        map.put("error",retMsg);
+        Map<String, String> map = new HashMap<>();
+        map.put("error", retMsg);
         result.setData(map);
         return result;
     }

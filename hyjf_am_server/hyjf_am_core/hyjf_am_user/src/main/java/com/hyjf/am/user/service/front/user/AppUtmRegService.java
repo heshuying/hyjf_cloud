@@ -38,7 +38,7 @@ public interface AppUtmRegService {
      */
     List<AppUtmReg> exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
-    List<AppUtmReg> getAppUtmRegVO(AppChannelStatisticsRequest request);
+    int getAppUtmRegVOCount(AppChannelStatisticsRequest request);
 
     /**
      *
@@ -60,4 +60,13 @@ public interface AppUtmRegService {
      * @return
      */
     List<AppUtmReg> findAppUtmReg(AppChannelStatisticsDetailRequest request,Paginator paginator);
+
+    /**
+     * 查询相应的app渠道无主单开户数
+     * @param request
+     * @return
+     */
+    int getOpenAccountAttrCount(AppChannelStatisticsRequest request);
+
+    List<AppUtmReg> getAppUtmRegVO(AppChannelStatisticsRequest request);
 }
