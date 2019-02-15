@@ -61,7 +61,7 @@ public class AemsTrusteePayController extends BaseController {
     * @return org.springframework.web.servlet.ModelAndView
     **/
     @ApiOperation(value = "AEMS借款人受托支付申请", notes = "AEMS借款人受托支付申请")
-    @PostMapping(value = "/pay.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/pay", produces = "application/json; charset=utf-8")
     public ModelAndView trusteePay(HttpServletRequest request, @RequestBody AemsTrusteePayRequestBean payRequestBean){
         ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
         logger.info("请求参数" + JSONObject.toJSONString(payRequestBean, true) + "]");
@@ -202,7 +202,7 @@ public class AemsTrusteePayController extends BaseController {
 
         // 同步调用路径
         String retUrl =systemConfig.getAppFrontHost() + request.getContextPath()
-                +  "/aems/trusteePay/trusteePayReturn.do?acqRes="
+                +  "/aems/trusteePay/trusteePayReturn?acqRes="
                 + payRequestBean.getAcqRes()
                 + StringPool.AMPERSAND + BankCallConstant.PARAM_PRODUCTID + StringPool.EQUAL + payRequestBean.getProductId()
                 + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
@@ -255,7 +255,7 @@ public class AemsTrusteePayController extends BaseController {
     }
 
     // 同步回调
-    @RequestMapping("/trusteePayReturn.do")
+    @RequestMapping("/trusteePayReturn")
     public ModelAndView passwordReturn(HttpServletRequest request, HttpServletResponse response,
                                        BankCallBean bean) {
         logger.info("借款人受托支付申请同步回调start,请求参数为：【"+JSONObject.toJSONString(bean, true)+"】");
@@ -317,7 +317,7 @@ public class AemsTrusteePayController extends BaseController {
 
     // 异步回调
     @ResponseBody
-    @RequestMapping(value = "/trusteePayBgReturn.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/trusteePayBgReturn",method = RequestMethod.POST)
     public BankCallResult passwordBgreturn(HttpServletRequest request, HttpServletResponse response,
                                            @ModelAttribute BankCallBean bean) {
         logger.info("借款人受托支付申请异步回调start");

@@ -38,7 +38,7 @@ public class AemsAssetSearchController extends BaseController {
     @Autowired
     AemsAssetSearchService amesassetSearchService;
 
-    @PostMapping("/status.do")
+    @PostMapping("/status")
     @ApiParam(required = true, name = "findDetailById", value = "Aems第三方资产状态查询接口")
     @ApiOperation(value = "AEMS第三方资产状态查询接口", httpMethod = "POST", notes = "AEMS第三方资产状态查询接口")
     public AemsAssetStatusResultBean findDetailById(@RequestBody @Valid AemsAssetStatusRequestBean bean) {

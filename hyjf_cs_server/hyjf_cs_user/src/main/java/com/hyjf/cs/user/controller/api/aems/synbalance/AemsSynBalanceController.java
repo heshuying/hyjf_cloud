@@ -35,10 +35,9 @@ import javax.servlet.http.HttpServletRequest;
 public class AemsSynBalanceController extends BaseUserController {
     @Autowired
     private AemsSynBalanceService synBalanceService;
-    @Autowired
-    SystemConfig systemConfig;
+
     @ApiOperation(value = "AEMS用户余额查询接口", notes = "AEMS用户余额查询接口")
-    @PostMapping(value = "/synbalance.do")
+    @PostMapping(value = "/synbalance")
     @ResponseBody
     public AemsSynBalanceResultBean synBalance(@RequestBody AemsSynBalanceRequestBean synBalanceRequestBean, HttpServletRequest request) {
         logger.info(synBalanceRequestBean.getAccountId()+"第三方同步余额开始-----------------------------");

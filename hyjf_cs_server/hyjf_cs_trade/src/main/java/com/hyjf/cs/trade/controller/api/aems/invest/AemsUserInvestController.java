@@ -48,7 +48,7 @@ public class AemsUserInvestController extends BaseTradeController {
     private CommonSvrChkService commonSvrChkService;
 
 
-    @PostMapping("/repayList.do")
+    @PostMapping("/repayList")
     @ApiParam(required = true, name = "repaymentInfoList", value = "第三方查询投资信息,获取回款记录")
     @ApiOperation(value = " 第三方查询投资信息,获取回款记录", httpMethod = "POST", notes = " 第三方查询投资信息,获取回款记录")
     public ResultApiBean repayList(@RequestBody AemsRepayListRequestBean bean) {

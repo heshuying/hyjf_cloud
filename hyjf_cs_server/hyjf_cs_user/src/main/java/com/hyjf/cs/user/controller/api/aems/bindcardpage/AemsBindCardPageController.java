@@ -57,7 +57,7 @@ public class AemsBindCardPageController extends BaseController {
      * @param response
      * @return
      */
-    @PostMapping("/bind.do")
+    @PostMapping("/bind")
     @ApiParam(required = true, name = "findDetailById", value = "AEMS用户页面绑卡")
     @ApiOperation(value = "AEMS用户页面绑卡", httpMethod = "POST", notes = "AEMS用户页面绑卡")
     public ModelAndView userBindCardPlus(@RequestBody AemsBindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {

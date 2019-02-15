@@ -42,7 +42,7 @@ public class AemsUserRegisterController extends BaseUserController {
     @Autowired
     private AemsUserRegisterService aemsUserRegisterService;
 
-    @PostMapping("/register.do")
+    @PostMapping("/register")
     @ApiOperation(value = "AEMS系统用户注册接口", httpMethod = "POST", notes = "AEMS系统用户注册接口")
     public AemsUserRegisterResultBean userRegister(@RequestBody AemsUserRegisterRequestBean aemsUserRegisterRequestBean, HttpServletRequest request, HttpServletResponse response) {
         logger.info("AEMS注册接口, aemsUserRegisterRequestBean is :{}", JSONObject.toJSONString(aemsUserRegisterRequestBean));

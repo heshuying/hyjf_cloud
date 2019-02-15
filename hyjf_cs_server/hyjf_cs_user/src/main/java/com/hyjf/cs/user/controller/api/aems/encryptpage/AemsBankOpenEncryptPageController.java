@@ -52,7 +52,7 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "AEMS系统:用户开户", notes = "AEMS系统:用户开户")
-    @PostMapping(value = "/open.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/open", produces = "application/json; charset=utf-8")
     @HystrixCommand(commandKey = "AEMS系统:用户开户", fallbackMethod = "fallBackApiBankOpen", ignoreExceptions = CheckException.class, commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
