@@ -428,9 +428,8 @@ public class AccountRechargeController extends BaseController {
         map.put("cardid", "银行卡号");
         map.put("money", "充值金额");
         map.put("fee", "手续费");
-        map.put("dianfufee", "垫付手续费");
         map.put("balance", "到账金额");
-        map.put("status", "充值状态");
+        map.put("statusName", "充值状态");
         map.put("client", "充值平台");
         map.put("createTime", "充值时间");
         map.put("txDate", "发送日期");
@@ -473,22 +472,7 @@ public class AccountRechargeController extends BaseController {
                 }
             }
         };
-        IValueFormatter statusAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                // 充值类型
-                String status = (String) object;
-                if ("1".equals(status)) {
-                    return "充值中";
-                } else if ("2".equals(status)) {
-                    return "充值成功";
-                } else if ("3".equals(status)) {
-                    return "充值失败";
-                } else {
-                    return status;
-                }
-            }
-        };
+
         IValueFormatter moneyAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -500,16 +484,14 @@ public class AccountRechargeController extends BaseController {
             @Override
             public String format(Object object) {
                 BigDecimal fee = (BigDecimal) object;
-                return fee != null ? (fee + "") : (0 + "");
+                return fee != null ? (fee + "") : (0.00 + "");
             }
         };
         mapAdapter.put("userAttribute", userAttributeAdapter);
         mapAdapter.put("gateType", gateTypeAdapter);
         mapAdapter.put("money", moneyAdapter);
         mapAdapter.put("fee", feeAdapter);
-        mapAdapter.put("fianfuFee", feeAdapter);
         mapAdapter.put("balance", moneyAdapter);
-        mapAdapter.put("status", statusAdapter);
         return mapAdapter;
     }
 

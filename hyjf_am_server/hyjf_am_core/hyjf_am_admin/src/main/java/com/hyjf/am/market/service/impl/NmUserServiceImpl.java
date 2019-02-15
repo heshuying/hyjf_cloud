@@ -9,6 +9,7 @@ import com.hyjf.am.market.dao.model.auto.NmUser;
 import com.hyjf.am.market.dao.model.auto.NmUserExample;
 import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.market.service.NmUserService;
+import com.hyjf.am.response.IntegerResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,11 @@ public class NmUserServiceImpl implements NmUserService {
         return nmUsers;
     }
     @Override
-    public void saveReutrnCash(Map<String,Object> map){
+    public IntegerResponse saveReutrnCash(Map<String,Object> map){
         _log.info("返现参数=="+ JSONObject.toJSONString(map));
+        IntegerResponse response = new IntegerResponse(1);
         if(map ==null){
-            return;
+            return new IntegerResponse(0) ;
         }
         int level = (int)map.get("level");
         if(level>0) {
@@ -54,11 +56,12 @@ public class NmUserServiceImpl implements NmUserService {
         if(level == 1){
             InviterReturnDetail inviterReturnDetail = (InviterReturnDetail)map.get("inviterReturnDetail");
             this.saveInviterReturnDetail(inviterReturnDetail);
-            return;
+            return response;
         }
         for(int i =1;i<level;i++){
             this.saveInviterReturnDetail((InviterReturnDetail)map.get("inviterReturnDetail"+i));
         }
+        return response;
     }
     private int saveInviterReturnDetail(InviterReturnDetail inviterReturnDetail){
         return inviterReturnDetailMapper.insert(inviterReturnDetail);

@@ -82,17 +82,7 @@ public class RechargeManagementController extends BaseController {
 
             // 遍历列表从, 从Redis中读取配置信息
             for (RechargeManagementCustomize ac : responseList) {
-
-                // 处理中 和 失败 的数据需要进行数据处理
-                // TODO: 后期需要处理
-                if ("1".equals(ac.getStatus())) {
-                    ac.setStatus("1");
-                }else if ("3".equals(ac.getStatus())){
-                    ac.setStatus("3");
-                }else {
-                    ac.setStatus(null);
-                }
-
+                ac.setStatusName(rechargeStatusMap.get(ac.getStatus()));
                 ac.setIsBank(bankTypeMap.get(ac.getIsBank()));
                 ac.setUserProperty(userPropertyMap.get(ac.getUserProperty()));
             }
