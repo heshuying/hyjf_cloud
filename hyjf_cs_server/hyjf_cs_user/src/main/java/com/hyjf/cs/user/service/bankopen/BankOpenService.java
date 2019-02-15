@@ -2,15 +2,13 @@ package com.hyjf.cs.user.service.bankopen;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
-import com.hyjf.cs.user.bean.OpenAccountPageBean;
-import com.hyjf.cs.user.bean.OpenAccountPlusRequest;
-import com.hyjf.cs.user.bean.OpenAccountPlusResult;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -76,4 +74,12 @@ public interface BankOpenService extends BaseUserService {
     OpenAccountPlusResult checkAndUpdateForSendCode(OpenAccountPlusRequest openAccountRequestBean, String ipAddr);
 
     BankCallBean sendOpenAccountSms(Integer userId, String orderId, String srvTxCode, String mobile, String channel);
+
+	/**
+	 * AEMS系统:用户开户校验参数
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	Map<String, String> checkAemsOpenBankAccountParam(@Valid AemsBankOpenEncryptPageRequestBean requestBean);
 }

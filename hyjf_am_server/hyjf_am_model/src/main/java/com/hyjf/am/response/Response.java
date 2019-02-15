@@ -1,5 +1,6 @@
 package com.hyjf.am.response;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * @version Response, v0.1 2018/1/21 22:18
  */
 @SuppressWarnings("unchecked")
-public class Response<T> {
+public class Response<T> implements Serializable {
 	public static final String SUCCESS = "0";
 	public static final String SUCCESS_MSG = "成功";
 	public static final String FAIL = "1";

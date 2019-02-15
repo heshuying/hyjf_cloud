@@ -200,7 +200,11 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             try {
                 //调用银行接口
                 BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
-                String retCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
+                String retCode = "";
+                if(registResult != null){
+                    retCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
+                }
+
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
                     //受托支付备案
                     if (borrowInfo.getEntrustedFlg() == 1) {

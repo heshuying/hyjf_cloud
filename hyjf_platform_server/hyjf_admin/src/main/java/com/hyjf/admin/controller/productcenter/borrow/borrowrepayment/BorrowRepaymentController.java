@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepayment;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
@@ -164,7 +165,7 @@ public class BorrowRepaymentController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportRepayClkAct(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRepaymentPlanRequestBean form) throws Exception {
         BorrowRepaymentPlanRequest copyForm=new BorrowRepaymentPlanRequest();
-
+        logger.info("请求参数:" +JSONObject.toJSON(form));
         BeanUtils.copyProperties(form, copyForm);
         if(form.getVerifyTimeStartSrch() != null&&!"".equals(form.getVerifyTimeStartSrch())) {
             String date;

@@ -9,10 +9,10 @@ import com.hyjf.admin.beans.vo.AccountDetailCustomizeVO;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AccountDetailService;
-import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -30,10 +30,6 @@ import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +56,13 @@ public class AccountDetailController extends BaseController {
 
     @Autowired
     private AccountDetailService accountDetailService;
-    @Autowired
-    private UserCenterService userCenterService;
 
+    public static final String PERMISSIONS = "accountdetail";
 
     @ApiOperation(value = "资金明细页面初始化", notes = "资金明细页面初始化")
     @PostMapping(value = "/accountDetailInit")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<List<DropDownVO>> userManagerInit() {
         List<AccountTradeVO> accountTradeVOList = accountDetailService.selectTradeTypes();
         List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(accountTradeVOList,"id","name");
@@ -76,6 +72,7 @@ public class AccountDetailController extends BaseController {
     @ApiOperation(value = "资金明细", notes = "资金明细页面列表显示")
     @PostMapping(value = "/queryAccountDetail")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AccountDetailCustomizeVO>> queryAccountDetail(@RequestBody AccountDetailRequestBean accountDetailRequestBean) {
         AccountDetailRequest requestAccountDetail = new AccountDetailRequest();
         BeanUtils.copyProperties(accountDetailRequestBean,requestAccountDetail);
@@ -115,7 +112,7 @@ public class AccountDetailController extends BaseController {
                 }
             }
         }else {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+            return new AdminResult<>(FAIL, "暂无可修复的数据");
         }
         return new AdminResult<>();
     }
@@ -128,6 +125,7 @@ public class AccountDetailController extends BaseController {
      */
     @ApiOperation(value = "导出资金明细列表", notes = "导出资金明细列表")
     @PostMapping(value = "/exportqueryaccountdetail")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAccountsExcel(HttpServletRequest httpRequest, HttpServletResponse response, @RequestBody AccountDetailRequestBean accountDetailRequestBean) throws Exception {
 
         //sheet默认最大行数
