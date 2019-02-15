@@ -67,9 +67,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     private SynBalanceService synBalanceService;
 
 	// 服务费授权描述
-	private static final String paymentAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n服务费授权。";
+	private static final String paymentAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。";
 	//三合一授权描述
-	private static final String mergeAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。";
+	private static final String mergeAuthDesc = " 您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期;";
 	private static final String checkUserRoleDesc = "仅限出借人进行出借";
 	@Autowired
 	private AmUserClient amUserClient;

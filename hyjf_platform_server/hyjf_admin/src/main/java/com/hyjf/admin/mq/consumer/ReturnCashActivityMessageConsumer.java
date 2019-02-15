@@ -5,6 +5,7 @@ package com.hyjf.admin.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmAdminClient;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.resquest.admin.ReturnCashRequest;
 import com.hyjf.common.cache.RedisConstants;
@@ -94,7 +95,10 @@ public class ReturnCashActivityMessageConsumer implements RocketMQListener<Messa
             returnCashRequest.setOrderId(orderId);
             returnCashRequest.setProductType(productType);
             returnCashRequest.setInvestMoney(investMoney);
-            amAdminClient.saveReturnCash(returnCashRequest);
+            IntegerResponse integerResponse = amAdminClient.saveReturnCash(returnCashRequest);
+            if(integerResponse.getResultInt()==0){
+                _log.error("【纳觅返现活动】保存失败，userId："  + userId + " orderId:" + orderId+" productType:"+productType);
+            }
         } catch (Exception e) {
             _log.error("【纳觅返现活动】处理失败，userId："  + userId + " orderId:" + orderId+" productType:"+productType, e);
             return;

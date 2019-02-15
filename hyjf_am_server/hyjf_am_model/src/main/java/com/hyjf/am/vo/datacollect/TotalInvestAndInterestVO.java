@@ -2,6 +2,7 @@ package com.hyjf.am.vo.datacollect;
 
 import com.hyjf.am.vo.BaseVO;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -9,7 +10,7 @@ import java.math.BigDecimal;
  * @author zhangyk
  * @date 2018/7/14 16:16
  */
-public class TotalInvestAndInterestVO extends BaseVO {
+public class TotalInvestAndInterestVO extends BaseVO implements Serializable {
 
     /**
      *
