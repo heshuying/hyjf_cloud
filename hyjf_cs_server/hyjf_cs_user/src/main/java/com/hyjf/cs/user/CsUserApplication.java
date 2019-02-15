@@ -1,6 +1,7 @@
 package com.hyjf.cs.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableCircuitBreaker
-@ComponentScan(basePackages = {"com.hyjf.cs.user","com.hyjf.common","com.hyjf.pay.lib"})
+@ComponentScan(basePackages = {"com.hyjf.cs.user","com.hyjf.common","com.hyjf.cs.common","com.hyjf.pay.lib"})
 public class CsUserApplication {
 
 	@Bean
@@ -33,5 +34,6 @@ public class CsUserApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsUserApplication.class, args);
+		ApiSignUtil.verifyByRSA("11000001", "", "15411111129110000011550218304");
 	}
 }

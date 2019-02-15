@@ -26,10 +26,12 @@
 		<result column="lateInterest" property="lateInterest" jdbcType="VARCHAR" />
 		<result column="lateDays" property="lateDays" jdbcType="INTEGER" />
 		<result column="charge_interest" property="reduceInterest" jdbcType="VARCHAR" />
+		<result column="instCode" property="instCode" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepayPlanList" resultMap="borrowRepayPlanList" parameterType="java.util.Map">
 		SELECT
 		b.borrow_nid AS borrowNid,
+		hbi.inst_code instCode,
 		b.account AS borrowAccount,
 		b.borrow_account_yes AS borrowAccountYes,
 		b.borrow_apr AS borrowInterest,
@@ -52,7 +54,7 @@
 		hbr.repay_fee AS manageFee,
 		hbr.repay_fee AS repayFee,
 		CASE WHEN hbr.repay_status = 1 THEN hbr.repay_fee
-		ELSE (select sum(bp.repay_fee)  from huiyingdai_borrow_repay_plan bp where bp.repay_status=1 and bp.borrow_nid=b.borrow_nid)
+		ELSE (select sum(bp.repay_fee)  from ht_borrow_repay_plan bp where bp.repay_status=1 and bp.borrow_nid=b.borrow_nid)
 		END AS manageFeeYes,
 		hbr.repay_time AS repayTime
 		FROM
@@ -99,10 +101,10 @@
 		INNER JOIN ht_borrow_apicron hba on hba.borrow_nid = b.borrow_nid and hba.api_type = 0 and hba.status = 6
 		INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.inst_code = hbi.inst_code and b.borrow_nid = hhpa.borrow_nid
 		WHERE
-			b.inst_code = #{instCode}
-        <if test="repayType != null and repayType != 2 ">
-            AND hbr.repay_status = #{repayType}
-        </if>
+		hbi.inst_code = #{instCode}
+		<if test="repayType != null and repayType != 2 ">
+			AND hbr.repay_status = #{repayType}
+		</if>
 		<if test="startDate != null and startDate != ''">
 			AND hbr.repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startDate})
 		</if>

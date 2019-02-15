@@ -136,6 +136,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		// 机构编号必须参数
 		String instCode = paramBean.getInstCode();
 		if (StringUtils.isEmpty(instCode)) {
+			logger.info("instCode为空");
 			return false;
 		}
 
@@ -167,6 +168,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 用户注册
 			UserRegisterRequestBean bean = (UserRegisterRequestBean) paramBean;
 			sign = bean.getMobile() + bean.getInstCode() + bean.getTimestamp();
+			logger.info("sign："+sign);
 			//用户开户
 		}else if (BaseDefine.METHOD_SERVER_SYNCUSERINFO.equals(methodName)) {
 			//查询用户信息
