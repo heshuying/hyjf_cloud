@@ -2157,6 +2157,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             try{
                 // redis扣减
                 redisTender(userId, borrowNid, txAmount);
+                logger.info("userId:{}   borrowNid:{}   redis减扣成功，开始进行投资",userId,borrowNid);
                 this.borrowTender(borrow, bean);
             }catch (Exception e){
                 // 回滚redis
