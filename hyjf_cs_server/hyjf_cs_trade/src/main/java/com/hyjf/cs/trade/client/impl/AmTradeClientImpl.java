@@ -2031,7 +2031,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Boolean getOverDueFlag(RightBorrowVO borrow){
         BooleanResponse response = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/borrowRepayPlan/getOverDueFlag", borrow,
+                "http://AM-TRADE/am-trade/borrowRecover/getOverDueFlag", borrow,
                 BooleanResponse.class).getBody();
         if (response != null) {
             return response.getResultBoolean();

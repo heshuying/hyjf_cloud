@@ -3,16 +3,11 @@
  */
 package com.hyjf.am.trade.controller.api.aems.repayplan;
 
-import com.hyjf.am.response.admin.WebProjectRepayListCustomizeResponse;
 import com.hyjf.am.response.trade.AemsBorrowRepayPlanCustomizeResponse;
-import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.customize.AemsBorrowRepayPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.service.api.aems.repayplan.AemsBorrowRepayPlanService;
-import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.trade.AemsBorrowRepayPlanCustomizeVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +25,7 @@ import java.util.Map;
  * @version AemsBorrowRepayPlanController, v0.1 2018/12/12 14:45
  */
 @RestController
-@RequestMapping("/am-trade/aems/repayment")
+@RequestMapping("/am-trade/aems/repayplan")
 public class AemsBorrowRepayPlanController extends BaseController {
 
     @Autowired
