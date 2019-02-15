@@ -5,6 +5,7 @@ import com.hyjf.am.market.dao.model.auto.NmUser;
 import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.market.service.NmUserService;
 import com.hyjf.am.market.service.ReturnCashActivityService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.ReturnCashRequest;
 import com.hyjf.am.resquest.market.InviterReturnCashCustomize;
 import org.slf4j.Logger;
@@ -40,12 +41,15 @@ public class ReturnCashController {
         }
     }
     @PostMapping("/saveReturnCash")
-    public void saveReturnCash(@RequestBody ReturnCashRequest request) {
+    public IntegerResponse saveReturnCash(@RequestBody ReturnCashRequest request) {
         //查询用户提出来
         InviterReturnCashCustomize inviterReturnCashCustomize = returnCashActivityService.selectReturnCashList(request.getUserId());
         List<NmUser> nmUserList = nmUserService.selectNmUserList(null);
         Map<String,Object> map = returnCashActivityService.selectReturnCash(request.getUserId(),request.getOrderId(),
                 request.getProductType(),request.getInvestMoney(),inviterReturnCashCustomize,nmUserList);
-        nmUserService.saveReutrnCash(map);
+        if(CollectionUtils.isEmpty(map)){
+            return  new IntegerResponse(0);
+        }
+        return  nmUserService.saveReutrnCash(map);
     }
 }
