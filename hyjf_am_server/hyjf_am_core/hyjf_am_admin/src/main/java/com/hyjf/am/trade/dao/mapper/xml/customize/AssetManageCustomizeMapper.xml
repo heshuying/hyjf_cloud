@@ -1007,7 +1007,7 @@
         CONCAT(hdp.debt_lock_period,'个月') debt_lock_period,
         hdpa.user_id user_id,
         hdpa.accede_account accede_account,
-        hdpa.repay_account_wait repay_account_wait,
+        hdpa.repay_interest_wait repay_account_wait,
         IFNULL(FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d' ),'--') AS create_time,
         hdpa.create_time orderby_create_time,
         IFNULL(FROM_UNIXTIME( hdp.liquidate_should_time, '%Y-%m-%d' ),'--') AS liquidate_should_time,
