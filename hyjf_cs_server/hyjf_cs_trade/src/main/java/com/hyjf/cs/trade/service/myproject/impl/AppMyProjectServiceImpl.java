@@ -721,6 +721,16 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     }
                 }
 
+                // add 合规数据上报 埋点 liubin 20181122 start
+                // 推送数据到MQ 转让 散
+                JSONObject params = new JSONObject();
+                params.put("creditNid", request.getBorrowNid());
+                params.put("flag", "1"); //1（散）2（智投）
+                params.put("status", "0"); //0转让
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.TRANSFER_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+                // add 合规数据上报 埋点 liubin 20181122 end
+
             }catch (CheckException e){
                 result.put(CustomConstants.APP_STATUS, e.getCode());
                 result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
