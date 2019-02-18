@@ -116,7 +116,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		WhereaboutsPageConfig record = new WhereaboutsPageConfig();
 		BeanUtils.copyProperties(request, record);
 		record.setStatusOn(request.getStatusOn() == 0? 1 : 0);
-		whereaboutsPageConfigMapper.updateByPrimaryKey(record);
+		whereaboutsPageConfigMapper.updateByPrimaryKeySelective(record);
 	}
 
 
@@ -127,7 +127,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		record.setId(id);
 		// 操作时间
 		record.setUpdateTime(GetDate.getDate());
-		whereaboutsPageConfigMapper.updateByPrimaryKey(record);
+		whereaboutsPageConfigMapper.updateByPrimaryKeySelective(record);
 	}
 	@Override
 	public WhereaboutsPageResponse  getWhereaboutsPageConfigById(WhereaboutsPageRequest form){

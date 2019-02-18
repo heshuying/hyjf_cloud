@@ -2842,5 +2842,7 @@ public interface AmTradeClient {
     List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
+
+    boolean checkAutoPayment(String creditNid);
 }
 

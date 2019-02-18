@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.front.borrow;
 
 import com.hyjf.am.response.BigDecimalResponse;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.HjhAccedeResponse;
@@ -171,4 +172,19 @@ public class AutoTenderController extends BaseController {
         String authCode = this.autoTenderService.getSellerAuthCode(tenderOrderId, sourceType);
         return new StringResponse(authCode);
     }
+
+    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
+    /**
+     * 出让人没有缴费授权临时对应（不收取服务费）
+     *
+     * @param tenderOrderId
+     * @param sourceType
+     * @return
+     */
+    @RequestMapping("/checkAutoPayment/{creditNid}")
+    public BooleanResponse checkAutoPayment(@PathVariable String creditNid) {
+        boolean ret = this.autoTenderService.checkAutoPayment(creditNid);
+        return new BooleanResponse(ret);
+    }
+    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
 }

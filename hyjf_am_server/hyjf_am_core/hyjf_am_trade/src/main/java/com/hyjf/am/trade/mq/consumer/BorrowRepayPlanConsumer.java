@@ -63,11 +63,11 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 				borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
 				if(borrowApicron == null || borrowApicron.getId() == null || StringUtils.isBlank(borrowApicron.getBorrowNid())
 						|| borrowApicron.getTxDate() == null || StringUtils.isBlank(borrowApicron.getBatchNo()) ){
-					logger.info("【智投还款】收到消息，解析为空");
+					logger.error("【智投还款】收到消息，解析为空！");
 					return;
 				}
 			} catch (Exception e1) {
-				logger.error(e1.getMessage());
+				logger.error("【智投还款】收到消息，解析异常！", e1);
 				return;
 			}
 
@@ -87,6 +87,7 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 				// 如果已经发生过相应的还款请求，则查询相应的状态
 				if (borrowApicron.getStatus() == 6) {
                     logger.error("【智投还款】借款编号：{}，还款已经成功，状态有误！", borrowNid);
+                    return;
 				}
 				// 还款序列号
 				String bankSeqNo = borrowApicron.getBankSeqNo();
@@ -105,8 +106,8 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 				if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
 					// 失败原因
 					String failMsg = batchResult.getFailMsg();
-                    logger.info("【智投还款】借款编号：{}，批次处理失败：{}", borrowNid, failMsg);
                     if (StringUtils.isNotBlank(failMsg)) {
+						logger.error("【智投还款】借款编号：{}，批次处理失败：{}", borrowNid, failMsg);
 						borrowApicron.setData(failMsg);
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 更新任务API状态
@@ -115,12 +116,13 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
                             throw new Exception("批次还款任务表(ht_borrow_apicron)更新状态(还款失败)失败！[用户ID：" + borrowUserId + "]，[借款编号：" + borrowNid + "]");
 						}
 					} else {
+						logger.info("【智投还款】借款编号：{}，未返回批次处理失败原因，尝试更新还款明细数据。", borrowNid);
 						// 查询批次交易明细，进行后续操作
 						int batchDetailStatus = batchBorrowRepayPlanService.reapyBatchDetailsUpdate(borrowApicron);
 						// 进行后续失败的还款的还款请求
                         if (CustomConstants.BANK_BATCH_STATUS_SUCCESS != batchDetailStatus) {
                             String statusStr = CustomConstants.BANK_BATCH_STATUS_PART_FAIL == batchDetailStatus ? "部分成功" : "失败";
-                            throw new Exception("批次查询成功后，还款明细更新" + statusStr + "。[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
+                            throw new Exception("批次查询未返回失败原因，还款明细更新" + statusStr + "。[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
                         }
 					}
 				}
@@ -166,9 +168,8 @@ public class BorrowRepayPlanConsumer implements RocketMQListener<MessageExt>, Ro
 					// add 合规数据上报 埋点 liubin 20181122 end
                     logger.info("【智投还款】借款编号：{}，还款成功！", borrowNid);
 				}
-			}catch(Exception e){
-				// 消息队列指令不消费
-				logger.error(e.getMessage());
+			} catch (Exception e) {
+				logger.error("【智投还款】还款发生系统异常！", e);
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上

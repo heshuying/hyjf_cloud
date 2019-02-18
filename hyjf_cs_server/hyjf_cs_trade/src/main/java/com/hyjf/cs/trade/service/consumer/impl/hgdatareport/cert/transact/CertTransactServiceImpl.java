@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
@@ -79,6 +80,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certRequest.setMinId((String) param.get("minId"));
 		certRequest.setLimitStart((Integer) param.get("limitStart"));
 		certRequest.setLimitEnd((Integer) param.get("limitEnd"));
+		logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
 		return amTradeClient.queryCertAccountListId(certRequest);
 	}
 
