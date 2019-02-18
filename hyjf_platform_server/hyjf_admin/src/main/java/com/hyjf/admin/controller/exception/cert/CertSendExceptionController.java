@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.exception.cert;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -55,7 +54,6 @@ public class CertSendExceptionController extends BaseController{
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertErrLogVO>> selectCertErrorLogList(@RequestBody CertErrorReportLogRequestBean requestBean){
         CertErrorReportLogResponse response = certReportLogService.selectCertErrorReportLogList(requestBean);
-        logger.info("requestBean:{}",JSONObject.toJSONString(requestBean));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

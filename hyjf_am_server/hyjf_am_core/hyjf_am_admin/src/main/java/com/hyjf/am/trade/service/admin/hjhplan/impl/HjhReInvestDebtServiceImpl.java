@@ -28,10 +28,10 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
         Map<String, Object> param = new HashMap<String, Object>();
 
         //起始时间
-//        param.put("date", request.getDate() + " 00:00:00");
+        param.put("dateStart", request.getDate() + " 00:00:00");
         // 结束时间
-//        param.put("datee", request.getDate() + " 23:59:59");
-        param.put("date", request.getDate());
+        param.put("dateEnd", request.getDate() + " 23:59:59");
+
         if (StringUtils.isNotEmpty(request.getPlanNid())){
             param.put("planNid", request.getPlanNid());
         }
@@ -50,12 +50,14 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
         Map<String, Object> param = new HashMap<String, Object>();
 
         //起始时间
-        param.put("date", request.getDate() + " 00:00:00");
+        param.put("dateStart", request.getDate() + " 00:00:00");
         // 结束时间
-        param.put("datee", request.getDate() + " 23:59:59");
+        param.put("dateEnd", request.getDate() + " 23:59:59");
         if (StringUtils.isNotEmpty(request.getPlanNid())){
             param.put("planNid", request.getPlanNid());
         }
+        param.put("limitStart", request.getLimitStart());
+        param.put("limitEnd", request.getLimitEnd());
 
         List<HjhReInvestDebtVO> recordList = hjhReInvestDebtCustomizeMapper.queryReinvestDebtList(param);
         return recordList;

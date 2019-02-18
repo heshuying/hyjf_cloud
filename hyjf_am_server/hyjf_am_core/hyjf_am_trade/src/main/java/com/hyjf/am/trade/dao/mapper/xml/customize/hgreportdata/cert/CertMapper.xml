@@ -52,11 +52,11 @@
     <select id="queryCertAccountList" resultMap="queryCertAccountListMap"
             parameterType="java.util.Map">
 		SELECT
-			hui.role_id role_id,
+			hru.role_id role_id,
 			hal.*
 		FROM
 			ht_account_list hal
-		INNER JOIN huiyingdai_users_info hui ON hal.user_id = hui.user_id
+		INNER JOIN ht_r_user hru ON hal.user_id = hru.user_id
 		WHERE hal.id<![CDATA[>=]]>#{minId} AND hal.id<![CDATA[<=]]>#{maxId}
 	</select>
 

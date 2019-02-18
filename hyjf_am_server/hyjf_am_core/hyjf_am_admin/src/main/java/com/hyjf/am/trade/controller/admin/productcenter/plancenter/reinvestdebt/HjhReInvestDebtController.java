@@ -43,7 +43,7 @@ public class HjhReInvestDebtController {
 
         Integer count = this.hjhReInvestDebtService.getReinvestDebtCount(request);
 
-        if (request.getCurrPage() > 0){
+        if (count > 0){
             Paginator paginator = new Paginator(request.getCurrPage(), count);
             request.setLimitStart(paginator.getOffset());
             if (request.getPageSize() > 0){
@@ -51,16 +51,16 @@ public class HjhReInvestDebtController {
             }else{
                 request.setLimitEnd(paginator.getLimit());
             }
+            // 获取数据列表
+            List<HjhReInvestDebtVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
+
+            if (!CollectionUtils.isEmpty(responseList)){
+                response.setResultList(responseList);
+                response.setCount(count);
+                response.setRtn(Response.SUCCESS);
+            }
         }
 
-        // 获取数据列表
-        List<HjhReInvestDebtVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
-
-        if (!CollectionUtils.isEmpty(responseList)){
-            response.setResultList(responseList);
-            response.setCount(count);
-            response.setRtn(Response.SUCCESS);
-        }
         return response;
     }
 
