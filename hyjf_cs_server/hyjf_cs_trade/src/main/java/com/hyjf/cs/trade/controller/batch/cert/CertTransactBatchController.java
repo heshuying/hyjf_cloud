@@ -36,7 +36,7 @@ import java.util.UUID;
 public class CertTransactBatchController {
 
     @Autowired
-    private CommonProducer producer;
+    private CommonProducer commonProducer;
 
     private String thisMessName = "国家互联网应急中心交易流水上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
@@ -59,6 +59,7 @@ public class CertTransactBatchController {
             param.put("limitEnd", size);
             logger.info("queryCertAccountListId:" + JSONObject.toJSONString(param));
             customize=certTransactService.queryCertAccountListId(param);
+            logger.info("customize:" + JSONObject.toJSONString(customize));
             if(certTransactMaxId==null||"".equals(certTransactMaxId)){
                 RedisUtils.set("certTransactOtherMaxId", customize.getMaxId()+"");
                 logger.info(logHeader + "CertTransactBatchController execute end...");
@@ -77,7 +78,10 @@ public class CertTransactBatchController {
             params.put("minId", minId);
             params.put("maxId", maxId);
             try{
-                producer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), JSONObject.toJSONString(params)));
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+
+
             }catch (Exception e){}
             RedisUtils.set("certTransactOtherMaxId", maxId);
             page=page+1;

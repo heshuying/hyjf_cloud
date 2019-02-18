@@ -54,9 +54,9 @@
 			AND cr.recover_status = 0
 			AND cr.received_flg = 4
 			AND cr.del_flag = 0
-			AND ct.del_flg = 0
+			AND ct.del_flag = 0
 			AND cu.del_flag = 0
-			AND cc.del_flg = 0
+			AND cc.del_flag = 0
 	</select>
 	
 	<resultMap id="couponRecoverResult" type="com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize">
