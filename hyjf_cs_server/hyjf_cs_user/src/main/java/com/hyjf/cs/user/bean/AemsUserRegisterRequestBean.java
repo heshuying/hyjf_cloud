@@ -21,6 +21,14 @@ public class AemsUserRegisterRequestBean extends BaseBean {
     @ApiModelProperty(value = "推荐人")
     private String recommended;
 
+    // 身份证号
+    @ApiModelProperty(value = "身份证号")
+    private String idCard;
+
+    // 真实姓名
+    @ApiModelProperty(value = "真实姓名")
+    private String trueName;
+
     public String getMobile() {
         return mobile;
     }
@@ -35,5 +43,21 @@ public class AemsUserRegisterRequestBean extends BaseBean {
 
     public void setRecommended(String recommended) {
         this.recommended = recommended;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getTrueName() {
+        return trueName;
+    }
+
+    public void setTrueName(String trueName) {
+        this.trueName = trueName;
     }
 }
