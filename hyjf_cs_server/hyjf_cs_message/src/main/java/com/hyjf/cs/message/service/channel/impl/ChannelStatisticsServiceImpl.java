@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
@@ -50,9 +51,9 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         String[] utmIdsSrch = request.getUtmIdsSrch();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(timeStartSrch) && StringUtils.isNotBlank(timeEndSrch)) {
-            Integer begin = GetDate.dateString2Timestamp(timeStartSrch + " 00:00:00");
-            Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
-            criteria.and("updateTime").gte(begin).lte(end);
+            Date startTime = GetDate.stringToDate2(request.getTimeStartSrch());
+            Date endTime = GetDate.stringToDate2(request.getTimeEndSrch());
+            criteria.and("updateTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
         if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
@@ -150,6 +151,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         Criteria criteria = new Criteria();
         if (startTime != null && endTime != null) {
             criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
+
         }
         if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
@@ -166,7 +168,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
                 match(criteria),
                 Aggregation.group("sourceId").count().as("count")
         );
-        AggregationResults<Map> ar = appChannelStatisticsDao.countChannelStatistics(aggregation);
+        AggregationResults<Map> ar = pcChannelStatisticsDao.countChannelStatistics(aggregation);
         List<Map> result = ar.getMappedResults();
         int count = result.size();
         return count;
