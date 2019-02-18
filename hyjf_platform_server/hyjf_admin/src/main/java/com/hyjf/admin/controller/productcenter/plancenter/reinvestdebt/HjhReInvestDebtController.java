@@ -160,7 +160,7 @@ public class HjhReInvestDebtController extends BaseController {
      */
     @ApiOperation(value = "复投承接债权导出", notes = "复投承接债权列表导出")
     @PostMapping(value = "/exportAction")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDebtRequest requestBean) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhReInvestDebtRequest requestBean) throws Exception {
         if (StringUtils.isEmpty(requestBean.getDate())){
             logger.error("复投承接债权导出日期为空无法导出!");
         }
