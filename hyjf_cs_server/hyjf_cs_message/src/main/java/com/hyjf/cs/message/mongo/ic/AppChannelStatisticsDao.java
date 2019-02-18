@@ -13,10 +13,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 
@@ -38,9 +35,11 @@ public class AppChannelStatisticsDao extends BaseMongoDao<AppChannelStatistics> 
         String[] utmIdsSrch = request.getUtmIdsSrch();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(timeStartSrch) && StringUtils.isNotBlank(timeEndSrch)) {
-            Integer begin = GetDate.dateString2Timestamp(timeStartSrch + " 00:00:00");
-            Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
-            criteria.and("updateTime").gte(begin).lte(end);
+            Date startTime = GetDate.stringToDate2(request.getTimeStartSrch());
+            Date endTime = GetDate.stringToDate2(request.getTimeEndSrch());
+//            Integer begin = GetDate.dateString2Timestamp(timeStartSrch + " 00:00:00");
+//            Integer end = GetDate.dateString2Timestamp(timeEndSrch + " 23:59:59");
+            criteria.and("updateTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
         if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
