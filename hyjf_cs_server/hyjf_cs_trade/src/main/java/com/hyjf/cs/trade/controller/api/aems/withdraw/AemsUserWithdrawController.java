@@ -49,7 +49,7 @@ public class AemsUserWithdrawController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "AEMS用户提现",notes = "AEMS用户提现")
-    @PostMapping(value = "/withdraw.do")
+    @PostMapping(value = "/withdraw")
     public ModelAndView withdraw(@RequestBody AemsUserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request){
         logger.info("用户提现第三方请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
         Map<String,Object>  withdrawResult = userWithdrawService.withdraw(userWithdrawRequestBean, request);

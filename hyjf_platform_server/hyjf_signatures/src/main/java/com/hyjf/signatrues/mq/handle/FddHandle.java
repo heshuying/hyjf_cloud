@@ -2185,7 +2185,7 @@ public class FddHandle {
 		int index_x = 0;
 		int index_y = 0;
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 867;
+			index_x = 887;
 			index_y = 270;
 			if(isCompanyUser){
 				index_x = 825;

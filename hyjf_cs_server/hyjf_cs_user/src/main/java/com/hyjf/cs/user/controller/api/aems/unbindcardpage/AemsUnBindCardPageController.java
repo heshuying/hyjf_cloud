@@ -57,7 +57,7 @@ public class AemsUnBindCardPageController extends BaseUserController {
      * 用户页面绑卡
      * @return
      */
-    @PostMapping("/deleteCardPage.do")
+    @PostMapping("/deleteCardPage")
     @ApiOperation(value = "解绑银行卡", notes = "解绑银行卡")
     public ModelAndView userBindCardPlus(@RequestBody AemsUnbindCardPageRequestBean unbindCardPageRequestBean, HttpServletRequest request, HttpServletResponse response) {
         logger.info("-----------------------------"+unbindCardPageRequestBean.getAccountId() + "用户解除绑定银行卡开始-----------------------------");

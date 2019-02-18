@@ -59,8 +59,6 @@ public class AemsUserBindController extends BaseUserController {
 	private LoginService loginService;
 	@Autowired
 	private WebLoginController loginController;
-	@Autowired
-	BindCardService bindCardService;
 
 	@Value("${hyjf.front.host}")
 	public String webHost;
@@ -90,7 +88,6 @@ public class AemsUserBindController extends BaseUserController {
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody AemsUserPostRequsettBean userPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(userPostBean);
-		//TODO:用户登录授权页面
 		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
         BaseMapBean baseMapBean=new BaseMapBean();
         // 验证
@@ -330,56 +327,6 @@ public class AemsUserBindController extends BaseUserController {
 		}
 		return null;
 
-	}
-	/**
-	 * 登陆
-	 * @param request
-	 * @param
-	 * @param userName 用户名
-	 * @param password 密码
-	 * @return LoginResultBean
-	 */
-
-	public LoginResultBean doLogin( HttpServletRequest request,String userName , String password) {
-
-		logger.info("请求登录接口,手机号为：【"+userName+"】");
-		LoginResultBean result = new LoginResultBean();
-		if(StringUtils.isBlank(userName)||StringUtils.isBlank(password)){
-			result.setEnum(ResultEnum.PARAM);
-			return result;
-		}
-		//密码解密
-		password = RSAJSPUtil.rsaToPassword(password);
-
-		Map<String, String> user = loginService.updateLoginInAction(userName, password, CustomUtil.getIpAddr(request));
-		String stt = user.get("stt");
-		switch (stt) {
-			case "-1":
-				result.setEnum(ResultEnum.ERROR_001);
-				break;
-			case "-2":
-				result.setEnum(ResultEnum.ERROR_002);
-				break;
-			case "-3":
-				result.setEnum(ResultEnum.ERROR_003);
-				break;
-			case "-4":
-				result.setEnum(ResultEnum.ERROR_043);
-				break;
-			case "-5":
-				result.setEnum(ResultEnum.ERR_PASSWORD_ERROR_TOO_MANEY);
-				break;
-			default:
-				// 登录完成返回值
-				result.setEnum(ResultEnum.SUCCESS);
-				result.setSign(user.get("sign"));
-				int  userId=Integer.valueOf(user.get("userId"));
-				RedisUtils.del("loginFrom"+userId);
-				RedisUtils.set("loginFrom"+userId, "2", 1800);
-				break;
-		}
-
-		return result;
 	}
 
     public static Map<String, String> objectToMap(Object obj){

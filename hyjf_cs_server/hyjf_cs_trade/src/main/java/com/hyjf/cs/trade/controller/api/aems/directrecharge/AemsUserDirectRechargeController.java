@@ -39,7 +39,7 @@ public class AemsUserDirectRechargeController extends BaseTradeController {
      */
     @ApiOperation(value = "页面充值")
     @ResponseBody
-    @PostMapping(value = "/recharge.do")
+    @PostMapping(value = "/recharge")
     public ModelAndView recharge(@RequestBody AemsUserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         logger.info("api充值   请求参数  ", userRechargeRequestBean);
         Map<String, Object> result = directRechargeService.recharge(userRechargeRequestBean, request);

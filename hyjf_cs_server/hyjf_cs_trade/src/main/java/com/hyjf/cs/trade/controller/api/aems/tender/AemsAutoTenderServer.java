@@ -51,7 +51,7 @@ public class AemsAutoTenderServer extends BaseTradeController{
 
 	@ResponseBody
     @ApiOperation(value = "手动投资散标", notes = "手动投资散标")
-    @PostMapping(value = "/tender.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     public AutoTenderResultBean autoTender(@RequestBody AutoTenderRequestBean autoTenderRequestBean, HttpServletRequest request, HttpServletResponse response) {
     	
     	logger.info("投资输入参数.... autoTenderRequestBean is :{}", JSONObject.toJSONString(autoTenderRequestBean));

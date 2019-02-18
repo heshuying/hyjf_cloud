@@ -5,11 +5,13 @@ package com.hyjf.cs.trade.service.batch.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcPeriodResultVO;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -353,14 +355,30 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     if (Validator.isNull(resultVO)) {
                         throw new Exception("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
+
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
                     BigDecimal assignCapital = resultVO.getAssignCapital();
                     //承接服务费
                     BigDecimal serviceFee = resultVO.getServiceFee();
-                    logger.info(logMsgHeader + "承接用计算完成\n"
-                            + resultVO.toLog());
+                    logger.info(logMsgHeader + "承接用计算完成\n" + resultVO.toLog());
+
+                    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
+                    if(!this.amTradeClient.checkAutoPayment(credit.getCreditNid())){
+                        serviceFee = BigDecimal.ZERO;//承接服务费
+                        resultVO.setServiceFee(BigDecimal.ZERO);
+                        logger.info(logMsgHeader + "债权转让人未做缴费授权,该笔债权的承接服务费置为" + serviceFee);
+                    }
+                    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
+
+                    // 校验债转用的计算金额是否有异常数据
+                    CheckResult checkResult = checkHjhCreditCalcResult(resultVO);
+                    if (!checkResult.getResultBool()) {
+                        logger.error(logMsgHeader + checkResult.getResultMsg());
+                        this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
+                        return FAIL;
+                    }
 
                     //防止钱不够也承接校验
                     HjhAccedeVO hjhAccedeCheck = this.amTradeClient.getHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
@@ -370,7 +388,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                         return FAIL;
                     }
-
 
                     logger.info(logMsgHeader + "#### 开始 调用银行自动购买债权接口（承接）" + credit.getCreditNid() + "####");
 
@@ -616,6 +633,42 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
 
         return OK;
+    }
+
+    /**
+     * 校验债转用的计算金额是否有异常数据
+     * @param resultVO
+     * @return
+     */
+    private CheckResult checkHjhCreditCalcResult(HjhCreditCalcResultVO resultVO) {
+        // 启动限制开关 redis.check_hjh_credit_calc_flag = 0 时，不执行校验。
+        if ( RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG) != null
+                && RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG).equals("0") ) {
+            return new CheckResult(true);
+        }
+
+        logger.debug(logHeader + "校验债转用的计算金额是否有异常数据 开启！");
+
+        // 承接的应该大于等于支付的
+        if(resultVO.getAssignPay().compareTo(resultVO.getAssignAccount()) > 0){
+            return new CheckResult(false, "承接支付金额 > 承接本金+利息");
+        }
+        // 承接服务率不能大于1
+        if(resultVO.getServiceApr().compareTo(BigDecimal.ONE) >= 0){
+            return new CheckResult(false, "承接支付金额 > 承接本金+利息");
+        }
+        // 校验通过
+        return new CheckResult(true);
+//        result = " 承接总额:" + assignAccount +
+//                "\n,承接本金:" + assignCapital +
+//                "\n,承接利息:" + assignInterest +
+//                "\n,承接支付金额:" + assignPay +
+//                "\n,承接垫付利息:" + assignAdvanceMentInterest +
+//                "\n,承接延期利息:" + assignRepayDelayInterest +
+//                "\n,承接逾期利息:" + assignRepayLateInterest +
+//                "\n,承接服务率:" + serviceApr +
+//                "\n,承接服务费:" + serviceFee +
+//                "\n,分期数据结果:" + assignResult;
     }
 
     /**

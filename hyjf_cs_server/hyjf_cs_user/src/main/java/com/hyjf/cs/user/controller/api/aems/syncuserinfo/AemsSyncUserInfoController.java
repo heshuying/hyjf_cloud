@@ -41,7 +41,7 @@ public class AemsSyncUserInfoController extends BaseController {
     private AemsSyncUserService syncUserService;
 
     @ApiOperation(value = "api端-AEMS同步用户信息", notes = "api端-AEMS同步用户信息")
-    @PostMapping(value = "/syncUserInfo.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/syncUserInfo", produces = "application/json; charset=utf-8")
     public AemsSyncUserInfoResult syncUserInfo(@RequestBody AemsSyncUserInfoRequest syncUserInfoRequest, HttpServletRequest request) {
         logger.info("synUserInfoRequest is {}", JSONObject.toJSONString(syncUserInfoRequest));
         AemsSyncUserInfoResult result = new AemsSyncUserInfoResult();

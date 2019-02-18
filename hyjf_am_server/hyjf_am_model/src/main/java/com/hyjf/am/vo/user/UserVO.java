@@ -358,8 +358,6 @@ public class UserVO extends BaseVO implements Serializable {
 				", username='" + username + '\'' +
 				", mobile='" + mobile + '\'' +
 				", email='" + email + '\'' +
-				", password='" + password + '\'' +
-				", salt='" + salt + '\'' +
 				", status=" + status +
 				", openAccount=" + openAccount +
 				", rechargeSms=" + rechargeSms +
@@ -368,9 +366,6 @@ public class UserVO extends BaseVO implements Serializable {
 				", investSms=" + investSms +
 				", recieveSms=" + recieveSms +
 				", regEsb=" + regEsb +
-				", eprovince='" + eprovince + '\'' +
-				", iconUrl='" + iconUrl + '\'' +
-				", evaluationExpiredTime=" + evaluationExpiredTime +
 				", sendSms=" + sendSms +
 				", isInstFlag=" + isInstFlag +
 				", instCode='" + instCode + '\'' +
@@ -384,10 +379,6 @@ public class UserVO extends BaseVO implements Serializable {
 				", isEvaluationFlag=" + isEvaluationFlag +
 				", isCaFlag=" + isCaFlag +
 				", isSmtp=" + isSmtp +
-				", regIp='" + regIp + '\'' +
-				", regTime=" + regTime +
-				", createTime=" + createTime +
-				", updateTime=" + updateTime +
 				'}';
 	}
 }

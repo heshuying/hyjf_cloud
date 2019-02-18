@@ -43,7 +43,7 @@ public class AemsTransactionDetailsController extends BaseController {
     private CommonSvrChkService commonSvrChkService;
 
     @ApiOperation(value = "AEMS交易明细查询", notes = "AEMS交易明细查询")
-    @PostMapping(value = "/tradelist.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/tradelist", produces = "application/json; charset=utf-8")
     public ResultApiBean srchTradeList(@RequestBody AemsTransactionDetailsResultBean resultBean){
 
         /**必传为空校验 start*/
