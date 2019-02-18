@@ -151,4 +151,21 @@
             order_status <![CDATA[>]]> #{start,jdbcType=INTEGER}
     </update>
 	<!-- add 获取发生异常且开始计息时间为空的的数据并更新其匹配期 huanghui 20181129 end-->
+
+	<!--add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start -->
+	<select id="countNoAutoPayment" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT
+        count( DISTINCT c.user_id )
+        FROM
+        hyjf_hjh_debt_credit c
+        INNER JOIN huiyingdai_borrow b ON c.borrow_nid = b.borrow_nid
+        LEFT JOIN hyjf_hjh_user_auth ua ON c.user_id = ua.user_id
+        WHERE
+        c.credit_nid = #{creditNid}
+        AND b.addtime <![CDATA[>=]]> '1540893600'
+        AND b.`status` = 4
+        AND (ua.auto_payment_status <![CDATA[<>]]> 1
+        OR ua.auto_payment_status IS NULL)
+    </select>
+	<!--add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end -->
 </mapper>

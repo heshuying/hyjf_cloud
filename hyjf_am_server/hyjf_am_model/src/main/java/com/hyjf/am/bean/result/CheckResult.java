@@ -52,6 +52,10 @@ public class CheckResult{
 		return resultBool;
 	}
 
+	public boolean getResultBool() {
+		return resultBool;
+	}
+
 	public void setResultBool(boolean resultBool) {
 		this.resultBool = resultBool;
 	}
