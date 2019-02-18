@@ -39,15 +39,15 @@
 		''
 		END AS `repaymentType`,
 		CASE
-		WHEN hb.asset_attributes = '1' THEN
+		WHEN hbi.asset_attributes = '1' THEN
 		'抵押标'
-		WHEN hb.asset_attributes = '2' THEN
+		WHEN hbi.asset_attributes = '2' THEN
 		'质押标'
-		WHEN hb.asset_attributes = '3' THEN
+		WHEN hbi.asset_attributes = '3' THEN
 		'信用标'
-		WHEN hb.asset_attributes = '4' THEN
+		WHEN hbi.asset_attributes = '4' THEN
 		'债权转让标'
-		WHEN hb.asset_attributes = '5' THEN
+		WHEN hbi.asset_attributes = '5' THEN
 		'净值标'
 		ELSE
 		'信用标'

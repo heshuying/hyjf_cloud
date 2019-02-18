@@ -65,7 +65,7 @@ public class AemsTransPasswordController extends BaseController {
     * @return org.springframework.web.servlet.ModelAndView
     **/
     @ApiOperation(value = "AEMS设置/修改交易密码", notes = "AEMS设置/修改交易密码")
-    @PostMapping(value = "/setPassword.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/setPassword", produces = "application/json; charset=utf-8")
     public ModelAndView setPassword(@RequestBody AemsTransPasswordRequestBean transPasswordRequestBean) {
         _log.info("设置交易密码 start");
         ModelAndView modelAndView = new ModelAndView();
@@ -239,8 +239,8 @@ public class AemsTransPasswordController extends BaseController {
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/aems/transpassword";
         // 调用设置密码接口
-        retUrl += "/passwordReturn.do?acqRes="+transPasswordRequestBean.getAcqRes()+"&logUserId="+user.getUserId()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/passwordBgreturn.do?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
+        retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&logUserId="+user.getUserId()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/passwordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
 
         // 调用设置密码接口
         BankCallBean bean = new BankCallBean();
@@ -290,7 +290,7 @@ public class AemsTransPasswordController extends BaseController {
      * @param request, response, bean
      * @return org.springframework.web.servlet.ModelAndView
      **/
-    @RequestMapping("/passwordReturn.do")
+    @RequestMapping("/passwordReturn")
     public ModelAndView passwordReturn(HttpServletRequest request, HttpServletResponse response,
                                        @ModelAttribute BankCallBean bean) {
         _log.info("设置交易密码同步回调start");
@@ -355,7 +355,7 @@ public class AemsTransPasswordController extends BaseController {
      * @return com.hyjf.pay.lib.bank.bean.BankCallResult
      **/
     @ResponseBody
-    @RequestMapping("passwordBgreturn.do")
+    @RequestMapping("passwordBgreturn")
     public BankCallResult passwordBgreturn(HttpServletRequest request, HttpServletResponse response,
                                            @ModelAttribute BankCallBean bean) {
         _log.info("设置交易密码异步回调start");

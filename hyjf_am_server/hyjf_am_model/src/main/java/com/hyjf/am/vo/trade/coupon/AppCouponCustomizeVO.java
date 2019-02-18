@@ -31,6 +31,8 @@ public class AppCouponCustomizeVO {
 	private String repayStyle;
 	// 订单状态
 	private String orderStatus;
+	// 优惠券还款状态
+	private String recoverStatus;
 	// add 添加计划开始计息时间字段 nxl 20180420 start
     // 计划开始计息时间
     private String countInterestTime;
@@ -216,5 +218,12 @@ public class AppCouponCustomizeVO {
 	public void setCountInterestTime(String countInterestTime) {
 		this.countInterestTime = countInterestTime;
 	}
-	
+
+	public String getRecoverStatus() {
+		return recoverStatus;
+	}
+
+	public void setRecoverStatus(String recoverStatus) {
+		this.recoverStatus = recoverStatus;
+	}
 }

@@ -43,7 +43,7 @@ public class AemsAssetPushController extends BaseTradeController {
     @Autowired
     private AemsAssetPushService pushService;
 
-    @PostMapping("/push.do")
+    @PostMapping("/push")
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "个人资产推送", httpMethod = "POST", notes = "个人资产推送")
     public JSONObject push(@RequestBody AemsPushRequestBean pushRequestBean) {
@@ -86,7 +86,7 @@ public class AemsAssetPushController extends BaseTradeController {
         return result;
     }
 
-    @PostMapping("/pushcompany.do")
+    @PostMapping("/pushcompany")
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "企业资产推送", httpMethod = "POST", notes = "企业资产推送")
     public JSONObject pushcompany(@RequestBody AemsPushRequestBean pushRequestBean) {

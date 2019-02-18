@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.common.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,6 @@ import com.hyjf.common.bean.AccessToken;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.jwt.JwtHelper;
-import com.hyjf.common.util.AppUserToken;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.util.SignValue;
 import com.hyjf.zuul.contant.GatewayConstant;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -69,7 +66,7 @@ public class AccessFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 		String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
-		String remoteHost = getRemoteHost(request);
+		String remoteHost = GetCilentIP.getIpAddr(request);
 		logger.info("原始请求地址originalRequestPath is {}:, remoteHost is :{}", originalRequestPath, remoteHost);
 
 		// 访问url是不是需要判断登录
@@ -116,20 +113,6 @@ public class AccessFilter extends ZuulFilter {
 			this.buildErrorRequestContext(ctx, 502, "illegal visit!");
 		}
 		return null;
-	}
-
-	private String getRemoteHost(HttpServletRequest request) {
-		String ip = request.getHeader("x-forwarded-for");
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemoteAddr();
-		}
-		return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
 	}
 
 	/**

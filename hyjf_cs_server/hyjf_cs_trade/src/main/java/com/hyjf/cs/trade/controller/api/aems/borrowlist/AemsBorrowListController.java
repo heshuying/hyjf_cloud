@@ -38,7 +38,7 @@ public class AemsBorrowListController extends BaseTradeController {
      * @return com.hyjf.cs.common.bean.result.ApiResult
      **/
     @ApiOperation(value = "查询标的列表", notes = "查询标的列表")
-    @PostMapping("/borrowList.do")
+    @PostMapping("/borrowList")
     public ApiResult getBorrowList(@RequestBody AemsBorrowListRequestBean reqBean){
         ApiResult apiResult = new ApiResult();
         apiResult = aemsBorrowService.getBorrowList(reqBean);

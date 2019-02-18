@@ -71,7 +71,7 @@ public class AppBorrowImageController {
             String filePhysicalPath = DOMAIN_URL;
             record = appBorrowImageService.getRecord(form.getId());
             if (record != null) {
-                record.setBorrowImageUrl(filePhysicalPath + record.getBorrowImageUrl());
+                record.setBorrowImageUrl(record.getBorrowImageUrl());
             }
         }
         AppBorrowImageVO appBorrowImageVO = CommonUtils.convertBean(record, AppBorrowImageVO.class);

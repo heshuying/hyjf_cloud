@@ -543,4 +543,9 @@ public class RedisConstants {
      * 推送表的消息唯一标识
      */
     public static final String MSG_PUSH_CODE = "MSG_PUSH_CODE:";
+
+    /**
+     * 校验债转用的计算金额是否有异常数据(0:关闭；1：开启)
+     */
+    public static final String CHECK_HJH_CREDIT_CALC_FLAG = "check_hjh_credit_calc_flag";
 }

@@ -3,13 +3,9 @@
  */
 package com.hyjf.cs.user.service.aems.evalation;
 
-import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.am.vo.user.EvalationVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.service.BaseUserService;
-
-import java.util.Date;
 
 /**
  *
@@ -19,14 +15,6 @@ import java.util.Date;
  * @return 
  **/
 public interface AemsEvaluationService extends BaseUserService {
-
-    /**
-     * redis获取测评有效时间计算测评到期时间
-     *
-     * @param beginTime
-     * @return
-     */
-    Date selectEvaluationExpiredTime(Date beginTime);
 
     /**
      * 获取测评结果

@@ -74,7 +74,7 @@ public class AppBorrowImageServiceImpl implements AppBorrowImageService {
         //int nowTime = GetDate.getNowTime10();
         //record.setAddtime(nowTime);
         record.setCreateTime(new Date());
-        record.setBorrowImageUrl(this.moveUploadImage(record));
+        record.setBorrowImageUrl(record.getBorrowImageUrl());
         appBorrowImageMapper.insertSelective(record);
     }
 

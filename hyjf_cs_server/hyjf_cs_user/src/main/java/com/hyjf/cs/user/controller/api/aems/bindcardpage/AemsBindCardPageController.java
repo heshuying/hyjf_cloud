@@ -57,7 +57,7 @@ public class AemsBindCardPageController extends BaseController {
      * @param response
      * @return
      */
-    @PostMapping("/bind.do")
+    @PostMapping("/bind")
     @ApiParam(required = true, name = "findDetailById", value = "AEMS用户页面绑卡")
     @ApiOperation(value = "AEMS用户页面绑卡", httpMethod = "POST", notes = "AEMS用户页面绑卡")
     public ModelAndView userBindCardPlus(@RequestBody AemsBindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {
@@ -70,7 +70,6 @@ public class AemsBindCardPageController extends BaseController {
                 Validator.isNull(bankCardRequestBean.getInstCode())||
                 Validator.isNull(bankCardRequestBean.getRetUrl())||
                 Validator.isNull(bankCardRequestBean.getPlatform())||
-                Validator.isNull(bankCardRequestBean.getForgotPwdUrl())||
                 Validator.isNull(bankCardRequestBean.getChannel())||
                 Validator.isNull(bankCardRequestBean.getNotifyUrl())) {
             logger.info("-------------------绑卡请求参数非法--------------------");

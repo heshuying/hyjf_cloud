@@ -224,6 +224,7 @@
 		<result column="repay_style" property="repayStyle" jdbcType="VARCHAR" />
 		<result column="repay_method" property="repayMethod" jdbcType="VARCHAR" />
 		<result column="order_status" property="orderStatus" jdbcType="VARCHAR" />
+		<result column="recover_status" property="recoverStatus" jdbcType="VARCHAR" />
 		<!-- 添加计息时间字段 -->
 		<result column="count_interest_time" property="countInterestTime" jdbcType="VARCHAR" />
 		<result column="coupon_type" property="couponType" />
@@ -255,6 +256,7 @@
 		a.borrow_style repay_style,
 		(SELECT hbs.NAME FROM ht_borrow_style hbs where hbs.nid = a.borrow_style limit 1 ) repay_method,
 		f.order_status,
+		cr.recover_status,
 		<!-- 添加计息时间字段 -->
 		IFNULL(FROM_UNIXTIME( IF(f.count_interest_time=0,NULL,f.count_interest_time), '%Y-%m-%d' ),'--') AS count_interest_time,
 		d.coupon_type,
@@ -286,6 +288,7 @@
 		ht_borrow_tender_cpn t
 		INNER JOIN ht_hjh_plan a ON t.borrow_nid = a.plan_nid
 		INNER JOIN ht_coupon_tender b ON b.order_id = t.nid
+		INNER JOIN ht_coupon_recover cr ON cr.tender_id = t.nid
 		INNER JOIN ht_coupon_user c ON b.coupon_grant_id = c.id
 		INNER JOIN ht_coupon_config d ON c.coupon_code = d.coupon_code
 		LEFT JOIN ht_coupon_real_tender e ON e.coupon_tender_id = t.nid

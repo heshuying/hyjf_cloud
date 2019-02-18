@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.hgreportdata.cert;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -63,6 +64,8 @@ public class CertController extends BaseController {
 
     @PostMapping("/queryCertAccountListId")
     public CertAccountListResponse queryCertAccountListId(@RequestBody CertRequest certRequest) {
+        logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
+
         CertAccountListResponse response = new CertAccountListResponse();
         CertAccountListIdCustomize certAccountListIdCustomize = certService.queryCertAccountListId(certRequest);
         response.setCertAccountListIdCustomizeVO(CommonUtils.convertBean(certAccountListIdCustomize,CertAccountListIdCustomizeVO.class));

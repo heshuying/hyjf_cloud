@@ -98,6 +98,8 @@ public class AemsErrorCodeConstant implements MessageConstants, PropertiesConsta
     public static final String STATUS_ZC000024 = "ZC000024";
     // 用户已在别的平台注册
     public static final String STATUS_ZC000025 = "ZC000025";
+    // 用户身份校验没通过
+    public static final String STATUS_ZC000026 = "ZC000026";
 
     /********************注册相关相关    end***********************/
 
