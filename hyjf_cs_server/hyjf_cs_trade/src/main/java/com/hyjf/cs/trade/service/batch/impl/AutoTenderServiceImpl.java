@@ -281,8 +281,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "自动承接债转标的" + redisBorrow.getBorrowNid() + "--------");
                     logger.info(logMsgHeader + "承前的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
-                    /** 4.1. 债转用金额计算	 */
-                    // 设置实际出借金额
+                    /** 4.1. 本次债转实际出借金额计算	 */
+                    // 出借金额和待投金额，谁小用谁
                     // 债转标的： 清算时公允价值-已投本金和已投垫付利息
                     BigDecimal yujiAmoust = ketouplanAmoust;
                     if (yujiAmoust.compareTo(redisBorrow.getBorrowAccountWait()) >= 0) {
@@ -291,7 +291,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         isLast = true;
                     }
 
-                    /** 4.2. 获取债转详情	 */
+                    /** 4.2. 获取债转标的详情	 */
                     HjhDebtCreditVO credit = this.amTradeClient.doSelectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid()); // 从主库
                     if (credit == null) {
                         logger.error(logMsgHeader + "债转号不存在 " + redisBorrow.getBorrowNid());
@@ -345,9 +345,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         continue;
                     }
 
-                    // 生成承接日志
+                    // 生成调用银行接口订单号
                     String orderId = GetOrderIdUtils.getOrderId2(hjhAccede.getUserId());
-                    // 债权承接订单日期
+                    // 生成调用银行接口日期
                     String orderDate = GetOrderIdUtils.getTxDate();
 
                     // 计算计划债转实际金额 保存creditTenderLog表
@@ -391,7 +391,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     logger.info(logMsgHeader + "#### 开始 调用银行自动购买债权接口（承接）" + credit.getCreditNid() + "####");
 
-                    // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
+                    // 智投订单状态改为初始状态7X（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
                     //调用银行自动购买债权接口
@@ -651,11 +651,11 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         // 承接的应该大于等于支付的
         if(resultVO.getAssignPay().compareTo(resultVO.getAssignAccount()) > 0){
-            return new CheckResult(false, "承接支付金额 > 承接本金+利息");
+            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息");
         }
         // 承接服务率不能大于1
         if(resultVO.getServiceApr().compareTo(BigDecimal.ONE) >= 0){
-            return new CheckResult(false, "承接支付金额 > 承接本金+利息");
+            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息");
         }
         // 校验通过
         return new CheckResult(true);
@@ -805,7 +805,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         BankCallBean bankResult = null;
 
         // 取得当前债权在清算前已经发生债转的本金
-        BigDecimal preCreditCapital = this.amTradeClient.getPreCreditCapital(credit);
+        BigDecimal preCreditCapital = this.amTradeClient.doGetPreCreditCapital(credit);
 
         // 银行接口用bean
         BankCallBean bean = new BankCallBean(orderId, userId, BankCallConstant.TXCODE_CREDIT_AUTO_INVEST, "自动购买债权", hjhAccede.getClient());
