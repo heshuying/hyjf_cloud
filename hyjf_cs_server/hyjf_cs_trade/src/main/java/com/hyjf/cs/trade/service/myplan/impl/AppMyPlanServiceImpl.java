@@ -328,13 +328,29 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         // 计划处于出借中状态
         List<String> statusList = Arrays.asList("0", "2", "99", "9");
         // 出借中状态不显示持有列表
-        if (appCouponCustomize != null && statusList.contains(appCouponCustomize.getOrderStatus())) {
-            projectIntr.setStatus("出借中");
-        } else if("7".equals(appCouponCustomize.getOrderStatus())){
-            projectIntr.setStatus("已退出");
-        } else{
-            projectIntr.setStatus("未回款");
+        if(appCouponCustomize == null){
+            return;
         }
+        if(StringUtils.isBlank(appCouponCustomize.getOrderStatus())){
+            // 优惠券单独投资的情况
+            if(appCouponCustomize.getRecoverStatus().equals("0")){
+                projectIntr.setStatus("出借中");
+            }else if(appCouponCustomize.getRecoverStatus().equals("1")){
+                projectIntr.setStatus("已退出");
+            }else{
+                projectIntr.setStatus("未回款");
+            }
+        }else{
+            // 含有本金投资的情况
+            if (statusList.contains(appCouponCustomize.getOrderStatus())) {
+                projectIntr.setStatus("出借中");
+            } else if("7".equals(appCouponCustomize.getOrderStatus())){
+                projectIntr.setStatus("已退出");
+            } else{
+                projectIntr.setStatus("未回款");
+            }
+        }
+
         projectIntr.setPlanName(appCouponCustomize.getPlanName());
         projectIntr.setBorrowApr(appCouponCustomize.getPlanApr());
         // mod by nxl 智投服务 修改优惠券锁定期显示 start
