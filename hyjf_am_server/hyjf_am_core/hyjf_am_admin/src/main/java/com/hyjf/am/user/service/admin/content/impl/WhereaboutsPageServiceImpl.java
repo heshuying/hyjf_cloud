@@ -115,7 +115,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 	public void statusAction(WhereaboutsPageRequest request) {
 		WhereaboutsPageConfig record = new WhereaboutsPageConfig();
 		BeanUtils.copyProperties(request, record);
-		record.setStatusOn(request.getStatusOn() == 0? 1 : 0);
+		//record.setStatusOn(request.getStatusOn() == 0? 1 : 0);
 		whereaboutsPageConfigMapper.updateByPrimaryKeySelective(record);
 	}
 
