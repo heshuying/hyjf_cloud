@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.exception;
+package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.repair;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
@@ -26,9 +26,9 @@ import java.util.Map;
  */
 
 @Service
-public class CertSendExceptionServiceImpl extends BaseHgCertReportServiceImpl implements CertSendExceptionService {
+public class CertSendRepairServiceImpl extends BaseHgCertReportServiceImpl implements CertSendExceptionService {
 
-    Logger logger = LoggerFactory.getLogger(CertSendExceptionServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(CertSendRepairServiceImpl.class);
 
     private String thisMessName = "上报失败异常处理";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";

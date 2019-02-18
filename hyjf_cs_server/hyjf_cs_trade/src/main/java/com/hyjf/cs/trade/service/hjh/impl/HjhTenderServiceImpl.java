@@ -540,7 +540,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 resultVo.setDesc("历史年回报率: "+plan.getExpectApr()+"%      历史回报: " + earnings +"元");
                 resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
-                resultVo.setProspectiveEarnings(earnings + "元");
+                resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings) + "元");
             }
             // 可用优惠券数量
             resultVo.setCouponAvailableCount(couponAvailableCount);
@@ -1145,7 +1145,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             result.put("projectType",couponUser.getProjectType());
             result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest)));
             // app结果页加上面值
-            result.put("appEarnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest).add(couponUser.getCouponQuota())));
+            if (couponUser != null && couponUser.getCouponType() == 3) {
+                result.put("appEarnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest).add(couponUser.getCouponQuota())));
+            }
         }else{
             // 优惠券类别
             result.put("couponType", "");
