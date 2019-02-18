@@ -14,7 +14,6 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.AemsUserDirectRechargeRequestBean;
-import com.hyjf.cs.trade.bean.BaseDefine;
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
 import com.hyjf.cs.trade.config.SystemConfig;
