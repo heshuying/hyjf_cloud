@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.controller.batch.cert;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -45,7 +46,7 @@ public class CertTransactBatchController {
     private CertTransactService certTransactService;
 
     @GetMapping("/certTransact")
-    public String certTransact() {
+    public StringResponse certTransact() {
         logger.info(logHeader + "CertTransactBatchController execute start...");
         Integer page=1;
         Integer size=1000;
@@ -61,14 +62,14 @@ public class CertTransactBatchController {
             if(certTransactMaxId==null||"".equals(certTransactMaxId)){
                 RedisUtils.set("certTransactOtherMaxId", customize.getMaxId()+"");
                 logger.info(logHeader + "CertTransactBatchController execute end...");
-                return "Success";
+                return new StringResponse("success");
             }
             String minId=customize.getLimitMinId()+"";
             String maxId=customize.getLimitMaxId()+"";
             String sumCount=customize.getSumCount()+"";
             if("0".equals(sumCount)){
                 logger.info(logHeader + "CertTransactBatchController execute end...");
-                return "Success";
+                return new StringResponse("success");
             }
             // 加入到消息队列
             Map<String, String> params = new HashMap<String, String>();
@@ -82,6 +83,6 @@ public class CertTransactBatchController {
             page=page+1;
         } while (customize.getMaxId()>customize.getLimitMaxId());
         logger.info(logHeader + "CertTransactBatchController execute end...");
-        return "Success";
+        return new StringResponse("success");
     }
 }

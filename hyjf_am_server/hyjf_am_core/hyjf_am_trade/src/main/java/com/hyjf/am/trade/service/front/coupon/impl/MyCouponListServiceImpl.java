@@ -507,7 +507,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
-        String style = borrow.getBorrowStyle();
+        //principal: 等额本金,  month:等额本息, endmonth:先息后本,endday: 按天计息, end:按月计息
+        String style = borrow != null?borrow.getBorrowStyle():null;
         // 加息券是否启用 0禁用 1启用
         Integer couponFlg = borrowInfo.getBorrowInterestCoupon();
         // 体验金是否启用 0禁用 1启用

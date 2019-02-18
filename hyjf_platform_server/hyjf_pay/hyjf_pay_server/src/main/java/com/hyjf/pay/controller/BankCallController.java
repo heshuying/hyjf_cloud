@@ -487,7 +487,7 @@ public class BankCallController extends BaseController {
                                 logger.info("参数：" + JSON.toJSONString(bean.getAllParams()));
                                 content = restTemplate
                                         .postForEntity(notifyUrl, bean.getAllParams(), String.class).getBody();
-                                logger.info("返回值content：" + content);
+                                logger.debug("返回值content：" + content);
                                 if (StringUtils.isNotBlank(content)) {
                                     BankCallResult callResult = JSONObject.parseObject(content, BankCallResult.class);
                                     if (callResult.isStatus()) {
