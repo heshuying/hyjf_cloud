@@ -82,7 +82,7 @@
 		tt.repaymentType,
 		tt.`type`,
 		tt.loanUrl,
-		FROM_UNIXTIME(
+		date_format(
 		tt.end_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS successTime,
@@ -141,7 +141,7 @@
 		tt.repaymentType,
 		tt.`type`,
 		tt.loanUrl,
-		FROM_UNIXTIME(
+		date_format(
 		tt.end_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS successTime,
