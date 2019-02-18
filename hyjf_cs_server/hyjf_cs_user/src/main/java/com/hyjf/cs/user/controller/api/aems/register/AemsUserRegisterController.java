@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 /**
@@ -89,6 +88,10 @@ public class AemsUserRegisterController extends BaseUserController {
                     result.setStatusDesc("身份校验不通过");
                     return result;
                 }
+            } else if (user.getBankOpenAccount() != null) {
+                result.setStatus(AemsErrorCodeConstant.SUCCESS);
+                result.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
+                return result;
             }
             if (user.getIsSetPassword() != null) {
                 result.setIsSetPassword(String.valueOf(user.getIsSetPassword()));
