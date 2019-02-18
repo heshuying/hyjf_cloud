@@ -29,11 +29,11 @@
             <if test="planNid != null and planNid != ''">
                 AND hp.plan_nid = #{planNid }
             </if>
-            <if test="date != null ">
-                AND  ct.create_time <![CDATA[ >= ]]> #{date}
+            <if test="dateStart != null and dateStart != ''">
+                AND  ct.create_time <![CDATA[ >= ]]> #{dateStart}
             </if>
-            <if test="datee != null">
-                AND  ct.create_time <![CDATA[ <= ]]> #{datee}
+            <if test="dateEnd != null and dateEnd != ''">
+                AND  ct.create_time <![CDATA[ <= ]]> #{dateEnd}
             </if>
             <if test="assignPlanOrderIdSrch != null and assignPlanOrderIdSrch != ''">
                 AND ct.assign_plan_order_id = #{assignPlanOrderIdSrch }
