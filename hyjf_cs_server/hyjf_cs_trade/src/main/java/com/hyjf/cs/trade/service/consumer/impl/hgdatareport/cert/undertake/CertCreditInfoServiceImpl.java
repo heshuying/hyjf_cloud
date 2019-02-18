@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -137,9 +138,12 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //承接人用户标示 Hash
                     param.put("userIdcardHash", idHash);
                     //4.承接人投资资金额：承接本金金额
-                    param.put("takeAmount", creditTender.getAssignCapital().toString());
+                    DecimalFormat dfAmount = new DecimalFormat("0.00");
+                    String strAmount = dfAmount.format(creditTender.getAssignCapital());
+                    param.put("takeAmount",strAmount);
                     //5.承接利息金额：承接人承接本金对应的待收利息金额
-                    param.put("takeInterest", creditTender.getAssignInterest().toString());
+                    String strInterest = dfAmount.format(creditTender.getAssignInterest());
+                    param.put("takeInterest",strInterest);
                     //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
                     //承接本金*折让率  数值前加负
                     param.put("floatMoney", "-" + bigDecimalCredit.toString());
@@ -198,9 +202,12 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //承接人用户标示 Hash
                     param.put("userIdcardHash", userIdcardHash);
                     //4.承接人投资资金额：承接本金金额
-                    param.put("takeAmount", hjhDebtCreditTender.getAssignCapital());
+                    DecimalFormat dfAmount = new DecimalFormat("0.00");
+                    String strAmount = dfAmount.format(hjhDebtCreditTender.getAssignCapital());
+                    param.put("takeAmount",strAmount);
                     //5.承接利息金额：承接人承接本金对应的待收利息金额
-                    param.put("takeInterest", hjhDebtCreditTender.getAssignInterest());
+                    String strInterest = dfAmount.format(hjhDebtCreditTender.getAssignInterest());
+                    param.put("takeInterest",strInterest);
                     //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
                     param.put("floatMoney", "0");
                     //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
