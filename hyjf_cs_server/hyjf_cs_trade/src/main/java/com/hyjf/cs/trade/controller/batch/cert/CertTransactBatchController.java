@@ -7,10 +7,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.transact.CertTransactService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,11 +37,14 @@ public class CertTransactBatchController {
     @Autowired
     private CommonProducer producer;
 
-
+    private String thisMessName = "国家互联网应急中心交易流水上报";
+    private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+    Logger logger = LoggerFactory.getLogger(CertTransactBatchController.class);
     private CertTransactService certTransactService;
 
     @GetMapping("/certTransact")
     public String autoIssueRecover() {
+        logger.info(logHeader + "CertTransactBatchController execute start...");
         Integer page=1;
         Integer size=1000;
         CertAccountListIdCustomizeVO customize=new CertAccountListIdCustomizeVO();
@@ -51,12 +57,14 @@ public class CertTransactBatchController {
             customize=certTransactService.queryCertAccountListId(param);
             if(certTransactMaxId==null||"".equals(certTransactMaxId)){
                 RedisUtils.set("certTransactOtherMaxId", customize.getMaxId()+"");
+                logger.info(logHeader + "CertTransactBatchController execute end...");
                 return "Success";
             }
             String minId=customize.getLimitMinId()+"";
             String maxId=customize.getLimitMaxId()+"";
             String sumCount=customize.getSumCount()+"";
             if("0".equals(sumCount)){
+                logger.info(logHeader + "CertTransactBatchController execute end...");
                 return "Success";
             }
             // 加入到消息队列
@@ -70,6 +78,7 @@ public class CertTransactBatchController {
             RedisUtils.set("certTransactOtherMaxId", maxId);
             page=page+1;
         } while (customize.getMaxId()>customize.getLimitMaxId());
+        logger.info(logHeader + "CertTransactBatchController execute end...");
         return "Success";
     }
 }
