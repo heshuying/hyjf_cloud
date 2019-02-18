@@ -74,6 +74,7 @@ public class CertController extends BaseController {
 
     @PostMapping("/getAccountListVOListByRequest")
     public AccountListResponse getAccountListVOListByRequest(@RequestBody CertRequest certRequest) {
+        logger.info("getAccountListVOListByRequest:" + JSONObject.toJSONString(certRequest));
         AccountListResponse response = new AccountListResponse();
         List<AccountList> accountLists = certService.getAccountListVOListByRequest(certRequest);
         if (!CollectionUtils.isEmpty(accountLists)) {
