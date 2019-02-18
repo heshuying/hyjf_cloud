@@ -447,7 +447,7 @@
 		'天' AS deadlineUnit,
 		ROUND(
 		(
-		br.repay_yestime - br.create_time
+		br.repay_yestime - UNIX_TIMESTAMP(br.create_time)
 		) / (60 * 60 * 24)
 		) AS deadline
 		FROM
