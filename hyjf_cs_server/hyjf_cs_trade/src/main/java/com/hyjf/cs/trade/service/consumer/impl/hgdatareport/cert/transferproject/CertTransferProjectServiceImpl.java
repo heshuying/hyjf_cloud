@@ -74,12 +74,12 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						//原产品信息编号
 						param.put("sourceFinancingCode", "-1");// 选填
 						//计划转让本金(元)
-						param.put("transferAmount", credit.getCreditCapital());
+						param.put("transferAmount", credit.getCreditCapital().toString());
 						//计划转让利息
-						param.put("transferInterest", credit.getCreditInterest());
+						param.put("transferInterest", credit.getCreditInterest().toString());
 						//浮动金额   0-(credit_capital*credit_discount/100)
 						param.put("floatMoney", 
-								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))));
+								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))).toString());
 						//转让项目发布的日期
 						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getCreditTerm()));
 						//转让债权信息的链接URL

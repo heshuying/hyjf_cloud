@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.borrow;
 
+import com.hyjf.am.response.trade.BorrowResponse;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -206,6 +207,7 @@ public interface BorrowService extends BaseService {
      * @return
      */
 	public String getborrowIdByProductId(Map<String, Object> params);
+	List<BorrowAndInfoVO> getborrowByProductId( Map<String, Object> params);
     /**
      * 还款列表
      *

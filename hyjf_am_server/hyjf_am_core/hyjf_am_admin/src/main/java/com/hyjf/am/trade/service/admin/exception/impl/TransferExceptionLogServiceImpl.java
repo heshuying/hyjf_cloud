@@ -137,11 +137,11 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
     @Transactional(rollbackFor = Exception.class)
     public boolean transferAfter(JSONObject jsonObject) throws Exception {
 
-        TransferExceptionLogVO transfer= (TransferExceptionLogVO) jsonObject.get("transferExceptionLogVO");
-        BankCallBean resultBean= (BankCallBean) jsonObject.get("BankCallBean");
+        TransferExceptionLogVO transfer= jsonObject.getObject("TransferExceptionLogVO",TransferExceptionLogVO.class);
+        BankCallBean resultBean= jsonObject.getObject("BankCallBean",BankCallBean.class);
         //取的优惠券还款记录
         //CouponRecover recover = couponRecoverMapper.selectByPrimaryKey(transfer.getRecoverId());
-        CouponRecoverVO recover = (CouponRecoverVO) jsonObject.get("CouponRecoverVO");
+        CouponRecoverVO recover = jsonObject.getObject("CouponRecoverVO",CouponRecoverVO.class);
         if (recover == null){
             throw new Exception("未查询到对应的优惠券还款记录，[recoverid：" + transfer.getRecoverId() + "]");
         }
@@ -150,7 +150,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             throw new Exception("未查询到对应的CouponTender记录，[tender_nid：" + recover.getTenderId() + "]");
         }
         //取得优惠券出借信息
-        BorrowTenderCpnVO borrowTender = (BorrowTenderCpnVO) jsonObject.get("BorrowTenderCpnVO");
+        BorrowTenderCpnVO borrowTender = jsonObject.getObject("BorrowTenderCpnVO",BorrowTenderCpnVO.class);
         //BorrowTenderCpn borrowTender = this.getCouponTenderInfo(recover.getTenderId());
         if(borrowTender == null) {
             throw new Exception("未查询到对应的优惠券出借记录，[tender_nid：" + recover.getTenderId() + "]");
@@ -367,7 +367,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
         // 插入网站收支明细记录
         //AccountWebList accountWebList = new AccountWebList();
-        AccountWebListVO accountWebList= (AccountWebListVO) jsonObject.get("AccountWebListVO");
+        AccountWebListVO accountWebList= jsonObject.getObject("AccountWebListVO",AccountWebListVO.class);
 
         //AccountWebList accountWebList = CommonUtils.convertBean(accountWebListVO,AccountWebList.class);
 
@@ -421,7 +421,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         // 更新红包账户信息
         int updateCount = this.updateBankMerchantAccount(nowBankMerchantAccount);
         if(updateCount > 0){
-            UserInfoCustomizeVO userInfoCustomize= (UserInfoCustomizeVO) jsonObject.get("UserInfoCustomizeVO");
+            UserInfoCustomizeVO userInfoCustomize= jsonObject.getObject("UserInfoCustomizeVO",UserInfoCustomizeVO.class);
 //            UserInfoCustomize userInfoCustomize = this.queryUserInfoByUserId(transfer.getUserId());
 
             // 添加红包明细

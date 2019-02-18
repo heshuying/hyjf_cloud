@@ -151,11 +151,11 @@ public class LockedConfigServiceImpl implements LockedConfigService {
                 return r;
             }
             //1.获取该用户密码错误次数
-            String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
+            String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUsername());
             //2.获取用户允许输入的最大错误次数
             Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
             //3.redis配置的超限有效时间
-            long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUserId());
+            long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + users.get(0).getUsername());
             //判断密码错误次数是否超限
             if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
@@ -167,7 +167,7 @@ public class LockedConfigServiceImpl implements LockedConfigService {
             String password = MD5.toMD5Code(loginPassword);
             logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
             if (!password.equals(passwordDb)) {
-                long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ users.get(0).getUserId());//以用户手机号为key
+                long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ADMIN+ users.get(0).getUsername());//以用户手机号为key
                 for (int i=1;i<4;i++){
                     if (maxLoginErrorNum-value == i){
 //					CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_MAX,i);

@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @version BifaHjhPlanInfoConsumer, v0.1 2019/1/31 15:01
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BIFA_HJH_PLANINFO_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.HJHPLAN_ADD_TAG, consumerGroup = MQConstant.BIFA_HJH_PLANINFO_GROUP)
 public class BifaHjhPlanInfoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BifaHjhPlanInfoConsumer.class);

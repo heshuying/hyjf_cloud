@@ -214,7 +214,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 接口版本号
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
         // 用户注册时间
-        param.put("userCreateTime", GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(item.getRegTime()));
+        param.put("userCreateTime", GetDate.dateToDateFormatStr(item.getRegTime(),GetDate.datetimeFormat_key));
         // 平台编号
         param.put("sourceCode", systemConfig.getCertSourceCode());
         // 用户状态编码  1-新增／2-变更／3-失效

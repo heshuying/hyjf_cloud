@@ -85,7 +85,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
 
         // 散标类别
         String productRegType = "散标";
-        if (borrowProjectTypes != null && borrowProjectTypes.get(0).getInvestUserType().equals("1")) {
+        if (borrowProjectTypes != null && borrowProjectTypes.get(0).getInvestUserType().equals(1)) {
             productRegType = "新手标";
         }
         // 借款用途  个人报送1 企业报送2

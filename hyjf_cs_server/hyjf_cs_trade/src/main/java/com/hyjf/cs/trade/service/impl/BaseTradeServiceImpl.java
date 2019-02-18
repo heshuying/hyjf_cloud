@@ -6,6 +6,9 @@ import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -205,6 +208,18 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             throw e;
         }
     }
+
+    /**
+     * 根据标的编号查询标的信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public RightBorrowVO selectBorrowByBorrowNid(String borrowNid) {
+        return this.amTradeClient.getRightBorrowByNid(borrowNid);
+    }
+
     /**
      * 获取account信息
      * @auther: hesy

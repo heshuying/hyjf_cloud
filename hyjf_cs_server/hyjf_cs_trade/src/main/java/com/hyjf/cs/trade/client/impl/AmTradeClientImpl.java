@@ -2024,6 +2024,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+     * @param borrow
+     * @return
+     */
+    @Override
+    public Boolean getOverDueFlag(RightBorrowVO borrow){
+        BooleanResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/borrowRecover/getOverDueFlag", borrow,
+                BooleanResponse.class).getBody();
+        if (response != null) {
+            return response.getResultBoolean();
+        }
+        return null;
+    }
+
+    /**
      * 查询债转承接掉单的数据
      *
      * @return
@@ -5094,6 +5110,12 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params) {
+        return null;
+    }
+
     @Override
     public List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1) {
         String url = "http://AM-TRADE/am-trade/borrowCredit/getBorrowCreditList";
@@ -6225,6 +6247,37 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * AMES借款人受托支付申请异步回调更新数据
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public boolean updateAemsTrusteePaySuccess(String borrowNid){
+        String url = "http://AM-TRADE/am-trade/trustee/update/" + borrowNid;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 根据机构编号,查询还款计划数量
+     *
+     * @param param
+     * @return
+     */
+    @Override
+    public Integer selectBorrowRepayPlanCountsByInstCode(Map<String, Object> param) {
+        AemsBorrowRepayPlanCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/aems/repayplan/selectBorrowRepayPlanCountsByInstCode", param, AemsBorrowRepayPlanCustomizeResponse.class);
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
     @Override
     public BooleanResponse updateHjhPlanJoinOff() {
         String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOff";
@@ -6588,7 +6641,23 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 当前出借人
+     * 根据机构编号查询还款计划
+     *
+     * @param param
+     * @return
+     */
+    @Override
+    public List<AemsBorrowRepayPlanCustomizeVO> selectBorrowRepayPlanList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/aems/repayplan/selectBorrowRepayPlanList";
+        AemsBorrowRepayPlanCustomizeResponse response = restTemplate.postForEntity(url, param, AemsBorrowRepayPlanCustomizeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+            /** 当前出借人
      * @return
      */
     @Override
@@ -6659,8 +6728,29 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    @Override
+    public boolean checkAutoPayment(String creditNid) {
+        String url = urlBase + "autoTenderController/checkAutoPayment/" + creditNid;
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        return response.getResultBoolean();
+    }
+
     /**
-     * 获取借款用户信息
+     * 根据标的编号查询资产推送表
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public HjhPlanAssetVO selectHjhPlanAssetByBorrowNid(String borrowNid) {
+        HjhPlanAssetResponse response = restTemplate
+                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectHjhPlanAssetByBorrowNid/" + borrowNid, HjhPlanAssetResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+            /** 获取借款用户信息
      * @param borrowNid
      * @param companyOrPersonal
      * @return

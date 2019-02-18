@@ -24,8 +24,6 @@ import java.util.List;
 @Service
 public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRechargeService {
 
-    // 充值状态:充值终止
-    private static final int RECHARGE_STATUS_BANK_FAIL = 4;
     // 充值状态:失败
     private static final int RECHARGE_STATUS_FAIL = 3;
     // 充值状态:成功
@@ -213,7 +211,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
                         // 充值记录状态:充值中
                         if (newAccountRechage.getStatus() == 1 || newAccountRechage.getStatus() == 0) {
                             // 更新充值订单为:失败
-                            newAccountRechage.setStatus(RECHARGE_STATUS_BANK_FAIL);
+                            newAccountRechage.setStatus(RECHARGE_STATUS_FAIL);
                             newAccountRechage.setUpdateTime(nowTime);
                             boolean isUpdateFlag = this.accountRechargeMapper.updateByPrimaryKeySelective(newAccountRechage) > 0 ? true : false;
                             if (!isUpdateFlag) {

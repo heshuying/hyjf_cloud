@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableCircuitBreaker
-@ComponentScan(basePackages = {"com.hyjf.cs.user","com.hyjf.common","com.hyjf.pay.lib"})
+@ComponentScan(basePackages = {"com.hyjf.cs.user","com.hyjf.common","com.hyjf.cs.common","com.hyjf.pay.lib"})
 public class CsUserApplication {
 
 	@Bean

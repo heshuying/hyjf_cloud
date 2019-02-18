@@ -113,6 +113,26 @@ public class BorrowRecoverServiceImpl extends BaseServiceImpl implements BorrowR
         }
         return list.get(0);
     }
+    
+    /**
+     * 根据用户id和borrowNid查询还款总表
+     * @param userId,borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRepay getRepayPlanByUserIdAndBorrowNid(Integer userId, String borrowNid){
+        // 获取还款总表数据
+        BorrowRepayExample borrowRepayExample = new BorrowRepayExample();
+        BorrowRepayExample.Criteria borrowRepayCrt = borrowRepayExample.createCriteria();
+        borrowRepayCrt.andUserIdEqualTo(userId);
+        borrowRepayCrt.andBorrowNidEqualTo(borrowNid);
+        List<BorrowRepay> borrowRepays = borrowRepayMapper.selectByExample(borrowRepayExample);
+        if (borrowRepays != null && borrowRepays.size() == 1) {
+            return borrowRepays.get(0);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * 根据borrowNid，tenderNid，accedeOrderId查找放款记录

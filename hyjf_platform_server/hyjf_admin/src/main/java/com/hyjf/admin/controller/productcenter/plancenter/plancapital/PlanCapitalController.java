@@ -111,7 +111,7 @@ public class PlanCapitalController extends BaseController {
      */
     @ApiOperation(value = "资金计划列表", notes = "资金计划列表导出")
     @PostMapping(value = "/exportExcel")
-    public void exportExcel(@ModelAttribute HjhPlanCapitalRequestBean requestBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhPlanCapitalRequestBean requestBean) throws Exception {
         HjhPlanCapitalRequest hjhPlanCapitalRequest = new HjhPlanCapitalRequest();
         BeanUtils.copyProperties(requestBean, hjhPlanCapitalRequest);
 

@@ -39,17 +39,17 @@ public class AppBorrowImageController {
     @PostMapping("/getRecordList")
     public AppBorrowImageResponse findAppBannerData(@RequestBody AppBorrowImageRequest form) {
         AppBorrowImageResponse response = new AppBorrowImageResponse();
-        List<AppBorrowImage> recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), -1, -1);
-        if (recordList != null) {
+        Integer count = appBorrowImageService.getCount();
+        if (count >0) {
             String filePhysicalPath = DOMAIN_URL;
-            Paginator paginator = new Paginator(form.getCurrPage(), recordList.size(), form.getPageSize());
-            recordList = appBorrowImageService.getRecordList(new AppBorrowImage(), paginator.getOffset(), paginator.getLimit());
+            Paginator paginator = new Paginator(form.getCurrPage(), count, form.getPageSize());
+            List<AppBorrowImage> recordList = appBorrowImageService.getRecordList(paginator.getOffset(), paginator.getLimit());
             List<AppBorrowImageVO> resultList = CommonUtils.convertBeanList(recordList, AppBorrowImageVO.class);
             for (AppBorrowImage appBorrowImage : recordList) {
                 appBorrowImage.setBorrowImageUrl(filePhysicalPath + appBorrowImage.getBorrowImageUrl());
             }
             response.setResultList(resultList);
-            response.setRecordTotal(resultList.size());
+            response.setRecordTotal(count);
         }
         return response;
     }
@@ -71,7 +71,7 @@ public class AppBorrowImageController {
             String filePhysicalPath = DOMAIN_URL;
             record = appBorrowImageService.getRecord(form.getId());
             if (record != null) {
-                record.setBorrowImageUrl(filePhysicalPath + record.getBorrowImageUrl());
+                record.setBorrowImageUrl(record.getBorrowImageUrl());
             }
         }
         AppBorrowImageVO appBorrowImageVO = CommonUtils.convertBean(record, AppBorrowImageVO.class);

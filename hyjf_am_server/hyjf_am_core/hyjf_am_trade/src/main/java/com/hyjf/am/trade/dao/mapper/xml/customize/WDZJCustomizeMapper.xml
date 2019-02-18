@@ -39,15 +39,15 @@
 		''
 		END AS `repaymentType`,
 		CASE
-		WHEN hb.asset_attributes = '1' THEN
+		WHEN hbi.asset_attributes = '1' THEN
 		'抵押标'
-		WHEN hb.asset_attributes = '2' THEN
+		WHEN hbi.asset_attributes = '2' THEN
 		'质押标'
-		WHEN hb.asset_attributes = '3' THEN
+		WHEN hbi.asset_attributes = '3' THEN
 		'信用标'
-		WHEN hb.asset_attributes = '4' THEN
+		WHEN hbi.asset_attributes = '4' THEN
 		'债权转让标'
-		WHEN hb.asset_attributes = '5' THEN
+		WHEN hbi.asset_attributes = '5' THEN
 		'净值标'
 		ELSE
 		'信用标'
@@ -394,33 +394,24 @@
 
 	<select id="selectTenderList" parameterType="map" resultMap="TenderListResultMap">
   	SELECT
-		ui.idcard AS subscribeUserName,
+		hu.user_id AS subscribeUserName,
 		t.account AS amount,
 		t.account AS validAmount,
-		FROM_UNIXTIME(
-			t.addtime,
-			'%Y-%m-%d %H:%i:%s'
-		) AS addDate,
+		date_format(t.create_time, '%Y-%m-%d %H:%i:%s') AS addDate,
 		'1' AS STATUS,
-
-		IF (
-			hu.inst_code = '11000001',
-			1,
-
 		IF (
 			t.accede_order_id IS NULL,
 			0,
 			1
 		)
-		) AS type
+		 AS type
 	FROM
 		ht_borrow_tender t
-	JOIN ht_users hu ON t.user_id = hu.user_id
-	JOIN ht_users_info ui ON ui.user_id = hu.user_id
+	JOIN ht_r_user hu ON t.user_id = hu.user_id
 	WHERE t.borrow_nid = #{projectId}
 	UNION ALL
 		SELECT
-			ui.idcard AS subscribeUserName,
+			hu.user_id AS subscribeUserName,
 			ct.assign_capital AS amount,
 			ct.assign_capital AS validAmount,
 			date_format(ct.create_time, '%Y-%m-%d %H:%i:%s') AS addDate,
@@ -430,15 +421,14 @@
 			ht_credit_tender ct
 		INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid
 		AND bc.credit_nid = ct.credit_nid
-		JOIN ht_users hu ON ct.user_id = hu.user_id
-		JOIN ht_users_info ui ON ui.user_id = hu.user_id
+		JOIN ht_r_user hu ON ct.user_id = hu.user_id
 		WHERE ct.credit_nid = #{projectId}
 		UNION ALL
 			SELECT
-				ui.idcard AS subscribeUserName,
+				hu.user_id AS subscribeUserName,
 				ct.assign_capital AS amount,
 				ct.assign_capital AS validAmount,
-				FROM_UNIXTIME(
+				date_format(
 					ct.create_time,
 					'%Y-%m-%d %H:%i:%s'
 				) AS addDate,
@@ -448,8 +438,7 @@
 				ht_hjh_debt_credit_tender ct
 			INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid
 			AND bc.credit_nid = ct.credit_nid
-			JOIN ht_users hu ON ct.user_id = hu.user_id
-			JOIN ht_users_info ui ON ui.user_id = hu.user_id
+			JOIN ht_r_user hu ON ct.user_id = hu.user_id
 			WHERE ct.credit_nid = #{projectId}
   </select>
 	<select id="selectPreapysList" parameterType="map" resultMap="PreapysListCustomize">
@@ -458,7 +447,7 @@
 		'天' AS deadlineUnit,
 		ROUND(
 		(
-		br.repay_yestime - br.create_time
+		br.repay_yestime - UNIX_TIMESTAMP(br.create_time)
 		) / (60 * 60 * 24)
 		) AS deadline
 		FROM

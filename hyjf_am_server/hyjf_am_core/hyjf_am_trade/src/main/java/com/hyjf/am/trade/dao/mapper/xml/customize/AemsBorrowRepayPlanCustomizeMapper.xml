@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AemsBorrowRepayPlanCustomizeMapper">
+	<resultMap id="borrowRepayPlanList" type="com.hyjf.am.trade.dao.model.customize.AemsBorrowRepayPlanCustomize">
+		<result column="borrowNid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrowAccount" property="borrowAccount" jdbcType="VARCHAR" />
+		<result column="borrowInterest" property="borrowInterest" jdbcType="VARCHAR" />
+		<result column="yesAccount" property="yesAccount" jdbcType="VARCHAR" />
+		<result column="yesAccountTime" property="yesAccountTime" jdbcType="VARCHAR" />
+		<result column="repayCapital" property="repayCapital" jdbcType="VARCHAR" />
+		<result column="repayInterest" property="repayInterest" jdbcType="VARCHAR" />
+		<result column="borrowTotal" property="borrowTotal" jdbcType="VARCHAR" />
+		<result column="repayTotal" property="repayTotal" jdbcType="VARCHAR" />
+		<result column="repayTime" property="repayTime" jdbcType="VARCHAR" />
+		<result column="repayYseTime" property="repayYseTime" jdbcType="VARCHAR" />
+		<result column="periods" property="periods" jdbcType="VARCHAR" />
+		<result column="manageFee" property="manageFee" jdbcType="VARCHAR" />
+		<result column="repayStatus" property="repayStatus" jdbcType="VARCHAR" />
+		<result column="productId" property="productId" jdbcType="VARCHAR" />
+
+		<result column="borrowAccountYes" property="borrowAccountYes" jdbcType="VARCHAR" />
+		<result column="repayInterestYes" property="repayInterestYes" jdbcType="VARCHAR" />
+		<result column="repayCapitalYes" property="repayCapitalYes" jdbcType="VARCHAR" />
+		<result column="manageFeeYes" property="manageFeeYes" jdbcType="VARCHAR" />
+		<result column="repayFee" property="repayFee" jdbcType="VARCHAR" />
+		<result column="lateInterest" property="lateInterest" jdbcType="VARCHAR" />
+		<result column="lateDays" property="lateDays" jdbcType="INTEGER" />
+		<result column="charge_interest" property="reduceInterest" jdbcType="VARCHAR" />
+		<result column="instCode" property="instCode" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectBorrowRepayPlanList" resultMap="borrowRepayPlanList" parameterType="java.util.Map">
+		SELECT
+		b.borrow_nid AS borrowNid,
+		hbi.inst_code instCode,
+		b.account AS borrowAccount,
+		b.borrow_account_yes AS borrowAccountYes,
+		b.borrow_apr AS borrowInterest,
+		b.account - hba.service_fee AS yesAccount,
+		FROM_UNIXTIME(b.recover_last_time,'%Y-%m-%d %H:%i:%S') AS yesAccountTime,
+		hbr.repay_capital AS repayCapital,
+		hbr.repay_capital_yes AS repayCapitalYes,
+		hbr.repay_interest AS repayInterest,
+		hbr.repay_interest_yes AS repayInterestYes,
+		hbr.repay_account + hbr.repay_fee AS borrowTotal,
+		hbr.repay_account_all AS repayTotal,
+		hbr.late_interest as lateInterest,
+		hbr.late_days as lateDays,
+		CASE WHEN hbr.repay_status = 1 THEN FROM_UNIXTIME(hbr.repay_action_time,'%Y-%m-%d %H:%i:%S')
+		ELSE 0 END AS repayYseTime,
+		CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS periods,
+		hhpa.asset_id AS productId,
+		hbr.repay_status AS repayStatus,
+		hbr.charge_interest,
+		hbr.repay_fee AS manageFee,
+		hbr.repay_fee AS repayFee,
+		CASE WHEN hbr.repay_status = 1 THEN hbr.repay_fee
+		ELSE (select sum(bp.repay_fee)  from ht_borrow_repay_plan bp where bp.repay_status=1 and bp.borrow_nid=b.borrow_nid)
+		END AS manageFeeYes,
+		hbr.repay_time AS repayTime
+		FROM
+		ht_borrow_repay  hbr
+		INNER JOIN ht_borrow b ON b.borrow_nid = hbr.borrow_nid
+		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
+		INNER JOIN ht_borrow_apicron hba on hba.borrow_nid = b.borrow_nid and hba.api_type = 0 and hba.status = 6
+		INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.inst_code = hbi.inst_code and b.borrow_nid = hhpa.borrow_nid
+		WHERE
+		    hbi.inst_code = #{instCode}
+        <if test="repayType != null and repayType != 2">
+            AND hbr.repay_status = #{repayType}
+        </if>
+		<if test="startDate != null and startDate != ''">
+			AND hbr.repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startDate})
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND hbr.repay_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endDate})
+		</if>
+		<if test="isMonth != null and isMonth != ''">
+			AND (
+				b.borrow_style = 'principal'
+				OR b.borrow_style = 'month'
+				OR b.borrow_style = 'endmonth'
+			)
+		</if>
+		<if test="productId != null and productId != ''">
+			AND hhpa.asset_id = #{productId}
+		</if>
+		ORDER BY hbr.id ASC
+		<if test="limitStart >= 0" >
+			limit #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+
+	<select id="selectBorrowRepayPlanCountsByInstCode" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT
+			COUNT(*)
+		FROM
+			  ht_borrow_repay  hbr
+		INNER JOIN ht_borrow b ON b.borrow_nid = hbr.borrow_nid
+		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
+		INNER JOIN ht_borrow_apicron hba on hba.borrow_nid = b.borrow_nid and hba.api_type = 0 and hba.status = 6
+		INNER JOIN ht_hjh_plan_asset hhpa ON hhpa.inst_code = hbi.inst_code and b.borrow_nid = hhpa.borrow_nid
+		WHERE
+		hbi.inst_code = #{instCode}
+		<if test="repayType != null and repayType != 2 ">
+			AND hbr.repay_status = #{repayType}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND hbr.repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startDate})
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND hbr.repay_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endDate})
+		</if>
+		<if test="isMonth != null and isMonth != ''">
+			AND (
+			b.borrow_style = 'principal'
+			OR b.borrow_style = 'month'
+			OR b.borrow_style = 'endmonth'
+			)
+		</if>
+		<if test="productId != null and productId != ''">
+			AND hhpa.asset_id = #{productId}
+		</if>
+	</select>
+
+</mapper>

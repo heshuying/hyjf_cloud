@@ -83,7 +83,8 @@ public class ApiBankOpenController extends BaseUserController {
             e.printStackTrace();
         }
         //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(),
+                openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + requestBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
@@ -98,7 +99,8 @@ public class ApiBankOpenController extends BaseUserController {
         // 根据身份证号码获取性别
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
-        BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
+        BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE,
+                Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
         openAccoutBean.setIdentity(openBean.getIdentity());
         /**1：出借角色2：借款角色3：代偿角色*/
         openAccoutBean.setChannel(openBean.getChannel());

@@ -56,7 +56,7 @@ public class LandingPageServiceImpl implements LandingPageService {
 		int count = landingPageMapper.countByExample(example);
 		response.setCount(count);
 		if(count>0){
-			Paginator paginator = new Paginator(request.getCurrPage(), count);
+			Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
 			example.setLimitStart(paginator.getOffset());
 			example.setLimitEnd(paginator.getLimit());
 			List<LandingPage> list = landingPageMapper.selectByExample(example);
