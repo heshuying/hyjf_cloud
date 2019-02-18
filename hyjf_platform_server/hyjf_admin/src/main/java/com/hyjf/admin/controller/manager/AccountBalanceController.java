@@ -168,8 +168,8 @@ public class AccountBalanceController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         //请求第一页5000条
-       // form.setPageSize(defaultRowMaxCount);
-      //  form.setCurrPage(1);
+        form.setPageSize(defaultRowMaxCount);
+        form.setCurrPage(1);
         HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByMonth(form);
         // 表格sheet名称
         String sheetName = "每月交易量";
@@ -182,14 +182,16 @@ public class AccountBalanceController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = monthBuildMap();
         Map<String, IValueFormatter> mapValueAdapter = monthBuildValueAdapter();
-        String sheetNameTmp = "";
+        String sheetNameTmp = sheetName + "_第1页";
         if(totalCount==0){
             helper.export(workbook, sheetName + "_第" + (1) + "页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultResponse.getResultList());
         }
-        for (int i = 1; i <= sheetCount; i++) {
+        for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setCurrPage(i);
+            form.setCurrPage(i+1);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByMonth(form);
             if (resultResponse2.getResultList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
