@@ -419,8 +419,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BigDecimal getPreCreditCapital(HjhDebtCreditVO hjhDebtCreditVO) {
-        String url = urlBase + "autoTenderController/getPreCreditCapital";
+    public BigDecimal doGetPreCreditCapital(HjhDebtCreditVO hjhDebtCreditVO) {
+        String url = urlBase + "autoTenderController/doGetPreCreditCapital";
         BigDecimalResponse response = restTemplate.postForEntity(url, hjhDebtCreditVO, BigDecimalResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)){
             return null;

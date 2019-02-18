@@ -104,11 +104,11 @@ public class AutoTenderController extends BaseController {
      * @param hjhDebtCreditVO
      * @return
      */
-    @RequestMapping("/getPreCreditCapital")
-    public BigDecimalResponse getPreCreditCapital(@RequestBody HjhDebtCreditVO hjhDebtCreditVO) {
+    @RequestMapping("/doGetPreCreditCapital")
+    public BigDecimalResponse doGetPreCreditCapital(@RequestBody HjhDebtCreditVO hjhDebtCreditVO) {
         HjhDebtCredit hjhDebtCredit = new HjhDebtCredit();
         BeanUtils.copyProperties(hjhDebtCreditVO, hjhDebtCredit);
-        return new BigDecimalResponse(this.autoTenderService.getPreCreditCapital(hjhDebtCredit));
+        return new BigDecimalResponse(this.autoTenderService.doGetPreCreditCapital(hjhDebtCredit));
     }
 
     /**

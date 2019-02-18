@@ -32,7 +32,7 @@ public class CertSendUserCustomize implements Serializable {
 
     private String regIp;
 
-    private Integer regTime;
+    private Date regTime;
 
     private String loginIp;
 
@@ -213,11 +213,11 @@ public class CertSendUserCustomize implements Serializable {
         this.regIp = regIp;
     }
 
-    public Integer getRegTime() {
+    public Date getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(Integer regTime) {
+    public void setRegTime(Date regTime) {
         this.regTime = regTime;
     }
 

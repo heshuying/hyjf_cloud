@@ -64,13 +64,9 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
-		logger.info("customize:" + JSONObject.toJSONString(certTransactRequest));
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
-		logger.info(logHeader + " accountLists.size():" + accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
-				logger.info(logHeader + "accountList.getNid():" + accountList.getNid());
-				logger.info(logHeader + "accountList.getType():" + accountList.getType());
 				 createParam(accountList,list);
 			}
 			if(list==null||list.size()==0){
@@ -1291,7 +1287,9 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setTradeList(tradeList);
 		certTransactRequest.setBorrowNid(borrow.getBorrowNid());
+		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<AccountListVO> tenderList=this.amTradeClient.getAccountListVOListByRequest(certTransactRequest);
+		logger.info("tenderList.size():" + tenderList.size());
 		for (AccountListVO accountList2 : tenderList) {
 			UserInfoVO tenderUsersInfo=this.amUserClient.findUserInfoById(accountList2.getUserId());
 			Map<String, Object> param3 = new HashMap<String, Object>();
