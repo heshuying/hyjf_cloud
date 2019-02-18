@@ -1145,7 +1145,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             result.put("projectType",couponUser.getProjectType());
             result.put("earnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest)));
             // app结果页加上面值
-            result.put("appEarnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest).add(couponUser.getCouponQuota())));
+            if (couponUser != null && couponUser.getCouponType() == 3) {
+                result.put("appEarnings", CommonUtils.formatAmount(null, request.getEarnings().add(couponInterest).add(couponUser.getCouponQuota())));
+            }
         }else{
             // 优惠券类别
             result.put("couponType", "");
