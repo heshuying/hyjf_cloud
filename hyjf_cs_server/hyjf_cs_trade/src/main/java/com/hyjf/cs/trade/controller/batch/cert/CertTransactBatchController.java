@@ -40,6 +40,8 @@ public class CertTransactBatchController {
     private String thisMessName = "国家互联网应急中心交易流水上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
     Logger logger = LoggerFactory.getLogger(CertTransactBatchController.class);
+
+    @Autowired
     private CertTransactService certTransactService;
 
     @GetMapping("/certTransact")
