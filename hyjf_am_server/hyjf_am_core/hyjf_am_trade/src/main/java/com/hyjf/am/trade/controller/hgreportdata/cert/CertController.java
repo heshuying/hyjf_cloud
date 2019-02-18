@@ -53,8 +53,10 @@ public class CertController extends BaseController {
 
     @PostMapping("/queryCertAccountList")
     public CertAccountListResponse queryCertAccountList(@RequestBody CertRequest certRequest) {
+        logger.info("certRequest:" + JSONObject.toJSONString(certRequest));
         CertAccountListResponse response = new CertAccountListResponse();
         List<CertAccountListCustomize> certAccountListCustomizes = certService.queryCertAccountList(certRequest);
+        logger.info("certAccountListCustomizes:" + certAccountListCustomizes.size());
         if (!CollectionUtils.isEmpty(certAccountListCustomizes)) {
             List<CertAccountListCustomizeVO> voList = CommonUtils.convertBeanList(certAccountListCustomizes, CertAccountListCustomizeVO.class);
             response.setResultList(voList);
