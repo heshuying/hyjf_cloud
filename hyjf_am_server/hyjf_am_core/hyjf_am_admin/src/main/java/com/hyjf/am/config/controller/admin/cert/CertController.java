@@ -1,6 +1,5 @@
 package com.hyjf.am.config.controller.admin.cert;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.CertErrLog;
 import com.hyjf.am.config.dao.model.auto.CertLog;
@@ -72,7 +71,6 @@ public class CertController extends BaseConfigController {
     @PostMapping("/selectCertErrorReportLogList")
     public CertErrorReportLogResponse selectCertErrorReportLogList(@RequestBody @Valid CertErrorReportLogRequestBean request) {
         CertErrorReportLogResponse response =new CertErrorReportLogResponse();
-        logger.info("requestBean:{}",JSONObject.toJSONString(request));
         int recordTotal = certService.selectCertErrorReportLogListCount(request);
 
         if (recordTotal > 0) {
