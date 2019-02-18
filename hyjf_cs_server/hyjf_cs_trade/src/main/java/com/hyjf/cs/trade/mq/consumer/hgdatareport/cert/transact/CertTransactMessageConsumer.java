@@ -84,7 +84,6 @@ public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>
 
             // --> 调用service组装数据
             JSONArray data =certTransactService.createDate(minId,maxId);
-            logger.info(logHeader + " data" + data.toJSONString());
             if(data==null){
                 return;
             }
