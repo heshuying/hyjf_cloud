@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.hgreportdata.nifa;
 
-import java.util.List;
-
 /**
  * @author PC-LIUSHOUYI
  * @version NifaStatisticalCustomizeMapper, v0.1 2019/1/19 16:40

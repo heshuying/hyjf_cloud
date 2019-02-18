@@ -11,7 +11,6 @@ import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IncreaseinterestLoansService;
-import com.hyjf.am.trade.utils.PdfGenerator;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.MailMessage;
@@ -20,30 +19,22 @@ import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.file.FileUtil;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.StringPool;
 import com.hyjf.common.util.calculate.CalculatesUtil;
-import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 产品加息放款

@@ -2,19 +2,14 @@ package com.hyjf.am.trade.service.front.consumer.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
@@ -32,12 +27,8 @@ import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -2699,8 +2690,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				}
 				if(1 == isAllrepay){//智投一次性还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
 					boolean result = isLastAllRepay(apicron);
-					BigDecimal sum = getRepayPlanAccountSum(borrowNid);
 					if(result){
+						BigDecimal sum = getRepayPlanAccountSum(borrowNid);
+						logger.info("【智投还款】借款编号：{}，一次性还款插入交易明细。总还款金额：{}", borrowNid, sum);
 						AccountList repayAllAccountList = new AccountList();
 						repayAllAccountList.setBankAwait(repayUserAccount.getBankAwait());
 						repayAllAccountList.setBankAwaitCapital(repayUserAccount.getBankAwaitCapital());
