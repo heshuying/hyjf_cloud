@@ -64,6 +64,7 @@ public class AemsUserRegisterController extends BaseUserController {
         //验证手机号是否已被注册
         UserVO user = aemsUserRegisterService.getUsersByMobile(registerRequest.getMobile());
         if (null != user) {
+            logger.info("用户已存在，执行重复注册逻辑判断, user is : {}", user);
             //result.setStatus(MsgEnum.STATUS_ZC000005.getCode());
             result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getCode());
             result.setStatusDesc(MsgEnum.STATUS_ZC000005.getMsg());
