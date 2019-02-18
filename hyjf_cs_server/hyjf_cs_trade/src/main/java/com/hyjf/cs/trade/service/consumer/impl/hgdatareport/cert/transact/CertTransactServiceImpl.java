@@ -64,6 +64,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
+		logger.info("customize:" + JSONObject.toJSONString(certTransactRequest));
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
 		logger.info(logHeader + " accountLists.size():" + accountLists.size());
 		try {
