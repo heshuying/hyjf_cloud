@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.util;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
@@ -41,7 +40,7 @@ public class SignUtil {
             sign = bean.getAssetId() + bean.getInstCode() + bean.getTimestamp();
         } else if (("/aems/authState/recharge").equals(methodName)) {
             //aems充值页面
-            UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
+            AemsUserDirectRechargeRequestBean bean = (AemsUserDirectRechargeRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
                     + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
         } else if (("/aems/trusteePay/pay").equals(methodName)) {
