@@ -127,7 +127,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		record.setId(id);
 		// 操作时间
 		record.setUpdateTime(GetDate.getDate());
-		whereaboutsPageConfigMapper.updateByPrimaryKey(record);
+		whereaboutsPageConfigMapper.updateByPrimaryKeySelective(record);
 	}
 	@Override
 	public WhereaboutsPageResponse  getWhereaboutsPageConfigById(WhereaboutsPageRequest form){
