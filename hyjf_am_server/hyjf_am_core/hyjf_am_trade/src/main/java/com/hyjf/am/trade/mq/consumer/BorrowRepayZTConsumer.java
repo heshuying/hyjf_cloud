@@ -111,8 +111,8 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 				if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
 					// 失败原因
 					String failMsg = batchResult.getFailMsg();
-					logger.info("【直投还款】借款编号：{}，批次处理失败：{}", borrowNid, failMsg);
 					if (StringUtils.isNotBlank(failMsg)) {
+						logger.error("【直投还款】借款编号：{}，批次处理失败：{}", borrowNid, failMsg);
 						borrowApicron.setData(failMsg);
 						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
 						// 更新任务API状态
@@ -121,12 +121,13 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 							throw new Exception("批次还款任务表(ht_borrow_apicron)更新状态(还款失败)失败！[用户ID：" + borrowUserId + "]，[借款编号：" + borrowNid + "]");
 						}
 					} else {
+						logger.info("【直投还款】借款编号：{}，未返回批次处理失败原因，尝试更新还款明细数据。", borrowNid);
 						// 查询批次交易明细，进行后续操作
 						int batchDetailStatus = batchBorrowRepayZTService.reapyBatchDetailsUpdate(borrowApicron);
 						// 进行后续失败的还款的还款请求
 						if (CustomConstants.BANK_BATCH_STATUS_SUCCESS != batchDetailStatus) {
 							String statusStr = CustomConstants.BANK_BATCH_STATUS_PART_FAIL == batchDetailStatus ? "部分成功" : "失败";
-							throw new Exception("批次查询成功后，还款明细更新" + statusStr + "。[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
+							throw new Exception("批次查询未返回失败原因，还款明细更新" + statusStr + "。[银行唯一订单号：" + bankSeqNo + "]，[借款编号：" + borrowNid + "]");
 						}
 					}
 				}
@@ -173,7 +174,8 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 					// add 合规数据上报 埋点 liubin 20181122 end
                     logger.info("【直投还款】借款编号：{}，还款成功！", borrowNid);
 				}
-			}catch(Exception e){
+			} catch (Exception e) {
+				logger.error("【直投还款】还款发生系统异常！", e);
 				StringBuffer sbError = new StringBuffer();// 错误信息
 				sbError.append(e.getMessage()).append("<br/>");
 				String online = "生产环境";// 取得是否线上

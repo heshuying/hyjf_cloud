@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.controller.batch.cert;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -35,15 +36,17 @@ import java.util.UUID;
 public class CertTransactBatchController {
 
     @Autowired
-    private CommonProducer producer;
+    private CommonProducer commonProducer;
 
     private String thisMessName = "国家互联网应急中心交易流水上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
     Logger logger = LoggerFactory.getLogger(CertTransactBatchController.class);
+
+    @Autowired
     private CertTransactService certTransactService;
 
     @GetMapping("/certTransact")
-    public String autoIssueRecover() {
+    public StringResponse certTransact() {
         logger.info(logHeader + "CertTransactBatchController execute start...");
         Integer page=1;
         Integer size=1000;
@@ -54,18 +57,20 @@ public class CertTransactBatchController {
             param.put("minId", certTransactMaxId==null?"0":certTransactMaxId);
             param.put("limitStart", (page-1)*size);
             param.put("limitEnd", size);
+            logger.info("queryCertAccountListId:" + JSONObject.toJSONString(param));
             customize=certTransactService.queryCertAccountListId(param);
+            logger.info("customize:" + JSONObject.toJSONString(customize));
             if(certTransactMaxId==null||"".equals(certTransactMaxId)){
                 RedisUtils.set("certTransactOtherMaxId", customize.getMaxId()+"");
                 logger.info(logHeader + "CertTransactBatchController execute end...");
-                return "Success";
+                return new StringResponse("success");
             }
             String minId=customize.getLimitMinId()+"";
             String maxId=customize.getLimitMaxId()+"";
             String sumCount=customize.getSumCount()+"";
             if("0".equals(sumCount)){
                 logger.info(logHeader + "CertTransactBatchController execute end...");
-                return "Success";
+                return new StringResponse("success");
             }
             // 加入到消息队列
             Map<String, String> params = new HashMap<String, String>();
@@ -73,12 +78,15 @@ public class CertTransactBatchController {
             params.put("minId", minId);
             params.put("maxId", maxId);
             try{
-                producer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), JSONObject.toJSONString(params)));
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+
+
             }catch (Exception e){}
             RedisUtils.set("certTransactOtherMaxId", maxId);
             page=page+1;
         } while (customize.getMaxId()>customize.getLimitMaxId());
         logger.info(logHeader + "CertTransactBatchController execute end...");
-        return "Success";
+        return new StringResponse("success");
     }
 }

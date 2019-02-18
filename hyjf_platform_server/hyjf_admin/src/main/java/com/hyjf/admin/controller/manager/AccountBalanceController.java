@@ -80,7 +80,7 @@ public class AccountBalanceController extends BaseController {
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
     @PostMapping("/exportActionByDay")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT )
-    public void exportActionByDay( HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
+    public void exportActionByDay(@RequestBody HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

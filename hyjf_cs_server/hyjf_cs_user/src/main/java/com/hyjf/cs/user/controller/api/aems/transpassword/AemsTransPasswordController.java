@@ -144,7 +144,7 @@ public class AemsTransPasswordController extends BaseController {
         
         //根据账号找出用户ID
         String accountId = StringUtils.isEmpty(transPasswordRequestBean.getAccountId()) ? "0" : transPasswordRequestBean.getAccountId();
-        BankOpenAccountVO bankOpenAccount = transPasswordService.getBankOpenAccount(Integer.valueOf(accountId));
+        BankOpenAccountVO bankOpenAccount = transPasswordService.getBankOpenAccountByAccount(accountId);
         if(bankOpenAccount == null){
             modelAndView = new ModelAndView(PASSWORD_ERROR_PATH);
             _log.info("-------------------没有根据电子银行卡找到用户"+transPasswordRequestBean.getAccountId()+"！--------------------");
