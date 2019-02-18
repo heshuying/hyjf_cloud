@@ -43,7 +43,7 @@ public class CertTransactBatchController {
     private CertTransactService certTransactService;
 
     @GetMapping("/certTransact")
-    public String autoIssueRecover() {
+    public String certTransact() {
         logger.info(logHeader + "CertTransactBatchController execute start...");
         Integer page=1;
         Integer size=1000;
