@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
  * @version BifaCreditTenderInfoHandle, v0.1 2019/1/17 9:33
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BIFA_CREDITTENDERINFO_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, consumerGroup = MQConstant.BIFA_CREDITTENDERINFO_GROUP)
 public class BifaCreditTenderInfoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     Logger logger = LoggerFactory.getLogger(BifaCreditTenderInfoConsumer.class);
