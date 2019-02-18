@@ -304,7 +304,7 @@ public class FinmanChargeNewController extends BaseController {
         int cnt = this.finmanChargeNewService.countRecordByProjectType(form.getManChargeTimeType(), form.getManChargeTime(), form.getInstCode(),form.getAssetType());
         if (cnt > 0) {
 //            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "mancharge.time.type.repeat");
-            message =  "相同资产来源，产品类型，类型，期限的费率配置已经存错误的Unicode字符串!";
+            message =  "相同资产来源，产品类型，期限的费率配置已经存在,请重新操作!";
         }
         return message;
     }

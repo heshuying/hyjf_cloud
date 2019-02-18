@@ -70,7 +70,6 @@ public class AemsBindCardPageController extends BaseController {
                 Validator.isNull(bankCardRequestBean.getInstCode())||
                 Validator.isNull(bankCardRequestBean.getRetUrl())||
                 Validator.isNull(bankCardRequestBean.getPlatform())||
-                Validator.isNull(bankCardRequestBean.getForgotPwdUrl())||
                 Validator.isNull(bankCardRequestBean.getChannel())||
                 Validator.isNull(bankCardRequestBean.getNotifyUrl())) {
             logger.info("-------------------绑卡请求参数非法--------------------");

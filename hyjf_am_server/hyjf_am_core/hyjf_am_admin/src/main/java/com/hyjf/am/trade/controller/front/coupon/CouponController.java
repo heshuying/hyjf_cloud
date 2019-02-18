@@ -89,7 +89,9 @@ public class CouponController extends BaseController {
         CouponRecoverResponse response = new CouponRecoverResponse();
         CouponRecover recover=couponService.getCouponRecoverByPrimaryKey(id);
         if (Validator.isNotNull(recover)){
-            response.setResult(CommonUtils.convertBean(recover,CouponRecoverVO.class));
+            CouponRecoverVO couponRecoverVO=CommonUtils.convertBean(recover,CouponRecoverVO.class);
+            couponRecoverVO.setRecoverPeriod(String.valueOf(recover.getRecoverPeriod()));
+            response.setResult(couponRecoverVO);
         }
         return response;
     }

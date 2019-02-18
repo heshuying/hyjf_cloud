@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
@@ -21,6 +22,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -49,6 +51,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	AmUserClient amUserClient;
 	@Autowired
 	SystemConfig systemConfig;
+
+	private String thisMessName = "交易流水信息";
+	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
+
 	@Override
 	public JSONArray createDate(String minId, String maxId) {
 		
@@ -60,7 +67,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
-				
 				 createParam(accountList,list);
 			}
 			if(list==null||list.size()==0){
@@ -79,6 +85,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certRequest.setMinId((String) param.get("minId"));
 		certRequest.setLimitStart((Integer) param.get("limitStart"));
 		certRequest.setLimitEnd((Integer) param.get("limitEnd"));
+		logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
 		return amTradeClient.queryCertAccountListId(certRequest);
 	}
 

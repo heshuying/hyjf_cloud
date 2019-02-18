@@ -8,12 +8,14 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.bean.AemsUserRegisterRequestBean;
 import com.hyjf.cs.user.bean.AemsUserRegisterResultBean;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.aems.register.AemsUserRegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
+import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,8 +47,13 @@ public class AemsUserRegisterController extends BaseUserController {
 
     @PostMapping("/register")
     @ApiOperation(value = "AEMS系统用户注册接口", httpMethod = "POST", notes = "AEMS系统用户注册接口")
-    public AemsUserRegisterResultBean userRegister(@RequestBody AemsUserRegisterRequestBean aemsUserRegisterRequestBean, HttpServletRequest request, HttpServletResponse response) {
+    public AemsUserRegisterResultBean userRegister(@RequestBody AemsUserRegisterRequestBean aemsUserRegisterRequestBean,
+                                                   HttpServletRequest request) {
         logger.info("AEMS注册接口, aemsUserRegisterRequestBean is :{}", JSONObject.toJSONString(aemsUserRegisterRequestBean));
+
+        // 验签
+        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(aemsUserRegisterRequestBean,"/aems/register/register"), MsgEnum.STATUS_CE000002);
+
         AemsUserRegisterResultBean result = new AemsUserRegisterResultBean();
         RegisterRequest registerRequest = new RegisterRequest();
         //切换参数实体(调共用方法)

@@ -1092,7 +1092,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             return resultMap;
         }
         // 验签
-        if(!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/encryptpage/open.do")){
+        if(!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/encryptpage/open")){
             logger.info("验签失败[" + JSONObject.toJSONString(requestBean, true) + "]");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
             resultMap.put("mess", "验签失败！");

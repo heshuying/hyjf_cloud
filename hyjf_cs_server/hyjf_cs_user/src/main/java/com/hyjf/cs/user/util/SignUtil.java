@@ -55,11 +55,11 @@ public class SignUtil {
             //aems设置&重置交易密码
             AemsTransPasswordRequestBean bean = (AemsTransPasswordRequestBean) paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getInstCode() + bean.getTimestamp();
-        }else if (("/aems/encryptpage/open.do").equals(methodName)){
+        }else if (("/aems/encryptpage/open").equals(methodName)){
             // AEMS 用户开户
             AemsBankOpenEncryptPageRequestBean bean = (AemsBankOpenEncryptPageRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getMobile() + bean.getTrueName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
-        }else if ("/aems/register/register.do".equals(methodName)){
+        }else if ("/aems/register/register".equals(methodName)){
             // AEMS 用户注册
             AemsUserRegisterRequestBean bean = (AemsUserRegisterRequestBean) paramBean;
             sign = bean.getMobile() + bean.getInstCode() + bean.getTimestamp();
@@ -81,7 +81,6 @@ public class SignUtil {
             sign = bean.getAccountId() + bean.getTimestamp();
         }
 
-        // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
     }
 
