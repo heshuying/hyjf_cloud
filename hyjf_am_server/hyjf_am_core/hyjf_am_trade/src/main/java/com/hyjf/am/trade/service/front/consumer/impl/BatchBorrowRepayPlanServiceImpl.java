@@ -2699,8 +2699,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				}
 				if(1 == isAllrepay){//智投一次性还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
 					boolean result = isLastAllRepay(apicron);
-					BigDecimal sum = getRepayPlanAccountSum(borrowNid);
 					if(result){
+						BigDecimal sum = getRepayPlanAccountSum(borrowNid);
+						logger.info("【智投还款】借款编号：{}，一次性还款插入交易明细。总还款金额：{}", borrowNid, sum);
 						AccountList repayAllAccountList = new AccountList();
 						repayAllAccountList.setBankAwait(repayUserAccount.getBankAwait());
 						repayAllAccountList.setBankAwaitCapital(repayUserAccount.getBankAwaitCapital());
