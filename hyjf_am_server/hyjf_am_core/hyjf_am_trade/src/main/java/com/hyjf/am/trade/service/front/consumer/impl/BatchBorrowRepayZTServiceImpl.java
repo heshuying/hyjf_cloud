@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
