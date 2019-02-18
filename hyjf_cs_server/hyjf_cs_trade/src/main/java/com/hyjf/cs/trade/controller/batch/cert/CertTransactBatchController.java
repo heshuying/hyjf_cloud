@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/certTransactMessage")
+@RequestMapping("/cs-trade/batch/certTransactMessage")
 public class CertTransactBatchController {
 
     @Autowired
