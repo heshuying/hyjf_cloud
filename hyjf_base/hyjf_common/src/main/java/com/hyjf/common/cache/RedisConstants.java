@@ -309,7 +309,7 @@ public class RedisConstants {
     public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
 
     /**
-     * 记录密码错误次数Redis前缀admin端（有的加的username有的加的userid)
+     * 记录密码错误次数Redis前缀admin端（password_err_count_admin:$username)
      */
     public static final String PASSWORD_ERR_COUNT_ADMIN = "password_err_count_admin:";
 

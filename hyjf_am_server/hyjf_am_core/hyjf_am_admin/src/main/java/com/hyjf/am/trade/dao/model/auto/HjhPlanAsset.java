@@ -405,6 +405,83 @@ public class HjhPlanAsset implements Serializable {
      */
     private String registrationAddress;
 
+    /**
+     * 借款类型 0:个人;1:企业
+     *
+     * @mbggenerated
+     */
+    private Integer borrowType;
+
+    /**
+     * 借款企业名称
+     *
+     * @mbggenerated
+     */
+    private String borrowCompanyName;
+
+    /**
+     * 财务状况
+     *
+     * @mbggenerated
+     */
+    private String financialSituation;
+
+    /**
+     * 法人
+     *
+     * @mbggenerated
+     */
+    private String legalPerson;
+
+    /**
+     * 注册地区
+     *
+     * @mbggenerated
+     */
+    private String registrationArea;
+
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
+    private String registrationDate;
+
+    /**
+     * 主营业务
+     *
+     * @mbggenerated
+     */
+    private String mainBusiness;
+
+    /**
+     * 统一社会信用代码
+     *
+     * @mbggenerated
+     */
+    private String unifiedSocialCreditCode;
+
+    /**
+     * 注册资本
+     *
+     * @mbggenerated
+     */
+    private String registeredCapital;
+
+    /**
+     * 所属行业
+     *
+     * @mbggenerated
+     */
+    private String industryInvolved;
+
+    /**
+     * 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
+     *
+     * @mbggenerated
+     */
+    private Integer assetAttributes;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -869,5 +946,93 @@ public class HjhPlanAsset implements Serializable {
 
     public void setRegistrationAddress(String registrationAddress) {
         this.registrationAddress = registrationAddress == null ? null : registrationAddress.trim();
+    }
+
+    public Integer getBorrowType() {
+        return borrowType;
+    }
+
+    public void setBorrowType(Integer borrowType) {
+        this.borrowType = borrowType;
+    }
+
+    public String getBorrowCompanyName() {
+        return borrowCompanyName;
+    }
+
+    public void setBorrowCompanyName(String borrowCompanyName) {
+        this.borrowCompanyName = borrowCompanyName == null ? null : borrowCompanyName.trim();
+    }
+
+    public String getFinancialSituation() {
+        return financialSituation;
+    }
+
+    public void setFinancialSituation(String financialSituation) {
+        this.financialSituation = financialSituation == null ? null : financialSituation.trim();
+    }
+
+    public String getLegalPerson() {
+        return legalPerson;
+    }
+
+    public void setLegalPerson(String legalPerson) {
+        this.legalPerson = legalPerson == null ? null : legalPerson.trim();
+    }
+
+    public String getRegistrationArea() {
+        return registrationArea;
+    }
+
+    public void setRegistrationArea(String registrationArea) {
+        this.registrationArea = registrationArea == null ? null : registrationArea.trim();
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate == null ? null : registrationDate.trim();
+    }
+
+    public String getMainBusiness() {
+        return mainBusiness;
+    }
+
+    public void setMainBusiness(String mainBusiness) {
+        this.mainBusiness = mainBusiness == null ? null : mainBusiness.trim();
+    }
+
+    public String getUnifiedSocialCreditCode() {
+        return unifiedSocialCreditCode;
+    }
+
+    public void setUnifiedSocialCreditCode(String unifiedSocialCreditCode) {
+        this.unifiedSocialCreditCode = unifiedSocialCreditCode == null ? null : unifiedSocialCreditCode.trim();
+    }
+
+    public String getRegisteredCapital() {
+        return registeredCapital;
+    }
+
+    public void setRegisteredCapital(String registeredCapital) {
+        this.registeredCapital = registeredCapital == null ? null : registeredCapital.trim();
+    }
+
+    public String getIndustryInvolved() {
+        return industryInvolved;
+    }
+
+    public void setIndustryInvolved(String industryInvolved) {
+        this.industryInvolved = industryInvolved == null ? null : industryInvolved.trim();
+    }
+
+    public Integer getAssetAttributes() {
+        return assetAttributes;
+    }
+
+    public void setAssetAttributes(Integer assetAttributes) {
+        this.assetAttributes = assetAttributes;
     }
 }

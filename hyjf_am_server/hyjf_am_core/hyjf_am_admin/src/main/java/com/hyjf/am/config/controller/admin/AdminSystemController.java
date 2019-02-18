@@ -81,11 +81,11 @@ public class AdminSystemController extends BaseConfigController {
 				return asr;
 			}
 			//1.获取该用户密码错误次数
-			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getId());
+			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getUsername());
 			//2.获取用户允许输入的最大错误次数
 			Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
 			//3.redis配置的超限有效时间
-			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getId());
+			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getUsername());
 			//判断密码错误次数是否超限
 			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 				asr.setMessage("您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");

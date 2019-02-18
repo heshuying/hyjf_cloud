@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -215,14 +216,14 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 
 	/**
 	 * 导入商家信息，并返回资产推送结果
-	 * 
+	 *
 	 * @param resultBean
 	 * @param retAssets
 	 * @param riskInfo
 	 * @return
 	 */
 	private PushResultBean assembleResult(PushResultBean resultBean, List<PushBean> retAssets,
-			List<InfoBean> riskInfo) {
+										  List<InfoBean> riskInfo) {
 		// 商家信息未解析版
 		logger.info("----------------商家信息导入开始-----------------------");
 		if (!CollectionUtils.isEmpty(riskInfo)) {
@@ -249,16 +250,16 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		return resultBean;
 	}
 
-    /**
-     * 企业资产数据处理
-     * @param pushBean
-     * @param instCode
-     * @param assetType
-     * @param projectRepays
-     * @return
-     */
+	/**
+	 * 企业资产数据处理
+	 * @param pushBean
+	 * @param instCode
+	 * @param assetType
+	 * @param projectRepays
+	 * @return
+	 */
 	private PushBean processCompanyAsset(PushBean pushBean, String instCode, Integer assetType,
-			List<BorrowProjectRepayVO> projectRepays) {
+										 List<BorrowProjectRepayVO> projectRepays) {
 		/*
 		 * if (pushBean.getAccount() > MAX_ASSET_MONEY) {
 		 * pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000006);
@@ -435,16 +436,16 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 				stzAccount, 1);
 	}
 
-    /**
-     * 个人资产数据处理
-     * @param pushBean
-     * @param instCode
-     * @param assetType
-     * @param projectRepays
-     * @return
-     */
+	/**
+	 * 个人资产数据处理
+	 * @param pushBean
+	 * @param instCode
+	 * @param assetType
+	 * @param projectRepays
+	 * @return
+	 */
 	private PushBean processAsset(PushBean pushBean, String instCode, Integer assetType,
-			List<BorrowProjectRepayVO> projectRepays) {
+								  List<BorrowProjectRepayVO> projectRepays) {
 		String truename = pushBean.getTruename();
 		String idcard = pushBean.getIdcard();
 
@@ -612,24 +613,24 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 				bankOpenAccount.getAccount(), userInfo.getTruename(), stzAccount, 0);
 	}
 
-    /**
-     * 保存资产信息
-     * @param pushBean
-     * @param instCode
-     * @param assetType
-     * @param idcard
-     * @param userId
-     * @param mobile
-     * @param username
-     * @param accountId
-     * @param trueName
-     * @param stzAccount
-     * @param borrowType
-     * @return
-     */
+	/**
+	 * 保存资产信息
+	 * @param pushBean
+	 * @param instCode
+	 * @param assetType
+	 * @param idcard
+	 * @param userId
+	 * @param mobile
+	 * @param username
+	 * @param accountId
+	 * @param trueName
+	 * @param stzAccount
+	 * @param borrowType
+	 * @return
+	 */
 	private PushBean saveAssetAndSendNext(PushBean pushBean, String instCode, Integer assetType, String idcard,
-			int userId, String mobile, String username, String accountId, String trueName, STZHWhiteListVO stzAccount,
-			int borrowType) {
+										  int userId, String mobile, String username, String accountId, String trueName, STZHWhiteListVO stzAccount,
+										  int borrowType) {
 
 		HjhPlanAssetVO record = buildHjhPlanAsset(pushBean, instCode, assetType, idcard, userId, mobile, username,
 				accountId, trueName, stzAccount, borrowType);
@@ -650,10 +651,10 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		return pushBean;
 	}
 
-    /**
-     * 发送录标队列
-     * @param hjhPlanAsset
-     */
+	/**
+	 * 发送录标队列
+	 * @param hjhPlanAsset
+	 */
 	private void sendToAutoIssueRecoverQueue(HjhPlanAssetVO hjhPlanAsset) {
 		JSONObject params = new JSONObject();
 		params.put("assetId", hjhPlanAsset.getAssetId());
@@ -667,95 +668,95 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		}
 	}
 
-    /**
-     * 构建资产信息vo
-     * @param pushBean
-     * @param instCode
-     * @param assetType
-     * @param idcard
-     * @param userId
-     * @param mobile
-     * @param username
-     * @param accountId
-     * @param trueName
-     * @param stzAccount
-     * @param borrowType
-     * @return
-     */
-    private HjhPlanAssetVO buildHjhPlanAsset(PushBean pushBean, String instCode, Integer assetType, String idcard,
-                                             int userId, String mobile, String username, String accountId, String trueName, STZHWhiteListVO stzAccount,
-                                             int borrowType) {
-        // 包装资产信息
-        HjhPlanAssetVO record = new HjhPlanAssetVO();
-        // 信批需求新增字段属于选填(string)不加校验
-        BeanUtils.copyProperties(pushBean, record);
-        // 默认审核通过
-        record.setVerifyStatus(1);
-        // 状态
-        record.setStatus(0);
-        // 当前时间
-        int nowTime = GetDate.getNowTime10();
-        record.setRecieveTime(nowTime);
-        record.setCreateTime(nowTime);
-        record.setUpdateTime(nowTime);
-        // 默认系统用户
-        record.setCreateUserId(1);
-        record.setUpdateUserId(1);
-        // 受托支付
-        if (stzAccount != null) {
-            record.setEntrustedFlg(1);
-            record.setEntrustedUserId(stzAccount.getStUserId());
-            record.setEntrustedUserName(stzAccount.getStUserName());
-            record.setEntrustedAccountId(stzAccount.getStAccountId());
-        }
+	/**
+	 * 构建资产信息vo
+	 * @param pushBean
+	 * @param instCode
+	 * @param assetType
+	 * @param idcard
+	 * @param userId
+	 * @param mobile
+	 * @param username
+	 * @param accountId
+	 * @param trueName
+	 * @param stzAccount
+	 * @param borrowType
+	 * @return
+	 */
+	private HjhPlanAssetVO buildHjhPlanAsset(PushBean pushBean, String instCode, Integer assetType, String idcard,
+											 int userId, String mobile, String username, String accountId, String trueName, STZHWhiteListVO stzAccount,
+											 int borrowType) {
+		// 包装资产信息
+		HjhPlanAssetVO record = new HjhPlanAssetVO();
+		// 信批需求新增字段属于选填(string)不加校验
+		BeanUtils.copyProperties(pushBean, record);
+		// 默认审核通过
+		record.setVerifyStatus(1);
+		// 状态
+		record.setStatus(0);
+		// 当前时间
+		int nowTime = GetDate.getNowTime10();
+		record.setRecieveTime(nowTime);
+		record.setCreateTime(new Date());
+		record.setUpdateTime(new Date());
+		// 默认系统用户
+		record.setCreateUserId(1);
+		record.setUpdateUserId(1);
+		// 受托支付
+		if (stzAccount != null) {
+			record.setEntrustedFlg(1);
+			record.setEntrustedUserId(stzAccount.getStUserId());
+			record.setEntrustedUserName(stzAccount.getStUserName());
+			record.setEntrustedAccountId(stzAccount.getStAccountId());
+		}
 
-        // 0：个人，1：企业
-        if (borrowType == 0) {
-            record.setBorrowType("0");
-            // 性别,如果没传，用身份证的
-            String idCard = pushBean.getIdcard();
-            // 性别
-            int sexInt = Integer.parseInt(idCard.substring(16, 17));
-            if (sexInt % 2 == 0) {
-                sexInt = 2;
-            } else {
-                sexInt = 1;
-            }
+		// 0：个人，1：企业
+		if (borrowType == 0) {
+			record.setBorrowType(0);
+			// 性别,如果没传，用身份证的
+			String idCard = pushBean.getIdcard();
+			// 性别
+			int sexInt = Integer.parseInt(idCard.substring(16, 17));
+			if (sexInt % 2 == 0) {
+				sexInt = 2;
+			} else {
+				sexInt = 1;
+			}
 
-            record.setSex(sexInt);
-            // 年纪，如果没传，用身份证的，从user表获取
-            record.setAge(IdCard15To18.getAgeById(idcard));
+			record.setSex(sexInt);
+			// 年纪，如果没传，用身份证的，从user表获取
+			record.setAge(IdCard15To18.getAgeById(idcard));
 
-            record.setFirstPayment("个人收入");
-            record.setUseage("个人资金周转");
-        } else if (borrowType == 1) {
-            record.setBorrowType("1");
-            record.setFirstPayment("经营收入");
-            record.setUseage("经营资金周转");
-        }
+			record.setFirstPayment("个人收入");
+			record.setUseage("个人资金周转");
+		} else if (borrowType == 1) {
+			record.setBorrowType(1);
+			record.setFirstPayment("经营收入");
+			record.setUseage("经营资金周转");
+		}
 
-        record.setIdcard(idcard);
-        record.setAccountId(accountId);
-        record.setTruename(trueName);
-        record.setInstCode(instCode);
-        record.setAssetType(assetType);
-        record.setUserId(userId);
-        record.setUserName(username);
-        record.setMobile(mobile);
+		record.setIdcard(idcard);
+		record.setAccountId(accountId);
+		record.setTruename(trueName);
+		record.setInstCode(instCode);
+		record.setAssetType(assetType);
+		record.setUserId(userId);
+		record.setUserName(username);
+		record.setMobile(mobile);
 
-        // 平台直接默认填写：写死字段
-        record.setCreditLevel("AA");
-        record.setCostIntrodution(
-                StringUtils.isBlank(pushBean.getCostIntrodution()) ? "加入费用0元" : pushBean.getCostIntrodution());
-        record.setLitigation("无或已处理");
-        record.setOverdueTimes("0");
-        record.setOverdueAmount("0");
-        record.setSecondPayment(
-                StringUtils.isBlank(pushBean.getSecondPayment()) ? "第三方保障" : pushBean.getSecondPayment());
-        record.setOverdueTimes(StringUtils.isBlank(pushBean.getOverdueTimes()) ? "0" : pushBean.getOverdueTimes());
-        record.setOverdueAmount(StringUtils.isBlank(pushBean.getOverdueAmount()) ? "0" : pushBean.getOverdueAmount());
-        return record;
-    }
+		// 平台直接默认填写：写死字段
+		record.setCreditLevel("AA");
+		record.setCostIntrodution(
+				StringUtils.isBlank(pushBean.getCostIntrodution()) ? "加入费用0元" : pushBean.getCostIntrodution());
+		record.setLitigation("无或已处理");
+		record.setOverdueTimes("0");
+		record.setOverdueAmount("0");
+		record.setSecondPayment(
+				StringUtils.isBlank(pushBean.getSecondPayment()) ? "第三方保障" : pushBean.getSecondPayment());
+		record.setOverdueTimes(StringUtils.isBlank(pushBean.getOverdueTimes()) ? "0" : pushBean.getOverdueTimes());
+		record.setOverdueAmount(StringUtils.isBlank(pushBean.getOverdueAmount()) ? "0" : pushBean.getOverdueAmount());
+		return record;
+	}
 
 	private boolean checkBorrowStyle(List<BorrowProjectRepayVO> projectRepays, String borrowStyle) {
 		if (projectRepays == null) {

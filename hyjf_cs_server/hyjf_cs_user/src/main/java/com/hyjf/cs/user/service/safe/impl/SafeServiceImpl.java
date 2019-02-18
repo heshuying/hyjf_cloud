@@ -471,6 +471,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        imgFilePath = systemConfig.getFileDomainUrl()+fileUploadTempPath+fileRealName;
         return imgFilePath;
     }
 

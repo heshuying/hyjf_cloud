@@ -186,7 +186,7 @@
 		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		LEFT JOIN ht_r_user AS iu ON t.invite_user_id=iu.user_id
+		LEFT JOIN ht_r_user AS iu ON t.user_id=iu.user_id
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 		<include refid="Where_Clause" />
@@ -234,10 +234,10 @@
 		bs.name AS repayType,
 		t.user_id AS recoverUserId,
 		t.user_name AS recoverUserName,
-		br.invite_user_attribute AS recover_user_attribute,
-		CASE WHEN br.invite_user_attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
-		CASE WHEN br.invite_user_attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
-		CASE WHEN br.invite_user_attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
+		iu.attribute AS recover_user_attribute,
+		CASE WHEN iu.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
+		CASE WHEN iu.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
+		CASE WHEN iu.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
 		br.invite_user_name AS referrer_name,
 		br.invite_user_id AS referrer_user_id,
 		iu.truename AS referrer_true_name,
@@ -270,7 +270,7 @@
 		ht_borrow AS b
 		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
 		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT JOIN ht_r_user AS iu on br.invite_user_id=iu.user_id
+		LEFT JOIN ht_r_user AS iu on br.user_id=iu.user_id
 
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
@@ -279,7 +279,7 @@
 		LEFT JOIN `ht_r_oa_department` `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
 		LEFT JOIN `ht_r_oa_department` `od2` ON `od2`.`id` = `od`.`parentid`
 		LEFT JOIN `ht_r_oa_department` `od3` ON `od3`.`id` = `od2`.`parentid`
-		LEFT JOIN `ht_r_oa_users` `ou1` ON `ou1`.hyd_id = br.invite_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `ht_r_oa_users` `ou1` ON `ou1`.hyd_id = br.user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 		LEFT JOIN `ht_r_oa_department` `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 		LEFT JOIN `ht_r_oa_department` `od5` ON `od5`.`id` = `od4`.`parentid`
 		LEFT JOIN `ht_r_oa_department` `od6` ON `od6`.`id` = `od5`.`parentid`

@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 用于保存银行充值返回结果
  * @author jijun 20180616
  */
-
 public class CheckResult{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private boolean resultBool; // 结果
-	private String resultMsg; // 单条结果信息(单结果返回)
-	private Map<Object, Object> resultMsgMap = new HashMap<Object, Object>(); // 多条结果信息(多结果返回)
+	private boolean resultBool; // 结果true或者false
+	private String resultMsg; // 单条结果描述(单结果返回)
+	private Map<Object, Object> resultMsgMap = new HashMap<Object, Object>(); // 多条结果描述(多结果返回)
 
 	public CheckResult() {
 	}

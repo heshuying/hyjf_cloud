@@ -183,7 +183,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 				//成功转让浮动金额 (元)
 				map.put("floatMoney", "0.00");
 				//	状态更新时间
-				map.put("productDate", GetDate.formatDate(credit.getCreateTime()));
+				map.put("productDate", GetDate.getDateTimeMyTimeInMillis(credit.getCreateTime()));
 				break;
 			case "1":
 				//转让项目编号
@@ -197,7 +197,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 				//成功转让浮动金额 (元)
 				map.put("floatMoney", "0.00");
 				//	状态更新时间
-				map.put("productDate", GetDate.formatDate(credit.getCreateTime()));
+				map.put("productDate", GetDate.getDateTimeMyTimeInMillis(credit.getCreateTime()));
 				break;
 			case "2":
 			case "3":
@@ -224,15 +224,15 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 					//	状态编码
 					map.put("transferStatus", "2");
 					//成功转让本金金额(元)
-					map.put("amount", credit.getCreditCapitalAssigned());
+					map.put("amount", credit.getCreditCapitalAssigned().toString());
 					//成功转让利息金额 (元)
-					map.put("interest", credit.getCreditInterestAssigned());
+					map.put("interest", credit.getCreditInterestAssigned().toString());
 					//成功转让浮动金额 (元)
 					map.put("floatMoney", BigDecimal.ZERO.subtract(credit.getCreditCapitalAssigned().
-							multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+							multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString());
 					if(credit.getCreditCapitalAssigned().compareTo(credit.getCreditCapital())==0){
 						//状态更新时间
-						map.put("productDate",  GetDate.formatDate((list.get(list.size()-1).getCreateTime()+"")));
+						map.put("productDate",  GetDate.getDateTimeMyTimeInMillis(list.get(list.size()-1).getCreateTime()));
 					}else{
 						//状态更新时间
 						map.put("productDate",  GetDate.timestamptoStrYYYYMMDDHHMMSS(credit.getEndTime()+""));
@@ -281,7 +281,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 				//成功转让浮动金额 (元)
 				map.put("floatMoney", "0.00");
 				//状态更新时间
-				map.put("productDate", GetDate.formatDate(hjhDebtCredit.getCreateTime()));
+				map.put("productDate", GetDate.getDateTimeMyTimeInMillis(hjhDebtCredit.getCreateTime()));
 				break;
 			case "1":
 				
@@ -296,7 +296,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 				//成功转让浮动金额 (元)
 				map.put("floatMoney", "0.00");
 				//状态更新时间
-				map.put("productDate", GetDate.formatDate(hjhDebtCredit.getCreateTime()));
+				map.put("productDate", GetDate.getDateTimeMyTimeInMillis(hjhDebtCredit.getCreateTime()));
 				break;
 			case "2":
 			case "3":
@@ -312,7 +312,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 					map.put("interest", "0.00");
 					//成功转让浮动金额 (元)
 					map.put("floatMoney", "0.00");
-					String endTime=hjhDebtCredit.getEndTime()==0?GetDate.formatDate(hjhDebtCredit.getUpdateTime()):
+					String endTime=hjhDebtCredit.getEndTime()==0?GetDate.getDateTimeMyTimeInMillis(hjhDebtCredit.getUpdateTime()):
                             GetDate.timestamptoStrYYYYMMDDHHMMSS((now<=hjhDebtCredit.getEndTime()?now:hjhDebtCredit.getEndTime())+"");
 					//状态更新时间
 					map.put("productDate",  endTime);
@@ -325,19 +325,17 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 					//状态编码
 					map.put("transferStatus", "2");
 					//成功转让本金金额(元)
-					map.put("amount", hjhDebtCredit.getCreditCapitalAssigned());
+					map.put("amount", hjhDebtCredit.getCreditCapitalAssigned().toString());
 					//成功转让利息金额 (元)
-					map.put("interest", hjhDebtCredit.getCreditInterestAssigned());
+					map.put("interest", hjhDebtCredit.getCreditInterestAssigned().toString());
 					//成功转让浮动金额 (元)
 					map.put("floatMoney", "0.00");
-					
-					
 					if(hjhDebtCredit.getCreditCapitalAssigned().compareTo(hjhDebtCredit.getCreditCapital())==0){
 						//状态更新时间
-						map.put("productDate",  GetDate.formatDate(list.get(list.size()-1).getCreateTime()));
+						map.put("productDate",  GetDate.getDateTimeMyTimeInMillis(list.get(list.size()-1).getCreateTime()));
 					}else{
 						//状态更新时间
-						map.put("productDate", hjhDebtCredit.getEndTime()==0? GetDate.formatDate(hjhDebtCredit.getUpdateTime()):GetDate.timestamptoStrYYYYMMDDHHMMSS(hjhDebtCredit.getEndTime()));
+						map.put("productDate", hjhDebtCredit.getEndTime()==0? GetDate.getDateTimeMyTimeInMillis(hjhDebtCredit.getUpdateTime()):GetDate.timestamptoStrYYYYMMDDHHMMSS(hjhDebtCredit.getEndTime()));
 					}
 				}
 				break;
