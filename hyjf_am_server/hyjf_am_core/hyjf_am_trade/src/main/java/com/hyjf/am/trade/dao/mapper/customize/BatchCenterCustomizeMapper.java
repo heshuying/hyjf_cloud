@@ -8,10 +8,12 @@ import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import java.util.List;
 
 /**
- * @Auther:yangchangwei
- * @Date:2018/7/7
- * @Description: 后台列表-批次中心
- */
+* api端-第三方-批次放款
+* @author Zha Daojian
+* @date 2019/2/14 9:16
+* @param
+* @return
+**/
 public interface BatchCenterCustomizeMapper {
 
     /**
