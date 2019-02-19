@@ -64,7 +64,7 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
      */
     @Override
     public void apiCheckParam(RegisterRequest registerRequest) {
-// 手机号
+        // 手机号
         String mobile = registerRequest.getMobile();
         // 机构编号
         String instCode = registerRequest.getInstCode();

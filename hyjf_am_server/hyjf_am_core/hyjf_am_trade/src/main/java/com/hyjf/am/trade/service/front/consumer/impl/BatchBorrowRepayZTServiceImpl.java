@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
@@ -1804,8 +1803,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				}
 				if(1 == isAllrepay){//一次性还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
 					boolean result = isLastAllRepay(apicron);
-					BigDecimal sum = getRepayPlanAccountSum(borrowNid);
-					if(result){
+                    if(result){
+                        BigDecimal sum = getRepayPlanAccountSum(borrowNid);
+                        logger.info("【直投还款】借款编号：{}，一次性还款插入交易明细。总还款金额：{}", borrowNid, sum);
 						AccountList repayAllAccountList = new AccountList();
 						repayAllAccountList.setBankAwait(repayUserAccount.getBankAwait());
 						repayAllAccountList.setBankAwaitCapital(repayUserAccount.getBankAwaitCapital());

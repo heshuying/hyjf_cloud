@@ -53,9 +53,11 @@ public class CertUserController extends BaseController {
 	@GetMapping("/getCertSendUserByUserId/{userId}")
 	public CertSendUserResponse getCertSendUserByUserId(@PathVariable("userId") Integer userId) {
 		CertSendUserCustomize certUsers = certUserService.getCertSendUserByUserId(userId);
+		logger.info("userCreateTime---:{}",certUsers.getRegTime());
 		CertSendUserResponse response = new CertSendUserResponse();
 		if (null != certUsers) {
 			CertSendUserVO certSendUserVO = CommonUtils.convertBean(certUsers,CertSendUserVO.class);
+			logger.info("userCreateTime2---:{}",certSendUserVO.getRegTime());
 			response.setResult(certSendUserVO);
 		}
 		return response;

@@ -3,7 +3,6 @@ package com.hyjf.am.trade.service.front.borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowUser;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.bifa.UserIdAccountSumBean;
-import com.hyjf.am.trade.dao.model.customize.HjhPlanCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
