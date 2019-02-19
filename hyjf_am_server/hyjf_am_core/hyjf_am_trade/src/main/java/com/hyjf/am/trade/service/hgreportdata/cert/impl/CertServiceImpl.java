@@ -9,13 +9,9 @@ import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

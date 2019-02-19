@@ -2,7 +2,6 @@ package com.hyjf.am.trade.service.front.trade.impl;
 
 import com.hyjf.am.trade.service.front.trade.PlanCapitalService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import org.springframework.stereotype.Service;
 
