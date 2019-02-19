@@ -81,11 +81,11 @@ public class AdminSystemController extends BaseConfigController {
 				return asr;
 			}
 			//1.获取该用户密码错误次数
-			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getId());
+			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getUsername());
 			//2.获取用户允许输入的最大错误次数
 			Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
 			//3.redis配置的超限有效时间
-			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getId());
+			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getUsername());
 			//判断密码错误次数是否超限
 			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 				asr.setMessage("您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
@@ -208,10 +208,10 @@ public class AdminSystemController extends BaseConfigController {
         	response.setRtn(Response.FAIL);
         	response.setMessage("新密码和旧密码都不能为空！");
         } else {
-            if (Validator.isNumber(adminSystemR.getPassword()) || adminSystemR.getPassword().length() < 8 || adminSystemR.getPassword().length() > 16) {
-            	response.setRtn(Response.FAIL);
-            	response.setMessage("密码8-16位，必须有数字字母组成，区分大小写");
-            } else {
+//            if (Validator.isNumber(adminSystemR.getPassword()) || adminSystemR.getPassword().length() < 8 || adminSystemR.getPassword().length() > 16) {
+//            	response.setRtn(Response.FAIL);
+//            	response.setMessage("密码8-16位，必须有数字字母组成，区分大小写");
+//            } else {
         		AdminSystem adminSystem = new AdminSystem();
         		adminSystem.setUsername(adminSystemR.getUsername());
         		adminSystem.setPassword(adminSystemR.getOldPassword());
@@ -223,7 +223,7 @@ public class AdminSystemController extends BaseConfigController {
 
                     adminSystemService.updatePassword(adminSystemR.getUsername(),adminSystemR.getPassword());
 
-            }
+            //}
         }
         return response;
     }

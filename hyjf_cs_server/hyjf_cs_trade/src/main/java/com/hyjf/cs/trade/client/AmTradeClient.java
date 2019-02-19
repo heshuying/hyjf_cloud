@@ -113,6 +113,8 @@ public interface AmTradeClient {
 
     Integer updateTrusteePaySuccess(String borrowNid);
 
+    boolean updateAemsTrusteePaySuccess(String borrowNid);
+
     STZHWhiteListVO getStzhWhiteListVO(Integer userId, Integer stzUserId);
 
     /**
@@ -150,7 +152,7 @@ public interface AmTradeClient {
      * @author liubin
      * @return
      */
-    BigDecimal getPreCreditCapital(HjhDebtCreditVO credit);
+    BigDecimal doGetPreCreditCapital(HjhDebtCreditVO credit);
 
     /**
      * 银行自动债转成功后，更新债转数据
@@ -586,6 +588,13 @@ public interface AmTradeClient {
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request);
 
     /**
+     * app端获取散标出借项目列表 无缓存版
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> searchAppProjectListNoCash(AppProjectListRequest request);
+
+    /**
      *  app端查询债权转让所有分页总数
      * @author zhangyk
      * @date 2018/6/19 16:39
@@ -918,6 +927,12 @@ public interface AmTradeClient {
     List<BorrowRepayPlanVO> getBorrowRepayPlansByPeriod(String bidNid, Integer borrowPeriod);
 
     List<BorrowRepayPlanVO> getBorrowRepayPlansByBorrowNid(String borrowNid);
+    /**
+     * 判断是否逾期 逾期或延期时返回false 逾期或延期时不计算提前还款提前还款减息
+     * @param borrow
+     * @return
+     */
+    Boolean getOverDueFlag(RightBorrowVO borrow);
 
     List<CreditTenderLogVO> selectCreditTenderLogs();
 
@@ -2180,6 +2195,8 @@ public interface AmTradeClient {
 
 	String getborrowIdByProductId(Map<String, Object> params);
 
+    List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params);
+
     Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize);
 
 	List<BatchCenterCustomizeVO> selectBatchCenterList(BatchCenterCustomize batchCenterCustomize);
@@ -2533,6 +2550,29 @@ public interface AmTradeClient {
      * @Author : huanghui
      */
     List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
+    /**
+     * 根据机构编号,查询还款计划数量
+     *
+     * @param param
+     * @return
+     */
+    Integer selectBorrowRepayPlanCountsByInstCode(Map<String, Object> param);
+
+    /**
+     * 根据机构编号查询还款计划
+     *
+     * @param param
+     * @return
+     */
+    List<AemsBorrowRepayPlanCustomizeVO> selectBorrowRepayPlanList(Map<String, Object> param);
+
+    /**
+     * 根据标的编号查询资产推送表
+     *
+     * @param borrowNid
+     * @return
+     */
+    HjhPlanAssetVO selectHjhPlanAssetByBorrowNid(String borrowNid);
 
     /**
      * 计划定时关闭任务
@@ -2802,5 +2842,7 @@ public interface AmTradeClient {
     List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
+
+    boolean checkAutoPayment(String creditNid);
 }
 

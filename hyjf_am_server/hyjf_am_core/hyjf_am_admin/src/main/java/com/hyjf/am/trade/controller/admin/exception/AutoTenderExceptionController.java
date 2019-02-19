@@ -90,7 +90,10 @@ public class AutoTenderExceptionController  extends BaseController {
         mapParam.put("searchStartDate",request.getSearchStartDate());
         mapParam.put("searchEndDate",request.getSearchEndDate());
         // 订单状态
-        mapParam.put("orderStatus", 80);
+        //银行交易前，异常订单状态设定，和系统异常 90系列;
+        //银行交易后，异常订单状态设定  80 系列;
+        //银行交易前，初始订单状态设定  70 系列;
+        mapParam.put("orderStatus", 70);
         return mapParam;
     }
 

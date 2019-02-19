@@ -55,7 +55,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             //查询加入汇计划的投资信息
             tenderList = activityMidauInfoCustomizeMapper.queryPlanList(orderId,userId);
             if(CollectionUtils.isEmpty(tenderList)){
-                _log.error("【纳觅返现活动】用户加入汇计划信息为空，orderId:"+orderId+",userId:"+userId);
+                _log.info("【纳觅返现活动】用户加入汇计划信息为空，orderId:"+orderId+",userId:"+userId);
                 return null;
             }
             activityMidauInfo = tenderList.get(0);
@@ -65,7 +65,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             performanceReturnDetail.setProductType("新手标");
             tenderList = activityMidauInfoCustomizeMapper.queryTenderRecoverList(orderId,userId);
             if(CollectionUtils.isEmpty(tenderList)){
-                _log.error("【纳觅返现活动】用户投资的散标信息为空，orderId:"+orderId+",userId:"+userId);
+                _log.info("【纳觅返现活动】用户投资的散标信息为空，orderId:"+orderId+",userId:"+userId);
                 return null;
             }
 
@@ -75,7 +75,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             performanceReturnDetail.setProductType("汇直投");
             tenderList = activityMidauInfoCustomizeMapper.queryTenderRecoverList(orderId,userId);
             if(CollectionUtils.isEmpty(tenderList)){
-                _log.error("【纳觅返现活动】用户投资的散标信息为空，orderId:"+orderId+",userId:"+userId);
+                _log.info("【纳觅返现活动】用户投资的散标信息为空，orderId:"+orderId+",userId:"+userId);
                 return null;
             }
 

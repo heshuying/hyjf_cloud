@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.*;
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
@@ -38,7 +37,8 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -102,7 +102,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     /*承接列表sum*/
     public static final String TENDER_SUM_URL = BASE_URL + "/creditTender/getTenderSum";
 
-    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-ADMIN/am-user/borrow_regist_exception/searchbankopenaccount/";
+    public static final String BANK_OPEN_ACCOUNT_URL = "http://AM-ADMIN/am-user/borrow_regist_repair/searchbankopenaccount/";
 
     public static final String BORROW_URL = BASE_URL + "/borrow/getBorrow/";
 

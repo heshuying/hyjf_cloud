@@ -1620,7 +1620,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public int getBindCardExceptionCount(BindCardExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-user/bindcardexception/getBindCardExceptionCount";
+        String url = "http://AM-ADMIN/am-user/bindcardrepair/getBindCardRepairCount";
         AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getCount();
@@ -1636,7 +1636,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public List<BindCardExceptionCustomizeVO> searchBindCardExceptionList(BindCardExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-user/bindcardexception/searchBindCardExceptionList";
+        String url = "http://AM-ADMIN/am-user/bindcardrepair/searchBindCardRepairList";
         AdminBindCardExceptionResponse response = restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
@@ -1652,7 +1652,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public void updateBindCard(BindCardExceptionRequest request) {
-        String url = "http://AM-ADMIN/am-user/bindcardexception/updateBindCard";
+        String url = "http://AM-ADMIN/am-user/bindcardrepair/updateBindCard";
         restTemplate.postForEntity(url,request,AdminBindCardExceptionResponse.class).getBody();
     }
 
@@ -2012,9 +2012,9 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     @Override
-    public void saveReturnCash(ReturnCashRequest returnCashRequest){
+    public IntegerResponse saveReturnCash(ReturnCashRequest returnCashRequest){
         String url = "http://AM-ADMIN/am-market/returncash/saveReturnCash";
-        restTemplate.postForEntity(url,returnCashRequest,String.class);
+       return restTemplate.postForEntity(url,returnCashRequest,IntegerResponse.class).getBody();
     }
 
     /**

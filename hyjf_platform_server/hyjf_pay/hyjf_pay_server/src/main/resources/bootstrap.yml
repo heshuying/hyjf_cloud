@@ -19,7 +19,7 @@ spring:
     base-url: http://ZIPKIN
   sleuth:
     sampler:
-    percentage: 1
+      percentage: 1
 
   profiles:
     active: dev

@@ -4,12 +4,14 @@ import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -134,7 +136,13 @@ public interface AuthService extends BaseUserService {
     ModelAndView getApiCallbankMV(AuthBean authBean);
 
     /**
-     * 获得所有协议类型
+     * AEMS系统多合一授权参数校验
+     * @param requestBean
+     * @return
+     */
+    Map<String,String> checkAemsParam(@Valid AemsMergeAuthPagePlusRequestBean requestBean);
+
+    /** * 获得所有协议类型
      * @return
      */
     List<ProtocolTemplateVO> getProtocolTypes();

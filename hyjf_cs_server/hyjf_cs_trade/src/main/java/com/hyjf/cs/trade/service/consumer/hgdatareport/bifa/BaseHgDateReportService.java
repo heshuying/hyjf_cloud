@@ -14,7 +14,7 @@ package com.hyjf.cs.trade.service.consumer.hgdatareport.bifa;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.bifa.BaseHgDataReportEntityVO;
-import com.hyjf.am.vo.trade.bifa.UserInfoSHA256EntityVO;
+import com.hyjf.am.vo.trade.bifa.BifaUserInfoSHA256EntityVO;
 import com.hyjf.cs.common.service.BaseService;
 
 /**
@@ -45,7 +45,7 @@ public interface BaseHgDateReportService extends BaseService {
      * 获取用户索引信息
      * @return
      */
-    UserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject);
+    BifaUserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject);
 }
 
 	

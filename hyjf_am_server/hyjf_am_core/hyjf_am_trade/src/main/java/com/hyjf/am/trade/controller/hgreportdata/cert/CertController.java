@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.hgreportdata.cert;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
@@ -20,7 +21,6 @@ import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -63,6 +63,8 @@ public class CertController extends BaseController {
 
     @PostMapping("/queryCertAccountListId")
     public CertAccountListResponse queryCertAccountListId(@RequestBody CertRequest certRequest) {
+        logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
+
         CertAccountListResponse response = new CertAccountListResponse();
         CertAccountListIdCustomize certAccountListIdCustomize = certService.queryCertAccountListId(certRequest);
         response.setCertAccountListIdCustomizeVO(CommonUtils.convertBean(certAccountListIdCustomize,CertAccountListIdCustomizeVO.class));
@@ -71,6 +73,7 @@ public class CertController extends BaseController {
 
     @PostMapping("/getAccountListVOListByRequest")
     public AccountListResponse getAccountListVOListByRequest(@RequestBody CertRequest certRequest) {
+        logger.info("getAccountListVOListByRequest:" + JSONObject.toJSONString(certRequest));
         AccountListResponse response = new AccountListResponse();
         List<AccountList> accountLists = certService.getAccountListVOListByRequest(certRequest);
         if (!CollectionUtils.isEmpty(accountLists)) {

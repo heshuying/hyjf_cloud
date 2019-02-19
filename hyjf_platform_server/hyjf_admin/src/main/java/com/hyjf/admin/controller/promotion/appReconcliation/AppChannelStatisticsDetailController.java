@@ -188,9 +188,9 @@ public class AppChannelStatisticsDetailController extends BaseController {
      * @param form
      */
     @ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
-    @GetMapping("/exportAction")
+    @PostMapping("/exportAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody AppChannelStatisticsDetailRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称

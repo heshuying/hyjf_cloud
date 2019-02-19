@@ -1,13 +1,19 @@
 package com.hyjf.cs.message.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
 import com.hyjf.am.response.user.UserAliasResponse;
 import com.hyjf.am.response.user.UserInfoCustomizeResponse;
 import com.hyjf.am.response.user.UserInfoResponse;
 import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
@@ -17,10 +23,16 @@ import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xiasq
@@ -226,6 +238,77 @@ public class AmUserClientImpl implements AmUserClient {
 			return 0;
 		}
 		return response.getCount();
+	}
+
+	@Override
+	public List<UtmVO> selectUtmPlatList(String type) {
+		Map<String, Object> params = new HashMap<>();
+		if ("pc".equals(type)) {
+			params.put("sourceType", 0);// 渠道0 PC
+			params.put("flagType", 0);// 未删除
+		} else if ("app".equals(type)) {
+			params.put("sourceType", 1);// 渠道1 APP
+			params.put("flagType", 0);// 未删除
+		}
+//		UtmResponse response = restTemplate.postForObject("http://AM-USER/am-user/promotion/utm/getbypagelist",
+//				params,
+//				UtmResponse.class);
+		HttpEntity httpEntity = new HttpEntity(params);
+		ResponseEntity<UtmResponse<UtmVO>> response =
+				restTemplate.exchange("http://AM-USER/am-user/channel/getbypagelist",
+						HttpMethod.POST, httpEntity, new ParameterizedTypeReference<UtmResponse<UtmVO>>() {});
+
+		if (response.getBody() != null) {
+			return response.getBody().getResultListS();
+		}
+		return null;
+	}
+
+	@Override
+	public int getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getRegistNumberCount",
+				request, IntegerResponse.class);
+		return response.getResultInt();
+	}
+
+	@Override
+	public List<AppUtmRegVO> getAppChannelStatisticsDetailVOList(AppChannelStatisticsRequest request) {
+		AppUtmRegResponse response = restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getRegistNumber",
+				request, AppUtmRegResponse.class);
+		return response.getResultList();
+	}
+
+	@Override
+	public int getOpenAccountAttrCount(AppChannelStatisticsRequest request) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getOpenAccountAttrCount",
+				request, IntegerResponse.class);
+		return response.getResultInt();
+	}
+
+	@Override
+	public List<Integer> getUsersList(String source) {
+		IntegerResponse response = restTemplate
+				.getForObject("http://AM-USER/am-user/channel/getUsersList/"+source, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Integer> getUsersInfoList() {
+		IntegerResponse response = restTemplate
+				.getForObject("http://AM-USER/am-user/channel/getUsersInfoList", IntegerResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public AppUtmRegResponse getAppUtmRegResponse(AppChannelStatisticsRequest request) {
+		return restTemplate.postForObject("http://AM-USER/am-user/app_utm_reg/getRegistNumber",
+				request, AppUtmRegResponse.class);
 	}
 
 }

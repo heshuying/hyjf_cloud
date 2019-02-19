@@ -34,6 +34,8 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_CE000011 = "CE000011";
     // 未进行还款授权
     public static final String STATUS_CE000012 = "CE000012";
+    // 用户未充值
+    public static final String STATUS_CE000013 = "CE000013";
     // 系统异常
     public static final String STATUS_CE999999 = "CE999999";
     /********************共通相关      end***********************/
@@ -185,5 +187,13 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_SQ000001 = "SQ000001";
     /**授权类型不是指定类型 SQ000002 */
     public static final String STATUS_SQ000002 = "SQ000002";
+    /**出借人只能进行 1-自动投资授权 2-自动债转授权 3-缴费授权 SQ000003 */
+    public static final String STATUS_SQ000003 = "SQ000003";
+    /**借款人只能进行 3-缴费授权 4-还款授权 SQ000004 */
+    public static final String STATUS_SQ000004 = "SQ000004";
+    /**垫付机构只能进行 3-缴费授权 SQ000005 */
+    public static final String STATUS_SQ000005 = "SQ000005";
+    /**授权类型过长 SQ000006 */
+    public static final String STATUS_SQ000006 = "SQ000006";
     /********************多合一授权接口    end***********************/
 }

@@ -8,7 +8,6 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
@@ -40,8 +39,8 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
     private static final int WITHDRAW_STATUS_SUCCESS = 2;
     // 提现状态:失败
     private static final int WITHDRAW_STATUS_FAIL = 3;
-    // 提现状态:终止
-    private static final int WITHDRAW_STATUS_BANK_FAIL = 4;
+
+
     /**
      * 检索处理中的充值订单
      * add by jijun 20180615
@@ -93,8 +92,9 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
         int nowTime = GetDate.getNowTime10();
 
         Date nowDate = new Date();
-        if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode())) {
-            if("00".equals(bean.getResult()) && !"1".equals(bean.getOrFlag())){
+        if((BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode()))
+                && "00".equals(bean.getResult())
+                && !"1".equals(bean.getOrFlag())) {
                 CheckResult rtCheck = checkCallRetAndHyjf(bean,accountWithdraw);
                 if (!rtCheck.isResultBool()) {
                     // 验证失败，异常信息抛出
@@ -209,42 +209,12 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
                         if (!isUpdateFlag) {
                             throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + userId);
                         }
-
                     }
                 }
-            }
-        }else{
-
-            // 提现失败,更新处理中订单状态为失败
-            AccountWithdrawExample example = new AccountWithdrawExample();
-            AccountWithdrawExample.Criteria cra = example.createCriteria();
-            cra.andNidEqualTo(ordId);
-            List<AccountWithdraw> list = this.accountWithdrawMapper.selectByExample(example);
-            if (list != null && list.size() > 0) {
-                AccountWithdraw accountwithdraw = list.get(0);
-                if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
-                        || WITHDRAW_STATUS_WAIT == accountWithdraw.getStatus()) {
-                    accountwithdraw.setStatus(WITHDRAW_STATUS_BANK_FAIL);// 提现失败
-                    accountwithdraw.setUpdateTime(GetDate.getDate(nowTime));// 更新时间
-                    accountwithdraw.setReason(bean.getRetMsg());// 失败原因
-
-                    //冲正撤销标志为1：已冲正/撤销时
-                    //临时按照失败处理
-                    if ("1".equals(bean.getOrFlag())) {
-                        accountwithdraw.setReason("提现订单："+ bean.getOrFlag() + "：已终止");
-                    }
-
-                    boolean isUpdateFlag = this.accountWithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
-                    if (!isUpdateFlag) {
-                        throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + userId);
-                    }
-
-                }
-
             }
         }
 
-    }
+
 
 
     /**

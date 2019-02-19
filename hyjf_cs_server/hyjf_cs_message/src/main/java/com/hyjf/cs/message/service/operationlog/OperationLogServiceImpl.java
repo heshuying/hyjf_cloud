@@ -40,8 +40,8 @@ public class OperationLogServiceImpl  implements OperationLogService {
 			criteria.and("operationTime").gte(operationTimeStart).lte(operationTimeEnd);
 		}
 		query.addCriteria(criteria);
-		List<UserOperationLog> list = userOperationLogMongDao.find(query);
-        return list.size();
+		int count = userOperationLogMongDao.count(query).intValue();
+        return count;
     }
 
 	@Override

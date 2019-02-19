@@ -60,6 +60,17 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="corporate_code" property="corporateCode" jdbcType="VARCHAR" />
     <result column="registration_address" property="registrationAddress" jdbcType="VARCHAR" />
+    <result column="borrow_type" property="borrowType" jdbcType="TINYINT" />
+    <result column="borrow_company_name" property="borrowCompanyName" jdbcType="VARCHAR" />
+    <result column="financial_situation" property="financialSituation" jdbcType="VARCHAR" />
+    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
+    <result column="registration_area" property="registrationArea" jdbcType="VARCHAR" />
+    <result column="registration_date" property="registrationDate" jdbcType="VARCHAR" />
+    <result column="main_business" property="mainBusiness" jdbcType="VARCHAR" />
+    <result column="unified_social_credit_code" property="unifiedSocialCreditCode" jdbcType="VARCHAR" />
+    <result column="registered_capital" property="registeredCapital" jdbcType="VARCHAR" />
+    <result column="industry_involved" property="industryInvolved" jdbcType="VARCHAR" />
+    <result column="asset_attributes" property="assetAttributes" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -128,7 +139,9 @@
     overdue_times, overdue_amount, litigation, asset_info, annual_income, overdue_report, 
     debt_situation, other_borrowed, is_funds, is_managed, is_ability, is_overdue, is_complaint, 
     is_punished, create_user_id, update_user_id, create_time, update_time, address, corporate_code, 
-    registration_address
+    registration_address, borrow_type, borrow_company_name, financial_situation, legal_person, 
+    registration_area, registration_date, main_business, unified_social_credit_code, 
+    registered_capital, industry_involved, asset_attributes
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAssetExample" >
     select
@@ -185,7 +198,11 @@
       is_managed, is_ability, is_overdue, 
       is_complaint, is_punished, create_user_id, 
       update_user_id, create_time, update_time, 
-      address, corporate_code, registration_address
+      address, corporate_code, registration_address, 
+      borrow_type, borrow_company_name, financial_situation, 
+      legal_person, registration_area, registration_date, 
+      main_business, unified_social_credit_code, 
+      registered_capital, industry_involved, asset_attributes
       )
     values (#{assetId,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{assetType,jdbcType=TINYINT}, 
       #{borrowNid,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
@@ -205,7 +222,11 @@
       #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, 
       #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{address,jdbcType=VARCHAR}, #{corporateCode,jdbcType=VARCHAR}, #{registrationAddress,jdbcType=VARCHAR}
+      #{address,jdbcType=VARCHAR}, #{corporateCode,jdbcType=VARCHAR}, #{registrationAddress,jdbcType=VARCHAR}, 
+      #{borrowType,jdbcType=TINYINT}, #{borrowCompanyName,jdbcType=VARCHAR}, #{financialSituation,jdbcType=VARCHAR}, 
+      #{legalPerson,jdbcType=VARCHAR}, #{registrationArea,jdbcType=VARCHAR}, #{registrationDate,jdbcType=VARCHAR}, 
+      #{mainBusiness,jdbcType=VARCHAR}, #{unifiedSocialCreditCode,jdbcType=VARCHAR}, 
+      #{registeredCapital,jdbcType=VARCHAR}, #{industryInvolved,jdbcType=VARCHAR}, #{assetAttributes,jdbcType=TINYINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.HjhPlanAsset" >
@@ -385,6 +406,39 @@
       <if test="registrationAddress != null" >
         registration_address,
       </if>
+      <if test="borrowType != null" >
+        borrow_type,
+      </if>
+      <if test="borrowCompanyName != null" >
+        borrow_company_name,
+      </if>
+      <if test="financialSituation != null" >
+        financial_situation,
+      </if>
+      <if test="legalPerson != null" >
+        legal_person,
+      </if>
+      <if test="registrationArea != null" >
+        registration_area,
+      </if>
+      <if test="registrationDate != null" >
+        registration_date,
+      </if>
+      <if test="mainBusiness != null" >
+        main_business,
+      </if>
+      <if test="unifiedSocialCreditCode != null" >
+        unified_social_credit_code,
+      </if>
+      <if test="registeredCapital != null" >
+        registered_capital,
+      </if>
+      <if test="industryInvolved != null" >
+        industry_involved,
+      </if>
+      <if test="assetAttributes != null" >
+        asset_attributes,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="assetId != null" >
@@ -557,6 +611,39 @@
       </if>
       <if test="registrationAddress != null" >
         #{registrationAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowType != null" >
+        #{borrowType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowCompanyName != null" >
+        #{borrowCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="financialSituation != null" >
+        #{financialSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null" >
+        #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationArea != null" >
+        #{registrationArea,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        #{registrationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="mainBusiness != null" >
+        #{mainBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="unifiedSocialCreditCode != null" >
+        #{unifiedSocialCreditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCapital != null" >
+        #{registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="industryInvolved != null" >
+        #{industryInvolved,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAttributes != null" >
+        #{assetAttributes,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -743,6 +830,39 @@
       <if test="record.registrationAddress != null" >
         registration_address = #{record.registrationAddress,jdbcType=VARCHAR},
       </if>
+      <if test="record.borrowType != null" >
+        borrow_type = #{record.borrowType,jdbcType=TINYINT},
+      </if>
+      <if test="record.borrowCompanyName != null" >
+        borrow_company_name = #{record.borrowCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.financialSituation != null" >
+        financial_situation = #{record.financialSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.legalPerson != null" >
+        legal_person = #{record.legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationArea != null" >
+        registration_area = #{record.registrationArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationDate != null" >
+        registration_date = #{record.registrationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mainBusiness != null" >
+        main_business = #{record.mainBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unifiedSocialCreditCode != null" >
+        unified_social_credit_code = #{record.unifiedSocialCreditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registeredCapital != null" >
+        registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="record.industryInvolved != null" >
+        industry_involved = #{record.industryInvolved,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assetAttributes != null" >
+        asset_attributes = #{record.assetAttributes,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -807,7 +927,18 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       address = #{record.address,jdbcType=VARCHAR},
       corporate_code = #{record.corporateCode,jdbcType=VARCHAR},
-      registration_address = #{record.registrationAddress,jdbcType=VARCHAR}
+      registration_address = #{record.registrationAddress,jdbcType=VARCHAR},
+      borrow_type = #{record.borrowType,jdbcType=TINYINT},
+      borrow_company_name = #{record.borrowCompanyName,jdbcType=VARCHAR},
+      financial_situation = #{record.financialSituation,jdbcType=VARCHAR},
+      legal_person = #{record.legalPerson,jdbcType=VARCHAR},
+      registration_area = #{record.registrationArea,jdbcType=VARCHAR},
+      registration_date = #{record.registrationDate,jdbcType=VARCHAR},
+      main_business = #{record.mainBusiness,jdbcType=VARCHAR},
+      unified_social_credit_code = #{record.unifiedSocialCreditCode,jdbcType=VARCHAR},
+      registered_capital = #{record.registeredCapital,jdbcType=VARCHAR},
+      industry_involved = #{record.industryInvolved,jdbcType=VARCHAR},
+      asset_attributes = #{record.assetAttributes,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -986,6 +1117,39 @@
       <if test="registrationAddress != null" >
         registration_address = #{registrationAddress,jdbcType=VARCHAR},
       </if>
+      <if test="borrowType != null" >
+        borrow_type = #{borrowType,jdbcType=TINYINT},
+      </if>
+      <if test="borrowCompanyName != null" >
+        borrow_company_name = #{borrowCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="financialSituation != null" >
+        financial_situation = #{financialSituation,jdbcType=VARCHAR},
+      </if>
+      <if test="legalPerson != null" >
+        legal_person = #{legalPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationArea != null" >
+        registration_area = #{registrationArea,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null" >
+        registration_date = #{registrationDate,jdbcType=VARCHAR},
+      </if>
+      <if test="mainBusiness != null" >
+        main_business = #{mainBusiness,jdbcType=VARCHAR},
+      </if>
+      <if test="unifiedSocialCreditCode != null" >
+        unified_social_credit_code = #{unifiedSocialCreditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCapital != null" >
+        registered_capital = #{registeredCapital,jdbcType=VARCHAR},
+      </if>
+      <if test="industryInvolved != null" >
+        industry_involved = #{industryInvolved,jdbcType=VARCHAR},
+      </if>
+      <if test="assetAttributes != null" >
+        asset_attributes = #{assetAttributes,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -1047,7 +1211,18 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       address = #{address,jdbcType=VARCHAR},
       corporate_code = #{corporateCode,jdbcType=VARCHAR},
-      registration_address = #{registrationAddress,jdbcType=VARCHAR}
+      registration_address = #{registrationAddress,jdbcType=VARCHAR},
+      borrow_type = #{borrowType,jdbcType=TINYINT},
+      borrow_company_name = #{borrowCompanyName,jdbcType=VARCHAR},
+      financial_situation = #{financialSituation,jdbcType=VARCHAR},
+      legal_person = #{legalPerson,jdbcType=VARCHAR},
+      registration_area = #{registrationArea,jdbcType=VARCHAR},
+      registration_date = #{registrationDate,jdbcType=VARCHAR},
+      main_business = #{mainBusiness,jdbcType=VARCHAR},
+      unified_social_credit_code = #{unifiedSocialCreditCode,jdbcType=VARCHAR},
+      registered_capital = #{registeredCapital,jdbcType=VARCHAR},
+      industry_involved = #{industryInvolved,jdbcType=VARCHAR},
+      asset_attributes = #{assetAttributes,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

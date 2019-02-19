@@ -200,7 +200,6 @@ public class RepayManageController extends BaseController {
         responseBean.setResultStr(JSON.toJSONString(projectBean));
         try {
             projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
-            logger.info("加载的还款详情数据：" + JSON.toJSONString(projectBean));
             responseBean.setResultStr(JSON.toJSONString(projectBean));
             return responseBean;
         } catch (Exception e) {
@@ -333,7 +332,6 @@ public class RepayManageController extends BaseController {
             responseBean.setResultStr(JSON.toJSONString(repayByTerm));
             return responseBean;
         }
-        logger.info("计算完的还款bean数据：{}", JSON.toJSONString(repayByTerm));
         responseBean.setResultStr(JSON.toJSONString(repayByTerm));
         return responseBean;
     }

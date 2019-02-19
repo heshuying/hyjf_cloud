@@ -243,9 +243,9 @@
 		<repository>
 			<id>nexus</id>
 			<name>Local Repo</name>
-			<url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>
+			<!--<url>http://10.10.2.100:18080/nexus-2.9.0/content/groups/public/</url>-->
 			<!--上海使用外网连接nexus私服，青岛使用内网 -->
-			<!--<url>http://219.147.28.242:18080/nexus-2.9.0/content/groups/public/</url>-->
+			<url>http://219.147.28.242:18080/nexus-2.9.0/content/groups/public/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
@@ -256,25 +256,25 @@
 	<distributionManagement>
 		<repository>
 			<id>nexus-releases</id>
-			<url>
-				http://10.10.2.100:18080/nexus-2.9.0/content/repositories/releases/
-			</url>
+			<!--<url>-->
+				<!--http://10.10.2.100:18080/nexus-2.9.0/content/repositories/releases/-->
+			<!--</url>-->
 
 			<!--上海使用外网连接nexus私服，青岛使用内网 -->
-			<!--<url>
+			<url>
 			http://219.147.28.242:18080/nexus-2.9.0/content/repositories/releases/
-			</url>-->
+			</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>
-				http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/
-			</url>
+			<!--<url>-->
+				<!--http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/-->
+			<!--</url>-->
 
 			<!--上海使用外网连接nexus私服，青岛使用内网 -->
-			<!--<url>-->
-			<!--http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/-->
-			<!--</url>-->
+			<url>
+			http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/
+			</url>
 		</snapshotRepository>
 	</distributionManagement>
 

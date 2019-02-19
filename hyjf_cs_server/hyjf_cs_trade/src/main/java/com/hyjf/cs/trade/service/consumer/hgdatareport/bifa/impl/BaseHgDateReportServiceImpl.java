@@ -14,7 +14,7 @@ package com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.bifa.BaseHgDataReportEntityVO;
-import com.hyjf.am.vo.trade.bifa.UserInfoSHA256EntityVO;
+import com.hyjf.am.vo.trade.bifa.BifaUserInfoSHA256EntityVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.WebServiceUtil;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -171,7 +171,7 @@ public class BaseHgDateReportServiceImpl extends BaseServiceImpl implements Base
      * @return
      */
     @Override
-    public UserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject) {
+    public BifaUserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject) {
         return csMessageClient.selectUserIdToSHA256(jsonObject);
     }
 

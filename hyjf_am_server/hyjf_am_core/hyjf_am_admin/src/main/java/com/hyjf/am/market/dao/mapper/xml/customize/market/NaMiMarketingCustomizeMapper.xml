@@ -282,7 +282,7 @@
     </select>
 
     <select id="selectMonthList" resultType="java.lang.String" >
-        select left(d.join_time,7) join_time from ht_inviter_return_detail d group by left(d.join_time,7) order by join_time desc
+        select left(d.join_time,7) join_time from ht_inviter_return_detail d WHERE join_time is not null group by left(d.join_time,7) order by join_time desc
     </select>
 </mapper>
 

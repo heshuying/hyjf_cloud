@@ -122,11 +122,6 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
     private BigDecimal fee;
 
     /**
-     * 垫付手续费
-     */
-    private BigDecimal dianfuFee;
-
-    /**
      * 充值手续费收取方式,U向用户收取,M向商户收取
      */
     private String feeFrom;
@@ -382,14 +377,6 @@ public class AccountRechargeCustomizeVO extends BaseVO implements Serializable {
 
     public void setFee(BigDecimal fee) {
         this.fee = fee;
-    }
-
-    public BigDecimal getDianfuFee() {
-        return dianfuFee;
-    }
-
-    public void setDianfuFee(BigDecimal dianfuFee) {
-        this.dianfuFee = dianfuFee;
     }
 
     public String getFeeFrom() {

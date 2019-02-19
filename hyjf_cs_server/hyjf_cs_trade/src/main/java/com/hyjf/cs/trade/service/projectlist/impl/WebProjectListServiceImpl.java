@@ -1653,6 +1653,34 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 }
                 planAccede.setBorrowUserName(trueName);
             }
+            // 处理借款用途
+            if(StringUtils.isNotBlank(planAccede.getFinancePurpose())){
+                switch (planAccede.getFinancePurpose()) {
+                    case "01":
+                        planAccede.setFinancePurpose("个人消费");
+                        break;
+                    case "02":
+                        planAccede.setFinancePurpose("个人经营");
+                        break;
+                    case "03":
+                        planAccede.setFinancePurpose("个人资金周转");
+                        break;
+                    case "04":
+                        planAccede.setFinancePurpose("房贷");
+                        break;
+                    case "05":
+                        planAccede.setFinancePurpose("企业经营");
+                        break;
+                    case "06":
+                        planAccede.setFinancePurpose("企业周转");
+                        break;
+                    case "99":
+                        planAccede.setFinancePurpose("其他");
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 

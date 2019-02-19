@@ -1114,6 +1114,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			return -1;
 		}
 
+		logger.info("自动录标校验开始：instCode：" + instCode + ",assetId:" + hjhPlanAsset.getAssetId() + " assetAcount:" + hjhPlanAsset.getAccount());
 		BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
 
 		// 日推标额度校验
@@ -1131,6 +1132,8 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 			dayAvailable = dayAvailable.add(accumulate);
 			logger.info("自动录标校验保证金：已开启日累计额度，当前可用额度：" + dayAvailable);
 		}
+
+		logger.info("自动录标校验保证金, dayAvailable: " + dayAvailable);
 		if (dayAvailable.compareTo(assetAcount) < 0) {
 			logger.info("自动录标校验保证金：日推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", dayAvailable, assetAcount);
 			return 23;
@@ -1142,6 +1145,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 		BigDecimal monthUsed = getValueInRedis(monthKey, new Long(60 * 60 * 24 * 31 * 2));
 		logger.info("自动录标校验保证金：monthKey: " + monthKey + " month userd in redis: " + monthUsed);
 		monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
+		logger.info("自动录标校验保证金，monthAvailable：" + monthAvailable);
 		if (monthAvailable.compareTo(assetAcount) < 0) {
 			logger.info("自动录标校验保证金：月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
 			return 24;
@@ -1181,7 +1185,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	 * @return
 	 */
 	private BigDecimal getValueInRedis(String key, Long seconds) {
-		logger.info("get value in redis, key:{}", key);
 		String value = RedisUtils.get(key);
 		logger.info("value in redis, key:{}, value:{}", key, value);
 

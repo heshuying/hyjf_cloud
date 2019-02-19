@@ -5,11 +5,9 @@
 package com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa;
 
 import com.hyjf.am.trade.dao.model.bifa.UserIdAccountSumBean;
-import com.hyjf.am.trade.dao.model.customize.BorrowTenderInfoCustomize;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface BifaBorrowTenderInfoCustomizeMapper {

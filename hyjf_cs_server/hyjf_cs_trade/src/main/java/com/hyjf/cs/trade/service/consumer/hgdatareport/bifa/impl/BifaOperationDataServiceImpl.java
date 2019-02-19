@@ -105,8 +105,7 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
             bifaOperationDataEntity.setCur_borrow_users(String.valueOf(this.countCurrentBorrowUser()));
 
             // 当前投资人（定义：当前代还金额不为0的用户数量）
-            Integer countCurrentTenderUser = this.countCurrentTenderUser();
-            bifaOperationDataEntity.setCur_invest_users(String.valueOf(countCurrentTenderUser));
+            bifaOperationDataEntity.setCur_invest_users(String.valueOf(this.countCurrentTenderUser()));
 
             //平台前十大融资人融资待还余额占比
             BigDecimal sumBorrowUserMoneyTopTen = this.sumBorrowUserMoneyTopTen();

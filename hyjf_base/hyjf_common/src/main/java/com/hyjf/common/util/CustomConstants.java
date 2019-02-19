@@ -1126,6 +1126,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 用户优惠券状态 未使用 */
     public static final int USER_COUPON_STATUS_UNUSED = 0;
 
+    /** 用户优惠券状态 已使用 */
+    public static final int USER_COUPON_STATUS_USED = 1;
+
     /** 用户优惠券状态 审核未通过 */
     public static final int USER_COUPON_STATUS_NOCHECKED = 2;
 
@@ -1143,9 +1146,6 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 汇添金redis标号后缀PLAN */
     public static final String PLAN = "plan";
-
-    /** 用户优惠券状态 已使用 */
-    public static final int USER_COUPON_STATUS_USED = 1;
 
     /** 用户优惠券状态 已失效 */
     public static final int USER_COUPON_STATUS_INVALID = 4;

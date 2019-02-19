@@ -70,7 +70,7 @@ public interface CsMessageClient {
      * @param jsonObject
      * @return
      */
-    UserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject);
+    BifaUserInfoSHA256EntityVO selectUserIdToSHA256(JSONObject jsonObject);
 
     /**
      * 散标上报保存本地mongo
@@ -196,7 +196,6 @@ public interface CsMessageClient {
 
     /**
      * 更新sha256表中用户对应状态
-     * @param userList
      * @param dataType
      */
     void updateUserIndexReportStatus(Integer userId, String dataType);
@@ -208,7 +207,7 @@ public interface CsMessageClient {
      * @param isLenderOneUp
      * @return
      */
-    List<UserInfoSHA256EntityVO> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp);
+    List<BifaUserInfoSHA256EntityVO> getUserInfoSHA256(String isOpenUp, String isLenderZeroUp, String isLenderOneUp);
 
     /**
      * 从mongo中获取借贷用户索引信息

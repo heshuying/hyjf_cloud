@@ -20,7 +20,7 @@ public class AppChannelStatisticsJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("AppChannelStatisticsJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://CS-MARKET/cs-market/appchannelstatistics/insertStatistics", String.class);
+		restTemplate.getForEntity("http://CS-MESSAGE/cs-message/appchannelstatistics/insertStatistics", String.class);
 		logger.info("AppChannelStatisticsJob execute end...");
 	}
 }

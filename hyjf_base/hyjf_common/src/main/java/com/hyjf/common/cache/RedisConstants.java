@@ -309,7 +309,7 @@ public class RedisConstants {
     public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
 
     /**
-     * 记录密码错误次数Redis前缀admin端（有的加的username有的加的userid)
+     * 记录密码错误次数Redis前缀admin端（password_err_count_admin:$username)
      */
     public static final String PASSWORD_ERR_COUNT_ADMIN = "password_err_count_admin:";
 
@@ -543,4 +543,9 @@ public class RedisConstants {
      * 推送表的消息唯一标识
      */
     public static final String MSG_PUSH_CODE = "MSG_PUSH_CODE:";
+
+    /**
+     * 校验债转用的计算金额是否有异常数据(0:关闭；1：开启)
+     */
+    public static final String CHECK_HJH_CREDIT_CALC_FLAG = "check_hjh_credit_calc_flag";
 }

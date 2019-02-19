@@ -206,6 +206,7 @@ public interface BorrowService extends BaseService {
      * @return
      */
 	public String getborrowIdByProductId(Map<String, Object> params);
+	List<BorrowAndInfoVO> getborrowByProductId( Map<String, Object> params);
     /**
      * 还款列表
      *

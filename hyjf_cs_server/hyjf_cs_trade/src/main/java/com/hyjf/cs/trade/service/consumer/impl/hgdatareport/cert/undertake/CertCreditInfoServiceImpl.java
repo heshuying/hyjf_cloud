@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -137,9 +138,12 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //承接人用户标示 Hash
                     param.put("userIdcardHash", idHash);
                     //4.承接人投资资金额：承接本金金额
-                    param.put("takeAmount", creditTender.getAssignCapital().toString());
+                    DecimalFormat dfAmount = new DecimalFormat("0.00");
+                    String strAmount = dfAmount.format(creditTender.getAssignCapital());
+                    param.put("takeAmount",strAmount);
                     //5.承接利息金额：承接人承接本金对应的待收利息金额
-                    param.put("takeInterest", creditTender.getAssignInterest().toString());
+                    String strInterest = dfAmount.format(creditTender.getAssignInterest());
+                    param.put("takeInterest",strInterest);
                     //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
                     //承接本金*折让率  数值前加负
                     param.put("floatMoney", "-" + bigDecimalCredit.toString());
@@ -180,8 +184,6 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     String userIdcardHash = getUserIdcardHash(hjhDebtCreditTender.getUserId());
                     //8.承接时间：系统记录的承接时间
                     String takeTime = dateFormatTransformationDate(hjhDebtCreditTender.getCreateTime(), "H");
-                    //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-                    BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(hjhDebtCreditTender.getAssignPlanOrderId());
                     //10.封闭截至时间：散标报送 到期日  智投报送承接日
                     String lockTime = dateFormatTransformationDate(hjhDebtCreditTender.getCreateTime(), "Y");
 
@@ -198,9 +200,12 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //承接人用户标示 Hash
                     param.put("userIdcardHash", userIdcardHash);
                     //4.承接人投资资金额：承接本金金额
-                    param.put("takeAmount", hjhDebtCreditTender.getAssignCapital());
+                    DecimalFormat dfAmount = new DecimalFormat("0.00");
+                    String strAmount = dfAmount.format(hjhDebtCreditTender.getAssignCapital());
+                    param.put("takeAmount",strAmount);
                     //5.承接利息金额：承接人承接本金对应的待收利息金额
-                    param.put("takeInterest", hjhDebtCreditTender.getAssignInterest());
+                    String strInterest = dfAmount.format(hjhDebtCreditTender.getAssignInterest());
+                    param.put("takeInterest",strInterest);
                     //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
                     param.put("floatMoney", "0");
                     //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
@@ -209,7 +214,6 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //8.承接时间：系统记录的承接时间
                     param.put("takeTime", takeTime);
                     //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-//                param.put("redpackage", bigDecimalCouponQuota.toString());
                     param.put("redpackage", "0");
                     //10.封闭截至时间：散标报送 到期日  智投报送承接日
                     param.put("lockTime", lockTime);

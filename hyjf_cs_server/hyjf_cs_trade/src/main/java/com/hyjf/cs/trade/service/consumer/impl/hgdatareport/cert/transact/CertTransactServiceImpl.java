@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
@@ -22,6 +22,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -50,6 +51,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	AmUserClient amUserClient;
 	@Autowired
 	SystemConfig systemConfig;
+
+	private String thisMessName = "交易流水信息";
+	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
+
 	@Override
 	public JSONArray createDate(String minId, String maxId) {
 		
@@ -61,7 +67,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
-				
 				 createParam(accountList,list);
 			}
 			if(list==null||list.size()==0){
@@ -80,6 +85,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certRequest.setMinId((String) param.get("minId"));
 		certRequest.setLimitStart((Integer) param.get("limitStart"));
 		certRequest.setLimitEnd((Integer) param.get("limitEnd"));
+		logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
 		return amTradeClient.queryCertAccountListId(certRequest);
 	}
 
@@ -180,7 +186,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("11"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -273,7 +279,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("11"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -361,7 +367,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("17"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -410,7 +416,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("17"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -768,7 +774,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("10"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -836,7 +842,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("41"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -1200,7 +1206,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("1"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -1281,14 +1287,19 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setTradeList(tradeList);
 		certTransactRequest.setBorrowNid(borrow.getBorrowNid());
+		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<AccountListVO> tenderList=this.amTradeClient.getAccountListVOListByRequest(certTransactRequest);
+		logger.info("tenderList.size():" + tenderList.size());
+
+
+
 		for (AccountListVO accountList2 : tenderList) {
 			UserInfoVO tenderUsersInfo=this.amUserClient.findUserInfoById(accountList2.getUserId());
 			Map<String, Object> param3 = new HashMap<String, Object>();
 			//接口版本号
 			param3.put("version", CertCallConstant.CERT_CALL_VERSION);
 			//交易流水时间
-			param3.put("transTime", GetDate.timestamptoStrYYYYMMDDHHMMSS(accountList2.getCreateTime()+""));
+			param3.put("transTime", GetDate.formatDate(accountList2.getCreateTime()+""));
 			//	平台交易流水号
 			param3.put("transId", accountList2.getNid());
 			//平台编号
@@ -1414,7 +1425,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("6"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）

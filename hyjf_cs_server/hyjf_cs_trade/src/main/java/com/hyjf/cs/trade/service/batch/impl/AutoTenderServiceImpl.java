@@ -5,11 +5,13 @@ package com.hyjf.cs.trade.service.batch.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanBorrowTmpVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcPeriodResultVO;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -279,8 +281,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "自动承接债转标的" + redisBorrow.getBorrowNid() + "--------");
                     logger.info(logMsgHeader + "承前的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
-                    /** 4.1. 债转用金额计算	 */
-                    // 设置实际出借金额
+                    /** 4.1. 本次债转实际出借金额计算	 */
+                    // 出借金额和待投金额，谁小用谁
                     // 债转标的： 清算时公允价值-已投本金和已投垫付利息
                     BigDecimal yujiAmoust = ketouplanAmoust;
                     if (yujiAmoust.compareTo(redisBorrow.getBorrowAccountWait()) >= 0) {
@@ -289,7 +291,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         isLast = true;
                     }
 
-                    /** 4.2. 获取债转详情	 */
+                    /** 4.2. 获取债转标的详情	 */
                     HjhDebtCreditVO credit = this.amTradeClient.doSelectHjhDebtCreditByCreditNid(redisBorrow.getBorrowNid()); // 从主库
                     if (credit == null) {
                         logger.error(logMsgHeader + "债转号不存在 " + redisBorrow.getBorrowNid());
@@ -343,9 +345,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         continue;
                     }
 
-                    // 生成承接日志
+                    // 生成调用银行接口订单号
                     String orderId = GetOrderIdUtils.getOrderId2(hjhAccede.getUserId());
-                    // 债权承接订单日期
+                    // 生成调用银行接口日期
                     String orderDate = GetOrderIdUtils.getTxDate();
 
                     // 计算计划债转实际金额 保存creditTenderLog表
@@ -353,14 +355,30 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     if (Validator.isNull(resultVO)) {
                         throw new Exception("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
+
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
                     BigDecimal assignCapital = resultVO.getAssignCapital();
                     //承接服务费
                     BigDecimal serviceFee = resultVO.getServiceFee();
-                    logger.info(logMsgHeader + "承接用计算完成\n"
-                            + resultVO.toLog());
+                    logger.info(logMsgHeader + "承接用计算完成\n" + resultVO.toLog());
+
+                    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
+                    if(!this.amTradeClient.checkAutoPayment(credit.getCreditNid())){
+                        serviceFee = BigDecimal.ZERO;//承接服务费
+                        resultVO.setServiceFee(BigDecimal.ZERO);
+                        logger.info(logMsgHeader + "债权转让人未做缴费授权,该笔债权的承接服务费置为" + serviceFee);
+                    }
+                    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
+
+                    // 校验债转用的计算金额是否有异常数据
+                    CheckResult checkResult = checkHjhCreditCalcResult(resultVO);
+                    if (!checkResult.getResultBool()) {
+                        logger.error(logMsgHeader + checkResult.getResultMsg());
+                        this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
+                        return FAIL;
+                    }
 
                     //防止钱不够也承接校验
                     HjhAccedeVO hjhAccedeCheck = this.amTradeClient.getHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
@@ -371,10 +389,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         return FAIL;
                     }
 
+                    logger.info(logMsgHeader + "#### 开始 调用银行自动购买债权接口（承接）" + credit.getCreditNid() + "####");
 
-                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动购买债权接口（承接）" + credit.getCreditNid()+ "########");
-
-                    // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
+                    // 智投订单状态改为初始状态7X（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
                     //调用银行自动购买债权接口
@@ -399,7 +416,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         noPushRedis = true;
                         return FAIL;
                     }
-                    logger.info(logMsgHeader + " 银行自动购买债权接口成功调用后  " + credit.getBorrowNid());
+                    logger.info(logMsgHeader + "#### 成功 调用银行自动购买债权接口（承接）" + credit.getBorrowNid() + "####");
 
                     // add 合规数据上报 埋点 liubin 20181122 start
                     JSONObject params = new JSONObject();
@@ -503,7 +520,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     /** 5.4. 调用银行自动投标申请接口	 */
-                    logger.info(logHeader + "智投订单号[" + hjhAccede.getAccedeOrderId()  + "########开始调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "########");
+                    logger.info(logMsgHeader + "#### 开始 调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "####");
                     // 智投订单状态改为初始状态70（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
@@ -527,7 +544,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         return FAIL;
                     }
 
-                    logger.info(logMsgHeader + " 银行自动投标申请接口成功调用后  " + borrow.getBorrowNid());
+                    logger.info(logMsgHeader + "#### 成功 调用银行自动投标申请接口（出借）" + borrow.getBorrowNid() + "####");
 
                     // add by liushouyi nifa2 20181204 start
                     if(redisBorrow.getBorrowAccountWait().compareTo(realAmoust) == 0){
@@ -616,6 +633,42 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
 
         return OK;
+    }
+
+    /**
+     * 校验债转用的计算金额是否有异常数据
+     * @param resultVO
+     * @return
+     */
+    private CheckResult checkHjhCreditCalcResult(HjhCreditCalcResultVO resultVO) {
+        // 启动限制开关 redis.check_hjh_credit_calc_flag = 0 时，不执行校验。
+        if ( RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG) != null
+                && RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG).equals("0") ) {
+            return new CheckResult(true);
+        }
+
+        logger.debug(logHeader + "校验债转用的计算金额是否有异常数据 开启！");
+
+        // 承接的应该大于等于支付的
+        if(resultVO.getAssignPay().compareTo(resultVO.getAssignAccount()) > 0){
+            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息");
+        }
+        // 承接服务率不能大于1
+        if(resultVO.getServiceApr().compareTo(BigDecimal.ONE) >= 0){
+            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息");
+        }
+        // 校验通过
+        return new CheckResult(true);
+//        result = " 承接总额:" + assignAccount +
+//                "\n,承接本金:" + assignCapital +
+//                "\n,承接利息:" + assignInterest +
+//                "\n,承接支付金额:" + assignPay +
+//                "\n,承接垫付利息:" + assignAdvanceMentInterest +
+//                "\n,承接延期利息:" + assignRepayDelayInterest +
+//                "\n,承接逾期利息:" + assignRepayLateInterest +
+//                "\n,承接服务率:" + serviceApr +
+//                "\n,承接服务费:" + serviceFee +
+//                "\n,分期数据结果:" + assignResult;
     }
 
     /**
@@ -752,7 +805,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         BankCallBean bankResult = null;
 
         // 取得当前债权在清算前已经发生债转的本金
-        BigDecimal preCreditCapital = this.amTradeClient.getPreCreditCapital(credit);
+        BigDecimal preCreditCapital = this.amTradeClient.doGetPreCreditCapital(credit);
 
         // 银行接口用bean
         BankCallBean bean = new BankCallBean(orderId, userId, BankCallConstant.TXCODE_CREDIT_AUTO_INVEST, "自动购买债权", hjhAccede.getClient());

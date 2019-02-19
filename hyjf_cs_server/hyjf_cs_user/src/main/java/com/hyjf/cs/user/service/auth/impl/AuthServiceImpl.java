@@ -14,6 +14,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -23,6 +24,7 @@ import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.auth.AuthService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -34,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1385,6 +1388,113 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * AEMS系统:用户授权
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public Map<String, String> checkAemsParam(@Valid AemsMergeAuthPagePlusRequestBean requestBean) {
+		Map<String, String> resultMap = new HashMap<>();
+		resultMap.put("status", "0");
+		if (Validator.isNull(requestBean.getInstCode())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("statusDesc", "机构编号不能为空");
+			return resultMap;
+		}
+		if (Validator.isNull(requestBean.getRetUrl())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("statusDesc", "同步地址不能为空");
+			return resultMap;
+		}
+		if (Validator.isNull(requestBean.getNotifyUrl())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("statusDesc", "异步地址不能为空");
+			return resultMap;
+		}
+		// 渠道
+		if (Validator.isNull(requestBean.getChannel())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+			resultMap.put("statusDesc", "渠道号不能为空");
+			return resultMap;
+		}
+		if (Validator.isNull(requestBean.getAuthType())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_SQ000001);
+			resultMap.put("statusDesc", "授权类型不能为空");
+			return resultMap;
+		}
+		if (!Arrays.asList(AuthBean.AUTH_TYPE_AUTO_CREDIT,
+				AuthBean.AUTH_TYPE_AUTO_BID,
+				AuthBean.AUTH_TYPE_PAYMENT_AUTH,
+				AuthBean.AUTH_TYPE_REPAY_AUTH).contains(requestBean.getAuthType())) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_SQ000002);
+			resultMap.put("statusDesc", "授权类型不是指定类型");
+			return resultMap;
+		}
+		// 验签
+		if (!SignUtil.AEMSVerifyRequestSign(requestBean,"/aems/mergeauth/mergeAuth/mergeAuth")) {
+			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000002);
+			resultMap.put("statusDesc", "验签失败");
+			return resultMap;
+		}
+
+
+		// 根据电子账户号查询用户ID
+		BankOpenAccountVO bankOpenAccount = this.amUserClient.selectBankOpenAccountByAccountId(requestBean.getAccountId());
+		if(bankOpenAccount == null){
+			logger.info("没有根据电子银行卡找到用户[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000004);
+			resultMap.put("statusDesc", "没有根据电子银行卡找到用户");
+			return resultMap;
+		}
+
+
+		// 检查用户是否存在
+		UserVO user = this.getUsersById(bankOpenAccount.getUserId());//用户ID
+		if (user == null) {
+			logger.info("用户不存在汇盈金服账户[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000007);
+			resultMap.put("statusDesc", "用户不存在汇盈金服账户");
+			return resultMap;
+		}
+
+
+		if (user.getBankOpenAccount().intValue() != 1) {// 未开户
+			logger.info("用户未开户！[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000006);
+			resultMap.put("statusDesc", "用户未开户！");
+			return resultMap;
+		}
+
+		// 检查是否设置交易密码
+		Integer passwordFlag = user.getIsSetPassword();
+		if (passwordFlag != 1) {// 未设置交易密码
+			logger.info("未设置交易密码！[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_TP000002);
+			resultMap.put("statusDesc", "未设置交易密码！");
+			return resultMap;
+		}
+
+		// 查询是否已经授权过
+		boolean isAuth = this.checkIsAuth(user.getUserId(),requestBean.getAuthType());
+		if(isAuth){
+			logger.info("已授权,请勿重复授权！[" + JSONObject.toJSONString(requestBean, true) + "]");
+			resultMap.put("status", ErrorCodeConstant.STATUS_CE000009);
+			resultMap.put("statusDesc", "已授权,请勿重复授权！");
+			return resultMap;
+		}
+		resultMap.put("status", "1");
+		return resultMap;
 	}
 
 	/**

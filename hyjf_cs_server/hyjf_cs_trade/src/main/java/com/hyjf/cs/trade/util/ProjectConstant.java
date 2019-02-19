@@ -301,7 +301,24 @@ public class ProjectConstant {
                                         detailBeanList.add(detailBean);
                                         break;
                                     case "position":
-                                        detailBean.setKey("岗位职业");
+                                        detailBean.setKey("职业类型");
+                                        if ("10000".equals(result.toString())) {
+                                            detailBean.setVal("机关企事业单位负责人");
+                                        } else if ("20000".equals(result.toString())) {
+                                            detailBean.setVal("专业技术人员");
+                                        } else if ("30000".equals(result.toString())) {
+                                            detailBean.setVal("办事人员和有关人员");
+                                        } else if ("40000".equals(result.toString())) {
+                                            detailBean.setVal("会生产服务和生活服务人员");
+                                        } else if ("50000".equals(result.toString())) {
+                                            detailBean.setVal("农、林、牧、渔业生产及辅助人员");
+                                        } else if ("60000".equals(result.toString())) {
+                                            detailBean.setVal("生产制造及有关人员");
+                                        } else if ("70000".equals(result.toString())) {
+                                            detailBean.setVal("军人");
+                                        } else if ("80000".equals(result.toString())) {
+                                            detailBean.setVal("不便分类的其他从业人员");
+                                        }
                                         detailBeanList.add(detailBean);
                                         break;
                                     case "annualIncome":

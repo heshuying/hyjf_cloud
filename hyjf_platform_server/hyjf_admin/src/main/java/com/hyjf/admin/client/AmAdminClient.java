@@ -1176,7 +1176,7 @@ public interface AmAdminClient {
      * 纳觅返现活动-保存返现数据
      * @param returnCashRequest
      */
-    void saveReturnCash(ReturnCashRequest returnCashRequest);
+    IntegerResponse saveReturnCash(ReturnCashRequest returnCashRequest);
 
     /**
      * 查询汇计划转让列表的求和

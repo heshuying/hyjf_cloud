@@ -59,7 +59,6 @@ public class  AppTradeDetailController extends BaseTradeController {
     @PostMapping(value = "/getTradeList",  produces = "application/json; charset=utf-8")
     public AppTradeDetailBean searchTradeDetailList(HttpServletRequest request,@RequestHeader(value = "userId" , required = false )Integer userId) {
         AppTradeDetailBeanRequest trade=createBean(request,userId);
-        _log.info("trade"+JSONObject.toJSONString(trade));
         AppTradeDetailBean appTradeDetailBean=tradeDetailService.createTradeDetailListPage(trade);
         appTradeDetailBean.setStatus(CustomConstants.APP_STATUS_SUCCESS);
         appTradeDetailBean.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);

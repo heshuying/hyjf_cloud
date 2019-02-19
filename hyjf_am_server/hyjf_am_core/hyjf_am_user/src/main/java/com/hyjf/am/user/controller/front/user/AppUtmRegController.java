@@ -1,6 +1,7 @@
 package com.hyjf.am.user.controller.front.user;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
@@ -86,6 +87,19 @@ public class AppUtmRegController extends BaseController {
      * @param request
      * @return
      */
+    @RequestMapping("/getRegistNumberCount")
+    public IntegerResponse getRegistNumberCount(@RequestBody AppChannelStatisticsRequest request) {
+        IntegerResponse response = new IntegerResponse();
+        int count = appUtmRegService.getAppUtmRegVOCount(request);
+        response.setResultInt(count);
+        return response;
+    }
+
+    /**
+     *根据开始时间、结束时间和来源查询数据
+     * @param request
+     * @return
+     */
     @RequestMapping("/getRegistNumber")
     public AppUtmRegResponse getRegistNumber(@RequestBody AppChannelStatisticsRequest request) {
         AppUtmRegResponse response = new AppUtmRegResponse();
@@ -95,6 +109,39 @@ public class AppUtmRegController extends BaseController {
             voList = CommonUtils.convertBeanList(list, AppUtmRegVO.class);
             response.setResultList(voList);
         }
+        request.setSourceIdSrch("hxfTenderPrice");
+        List<AppUtmReg> list1 = appUtmRegService.getAppUtmRegVO(request);
+        if (!CollectionUtils.isEmpty(list1)) {
+            List<AppUtmRegVO> voList = null;
+            voList = CommonUtils.convertBeanList(list1, AppUtmRegVO.class);
+            response.setHxfTenderPriceList(voList);
+        }
+        request.setSourceIdSrch("hztTenderPrice");
+        List<AppUtmReg> list2 = appUtmRegService.getAppUtmRegVO(request);
+        if (!CollectionUtils.isEmpty(list2)) {
+            List<AppUtmRegVO> voList = null;
+            voList = CommonUtils.convertBeanList(list2, AppUtmRegVO.class);
+            response.setHztTenderPriceList(voList);
+        }
+        request.setSourceIdSrch("openAccountTime");
+        List<AppUtmReg> list3 = appUtmRegService.getAppUtmRegVO(request);
+        if (!CollectionUtils.isEmpty(list3)) {
+            List<AppUtmRegVO> voList = null;
+            voList = CommonUtils.convertBeanList(list3, AppUtmRegVO.class);
+            response.setOpenAccountTimeList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 查询相应的app渠道无主单开户数
+     * @return
+     */
+    @RequestMapping("/getOpenAccountAttrCount")
+    public IntegerResponse getOpenAccountAttrCount(@RequestBody AppChannelStatisticsRequest request) {
+        IntegerResponse response = new IntegerResponse();
+        int count = appUtmRegService.getOpenAccountAttrCount(request);
+        response.setResultInt(count);
         return response;
     }
 

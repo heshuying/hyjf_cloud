@@ -17,6 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @ApiIgnore
 @RestController
 @RequestMapping("/cs-market/appchannelstatistics")
+@Deprecated
 public class AppChannelStatisticsController extends BaseMarketController {
 	@Autowired
 	private AppChannelStatisticsService statisticsService;

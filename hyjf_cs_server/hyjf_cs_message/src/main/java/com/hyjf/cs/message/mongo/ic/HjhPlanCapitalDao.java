@@ -5,8 +5,11 @@ import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -21,6 +24,8 @@ import java.util.List;
  */
 @Repository
 public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
+
+    protected static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
     @Override
     protected Class<HjhPlanCapital> getEntityClass(){
@@ -51,8 +56,10 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
         query.addCriteria(criteria);
         // 分页
         if(request.getLimitStart()!=-1){
-            query.skip(request.getLimitStart()-1).limit(request.getLimitEnd());
+            query.skip(request.getLimitStart()).limit(request.getLimitEnd());
         }
+
+        logger.info("汇计划->资金计划列表和导出列表查询条件:" + request.getDateFromSrch() + ":" + request.getDateToSrch() + ":" + query.toString());
         List<HjhPlanCapital> hjhPlanCapitalList = mongoTemplate.find(query, getEntityClass());
         return hjhPlanCapitalList;
     }

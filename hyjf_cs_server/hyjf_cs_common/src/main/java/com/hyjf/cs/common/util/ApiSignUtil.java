@@ -80,7 +80,7 @@ public class ApiSignUtil {
 			RSAHelper signHelper = new RSAHelper(ru.getPublicKey());
 			b = signHelper.verify(dataText, signText);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("验签出错  ",e);
 		}
 		return b;
 	}

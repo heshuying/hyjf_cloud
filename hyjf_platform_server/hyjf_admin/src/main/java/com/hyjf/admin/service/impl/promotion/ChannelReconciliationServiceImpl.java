@@ -89,7 +89,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         // 投资信息
         ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecordHjhCount(request);
         if (response != null) {
-            response.getCount();
+            return response.getCount();
         }
         return 0;
     }

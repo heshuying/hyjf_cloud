@@ -407,7 +407,7 @@ public class AppBankWithdrawController extends BaseTradeController {
     @ResponseBody
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
+    public AppResult<Object> userBankWithdraw(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         logger.info("app端提现接口, userId is :{}", userId);
         AppResult<Object> result = new AppResult<Object>();
         String transAmt = request.getParameter("total");// 交易金额
@@ -437,6 +437,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         logger.info("ipAddr is :{}", ipAddr);
         // (提现)
         String retUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/handing";
+        retUrl += "?token=1&sign=" +sign;
         String bgRetUrl = "http://CS-TRADE/hyjf-app/bank/user/withdraw/userBankWithdrawBgreturn";
         bgRetUrl=splicingParam(bgRetUrl,request);
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";

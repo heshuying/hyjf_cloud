@@ -461,7 +461,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
 
     @ApiOperation(value = "查看债权人债权信息", notes = "查看债权人债权信息")
     @PostMapping("/getCreditUserInfo")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_QUERY_INVEST_DEBT_VIEW)
     @ResponseBody
     public Object  getCreditUserInfo(@RequestBody BorrowCreditTenderInfoRequest request){
         AdminResult result =  borrowCreditTenderService.getCreditUserInfo(request);
