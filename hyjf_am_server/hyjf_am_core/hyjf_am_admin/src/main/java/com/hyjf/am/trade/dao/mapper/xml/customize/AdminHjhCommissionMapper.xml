@@ -90,7 +90,7 @@
 			t.invite_department_name as department_name,
 			u.username,
 			u2.username AS username_tender,
-			u.attribute,
+			case  when u.username=hha.user_name then hha.user_attribute when u.username=invite_user_name then hha.invite_user_attribute else '' end as attribute,
 			u2.attribute AS attribute_tender,
 			u.truename
 			
