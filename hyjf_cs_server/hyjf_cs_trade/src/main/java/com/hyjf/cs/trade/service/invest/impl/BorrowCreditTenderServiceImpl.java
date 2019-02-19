@@ -1458,6 +1458,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 }
             }
         }
+        BigDecimal assCreditCapital = new BigDecimal(creditAssign.getAssignCapital().replaceAll(",",""));
+        if (assCreditCapital.equals(BigDecimal.ZERO)) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE,creditCapital);
+        } else {
+            if (accountBigDecimal.compareTo(assCreditCapital) > 0) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_BIG,creditCapital);
+            }
+        }
     }
 
     /**
