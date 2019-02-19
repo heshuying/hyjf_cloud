@@ -111,7 +111,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                         //当期应还本金（元）
                         param.put("curFund", strCurFund);
                         //当期应还利息（元）
-                        String strCurInterest = dfAmount.format(borrowRepayPlan.getRepayCapital());
+                        String strCurInterest = dfAmount.format(borrowRepayPlan.getRepayInterest());
                         param.put("curInterest", strCurInterest);
                         //当期应还款时间点
                         //当期应还时间点：报送当期应还日期23:59:59
