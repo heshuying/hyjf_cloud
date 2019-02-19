@@ -687,9 +687,9 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 			// 调用江西银行提现接口
 			// 调用汇付接口(提现)
 
-			String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/aems/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
+			String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/aems/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
 			// 支付工程路径
-			String bankBgRetUrl = "http://CS-TRADE/hyjf-api/aems/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");
+			String bankBgRetUrl = "http://CS-TRADE/hyjf-api/aems/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");
 
 			// 路由代码
 			String routeCode = "";
