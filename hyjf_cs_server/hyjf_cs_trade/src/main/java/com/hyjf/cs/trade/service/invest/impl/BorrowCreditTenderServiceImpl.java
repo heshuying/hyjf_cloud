@@ -348,7 +348,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         AppInvestInfoResultVO result = new AppInvestInfoResultVO();
         // 查询债转信息
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,tender.getUserId());
-        logger.info("creditAssign:::::::{}",creditAssign);
+        logger.info("creditAssign:::::::{}",JSONObject.toJSONString(creditAssign));
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
             result.setRealAmount("¥0.00");
