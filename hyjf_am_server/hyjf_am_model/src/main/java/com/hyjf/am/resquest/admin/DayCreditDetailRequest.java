@@ -42,6 +42,15 @@ public class DayCreditDetailRequest extends BasePage implements Serializable {
     //转让人计划编号
     private String planNid;
 
+    //出让人
+    private String userName;
+
+    // 债转编号
+    private String creditNid;
+
+    // 原项目编号
+    private String borrowNid;
+
     public int limit = 0;
 
     private int limitStart = -1;
@@ -158,5 +167,29 @@ public class DayCreditDetailRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCreditNid() {
+        return creditNid;
+    }
+
+    public void setCreditNid(String creditNid) {
+        this.creditNid = creditNid;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }
