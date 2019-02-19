@@ -284,7 +284,7 @@
 			CONCAT(substr(hpa.idcard, 1, 4),'************') idcard,
 			hpa.domicile,
 			hpa.credit_level,
-			IFNULL(hpn.name,hpa.useage) as useage,
+			hpa.useage,
 			hpa.monthly_income,
 			hpa.first_payment,
 			hpa.second_payment,
@@ -303,7 +303,6 @@
 			hpa.main_business,
 			hpa.financial_situation
 		FROM ht_hjh_plan_asset hpa
-		LEFT JOIN ht_param_name hpn ON hpa.useage = hpn.name_cd AND hpn.name_class = 'FINANCE_PURPOSE'
 		<include refid="Where_Clause" />
 	</select>
 	

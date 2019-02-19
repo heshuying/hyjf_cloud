@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.hgreportdata.nifa;
 
 import com.hyjf.am.trade.dao.model.auto.FddTemplet;
-import com.hyjf.am.trade.dao.model.auto.NifaContractTemplate;
 import com.hyjf.am.trade.dao.model.auto.NifaReportLog;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.BaseService;

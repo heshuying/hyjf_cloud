@@ -412,7 +412,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
             result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
             // 待承接垫付利息
-            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance());
+            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance().replaceAll(",",""));
             // 待承接金额
             BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
             result.setBorrowAccountWait(CommonUtils.formatAmount(null, creditAssign.getAssignCapital()));
@@ -429,6 +429,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setBorrowApr(creditAssign.getCreditDiscount()+"%");
             if (StringUtils.isNotEmpty(money) && !"0".equals(money)) {
                 // 实际支付金额
+                result.setRealAmount("¥" + creditAssign.getAssignPay());
                 //result.setRealAmount("实际支付金额:" + creditAssign.getAssignPay());
                 // 历史回报
                 result.setProspectiveEarnings(creditAssign.getAssignInterest()+"元");
@@ -1455,6 +1456,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     // 项目最大出借金额为{0}元
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_MAX_INVESTMENT,creditCapital);
                 }
+            }
+        }
+        BigDecimal assCreditCapital = new BigDecimal(creditAssign.getAssignCapital().replaceAll(",",""));
+        if (assCreditCapital.equals(BigDecimal.ZERO)) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE,creditCapital);
+        } else {
+            if (accountBigDecimal.compareTo(assCreditCapital) > 0) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_BIG,creditCapital);
             }
         }
     }
