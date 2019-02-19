@@ -51,9 +51,9 @@ public class DayCreditDetailController {
         params.put("planNid", request.getPlanNid());
 //        params.put("planOrderId", request.getPlanOrderId());
 //        params.put("planNidNew", request.getPlanNidNew());
-//        params.put("userName", request.getUserName());
-//        params.put("creditNid", request.getCreditNid());
-//        params.put("borrowNid", request.getBorrowNid());
+        params.put("userName", request.getUserName());
+        params.put("creditNid", request.getCreditNid());
+        params.put("borrowNid", request.getBorrowNid());
         params.put("repayStyle", request.getRepayStyle());
         params.put("creditStatus", request.getCreditStatus());
         params.put("repayStatus", request.getRepayStatus());

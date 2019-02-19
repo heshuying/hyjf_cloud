@@ -29,7 +29,7 @@
 			hydu.username,
 			hvi.vip_name,
 		    CASE WHEN hvu.upgrade_vip_type = 1 THEN '购买' WHEN hvu.upgrade_vip_type = 2 THEN 'V值升级' ELSE '' END upgrade_vip_type,
-			FROM_UNIXTIME(hvu.create_time, '%Y-%m-%d %H:%i:%s' ) upgrade_time,
+			DATE_FORMAT(hvu.create_time,"%Y-%m-%d %T") as upgrade_time,
 			IFNULL(hvu.upgrade_vip_value,0) upgrade_vip_value,
 			CASE WHEN hvu.gift_flg = 0 THEN '未发放' WHEN hvu.gift_flg = 1 THEN '已发放' ELSE '' END gift_flg,
 			hvu.remark
