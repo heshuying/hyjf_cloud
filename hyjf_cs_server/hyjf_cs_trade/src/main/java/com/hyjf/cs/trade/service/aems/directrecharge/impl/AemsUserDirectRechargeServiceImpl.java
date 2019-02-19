@@ -166,15 +166,15 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
                 return map;
             }
             // 缴费授权
-            if (user.getPaymentAuthStatus() !=1) {
-                logger.info("用户未进行缴费授权,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
-                map.put("status", AemsErrorCodeConstant.STATUS_CE000011);
-                map.put("acqRes", userRechargeRequestBean.getAcqRes());
-                map.put("accountId", userRechargeRequestBean.getAccountId());
-                map.put("statusDesc","用户未进行缴费授权");
-                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
-                return map;
-            }
+//            if (user.getPaymentAuthStatus() !=1) {
+//                logger.info("用户未进行缴费授权,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
+//                map.put("status", AemsErrorCodeConstant.STATUS_CE000011);
+//                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+//                map.put("accountId", userRechargeRequestBean.getAccountId());
+//                map.put("statusDesc","用户未进行缴费授权");
+//                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+//                return map;
+//            }
 
             // 拼装参数  调用江西银行
             // 同步调用路径
