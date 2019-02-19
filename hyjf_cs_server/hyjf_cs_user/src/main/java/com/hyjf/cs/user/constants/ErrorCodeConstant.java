@@ -34,6 +34,8 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_CE000011 = "CE000011";
     // 未进行还款授权
     public static final String STATUS_CE000012 = "CE000012";
+    // 用户未充值
+    public static final String STATUS_CE000013 = "CE000013";
     // 系统异常
     public static final String STATUS_CE999999 = "CE999999";
     /********************共通相关      end***********************/

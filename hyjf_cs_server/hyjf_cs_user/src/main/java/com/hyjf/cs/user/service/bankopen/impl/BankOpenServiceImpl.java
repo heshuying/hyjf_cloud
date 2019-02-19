@@ -236,11 +236,10 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     @Override
     public BankCallResult openAccountBgReturn(BankCallBean bean) {
         BankCallResult result = new BankCallResult();
-        logger.info("页面开户异步处理start,UserId:{} 开户平台为：{}", bean.getLogUserId(), bean.getLogClient());
         int userId = Integer.parseInt(bean.getLogUserId());
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-
+        logger.info("页面开户异步处理start,UserId:{} 开户平台为：{} 银行返回响应代码为：{} status为{}", bean.getLogUserId(), bean.getLogClient(),retCode,bean.getStatus());
         // State为0时候为0：交易失败 1：交易成功 2：开户成功设置交易密码失败
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || "0".equals(bean.getStatus())) {
             // 开户失败   将开户记录状态改为4

@@ -81,7 +81,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						param.put("floatMoney", 
 								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))).toString());
 						//转让项目发布的日期
-						param.put("transferDate", GetDate.times10toStrYYYYMMDD(credit.getCreditTerm()));
+						param.put("transferDate", GetDate.formatDate(credit.getCreateTime()));
 						//转让债权信息的链接URL
 						param.put("sourceProductUrl", systemConfig.getWebHost() + "/bank/user/credit/webcredittender.do?creditNid="+credit.getCreditNid());
 						list.add(param);
