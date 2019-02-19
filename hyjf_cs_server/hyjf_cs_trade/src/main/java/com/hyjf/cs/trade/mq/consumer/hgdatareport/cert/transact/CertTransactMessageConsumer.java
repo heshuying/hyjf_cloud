@@ -34,10 +34,6 @@ public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>
     private String thisMessName = "交易流水信息";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
-
-
-
-
     @Autowired
     private CertTransactService certTransactService;
 
@@ -88,7 +84,6 @@ public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>
 
             // --> 调用service组装数据
             JSONArray data =certTransactService.createDate(minId,maxId);
-
             if(data==null){
                 return;
             }

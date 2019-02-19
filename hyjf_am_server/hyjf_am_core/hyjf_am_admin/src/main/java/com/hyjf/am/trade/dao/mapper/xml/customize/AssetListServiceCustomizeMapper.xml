@@ -303,7 +303,7 @@
 			hpa.main_business,
 			hpa.financial_situation
 		FROM ht_hjh_plan_asset hpa
-		LEFT JOIN hyjf_param_name hpn ON hpa.useage = hpn.name_cd AND hpn.name_class = 'FINANCE_PURPOSE'
+		LEFT JOIN hyjf_config.ht_param_name hpn ON hpa.useage = hpn.name_cd AND hpn.name_class = 'FINANCE_PURPOSE'
 		<include refid="Where_Clause" />
 	</select>
 	

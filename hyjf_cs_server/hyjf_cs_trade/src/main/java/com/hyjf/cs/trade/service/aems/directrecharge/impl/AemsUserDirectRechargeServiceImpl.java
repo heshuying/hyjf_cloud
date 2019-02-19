@@ -14,7 +14,6 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.AemsUserDirectRechargeRequestBean;
-import com.hyjf.cs.trade.bean.BaseDefine;
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -64,7 +63,7 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
     * @return java.util.Map<java.lang.String,java.lang.Object>
     **/
     @Override
-    @HystrixCommand(commandKey = "页面充值(api)-recharge",fallbackMethod = "fallBackApiRecharge",ignoreExceptions = CheckException.class,commandProperties = {
+    @HystrixCommand(commandKey = "页面充值(api)-recharge",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -75,7 +74,6 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
-
     public Map<String,Object> recharge(AemsUserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = new HashMap<>();
@@ -168,15 +166,15 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
                 return map;
             }
             // 缴费授权
-            if (user.getPaymentAuthStatus() !=1) {
-                logger.info("用户未进行缴费授权,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
-                map.put("status", AemsErrorCodeConstant.STATUS_CE000011);
-                map.put("acqRes", userRechargeRequestBean.getAcqRes());
-                map.put("accountId", userRechargeRequestBean.getAccountId());
-                map.put("statusDesc","用户未进行缴费授权");
-                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
-                return map;
-            }
+//            if (user.getPaymentAuthStatus() !=1) {
+//                logger.info("用户未进行缴费授权,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
+//                map.put("status", AemsErrorCodeConstant.STATUS_CE000011);
+//                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+//                map.put("accountId", userRechargeRequestBean.getAccountId());
+//                map.put("statusDesc","用户未进行缴费授权");
+//                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+//                return map;
+//            }
 
             // 拼装参数  调用江西银行
             // 同步调用路径

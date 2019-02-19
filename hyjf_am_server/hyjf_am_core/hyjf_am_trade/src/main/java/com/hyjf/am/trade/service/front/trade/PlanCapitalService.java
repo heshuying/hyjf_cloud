@@ -1,7 +1,6 @@
 package com.hyjf.am.trade.service.front.trade;
 
 import com.hyjf.am.trade.service.BaseService;
-import com.hyjf.am.vo.trade.HjhAccountBalanceVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
 import java.util.Date;

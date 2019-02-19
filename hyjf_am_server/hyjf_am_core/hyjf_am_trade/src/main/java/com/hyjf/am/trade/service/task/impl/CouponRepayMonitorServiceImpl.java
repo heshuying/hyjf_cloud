@@ -8,7 +8,6 @@ import com.hyjf.am.trade.dao.mapper.auto.CouponRepayMonitorMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminCouponRepayMonitorCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitorExample;
-import com.hyjf.am.trade.dao.model.customize.AdminCouponRepayMonitorCustomize;
 import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

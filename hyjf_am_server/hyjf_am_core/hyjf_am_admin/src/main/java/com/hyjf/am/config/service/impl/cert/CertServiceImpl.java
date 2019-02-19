@@ -45,7 +45,7 @@ public class CertServiceImpl implements CertService {
                 creteria.andSendTimeGreaterThanOrEqualTo(startTime);
             }
             if (StringUtils.isNotEmpty(form.getSendEndtTimeStr())) {
-                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendStartTimeStr()+" 23:59:59");
+                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendEndtTimeStr()+" 23:59:59");
                 creteria.andSendTimeLessThanOrEqualTo(endTime);
             }
             if (form.getInfType() != null && form.getInfType().intValue() > 0) {
@@ -81,7 +81,7 @@ public class CertServiceImpl implements CertService {
                 creteria.andSendTimeGreaterThanOrEqualTo(startTime);
             }
             if (StringUtils.isNotEmpty(form.getSendEndtTimeStr())) {
-                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendStartTimeStr()+" 23:59:59");
+                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendEndtTimeStr()+" 23:59:59");
                 creteria.andSendTimeLessThanOrEqualTo(endTime);
             }
             if (form.getInfType() != null && form.getInfType().intValue() > 0) {
@@ -120,7 +120,7 @@ public class CertServiceImpl implements CertService {
                 creteria.andSendTimeGreaterThanOrEqualTo(startTime);
             }
             if (StringUtils.isNotEmpty(form.getSendEndtTimeStr())) {
-                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendStartTimeStr()+" 23:59:59");
+                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendEndtTimeStr()+" 23:59:59");
                 creteria.andSendTimeLessThanOrEqualTo(endTime);
             }
             if (form.getInfType() != null && form.getInfType().intValue() > 0) {
@@ -152,7 +152,7 @@ public class CertServiceImpl implements CertService {
                 creteria.andSendTimeGreaterThanOrEqualTo(startTime);
             }
             if (StringUtils.isNotEmpty(form.getSendEndtTimeStr())) {
-                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendStartTimeStr()+" 23:59:59");
+                Integer endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(form.getSendEndtTimeStr()+" 23:59:59");
                 creteria.andSendTimeLessThanOrEqualTo(endTime);
             }
             if (form.getInfType() != null && form.getInfType().intValue() >= 0) {

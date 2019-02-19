@@ -16,7 +16,8 @@ public class WDZJTenderListDataCustomize implements Serializable {
     private String type;
     
 	public String getSubscribeUserName() {
-		return encryptTenderUser(subscribeUserName);
+		return subscribeUserName;
+//		return encryptTenderUser(subscribeUserName);
 	}
 	public void setSubscribeUserName(String subscribeUserName) {
 		this.subscribeUserName = subscribeUserName;

@@ -56,7 +56,7 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
         query.addCriteria(criteria);
         // 分页
         if(request.getLimitStart()!=-1){
-            query.skip(request.getLimitStart()-1).limit(request.getLimitEnd());
+            query.skip(request.getLimitStart()).limit(request.getLimitEnd());
         }
 
         logger.info("汇计划->资金计划列表和导出列表查询条件:" + request.getDateFromSrch() + ":" + request.getDateToSrch() + ":" + query.toString());
