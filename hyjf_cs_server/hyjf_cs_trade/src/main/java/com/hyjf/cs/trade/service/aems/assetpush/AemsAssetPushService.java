@@ -8,7 +8,6 @@ import com.hyjf.cs.trade.bean.AemsPushResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 /**
- *
  * @author Zha Daojian
  * @date 2018/12/19 16:42
  * @param 
@@ -18,16 +17,14 @@ public interface AemsAssetPushService extends BaseTradeService {
 
 
     /**
-     * 个人资产推送
-     *
+     * AEMS个人资产推送
      * @param pushRequestBean
      */
     AemsPushResultBean assetPush(AemsPushRequestBean pushRequestBean);
 
 
     /**
-     * 企业资产推送
-     *
+     * AEMS企业资产推送
      * @param pushRequestBean
      */
     AemsPushResultBean companyAssetPush(AemsPushRequestBean pushRequestBean);

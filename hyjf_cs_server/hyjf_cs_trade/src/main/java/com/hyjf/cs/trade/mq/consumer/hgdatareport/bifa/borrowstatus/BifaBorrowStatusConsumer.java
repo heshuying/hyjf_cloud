@@ -31,7 +31,7 @@ import java.util.List;
  * @version BifaBorrowStatusConsumer, v0.1 2019/1/14 17:01
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BIFA_BORROW_STATUS_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.LOAN_SUCCESS_TAG + "||" +MQConstant.REPAY_ALL_SUCCESS_TAG, consumerGroup = MQConstant.BIFA_BORROW_STATUS_GROUP)
 public class BifaBorrowStatusConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BifaBorrowStatusConsumer.class);

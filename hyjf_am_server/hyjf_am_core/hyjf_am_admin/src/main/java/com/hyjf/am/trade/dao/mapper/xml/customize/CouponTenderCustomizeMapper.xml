@@ -1213,7 +1213,8 @@
         date_format(hcr.create_time, '%Y-%m-%d') hcr_add_time,
         FROM_UNIXTIME(hcr.recover_time,'%Y-%m-%d') recover_time,
         hcr.recover_account recover_interest,
-        pa.name received_flg,
+        pa.name received_flg_string,
+        hcr.received_flg as received_flg,
         IFNULL(hcr.transfer_id,'') transfer_id,
         FROM_UNIXTIME(hcr.recover_yestime,'%Y-%m-%d') recover_yestime,
         IFNULL(hbten.account,'0.00') recover_capital

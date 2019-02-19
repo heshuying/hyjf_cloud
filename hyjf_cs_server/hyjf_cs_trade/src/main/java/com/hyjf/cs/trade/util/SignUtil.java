@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.util;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
@@ -11,6 +10,7 @@ import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
+import com.hyjf.cs.trade.controller.api.aems.assetpush.AemsAssetPushController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class SignUtil {
             sign = bean.getAssetId() + bean.getInstCode() + bean.getTimestamp();
         } else if (("/aems/authState/recharge").equals(methodName)) {
             //aems充值页面
-            UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
+            AemsUserDirectRechargeRequestBean bean = (AemsUserDirectRechargeRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
                     + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
         } else if (("/aems/trusteePay/pay").equals(methodName)) {
@@ -77,11 +77,11 @@ public class SignUtil {
             //aems标的详情查询
             AemsBorrowDetailRequestBean bean = (AemsBorrowDetailRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getBorrowNid() + bean.getTimestamp();
-        }else if (("/aems/assetpush/push").equals(methodName)) {
+        }else if ((AemsAssetPushController.AEMS_ASSETPUSH+AemsAssetPushController.PERSON).equals(methodName)) {
             //aems资产推送个人-校验接口
             AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
             sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();
-        } else if (("/aems/assetpush/pushcompany").equals(methodName)) {
+        } else if ((AemsAssetPushController.AEMS_ASSETPUSH+AemsAssetPushController.COMPANY).equals(methodName)) {
             //aems资产推送公司-校验接口
             AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
             sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();

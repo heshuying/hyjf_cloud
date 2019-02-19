@@ -215,7 +215,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      * @return
      */
     @Override
-    public BigDecimal getPreCreditCapital(HjhDebtCredit credit) {
+    public BigDecimal doGetPreCreditCapital(HjhDebtCredit credit) {
         BigDecimal result = BigDecimal.ZERO;
 
         HjhDebtCreditExample example = new HjhDebtCreditExample();
