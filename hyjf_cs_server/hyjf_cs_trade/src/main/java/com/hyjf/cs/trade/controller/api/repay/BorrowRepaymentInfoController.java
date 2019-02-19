@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Api(value = "api端-第三方还款明细查询接口",tags = "api端-第三方还款明细查询接口")
 @RestController
-@RequestMapping("/hyjf-api/aems/repayment")
+@RequestMapping("/hyjf-api/server/repayment")
 public class BorrowRepaymentInfoController  extends BaseController {
 
 
@@ -40,7 +40,7 @@ public class BorrowRepaymentInfoController  extends BaseController {
     @Autowired
     private CommonSvrChkService commonSvrChkService;
 
-    @PostMapping("/repaymentInfoList")
+    @PostMapping("/repaymentInfoList.do")
     @ApiParam(required = true, name = "repaymentInfoList", value = "第三方还款明细查询接口")
     @ApiOperation(value = "第三方还款明细查询接口", httpMethod = "POST", notes = "第三方资产状态查询接口")
     public ResultApiBean repaymentInfoList(@RequestBody @Valid ApiBorrowRepaymentInfoRequestBean bean) {
