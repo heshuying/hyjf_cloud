@@ -57,7 +57,6 @@ public class CertTransactBatchController {
             param.put("minId", certTransactMaxId==null?"0":certTransactMaxId);
             param.put("limitStart", (page-1)*size);
             param.put("limitEnd", size);
-            logger.info("queryCertAccountListId:" + JSONObject.toJSONString(param));
             customize=certTransactService.queryCertAccountListId(param);
             if(certTransactMaxId==null||"".equals(certTransactMaxId)){
                 RedisUtils.set("certTransactOtherMaxId", customize.getMaxId()+"");

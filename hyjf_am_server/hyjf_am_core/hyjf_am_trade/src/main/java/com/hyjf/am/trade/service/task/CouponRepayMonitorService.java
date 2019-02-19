@@ -5,10 +5,8 @@ package com.hyjf.am.trade.service.task;
 
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
-import com.hyjf.am.trade.dao.model.customize.AdminCouponRepayMonitorCustomize;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoy

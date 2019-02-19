@@ -5,8 +5,6 @@ package com.hyjf.am.trade.service.hgreportdata.nifa;
 
 import com.hyjf.am.trade.service.BaseService;
 
-import java.util.List;
-
 /**
  * @author PC-LIUSHOUYI
  * @version NifaStatisticalService, v0.1 2019/1/19 16:52

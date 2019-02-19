@@ -21,7 +21,6 @@ import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
 import com.hyjf.am.vo.trade.account.AccountListVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -74,6 +73,7 @@ public class CertController extends BaseController {
 
     @PostMapping("/getAccountListVOListByRequest")
     public AccountListResponse getAccountListVOListByRequest(@RequestBody CertRequest certRequest) {
+        logger.info("getAccountListVOListByRequest:" + JSONObject.toJSONString(certRequest));
         AccountListResponse response = new AccountListResponse();
         List<AccountList> accountLists = certService.getAccountListVOListByRequest(certRequest);
         if (!CollectionUtils.isEmpty(accountLists)) {

@@ -18,7 +18,6 @@ import com.hyjf.am.trade.service.front.config.TenderAgreementService;
 import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;

@@ -12,7 +12,7 @@
         <result column="salt" property="salt" jdbcType="CHAR" />
         <result column="logintime" property="logintime" jdbcType="INTEGER" />
         <result column="reg_ip" property="regIp" jdbcType="CHAR" />
-        <result column="reg_time" property="regTime" jdbcType="INTEGER" />
+        <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
         <result column="login_ip" property="loginIp" jdbcType="CHAR" />
         <result column="login_time" property="loginTime" jdbcType="INTEGER" />
         <result column="last_ip" property="lastIp" jdbcType="CHAR" />

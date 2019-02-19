@@ -22,6 +22,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -50,6 +51,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	AmUserClient amUserClient;
 	@Autowired
 	SystemConfig systemConfig;
+
+	private String thisMessName = "交易流水信息";
+	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
+
 	@Override
 	public JSONArray createDate(String minId, String maxId) {
 		
@@ -61,7 +67,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
-				
 				 createParam(accountList,list);
 			}
 			if(list==null||list.size()==0){
@@ -1282,7 +1287,9 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setTradeList(tradeList);
 		certTransactRequest.setBorrowNid(borrow.getBorrowNid());
+		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<AccountListVO> tenderList=this.amTradeClient.getAccountListVOListByRequest(certTransactRequest);
+		logger.info("tenderList.size():" + tenderList.size());
 		for (AccountListVO accountList2 : tenderList) {
 			UserInfoVO tenderUsersInfo=this.amUserClient.findUserInfoById(accountList2.getUserId());
 			Map<String, Object> param3 = new HashMap<String, Object>();
