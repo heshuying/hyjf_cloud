@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -129,7 +130,9 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //投资人用户标示 Hash
                     param.put("userIdcardHash", userIdcardHash);
                     //投资 金额 (元)
-                    param.put("invAmount", borrowTender.getAccount());
+                    DecimalFormat dfAmount = new DecimalFormat("0.00");
+                    String strAmount = dfAmount.format(borrowTender.getAccount());
+                    param.put("invAmount", strAmount);
                     //投资预期年化收益率
                     param.put("invRate", rate);
                     //  投资计息时间
