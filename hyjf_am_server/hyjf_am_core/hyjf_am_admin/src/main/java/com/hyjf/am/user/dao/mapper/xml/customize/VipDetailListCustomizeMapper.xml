@@ -32,7 +32,7 @@
 			hydu.username,
 -- 			FORMAT(hydbt.account, 2) account,
             hvut.tender_nid,
-			hvut.create_time as trade_time,
+            DATE_FORMAT(hvut.create_time,"%Y-%m-%d %T") as trade_time,
 			hvi.vip_name,
 			IFNULL(hvut.tender_vip_value,0) tender_vip_value,
 			IFNULL(hvut.sum_vip_value,0) sum_vip_value,

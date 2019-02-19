@@ -50,7 +50,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     /**
      * 外部服务接口:缴费授权 @RequestMapping
      */
-    public static final String REQUEST_MAPPING = "/hyjf-api/aems/mergeauth/mergeAuth";
+    public static final String REQUEST_MAPPING = "/hyjf-api/aems/mergeauth";
     /**
      * 同步回调
      */
@@ -64,7 +64,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "AEMS系统:多合一授权", notes = "AEMS系统:多合一授权")
     @PostMapping(value = "/mergeAuth", produces = "application/json; charset=utf-8")
     public ModelAndView mergeAuthPage(@RequestBody @Valid AemsMergeAuthPagePlusRequestBean requestBean, HttpServletRequest request) {
-        logger.info("AEMS系统请求页面多合一授权[开始], 接口路径:["+ REQUEST_MAPPING +"]", "请求参数:["+ requestBean.toString() +"]");
+        logger.info("AEMS系统请求页面多合一授权[开始],请求参数:["+ requestBean.toString() +"]");
 
         ModelAndView modelAndView;
         // 入参校验
