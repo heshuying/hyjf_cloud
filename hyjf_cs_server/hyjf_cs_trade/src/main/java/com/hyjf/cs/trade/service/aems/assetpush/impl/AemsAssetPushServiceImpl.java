@@ -22,6 +22,7 @@ import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.AemsPushBean;
 import com.hyjf.cs.trade.bean.AemsPushRequestBean;
 import com.hyjf.cs.trade.bean.AemsPushResultBean;
@@ -99,6 +100,8 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         if (assetBorrow == null) {
             logger.info("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->机构编号不存在");
             resultBean.setStatusDesc("机构编号不存在");
+            resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000101);
+            resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000101));
             return resultBean;
         }
 
@@ -107,13 +110,17 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         if(bailConfig == null){
             logger.info("保证金配置不存在:{}", pushRequestBean.getInstCode());
             resultBean.setStatusDesc("保证金配置不存在:{" + pushRequestBean.getInstCode() + "}");
+            resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000102);
+            resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000102));
             return resultBean;
         }
         if(GetDate.getNowTime10() < GetDate.getDayStart10(bailConfig.getTimestart()) ||
             GetDate.getNowTime10() > GetDate.getDayEnd10(bailConfig.getTimeend())
             ){
-                logger.info("未在授信期内，不能推标");
+                logger.info("未在授信期内，不能推标！");
                 resultBean.setStatusDesc("未在授信期内，不能推标");
+                resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000103);
+                resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000103));
                 return resultBean;
             }
 
@@ -123,12 +130,17 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         // 检查请求资产总参数
         List<AemsPushBean> assets = pushRequestBean.getReqData();
         if (CollectionUtils.isEmpty(assets)) {
+            logger.info("AEMS个人资产推送[推送资产不能为空]！");
             resultBean.setStatusDesc("推送资产不能为空");
+            resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000104);
+            resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000104));
             return resultBean;
         }
         if (assets.size() > 1000) {
+            logger.info("AEMS个人资产推送[请求参数过长]！");
             resultBean.setStatusDesc("请求参数过长");
-            logger.error("------请求参数过长-------");
+            resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000105);
+            resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000105));
             return resultBean;
         }
 
@@ -437,8 +449,10 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         List<InfoBean> riskInfo = pushRequestBean.getRiskInfo();
         if (Validator.isNotNull(riskInfo)) {
             if (riskInfo.size() > 1000) {
+                logger.info("AEMS个人资产推送[商家信息数量超限]！");
                 resultBean.setStatusDesc("商家信息数量超限");
-                logger.error("------------商家信息数量超限-----------");
+                resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000106);
+                resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000106));
                 return resultBean;
             }
             //推送商家信息
@@ -449,10 +463,13 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         // 资产推送失败时返回 提示信息
         resultBean.setData(retassets);
         resultBean.setStatusDesc(retassets.get(0).getRetMsg());
+        resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000107);
+        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000107);
         // 当无失败信息时，说明校验通过，资产推送成功
         if(StringUtils.isBlank(resultBean.getStatusDesc())){
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             resultBean.setStatusDesc("资产推送成功");
+            resultBean.setStatus(ErrorCodeConstant.SUCCESS);
+            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         }
 
         return resultBean;

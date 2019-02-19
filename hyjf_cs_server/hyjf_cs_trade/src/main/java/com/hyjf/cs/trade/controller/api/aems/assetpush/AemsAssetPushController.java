@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.AemsPushBean;
 import com.hyjf.cs.trade.bean.AemsPushRequestBean;
 import com.hyjf.cs.trade.bean.AemsPushResultBean;
@@ -132,8 +133,9 @@ public class AemsAssetPushController extends BaseTradeController {
                 Validator.isNull(pushRequestBean.getAssetType())
                 ) {
             logger.info("------请求参数非法-------" + pushRequestBean);
-            result.put("status", ErrorCodeConstant.STATUS_CE000001);
+            result.put("status", ErrorCodeConstant.STATUS_ZT000100);
             result.put("statusDesc", "请求参数非法");
+            result.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000100));
             return result;
         }
 
@@ -142,6 +144,7 @@ public class AemsAssetPushController extends BaseTradeController {
             logger.info("------------------验签失败！---------------------");
             result.put("status", ErrorCodeConstant.STATUS_CE000002);
             result.put("statusDesc", "验签失败！");
+            result.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_CE000002));
             return result;
         }
 
@@ -151,6 +154,7 @@ public class AemsAssetPushController extends BaseTradeController {
             logger.info("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->不能推送本平台资产！");
             result.put("status", ErrorCodeConstant.STATUS_ZT000010);
             result.put("statusDesc", "不能推送本平台资产！");
+            result.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000010));
             return result;
         }
 
