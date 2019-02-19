@@ -191,8 +191,8 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     continue;
                 }
 
-                //融资用途 不能为空
-                String use = UseageEnum.getUse(pushBean.getUseage());
+                // 借款用途 不能为空
+                String use = pushBean.getUseage();
                 if(org.apache.commons.lang.StringUtils.isEmpty(use)){
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("融资用途为空or不存在");

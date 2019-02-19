@@ -91,13 +91,12 @@ public class BorrowCommonController extends BaseController {
 	/**
      * 迁移到详细画面
      *
-     * @param request
-     * @param form
+     * @param borrowCommonRequest
      * @return
      */
 	@ApiOperation(value = "查询信息")
 	@PostMapping("/infoAction")
-    public AdminResult<BorrowCommonResponse>  moveToInfoAction(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
+    public AdminResult<BorrowCommonResponse> moveToInfoAction(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonResponse bcr=borrowCommonService.moveToInfoAction(borrowCommonRequest);
 		if(bcr==null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
