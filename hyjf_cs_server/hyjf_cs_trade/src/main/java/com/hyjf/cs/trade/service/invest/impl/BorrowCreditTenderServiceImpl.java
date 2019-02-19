@@ -429,6 +429,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setBorrowApr(creditAssign.getCreditDiscount()+"%");
             if (StringUtils.isNotEmpty(money) && !"0".equals(money)) {
                 // 实际支付金额
+                result.setRealAmount("¥" + creditAssign.getAssignPay());
                 //result.setRealAmount("实际支付金额:" + creditAssign.getAssignPay());
                 // 历史回报
                 result.setProspectiveEarnings(creditAssign.getAssignInterest()+"元");
