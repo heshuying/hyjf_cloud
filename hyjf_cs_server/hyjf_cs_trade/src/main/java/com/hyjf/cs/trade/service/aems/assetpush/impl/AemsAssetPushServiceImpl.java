@@ -428,6 +428,21 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     pushBean.setRetCode(ErrorCodeConstant.SUCCESS);
                     // 送到队列
                     this.sendToMQ(record);
+                    //商家信息未解析版
+                    logger.info("----------------商家信息导入开始-----------------------");
+                    List<InfoBean> riskInfo = pushRequestBean.getRiskInfo();
+                    if (Validator.isNotNull(riskInfo)) {
+                        if (riskInfo.size() > 1000) {
+                            logger.info("AEMS个人资产推送[商家信息数量超限]！");
+                            resultBean.setStatusDesc("商家信息数量超限");
+                            resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000106);
+                            resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000106));
+                            return resultBean;
+                        }
+                        //推送商家信息
+                        this.amTradeClient.insertRiskInfo(riskInfo);
+                    }
+                    logger.info("----------------商家信息导入完成-----------------------");
                 } else {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
                     pushBean.setRetMsg("系统异常,资产未进库");
@@ -438,33 +453,18 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
                     pushBean.setRetMsg("资产已入库");
                 } else {
+                    logger.error("AEMS个人资产推送异常！["+ e +"]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
                     pushBean.setRetMsg("系统异常,资产未进库");
                 }
             }
         }
 
-        //商家信息未解析版
-        logger.info("----------------商家信息导入开始-----------------------");
-        List<InfoBean> riskInfo = pushRequestBean.getRiskInfo();
-        if (Validator.isNotNull(riskInfo)) {
-            if (riskInfo.size() > 1000) {
-                logger.info("AEMS个人资产推送[商家信息数量超限]！");
-                resultBean.setStatusDesc("商家信息数量超限");
-                resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000106);
-                resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000106));
-                return resultBean;
-            }
-            //推送商家信息
-            this.amTradeClient.insertRiskInfo(riskInfo);
-        }
-        logger.info("----------------商家信息导入完成-----------------------");
-
         // 资产推送失败时返回 提示信息
         resultBean.setData(retassets);
         resultBean.setStatusDesc(retassets.get(0).getRetMsg());
-        resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000107);
-        resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000107));
+        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000107);
+        logger.info("生成的checkValue：["+ ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000107) +"]");
         // 当无失败信息时，说明校验通过，资产推送成功
         if(StringUtils.isBlank(resultBean.getStatusDesc())){
             resultBean.setStatusDesc("资产推送成功");
