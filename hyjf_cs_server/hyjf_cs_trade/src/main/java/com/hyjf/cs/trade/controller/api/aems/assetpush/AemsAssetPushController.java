@@ -4,15 +4,19 @@
 package com.hyjf.cs.trade.controller.api.aems.assetpush;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.AemsPushBean;
 import com.hyjf.cs.trade.bean.AemsPushRequestBean;
 import com.hyjf.cs.trade.bean.AemsPushResultBean;
+import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.aems.assetpush.AemsAssetPushService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -50,6 +54,17 @@ public class AemsAssetPushController extends BaseTradeController {
     @PostMapping(PERSON)
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "AEMS-个人资产推送", httpMethod = "POST", notes = "AEMS-个人资产推送")
+    @HystrixCommand(commandKey = "API-AEMS个人资产推送", fallbackMethod = "fallBackAssetPush", ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public JSONObject push(@RequestBody AemsPushRequestBean pushRequestBean) {
         logger.info("API端-AEMS个人资产推送[开始]，请求参数["+ pushRequestBean.toString() +"]，接口路径+["+ AEMS_ASSETPUSH+PERSON +"]");
 
@@ -73,6 +88,17 @@ public class AemsAssetPushController extends BaseTradeController {
     @PostMapping(COMPANY)
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "AEMS-企业资产推送", httpMethod = "POST", notes = "AEMS-企业资产推送")
+    @HystrixCommand(commandKey = "API-AEMS个人资产推送", fallbackMethod = "fallBackAssetPush", ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public JSONObject pushcompany(@RequestBody AemsPushRequestBean pushRequestBean) {
         logger.info("API端-AEMS企业资产推送[开始]，请求参数["+ pushRequestBean.toString() +"]，接口路径+["+ AEMS_ASSETPUSH+COMPANY +"]");
 
@@ -129,5 +155,19 @@ public class AemsAssetPushController extends BaseTradeController {
         }
 
         return null;
+    }
+
+    /**
+     * 熔断方法默认返回
+     * @param pushRequestBean
+     * @return
+     */
+    public JSONObject fallBackAssetPush(AemsPushRequestBean pushRequestBean) {
+        logger.warn("已进入 AEMS个人/企业资产推送(api) fallBackAssetPush 熔断方法， pushRequestBean is: {}", pushRequestBean);
+        JSONObject result = new JSONObject();
+        result.put("status", ErrorCodeConstant.STATUS_CE999999);
+        result.put("statusDesc", "系统维护，请稍后重试!");
+        result.put("data", new PushResultBean());
+        return result;
     }
 }
