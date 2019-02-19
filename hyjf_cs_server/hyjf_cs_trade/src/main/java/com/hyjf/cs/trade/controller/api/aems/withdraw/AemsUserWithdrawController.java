@@ -4,13 +4,11 @@
 package com.hyjf.cs.trade.controller.api.aems.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.bean.AemsUserWithdrawRequestBean;
 import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.aems.withdraw.AemsUserWithdrawService;
-import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
@@ -36,7 +34,7 @@ import java.util.Map;
 **/
 @Api(value = "api端-AEMS用户提现接口",tags = "api端-AEMS用户提现接口")
 @Controller
-@RequestMapping(value = "/hyjf-api/aems/user/withdraw")
+@RequestMapping(value = "/hyjf-api/aems/withdraw")
 public class AemsUserWithdrawController extends BaseTradeController {
 
     @Autowired
