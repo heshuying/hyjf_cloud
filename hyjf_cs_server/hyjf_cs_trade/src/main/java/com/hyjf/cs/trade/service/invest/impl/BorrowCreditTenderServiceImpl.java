@@ -348,7 +348,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         AppInvestInfoResultVO result = new AppInvestInfoResultVO();
         // 查询债转信息
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,tender.getUserId());
-        logger.info("creditAssign:::::::{}",JSONObject.toJSONString(creditAssign));
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
             result.setRealAmount("¥0.00");
@@ -413,7 +412,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setStatus(CustomConstants.APP_STATUS_SUCCESS);
             result.setStatusDesc(CustomConstants.APP_STATUS_DESC_SUCCESS);
             // 待承接垫付利息
-            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance());
+            BigDecimal interestAdvanceWait = new BigDecimal(creditAssign.getAssignInterestAdvance().replaceAll(",",""));
             // 待承接金额
             BigDecimal capitalWait = new BigDecimal(creditAssign.getCreditCapital().replaceAll(",",""));
             result.setBorrowAccountWait(CommonUtils.formatAmount(null, creditAssign.getAssignCapital()));
