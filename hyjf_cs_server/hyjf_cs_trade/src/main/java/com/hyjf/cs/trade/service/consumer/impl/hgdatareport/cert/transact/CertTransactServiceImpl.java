@@ -1294,13 +1294,12 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 
 
 		for (AccountListVO accountList2 : tenderList) {
-		try {
 			UserInfoVO tenderUsersInfo=this.amUserClient.findUserInfoById(accountList2.getUserId());
 			Map<String, Object> param3 = new HashMap<String, Object>();
 			//接口版本号
 			param3.put("version", CertCallConstant.CERT_CALL_VERSION);
 			//交易流水时间
-			param3.put("transTime", GetDate.timestamptoStrYYYYMMDDHHMMSS(accountList2.getCreateTime()+""));
+			param3.put("transTime", GetDate.formatDate(accountList2.getCreateTime()+""));
 			//	平台交易流水号
 			param3.put("transId", accountList2.getNid());
 			//平台编号
@@ -1336,11 +1335,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			//还款计划编号
 			param3.put("replanId", "-1");
 			list.add(param3);
-		}catch (Exception e){
-			logger.info("accountList2.getNid():" + accountList2.getNid());
 		}
-		}
-        logger.info("list.size():" + tenderList.size());
 	}
 
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
