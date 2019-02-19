@@ -464,12 +464,12 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         resultBean.setData(retassets);
         resultBean.setStatusDesc(retassets.get(0).getRetMsg());
         resultBean.setStatus(ErrorCodeConstant.STATUS_ZT000107);
-        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000107);
+        resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000107));
         // 当无失败信息时，说明校验通过，资产推送成功
         if(StringUtils.isBlank(resultBean.getStatusDesc())){
             resultBean.setStatusDesc("资产推送成功");
             resultBean.setStatus(ErrorCodeConstant.SUCCESS);
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+            resultBean.setChkValue(ApiSignUtil.encryptByRSA(ErrorCodeConstant.SUCCESS));
         }
 
         return resultBean;
