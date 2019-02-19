@@ -1333,6 +1333,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param3.put("replanId", "-1");
 			list.add(param3);
 		}
+        logger.info("list.size():" + list.size());
 	}
 
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
