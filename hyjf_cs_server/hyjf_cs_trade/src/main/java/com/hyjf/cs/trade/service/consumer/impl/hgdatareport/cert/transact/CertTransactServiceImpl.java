@@ -1290,7 +1290,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<AccountListVO> tenderList=this.amTradeClient.getAccountListVOListByRequest(certTransactRequest);
 		logger.info("tenderList.size():" + tenderList.size());
+
+
+
 		for (AccountListVO accountList2 : tenderList) {
+		try {
 			UserInfoVO tenderUsersInfo=this.amUserClient.findUserInfoById(accountList2.getUserId());
 			Map<String, Object> param3 = new HashMap<String, Object>();
 			//接口版本号
@@ -1332,8 +1336,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			//还款计划编号
 			param3.put("replanId", "-1");
 			list.add(param3);
+		}catch (Exception e){
+			logger.info("accountList2.getNid():" + accountList2.getNid());
 		}
-        logger.info("list.size():" + list.size());
+		}
+        logger.info("list.size():" + tenderList.size());
 	}
 
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
