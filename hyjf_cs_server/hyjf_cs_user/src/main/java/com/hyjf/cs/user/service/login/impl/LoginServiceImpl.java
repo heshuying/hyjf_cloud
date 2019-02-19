@@ -853,26 +853,32 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setPayRepayAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH)+"");
 			String imminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
 			String expireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			/*String mergeImminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String mergeExpireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			String paymentImminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String paymentExpireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			String payRepayImminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String payRepayExpireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";*/
 			// 三合一授权描述
 			result.setMergeAuthDesc(mergeAuthDesc);
-			if("3".equals(result.getMergeAuthExpire())){
+			/*if("3".equals(result.getMergeAuthExpire())){
 				result.setMergeAuthDesc(expireDesc);
 			}else if("2".equals(result.getMergeAuthExpire())){
 				result.setMergeAuthDesc(imminentExpiryDesc);
-			}
+			}*/
 			// 服务费授权描述
 			result.setPaymentAuthDesc(paymentAuthDesc);
-			if("3".equals(result.getPaymentAuthExpire())){
+			/*if("3".equals(result.getPaymentAuthExpire())){
 				result.setPaymentAuthDesc(expireDesc);
 			}else if("2".equals(result.getPaymentAuthExpire())){
 				result.setPaymentAuthDesc(imminentExpiryDesc);
-			}
+			}*/
 			// 二合一授权描述
-			if("3".equals(result.getPayRepayAuthExpire())){
+			/*if("3".equals(result.getPayRepayAuthExpire())){
 				result.setMergeAuthDesc(expireDesc);
 			}else if("2".equals(result.getPayRepayAuthExpire())){
 				result.setMergeAuthDesc(imminentExpiryDesc);
-			}
+			}*/
 			String sign=request.getParameter("sign");
 
 			/*
