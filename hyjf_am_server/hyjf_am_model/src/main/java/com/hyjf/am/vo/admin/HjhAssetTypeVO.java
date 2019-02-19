@@ -15,7 +15,7 @@ public class HjhAssetTypeVO extends BaseVO implements Serializable {
 
     private String instCode;
 
-    private Integer assetType;
+    private String assetType;
 
     private String assetTypeName;
 
@@ -47,11 +47,11 @@ public class HjhAssetTypeVO extends BaseVO implements Serializable {
 		this.instCode = instCode;
 	}
 
-	public Integer getAssetType() {
+	public String getAssetType() {
 		return assetType;
 	}
 
-	public void setAssetType(Integer assetType) {
+	public void setAssetType(String assetType) {
 		this.assetType = assetType;
 	}
 
