@@ -175,9 +175,6 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
 //                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
 //                return map;
 //            }
-            if(null == userRechargeRequestBean.getAcqRes()){
-                userRechargeRequestBean.setAcqRes("");
-            }
 
             // 拼装参数  调用江西银行
             // 同步调用路径
