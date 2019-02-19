@@ -67,39 +67,43 @@ public class AemsUserRegisterController extends BaseUserController {
         String idCard = aemsUserRegisterRequestBean.getIdCard();
         // 真实姓名
         String trueName = aemsUserRegisterRequestBean.getTrueName();
+
         //验证手机号是否已被注册
         UserVO user = aemsUserRegisterService.getUsersByMobile(registerRequest.getMobile());
         if (null != user) {
             logger.info("用户已存在，执行重复注册逻辑判断, user is : {}", user);
-            //result.setStatus(MsgEnum.STATUS_ZC000005.getCode());
-            result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getCode());
-            result.setStatusDesc(MsgEnum.STATUS_ZC000005.getMsg());
-            result.setIsOpenAccount(String.valueOf(user.getBankOpenAccount()));
+
+            // 已开户需校验证件号和真实姓名
             if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
                 UserInfoVO usersInfo = aemsUserRegisterService.getUserInfo(user.getUserId());
                 if (StringUtils.isNotBlank(idCard) && StringUtils.isNotBlank(trueName) &&
                         Objects.equals(usersInfo.getTruename(), trueName) && Objects.equals(usersInfo.getIdcard(), idCard)) {
-                    result.setStatus(AemsErrorCodeConstant.SUCCESS);
                     result.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
                     result.setStatusDesc("注册成功");
-                    return result;
-                } else if (StringUtils.isNotBlank(idCard) && StringUtils.isNotBlank(trueName)){
+
+                    result.setIsOpenAccount(String.valueOf(user.getBankOpenAccount()));
+                    if (user.getIsSetPassword() != null) {
+                        result.setIsSetPassword(String.valueOf(user.getIsSetPassword()));
+                    }
+                    result.setAutoInvesStatus(aemsUserRegisterService.getAutoInvesStatus(user.getUserId()));
+                    result.setUserId(user.getUserId());
+                } else {
                     result.setStatusForResponse(AemsErrorCodeConstant.STATUS_ZC000026);
                     result.setStatusDesc("身份校验不通过");
-                    return result;
                 }
-            } else if (user.getBankOpenAccount() != null) {
-                result.setStatus(AemsErrorCodeConstant.SUCCESS);
-                result.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
-                return result;
+            } else {
+                // 未开户 判断上送证件号和真实姓名即可注册成功，产品设定暂时不保存证件号和真实姓名
+                if(StringUtils.isNotBlank(idCard) && StringUtils.isNotBlank(trueName)){
+                    result.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
+                    result.setStatusDesc("注册成功");
+                } else {
+                    result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getCode());
+                    result.setStatusDesc(MsgEnum.STATUS_ZC000005.getMsg());
+                }
             }
-            if (user.getIsSetPassword() != null) {
-                result.setIsSetPassword(String.valueOf(user.getIsSetPassword()));
-            }
-            result.setAutoInvesStatus(aemsUserRegisterService.getAutoInvesStatus(user.getUserId()));
-            result.setUserId(user.getUserId());
             return result;
         }
+
         //调用注册方法
         user = aemsUserRegisterService.apiRegister(aemsUserRegisterRequestBean, registerRequest, ip);
         if (user != null) {

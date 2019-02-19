@@ -186,7 +186,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("11"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -279,7 +279,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("11"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -367,7 +367,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("17"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -416,7 +416,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("17"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -774,7 +774,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("10"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -842,7 +842,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("41"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -1206,7 +1206,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("1"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
@@ -1333,6 +1333,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			param3.put("replanId", "-1");
 			list.add(param3);
 		}
+        logger.info("list.size():" + list.size());
 	}
 
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
@@ -1422,7 +1423,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		//交易类型描述
 		param.put("transTypeDec", CertTradeTypeEnum.getName("6"));
 		//交易金额
-		param.put("transMoney", accountList.getAmount());
+		param.put("transMoney", accountList.getAmount().toString());
 		//	交易日期
 		param.put("transDate", GetDate.formatDate(accountList.getCreateTime()));
 		//交易人员银行（或三方支付名称）
