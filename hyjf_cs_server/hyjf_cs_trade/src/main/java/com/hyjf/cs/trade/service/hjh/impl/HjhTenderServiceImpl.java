@@ -299,6 +299,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             } else {
                 investInfo.setCouponAvailableCount(0);
             }
+        }else{
+            investInfo.setRecordTotal(0);
+            investInfo.setCouponAvailableCount(0);
         }
 
         BigDecimal earnings = new BigDecimal("0");
