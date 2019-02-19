@@ -10,6 +10,7 @@ import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
+import com.hyjf.cs.trade.controller.api.aems.assetpush.AemsAssetPushController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -76,11 +77,11 @@ public class SignUtil {
             //aems标的详情查询
             AemsBorrowDetailRequestBean bean = (AemsBorrowDetailRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getBorrowNid() + bean.getTimestamp();
-        }else if (("/aems/assetpush/push").equals(methodName)) {
+        }else if ((AemsAssetPushController.AEMS_ASSETPUSH+AemsAssetPushController.PERSON).equals(methodName)) {
             //aems资产推送个人-校验接口
             AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
             sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();
-        } else if (("/aems/assetpush/pushcompany").equals(methodName)) {
+        } else if ((AemsAssetPushController.AEMS_ASSETPUSH+AemsAssetPushController.COMPANY).equals(methodName)) {
             //aems资产推送公司-校验接口
             AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
             sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();
