@@ -2195,7 +2195,7 @@ public interface AmTradeClient {
 
 	String getborrowIdByProductId(Map<String, Object> params);
 
-    List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params);
+    BorrowAndInfoVO getborrowByProductId(String productId);
 
     Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize);
 
