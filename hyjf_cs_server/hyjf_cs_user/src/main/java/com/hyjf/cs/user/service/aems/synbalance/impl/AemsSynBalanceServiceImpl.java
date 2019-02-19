@@ -78,6 +78,12 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
         }
         //用户可用余额
         AccountVO accountUser = getAccount(user.getUserId());
+        if (accountUser == null) {
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000013);
+            logger.info("-------------------未找到用户--------------------");
+            resultBean.setStatusDesc("用户未充值");
+            return resultBean;
+        }
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
         if(systemConfig.isHyjfEnvTest()){
