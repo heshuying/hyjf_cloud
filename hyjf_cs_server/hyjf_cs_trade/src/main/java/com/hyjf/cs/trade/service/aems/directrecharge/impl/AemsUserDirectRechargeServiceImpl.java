@@ -178,11 +178,11 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
 
             // 拼装参数  调用江西银行
             // 同步调用路径
-            String retUrl = systemConfig.getServerHost()+"/hyjf-api/aems/user/directRechargePage/directRechargePageReturn?acqRes="
+            String retUrl = systemConfig.getServerHost()+"/hyjf-api/aems/directRechargePage/directRechargePageReturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + userRechargeRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
-            String bgRetUrl = "http://CS-TRADE/hyjf-api/aems/user/directRechargePage/directRechargePageBgreturn?acqRes="
+            String bgRetUrl = "http://CS-TRADE/hyjf-api/aems/directRechargePage/directRechargePageBgreturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + "&phone="+userRechargeRequestBean.getMobile()+"&callback=" + userRechargeRequestBean.getBgRetUrl().replace("#", "*-*-*");
 
             // 充值订单号
