@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.mobileclient.AppPushManageService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.admin.AppPushManageRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
@@ -20,12 +21,14 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,6 +56,9 @@ public class AppPushManageController extends BaseController {
     @Autowired
     AppPushManageService appPushManageService;
 
+    // 权限名称
+    public static final String PERMISSIONS = "apppushmanage";
+
     /**
      *
      * @param requestBean
@@ -60,6 +66,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "App 推送管理", notes = "App 推送管理")
     @PostMapping(value = "/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AppPushManageVO>> init(@RequestBody AppPushManageRequestBean requestBean) {
 
         AppPushManageResponse pushManageResponse = appPushManageService.getAppPushManageList(requestBean);
@@ -93,6 +100,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "App 推送管理添加", notes = "App 推送管理添加")
     @PostMapping(value = "/add")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<AppPushManageVO> add(@RequestBody AppPushManageRequestBean requestBean){
 
         JSONObject jsonObject = new JSONObject();
@@ -122,6 +130,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "App 推送管理更新", notes = "App 推送管理更新")
     @PostMapping(value = "/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AppPushManageVO> update(@RequestBody AppPushManageRequestBean requestBean){
 
         JSONObject jsonObject = new JSONObject();
@@ -147,6 +156,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "获取单条记录内容", notes = "获取单条记录内容")
     @PostMapping(value = "/getPushManageById")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult getPushManageById(@RequestBody AppPushManageRequestBean requestBean){
 
         // ID必须不为空
@@ -174,6 +184,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "根据ID 更新 单条信息状态", notes = "根据ID 更新 单条信息状态")
     @PostMapping("/updatePushManageStatusById")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult<AppPushManageVO> updatePushManageStatusById(@RequestBody AppPushManageRequestBean requestBean){
 
         // ID必须不为空
@@ -199,6 +210,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "App 推送管理删除", notes = "App 推送管理删除")
     @PostMapping(value = "/delete")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<AppPushManageVO> delete(@RequestBody AppPushManageRequestBean requestBean){
         // ID必须不为空
         if (StringUtils.isEmpty(requestBean.getIds())){

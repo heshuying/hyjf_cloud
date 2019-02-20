@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.controller.config;
 
-import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -79,12 +79,12 @@ public class StzfWhiteConfigController extends BaseController {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());
 		requestBean.setUpdateuser(adminUser.getId());
-		if (requestBean.getInstname() != null) {
+		if (requestBean.getInstName() != null) {
 			// 机构编号
-			requestBean.setInstcode(requestBean.getInstname());
+			requestBean.setInstcode(requestBean.getInstName());
 			HjhInstConfigVO hjhInstConfigVO = stzfWhiteConfigService.selectHjhInstConfig(requestBean.getInstcode());
 			if (hjhInstConfigVO != null) {
-				requestBean.setInstname(hjhInstConfigVO.getInstName());
+				requestBean.setInstName(hjhInstConfigVO.getInstName());
 			}
 		}
 		STZHWhiteListResponse response = stzfWhiteConfigService.insertSTZHWhiteList(requestBean);
@@ -104,12 +104,12 @@ public class StzfWhiteConfigController extends BaseController {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());
 		requestBean.setUpdateuser(adminUser.getId());
-		if (requestBean.getInstname() != null) {
+		if (requestBean.getInstName() != null) {
 			// 机构编号
-			requestBean.setInstcode(requestBean.getInstname());
+			requestBean.setInstcode(requestBean.getInstName());
 			HjhInstConfigVO hjhInstConfigVO = stzfWhiteConfigService.selectHjhInstConfig(requestBean.getInstcode());
 			if (hjhInstConfigVO != null) {
-				requestBean.setInstname(hjhInstConfigVO.getInstName());
+				requestBean.setInstName(hjhInstConfigVO.getInstName());
 			}
 		}
 		STZHWhiteListResponse response = stzfWhiteConfigService.updateSTZHWhiteList(requestBean);

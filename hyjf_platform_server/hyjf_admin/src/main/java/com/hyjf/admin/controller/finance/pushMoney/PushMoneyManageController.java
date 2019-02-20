@@ -167,8 +167,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-//        requestBean.setCurrPage(1);
-////        requestBean.setPageSize(defaultRowMaxCount);
+        requestBean.setCurrPage(1);
+        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.findPushMoneyList(requestBean).getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;

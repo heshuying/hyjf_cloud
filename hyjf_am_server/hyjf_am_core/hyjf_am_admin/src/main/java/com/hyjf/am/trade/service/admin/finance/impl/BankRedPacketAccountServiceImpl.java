@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.mapper.customize.BankMerchantAccountListCustomizeMa
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample;
 import com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,10 +85,10 @@ public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountServ
             criteria.andTransTypeEqualTo(form.getTransType());
         }
         if(null != form.getTimeStartSrch()){
-            criteria.andCreateTimeGreaterThan(form.getTimeStartSrch());
+            criteria.andCreateTimeGreaterThan(GetDate.getDayStartOfSomeDay(form.getTimeStartSrch()));
         }
         if(null != form.getTimeEndSrch()){
-            criteria.andCreateTimeLessThan(form.getTimeEndSrch());
+            criteria.andCreateTimeLessThan(GetDate.getDayEndOfSomeDay(form.getTimeEndSrch()));
         }
         return example;
     }

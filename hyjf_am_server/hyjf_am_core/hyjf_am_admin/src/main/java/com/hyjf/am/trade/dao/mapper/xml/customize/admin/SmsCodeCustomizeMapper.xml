@@ -10,7 +10,7 @@
 		hyjf_user.ht_user u
 		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
 		<where>
-			<if test="open_account!=3" >
+			<if test="open_account != null and open_account != 3" >
 				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
@@ -38,7 +38,7 @@
 		hyjf_user.ht_user u
 		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
 		<where>
-			<if test="open_account!=3" >
+			<if test="open_account != null and open_account != 3" >
 				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
