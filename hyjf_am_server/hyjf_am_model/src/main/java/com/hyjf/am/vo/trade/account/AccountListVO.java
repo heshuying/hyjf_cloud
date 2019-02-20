@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class AccountListVO extends BaseVO implements Serializable {
     private Integer id;
@@ -38,7 +39,12 @@ public class AccountListVO extends BaseVO implements Serializable {
 
     private String remark;
 
-    private Integer createTime;
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    private Date createTime;
 
     private String operator;
 
@@ -228,11 +234,11 @@ public class AccountListVO extends BaseVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

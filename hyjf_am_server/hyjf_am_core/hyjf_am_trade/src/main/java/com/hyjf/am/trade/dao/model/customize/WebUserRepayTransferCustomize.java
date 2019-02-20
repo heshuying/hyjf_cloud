@@ -1,11 +1,8 @@
 package com.hyjf.am.trade.dao.model.customize;
 
-import com.hyjf.common.paginator.Paginator;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Author : huanghui

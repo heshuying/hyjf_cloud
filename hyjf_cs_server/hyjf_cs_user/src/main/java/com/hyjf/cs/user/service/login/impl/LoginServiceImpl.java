@@ -42,7 +42,6 @@ import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -607,21 +606,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String jxBankOpenUrl = "";
 			// 非企业用户开户地址
 			if (userType != 1) {
-				if (StringUtils.isNotEmpty(result.getMobile())) {
-					// 开户url
-					result.setHuifuOpenAccountUrl("");
-					// 江西银行开户url
-					jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request) + "&mobile=" + result.getMobile();
-					result.setOpenAccountUrl(jxBankOpenUrl);
-					logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
-				} else {
-					// 开户url
-					result.setHuifuOpenAccountUrl("");
-					// 江西银行开户url
-					jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request);
-					result.setOpenAccountUrl(jxBankOpenUrl);
-					logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
-				}
+				// 开户url
+				result.setHuifuOpenAccountUrl("");
+				// 江西银行开户url
+				jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request);
+				result.setOpenAccountUrl(jxBankOpenUrl);
 			}
 			// 企业用户开户地址
 			else {
@@ -853,26 +842,32 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setPayRepayAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH)+"");
 			String imminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
 			String expireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			/*String mergeImminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String mergeExpireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			String paymentImminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String paymentExpireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
+			String payRepayImminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
+			String payRepayExpireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";*/
 			// 三合一授权描述
 			result.setMergeAuthDesc(mergeAuthDesc);
-			if("3".equals(result.getMergeAuthExpire())){
+			/*if("3".equals(result.getMergeAuthExpire())){
 				result.setMergeAuthDesc(expireDesc);
 			}else if("2".equals(result.getMergeAuthExpire())){
 				result.setMergeAuthDesc(imminentExpiryDesc);
-			}
+			}*/
 			// 服务费授权描述
 			result.setPaymentAuthDesc(paymentAuthDesc);
-			if("3".equals(result.getPaymentAuthExpire())){
+			/*if("3".equals(result.getPaymentAuthExpire())){
 				result.setPaymentAuthDesc(expireDesc);
 			}else if("2".equals(result.getPaymentAuthExpire())){
 				result.setPaymentAuthDesc(imminentExpiryDesc);
-			}
+			}*/
 			// 二合一授权描述
-			if("3".equals(result.getPayRepayAuthExpire())){
+			/*if("3".equals(result.getPayRepayAuthExpire())){
 				result.setMergeAuthDesc(expireDesc);
 			}else if("2".equals(result.getPayRepayAuthExpire())){
 				result.setMergeAuthDesc(imminentExpiryDesc);
-			}
+			}*/
 			String sign=request.getParameter("sign");
 
 			/*

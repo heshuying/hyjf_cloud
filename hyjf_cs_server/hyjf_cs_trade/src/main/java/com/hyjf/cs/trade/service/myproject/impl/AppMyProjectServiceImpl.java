@@ -65,20 +65,20 @@ import java.util.*;
 @Service
 public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements AppMyProjectService {
 
-    public static final String  COUPON_CONFIG_URL = "http://AM-TRADE/am-trade/coupon/getborrowtendercpnByUserIdAndOrderId/";
+    public static final String COUPON_CONFIG_URL = "http://AM-TRADE/am-trade/coupon/getborrowtendercpnByUserIdAndOrderId/";
 
     public static final String BORROW_ACCOUNT_URL = "http://AM-TRADE/am-trade/borrow/getBorrowAccountList";
 
     public static final String BORROW_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/recoverplan/getBorrowRecoverPlanListByTenderNid";
 
-    public static final String  COUPON_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList";
+    public static final String COUPON_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList";
 
     @Autowired
     private CommonProducer commonProducer;
 
     @Autowired
     private BaseClient baseClient;
-    
+
     @Autowired
     private SystemConfig systemConfig;
 
@@ -93,12 +93,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     //放款/承接时间(2018-3-28法大大上线时间）
     private static final int ADD_TIME328 = 1522195200;
-    
+
     /**
      * 折让率格式
      */
     private static String regex = "\\d{1}\\.\\d{1}";
-	/**
+    /**
      * 折让率范围开始
      */
     private static float creditDiscountStart = 0.5f;
@@ -106,7 +106,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * 折让率范围结束
      */
     private static float creditDiscountEnd = 2.0f;
-    
+
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
 
     private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
@@ -159,12 +159,13 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 查询我的散标详情
+     *
      * @author zhangyk
      * @date 2018/7/31 9:32
      */
     @Override
     public JSONObject getMyProjectDetail(String borrowNid, HttpServletRequest request, String userId) {
-        CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_BLANK, "标的编号");
+        CheckUtil.check(StringUtils.isNotBlank(borrowNid), MsgEnum.ERR_OBJECT_BLANK, "标的编号");
         String orderId = request.getParameter("orderId");
         // 优惠券类型，0代表本金出借
         String couponType = request.getParameter("couponType");
@@ -185,7 +186,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         jsonObject.put("couponType", "");
 
         /*验证用户是否登录*/
-        if (StringUtils.isBlank(userId)){
+        if (StringUtils.isBlank(userId)) {
             jsonObject.put("status", BaseResultBeanFrontEnd.FAIL);
             jsonObject.put("statusDesc", "请登录用户");
             jsonObject.put("projectDetail", new ArrayList<>());
@@ -211,14 +212,14 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         List<BorrowProjectDetailBean> detailBeansList = new ArrayList<>();
         List<BorrowDetailBean> borrowBeansList = new ArrayList<>();
         // 如果加息的展示加息部分
-        if (isIncrease != null && "1".equals(isIncrease)) {
+        if (isIncrease != null && "1" .equals(isIncrease)) {
             preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowExtraYield() + "%");
-        }else{
+        } else {
             preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowApr() + "%");
         }
 
         //preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowApr() + "%");
-        if ("endday".equals(borrow.getBorrowStyle())) {
+        if ("endday" .equals(borrow.getBorrowStyle())) {
             preckCredit(borrowBeansList, "项目期限", borrow.getBorrowPeriod() + "天");
         } else {
             preckCredit(borrowBeansList, "项目期限", borrow.getBorrowPeriod() + "个月");
@@ -229,34 +230,34 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         // 风控信息
         BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
-        Map<String,String> riskControl = new HashMap<>();
-        if (borrowInfoWithBLOBsVO != null){
-            riskControl.put("controlMeasures",borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n",""));
-            riskControl.put("controlMort",borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n",""));
-            riskControl.put("partner",borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
-            riskControl.put("agencyIntroduction",borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
-            riskControl.put("operatingProcess",borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
+        Map<String, String> riskControl = new HashMap<>();
+        if (borrowInfoWithBLOBsVO != null) {
+            riskControl.put("controlMeasures", borrowInfoWithBLOBsVO.getBorrowMeasuresMea() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMea().replace("\r\n", ""));
+            riskControl.put("controlMort", borrowInfoWithBLOBsVO.getBorrowMeasuresMort() == null ? "" : borrowInfoWithBLOBsVO.getBorrowMeasuresMort().replace("\r\n", ""));
+            riskControl.put("partner", borrowInfoWithBLOBsVO.getBorrowMeasuresInstit());
+            riskControl.put("agencyIntroduction", borrowInfoWithBLOBsVO.getBorrowCompanyInstruction());
+            riskControl.put("operatingProcess", borrowInfoWithBLOBsVO.getBorrowOperatingProcess());
         }
         jsonObject.put("riskControl", riskControl);
 
 
         // 加息收益
-        if (isIncrease != null && "1".equals(isIncrease)) {
+        if (isIncrease != null && "1" .equals(isIncrease)) {
             //List<BorrowDetailBean> borrowBeansList3 = new ArrayList<>();
-            IncreaseInterestInvestVO inc =  null;
+            IncreaseInterestInvestVO inc = null;
 
             // 还款日历
-            if (isCalendar != null && "1".equals(isCalendar)) {
+            if (isCalendar != null && "1" .equals(isCalendar)) {
                 inc = amTradeClient.getIncreaseInterestInvestByTenderNid(orderId);
-            }else{
+            } else {
                 inc = amTradeClient.getIncreaseInterestInvestByOrdId(orderId);
             }
 
             if (inc != null) {
                 // 2. 出借信息 ( 有真实资金，显示出借信息 )
                 this.setTenderInfoToResult(detailBeansList, inc.getTenderNid());
-                jsonObject.put("couponType", "加息"+borrow.getBorrowExtraYield() + "%");
-                jsonObject.put("couponTypeCode","4");
+                jsonObject.put("couponType", "加息" + borrow.getBorrowExtraYield() + "%");
+                jsonObject.put("couponTypeCode", "4");
                /* jsonObject.put("couponType", "加息"+inc.getBorrowExtraYield()+"%");
                 preckCredit(borrowBeansList3, "待收利息", CommonUtils.formatAmount(inc.getRepayInterestWait()) + "元");
                 preckCredit(borrowBeansList3, "已收利息", CommonUtils.formatAmount(inc.getRepayInterestYes()) + "元");
@@ -265,15 +266,15 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 // 3.回款计划  加息的  二期做
                 /*this.setIncreaseRepayPlanByStagesToResult(jsonObject, orderId);*/
             }
-        }else if (!"0".equals(couponType)) {
+        } else if (!"0" .equals(couponType)) {
             // 区别本金出借和优惠券出借，返回值不同
-            Map<String,Object> params = new HashMap<>();
-            params.put("userId",userId);
-            params.put("orderId",orderId);
-            AppCouponInfoResponse response = baseClient.postExe(COUPON_CONFIG_URL,params,AppCouponInfoResponse.class);//amTradeClient.getCouponfigByUserIdAndBorrowNid(userId, orderId);
+            Map<String, Object> params = new HashMap<>();
+            params.put("userId", userId);
+            params.put("orderId", orderId);
+            AppCouponInfoResponse response = baseClient.postExe(COUPON_CONFIG_URL, params, AppCouponInfoResponse.class);//amTradeClient.getCouponfigByUserIdAndBorrowNid(userId, orderId);
             AppCouponInfoCustomizeVO appCouponInfoCustomize = response.getResult();
             if (appCouponInfoCustomize != null) {
-                if(StringUtils.isNotBlank(appCouponInfoCustomize.getRealOrderId())){
+                if (StringUtils.isNotBlank(appCouponInfoCustomize.getRealOrderId())) {
                     // 2. 出借信息 ( 有真实资金，显示出借信息 )
                     this.setTenderInfoToResult(detailBeansList, appCouponInfoCustomize.getRealOrderId());
                 }
@@ -281,21 +282,21 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 switch (appCouponInfoCustomize.getCouponType()) {
                     case "1":
                         jsonObject.put("couponType", "体验金");
-                        jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
+                        jsonObject.put("couponTypeCode", appCouponInfoCustomize.getCouponType());
                         preckCredit(borrowBeansList2, "优惠券面额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getCouponQuota())) + "元");
                         preckCredit(borrowBeansList2, "优惠券类型", "体验金");
                         preckCredit(borrowBeansList2, "待收利息", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait())) + "元");
                         break;
                     case "2":
                         jsonObject.put("couponType", "加息券");
-                        jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
+                        jsonObject.put("couponTypeCode", appCouponInfoCustomize.getCouponType());
                         preckCredit(borrowBeansList2, "优惠券面额", appCouponInfoCustomize.getCouponQuota() + "%");
                         preckCredit(borrowBeansList2, "优惠券类型", "加息券");
                         preckCredit(borrowBeansList2, "待收利息", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getRecoverAccountInterestWait())) + "元");
                         break;
                     case "3":
                         jsonObject.put("couponType", "代金券");
-                        jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
+                        jsonObject.put("couponTypeCode", appCouponInfoCustomize.getCouponType());
                         preckCredit(borrowBeansList2, "优惠券面额", CommonUtils.formatAmount(new BigDecimal(appCouponInfoCustomize.getCouponQuota())) + "元");
                         preckCredit(borrowBeansList2, "优惠券类型", "代金券");
                         preckCredit(borrowBeansList2, "待收利息",
@@ -313,7 +314,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 logger.error("未查询到优惠券信息...");
                 preck(detailBeansList, "优惠券信息", new ArrayList<BorrowDetailBean>());
                 jsonObject.put("couponType", "体验金");
-                jsonObject.put("couponTypeCode",appCouponInfoCustomize.getCouponType());
+                jsonObject.put("couponTypeCode", appCouponInfoCustomize.getCouponType());
             }
 
             // 3. 优惠券回款计划
@@ -321,11 +322,11 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         } else {
             // 这里要区别是普通出借 还是 承接债转
             logger.info("债转编号： {}, 空代表普通出借，否则为承接债转...,出借订单号: {}", assignNid, orderId);
-            if(StringUtils.isBlank(assignNid)){
+            if (StringUtils.isBlank(assignNid)) {
                 // 2. 出借信息(本金出借)
                 this.setTenderInfoToResult(detailBeansList, orderId);
 
-                if(CommonUtils.isStageRepay(borrow.getBorrowStyle())){
+                if (CommonUtils.isStageRepay(borrow.getBorrowStyle())) {
                     // 3.回款计划(本金出借 - 分期)
                     this.setRepayPlanByStagesToResult(jsonObject, orderId);
                 } else {
@@ -335,9 +336,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             } else {
                 List<CreditTenderVO> list = amTradeClient.selectCreditTender(assignNid);
                 CreditTenderVO creditTender;
-                if (CollectionUtils.isEmpty(list)){
+                if (CollectionUtils.isEmpty(list)) {
                     creditTender = null;
-                }else {
+                } else {
                     creditTender = list.get(0);
                 }
                 if (creditTender != null) {
@@ -358,8 +359,8 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         jsonObject.put("projectDetail", detailBeansList);
         // 4. 转让信息
         if (orderId != null) {
-            if (isIncrease == null || "".equals(isIncrease)) {
-                List<BorrowCreditVO> borrowCreditList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId,userId);//projectService.getBorrowList(orderId,userId);
+            if (isIncrease == null || "" .equals(isIncrease)) {
+                List<BorrowCreditVO> borrowCreditList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId, userId);//projectService.getBorrowList(orderId,userId);
                 JSONArray jsonArray = new JSONArray();
                 if (!CollectionUtils.isEmpty(borrowCreditList)) {
                     for (BorrowCreditVO borrowCredit : borrowCreditList) {
@@ -380,50 +381,50 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     }
                     jsonObject.put("transferInfo", jsonArray);
                 }
-            }else{
+            } else {
                 jsonObject.put("transferInfo", null);
             }
         } else {
             jsonObject.put("transferInfo", null);
         }
         //增加返回值，用于前端判断调到那个协议
-        if(borrow.getType().equalsIgnoreCase("13")){
+        if (borrow.getType().equalsIgnoreCase("13")) {
             //如果是13表示是融通宝，调到融通宝的相关协议
             jsonObject.put("isPreferred", true);
-            if(borrow.getBorrowPublisher().equalsIgnoreCase("嘉诺")){
+            if (borrow.getBorrowPublisher().equalsIgnoreCase("嘉诺")) {
                 jsonObject.put("publisher", 2);
-            }else{
+            } else {
                 jsonObject.put("publisher", 1);
             }
-        }else{
+        } else {
             //调到居间服务协议
             jsonObject.put("isPreferred", false);
         }
         int addTime = ADD_TIME;
-        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(tenderNid);//居间协议
+        List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(tenderNid);//居间协议
         BorrowRecoverVO borrowRecoverVO = amTradeClient.selectBorrowRecoverByNid(tenderNid);
-        if(borrowRecoverVO != null){
-            addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+        if (borrowRecoverVO != null) {
+            addTime = (borrowRecoverVO.getCreateTime() == null ? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
         }
-        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+        if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
             TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
             Integer fddStatus = tenderAgreement.getStatus();
             //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
             //System.out.println("计划详情的接口参数******************1法大大协议状态："+tenderAgreement.getStatus());
-            if(fddStatus.equals(3)){
+            if (fddStatus.equals(3)) {
                 jsonObject.put("fddStatus", 1);
-            }else {
+            } else {
                 //隐藏下载按钮
                 //System.out.println("计划详情的接口参数******************2法大大协议状态：0");
                 jsonObject.put("fddStatus", 2);
             }
-        }else {
+        } else {
             /**
              * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
              * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
              * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
              */
-            if (addTime<ADD_TIME328) {
+            if (addTime < ADD_TIME328) {
                 //下载老版本协议
                 jsonObject.put("fddStatus", 1);
             } else {
@@ -432,14 +433,13 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
         }
 
-        jsonObject.put(CustomConstants.APP_STATUS,BaseResultBeanFrontEnd.SUCCESS);
-        jsonObject.put(CustomConstants.APP_STATUS_DESC,BaseResultBeanFrontEnd.SUCCESS_MSG);
+        jsonObject.put(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+        jsonObject.put(CustomConstants.APP_STATUS_DESC, BaseResultBeanFrontEnd.SUCCESS_MSG);
         return jsonObject;
     }
 
 
-
-    private void setCreditUrlValue(JSONObject result,CreditTenderVO creditTender){
+    private void setCreditUrlValue(JSONObject result, CreditTenderVO creditTender) {
         result.put("isCredit", true);
         // 跳债转协议需要的字段
         // 原标nid
@@ -455,6 +455,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 债转出借还款计划
+     *
      * @param result
      * @param
      * @param
@@ -481,6 +482,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 出借信息 - 承接标
+     *
      * @param detailBeansList
      * @param
      */
@@ -492,12 +494,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             preckCredit(borrowBeansList1, "出借本金", CommonUtils.formatAmount(creditTender.getAssignCapital()) + "元");
             preckCredit(borrowBeansList1, "已收本息", CommonUtils.formatAmount(creditRepay.getAssignRepayAccount()) + "元");
             preckCredit(borrowBeansList1, "待收本金", CommonUtils.formatAmount(creditRepay.getAssignCapital().subtract(creditRepay.getAssignRepayCapital())) + "元");
-            if (creditRepay.getStatus() != 0){//已回款
+            if (creditRepay.getStatus() != 0) {//已回款
                 preckCredit(borrowBeansList1, "待收利息", "0.00元");
             } else {
                 preckCredit(borrowBeansList1, "待收利息", CommonUtils.formatAmount(creditTender.getAssignInterest()) + "元");
             }
-            preckCredit(borrowBeansList1, "出借时间", GetDate.date2Str(creditTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+            preckCredit(borrowBeansList1, "出借时间", GetDate.date2Str(creditTender.getCreateTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             preck(detailBeansList, "出借信息", borrowBeansList1);
         } else {
             preck(detailBeansList, "出借信息", new ArrayList<BorrowDetailBean>());
@@ -506,6 +508,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 本金出借还款计划 - 不分期
+     *
      * @param result
      * @param
      */
@@ -530,11 +533,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 本金出借还款计划 - 分期
+     *
      * @param result
      * @param
      */
     private void setRepayPlanByStagesToResult(JSONObject result, String orderId) {
-        BorrowRecoverPlanResponse response = baseClient.getExe(BORROW_RECOVER_PLAN_URL + "/" + orderId,BorrowRecoverPlanResponse.class);//projectService.selectBorrowRecoverPlanByNid(orderId);
+        BorrowRecoverPlanResponse response = baseClient.getExe(BORROW_RECOVER_PLAN_URL + "/" + orderId, BorrowRecoverPlanResponse.class);//projectService.selectBorrowRecoverPlanByNid(orderId);
         List<BorrowRecoverPlanVO> recoverPlanList = response.getResultList();
         JSONArray jsonArray = new JSONArray();
         if (!CollectionUtils.isEmpty(recoverPlanList)) {
@@ -562,7 +566,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @param orderId
      */
     private void setCouponRepayPlanToResult(JSONObject result, String orderId) {
-        CouponRepayResponse response = baseClient.getExe(COUPON_RECOVER_PLAN_URL + "/" + orderId,CouponRepayResponse.class);
+        CouponRepayResponse response = baseClient.getExe(COUPON_RECOVER_PLAN_URL + "/" + orderId, CouponRepayResponse.class);
         List<CurrentHoldRepayMentPlanListVO> repaymentPlanList = response.getResultList();
         JSONArray jsonArray = new JSONArray();
         if (!CollectionUtils.isEmpty(repaymentPlanList)) {
@@ -593,6 +597,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 出借信息
+     *
      * @param detailBeansList
      * @param orderId
      */
@@ -606,7 +611,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             preckCredit(borrowBeansList1, "出借本金", CommonUtils.formatAmount(borrowTender.getAccount()) + "元");
             preckCredit(borrowBeansList1, "已收本息", CommonUtils.formatAmount(borrowTender.getRecoverAccountYes()) + "元");
             String borrowNid = borrowTender.getBorrowNid();
-            BorrowAccountResponse response = baseClient.getExe(BORROW_ACCOUNT_URL + "/" +borrowNid ,BorrowAccountResponse.class);
+            BorrowAccountResponse response = baseClient.getExe(BORROW_ACCOUNT_URL + "/" + borrowNid, BorrowAccountResponse.class);
             List<AccountBorrowVO> list = response.getResultList();
 
             if (CollectionUtils.isEmpty(list)) {
@@ -618,7 +623,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
             if (borrowTender.getCreateTime() != null) {
-                preckCredit(borrowBeansList1, "出借时间", GetDate.date2Str(borrowTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm")));
+                preckCredit(borrowBeansList1, "出借时间", GetDate.date2Str(borrowTender.getCreateTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm")));
             } else {
                 preckCredit(borrowBeansList1, "出借时间", "");
             }
@@ -632,12 +637,13 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 封装TenderCreditBorrowBean对象，放入list中
+     *
      * @param borrowBeansList
-     * @param key 字段名
-     * @param val 字段值
+     * @param key             字段名
+     * @param val             字段值
      */
-    private void preckCredit(List<BorrowDetailBean> borrowBeansList,String key, String val){
-        if(!StringUtils.isEmpty(key)){
+    private void preckCredit(List<BorrowDetailBean> borrowBeansList, String key, String val) {
+        if (!StringUtils.isEmpty(key)) {
             BorrowDetailBean borrowBean = new BorrowDetailBean();
             borrowBean.setId("");
             borrowBean.setKey(key);
@@ -647,7 +653,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
     }
 
 
-    private void preck(List<BorrowProjectDetailBean> jsonObject,String keyName,List<BorrowDetailBean> msg){
+    private void preck(List<BorrowProjectDetailBean> jsonObject, String keyName, List<BorrowDetailBean> msg) {
         BorrowProjectDetailBean detailBean = new BorrowProjectDetailBean();
         detailBean.setId("");
         detailBean.setTitle(keyName);
@@ -659,52 +665,53 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @author libin
      * App端:发送短信验证码(ajax请求)短信验证码数据保存(取自web)
      */
-	@Override
-	public AppResult sendCreditCode(HttpServletRequest request, Integer userId) {
-		UserVO user = amUserClient.findUserById(userId);
-        if(user.getMobile()==null){
+    @Override
+    public AppResult sendCreditCode(HttpServletRequest request, Integer userId) {
+        UserVO user = amUserClient.findUserById(userId);
+        if (user.getMobile() == null) {
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
         AppResult result = new AppResult();
-        logger.info("开始发送验证码。。。。。userId:{},mobile:{},platform:{}",user.getUserId(),user.getMobile(),request.getParameter("platform"));
-        myCreditListService.sendCode(userId,GetCilentIP.getIpAddr(request),user.getMobile(),request.getParameter("platform"));
-		return result;
-	}
+        logger.info("开始发送验证码。。。。。userId:{},mobile:{},platform:{}", user.getUserId(), user.getMobile(), request.getParameter("platform"));
+        myCreditListService.sendCode(userId, GetCilentIP.getIpAddr(request), user.getMobile(), request.getParameter("platform"));
+        return result;
+    }
 
-	/**
+    /**
      * 债转提交保存
-     * @author libin
+     *
      * @param request
      * @param userId
      * @return
+     * @author libin
      */
-	@Override
-	public JSONObject saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
-	    JSONObject result = new JSONObject();
+    @Override
+    public JSONObject saveTenderToCredit(TenderBorrowCreditCustomize request, Integer userId) {
+        JSONObject result = new JSONObject();
         String accountStr = "{account}";  //转让本金替换字符
         String priceStr = "{price}";    //转让价格替换字符
         String endTimeStr = "{endTime}";  //结束时间替换字符
         result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
-        result.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
+        result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         // 检查是否能债转
         String resultUrl = systemConfig.getAppFrontHost() + "/user/borrow/{borrowNid}/transfer/result/{state}?status={status}&statusDesc={statusDesc}&endTime={endTime}&price={price}&account={account}";
         try {
-            try{
+            try {
                 request.setTelcode(request.getCode());
-                myCreditListService.checkCanCredit(request,userId);
-                myCreditListService.checkTenderToCreditParam(request,userId);
+                myCreditListService.checkCanCredit(request, userId);
+                myCreditListService.checkTenderToCreditParam(request, userId);
                 // 债转保存
                 myCreditListService.insertTenderToCredit(userId, request);
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid())
-                        .replace("{state}","success")
-                        .replace("{status}",CustomConstants.APP_STATUS_SUCCESS)
-                        .replace("{statusDesc}",URLEncoder.encode(CustomConstants.APP_STATUS_DESC_SUCCESS,"utf-8"))
-                        .replace(accountStr,URLEncoder.encode(request.getCreditCapital(),"utf-8"))
-                        .replace(priceStr,URLEncoder.encode(request.getCreditPrice(),"utf-8"))
-                        .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoStrYYYYMMDD(request.getCreditEndTime()),"utf-8"));
+                resultUrl = resultUrl.replace("{borrowNid}", request.getBorrowNid())
+                        .replace("{state}", "success")
+                        .replace("{status}", CustomConstants.APP_STATUS_SUCCESS)
+                        .replace("{statusDesc}", URLEncoder.encode(CustomConstants.APP_STATUS_DESC_SUCCESS, "utf-8"))
+                        .replace(accountStr, URLEncoder.encode(request.getCreditCapital(), "utf-8"))
+                        .replace(priceStr, URLEncoder.encode(request.getCreditPrice(), "utf-8"))
+                        .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoStrYYYYMMDD(request.getCreditEndTime()), "utf-8"));
                 // 业务手动抛出的异常
                 // 保存成功后,发送神策统计数据
-                if(StringUtils.isNotEmpty(request.getPresetProps())){
+                if (StringUtils.isNotEmpty(request.getPresetProps())) {
                     SensorsDataBean sensorsDataBean = new SensorsDataBean();
                     // 将json串转换成Bean
                     try {
@@ -721,36 +728,47 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     }
                 }
 
-            }catch (CheckException e){
+                // add 合规数据上报 埋点 liubin 20181122 start
+                // 推送数据到MQ 转让 散
+                JSONObject params = new JSONObject();
+                params.put("creditNid", request.getCreditNid());
+                params.put("flag", "1"); //1（散）2（智投）
+                params.put("status", "0"); //0转让
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.TRANSFER_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+                // add 合规数据上报 埋点 liubin 20181122 end
+
+            } catch (CheckException e) {
                 result.put(CustomConstants.APP_STATUS, e.getCode());
-                result.put(CustomConstants.APP_STATUS_DESC,e.getMessage());
-                resultUrl = resultUrl.replace("{borrowNid}",request.getBorrowNid())
+                result.put(CustomConstants.APP_STATUS_DESC, e.getMessage());
+                resultUrl = resultUrl.replace("{borrowNid}", request.getBorrowNid())
                         .replace("{state}", "failed")
-                        .replace("{status}",e.getCode())
-                        .replace("{statusDesc}",URLEncoder.encode(e.getMessage(),"utf-8"))
-                        .replace(accountStr,"")
-                        .replace(priceStr,"")
-                        .replace(endTimeStr,"");
+                        .replace("{status}", e.getCode())
+                        .replace("{statusDesc}", URLEncoder.encode(e.getMessage(), "utf-8"))
+                        .replace(accountStr, "")
+                        .replace(priceStr, "")
+                        .replace(endTimeStr, "");
             }
             //  未处理的异常
-        }catch (Exception e){
-            result.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_FAIL);
-            result.put(CustomConstants.APP_STATUS_DESC,MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
-            resultUrl =  resultUrl.replace("{borrowNid}",request.getBorrowNid())
+        } catch (Exception e) {
+            result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
+            result.put(CustomConstants.APP_STATUS_DESC, MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg());
+            resultUrl = resultUrl.replace("{borrowNid}", request.getBorrowNid())
                     .replace("{state}", "failed")
-                    .replace("{status}",CustomConstants.APP_STATUS_FAIL)
-                    .replace("{statusDesc}",MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg())
-                    .replace(accountStr,"")
-                    .replace(priceStr,"")
-                    .replace(endTimeStr,"");
+                    .replace("{status}", CustomConstants.APP_STATUS_FAIL)
+                    .replace("{statusDesc}", MsgEnum.ERR_SYSTEM_UNUSUAL.getMsg())
+                    .replace(accountStr, "")
+                    .replace(priceStr, "")
+                    .replace(endTimeStr, "");
         }
-        result.put("resultUrl",resultUrl);
+        result.put("resultUrl", resultUrl);
         return result;
-	}
+    }
 
 
     /**
      * 债转各项金额计算
+     *
      * @param borrow
      * @param borrowRecover
      * @param creditDiscount
@@ -880,6 +898,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 我的债转详情
+     *
      * @author zhangyk
      * @date 2018/8/30 13:56
      */
@@ -891,16 +910,16 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         String isCalendar = request.getParameter("isCalendar");
 
         JSONObject jsonObject = new JSONObject();
-        CheckUtil.check(StringUtils.isNotBlank(transfId),MsgEnum.ERR_OBJECT_REQUIRED,"债转编号");
+        CheckUtil.check(StringUtils.isNotBlank(transfId), MsgEnum.ERR_OBJECT_REQUIRED, "债转编号");
         List<BorrowCreditVO> borrowCreditList = amTradeClient.getBorrowCreditListByCreditNid(transfId);
-        BorrowCreditVO borrowCreditVO =null;
-        if (!CollectionUtils.isEmpty(borrowCreditList)){
+        BorrowCreditVO borrowCreditVO = null;
+        if (!CollectionUtils.isEmpty(borrowCreditList)) {
             borrowCreditVO = borrowCreditList.get(0);
         }
-        if (borrowCreditVO == null){
+        if (borrowCreditVO == null) {
             jsonObject.put("status", "99");
             jsonObject.put("statusDesc", "债转信息不存在");
-            jsonObject.put("projectName","");
+            jsonObject.put("projectName", "");
             jsonObject.put("projectDetail", new ArrayList<>());
             jsonObject.put("repayPlan", new ArrayList<>());
             jsonObject.put("transferInfo", null);
@@ -912,7 +931,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         // 原标id
         String borrowNid = borrowCreditVO.getBidNid();
 
-       ProjectCustomeDetailVO borrowDetail = amTradeClient.selectProjectDetail(borrowNid);
+        ProjectCustomeDetailVO borrowDetail = amTradeClient.selectProjectDetail(borrowNid);
 
         /**
          * 验证用户是否登录
@@ -920,7 +939,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         if (null == userId) {
             jsonObject.put("status", "99");
             jsonObject.put("statusDesc", "请登录用户");
-            jsonObject.put("projectName",borrowDetail==null?"":borrowDetail.getBorrowName());
+            jsonObject.put("projectName", borrowDetail == null ? "" : borrowDetail.getBorrowName());
             jsonObject.put("projectDetail", new ArrayList<>());
             jsonObject.put("repayPlan", new ArrayList<>());
             jsonObject.put("transferInfo", null);
@@ -931,10 +950,10 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         /**
          * 如果标不存在，则返回
          */
-        if(borrowDetail == null){
+        if (borrowDetail == null) {
             jsonObject.put("status", "99");
             jsonObject.put("statusDesc", "未查到标的信息");
-            jsonObject.put("projectName","");
+            jsonObject.put("projectName", "");
             jsonObject.put("projectDetail", new ArrayList<>());
             jsonObject.put("repayPlan", new ArrayList<>());
             jsonObject.put("transferInfo", null);
@@ -946,7 +965,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         List<BorrowTenderVO> borrowTenderList = amTradeClient.getBorrowTenderListByNid(orderId); //projectService.selectBorrowTenderByNid(orderId);
         BorrowTenderVO borrowTenderVO = null;
-        if (!CollectionUtils.isEmpty(borrowTenderList)){
+        if (!CollectionUtils.isEmpty(borrowTenderList)) {
             borrowTenderVO = borrowTenderList.get(0);
         }
         // 1. 资产信息
@@ -954,45 +973,45 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         List<BorrowDetailBean> borrowBeansList = new ArrayList<>();
 
         // 如果加息的展示加息部分
-        if (isIncrease != null && "1".equals(isIncrease)) {
+        if (isIncrease != null && "1" .equals(isIncrease)) {
             preckCredit(borrowBeansList, "历史年回报率", borrowDetail.getBorrowExtraYield() + "%");
-        }else{
+        } else {
             preckCredit(borrowBeansList, "历史年回报率", borrowDetail.getBorrowApr() + "%");
         }
 
 
         //preckCredit(borrowBeansList, "历史年回报率", borrowDetail.getBorrowApr()+"%");
-        if("endday".equals(borrowDetail.getBorrowStyle())){
+        if ("endday" .equals(borrowDetail.getBorrowStyle())) {
             preckCredit(borrowBeansList, "项目期限", borrowDetail.getBorrowPeriod() + "天");
-        }else{
+        } else {
             preckCredit(borrowBeansList, "项目期限", borrowDetail.getBorrowPeriod() + "个月");
         }
         preckCredit(borrowBeansList, "回款方式", borrowDetail.getRepayStyle());
 
         preck(detailBeansList, "资产信息", borrowBeansList);
 
-        if(borrowTenderVO != null ){
+        if (borrowTenderVO != null) {
 
             List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
             preckCredit(borrowBeansList1, "出借本金", DF_FOR_VIEW.format(borrowTenderVO.getAccount()) + "元");
             preckCredit(borrowBeansList1, "已收本息", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountYes()) + "元");
             preckCredit(borrowBeansList1, "待收本金", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountCapitalWait()) + "元");
             preckCredit(borrowBeansList1, "待收本息", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountInterestWait()) + "元");
-            if(borrowTenderVO.getCreateTime() != null){
-                String strDate = GetDate.date2Str(borrowTenderVO.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                logger.info("出借时间:"+strDate);
+            if (borrowTenderVO.getCreateTime() != null) {
+                String strDate = GetDate.date2Str(borrowTenderVO.getCreateTime(), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                logger.info("出借时间:" + strDate);
                 preckCredit(borrowBeansList1, "出借时间", strDate);
-            }else{
+            } else {
                 preckCredit(borrowBeansList1, "出借时间", "");
             }
 
             preck(detailBeansList, "出借信息", borrowBeansList1);
-        }else {
+        } else {
             preck(detailBeansList, "出借信息", new ArrayList<BorrowDetailBean>());
         }
         jsonObject.put("projectDetail", detailBeansList);
-        if(borrowCreditVO.getCreditCapital().compareTo(borrowCreditVO.getCreditCapitalAssigned())>0){
-            if(CommonUtils.isStageRepay(borrowDetail.getBorrowStyle())){
+        if (borrowCreditVO.getCreditCapital().compareTo(borrowCreditVO.getCreditCapitalAssigned()) > 0) {
+            if (CommonUtils.isStageRepay(borrowDetail.getBorrowStyle())) {
                 // 3.回款计划(本金出借 - 分期)
                 this.setRepayPlanByStagesToResult(jsonObject, orderId);
             } else {
@@ -1001,31 +1020,31 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
         }
         List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(orderId);//居间协议
-        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+        if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
             TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
             Integer fddStatus = tenderAgreement.getStatus();
             //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
             //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
-            if(fddStatus.equals(3)){
+            if (fddStatus.equals(3)) {
                 jsonObject.put("fddStatus", 1);
-            }else {
+            } else {
                 //隐藏下载按钮
                 //System.out.println("******************2法大大协议状态：0");
                 jsonObject.put("fddStatus", 0);
             }
-        }else {
+        } else {
             //下载老版本协议
             //System.out.println("******************3法大大协议状态：2");
             jsonObject.put("fddStatus", 1);
         }
         // 4. 转让信息
         if (StringUtils.isNotBlank(orderId)) {
-            List<BorrowCreditVO> borrowCreditVOList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId,String.valueOf(userId));//projectService.getBorrowList(orderId,userId);
+            List<BorrowCreditVO> borrowCreditVOList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId, String.valueOf(userId));//projectService.getBorrowList(orderId,userId);
             JSONArray jsonArray = new JSONArray();
             for (BorrowCreditVO borrowCredit : borrowCreditVOList) {
                 JSONObject js = new JSONObject();
                 Integer creditNid = borrowCredit.getCreditNid();
-                js.put("date", GetDate.date2Str(borrowCredit.getCreateTime(),GetDate.date_sdf));
+                js.put("date", GetDate.date2Str(borrowCredit.getCreateTime(), GetDate.date_sdf));
                 js.put("transferPrice", CommonUtils.formatAmount(borrowCredit.getCreditCapital()));
                 js.put("discount", CommonUtils.formatAmount(borrowCredit.getCreditDiscount()));
                 js.put("remainTime", borrowCredit.getCreditTerm());
@@ -1060,6 +1079,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 已持有债权列表去转让接口
+     *
      * @author zhangyk
      * @date 2018/9/12 13:57
      */
@@ -1068,25 +1088,25 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         String tenderNid = request.getParameter("tenderId");
         String borrowId = request.getParameter("borrowId");
 
-        CheckUtil.check(StringUtils.isNotBlank(tenderNid) && StringUtils.isNotBlank(borrowId) ,MsgEnum.ERR_OBJECT_REQUIRED,"借款编号");
+        CheckUtil.check(StringUtils.isNotBlank(tenderNid) && StringUtils.isNotBlank(borrowId), MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         JSONObject projectInfo = new JSONObject();
         JSONObject result = new JSONObject();
         // 获取当前时间
         Integer nowTime = GetDate.getNowTime10();
         // 获取债转详情信息
-        TenderCreditCustomizeVO appTenderToCreditDetail =amTradeClient.selectTenderToCreditDetail(userId,borrowId,tenderNid);
+        TenderCreditCustomizeVO appTenderToCreditDetail = amTradeClient.selectTenderToCreditDetail(userId, borrowId, tenderNid);
         //债转费率配置 开始
         List<DebtConfigVO> config = amConfigClient.getDebtConfigList();
-        if(!CollectionUtils.isEmpty(config)){
-            projectInfo.put("attornRate",config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));
-            projectInfo.put("concessionRateUp",config.get(0).getConcessionRateUp().setScale(2, BigDecimal.ROUND_DOWN));
-            projectInfo.put("concessionRateDown",config.get(0).getConcessionRateDown().setScale(2, BigDecimal.ROUND_DOWN));
-            projectInfo.put("toggle",config.get(0).getToggle());
-            projectInfo.put("closeDes",config.get(0).getCloseDes());
+        if (!CollectionUtils.isEmpty(config)) {
+            projectInfo.put("attornRate", config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));
+            projectInfo.put("concessionRateUp", config.get(0).getConcessionRateUp().setScale(2, BigDecimal.ROUND_DOWN));
+            projectInfo.put("concessionRateDown", config.get(0).getConcessionRateDown().setScale(2, BigDecimal.ROUND_DOWN));
+            projectInfo.put("toggle", config.get(0).getToggle());
+            projectInfo.put("closeDes", config.get(0).getCloseDes());
             projectInfo.put("serviceRate", config.get(0).getAttornRate().setScale(2, BigDecimal.ROUND_DOWN));//原来逻辑的字段
         }
         //债转费率配置 开始
-        if (appTenderToCreditDetail != null){
+        if (appTenderToCreditDetail != null) {
 
             int lastdays = 0;
             String borrowNid = appTenderToCreditDetail.getBorrowNid();
@@ -1103,7 +1123,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
             // 等额本息和等额本金和先息后本
             if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-                List<BorrowRepayPlanVO> list  = amTradeClient.getBorrowRepayPlansByPeriod(borrowNid,borrowVO.getBorrowPeriod());
+                List<BorrowRepayPlanVO> list = amTradeClient.getBorrowRepayPlansByPeriod(borrowNid, borrowVO.getBorrowPeriod());
                 if (list != null && list.size() > 0) {
                     try {
                         lastdays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(list.get(0).getRepayTime()));
@@ -1123,7 +1143,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
             projectInfo.put("borrowApr", appTenderToCreditDetail.getBorrowApr());
             projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriodNumber());
-            projectInfo.put("borrowPeriodUnit", "endday".equals(borrowVO.getBorrowStyle())?"天":"个月");
+            projectInfo.put("borrowPeriodUnit", "endday" .equals(borrowVO.getBorrowStyle()) ? "天" : "个月");
             projectInfo.put("account", creditCreateMap.get("creditCapital"));
             projectInfo.put("borrowId", appTenderToCreditDetail.getBorrowNid());
             projectInfo.put("tenderPeriod", appTenderToCreditDetail.getTenderPeriod());
@@ -1131,17 +1151,18 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
             result.put("status", BaseResultBeanFrontEnd.SUCCESS);
             result.put("statusDesc", BaseResultBeanFrontEnd.SUCCESS_MSG);
-            result.put("projectInfo",projectInfo);
-        }else {
+            result.put("projectInfo", projectInfo);
+        } else {
             result.put("status", BaseResultBeanFrontEnd.FAIL);
-            result.put("statusDesc","获取债转数据失败");
-            result.put("projectInfo",projectInfo);
+            result.put("statusDesc", "获取债转数据失败");
+            result.put("projectInfo", projectInfo);
         }
         return result;
     }
 
     /**
      * 获取债转垫付利息
+     *
      * @author zhangyk
      * @date 2018/9/12 15:19
      */
@@ -1150,7 +1171,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         Map<String, BigDecimal> resultMap = new HashMap<String, BigDecimal>();
 
         BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
-        BorrowRecoverVO borrowRecoverVO = amTradeClient.getBorrowRecoverByTenderNidBidNid(tenderNid,borrowNid);
+        BorrowRecoverVO borrowRecoverVO = amTradeClient.getBorrowRecoverByTenderNidBidNid(tenderNid, borrowNid);
         // 债转本息
         BigDecimal creditAccount = BigDecimal.ZERO;
         // 债转期全部利息
@@ -1168,9 +1189,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         // 折后价格
         BigDecimal creditPrice = BigDecimal.ZERO;
 
-        if (borrowVO != null){
+        if (borrowVO != null) {
             String borrowStyle = borrowVO.getBorrowStyle();
-            if (borrowRecoverVO != null){
+            if (borrowRecoverVO != null) {
                 // 可转本金
                 creditCapital = borrowRecoverVO.getRecoverCapital().subtract(borrowRecoverVO.getRecoverCapitalYes()).subtract(borrowRecoverVO.getCreditAmount());
                 // 折后价格
@@ -1220,7 +1241,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     String bidNid = borrowVO.getBorrowNid();
 
                     int borrowPeriod = borrowVO.getBorrowPeriod() - borrowRecoverVO.getRecoverPeriod() + 1;
-                    List<BorrowRepayPlanVO> borrowRepayPlanList = amTradeClient.getBorrowRepayPlansByPeriod(bidNid,borrowPeriod);
+                    List<BorrowRepayPlanVO> borrowRepayPlanList = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowPeriod);
 
                     int lastDays = 0;
                     if (borrowRepayPlanList != null && borrowRepayPlanList.size() > 0) {
@@ -1264,6 +1285,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
     /**
      * 发起转让成功后,发送神策数据统计
+     *
      * @param sensorsDataBean
      * @throws MQException
      */

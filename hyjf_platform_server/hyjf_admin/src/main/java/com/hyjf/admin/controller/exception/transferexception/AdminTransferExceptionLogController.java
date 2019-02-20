@@ -168,7 +168,7 @@ public class AdminTransferExceptionLogController extends BaseController {
             boolean result;
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("transferExceptionLogVO",transfer);
+                jsonObject.put("TransferExceptionLogVO",transfer);
                 jsonObject.put("BankCallBean",resultBean);
                 UserInfoCustomizeVO userInfoCustomize=transferLogService.queryUserInfoByUserId(transfer.getUserId());
                 jsonObject.put("UserInfoCustomizeVO",userInfoCustomize);

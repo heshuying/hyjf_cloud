@@ -445,7 +445,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         // 年利率
         BigDecimal borrowApr = borrow.getBorrowApr();
         // 借款成功时间
-        Integer borrowSuccessTime = borrow.getVerifyTimeInteger();
+        Integer borrowSuccessTime = borrow.getReverifyTime();
         logger.info("标的："+borrowNid + "放款开始，借款满标时间："+borrow.getVerifyTimeInteger());
         // 项目类型
         Integer projectType = borrow.getProjectType();

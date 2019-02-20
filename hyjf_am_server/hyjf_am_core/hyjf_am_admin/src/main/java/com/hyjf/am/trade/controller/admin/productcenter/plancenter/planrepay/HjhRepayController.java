@@ -87,17 +87,12 @@ public class HjhRepayController {
         // 查询 总条数
         Integer count = this.hjhRepayService.getRepayCount(params);
         List<HjhRepayVO> repayVOListSum = new ArrayList<>();
-        if (request.getCurrPage() > 0){
-            repayVOListSum = this.hjhRepayService.selectByExample(params);
 
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+        if(request.getCurrPage()>0){
+            repayVOListSum = this.hjhRepayService.selectByExample(params);
+            Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             params.put("limitStart", paginator.getOffset());
-            if (request.getPageSize() > 0){
-                params.put("limitEnd", request.getPageSize());
-            }else {
-                // paginator.getLimit() 默认 10条
-                params.put("limitEnd", paginator.getLimit());
-            }
+            params.put("limitEnd", paginator.getLimit());
         }
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);

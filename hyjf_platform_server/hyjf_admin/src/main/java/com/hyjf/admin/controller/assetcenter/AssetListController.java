@@ -21,6 +21,8 @@ import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -228,7 +230,13 @@ public class AssetListController extends BaseController {
 			assetListRequest.setInstCodeSrch(viewRequest.getInstCodeSrch());
 			// 获取到原子层查询的VO(多处调用)
 			AssetDetailCustomizeVO assetDetailCustomizeVO = assetListService.getDetailById(assetListRequest);
-			// 将原子层查询的VO转型为组合层VO
+			// 借款用途 code 转 中文
+			Map<String, String> useages = RedisUtils.hgetall(RedisConstants.CACHE_PARAM_NAME+CustomConstants.FINANCE_PURPOSE);
+            String useageName = (String) useages.get(assetDetailCustomizeVO.getUseage());
+            if (StringUtils.isNotBlank(useageName)){
+                assetDetailCustomizeVO.setUseage(useageName);
+            }
+            // 将原子层查询的VO转型为组合层VO
 			/*BeanUtils.copyProperties(assetDetailCustomizeVO,vo);*/
 			jsonObject.put("返回实体类", "assetDetailCustomizeVO");
 			jsonObject.put("assetDetailCustomizeVO", assetDetailCustomizeVO);

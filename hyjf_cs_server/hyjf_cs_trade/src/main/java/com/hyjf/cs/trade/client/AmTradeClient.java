@@ -152,7 +152,7 @@ public interface AmTradeClient {
      * @author liubin
      * @return
      */
-    BigDecimal getPreCreditCapital(HjhDebtCreditVO credit);
+    BigDecimal doGetPreCreditCapital(HjhDebtCreditVO credit);
 
     /**
      * 银行自动债转成功后，更新债转数据
@@ -2195,7 +2195,7 @@ public interface AmTradeClient {
 
 	String getborrowIdByProductId(Map<String, Object> params);
 
-    List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params);
+    BorrowAndInfoVO getborrowByProductId(String productId);
 
     Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize);
 

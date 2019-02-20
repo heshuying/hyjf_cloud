@@ -53,7 +53,7 @@ public class BankAleveController {
     @Autowired
     private BankAleveService bankAleveService;
     /** 权限 */
-    public static final String PERMISSIONS = "bankalevelist";
+    public static final String PERMISSIONS = "bankAleve";
 
     /**
      * 银行账务明细列表查询

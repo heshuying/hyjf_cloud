@@ -17,10 +17,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 
@@ -57,7 +54,21 @@ public class PcChannelStatisticsDao extends BaseMongoDao<PcChannelStatistics> {
         }
        Aggregation aggregation = Aggregation.newAggregation(
                 match(criteria),
-                Aggregation.group( "sourceId").sum("accessNumber").as("accessNumber").sum("registNumber").as("registNumber").sum("openAccountNumber").as("openAccountNumber").sum("tenderNumber").as("tenderNumber").sum("cumulativeRecharge").as("cumulativeRecharge").sum("cumulativeInvestment").as("cumulativeInvestment").sum("hztTenderPrice").as("hztTenderPrice").sum("hxfTenderPrice").as("hxfTenderPrice").sum("htlTenderPrice").as("htlTenderPrice").sum("htjTenderPrice").as("htjTenderPrice").sum("rtbTenderPrice").as("rtbTenderPrice").sum("hzrTenderPrice").as("hzrTenderPrice").addToSet("sourceName").as("sourceName").addToSet("sourceId").as("sourceId")
+                Aggregation.group( "sourceId")
+                        .sum("accessNumber").as("accessNumber")
+                        .sum("registNumber").as("registNumber")
+                        .sum("openAccountNumber").as("openAccountNumber")
+                        .sum("tenderNumber").as("tenderNumber")
+                        .sum("cumulativeRecharge").as("cumulativeRecharge")
+                        .sum("cumulativeInvestment").as("cumulativeInvestment")
+                        .sum("hztTenderPrice").as("hztTenderPrice")
+                        .sum("hxfTenderPrice").as("hxfTenderPrice")
+                        .sum("htlTenderPrice").as("htlTenderPrice")
+                        .sum("htjTenderPrice").as("htjTenderPrice")
+                        .sum("rtbTenderPrice").as("rtbTenderPrice")
+                        .sum("hzrTenderPrice").as("hzrTenderPrice")
+                        .addToSet("sourceName").as("sourceName")
+                        .addToSet("sourceId").as("sourceId")
         );
         AggregationResults<PcChannelStatistics> ar = mongoTemplate.aggregate(aggregation, getEntityClass(), PcChannelStatistics.class);
         List<PcChannelStatistics> result = ar.getMappedResults();
@@ -88,4 +99,7 @@ public class PcChannelStatisticsDao extends BaseMongoDao<PcChannelStatistics> {
         return result;
     }
 
+    public AggregationResults<Map> countChannelStatistics(Aggregation aggregation) {
+        return mongoTemplate.aggregate(aggregation, getEntityClass(), Map.class);
+    }
 }

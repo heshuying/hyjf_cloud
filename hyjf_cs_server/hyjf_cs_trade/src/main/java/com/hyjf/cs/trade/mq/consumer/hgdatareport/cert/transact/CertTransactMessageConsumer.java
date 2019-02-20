@@ -34,10 +34,6 @@ public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>
     private String thisMessName = "交易流水信息";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
-
-
-
-
     @Autowired
     private CertTransactService certTransactService;
 
@@ -88,7 +84,6 @@ public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>
 
             // --> 调用service组装数据
             JSONArray data =certTransactService.createDate(minId,maxId);
-
             if(data==null){
                 return;
             }
@@ -105,6 +100,7 @@ public class CertTransactMessageConsumer implements RocketMQListener<MessageExt>
             }
             logger.info(logHeader + " 处理成功。" + msgBody);
         } catch (Exception e) {
+            e.printStackTrace();
             // 错误时，以下日志必须出力（预警捕捉点）
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
         } finally {

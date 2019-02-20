@@ -1,7 +1,5 @@
 package com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa;
 
-import java.util.Date;
-
 /**
  * 统计运营报告的相关数据
  * 

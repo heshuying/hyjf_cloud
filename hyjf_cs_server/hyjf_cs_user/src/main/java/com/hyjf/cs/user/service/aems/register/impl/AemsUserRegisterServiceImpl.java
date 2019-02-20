@@ -25,7 +25,6 @@ import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.aems.register.AemsUserRegisterService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.util.GetInfoByUserIp;
-import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -64,7 +63,7 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
      */
     @Override
     public void apiCheckParam(RegisterRequest registerRequest) {
-// 手机号
+        // 手机号
         String mobile = registerRequest.getMobile();
         // 机构编号
         String instCode = registerRequest.getInstCode();
@@ -230,7 +229,7 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
         account.setPlanRepayInterest(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(),account));
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");
