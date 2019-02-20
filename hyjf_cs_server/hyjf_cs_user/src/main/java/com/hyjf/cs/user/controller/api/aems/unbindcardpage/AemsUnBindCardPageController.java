@@ -9,12 +9,13 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.bean.AemsUnbindCardPageRequestBean;
+import com.hyjf.cs.user.bean.BaseResultBean;
+import com.hyjf.cs.user.bean.DeleteCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.aems.unbindcard.AemsUnBindCardService;
-import com.hyjf.cs.user.service.unbindcard.UnBindCardService;
 import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -106,6 +107,12 @@ public class AemsUnBindCardPageController extends BaseUserController {
             Integer userId=user.getUserId();
             // 用户余额大于零不让解绑
             AccountVO account =unBindCardService.getAccountByUserId(userId);
+            if(null == account){
+                logger.info("解绑失败，用户账户信息不存在"+userId);
+                paramMap.put("status",ErrorCodeConstant.STATUS_BC000004);
+                paramMap.put("statusDesc","抱歉，解绑失败，用户账户信息不存在。");
+                return callbackErrorView(paramMap);
+            }
             // 用户在银行的账户余额
             BigDecimal bankBalance =unBindCardService.getBankBalance(userId,bankOpenAccount.getAccount());
             if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
