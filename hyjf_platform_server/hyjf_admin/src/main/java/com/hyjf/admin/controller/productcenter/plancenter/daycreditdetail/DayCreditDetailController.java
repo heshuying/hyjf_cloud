@@ -12,7 +12,10 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DayCreditDetailResponse;
 import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,9 +31,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品中心 --> 汇计划 --> 资金计划 -> 转让详情
@@ -43,6 +48,9 @@ public class DayCreditDetailController extends BaseController {
 
     @Autowired
     private DayCreditDetailService dayCreditDetailService;
+
+    // 权限名称 (子页面.未添加为菜单,无需设置权限)
+    public static final String PERMISSIONS = "hjhdebtcredit";
 
     /**
      * 产品中心  -  汇计划 --  转让详情 -- 检索下拉框
@@ -117,9 +125,8 @@ public class DayCreditDetailController extends BaseController {
      */
     @ApiOperation(value = "资金计划", notes = "汇计划按天转让记录列表")
     @PostMapping(value = "/hjhDayCreditDetailList")
-    @ResponseBody
-    public AdminResult<ListResult<DayCreditDetailVO>> init(@RequestBody @Valid DayCreditDetailRequestBean request){
-
+    public AdminResult<ListResult<DayCreditDetailVO>> init(@RequestBody DayCreditDetailRequestBean request){
+        logger.info("汇计划按天转让记录列表请求开始....");
         DayCreditDetailRequest copyRequest = new DayCreditDetailRequest();
         BeanUtils.copyProperties(request, copyRequest);
 
@@ -145,6 +152,7 @@ public class DayCreditDetailController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
 
+        logger.info("汇计划按天转让记录列表请求结束....");
         if (CollectionUtils.isNotEmpty(response.getResultList())){
             returnList = CommonUtils.convertBeanList(response.getResultList(), DayCreditDetailVO.class);
             return new AdminResult<ListResult<DayCreditDetailVO>>(ListResult.build2(returnList, response.getCount(), response.getSumDayCreditDetailVO()));
