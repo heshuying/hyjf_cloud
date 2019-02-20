@@ -80,8 +80,9 @@
 			
 			<!-- FROM_UNIXTIME(IFNULL(tc.send_time, tc.update_time),'%Y-%m-%d %H:%i:%S') AS send_time, -->
 			<!-- IFNULL(tc.send_time, tc.update_time) AS send_time, 因为微服务数据库会自动插入update_time，此时间不可靠-->
-			
-			IFNULL(tc.send_time, "") AS send_time,
+
+		    <!-- IFNULL(tc.send_time, "") AS send_time,-->
+			case when tc.send_time is null then '' else from_unixtime(tc.send_time,'%Y-%m-%d %H:%i:%S') end as send_time,
 			
 			case b.borrow_style when 'endday' then CONCAT(b.borrow_period,'天') else CONCAT(b.borrow_period,'个月') end as rzqx,
 			case tc.`status` when 1 then '已发放' else '未发放' end as status_name,
