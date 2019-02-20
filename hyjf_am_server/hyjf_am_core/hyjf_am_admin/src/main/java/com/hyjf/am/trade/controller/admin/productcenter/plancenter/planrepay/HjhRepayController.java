@@ -93,6 +93,7 @@ public class HjhRepayController {
             Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             params.put("limitStart", paginator.getOffset());
             params.put("limitEnd", paginator.getLimit());
+            logger.info( HjhRepayController.class + ":" + params.toString());
         }
 
         List<HjhRepayVO> repayVOList = this.hjhRepayService.selectByExample(params);
