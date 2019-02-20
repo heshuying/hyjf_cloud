@@ -139,7 +139,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 // 返回参数
                 BankCallBean retBean =  BankCallUtils.callApiBg(selectbean);
                 // 调用接口
-                logger.info("请求开户掉单查询接口  调用银行返回参数为：{}",JSONObject.toJSONString(selectbean));
+                logger.info("请求开户掉单查询接口  调用银行返回参数为：{}",JSONObject.toJSONString(retBean));
                 if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
                     {
                         JSONArray jsa = JSONArray.parseArray(retBean.getSubPacks());
