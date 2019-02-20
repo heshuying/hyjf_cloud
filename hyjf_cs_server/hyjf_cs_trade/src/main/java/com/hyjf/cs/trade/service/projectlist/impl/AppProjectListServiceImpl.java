@@ -188,7 +188,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         boolean isOpened = false;
         boolean isSetPassword = false;
         boolean isAllowed = false;
-        boolean isRiskTested = false;
+       // boolean isRiskTested = false;
+        String isRiskTested = "0";
         boolean isAutoInves = false;
         boolean isInvested = false;
         //  0：未授权1：已授权
@@ -213,8 +214,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     isAllowed = true;
                 }
                 //是否完成风险测评
-                if (users.getIsEvaluationFlag() == 1) {
-                    isRiskTested = true;
+                if (users.getIsEvaluationFlag() == 1 && null != users.getEvaluationExpiredTime()) {
+                    //测评到期日
+                    Long lCreate = users.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        isRiskTested = "2";
+                    } else {
+                        //测评未过期
+                        isRiskTested = "1";
+                    }
                 }
                 boolean isTender = this.isTenderBorrow(userId, borrowNid, type);
                 if (isTender) {
