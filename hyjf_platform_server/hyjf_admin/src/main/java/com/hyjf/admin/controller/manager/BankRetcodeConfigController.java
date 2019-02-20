@@ -143,10 +143,6 @@ public class BankRetcodeConfigController extends BaseController {
         ModelAndView mv =new ModelAndView();
         // 画面验证
         String message = this.validatorFieldCheck(mv, adminRequest);
-        // 返回码功能按钮是否重复
-        if (this.bankRetcodeConfigService.isExistsReturnCode(adminRequest)) {
-            message = "返回码重复";
-        }
         // 数据检索
         if (StringUtils.isNotBlank(message)) {
             // 失败返回

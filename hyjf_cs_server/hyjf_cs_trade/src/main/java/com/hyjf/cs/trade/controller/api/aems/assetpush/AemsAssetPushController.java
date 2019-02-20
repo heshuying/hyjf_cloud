@@ -54,7 +54,7 @@ public class AemsAssetPushController extends BaseTradeController {
     @PostMapping(PERSON)
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "AEMS-个人资产推送", httpMethod = "POST", notes = "AEMS-个人资产推送")
-    /*@HystrixCommand(commandKey = "API-AEMS个人资产推送", fallbackMethod = "fallBackAssetPush", ignoreExceptions = CheckException.class, commandProperties = {
+    @HystrixCommand(commandKey = "API-AEMS个人资产推送", fallbackMethod = "fallBackAssetPush", ignoreExceptions = CheckException.class, commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -64,7 +64,7 @@ public class AemsAssetPushController extends BaseTradeController {
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})*/
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public JSONObject push(@RequestBody AemsPushRequestBean pushRequestBean) {
         logger.info("API端-AEMS个人资产推送[开始]，请求参数["+ pushRequestBean.toString() +"]，接口路径+["+ AEMS_ASSETPUSH+PERSON +"]");
 
@@ -78,9 +78,10 @@ public class AemsAssetPushController extends BaseTradeController {
 
         logger.info("API端-AEMS个人资产推送[结束]");
         result = new JSONObject();
-        result.put("status", resultBean.getStatus());
-        result.put("statusDesc", resultBean.getStatusDesc());
         result.put("data", resultBean);
+        result.put("status", resultBean.getStatus());
+        result.put("chkValue",resultBean.getChkValue());
+        result.put("statusDesc", resultBean.getStatusDesc());
         return result;
     }
 
@@ -112,9 +113,10 @@ public class AemsAssetPushController extends BaseTradeController {
 
         logger.info("API端-AEMS企业资产推送[结束]");
         result = new JSONObject();
-        result.put("status", resultBean.getStatus());
-        result.put("statusDesc", resultBean.getStatusDesc());
         result.put("data", resultBean);
+        result.put("status", resultBean.getStatus());
+        result.put("chkValue",resultBean.getChkValue());
+        result.put("statusDesc", resultBean.getStatusDesc());
         return result;
     }
 

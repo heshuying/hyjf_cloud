@@ -43,14 +43,13 @@ public class HjhReInvestDebtController {
 
         Integer count = this.hjhReInvestDebtService.getReinvestDebtCount(request);
 
-        if (count > 0){
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+        if (count > 0 && count != null){
+
+            Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             request.setLimitStart(paginator.getOffset());
-            if (request.getPageSize() > 0){
-                request.setLimitEnd(request.getPageSize());
-            }else{
-                request.setLimitEnd(paginator.getLimit());
-            }
+            request.setLimitEnd(paginator.getLimit());
+            logger.info(HjhReInvestDebtController.class + ":" + request.toString());
+
             // 获取数据列表
             List<HjhReInvestDebtVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
 
