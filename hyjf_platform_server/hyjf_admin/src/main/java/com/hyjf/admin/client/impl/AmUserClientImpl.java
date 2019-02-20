@@ -2064,13 +2064,13 @@ public class AmUserClientImpl implements AmUserClient {
 	public List<String> queryUser(SmsCodeRequestBean requestBean) {
 		Response tradeResponse = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/queryUser",
 				requestBean, Response.class);
-		Response userResponse = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/queryUser", requestBean, Response.class);
-		if (tradeResponse != null && userResponse != null) {
+//		Response userResponse = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/queryUser", requestBean, Response.class);
+		if (tradeResponse != null ) {
 			List<String> tradeList = tradeResponse.getResultList();
-			List<String> userList = userResponse.getResultList();
-			if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
-				tradeList.retainAll(userList);
-			}
+//			List<String> userList = userResponse.getResultList();
+//			if (!CollectionUtils.isEmpty(tradeList) ) {
+//				tradeList.retainAll(userList);
+//			}
 			return tradeList;
 		}
 		return null;

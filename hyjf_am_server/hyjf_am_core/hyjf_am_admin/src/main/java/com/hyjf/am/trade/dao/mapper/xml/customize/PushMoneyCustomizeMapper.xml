@@ -223,7 +223,7 @@
             <!-- 优化sql(字段类型转换) int-->
             AND b.recover_last_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{recoverDateEnd},' 23:59:59'))
         </if>
-        <if test="combotreeListSrch != null and combotreeListSrch != ''">
+        <if test="combotreeListSrch != null and combotreeListSrch.length>0">
             AND tc.department_id in
             <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
                 #{dep}
