@@ -82,13 +82,13 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
 
         // 打包参数
         authBean = paramPackage(request, requestBean, authBean, orderId);
-
+        logger.info("AEMS系统请求页面多合一授权,authBean:{}"+authBean);
         // 校验用户角色和授权类型是否一致
         paramMap = authService.checkUserRoleAndAuthType(authBean, requestBean.getAuthType());
         if (!"1".equals(paramMap.get("status"))) {
             return callbackErrorView(paramMap);
         }
-
+        logger.info("AEMS系统请求页面多合一授权,paramMap:{}"+paramMap);
         try {
             // 补充数据，请求银行
             modelAndView = authService.getApiCallbankMV(authBean);

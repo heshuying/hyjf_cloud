@@ -27,7 +27,7 @@ public class SignUtil {
         if (StringUtils.isEmpty(instCode)) {
             return false;
         }
-        if (("/aems/authState/status").equals(methodName)) {
+        if (("/aems/authState/query").equals(methodName)) {
             //aems授权状态查询
             AemsAuthStatusQueryRequestBean bean = (AemsAuthStatusQueryRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
