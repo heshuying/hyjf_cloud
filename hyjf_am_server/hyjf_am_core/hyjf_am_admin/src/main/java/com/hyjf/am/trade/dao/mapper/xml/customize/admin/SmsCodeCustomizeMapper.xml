@@ -29,9 +29,11 @@
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
 			</if>
 		</where>
+		GROUP BY u.user_id
 	</select>
 
 	<select id="countUser" resultType="java.lang.Integer" parameterType="map">
+		select count(*) as total from (
 		SELECT
 		count(*)
 		FROM
@@ -57,5 +59,6 @@
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
 			</if>
 		</where>
+		GROUP BY u.user_id) u
 	</select>
 </mapper>

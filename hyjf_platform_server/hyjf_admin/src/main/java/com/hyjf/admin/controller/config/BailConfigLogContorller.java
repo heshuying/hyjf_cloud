@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.config;
 import com.hyjf.admin.beans.response.BailConfigLogResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BailConfigLogService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
@@ -30,6 +32,8 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/bail_config_log")
 public class BailConfigLogContorller extends BaseController {
 
+    public static final String PERMISSIONS = "bailConfigLog";
+
     @Autowired
     BailConfigLogService bailConfigLogService;
 
@@ -42,6 +46,7 @@ public class BailConfigLogContorller extends BaseController {
     @ApiOperation(value = "保证金配置列表查询", notes = "保证金配置列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BailConfigLogResponseBean> search(@RequestBody BailConfigLogRequest request) {
         BailConfigLogResponseBean responseBean = new BailConfigLogResponseBean();
         // 资产来源
