@@ -244,6 +244,21 @@ public class BorrowController extends BaseController {
 		return response;
 	}
 
+	@GetMapping("/getBorrowVOByNid/{borrowId}")
+	public BorrowResponse getBorrowVOByNid(@PathVariable String borrowId){
+		BorrowResponse response = new BorrowResponse();
+		Borrow borrow = borrowService.getBorrowByNid(borrowId);
+		BorrowInfo borrowInfo=borrowService.getBorrowInfoByNid(borrowId);
+		BorrowAndInfoVO borrowAndInfoVo = null;
+		if (Validator.isNotNull(borrow)){
+			borrowAndInfoVo=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
+		}
+		if (Validator.isNotNull(borrowInfo)){
+			borrowAndInfoVo.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(borrowAndInfoVo);
+		return response;
+	}
 	/**
 	 * 获取正确的borrowvo
 	 * @author zhangyk

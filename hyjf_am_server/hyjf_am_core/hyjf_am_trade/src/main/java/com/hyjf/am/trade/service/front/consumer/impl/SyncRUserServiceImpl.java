@@ -33,21 +33,20 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
 
             int userIdInt = Integer.parseInt(userId);
             int roleIdInt = Integer.parseInt(roleId);
-            int attributeInt = Integer.parseInt(attribute);
 
             record.setUserId(userIdInt);
             record.setRoleId(roleIdInt);
-            record.setAttribute(attributeInt);
+            if (StringUtils.isNotBlank(attribute)) {
+                int attributeInt = Integer.parseInt(attribute);
+                record.setAttribute(attributeInt);
+            }
             if (StringUtils.isNotBlank(trueName)) {
                 record.setTruename(trueName);
             }
 
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
-
             logger.info("uid:{},am_trade.ht_r_user更新ht_user_info{}", userIdInt, upRet > 0 ? "成功" : "失败");
-
         }
-
     }
 
     @Override
@@ -72,11 +71,8 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
                 record.setUserType(userTypeInt);
             }
             int upRet = rUserMapper.insertSelective(record);
-
             logger.info("uid:{},am_trade.ht_r_user插入ht_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
-
         }
-
     }
 
     /**
@@ -122,11 +118,8 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
             record.setSpreadsUserId(spreadUserIdInt);
 
             int upRet = rUserMapper.updateByPrimaryKeySelective(record);
-
             logger.info("uid:{},am_trade.ht_r_user更新ht_spreads_user{}", userIdInt, upRet > 0 ? "成功" : "失败");
-
         }
-
     }
 
     /**

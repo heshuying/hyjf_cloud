@@ -94,26 +94,29 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
 
         AemsPushResultBean resultBean = new AemsPushResultBean();
 
-        //查看机构表是否存在
+        // 查看机构表是否存在
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
-            logger.info("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->机构编号不存在");
+            logger.info("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->AEMS个人资产推送[机构编号不存在]");
             resultBean.setStatusDesc("机构编号不存在");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000101);
             return resultBean;
         }
 
         // 授信期内校验
         BailConfigInfoCustomizeVO bailConfig = amTradeClient.selectBailConfigByInstCode(pushRequestBean.getInstCode());
         if(bailConfig == null){
-            logger.info("保证金配置不存在:{}", pushRequestBean.getInstCode());
-            resultBean.setStatusDesc("保证金配置不存在:{" + pushRequestBean.getInstCode() + "}");
+            logger.info("AEMS个人资产推送[保证金配置不存在!],instCode:"+ pushRequestBean.getInstCode());
+            resultBean.setStatusDesc("保证金配置不存在");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000102);
             return resultBean;
         }
         if(GetDate.getNowTime10() < GetDate.getDayStart10(bailConfig.getTimestart()) ||
             GetDate.getNowTime10() > GetDate.getDayEnd10(bailConfig.getTimeend())
             ){
-                logger.info("未在授信期内，不能推标");
-                resultBean.setStatusDesc("未在授信期内，不能推标");
+                logger.info("AEMS个人资产推送[未在授信期内,不能推标!]");
+                resultBean.setStatusDesc("未在授信期内,不能推标");
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000103);
                 return resultBean;
             }
 
@@ -123,16 +126,19 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         // 检查请求资产总参数
         List<AemsPushBean> assets = pushRequestBean.getReqData();
         if (CollectionUtils.isEmpty(assets)) {
+            logger.info("AEMS个人资产推送[推送资产不能为空!]");
             resultBean.setStatusDesc("推送资产不能为空");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000104);
             return resultBean;
         }
         if (assets.size() > 1000) {
+            logger.info("AEMS个人资产推送[请求参数过长!]");
             resultBean.setStatusDesc("请求参数过长");
-            logger.error("------请求参数过长-------");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000105);
             return resultBean;
         }
 
-        //定义返回对象
+        // 定义返回对象
         List<AemsPushBean> retassets = new ArrayList<>();
 
         for (AemsPushBean pushBean : assets) {
@@ -143,23 +149,26 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 // 返回结果，下面的修改应该会返回到这里
                 retassets.add(pushBean);
 
-                //资产编号判空
+                // 资产编号判空
                 if(Validator.isNull(pushBean.getAssetId())){
+                    logger.info("AEMS个人资产推送[资产编号不能为空!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("资产编号不能为空");
                     continue;
                 }
-                //资产编号判重
+                // 资产编号判重
                 int count = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId()).size();
-                if (count>0){
-                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
+                if (count > 0){
+                    logger.info("AEMS个人资产推送[资产已存在!]");
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
                     pushBean.setRetMsg("资产已存在");
                     continue;
                 }
 
-                //职业类型 不能为空
+                // 职业类型 不能为空
                 String position = PositionEnum.getJob(pushBean.getPosition());
                 if(org.apache.commons.lang.StringUtils.isEmpty(position)){
+                    logger.info("AEMS个人资产推送[职业类型为空or不存在!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("职业类型为空or不存在");
                     continue;
@@ -168,22 +177,25 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 // 借款用途 不能为空
                 String use = pushBean.getUseage();
                 if(org.apache.commons.lang.StringUtils.isEmpty(use)){
+                    logger.info("AEMS个人资产推送[融资用途为空or不存在!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("融资用途为空or不存在");
                     continue;
                 }
 
-                //借款人信用等级 不能为空
+                // 借款人信用等级 不能为空
                 String level = CreditLevelEnum.getKey(pushBean.getCreditLevel());
                 if(org.apache.commons.lang.StringUtils.isEmpty(level)){
+                    logger.info("AEMS个人资产推送[信用等级为空or不存在!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("信用等级为空or不存在");
                     continue;
                 }
 
-                //资产属性 不能为空
+                // 资产属性 不能为空
                 String asset = AssetAttributesEnum.getAsset(pushBean.getAssetAttributes());
                 if(org.apache.commons.lang.StringUtils.isEmpty(asset)){
+                    logger.info("AEMS个人资产推送[资产属性为空or不存在!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("资产属性为空or不存在");
                     continue;
@@ -197,47 +209,54 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     StringUtils.isBlank(idcard) ||
                     StringUtils.isBlank(pushBean.getBorrowStyle())
                     ) {
+                        logger.info("AEMS个人资产推送[资产信息不正确!]");
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                         pushBean.setRetMsg("资产信息不正确");
                         continue;
                     }
                 if (pushBean.getWorkCity()!=null && pushBean.getWorkCity().length()>20) {
+                    logger.info("AEMS个人资产推送[工作城市过长!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
-                    pushBean.setRetMsg("资产信息不正确(工作城市过长)");
+                    pushBean.setRetMsg("工作城市过长");
                     continue;
                 }
                 if (pushBean.getAccount() > MAX_ASSET_MONEY) {
+                    logger.info("AEMS个人资产推送[资产金额超过一百万!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000006);
                     pushBean.setRetMsg("资产金额超过一百万");
                     continue;
                 }
-                //查询用户信息（user表）
+                // 查询用户信息（user表）
                 UserInfoVO userInfo = amUserClient.selectUserInfoByNameAndCard(truename, idcard);
                 if (userInfo == null) {
+                    logger.info("AEMS个人资产推送[没有用户信息! -- user_info]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
                     pushBean.setRetMsg("没有用户信息");
                     continue;
                 } else if (userInfo.getRoleId() != 2) {
+                    logger.info("AEMS个人资产推送[用户不是借款人!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000003);
                     pushBean.setRetMsg("用户不是借款人");
                     continue;
                 }
                 BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userInfo.getUserId());
                 if (bankOpenAccount == null) {
+                    logger.info("AEMS个人资产推送[没有用户开户信息!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000002);
                     pushBean.setRetMsg("没有用户开户信息");
                     continue;
                 }
-                //查询用户信息（userinfo表）
+                // 查询用户信息（userinfo表）
                 UserVO users = amUserClient.selectUsersById(userInfo.getUserId());
                 if (users == null) {
+                    logger.info("AEMS个人资产推送[没有用户信息! -- user]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
                     pushBean.setRetMsg("没有用户信息");
                     continue;
                 }
-                //校验还款方式
+                // 校验还款方式
                 if (!checkIsMonthStyle(pushBean.getBorrowStyle(), pushBean.getIsMonth()) || !checkBorrowStyle(projectRepays, pushBean.getBorrowStyle())) {
-                    logger.info(pushRequestBean.getInstCode() + " 还款方式不正确 " + projectRepays);
+                    logger.info("AEMS个人资产推送[不支持这种还款方式!],输入的还款方式为:"+ projectRepays);
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000005);
                     pushBean.setRetMsg("不支持这种还款方式");
                     continue;
@@ -247,6 +266,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 if (pushBean.getEntrustedFlg() != null && pushBean.getEntrustedFlg().intValue() == 1) {
                     // 校验
                     if (StringUtils.isBlank(pushBean.getEntrustedAccountId())) {
+                        logger.info("AEMS个人资产推送[受托支付电子账户为空!]");
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000011);
                         pushBean.setRetMsg("受托支付电子账户为空");
                         continue;
@@ -254,12 +274,14 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     //查询用户受托支付电子账户是否授权
                     stzAccount = amTradeClient.selectStzfWhiteList(pushRequestBean.getInstCode(), pushBean.getEntrustedAccountId());
                     if (stzAccount == null) {
-                        pushBean.setRetCode("ZT000012");
+                        logger.info("AEMS个人资产推送[受托支付电子账户未授权!]");
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000108);
                         pushBean.setRetMsg("受托支付电子账户未授权");
                         continue;
                     }
                     // 校验受托人是否授权
                     if(!authService.checkPaymentAuthStatus(stzAccount.getUserId())){
+                        logger.info("AEMS个人资产推送[受托账户未进行服务费授权!]");
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
                         pushBean.setRetMsg("受托账户未进行服务费授权");
                         retassets.add(pushBean);// 返回提示
@@ -272,16 +294,19 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 Integer repayAuth = hjhUserAuth == null ? 0 : hjhUserAuth.getAutoRepayStatus();
                 Integer authResult = authService.checkAuthStatus(repayAuth, paymentAuth);
                 if (authResult == 5) {
+                    logger.info("AEMS个人资产推送[借款人必须服务费授权!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
                     pushBean.setRetMsg("借款人必须服务费授权");
                     retassets.add(pushBean);// 返回提示
                     continue;
                 } else if (authResult == 6) {
+                    logger.info("AEMS个人资产推送[借款人必须还款授权!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000012);
                     pushBean.setRetMsg("借款人必须还款授权");
                     retassets.add(pushBean);// 返回提示
                     continue;
                 } else if (authResult == 7) {
+                    logger.info("AEMS个人资产推送[借款人必须服务费授权和还款授权!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000014);
                     pushBean.setRetMsg("借款人必须服务费授权和还款授权");
                     retassets.add(pushBean);// 返回提示
@@ -295,12 +320,14 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 }*/
                 //update by wj 2018-05-24 年收入，月收入非空校验 start
                 if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getAnnualIncome()) || !DigitalUtils.isNumber(pushBean.getAnnualIncome())){
-                    pushBean.setRetCode("ZT000013");
+                    logger.info("AEMS个人资产推送[年收入为空or不为数字!]");
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000109);
                     pushBean.setRetMsg("年收入为空or不为数字");
                     continue;
                 }
                 if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getMonthlyIncome())){
-                    pushBean.setRetCode("ZT000014");
+                    logger.info("AEMS个人资产推送[月收入为空!]");
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000110);
                     pushBean.setRetMsg("月收入为空");
                     continue;
                 }
@@ -345,7 +372,8 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
 
                 // add by nxl 20180710互金系统,新添加借款人地址 Start
                 if (pushBean.getAddress()==null || pushBean.getAddress().length()>99) {
-                    pushBean.setRetCode("ZT000015");
+                    logger.info("AEMS个人资产推送[借款人地址信息不正确!]");
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000111);
                     pushBean.setRetMsg("借款人地址信息不正确");
                     continue;
                 }
@@ -365,23 +393,23 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     sexInt = 1;
                 }
                 record.setSex(sexInt);
-                //融资用途
+                // 融资用途
                 record.setUseage(use);
-                //岗位职业
+                // 岗位职业
                 record.setPosition(position);
                 record.setMobile(users.getMobile());
                 record.setUserId(userInfo.getUserId());
                 // 年纪，如果没传，用身份证的，从user表获取
                 record.setAge(IdCard15To18.getAgeById(idcard));
-                //借款人信用等级
+                // 借款人信用等级
                 record.setCreditLevel(pushBean.getCreditLevel());
                 record.setInstCode(pushRequestBean.getInstCode());
                 record.setUserName(bankOpenAccount.getUserName());
                 record.setAccountId(bankOpenAccount.getAccount());
                 record.setAssetType(pushRequestBean.getAssetType());
-                //资产属性 1:抵押标 2:质押标 3:信用标
+                // 资产属性 1:抵押标 2:质押标 3:信用标
                 record.setAssetAttributes(pushBean.getAssetAttributes());
-                //受托支付
+                // 受托支付
                 if (stzAccount != null) {
                     record.setEntrustedFlg(1);
                     record.setEntrustedUserId(stzAccount.getStUserId());
@@ -389,7 +417,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                     record.setEntrustedAccountId(stzAccount.getStAccountId());
                 }
 
-                //系统默认赋值
+                // 系统默认赋值
                 // 状态
                 record.setStatus(0);
                 // 默认审核通过
@@ -410,53 +438,58 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 record.setSecondPayment("第三方保障");
                 record.setCostIntrodution("加入费用0元");
 
-                //资产数据保存
+                // 资产数据保存
                 int result = amTradeClient.insertAssert(record);
                 if (result == 1) {
                     pushBean.setRetCode(ErrorCodeConstant.SUCCESS);
                     // 送到队列
                     this.sendToMQ(record);
                 } else {
+                    logger.info("AEMS个人资产推送[数据保存异常,资产未进库！!]");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
-                    pushBean.setRetMsg("系统异常,资产未进库");
+                    pushBean.setRetMsg("数据保存异常,资产未进库！");
                 }
 
             } catch (Exception e) {
-                if (e instanceof DuplicateKeyException) {
-                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
-                    pushBean.setRetMsg("资产已入库");
-                } else {
-                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
-                    pushBean.setRetMsg("系统异常,资产未进库");
-                }
+                logger.error("AEMS个人资产推送异常！["+ e +"]");
+                pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
+                pushBean.setRetMsg("系统异常,资产未进库！");
             }
         }
 
-        //商家信息未解析版
-        logger.info("----------------商家信息导入开始-----------------------");
+        // 资产推送数据循环结束，商家信息未解析版导入开始
+        logger.info("AEMS个人资产推送[商家信息导入开始!]");
         List<InfoBean> riskInfo = pushRequestBean.getRiskInfo();
         if (Validator.isNotNull(riskInfo)) {
             if (riskInfo.size() > 1000) {
+                logger.info("AEMS个人资产推送[商家信息数量超限]！");
                 resultBean.setStatusDesc("商家信息数量超限");
-                logger.error("------------商家信息数量超限-----------");
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000106);
                 return resultBean;
             }
             //推送商家信息
-            this.amTradeClient.insertRiskInfo(riskInfo);
+            try {
+                this.amTradeClient.insertRiskInfo(riskInfo);
+                logger.info("AEMS个人资产推送[商家信息导入成功!]");
+            } catch (Exception e){
+                logger.info("AEMS个人资产推送[商家信息导入异常!],异常信息如下："+ e);
+            }
         }
-        logger.info("----------------商家信息导入完成-----------------------");
 
         // 资产推送失败时返回 提示信息
         resultBean.setData(retassets);
         resultBean.setStatusDesc(retassets.get(0).getRetMsg());
+        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000107);
         // 当无失败信息时，说明校验通过，资产推送成功
         if(StringUtils.isBlank(resultBean.getStatusDesc())){
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+            logger.info("AEMS个人资产推送[资产推送成功]！");
             resultBean.setStatusDesc("资产推送成功");
+            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
         }
 
         return resultBean;
     }
+
 
     /**
      * AEMS企业资产推送
