@@ -284,7 +284,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(record.get("timeStar") != null){
 			Integer timeStar = GetDate.strYYYYMMDDHHMMSS2Timestamp2(record.get("timeStar").toString());
 			Integer timeEnd = GetDate.strYYYYMMDDHHMMSS2Timestamp2(record.get("timeEnd").toString());
-			criteria.and("createTime").gte(timeStar).lte(timeEnd);
+			criteria.and("releaseTime").gte(timeStar).lte(timeEnd);
 		}
 
 		query.addCriteria(criteria);
