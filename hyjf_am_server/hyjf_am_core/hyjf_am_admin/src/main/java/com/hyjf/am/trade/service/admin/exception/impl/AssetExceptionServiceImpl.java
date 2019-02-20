@@ -128,6 +128,12 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
         if (null != borrowDeleteList && borrowDeleteList.size() > 0) {
             return "该标的编号已存在异常表中、请勿重复添加。";
         }
+        // 检查标的来源机构是否添加保证金配置表
+        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+        HjhBailConfig hjhBailConfig = this.selectHjhBailConfigByInstCode(borrowInfo.getInstCode());
+        if (null == hjhBailConfig) {
+            return "该标的来源机构未配置保证金！";
+        }
         // 验证通过返回空字符串
         return "";
     }

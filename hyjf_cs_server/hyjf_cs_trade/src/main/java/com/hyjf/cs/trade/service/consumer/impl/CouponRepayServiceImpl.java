@@ -579,7 +579,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             // 出借人待收金额
             accountList.setAwait(account.getAwait());
             // 创建时间
-            accountList.setCreateTime(nowTime);
+            accountList.setCreateTime(new Date());
             // 更新时间
 //			accountList.setBaseUpdate(nowTime);
             // 操作者
@@ -1030,7 +1030,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         // 出借人待收金额
         accountList.setAwait(account.getAwait());
         // 创建时间
-        accountList.setCreateTime(GetDate.getNowTime10());
+        accountList.setCreateTime(new Date());
         // 更新时间
         accountList.setBaseUpdate(GetDate.getNowTime10());
         // 操作者

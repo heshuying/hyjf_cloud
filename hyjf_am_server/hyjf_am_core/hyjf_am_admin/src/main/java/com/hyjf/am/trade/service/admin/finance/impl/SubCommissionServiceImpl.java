@@ -232,7 +232,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         receiveUserList.setPlanBalance(receiveUserAccount.getPlanBalance());// 汇添金可用金额
         receiveUserList.setFrost(receiveUserAccount.getFrost()); // 出借人冻结金额
         receiveUserList.setAwait(receiveUserAccount.getAwait()); // 出借人待收金额
-        receiveUserList.setCreateTime(nowTime); // 创建时间
+        receiveUserList.setCreateTime(new Date()); // 创建时间
         receiveUserList.setBaseUpdate(nowTime); // 更新时间
         receiveUserList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作者
         receiveUserList.setRemark("账户分佣");

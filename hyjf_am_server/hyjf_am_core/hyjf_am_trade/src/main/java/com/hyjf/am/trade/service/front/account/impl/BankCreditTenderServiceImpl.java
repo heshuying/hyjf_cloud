@@ -1331,7 +1331,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 								lastDays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(date),
 										GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime()));
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error("计算出错,borrowRepayPlans:"+JSONObject.toJSONString(borrowRepayPlans.get(0))+"---------"+JSONObject.toJSONString(borrowCredit),e);
 							}
 						}
 						// 已还多少期

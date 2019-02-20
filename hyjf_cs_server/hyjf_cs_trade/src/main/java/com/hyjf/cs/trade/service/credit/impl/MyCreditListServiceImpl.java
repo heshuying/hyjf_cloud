@@ -82,6 +82,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     private static float creditDiscountEnd = 2.0f;
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
+    private final String FORMAT_DEFAULT_AMOUNT = "0.00";
     @Autowired
     private CommonProducer commonProducer;
     @Autowired
@@ -109,23 +110,26 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     @Override
     public WebResult getCreditListData(MyCreditListRequest request, Integer userId) {
+
+        // 获取可债转金额   转让中本金   累计已转让本金
+        CreditPageVO moneys = amTradeClient.selectCreditPageMoneyTotal(userId);
+        AccountVO account = amTradeClient.getAccountByUserId(userId);
+        moneys.setHoldMoneyTotal(account.getBankAwaitCapital());
         // 判断用户所处的渠道如果不允许债转，可债转金额为0  start
         if (!amTradeClient.isAllowChannelAttorn(userId)) {
             logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
-            throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
+            //throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
+            moneys.setCanCreditMoney(BigDecimal.ZERO);
         }
         AppUtmRegVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetails != null) {
             UtmPlatVO utmPlat = amUserClient.selectUtmPlatByUtmId(userId);
             if (utmPlat != null && utmPlat.getAttornFlag() == 0) {
                 logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
-                throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
+                //throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
+                moneys.setCanCreditMoney(BigDecimal.ZERO);
             }
         }
-        // 获取可债转金额   转让中本金   累计已转让本金
-        CreditPageVO moneys = amTradeClient.selectCreditPageMoneyTotal(userId);
-        AccountVO account = amTradeClient.getAccountByUserId(userId);
-        moneys.setHoldMoneyTotal(account.getBankAwaitCapital());
         WebResult result =  new WebResult();
         result.setData(moneys);
         return result;
@@ -140,17 +144,22 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      */
     @Override
     public WebResult getCreditList(MyCreditListQueryRequest request, Integer userId) {
-        if (!amTradeClient.isAllowChannelAttorn(userId)) {
-            logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
-            throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
-        }
+        WebResult webResult = new WebResult();
         // 初始化分页参数，并组合到请求参数
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        if (!amTradeClient.isAllowChannelAttorn(userId)) {
+            logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
+            //throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
+            webResult.setData(new ArrayList<>());
+            page.setTotal(0);
+            webResult.setPage(page);
+            return webResult;
+        }
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         request.setUserId(userId);
         MyCreditListQueryResponse res = amTradeClient.countMyCreditList(request);
-        WebResult webResult = new WebResult();
+
         if (!Response.isSuccess(res)) {
             logger.error("查询count异常");
             throw new RuntimeException("查询count异常");

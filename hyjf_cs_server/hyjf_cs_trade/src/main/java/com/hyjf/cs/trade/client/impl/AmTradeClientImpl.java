@@ -5112,7 +5112,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params) {
+    public BorrowAndInfoVO getborrowByProductId(String productId) {
+        String url = "http://AM-TRADE/am-trade/borrow/getBorrowVOByNid/"+productId;
+        BorrowResponse response=restTemplate.getForEntity(url,BorrowResponse.class).getBody();
+        if (Validator.isNotNull(response)){
+            return response.getResult();
+        }
         return null;
     }
 

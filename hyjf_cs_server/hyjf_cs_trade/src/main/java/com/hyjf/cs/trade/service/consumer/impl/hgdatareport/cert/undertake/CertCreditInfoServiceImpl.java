@@ -184,8 +184,6 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     String userIdcardHash = getUserIdcardHash(hjhDebtCreditTender.getUserId());
                     //8.承接时间：系统记录的承接时间
                     String takeTime = dateFormatTransformationDate(hjhDebtCreditTender.getCreateTime(), "H");
-                    //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-                    BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(hjhDebtCreditTender.getAssignPlanOrderId());
                     //10.封闭截至时间：散标报送 到期日  智投报送承接日
                     String lockTime = dateFormatTransformationDate(hjhDebtCreditTender.getCreateTime(), "Y");
 
@@ -216,7 +214,6 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //8.承接时间：系统记录的承接时间
                     param.put("takeTime", takeTime);
                     //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-//                param.put("redpackage", bigDecimalCouponQuota.toString());
                     param.put("redpackage", "0");
                     //10.封闭截至时间：散标报送 到期日  智投报送承接日
                     param.put("lockTime", lockTime);

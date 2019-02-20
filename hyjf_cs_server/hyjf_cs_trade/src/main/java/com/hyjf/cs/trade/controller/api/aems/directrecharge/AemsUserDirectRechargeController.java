@@ -41,7 +41,7 @@ public class AemsUserDirectRechargeController extends BaseTradeController {
     @ResponseBody
     @PostMapping(value = "/recharge")
     public ModelAndView recharge(@RequestBody AemsUserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
-        logger.info("api充值   请求参数  ", userRechargeRequestBean);
+        logger.info("api充值AEMS用户充值请求参数request:{}" + JSONObject.toJSONString(userRechargeRequestBean, true) + "】");
         Map<String, Object> result = directRechargeService.recharge(userRechargeRequestBean, request);
         if (null != result && result.get("modelAndView") == null) {
             return callbackErrorViewForMap(result);
@@ -76,7 +76,7 @@ public class AemsUserDirectRechargeController extends BaseTradeController {
     @ResponseBody
     @PostMapping(value = "/directRechargePageBgreturn")
     public BankCallResult bgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
-        logger.info("页面充值异步回调start");
+        logger.info("页面充值同步回调start,请求参数为：【" + JSONObject.toJSONString(bean, true) + "】");
         return directRechargeService.bgreturn(request, bean);
     }
 }

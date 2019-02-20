@@ -790,7 +790,7 @@
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
         FROM
-        ht_borrow AS bWhere_Clause_New
+        ht_borrow AS b
         INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid
         INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
         LEFT JOIN ht_r_user u ON b.user_id = u.user_id
