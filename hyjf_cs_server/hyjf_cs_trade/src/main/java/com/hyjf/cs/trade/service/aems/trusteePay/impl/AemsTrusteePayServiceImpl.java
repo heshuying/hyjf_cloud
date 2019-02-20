@@ -36,7 +36,7 @@ public class AemsTrusteePayServiceImpl extends BaseTradeServiceImpl implements A
     @Override
     public BankOpenAccountVO selectBankOpenAccountByAccountId(String accountId) {
         BankOpenAccountVO bankOpenAccountVO = this.amUserClient.selectBankOpenAccountByAccountId(accountId);
-        if (bankOpenAccountVO == null || "".equals(bankOpenAccountVO)){
+        if (bankOpenAccountVO != null){
             return bankOpenAccountVO;
         }
         return null;
@@ -44,13 +44,7 @@ public class AemsTrusteePayServiceImpl extends BaseTradeServiceImpl implements A
 
     @Override
     public BorrowAndInfoVO selectBorrowByProductId(String productId) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("productId",productId);
-        List<BorrowAndInfoVO> borrows = this.amTradeClient.getborrowByProductId(params);
-        if (borrows != null && borrows.size() > 0) {
-            return borrows.get(0);
-        }
-        return null;
+        return this.amTradeClient.getborrowByProductId(productId);
     }
 
     @Override

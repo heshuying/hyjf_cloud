@@ -74,10 +74,10 @@
           		AND admin.state = #{stateSrch}
           	</if>
 			<if test="addtimeStartSrch != null and addtimeStartSrch != ''">
-				AND admin.create_time  <![CDATA[>=]]> #{addtimeStartSrch}
+				AND admin.create_time  <![CDATA[>=]]> unix_timestamp(CONCAT(#{addtimeStartSrch},' 00:00:00')
 			</if>
 			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
-				AND admin.create_time <![CDATA[<=]]> #{addtimeEndSrch}
+				AND admin.create_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{addtimeEndSrch},' 23:59:59'))
 			</if>
 			and admin.del_flag=0
 		ORDER BY
