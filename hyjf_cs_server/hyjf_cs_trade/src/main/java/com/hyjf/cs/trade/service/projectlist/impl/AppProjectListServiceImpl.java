@@ -1455,17 +1455,26 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 服务费授权开关
             userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 
-            try {
-
-                if (userVO.getIsEvaluationFlag() == 1) {
-                    userValidation.put("isRiskTested", true);
-                } else {
-                    userValidation.put("isRiskTested", false);
+            try{
+                if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
+                    //测评到期日
+                    Long lCreate = userVO.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        userValidation.put("isRiskTested", "2");
+                    } else {
+                        //未到一年有效期
+                        userValidation.put("isRiskTested", "1");
+                    }
+                }else{
+                    userValidation.put("isRiskTested", "0");
                 }
                 // modify by liuyang 20180411 用户是否完成风险测评标识 end
-            } catch (Exception e) {
+            }catch (Exception e){
                 logger.error("是否进行过风险测评查询出错....", e);
-                userValidation.put("isRiskTested", false);
+                userValidation.put("isRiskTested", "2");
             }
 
             //

@@ -135,8 +135,9 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
                 logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低,请重新授权！");
                 return callbackErrorView(resultMap);
             }
+            resultMap.put("acqRes", request.getParameter("acqRes"));
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
-            resultMap.put("status", "多合一授权成功");
+            resultMap.put("statusDesc", "多合一授权成功");
             resultMap.put("deadline", bean.getDeadline());
             logger.info("AEMS多合一授权[同步回调]结束");
             return callbackErrorView(resultMap);

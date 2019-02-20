@@ -14,6 +14,7 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
+import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
@@ -44,8 +45,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/hyjf-admin/config/operationlog")
 public class OperationLogController  extends BaseController {
-
-
 
     //权限名称
     private static final String PERMISSIONS = "operationlog";
@@ -344,6 +343,31 @@ public class OperationLogController  extends BaseController {
         }
         return null;
 
+    }
+
+    /**
+     * 下拉联动
+     *
+     * @return 进入资产列表页面
+     */
+    @ApiOperation(value = "查询配置中心操作日志配置", notes = "下拉联动")
+    @PostMapping("/assetTypeAction")
+    public AdminResult assetTypeAction(@RequestBody OperationLogRequestBean request) {
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isBlank(request.getInstCode())){
+            return new AdminResult<>(Response.FAIL,"资产来源不能为空，请重新操作！") ;
+        }
+        // 根据资金来源取得产品类型
+        List<HjhAssetTypeVO> hjhAssetTypeList = this.operationLogService.hjhAssetTypeList(request.getInstCode());
+        if (hjhAssetTypeList != null && hjhAssetTypeList.size() > 0) {
+            for (HjhAssetTypeVO hjhAssetBorrowType : hjhAssetTypeList) {
+                Map<String, Object> mapTemp = new HashMap<String, Object>();
+                mapTemp.put("id", hjhAssetBorrowType.getAssetType());
+                mapTemp.put("text", hjhAssetBorrowType.getAssetTypeName());
+                resultList.add(mapTemp);
+            }
+        }
+        return new AdminResult<List<Map<String, Object>>>(resultList) ;
     }
 
 }

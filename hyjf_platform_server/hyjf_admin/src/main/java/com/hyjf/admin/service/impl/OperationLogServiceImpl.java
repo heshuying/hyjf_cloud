@@ -66,4 +66,13 @@ public class OperationLogServiceImpl implements OperationLogService {
         return csMessageClient.getOperationLogList(request);
     }
 
+    /**
+     * 根据资金来源查询产品类型
+     * @param instCode
+     * @return
+     */
+    @Override
+    public List<HjhAssetTypeVO> hjhAssetTypeList(String instCode){
+        return amTradeClient.hjhAssetTypeList(instCode);
+    }
 }

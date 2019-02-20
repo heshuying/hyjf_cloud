@@ -167,12 +167,16 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;
                         } else {
-                            CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
+                            result.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
+                            result.setResult("该用户无银行开户信息");
+                            return result;
                         }
                     }
                 }else {
                     // 该用户无银行开户信息
-                    CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
+                    result.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
+                    result.setResult("该用户无银行开户信息");
+                    return result;
                 }
             }
         }
