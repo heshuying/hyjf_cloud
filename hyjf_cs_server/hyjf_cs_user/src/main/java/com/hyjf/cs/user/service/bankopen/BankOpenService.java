@@ -82,4 +82,12 @@ public interface BankOpenService extends BaseUserService {
 	 * @return
 	 */
 	Map<String, String> checkAemsOpenBankAccountParam(@Valid AemsBankOpenEncryptPageRequestBean requestBean);
+	/**
+	 *
+	 * 根据手机号查询银行开户电子账户号
+	 * @author pcc
+	 * @param mobile
+	 * @return
+	 */
+	String getBankOpenAccountByMobile(String mobile);
 }

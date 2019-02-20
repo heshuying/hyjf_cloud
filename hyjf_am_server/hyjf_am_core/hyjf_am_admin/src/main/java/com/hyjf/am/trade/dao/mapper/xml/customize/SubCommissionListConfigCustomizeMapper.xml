@@ -68,7 +68,12 @@
         <if test="distinct" >
             distinct
         </if>
-        id, user_id, username, truename,role_name, user_type, bank_open_account, account, `status`, cooperate_num,
+        id, user_id, username, truename,
+        CASE
+        WHEN role_name='投资人' THEN '出借人'
+        WHEN role_name='担保机构' THEN '垫付机构'
+        else role_name end role_name,
+        user_type, bank_open_account, account, `status`, cooperate_num,
         remark, create_user_id, create_user_name,
         DATE_FORMAT( c.create_time, '%Y-%m-%d %H:%i:%s' ) create_time, update_user_id, update_user_name,
         DATE_FORMAT( c.update_time, '%Y-%m-%d %H:%i:%s' ) update_time
@@ -84,11 +89,15 @@
         id, user_id, username, truename,
       CASE role_name
        WHEN '出借人' THEN
-           '1'
-       WHEN '借款人' THEN
-          '2'
-       WHEN ' 担保机构' THEN
-          ' 3 '
+            '1'
+        WHEN '投资人' THEN
+            '1'
+        WHEN '借款人' THEN
+            '2'
+        WHEN '担保机构' THEN
+            ' 3 '
+        WHEN '垫付机构' THEN
+            ' 3 '
        END AS role_name,
        CASE user_type
        WHEN '个人用户' THEN
