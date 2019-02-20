@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +59,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
     public void updateHjhDebtCreditStatus(HjhDebtCredit hjhDebtCredit) throws Exception {
         // 根据债转的计划编号查询计划
         String planNid = hjhDebtCredit.getPlanNidNew();
+        Integer now = GetDate.getNowTime10();
         // 如果新的计划编号为空
         if (StringUtils.isBlank(planNid)) {
             logger.info("清算出的债转未绑定新的计划:债转编号:[" + hjhDebtCredit.getCreditNid() + "]");
@@ -114,6 +116,8 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         }
         // 1.更新债转状态未停止
         hjhDebtCredit.setCreditStatus(3);
+        hjhDebtCredit.setEndTime(now);
+        hjhDebtCredit.setUpdateTime(new Date());
         boolean isHjhDebtCreditStatusupdateFlag = this.hjhDebtCreditMapper.updateByPrimaryKey(hjhDebtCredit) > 0 ? true : false;
         if (!isHjhDebtCreditStatusupdateFlag) {
             throw new RuntimeException("更新未结束债转状态失败,债转编号:[" + hjhDebtCredit.getCreditNid() + "].");

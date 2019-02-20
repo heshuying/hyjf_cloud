@@ -143,6 +143,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
                     {
                         JSONArray jsa = JSONArray.parseArray(retBean.getSubPacks());
+                        logger.info("请求开户掉单查询接口  调用银行返回参数为：{}",JSONObject.toJSONString(jsa));
                         if (jsa != null && jsa.size() > 0) {
                             // 如果返回的结果大于0条
                             result.setStatus("y");

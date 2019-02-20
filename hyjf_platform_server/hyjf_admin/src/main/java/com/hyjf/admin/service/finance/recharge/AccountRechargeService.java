@@ -4,7 +4,7 @@ import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface AccountRechargeService extends BaseService {
      * 获取银行列表
      * @return
      */
-    List<BankConfigVO> getBankcardList();
+    List<JxBankConfigVO> getBankcardList();
 
     /**
      * 充值管理(账户数量)

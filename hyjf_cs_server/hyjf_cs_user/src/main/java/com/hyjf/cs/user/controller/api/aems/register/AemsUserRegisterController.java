@@ -96,6 +96,10 @@ public class AemsUserRegisterController extends BaseUserController {
                 if(StringUtils.isNotBlank(idCard) && StringUtils.isNotBlank(trueName)){
                     result.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
                     result.setStatusDesc("注册成功");
+                    result.setIsOpenAccount("0");
+                    result.setAutoInvesStatus("0");
+                    result.setIsSetPassword("0");
+                    result.setUserId(user.getUserId());
                 } else {
                     result.setStatusForResponse(MsgEnum.STATUS_ZC000005.getCode());
                     result.setStatusDesc(MsgEnum.STATUS_ZC000005.getMsg());
