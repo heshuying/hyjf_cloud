@@ -412,7 +412,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 	 * @return
 	 */
 	@Override
-	@HystrixCommand(commandKey = "提现(api)-withdraw",fallbackMethod = "fallBackApiWithdraw",ignoreExceptions = CheckException.class,commandProperties = {
+	@HystrixCommand(commandKey = "提现(api)-withdraw",ignoreExceptions = CheckException.class,commandProperties = {
 			//设置断路器生效
 			@HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
 			//一个统计窗口内熔断触发的最小个数3/10s
@@ -520,7 +520,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 				return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"忘记密码URL不能为空");
 			}
 			// 验签  先去掉验签
-			if (!SignUtil.AEMSVerifyRequestSign(userWithdrawRequestBean,"/aems/user/withdraw/withdraw.do")) {
+			if (!SignUtil.AEMSVerifyRequestSign(userWithdrawRequestBean,"/aems/user/withdraw/withdraw")) {
 				logger.info("-------------------验签失败！--------------------");
 				return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000002,"验签失败!");
 			}
@@ -687,9 +687,9 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 			// 调用江西银行提现接口
 			// 调用汇付接口(提现)
 
-			String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/aems/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
+			String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/aems/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
 			// 支付工程路径
-			String bankBgRetUrl = "http://CS-TRADE/hyjf-api/aems/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");
+			String bankBgRetUrl = "http://CS-TRADE/hyjf-api/aems/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");
 
 			// 路由代码
 			String routeCode = "";

@@ -135,15 +135,11 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_TP000001 = "TP000001";
     //未设置过交易密码，请先设置交易密码
     public static final String STATUS_TP000002 = "TP000002";
-    
-    
-    
     /********************交易密码相关    end***********************/
     
 
 
     /********************资产推送 start***********************/
-    
     // 没有用户信息
     public static final String STATUS_ZT000001 = "ZT000001";
     // 没有用户开户信息
@@ -166,27 +162,48 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_ZT000010 = "ZT000010";
     // 受托支付电子账户为空
     public static final String STATUS_ZT000011 = "ZT000011";
-    
-    
     /********************资产推送    end***********************/
-    
+
+    /********************AEMS资产推送    start***********************/
+    // 请求参数非法
+    public static final String STATUS_ZT000100 = "ZT000100";
+    // 机构编号不存在
+    public static final String STATUS_ZT000101 = "ZT000101";
+    // 保证金配置不存在
+    public static final String STATUS_ZT000102 = "ZT000102";
+    // 未在授信期内，不能推标
+    public static final String STATUS_ZT000103 = "ZT000103";
+    // 推送资产不能为空
+    public static final String STATUS_ZT000104 = "ZT000104";
+    // 请求参数过长
+    public static final String STATUS_ZT000105 = "ZT000105";
+    // 商家信息数量超限
+    public static final String STATUS_ZT000106 = "ZT000106";
+    // AEMS资产推送异常
+    public static final String STATUS_ZT000107 = "ZT000107";
+    // 受托支付电子账户未授权
+    public static final String STATUS_ZT000108 = "ZT000108";
+    //年收入为空or不为数字
+    public static final String STATUS_ZT000109 = "ZT000109";
+    //月收入为空
+    public static final String STATUS_ZT000110 = "ZT000110";
+    //借款人地址信息不正确
+    public static final String STATUS_ZT000111 = "ZT000111";
+    /********************AEMS资产推送    end***********************/
+
     /********************还款接口    start***********************/
-    /**
-     * 没有查询到对应借款标的
-     * */
+    // 没有查询到对应借款标的
     public static final String STATUS_HK000001 = "HK000001";
-    /**
-     * 借款标的没有对应的还款信息
-     */
+    // 借款标的没有对应的还款信息
     public static final String STATUS_HK000002 = "HK000002";
     /*********************还款接口  end***********************/
     
     /********************受托支付接口    start***********************/
-    /**标的状态错误 TP000001 */
+    //标的状态错误 TP000001
     public static final String STATUS_TR000001 = "TR000001";
-    /**不在授权白名单里 TP000002 */
+    // 不在授权白名单里 TP000002
     public static final String STATUS_TR000002 = "TR000002";
-    /**证件号不能为空  TP000003 */
+    // 证件号不能为空  TP000003
     public static final String STATUS_TR000003 = "TR000003";
     /********************受托支付接口    end***********************/
 }

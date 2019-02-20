@@ -386,7 +386,7 @@ public class AemsTrusteePayController extends BaseController {
     
 
     @ApiOperation(value = "AEMS借款人受托支付申请,查询接口", notes = "AEMS借款人受托支付申请，查询接口")
-    @PostMapping(value = "/trusteePayQuery.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "/trusteePayQuery", produces = "application/json; charset=utf-8")
     public JSONObject trusteePayQuery(HttpServletRequest request, @RequestBody AemsTrusteePayRequestBean payRequestBean , HttpServletResponse response) {
         logger.info("受托支付申请查询接口 请求参数：" + JSONObject.toJSONString(payRequestBean, true) + "]");
         JSONObject result = new JSONObject();

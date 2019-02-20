@@ -46,7 +46,7 @@ public class AemsAuthStatusQueryController extends BaseController {
      * @param response
      * @return
      */
-    @PostMapping("/status")
+    @PostMapping("/query")
     @ApiParam(required = true, name = "findDetailById", value = "AEMS授权状态查询接口")
     @ApiOperation(value = "AEMS授权状态查询接口", httpMethod = "POST", notes = "AEMS授权状态查询接口")
     public AemsAuthStatusQueryResultBean sendCode(@RequestBody AemsAuthStatusQueryRequestBean autoStateQuery, HttpServletRequest request, HttpServletResponse response) {
@@ -68,7 +68,7 @@ public class AemsAuthStatusQueryController extends BaseController {
         }
 
         // 验签  accountId
-        if (!SignUtil.AEMSVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
+        if (!SignUtil.AEMSVerifyRequestSign(autoStateQuery, "/aems/authState/query")) {
             logger.info("----验签失败----");
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);
             resultBean.setStatusDesc("验签失败！");

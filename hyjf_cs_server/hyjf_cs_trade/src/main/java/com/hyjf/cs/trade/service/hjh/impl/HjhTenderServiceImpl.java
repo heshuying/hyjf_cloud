@@ -218,9 +218,12 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 计划不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
-        UserVO loginUser = amUserClient.findUserById(tender.getUserId());
+        UserVO loginUser = null;
+        if(tender.getUserId()!=null){
+            loginUser = amUserClient.findUserById(tender.getUserId());
+            tender.setUser(loginUser);
+        }
 
-        tender.setUser(loginUser);
         BigDecimal couponInterest = BigDecimal.ZERO;
         CouponUserVO couponUser = null;
         if (couponId != null && couponId > 0) {
@@ -230,66 +233,74 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         /** 计算最优优惠券开始 isThereCoupon 1是有最优优惠券，0无最有优惠券 */
         MyCouponListRequest request = new MyCouponListRequest();
         request.setBorrowNid(tender.getBorrowNid());
-        request.setUserId(String.valueOf(loginUser.getUserId()));
-        request.setPlatform(tender.getPlatform());
-        /** 可用优惠券张数开始 */
-        request.setMoney(money);
-        int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
-        investInfo.setCouponAvailableCount(availableCouponListCount);
-        if(couponId==null || couponId.intValue()==0){
-            BestCouponListVO bestCouponListVO = amTradeClient.selectHJHBestCoupon(request);
-            logger.info("最优优惠券   " + JSONObject.toJSONString(bestCouponListVO));
-            if(bestCouponListVO!=null){
-                couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
-            }
-            investInfo.setCouponConfig(bestCouponListVO);
-            investInfo.setIsThereCoupon(1);
-        }else{
-            if(couponUser!=null){
-                BestCouponListVO couponConfig = new BestCouponListVO();
-                couponConfig.setCouponType(couponUser.getCouponType());
-                couponConfig.setUserCouponId(couponUser.getId()+"");
-                couponConfig.setCouponQuota(couponUser.getCouponQuota());
-                couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
-                couponConfig.setTenderQuotaType(couponUser.getCouponType());
-                investInfo.setIsThereCoupon(1);
-                investInfo.setCouponConfig(couponConfig);
-            }
+        if(loginUser!=null){
+            request.setUserId(String.valueOf(loginUser.getUserId()));
         }
-        /** 可用优惠券张数结束 */
+        request.setPlatform(tender.getPlatform());
 
-        /** 获取用户优惠券总张数开始 */
-        int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
-        investInfo.setRecordTotal(recordTotal);
-        /** 获取用户优惠券总张数结束 */
-        //BestCouponListVO couponConfig = new BestCouponListVO();
-        if (!"0".equals(plan.getCouponConfig()) && loginUser != null) {
-            BigDecimal borrowApr = plan.getExpectApr();
-            if (couponUser != null) {
-                investInfo.setIsThereCoupon(1);
-                if (couponUser != null) {
-                    if (couponUser.getCouponType() == 1) {
-                        couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), plan.getExpectApr());
-                    } else {
-                        couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponUser.getCouponType(), plan.getExpectApr(), couponUser.getCouponQuota(), money, plan.getLockPeriod());
-                    }
-
-                    couponUser.setCouponInterest(df.format(couponInterest));
-                    if (couponUser.getCouponType() == 2) {
-                        borrowApr = borrowApr.add(couponUser.getCouponQuota());
-                    }
-                    if (couponUser.getCouponType() == 3) {
-                        money = new BigDecimal(money).add(couponUser.getCouponQuota()).toString();
-                    }
+        request.setMoney(money);
+        if(loginUser!=null){
+            /** 可用优惠券张数开始 */
+            int availableCouponListCount = amTradeClient.countHJHAvaliableCoupon(request);
+            investInfo.setCouponAvailableCount(availableCouponListCount);
+            if(couponId==null || couponId.intValue()==0){
+                BestCouponListVO bestCouponListVO = amTradeClient.selectHJHBestCoupon(request);
+                logger.info("最优优惠券   " + JSONObject.toJSONString(bestCouponListVO));
+                if(bestCouponListVO!=null){
+                    couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
                 }
-                couponUser.setCouponInterest(df.format(couponInterest));
-            } else {
-                investInfo.setIsThereCoupon(0);
+                investInfo.setCouponConfig(bestCouponListVO);
+                investInfo.setIsThereCoupon(1);
+            }else{
+                if(couponUser!=null){
+                    BestCouponListVO couponConfig = new BestCouponListVO();
+                    couponConfig.setCouponType(couponUser.getCouponType());
+                    couponConfig.setUserCouponId(couponUser.getId()+"");
+                    couponConfig.setCouponQuota(couponUser.getCouponQuota());
+                    couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                    couponConfig.setTenderQuotaType(couponUser.getCouponType());
+                    investInfo.setIsThereCoupon(1);
+                    investInfo.setCouponConfig(couponConfig);
+                }
             }
-            investInfo.setCouponUser(couponUser);
-            /** 计算最优优惠券结束 */
-            investInfo.setCouponCapitalInterest(df.format(couponInterest));
-        } else {
+            /** 可用优惠券张数结束 */
+
+            /** 获取用户优惠券总张数开始 */
+            int recordTotal = amTradeClient.getUserCouponCount(tender.getUser().getUserId(), "0");
+            investInfo.setRecordTotal(recordTotal);
+            /** 获取用户优惠券总张数结束 */
+            //BestCouponListVO couponConfig = new BestCouponListVO();
+            if (!"0".equals(plan.getCouponConfig()) && loginUser != null) {
+                BigDecimal borrowApr = plan.getExpectApr();
+                if (couponUser != null) {
+                    investInfo.setIsThereCoupon(1);
+                    if (couponUser != null) {
+                        if (couponUser.getCouponType() == 1) {
+                            couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), plan.getExpectApr());
+                        } else {
+                            couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponUser.getCouponType(), plan.getExpectApr(), couponUser.getCouponQuota(), money, plan.getLockPeriod());
+                        }
+
+                        couponUser.setCouponInterest(df.format(couponInterest));
+                        if (couponUser.getCouponType() == 2) {
+                            borrowApr = borrowApr.add(couponUser.getCouponQuota());
+                        }
+                        if (couponUser.getCouponType() == 3) {
+                            money = new BigDecimal(money).add(couponUser.getCouponQuota()).toString();
+                        }
+                    }
+                    couponUser.setCouponInterest(df.format(couponInterest));
+                } else {
+                    investInfo.setIsThereCoupon(0);
+                }
+                investInfo.setCouponUser(couponUser);
+                /** 计算最优优惠券结束 */
+                investInfo.setCouponCapitalInterest(df.format(couponInterest));
+            } else {
+                investInfo.setCouponAvailableCount(0);
+            }
+        }else{
+            investInfo.setRecordTotal(0);
             investInfo.setCouponAvailableCount(0);
         }
 
