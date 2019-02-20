@@ -56,7 +56,7 @@ public class SyncRUserConsumer implements RocketMQListener<MessageExt>, RocketMQ
             }
             logger.info("【{}】Ruser同步OK",tagName);
         } catch (Exception e1) {
-            logger.error("【Ruser同步】消费失败，{}", e1.getMessage());
+            logger.error("【Ruser同步】消费失败，{}", e1);
             return;
         }
         // 如果没有return success ，consumer会重新消费该消息，直到return success

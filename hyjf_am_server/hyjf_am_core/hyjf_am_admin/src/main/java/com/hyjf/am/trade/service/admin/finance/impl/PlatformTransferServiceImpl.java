@@ -304,7 +304,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         accountListVO.setAwait(accountVO.getAwait());
         accountListVO.setRepay(accountVO.getRepay());
         accountListVO.setRemark("平台转账");
-        accountListVO.setCreateTime(time);
+        accountListVO.setCreateTime(new Date());
         accountListVO.setOperator(loginUserName);
         accountListVO.setIp(bankBean.getLogIp());
         accountListVO.setIsUpdate(0);

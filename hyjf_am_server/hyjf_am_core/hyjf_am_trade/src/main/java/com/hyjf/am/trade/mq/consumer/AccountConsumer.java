@@ -36,6 +36,7 @@ public class AccountConsumer implements RocketMQListener<MessageExt>, RocketMQPu
 	public void onMessage(MessageExt msg) {
 		logger.info("AccountConsumer 收到消息，开始处理....");
 		AccountVO accountVO = JSONObject.parseObject(msg.getBody(), AccountVO.class);
+		logger.info("AccountConsumer 收到消息，请求参数msg.... :", msg);
 		if (accountVO != null) {
 			logger.info("注册保存账户表...userId is :", accountVO.getUserId());
 			Account account = new Account();
