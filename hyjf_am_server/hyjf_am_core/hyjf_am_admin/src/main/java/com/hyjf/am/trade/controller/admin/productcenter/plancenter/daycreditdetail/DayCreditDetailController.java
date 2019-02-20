@@ -70,14 +70,9 @@ public class DayCreditDetailController {
         //传分页
         Paginator paginator;
 
-        if (request.getLimitStart() == 0){
-            // 根据前台传入分页
-            paginator = new Paginator(request.getCurrPage(), count);
-        }else {
-            // 未传入分页信息,使用默认分页信息
-            paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
-        }
         if (count > 0 && count != null) {
+
+            paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
 
             params.put("limitStart", paginator.getOffset());
             params.put("limitEnd", paginator.getLimit());
