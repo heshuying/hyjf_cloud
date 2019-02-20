@@ -184,8 +184,12 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             resultMap.put("acqRes", request.getParameter("acqRes"));
             return callbackErrorView(resultMap);
         } else {
+            String accountId = bankOpenService.getBankOpenAccountByMobile((String) request.getParameter("phone"));
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
-            resultMap.put("status", "页面开户成功");
+            resultMap.put("statusDesc", "页面开户成功");
+            resultMap.put("accountId", accountId);
+            resultMap.put("chkValue", "");
+            resultMap.put("acqRes", request.getParameter("acqRes"));
             resultMap.put("phone", phone);
             return callbackErrorView(resultMap);
         }

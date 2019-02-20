@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlanCapitalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -50,6 +52,9 @@ public class PlanCapitalController extends BaseController {
     @Autowired
     private PlanCapitalService planCapitalService;
 
+    // 权限名称
+    public static final String PERMISSIONS = "plancapitallist";
+
     /**
      * 计划资金 列表
      * @param requestBean
@@ -57,6 +62,7 @@ public class PlanCapitalController extends BaseController {
      */
     @ApiOperation(value = "资金计划列表", notes = "资金计划列表")
     @PostMapping(value = "/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<HjhPlanCapitalVO>> init(@RequestBody HjhPlanCapitalRequestBean requestBean){
 
         HjhPlanCapitalRequest hjhPlanCapitalRequest = new HjhPlanCapitalRequest();
@@ -111,6 +117,7 @@ public class PlanCapitalController extends BaseController {
      */
     @ApiOperation(value = "资金计划列表", notes = "资金计划列表导出")
     @PostMapping(value = "/exportExcel")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhPlanCapitalRequestBean requestBean) throws Exception {
         HjhPlanCapitalRequest hjhPlanCapitalRequest = new HjhPlanCapitalRequest();
         BeanUtils.copyProperties(requestBean, hjhPlanCapitalRequest);
