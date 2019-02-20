@@ -477,7 +477,7 @@ public class AppBankWithdrawController extends BaseTradeController {
      * @Version v0.1
      * @Date
      */
-    @ApiIgnore
+    @ApiOperation(value = "用户充值异步回调", notes = "用户充值")
     @ResponseBody
     @PostMapping("/userBankWithdrawBgreturn")
     public String userBankWithdrawBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {

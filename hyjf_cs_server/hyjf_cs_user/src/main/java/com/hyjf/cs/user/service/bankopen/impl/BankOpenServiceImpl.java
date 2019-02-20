@@ -40,6 +40,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.map.HashedMap;
@@ -896,6 +897,31 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         }
 
         return resultBean;
+    }
+    @Override
+    public String getBankOpenAccountByMobile(String mobile) {
+        try {
+            BankCallBean bean = new BankCallBean();
+            bean.setLogOrderId(GetOrderIdUtils.getOrderId2(1));
+            bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+            bean.setLogUserId(StringUtil.valueOf(1));
+            bean.setLogRemark("根据手机号查询银行电子账户号");
+            bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+            bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
+            bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
+            bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
+            bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道
+            bean.setVersion(ChinaPnrConstant.VERSION_10);
+            bean.setTxCode(BankCallMethodConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE);
+            bean.setMobile(mobile);
+            // 调用汇付接口
+            BankCallBean retBean = BankCallUtils.callApiBg(bean);
+            return retBean.getAccountId();
+        } catch (Exception e) {
+            logger.info("开户同步步处理,mobile:{}", "根据手机号查询电子账户信息失败"+mobile);
+            throw new CheckException(MsgEnum.ERR_BANK_CALL);
+        }
+
     }
 
     /**

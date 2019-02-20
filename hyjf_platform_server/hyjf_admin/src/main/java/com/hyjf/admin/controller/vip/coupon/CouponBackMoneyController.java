@@ -61,6 +61,9 @@ public class CouponBackMoneyController extends BaseController {
     public static final String HZTPERMISSIONSJX = "HZTBACKMONEYJX";
     /** 汇直投代金券查看权限 */
     public static final String HZTPERMISSIONSDJ = "HZTBACKMONEYDJ";
+    /** 优惠券回款导出权限 */
+    public static final String PERMISSIONS = "HZTBACKMONEY";
+
 
 
     @ApiOperation(value = "汇直投-代金券-回款使用列表", notes = "汇直投-代金券-回款使用列表")
@@ -131,6 +134,7 @@ public class CouponBackMoneyController extends BaseController {
      *
      */
     @PostMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request,HttpServletResponse response, @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) throws Exception {
         String father = couponBackMoneyCustomize.getFather();
         String son = couponBackMoneyCustomize.getSon();

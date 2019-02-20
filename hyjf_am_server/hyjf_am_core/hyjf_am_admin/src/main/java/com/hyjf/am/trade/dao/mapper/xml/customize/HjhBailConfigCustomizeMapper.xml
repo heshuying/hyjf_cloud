@@ -84,7 +84,7 @@
         hhbc.del_flg
         FROM
         ht_hjh_bail_config hhbc
-        LEFT JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code AND hhic.del_flag = 0
+        JOIN ht_hjh_inst_config hhic ON hhbc.inst_code = hhic.inst_code AND hhic.del_flag = 0
         WHERE hhbc.del_flg = 0
         <if test="limitStart >= 0">
             limit #{limitStart} , #{limitEnd}

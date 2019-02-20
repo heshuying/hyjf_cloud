@@ -29,16 +29,25 @@ public class SmsCodeServiceImpl implements SmsCodeService {
     @Override
     public List<String> queryUser(SmsCodeUserRequest request) {
         Map<String, Object> params = new HashMap<>();
+        if (request.getOpen_account() != null && request.getOpen_account() != 3) {
+            params.put("open_account", request.getOpen_account());
+        }
+        if (StringUtils.isNotBlank(request.getRe_time_begin())) {
+            params.put("re_time_begin", GetDate.getDayStart(request.getRe_time_begin()));
+        }
+        if (StringUtils.isNotBlank(request.getRe_time_end())) {
+            params.put("re_time_end", GetDate.getDayEnd(request.getRe_time_end()));
+        }
         if (StringUtils.isNotBlank(request.getAdd_time_begin())) {
-            params.put("add_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getAdd_time_begin())));
+            params.put("add_time_begin", GetDate.getDayStart(request.getAdd_time_begin()));
         }
         if (StringUtils.isNotBlank(request.getAdd_time_end())) {
-            params.put("add_time_end", GetDate.dateString2Timestamp(GetDate.getDayEnd(request.getAdd_time_end())));
+            params.put("add_time_end", GetDate.getDayEnd(request.getAdd_time_end()));
         }
         String addMoneyCount = request.getAdd_money_count();
-		if (StringUtils.isNotBlank(addMoneyCount)) {
-			params.put("add_money_count", new BigDecimal(addMoneyCount));
-		}
+        if (StringUtils.isNotBlank(addMoneyCount)) {
+            params.put("add_money_count", new BigDecimal(addMoneyCount));
+        }
         return smsCodeCustomizeMapper.queryUser(params);
     }
 
