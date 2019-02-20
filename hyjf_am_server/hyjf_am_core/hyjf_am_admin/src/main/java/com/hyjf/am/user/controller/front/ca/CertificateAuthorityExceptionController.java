@@ -52,7 +52,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      * 获取CA认证异常列表
      */
     @PostMapping("/getExceptionRecordList")
-    public CertificateAuthorityResponse getExceptionRecordList(HttpServletRequest request, @RequestBody CertificateAuthorityExceptionRequest form) {
+    public CertificateAuthorityResponse getExceptionRecordList(@RequestBody CertificateAuthorityExceptionRequest form) {
         CertificateAuthorityResponse cfar = new CertificateAuthorityResponse();
         // 创建分页
         return this.createExceptionPage(form, cfar);

@@ -163,7 +163,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updateBankMerchantAccount(BankMerchantAccount bankMerchantAccountVO) {
-        return bankMerchantAccountMapper.insertSelective(bankMerchantAccountVO);
+        return bankMerchantAccountMapper.updateByPrimaryKeySelective(bankMerchantAccountVO);
     }
 
     /**

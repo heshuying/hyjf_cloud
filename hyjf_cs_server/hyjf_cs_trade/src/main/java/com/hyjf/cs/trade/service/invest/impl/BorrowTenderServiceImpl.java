@@ -697,8 +697,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account.toString() , borrowInfo.getBorrowExtraYield());
-                BigDecimal oldEarnings = new BigDecimal(interest);
-                earnings = incEarnings.add(oldEarnings);
+                earnings = incEarnings.add(earnings);
             }
             data.put("income",df.format(earnings));
             // 本金

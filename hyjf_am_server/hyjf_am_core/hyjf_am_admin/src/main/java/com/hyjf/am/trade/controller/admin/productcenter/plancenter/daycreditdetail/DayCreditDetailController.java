@@ -53,7 +53,7 @@ public class DayCreditDetailController {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", request.getPlanNid());
-//        params.put("planOrderId", request.getPlanOrderId());
+        params.put("planOrderId", request.getPlanOrderId());
 //        params.put("planNidNew", request.getPlanNidNew());
         params.put("userName", request.getUserName());
         params.put("creditNid", request.getCreditNid());
