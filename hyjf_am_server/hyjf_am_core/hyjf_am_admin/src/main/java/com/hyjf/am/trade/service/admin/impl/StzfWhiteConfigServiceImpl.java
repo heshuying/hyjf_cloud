@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.trade.dao.mapper.auto.StzhWhiteListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.StzhWhiteListCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
@@ -38,20 +39,24 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	}
 
 	@Override
-	public void insertSTZHWhiteList(STZHWhiteListRequest request) {
+	public void insertSTZHWhiteList(STZHWhiteListRequestBean request) {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
 		BeanUtils.copyProperties(request, stzhWhiteList);
 		stzhWhiteList.setDelFlag(0);
+		stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
+		stzhWhiteList.setCreateUserId(Integer.valueOf(request.getCreateuser()));
 		stzhWhiteListMapper.insert(stzhWhiteList);
 	}
 
 	@Override
-	public void updateSTZHWhiteList(STZHWhiteListRequest request) {
+	public void updateSTZHWhiteList(STZHWhiteListRequestBean request) {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
 		BeanUtils.copyProperties(request, stzhWhiteList);
 		if (request.getDelFlag() == null) {
 			stzhWhiteList.setDelFlag(0);
 		}
+		stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
+		stzhWhiteList.setCreateUserId(Integer.valueOf(request.getCreateuser()));
 		stzhWhiteListMapper.updateByPrimaryKey(stzhWhiteList);
 	}
 

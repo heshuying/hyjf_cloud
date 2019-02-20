@@ -6,17 +6,15 @@ import com.hyjf.admin.beans.request.HjhRepayRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlanRepayService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.response.trade.HjhRepayResponse;
-import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
-import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -27,10 +25,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,6 +49,9 @@ public class PlanRepayController extends BaseController {
 
     @Autowired
     private PlanRepayService planRepayService;
+
+    // 权限名称
+    public static final String PERMISSIONS = "planrepay";
 
     /**
      * 资金中心 - 订单退出 检索下拉框
@@ -110,6 +106,7 @@ public class PlanRepayController extends BaseController {
      */
     @ApiOperation(value = "智投退出", notes = "智投退出初始化列表")
     @PostMapping(value = "/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<HjhRepayVO>> init(@RequestBody HjhRepayRequestBean repayRequestBean){
 
         HjhRepayRequest repayRequest = new HjhRepayRequest();
@@ -171,6 +168,7 @@ public class PlanRepayController extends BaseController {
      */
     @ApiOperation(value = "智投退出", notes = "智投退出列表导出")
     @PostMapping(value = "/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhRepayRequestBean repayRequestBean) throws Exception {
         HjhRepayRequest repayRequest = new HjhRepayRequest();
         BeanUtils.copyProperties(repayRequestBean, repayRequest);

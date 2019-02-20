@@ -440,6 +440,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
     public boolean checkCanRun() {
         // 合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报
         String canRun = RedisUtils.get(RedisConstants.CERT_CAN_RUN);
+        logger.info("canRun:"+canRun);
         if (canRun == null || canRun.length() == 0) {
             // 如果是空的话不允许运行
             return false;
