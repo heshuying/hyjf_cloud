@@ -56,7 +56,7 @@ public class AemsAssetSearchController extends BaseController {
             return resultBean;
         }
         //验签
-        if(!SignUtil.AEMSVerifyRequestSign(bean, "/server/asset/status")){
+        if(!SignUtil.AEMSVerifyRequestSign(bean, "/aems/asset/status")){
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);
             resultBean.setStatusDesc("验签失败！");
             logger.info("-------------------验签失败！--------------------");

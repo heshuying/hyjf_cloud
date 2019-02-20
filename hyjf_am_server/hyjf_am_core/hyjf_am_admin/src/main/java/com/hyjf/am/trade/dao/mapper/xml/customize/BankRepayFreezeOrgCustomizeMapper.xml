@@ -27,10 +27,10 @@
 				AND fl.repay_user_name LIKE CONCAT('%', #{repayUserName}, '%')
 			</if>
 			<if test="submitTimeStartSrch != null and submitTimeStartSrch != '' ">
-				AND fl.create_time <![CDATA[>=]]> str_to_date(#{submitTimeStartSrch},'%Y-%m-%d')
+				AND fl.create_time <![CDATA[>=]]> str_to_date(CONCAT(#{submitTimeStartSrch},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
-				AND fl.create_time <![CDATA[<=]]> str_to_date(#{submitTimeEndSrch},'%Y-%m-%d')
+				AND fl.create_time <![CDATA[<=]]> str_to_date(CONCAT(#{submitTimeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
