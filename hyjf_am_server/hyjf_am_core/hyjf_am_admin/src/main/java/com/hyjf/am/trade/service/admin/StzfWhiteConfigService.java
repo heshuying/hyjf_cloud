@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin;
 
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
 
@@ -26,14 +27,14 @@ public interface StzfWhiteConfigService {
 	 *
 	 * @param request
 	 */
-	void insertSTZHWhiteList(STZHWhiteListRequest request);
+	void insertSTZHWhiteList(STZHWhiteListRequestBean request);
 
 	/**
 	 * 更新受托支付白名单
 	 *
 	 * @param request
 	 */
-	void updateSTZHWhiteList(STZHWhiteListRequest request);
+	void updateSTZHWhiteList(STZHWhiteListRequestBean request);
 
 	/**
 	 * 加载用户/机构信息
