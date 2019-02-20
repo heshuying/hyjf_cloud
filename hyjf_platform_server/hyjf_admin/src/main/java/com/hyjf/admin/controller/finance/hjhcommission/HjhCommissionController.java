@@ -460,6 +460,7 @@ public class HjhCommissionController extends BaseController{
 		for (int i = 1; i <= sheetCount; i++) {
 			form.setPageSize(defaultRowMaxCount);
 			form.setCurrPage(i);
+			form.setLimit(defaultRowMaxCount);
 			HjhCommissionResponse listResponse = hjhCommissionService.selectHjhCommissionList(form);
 			if (listResponse != null && listResponse.getResultList().size()> 0) {
 				for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : listResponse.getResultList()){

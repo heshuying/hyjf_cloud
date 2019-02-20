@@ -76,10 +76,10 @@ public class OperationLogController  extends BaseController {
         responseBean.setHjhInstConfigList(hjhInstConfigs);
         //产品类型   asset_type  asset_type_name资产类型名称
         List<HjhAssetTypeVO> hjhAssetTypes = this.operationLogService.getHjhAssetType();
-        //前端直接显示assetType会有错误，做个参数拼接
-        for(HjhAssetTypeVO vo : hjhAssetTypes){
-            vo.setAssetType(vo.getInstCode()+"-"+vo.getAssetType());
-        }
+//        //前端直接显示assetType会有错误，做个参数拼接
+//        for(HjhAssetTypeVO vo : hjhAssetTypes){
+//            vo.setAssetType(vo.getInstCode()+"-"+vo.getAssetType());
+//        }
         responseBean.setHjhAssetTypes(hjhAssetTypes);
         //修改类型
         Map<String,String> map =updateTypeList();
@@ -243,13 +243,14 @@ public class OperationLogController  extends BaseController {
      * @return
      */
     private Map<String, Object> setCondition(AdminOperationLogRequest form) {
-        String[] strArrray = null;
-        if(StringUtils.isNotEmpty(form.getAssetTypeSrch())){
-            strArrray=form.getAssetTypeSrch().split("-");
-        }
-
-        String instCodeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[0] : null;
-        String assetTypeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[1] : null;
+//        String[] strArrray = null;
+//        if(StringUtils.isNotEmpty(form.getAssetTypeSrch())){
+//            strArrray=form.getAssetTypeSrch().split("-");
+//        }
+        String instCodeSrch = StringUtils.isNotEmpty(form.getInstCodeSrch()) ? form.getInstCodeSrch() : null;
+        String assetTypeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? form.getAssetTypeSrch() : null;
+//        String instCodeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[0] : null;
+//        String assetTypeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[1] : null;
         String borrowPeriodSrch = StringUtils.isNotEmpty(form.getBorrowPeriodSrch()) ? form.getBorrowPeriodSrch() : null;
         String modifyTypeSrch = StringUtils.isNotEmpty(form.getModifyTypeSrch()) ? form.getModifyTypeSrch() : null;
         String userNameSrch = StringUtils.isNotEmpty(form.getUserNameSrch()) ? form.getUserNameSrch() : null;
