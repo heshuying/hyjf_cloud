@@ -61,6 +61,9 @@ public class CouponBackMoneyController extends BaseController {
     public static final String HZTPERMISSIONSJX = "HZTBACKMONEYJX";
     /** 汇直投代金券查看权限 */
     public static final String HZTPERMISSIONSDJ = "HZTBACKMONEYDJ";
+    /** 优惠券回款导出权限 */
+    public static final String PERMISSIONS = "HZTBACKMONEY";
+
 
 
     @ApiOperation(value = "汇直投-代金券-回款使用列表", notes = "汇直投-代金券-回款使用列表")
@@ -131,6 +134,7 @@ public class CouponBackMoneyController extends BaseController {
      *
      */
     @PostMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request,HttpServletResponse response, @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) throws Exception {
         String father = couponBackMoneyCustomize.getFather();
         String son = couponBackMoneyCustomize.getSon();
@@ -370,11 +374,40 @@ public class CouponBackMoneyController extends BaseController {
                 return StringUtils.isEmpty(value) ? StringUtils.EMPTY : value+"天";
             }
         };
+        IValueFormatter dateAdapter5 = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String)object;
+                if(value == null||value==""){
+                    return "";
+                }
+                if("1".equals(value)){
+                    value= "未回款";
+                }
+                if("2".equals(value)){
+                    value="未领取";
+                }
+                if("3".equals(value)){
+                    value= "转账中";
+                }
+                if("4".equals(value)){
+                    value= "转账失败";
+                }
+                if("5".equals(value)){
+                    value= "已领取";
+                }
+                if("6".equals(value)){
+                    value= "已过期";
+                }
+                return value;
+            }
+        };
         if("tyj".equals(son)){
             mapAdapter.put("couponQuota", dateAdapter2);
             mapAdapter.put("recoverInterest", dateAdapter2);
             mapAdapter.put("borrowPeriod", dateAdapter3);
             mapAdapter.put("couponProfitTime", dateAdapter3);
+            mapAdapter.put("receivedFlg", dateAdapter5);
         }else{
             mapAdapter.put("recoverCapital", dateAdapter2);
             mapAdapter.put("recoverInterest", dateAdapter2);

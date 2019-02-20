@@ -27,10 +27,10 @@
 				AND fl.repay_user_name LIKE CONCAT('%', #{repayUserName}, '%')
 			</if>
 			<if test="submitTimeStartSrch != null and submitTimeStartSrch != '' ">
-				AND FROM_UNIXTIME( fl.create_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{submitTimeStartSrch}
+				AND fl.create_time <![CDATA[>=]]> str_to_date(CONCAT(#{submitTimeStartSrch},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="submitTimeEndSrch != null and submitTimeEndSrch != ''">
-				AND FROM_UNIXTIME( fl.create_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{submitTimeEndSrch}
+				AND fl.create_time <![CDATA[<=]]> str_to_date(CONCAT(#{submitTimeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>
@@ -64,7 +64,7 @@
 		fl.lower_interest AS lowerInterest,
 		fl.penalty_amount AS penaltyAmount,
 		fl.default_interest AS defaultInterest,
-		fl.create_time AS createTimeView
+		date_format(fl.create_time, '%Y-%m-%d %H:%i:%s') AS createTimeView
 		FROM
 		ht_bank_repay_org_freeze_log fl
 		LEFT JOIN ht_hjh_inst_config ic ON fl.inst_code = ic.inst_code and ic.del_flag = 0
