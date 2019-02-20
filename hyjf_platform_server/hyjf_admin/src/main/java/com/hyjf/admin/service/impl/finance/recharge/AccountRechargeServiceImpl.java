@@ -7,7 +7,7 @@ import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.BankConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +31,8 @@ public class AccountRechargeServiceImpl extends BaseServiceImpl implements Accou
      * @return
      */
     @Override
-    public List<BankConfigVO> getBankcardList() {
-        List<BankConfigVO> list = amConfigClient.getBankcardList();
+    public List<JxBankConfigVO> getBankcardList() {
+        List<JxBankConfigVO> list = amConfigClient.getBankcardList();
         return list;
     }
 
