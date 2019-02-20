@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -85,6 +86,9 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
      * 短信内容是否显示
      */
     private Integer isDisplay;
+
+    @ApiModelProperty(value = "短信类型 single:单发 crowd:群发")
+    private String messageType;
 
     /**
      * @return the sender
@@ -238,5 +242,13 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
 
     public void setIsDisplay(Integer isDisplay) {
         this.isDisplay = isDisplay;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 }

@@ -218,6 +218,10 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
                 e.printStackTrace();
             }
         }
+        //检索条件（状态）
+        if(StringUtils.isNotBlank(form.getStatusSrch())){
+            cra.andStatusEqualTo(form.getStatusSrch());
+        }
 
         cra.andCodeNotEqualTo("1000");
         return this.certificateAuthorityMapper.countByExample(example);
@@ -272,6 +276,12 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
                 e.printStackTrace();
             }
         }
+
+        //检索条件（状态）
+        if(StringUtils.isNotBlank(form.getStatusSrch())){
+            cra.andStatusEqualTo(form.getStatusSrch());
+        }
+
         cra.andCodeNotEqualTo("1000");
         //1000正常 其他的不正常
         if (limitStart >= 0) {
