@@ -14,6 +14,7 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminOperationLogResponse;
+import com.hyjf.am.resquest.admin.AdminBorrowFlowRequest;
 import com.hyjf.am.resquest.admin.AdminOperationLogRequest;
 import com.hyjf.am.vo.admin.FeerateModifyLogVO;
 import com.hyjf.am.vo.admin.HjhAssetTypeVO;
@@ -45,8 +46,6 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/config/operationlog")
 public class OperationLogController  extends BaseController {
 
-
-
     //权限名称
     private static final String PERMISSIONS = "operationlog";
     @Autowired
@@ -76,10 +75,10 @@ public class OperationLogController  extends BaseController {
         responseBean.setHjhInstConfigList(hjhInstConfigs);
         //产品类型   asset_type  asset_type_name资产类型名称
         List<HjhAssetTypeVO> hjhAssetTypes = this.operationLogService.getHjhAssetType();
-        //前端直接显示assetType会有错误，做个参数拼接
-        for(HjhAssetTypeVO vo : hjhAssetTypes){
-            vo.setAssetType(vo.getInstCode()+"-"+vo.getAssetType());
-        }
+//        //前端直接显示assetType会有错误，做个参数拼接
+//        for(HjhAssetTypeVO vo : hjhAssetTypes){
+//            vo.setAssetType(vo.getInstCode()+"-"+vo.getAssetType());
+//        }
         responseBean.setHjhAssetTypes(hjhAssetTypes);
         //修改类型
         Map<String,String> map =updateTypeList();
@@ -243,13 +242,14 @@ public class OperationLogController  extends BaseController {
      * @return
      */
     private Map<String, Object> setCondition(AdminOperationLogRequest form) {
-        String[] strArrray = null;
-        if(StringUtils.isNotEmpty(form.getAssetTypeSrch())){
-            strArrray=form.getAssetTypeSrch().split("-");
-        }
-
-        String instCodeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[0] : null;
-        String assetTypeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[1] : null;
+//        String[] strArrray = null;
+//        if(StringUtils.isNotEmpty(form.getAssetTypeSrch())){
+//            strArrray=form.getAssetTypeSrch().split("-");
+//        }
+        String instCodeSrch = StringUtils.isNotEmpty(form.getInstCodeSrch()) ? form.getInstCodeSrch() : null;
+        String assetTypeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? form.getAssetTypeSrch() : null;
+//        String instCodeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[0] : null;
+//        String assetTypeSrch = StringUtils.isNotEmpty(form.getAssetTypeSrch()) ? strArrray[1] : null;
         String borrowPeriodSrch = StringUtils.isNotEmpty(form.getBorrowPeriodSrch()) ? form.getBorrowPeriodSrch() : null;
         String modifyTypeSrch = StringUtils.isNotEmpty(form.getModifyTypeSrch()) ? form.getModifyTypeSrch() : null;
         String userNameSrch = StringUtils.isNotEmpty(form.getUserNameSrch()) ? form.getUserNameSrch() : null;
@@ -343,6 +343,31 @@ public class OperationLogController  extends BaseController {
         }
         return null;
 
+    }
+
+    /**
+     * 下拉联动
+     *
+     * @return 进入资产列表页面
+     */
+    @ApiOperation(value = "查询配置中心操作日志配置", notes = "下拉联动")
+    @PostMapping("/assetTypeAction")
+    public AdminResult assetTypeAction(@RequestBody OperationLogRequestBean request) {
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        if(StringUtils.isBlank(request.getInstCode())){
+            return new AdminResult<>(Response.FAIL,"资产来源不能为空，请重新操作！") ;
+        }
+        // 根据资金来源取得产品类型
+        List<HjhAssetTypeVO> hjhAssetTypeList = this.operationLogService.hjhAssetTypeList(request.getInstCode());
+        if (hjhAssetTypeList != null && hjhAssetTypeList.size() > 0) {
+            for (HjhAssetTypeVO hjhAssetBorrowType : hjhAssetTypeList) {
+                Map<String, Object> mapTemp = new HashMap<String, Object>();
+                mapTemp.put("id", hjhAssetBorrowType.getAssetType());
+                mapTemp.put("text", hjhAssetBorrowType.getAssetTypeName());
+                resultList.add(mapTemp);
+            }
+        }
+        return new AdminResult<List<Map<String, Object>>>(resultList) ;
     }
 
 }

@@ -105,6 +105,9 @@ public class StzfWhiteConfigController extends BaseController {
 			if (whiteListCustomize.getAccountid() != null) {
 				stzhWhiteListVO.setAccountId(whiteListCustomize.getAccountid());
 			}
+			if (whiteListCustomize.getStAccountid() != null) {
+			    stzhWhiteListVO.setStAccountId(whiteListCustomize.getStAccountid());
+            }
 			response.setResult(stzhWhiteListVO);
 		}
 		return response;

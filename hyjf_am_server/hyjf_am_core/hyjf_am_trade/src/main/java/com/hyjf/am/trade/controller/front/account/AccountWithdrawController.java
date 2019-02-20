@@ -121,12 +121,16 @@ public class AccountWithdrawController extends BaseController {
      * @Version v0.1
      * @Date
      */
-    @RequestMapping("/updateAccountWithdrawLog")
+    @PostMapping("/updateAccountWithdrawLog")
     public IntegerResponse updateAccountWithdrawLog(@RequestBody AccountWithdraw accountwithdraw){
         logger.info("updateAccountWithdrawLog:" + JSONObject.toJSONString(accountwithdraw));
         IntegerResponse response=new IntegerResponse();
-        response.setResultInt(accountWithdrawService.updateAccountWithdrawLog(accountwithdraw));
-        return response;
+        try {
+            response.setResultInt(accountWithdrawService.updateAccountWithdrawLog(accountwithdraw));
+            return response;
+        } catch (Exception e){
+            return response;
+        }
     }
     
     /**
