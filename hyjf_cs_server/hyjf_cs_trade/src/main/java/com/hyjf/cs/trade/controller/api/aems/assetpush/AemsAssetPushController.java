@@ -113,7 +113,7 @@ public class AemsAssetPushController extends BaseTradeController {
 
         logger.info("API端-AEMS企业资产推送[结束]");
         result = new JSONObject();
-        result.put("data", resultBean);
+        result.put("data", resultBean.getData());
         result.put("status", resultBean.getStatus());
         result.put("chkValue",resultBean.getChkValue());
         result.put("statusDesc", resultBean.getStatusDesc());
