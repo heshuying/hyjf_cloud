@@ -12,6 +12,8 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +38,8 @@ public class DayCreditDetailController {
 
     @Autowired
     private DayCreditDetailService dayCreditDetailService;
+
+    private static Logger logger = LoggerFactory.getLogger(DayCreditDetailController.class);
 
     @RequestMapping(value = "/hjhDayCreditList", method = RequestMethod.POST)
     public DayCreditDetailResponse hjhDayCreditList(@RequestBody @Valid DayCreditDetailRequest request){
@@ -63,7 +67,7 @@ public class DayCreditDetailController {
         params.put("repayNextTimeEnd",StringUtils.isNotBlank(request.getRepayNextTimeEnd())?request.getRepayNextTimeEnd():null);
         params.put("endTimeStart", StringUtils.isNotBlank(request.getEndTimeStart())?request.getEndTimeStart():null);
         params.put("endTimeEnd", StringUtils.isNotBlank(request.getEndTimeEnd())?request.getEndTimeEnd():null);
-
+        logger.info(DayCreditDetailController.class + ":检索条件:" + params.toString());
         //总计条数
         Integer count = this.dayCreditDetailService.countDebtCredit(params);
 
