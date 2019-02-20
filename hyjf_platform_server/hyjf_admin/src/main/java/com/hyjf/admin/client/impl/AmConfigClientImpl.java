@@ -1977,9 +1977,9 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @Author : huanghui
      */
     @Override
-    public List<BankConfigVO> getBankcardList() {
-        AdminBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/selectBankConfigList",
-                AdminBankConfigResponse.class).getBody();
+    public List<JxBankConfigVO> getBankcardList() {
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/jxBankConfig/selectBankConfigList",
+                JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
