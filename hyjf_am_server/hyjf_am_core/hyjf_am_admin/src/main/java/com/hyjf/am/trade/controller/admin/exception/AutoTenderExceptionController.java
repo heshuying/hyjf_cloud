@@ -94,6 +94,9 @@ public class AutoTenderExceptionController  extends BaseController {
         //银行交易后，异常订单状态设定  80 系列;
         //银行交易前，初始订单状态设定  70 系列;
         mapParam.put("orderStatus", 70);
+        // add by nxl 添加项目编号检索
+        mapParam.put("tmpBorrowNid", request.getTmpBorrowNid());
+
         return mapParam;
     }
 
