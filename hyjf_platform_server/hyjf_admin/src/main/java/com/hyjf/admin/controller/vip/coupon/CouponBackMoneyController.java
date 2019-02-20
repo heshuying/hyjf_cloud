@@ -370,11 +370,40 @@ public class CouponBackMoneyController extends BaseController {
                 return StringUtils.isEmpty(value) ? StringUtils.EMPTY : value+"天";
             }
         };
+        IValueFormatter dateAdapter5 = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String)object;
+                if(value == null||value==""){
+                    return "";
+                }
+                if("1".equals(value)){
+                    value= "未回款";
+                }
+                if("2".equals(value)){
+                    value="未领取";
+                }
+                if("3".equals(value)){
+                    value= "转账中";
+                }
+                if("4".equals(value)){
+                    value= "转账失败";
+                }
+                if("5".equals(value)){
+                    value= "已领取";
+                }
+                if("6".equals(value)){
+                    value= "已过期";
+                }
+                return value;
+            }
+        };
         if("tyj".equals(son)){
             mapAdapter.put("couponQuota", dateAdapter2);
             mapAdapter.put("recoverInterest", dateAdapter2);
             mapAdapter.put("borrowPeriod", dateAdapter3);
             mapAdapter.put("couponProfitTime", dateAdapter3);
+            mapAdapter.put("receivedFlg", dateAdapter5);
         }else{
             mapAdapter.put("recoverCapital", dateAdapter2);
             mapAdapter.put("recoverInterest", dateAdapter2);
