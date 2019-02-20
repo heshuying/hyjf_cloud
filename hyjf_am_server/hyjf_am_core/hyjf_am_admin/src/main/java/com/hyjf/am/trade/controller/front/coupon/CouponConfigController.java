@@ -247,6 +247,9 @@ public class CouponConfigController extends BaseController {
         CouponConfigExportCustomizeResponse response = new CouponConfigExportCustomizeResponse();
         CouponConfigCustomize configCustomize = new CouponConfigCustomize();
         BeanUtils.copyProperties(request,configCustomize);
+        if (request.getCouponType() != null) {
+            configCustomize.setCouponType(String.valueOf(request.getCouponType()));
+        }
         //分页参数配置
         Paginator paginator = new Paginator(request.getCurrPage(), request.getExportCount(), request.getPageSize());
         configCustomize.setLimitStart(paginator.getOffset());

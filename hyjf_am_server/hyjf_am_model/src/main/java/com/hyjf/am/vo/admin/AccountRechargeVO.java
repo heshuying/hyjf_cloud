@@ -31,6 +31,8 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
     private String accountId;
     @ApiModelProperty(value = "交易日期")
     private Integer txDate;
+    @ApiModelProperty(value = "交易日期字符串")
+    private String txDateStr;
     @ApiModelProperty(value = "交易时间")
     private Integer txTime;
     @ApiModelProperty(value = "交易时间字符串")
@@ -286,5 +288,13 @@ public class AccountRechargeVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTxDateStr() {
+        return txDateStr;
+    }
+
+    public void setTxDateStr(String txDateStr) {
+        this.txDateStr = txDateStr;
     }
 }

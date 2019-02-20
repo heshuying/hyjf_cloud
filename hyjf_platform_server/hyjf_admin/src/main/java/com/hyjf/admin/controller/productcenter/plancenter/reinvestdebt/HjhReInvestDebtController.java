@@ -49,6 +49,8 @@ public class HjhReInvestDebtController extends BaseController {
     @Autowired
     private HjhReInvestDebtService hjhReInvestDebtService;
 
+    // 权限名称 (子页面.未添加为菜单,无需设置权限)
+    public static final String PERMISSIONS = "plancapitallist";
 
     /**
      * 产品中心  -  汇计划 --  复投承接债权 -- 检索下拉框
