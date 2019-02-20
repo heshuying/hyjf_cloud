@@ -60,6 +60,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         /*if(0==start){
             return mongoTemplate.find(query,getEntityClass());
         }*/
+        logger.info("start:"+start+";end:"+end);
         return mongoTemplate.find(query.skip(start-1).limit(end),getEntityClass());
     }
 
