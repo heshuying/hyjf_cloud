@@ -212,7 +212,7 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 	}
 	@Override
 	public Boolean updatePassword(String username, String password){
-		password = MD5.toMD5Code(password);
+		//password = MD5.toMD5Code(password);
 		AdminSystem adminSystem = new AdminSystem();
 		adminSystem.setUsername(username);
 		adminSystem= adminSystemMapper.getUserInfo(adminSystem);
