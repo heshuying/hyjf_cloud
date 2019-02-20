@@ -289,6 +289,11 @@ public class PushMoneyManageController extends BaseController {
         // 是否具有组织机构查看权限
         String isOrganizationView = requestBean.getIsOrganizationView();
 
+        if(null != requestBean.getCombotreeListSrch() && requestBean.getCombotreeListSrch().length>0){
+            // 查询部门处理
+            String [] strDepts = pushMoneyManageService.getDeptId(requestBean.getCombotreeListSrch());
+            requestBean.setCombotreeListSrch(strDepts);
+        }
         //选择1直投类，而非2计划类数据
         requestBean.setTenderType(1);
         //sheet默认最大行数
