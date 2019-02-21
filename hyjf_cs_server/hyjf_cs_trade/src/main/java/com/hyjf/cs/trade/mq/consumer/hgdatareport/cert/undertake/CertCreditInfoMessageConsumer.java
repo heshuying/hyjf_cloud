@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, consumerGroup = MQConstant.CERT_CREDITTENDERINFO_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_CREDITTENDERINFO_TAG, consumerGroup = MQConstant.CERT_CREDITTENDERINFO_GROUP)
 public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     Logger logger = LoggerFactory.getLogger(CertCreditInfoMessageConsumer.class);

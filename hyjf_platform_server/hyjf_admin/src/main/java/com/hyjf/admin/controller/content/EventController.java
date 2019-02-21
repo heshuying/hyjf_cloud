@@ -82,7 +82,9 @@ public class EventController extends BaseController {
 	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
 	@PostMapping("/update")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-	public AdminResult update(@RequestBody EventRequestBean requestBean) {
+	public AdminResult update(@RequestBody EventRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO adminUser = getUser(request);
+		requestBean.setAddAdmin(adminUser.getUsername());
 		int num = eventService.updateAction(requestBean);
 		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
@@ -93,7 +95,9 @@ public class EventController extends BaseController {
 	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
 	@PostMapping("/updatestatus")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-	public AdminResult updatestatus(@RequestBody EventRequestBean requestBean) {
+	public AdminResult updatestatus(@RequestBody EventRequestBean requestBean, HttpServletRequest request) {
+		AdminSystemVO adminUser = getUser(request);
+		requestBean.setAddAdmin(adminUser.getUsername());
 		int num = eventService.updateStatus(requestBean);
 		if (num <= 0) {
 			return new AdminResult<>(FAIL, FAIL_DESC);

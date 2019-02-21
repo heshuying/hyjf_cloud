@@ -26,17 +26,17 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * @Description 合规数据上报 CERT 散标状态上报（放款成功）
+ * @Description 合规数据上报 CERT 散标状态上报（满标）
  * @Author nxl
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.LOAN_SUCCESS_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP_INVEST_LOAN)
-public class CertBorrowStatusMessageConsumerLoan implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_BORROW_STATUS_TAG, consumerGroup = MQConstant.CERT_BORROW_STATUS_GROUP_INVESTED)
+public class CertBorrowStatusMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumerLoan.class);
+    Logger logger = LoggerFactory.getLogger(CertBorrowStatusMessageConsumer.class);
 
-    private String thisMessName = "散标状态信息推送_放款成功";
+    private String thisMessName = "散标状态信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Override

@@ -381,7 +381,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         // 江西银行账户冻结金额
         accountBean.setBankFrostCash(tenderBg.getAccountDecimal());
         logger.info("开始更新用户账户信息表");
-        Boolean accountFlag = this.accountCustomizeMapper.updateOfTender(accountBean) > 0 ? true : false;
+        // mod by liuyang 20190221 更新账户时,可用大于投资金额时,才更新 start
+        Boolean accountFlag = this.accountCustomizeMapper.updateAccountOfTender(accountBean) > 0 ? true : false;
+        // mod by liuyang 20190221 更新账户时,可用大于投资金额时,才更新 end
         if (!accountFlag) {
             logger.error("用户账户信息表更新失败");
             throw new RuntimeException("用户账户信息表更新失败");

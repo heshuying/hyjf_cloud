@@ -3455,10 +3455,13 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				return 1;
 			}
 
-
+			
 			 Account openAccount = this.getAccount(user.getUserId());
 			if (Validator.isNull(openAccount)) {
 				// 借款人用户名必须已在银行开户
+				return 2;
+			}
+			if(openAccount.getAccountId().isEmpty()) {
 				return 2;
 			}
 			if(user.getRoleId()!=2) {

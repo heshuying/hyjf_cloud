@@ -115,7 +115,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      */
     @PostMapping("/modifyAction")
  	@ApiOperation(value = "CA认证更新", notes = "CA认证更新")
- 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+ 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult modifyAction(@RequestBody CertificateAuthorityExceptionBean certificateAuthorityExceptionBean) {
 
        // 发送CA认证MQ

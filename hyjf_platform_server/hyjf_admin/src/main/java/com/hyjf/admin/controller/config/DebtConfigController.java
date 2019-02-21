@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.config;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.DebtConfigService;
 import com.hyjf.am.resquest.admin.DebtConfigRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -29,13 +31,15 @@ public class DebtConfigController extends BaseController {
 
     @Autowired
     private DebtConfigService debtConfigService;
-
+    /** 查看权限 */
+    public static final String PERMISSIONS = "debtconfig";
     /**
      * 债转配置页面初始化
      * @return
      */
     @ApiOperation(value = "债转配置页面查询", notes = "债转配置页面查询")
     @GetMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<DebtConfigVO> init(){
         AdminResult response = new AdminResult();
         List<DebtConfigVO> feeConfigs = debtConfigService.getDebtConfig();
@@ -53,6 +57,7 @@ public class DebtConfigController extends BaseController {
      */
     @ApiOperation(value = "债转配置页面更新", notes = "债转配置页面更新")
     @PostMapping("/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<DebtConfigVO> update(@RequestBody DebtConfigRequest adminRequest, HttpServletRequest request) {
         logger.info("修改债转配置..." + JSONObject.toJSON(adminRequest));
         AdminSystemVO user = getUser(request);
