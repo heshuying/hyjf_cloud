@@ -41,7 +41,7 @@ public class StzfWhiteConfigController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/selectSTZHWhiteList")
-	public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+	public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequestBean request) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		int count = stzfWhiteConfigService.countSTZFHWhiteList(request);
 		Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());

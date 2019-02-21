@@ -3957,18 +3957,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         repayTimeStart = borrowRepayPlans.get(i - 1).getRepayTime();
                     }
 
-
                     // 当期是下一期的话，不能超前还的检查
                     Integer repayTimeEnd = borrowRepayPlan.getRepayTime();
                     // 用户计划还款时间
                     Date repayEndDate = GetDate.getDate(repayTimeEnd);
                     Date repayStartDate = DateUtils.addMonths(repayEndDate, -1);
-                    logger.info("repayTimeEnd:" + repayTimeEnd + " repayEndDate:" + repayEndDate + " repayStartDate:" + repayStartDate);
 
                     int curPlanStart = GetDate.getIntYYMMDD(repayStartDate);
                     int nowDate = GetDate.getIntYYMMDD(new Date());
-                    logger.info("nowDate:" + nowDate + " curPlanStart:" + curPlanStart);
                     if (nowDate < curPlanStart) {
+                        logger.info("repayTimeEnd:" + repayTimeEnd + " repayEndDate:" + repayEndDate + " repayStartDate:" + repayStartDate);
+                        logger.info("nowDate:" + nowDate + " curPlanStart:" + curPlanStart);
                         throw new Exception("不能超前还，只能全部结清");
                     }
 
