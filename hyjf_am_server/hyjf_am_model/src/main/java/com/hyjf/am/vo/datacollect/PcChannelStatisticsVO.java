@@ -8,6 +8,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -129,7 +130,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getCumulativeRecharge() {
-		return cumulativeRecharge;
+		return cumulativeRecharge.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setCumulativeRecharge(BigDecimal cumulativeRecharge) {
@@ -137,7 +138,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getCumulativeInvestment() {
-		return cumulativeInvestment;
+		return cumulativeInvestment.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setCumulativeInvestment(BigDecimal cumulativeInvestment) {
@@ -145,7 +146,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getHztTenderPrice() {
-		return hztTenderPrice;
+		return hztTenderPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setHztTenderPrice(BigDecimal hztTenderPrice) {
@@ -153,7 +154,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getHxfTenderPrice() {
-		return hxfTenderPrice;
+		return hxfTenderPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setHxfTenderPrice(BigDecimal hxfTenderPrice) {
@@ -161,7 +162,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getHtlTenderPrice() {
-		return htlTenderPrice;
+		return htlTenderPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setHtlTenderPrice(BigDecimal htlTenderPrice) {
@@ -169,7 +170,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getHtjTenderPrice() {
-		return htjTenderPrice;
+		return htjTenderPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setHtjTenderPrice(BigDecimal htjTenderPrice) {
@@ -177,7 +178,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getRtbTenderPrice() {
-		return rtbTenderPrice;
+		return rtbTenderPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setRtbTenderPrice(BigDecimal rtbTenderPrice) {
@@ -185,7 +186,7 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	}
 
 	public BigDecimal getHzrTenderPrice() {
-		return hzrTenderPrice;
+		return hzrTenderPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public void setHzrTenderPrice(BigDecimal hzrTenderPrice) {
