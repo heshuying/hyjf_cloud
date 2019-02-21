@@ -45,6 +45,7 @@ public class ApiEvaluationController extends BaseUserController {
         ThirdPartyEvaluationResultBean resultBean = new ThirdPartyEvaluationResultBean();
         //验证请求参数
         EvalationVO evalation = evaluationService.checkParam(thirdPartyFinancialadvisorRequestBean);
+        logger.info("用户手机号："+thirdPartyFinancialadvisorRequestBean.getMobile());
         UserVO user = evaluationService.getUsersByMobile(thirdPartyFinancialadvisorRequestBean.getMobile());
         CheckUtil.check(user != null, MsgEnum.STATUS_CE000006);
         int flag = evaluationService.ThirdPartySaveUserEvaluationResults(user, evalation.getScoreDown() - 2, evalation,

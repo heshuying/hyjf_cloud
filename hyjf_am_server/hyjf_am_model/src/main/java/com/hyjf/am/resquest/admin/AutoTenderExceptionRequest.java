@@ -35,6 +35,9 @@ public class AutoTenderExceptionRequest extends BasePage implements Serializable
 	 */
 	private String searchEndDate;
 
+	// add by nxl 添加项目编号检索
+	private String tmpBorrowNid;
+
 	private boolean limitFlg = false;
 
 	public String getDebtPlanNidSrch() {
@@ -99,5 +102,13 @@ public class AutoTenderExceptionRequest extends BasePage implements Serializable
 
 	public void setLimitFlg(boolean limitFlg) {
 		this.limitFlg = limitFlg;
+	}
+
+	public String getTmpBorrowNid() {
+		return tmpBorrowNid;
+	}
+
+	public void setTmpBorrowNid(String tmpBorrowNid) {
+		this.tmpBorrowNid = tmpBorrowNid;
 	}
 }

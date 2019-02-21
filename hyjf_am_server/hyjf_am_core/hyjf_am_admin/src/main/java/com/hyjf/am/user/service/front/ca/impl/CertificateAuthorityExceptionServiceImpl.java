@@ -220,7 +220,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
         }
         //检索条件（状态）
         if(StringUtils.isNotBlank(form.getStatusSrch())){
-            cra.andStatusEqualTo(form.getStatusSrch());
+            cra.andCodeEqualTo(form.getStatusSrch());
         }
 
         cra.andCodeNotEqualTo("1000");
@@ -279,7 +279,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 
         //检索条件（状态）
         if(StringUtils.isNotBlank(form.getStatusSrch())){
-            cra.andStatusEqualTo(form.getStatusSrch());
+            cra.andCodeEqualTo(form.getStatusSrch());
         }
 
         cra.andCodeNotEqualTo("1000");
