@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.LOAN_SUCCESS_TAG, consumerGroup = MQConstant.CERT_TENDER_INFO_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_TENDER_INFO_TAG, consumerGroup = MQConstant.CERT_TENDER_INFO_GROUP)
 public class CertTenderInfoMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(CertTenderInfoMessageConsumer.class);
