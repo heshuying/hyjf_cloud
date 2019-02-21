@@ -101,8 +101,8 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
             try {
 				Date start = smp.parse(strStart);
 				Date end = smp.parse(strEnd);
-                crt.andCreateTimeGreaterThanOrEqualTo(start);
-                crt.andCreateTimeLessThanOrEqualTo(end);
+                crt.andUpdateTimeGreaterThanOrEqualTo(start);
+                crt.andUpdateTimeLessThanOrEqualTo(end);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
