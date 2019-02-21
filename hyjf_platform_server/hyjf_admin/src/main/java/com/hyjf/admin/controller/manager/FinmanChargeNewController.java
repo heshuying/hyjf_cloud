@@ -149,10 +149,8 @@ public class FinmanChargeNewController extends BaseController {
         adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
 //        adminRequest.setCreateUserId(3);
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
-        // 表单校验(双表校验)
-        ModelAndView model = new ModelAndView();
         //表单字段校验
-        String message = this.validatorFieldCheck(model, adminRequest);
+        String message = this.validatorFieldCheck( adminRequest);
         if (StringUtils.isNotBlank(message)) {
             // 汇直投项目列表
             List<BorrowProjectTypeVO> borrowProjectTypeList = this.finmanChargeNewService.borrowProjectTypeList("HZT");
@@ -240,10 +238,9 @@ public class FinmanChargeNewController extends BaseController {
     /**
      * 画面校验
      *
-     * @param modelAndView
      * @param form
      */
-    private String validatorFieldCheck(ModelAndView modelAndView, FinmanChargeNewRequest form) {
+    private String validatorFieldCheck( FinmanChargeNewRequest form) {
         String message ="";
         // 类型
         if(StringUtils.isBlank(form.getManChargeTimeType())){
@@ -303,7 +300,6 @@ public class FinmanChargeNewController extends BaseController {
         // 检查唯一性
         int cnt = this.finmanChargeNewService.countRecordByProjectType(form.getManChargeTimeType(), form.getManChargeTime(), form.getInstCode(),form.getAssetType());
         if (cnt > 0) {
-//            ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "instCode", "mancharge.time.type.repeat");
             message =  "相同资产来源，产品类型，期限的费率配置已经存在,请重新操作!";
         }
         return message;
