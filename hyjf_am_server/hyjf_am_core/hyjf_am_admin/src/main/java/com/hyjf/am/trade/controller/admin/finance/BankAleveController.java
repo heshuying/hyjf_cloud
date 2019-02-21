@@ -48,9 +48,11 @@ public class BankAleveController extends BaseController {
 			mapParam.put("limitEnd", paginator.getLimit());
 		}
 		List<AleveLogCustomize> manageList = aleveService.selectBankAleveInfoList(mapParam);
+		logger.info("manageList:" +JSONObject.toJSON(manageList));
 		if (count > 0) {
 			if (!CollectionUtils.isEmpty(manageList)) {
 				List<BankAleveVO> vipManageVOS = CommonUtils.convertBeanList(manageList, BankAleveVO.class);
+				logger.info("vipManageVOS:" +JSONObject.toJSON(vipManageVOS));
 				response.setResultList(vipManageVOS);
 				response.setCount(count);
 				returnCode = Response.SUCCESS;
