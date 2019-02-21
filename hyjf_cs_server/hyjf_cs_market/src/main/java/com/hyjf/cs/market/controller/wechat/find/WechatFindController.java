@@ -62,14 +62,14 @@ public class WechatFindController extends BaseMarketController {
             if (count != null && count > 0) {
                 // 构造分页
                 params.put("limitStart", pageSize * (currentPage - 1));
-                params.put("limitEnd", pageSize);
+                params.put("limitEnd", pageSize+1);
                 List<ContentArticleCustomizeVO> list=appFindService.getContentArticleListByType(params);
 
                 if (!CollectionUtils.isEmpty(list)) {
                     ret.put("messageCount", count);
                     ret.put("messageList", list);
-                    if (list.size() == (pageSize + 1)) {
-                        // 0:是组后一页
+                    if (list.size() == (pageSize+1)) {
+                        // 0:不是组后一页
                         ret.put("endPage", 0);
                     }
                 } else {

@@ -107,12 +107,11 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                         //还款计划编号：报送标的号+“-”+当前期数
                         param.put("replanId", borrowNid + "-" + borrowRepayPlan.getRepayPeriod());
                         BigDecimal bdAmount = borrowRepayPlan.getRepayCapital().setScale(2,BigDecimal.ROUND_HALF_UP);
-                        String strCurFund = bdAmount.toString();
                         //当期应还本金（元）
-                        param.put("curFund", strCurFund);
+                        param.put("curFund", bdAmount.toString());
                         //当期应还利息（元）
                         BigDecimal bdCurInterest = borrowRepayPlan.getRepayInterest().setScale(2,BigDecimal.ROUND_HALF_UP);
-                        param.put("curInterest", bdCurInterest);
+                        param.put("curInterest", bdCurInterest.toString());
                         //当期应还款时间点
                         //当期应还时间点：报送当期应还日期23:59:59
                         param.put("repayTime",GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
@@ -139,9 +138,11 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                 //还款计划编号：报送标的号+“-”+当前期数
                 param.put("replanId", borrowNid + "-" + "1");
                 //当期应还本金（元）
-                param.put("curFund", borrow.getBorrowAccountYes());
+                BigDecimal bdAmount = borrow.getBorrowAccountYes().setScale(2,BigDecimal.ROUND_HALF_UP);
+                param.put("curFund",bdAmount.toString());
                 //当期应还利息（元）
-                param.put("curInterest", borrow.getRepayAccountInterest());
+                BigDecimal bdCurInterest =borrow.getRepayAccountInterest().setScale(2,BigDecimal.ROUND_HALF_UP);
+                param.put("curInterest", bdCurInterest.toString());
                 //当期应还款时间点
                 //当期应还时间点：报送当期应还日期23:59:59
                 param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
