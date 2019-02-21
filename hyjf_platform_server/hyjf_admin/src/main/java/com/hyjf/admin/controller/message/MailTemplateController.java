@@ -15,8 +15,10 @@ import com.hyjf.am.response.config.SmsMailTemplateResponse;
 import com.hyjf.am.resquest.config.MailTemplateRequest;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +106,12 @@ public class MailTemplateController extends BaseController {
 	public JSONObject insertMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
+			//modify by cwyang 2019-2-21 增加空值校验
+			boolean result = checkParam(jsonObject, request);
+			if(!result){
+				jsonObject.put("status", "99");
+				return jsonObject;
+			}
 			int sum = mailTemplateService.insertMailTemplate(request);
 			if (sum > 0) {
 				jsonObject.put("status", "000");
@@ -122,6 +130,34 @@ public class MailTemplateController extends BaseController {
 		}
 	}
 
+
+	/**
+	 * modify by cwyang 2019-2-21 增加空值校验
+	 * @param jsonObject
+	 * @param request
+	 * @return
+	 */
+	private boolean checkParam(JSONObject jsonObject, MailTemplateRequest request) {
+
+		if(request !=  null){
+			if(StringUtils.isBlank(request.getMailName())){
+				jsonObject.put("statusDesc","请输入有效的模板名称！");
+				return false;
+			}
+			if(StringUtils.isBlank(request.getMailValue())){
+				jsonObject.put("statusDesc","请输入有效的模板标识！");
+				return false;
+			}
+			if("<p></p>".equals(request.getMailContent().replace(" ",""))){
+				jsonObject.put("statusDesc","请输入有效的模板内容！");
+				return false;
+			}
+			return true;
+		}
+
+		return false;
+	}
+
 	/**
 	 * 修改邮件模板
 	 *
@@ -134,6 +170,13 @@ public class MailTemplateController extends BaseController {
 	public JSONObject updateMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
+			//modify by cwyang 2019-2-21 增加空值校验
+			boolean result = checkParam(jsonObject, request);
+			if(!result){
+				jsonObject.put("status", "99");
+				jsonObject.put("statusDesc", jsonObject.get("statusDesc"));
+				return jsonObject;
+			}
 			int num = mailTemplateService.updateMailTemplate(request);
 			if (num > 0) {
 				jsonObject.put("status", "000");

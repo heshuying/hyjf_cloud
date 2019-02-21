@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -212,7 +213,8 @@ public class MessagePushMsgMongoDao extends BaseMongoDao<MessagePushMsg> {
             record.setPreSendTime(null);
             record.setSendTime(GetDate.getNowTime10());
         }
-        String msgCode = GetMessageIdUtil.getNewMsgCode(record.getTagCode());
+        String msgCodeKey = GetMessageIdUtil.getNewMsgCode(record.getTagCode());
+        String msgCode = msgCodeKey.replace(RedisConstants.MSG_PUSH_CODE, "");
         record.setMsgCode(msgCode);// 设置ID
         record.setMsgSendStatus(CustomConstants.MSG_PUSH_MSG_STATUS_0);// 设置默认状态
         record.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_0);

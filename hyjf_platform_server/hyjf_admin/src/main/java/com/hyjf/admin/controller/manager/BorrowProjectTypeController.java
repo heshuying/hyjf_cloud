@@ -291,7 +291,7 @@ public class BorrowProjectTypeController extends BaseController {
         form.setBorrowCd(borrowCd);
         int cnt = this.borrowProjectTypeService.borrowCdIsExists(form);
         if (cnt > 0) {
-            return new AdminResult<String>("项目名称重复了，请重试。");
+            return new AdminResult<String>("项目编号重复。");
         }
         // 没有错误时,返回y
         return new AdminResult<String>("y");

@@ -7,6 +7,7 @@ import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
@@ -40,7 +41,7 @@ public class StzfWhiteConfigController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/selectSTZHWhiteList")
-	public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+	public STZHWhiteListResponse selectSTZHWhiteList(@RequestBody STZHWhiteListRequestBean request) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		int count = stzfWhiteConfigService.countSTZFHWhiteList(request);
 		Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
@@ -67,7 +68,7 @@ public class StzfWhiteConfigController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/insertSTZHWhiteList")
-	public STZHWhiteListResponse insertSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+	public STZHWhiteListResponse insertSTZHWhiteList(@RequestBody STZHWhiteListRequestBean request) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		stzfWhiteConfigService.insertSTZHWhiteList(request);
 		response.setRtn(AdminResponse.SUCCESS);
@@ -81,7 +82,7 @@ public class StzfWhiteConfigController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/updateSTZHWhiteList")
-	public STZHWhiteListResponse updateSTZHWhiteList(@RequestBody STZHWhiteListRequest request) {
+	public STZHWhiteListResponse updateSTZHWhiteList(@RequestBody STZHWhiteListRequestBean request) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		stzfWhiteConfigService.updateSTZHWhiteList(request);
 		response.setRtn(AdminResponse.SUCCESS);

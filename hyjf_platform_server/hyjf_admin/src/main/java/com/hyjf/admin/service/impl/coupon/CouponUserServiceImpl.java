@@ -24,7 +24,6 @@ import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.admin.CouponConfigCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderDetailVo;
-import com.hyjf.am.vo.admin.coupon.CouponUserCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -73,11 +72,11 @@ public class CouponUserServiceImpl implements CouponUserService {
     }
 
 
-    private Map<Integer,String> convertToIdTitleMap(List<ActivityListVO> activityListVOs) {
-        Map<Integer,String> result = new HashMap<Integer,String>();
-        if (CollectionUtils.isNotEmpty(activityListVOs)){
-            for (ActivityListVO obj:activityListVOs) {
-                result.put(obj.getId(),obj.getTitle());
+    private Map<Integer, String> convertToIdTitleMap(List<ActivityListVO> activityListVOs) {
+        Map<Integer, String> result = new HashMap<Integer, String>();
+        if (CollectionUtils.isNotEmpty(activityListVOs)) {
+            for (ActivityListVO obj : activityListVOs) {
+                result.put(obj.getId(), obj.getTitle());
             }
         }
         return result;
@@ -96,6 +95,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 获取优惠券配置
+     *
      * @param request
      * @return
      */
@@ -103,12 +103,18 @@ public class CouponUserServiceImpl implements CouponUserService {
     public CouponUserCustomizeResponse getRecordList(CouponConfigRequest request) {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         //加载优惠券配置列表
+        List<CouponConfigCustomizeVO> customizeVOList = new ArrayList<>();
         CouponConfigCustomizeResponse configCustomizeResponse = amTradeClient.getConfigCustomizeList(request);
         List<CouponConfigCustomizeVO> configCustomizeVOS = configCustomizeResponse.getResultList();
+        for (CouponConfigCustomizeVO customizeVO : configCustomizeVOS) {
+            if (("1").equals(customizeVO.getIsExpiration())) {
+                customizeVOList.add(customizeVO);
+            }
+        }
         //加载有效的活动列表
         List<ActivityListCustomizeVO> activityListCustomizeVOS = amMarketClient.getActivityList(new ActivityListCustomizeVO());
         if (!CollectionUtils.isEmpty(configCustomizeVOS)) {
-            response.setCouponConfigCustomizeVOS(configCustomizeVOS);
+            response.setCouponConfigCustomizeVOS(customizeVOList);
         }
         if (!CollectionUtils.isEmpty(activityListCustomizeVOS)) {
             response.setActivityListCustomizeVOS(activityListCustomizeVOS);
@@ -118,6 +124,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 根据用户名获取用户
+     *
      * @param userName
      * @return
      */
@@ -128,6 +135,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 根据用户id获取用户详情信息
+     *
      * @param userId
      * @return
      */
@@ -138,6 +146,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 获取注册时的用户渠道
+     *
      * @param userId
      * @return
      */
@@ -148,6 +157,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 根据优惠券编码查询优惠券
+     *
      * @param couponCode
      * @return
      */
@@ -158,6 +168,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 发放一条优惠券
+     *
      * @param couponUserRequest
      * @return
      */
@@ -168,6 +179,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 根据优惠券编码查询优惠券用户
+     *
      * @param couponCode
      * @return
      */
@@ -177,25 +189,27 @@ public class CouponUserServiceImpl implements CouponUserService {
     }
 
     /**
-     *根据条件查询优惠券使用详情
+     * 根据条件查询优惠券使用详情
+     *
      * @param paramMap
      * @return
      */
     @Override
-    public CouponTenderDetailVo getCouponTenderDetailCustomize(Map<String,Object> paramMap) {
+    public CouponTenderDetailVo getCouponTenderDetailCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse response = amTradeClient.getCouponTenderDetailCustomize(paramMap);
         return response.getDetail();
     }
 
     /**
      * 查询回款列表
+     *
      * @param paramMap
      * @return
      */
     @Override
     public List<CouponRecoverVO> getCouponRecoverCustomize(Map<String, Object> paramMap) {
         CouponTenderResponse couponTenderResponse = amTradeClient.getCouponRecoverCustomize(paramMap);
-        if(null != couponTenderResponse){
+        if (null != couponTenderResponse) {
             return couponTenderResponse.getCouponRecoverList();
         }
         return null;
@@ -203,6 +217,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 根据id查询用户优惠券
+     *
      * @param couponUserId
      * @return
      */
@@ -216,7 +231,8 @@ public class CouponUserServiceImpl implements CouponUserService {
     }
 
     /**
-     *用户优惠券审批
+     * 用户优惠券审批
+     *
      * @param adminCouponUserRequestBean
      * @return
      */
@@ -227,6 +243,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     /**
      * 手动批量发券上传
+     *
      * @param request
      * @param response
      * @return
@@ -251,19 +268,19 @@ public class CouponUserServiceImpl implements CouponUserService {
             for (CSVRecord record : records) {
 
                 // 格式小于3,跳过
-                if(record.size() < 3){
+                if (record.size() < 3) {
                     continue;
                 }
                 BatchSubUserCouponBean subBean = new BatchSubUserCouponBean();
 //				String userId = record.get(0);
                 String userName = record.get(0);
                 String activeId = record.get(1);
-                String couponcode  = record.get(2);
+                String couponcode = record.get(2);
                 logger.info("优惠券批量导入username: " + userName);
 
                 List<String> copuncodes = Arrays.asList(couponcode.split(","));
 
-                if(copuncodes.size() <= 0 || StringUtils.isBlank(userName)){
+                if (copuncodes.size() <= 0 || StringUtils.isBlank(userName)) {
                     continue;
                 }
 
@@ -288,12 +305,12 @@ public class CouponUserServiceImpl implements CouponUserService {
             retResult.put("totalcouponCount", 0);
             retResult.put("couponCount", 0);
             return JSONObject.toJSONString(retResult, true);
-        }else{
+        } else {
             // 访问API
             Map<String, String> params = new HashMap<String, String>();
             // 用户id
             params.put("usercoupons", JSON.toJSONString(subBeans));
-            params.put("userId",loginUserId);
+            params.put("userId", loginUserId);
 
             // 请求路径
             JSONObject result = amTradeClient.getBatchCoupons(params);
@@ -326,7 +343,6 @@ public class CouponUserServiceImpl implements CouponUserService {
         }
         return code;
     }
-
 
 
 }
