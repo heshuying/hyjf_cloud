@@ -38,13 +38,13 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
 
     private Short sort;
 
-    private Integer createTime;
+    private Integer createtime;
 
-    private Integer updateTime;
+    private Integer updatetime;
 
-    private Date createtime;
+    private Date createTime;
 
-    private Date updatetime;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -178,35 +178,35 @@ public class MerchantAccountVO extends BaseVO implements Serializable {
         this.sort = sort;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Integer updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Date getCreatetime() {
+    public Integer getCreatetime() {
         return createtime;
     }
 
-    public void setCreatetime(Date createtime) {
+    public void setCreatetime(Integer createtime) {
         this.createtime = createtime;
     }
 
-    public Date getUpdatetime() {
+    public Integer getUpdatetime() {
         return updatetime;
     }
 
-    public void setUpdatetime(Date updatetime) {
+    public void setUpdatetime(Integer updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
