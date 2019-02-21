@@ -65,18 +65,18 @@ public class BankJournalController {
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+       // Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
-        if(count==null ||count<1){
-            jsonObject.put("count",0);
-            jsonObject.put("record",null);
-            jsonObject.put("status",status);
-            jsonObject.put("statusDesc",statusDesc);
-            return jsonObject;
-        }
-
-        if(null!=bankEveList&&bankEveList.size()>0){
+        if(null!=bankEveList){
+            Integer count = bankEveList.size();
+            if(count==null ||count<1){
+                jsonObject.put("count",0);
+                jsonObject.put("record",null);
+                jsonObject.put("status",status);
+                jsonObject.put("statusDesc",statusDesc);
+                return jsonObject;
+            }
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
             status =  "000";
@@ -121,9 +121,12 @@ public class BankJournalController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         bankEveRequest.setPageSize(defaultRowMaxCount);
         bankEveRequest.setCurrPage(1);
-
-        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+        Integer count = 0;
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        if(bankEveList!=null){
+            count = bankEveList.size();
+        }
+       // Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
