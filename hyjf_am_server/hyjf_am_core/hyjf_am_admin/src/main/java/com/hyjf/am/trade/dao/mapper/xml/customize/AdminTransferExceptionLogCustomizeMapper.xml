@@ -12,7 +12,7 @@
 	    <result column="acct_id" property="acctId" jdbcType="VARCHAR" />
 	    <result column="user_id" property="userId" jdbcType="INTEGER" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
-	    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+	    <result column="create_time" property="createTime" jdbcType="DATE" />
 	    <result column="create_time_view" property="createTimeView" jdbcType="VARCHAR" />
 	    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
 	    <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
@@ -20,7 +20,7 @@
 	    <result column="username" property="username" jdbcType="VARCHAR" />
 	    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
 	    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
-	    <result column="del_flg" property="delFlg" jdbcType="INTEGER" />
+	    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Where_Clause">
 		<where>
