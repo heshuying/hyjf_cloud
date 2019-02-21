@@ -103,15 +103,15 @@ public class CertSendExceptionController extends BaseController{
             }
             if("6".equals(dataType)){
                 // 散标状态数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_SCATTER_INVEST_TAG ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_BORROW_STATUS ,UUID.randomUUID().toString(), mqValue));
             }
             if("81".equals(dataType)){
                 // 还款计划数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.LOAN_SUCCESS_TAG ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_BORROW_REPAYMENTPLAN ,UUID.randomUUID().toString(), mqValue));
             }
             if("82".equals(dataType)){
                 // 债权信息数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC ,MQConstant.LOAN_SUCCESS_TAG ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC ,MQConstant.CERT_REPAIR_TENDER_INFO ,UUID.randomUUID().toString(), mqValue));
             }
             if("83".equals(dataType)){
                 // 转让项目数据同步
@@ -121,7 +121,7 @@ public class CertSendExceptionController extends BaseController{
             }
             if("85".equals(dataType)){
                 // 承接信息数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC ,MQConstant.TRANSFER_SUCCESS_TAG ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC ,MQConstant.CERT_REPAIR_CREDITTENDERINFO ,UUID.randomUUID().toString(), mqValue));
             }
             if("4".equals(dataType)){
                 // 交易流水数据同步
