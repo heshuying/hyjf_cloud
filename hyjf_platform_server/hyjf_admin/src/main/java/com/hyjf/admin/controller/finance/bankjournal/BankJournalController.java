@@ -168,22 +168,17 @@ public class BankJournalController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter cendtAdapter = new IValueFormatter() {
+        IValueFormatter revindAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                Integer cendt = (Integer) object;
-                return cendt + "";
+                if(object instanceof Integer){
+                    Integer revind = (Integer) object;
+                    return revind == 1 ? "已撤销/冲正" : "";
+                }
+                return "";
             }
         };
-        IValueFormatter transtypeAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                Integer transtype = (Integer) object;
-                return transtype + "";
-            }
-        };
-        mapAdapter.put("cendt",cendtAdapter);
-        mapAdapter.put("transtype",transtypeAdapter);
+        mapAdapter.put("revind",revindAdapter);
         return mapAdapter;
     }
 }
