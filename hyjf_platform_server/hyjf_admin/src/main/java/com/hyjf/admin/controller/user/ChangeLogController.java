@@ -295,7 +295,10 @@ public class ChangeLogController extends BaseController {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile, 3,4)+mobile.substring(mobile.length()- 4);
+                if(mobile!=null) {
+                	return AsteriskProcessUtil.getAsteriskedValue(mobile, 3,4)+mobile.substring(mobile.length()- 4);
+                }
+                return "";
             }
         };
 
