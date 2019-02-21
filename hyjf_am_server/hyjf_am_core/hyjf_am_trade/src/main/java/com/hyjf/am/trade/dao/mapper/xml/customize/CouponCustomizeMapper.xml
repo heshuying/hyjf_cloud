@@ -199,7 +199,7 @@
 			hcr.recover_capital recoverCapitalWait,
 			IF(hcr.recover_capital>0,hcr.recover_account-hcr.recover_capital,hcr.recover_interest) recoverInterestWait,
 			hcr.recover_account_yes recoverAccount,
-			FROM_UNIXTIME(IFNULL(hcr.recover_yestime,hcr.recover_time), '%Y-%m-%d' ) recoverTime,
+			FROM_UNIXTIME(hcr.recover_time, '%Y-%m-%d' ) recoverTime,
 			IF(hcr.recover_status=0,'未回款','已回款') recoveStatus
 		FROM
 			ht_coupon_recover hcr

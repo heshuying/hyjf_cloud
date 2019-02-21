@@ -65,18 +65,18 @@ public class BankJournalController {
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+       // Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
-        if(count==null ||count<1){
-            jsonObject.put("count",0);
-            jsonObject.put("record",null);
-            jsonObject.put("status",status);
-            jsonObject.put("statusDesc",statusDesc);
-            return jsonObject;
-        }
-
-        if(null!=bankEveList&&bankEveList.size()>0){
+        if(null!=bankEveList){
+            Integer count = bankEveList.size();
+            if(count==null ||count<1){
+                jsonObject.put("count",0);
+                jsonObject.put("record",null);
+                jsonObject.put("status",status);
+                jsonObject.put("statusDesc",statusDesc);
+                return jsonObject;
+            }
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
             status =  "000";
@@ -121,9 +121,12 @@ public class BankJournalController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         bankEveRequest.setPageSize(defaultRowMaxCount);
         bankEveRequest.setCurrPage(1);
-
-        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+        Integer count = 0;
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        if(bankEveList!=null){
+            count = bankEveList.size();
+        }
+       // Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
@@ -168,22 +171,17 @@ public class BankJournalController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter cendtAdapter = new IValueFormatter() {
+        IValueFormatter revindAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                Integer cendt = (Integer) object;
-                return cendt + "";
+                if(object instanceof Integer){
+                    Integer revind = (Integer) object;
+                    return revind == 1 ? "已撤销/冲正" : "";
+                }
+                return "";
             }
         };
-        IValueFormatter transtypeAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                Integer transtype = (Integer) object;
-                return transtype + "";
-            }
-        };
-        mapAdapter.put("cendt",cendtAdapter);
-        mapAdapter.put("transtype",transtypeAdapter);
+        mapAdapter.put("revind",revindAdapter);
         return mapAdapter;
     }
 }

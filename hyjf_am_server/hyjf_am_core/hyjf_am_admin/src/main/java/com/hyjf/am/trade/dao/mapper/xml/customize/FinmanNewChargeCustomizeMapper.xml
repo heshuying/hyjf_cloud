@@ -57,6 +57,7 @@
         </where>
     </sql>
     <select id="countRecordTotal" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.FinmanChargeNewRequest">
+        select count(*) from (
         SELECT
         COUNT(1)
         FROM
@@ -66,6 +67,7 @@
         LEFT JOIN ht_hjh_inst_config hic ON c.inst_code = hic.inst_code
         LEFT JOIN ht_hjh_asset_type hat on c.inst_code = hat.inst_code AND c.asset_type = hat.asset_type
         <include refid="Where_Clause" />
+        GROUP BY c.man_charge_cd ) b
     </select>
 
     <select id="getRecordList" resultMap="borrowFinmanNewChargeCustomizeMapperResult" parameterType="com.hyjf.am.resquest.admin.FinmanChargeNewRequest">
@@ -99,6 +101,7 @@
         LEFT JOIN ht_hjh_inst_config hic ON c.inst_code = hic.inst_code
         LEFT JOIN ht_hjh_asset_type hat on c.inst_code = hat.inst_code AND c.asset_type = hat.asset_type
         <include refid="Where_Clause" />
+        GROUP BY c.man_charge_cd
         ORDER BY
         c.man_charge_time_type ASC,c.man_charge_time ASC, c.project_type DESC
         <if test="limitStart >= 0" >
