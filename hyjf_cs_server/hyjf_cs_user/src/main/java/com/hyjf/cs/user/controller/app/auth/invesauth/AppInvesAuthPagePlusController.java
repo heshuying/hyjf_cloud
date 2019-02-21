@@ -225,7 +225,7 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         //判断用户是否设置过交易密码
         CheckUtil.check(user.getIsSetPassword() != 0,MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         //判断是否授权过
-        CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID),MsgEnum.STATUS_CE000009);
+        CheckUtil.check(!authService.checkIsAuth(user.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID),MsgEnum.ERR_AUTH_REPEAT);
     }
 
     /**

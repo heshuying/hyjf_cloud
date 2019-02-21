@@ -24,4 +24,11 @@ public interface AccountCustomizeMapper {
      * @return
      */
     Integer updateOfTender(Account accountBean);
+
+    /**
+     * 投标成功后修改Account表
+     * @param accountBean
+     * @return
+     */
+    Integer updateAccountOfTender(Account accountBean);
 }
