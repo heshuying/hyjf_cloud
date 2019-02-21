@@ -628,7 +628,8 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
 				certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
 				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
-
+				logger.info("certRequest:" + JSONObject.toJSONString(certRequest));
+				logger.info("hjhDebtCreditRepays.size():" + hjhDebtCreditRepays.size());
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
 					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes());
 					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes());

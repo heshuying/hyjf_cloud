@@ -148,7 +148,7 @@ public class CertController extends BaseController {
     }
     @PostMapping("/getHjhDebtCreditRepayListByRequest")
     public HjhDebtCreditRepayResponse getHjhDebtCreditRepayListByRequest(@RequestBody CertRequest certRequest) {
-        logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
+        logger.info("getHjhDebtCreditRepayListByRequest:" + JSONObject.toJSONString(certRequest));
         HjhDebtCreditRepayResponse response = new HjhDebtCreditRepayResponse();
         List<HjhDebtCreditRepay> hjhDebtCreditRepayList = certService.getHjhDebtCreditRepayListByRequest(certRequest);
         if (!CollectionUtils.isEmpty(hjhDebtCreditRepayList)) {
