@@ -5,12 +5,10 @@ package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.BorrowCommonImage;
-import com.hyjf.admin.beans.PermissionsBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
@@ -348,19 +346,19 @@ public class MessagePushTemplateController extends BaseController {
         if (request.getTagId() == null) {
             message = "标签id不能为空";
         }
-        if (request.getTemplateCode() == null || request.getTemplateCode().length() > 40) {
+        if (StringUtils.isBlank(request.getTemplateCode().substring(4)) || request.getTemplateCode().length() > 40) {
             message = "模板编码不能为空或长度大于40字符";
         }
-        if (request.getTemplateTitle() == null || request.getTemplateTitle().length() > 20) {
+        if (StringUtils.isBlank(request.getTemplateTitle()) || request.getTemplateTitle().length() > 20) {
             message = "模板名称不能为空或长度大于20字符";
         }
-        if (request.getTemplateImageUrl() != null && request.getTemplateImageUrl().length() > 100) {
+        if (StringUtils.isNotBlank(request.getTemplateImageUrl())  && request.getTemplateImageUrl().length() > 100) {
             message = "图片url长度不能大于100字符";
         }
-        if (request.getTemplateContent() == null || request.getTemplateContent().length() > 4000) {
+        if (StringUtils.isBlank(request.getTemplateContent())|| request.getTemplateContent().length() > 4000) {
             message = "模板内容不能为空或内容长度不能大于4000字符";
         }
-        if (request.getTemplateTerminal() == null || request.getTemplateTerminal().length() > 20) {
+        if (StringUtils.isBlank(request.getTemplateTerminal()) || request.getTemplateTerminal().length() > 20) {
             message = "推送终端不能为空或长度不能大于20字符";
         }
         if (request.getTemplateAction() == null) {
@@ -370,17 +368,17 @@ public class MessagePushTemplateController extends BaseController {
             message = "状态不能为空";
         }
         if (request.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_1) {
-            if (request.getTemplateActionUrl1() == null || request.getTemplateActionUrl1().length() > 100) {
+            if (StringUtils.isBlank(request.getTemplateActionUrl1()) || request.getTemplateActionUrl1().length() > 100) {
                 message = "后续动作url1不能为空或长度不能大于100字符";
             }
         }
         if (request.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_3) {
-            if (request.getTemplateActionUrl3() == null || request.getTemplateActionUrl3().length() > 100) {
+            if (StringUtils.isBlank(request.getTemplateActionUrl3()) || request.getTemplateActionUrl3().length() > 100) {
                 message = "后续动作url3不能为空或长度不能大于100字符";
             }
         }
         if (request.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
-            if (request.getTemplateActionUrl2() == null || request.getTemplateActionUrl2().length() > 100) {
+            if (StringUtils.isBlank(request.getTemplateActionUrl2()) || request.getTemplateActionUrl2().length() > 100) {
                 message = "后续动作url2不能为空或长度不能大于100字符";
             }
         }
