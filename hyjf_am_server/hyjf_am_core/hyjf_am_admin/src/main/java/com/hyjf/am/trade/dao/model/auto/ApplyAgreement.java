@@ -44,7 +44,7 @@ public class ApplyAgreement implements Serializable {
      *
      * @mbggenerated
      */
-    private Byte agreementNumber;
+    private Integer agreementNumber;
 
     /**
      * 投资状态 0 全部；1申请中：2申请成功
@@ -130,11 +130,11 @@ public class ApplyAgreement implements Serializable {
         this.applyUserName = applyUserName == null ? null : applyUserName.trim();
     }
 
-    public Byte getAgreementNumber() {
+    public Integer getAgreementNumber() {
         return agreementNumber;
     }
 
-    public void setAgreementNumber(Byte agreementNumber) {
+    public void setAgreementNumber(Integer agreementNumber) {
         this.agreementNumber = agreementNumber;
     }
 
