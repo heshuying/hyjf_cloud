@@ -26,4 +26,16 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
+	<update id="updateAccountOfTender" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
+		update ht_account
+		set
+		bank_balance = IFNULL(bank_balance,0) - #{bankBalance,jdbcType=DECIMAL},
+		bank_frost = IFNULL(bank_frost,0) + #{bankFrost,jdbcType=DECIMAL},
+		bank_balance_cash = IFNULL(bank_balance_cash,0) - #{bankBalanceCash,jdbcType=DECIMAL},
+		bank_frost_cash = IFNULL(bank_frost_cash,0) + #{bankFrostCash,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+		AND bank_balance - #{bankBalance,jdbcType=DECIMAL} >= 0
+	</update>
+
 </mapper>

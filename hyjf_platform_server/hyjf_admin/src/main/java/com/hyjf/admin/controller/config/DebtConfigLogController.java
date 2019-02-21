@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.config;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.DebtConfigService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -48,10 +50,11 @@ public class DebtConfigLogController extends BaseController {
 
 	@Autowired
 	private DebtConfigService debtConfigService;
-
+	public static final String PERMISSIONS = "debtconfiglog";
 
 	@ApiOperation(value = "债转日志配置查询", notes = "债转日志配置查询")
 	@PostMapping("/pageinit")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult pageInit(@RequestBody DebtConfigRequest debtConfigRequest) {
 		DebtConfigLogResponse response = new DebtConfigLogResponse();
 		int count = debtConfigService.countDebtConfigLogTotal();
