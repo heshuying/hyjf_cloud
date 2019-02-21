@@ -132,7 +132,7 @@ public class PartnerConfigServiceImpl extends BaseServiceImpl implements Partner
     public IntegerResponse isExists(AdminPartnerConfigListRequest req){
         IntegerResponse response = new IntegerResponse();
         HjhInstConfigExample example = new HjhInstConfigExample();
-        example.createCriteria().andInstCodeEqualTo(req.getInstCode());
+        example.createCriteria().andInstCodeEqualTo(req.getInstCode()).andDelFlagEqualTo(0);
         int count = this.hjhInstConfigMapper.countByExample(example);
         if(count >=0){
             response.setResultInt(count);

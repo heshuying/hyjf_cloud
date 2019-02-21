@@ -155,6 +155,11 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getAssignType())) {
 			param.put("assignType", request.getAssignType());
 		}
+		// 导出查询漏掉了是否复投承接的果略
+		if (StringUtils.isNotEmpty(request.getTenderType())){
+			param.put("tenderType",request.getTenderType());
+		}
+		
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderCustomizeMapper.selectDebtCreditTenderList(param);

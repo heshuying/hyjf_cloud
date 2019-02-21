@@ -157,9 +157,9 @@
         SELECT
         count( DISTINCT c.user_id )
         FROM
-        hyjf_hjh_debt_credit c
-        INNER JOIN huiyingdai_borrow b ON c.borrow_nid = b.borrow_nid
-        LEFT JOIN hyjf_hjh_user_auth ua ON c.user_id = ua.user_id
+        ht_hjh_debt_credit c
+        INNER JOIN ht_borrow b ON c.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_hjh_user_auth ua ON c.user_id = ua.user_id
         WHERE
         c.credit_nid = #{creditNid}
         AND b.addtime <![CDATA[>=]]> '1540893600'

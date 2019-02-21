@@ -103,4 +103,11 @@ public interface ChannelService {
      * @return
      */
     boolean getBySourceIdAndTerm(String utmId, String sourceId, String utmTerm);
+
+    /**
+     * 根据用户名查询用户
+     * @param utmReferrer
+     * @return
+     */
+    UserVO getUserByUserName(String utmReferrer);
 }
