@@ -171,8 +171,11 @@ public class BankJournalController {
         IValueFormatter revindAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                Integer revind = (Integer) object;
-                return revind + "";
+                if(object instanceof Integer){
+                    Integer revind = (Integer) object;
+                    return revind == 1 ? "已撤销/冲正" : "";
+                }
+                return "";
             }
         };
         mapAdapter.put("revind",revindAdapter);
