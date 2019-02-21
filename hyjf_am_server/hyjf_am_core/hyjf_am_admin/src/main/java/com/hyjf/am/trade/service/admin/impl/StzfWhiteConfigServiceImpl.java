@@ -29,7 +29,7 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	private StzhWhiteListCustomizeMapper stzhWhiteListCustomizeMapper;
 
 	@Override
-	public List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request, int limitStart, int limitEnd) {
+	public List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequestBean request, int limitStart, int limitEnd) {
 		StzhWhiteListExample example = new StzhWhiteListExample();
 		if (limitStart != -1) {
 			example.setLimitStart(limitStart);
@@ -43,6 +43,7 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 		StzhWhiteList stzhWhiteList = new StzhWhiteList();
 		BeanUtils.copyProperties(request, stzhWhiteList);
 		stzhWhiteList.setDelFlag(0);
+		stzhWhiteList.setInstCode(request.getInstcode());
 		stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
 		stzhWhiteList.setCreateUserId(Integer.valueOf(request.getCreateuser()));
 		stzhWhiteListMapper.insert(stzhWhiteList);
@@ -72,7 +73,7 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 	}
 
 	@Override
-	public int countSTZFHWhiteList(STZHWhiteListRequest request) {
+	public int countSTZFHWhiteList(STZHWhiteListRequestBean request) {
 		StzhWhiteListExample example = new StzhWhiteListExample();
 		int count = stzhWhiteListMapper.countByExample(example);
 		return count;
