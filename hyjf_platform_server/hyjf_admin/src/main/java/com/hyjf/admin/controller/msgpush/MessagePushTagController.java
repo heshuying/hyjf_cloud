@@ -8,7 +8,6 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
@@ -20,6 +19,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +46,9 @@ public class MessagePushTagController extends BaseController {
     @Autowired
     private MessagePushTagService messagePushTagService;
 
-    /** 权限关键字 */
+    /**
+     * 权限关键字
+     */
     public static final String PERMISSIONS = "msgpushtag";
 
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
@@ -170,12 +172,15 @@ public class MessagePushTagController extends BaseController {
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkAction(@RequestBody MessagePushTagRequest request) {
+        MessagePushTagResponse response = new MessagePushTagResponse();
         Integer id = null;
         if (request.getId() != null) {
             id = request.getId();
         }
-        String tagCode = request.getTagCode();
-        MessagePushTagResponse response = messagePushTagService.countByTagCode(id, tagCode);
+        if (StringUtils.isNotBlank(request.getTagCode())) {
+            String tagCode = request.getTagCode();
+            response = messagePushTagService.countByTagCode(id, tagCode);
+        }
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -185,7 +190,7 @@ public class MessagePushTagController extends BaseController {
         if (response.getCount() > 0) {
             String message = "标签重复";
             response.setMessage(message);
-            return new AdminResult(FAIL,response.getMessage());
+            return new AdminResult(FAIL, response.getMessage());
         }
         return new AdminResult<>(response);
     }
