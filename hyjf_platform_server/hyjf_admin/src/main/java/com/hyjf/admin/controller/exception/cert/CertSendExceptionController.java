@@ -22,10 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -90,7 +87,7 @@ public class CertSendExceptionController extends BaseController{
     @ApiOperation(value = "发送MQ", notes = "发送MQ")
     @PostMapping("/doSendMq")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult doSendMQ(HttpServletRequest request, String dataType, String mqValue) {
+    public AdminResult doSendMQ(HttpServletRequest request, @RequestParam(value = "dataType") String dataType, @RequestParam(value = "mqValue") String mqValue) {
         try {
             _log.info("应急中心掉单处理，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】");
             if("1".equals(dataType)){
