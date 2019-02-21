@@ -8,6 +8,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.admin.service.MessagePushNoticesService;
+import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushNoticesResponse;
@@ -48,6 +49,9 @@ public class MessagePushNoticesController extends BaseController {
     MessagePushNoticesService messagePushNoticesService;
     @Autowired
     MessagePushHistoryService messagePushHistoryService;
+    @Autowired
+    private MessagePushTagService messagePushTagService;
+
     @Value("${file.domain.url}")
     private String url;
     private static final String PERMISSIONS = "msgpushnotices";
@@ -58,7 +62,7 @@ public class MessagePushNoticesController extends BaseController {
     public JSONObject init(@RequestBody MessagePushNoticesRequest messagePushNoticesRequest) {
         JSONObject jsonObject = new JSONObject();
             MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
-            List<MessagePushTagVO> allPushTagList = messagePushHistoryService.getAllPushTagList();
+            List<MessagePushTagVO> allPushTagList = this.messagePushTagService.getTagList();
             if (prs == null) {
                 jsonObject.put(FAIL, FAIL_DESC);
                 return jsonObject;
@@ -170,9 +174,7 @@ public class MessagePushNoticesController extends BaseController {
             }
             jsonObject.put("msgPushNoticesForm", form);
             // 标签类型
-           // MessagePushTagResponse tagList = messagePushNoticesService.getTagList();
-           // List<MessagePushTagVO> resultList = tagList.getResultList();
-            List<MessagePushTagVO> resultList = messagePushHistoryService.getAllPushTagList();
+            List<MessagePushTagVO> resultList = this.messagePushTagService.getTagList();
             jsonObject.put("noticesPushTags", resultList);
             prepareDatas(jsonObject);
             return jsonObject;
