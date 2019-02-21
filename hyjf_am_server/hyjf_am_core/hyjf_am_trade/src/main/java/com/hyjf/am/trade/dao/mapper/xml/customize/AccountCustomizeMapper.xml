@@ -24,6 +24,7 @@
 		bank_frost_cash = IFNULL(bank_frost_cash,0) + #{bankFrostCash,jdbcType=DECIMAL}
 		where
 		user_id = #{userId,jdbcType=INTEGER}
+		AND bank_balance - #{bankBalance,jdbcType=DECIMAL} >= 0
 	</update>
 
 </mapper>
