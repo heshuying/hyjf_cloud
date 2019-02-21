@@ -95,11 +95,11 @@ public class CertSendExceptionController extends BaseController{
             _log.info("应急中心掉单处理，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】");
             if("1".equals(dataType)){
                 // 用户数据同步
-               commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_USER_INFO_TAG, UUID.randomUUID().toString(), mqValue));
+               commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_USER_INFO, UUID.randomUUID().toString(), mqValue));
             }
             if("2".equals(dataType)){
                 // 散标数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_SCATTER_INVEST_TAG ,UUID.randomUUID().toString(), mqValue));
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_SCATTER_INVEST ,UUID.randomUUID().toString(), mqValue));
             }
             if("6".equals(dataType)){
                 // 散标状态数据同步
@@ -115,9 +115,11 @@ public class CertSendExceptionController extends BaseController{
             }
             if("83".equals(dataType)){
                 // 转让项目数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_TRANSFER_PROJECT, UUID.randomUUID().toString(), mqValue));
             }
             if("84".equals(dataType)){
                 // 转让状态数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_TRANSFER_STATUS, UUID.randomUUID().toString(), mqValue));
             }
             if("85".equals(dataType)){
                 // 承接信息数据同步
@@ -125,6 +127,7 @@ public class CertSendExceptionController extends BaseController{
             }
             if("4".equals(dataType)){
                 // 交易流水数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), mqValue));
             }
         }catch (Exception e){
             _log.info("应急中心发送MQ出错，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】",e);
