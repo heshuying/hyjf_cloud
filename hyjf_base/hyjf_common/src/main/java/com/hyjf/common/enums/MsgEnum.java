@@ -185,7 +185,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AUTH_USER_REPAYMENT("EAU000002","请先进行还款授权"),
 	ERR_AUTH_USER_AUTO_BID("EAU000003","请先进行自动出借授权"),
 	ERR_AUTH_USER_AUTO_CREDIT("EAU000004","请先进行自动债转授权"),
-
+	ERR_AUTH_REPEAT("CE000009","已授权,请勿重复授权！"),
 	// 邮件相关错误信息ERR_EMAIL_
 	ERR_EMAIL_USED("EEM000001", "邮箱已被占用"),
 	//邮件激活相关错误信息ERR_EMAIL_ACTIVE_
@@ -274,8 +274,8 @@ public enum MsgEnum implements MsgCode {
 	STATUS_CE000005("CE000005","银行处理中，请稍后查看"),
 	STATUS_CE000006("CE000006","没有用户信息"),
 	STATUS_CE000007("CE000007","没有用户开户信息"),
-	STATUS_CE000008("CE000008","未查询到短信授权码"),
-	STATUS_CE000009("CE000009","已授权,请勿重复授权！"),
+	STATUS_CE000008("CE000008","请求日期格式错误"),
+	STATUS_CE000009("CE000009","请求开始日期大于结束日期"),
 	STATUS_CE000010("CE000010","请求手机号格式错误"),
 	STATUS_CE000011("CE000011","请求手机号不存在"),
 	STATUS_CE000012("CE000012","请求用户电子账号不存在"),
@@ -283,6 +283,7 @@ public enum MsgEnum implements MsgCode {
 	STATUS_CE000014("CE000014","此版本暂不可用，请更新至最新版本"),
 	STATUS_CE000015("CE000015","平台账户可用余额不足"),
 	STATUS_CE000016("CE000016","银行账户可用余额不足"),
+	STATUS_CE000017("CE000017","该用户无银行开户信息"),
 	STATUS_CE999999("CE999999","系统异常"),
 	// ----------注册机能用错误信息------------
 	STATUS_ZC000001("ZC000001","手机号不能为空"),

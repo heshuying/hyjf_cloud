@@ -93,6 +93,21 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 				e.printStackTrace();
 			}
         }
+        
+        // 添加更新时间
+        if (StringUtils.isNotEmpty(request.getUpdateTimeStartSrch()) && StringUtils.isNotEmpty(request.getUpdateTimeEndSrch())) {
+            String strStart = request.getUpdateTimeStartSrch() + " 00:00:00";
+            String strEnd = request.getUpdateTimeEndSrch() + " 23:59:59";
+            try {
+				Date start = smp.parse(strStart);
+				Date end = smp.parse(strEnd);
+                crt.andCreateTimeGreaterThanOrEqualTo(start);
+                crt.andCreateTimeLessThanOrEqualTo(end);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+        }
+        
 		// 传入排序
 		example.setOrderByClause("create_time Desc");
         list = hjhLabelMapper.selectByExample(example);

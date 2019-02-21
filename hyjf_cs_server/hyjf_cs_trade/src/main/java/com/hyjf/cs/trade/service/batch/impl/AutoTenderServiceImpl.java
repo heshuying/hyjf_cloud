@@ -261,13 +261,13 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
             // 标的编号为空
             if (redisBorrow.getBorrowNid() == null) {
-                logger.error(logMsgHeader + "队列的标的编号为空！");
+                logger.error(logMsgHeader + "队列的标的编号为空！" + "标出错不再推回队列。");
                 return FAIL;
             }
 
             // 标的无可投余额
             if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) < 0) {
-                logger.error(logMsgHeader + redisBorrow.getBorrowNid() + " 标的可投金额为 " + redisBorrow.getBorrowAccountWait());
+                logger.error(logMsgHeader + redisBorrow.getBorrowNid() + " 标的可投金额为 " + redisBorrow.getBorrowAccountWait() + "，标出错不再推回队列。");
                 return FAIL;
             }
             /*******************************************/
@@ -332,8 +332,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     //获取出让用户的江西银行电子账号
                     BankOpenAccountVO sellerBankOpenAccount = this.amUserClient.selectBankAccountById(credit.getUserId());
                     if (sellerBankOpenAccount == null) {
-                        logger.error(logMsgHeader + "转出用户没开户 " + credit.getUserId());
-                        return FAIL;
+                        noPushRedis = true;
+                        throw new Exception(logMsgHeader + "转出用户没开户 " + credit.getUserId() + "，标出错不再推回队列。");
                     }
                     String sellerUsrcustid = sellerBankOpenAccount.getAccount();//出让用户的江西银行电子账号
 
@@ -353,7 +353,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 计算计划债转实际金额 保存creditTenderLog表
                     HjhCreditCalcResultVO resultVO = this.amTradeClient.saveCreditTenderLog(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
                     if (Validator.isNull(resultVO)) {
-                        throw new Exception("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
+                        throw new Exception(logMsgHeader + "保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
 
                     //承接支付金额
@@ -368,7 +368,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     if(!this.amTradeClient.checkAutoPayment(credit.getCreditNid())){
                         serviceFee = BigDecimal.ZERO;//承接服务费
                         resultVO.setServiceFee(BigDecimal.ZERO);
-                        logger.info(logMsgHeader + "债权转让人未做缴费授权,该笔债权的承接服务费置为" + serviceFee);
+                        logger.warn(logMsgHeader + "债权转让人未做缴费授权,该笔债权的承接服务费置为" + serviceFee);
                     }
                     // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
 

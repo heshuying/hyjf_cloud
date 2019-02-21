@@ -159,4 +159,14 @@ public interface HjhPlanCustomizeMapper {
      * @return
      */
     List<Map<String,Object>> searchPlanStatisticData();
+
+
+    /**
+     * 更新相应的汇计划专属标的加入的用户的账户信息
+     *
+     * @param investAccount
+     * @return
+     */
+    int updateOfHjhPlanJoin(Account investAccount);
+
 }
