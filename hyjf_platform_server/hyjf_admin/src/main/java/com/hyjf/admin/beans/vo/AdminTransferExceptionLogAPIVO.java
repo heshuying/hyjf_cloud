@@ -23,8 +23,15 @@ public class AdminTransferExceptionLogAPIVO extends TransferExceptionLogVO imple
     private String tradeStatus;
 
     @ApiModelProperty(value = "添加时间")
-    private String addTimeView;
+    private String createTimeView;
 
+    public String getCreateTimeView() {
+        return createTimeView;
+    }
+
+    public void setCreateTimeView(String createTimeView) {
+        this.createTimeView = createTimeView;
+    }
 
     public String getTradeStatus() {
         return tradeStatus;
@@ -32,14 +39,6 @@ public class AdminTransferExceptionLogAPIVO extends TransferExceptionLogVO imple
 
     public void setTradeStatus(String tradeStatus) {
         this.tradeStatus = tradeStatus;
-    }
-
-    public String getAddTimeView() {
-        return addTimeView;
-    }
-
-    public void setAddTimeView(String addTimeView) {
-        this.addTimeView = addTimeView;
     }
 
 }
