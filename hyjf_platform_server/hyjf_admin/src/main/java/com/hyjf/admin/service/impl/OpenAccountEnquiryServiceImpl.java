@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
+import com.hyjf.common.exception.ReturnMessageException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,16 +168,11 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;
                         } else {
-                            result.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-                            result.setResult("该用户无银行开户信息");
-                            return result;
+                            throw new ReturnMessageException(MsgEnum.STATUS_CE000017);
                         }
                     }
                 }else {
-                    // 该用户无银行开户信息
-                    result.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-                    result.setResult("该用户无银行开户信息");
-                    return result;
+                    throw new ReturnMessageException(MsgEnum.STATUS_CE000017);
                 }
             }
         }
