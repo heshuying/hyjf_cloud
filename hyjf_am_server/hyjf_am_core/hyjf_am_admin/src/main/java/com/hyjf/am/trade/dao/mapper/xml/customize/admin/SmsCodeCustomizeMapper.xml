@@ -10,7 +10,7 @@
 		hyjf_user.ht_user u
 		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
 		<where>
-			<if test="open_account!=3" >
+			<if test="open_account != null and open_account != 3" >
 				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
@@ -29,16 +29,18 @@
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
 			</if>
 		</where>
+		GROUP BY u.user_id
 	</select>
 
 	<select id="countUser" resultType="java.lang.Integer" parameterType="map">
+		select count(*) as total from (
 		SELECT
 		count(*)
 		FROM
 		hyjf_user.ht_user u
 		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
 		<where>
-			<if test="open_account!=3" >
+			<if test="open_account != null and open_account != 3" >
 				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
@@ -57,5 +59,6 @@
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
 			</if>
 		</where>
+		GROUP BY u.user_id) u
 	</select>
 </mapper>

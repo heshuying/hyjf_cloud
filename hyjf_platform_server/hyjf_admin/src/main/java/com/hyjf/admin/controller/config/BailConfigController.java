@@ -8,7 +8,9 @@ import com.hyjf.admin.beans.request.BailConfigRequestBean;
 import com.hyjf.admin.beans.response.BailConfigResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BailConfigService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.ExportExcel;
@@ -54,6 +56,8 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/bail_config")
 public class BailConfigController extends BaseController {
 
+    public static final String PERMISSIONS = "bailconfig";
+
     @Autowired
     BailConfigService bailConfigService;
 
@@ -66,6 +70,7 @@ public class BailConfigController extends BaseController {
     @ApiOperation(value = "合作额度配置列表查询", notes = "合作额度配置列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BailConfigResponseBean> search(@RequestBody BailConfigRequest request) {
 
         BailConfigResponseBean bean = new BailConfigResponseBean();
@@ -97,6 +102,7 @@ public class BailConfigController extends BaseController {
     @ApiOperation(value = "合作额度配置详情", notes = "合作额度配置详情")
     @GetMapping("/info/{idStr}")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BailConfigInfoCustomizeVO> info(@PathVariable String idStr) {
         // 用户ID
         Integer id = GetterUtil.getInteger(idStr);
@@ -138,6 +144,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "添加合作额度配置", notes = "添加合作额度配置")
     @PostMapping("/insert_bail_config")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBailConfig(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
 
         BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
@@ -195,6 +202,7 @@ public class BailConfigController extends BaseController {
      * @param requestBean
      * @return
      */
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "更新合作额度配置", notes = "更新合作额度配置")
     @PostMapping("/update_bail_config")
     public AdminResult updateBailConfig(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
@@ -240,6 +248,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "删除合作额度配置", notes = "删除合作额度配置")
     @PostMapping("/delete_bail_config")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBailConfig(HttpServletRequest request, Integer id) {
         BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
         bailConfigAddRequest.setId(id);
@@ -498,6 +507,7 @@ public class BailConfigController extends BaseController {
      */
     @ApiOperation(value = "合作额度配置列表导出", notes = "合作额度配置列表导出")
     @PostMapping("/export_account_detail_excel")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest requestt,@RequestBody BailConfigRequest request, HttpServletResponse response) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -535,13 +545,13 @@ public class BailConfigController extends BaseController {
 //        map.put("bailRate", "保证金比例");
 //        map.put("newCreditLine", "新增授信额度");
 //        map.put("loanCreditLine", "在贷授信额度");
+        map.put("newCreditLine", "合作额度");
         map.put("dayMarkLine", "日推标额度");
         map.put("monthMarkLine", "月推标额度");
 //        map.put("pushMarkLine", "发标额度上限");
 //        map.put("loanMarkLine", "发标已发额度");
 //        map.put("remainMarkLine", "发标额度余额");
 //        map.put("repayedCapital", "已还本金");
-        map.put("newCreditLine", "合作额度");
         map.put("cycLoanTotal", "周期内发标额度");
         return map;
     }

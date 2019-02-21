@@ -176,6 +176,10 @@
 			<if test="searchEndDate != null and searchEndDate !='' ">
 				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate}' 23:59:59')
 			</if>
+			<!-- 添加项目编号检索-->
+			<if test="tmpBorrowNid != null and tmpBorrowNid !='' ">
+				AND tmp.borrow_nid =#{tmpBorrowNid}
+			</if>
 		</where>
 		ORDER BY
 		add_time_long DESC
@@ -190,6 +194,8 @@
 		ht_hjh_accede hdpa
 		LEFT JOIN
 		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+		LEFT JOIN
+		ht_hjh_plan_borrow_tmp tmp ON hdpa.accede_order_id = tmp.accede_order_id
 		<where>
 			<if test="debtPlanNid != null and debtPlanNid != ''">
 				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNid}, '%')
@@ -211,6 +217,10 @@
 			</if>
 			<if test="searchEndDate != null and searchEndDate !='' ">
 				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate}' 23:59:59')
+			</if>
+			<!-- 添加项目编号检索-->
+			<if test="tmpBorrowNid != null and tmpBorrowNid !='' ">
+				AND tmp.borrow_nid = #{tmpBorrowNid}
 			</if>
 		</where>
 	</select>

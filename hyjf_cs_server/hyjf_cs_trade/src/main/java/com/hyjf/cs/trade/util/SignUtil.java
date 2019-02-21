@@ -136,7 +136,7 @@ public class SignUtil {
         	//自动出借
         	AutoTenderRequestBean bean = (AutoTenderRequestBean) paramBean;
         	sign = bean.getInstCode() + bean.getAccountId() + bean.getBorrowNid() + bean.getTimestamp();
-        }else if (Objects.equals("/tradelist", methodName)){
+        }else if (Objects.equals("/server/tradelist/tradelist", methodName)){
             //同步交易明细
             TransactionDetailsResultBean bean = (TransactionDetailsResultBean) paramBean;
             //暂定四个参数
