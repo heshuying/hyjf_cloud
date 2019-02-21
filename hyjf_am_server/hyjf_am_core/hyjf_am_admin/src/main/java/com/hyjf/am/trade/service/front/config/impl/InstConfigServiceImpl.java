@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.service.front.config.impl;
 
 import com.hyjf.am.resquest.admin.AdminInstConfigListRequest;
+import com.hyjf.am.trade.dao.model.auto.HjhBailConfig;
+import com.hyjf.am.trade.dao.model.auto.HjhBailConfigExample;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfigExample;
 import com.hyjf.am.trade.service.front.config.InstConfigService;
@@ -94,10 +96,28 @@ public class InstConfigServiceImpl extends BaseServiceImpl implements InstConfig
         if(StringUtils.isNotBlank(req.getIds())){
             record = this.getInstConfigRecordById(req.getIds());
             record.setDelFlag(1);
-            int result = hjhInstConfigMapper.updateByPrimaryKeySelective(record);
+            hjhInstConfigMapper.updateByPrimaryKeySelective(record);
+
+            // 同时删除保证金配置记录 update by hesy
+            deleteBailConfig(record.getInstCode());
 //            if(result > 0 && RedisUtils.exists(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode())){
 //                RedisUtils.del(RedisConstants.CAPITAL_TOPLIMIT_+record.getInstCode());
 //            }
+        }
+    }
+
+    /**
+     *  根据instCode删除保证金配置记录
+      * @param instCode
+     */
+    private void deleteBailConfig(String instCode){
+        HjhBailConfigExample example = new HjhBailConfigExample();
+        example.createCriteria().andInstCodeEqualTo(instCode);
+        List<HjhBailConfig> bailConfigs = hjhBailConfigMapper.selectByExample(example);
+        if(bailConfigs != null && !bailConfigs.isEmpty()){
+            HjhBailConfig bailConfig = bailConfigs.get(0);
+            bailConfig.setDelFlg(1);
+            hjhBailConfigMapper.updateByPrimaryKey(bailConfig);
         }
     }
     /**

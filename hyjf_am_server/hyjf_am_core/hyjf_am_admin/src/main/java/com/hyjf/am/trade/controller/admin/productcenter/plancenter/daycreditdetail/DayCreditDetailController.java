@@ -12,6 +12,8 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +39,8 @@ public class DayCreditDetailController {
     @Autowired
     private DayCreditDetailService dayCreditDetailService;
 
+    private static Logger logger = LoggerFactory.getLogger(DayCreditDetailController.class);
+
     @RequestMapping(value = "/hjhDayCreditList", method = RequestMethod.POST)
     public DayCreditDetailResponse hjhDayCreditList(@RequestBody @Valid DayCreditDetailRequest request){
         DayCreditDetailResponse response = new DayCreditDetailResponse();
@@ -49,7 +53,7 @@ public class DayCreditDetailController {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", request.getPlanNid());
-//        params.put("planOrderId", request.getPlanOrderId());
+        params.put("planOrderId", request.getPlanOrderId());
 //        params.put("planNidNew", request.getPlanNidNew());
         params.put("userName", request.getUserName());
         params.put("creditNid", request.getCreditNid());
@@ -63,21 +67,16 @@ public class DayCreditDetailController {
         params.put("repayNextTimeEnd",StringUtils.isNotBlank(request.getRepayNextTimeEnd())?request.getRepayNextTimeEnd():null);
         params.put("endTimeStart", StringUtils.isNotBlank(request.getEndTimeStart())?request.getEndTimeStart():null);
         params.put("endTimeEnd", StringUtils.isNotBlank(request.getEndTimeEnd())?request.getEndTimeEnd():null);
-
+        logger.info(DayCreditDetailController.class + ":检索条件:" + params.toString());
         //总计条数
         Integer count = this.dayCreditDetailService.countDebtCredit(params);
 
         //传分页
         Paginator paginator;
 
-        if (request.getLimitStart() == 0){
-            // 根据前台传入分页
-            paginator = new Paginator(request.getCurrPage(), count);
-        }else {
-            // 未传入分页信息,使用默认分页信息
-            paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
-        }
         if (count > 0 && count != null) {
+
+            paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
 
             params.put("limitStart", paginator.getOffset());
             params.put("limitEnd", paginator.getLimit());

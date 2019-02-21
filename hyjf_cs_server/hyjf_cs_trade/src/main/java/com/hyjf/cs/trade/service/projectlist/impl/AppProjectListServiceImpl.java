@@ -188,7 +188,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         boolean isOpened = false;
         boolean isSetPassword = false;
         boolean isAllowed = false;
-        boolean isRiskTested = false;
+       // boolean isRiskTested = false;
+        String isRiskTested = "0";
         boolean isAutoInves = false;
         boolean isInvested = false;
         //  0：未授权1：已授权
@@ -213,8 +214,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     isAllowed = true;
                 }
                 //是否完成风险测评
-                if (users.getIsEvaluationFlag() == 1) {
-                    isRiskTested = true;
+                if (users.getIsEvaluationFlag() == 1 && null != users.getEvaluationExpiredTime()) {
+                    //测评到期日
+                    Long lCreate = users.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        isRiskTested = "2";
+                    } else {
+                        //测评未过期
+                        isRiskTested = "1";
+                    }
                 }
                 boolean isTender = this.isTenderBorrow(userId, borrowNid, type);
                 if (isTender) {
@@ -1444,17 +1455,26 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 服务费授权开关
             userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 
-            try {
-
-                if (userVO.getIsEvaluationFlag() == 1) {
-                    userValidation.put("isRiskTested", true);
-                } else {
-                    userValidation.put("isRiskTested", false);
+            try{
+                if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
+                    //测评到期日
+                    Long lCreate = userVO.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        userValidation.put("isRiskTested", "2");
+                    } else {
+                        //未到一年有效期
+                        userValidation.put("isRiskTested", "1");
+                    }
+                }else{
+                    userValidation.put("isRiskTested", "0");
                 }
                 // modify by liuyang 20180411 用户是否完成风险测评标识 end
-            } catch (Exception e) {
+            }catch (Exception e){
                 logger.error("是否进行过风险测评查询出错....", e);
-                userValidation.put("isRiskTested", false);
+                userValidation.put("isRiskTested", "2");
             }
 
             //

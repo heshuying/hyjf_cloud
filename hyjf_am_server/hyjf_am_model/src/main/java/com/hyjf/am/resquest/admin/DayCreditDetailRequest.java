@@ -51,6 +51,9 @@ public class DayCreditDetailRequest extends BasePage implements Serializable {
     // 原项目编号
     private String borrowNid;
 
+    // 出让人智投订单号
+    private String planOrderId;
+
     public int limit = 0;
 
     private int limitStart = -1;
@@ -191,5 +194,13 @@ public class DayCreditDetailRequest extends BasePage implements Serializable {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
+    }
+
+    public String getPlanOrderId() {
+        return planOrderId;
+    }
+
+    public void setPlanOrderId(String planOrderId) {
+        this.planOrderId = planOrderId;
     }
 }

@@ -19,6 +19,7 @@ import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -96,7 +97,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
             // 判断授权类型，保存至授权日志表
             authService.saveUserAuthLog(authBean, orderId);
         } catch (Exception e) {
-            logger.info("AEMS多合一授权页面异常,异常信息:[" + e.toString() + "]");
+            logger.info("AEMS多合一授权页面异常,异常信息:["+ e +"]");
             return null;
         }
         logger.info("AEMS系统请求页面多合一授权[结束]");
@@ -107,16 +108,19 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "AEMS多合一授权[同步回调]", notes = "AEMS多合一授权[同步回调]")
     @RequestMapping(RETURL_SYN_ACTION)
     public ModelAndView returnPage(HttpServletRequest request, BankCallBean bean) {
-        logger.info("AEMS多合一授权[同步回调]开始, 接口路径:["+ "/hyjf-api/aems/mergeauth"+RETURL_SYN_ACTION +"]", "请求参数:["+ bean.toString() +"]");
+        logger.info("AEMS多合一授权[同步回调]开始, 请求参数:bean{}"+ bean.toString());
 
         String authType = request.getParameter("authType");
         String isSuccess = request.getParameter("isSuccess");
-        logger.info("第三方端授权同步请求,isSuccess:{}", isSuccess);
+        logger.info("第三方端授权同步请求,isSuccess:["+ isSuccess +"]");
         String url = request.getParameter("callback").replace("*-*-*", "#");
+
+        String retCode = bean.getRetCode();
+        logger.info("第三方端授权同步请求,retCode:["+ retCode +"]");
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
-        if (isSuccess == null || !"1".equals(isSuccess)) {
+        if (retCode == null || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 失败
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
             resultMap.put("statusDesc", "多合一授权失败,调用银行接口失败");
@@ -132,11 +136,12 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
                 resultMap.put("statusDesc", "多合一授权申请失败,失败原因：授权期限过短或额度过低，<br>请重新授权！");
                 resultMap.put("acqRes", request.getParameter("acqRes"));
                 resultMap.put("callBackAction", url);
-                logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低，请重新授权！");
+                logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低,请重新授权！");
                 return callbackErrorView(resultMap);
             }
+            resultMap.put("acqRes", request.getParameter("acqRes"));
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
-            resultMap.put("status", "多合一授权成功");
+            resultMap.put("statusDesc", "多合一授权成功");
             resultMap.put("deadline", bean.getDeadline());
             logger.info("AEMS多合一授权[同步回调]结束");
             return callbackErrorView(resultMap);
@@ -148,7 +153,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @RequestMapping(RETURL_ASY_ACTION)
     @ResponseBody
     public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
-        logger.info("AEMS多合一授权[异步回调]开始, 接口路径:["+ "/hyjf-api/aems/mergeauth"+RETURL_ASY_ACTION +"]", "请求参数:["+ bean.toString() +"]");
+        logger.info("AEMS多合一授权[异步回调]开始,请求参数:["+ bean.toString() +"]");
 
         Map<String, String> params = new HashMap<>();
         BankCallResult result = new BankCallResult();
@@ -197,7 +202,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
-            logger.error("多合一授权出错, userId:["+ userId +"]错误原因：" + e.getMessage());
+            logger.error("多合一授权出错,userId:["+ userId +"]错误原因："+ e);
             message = "多合一授权失败";
             status = ErrorCodeConstant.STATUS_CE999999;
         }

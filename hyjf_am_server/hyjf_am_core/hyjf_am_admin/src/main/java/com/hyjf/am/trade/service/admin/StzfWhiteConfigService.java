@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin;
 
-import com.hyjf.am.resquest.admin.STZHWhiteListRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.trade.dao.model.auto.StzhWhiteList;
 import com.hyjf.am.trade.dao.model.customize.STZHWhiteListCustomize;
 
@@ -19,21 +19,21 @@ public interface StzfWhiteConfigService {
 	 *
 	 * @return
 	 */
-	List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequest request, int offset, int limit);
+	List<StzhWhiteList> selectSTZHWhiteList(STZHWhiteListRequestBean request, int offset, int limit);
 
 	/**
 	 * 添加受托支付白名单
 	 *
 	 * @param request
 	 */
-	void insertSTZHWhiteList(STZHWhiteListRequest request);
+	void insertSTZHWhiteList(STZHWhiteListRequestBean request);
 
 	/**
 	 * 更新受托支付白名单
 	 *
 	 * @param request
 	 */
-	void updateSTZHWhiteList(STZHWhiteListRequest request);
+	void updateSTZHWhiteList(STZHWhiteListRequestBean request);
 
 	/**
 	 * 加载用户/机构信息
@@ -54,5 +54,5 @@ public interface StzfWhiteConfigService {
 	 * @param request
 	 * @return
 	 */
-	int countSTZFHWhiteList(STZHWhiteListRequest request);
+	int countSTZFHWhiteList(STZHWhiteListRequestBean request);
 }

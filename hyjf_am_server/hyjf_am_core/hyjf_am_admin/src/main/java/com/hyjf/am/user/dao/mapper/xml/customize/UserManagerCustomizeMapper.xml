@@ -70,7 +70,7 @@
         hydu.inst_code AS instCode,
         hca.customer_id,
         hboa.account,
-        hboa.create_time AS bank_open_time,
+        date_format(hboa.create_time,'%Y-%c-%d %H:%i:%s') AS bank_open_time,
 		CASE
 				hydui.attribute 
 				WHEN 1 THEN

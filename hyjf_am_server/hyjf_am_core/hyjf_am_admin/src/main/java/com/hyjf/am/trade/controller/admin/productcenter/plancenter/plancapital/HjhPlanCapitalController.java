@@ -44,23 +44,21 @@ public class HjhPlanCapitalController {
 
         Integer count = this.hjhPlanCapitalService.queryReInvestDetailCount(request);
 
-        if (request.getCurrPage() > 0){
-            Paginator paginator = new Paginator(request.getCurrPage(), count);
+        if (count > 0 && count != null){
+            Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             request.setLimitStart(paginator.getOffset());
-            if (request.getPageSize() > 0){
-                request.setLimitEnd(request.getPageSize());
-            }else{
-                request.setLimitEnd(paginator.getLimit());
+            request.setLimitEnd(paginator.getLimit());
+            logger.info(HjhPlanCapitalController.class + ":" + request.toString());
+
+            List<HjhReInvestDetailVO> reInvestDetailVOList = this.hjhPlanCapitalService.getReinvestInfo(request);
+
+            if (!CollectionUtils.isEmpty(reInvestDetailVOList)){
+                response.setResultList(reInvestDetailVOList);
+                response.setCount(count);
+                response.setRtn(Response.SUCCESS);
             }
         }
 
-        List<HjhReInvestDetailVO> reInvestDetailVOList = this.hjhPlanCapitalService.getReinvestInfo(request);
-
-        if (!CollectionUtils.isEmpty(reInvestDetailVOList)){
-            response.setResultList(reInvestDetailVOList);
-            response.setCount(count);
-            response.setRtn(Response.SUCCESS);
-        }
         return response;
     }
 

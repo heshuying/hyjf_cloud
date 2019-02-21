@@ -42,4 +42,11 @@ public interface OperationLogService {
      * @return
      */
     UserOperationLogResponse  getOperationLogList(UserOperationLogRequest request);
+
+    /**
+     * 根据资金来源查询产品类型
+     * @param instCode
+     * @return
+     */
+    public List<HjhAssetTypeVO> hjhAssetTypeList(String instCode);
 }

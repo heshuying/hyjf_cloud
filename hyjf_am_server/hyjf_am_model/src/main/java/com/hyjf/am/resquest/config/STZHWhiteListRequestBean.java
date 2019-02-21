@@ -1,9 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.admin.beans.request;
+package com.hyjf.am.resquest.config;
 
-import com.hyjf.admin.beans.BaseRequest;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author fuqiang
  * @version STZHWhiteListRequestBean, v0.1 2018/7/10 9:59
  */
-public class STZHWhiteListRequestBean extends BaseRequest implements Serializable {
+public class STZHWhiteListRequestBean extends BasePage implements Serializable {
 	private Integer id;
 
 	@ApiModelProperty(value = "机构/个人ID")
@@ -24,7 +24,7 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 	private String userName;
 
 	@ApiModelProperty(value = "电子账号")
-	private String accountid;
+	private String accountId;
 
 	@ApiModelProperty(value = "手机号")
 	private String mobile;
@@ -39,7 +39,7 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 	private String stUserName;
 
 	@ApiModelProperty(value = "收款人电子账号")
-	private String stAccountid;
+	private String stAccountId;
 
 	@ApiModelProperty(value = "收款人手机号")
 	private String stMobile;
@@ -73,7 +73,7 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 	private String instcode;
 
 	@ApiModelProperty(value = "机构名称")
-	private String instname;
+	private String instName;
 
 	private String stateName;
 
@@ -121,12 +121,12 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 		this.userName = userName == null ? null : userName.trim();
 	}
 
-	public String getAccountid() {
-		return accountid;
+	public String getAccountId() {
+		return accountId;
 	}
 
-	public void setAccountid(String accountid) {
-		this.accountid = accountid == null ? null : accountid.trim();
+	public void setAccountId(String accountId) {
+		this.accountId = accountId == null ? null : accountId.trim();
 	}
 
 	public String getMobile() {
@@ -161,12 +161,12 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 		this.stUserName = stUserName == null ? null : stUserName.trim();
 	}
 
-	public String getStAccountid() {
-		return stAccountid;
+	public String getStAccountId() {
+		return stAccountId;
 	}
 
-	public void setStAccountid(String stAccountid) {
-		this.stAccountid = stAccountid == null ? null : stAccountid.trim();
+	public void setStAccountId(String stAccountId) {
+		this.stAccountId = stAccountId == null ? null : stAccountId.trim();
 	}
 
 	public String getStMobile() {
@@ -265,11 +265,11 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 		this.instcode = instcode == null ? null : instcode.trim();
 	}
 
-	public String getInstname() {
-		return instname;
+	public String getInstName() {
+		return instName;
 	}
 
-	public void setInstname(String instname) {
-		this.instname = instname == null ? null : instname.trim();
+	public void setInstName(String instName) {
+		this.instName = instName == null ? null : instName.trim();
 	}
 }

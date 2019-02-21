@@ -343,7 +343,9 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         account.setBankTotal(accountDecimal);
         logger.info("加入计划账户 开始操作 account :{}",JSONObject.toJSONString(account));
         // 更新用户计划账户
-        boolean accountFlag = hjhPlanCustomizeMapper.updateOfPlanJoin(account)> 0 ? true : false;
+        // mod by liuyang 20190221 更新账户时,可用大于投资金额时,才更新 start
+        boolean accountFlag = hjhPlanCustomizeMapper.updateOfHjhPlanJoin(account)> 0 ? true : false;
+        // mod by liuyang 20190221 更新账户时,可用大于投资金额时,才更新 end
         logger.info("加入计划账户 操作account结果 :{}",accountFlag);
         accedeAccount = getAccount(request.getUserId());
         // 组装accountList

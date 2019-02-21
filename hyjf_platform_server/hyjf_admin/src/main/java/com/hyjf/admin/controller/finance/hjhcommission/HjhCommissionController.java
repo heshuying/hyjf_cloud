@@ -441,7 +441,7 @@ public class HjhCommissionController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "智投服务提成列表";
+		String sheetName = "推广提成发放列表";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -460,6 +460,7 @@ public class HjhCommissionController extends BaseController{
 		for (int i = 1; i <= sheetCount; i++) {
 			form.setPageSize(defaultRowMaxCount);
 			form.setCurrPage(i);
+			form.setLimit(defaultRowMaxCount);
 			HjhCommissionResponse listResponse = hjhCommissionService.selectHjhCommissionList(form);
 			if (listResponse != null && listResponse.getResultList().size()> 0) {
 				for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : listResponse.getResultList()){
@@ -592,12 +593,24 @@ public class HjhCommissionController extends BaseController{
 			}
 		};
 
+		IValueFormatter sendTimeViewAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String sendTimeView = (String) object;
+				if (StringUtils.isNotBlank(sendTimeView)){
+					return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(sendTimeView));
+				}
+				return "";
+			}
+		};
+
 		mapAdapter.put("borrowStyleHjh", borrowStyleHjhAdapter);
 		mapAdapter.put("expectApr", expectAprAdapter);
 		mapAdapter.put("attribute", attributeAdapter);
 		mapAdapter.put("attributeTender", attributeTenderAdapter);
 		mapAdapter.put("accountTender", accountTenderAdapter);
 		mapAdapter.put("commission", commissionAdapter);
+		mapAdapter.put("sendTimeView",sendTimeViewAdapter);
 		return mapAdapter;
 	}
 

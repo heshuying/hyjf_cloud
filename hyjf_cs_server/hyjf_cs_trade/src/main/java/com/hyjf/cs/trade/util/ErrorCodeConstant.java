@@ -181,6 +181,14 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_ZT000106 = "ZT000106";
     // AEMS资产推送异常
     public static final String STATUS_ZT000107 = "ZT000107";
+    // 受托支付电子账户未授权
+    public static final String STATUS_ZT000108 = "ZT000108";
+    //年收入为空or不为数字
+    public static final String STATUS_ZT000109 = "ZT000109";
+    //月收入为空
+    public static final String STATUS_ZT000110 = "ZT000110";
+    //借款人地址信息不正确
+    public static final String STATUS_ZT000111 = "ZT000111";
     /********************AEMS资产推送    end***********************/
 
     /********************还款接口    start***********************/

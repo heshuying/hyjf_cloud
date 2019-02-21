@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.finance.pushMoney;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -168,8 +167,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-//        requestBean.setCurrPage(1);
-////        requestBean.setPageSize(defaultRowMaxCount);
+        requestBean.setCurrPage(1);
+        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.findPushMoneyList(requestBean).getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -223,10 +222,8 @@ public class PushMoneyManageController extends BaseController {
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
         logger.info("enter pushMoneyList controller for admin");
         if(null != request.getCombotreeListSrch() && request.getCombotreeListSrch().length>0){
-            logger.info("combotreeListSrch:::::::::::::::::::::::::::::【{}】", JSON.toJSONString(request.getCombotreeListSrch()));
             // 查询部门处理
             String [] strDepts = pushMoneyManageService.getDeptId(request.getCombotreeListSrch());
-            logger.info("strDepts:::::::::::::::::::::::::::::【{}】", JSON.toJSONString(strDepts));
             request.setCombotreeListSrch(strDepts);
         }
         //选择1直投类，而非2计划类数据
@@ -292,6 +289,11 @@ public class PushMoneyManageController extends BaseController {
         // 是否具有组织机构查看权限
         String isOrganizationView = requestBean.getIsOrganizationView();
 
+        if(null != requestBean.getCombotreeListSrch() && requestBean.getCombotreeListSrch().length>0){
+            // 查询部门处理
+            String [] strDepts = pushMoneyManageService.getDeptId(requestBean.getCombotreeListSrch());
+            requestBean.setCombotreeListSrch(strDepts);
+        }
         //选择1直投类，而非2计划类数据
         requestBean.setTenderType(1);
         //sheet默认最大行数
