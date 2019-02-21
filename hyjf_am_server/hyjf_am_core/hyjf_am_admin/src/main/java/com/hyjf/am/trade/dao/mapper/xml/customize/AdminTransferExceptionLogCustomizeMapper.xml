@@ -13,7 +13,7 @@
 	    <result column="user_id" property="userId" jdbcType="INTEGER" />
 	    <result column="remark" property="remark" jdbcType="VARCHAR" />
 	    <result column="create_time" property="createTime" jdbcType="INTEGER" />
-	    <result column="create_time_view" property="createTimeView" jdbcType="INTEGER" />
+	    <result column="create_time_view" property="createTimeView" jdbcType="VARCHAR" />
 	    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
 	    <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
 	    <result column="trade_status" property="tradeStatus" jdbcType="VARCHAR" />
