@@ -25,6 +25,16 @@ public class AdminTransferExceptionLogAPIVO extends TransferExceptionLogVO imple
     @ApiModelProperty(value = "添加时间")
     private String createTimeView;
 
+    private Integer updatetime;
+
+    public Integer getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(Integer updatetime) {
+        this.updatetime = updatetime;
+    }
+
     public String getCreateTimeView() {
         return createTimeView;
     }
