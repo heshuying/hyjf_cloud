@@ -11,6 +11,7 @@ import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.controller.api.aems.assetpush.AemsAssetPushController;
+import com.hyjf.cs.trade.controller.api.assetpush.ApiAssetPushController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -117,7 +118,7 @@ public class SignUtil {
         if (StringUtils.isEmpty(instCode)) {
             return false;
         }
-        if (Objects.equals("/push", methodName)) {
+        if (Objects.equals(ApiAssetPushController.PERSON, methodName)) {
             // 个人资产推送--校验接口
             PushRequestBean requestBean = (PushRequestBean) paramBean;
             int assetType = requestBean.getAssetType();
@@ -126,7 +127,7 @@ public class SignUtil {
         } else if(Objects.equals("/synbalance", methodName)){
             SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
             sign =  bean.getAccountId()+bean.getInstCode() + bean.getTimestamp();
-        } else if (Objects.equals("/pushcompany", methodName)) {
+        } else if (Objects.equals(ApiAssetPushController.COMPANY, methodName)) {
             // 企业资产推送--校验接口
             PushRequestBean bean = (PushRequestBean) paramBean;
             Long timestamp = bean.getTimestamp();

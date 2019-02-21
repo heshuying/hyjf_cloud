@@ -669,147 +669,145 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
 
                 //企业推送-必传字段非空校验
                 if(checkCompanyPushInfo(pushBean)){
-                    //通过用户名获得用户的详细信息
-                    UserVO users = amUserClient.selectUserInfoByUsername(pushBean.getUserName());
-                    //判断用户是否注册
-                    if(users == null){
-                        //自动注册
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
-                        pushBean.setRetMsg("没有用户信息，请注册！--users");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-                    if (users.getUserType() == 0){
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
-                        pushBean.setRetMsg("用户类型不是企业用户");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-                    //通过用户id获得用户真实姓名和身份证号
-                    UserInfoVO userInfos = amUserClient.selectUserInfoByUserId(users.getUserId());
-                    if(userInfos == null){
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
-                        pushBean.setRetMsg("没有用户信息，请注册！--userinfo");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-                    //通过用户id获得借款人的开户电子账号
-                    BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(users.getUserId());
-                    //判断用户是否开户（汇盈金服、江西银行）
-                    if (bankOpenAccount == null){
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000002);
-                        pushBean.setRetMsg("没有用户开户信息，请在线下开户！");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-                    //判断借款用户是否是机构合作用户
-                    if(users.getIsInstFlag() == 0 || users.getIsInstFlag().equals("0")){
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000007);
-                        pushBean.setRetMsg("借款用户不是机构合作用户！");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-                    //查看用户对应的企业编号
-                    CorpOpenAccountRecordVO userCorpOpenAccountRecordInfo = amUserClient.selectUserBusiNameByUsername(pushBean.getUserName());
-                    if(userCorpOpenAccountRecordInfo == null){
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
-                        pushBean.setRetMsg("企业用户未录入对应的企业信息！");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-                    //判断借款人用户名所属企业与传入的企业名称是否一致
-                    if(!userCorpOpenAccountRecordInfo.getBusiName().equals(pushBean.getBorrowCompanyName())){
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
-                        pushBean.setRetMsg("借款人用户名所属企业与传入的企业名称不一致！");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-
-                    Integer paymentAuth = users.getPaymentAuthStatus();
-                    HjhUserAuthVO hjhUserAuth = this.amUserClient.getHjhUserAuthByUserId(users.getUserId());
-                    Integer repayAuth = hjhUserAuth == null ? 0 : hjhUserAuth.getAutoRepayStatus();
-                    Integer authResult = authService.checkAuthStatus(repayAuth, paymentAuth);
-                    if (authResult == 5) {
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
-                        pushBean.setRetMsg("借款人必须服务费授权");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    } else if (authResult == 6) {
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000012);
-                        pushBean.setRetMsg("借款人必须还款授权");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    } else if (authResult == 7) {
-                        pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000014);
-                        pushBean.setRetMsg("借款人必须服务费授权和还款授权");
-                        retassets.add(pushBean);// 返回提示
-                        continue;
-                    }
-
-					/*--- 包装推送资产信息 start ---*/
-                    record.setAccountId(bankOpenAccount.getAccount());
-                    record.setTruename(userInfos.getTruename());
-                    record.setIdcard(userInfos.getIdcard());
-                    record.setCreateUserId(1);// 默认系统用户
-                    record.setUpdateUserId(1);
-                    record.setInstCode(pushRequestBean.getInstCode());
-                    record.setAssetType(pushRequestBean.getAssetType());
-                    //0：个人，1：企业
-                    record.setBorrowType(1);
-                    record.setAssetId(pushBean.getAssetId());
-                    record.setBorrowPeriod(pushBean.getBorrowPeriod());
-                    record.setBorrowStyle(pushBean.getBorrowStyle());
-                    record.setEntrustedFlg(pushBean.getEntrustedFlg());
-                    record.setEntrustedAccountId(pushBean.getEntrustedAccountId());
-                    record.setUserName(pushBean.getUserName());
-                    record.setBorrowCompanyName(pushBean.getBorrowCompanyName());
-                    record.setAccount(pushBean.getAccount());
-                    record.setUseage(pushBean.getUseage());
-                    if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getFirstPayment())){
-                        pushBean.setFirstPayment("经营收入");
-                    }
-                    record.setFirstPayment(pushBean.getFirstPayment());
-                    if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getSecondPayment())){
-                        pushBean.setSecondPayment("第三方保障");
-                    }
-                    record.setSecondPayment(pushBean.getSecondPayment());
-                    if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getCostIntrodution())){
-                        pushBean.setCostIntrodution("加入费用0元");
-                    }
-                    record.setCostIntrodution(pushBean.getCostIntrodution());
-                    record.setFinancialSituation(pushBean.getFinancialSituation());
-                    record.setLegalPerson(pushBean.getLegalPerson());
-                    record.setRegistrationArea(pushBean.getRegistrationArea());
-                    record.setRegistrationDate(pushBean.getRegistrationDate());
-                    record.setMainBusiness(pushBean.getMainBusiness());
-                    record.setUnifiedSocialCreditCode(pushBean.getUnifiedSocialCreditCode());
-                    record.setRegisteredCapital(pushBean.getRegisteredCapital());
-                    record.setIndustryInvolved(pushBean.getIndustryInvolved());
-                    if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getOverdueTimes())){
-                        pushBean.setOverdueTimes("0");
-                    }
-                    record.setOverdueTimes(pushBean.getOverdueTimes());
-                    if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getOverdueAmount())){
-                        pushBean.setOverdueAmount("0");
-                    }
-                    record.setOverdueAmount(pushBean.getOverdueAmount());
-                    if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getLitigation())){
-                        pushBean.setLitigation("无或已处理");
-                    }
-                    record.setLitigation(pushBean.getLitigation());
-                    record.setUserId(users.getUserId());
-                    record.setMobile(users.getMobile());
-					/*--- 包装推送资产信息 end ---*/
-
-                }else{
-                    logger.info(pushRequestBean.getInstCode()+"必传字段未传");
+                    logger.info(pushRequestBean.getInstCode() + "必传字段未传!");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
                     pushBean.setRetMsg("必传字段未传，请传输！");
                     retassets.add(pushBean);// 返回提示
                     continue;
                 }
+                //通过用户名获得用户的详细信息
+                UserVO users = amUserClient.selectUserInfoByUsername(pushBean.getUserName());
+                //判断用户是否注册
+                if(users == null){
+                    //自动注册
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
+                    pushBean.setRetMsg("没有用户信息，请注册！--users表");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+                if (users.getUserType() == 0){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
+                    pushBean.setRetMsg("用户类型不是企业用户");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+                //通过用户id获得用户真实姓名和身份证号
+                UserInfoVO userInfos = amUserClient.selectUserInfoByUserId(users.getUserId());
+                if(userInfos == null){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
+                    pushBean.setRetMsg("没有用户信息，请注册！--userinfo表");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+                //通过用户id获得借款人的开户电子账号
+                BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(users.getUserId());
+                //判断用户是否开户（汇盈金服、江西银行）
+                if (bankOpenAccount == null){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000002);
+                    pushBean.setRetMsg("没有用户开户信息，请在线下开户！");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+                //判断借款用户是否是机构合作用户
+                if(users.getIsInstFlag() == 0 || users.getIsInstFlag().equals("0")){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000007);
+                    pushBean.setRetMsg("借款用户不是机构合作用户！");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+                //查看用户对应的企业编号
+                CorpOpenAccountRecordVO userCorpOpenAccountRecordInfo = amUserClient.selectUserBusiNameByUsername(pushBean.getUserName());
+                if(userCorpOpenAccountRecordInfo == null){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
+                    pushBean.setRetMsg("企业用户未录入对应的企业信息！");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+                //判断借款人用户名所属企业与传入的企业名称是否一致
+                if(!userCorpOpenAccountRecordInfo.getBusiName().equals(pushBean.getBorrowCompanyName())){
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
+                    pushBean.setRetMsg("借款人用户名所属企业与传入的企业名称不一致！");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
 
-                logger.info(pushRequestBean.getInstCode()+" 审核完成，开始推送资产 ");
+                Integer paymentAuth = users.getPaymentAuthStatus();
+                HjhUserAuthVO hjhUserAuth = this.amUserClient.getHjhUserAuthByUserId(users.getUserId());
+                Integer repayAuth = hjhUserAuth == null ? 0 : hjhUserAuth.getAutoRepayStatus();
+                Integer authResult = authService.checkAuthStatus(repayAuth, paymentAuth);
+                if (authResult == 5) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
+                    pushBean.setRetMsg("借款人必须服务费授权");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                } else if (authResult == 6) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000012);
+                    pushBean.setRetMsg("借款人必须还款授权");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                } else if (authResult == 7) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000014);
+                    pushBean.setRetMsg("借款人必须服务费授权和还款授权");
+                    retassets.add(pushBean);// 返回提示
+                    continue;
+                }
+
+                /*--- 包装推送资产信息 start ---*/
+                record.setAccountId(bankOpenAccount.getAccount());
+                record.setTruename(userInfos.getTruename());
+                record.setIdcard(userInfos.getIdcard());
+                record.setCreateUserId(1);// 默认系统用户
+                record.setUpdateUserId(1);
+                record.setInstCode(pushRequestBean.getInstCode());
+                record.setAssetType(pushRequestBean.getAssetType());
+                //0：个人，1：企业
+                record.setBorrowType(1);
+                record.setAssetId(pushBean.getAssetId());
+                record.setBorrowPeriod(pushBean.getBorrowPeriod());
+                record.setBorrowStyle(pushBean.getBorrowStyle());
+                record.setEntrustedFlg(pushBean.getEntrustedFlg());
+                record.setEntrustedAccountId(pushBean.getEntrustedAccountId());
+                record.setUserName(pushBean.getUserName());
+                record.setBorrowCompanyName(pushBean.getBorrowCompanyName());
+                record.setAccount(pushBean.getAccount());
+                record.setUseage(pushBean.getUseage());
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getFirstPayment())){
+                    pushBean.setFirstPayment("经营收入");
+                }
+                record.setFirstPayment(pushBean.getFirstPayment());
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getSecondPayment())){
+                    pushBean.setSecondPayment("第三方保障");
+                }
+                record.setSecondPayment(pushBean.getSecondPayment());
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getCostIntrodution())){
+                    pushBean.setCostIntrodution("加入费用0元");
+                }
+                record.setCostIntrodution(pushBean.getCostIntrodution());
+                record.setFinancialSituation(pushBean.getFinancialSituation());
+                record.setLegalPerson(pushBean.getLegalPerson());
+                record.setRegistrationArea(pushBean.getRegistrationArea());
+                record.setRegistrationDate(pushBean.getRegistrationDate());
+                record.setMainBusiness(pushBean.getMainBusiness());
+                record.setUnifiedSocialCreditCode(pushBean.getUnifiedSocialCreditCode());
+                record.setRegisteredCapital(pushBean.getRegisteredCapital());
+                record.setIndustryInvolved(pushBean.getIndustryInvolved());
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getOverdueTimes())){
+                    pushBean.setOverdueTimes("0");
+                }
+                record.setOverdueTimes(pushBean.getOverdueTimes());
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getOverdueAmount())){
+                    pushBean.setOverdueAmount("0");
+                }
+                record.setOverdueAmount(pushBean.getOverdueAmount());
+                if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getLitigation())){
+                    pushBean.setLitigation("无或已处理");
+                }
+                record.setLitigation(pushBean.getLitigation());
+                record.setUserId(users.getUserId());
+                record.setMobile(users.getMobile());
+                /*--- 包装推送资产信息 end ---*/
+
+                logger.info(pushRequestBean.getInstCode() +" 审核完成，开始推送资产 ");
                 //检查是否存在重复资产
                 List<HjhPlanAssetVO> duplicateAssetId = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId());
                 if (!CollectionUtils.isEmpty(duplicateAssetId)){
@@ -919,8 +917,8 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
            pushBean.getAccount() == null || StringUtils.isBlank(pushBean.getUnifiedSocialCreditCode()) ||
            StringUtils.isBlank(pushBean.getOverdueAmount())){
 
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

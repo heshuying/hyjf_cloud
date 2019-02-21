@@ -23,14 +23,6 @@ public class PushRequestBean extends BaseBean implements Serializable {
 	@ApiModelProperty(value = "商铺信息")
 	private List<InfoBean> riskInfo;
 
-	public List<PushBean> getReqData() {
-		return reqData;
-	}
-
-	public void setReqData(List<PushBean>  reqData) {
-		this.reqData = reqData;
-	}
-
 	public Integer getAssetType() {
 		return assetType;
 	}
@@ -39,23 +31,20 @@ public class PushRequestBean extends BaseBean implements Serializable {
 		this.assetType = assetType;
 	}
 
-	/**
-	 * riskInfo
-	 * @return the riskInfo
-	 */
-		
-	public List<InfoBean> getRiskInfo() {
-		return riskInfo;
-			
+	public List<PushBean> getReqData() {
+		return reqData;
 	}
 
-	/**
-	 * @param riskInfo the riskInfo to set
-	 */
-		
+	public void setReqData(List<PushBean> reqData) {
+		this.reqData = reqData;
+	}
+
+	public List<InfoBean> getRiskInfo() {
+		return riskInfo;
+	}
+
 	public void setRiskInfo(List<InfoBean> riskInfo) {
 		this.riskInfo = riskInfo;
-			
 	}
 
 	@Override

@@ -44,9 +44,9 @@ public class AemsAssetPushController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(AemsAssetPushController.class);
 
-    public static final String AEMS_ASSETPUSH = "/hyjf-api/aems/assetpush" ;
-    public static final String PERSON = "/push" ;
-    public static final String COMPANY = "/pushcompany" ;
+    public static final String AEMS_ASSETPUSH = "/hyjf-api/aems/assetpush";
+    public static final String PERSON = "/push";
+    public static final String COMPANY = "/pushcompany";
 
     @Autowired
     private AemsAssetPushService pushService;
