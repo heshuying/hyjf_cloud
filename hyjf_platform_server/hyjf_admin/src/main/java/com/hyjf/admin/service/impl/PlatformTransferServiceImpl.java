@@ -73,8 +73,11 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
         List<UserVO> userVOList = amUserClient.findUserListByUserIds(userIds);
         for(AccountRechargeVO accountRechargeVO:accountRechargeVOList){
             //txTime时间格式化
+            if(null != accountRechargeVO.getTxDate()){
+                accountRechargeVO.setTxDateStr(timeFormat(accountRechargeVO.getTxDate(),"-"));
+            }
             if(null != accountRechargeVO.getTxTime()){
-                accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime()));
+                accountRechargeVO.setTxTimeStr(timeFormat(accountRechargeVO.getTxTime(),":"));
             }
             for(UserVO userVO:userVOList){
                 if(null != userVO && null != userVO.getUserId() && accountRechargeVO.getUserId().equals(userVO.getUserId())){
@@ -88,7 +91,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
         return accountRechargeVOList;
     }
 
-    private String timeFormat(int time){
+    private static String timeFormat(int time,String format){
         int s = time % 100;
         time = time / 100;
         int m = time % 100;
@@ -105,7 +108,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
         if(h<10){
             hStr = "0" + h;
         }
-        return hStr + ":" + mStr + ":" + sStr;
+        return hStr + format + mStr + format + sStr;
     }
 
     /**

@@ -127,8 +127,15 @@ public class SmsCodeController extends BaseController {
             return jsonObject;
         }
 
+        if(StringUtils.isEmpty(form.getMessageType())){
+            jsonObject.put("msg", "短信类型不能为空,单发or群发");
+            jsonObject.put("status", FAIL);
+            jsonObject.put("statusDesc", FAIL_DESC);
+            return jsonObject;
+        }
+
         boolean flag = false;
-        if (org.apache.commons.lang3.StringUtils.isNotBlank(mobile)) {
+        if ("single".equals(form.getMessageType())) {
             if (mobile.contains(",")) {
                 jsonObject.put("msg", "单发只能发送一条");
                 jsonObject.put("status", FAIL);
@@ -138,6 +145,15 @@ public class SmsCodeController extends BaseController {
             flag = smsCodeService.getUserByMobile(mobile);
             if (!flag) {
                 jsonObject.put("msg", "单发不能发送平台外的用户手机号");
+                jsonObject.put("status", FAIL);
+                jsonObject.put("statusDesc", FAIL_DESC);
+                return jsonObject;
+            }
+        }
+
+        if ("crowd".equals(form.getMessageType())) {
+            if(StringUtils.isNotEmpty(mobile) && mobile.length() > 11 && !mobile.contains(",")){
+                jsonObject.put("msg", "多个号码请用英文半角逗号 “,” 隔开");
                 jsonObject.put("status", FAIL);
                 jsonObject.put("statusDesc", FAIL_DESC);
                 return jsonObject;

@@ -50,6 +50,9 @@ public class HjhReInvestDetailController extends BaseController {
     @Autowired
     private HjhReInvestDetailService hjhReInvestDetailService;
 
+    // 权限名称 (子页面.未添加为菜单,无需设置权限)
+    public static final String PERMISSIONS = "plancapitallist";
+
     @ApiOperation(value = "复投原始标的检索下拉框", notes = "复投原始标的检索下拉框")
     @RequestMapping(value = "/dropDownBox", method = RequestMethod.GET)
     public JSONObject dropDownBox(){

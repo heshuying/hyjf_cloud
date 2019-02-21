@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.manager.underlinerecharge;
 import com.hyjf.admin.beans.request.UnderLineRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.UnderLineRechargeService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UnderLineRechargeResponse;
@@ -35,8 +37,12 @@ public class UnderLineRechargeController extends BaseController {
     @Autowired
     private UnderLineRechargeService underLineRechargeService;
 
+    // 权限名称
+    public static final String PERMISSIONS = "underlinerecharge";
+
     @ApiOperation( value = "线下充值类型列表", notes = "线下充值类型列表")
     @PostMapping(value = "/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<UnderLineRechargeVO>> init(@RequestBody UnderLineRechargeRequestBean requestBean){
 
         UnderLineRechargeResponse underLineRechargeResponse = this.underLineRechargeService.selectUnderLineList(requestBean);
@@ -62,6 +68,7 @@ public class UnderLineRechargeController extends BaseController {
 
     @ApiOperation(value = "线下充值类型添加", notes = "线下充值类型添加")
     @PostMapping("/add")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<UnderLineRechargeVO> add(HttpServletRequest request, @RequestBody UnderLineRechargeRequestBean requestBean){
 
         // 当前用户的UserID
@@ -117,6 +124,7 @@ public class UnderLineRechargeController extends BaseController {
 
     @ApiOperation(value = "线下充值类型更新", notes = "更新当前 Code .")
     @PostMapping("/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<UnderLineRechargeVO> update(HttpServletRequest request, @RequestBody UnderLineRechargeRequestBean requestBean){
 
         // 当前用户的UserID
@@ -160,6 +168,7 @@ public class UnderLineRechargeController extends BaseController {
      */
     @ApiOperation(value = "线下充值类型删除", notes = "删除当前 Code.")
     @PostMapping("/delete")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<UnderLineRechargeVO> delete(@RequestBody UnderLineRechargeRequestBean requestBean){
 
         Integer id = requestBean.getId();

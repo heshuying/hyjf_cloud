@@ -3940,6 +3940,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     private BigDecimal calculateRepayPlan(RepayBean repay, Borrow borrow, int period) throws Exception {
 
+        logger.info("calculateRepayPlan, borrowNid:" + borrow.getBorrowNid() + " period:" + period);
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
         BigDecimal repayAccountAll = new BigDecimal("0");
@@ -3962,10 +3963,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 用户计划还款时间
                     Date repayEndDate = GetDate.getDate(repayTimeEnd);
                     Date repayStartDate = DateUtils.addMonths(repayEndDate, -1);
+                    logger.info("repayTimeEnd:" + repayTimeEnd + " repayEndDate:" + repayEndDate + " repayStartDate:" + repayStartDate);
 
                     int curPlanStart = GetDate.getIntYYMMDD(repayStartDate);
                     int nowDate = GetDate.getIntYYMMDD(new Date());
-
+                    logger.info("nowDate:" + nowDate + " curPlanStart:" + curPlanStart);
                     if (nowDate < curPlanStart) {
                         throw new Exception("不能超前还，只能全部结清");
                     }

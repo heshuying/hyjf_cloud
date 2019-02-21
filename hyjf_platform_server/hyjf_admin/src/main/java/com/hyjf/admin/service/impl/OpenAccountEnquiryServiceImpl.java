@@ -137,12 +137,13 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
                 selectbean.setLogClient(0);
                 // 返回参数
-                BankCallBean retBean = null;
+                BankCallBean retBean =  BankCallUtils.callApiBg(selectbean);
                 // 调用接口
-                retBean = BankCallUtils.callApiBg(selectbean);
+                logger.info("请求开户掉单查询接口  调用银行返回参数为：{}",JSONObject.toJSONString(retBean));
                 if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
                     {
                         JSONArray jsa = JSONArray.parseArray(retBean.getSubPacks());
+                        logger.info("请求开户掉单查询接口  调用银行返回参数为：{}",JSONObject.toJSONString(jsa));
                         if (jsa != null && jsa.size() > 0) {
                             // 如果返回的结果大于0条
                             result.setStatus("y");
@@ -166,12 +167,16 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;
                         } else {
-                            CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
+                            result.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
+                            result.setResult("该用户无银行开户信息");
+                            return result;
                         }
                     }
                 }else {
                     // 该用户无银行开户信息
-                    CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
+                    result.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
+                    result.setResult("该用户无银行开户信息");
+                    return result;
                 }
             }
         }

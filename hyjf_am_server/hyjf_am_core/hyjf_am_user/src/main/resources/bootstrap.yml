@@ -15,12 +15,6 @@ spring:
         serviceId: CONFIG-SERVER
       failFast: true
 
-# zipkin 监控端点
-  zipkin:
-    base-url: http://ZIPKIN
-  sleuth:
-    sampler:
-      percentage: 1
     
   profiles:
     active: dev

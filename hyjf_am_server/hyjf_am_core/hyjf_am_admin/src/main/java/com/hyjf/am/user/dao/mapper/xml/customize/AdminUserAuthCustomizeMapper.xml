@@ -82,11 +82,11 @@
         AND hydua.auto_create_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{invesAddTimeEnd},' 23:59:59'))
       </if>
 
-      <if test="invesEndTimeStart != null and invesEndTimeStart != '' ">
+      <if test="investEndTimeStart != null and investEndTimeStart != '' ">
         <!-- 优化sql(字段类型转换) -->
         AND hydua.auto_bid_end_time >= FROM_UNIXTIME(UNIX_TIMESTAMP(CONCAT(#{invesEndTimeStart})), '%Y%m%d')
       </if>
-      <if test="invesEndTimeEnd != null and invesEndTimeEnd != ''">
+      <if test="investEndTimeEnd != null and investEndTimeEnd != ''">
         <!-- 优化sql(字段类型转换) -->
         AND hydua.auto_bid_end_time <![CDATA[<=]]> FROM_UNIXTIME(UNIX_TIMESTAMP(CONCAT(#{invesEndTimeEnd},' 23:59:59')), '%Y%m%d')
       </if>
