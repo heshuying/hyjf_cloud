@@ -222,16 +222,16 @@ public class MessagePushTagController extends BaseController {
      */
     private String validatorFieldCheckAudit(MessagePushTagRequest tagRequest) {
         String message = null;
-        if (tagRequest.getTagName() == null) {
+        if (StringUtils.isBlank(tagRequest.getTagName())) {
             message = "标签名不能为空";
         }
-        if (tagRequest.getTagCode() == null) {
+        if (StringUtils.isBlank(tagRequest.getTagCode())) {
             message = "标签编号不能为空";
         }
-        if (tagRequest.getIntroduction() == null) {
+        if (StringUtils.isBlank(tagRequest.getIntroduction())) {
             message = "描述不能为空";
         }
-        if (tagRequest.getIconUrl() == null) {
+        if (StringUtils.isBlank(tagRequest.getIconUrl())) {
             message = "icon图标不能为空";
         }
         return message;

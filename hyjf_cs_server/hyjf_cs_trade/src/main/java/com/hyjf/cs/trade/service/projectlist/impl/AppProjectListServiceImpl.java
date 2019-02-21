@@ -2042,7 +2042,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         //标的等级
         projectInfo.setInvestLevel(customize.getInvestLevel());
         String minInvestment = customize.getDebtMinInvestment();
+        String investIncrement = customize.getDebtInvestmentIncrement();
         projectInfo.setMinInvestment(StringUtils.isBlank(minInvestment)? "0" : new DecimalFormat("######").format(new BigDecimal(minInvestment)));
+        projectInfo.setInvestmentIncrement(StringUtils.isBlank(investIncrement)? "0" : new DecimalFormat("######").format(new BigDecimal(investIncrement)));
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
