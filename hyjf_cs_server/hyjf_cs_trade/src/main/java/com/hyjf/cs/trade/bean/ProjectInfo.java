@@ -34,6 +34,8 @@ public class ProjectInfo implements Serializable {
     private String investLevel;
     // 最小加入金额
     private String minInvestment;
+    // 投资增量
+    private String investmentIncrement;
 
     public String getInvestLevel() {
         return investLevel;
@@ -137,5 +139,13 @@ public class ProjectInfo implements Serializable {
 
     public void setMinInvestment(String minInvestment) {
         this.minInvestment = minInvestment;
+    }
+
+    public String getInvestmentIncrement() {
+        return investmentIncrement;
+    }
+
+    public void setInvestmentIncrement(String investmentIncrement) {
+        this.investmentIncrement = investmentIncrement;
     }
 }

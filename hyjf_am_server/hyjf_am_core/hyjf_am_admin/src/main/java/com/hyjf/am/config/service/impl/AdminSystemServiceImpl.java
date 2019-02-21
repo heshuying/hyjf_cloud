@@ -10,12 +10,16 @@ import com.hyjf.am.config.dao.model.auto.ConfigApplicantExample;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
+import com.hyjf.am.resquest.config.ConfigApplicantRequest;
 import com.hyjf.common.security.util.MD5;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -219,5 +223,51 @@ public class AdminSystemServiceImpl implements AdminSystemService {
 		adminSystem.setPassword(password);
 		adminSystemMapper.updatePassword(adminSystem);
 		return true;
+	}
+
+	@Override
+	public Integer updateApplicantConfigList(ConfigApplicantRequest request) {
+		ConfigApplicant record = new ConfigApplicant();
+		BeanUtils.copyProperties(request, record);
+		return configApplicantMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public Integer addApplicantConfigList(ConfigApplicantRequest request) {
+		ConfigApplicant record = new ConfigApplicant();
+		BeanUtils.copyProperties(request, record);
+		return configApplicantMapper.insertSelective(record);
+	}
+
+	@Override
+	public ConfigApplicant findConfigApplicant(ConfigApplicantRequest request) {
+		return configApplicantMapper.selectByPrimaryKey(request.getId());
+	}
+
+	@Override
+	public List<ConfigApplicant> getApplicantConfigList(ConfigApplicantRequest request, Integer limitStart, Integer limitEnd) {
+		ConfigApplicantExample example = new ConfigApplicantExample();
+		ConfigApplicantExample.Criteria cra= example.createCriteria();
+		if(request!=null && request.getApplicant()!=null){
+			cra.andApplicantLike("%" +request.getApplicant() + "%");
+		}
+		example.setOrderByClause("id desc");
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
+		}
+		return configApplicantMapper.selectByExample(example);
+
+	}
+
+	@Override
+	public Integer countApplicantConfigList(ConfigApplicantRequest request) {
+		ConfigApplicantExample example = new ConfigApplicantExample();
+		ConfigApplicantExample.Criteria cra= example.createCriteria();
+		if(request!=null && request.getApplicant()!=null){
+			cra.andApplicantLike("%" +request.getApplicant() + "%");
+		}
+		return configApplicantMapper.countByExample(example);
+
 	}
 }
