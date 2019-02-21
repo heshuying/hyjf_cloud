@@ -300,8 +300,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					result.setHtlDescription(DF_FOR_VIEW.format(principal) + "元");
 				}
 				// 银行已开户，江西银行账户描述
-				result.setJiangxiDesc(
-						account.substring(0, 3) + "************" + account.substring(account.length() - 4));
+				// 江西银行账户账号不需要脱敏
+				result.setJiangxiDesc(account);
 
 				// 用户已开户，显示某先生/女士
 				UserInfoVO usersInfo = this.getUserInfo(userId);
