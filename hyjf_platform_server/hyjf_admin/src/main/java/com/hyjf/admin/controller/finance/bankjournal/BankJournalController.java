@@ -152,7 +152,7 @@ public class BankJournalController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("forcode", "发送方标识码");
         map.put("seqno","系统跟踪号");
-        map.put("cendt", "交易传输时间");
+        map.put("cendtString", "交易传输时间");
         map.put("cardnbr", "主账号");
         map.put("amount", "交易金额");
         map.put("crflag", "交易金额符号");

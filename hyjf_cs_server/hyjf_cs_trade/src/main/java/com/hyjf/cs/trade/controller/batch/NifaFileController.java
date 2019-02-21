@@ -148,7 +148,9 @@ public class NifaFileController extends BaseController {
                 }
 
                 // 文件上传请求
+                logger.info("【互金上传文件】get请求开始：" + GetDate.getNowTime());
                 String uploadResult = HttpDeal.get(requestURL);
+                logger.info("【互金上传文件】get请求结束：" + GetDate.getNowTime());
                 // 上传结果解析
                 JSONObject jsonObject = JSONObject.parseObject(uploadResult);
                 if (!"true".equals(jsonObject.get("success"))) {
