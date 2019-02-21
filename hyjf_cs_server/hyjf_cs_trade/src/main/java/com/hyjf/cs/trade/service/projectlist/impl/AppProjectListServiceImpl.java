@@ -27,10 +27,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -2044,6 +2041,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         //标的等级
         projectInfo.setInvestLevel(customize.getInvestLevel());
+        String minInvestment = customize.getDebtMinInvestment();
+        projectInfo.setMinInvestment(StringUtils.isBlank(minInvestment)? "0" : new DecimalFormat("######").format(new BigDecimal(minInvestment)));
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
