@@ -86,7 +86,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certRequest.setMinId((String) param.get("minId"));
 		certRequest.setLimitStart((Integer) param.get("limitStart"));
 		certRequest.setLimitEnd((Integer) param.get("limitEnd"));
-		logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
 		return amTradeClient.queryCertAccountListId(certRequest);
 	}
 
@@ -812,6 +811,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			return;
 		}
 		CouponRecoverVO couponRecover=couponRecovers.get(0);
+        logger.info("couponRecover:" + JSONObject.toJSONString(couponRecover));
 		certRequest.setCouponTenderId(couponRecover.getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
