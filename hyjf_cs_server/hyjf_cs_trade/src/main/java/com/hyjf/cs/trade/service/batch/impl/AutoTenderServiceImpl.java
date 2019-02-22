@@ -190,7 +190,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         BigDecimal minAccountEnable = getMinAccountEnable(hjhAccede);
         while (ketouplanAmoust.compareTo(minAccountEnable) >= 0) {
             // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 start
-            logger.info(logMsgHeader + "投前累计出借笔数：" + investCountForLog + "============");
+            logger.info(logMsgHeader + "============投前累计出借笔数：" + investCountForLog + "============");
             investCountForLog += 1;
             // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 end
 
@@ -278,7 +278,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             try {
                 if (borrowFlag.equals(RedisConstants.HJH_BORROW_CREDIT)) {
                     /** 4. 自动出借债转标的（承接）	 */
-                    logger.info(logMsgHeader + "自动承接债转标的" + redisBorrow.getBorrowNid() + "--------");
+                    logger.info(logMsgHeader + "--------自动承接债转标的" + redisBorrow.getBorrowNid() + "--------");
                     logger.info(logMsgHeader + "承前的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     /** 4.1. 本次债转实际出借金额计算	 */
@@ -443,7 +443,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
                 } else if (borrowFlag.equals(RedisConstants.HJH_BORROW_INVEST)) {
                     /** 5. 自动投资原始标的（投资）	 */
-                    logger.info(logMsgHeader + "投前 自动出借原始标的" + redisBorrow.getBorrowNid()+"--------");
+                    logger.info(logMsgHeader + "--------投前 自动出借原始标的" + redisBorrow.getBorrowNid()+"--------");
                     logger.info(logMsgHeader + "投前的可投金额：" + ketouplanAmoust + "，" + "投前的本组金额：" + groupAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
 
