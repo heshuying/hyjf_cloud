@@ -99,7 +99,7 @@ public class AccountBalanceMonitoringServiceImpl implements AccountBalanceMonito
                 // 如果数据有更新
                 if (record.isUpdateFlg()) {
                     merchantAccount.setId(record.getId());
-                    merchantAccount.setUpdatetime(new Date());
+                    merchantAccount.setUpdateTime(new Date());
                     merchantAccount.setBalanceLowerLimit(record.getBalanceLowerLimit() == null ? 0
                             : record.getBalanceLowerLimit());
                     merchantAccount.setTransferIntoRatio(record.getTransferIntoRatio() == null ? 0
