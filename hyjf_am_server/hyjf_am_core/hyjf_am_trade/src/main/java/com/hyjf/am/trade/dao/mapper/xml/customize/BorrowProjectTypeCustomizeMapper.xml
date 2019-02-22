@@ -94,4 +94,5 @@
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         where typ.borrow_cd=#{borrowCd}
     </select>
+
 </mapper>

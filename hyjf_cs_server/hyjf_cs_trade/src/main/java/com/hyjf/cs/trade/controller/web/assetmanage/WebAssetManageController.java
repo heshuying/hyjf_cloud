@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.controller.web.assetmanage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
@@ -148,6 +149,7 @@ public class WebAssetManageController extends BaseTradeController {
         PlanAjaxBean bean = new PlanAjaxBean();
         form.setUserId(userId);
         bean=assetManageService.getCurrentHoldPlan(form);
+        logger.info("bean:{}", JSONObject.toJSONString(bean));
         result.setData(bean);
         result.setPage(bean.getPage());
         return result;

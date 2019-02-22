@@ -26,7 +26,7 @@
     <sql id="Where_Clause">
         <!-- 项目类型 -->
         <if test="borrowCdSrch != null and borrowCdSrch != ''">
-            AND hab.borrow_cd = #{borrowCdSrch}
+            AND hab.borrow_class = #{borrowCdSrch}
         </if>
         <!-- 资产来源 -->
         <if test="instCodeSrch != null and instCodeSrch != ''">
