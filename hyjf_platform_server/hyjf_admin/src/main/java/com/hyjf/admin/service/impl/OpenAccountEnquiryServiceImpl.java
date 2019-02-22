@@ -219,6 +219,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         }
         logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
+        logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
         return requestBean;
     }
     /**
