@@ -155,6 +155,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setName((String) jso.get("name"));
                             result.setAddr((String) jso.get("addr"));
                             result.setRoleId((String) jso.get("identity"));
+                            result.setUsername(user.getUsername());
+                            result.setMobile(phone);
                             List<BankOpenAccountLogVO> log = amUserClient.getBankOpenAccountLogVOByUserId(user.getUserId());
                             Integer platform = 1;
                             if(log!=null && log.size()>0){
@@ -208,13 +210,15 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             resultBean.setResult("电子账号不能为空");
             return resultBean;
         }
-        //同步保存user信息
+        //同步保存Account信息
         OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
+        logger.info("==========保存开户掉单Account的数据openAccountEnquiryDefineRequestBeanVO：" +openAccountEnquiryDefineRequestBeanVO);
         if(openAccountEnquiryDefineRequestBeanVO !=null){
             ////同步保存user信息成
             if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
-                //同步保存Account信息
+                //同步保存user信息
                 openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+                logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +openAccountEnquiryDefineRequestBeanVO);
             }
         }
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);

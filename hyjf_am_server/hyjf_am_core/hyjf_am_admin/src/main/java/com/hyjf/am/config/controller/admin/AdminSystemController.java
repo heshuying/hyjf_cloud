@@ -5,21 +5,27 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.auto.AdminAndRole;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
+import com.hyjf.am.config.dao.model.auto.ConfigApplicant;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.config.service.AdminSystemService;
+import com.hyjf.am.market.dao.model.auto.Ads;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
+import com.hyjf.am.response.config.ConfigApplicantResponse;
 import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
+import com.hyjf.am.resquest.config.ConfigApplicantRequest;
 import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.service.admin.locked.LockedUserService;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.ConfigApplicantVO;
 import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.Validator;
@@ -227,4 +233,72 @@ public class AdminSystemController extends BaseConfigController {
         }
         return response;
     }
+
+
+	/**
+	 * 修改项目申请人配置
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = "/updateApplicantConfigList")
+	public ConfigApplicantResponse updateApplicantConfigList(@RequestBody ConfigApplicantRequest request) {
+		int result=adminSystemService.updateApplicantConfigList(request);
+		ConfigApplicantResponse response = new ConfigApplicantResponse();
+		if (result == 0) {
+			response.setRtn(Response.FAIL);
+		}
+		return response;
+	}
+
+	/**
+	 * 添加项目申请人配置
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = "/addApplicantConfigList")
+	public ConfigApplicantResponse addApplicantConfigList(@RequestBody ConfigApplicantRequest request) {
+		Integer result=adminSystemService.addApplicantConfigList(request);
+		ConfigApplicantResponse response = new ConfigApplicantResponse();
+		if (result == 0) {
+			response.setRtn(Response.FAIL);
+		}
+		return response;
+	}
+
+	/**
+	 * 获取项目申请人配置列表
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = "/getApplicantConfigList")
+	public ConfigApplicantResponse getApplicantConfigList(@RequestBody ConfigApplicantRequest request) {
+		ConfigApplicantResponse response = new ConfigApplicantResponse();
+		Integer count=adminSystemService.countApplicantConfigList(request);
+		if (count > 0) {
+			Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+			List<ConfigApplicant> applicantConfigList = adminSystemService.getApplicantConfigList(request, paginator.getOffset(), paginator.getLimit());
+			List<ConfigApplicantVO> list = CommonUtils.convertBeanList(applicantConfigList, ConfigApplicantVO.class);
+			response.setResultList(list);
+
+		}
+		response.setCount(count);
+		return response;
+	}
+
+	/**
+	 * 获取项目申请人配置详情
+	 * @param request
+	 * @return
+	 */
+	@PostMapping(value = "/findConfigApplicant")
+	public ConfigApplicantResponse findConfigApplicant(@RequestBody ConfigApplicantRequest request) {
+		ConfigApplicant configApplicant = adminSystemService.findConfigApplicant(request);
+		ConfigApplicantResponse response = new ConfigApplicantResponse();
+		if (configApplicant == null) {
+			response.setRtn(Response.FAIL);
+		}else {
+			response.setResult(CommonUtils.convertBean(configApplicant, ConfigApplicantVO.class));
+		}
+		return response;
+	}
 }

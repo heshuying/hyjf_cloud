@@ -5,6 +5,8 @@ package com.hyjf.admin.controller.finance.bankjournal;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
@@ -61,22 +63,27 @@ public class BankJournalController {
     @PostMapping(value = "/bankevelist")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject getBankeveList(@RequestBody BankEveRequest bankEveRequest){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<BankEveVO>> getBankeveList(@RequestBody BankEveRequest bankEveRequest){
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+        count = (count == null)?0:count;
+        List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        return new AdminResult<>(ListResult.build(bankEveList,count));
+
+      /*  JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-       // Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
-        if(null!=bankEveList){
-            Integer count = bankEveList.size();
-            if(count==null ||count<1){
-                jsonObject.put("count",0);
-                jsonObject.put("record",null);
-                jsonObject.put("status",status);
-                jsonObject.put("statusDesc",statusDesc);
-                return jsonObject;
-            }
+        if(count==null ||count<1){
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
+            jsonObject.put("status",status);
+            jsonObject.put("statusDesc",statusDesc);
+            return jsonObject;
+        }
+
+        if(null!=bankEveList&&bankEveList.size()>0){
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
             status =  "000";
@@ -88,7 +95,7 @@ public class BankJournalController {
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);
-        return jsonObject;
+        return jsonObject;*/
     }
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
@@ -121,12 +128,9 @@ public class BankJournalController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         bankEveRequest.setPageSize(defaultRowMaxCount);
         bankEveRequest.setCurrPage(1);
-        Integer count = 0;
+
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        if(bankEveList!=null){
-            count = bankEveList.size();
-        }
-       // Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
@@ -153,12 +157,12 @@ public class BankJournalController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("forcode", "发送方标识码");
+        map.put("forcode","发送方标识码");
         map.put("seqno","系统跟踪号");
-        map.put("cendtString", "交易传输时间");
-        map.put("cardnbr", "主账号");
-        map.put("amount", "交易金额");
-        map.put("crflag", "交易金额符号");
+        map.put("cendtString","交易传输时间");
+        map.put("cardnbr","主账号");
+        map.put("amount","交易金额");
+        map.put("crflag","交易金额符号");
         map.put("msgtype","消息类型");
         map.put("proccode","交易类型码");
         map.put("orderno", "订单号");

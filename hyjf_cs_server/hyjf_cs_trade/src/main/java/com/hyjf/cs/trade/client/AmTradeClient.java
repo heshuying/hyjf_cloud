@@ -7,7 +7,9 @@ import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
@@ -19,8 +21,9 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
-import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
@@ -34,6 +37,7 @@ import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -51,7 +55,6 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
-import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -59,7 +62,10 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
-import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.BatchCenterCustomize;
+import com.hyjf.cs.trade.bean.MyCreditDetailBean;
+import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
+import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -2784,7 +2790,7 @@ public interface AmTradeClient {
 
     List<BorrowRepayPlanVO> getBorrowRepayPlanListByRequest(CertRequest certRequest);
 
-    List<CouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest);
+    List<CertCouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest);
 
     List<BorrowTenderCpnVO> getBorrowTenderCpnListByCertRequest(CertRequest certRequest);
 

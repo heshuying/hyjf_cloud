@@ -15,4 +15,15 @@ public class SimpleResultBean<T> extends WXBaseResultBean {
     public void setObject(T object) {
         this.object = object;
     }
+
+    //测评状态
+    private String resultStatus; // 0:未测评  1：已测评
+
+    public String getResultStatus() {
+        return resultStatus;
+    }
+
+    public void setResultStatus(String resultStatus) {
+        this.resultStatus = resultStatus;
+    }
 }

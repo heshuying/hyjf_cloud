@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetBorrowtypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAssetTypeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhInstConfigMapper;
+import com.hyjf.am.trade.dao.mapper.customize.BorrowProjectTypeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.HjhAssetBorrowTypeCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFlowService;
@@ -29,6 +30,8 @@ import java.util.List;
 public class BorrowFlowServiceImpl implements BorrowFlowService {
 
     @Autowired
+    private BorrowProjectTypeCustomizeMapper borrowProjectTypeCustomizeMapper;
+    @Autowired
     private BorrowProjectTypeMapper borrowProjectTypeMapper;
     @Autowired
     private HjhInstConfigMapper hjhInstConfigMapper;
@@ -44,16 +47,16 @@ public class BorrowFlowServiceImpl implements BorrowFlowService {
      */
     @Override
     public List<BorrowProjectTypeVO> selectBorrowProjectTypeList(String borrowTypeCd){
-        BorrowProjectTypeExample example = new BorrowProjectTypeExample();
-        BorrowProjectTypeExample.Criteria cra = example.createCriteria();
-        cra.andStatusEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
+        BorrowProjectTypeVO vo = new BorrowProjectTypeVO();
+
+        vo.setStatus(Integer.valueOf(CustomConstants.FLAG_NORMAL));
         if (StringUtils.isNotEmpty(borrowTypeCd)) {
-            cra.andBorrowProjectTypeEqualTo(borrowTypeCd);
+            vo.setBorrowProjectType(borrowTypeCd);
         }
         // 不查询融通宝相关
-        cra.andBorrowNameNotEqualTo(CustomConstants.RTB);
-        List<BorrowProjectType> borrowProjectType = this.borrowProjectTypeMapper.selectByExample(example);
-        List<BorrowProjectTypeVO> borrowProjectTypeVOS= CommonUtils.convertBeanList(borrowProjectType,BorrowProjectTypeVO.class);
+        vo.setBorrowName(CustomConstants.RTB);
+        List<BorrowProjectTypeVO> borrowProjectTypeVOS = borrowProjectTypeCustomizeMapper.selectProjectTypeListGroupBy(vo);
+
         return borrowProjectTypeVOS;
     }
     /**

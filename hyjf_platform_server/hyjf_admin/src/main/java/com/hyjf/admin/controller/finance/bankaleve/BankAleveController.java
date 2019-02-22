@@ -8,6 +8,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -17,6 +19,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BankAleveVO;
+import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -66,8 +69,13 @@ public class BankAleveController {
     @PostMapping(value = "/bankalevelist")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject getBankaleveList(@RequestBody BankAleveRequest bankAleveRequest){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<BankAleveVO>> getBankaleveList(@RequestBody BankAleveRequest bankAleveRequest){
+
+        Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
+        count = (count == null)?0:count;
+        List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
+        return new AdminResult<>(ListResult.build(bankAleveList,count));
+       /* JSONObject jsonObject = new JSONObject();
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
@@ -91,7 +99,7 @@ public class BankAleveController {
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);
-        return jsonObject;
+        return jsonObject;*/
     }
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称

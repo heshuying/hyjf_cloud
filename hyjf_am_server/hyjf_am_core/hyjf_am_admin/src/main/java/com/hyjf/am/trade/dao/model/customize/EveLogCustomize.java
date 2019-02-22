@@ -20,6 +20,8 @@ public class EveLogCustomize {
 
     private Integer cendt;
 
+    private String cendtString;
+
     private String cardnbr;
 
     private BigDecimal amount;
@@ -214,5 +216,13 @@ public class EveLogCustomize {
 
     public void setDelFlg(Integer delFlg) {
         this.delFlg = delFlg;
+    }
+
+    public String getCendtString() {
+        return cendtString;
+    }
+
+    public void setCendtString(String cendtString) {
+        this.cendtString = cendtString;
     }
 }

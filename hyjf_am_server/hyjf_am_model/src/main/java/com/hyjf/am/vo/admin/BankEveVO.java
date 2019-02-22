@@ -26,6 +26,9 @@ public class BankEveVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "交易传输时间")
     private Integer cendt;
 
+    @ApiModelProperty(value = "交易传输时间字符串")
+    private String cendtString; //交易传输时间
+
     @ApiModelProperty(value = "主账号")
     private String cardnbr;
 
@@ -108,6 +111,14 @@ public class BankEveVO extends BaseVO implements Serializable {
 
     public void setCendt(Integer cendt) {
         this.cendt = cendt;
+    }
+
+    public String getCendtString() {
+        return cendtString;
+    }
+
+    public void setCendtString(String cendtString) {
+        this.cendtString = cendtString;
     }
 
     public String getCardnbr() {
