@@ -42,6 +42,9 @@ public class MessageServiceImpl implements MessageService {
 	/** 任务状态:执行中 */
 	private static final Integer STATUS_RUNNING = 1;
 
+	/** 任务状态:已完成 */
+	private static final Integer STATUS_SUCCESS = 2;
+
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -156,7 +159,7 @@ public class MessageServiceImpl implements MessageService {
 			throw new Exception("定时发送短信时发生错误。" + "[错误记录id：" + smsOntime.getId() + "]," + "[错误件数：" + errorCnt + "]");
 		}
 		// 更新任务API状态为完成
-		updatetOntime(smsOntime, STATUS_RUNNING, null);
+		updatetOntime(smsOntime, STATUS_SUCCESS, null);
 	}
 
 	/**

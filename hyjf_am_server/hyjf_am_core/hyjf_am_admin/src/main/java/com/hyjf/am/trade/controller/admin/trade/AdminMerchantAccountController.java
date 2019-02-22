@@ -9,6 +9,9 @@ import com.hyjf.am.trade.service.admin.finance.MerchantAccountService;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +51,12 @@ public class AdminMerchantAccountController {
             List<MerchantAccount> recordList =merchantAccountService.getMerchantAccountListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<MerchantAccountVO> configList = CommonUtils.convertBeanList(recordList, MerchantAccountVO.class);
+                for (int i = 0; i < configList.size(); i++) {
+                    MerchantAccountVO merchantAccountVO = configList.get(i);
+                    Date updatetime = merchantAccountVO.getUpdateTime();
+                    int time10 = GetDate.getTime10(updatetime);
+                    merchantAccountVO.setUpdatetime(time10);
+                }
                 result.setResultList(configList);
                 result.setRecordTotal(recordTotal);
             }

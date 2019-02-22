@@ -182,10 +182,15 @@
 		SELECT
 		COUNT(1)
 		FROM ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo on b.borrow_nid=binfo.borrow_nid
 		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
+		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
+		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+
 		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
+		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 		<include refid="Where_Clause" />
 	</select>
 
@@ -195,17 +200,16 @@
 		SUM(b.repay_account_all) AS repayAccountAll,
 		SUM(br.repay_fee) AS
 		repayFee
-		FROM
-		ht_borrow AS b
-		INNER JOIN ht_borrow_repay AS br on
-		b.borrow_nid=br.borrow_nid
-		LEFT JOIN ht_r_user u ON b.user_id =
-		u.user_id
-		LEFT JOIN
-		ht_borrow_style AS bs on
-		b.borrow_style=bs.nid
+		FROM ht_borrow AS b
+		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
+		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
+		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+
+		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
+		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 		<include refid="Where_Clause" />
 	</select>
 
