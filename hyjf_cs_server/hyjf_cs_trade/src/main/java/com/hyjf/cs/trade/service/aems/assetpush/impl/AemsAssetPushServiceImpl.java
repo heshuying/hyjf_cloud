@@ -538,7 +538,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         }
 
         return saveAssetAndSendNext(pushBean, instCode, assetType, idcard, userId, user.getMobile(), user.getUsername(),
-                bankOpenAccount.getAccount(), userInfo.getTruename(), stzAccount, identityFlag, pushBean.getUseage(), PositionEnum.getJob(pushBean.getPosition()));
+                bankOpenAccount.getAccount(), userInfo.getTruename(), stzAccount, identityFlag);
     }
 
     /**
@@ -558,10 +558,10 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
      */
     private AemsPushBean saveAssetAndSendNext(AemsPushBean pushBean, String instCode, Integer assetType, String idcard,
                                           int userId, String mobile, String username, String accountId, String trueName, STZHWhiteListVO stzAccount,
-                                          int borrowType, String useage, String position) {
+                                          int borrowType) {
 
         HjhPlanAssetVO record = buildHjhPlanAsset(pushBean, instCode, assetType, idcard, userId, mobile, username,
-                accountId, trueName, stzAccount, borrowType, useage, position);
+                accountId, trueName, stzAccount, borrowType);
         // 推送资产
         int result = amTradeClient.insertAssert(record);
         if (result == 1) {
@@ -596,7 +596,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
      */
     private HjhPlanAssetVO buildHjhPlanAsset(AemsPushBean pushBean, String instCode, Integer assetType, String idcard,
                                              int userId, String mobile, String username, String accountId, String trueName, STZHWhiteListVO stzAccount,
-                                             int borrowType, String useage, String position) {
+                                             int borrowType) {
         // 包装资产信息
         HjhPlanAssetVO record = new HjhPlanAssetVO();
         // 信批需求新增字段属于选填(string)不加校验
@@ -639,9 +639,12 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
             record.setAge(IdCard15To18.getAgeById(idcard));
 
             record.setFirstPayment("个人收入");
-            record.setUseage(useage);
+            // 借款用途
+            record.setUseage(pushBean.getUseage());
             // 岗位职业
-            record.setPosition(position);
+            record.setPosition(pushBean.getPosition());
+            // 借款人信用等级
+            record.setCreditLevel(pushBean.getCreditLevel());
             // 资产属性 1:抵押标 2:质押标 3:信用标
             record.setAssetAttributes(pushBean.getAssetAttributes());
         } else if (borrowType == 1) {
