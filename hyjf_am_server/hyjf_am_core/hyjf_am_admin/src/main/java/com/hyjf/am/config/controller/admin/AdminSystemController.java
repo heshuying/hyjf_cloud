@@ -279,8 +279,9 @@ public class AdminSystemController extends BaseConfigController {
 			List<ConfigApplicant> applicantConfigList = adminSystemService.getApplicantConfigList(request, paginator.getOffset(), paginator.getLimit());
 			List<ConfigApplicantVO> list = CommonUtils.convertBeanList(applicantConfigList, ConfigApplicantVO.class);
 			response.setResultList(list);
-			response.setCount(count);
+
 		}
+		response.setCount(count);
 		return response;
 	}
 
