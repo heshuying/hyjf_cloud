@@ -123,4 +123,39 @@
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         where typ.borrow_cd=#{borrowCd}
     </select>
+
+    <select id="selectProjectTypeListGroupBy" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
+        SELECT
+        id,
+        borrow_project_type,
+        borrow_cd,
+        borrow_name,
+        borrow_class,
+        invest_user_type,
+        `status`,
+        invest_start,
+        invest_end,
+        remark,
+        create_user_id,
+        create_time,
+        update_user_id,
+        update_time,
+        increase_money,
+        interest_coupon,
+        taste_money,
+        increase_interest_flag
+        FROM
+        ht_borrow_project_type
+        where
+        `status`=0
+        and borrow_name != '融通宝'
+        <if test="limitStart >= 0" >
+            and borrowProjectType = 'HZT'
+        </if>
+
+        GROUP BY
+        borrow_class
+
+        ORDER BY id asc;
+    </select>
 </mapper>

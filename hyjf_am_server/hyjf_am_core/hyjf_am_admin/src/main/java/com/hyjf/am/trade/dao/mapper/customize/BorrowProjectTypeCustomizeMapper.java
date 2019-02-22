@@ -28,4 +28,11 @@ public interface BorrowProjectTypeCustomizeMapper {
      */
     BorrowProjectTypeVO selectByBorrowCd(BorrowProjectTypeVO record);
 
+    /**
+     * 查询分项目类型后分组
+     * @param borrowProjectType
+     * @return
+     */
+    public List<BorrowProjectTypeVO>  selectProjectTypeListGroupBy(BorrowProjectTypeVO borrowProjectType);
+
 }

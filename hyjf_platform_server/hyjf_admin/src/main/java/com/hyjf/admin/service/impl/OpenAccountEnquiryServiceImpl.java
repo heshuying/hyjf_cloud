@@ -155,6 +155,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setName((String) jso.get("name"));
                             result.setAddr((String) jso.get("addr"));
                             result.setRoleId((String) jso.get("identity"));
+                            result.setUsername(user.getUsername());
+                            result.setMobile(phone);
                             List<BankOpenAccountLogVO> log = amUserClient.getBankOpenAccountLogVOByUserId(user.getUserId());
                             Integer platform = 1;
                             if(log!=null && log.size()>0){

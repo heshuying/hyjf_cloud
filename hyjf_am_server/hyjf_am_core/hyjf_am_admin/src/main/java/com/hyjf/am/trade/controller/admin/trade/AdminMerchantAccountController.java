@@ -10,8 +10,6 @@ import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -46,7 +44,7 @@ public class AdminMerchantAccountController {
         //查询平台设置账户列表条数
         int recordTotal = merchantAccountService.getMerchantAccountListCountByPage(adminRequest);
         if (recordTotal > 0) {
-            Paginator paginator = new Paginator(adminRequest.getPaginatorPage(), recordTotal);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordTotal,adminRequest.getPageSize());
             //查询记录
             List<MerchantAccount> recordList =merchantAccountService.getMerchantAccountListByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){

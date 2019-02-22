@@ -464,7 +464,7 @@ public class BorrowInvestController extends BaseController {
         }
         map.put("account", "出借金额");
         map.put("operatingDeck", "操作平台");
-        map.put("investType", "投标方式");
+        map.put("investType", "出借方式");
         map.put("createTime", "出借时间");
         map.put("contractNumber", "合同编号");
         map.put("contractStatus", "合同状态");

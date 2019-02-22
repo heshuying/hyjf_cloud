@@ -18,6 +18,19 @@ public class HyjfEnvProperties {
      */
     private String whiteList;
 
+    /**
+     * 测试环境邮件白名单
+     */
+    private String emailWhiteList;
+
+    public String getEmailWhiteList() {
+        return emailWhiteList;
+    }
+
+    public void setEmailWhiteList(String emailWhiteList) {
+        this.emailWhiteList = emailWhiteList;
+    }
+
     public boolean isTest() {
         return test;
     }
