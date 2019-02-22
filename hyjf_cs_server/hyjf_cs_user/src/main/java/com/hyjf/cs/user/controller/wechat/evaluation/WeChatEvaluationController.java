@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.wechat.evaluation;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -14,7 +13,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.bean.SimpleResultBean;
 import com.hyjf.cs.user.bean.WXBaseResultBean;
@@ -102,7 +100,15 @@ public class WeChatEvaluationController {
             Long lCreate = user.getEvaluationExpiredTime().getTime();
             //获取当前时间加一天的毫秒数 19.2.1以后需要再评测19.2.2
             Long lNow = System.currentTimeMillis();
-            CheckUtil.check(lCreate > lNow, MsgEnum.STATUS_EV000003);
+            if (lCreate <= lNow) {
+                // 已过期需要重新评测
+                resultBean.setResultStatus("2");
+            } else {
+                // 已测评
+                resultBean.setResultStatus("1");
+            }
+        } else {
+            resultBean.setResultStatus("0");
         }
         //已过期需要重新评测或者未测评
         List<QuestionCustomizeVO> lstQuestion = evaluationService.getNewQuestionList();

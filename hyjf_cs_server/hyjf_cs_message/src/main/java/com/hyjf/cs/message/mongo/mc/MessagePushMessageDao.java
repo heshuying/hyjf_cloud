@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,13 +42,13 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         if (request.getTagId() != null) {
             criteria.and("tagId").is(request.getTagId());
         }
-        if (request.getMsgTitle() != null) {
+        if (StringUtils.isNotBlank(request.getMsgTitle())) {
             criteria.and("msgTitle").is(request.getMsgTitle());
         }
-        if (request.getMsgCode() != null) {
+        if (StringUtils.isNotBlank(request.getMsgCode())) {
             criteria.and("msgCode").is(request.getMsgCode());
         }
-        if (request.getLastupdateUserName() != null) {
+        if (StringUtils.isNotBlank(request.getLastupdateUserName())) {
             criteria.and("lastupdateUserName").is(request.getLastupdateUserName());
         }
         if (request.getMsgTerminal() != null) {

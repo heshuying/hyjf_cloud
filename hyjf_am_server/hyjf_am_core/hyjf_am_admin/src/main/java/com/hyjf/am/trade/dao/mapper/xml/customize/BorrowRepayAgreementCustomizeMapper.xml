@@ -73,6 +73,7 @@
         rp.repay_user_id AS repayUserId,
         rp.repay_username AS repayUsername,
         rp.borrow_nid AS borrowNid,
+        hic.inst_name AS borrowProjectSource,
         b.plan_nid AS nid,
         1 AS isMonth,
         rp.repay_period AS repayPeriod,
@@ -84,7 +85,9 @@
         FROM
         ht_borrow_repay_plan AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info binfo ON binfo.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1
@@ -100,6 +103,7 @@
         rp.repay_user_id AS repayUserId,
         rp.repay_username AS repayUsername,
         rp.borrow_nid AS borrowNid,
+        hic.inst_name AS borrowProjectSource,
         b.plan_nid AS nid,
         1 AS isMonth,
         rp.repay_period AS repayPeriod,
@@ -111,7 +115,9 @@
         FROM
         ht_borrow_repay AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info binfo ON binfo.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = rp.borrow_nid AND rp.repay_period = hba.period_now
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         <include refid="Where_Clause" />
         AND rp.repay_money_source=2
         AND hba.api_type = 1

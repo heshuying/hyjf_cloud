@@ -852,9 +852,17 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
 		// 运营标签->hjh 默认不填
 		borrowInfo.setOperationLabel("0");
-		// 企业还是 默认是个人
-		borrowInfo.setCompanyOrPersonal(2);
 		borrowInfo.setUpfilesId(""); // 插入时不用的字段 发标上传图片
+		// 判断是企业还是个人
+		if(hjhPlanAsset.getBorrowType() == 0){
+			// 个人信息
+			borrowInfo.setCompanyOrPersonal(2);
+		}else{
+			// 企业信息
+			borrowInfo.setCompanyOrPersonal(1);
+		}
+		// 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
+		borrowInfo.setAssetAttributes(hjhPlanAsset.getAssetAttributes());
 
 		return borrowInfo;
 	}
