@@ -6,13 +6,17 @@
 		<result column="status" property="status" jdbcType="VARCHAR"/>
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectAssetStatusById" resultMap="selectAssetStatusMap" parameterType="com.hyjf.am.resquest.api.AsseStatusRequest">
 		SELECT
 			hpa.status,
 			hpa.borrow_nid,
-			hpa.plan_nid
+			hpa.plan_nid,
+			apc.nid
 		FROM ht_hjh_plan_asset hpa
+		LEFT JOIN ht_borrow_apicron apc ON apc.borrow_nid = hpa.borrow_nid
+		AND apc.api_type = 0
 		Where hpa.asset_id = #{assetId} AND hpa.inst_code = #{instCode}
 	</select>
 </mapper>

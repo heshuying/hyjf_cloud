@@ -48,6 +48,13 @@ public interface AutoTenderExceptionService {
     HjhAccede selectHjhAccede(Map<String,Object> mapParam);
 
     /**
+     * 查询计划加入明细
+     * @param mapParam
+     * @return
+     */
+    HjhAccede doSelectHjhAccede(Map<String,Object> mapParam);
+
+    /**
      * 查询计划加入明细临时表
      * @param mapParam
      * @return

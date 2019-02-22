@@ -305,7 +305,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
     @PostMapping(value = "/exportregist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminBankSettingRequest adminRequest) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody  AdminBankSettingRequest adminRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -334,6 +334,18 @@ public class BankSettingController extends BaseController {
             adminRequest.setCurrPage(i);
             AdminBankSettingResponse bankSettingResponse = this.bankSettingService.selectBankSettingList(adminRequest);
             List<JxBankConfigVO> bankConfigVOList = bankSettingResponse.getResultList();
+            for(JxBankConfigVO vo : bankConfigVOList){
+                if(vo.getQuickPayment() == 1){
+
+                    if(vo.getMonthCardQuota().compareTo(BigDecimal.ZERO) == 0){
+                        vo.setMonthCardQuotaStr("无限");
+                    }else{
+                        vo.setMonthCardQuotaStr(String.valueOf(vo.getMonthCardQuota()));
+                    }
+                }else{
+                    vo.setMonthCardQuotaStr("0.00");
+                }
+            }
             if (bankConfigVOList != null && bankConfigVOList.size()> 0) {
                 String sheetNameTmp = sheetName + "_第" + i + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  bankConfigVOList);
@@ -353,7 +365,7 @@ public class BankSettingController extends BaseController {
         map.put("quickPayment", "支持快捷支付");
         map.put("singleQuota", "快捷充值单笔限额");
         map.put("singleCardQuota", "快捷充值单日限额");
-//        map.put("monthCardQuota", "快捷充值单月限额");
+        map.put("monthCardQuotaStr", "快捷充值单月限额");
         map.put("feeWithdraw", "提现手续费");
         return map;
     }
@@ -382,23 +394,11 @@ public class BankSettingController extends BaseController {
             }
         };
 
-//        IValueFormatter monthCardQuotaAdapter = new IValueFormatter() {
-//            @Override
-//            public String format(Object object) {
-//                BigDecimal monthCardQuota = (BigDecimal) object;
-//                if(monthCardQuota.equals(BigDecimal.ZERO)){
-//                    return "无限";
-//                }else{
-//                    return "否";
-//                }
-//            }
-//
-//        };
-
         mapAdapter.put("quickPayment", quickPaymentAdapter);
         mapAdapter.put("singleQuota", bigDecimalAdapter);
         mapAdapter.put("singleCardQuota", bigDecimalAdapter);
         mapAdapter.put("feeWithdraw", bigDecimalAdapter);
+//        mapAdapter.put("monthCardQuota", monthCardQuotaAdapter);
         return mapAdapter;
     }
 

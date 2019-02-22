@@ -78,6 +78,7 @@ public class AemsAssetSearchController extends BaseController {
         }
         resultBean.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("请求成功");
+        resultBean.setNid(assetDetailCustomizeVO.getNid());
         resultBean.setAssetStatus(assetDetailCustomizeVO.getStatus());
         resultBean.setBorrowNid(assetDetailCustomizeVO.getBorrowNid());
 

@@ -35,7 +35,7 @@ public interface AutoTenderExceptionService extends BaseService{
      * @param tenderExceptionSolveRequest
      * @return
      */
-   HjhAccedeVO getHjhAccedeVO(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+   HjhAccedeVO doGetHjhAccedeVO(TenderExceptionSolveRequest tenderExceptionSolveRequest);
 
     /**
      * 查找HjhPlanBorrowTmpVO实体
@@ -71,6 +71,14 @@ public interface AutoTenderExceptionService extends BaseService{
      * @return
      */
     BorrowAndInfoVO selectBorrowByNid(String borrowNid);
+
+    /**
+     * 根据编号获取borrow
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowAndInfoVO doSelectBorrowByNid(String borrowNid);
     /**
      * 更新出借数据
      *
