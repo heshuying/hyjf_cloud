@@ -105,6 +105,7 @@ public class CouponConfigController extends BaseController {
             if (StringUtils.isNotEmpty(configRequest.getId())) {
                 CouponConfig couponConfig = new CouponConfig();
                 BeanUtils.copyProperties(configRequest, couponConfig);
+                couponConfig.setExpirationDate(Integer.parseInt(configRequest.getExpirationDate()));
                 couponConfig.setId(Integer.valueOf(configRequest.getId()));
                 couponConfig.setUpdateTime(GetDate.getDate());
                 int result = couponConfigService.saveCouponConfig(couponConfig);
