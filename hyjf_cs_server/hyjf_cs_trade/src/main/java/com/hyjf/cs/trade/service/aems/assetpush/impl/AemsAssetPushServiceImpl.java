@@ -77,7 +77,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         // 资产类别
         Integer assetType = pushRequestBean.getAssetType();
         // 还款方式
-        HjhAssetBorrowTypeVO assetBorrow = amTradeClient.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        selectAssetBorrowType(instCode, assetType);
+        HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(instCode, assetType);
 
         // 资产推送 参数校验
         AemsPushResultBean resultBean = checkParam(pushRequestBean, assetBorrow, instCode, 0);
@@ -173,6 +173,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         if (assetBorrow == null) {
             logger.warn("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->"+ logFlag +"资产推送[机构编号不存在]");
             resultBean.setStatusDesc("机构编号不存在");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000101);
             return resultBean;
         }
 
@@ -181,6 +182,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         if (bailConfig == null) {
             logger.warn(logFlag+"资产推送[保证金配置不存在!],instCode:"+ instCode);
             resultBean.setStatusDesc("保证金配置不存在:{" + instCode + "}");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000102);
             return resultBean;
         }
         if (GetDate.getNowTime10() < GetDate.getDayStart10(bailConfig.getTimestart()) ||
@@ -188,6 +190,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
                 ) {
             logger.warn(logFlag+"资产推送[未在授信期内,不能推标!]");
             resultBean.setStatusDesc("未在授信期内，不能推标");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000103);
             return resultBean;
         }
 
@@ -196,11 +199,13 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         if (CollectionUtils.isEmpty(assets)) {
             logger.warn(logFlag+"资产推送[推送资产不能为空!]");
             resultBean.setStatusDesc("推送资产不能为空");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000104);
             return resultBean;
         }
         if (assets.size() > 1000) {
             logger.warn(logFlag+"资产推送[请求参数过长!]");
             resultBean.setStatusDesc("请求参数过长");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000105);
             return resultBean;
         }
 
@@ -336,12 +341,6 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
             }
 
             // 信批需求(资产只有个人,若第三方不传则为默认值插入资产表中) start
-			 /*
-			// 年收入
-			 if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
-			 pushBean.setAnnualIncome("10万以内");
-			 }
-			 */
             // update by wj 2018-05-24 年收入，月收入非空校验 start
             if (StringUtils.isBlank(pushBean.getAnnualIncome())) {
                 logger.warn(logFlag+"资产推送[年收入为空!]");
@@ -468,7 +467,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
             stzAccount = amTradeClient.selectStzfWhiteList(instCode, pushBean.getEntrustedAccountId());
             if (stzAccount == null) {
                 logger.warn(logFlag+"资产推送[受托支付电子账户未授权!]");
-                pushBean.setRetCode("ZT000012");
+                pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000108);
                 pushBean.setRetMsg("受托支付电子账户未授权");
                 return pushBean;
             }
@@ -716,6 +715,7 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
             if (riskInfo.size() > 1000) {
                 logger.info(logFlag+"资产推送[商家信息数量超限]！");
                 resultBean.setStatusDesc("商家信息数量超限");
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000106);
                 return resultBean;
             }
             try {
@@ -728,14 +728,15 @@ public class AemsAssetPushServiceImpl extends BaseTradeServiceImpl implements Ae
         }
 
         if (pushFlag.get()) {
-            resultBean.setStatus(ErrorCodeConstant.SUCCESS);
+            logger.info(logFlag+"资产推送成功！");
             resultBean.setStatusDesc("资产推送成功");
+            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             resultBean.setData(retAssets);
         } else {
-            resultBean.setStatus(retAssets.get(0).getRetCode());
+            logger.warn(logFlag+"资产推送[异常！]");
             // 目前推送只有一条，如果多条不能这样取
             resultBean.setStatusDesc(retAssets.get(0).getRetMsg());
-            resultBean.setData(retAssets);
+            resultBean.setStatusForResponse(retAssets.get(0).getRetCode());
         }
         return resultBean;
     }

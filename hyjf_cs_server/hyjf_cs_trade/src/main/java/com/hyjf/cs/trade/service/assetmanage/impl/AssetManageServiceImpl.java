@@ -217,7 +217,6 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         if (recordTotal > 0) {
             // 获取用户当前持有计划记录列表
             List<CurrentHoldPlanListCustomizeVO> recordList = amTradeClient.selectCurrentHoldPlanList(request);
-            logger.info("recordList:{}", JSONObject.toJSONString(recordList));
             result.setCurrentHoldPlanList(recordList);
             result.setCurrentHoldPlanCount(recordTotal);
         } else {
