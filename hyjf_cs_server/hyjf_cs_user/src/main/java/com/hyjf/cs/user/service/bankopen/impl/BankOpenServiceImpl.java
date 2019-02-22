@@ -201,9 +201,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             retUrl += "&token=1&sign=" +sign;
             successUrl += "&token=1&sign=" +sign;
         }
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
-        openAccoutBean.setRetUrl(retUrl);
-        openAccoutBean.setSuccessfulUrl(successUrl);
+        String bgRetUrl = "http://CS-USER/hyjf-web111/user/secure/open/bgReturn?phone=" + openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
+        openAccoutBean.setRetUrl("1111"+retUrl);
+        openAccoutBean.setSuccessfulUrl("111"+successUrl);
         openAccoutBean.setNotifyUrl(bgRetUrl);
         openAccoutBean.setCoinstName(openBean.getCoinstName()==null?"汇盈金服":openBean.getCoinstName());
         openAccoutBean.setLogRemark("开户+设密码页面");
