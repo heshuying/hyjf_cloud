@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
+import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
@@ -66,7 +67,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
-        logger.info("accountLists.size():" + accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
@@ -738,11 +738,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setTransferId(accountList.getNid());
-		List<CouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
+		List<CertCouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
 		if(couponRecovers==null||couponRecovers.size()==0){
 			return;
 		}
-		CouponRecoverVO couponRecover=couponRecovers.get(0);
+		CertCouponRecoverVO couponRecover=couponRecovers.get(0);
 		certRequest.setCouponTenderId(couponRecover.getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
@@ -807,11 +807,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setTransferId(accountList.getNid());
-		List<CouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
+		List<CertCouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
 		if(couponRecovers==null||couponRecovers.size()==0){
 			return;
 		}
-		CouponRecoverVO couponRecover=couponRecovers.get(0);
+		CertCouponRecoverVO couponRecover=couponRecovers.get(0);
         logger.info("couponRecover:" + JSONObject.toJSONString(couponRecover));
 		certRequest.setCouponTenderId(couponRecover.getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
