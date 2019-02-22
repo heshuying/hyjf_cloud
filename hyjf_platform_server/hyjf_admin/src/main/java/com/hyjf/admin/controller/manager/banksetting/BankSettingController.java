@@ -351,8 +351,9 @@ public class BankSettingController extends BaseController {
         map.put("bankIcon", "银行ICON");
         map.put("bankLogo", "LOGO");
         map.put("quickPayment", "支持快捷支付");
-        map.put("singleQuota", "快捷支付单笔限额");
+        map.put("singleQuota", "快捷充值单笔限额");
         map.put("singleCardQuota", "快捷充值单日限额");
+//        map.put("monthCardQuota", "快捷充值单月限额");
         map.put("feeWithdraw", "提现手续费");
         return map;
     }
@@ -370,6 +371,7 @@ public class BankSettingController extends BaseController {
                     return "否";
                 }
             }
+
         };
 
         IValueFormatter bigDecimalAdapter = new IValueFormatter() {
@@ -379,6 +381,19 @@ public class BankSettingController extends BaseController {
                 return String.valueOf(number);
             }
         };
+
+//        IValueFormatter monthCardQuotaAdapter = new IValueFormatter() {
+//            @Override
+//            public String format(Object object) {
+//                BigDecimal monthCardQuota = (BigDecimal) object;
+//                if(monthCardQuota.equals(BigDecimal.ZERO)){
+//                    return "无限";
+//                }else{
+//                    return "否";
+//                }
+//            }
+//
+//        };
 
         mapAdapter.put("quickPayment", quickPaymentAdapter);
         mapAdapter.put("singleQuota", bigDecimalAdapter);

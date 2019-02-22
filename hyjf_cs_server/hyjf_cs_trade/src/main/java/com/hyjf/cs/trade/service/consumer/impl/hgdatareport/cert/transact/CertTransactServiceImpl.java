@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
+import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
@@ -86,7 +87,6 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certRequest.setMinId((String) param.get("minId"));
 		certRequest.setLimitStart((Integer) param.get("limitStart"));
 		certRequest.setLimitEnd((Integer) param.get("limitEnd"));
-		logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));
 		return amTradeClient.queryCertAccountListId(certRequest);
 	}
 
@@ -593,8 +593,8 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
 				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes()).subtract(hjhDebtCreditRepay.getRepayInterestWait());
-					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes()).subtract(hjhDebtCreditRepay.getRepayCapitalWait());
+					interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
+					capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
 				}
 			}else{
 				//散标
@@ -629,8 +629,8 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
 				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes()).subtract(hjhDebtCreditRepay.getRepayInterestWait());
-					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes()).subtract(hjhDebtCreditRepay.getRepayCapitalWait());
+					interest=interest.subtract(hjhDebtCreditRepay.getReceiveInterestYes());
+					capital=capital.subtract(hjhDebtCreditRepay.getReceiveCapitalYes());
 				}
 			}else{
 				//散标
@@ -738,11 +738,11 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setTransferId(accountList.getNid());
-		List<CouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
+		List<CertCouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
 		if(couponRecovers==null||couponRecovers.size()==0){
 			return;
 		}
-		CouponRecoverVO couponRecover=couponRecovers.get(0);
+		CertCouponRecoverVO couponRecover=couponRecovers.get(0);
 		certRequest.setCouponTenderId(couponRecover.getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
@@ -807,11 +807,12 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setTransferId(accountList.getNid());
-		List<CouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
+		List<CertCouponRecoverVO> couponRecovers=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
 		if(couponRecovers==null||couponRecovers.size()==0){
 			return;
 		}
-		CouponRecoverVO couponRecover=couponRecovers.get(0);
+		CertCouponRecoverVO couponRecover=couponRecovers.get(0);
+        logger.info("couponRecover:" + JSONObject.toJSONString(couponRecover));
 		certRequest.setCouponTenderId(couponRecover.getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
@@ -873,6 +874,8 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	}
 
 	private void repaySuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
+
+		logger.info("accountList:" + JSONObject.toJSONString(accountList));
 		//还款 发送18还款本金  19还款利息  5交易手续费（还款服务费）
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		BorrowInfoVO borrow = amTradeClient.getBorrowInfoByNid(accountList.getRemark());
@@ -882,8 +885,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		Map<String, Object> param2 = new HashMap<String, Object>();
-
+		logger.info("borrowAndInfoVO:" + JSONObject.toJSONString(accountList));
+		logger.info("borrow:" + JSONObject.toJSONString(accountList));
 		CertUserVO certUser=this.getCertUserByUserIdBorrowNid(borrow.getUserId(),accountList.getRemark());
+		logger.info("certUser:" + JSONObject.toJSONString(accountList));
 		if(certUser==null){
 			certUser=new CertUserVO();
 			certUser.setUserIdCardHash(getUserHashValue(borrowAndInfoVO));
@@ -1035,6 +1040,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			certRequest.setNid(accountList.getNid());
 			List<BorrowRepayPlanVO> borrowRepayPlans =this.amTradeClient.getBorrowRepayPlanListByRequest(certRequest) ;
 
+			logger.info("borrowRepayPlans.size():" + borrowRepayPlans.size());
 			for (BorrowRepayPlanVO borrowRepayPlan : borrowRepayPlans) {
 				BigDecimal repayCapitalYes=BigDecimal.ZERO;
 				BigDecimal repayInterestYes=BigDecimal.ZERO;
