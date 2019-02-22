@@ -1548,4 +1548,32 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	Integer updateCertErrorCount(Integer id);
+
+	/**
+	 * 修改项目申请人配置
+	 * @param request
+	 * @return
+	 */
+	ConfigApplicantResponse updateApplicantConfigList(ConfigApplicantRequest request);
+
+	/**
+	 * 添加项目申请人配置
+	 * @param request
+	 * @return
+	 */
+	ConfigApplicantResponse addApplicantConfigList(ConfigApplicantRequest request);
+
+	/**
+	 * 获取项目申请人列表
+	 * @param request
+	 * @return
+	 */
+	ConfigApplicantResponse getApplicantConfigList(ConfigApplicantRequest request);
+
+	/**
+	 * 获取项目申请人详情
+	 * @param request
+	 * @return
+	 */
+	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
 }

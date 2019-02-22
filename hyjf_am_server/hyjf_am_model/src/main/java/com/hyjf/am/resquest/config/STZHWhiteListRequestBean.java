@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.resquest.config;
 
-import com.hyjf.am.resquest.Request;
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @author fuqiang
  * @version STZHWhiteListRequestBean, v0.1 2018/7/10 9:59
  */
-public class STZHWhiteListRequestBean extends Request implements Serializable {
+public class STZHWhiteListRequestBean extends BasePage implements Serializable {
 	private Integer id;
 
 	@ApiModelProperty(value = "机构/个人ID")

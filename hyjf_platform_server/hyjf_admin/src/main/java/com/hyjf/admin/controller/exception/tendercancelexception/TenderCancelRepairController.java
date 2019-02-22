@@ -34,7 +34,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
  * @version: TenderCancelException, v0.1 2018/7/11 9:43
  */
 @RestController
-@RequestMapping("/hyjf-admin/exception/tendercancelrepair")
+@RequestMapping("/hyjf-admin/exception/tendercancelexception")
 @Api(value = "异常中心-银行出借撤销异常",tags = "异常中心-银行出借撤销异常")
 public class TenderCancelRepairController extends BaseController {
 

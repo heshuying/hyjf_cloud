@@ -365,7 +365,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
-        map.put("borrowName","借款标题");
+        map.put("borrowName","项目名称");
         map.put("projectTypeName","项目类型");
         map.put("partner","合作机构");
         map.put("borrowPeriod","借款期限");

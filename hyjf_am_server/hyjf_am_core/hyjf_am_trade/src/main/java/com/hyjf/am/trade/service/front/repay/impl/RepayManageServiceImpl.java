@@ -3940,6 +3940,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     private BigDecimal calculateRepayPlan(RepayBean repay, Borrow borrow, int period) throws Exception {
 
+        logger.info("calculateRepayPlan, borrowNid:" + borrow.getBorrowNid() + " period:" + period);
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
         BigDecimal repayAccountAll = new BigDecimal("0");
@@ -3956,7 +3957,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         repayTimeStart = borrowRepayPlans.get(i - 1).getRepayTime();
                     }
 
-
                     // 当期是下一期的话，不能超前还的检查
                     Integer repayTimeEnd = borrowRepayPlan.getRepayTime();
                     // 用户计划还款时间
@@ -3965,8 +3965,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
                     int curPlanStart = GetDate.getIntYYMMDD(repayStartDate);
                     int nowDate = GetDate.getIntYYMMDD(new Date());
-
                     if (nowDate < curPlanStart) {
+                        logger.info("repayTimeEnd:" + repayTimeEnd + " repayEndDate:" + repayEndDate + " repayStartDate:" + repayStartDate);
+                        logger.info("nowDate:" + nowDate + " curPlanStart:" + curPlanStart);
                         throw new Exception("不能超前还，只能全部结清");
                     }
 
