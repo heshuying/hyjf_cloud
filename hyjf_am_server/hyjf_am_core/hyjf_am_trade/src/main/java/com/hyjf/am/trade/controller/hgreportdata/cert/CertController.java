@@ -15,6 +15,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
+import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
@@ -109,8 +110,8 @@ public class CertController extends BaseController {
         CouponRecoverResponse response = new CouponRecoverResponse();
         List<CouponRecover> couponRecoverList = certService.getCouponRecoverListByCertRequest(certRequest);
         if (!CollectionUtils.isEmpty(couponRecoverList)) {
-            List<CouponRecoverVO> voList = CommonUtils.convertBeanList(couponRecoverList, CouponRecoverVO.class);
-            response.setResultList(voList);
+            List<CertCouponRecoverVO> voList = CommonUtils.convertBeanList(couponRecoverList, CertCouponRecoverVO.class);
+            response.setCertCouponRecoverVOList(voList);
         }
         return response;
     }

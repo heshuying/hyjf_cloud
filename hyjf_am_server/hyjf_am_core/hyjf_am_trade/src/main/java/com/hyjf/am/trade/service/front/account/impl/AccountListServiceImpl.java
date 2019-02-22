@@ -90,32 +90,10 @@ public class AccountListServiceImpl extends BaseServiceImpl implements AccountLi
 	 */
 	@Override
 	public List<ApiTransactionDetailsCustomize> selectTransactionDetails(ApiTransactionDetailsRequest detailsRequest) {
-		ApiTransactionDetailsCustomize transactionDetailsCustomize = new ApiTransactionDetailsCustomize();
-
-		//必传
-		transactionDetailsCustomize.setStartDate(detailsRequest.getStartDate());
-		//必传
-		transactionDetailsCustomize.setEndDate(detailsRequest.getEndDate());
-		//通过必传的phone
-		transactionDetailsCustomize.setUserId(detailsRequest.getUserId());
-		//必传
-		transactionDetailsCustomize.setAccountId(detailsRequest.getAccountId());
-		//必传
-		transactionDetailsCustomize.setLimitStart(detailsRequest.getLimitStart());
-		//必传
-		transactionDetailsCustomize.setLimitEnd(detailsRequest.getLimitEnd());
-		//选传
-		transactionDetailsCustomize.setNid(detailsRequest.getNid());
 		//默认为1 江西银行
-		transactionDetailsCustomize.setIsBank("1");
-		//选传 交易状态 :0失败 1成功
-		transactionDetailsCustomize.setTradeStatus(detailsRequest.getTradeStatus());
-		//选传 收支类型 :1收入 2支出 3冻结 4解冻
-		transactionDetailsCustomize.setTypeSearch(detailsRequest.getTypeSearch());
-		//选传 交易类型ID
-		transactionDetailsCustomize.setTradeTypeSearch(detailsRequest.getTradeTypeSearch());
+		detailsRequest.setIsBank("1");
 
-		List<ApiTransactionDetailsCustomize> accountInfos = this.apiTransactionDetailsCustomizeMapper.queryApiAccountDetails(transactionDetailsCustomize);
+		List<ApiTransactionDetailsCustomize> accountInfos = this.apiTransactionDetailsCustomizeMapper.queryApiAccountDetails(detailsRequest);
 		return accountInfos;
 	}
 }
