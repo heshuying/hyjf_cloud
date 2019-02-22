@@ -128,7 +128,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         map.put("threeBeginDate", threeBeginDate);
         map.put("threeEndDate", threeEndDate);
         List<BatchCouponTimeoutCommonCustomize> batchCouponTimeoutCommonCustomizes = batchCouponTimeoutCustomizeMapper.selectCouponQuota(map);
-        return null;
+        return batchCouponTimeoutCommonCustomizes;
     }
 
     @Override

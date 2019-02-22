@@ -46,6 +46,9 @@ public class JxBankConfigVO implements Serializable {
 
     private BigDecimal monthCardQuota;
 
+    //导出专用
+    private String monthCardQuotaStr;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -198,6 +201,14 @@ public class JxBankConfigVO implements Serializable {
 
     public void setMonthCardQuota(BigDecimal monthCardQuota) {
         this.monthCardQuota = monthCardQuota;
+    }
+
+    public String getMonthCardQuotaStr() {
+        return monthCardQuotaStr;
+    }
+
+    public void setMonthCardQuotaStr(String monthCardQuotaStr) {
+        this.monthCardQuotaStr = monthCardQuotaStr;
     }
 
     @Override

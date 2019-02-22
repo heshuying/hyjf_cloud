@@ -94,4 +94,13 @@ public class ChannelServiceImpl implements ChannelService {
         }
         return flag;
     }
+
+    @Override
+    public UserVO getUserByUserName(String utmReferrer) {
+        UserVO user = amUserClient.getUserByUserName(utmReferrer);
+        if(user != null){
+            return user;
+        }
+        return null;
+    }
 }

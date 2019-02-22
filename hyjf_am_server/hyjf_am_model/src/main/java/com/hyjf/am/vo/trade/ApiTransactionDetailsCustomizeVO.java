@@ -10,49 +10,10 @@ import java.math.BigDecimal;
 public class ApiTransactionDetailsCustomizeVO implements Serializable {
 
     /**
-     * 部门名称
-     */
-    private String departmentName;
-
-    /**
-     * 创建时间 起始
-     */
-    private String startDate;
-
-    /**
-     * 创建时间 结束
-     */
-    private String endDate;
-    // 交易类型
-    private String tradeTypeSearch;
-
-    private String typeSearch;
-
-    /**
-     * 备注查询
-     */
-    private String remarkSrch;
-
-    /**
-     * account_list 主键
-     */
-    private Integer id;
-    /**
-     * 用户id
-     */
-    private Integer userId;
-    /**
      * 用户名
      */
     private String username;
-    /**
-     * 推荐人
-     */
-    private String referrerName;
-    /**
-     * 推荐组
-     */
-    private String referrerGroup;
+
     /**
      * 订单号
      */
@@ -70,15 +31,6 @@ public class ApiTransactionDetailsCustomizeVO implements Serializable {
      * 操作金额
      */
     private BigDecimal amount;
-
-    /**
-     * 可用余额
-     */
-    private BigDecimal balance;
-    /**
-     * 冻结金额
-     */
-    private BigDecimal frost;
 
     /**
      * 汇添金可用余额
@@ -138,92 +90,12 @@ public class ApiTransactionDetailsCustomizeVO implements Serializable {
      */
     private String tradeStatus;
 
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getTradeTypeSearch() {
-        return tradeTypeSearch;
-    }
-
-    public void setTradeTypeSearch(String tradeTypeSearch) {
-        this.tradeTypeSearch = tradeTypeSearch;
-    }
-
-    public String getTypeSearch() {
-        return typeSearch;
-    }
-
-    public void setTypeSearch(String typeSearch) {
-        this.typeSearch = typeSearch;
-    }
-
-    public String getRemarkSrch() {
-        return remarkSrch;
-    }
-
-    public void setRemarkSrch(String remarkSrch) {
-        this.remarkSrch = remarkSrch;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getReferrerName() {
-        return referrerName;
-    }
-
-    public void setReferrerName(String referrerName) {
-        this.referrerName = referrerName;
-    }
-
-    public String getReferrerGroup() {
-        return referrerGroup;
-    }
-
-    public void setReferrerGroup(String referrerGroup) {
-        this.referrerGroup = referrerGroup;
     }
 
     public String getNid() {
@@ -256,22 +128,6 @@ public class ApiTransactionDetailsCustomizeVO implements Serializable {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public BigDecimal getFrost() {
-        return frost;
-    }
-
-    public void setFrost(BigDecimal frost) {
-        this.frost = frost;
     }
 
     public BigDecimal getPlanBalance() {

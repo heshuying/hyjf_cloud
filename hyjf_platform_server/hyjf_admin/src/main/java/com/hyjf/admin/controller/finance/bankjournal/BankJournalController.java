@@ -5,6 +5,8 @@ package com.hyjf.admin.controller.finance.bankjournal;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
@@ -61,8 +63,13 @@ public class BankJournalController {
     @PostMapping(value = "/bankevelist")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public JSONObject getBankeveList(@RequestBody BankEveRequest bankEveRequest){
-        JSONObject jsonObject = new JSONObject();
+    public AdminResult<ListResult<BankEveVO>> getBankeveList(@RequestBody BankEveRequest bankEveRequest){
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
+        count = (count == null)?0:count;
+        List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        return new AdminResult<>(ListResult.build(bankEveList,count));
+
+      /*  JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
         Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
@@ -88,7 +95,7 @@ public class BankJournalController {
         }
         jsonObject.put("status",status);
         jsonObject.put("statusDesc",statusDesc);
-        return jsonObject;
+        return jsonObject;*/
     }
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称

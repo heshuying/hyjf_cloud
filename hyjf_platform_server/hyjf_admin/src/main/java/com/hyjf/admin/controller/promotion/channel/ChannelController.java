@@ -179,6 +179,16 @@ public class ChannelController extends BaseController {
                 //新增数据
                 check = channelService.getBySourceIdAndTerm(null,channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
             }
+            //modify by cwyang 20190221 增加推荐人合法校验
+            String utmReferrer = channelCustomizeVO.getUtmReferrer();
+            if(StringUtils.isNotBlank(utmReferrer)){
+                UserVO user = channelService.getUserByUserName(utmReferrer);
+                if(user == null){
+                    adminResult.setStatus(UtmResultResponse.FAIL);
+                    adminResult.setStatusDesc("推荐人用户名不存在！");
+                }
+            }
+
             logger.info("校验sourceId和utmTerm结果 check："+check);
             if(check){
                 adminResult.setStatus(UtmResultResponse.FAIL);

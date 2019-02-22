@@ -25,7 +25,7 @@ public class PushMoneyServiceImpl implements PushMoneyService {
 
 	@Override
 	public List<PushMoney> getRecordList() {
-		return pushMoneyMapper.selectByExample(new PushMoneyExample());
+		return pushMoneyMapper.selectByExampleWithBLOBs(new PushMoneyExample());
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class PushMoneyServiceImpl implements PushMoneyService {
 			example.setLimitStart(limitStart);
 			example.setLimitEnd(limitEnd);
 		}
-		return pushMoneyMapper.selectByExample(example);
+		return pushMoneyMapper.selectByExampleWithBLOBs(example);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class PushMoneyServiceImpl implements PushMoneyService {
     public PushMoney getRecordById(Integer id) {
 		PushMoneyExample example = new PushMoneyExample();
 		example.createCriteria().andIdEqualTo(id);
-		List<PushMoney> pushMonies = pushMoneyMapper.selectByExample(example);
+		List<PushMoney> pushMonies = pushMoneyMapper.selectByExampleWithBLOBs(example);
 		if (pushMonies.size() == 0){
 			return null;
 		}

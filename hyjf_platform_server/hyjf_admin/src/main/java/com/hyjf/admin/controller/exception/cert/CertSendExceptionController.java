@@ -22,10 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -74,8 +71,10 @@ public class CertSendExceptionController extends BaseController{
     @ApiOperation(value = "重新跑批", notes = "重新跑批")
     @PostMapping("/updateCount")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult updateCount(Integer id) {
+    public AdminResult updateCount(@RequestBody CertSendMqReqBean reqBean) {
         try{
+            Integer id = reqBean.getId();
+            logger.info("应急中心重新跑批 请求参数：{}",id);
             certReportLogService.updateErrorCount(id);
         }catch (Exception e){
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -90,7 +89,9 @@ public class CertSendExceptionController extends BaseController{
     @ApiOperation(value = "发送MQ", notes = "发送MQ")
     @PostMapping("/doSendMq")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult doSendMQ(HttpServletRequest request, String dataType, String mqValue) {
+    public AdminResult doSendMQ(HttpServletRequest request, @RequestBody CertSendMqReqBean reqBean) {
+        String dataType = reqBean.getDataType();
+        String mqValue = reqBean.getMqValue();
         try {
             _log.info("应急中心掉单处理，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】");
             if("1".equals(dataType)){
@@ -127,8 +128,8 @@ public class CertSendExceptionController extends BaseController{
             }
             if("4".equals(dataType)){
                 // 交易流水数据同步
-                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), mqValue),
-                        MQConstant.HG_REPORT_DELAY_LEVEL);
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), mqValue));
+                _log.info(" 交易流水数据同步:"+mqValue);
             }
         }catch (Exception e){
             _log.info("应急中心发送MQ出错，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】",e);
