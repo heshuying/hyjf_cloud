@@ -7,47 +7,17 @@
 		SELECT
 		mobile
 		FROM
-		(
-		SELECT
-		sum(t.account) AS money,
-		t.user_id,
-		r.mobile
-		FROM
-		ht_borrow_tender t
-		LEFT JOIN ht_r_user r ON t.user_id = r.user_id
-		WHERE
-		<where>
-			<if test="add_time_begin != null" >
-				AND t.create_time  <![CDATA[>=]]> #{add_time_begin,jdbcType=INTEGER}
-			</if>
-			<if test="add_time_end != null" >
-				AND t.create_time  <![CDATA[<=]]> #{add_time_end,jdbcType=INTEGER}
-			</if>
-		</where>
-		GROUP BY
-		user_id
-		<if test="add_money_count != null" >
-			HAVING
-			money > #{add_money_count,jdbcType=DECIMAL}
-		</if>
-		) tmp
-	</select>
-
-	<select id="countUser" resultType="java.lang.Integer" parameterType="map">
-		SELECT
-		count(*)
-		FROM
-		ht_r_user u
+		hyjf_user.ht_user u
 		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
 		<where>
-			<if test="open_account!= null and open_account == 1" >
-				AND u.truename is not null
+			<if test="open_account != null and open_account != 3" >
+				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_begin != null" >
-				AND u.create_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+				AND u.reg_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
 			</if>
 			<if test="re_time_end != null" >
-				AND u.create_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+				AND u.reg_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
 			</if>
 			<if test="add_time_begin != null" >
 				AND bt.create_time  <![CDATA[>=]]> #{add_time_begin,jdbcType=INTEGER}
@@ -59,5 +29,36 @@
 				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
 			</if>
 		</where>
+		GROUP BY u.user_id
+	</select>
+
+	<select id="countUser" resultType="java.lang.Integer" parameterType="map">
+		select count(*) as total from (
+		SELECT
+		count(*)
+		FROM
+		hyjf_user.ht_user u
+		left JOIN ht_borrow_tender bt on u.user_id=bt.user_id
+		<where>
+			<if test="open_account != null and open_account != 3" >
+				AND u.bank_open_account = #{open_account,jdbcType=INTEGER}
+			</if>
+			<if test="re_time_begin != null" >
+				AND u.reg_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+			</if>
+			<if test="re_time_end != null" >
+				AND u.reg_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+			</if>
+			<if test="add_time_begin != null" >
+				AND bt.create_time  <![CDATA[>=]]> #{add_time_begin,jdbcType=INTEGER}
+			</if>
+			<if test="add_time_end != null" >
+				AND bt.create_time  <![CDATA[<=]]> #{add_time_end,jdbcType=INTEGER}
+			</if>
+			<if test="add_money_count != null" >
+				AND (select SUM(account) from  ht_borrow_tender where user_id=u.user_id) <![CDATA[>]]> #{add_money_count,jdbcType=DECIMAL}
+			</if>
+		</where>
+		GROUP BY u.user_id) u
 	</select>
 </mapper>

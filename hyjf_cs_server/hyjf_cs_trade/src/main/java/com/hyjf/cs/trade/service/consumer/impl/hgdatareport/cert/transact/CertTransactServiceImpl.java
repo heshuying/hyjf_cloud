@@ -56,7 +56,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	private String thisMessName = "交易流水信息";
 	private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
-	public static final DecimalFormat FORMAT = new DecimalFormat("#.00");
+	public static final DecimalFormat FORMAT = new DecimalFormat("#0.00");
 	@Override
 	public JSONArray createDate(String minId, String maxId) {
 		
@@ -593,8 +593,8 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				certRequest1.setPeriod(borrowRecover.getRecoverPeriod());
 				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes());
-					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes());
+					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes()).subtract(hjhDebtCreditRepay.getRepayInterestWait());
+					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes()).subtract(hjhDebtCreditRepay.getRepayCapitalWait());
 				}
 			}else{
 				//散标
@@ -628,10 +628,9 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				certRequest1.setBorrowNid(borrowRecoverPlan.getBorrowNid());
 				certRequest1.setPeriod(borrowRecoverPlan.getRecoverPeriod());
 				List<HjhDebtCreditRepayVO> hjhDebtCreditRepays=amTradeClient.getHjhDebtCreditRepayListByRequest(certRequest1);
-
 				for (HjhDebtCreditRepayVO hjhDebtCreditRepay : hjhDebtCreditRepays) {
-					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes());
-					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes());
+					interest=interest.subtract(hjhDebtCreditRepay.getRepayInterestYes()).subtract(hjhDebtCreditRepay.getRepayInterestWait());
+					capital=capital.subtract(hjhDebtCreditRepay.getRepayCapitalYes()).subtract(hjhDebtCreditRepay.getRepayCapitalWait());
 				}
 			}else{
 				//散标
@@ -645,6 +644,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 					interest=interest.subtract(creditRepay.getAssignRepayInterest());
 					capital=capital.subtract(creditRepay.getAssignRepayCapital());
 				}
+
 			}
 			period=period+"-"+borrowRecoverPlan.getRecoverPeriod();
 			nid=borrowRecoverPlan.getNid();

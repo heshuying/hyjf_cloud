@@ -14,6 +14,7 @@ import com.hyjf.am.vo.admin.AdminTransferExceptionLogCustomizeVO;
 import com.hyjf.am.vo.admin.TransferExceptionLogVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,6 +54,14 @@ public class TransferExceptionLogController extends BaseController {
         List<AdminTransferExceptionLogCustomize> results=transferExceptionLogService.getRecordList(request);
         String returnCode = "0";
         if (CollectionUtils.isNotEmpty(results)){
+            for (AdminTransferExceptionLogCustomize info: results
+                 ) {
+                Date updateTime = info.getUpdateTime();
+                if(updateTime != null){
+                    int time10 = GetDate.getTime10(updateTime);
+                    info.setUpdatetime(time10);
+                }
+            }
             response.setResultList(CommonUtils.convertBeanList(results,AdminTransferExceptionLogCustomizeVO.class));
             response.setCount(count);
             response.setRtn(returnCode);

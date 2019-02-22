@@ -256,6 +256,9 @@ public class BorrowCommonController extends BaseController {
 			if (user == null || user.size() == 0) {
 				return new AdminResult<>(FAIL, "请填写用户角色为担保机构的已开户用户！！");
 			}
+			if(user.get(0).getStatus()!=0) {
+				return new AdminResult<>(FAIL, "垫付机构已被禁用");
+			}
 				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
 				if(userinfo.getRoleId()!=3) {
 					return new AdminResult<>(FAIL, "请填写用户角色为担保机构的已开户用户！！");

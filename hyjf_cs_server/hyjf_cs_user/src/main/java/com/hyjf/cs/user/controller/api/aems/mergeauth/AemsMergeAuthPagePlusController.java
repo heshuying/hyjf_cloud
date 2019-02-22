@@ -19,9 +19,11 @@ import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -107,16 +109,31 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "AEMS多合一授权[同步回调]", notes = "AEMS多合一授权[同步回调]")
     @RequestMapping(RETURL_SYN_ACTION)
     public ModelAndView returnPage(HttpServletRequest request, BankCallBean bean) {
-        logger.info("AEMS多合一授权[同步回调]开始, 接口路径:["+ REQUEST_MAPPING+RETURL_SYN_ACTION +"],请求参数:["+ bean.toString());
+        logger.info("AEMS多合一授权[同步回调]开始------------------------------------");
+        bean.convert();
+        logger.info("AEMS多合一授权[同步回调], 请求参数:bean{}"+ bean.toString());
 
         String authType = request.getParameter("authType");
+        String frontParams = request.getParameter("frontParams");
+        logger.info("第三方端授权同步请求,request:"+request);
+        if (StringUtils.isBlank(bean.getRetCode())
+                && StringUtils.isNotBlank(frontParams)) {
+            logger.info("第三方端授权同步请求,bean.getRetCode():["+ bean.getRetCode() +"]");
+            JSONObject jsonParm = JSONObject.parseObject(frontParams);
+            if (jsonParm.containsKey("RETCODE")) {
+                bean.setRetCode(jsonParm.getString("RETCODE"));
+            }
+        }
+        String retCode = bean.getRetCode();
         String isSuccess = request.getParameter("isSuccess");
         logger.info("第三方端授权同步请求,isSuccess:["+ isSuccess +"]");
         String url = request.getParameter("callback").replace("*-*-*", "#");
 
+        logger.info("第三方端授权同步请求,retCode:["+ retCode +"]");
+
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
-        if (isSuccess == null || !"1".equals(isSuccess)) {
+        if (StringUtils.isBlank(retCode) || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 失败
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
             resultMap.put("statusDesc", "多合一授权失败,调用银行接口失败");
@@ -125,22 +142,41 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
             logger.info("AEMS多合一授权[同步回调],调用银行接口失败!");
             return callbackErrorView(resultMap);
 
-        } else {
-            if(authService.checkDefaultConfig(bean, authType)){
-                authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
-                resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-                resultMap.put("statusDesc", "多合一授权申请失败,失败原因：授权期限过短或额度过低，<br>请重新授权！");
-                resultMap.put("acqRes", request.getParameter("acqRes"));
-                resultMap.put("callBackAction", url);
-                logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低,请重新授权！");
-                return callbackErrorView(resultMap);
-            }
-            resultMap.put("status", ErrorCodeConstant.SUCCESS);
-            resultMap.put("status", "多合一授权成功");
+        }
+        logger.info("AEMS多合一授权[同步回调]，调用查询接口查询状态，userId:" + bean.getLogUserId());
+        BankCallBean retBean = authService.getTermsAuthQuery(Integer.parseInt(bean.getLogUserId()),
+                BankCallConstant.CHANNEL_PC);
+        if(authService.checkDefaultConfig(retBean, authType)){
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+            resultMap.put("statusDesc", "多合一授权申请失败,失败原因：授权期限过短或额度过低，<br>请重新授权！");
+            resultMap.put("acqRes", request.getParameter("acqRes"));
+            resultMap.put("callBackAction", url);
+            logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低,请重新授权！");
+            return callbackErrorView(resultMap);
+        }
+        logger.info("AEMS多合一授权同步回调调用查询接口查询状态结束  结果为:" + (retBean == null ? "空" : retBean.getRetCode()));
+        if (retBean == null || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
+            resultMap.put("acqRes", request.getParameter("acqRes"));
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+            resultMap.put("statusDesc", "多合一授权申请失败,失败原因："+ authService.getBankRetMsg(bean.getRetCode()));
             resultMap.put("deadline", bean.getDeadline());
             logger.info("AEMS多合一授权[同步回调]结束");
             return callbackErrorView(resultMap);
         }
+        try {
+            retBean.setOrderId(bean.getLogOrderId());
+            // 更新签约状态和日志表
+            this.authService.updateUserAuth(Integer.parseInt(retBean.getLogUserId()), retBean,authType);
+        } catch (Exception e) {
+            logger.info("AEMS多合一授权[同步回调]异常，异常信息：{}", e);
+        }
+        resultMap.put("acqRes", request.getParameter("acqRes"));
+        resultMap.put("status", ErrorCodeConstant.SUCCESS);
+        resultMap.put("statusDesc", "多合一授权成功");
+        resultMap.put("deadline", bean.getDeadline());
+        logger.info("AEMS多合一授权[同步回调]第三方返回参数："+JSONObject.toJSONString(resultMap));
+        logger.info("AEMS多合一授权[同步回调]结束----------------------------------");
+        return callbackErrorView(resultMap);
     }
 
 
@@ -148,7 +184,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @RequestMapping(RETURL_ASY_ACTION)
     @ResponseBody
     public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
-        logger.info("AEMS多合一授权[异步回调]开始,接口路径:["+ REQUEST_MAPPING+RETURL_ASY_ACTION +"],请求参数:["+ bean.toString() +"]");
+        logger.info("AEMS多合一授权[异步回调]开始,请求参数:["+ bean.toString() +"]");
 
         Map<String, String> params = new HashMap<>();
         BankCallResult result = new BankCallResult();
@@ -157,7 +193,6 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         if (bean == null) {
             logger.warn("调用江西银行多合一授权接口,银行异步返回空");
             params.put("status", BaseResultBean.STATUS_FAIL);
-            resultBean.setStatusForResponse(BaseResultBean.STATUS_FAIL);
             params.put("statusDesc", "多合一授权失败,调用银行接口失败");
             result.setMessage("多合一授权失败");
             params.put("chkValue", resultBean.getChkValue());

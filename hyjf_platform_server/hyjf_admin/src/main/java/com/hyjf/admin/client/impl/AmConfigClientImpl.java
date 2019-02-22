@@ -1977,9 +1977,9 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @Author : huanghui
      */
     @Override
-    public List<BankConfigVO> getBankcardList() {
-        AdminBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/selectBankConfigList",
-                AdminBankConfigResponse.class).getBody();
+    public List<JxBankConfigVO> getBankcardList() {
+        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/jxBankConfig/selectBankConfigList",
+                JxBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
@@ -2436,5 +2436,32 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getResultInt();
         }
         return 0;
+    }
+
+    @Override
+    public ConfigApplicantResponse updateApplicantConfigList(ConfigApplicantRequest request) {
+        String url = "http://AM-ADMIN/am-config/adminSystem/updateApplicantConfigList";
+        return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
+    }
+
+    @Override
+    public ConfigApplicantResponse addApplicantConfigList(ConfigApplicantRequest request) {
+        String url = "http://AM-ADMIN/am-config/adminSystem/addApplicantConfigList";
+        return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
+
+    }
+
+    @Override
+    public ConfigApplicantResponse getApplicantConfigList(ConfigApplicantRequest request) {
+        String url = "http://AM-ADMIN/am-config/adminSystem/getApplicantConfigList";
+        return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
+
+    }
+
+    @Override
+    public ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request) {
+        String url = "http://AM-ADMIN/am-config/adminSystem/findConfigApplicant";
+        return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
+
     }
 }

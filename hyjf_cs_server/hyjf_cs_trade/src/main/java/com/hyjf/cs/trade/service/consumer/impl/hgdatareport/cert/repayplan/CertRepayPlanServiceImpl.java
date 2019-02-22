@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,13 +106,12 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                         // 还款计划编号是指每一个项目的每一次还款计划的唯一编号，平台内所有还款计划中编号唯一。如果没有则填写“散标编号+当前期数”
                         //还款计划编号：报送标的号+“-”+当前期数
                         param.put("replanId", borrowNid + "-" + borrowRepayPlan.getRepayPeriod());
-                        DecimalFormat dfAmount = new DecimalFormat("0.00");
-                        String strCurFund = dfAmount.format(borrowRepayPlan.getRepayCapital());
+                        BigDecimal bdAmount = borrowRepayPlan.getRepayCapital().setScale(2,BigDecimal.ROUND_HALF_UP);
                         //当期应还本金（元）
-                        param.put("curFund", strCurFund);
+                        param.put("curFund", bdAmount.toString());
                         //当期应还利息（元）
-                        String strCurInterest = dfAmount.format(borrowRepayPlan.getRepayInterest());
-                        param.put("curInterest", strCurInterest);
+                        BigDecimal bdCurInterest = borrowRepayPlan.getRepayInterest().setScale(2,BigDecimal.ROUND_HALF_UP);
+                        param.put("curInterest", bdCurInterest.toString());
                         //当期应还款时间点
                         //当期应还时间点：报送当期应还日期23:59:59
                         param.put("repayTime",GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
@@ -139,9 +138,11 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                 //还款计划编号：报送标的号+“-”+当前期数
                 param.put("replanId", borrowNid + "-" + "1");
                 //当期应还本金（元）
-                param.put("curFund", borrow.getBorrowAccountYes());
+                BigDecimal bdAmount = borrow.getBorrowAccountYes().setScale(2,BigDecimal.ROUND_HALF_UP);
+                param.put("curFund",bdAmount.toString());
                 //当期应还利息（元）
-                param.put("curInterest", borrow.getRepayAccountInterest());
+                BigDecimal bdCurInterest =borrow.getRepayAccountInterest().setScale(2,BigDecimal.ROUND_HALF_UP);
+                param.put("curInterest", bdCurInterest.toString());
                 //当期应还款时间点
                 //当期应还时间点：报送当期应还日期23:59:59
                 param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");

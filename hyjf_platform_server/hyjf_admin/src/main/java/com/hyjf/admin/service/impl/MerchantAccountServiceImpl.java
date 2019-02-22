@@ -80,7 +80,7 @@ public class MerchantAccountServiceImpl implements MerchantAccountService {
                                     merchantAccount.setAccountBalance(acctBal);
                                     merchantAccount.setAvailableBalance(avlBal);
                                     merchantAccount.setFrost(frzBal);
-                                    merchantAccount.setUpdateTime(nowTime);
+                                    merchantAccount.setUpdatetime(nowTime);
                                     this.amTradeClient.updateByPrimaryKeySelective(merchantAccount);
                                 }
                             }

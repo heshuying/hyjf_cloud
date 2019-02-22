@@ -170,6 +170,7 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
     @ApiOperation(value = "AEMS系统:用户开户同步回调", notes = "用户开户")
     @RequestMapping(value = "/openaccountReturn")
     public ModelAndView returnPage(HttpServletRequest request) {
+        logger.info("第三方端开户同步请求开始,请求参数request为:{}", request);
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         String phone = request.getParameter("phone");
@@ -182,11 +183,18 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
             resultMap.put("statusDesc", "开户失败,调用银行接口失败");
             resultMap.put("acqRes", request.getParameter("acqRes"));
+            logger.info("第三方端开户同步请求失败,resultMap:{}", resultMap);
             return callbackErrorView(resultMap);
         } else {
+            String accountId = bankOpenService.getBankOpenAccountByMobile((String) request.getParameter("phone"));
+            logger.info("第三方端开户同步请求查询电子账号,accountId:{}", accountId);
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
-            resultMap.put("status", "页面开户成功");
+            resultMap.put("statusDesc", "页面开户成功");
+            resultMap.put("accountId", accountId);
+            resultMap.put("chkValue", "");
+            resultMap.put("acqRes", request.getParameter("acqRes"));
             resultMap.put("phone", phone);
+            logger.info("第三方端开户同步请求成功,resultMap:{}", resultMap);
             return callbackErrorView(resultMap);
         }
     }

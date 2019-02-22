@@ -27,10 +27,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.util.AsteriskProcessUtil;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
@@ -1455,17 +1452,26 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 服务费授权开关
             userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 
-            try {
-
-                if (userVO.getIsEvaluationFlag() == 1) {
-                    userValidation.put("isRiskTested", true);
-                } else {
-                    userValidation.put("isRiskTested", false);
+            try{
+                if(userVO.getIsEvaluationFlag()==1 && null != userVO.getEvaluationExpiredTime()){
+                    //测评到期日
+                    Long lCreate = userVO.getEvaluationExpiredTime().getTime();
+                    //当前日期
+                    Long lNow = System.currentTimeMillis();
+                    if (lCreate <= lNow) {
+                        //已过期需要重新评测
+                        userValidation.put("isRiskTested", "2");
+                    } else {
+                        //未到一年有效期
+                        userValidation.put("isRiskTested", "1");
+                    }
+                }else{
+                    userValidation.put("isRiskTested", "0");
                 }
                 // modify by liuyang 20180411 用户是否完成风险测评标识 end
-            } catch (Exception e) {
+            }catch (Exception e){
                 logger.error("是否进行过风险测评查询出错....", e);
-                userValidation.put("isRiskTested", false);
+                userValidation.put("isRiskTested", "2");
             }
 
             //
@@ -2035,6 +2041,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         //标的等级
         projectInfo.setInvestLevel(customize.getInvestLevel());
+        String minInvestment = customize.getDebtMinInvestment();
+        String investIncrement = customize.getDebtInvestmentIncrement();
+        projectInfo.setMinInvestment(StringUtils.isBlank(minInvestment)? "0" : new DecimalFormat("######").format(new BigDecimal(minInvestment)));
+        projectInfo.setInvestmentIncrement(StringUtils.isBlank(investIncrement)? "0" : new DecimalFormat("######").format(new BigDecimal(investIncrement)));
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),

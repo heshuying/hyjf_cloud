@@ -13,6 +13,18 @@
 		user_id = #{userId,jdbcType=INTEGER}
 	</update>
 
+
+	<update id="updateOfHjhPlanJoin" parameterType="com.hyjf.am.trade.dao.model.auto.Account">
+		update ht_account
+		set
+		bank_invest_sum = IFNULL(bank_invest_sum,0) + #{bankInvestSum,jdbcType=DECIMAL},
+		bank_balance = IFNULL(bank_balance,0) - #{bankBalance,jdbcType=DECIMAL},
+		plan_balance = IFNULL(plan_balance,0) + #{planBalance,jdbcType=DECIMAL}
+		where
+		user_id = #{userId,jdbcType=INTEGER}
+		AND bank_balance -  #{bankBalance,jdbcType=DECIMAL} >= 0
+	</update>
+
 	<update id="updateByDebtPlanId"  parameterType="Map">
 		UPDATE ht_hjh_plan
 		SET

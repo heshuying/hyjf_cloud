@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
+import com.hyjf.common.exception.ReturnMessageException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -137,9 +138,9 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
                 selectbean.setLogClient(0);
                 // 返回参数
-                BankCallBean retBean = null;
+                BankCallBean retBean =  BankCallUtils.callApiBg(selectbean);
                 // 调用接口
-                retBean = BankCallUtils.callApiBg(selectbean);
+                logger.info("请求开户掉单查询接口  调用银行返回参数为：{}",JSONObject.toJSONString(retBean));
                 if (retBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
                     {
                         JSONArray jsa = JSONArray.parseArray(retBean.getSubPacks());
@@ -167,12 +168,11 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;
                         } else {
-                            CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
+                            throw new ReturnMessageException(MsgEnum.STATUS_CE000017);
                         }
                     }
                 }else {
-                    // 该用户无银行开户信息
-                    CheckUtil.check(Validator.isNotNull(user) , MsgEnum.STATUS_CE000007);
+                    throw new ReturnMessageException(MsgEnum.STATUS_CE000017);
                 }
             }
         }

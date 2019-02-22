@@ -152,7 +152,7 @@ public class SmsCodeController extends BaseController {
         }
 
         if ("crowd".equals(form.getMessageType())) {
-            if(mobile.length() > 11 && !mobile.contains(",")){
+            if(StringUtils.isNotEmpty(mobile) && mobile.length() > 11 && !mobile.contains(",")){
                 jsonObject.put("msg", "多个号码请用英文半角逗号 “,” 隔开");
                 jsonObject.put("status", FAIL);
                 jsonObject.put("statusDesc", FAIL_DESC);

@@ -3,7 +3,7 @@
  */
 package com.hyjf.admin.service;
 
-import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
