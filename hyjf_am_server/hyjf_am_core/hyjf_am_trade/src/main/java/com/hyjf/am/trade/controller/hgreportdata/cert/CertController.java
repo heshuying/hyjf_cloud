@@ -96,6 +96,7 @@ public class CertController extends BaseController {
     }
     @PostMapping("/getBorrowRepayPlanListByRequest")
     public BorrowRepayPlanResponse getBorrowRepayPlanListByRequest(@RequestBody CertRequest certRequest) {
+        logger.info("getBorrowRepayPlanListByRequest:" + JSONObject.toJSONString(certRequest));
         BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
         List<BorrowRepayPlan> borrowRepayPlan = certService.getBorrowRepayPlanListByRequest(certRequest);
         if (!CollectionUtils.isEmpty(borrowRepayPlan)) {

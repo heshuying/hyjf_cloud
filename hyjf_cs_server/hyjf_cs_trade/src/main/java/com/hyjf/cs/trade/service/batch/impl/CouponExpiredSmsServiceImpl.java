@@ -69,8 +69,10 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
         if (!CollectionUtils.isEmpty(userCouponThrList)) {
             for (BatchCouponTimeoutCommonCustomizeVO userCoupon : userCouponThrList) {
                 UserVO user = amUserClient.findUserById(userCoupon.getUserId());
-                userCoupon.setMobile(user.getMobile());
-                userCouponThrs.add(userCoupon);
+                if(user != null && user.getMobile() !=null){
+                    userCoupon.setMobile(user.getMobile());
+                    userCouponThrs.add(userCoupon);
+                }
             }
         }
         // 三日到期短信提醒

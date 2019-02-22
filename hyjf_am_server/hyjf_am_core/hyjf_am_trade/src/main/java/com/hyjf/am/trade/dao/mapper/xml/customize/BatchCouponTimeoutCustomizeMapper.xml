@@ -16,8 +16,8 @@
 			ht_coupon_user uc
 		LEFT JOIN ht_coupon_config c ON uc.coupon_code = c.coupon_code
 		WHERE
-			uc.end_time <![CDATA[>=]]> #{startTime}
-		AND uc.end_time <![CDATA[<]]> #{endTime}
+			uc.end_time <![CDATA[>=]]> #{threeBeginDate}
+		AND uc.end_time <![CDATA[<]]> #{threeEndDate}
 		AND c.coupon_type = 3
 		AND uc.used_flag = 0
 		AND uc.del_flag = 0
