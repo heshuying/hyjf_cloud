@@ -70,7 +70,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(instCode, assetType);
 
 		// 资产推送 参数校验
-		PushResultBean resultBean = checkParam(pushRequestBean, assetBorrow, instCode);
+		PushResultBean resultBean = checkParam(pushRequestBean, assetBorrow, instCode, 0);
 		if (resultBean != null){
 			return resultBean;
 		}
@@ -86,7 +86,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 				// 资产推送公用方法 0:个人 1:企业
 				pushBean = commonProcessCompanyAsset(pushBean, instCode, assetType, projectRepays, 0);
 			} catch (Exception e) {
-				logger.error("系统异常,资产未进库, assetId is: {}", pushBean.getAssetId());
+				logger.warn("系统异常,资产未进库, assetId is : ["+ pushBean.getAssetId() +"],详情如下: ["+ e +"]");
 				if (StringUtils.isBlank(pushBean.getRetMsg())) {
 					pushBean.setRetMsg("系统异常,资产未进库");
 					pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
@@ -96,7 +96,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			}
 		}
 
-		return assembleResult(new PushResultBean(), retAssets, pushRequestBean.getRiskInfo());
+		return assembleResult(new PushResultBean(), retAssets, pushRequestBean.getRiskInfo(), 0);
 	}
 
 
@@ -115,7 +115,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(instCode, assetType);
 
 		// 资产推送 参数校验
-		PushResultBean resultBean = checkParam(pushRequestBean, assetBorrow, instCode);
+		PushResultBean resultBean = checkParam(pushRequestBean, assetBorrow, instCode, 1);
 		if (resultBean != null){
 			return resultBean;
 		}
@@ -140,7 +140,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			}
 		}
 
-		return assembleResult(new PushResultBean(), retAssets, pushRequestBean.getRiskInfo());
+		return assembleResult(new PushResultBean(), retAssets, pushRequestBean.getRiskInfo(), 1);
 	}
 
 	/**
@@ -150,12 +150,18 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 	 * @param instCode
 	 * @return
 	 */
-	public PushResultBean checkParam(PushRequestBean pushRequestBean, HjhAssetBorrowTypeVO assetBorrow, String instCode){
+	public PushResultBean checkParam(PushRequestBean pushRequestBean, HjhAssetBorrowTypeVO assetBorrow, String instCode, int identityFlag){
+		String logFlag = null;
 		PushResultBean resultBean = new PushResultBean();
+		if (identityFlag == 0){
+			logFlag = "个人";
+		}else {
+			logFlag = "企业";
+		}
 
 		// 查看机构表是否存在
 		if (assetBorrow == null) {
-			logger.warn("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->AEMS个人资产推送[机构编号不存在]");
+			logger.warn("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->"+ logFlag +"资产推送[机构编号不存在]");
 			resultBean.setStatusDesc("机构编号不存在");
 			return resultBean;
 		}
@@ -163,14 +169,14 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		// 授信期内校验
 		BailConfigInfoCustomizeVO bailConfig = amTradeClient.selectBailConfigByInstCode(instCode);
 		if (bailConfig == null) {
-			logger.warn("个人资产推送[保证金配置不存在!],instCode:"+ instCode);
+			logger.warn(logFlag+"资产推送[保证金配置不存在!],instCode:"+ instCode);
 			resultBean.setStatusDesc("保证金配置不存在:{" + instCode + "}");
 			return resultBean;
 		}
 		if (GetDate.getNowTime10() < GetDate.getDayStart10(bailConfig.getTimestart()) ||
 				GetDate.getNowTime10() > GetDate.getDayEnd10(bailConfig.getTimeend())
 				) {
-			logger.warn("个人资产推送[未在授信期内,不能推标!]");
+			logger.warn(logFlag+"资产推送[未在授信期内,不能推标!]");
 			resultBean.setStatusDesc("未在授信期内，不能推标");
 			return resultBean;
 		}
@@ -178,12 +184,12 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		// 检查请求资产总参数
 		List<PushBean> assets = pushRequestBean.getReqData();
 		if (CollectionUtils.isEmpty(assets)) {
-			logger.warn("个人资产推送[推送资产不能为空!]");
+			logger.warn(logFlag+"资产推送[推送资产不能为空!]");
 			resultBean.setStatusDesc("推送资产不能为空");
 			return resultBean;
 		}
 		if (assets.size() > 1000) {
-			logger.warn("个人资产推送[请求参数过长!]");
+			logger.warn(logFlag+"资产推送[请求参数过长!]");
 			resultBean.setStatusDesc("请求参数过长");
 			return resultBean;
 		}
@@ -214,6 +220,12 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			logFlag = "企业";
 		}
 
+		if (StringUtils.isBlank(pushBean.getAssetId())){
+			logger.warn(logFlag+"资产推送[assetId 必填!]");
+			pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000100);
+			pushBean.setRetMsg("资产推送[assetId 必填!]");
+			return pushBean;
+		}
 		// 重复资产校验
 		int count = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId()).size();
 		if (count > 0){
@@ -245,6 +257,13 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 
 		// 个人
 		if(identityFlag == 0){
+			// 个人推送-必传字段非空校验
+			if (checkPersonPushInfo(pushBean)) {
+				logger.warn(logFlag+"资产推送[必传字段未传,请检查!]");
+				pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
+				pushBean.setRetMsg("必传字段未传!");
+				return pushBean;
+			}
 			if (pushBean.getWorkCity() != null && pushBean.getWorkCity().length() > 20) {
 				logger.warn(logFlag+"资产推送[工作城市过长! assetId is:"+ pushBean.getAssetId() +"]");
 				pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
@@ -343,6 +362,13 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 
 		}else {
 			// 企业
+			// 企业推送-必传字段非空校验
+			if (checkCompanyPushInfo(pushBean)) {
+				logger.warn(logFlag+"资产推送[必传字段未传,请检查!]");
+				pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
+				pushBean.setRetMsg("必传字段未传!");
+				return pushBean;
+			}
 			// 通过用户名获得用户的详细信息
 			user = amUserClient.selectUserInfoByUsername(pushBean.getUserName());
 			// 判断用户是否注册
@@ -436,14 +462,6 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		}
 
 		if (identityFlag == 1){
-			// 企业推送-必传字段非空校验
-			if (!checkCompanyPushInfo(pushBean)) {
-				logger.warn(logFlag+"资产推送[必传字段未传,请检查!]");
-				pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
-				pushBean.setRetMsg("必传字段未传!");
-				return pushBean;
-			}
-
 			// add by nxl 20180710互金系统,新添加企业注册地址,企业注册编码Start
 			if (StringUtils.isBlank(pushBean.getRegistrationAddress()) || pushBean.getRegistrationAddress().length() > 99) {
 				logger.warn(logFlag+"资产推送[企业注册地址信息不正确!]");
@@ -460,12 +478,6 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			if (user.getUserType() == 0) {
 				pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000001);
 				pushBean.setRetMsg("用户类型不是企业用户");
-				return pushBean;
-			}
-			// 判断借款用户是否是机构合作用户
-			if (user.getIsInstFlag() == 0 || user.getIsInstFlag().equals("0")) {
-				pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000007);
-				pushBean.setRetMsg("借款用户不是机构合作用户！");
 				return pushBean;
 			}
 			// 查看用户对应的企业编号
@@ -518,7 +530,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			this.sendToAutoIssueRecoverQueue(record);
 			logger.info("资产推送成功, 发送至自动录标队列, assetId is : {}", pushBean.getAssetId());
 		} else {
-			logger.warn("系统异常,资产未进库, assetId is : {}", pushBean.getAssetId());
+			logger.warn("系统异常,资产未进库, assetId is : ["+ pushBean.getAssetId() +"]");
 			pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
 			pushBean.setRetMsg("系统异常,资产未进库");
 		}
@@ -641,31 +653,37 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 	 * @return
 	 */
 	private PushResultBean assembleResult(PushResultBean resultBean, List<PushBean> retAssets,
-										  List<InfoBean> riskInfo) {
+										  List<InfoBean> riskInfo, int identityFlag) {
+		String logFlag = null;
+		if (identityFlag == 0){
+			logFlag = "个人";
+		}else {
+			logFlag = "企业";
+		}
 		// 商家信息未解析版
-		logger.info("个人资产推送[商家信息导入开始!]");
+		logger.info(logFlag+"资产推送[商家信息导入开始!]");
 		if (!CollectionUtils.isEmpty(riskInfo)) {
 			logger.debug("riskInfo is : {}", JSONObject.toJSONString(riskInfo));
 			if (riskInfo.size() > 1000) {
-				logger.info("个人资产推送[商家信息数量超限]！");
+				logger.info(logFlag+"资产推送[商家信息数量超限]！");
 				resultBean.setStatusDesc("商家信息数量超限");
 				return resultBean;
 			}
 			try {
 				//推送商家信息
 				this.amTradeClient.insertRiskInfo(riskInfo);
-				logger.info("个人资产推送[商家信息导入成功!]");
+				logger.info(logFlag+"资产推送[商家信息导入成功!]");
 			} catch (Exception e){
-				logger.info("个人资产推送[商家信息导入异常!],异常信息如下："+ e);
+				logger.info(logFlag+"资产推送[商家信息导入异常!],异常信息如下："+ e);
 			}
 		}
 
 		if (pushFlag.get()) {
-			resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+			resultBean.setStatus(ErrorCodeConstant.SUCCESS);
 			resultBean.setStatusDesc("资产推送成功");
 			resultBean.setData(retAssets);
 		} else {
-			resultBean.setStatusForResponse(retAssets.get(0).getRetCode());
+			resultBean.setStatus(retAssets.get(0).getRetCode());
 			// 目前推送只有一条，如果多条不能这样取
 			resultBean.setStatusDesc(retAssets.get(0).getRetMsg());
 			resultBean.setData(retAssets);
@@ -718,13 +736,34 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 				|| StringUtils.isBlank(pushBean.getOverdueTimes())
 				|| StringUtils.isBlank(pushBean.getBorrowStyle())
 				|| StringUtils.isBlank(pushBean.getUserName())
-				|| StringUtils.isBlank(pushBean.getAssetId())
 				|| pushBean.getBorrowPeriod() == null
 				|| pushBean.getIsMonth() == null
 				|| pushBean.getAccount() == null
 				) {
-					return false;
+					return true;
 				}
-			return true;
+			return false;
 	}
+
+    /**
+     * 个人资产推送，必填字段判断
+     *
+     * @param pushBean
+     * @return
+     */
+    private boolean checkPersonPushInfo(PushBean pushBean) {
+        if (StringUtils.isBlank(pushBean.getTruename())
+				|| StringUtils.isBlank(pushBean.getMonthlyIncome())
+				|| StringUtils.isBlank(pushBean.getAnnualIncome())
+				|| StringUtils.isBlank(pushBean.getBorrowStyle())
+				|| StringUtils.isBlank(pushBean.getAddress())
+				|| StringUtils.isBlank(pushBean.getIdcard())
+				|| StringUtils.isBlank(pushBean.getUseage())
+				|| pushBean.getBorrowPeriod() == null
+				|| pushBean.getAccount() == null
+				) {
+            return true;
+        }
+        return false;
+    }
 }

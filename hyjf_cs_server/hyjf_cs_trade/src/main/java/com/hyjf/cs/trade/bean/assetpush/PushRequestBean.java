@@ -46,11 +46,4 @@ public class PushRequestBean extends BaseBean implements Serializable {
 	public void setRiskInfo(List<InfoBean> riskInfo) {
 		this.riskInfo = riskInfo;
 	}
-
-	@Override
-	public String toString() {
-		return "PushRequestBean{" +
-				"assetType=" + assetType +
-				'}';
-	}
 }
