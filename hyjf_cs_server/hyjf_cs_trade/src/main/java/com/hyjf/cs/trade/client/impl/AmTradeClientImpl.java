@@ -19,12 +19,12 @@ import com.hyjf.am.response.callcenter.CallCenterAccountDetailResponse;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
-import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.account.*;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
 import com.hyjf.am.response.trade.calculate.HjhCreditCalcResultResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
@@ -51,6 +51,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
@@ -68,12 +69,12 @@ import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
-import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.*;
+import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
@@ -6556,11 +6557,11 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public List<CouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest) {
+    public List<CertCouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest) {
         String url = urlBase + "cert/getCouponRecoverListByCertRequest";
         CouponRecoverResponse response = restTemplate.postForEntity(url,certRequest,CouponRecoverResponse.class).getBody();
         if (response != null) {
-            return response.getResultList();
+            return response.getCertCouponRecoverVOList();
         }
         return null;
     }
