@@ -189,7 +189,7 @@
 		JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		WHERE
 		br.create_time >= FROM_UNIXTIME(#{timeStart})
-		AND br.create_time <![CDATA[<=]]> #{timeEnd}
+		AND br.create_time <![CDATA[<=]]> FROM_UNIXTIME(#{timeEnd})
 		UNION ALL
 		SELECT
 		bc.credit_capital AS amount
