@@ -115,8 +115,10 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
 
         String authType = request.getParameter("authType");
         String frontParams = request.getParameter("frontParams");
+        logger.info("第三方端授权同步请求,request:"+request);
         if (StringUtils.isBlank(bean.getRetCode())
                 && StringUtils.isNotBlank(frontParams)) {
+            logger.info("第三方端授权同步请求,bean.getRetCode():["+ bean.getRetCode() +"]");
             JSONObject jsonParm = JSONObject.parseObject(frontParams);
             if (jsonParm.containsKey("RETCODE")) {
                 bean.setRetCode(jsonParm.getString("RETCODE"));
