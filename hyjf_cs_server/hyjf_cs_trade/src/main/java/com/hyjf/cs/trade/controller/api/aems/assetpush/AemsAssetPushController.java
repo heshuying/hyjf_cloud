@@ -15,6 +15,7 @@ import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.aems.assetpush.AemsAssetPushService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.hyjf.cs.trade.util.SignUtil;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.swagger.annotations.Api;
@@ -43,10 +44,9 @@ import java.util.List;
 public class AemsAssetPushController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(AemsAssetPushController.class);
-
-    public static final String AEMS_ASSETPUSH = "/hyjf-api/aems/assetpush" ;
-    public static final String PERSON = "/push" ;
-    public static final String COMPANY = "/pushcompany" ;
+    public static final String AEMS_ASSETPUSH = "/hyjf-api/aems/assetpush";
+    public static final String COMPANY = "/pushcompany";
+    public static final String PERSON = "/push";
 
     @Autowired
     private AemsAssetPushService pushService;
@@ -125,15 +125,23 @@ public class AemsAssetPushController extends BaseTradeController {
      * @return
      */
     private JSONObject aemsAssetPushParamCheck(AemsPushRequestBean pushRequestBean, String flag){
+        String logFlag = null;
         JSONObject result = new JSONObject();
+        if (flag.equals(PERSON)){
+            logFlag = "AEMS个人";
+        }else {
+            logFlag = "AEMS企业";
+        }
+
         // 验证请求参数
         List<AemsPushBean> reqData = pushRequestBean.getReqData();
         if (Validator.isNull(reqData) ||
                 Validator.isNull(pushRequestBean.getInstCode()) ||
                 Validator.isNull(pushRequestBean.getChkValue()) ||
+                Validator.isNull(pushRequestBean.getTimestamp()) ||
                 Validator.isNull(pushRequestBean.getAssetType())
                 ) {
-            logger.info("------请求参数非法-------" + pushRequestBean);
+            logger.warn(logFlag+"资产推送[请求参数非法!],数据如下:"+pushRequestBean.toString());
             result.put("status", ErrorCodeConstant.STATUS_ZT000100);
             result.put("statusDesc", "请求参数非法");
             result.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000100));
@@ -141,18 +149,18 @@ public class AemsAssetPushController extends BaseTradeController {
         }
 
         //验签
-        /*if (!SignUtil.AEMSVerifyRequestSign(pushRequestBean, AEMS_ASSETPUSH+flag)) {
-            logger.info("------------------验签失败！---------------------");
+        if (!SignUtil.AEMSVerifyRequestSign(pushRequestBean, AEMS_ASSETPUSH+flag)) {
+            logger.warn(logFlag+"资产推送[验签失败!],数据如下:"+pushRequestBean.toString());
             result.put("status", ErrorCodeConstant.STATUS_CE000002);
             result.put("statusDesc", "验签失败！");
             result.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_CE000002));
             return result;
-        }*/
+        }
 
-        logger.info("instCode：["+ pushRequestBean.getInstCode() +"]开始推送资产");
+        logger.info(logFlag+"资产推送,开始推送资产,资产机构编号instCode：["+ pushRequestBean.getInstCode() +"]");
 
         if (CustomConstants.INST_CODE_HYJF.equals(pushRequestBean.getInstCode())) {
-            logger.info("instCode：["+ pushRequestBean.getInstCode() +"]，assetType：["+ pushRequestBean.getAssetType() +"]  -->不能推送本平台资产！");
+            logger.warn(logFlag+"资产推送[不能推送本平台资产!],资产机构编号instCode：["+ pushRequestBean.getInstCode() +"]，机构产品类型assetType：["+ pushRequestBean.getAssetType() +"]");
             result.put("status", ErrorCodeConstant.STATUS_ZT000010);
             result.put("statusDesc", "不能推送本平台资产！");
             result.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_ZT000010));
