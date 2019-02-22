@@ -66,6 +66,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
+        logger.info("accountLists.size():" + accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
