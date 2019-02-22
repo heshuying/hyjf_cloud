@@ -3,17 +3,11 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ApiTransactionDetailsCustomizeMapper">
 
     <resultMap id="AccountDetailMapResult" type="com.hyjf.am.trade.dao.model.customize.ApiTransactionDetailsCustomize">
-        <result column="id" property="id" />
-        <result column="user_id" property="userId" /> <!-- 用户id -->
         <result column="username" property="username" /> <!-- 用户名 -->
-        <result column="referrer_name" property="referrerName" /> <!-- 推荐人 -->
-        <result column="referrer_group" property="referrerGroup" /> <!-- 推荐组 -->
         <result column="nid" property="nid" /> <!-- 订单号 -->
         <result column="type" property="type" /> <!-- 操作类型 -->
         <result column="trade_type" property="tradeType" /> <!-- 交易类型  -->
         <result column="amount" property="amount" /> <!-- 操作金额  -->
-        <result column="balance" property="balance" /> <!-- 可用金额 -->
-        <result column="frost" property="frost" /> <!-- 冻结金额 -->
         <result column="planBalance" property="planBalance"/><!-- 汇添金可用金额 -->
         <result column="planFrost" property="planFrost"/><!-- 汇添金冻结金额 -->
         <result column="remark" property="remark" /> <!-- 备注  -->
@@ -21,89 +15,54 @@
         <result column="is_bank" property="isBank" /> <!-- 是否是银行存管 -->
         <result column="account_id" property="accountId" /> <!-- 电子账号 -->
         <result column="seq_no" property="seqNo" /> <!-- 交易流水号  -->
+        <result column="bank_total" property="bankTotal" /> <!-- 银行存管总资产-->
         <result column="bank_balance" property="bankBalance" /> <!-- 银行存管余额  -->
         <result column="bank_frost" property="bankFrost" /> <!-- 银行存管冻结金额-->
-        <result column="bank_total" property="bankTotal" /> <!-- 银行存管总资产-->
         <result column="check_status" property="checkStatus" /> <!-- 对账状态 -->
         <result column="trade_status" property="tradeStatus" /> <!-- 交易状态  -->
     </resultMap>
 
     <sql id="where-all-page-condition">
-        <if test="userId != null and userId != 0">
-            AND l.user_id = #{userId}
+        <if test="accountId != null and accountId != ''">
+            AND l.account_id = #{accountId}
         </if>
-        <if test="referrerName != null and referrerName != ''">
-            AND u2.username = #{referrerName}
+        <if test="startDate != null and startDate != ''">
+            AND l.create_time &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'),'%Y-%m-%d %H:%i:%s')
         </if>
-        <if test="tradeTypeSearch != null and tradeTypeSearch != ''">
-            AND t.id = #{tradeTypeSearch}
-        </if>
-        <if test="username != null and username != ''">
-            AND u.username = #{username}
+        <if test="endDate != null and endDate != ''">
+            AND l.create_time &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="nid != null and nid != ''">
             AND l.nid = #{nid}
         </if>
-        <if test="typeSearch != null and typeSearch != ''">
-            AND l.type = #{typeSearch}
-        </if>
-        <if test="isBank != null and isBank != ''">
-            AND l.is_bank = #{isBank}
-        </if>
-        <if test="checkStatus != null and checkStatus != ''">
-            AND l.check_status = #{checkStatus}
-        </if>
         <if test="tradeStatus != null and tradeStatus != ''">
             AND l.trade_status = #{tradeStatus}
         </if>
-        <if test="accountId != null and accountId != ''">
-            AND l.account_id = #{accountId}
+        <if test="typeSearch != null and typeSearch != ''">
+            AND l.type = #{typeSearch}
         </if>
-        <if test="seqNo != null and seqNo != ''">
-            AND l.seq_no = #{seqNo}
-        </if>
-        <if test="balance != null">
-            AND l.balance = #{balance}
-        </if>
-        <if test="frost != null">
-            AND l.frost = #{frost}
-        </if>
-        <if test="remarkSrch != null and remarkSrch != ''">
-            AND l.remark = #{remarkSrch}
-        </if>
-        <if test="startDate != null and startDate != ''">
-
-            AND l.create_time &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'),'%Y-%m-%d %H:%i:%s')
-        </if>
-        <if test="endDate != null and endDate != ''">
-
-            AND l.create_time &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
+        <if test="tradeTypeSearch != null and tradeTypeSearch != ''">
+            AND t.id = #{tradeTypeSearch}
         </if>
     </sql>
 
-    <select id="queryApiAccountDetails" resultMap="AccountDetailMapResult" parameterType="com.hyjf.am.trade.dao.mapper.customize.ApiTransactionDetailsCustomizeMapper">
+    <select id="queryApiAccountDetails" resultMap="AccountDetailMapResult" parameterType="com.hyjf.am.trade.dao.model.customize.ApiTransactionDetailsCustomize">
         SELECT
         u.username,
-        u.username AS 'referrer_name',
         l.nid,
         CASE l.type
-        WHEN 1 THEN
-        '收入'
-        WHEN 2 THEN
-        '支出'
-        WHEN 3 THEN
-        '冻结'
-        WHEN 4 THEN
-        '解冻'
-        ELSE
-        '其它'
-        END AS type,
+        WHEN 1 THEN '收入'
+        WHEN 2 THEN '支出'
+        WHEN 3 THEN '冻结'
+        WHEN 4 THEN '解冻'
+        ELSE '其它' END
+        AS type,
         t.`name` AS trade_type,
         l.amount,
         IFNULL(l.plan_balance, 0) AS planBalance,
         IFNULL(l.plan_frost, 0) AS planFrost,
         l.remark,
-        l.create_time,
+        DATE_FORMAT(l.create_time, '%Y-%m-%d %k:%i:%s') as create_time,
         l.account_id,
         l.is_bank,
         l.seq_no,
@@ -116,10 +75,6 @@
         ht_account_list l
         LEFT JOIN ht_account_trade t ON l.trade = t.`value`
         LEFT JOIN ht_r_user u ON l.user_id = u.user_id
---         LEFT JOIN ht_users u ON l.user_id = u.user_id
---         LEFT JOIN ht_users_info ui ON l.user_id = ui.user_id
-
---         LEFT JOIN ht_users u2 ON u.referrer = u2.user_id
         WHERE 1=1
         <include refid="where-all-page-condition"/>
         ORDER BY l.create_time DESC, l.id DESC
