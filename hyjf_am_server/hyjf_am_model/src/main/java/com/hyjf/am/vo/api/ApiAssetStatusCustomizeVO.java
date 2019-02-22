@@ -18,6 +18,8 @@ public class ApiAssetStatusCustomizeVO extends BaseVO implements Serializable{
 	private String borrowNid;
 	@ApiModelProperty(value = "计划编号")
 	private String planNid;
+	@ApiModelProperty(value = "放款订单号")
+	private String nid;
 
 	public String getStatus() {
 		return status;
@@ -41,5 +43,13 @@ public class ApiAssetStatusCustomizeVO extends BaseVO implements Serializable{
 
 	public void setPlanNid(String planNid) {
 		this.planNid = planNid;
+	}
+
+	public String getNid() {
+		return nid;
+	}
+
+	public void setNid(String nid) {
+		this.nid = nid;
 	}
 }

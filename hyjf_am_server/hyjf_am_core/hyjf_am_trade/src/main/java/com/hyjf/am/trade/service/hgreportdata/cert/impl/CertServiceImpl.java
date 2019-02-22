@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.hgreportdata.cert.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
@@ -55,8 +56,9 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<BorrowRepayPlan> getBorrowRepayPlanListByRequest(CertRequest certRequest) {
         Integer timestamp=GetDate.getTime10(certRequest.getRepayYestime());
+        logger.info("timestamp:" + timestamp);
         BorrowRepayPlanExample borrowRepayPlanExample=new BorrowRepayPlanExample();
-        borrowRepayPlanExample.createCriteria().andRepayYestimeBetween(timestamp-60, timestamp).
+        borrowRepayPlanExample.createCriteria().andRepayYestimeBetween(timestamp-60, timestamp+20).
                 andBorrowNidEqualTo(certRequest.getBorrowNid());
         List<BorrowRepayPlan> borrowRepayPlans=borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;

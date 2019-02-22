@@ -170,11 +170,11 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
     @ApiOperation(value = "AEMS系统:用户开户同步回调", notes = "用户开户")
     @RequestMapping(value = "/openaccountReturn")
     public ModelAndView returnPage(HttpServletRequest request) {
-        logger.info("第三方端开户同步请求开始,请求参数request为:{}", request);
+        logger.info("第三方端开户同步请求开始,请求参数request为:{}", JSONObject.toJSONString(request));
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         String phone = request.getParameter("phone");
-        logger.info("第三方端开户同步请求,isSuccess:{}", isSuccess);
+
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         resultMap.put("callBackAction", url);
@@ -186,11 +186,8 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             logger.info("第三方端开户同步请求失败,resultMap:{}", resultMap);
             return callbackErrorView(resultMap);
         } else {
-            String accountId = bankOpenService.getBankOpenAccountByMobile((String) request.getParameter("phone"));
-            logger.info("第三方端开户同步请求查询电子账号,accountId:{}", accountId);
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
             resultMap.put("statusDesc", "页面开户成功");
-            resultMap.put("accountId", accountId);
             resultMap.put("chkValue", "");
             resultMap.put("acqRes", request.getParameter("acqRes"));
             resultMap.put("phone", phone);
@@ -213,7 +210,7 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
                                               @RequestParam("phone") String mobile,
                                               @RequestParam("roleId") String roleId,
                                               @RequestParam("openclient") String openclient) {
-        logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
+        logger.info("开户异步处理start,userId:{}", bean.getLogUserId()+" bean:{}"+JSONObject.toJSONString(bean));
         bean.setMobile(mobile);
         bean.setLogClient(Integer.parseInt(openclient));
         bean.setIdentity(roleId);
@@ -250,6 +247,7 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             params.put("accountId", bean.getAccountId());
             params.put("payAllianceCode", bean.getPayAllianceCode());
             params.put("idNo", bean.getIdNo());
+            params.put("cardNo", bean.getCardNo());
             params.put("isOpenAccount", "1");
             result.setStatus(true);
         }

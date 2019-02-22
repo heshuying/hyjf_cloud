@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.config;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -18,15 +17,12 @@ import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.vo.trade.PushMoneyVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 /**
  * 提成设置
@@ -109,7 +105,7 @@ public class PushMoneyController extends BaseController {
 		return new AdminResult<>(response);
 	}
 
-    @ApiOperation(value = "删除配置信息", notes = "删除配置信息")
+   /* @ApiOperation(value = "删除配置信息", notes = "删除配置信息")
     @PostMapping("/delete")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<ListResult<PushMoneyVO>> deleteRecord(@RequestBody PushMoneyRequest requestBean) {
@@ -126,7 +122,7 @@ public class PushMoneyController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
-    }
+    }*/
 
     /**
      * 调用校验表单方法
