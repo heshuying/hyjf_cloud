@@ -758,4 +758,29 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		modelAndView.addObject("callBackForm", repwdResult);
 		return modelAndView;
 	}
+	@Override
+	public BankCallBean getTermsAuthQuery(int userId, String channel) {
+		BankOpenAccountVO bankOpenAccount = getBankOpenAccount(userId);
+		// 调用查询投资人签约状态查询
+		BankCallBean selectbean = new BankCallBean();
+		selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+		selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
+		selectbean.setInstCode( systemConfig.getBankInstcode());// 机构代码
+		selectbean.setBankCode( systemConfig.getBankInstcode());
+		selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+		selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+		selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+		selectbean.setChannel(channel);
+		selectbean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));// 电子账号
+		selectbean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+		// 操作者ID
+		selectbean.setLogUserId(String.valueOf(userId));
+		selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+		selectbean.setLogClient(0);
+		// 返回参数
+		BankCallBean retBean = null;
+		// 调用接口
+		retBean = BankCallUtils.callApiBg(selectbean);
+		return retBean;
+	}
 }
