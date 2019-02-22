@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.controller.web.assetmanage;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManagePlanRequest;

@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.exception.openaccountenquiryexception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -55,6 +56,7 @@ public class OpenAccountEnquiryController extends BaseController {
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
         OpenAccountEnquiryDefineResultBean resultBean = openAccountEnquiryService.openAccountEnquiryUpdate(requestBean);
+        logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
         return new AdminResult<>(resultBean);
     }
 }

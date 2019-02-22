@@ -1322,7 +1322,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				// 禁用。
 				return 3;
 			}
-			if (Validator.isNull(user.get(0).getBankOpenAccount()==0)) {
+			if (user.get(0).getBankOpenAccount()!=1) {
 				// 借款人用户名必须已在银行开户
 				return 2;
 			}
