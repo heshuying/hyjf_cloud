@@ -96,7 +96,7 @@ public class PreregistController extends BaseController {
 	@ApiOperation(value = "编辑页信息", notes = "编辑页信息")
 	@PostMapping(value = "/updatepreregistlist")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult<AdminPreRegistListVO> updatepreregistlist(HttpServletRequest request, 
 			@RequestBody PreRegistRequestBean adminPreRegistListRequest) {
 		AdminPreRegistListRequest aprlr = new AdminPreRegistListRequest();
