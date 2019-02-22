@@ -125,6 +125,30 @@ public class AutoTenderExceptionController  extends BaseController {
     }
 
     /**
+     * 查询计划加入明细
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    @RequestMapping(value = "/doSelectHjhAccedeByParam", method = RequestMethod.POST)
+    public HjhAccedeResponse doSelectHjhAccedeByParam(@RequestBody @Valid TenderExceptionSolveRequest tenderExceptionSolveRequest){
+        Map<String,Object> mapReturn = mapTenderExcption(tenderExceptionSolveRequest);
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        String strRtnMsg = Response.FAIL_MSG;
+        String strRtnCode = Response.FAIL;
+        HjhAccede hjhAccede = autoTenderExceptionService.doSelectHjhAccede(mapReturn);
+        HjhAccedeVO hjhAccedeVO = new HjhAccedeVO();
+        if(null!=hjhAccede){
+            BeanUtils.copyProperties(hjhAccede,hjhAccedeVO);
+            response.setResult(hjhAccedeVO);
+            strRtnMsg = Response.SUCCESS_MSG;
+            strRtnCode = Response.SUCCESS;
+        }
+        response.setRtn(strRtnCode);
+        response.setMessage(strRtnMsg);
+        return response;
+    }
+
+    /**
      * 查询计划加入明细临时表
      * @param tenderExceptionSolveRequest
      * @return
