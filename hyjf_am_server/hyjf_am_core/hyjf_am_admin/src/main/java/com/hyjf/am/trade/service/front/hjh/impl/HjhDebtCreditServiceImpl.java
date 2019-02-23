@@ -126,6 +126,23 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
     }
 
     /**
+     * 根据债转编号查询债转信息
+     * @param creditNid
+     * @return
+     * @author liubin
+     */
+    @Override
+    public HjhDebtCredit doSelectHjhDebtCreditByCreditNid(String creditNid) {
+        HjhDebtCreditExample example = new HjhDebtCreditExample();
+        example.createCriteria().andCreditNidEqualTo(creditNid);
+        List<HjhDebtCredit> list = this.hjhDebtCreditMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    /**
      * 根据PK更新hjhDebtCredit
      * @param hjhDebtCredit
      * @return

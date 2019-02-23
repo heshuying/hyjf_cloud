@@ -45,6 +45,14 @@ public interface HjhDebtCreditService {
     HjhDebtCredit selectHjhDebtCreditByCreditNid(String creditNid);
 
     /**
+     * 根据债转编号查询债转信息
+     * @param creditNid
+     * @author liubin
+     * @return
+     */
+    HjhDebtCredit doSelectHjhDebtCreditByCreditNid(String creditNid);
+
+    /**
      * 根据PK更新hjhDebtCredit
      * @param hjhDebtCredit
      * @author liubin

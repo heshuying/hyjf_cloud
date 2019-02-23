@@ -117,6 +117,34 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             return null;
         }
     }
+
+    /**
+     * 查询计划加入明细
+     * @param mapParam
+     * @return
+     */
+    @Override
+    public HjhAccede doSelectHjhAccede(Map<String,Object> mapParam) {
+        String accedeOrderId = mapParam.get("planOrderId").toString();
+        String planNid = mapParam.get("debtPlanNid").toString();
+        String  strUserId = mapParam.get("userId").toString();
+        int userId = Integer.parseInt(strUserId);
+        HjhAccedeExample example = new HjhAccedeExample();
+        HjhAccedeExample.Criteria crt = example.createCriteria();
+        crt.andAccedeOrderIdEqualTo(accedeOrderId);
+        crt.andPlanNidEqualTo(planNid);
+        crt.andUserIdEqualTo(userId);
+        List<HjhAccede> list = this.hjhAccedeMapper.selectByExample(example);
+        if(list != null && list.size() >= 1){
+            if(list.size() > 1){
+                logger.info("加入明细表 "+accedeOrderId+" 记录大于1！");
+            }
+            return list.get(0);
+        }else {
+            return null;
+        }
+    }
+
     /**
      * 查询计划加入明细临时表
      * @param mapParam

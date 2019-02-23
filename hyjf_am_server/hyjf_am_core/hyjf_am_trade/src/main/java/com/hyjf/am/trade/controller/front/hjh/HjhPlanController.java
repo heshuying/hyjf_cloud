@@ -179,8 +179,6 @@ public class HjhPlanController extends BaseController {
         return response;
     }
 
-
-
     /**
      * 查询汇计划标的组成List
      * @author zhangyk
