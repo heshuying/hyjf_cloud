@@ -457,7 +457,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     /** 5.2. 获取标的详情	 */
                     //根据borrowNid查询borrow表
                     BorrowAndInfoVO borrow = amTradeClient.doSelectBorrowByNid(redisBorrow.getBorrowNid());
-borrow = null;
                     if (borrow == null) {
                         throw new Exception(logMsgHeader + "标的号不存在 " + redisBorrow.getBorrowNid());
                     }
