@@ -208,7 +208,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             // 出让人/出借人相同的校验
             logger.info(logMsgHeader + "连续相同次数" + serialFaileCount + "次");
             // 连续10次出投人相同后，换个计划订单投
-//            serialFaileCount = 10;
+            serialFaileCount = 10;
             if (serialFaileCount >= CustomConstants.HJH_SERIAL_FAILE_COUNT) {
                 logger.error(logMsgHeader + "借款人/出让人和计划订单的出借人连续相同次数超过" + CustomConstants.HJH_SERIAL_FAILE_COUNT + "次,跳过该计划订单");
                 return NO_TENDER;
