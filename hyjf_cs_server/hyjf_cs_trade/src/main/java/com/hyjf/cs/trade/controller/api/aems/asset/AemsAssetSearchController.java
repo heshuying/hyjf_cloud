@@ -82,6 +82,7 @@ public class AemsAssetSearchController extends BaseController {
         resultBean.setAssetStatus(assetDetailCustomizeVO.getStatus()+"");
         resultBean.setBorrowNid(assetDetailCustomizeVO.getBorrowNid()+"");
 
+        logger.info("----Aems资产查询接口，resultBean：{}"+JSONObject.toJSONString(resultBean));
         logger.info(bean.getInstCode()+"  ----Aems资产查询接口结束");
         return resultBean;
     }
