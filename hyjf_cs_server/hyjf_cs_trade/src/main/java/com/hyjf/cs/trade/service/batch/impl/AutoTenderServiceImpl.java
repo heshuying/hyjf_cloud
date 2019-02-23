@@ -157,6 +157,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         /** 1. 取得出借人信息（授权账户等） */
         //获取出借授权码
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(hjhAccede.getUserId());
+        hjhUserAuth.setAutoOrderId("");
         if (hjhUserAuth == null || StringUtils.isEmpty(hjhUserAuth.getAutoOrderId())) {
             logger.error(logMsgHeader + "未获取到出借授权码  " + hjhAccede.getUserId());
             return FAIL;
@@ -747,7 +748,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             Integer idKey = this.insertBorrowTmp(borrow, null, hjhAccede, account, hjhUserAuth, bean, RedisConstants.HJH_BORROW_INVEST, isLast ? 1 : 0);
 
             // 调用银行接口
-            logger.info(hjhAccede.getAccedeOrderId() + " 自动出借接口调用中  " + borrow.getBorrowNid() + " 请求订单号:" + orderId);
+            logger.info(hjhAccede.getAccedeOrderId() + " 智投自动承接银行接口（自动购买债权）调用中  " + borrow.getBorrowNid() + " 请求订单号:" + orderId);
             bankResult = BankCallUtils.callApiBg(bean);
 
             // 更新 自动出借临时表
@@ -796,8 +797,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             Integer idKey = this.insertBorrowTmp(null, credit, hjhAccede, account, hjhUserAuth, bean, RedisConstants.HJH_BORROW_CREDIT, isLast ? 1 : 0);
 
             // 调用银行接口
-            logger.info(hjhAccede.getAccedeOrderId() + " 银行自动出借接口("
-                    + BankCallConstant.TXCODE_CREDIT_AUTO_INVEST + ")调用中  "
+            logger.info(hjhAccede.getAccedeOrderId() + "智投自动承接银行接口（自动投标申请）调用中 "
                     + credit.getCreditNid() + " 请求订单号:" + orderId);
             bankResult = BankCallUtils.callApiBg(bean);
 
