@@ -251,17 +251,20 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
         String planNid = tenderExceptionSolveRequestBean.getDebtPlanNid();//计划编号
         String logMsgHeader = logHeader + "智投订单号[" + accedeOrderId + "]";
         logger.info(logMsgHeader + "=============开始=============");
-        TenderExceptionSolveRequest tenderExceptionSolveRequest = new TenderExceptionSolveRequest();
-        BeanUtils.copyProperties(tenderExceptionSolveRequestBean, tenderExceptionSolveRequest);
         try {
+            TenderExceptionSolveRequest tenderExceptionSolveRequest = new TenderExceptionSolveRequest();
+            BeanUtils.copyProperties(tenderExceptionSolveRequestBean, tenderExceptionSolveRequest);
+
             int userIdint = Integer.parseInt(userId);
 
             HjhAccedeVO hjhAccede = doGetHjhAccedeVO(tenderExceptionSolveRequest);
             if(hjhAccede == null){
+                logger.warn(logMsgHeader + " 没有加入明细");
                 return accedeOrderId+" 没有加入明细";
             }
             if(hjhAccede.getOrderStatus() == null ||
                     hjhAccede.getOrderStatus().intValue() >= 90){
+                logger.warn(logMsgHeader + " >90 失败(联系管理员) 手动处理");
                 return accedeOrderId+" >90 失败(联系管理员) 手动处理";
 
             }
@@ -526,7 +529,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             }
             return null;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(logMsgHeader + "发生未知异常！！！", e);
         }
         return null;
     }

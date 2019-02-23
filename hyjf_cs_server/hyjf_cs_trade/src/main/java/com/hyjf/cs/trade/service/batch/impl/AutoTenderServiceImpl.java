@@ -756,7 +756,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 logger.error("更新自动出借临时表失败 idKey=" + idKey);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("调用同步银行接口（智投自动出借）发生未知异常！！！", e);
         }
         return bankResult;
     }
@@ -807,7 +807,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 logger.error("更新自动出借临时表失败 idKey=" + idKey);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("调用同步银行接口（智投自动债转）发生未知异常！！！", e);
         }
         return bankResult;
     }
