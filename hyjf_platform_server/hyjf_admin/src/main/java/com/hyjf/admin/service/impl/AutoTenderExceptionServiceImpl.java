@@ -310,6 +310,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     return accedeOrderId+" 请求银行查询无响应";
                 }
                 String queryRetCode = debtQuery.getRetCode();
+                logger.info(logMsgHeader + "查询出借请求返回：" + queryRetCode);
                 boolean bankQueryisOK = false;
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)) {
                     String state = StringUtils.isNotBlank(debtQuery.getState()) ? debtQuery.getState() : "";
