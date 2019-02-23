@@ -457,7 +457,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     /** 5.2. 获取标的详情	 */
                     //根据borrowNid查询borrow表
                     BorrowAndInfoVO borrow = amTradeClient.doSelectBorrowByNid(redisBorrow.getBorrowNid());
-                    if (borrow == null) {
+                    if (borrow == null || borrow.getBorrowNid() == null) {
                         throw new Exception(logMsgHeader + "标的号不存在 " + redisBorrow.getBorrowNid());
                     }
 
@@ -501,6 +501,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "#### 开始 调用银行自动投标申请接口（出借）" + borrow.getBorrowNid()+ "####");
                     // 智投订单状态改为初始状态7X（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
+
+if (hjhAccede != null) {
+    return FAIL;
+}
 
                     // 调用同步银行接口（出借）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
