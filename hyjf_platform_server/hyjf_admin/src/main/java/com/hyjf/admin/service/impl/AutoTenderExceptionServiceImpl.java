@@ -214,7 +214,9 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
      */
     @Override
     public boolean updateTenderByParam(int status,int accedeId){
-        return amTradeClient.updateTenderByParam(status,accedeId);
+        boolean ret = amTradeClient.updateTenderByParam(status,accedeId);
+        logger.info("【智投自动出借异常处理】Order_Status => " + status);
+        return ret;
     }
     /**
      * 计算实际金额 保存creditTenderLog表

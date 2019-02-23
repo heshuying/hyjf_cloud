@@ -505,8 +505,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 调用同步银行接口（出借）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
 
-bean = null;
-
                     // 出借失败不回滚队列
                     if (bean == null) {
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回空,标的编号：" + borrow.getBorrowNid());
