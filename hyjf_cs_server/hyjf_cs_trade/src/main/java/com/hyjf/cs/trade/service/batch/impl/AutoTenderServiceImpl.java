@@ -157,19 +157,18 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         /** 1. 取得出借人信息（授权账户等） */
         //获取出借授权码
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(hjhAccede.getUserId());
-        hjhUserAuth.setAutoOrderId("");
         if (hjhUserAuth == null || StringUtils.isEmpty(hjhUserAuth.getAutoOrderId())) {
-            logger.error(logMsgHeader + "未获取到出借授权码  " + hjhAccede.getUserId());
+            logger.error(logMsgHeader + "未获取到出借授权码  用户id：" + hjhAccede.getUserId());
             return FAIL;
         }
         if (StringUtils.isEmpty(hjhUserAuth.getAutoCreditOrderId())) {
-            logger.error(logMsgHeader + "未获取到债转授权码  " + hjhAccede.getUserId());
+            logger.error(logMsgHeader + "未获取到债转授权码  用户id：" + hjhAccede.getUserId());
             return FAIL;
         }
         //获取出借账户
         BankOpenAccountVO bankOpenAccount = this.amUserClient.selectBankAccountById(hjhAccede.getUserId());
         if (bankOpenAccount == null) {
-            logger.error(logMsgHeader + "用户没开户 " + hjhAccede.getUserId());
+            logger.error(logMsgHeader + "用户没开户 用户id：" + hjhAccede.getUserId());
             return FAIL;
         }
 
@@ -178,7 +177,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
                 if (usersInfo.getRoleId() != 1) {// 非出借用户
-                    logger.error(logMsgHeader + "仅限出借人进行出借 " + hjhAccede.getUserId());
+                    logger.error(logMsgHeader + "仅限出借人进行出借 用户id：" + hjhAccede.getUserId());
                     return FAIL;
                 }
             }
@@ -192,7 +191,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         while (ketouplanAmoust.compareTo(minAccountEnable) >= 0) {
             // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 start
             logger.info(logMsgHeader + "============投前累计出借笔数：" + investCountForLog + "============");
-            investCountForLog += 1;
             // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 end
 
             // ketouplanAmoust小于1元时报警告信息
@@ -210,6 +208,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             // 出让人/出借人相同的校验
             logger.info(logMsgHeader + "连续相同次数" + serialFaileCount + "次");
             // 连续10次出投人相同后，换个计划订单投
+//            serialFaileCount = 10;
             if (serialFaileCount >= CustomConstants.HJH_SERIAL_FAILE_COUNT) {
                 logger.error(logMsgHeader + "借款人/出让人和计划订单的出借人连续相同次数超过" + CustomConstants.HJH_SERIAL_FAILE_COUNT + "次,跳过该计划订单");
                 return NO_TENDER;
@@ -572,6 +571,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.error(logMsgHeader + "该计划没有可投标的！");
                     return FAIL;
                 }
+                investCountForLog += 1;
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                 logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 未知异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
