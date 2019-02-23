@@ -170,7 +170,7 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
     @ApiOperation(value = "AEMS系统:用户开户同步回调", notes = "用户开户")
     @RequestMapping(value = "/openaccountReturn")
     public ModelAndView returnPage(HttpServletRequest request) {
-        logger.info("第三方端开户同步请求开始,请求参数request为:{}", JSONObject.toJSONString(request));
+        logger.info("第三方端开户同步请求开始,请求参数request为:{}", request.toString());
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         String phone = request.getParameter("phone");
