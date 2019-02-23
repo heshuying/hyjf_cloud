@@ -502,10 +502,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 智投订单状态改为初始状态7X（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
-if (hjhAccede != null) {
-    return FAIL;
-}
-
                     // 调用同步银行接口（出借）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
 
@@ -655,9 +651,10 @@ if (hjhAccede != null) {
         HjhAccedeVO newHjhAccede = new HjhAccedeVO();
         newHjhAccede.setId(hjhAccede.getId());
         newHjhAccede.setOrderStatus(orderStatus);
-        newHjhAccede.setUpdateTime(GetDate.getDate());
         newHjhAccede.setUpdateUser(1);
-        return this.amTradeClient.updateHjhAccedeByPrimaryKey(newHjhAccede);
+        int ret = this.amTradeClient.updateHjhAccedeByPrimaryKey(newHjhAccede);
+        logger.info("【智投自动出借任务】智投订单号[" + hjhAccede.getAccedeOrderId() + "]Order_Status => " + orderStatus);
+        return ret;
     }
 
     // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
