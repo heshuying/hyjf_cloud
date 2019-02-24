@@ -386,16 +386,15 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 智投订单状态改为初始状态7X（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
 
-                    if (hjhAccede != null){
-                        return FAIL;
-                    }
-
                     //调用银行自动购买债权接口
                     BankCallBean bean = this.autoCreditApi(credit, hjhAccede, hjhUserAuth,
                             assignPay, assignCapital, serviceFee,
                             tenderUsrcustid, sellerUsrcustid,
                             orderId, orderDate, isLast);
 
+                    if (hjhAccede != null){
+                        return FAIL;
+                    }
                     // 出借失败不回滚队列
                     if (bean == null) {
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回空,债转编号：" + credit.getBorrowNid() + "银行订单号：" + orderId);
