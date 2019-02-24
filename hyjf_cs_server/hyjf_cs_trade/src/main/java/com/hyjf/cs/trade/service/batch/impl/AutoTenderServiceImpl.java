@@ -615,6 +615,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      */
     private CheckResult checkHjhCreditCalcResult(HjhCreditCalcResultVO resultVO) {
         // 启动限制开关 redis.check_hjh_credit_calc_flag = 0 时，不执行校验。
+        logger.info(logHeader + "Redis.check_hjh_credit_calc_flag=" + RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG));
         if ( RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG) != null
                 && RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG).equals("0") ) {
             return new CheckResult(true);
