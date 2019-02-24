@@ -311,6 +311,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     return accedeOrderId+" 标的号不存在 "+hjhPlanBorrowTmp.getBorrowNid();
 
                 }
+
                 // 目前处理 510000 银行系统返回异常
                 // CA101141	投标记录不存在
                 BankCallBean debtQuery = debtStatusQuery(userIdint, borrowUserAccountId,hjhPlanBorrowTmp.getOrderId());
@@ -334,6 +335,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 }
                 if(bankQueryisOK){
                     logger.info(logMsgHeader + "0********查询到银行自动出借成功，开始做BD和redis更新。（2）");
+                    logger.info(logMsgHeader + "投前的可投金额：" + hjhAccede.getAvailableInvestAccount() + "，" + "投前的本次金额：" + debtQuery.getTxAmount() + "，"
+                            + borrow.getBorrowNid() + "可投余额：" + borrow.getBorrowAccountWait());
 
                     // 校验
                     // 标的待投金额DB和redis是否一致
@@ -352,6 +355,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
 
                     // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓核心异常处理开始↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                     updateTenderByParam(ORDER_STATUS_INIT,hjhAccede.getId());
+                    RedisBorrow redisBorrow = new RedisBorrow();
                     try{
                         // BD更新出借数据
                         boolean isOK = updateBorrowForAutoTender(borrow,hjhAccede,debtQuery);
@@ -363,7 +367,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
 
                             // 如果标的可投金额非0，推回队列的头部
                             String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
-                            RedisBorrow redisBorrow = new RedisBorrow();
                             redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));
                             redisBorrow.setBorrowNid(borrow.getBorrowNid());
 
@@ -390,6 +393,9 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         return accedeOrderId+" 核心异常处理（出借银行成功）发生未知异常！！！";
                     }
                     //  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑核心异常处理结束↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+                    HjhAccedeVO hjhAccedeEnd = doGetHjhAccedeVO(tenderExceptionSolveRequest);
+                    logger.info(logMsgHeader + "投后的可投金额：" + hjhAccedeEnd.getAvailableInvestAccount() + "，"
+                            + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     // 投标记录不存在才会继续，不然属于未知情况
                 }else if ("CA101141".equals(queryRetCode)){
                     // 自动出借时银行调用失败
@@ -442,6 +448,9 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     logger.error(logMsgHeader + "债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid());
                     return accedeOrderId+" 债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid();
                 }
+                // 标的待承接金额
+                BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
+
                 // 为了即信同步银行的结果，先调用下“出借人投标申请查询”接口，返回的txAmount不带承接利息
                 BankCallBean bean = debtStatusQuery(userIdint, borrowUserAccountId,hjhPlanBorrowTmp.getOrderId());
                 // 调用下“出借人购买债权查询”接口，返回的txAmount带承接利息
@@ -449,6 +458,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 String queryRetCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
                 if(BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)){
                     logger.info(logMsgHeader + "0********查询到银行自动承接成功，开始做BD和redis更新。（2）");
+                    logger.info(logMsgHeader + "承前的可承金额：" + hjhAccede.getAvailableInvestAccount() + "，本次承接金额：" + bean.getTxAmount()
+                            + credit.getCreditNid() + "待承投余额：" + await);
 
                     //BD更新承接数据
                     HjhPlanVO hjhPlan = getFirstHjhPlanVO(hjhAccede.getPlanNid());
@@ -479,8 +490,10 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
                     bean.setOrderId(hjhPlanBorrowTmp.getOrderId());
 
+
                     // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓核心异常处理开始↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
                     updateTenderByParam(ORDER_STATUS_INIT,hjhAccede.getId());
+                    RedisBorrow redisBorrow = new RedisBorrow();
                     try{
                         //BD更新承接数据
                         boolean isOK = updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultVO);
@@ -509,8 +522,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             // 剩余待投金额退回队列
                             // 投标成功后减掉redis 钱
                             String queueName =RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
-                            RedisBorrow redisBorrow = new RedisBorrow();
-                            BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
+                            await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                             redisBorrow.setBorrowAccountWait(await);
                             redisBorrow.setBorrowNid(credit.getCreditNid());
                             // 银行成功后，如果标的可投金额非0，推回队列的头部，标的可投金额为0，不再推回队列
@@ -532,6 +544,9 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         return accedeOrderId+" 核心异常处理（承接银行成功）发生未知异常！！！";
                     }
                     //  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑核心异常处理结束↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+                    HjhAccedeVO hjhAccedeEnd = doGetHjhAccedeVO(tenderExceptionSolveRequest);
+                    logger.info(logMsgHeader + "承后的承后金额：" + hjhAccedeEnd.getAvailableInvestAccount() + "，"
+                            + redisBorrow.getBorrowNid() + "承后余额：" + await);
                     //查询银行返回投标记录不存在
                 }else if ("CA110112".equals(queryRetCode)){
 
@@ -548,7 +563,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             // 投标成功后减掉redis 钱
                             String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                             RedisBorrow redisBorrow = new RedisBorrow();
-                            BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                             redisBorrow.setBorrowAccountWait(await);
                             redisBorrow.setBorrowNid(credit.getCreditNid());
                             // 银行成功后，如果标的可投金额非0，推回队列的头部
@@ -576,6 +590,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     return accedeOrderId+" 暂时没有处理该异常，需要协调开发处理  "+ queryRetCode;
                 }
             }
+            logger.info(logMsgHeader + "=============结束=============");
             return null;
         } catch (Exception e) {
             logger.error(logMsgHeader + "非核心异常处理发生未知异常！！！", e);
