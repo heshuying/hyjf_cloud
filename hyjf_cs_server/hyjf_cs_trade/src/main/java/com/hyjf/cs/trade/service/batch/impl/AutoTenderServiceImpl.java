@@ -351,8 +351,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         throw new Exception(logMsgHeader + "/finally推回队列/ 计算计划债转实际金额 和 保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
 
-                    resultVO.setAssignPay(new BigDecimal(103.26)); // testtesttest
-
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
@@ -387,6 +385,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     // 智投订单状态改为初始状态7X（防止银行成功，am服务挂了，数据消失）
                     this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT);
+
+                    if (hjhAccede != null){
+                        return FAIL;
+                    }
 
                     //调用银行自动购买债权接口
                     BankCallBean bean = this.autoCreditApi(credit, hjhAccede, hjhUserAuth,
@@ -615,7 +617,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      */
     private CheckResult checkHjhCreditCalcResult(HjhCreditCalcResultVO resultVO) {
         // 启动限制开关 redis.check_hjh_credit_calc_flag = 0 时，不执行校验。
-        logger.info(logHeader + "Redis.check_hjh_credit_calc_flag=" + RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG));
         if ( RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG) != null
                 && RedisUtils.get(RedisConstants.CHECK_HJH_CREDIT_CALC_FLAG).equals("0") ) {
             return new CheckResult(true);
