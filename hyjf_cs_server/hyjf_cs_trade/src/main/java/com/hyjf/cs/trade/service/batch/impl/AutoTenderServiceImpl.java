@@ -326,6 +326,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 调用银行接口准备参数
                     //获取出让用户的江西银行电子账号
                     BankOpenAccountVO sellerBankOpenAccount = this.amUserClient.selectBankAccountById(credit.getUserId());
+                    sellerBankOpenAccount = null;//testtesttest
+
                     if (sellerBankOpenAccount == null) {
                         throw new Exception(logMsgHeader + "转出用户没开户 " + credit.getUserId() + "，标出错。");
                     }
