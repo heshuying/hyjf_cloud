@@ -326,7 +326,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     // 调用银行接口准备参数
                     //获取出让用户的江西银行电子账号
                     BankOpenAccountVO sellerBankOpenAccount = this.amUserClient.selectBankAccountById(credit.getUserId());
-                    sellerBankOpenAccount = null;//testtesttest
 
                     if (sellerBankOpenAccount == null) {
                         throw new Exception(logMsgHeader + "转出用户没开户 " + credit.getUserId() + "，标出错。");
@@ -349,7 +348,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     HjhCreditCalcResultVO resultVO = this.amTradeClient.saveCreditTenderLog(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
                     if (Validator.isNull(resultVO)) {
                         noPushRedis = false;//finally推回队列
-                        throw new Exception(logMsgHeader + "/finally推回队列/ 保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
+                        throw new Exception(logMsgHeader + "/finally推回队列/ 计算计划债转实际金额 和 保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
 
                     //承接支付金额
