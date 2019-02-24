@@ -629,7 +629,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
         // 承接服务率不能大于1
         if(resultVO.getServiceApr().compareTo(BigDecimal.ONE) >= 0){
-            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息");
+            return new CheckResult(false, "校验债转用的计算金额：承接服务率不能大于1");
         }
         // 校验通过
         return new CheckResult(true);
