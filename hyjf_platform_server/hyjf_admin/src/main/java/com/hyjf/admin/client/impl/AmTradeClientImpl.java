@@ -1208,11 +1208,11 @@ public class AmTradeClientImpl implements AmTradeClient {
 //        String url = tradeService + "bankCreditEndController/insertBankCreditEndForCreditEnd";
         String url = "http://AM-ADMIN/am-trade/bankCreditEndController/insertBankCreditEndForCreditEnd";
         InsertBankCreditEndForCreditEndRequest request = new InsertBankCreditEndForCreditEndRequest(credit, tenderAccountId, tenderAuthCode);
-        Response<Integer> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
         }
-        return response.getResult().intValue();
+        return response.getResultInt();
     }
 
     /**

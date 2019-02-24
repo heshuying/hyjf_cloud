@@ -322,6 +322,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         continue;
                     }
 
+                    // redis的待承接金额和BDB的待承接金额是否一致
+                    BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
+                    if (await.compareTo(redisBorrow.getBorrowAccountWait()) != 0){
+                        String redisStr = JSON.toJSONString(redisBorrow);
+                        logger.error(logMsgHeader + "对应：1.确认金额不一致原因后，redis的"+queueName+"插入“"+redisStr+"”。2.智投订单状态 90改成0");
+                        throw new Exception(logMsgHeader + "标的：" + credit.getCreditNid() + "DB和redis待承接金额不一致。"
+                                + "表可投金额为：" + await + " (LiquidationFairValue-CreditPrice), "
+                                + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
+                    }
+
                     /** 4.4. 调用银行自动购买债权接口	 */
                     // 调用银行接口准备参数
                     //获取出让用户的江西银行电子账号
@@ -333,6 +343,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     String sellerUsrcustid = sellerBankOpenAccount.getAccount();//出让用户的江西银行电子账号
 
                     /** 4.7. 完全承接时，结束债券  */
+                    // （异常处理推回=0的金额用）
                     if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
                         requestHjhCreditEnd(accedeOrderId, redisBorrow.getBorrowNid(), sellerUsrcustid);
                         logger.info(logMsgHeader + "被承接标的" + redisBorrow.getBorrowNid() + "银行结束债权成功。");
@@ -440,6 +451,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             + redisBorrow.getBorrowNid() + "可承余额：" + redisBorrow.getBorrowAccountWait());
 
                     /** 4.7. 完全承接时，结束债券，更新债权表为完全承接  */
+                    //（防止不跑下个批次，债转清算正好开始，结束债权放到了最后。时间太长，结束债券先不放到下个批次）
                     if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
                         requestHjhCreditEnd(accedeOrderId, credit.getCreditNid(), sellerUsrcustid);
                         logger.info(logMsgHeader + "被承接标的" + credit.getCreditNid() + "银行结束债权成功。");
@@ -466,13 +478,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     /** 5.3. 校验是否可以出借	 */
-                    // 防止爆标校验
-                    if (borrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0){
-                        logger.warn(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "已经投资完成。"
-                                + "表可投金额为：" + borrow.getBorrowAccountWait()
-                                + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
-                        continue;
-                    }
                     if (borrow.getBorrowAccountWait().compareTo(redisBorrow.getBorrowAccountWait()) != 0){
                         logger.error(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "DB和redis可投金额不一致。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
@@ -482,6 +487,21 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         throw new Exception(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "DB和redis可投金额不一致。"
                                 + "表可投金额为：" + borrow.getBorrowAccountWait()
                                 + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
+                    }
+
+                    // 防止爆标校验（异常处理推回=0的金额用）
+                    if (borrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0){
+                        // 满标发送满标状态埋点
+                        // 发送发标成功的消息队列到互金上报数据
+                        JSONObject params = new JSONObject();
+                        params.put("borrowNid", borrow.getBorrowNid());
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+
+                        logger.warn(logMsgHeader + "(防止爆标)该标的：" + borrow.getBorrowNid() + "已经投资完成。"
+                                + "表可投金额为：" + borrow.getBorrowAccountWait()
+                                + "redis可投金额为：" + redisBorrow.getBorrowAccountWait());
+                        continue;
                     }
 
                     // 借款人和计划订单的出借人不能相同
@@ -524,7 +544,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     logger.info(logMsgHeader + "#### 调用银行自动投标申请接口（出借）成功 " + borrow.getBorrowNid() + "####");
 
-                    // add by liushouyi nifa2 20181204 start
+                    // add by liushouyi nifa2 20181204 start （防止不跑下个批次，债转清算正好开始，结束债权放到了最后。时间太长，满标处理先不放到写个批次）
                     if(redisBorrow.getBorrowAccountWait().compareTo(realAmoust) == 0){
                         // 满标发送满标状态埋点
                         // 发送发标成功的消息队列到互金上报数据
