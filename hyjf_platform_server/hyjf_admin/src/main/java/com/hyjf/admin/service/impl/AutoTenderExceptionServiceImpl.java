@@ -335,7 +335,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 }
                 if(bankQueryisOK){
                     logger.info(logMsgHeader + "0********查询到银行自动出借成功，开始做BD和redis更新。（2）");
-                    logger.info(logMsgHeader + "投前的可投金额：" + hjhAccede.getAvailableInvestAccount() + "，" + "投前的本次金额：" + debtQuery.getTxAmount() + "，"
+                    logger.info(logMsgHeader + "投前的可投金额：" + hjhAccede.getAvailableInvestAccount() + "，" + "投前的本次金额：" + debtQuery.getTxAmount() + "，标的"
                             + borrow.getBorrowNid() + "可投余额：" + borrow.getBorrowAccountWait());
 
                     // 校验
@@ -458,7 +458,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 String queryRetCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
                 if(BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)){
                     logger.info(logMsgHeader + "0********查询到银行自动承接成功，开始做BD和redis更新。（2）");
-                    logger.info(logMsgHeader + "承前的可承金额：" + hjhAccede.getAvailableInvestAccount() + "，本次承接金额：" + bean.getTxAmount()
+                    logger.info(logMsgHeader + "承前的可承金额：" + hjhAccede.getAvailableInvestAccount() + "，本次承接金额：" + bean.getTxAmount() + "，标的"
                             + credit.getCreditNid() + "待承投余额：" + await);
 
                     //BD更新承接数据

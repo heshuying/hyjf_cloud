@@ -403,9 +403,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             tenderUsrcustid, sellerUsrcustid,
                             orderId, orderDate, isLast);
 
-                    if (hjhAccede != null){
-                        return FAIL;
-                    }
                     // 出借失败不回滚队列
                     if (bean == null) {
                         logger.error(logMsgHeader + "用户出借失败,银行接口返回空,债转编号：" + credit.getBorrowNid() + "银行订单号：" + orderId);
