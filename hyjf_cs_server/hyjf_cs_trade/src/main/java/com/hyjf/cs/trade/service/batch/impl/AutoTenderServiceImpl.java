@@ -351,6 +351,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         throw new Exception(logMsgHeader + "/finally推回队列/ 计算计划债转实际金额 和 保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
 
+                    resultVO.setServiceFee(new BigDecimal(-0.01)); // testtesttest
+
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
@@ -358,8 +360,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     //承接服务费
                     BigDecimal serviceFee = resultVO.getServiceFee();
                     logger.info(logMsgHeader + "承接用计算完成\n" + resultVO.toLog());
-
-                    resultVO.setServiceFee(new BigDecimal(-0.01)); // testtesttest
 
                     // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
 //                    if(!this.amTradeClient.checkAutoPayment(credit.getCreditNid())){
