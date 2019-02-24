@@ -806,7 +806,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         bean.setProductId(borrowNid);// 标的号
         bean.setTxFee(CustomUtil.formatAmount(serviceFee.toString()));    //手续费 交易金额*当前清算服务费率=债转服务费
         bean.setTsfAmount(CustomUtil.formatAmount(assignCapital.toString()));    //转让金额  实际承接本金
-        bean.setTsfAmount(CustomUtil.formatAmount("100000000000"));    //testtesttesttest
         bean.setForAccountId(sellUsrcustid);    //对手电子账号
         bean.setOrgOrderId(credit.getSellOrderId());    //原订单号 原出借订单号
         bean.setOrgTxAmount(CustomUtil.formatAmount((credit.getCreditCapital().add(preCreditCapital)).toString()));    //原交易金额  债转总本金
