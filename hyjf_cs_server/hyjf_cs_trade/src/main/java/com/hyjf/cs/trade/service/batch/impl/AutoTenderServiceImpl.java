@@ -359,6 +359,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     BigDecimal serviceFee = resultVO.getServiceFee();
                     logger.info(logMsgHeader + "承接用计算完成\n" + resultVO.toLog());
 
+                    resultVO.setServiceFee(new BigDecimal(-0.01)); // testtesttest
+
                     // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
 //                    if(!this.amTradeClient.checkAutoPayment(credit.getCreditNid())){
 //                        serviceFee = BigDecimal.ZERO;//承接服务费
