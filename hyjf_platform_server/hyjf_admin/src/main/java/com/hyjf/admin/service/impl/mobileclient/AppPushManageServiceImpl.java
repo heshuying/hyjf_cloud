@@ -69,11 +69,11 @@ public class AppPushManageServiceImpl  implements AppPushManageService {
 
     /**
      * 根据ID更新记录状态
-     * @param id
+     * @param requestBean
      * @return
      */
     @Override
-    public boolean updatePushManageStatusById(Integer id) {
-        return amAdminClient.updatePushManageStatusById(id);
+    public boolean updatePushManageStatusById(AppPushManageRequestBean requestBean) {
+        return amAdminClient.updatePushManageStatusById(requestBean);
     }
 }
