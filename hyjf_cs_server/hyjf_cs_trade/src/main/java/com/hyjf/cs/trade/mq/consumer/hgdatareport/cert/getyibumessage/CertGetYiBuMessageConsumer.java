@@ -96,6 +96,7 @@ public class CertGetYiBuMessageConsumer implements RocketMQListener<MessageExt>,
         try {
             // --> 调用service组装数据
             List<CertLogVO> certLogList = certGetYiBuMessageService.getCertLog();
+            logger.info(logHeader + "查询批次数据入库数量为"+certLogList.size());
             if (null != certLogList && certLogList.size() > 0) {
                /* for (CertLogVO certLog : certLogList) {
                     int start = certLog.getLogOrdId().indexOf("_");
@@ -111,6 +112,8 @@ public class CertGetYiBuMessageConsumer implements RocketMQListener<MessageExt>,
                 CertReportEntityVO certReportEntity = certGetYiBuMessageService.updateYiBuMessage(bachNum, 3019, infType);
                 logger.info(logHeader + "返回结果为:" + JSONObject.toJSON(certReportEntity));
                 logger.info(logHeader + " 处理成功。" + msgBody);
+            }else{
+                logger.info(logHeader + " 未查询到批次数据入库数据。");
             }
         } catch (Exception e) {
             // 错误时，以下日志必须出力（预警捕捉点）
