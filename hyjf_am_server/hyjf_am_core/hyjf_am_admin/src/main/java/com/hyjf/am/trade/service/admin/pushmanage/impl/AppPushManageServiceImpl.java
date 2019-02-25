@@ -36,9 +36,9 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManageExample example = new AppPushManageExample();
         AppPushManageExample.Criteria criteria = example.createCriteria();
 
-        // 标的不为空
+        // 标题不为空
         if (StringUtils.isNotBlank(pushManageRequest.getTitle())){
-            criteria.andTitleLike(pushManageRequest.getTitle());
+            criteria.andTitleLike(pushManageRequest.getTitle() + "%");
         }
 
         // 状态不为空
@@ -65,9 +65,9 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManageExample example = new AppPushManageExample();
         AppPushManageExample.Criteria criteria = example.createCriteria();
 
-        // 标的不为空
+        // 标题不为空
         if (StringUtils.isNotBlank(pushManageRequest.getTitle())){
-            criteria.andTitleLike(pushManageRequest.getTitle());
+            criteria.andTitleLike(pushManageRequest.getTitle() + "%");
         }
 
         // 状态不为空
