@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.controller.batch.cert;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
@@ -39,17 +40,18 @@ public class CertGetYiBuMessageController {
     private CertGetYiBuMessageService certGetYiBuMessageService;
 
     @GetMapping("/certYiBuMessage")
-    public String autoIssueRecover() {
+    public StringResponse certYiBuMessage() {
         Map<String, String> params = new HashMap<String, String>();
-        int logSize = certGetYiBuMessageService.selectCertLogLength();
+        /*int logSize = certGetYiBuMessageService.selectCertLogLength();
         if (logSize > 0) {
-            params.put("mqMsgId", GetCode.getRandomCode(10));
-            logger.info("查询批次数据入库消息 执行MQ,参数为:" + params.toString());
-            try {
-                producer.messageSend(new MessageContent(MQConstant.CERT_GETYIBU_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONString(params)));
-            } catch (Exception e) {
-            }
+
+        }*/
+        params.put("mqMsgId", GetCode.getRandomCode(10));
+        logger.info("查询批次数据入库消息 执行MQ,参数为:" + params.toString());
+        try {
+            producer.messageSend(new MessageContent(MQConstant.CERT_GETYIBU_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONString(params)));
+        } catch (Exception e) {
         }
-        return "Success";
+        return new StringResponse("success");
     }
 }
