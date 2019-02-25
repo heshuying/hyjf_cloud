@@ -155,6 +155,17 @@
 		LEFT JOIN
 		ht_hjh_plan_borrow_tmp tmp ON hdpa.accede_order_id = tmp.accede_order_id
 		<where>
+			<!-- add by nxl 状态=70 代表初始状态,需要判断,处理时间和当前时间的时间差,是否大于5分钟,如果是,则进行处理,如果不是,则不显示-->
+		AND CASE
+			WHEN hdpa.order_status > 70 THEN
+			1 = 1
+			WHEN hdpa.order_status = 70 THEN
+			TIMESTAMPDIFF(
+			MINUTE,
+			hdpa.update_time,
+			NOW()
+			) >= 5
+			END
 			<if test="debtPlanNid != null and debtPlanNid != ''">
 				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNid}, '%')
 			</if>
@@ -197,6 +208,17 @@
 		LEFT JOIN
 		ht_hjh_plan_borrow_tmp tmp ON hdpa.accede_order_id = tmp.accede_order_id
 		<where>
+			<!-- add by nxl 状态=70 代表初始状态,需要判断,处理时间和当前时间的时间差,是否大于5分钟,如果是,则进行处理,如果不是,则不显示-->
+			AND CASE
+			WHEN hdpa.order_status > 70 THEN
+			1 = 1
+			WHEN hdpa.order_status = 70 THEN
+			TIMESTAMPDIFF(
+			MINUTE,
+			hdpa.update_time,
+			NOW()
+			) >= 5
+			END
 			<if test="debtPlanNid != null and debtPlanNid != ''">
 				AND hdp.plan_nid LIKE CONCAT( #{debtPlanNid}, '%')
 			</if>
@@ -222,6 +244,7 @@
 			<if test="tmpBorrowNid != null and tmpBorrowNid !='' ">
 				AND tmp.borrow_nid = #{tmpBorrowNid}
 			</if>
+
 		</where>
 	</select>
 

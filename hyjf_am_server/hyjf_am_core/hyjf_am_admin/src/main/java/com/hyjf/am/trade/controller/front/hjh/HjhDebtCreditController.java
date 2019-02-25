@@ -115,6 +115,19 @@ public class HjhDebtCreditController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据债转编号查询债转信息
+     * @author liubin
+     * @date 2018/6/30 11:19
+     */
+    @GetMapping("/doSelectHjhDebtCreditByCreditNid/{creditNid}")
+    public HjhDebtCreditResponse doSelectHjhDebtCreditByCreditNid(@PathVariable String creditNid){
+        HjhDebtCreditResponse response =  new HjhDebtCreditResponse();
+        HjhDebtCredit hjhDebtCredit = hjhDebtCreditService.doSelectHjhDebtCreditByCreditNid(creditNid);
+        response.setResult(CommonUtils.convertBean(hjhDebtCredit, HjhDebtCreditVO.class));
+        return response;
+    }
+
     @GetMapping("/updateHjhDebtCreditByPK")
     public IntegerResponse updateHjhDebtCreditByPK(@RequestBody HjhDebtCreditVO hjhDebtCreditVO){
         HjhDebtCredit hjhDebtCredit =  new HjhDebtCredit();

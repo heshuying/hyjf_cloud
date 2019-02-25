@@ -216,6 +216,7 @@ public class AssetManageController extends BaseController {
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
         List<CurrentHoldPlanListCustomize> list = assetManageService.selectCurrentHoldPlanList(request);
+        logger.info("list:{}", JSONObject.toJSONString(list));
         if(!CollectionUtils.isEmpty(list)){
             List<CurrentHoldPlanListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldPlanListCustomizeVO.class);
             response.setCurrentHoldPlanList(voList);

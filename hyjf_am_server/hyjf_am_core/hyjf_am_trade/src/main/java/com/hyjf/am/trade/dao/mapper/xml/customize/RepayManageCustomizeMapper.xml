@@ -267,7 +267,7 @@
 		hydbr.repay_action_time,
 		'%Y-%m-%d'
 		) AS action_time,
-		CASE WHEN hba.is_repay_org_flag = 1 THEN '机构垫付' ELSE '借款人还款' END AS repay_money_source,
+		hba.is_repay_org_flag AS repay_money_source,
 		hydbr.repay_capital_yes AS capital_yes,
 		CASE
 		WHEN (

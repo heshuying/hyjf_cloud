@@ -3,12 +3,12 @@ package com.hyjf.cs.trade.controller.api.aems.asset;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.bean.AemsAssetStatusRequestBean;
 import com.hyjf.cs.trade.bean.AemsAssetStatusResultBean;
 import com.hyjf.cs.trade.service.aems.asset.AemsAssetSearchService;
-import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -78,9 +78,11 @@ public class AemsAssetSearchController extends BaseController {
         }
         resultBean.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("请求成功");
-        resultBean.setAssetStatus(assetDetailCustomizeVO.getStatus()+"");
-        resultBean.setBorrowNid(assetDetailCustomizeVO.getBorrowNid()+"");
+        resultBean.setNid(assetDetailCustomizeVO.getNid());
+        resultBean.setAssetStatus(assetDetailCustomizeVO.getStatus());
+        resultBean.setBorrowNid(assetDetailCustomizeVO.getBorrowNid());
 
+        logger.info("----Aems资产查询接口，resultBean：{}"+JSONObject.toJSONString(resultBean));
         logger.info(bean.getInstCode()+"  ----Aems资产查询接口结束");
         return resultBean;
     }

@@ -281,8 +281,21 @@ public class MailHandler {
 	 */
 	private void send(String[] toMailArray, String subject, String content, String[] fileNames) throws Exception {
 		if (PropertiesConfig.hyjfEnvProperties.isTest()) {
-			logger.warn("测试环境不发送邮件， subject is : {}", subject);
-			return;
+			String emailWhiteList = PropertiesConfig.hyjfEnvProperties.getEmailWhiteList();
+			if(StringUtils.isBlank(emailWhiteList)){
+				logger.warn("测试环境白名单用户未配置！， subject is : {}", subject);
+				return;
+			}
+			for (String toMail : toMailArray) {
+				if (StringUtils.isNoneBlank(toMail)) {
+					boolean contains = emailWhiteList.contains(toMail);
+					if(!contains){
+						logger.warn("测试环境非白名单用户不发送邮件， subject is : {}", subject);
+						return;
+					}
+				}
+			}
+
 		}
 
 		init();

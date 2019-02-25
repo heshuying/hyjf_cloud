@@ -478,41 +478,42 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 						throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 					}
 				}
+
+				// 插入操作记录表
+				String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
+				if(bankId == null) {
+					bankId = "0";
+				}
+				// 查询银行配置信息
+				JxBankConfigVO bankConfig = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
+
+				BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
+				bankCardLogRequest.setUserId(userId);
+				bankCardLogRequest.setUserName(userVO.getUsername());
+				bankCardLogRequest.setBankCode(String.valueOf(bankId));
+				bankCardLogRequest.setCardNo(cardNo);
+				if(bankConfig != null){
+					bankCardLogRequest.setBankName(bankConfig.getBankName());
+				}
+				bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
+				bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
+				bankCardLogRequest.setStatus(0);// 成功
+				bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
+				boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
+				if (!isUpdateFlag) {
+					throw new CheckException(MsgEnum.ERR_CARD_SAVE);
+				}
+				BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
+				if (retCard != null && StringUtils.isNotBlank(bean.getMobile())) {
+					BankCardRequest bankCard=new BankCardRequest();
+					bankCard.setId(retCard.getId());
+					bankCard.setMobile(bean.getMobile());
+					amUserClient.updateUserCard(bankCard);
+				}
 			}
 		}
-		
-		// 插入操作记录表
-		String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
-		if(bankId == null) {
-			bankId = "0";
-		}
-		// 查询银行配置信息
-		JxBankConfigVO bankConfig = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
 
-		BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
-		bankCardLogRequest.setUserId(userId);
-		bankCardLogRequest.setUserName(userVO.getUsername());
-		bankCardLogRequest.setBankCode(String.valueOf(bankId));
-		bankCardLogRequest.setCardNo(cardNo);
-		if(bankConfig != null){
-			bankCardLogRequest.setBankName(bankConfig.getBankName());
-		}
-		bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
-		bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
-		bankCardLogRequest.setStatus(0);// 成功
-		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
-		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
-		if (!isUpdateFlag) {
-			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
-		}
-		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
-        if (retCard != null && StringUtils.isNotBlank(bean.getMobile())) {
-            BankCardRequest bankCard=new BankCardRequest();
-            bankCard.setId(retCard.getId());
-            bankCard.setMobile(bean.getMobile());
-            amUserClient.updateUserCard(bankCard);
-        }
-		
+
 	}
 	
 	/**

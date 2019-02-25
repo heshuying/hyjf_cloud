@@ -23,7 +23,7 @@ public class CertGetYiBuMessageJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info(logHeader + "CertGetYiBuMessageJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://cs-trade/getCertYiBuMessage/getCertYiBuMessage", Object.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/getCertYiBuMessage/certYiBuMessage", Object.class);
         logger.info(logHeader + "CertGetYiBuMessageJob execute end...");
     }
 }
