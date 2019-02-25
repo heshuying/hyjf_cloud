@@ -107,7 +107,7 @@
 		CONCAT(b.borrow_period, '个月')
 		END AS borrowPeriod,
 		b.borrow_Apr AS borrowApr,
-		t.account AS borrowAccount,
+		b.account AS borrowAccount,
 		b.borrow_account_yes AS borrowAccountYes,
 		bs. NAME AS repayType,
 		brp.recover_period AS recoverPeriod,

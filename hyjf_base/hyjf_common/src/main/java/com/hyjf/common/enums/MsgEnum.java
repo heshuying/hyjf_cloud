@@ -399,7 +399,7 @@ public enum MsgEnum implements MsgCode {
 	ERROR_SMS_SEND("1","发送验证码失败，请稍后再试"),
 	ERROR_CREDIT_NID_CAPITAL_NULL("1","债转编号和承接本金不能为空"),
 	ERROR_CREDIT_NID_CAPITAL_NUMBER("1","债转编号和承接本金必须是数字格式"),
-	ERROR_CREDIT_NO_MONEY("1","余额不足"),
+	ERROR_CREDIT_NO_MONEY("1","余额不足,请充值"),
 	ERROR_CREDIT_CANT_BBY_YOURSELF("1","不可以承接自己出让的债权"),
 	ERROR_CREDIT_NO_BORROW_RECOVER("1","未查询到用户的放款记录"),
 	ERROR_CREDIT_NO_BORROW("1","当前认购人数太多,提交的认购债权本金已经失效,或者可以稍后再试"),
