@@ -1163,6 +1163,23 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据creditNid查询债转信息
+     *
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid) {
+//        String url = tradeService + "hjhDebtCredit/selectHjhDebtCreditByCreditNid/" + creditNid;
+        String url = "http://AM-ADMIN/am-trade/hjhDebtCredit/doSelectHjhDebtCreditByCreditNid/" + creditNid;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url, HjhDebtCreditResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 银行结束债权后，更新债权表为完全承接
      *
      * @auther: hesy
@@ -1191,11 +1208,11 @@ public class AmTradeClientImpl implements AmTradeClient {
 //        String url = tradeService + "bankCreditEndController/insertBankCreditEndForCreditEnd";
         String url = "http://AM-ADMIN/am-trade/bankCreditEndController/insertBankCreditEndForCreditEnd";
         InsertBankCreditEndForCreditEndRequest request = new InsertBankCreditEndForCreditEndRequest(credit, tenderAccountId, tenderAuthCode);
-        Response<Integer> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
             return 0;
         }
-        return response.getResult().intValue();
+        return response.getResultInt();
     }
 
     /**
@@ -1260,6 +1277,26 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest) {
         String url = "http://AM-ADMIN/am-trade/autotenderexception/selectHjhAccedeByParam";
+        HjhAccedeResponse response = restTemplate.
+                postForEntity(url, tenderExceptionSolveRequest, HjhAccedeResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 查询计划加入明细
+     *
+     * @param tenderExceptionSolveRequest
+     * @return
+     * @auther: nxl
+     * @date: 2018/7/12
+     */
+    @Override
+    public HjhAccedeResponse doSelectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest) {
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/doSelectHjhAccedeByParam";
         HjhAccedeResponse response = restTemplate.
                 postForEntity(url, tenderExceptionSolveRequest, HjhAccedeResponse.class).
                 getBody();
@@ -1614,6 +1651,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     public BorrowAndInfoVO selectBorrowByNid(String borrowNid) {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-ADMIN/am-trade/borrow/getBorrow/" + borrowNid, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 根据标的编号查询详细信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowAndInfoVO doSelectBorrowByNid(String borrowNid) {
+        BorrowResponse response = restTemplate.getForEntity(
+                "http://AM-ADMIN/am-trade/borrow/doGetBorrow/" + borrowNid, BorrowResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

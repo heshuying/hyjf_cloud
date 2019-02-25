@@ -1212,7 +1212,7 @@
 		CASE hha.wait_interest
 		WHEN 0.00 THEN '--'
 		ELSE hha.wait_interest end AS reference_return,
-		IF(hha.wait_interest=0,'--',hha.wait_total) wait_interest,
+		IF(hha.wait_interest=0,'--',hha.wait_interest) wait_interest,
 		IFNULL(DATE_FORMAT( hha.create_time, '%Y-%m-%d' ),'--') AS add_time,
 		hha.create_time orderby_add_time,
 		IFNULL(FROM_UNIXTIME( IF(hha.quit_time=0,NULL,hha.quit_time), '%Y-%m-%d' ),'--') AS quit_time,

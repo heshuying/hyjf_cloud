@@ -53,6 +53,8 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         logger.info("OperationReportJobBean is: {}", JSONObject.toJSONString(bean));
         // 插入统计日期
         Calendar cal = bean.getCalendar();
+        // 要统计前一个月的数据，所以月份要减一
+        cal.add(Calendar.MONTH, -1);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         sdf = new SimpleDateFormat("yyyyMM");
 

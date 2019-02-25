@@ -199,4 +199,12 @@ public interface BaseUserService extends BaseService{
     String packageStrForm(HttpServletRequest request);
 
     ModelAndView getErrorMV(AutoPlusRequestBean payRequestBean, ModelAndView modelAndView, String status);
+	/**
+	 * 用户授权查询接口
+	 *
+	 * @param userId
+	 * @param channel
+	 * @return
+	 */
+	BankCallBean getTermsAuthQuery(int userId, String channel);
 }

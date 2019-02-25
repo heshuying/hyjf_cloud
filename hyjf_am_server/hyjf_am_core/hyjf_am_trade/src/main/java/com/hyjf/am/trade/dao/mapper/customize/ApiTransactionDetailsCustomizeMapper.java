@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.resquest.ApiTransactionDetailsRequest;
 import com.hyjf.am.trade.dao.model.customize.ApiTransactionDetailsCustomize;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public interface ApiTransactionDetailsCustomizeMapper {
 
     /**
      * 第三方交易明细列表
-     * @param accountDetailCustomize
+     * @param detailsRequest
      * @return
      */
-    List<ApiTransactionDetailsCustomize> queryApiAccountDetails(ApiTransactionDetailsCustomize accountDetailCustomize);
+    List<ApiTransactionDetailsCustomize> queryApiAccountDetails(ApiTransactionDetailsRequest detailsRequest);
 }
