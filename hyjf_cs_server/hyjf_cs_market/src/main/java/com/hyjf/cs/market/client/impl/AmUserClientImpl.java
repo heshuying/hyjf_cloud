@@ -214,6 +214,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 * 获取评分标准列表
 	 * @return
 	 */
+	@Override
 	public List<EvalationCustomizeVO> getEvalationRecord() {
 		EvalationCustomizeResponse response = restTemplate
 				.getForEntity("http://AM-USER/am-user/user/getEvalationRecord", EvalationCustomizeResponse.class).getBody();

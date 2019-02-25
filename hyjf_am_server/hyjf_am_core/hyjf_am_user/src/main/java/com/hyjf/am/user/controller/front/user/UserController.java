@@ -15,13 +15,10 @@ import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
@@ -631,28 +628,6 @@ public class UserController extends BaseController {
         List<Evalation> evalationList = userService.getEvalationRecord();
         if (!CollectionUtils.isEmpty(evalationList)) {
             List<EvalationCustomizeVO> evalationVOList = CommonUtils.convertBeanList(evalationList, EvalationCustomizeVO.class);
-            for(EvalationCustomizeVO evalStr : evalationVOList){
-                switch (evalStr.getEvalType()){
-                    case "保守型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
-                        break;
-                    case "稳健型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
-                        break;
-                    case "成长型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
-                        break;
-                    case "进取型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
-                        break;
-                    default:
-                        evalStr.setRevaluationMoney("0");
-                }
-            }
             response.setResultList(evalationVOList);
         }
         return response;
