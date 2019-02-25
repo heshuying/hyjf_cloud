@@ -131,7 +131,6 @@ public class BorrowRepaymentPlanController extends BaseController {
         map.put("instName","资产来源");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
-        map.put("borrowName","借款标题");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
         map.put("borrowApr","出借利率");
@@ -155,6 +154,8 @@ public class BorrowRepaymentPlanController extends BaseController {
         map.put("repayActionTime","实际还款日期");
         map.put("repayLastTime","应还日期");
         map.put("repayMoneySource","还款来源");
+        map.put("repayAccountCapitalWait","剩余待还本金");
+        map.put("repayAccountInterestWait","剩余待还利息");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
@@ -207,6 +208,8 @@ public class BorrowRepaymentPlanController extends BaseController {
         mapAdapter.put("yinghuanzonge", valueFormatAdapter);
         mapAdapter.put("shihuanzonge", valueFormatAdapter);
         mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("repayAccountCapitalWait",valueFormatAdapter);
+        mapAdapter.put("repayAccountInterestWait",valueFormatAdapter);
         return mapAdapter;
     }
 

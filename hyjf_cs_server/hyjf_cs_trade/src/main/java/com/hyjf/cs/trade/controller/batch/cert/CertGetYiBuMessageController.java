@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/getCertYiBuMessage")
+@RequestMapping("/cs-trade/batch/getCertYiBuMessage")
 public class CertGetYiBuMessageController {
 
     Logger logger = LoggerFactory.getLogger(CertGetYiBuMessageController.class);
@@ -38,7 +38,7 @@ public class CertGetYiBuMessageController {
     @Autowired
     private CertGetYiBuMessageService certGetYiBuMessageService;
 
-    @GetMapping("/getCertYiBuMessage")
+    @GetMapping("/certYiBuMessage")
     public String autoIssueRecover() {
         Map<String, String> params = new HashMap<String, String>();
         int logSize = certGetYiBuMessageService.selectCertLogLength();
