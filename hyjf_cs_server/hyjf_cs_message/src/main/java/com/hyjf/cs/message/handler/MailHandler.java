@@ -282,6 +282,10 @@ public class MailHandler {
 	private void send(String[] toMailArray, String subject, String content, String[] fileNames) throws Exception {
 		if (PropertiesConfig.hyjfEnvProperties.isTest()) {
 			String emailWhiteList = PropertiesConfig.hyjfEnvProperties.getEmailWhiteList();
+			if(StringUtils.isBlank(emailWhiteList)){
+				logger.warn("测试环境白名单用户未配置！， subject is : {}", subject);
+				return;
+			}
 			for (String toMail : toMailArray) {
 				if (StringUtils.isNoneBlank(toMail)) {
 					boolean contains = emailWhiteList.contains(toMail);

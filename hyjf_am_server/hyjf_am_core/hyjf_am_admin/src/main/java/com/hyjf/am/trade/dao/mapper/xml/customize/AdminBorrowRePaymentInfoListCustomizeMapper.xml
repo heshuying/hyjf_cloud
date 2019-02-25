@@ -92,7 +92,7 @@
 	<!-- 提前天数,少还利息,延期天数,延期利息,逾期天数,逾期利息,应还总额,实还总额,实际还款日期 -->
 	<select id="selectBorrowRepaymentInfoListList" resultMap="searchBorrowRepaymentInfoListListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset">
 		SELECT
-		brp.nid AS nid,
+		brp.repay_order_id AS nid,
 		brp.borrow_nid AS borrowNid,
 		u1.user_id AS borrowUserId,
 		u1.username AS borrowUserName,
