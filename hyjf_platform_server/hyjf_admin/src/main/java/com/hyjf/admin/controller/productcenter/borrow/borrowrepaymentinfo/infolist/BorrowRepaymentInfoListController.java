@@ -382,22 +382,40 @@ public class BorrowRepaymentInfoListController {
                 return null;
             }
         };
-        mapAdapter.put("borrowPeriod", borrowPeriodAdapter);
-        mapAdapter.put("borrowApr", borrowAprAdapter);
+
+        mapAdapter.put("borrowNid",valueFormatAdapter);
+        mapAdapter.put("instName",valueFormatAdapter);
+        mapAdapter.put("userId",valueFormatAdapter);
+        mapAdapter.put("borrowUserName",valueFormatAdapter);
+        mapAdapter.put("borrowName",borrowPeriodAdapter);
+        mapAdapter.put("projectTypeName",valueFormatAdapter);
+        mapAdapter.put("borrowPeriod",valueFormatAdapter);
+        mapAdapter.put("borrowApr",borrowAprAdapter);
         mapAdapter.put("borrowAccount", valueFormatAdapter);
         mapAdapter.put("borrowAccountYes", valueFormatAdapter);
+        mapAdapter.put("repayType",valueFormatAdapter);
         mapAdapter.put("recoverPeriod", recoverPeriodAdapter);
+        mapAdapter.put("recoverUserName",valueFormatAdapter);
+        mapAdapter.put("recoverUserId",valueFormatAdapter);
         mapAdapter.put("recoverTotal", valueFormatAdapter);
         mapAdapter.put("recoverCapital", valueFormatAdapter);
         mapAdapter.put("recoverInterest", valueFormatAdapter);
+        mapAdapter.put("recoverAccountCopy", valueFormatAdapter);
         mapAdapter.put("recoverFee", valueFormatAdapter);
+        mapAdapter.put("chargeDays",valueFormatAdapter);
         mapAdapter.put("chargeInterest", valueFormatAdapter);
+        mapAdapter.put("delayDays",valueFormatAdapter);
         mapAdapter.put("delayInterest", valueFormatAdapter);
+        mapAdapter.put("lateDays",valueFormatAdapter);
         mapAdapter.put("lateInterest", valueFormatAdapter);
         mapAdapter.put("recoverAccount", valueFormatAdapter);
-        mapAdapter.put("recoverAccountCopy", valueFormatAdapter);
+        mapAdapter.put("nid",valueFormatAdapter);
         mapAdapter.put("recoverAccountYes", valueFormatAdapter);
         mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("recoverActionTime",valueFormatAdapter);
+        mapAdapter.put("recoverLastTime",valueFormatAdapter);
+
+
         return mapAdapter;
     }
 }
