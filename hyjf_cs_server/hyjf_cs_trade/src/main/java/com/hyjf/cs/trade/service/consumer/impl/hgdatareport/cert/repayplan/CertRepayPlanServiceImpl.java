@@ -39,6 +39,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
     AmUserClient amUserClient;
     @Autowired
     SystemConfig systemConfig;
+
     /**
      * 获取标的的还款信息
      *
@@ -68,7 +69,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
 
             //借款人信息
             List<CertUserVO> certUserVOList = amUserClient.getCertUsersByUserId(borrow.getUserId());
-            if(null!=certUserVOList&&certUserVOList.size()>0) {
+            if (null != certUserVOList && certUserVOList.size() > 0) {
                 CertUserVO certUser = certUserVOList.get(0);
                 //如果借款人未上报,则从用户信息表中获取用户idCard
                 if (null != certUser) {
@@ -106,15 +107,17 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                         // 还款计划编号是指每一个项目的每一次还款计划的唯一编号，平台内所有还款计划中编号唯一。如果没有则填写“散标编号+当前期数”
                         //还款计划编号：报送标的号+“-”+当前期数
                         param.put("replanId", borrowNid + "-" + borrowRepayPlan.getRepayPeriod());
-                        BigDecimal bdAmount = borrowRepayPlan.getRepayCapital().setScale(2,BigDecimal.ROUND_HALF_UP);
                         //当期应还本金（元）
+                        BigDecimal bdAmount = borrowRepayPlan.getRepayCapital();
+                        bdAmount = bdAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
                         param.put("curFund", bdAmount.toString());
                         //当期应还利息（元）
-                        BigDecimal bdCurInterest = borrowRepayPlan.getRepayInterest().setScale(2,BigDecimal.ROUND_HALF_UP);
+                        BigDecimal bdCurInterest = borrowRepayPlan.getRepayInterest();
+                        bdCurInterest = bdCurInterest.setScale(2, BigDecimal.ROUND_HALF_UP);
                         param.put("curInterest", bdCurInterest.toString());
                         //当期应还款时间点
                         //当期应还时间点：报送当期应还日期23:59:59
-                        param.put("repayTime",GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
+                        param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime()) + " 23:59:59");
                         json.add(param);
                     }
                 }
@@ -124,7 +127,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                 //接口版本号
                 param.put("version", CertCallConstant.CERT_CALL_VERSION);
                 //平台编号
-                param.put("sourceCode",systemConfig.getCertSourceCode());
+                param.put("sourceCode", systemConfig.getCertSourceCode());
                 //原散标编号
                 param.put("sourceProductCode", borrowNid);
                 //借款用户标示hash
@@ -138,14 +141,16 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                 //还款计划编号：报送标的号+“-”+当前期数
                 param.put("replanId", borrowNid + "-" + "1");
                 //当期应还本金（元）
-                BigDecimal bdAmount = borrow.getBorrowAccountYes().setScale(2,BigDecimal.ROUND_HALF_UP);
-                param.put("curFund",bdAmount.toString());
+                BigDecimal bdAmount = borrow.getBorrowAccountYes();
+                bdAmount = bdAmount.setScale(2, BigDecimal.ROUND_HALF_UP);
+                param.put("curFund", bdAmount.toString());
                 //当期应还利息（元）
-                BigDecimal bdCurInterest =borrow.getRepayAccountInterest().setScale(2,BigDecimal.ROUND_HALF_UP);
+                BigDecimal bdCurInterest = borrow.getRepayAccountInterest();
+                bdCurInterest = bdCurInterest.setScale(2, BigDecimal.ROUND_HALF_UP);
                 param.put("curInterest", bdCurInterest.toString());
                 //当期应还款时间点
                 //当期应还时间点：报送当期应还日期23:59:59
-                param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime())+" 23:59:59");
+                param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime()) + " 23:59:59");
                 json.add(param);
             }
 
@@ -157,6 +162,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
 
     /**
      * 获取标的的哈希值
+     *
      * @param borrow
      * @return
      * @throws Exception
