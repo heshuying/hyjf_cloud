@@ -97,13 +97,19 @@ public class CertGetYiBuMessageConsumer implements RocketMQListener<MessageExt>,
             // --> 调用service组装数据
             List<CertLogVO> certLogList = certGetYiBuMessageService.getCertLog();
             if (null != certLogList && certLogList.size() > 0) {
-                for (CertLogVO certLog : certLogList) {
+               /* for (CertLogVO certLog : certLogList) {
                     int start = certLog.getLogOrdId().indexOf("_");
                     String bachNum = certLog.getLogOrdId().substring(start + 1);
-                    String infType = certLog.getLogOrdId().substring(0, start);
+                    String infType = certLog.getInfType().toString();
                     CertReportEntityVO certReportEntity = certGetYiBuMessageService.updateYiBuMessage(bachNum, certLog.getId(), infType);
                     logger.info(logHeader + "返回结果为:" + JSONObject.toJSON(certReportEntity));
-                }
+                }*/
+                String certLogOrderId ="4_CERT20181123001_201902240_322388";
+                int start = certLogOrderId.indexOf("_");
+                String bachNum = certLogOrderId.substring(start + 1);
+                String infType =certLogOrderId.substring(0, start);
+                CertReportEntityVO certReportEntity = certGetYiBuMessageService.updateYiBuMessage(bachNum, 3019, infType);
+                logger.info(logHeader + "返回结果为:" + JSONObject.toJSON(certReportEntity));
                 logger.info(logHeader + " 处理成功。" + msgBody);
             }
         } catch (Exception e) {
