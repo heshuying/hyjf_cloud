@@ -1306,7 +1306,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             }
 		}
 		// 更新标的表
-		// borrow = getBorrowByNid(borrowNid);
+        borrow = getBorrowByNid(borrowNid);
 		Borrow newBrrow = new Borrow();
 		newBrrow.setId(borrow.getId());
 		BigDecimal borrowManager = borrow.getBorrowManager() == null ? BigDecimal.ZERO : new BigDecimal(borrow.getBorrowManager());
@@ -1329,7 +1329,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!borrowFlag) {
             throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
-		BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
+		//BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
 		logger.info("【智投还款/承接人】借款编号：{}，更新标的表完毕。总还款：{}，未还款总额：{}",
 				borrowNid, borrow.getRepayAccountYes(), borrow.getRepayAccountWait());
 		// 更新出借表
@@ -2415,7 +2415,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
 		// 更新标的表
-		// borrow = getBorrowByNid(borrowNid);
+        borrow = getBorrowByNid(borrowNid);
 		Borrow newBrrow = new Borrow();
 		newBrrow.setId(borrow.getId());
 		BigDecimal borrowManager = borrow.getBorrowManager() == null ? BigDecimal.ZERO : new BigDecimal(borrow.getBorrowManager());
@@ -2431,7 +2431,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
-		BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
+		//BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
 		logger.info("【智投还款/承接人】借款编号：{}，更新标的表完毕。总还款：{}，未还款总额：{}",
 				borrowNid, borrow.getRepayAccountYes(), borrow.getRepayAccountWait());
 		// 更新出借表

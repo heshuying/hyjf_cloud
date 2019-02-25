@@ -29,7 +29,7 @@ public class AppPushManageRequestBean extends BasePage implements Serializable {
     private Integer orderId;
 
     @ApiModelProperty(value = "0:禁用;1:启用.")
-    private Integer statuss;
+    private Integer status;
 
     @ApiModelProperty(value = "开始时间 - 检索用")
     private String timeStartDiy;
@@ -91,12 +91,12 @@ public class AppPushManageRequestBean extends BasePage implements Serializable {
         this.orderId = orderId;
     }
 
-    public Integer getStatuss() {
-        return statuss;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setStatuss(Integer statuss) {
-        this.statuss = statuss;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getThumb() {
