@@ -131,7 +131,6 @@ public class BorrowRepaymentPlanController extends BaseController {
         map.put("instName","资产来源");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
-        map.put("borrowName","借款标题");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
         map.put("borrowApr","出借利率");
