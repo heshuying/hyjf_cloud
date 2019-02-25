@@ -65,43 +65,39 @@ public class HomePageServiceImpl implements HomePageService {
             switch (evalStr.getEvalType()) {
                 case "保守型":
                     //从redis获取金额（单笔）
-                    revaluation_money = StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue());
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
                     //如果reids不存在或者为零尝试获取数据库（单笔）
                     if ("0".equals(revaluation_money)) {
                         revaluation_money = evalConfig.getConservativeEvaluationSingleMoney() == null ? "0" : String.valueOf(evalConfig.getConservativeEvaluationSingleMoney());
                     }
-                    evalStr.setRevaluationMoney(revaluation_money);
+                    evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
                     break;
                 case "稳健型":
                     //从redis获取金额（单笔）
-                    revaluation_money = StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue());
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
                     //如果reids不存在或者为零尝试获取数据库（单笔）
                     if ("0".equals(revaluation_money)) {
                         revaluation_money = evalConfig.getSteadyEvaluationSingleMoney() == null ? "0" : String.valueOf(evalConfig.getSteadyEvaluationSingleMoney());
                     }
-                    evalStr.setRevaluationMoney(revaluation_money);
+                    evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
                     break;
                 case "成长型":
                     //从redis获取金额（单笔）
-                    revaluation_money = StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue());
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
                     //如果reids不存在或者为零尝试获取数据库（单笔）
                     if ("0".equals(revaluation_money)) {
                         revaluation_money = evalConfig.getGrowupEvaluationSingleMoney() == null ? "0" : String.valueOf(evalConfig.getGrowupEvaluationSingleMoney());
                     }
-                    evalStr.setRevaluationMoney(revaluation_money);
+                    evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
                     break;
                 case "进取型":
                     //从redis获取金额（单笔）
-                    revaluation_money = StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue());
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
                     //如果reids不存在或者为零尝试获取数据库（单笔）
                     if ("0".equals(revaluation_money)) {
                         revaluation_money = evalConfig.getEnterprisingEvaluationSinglMoney() == null ? "0" : String.valueOf(evalConfig.getEnterprisingEvaluationSinglMoney());
                     }
-                    evalStr.setRevaluationMoney(revaluation_money);
+                    evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
                     break;
                 default:
                     evalStr.setRevaluationMoney("0");
