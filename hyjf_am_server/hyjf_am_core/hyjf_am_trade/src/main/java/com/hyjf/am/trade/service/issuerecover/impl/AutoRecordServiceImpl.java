@@ -308,6 +308,9 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 				.andRegistStatusEqualTo(borrow.getRegistStatus());
 		borrow.setRegistStatus(registStatus);
 		borrow.setStatus(status);
+		// add by liuyang 合规自查 20181119 start
+		borrow.setVerifyStatus(1);//跳过已交保证金状态
+		// add by liuyang 合规自查 20181119 end
 		borrow.setRegistUserId(1);// id写死1
 		borrow.setRegistUserName("AutoRecord");
 		borrow.setRegistTime(nowDate);
