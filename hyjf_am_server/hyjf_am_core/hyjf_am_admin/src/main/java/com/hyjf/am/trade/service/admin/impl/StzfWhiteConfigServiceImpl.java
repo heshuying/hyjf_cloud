@@ -56,6 +56,7 @@ public class StzfWhiteConfigServiceImpl implements StzfWhiteConfigService {
 		if (request.getDelFlag() == null) {
 			stzhWhiteList.setDelFlag(0);
 		}
+		stzhWhiteList.setInstCode(request.getInstcode());
 		stzhWhiteList.setUpdateUserId(Integer.parseInt(request.getUpdateuser()));
 		stzhWhiteList.setCreateUserId(Integer.valueOf(request.getCreateuser()));
 		stzhWhiteListMapper.updateByPrimaryKey(stzhWhiteList);
