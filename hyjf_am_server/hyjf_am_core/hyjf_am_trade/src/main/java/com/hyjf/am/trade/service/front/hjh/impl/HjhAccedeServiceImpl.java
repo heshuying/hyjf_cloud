@@ -8,11 +8,13 @@ import com.hyjf.am.trade.dao.model.auto.HjhAccedeExample;
 import com.hyjf.am.trade.dao.model.customize.PlanDetailCustomize;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -137,25 +139,27 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
      */
     @Override
     public boolean updateMatchDays() {
-        // 更新计算匹配期
+
         /**
-         * 1,先更新正常数据, order_status 状态为 0,1,2 的数据
-         * 2,读取 order_status 状态为 80,81,82,90,91,92 并且 count_interest_time 开始计息时间为空的数据进行更新.
+         * 计划订单的匹配期计算新规则  : 2019-02-25
+         * 1,当前时间前推30天之内的数据.
+         * 2,异常状态码个位数为:0,1,2 三种状态的异常数据
          */
-        Boolean firstUpdate = this.batchHjhAccedeCustomizeMapper.updateMatchDates() >= 0 ? true : false;
 
-        // 获取发生异常且开始计息时间为空的的数据并更新其匹配期 add by huanghui start
-        // 投资异常
-        // this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(80, 82);
+        // 当前日期
+        Date nowDate = GetDate.getDate();
+        // 当前日期格式化为 yyy-MM-dd 格式
+        String nowDateStr = GetDate.formatDate(nowDate);
 
-        // 复投异常
-        // this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(90, 92);
+        // 30 天前的日期
+        Date thirtyDayAgo = GetDate.getTodayBeforeOrAfter(-29);
+        // 30天前的日期格式化为 yyy-MM-dd 格式
+        String thirtyDayAgoStr = GetDate.formatDate(thirtyDayAgo);
 
-        // 新增 70 状态,  将更新时的状态改为大于 10 的都定义为异常数据,需要更新其匹配期
-        this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(10);
-
+        Boolean updateStatus = this.batchHjhAccedeCustomizeMapper.updateMatchDatesTwo(thirtyDayAgoStr, nowDateStr) >= 0 ? true : false;
+        logger.info("未进入锁定期的计划订单的匹配期:" + GetDate.formatTime2() + ", 状态:" + updateStatus);
         // 获取发生异常且开始计息时间为空的的数据并更新其匹配期 add by huanghui end
-        return firstUpdate;
+        return updateStatus;
     }
 
     /**

@@ -1185,7 +1185,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
         IntegerResponse result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
+                .postForEntity(urlBase +"accountWithdraw/updateAccountWithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
         return result.getResultInt()>0?true:false;
     }
     /**

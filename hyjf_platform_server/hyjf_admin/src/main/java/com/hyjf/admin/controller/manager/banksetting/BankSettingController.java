@@ -89,7 +89,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/info");
 
@@ -246,7 +246,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "保存之前的去重验证", httpMethod = "POST", notes = "保存之前的去重验证")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "被校验信息")
     @PostMapping("/validateBeforeAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/validateBeforeAction");
 
@@ -289,7 +289,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
