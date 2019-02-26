@@ -73,7 +73,6 @@ public class BifaHjhPlanInfoServiceImpl extends BaseHgDateReportServiceImpl impl
             bifaHjhPlanInfoEntity.setCreateTime(currDate);
             bifaHjhPlanInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(logHeader + "新增的智投数据变换失败",e);
             return false;
         }
