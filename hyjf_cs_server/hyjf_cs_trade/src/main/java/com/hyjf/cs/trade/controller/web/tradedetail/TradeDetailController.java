@@ -95,6 +95,7 @@ public class TradeDetailController  extends BaseTradeController {
         logger.info("web获取用户充值记录列表分页数据, userId is :{}", JSONObject.toJSONString(userId));
         WebViewUserVO user=tradeDetailService.getUserFromCache(userId);
         TradeDetailBeanRequest form=createTradeDetailBeanRequest(request);
+        logger.info("startDate -> " + form.getStartDate() + "endDate -> " + form.getEndDate());
         TradeDetailBean result = new TradeDetailBean();
         result.setListType("recharge");
         if(user != null){
