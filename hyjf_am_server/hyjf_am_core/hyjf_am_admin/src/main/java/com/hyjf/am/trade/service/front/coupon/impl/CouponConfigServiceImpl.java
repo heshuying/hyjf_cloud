@@ -123,7 +123,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	 */
 	@Override
 	public int saveCouponConfig(CouponConfig couponConfig) {
-		int count = couponConfigMapper.updateByPrimaryKey(couponConfig);
+		int count = couponConfigMapper.updateByPrimaryKeySelective(couponConfig);
 		this.operationLog(couponConfig, CustomConstants.OPERATION_CODE_MODIFY);
 		return count;
 	}
