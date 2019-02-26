@@ -365,7 +365,9 @@
 		if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
 		'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
 		if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
-		'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource
+		'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
+		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
 		from
 		ht_borrow_repay_plan AS rp
 		INNER JOIN ht_borrow AS b ON

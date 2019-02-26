@@ -69,7 +69,7 @@
 				AND hct.user_name = #{userName}
 			</if>
 			<if test="creditUserName != null and creditUserName != ''">
-				AND hct.create_user_name  = #{creditUserName}
+				AND hct.credit_user_name  = #{creditUserName}
 			</if>
 			<if test="creditNid != null and creditNid != ''">
 				AND hct.credit_nid = #{creditNid}

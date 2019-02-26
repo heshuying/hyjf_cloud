@@ -129,7 +129,7 @@ public class MongoSeachController extends BaseController {
         CalculateInvestInterestResponse response = new CalculateInvestInterestResponse();
         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
         if (entity != null) {
-            response.setInterestSum(entity.getTotalInterestAmount());
+            response.setInterestSum(entity.getTotalInvestAmount());
         }
 		return response;
 	}
