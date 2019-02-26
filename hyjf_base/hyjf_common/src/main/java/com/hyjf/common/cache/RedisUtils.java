@@ -88,7 +88,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             value = jedis.incr(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -114,7 +114,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             value = jedis.get(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -143,7 +143,7 @@ public class RedisUtils {
             value = jedis.get(key);
             return JSON.parseObject(value, clazz);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -170,7 +170,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             value = jedis.get(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -197,7 +197,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             value = jedis.del(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -224,7 +224,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             value = jedis.del(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -251,7 +251,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             value = jedis.exists(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -281,7 +281,7 @@ public class RedisUtils {
             result = jedis.set(key, value);
             jedis.expire(key, expireSeconds);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -320,7 +320,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.expire(key, expireSeconds);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -346,7 +346,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.set(key, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -372,7 +372,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.set(key, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -398,7 +398,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.set(key, JSONObject.toJSONString(value));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -426,7 +426,7 @@ public class RedisUtils {
 			result = jedis.set(key, JSONObject.toJSONString(value));
 			jedis.expire(key, expireSeconds);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -461,7 +461,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.sadd(key, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -487,7 +487,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.srem(key, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -541,7 +541,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.rpush(key, values);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -567,7 +567,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.brpoplpush(source, destination, timeout);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -593,7 +593,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.rpop(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -621,7 +621,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.lrem(key, count, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -647,7 +647,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.llen(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -693,7 +693,7 @@ public class RedisUtils {
                 }
                 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Redis错误", e);
                 return false;
             } finally {
                 // 释放redis对象
@@ -733,7 +733,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.lpush(key, values);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -759,7 +759,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.rpush(key, values);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -784,7 +784,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.lpop(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -830,7 +830,7 @@ public class RedisUtils {
                 result = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -855,7 +855,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.hmset(key, hash);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -880,7 +880,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.hset(key, field, value);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -904,7 +904,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.hdel(key, field);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -929,7 +929,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.hget(key, field);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -953,7 +953,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.hgetAll(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -977,7 +977,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.ttl(key);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 返还到连接池
@@ -1051,7 +1051,7 @@ public class RedisUtils {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Redis错误", e);
         } finally {
             // 释放redis对象
             // 释放
@@ -1087,7 +1087,7 @@ public class RedisUtils {
             if (value.equals(jedis.get(rediskey))) {
                 jedis.del(rediskey);
             }
-            e.printStackTrace();
+            logger.error("Redis错误", e);
             return false;
         } finally {
             // 释放redis对象
