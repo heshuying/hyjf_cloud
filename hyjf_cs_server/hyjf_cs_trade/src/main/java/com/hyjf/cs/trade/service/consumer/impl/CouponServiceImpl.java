@@ -623,9 +623,13 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             default:
                 break;
         }
+        logger.info("获取投标成功结果  getInterest.couponType:{} ",couponType);
+        logger.info("获取投标成功结果  getInterest.earnings:{} ",earnings);
+        logger.info("获取投标成功结果  getInterest.earnings.add(couponQuota):{} ",earnings.add(couponQuota));
         if (couponType == 3) {
             earnings = earnings.add(couponQuota);
         }
+        logger.info("获取投标成功结果  getInterest.earnings:{} ",earnings);
         return earnings;
     }
 
