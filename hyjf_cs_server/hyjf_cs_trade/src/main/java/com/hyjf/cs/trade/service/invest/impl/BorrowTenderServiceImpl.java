@@ -657,7 +657,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
         data.put("borrowNid",borrow.getBorrowNid());
-        data.put("investDesc","恭喜您，出借成功");
+        data.put("investDesc","恭喜您出借成功");
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
         String interest = "0";
