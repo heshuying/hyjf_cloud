@@ -6734,13 +6734,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    @Override
-    public boolean checkAutoPayment(String creditNid) {
-        String url = urlBase + "autoTenderController/checkAutoPayment/" + creditNid;
-        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
-        return response.getResultBoolean();
-    }
-
     /**
      * 根据标的编号查询资产推送表
      *
