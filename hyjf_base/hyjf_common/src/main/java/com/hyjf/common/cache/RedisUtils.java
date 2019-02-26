@@ -67,7 +67,7 @@ public class RedisUtils {
             try {
             	redis.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Redis错误", e);
 			}
         }
     }
