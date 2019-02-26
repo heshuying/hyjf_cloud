@@ -93,7 +93,7 @@ public class CertGetYiBuMessageServiceImpl extends BaseHgCertReportServiceImpl i
         long timestamp = System.currentTimeMillis();
         entity.setTimestamp(String.valueOf(timestamp));
         // apiKey
-        String apiKey = CertCallUtil.getApiKey(systemConfig.getCertApiKey(),systemConfig.getCertSourceCode(), version, timestamp, nonce);
+        String apiKey = CertCallUtil.getApiKey(systemConfig.getCertApiKey(), systemConfig.getCertSourceCode(), entity.getVersion(), timestamp, nonce);
         entity.setApiKey(apiKey);
         // dataType 数据类型（0测试，1正式）
         // 判断是否测试环境
