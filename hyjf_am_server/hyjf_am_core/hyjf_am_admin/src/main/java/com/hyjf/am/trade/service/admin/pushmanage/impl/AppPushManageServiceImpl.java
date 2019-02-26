@@ -36,9 +36,9 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManageExample example = new AppPushManageExample();
         AppPushManageExample.Criteria criteria = example.createCriteria();
 
-        // 标的不为空
+        // 标题不为空
         if (StringUtils.isNotBlank(pushManageRequest.getTitle())){
-            criteria.andTitleLike(pushManageRequest.getTitle());
+            criteria.andTitleLike(pushManageRequest.getTitle() + "%");
         }
 
         // 状态不为空
@@ -65,9 +65,9 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManageExample example = new AppPushManageExample();
         AppPushManageExample.Criteria criteria = example.createCriteria();
 
-        // 标的不为空
+        // 标题不为空
         if (StringUtils.isNotBlank(pushManageRequest.getTitle())){
-            criteria.andTitleLike(pushManageRequest.getTitle());
+            criteria.andTitleLike(pushManageRequest.getTitle() + "%");
         }
 
         // 状态不为空
@@ -119,7 +119,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
-        pushManage.setId(pushManageRequest.getId());
+        pushManage.setId(pushManageRequest.getIds());
         if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {

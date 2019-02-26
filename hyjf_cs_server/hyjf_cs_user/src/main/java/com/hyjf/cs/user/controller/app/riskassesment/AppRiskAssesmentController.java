@@ -3,10 +3,10 @@
  */
 package com.hyjf.cs.user.controller.app.riskassesment;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -113,25 +113,14 @@ public class AppRiskAssesmentController extends BaseUserController {
             response.setResultStatus("1");
             response.setResultType(ueResult.getEvalType());
             // 测评金额上限增加（获取评分标准对应的上限金额并拼接）
-            switch (ueResult.getEvalType()){
-                case "保守型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
-                    break;
-                case "稳健型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
-                    break;
-                case "成长型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
-                    break;
-                case "进取型":
-                    response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                            RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)  == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
-                    break;
-                default:
-                    response.setRevaluationMoney("0");
+            String revaluationMoney,evalType;
+            List<EvalationCustomizeVO> evalationMoney = evaluationService.getEvalationRecord();
+            for(EvalationCustomizeVO evalationCustomizeVO:evalationMoney){
+                revaluationMoney = evalationCustomizeVO.getRevaluationMoney();
+                evalType = evalationCustomizeVO.getEvalType();
+                if(evalType.equals(ueResult.getEvalType())){
+                    response.setRevaluationMoney(revaluationMoney);
+                }
             }
             response.setResultText(ueResult.getSummary());
         }

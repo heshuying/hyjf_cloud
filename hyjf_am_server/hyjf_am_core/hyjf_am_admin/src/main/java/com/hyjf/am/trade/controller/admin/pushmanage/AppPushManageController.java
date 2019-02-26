@@ -168,21 +168,20 @@ public class AppPushManageController extends BaseController {
 
     /**
      * 根据ID 更新单条记录状态
-     * @param id
+     * @param pushManageRequest
      * @return
      */
-    @RequestMapping(value = "/updatePushManageStatusById/{id}", method = RequestMethod.GET)
-    public boolean updatePushManageStatusById(@PathVariable Integer id){
-        AppPushManageRequest pushManageRequest = new AppPushManageRequest();
+    @RequestMapping(value = "/updatePushManageStatusById", method = RequestMethod.POST)
+    public boolean updatePushManageStatusById(@RequestBody AppPushManageRequest pushManageRequest){
 
-        AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(id);
+        AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(pushManageRequest.getIds());
 
         if (pushManage == null){
             // 当前ID查询数据不存在时
-            logger.info("根据ID 更新App推送单条记录状态时ID对应数据不存在,提交ID为:" + id);
+            logger.info("根据ID 更新App推送单条记录状态时ID对应数据不存在,提交ID为:" + pushManageRequest.getIds());
             return false;
         }
-        pushManageRequest.setId(id);
+        pushManageRequest.setId(pushManageRequest.getIds());
 
         // 根据当前信息的状态,判断应该讲状态更新到的状态
         if (pushManage.getStatus() == 1){

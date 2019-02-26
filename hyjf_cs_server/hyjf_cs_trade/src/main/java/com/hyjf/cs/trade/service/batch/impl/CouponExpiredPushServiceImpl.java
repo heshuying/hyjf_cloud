@@ -7,6 +7,7 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -75,7 +76,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
                 param.put("val_coupon_balance", config.getCouponType() == 1 ? config.getCouponQuota() + "元" : config.getCouponType() == 2 ? config.getCouponQuota() + "%" : config.getCouponQuota() + "元");
                 param.put("val_coupon_type", config.getCouponType() == 1 ? "体验金" : config.getCouponType() == 2 ? "加息券" : "代金券");
                 param.put("val_profit_deadline", GetDate.formatDate(Long.parseLong(cUser.getEndTime() + "000")));
-                AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, "appMsSendForUser", CustomConstants.JYTZ_COUPON_DEADLINE);
+                AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_DEADLINE);
                 commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),appMsMessage));
             }
         }
@@ -95,7 +96,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
                 Map<String, String> param = new HashMap<String, String>();
                 param.put("val_coupon_balance", config.getCouponType() == 1 ? config.getCouponQuota() + "元" : config.getCouponType() == 2 ? config.getCouponQuota() + "%" : config.getCouponQuota() + "元");
                 param.put("val_coupon_type", config.getCouponType() == 1 ? "体验金" : config.getCouponType() == 2 ? "加息券" : "代金券");
-                AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, "appMsSendForUser", CustomConstants.JYTZ_COUPON_INVALIDED);
+                AppMsMessage appMsMessage = new AppMsMessage(cUser.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_INVALIDED);
                 commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),appMsMessage));
             }
         }

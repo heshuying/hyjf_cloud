@@ -42,7 +42,7 @@ public class BorrowRepayToHjhQuitController extends BaseTradeController {
     private CommonProducer commonProducer;
 
     @GetMapping("/hjhQuit")
-    public void entryUpdate(){
+    public void hjhQuit(){
         logger.info("【汇计划计划进入锁定期/退出计划开始】开始。。。");
         List<HjhAccedeVO> accedeList = borrowRepayToHjhQuitService.selectWaitQuitHjhList();
         if (accedeList != null) {

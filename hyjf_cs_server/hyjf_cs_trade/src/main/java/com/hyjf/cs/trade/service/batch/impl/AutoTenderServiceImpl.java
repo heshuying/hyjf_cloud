@@ -371,11 +371,12 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.info(logMsgHeader + "承接用计算完成\n" + resultVO.toLog());
 
                     // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
-//                    if(!this.amTradeClient.checkAutoPayment(credit.getCreditNid())){
-//                        serviceFee = BigDecimal.ZERO;//承接服务费
-//                        resultVO.setServiceFee(BigDecimal.ZERO);
-//                        logger.warn(logMsgHeader + "债权转让人未做缴费授权,该笔债权的承接服务费置为" + serviceFee);
-//                    }
+                    HjhUserAuthVO hjhUserAuthVO = amUserClient.getHjhUserAuthVO(credit.getUserId());
+                    if(hjhUserAuthVO.getAutoPaymentStatus() == null || hjhUserAuthVO.getAutoPaymentStatus().compareTo(0) != 1){
+                        serviceFee = BigDecimal.ZERO;//承接服务费
+                        resultVO.setServiceFee(BigDecimal.ZERO);
+                        logger.warn(logMsgHeader + "债权转让人未做缴费授权,该笔债权的承接服务费置为" + serviceFee);
+                    }
                     // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
 
                     // 校验债转用的计算金额是否有异常数据

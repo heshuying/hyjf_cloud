@@ -679,6 +679,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					return borrowStatus;
 				} catch (Exception e) {
 					logger.error("【直投还款】更新借款人数据时发生系统异常！", e);
+					// 更新借款人失败时将“还款处理中”状态改为“还款部分失败”状态 update by wgx 2019/02/26
+					try {
+						BorrowApicron newBorrowApicron = new BorrowApicron();
+						newBorrowApicron.setId(apicron.getId());
+						newBorrowApicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
+						this.borrowApicronMapper.updateByPrimaryKeySelective(newBorrowApicron);
+					} catch (Exception e2) {
+						logger.error("【直投还款】借款编号：{}，批次还款任务“还款处理中”状态修改失败！", borrowNid, e);
+					}
 				}
 			}
 		} catch (Exception e1) {
@@ -811,7 +820,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 								String creditRepayOrderId = creditRepay.getCreditRepayOrderId();
 								JSONObject assignRepayDetail = repayResults.get(creditRepayOrderId);
 								if (Validator.isNull(assignRepayDetail)) {
-									logger.error("【直投还款】银行端未查询到相应的还款明细！出借订单号：{}", tenderOrderId);
+									logger.error("【直投还款】银行端未查询到相应的还款明细！出借订单号：{}，债转还款订单号：{}", tenderOrderId, creditRepayOrderId);
 									creditRepayAllFlag = false;// 有债转处理失败，不进行后续还款更新
 									continue;
 								}
@@ -946,7 +955,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	@Override
 	public boolean updateCreditRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover, CreditRepay creditRepay, JSONObject assignRepayDetail) throws Exception {
 
-		logger.info("【直投还款/承接人】开始更新承接人的还款数据，还款人ID：{}，承接订单号：{}", apicron.getUserId(), creditRepay.getCreditNid());
 		/** 还款信息 */
 		// 当前时间
 		int nowTime = GetDate.getNowTime10();
@@ -954,6 +962,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		String borrowNid = apicron.getBorrowNid();
 		// 还款人(借款人或垫付机构)ID
 		Integer repayUserId = apicron.getUserId();
+		logger.info("【直投还款/承接人】借款编号：{}，开始更新承接人的还款数据。还款人ID：{}，承接订单号：{}", borrowNid, repayUserId, creditRepay.getCreditNid());
 		// 还款人用户名
 		String repayUserName = apicron.getUserName();
 		// 当前期数
@@ -1024,6 +1033,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		Account assignBankAccount = getAccountByUserId(assignUserId);
 		// 出借用户银行账户
 		String assignAccountId = assignBankAccount.getAccountId();
+		// 判断该收支明细存在时,跳出本次循环
+		if (countCreditAccountListByNid(repayOrderId)) {
+			logger.info("【直投还款/承接人】承接人收支明细已存在！还款订单号:{}", repayOrderId);
+			return true;
+		}
 		// 查询相应的债权承接记录
 		CreditTender creditTender = this.getCreditTender(assignNid);
 		if (Validator.isNull(creditTender)) {
@@ -1036,11 +1050,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
 		// 分期还款计划表
 		BorrowRecoverPlan borrowRecoverPlan = null;
-		// 判断该收支明细存在时,跳出本次循环
-		if (countCreditAccountListByNid(repayOrderId)) {
-            logger.info("【直投还款/承接人】承接人收支明细已存在。还款订单号:{}", repayOrderId);
-			return true;
-		}
 		// 债转的下次还款时间
 		int creditRepayNextTime = creditRepay.getAssignRepayNextTime();
 		// 更新账户信息(承接人)
@@ -1306,7 +1315,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             }
 		}
 		// 更新标的表
-		// borrow = getBorrowByNid(borrowNid);
+        borrow = getBorrowByNid(borrowNid);
 		Borrow newBrrow = new Borrow();
 		newBrrow.setId(borrow.getId());
 		BigDecimal borrowManager = borrow.getBorrowManager() == null ? BigDecimal.ZERO : new BigDecimal(borrow.getBorrowManager());
@@ -1329,7 +1338,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!borrowFlag) {
             throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
-		BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
+		//BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
 		logger.info("【智投还款/承接人】借款编号：{}，更新标的表完毕。总还款：{}，未还款总额：{}",
 				borrowNid, borrow.getRepayAccountYes(), borrow.getRepayAccountWait());
 		// 更新出借表
@@ -2245,7 +2254,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		}
 		// 判断该收支明细存在时,跳出本次循环
 		if (countAccountListByNid(repayOrderId)) {
-            logger.info("【直投还款/出借人】出借人收支明细已经存在。还款订单号：{}", repayOrderId);
+            logger.error("【直投还款/出借人】出借人收支明细已经存在！还款订单号：{}", repayOrderId);
 			return true;
 		}
 		// 更新账户信息(出借人)
@@ -2415,7 +2424,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
 		// 更新标的表
-		// borrow = getBorrowByNid(borrowNid);
+        borrow = getBorrowByNid(borrowNid);
 		Borrow newBrrow = new Borrow();
 		newBrrow.setId(borrow.getId());
 		BigDecimal borrowManager = borrow.getBorrowManager() == null ? BigDecimal.ZERO : new BigDecimal(borrow.getBorrowManager());
@@ -2431,7 +2440,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
-		BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
+		//BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
 		logger.info("【智投还款/承接人】借款编号：{}，更新标的表完毕。总还款：{}，未还款总额：{}",
 				borrowNid, borrow.getRepayAccountYes(), borrow.getRepayAccountWait());
 		// 更新出借表
