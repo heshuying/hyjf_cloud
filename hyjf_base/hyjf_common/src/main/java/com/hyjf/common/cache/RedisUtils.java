@@ -513,7 +513,7 @@ public class RedisUtils {
             jedis = pool.getResource();
             result = jedis.sismember(key, member);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("redis异常：" + e);
         } finally {
             // 释放redis对象
             // 释放
