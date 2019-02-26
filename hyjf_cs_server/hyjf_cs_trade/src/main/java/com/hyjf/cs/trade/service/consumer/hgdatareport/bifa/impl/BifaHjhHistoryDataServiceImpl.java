@@ -35,7 +35,7 @@ public class BifaHjhHistoryDataServiceImpl extends BaseHgDateReportServiceImpl i
 
     Logger logger = LoggerFactory.getLogger(BifaHjhHistoryDataServiceImpl.class);
 
-    private String thisMessName = "智投信息上报";
+    private String thisMessName = "历史智投信息上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
 
     @Autowired
