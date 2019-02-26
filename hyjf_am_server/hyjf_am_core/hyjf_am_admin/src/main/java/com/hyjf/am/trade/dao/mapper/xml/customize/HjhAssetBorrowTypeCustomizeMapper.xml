@@ -74,7 +74,6 @@
         bpt.borrow_name,
         hic.inst_name,
         hat.asset_type_name
-        #{paramNameVOS.name} `STATUS`
         FROM
         ht_hjh_asset_borrowtype hab
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = hab.borrow_cd
