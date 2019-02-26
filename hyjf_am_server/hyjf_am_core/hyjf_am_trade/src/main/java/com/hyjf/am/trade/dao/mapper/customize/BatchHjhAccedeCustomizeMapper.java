@@ -44,8 +44,4 @@ public interface BatchHjhAccedeCustomizeMapper {
 	int updateMatchDatesTwo(@Param("start") Integer start);
 
     // 计算匹配期处理 潜在问题修复 huanghui end
-
-	// add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
-	int countNoAutoPayment(@Param("creditNid") String creditNid);
-	// add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
 }

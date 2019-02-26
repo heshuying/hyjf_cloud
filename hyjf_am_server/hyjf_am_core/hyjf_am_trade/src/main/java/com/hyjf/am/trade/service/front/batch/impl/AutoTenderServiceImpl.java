@@ -232,13 +232,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         return result;
     }
 
-    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 start
-    @Override
-    public boolean checkAutoPayment(String creditNid) {
-        return this.batchHjhAccedeCustomizeMapper.countNoAutoPayment(creditNid) > 0 ? false : true;
-    }
-    // add 出让人没有缴费授权临时对应（不收取服务费） liubin 20181113 end
-
     /**
      * 插入冻结表
      *

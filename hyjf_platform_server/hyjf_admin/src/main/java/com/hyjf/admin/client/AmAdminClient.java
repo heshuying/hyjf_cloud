@@ -1024,11 +1024,11 @@ public interface AmAdminClient {
 
     /**
      * 根据ID 更新单条记录的状态
-     * @param id
+     * @param requestBean
      * @return
      * @Author : huanghui
      */
-    boolean updatePushManageStatusById(Integer id);
+    boolean updatePushManageStatusById(AppPushManageRequestBean requestBean);
 
     /**
      * 查询千乐渠道散标数据

@@ -3,12 +3,13 @@
  */
 package com.hyjf.cs.user.controller.api.aems.mergeauth;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
@@ -19,11 +20,9 @@ import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,7 +65,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "AEMS系统:多合一授权", notes = "AEMS系统:多合一授权")
     @PostMapping(value = "/mergeAuth", produces = "application/json; charset=utf-8")
     public ModelAndView mergeAuthPage(@RequestBody @Valid AemsMergeAuthPagePlusRequestBean requestBean, HttpServletRequest request) {
-        logger.info("AEMS系统请求页面多合一授权[开始],请求参数:["+ requestBean.toString() +"]");
+        logger.info("AEMS系统请求 页面多合一授权[开始]---------------------------------,请求参数:{}", JSON.toJSONString(requestBean));
 
         ModelAndView modelAndView;
         // 入参校验
@@ -84,13 +83,13 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
 
         // 打包参数
         authBean = paramPackage(request, requestBean, authBean, orderId);
-        logger.info("AEMS系统请求页面多合一授权,authBean:{}"+authBean);
+        logger.info("AEMS系统请求 页面多合一授权,authBean:{}", JSON.toJSONString(authBean));
         // 校验用户角色和授权类型是否一致
         paramMap = authService.checkUserRoleAndAuthType(authBean, requestBean.getAuthType());
         if (!"1".equals(paramMap.get("status"))) {
             return callbackErrorView(paramMap);
         }
-        logger.info("AEMS系统请求页面多合一授权,paramMap:{}"+paramMap);
+        logger.info("AEMS系统请求 页面多合一授权,paramMap:{}"+ JSON.toJSONString(paramMap));
         try {
             // 补充数据，请求银行
             modelAndView = authService.getApiCallbankMV(authBean);
@@ -98,83 +97,41 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
             // 判断授权类型，保存至授权日志表
             authService.saveUserAuthLog(authBean, orderId);
         } catch (Exception e) {
-            logger.info("AEMS多合一授权页面异常,异常信息:["+ e +"]");
+            logger.info("AEMS多合一授权页面异常,异常信息:{}", e);
             return null;
         }
-        logger.info("AEMS系统请求页面多合一授权[结束]");
+        logger.info("AEMS系统请求 页面多合一授权[结束]------------------------------");
         return modelAndView;
     }
 
 
     @ApiOperation(value = "AEMS多合一授权[同步回调]", notes = "AEMS多合一授权[同步回调]")
     @RequestMapping(RETURL_SYN_ACTION)
-    public ModelAndView returnPage(HttpServletRequest request, BankCallBean bean) {
+    public ModelAndView returnPage(HttpServletRequest request) {
         logger.info("AEMS多合一授权[同步回调]开始------------------------------------");
-        bean.convert();
-        logger.info("AEMS多合一授权[同步回调], 请求参数:bean{}"+ bean.toString());
 
-        String authType = request.getParameter("authType");
-        String frontParams = request.getParameter("frontParams");
-        logger.info("第三方端授权同步请求,request:"+request);
-        if (StringUtils.isBlank(bean.getRetCode())
-                && StringUtils.isNotBlank(frontParams)) {
-            logger.info("第三方端授权同步请求,bean.getRetCode():["+ bean.getRetCode() +"]");
-            JSONObject jsonParm = JSONObject.parseObject(frontParams);
-            if (jsonParm.containsKey("RETCODE")) {
-                bean.setRetCode(jsonParm.getString("RETCODE"));
-            }
-        }
-        String retCode = bean.getRetCode();
         String isSuccess = request.getParameter("isSuccess");
-        logger.info("第三方端授权同步请求,isSuccess:["+ isSuccess +"]");
-        String url = request.getParameter("callback").replace("*-*-*", "#");
-
-        logger.info("第三方端授权同步请求,retCode:["+ retCode +"]");
+        logger.info("第三方端授权同步请求,isSuccess:{}"+ isSuccess);
+        String url = request.getParameter("callback");
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
-        if (StringUtils.isBlank(retCode) || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
+        resultMap.put("callBackAction", url);
+        if (isSuccess == null || !"1".equals(isSuccess)) {
             // 失败
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+            resultMap.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_CE999999));
             resultMap.put("statusDesc", "多合一授权失败,调用银行接口失败");
             resultMap.put("acqRes", request.getParameter("acqRes"));
-            resultMap.put("callBackAction", url);
             logger.info("AEMS多合一授权[同步回调],调用银行接口失败!");
-            return callbackErrorView(resultMap);
-
-        }
-        logger.info("AEMS多合一授权[同步回调]，调用查询接口查询状态，userId:" + bean.getLogUserId());
-        BankCallBean retBean = authService.getTermsAuthQuery(Integer.parseInt(bean.getLogUserId()),
-                BankCallConstant.CHANNEL_PC);
-        if(authService.checkDefaultConfig(retBean, authType)){
-            resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            resultMap.put("statusDesc", "多合一授权申请失败,失败原因：授权期限过短或额度过低，<br>请重新授权！");
-            resultMap.put("acqRes", request.getParameter("acqRes"));
-            resultMap.put("callBackAction", url);
-            logger.info("AEMS多合一授权[同步回调]多合一授权申请失败,失败原因：授权期限过短或额度过低,请重新授权！");
+            logger.info("AEMS多合一授权[同步回调]结束----------------------------------");
             return callbackErrorView(resultMap);
         }
-        logger.info("AEMS多合一授权同步回调调用查询接口查询状态结束  结果为:" + (retBean == null ? "空" : retBean.getRetCode()));
-        if (retBean == null || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())) {
-            resultMap.put("acqRes", request.getParameter("acqRes"));
-            resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            resultMap.put("statusDesc", "多合一授权申请失败,失败原因："+ authService.getBankRetMsg(bean.getRetCode()));
-            resultMap.put("deadline", bean.getDeadline());
-            logger.info("AEMS多合一授权[同步回调]结束");
-            return callbackErrorView(resultMap);
-        }
-        try {
-            retBean.setOrderId(bean.getLogOrderId());
-            // 更新签约状态和日志表
-            this.authService.updateUserAuth(Integer.parseInt(retBean.getLogUserId()), retBean,authType);
-        } catch (Exception e) {
-            logger.info("AEMS多合一授权[同步回调]异常，异常信息：{}", e);
-        }
-        resultMap.put("acqRes", request.getParameter("acqRes"));
         resultMap.put("status", ErrorCodeConstant.SUCCESS);
+        resultMap.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.SUCCESS));
         resultMap.put("statusDesc", "多合一授权成功");
-        resultMap.put("deadline", bean.getDeadline());
-        logger.info("AEMS多合一授权[同步回调]第三方返回参数："+JSONObject.toJSONString(resultMap));
+        resultMap.put("acqRes", request.getParameter("acqRes"));
+        logger.info("AEMS多合一授权成功,resultMap:{}", JSON.toJSONString(resultMap));
         logger.info("AEMS多合一授权[同步回调]结束----------------------------------");
         return callbackErrorView(resultMap);
     }
@@ -184,7 +141,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @RequestMapping(RETURL_ASY_ACTION)
     @ResponseBody
     public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
-        logger.info("AEMS多合一授权[异步回调]开始,请求参数:["+ bean.toString() +"]");
+        logger.info("AEMS多合一授权[异步回调]开始--------------------------------------------,请求参数:{}", JSON.toJSONString(bean.toString()));
 
         Map<String, String> params = new HashMap<>();
         BankCallResult result = new BankCallResult();
@@ -192,23 +149,26 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
 
         if (bean == null) {
             logger.warn("调用江西银行多合一授权接口,银行异步返回空");
-            params.put("status", BaseResultBean.STATUS_FAIL);
-            params.put("statusDesc", "多合一授权失败,调用银行接口失败");
-            result.setMessage("多合一授权失败");
-            params.put("chkValue", resultBean.getChkValue());
+            // 返回AEMS的参数
             params.put("acqRes", request.getParameter("acqRes"));
+            params.put("status", ErrorCodeConstant.STATUS_CE999999);
+            params.put("statusDesc", "多合一授权失败,调用银行接口失败");
+            params.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.STATUS_CE999999));
+            CommonSoaUtils.noRetPostThree(request.getParameter("callback"), params);
+            // 返回银行的参数
             result.setStatus(false);
-            CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
+            result.setMessage("多合一授权失败");
             return result;
         }
 
         bean.convert();
+
         int userId = Integer.parseInt(bean.getLogUserId());
         // 查询用户
         UserVO user = this.authService.getUsersById(userId);
         String authType = request.getParameter("authType");
         if(authService.checkDefaultConfig(bean, authType)){
-            logger.info("[用户合并授权完成后,回调结束]");
+            logger.info("[A-EMS用户合并授权完成后,回调结束]");
             result.setMessage("合并授权成功");
             result.setStatus(true);
             return result;
@@ -232,17 +192,15 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
-            logger.error("多合一授权出错,userId:["+ userId +"]错误原因："+ e);
-            message = "多合一授权失败";
+            logger.error("多合一授权异常,userId:{},异常报文:{}", userId, e);
+            message = "多合一授权异常";
             status = ErrorCodeConstant.STATUS_CE999999;
         }
         // 返回值
-        params.put("status", status);
         params.put("statusDesc", message);
         resultBean.setStatusForResponse(status);
         params.put("deadline", bean.getDeadline());
         params.put("accountId", bean.getAccountId());
-        params.put("chkValue", resultBean.getChkValue());
         params.put("acqRes",request.getParameter("acqRes"));
         // 自动投标授权
         params.put("autoBidAuth", bean.getAutoBid());
@@ -260,10 +218,10 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         params.put("repayAuth", bean.getRepayAuth());
         params.put("repayDeadline", bean.getRepayDeadline());
         params.put("repayMaxAmt", bean.getRepayMaxAmt());
-        logger.info("AEMS多合一授权[异步回调]，第三方返回参数:["+ JSONObject.toJSONString(params) +"]");
+        logger.info("AEMS多合一授权[异步回调]，第三方返回参数:{}", JSON.toJSONString(params));
 
-        CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*","#"), params);
-        logger.info("AEMS多合一授权[异步回调]结束");
+        CommonSoaUtils.noRetPostThree(request.getParameter("callback"), params);
+        logger.info("AEMS多合一授权[异步回调]结束---------------------------------------------------------");
         result.setMessage("多合一授权权成功");
         result.setStatus(true);
         return result;
@@ -280,14 +238,16 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
      */
     private AuthBean paramPackage(HttpServletRequest request, AemsMergeAuthPagePlusRequestBean requestBean, AuthBean authBean, String orderId){
         // 拼装参数 调用江西银行
-        // 同步调用路径
-        String retUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
-                + requestBean.getAuthType() + "&callback="
-                + requestBean.getRetUrl().replace("#", "*-*-*");
+        // 成功同步调用路径
+        String successUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=1&callback="
+                + requestBean.getRetUrl();
+        // 失败同步调用路径
+        String retUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?callback="
+                + requestBean.getRetUrl();
         // 异步调用路
         String bgRetUrl = "http://CS-USER" + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
                 + requestBean.getAuthType() + "&callback="
-                + requestBean.getNotifyUrl().replace("#", "*-*-*");
+                + requestBean.getNotifyUrl();
 
         // 查询开户信息通过电子账号
         BankOpenAccountVO bankOpenAccount = this.authService.getBankOpenAccountByAccount(requestBean.getAccountId());
@@ -302,6 +262,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         authBean.setAccountId(bankOpenAccount.getAccount());
         // 同步 异步
         authBean.setRetUrl(retUrl);
+        authBean.setSuccessUrl(successUrl);
         authBean.setNotifyUrl(bgRetUrl);
         authBean.setIdNo(usersInfo.getIdcard());
         authBean.setName(usersInfo.getTruename());
