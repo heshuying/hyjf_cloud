@@ -236,14 +236,17 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		String notifyUrl = "http://CS-USER/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getFrontHost()+systemConfig.getForgetpassword();
+		UserInfoVO userInfoVO = amUserClient.findUserInfoById(user.getUserId());
+		BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(user.getUserId());
+
 
 		// 调用开户接口
 		BankCallBean bindCardBean = new BankCallBean();
 		bindCardBean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
 		bindCardBean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-		bindCardBean.setIdNo(user.getIdcard());
-		bindCardBean.setName(user.getTruename());
-		bindCardBean.setAccountId(user.getBankAccount());
+		bindCardBean.setIdNo(userInfoVO.getIdcard());
+		bindCardBean.setName(userInfoVO.getTruename());
+		bindCardBean.setAccountId(bankOpenAccountVO.getAccount());
 		bindCardBean.setUserIP(userIp);
 		bindCardBean.setRetUrl(retUrl);
 		bindCardBean.setSuccessfulUrl(successfulUrl);
@@ -264,7 +267,8 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 		return map;
 	}
-	
+
+
 	/**
 	 * 请求银行绑卡接口
 	 */
