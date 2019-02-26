@@ -64,7 +64,6 @@ public class FinmanChargeNewController extends BaseController {
             BorrowFinmanNewCharge charge = this.finmanChargeNewService.getRecordInfo(manChargeCd);
             if (null != charge) {
                 BorrowFinmanNewChargeVO chargeVO = CommonUtils.convertBean(charge, BorrowFinmanNewChargeVO.class);
-                chargeVO.setProjectType(String.valueOf(chargeVO.getAssetType()));
                 response.setResult(chargeVO);
                 response.setRtn(Response.SUCCESS);
             }

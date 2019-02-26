@@ -151,7 +151,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             // 调用开户接口
             BankCallBean debtRegistBean = new BankCallBean();
             // 调用银行接口部分共同参数删除
-            // 消息类型(用户开户)
+            // 消息类型(借款人标的登记)
             debtRegistBean.setTxCode(BankCallConstant.TXCODE_DEBT_REGISTER);
             // 借款人电子账号
             debtRegistBean.setAccountId(request.getAccountId());
