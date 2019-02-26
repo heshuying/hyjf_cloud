@@ -56,7 +56,7 @@ public class PushMoneyController extends BaseController {
 
 	@ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
 	@PostMapping("/info")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<PushMoneyResponse> getInfoAction(@RequestBody PushMoneyRequest requestBean) {
         PushMoneyResponse response = new PushMoneyResponse();
 		if (requestBean.getId() != null) {
@@ -87,7 +87,7 @@ public class PushMoneyController extends BaseController {
 
 	@ApiOperation(value = "修改提成配置", notes = "修改提成配置")
 	@PostMapping("/update")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody PushMoneyRequestBean requestBean) {
         ModelAndView modelAndView = new ModelAndView();
 	    // 调用校验
