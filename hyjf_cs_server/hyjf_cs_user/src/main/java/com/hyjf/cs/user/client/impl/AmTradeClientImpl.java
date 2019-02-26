@@ -895,4 +895,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return vo;
     }
+
+    /** 用户测评配置 */
+    @Override
+    public List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record){
+        EvaluationConfigResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/tradedetail/selectEvaluationConfig/", record, EvaluationConfigResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

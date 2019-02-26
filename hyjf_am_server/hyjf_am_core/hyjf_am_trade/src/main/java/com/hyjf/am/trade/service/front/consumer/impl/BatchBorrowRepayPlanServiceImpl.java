@@ -403,6 +403,14 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					return borrowStatus;
 				} catch (Exception e) {
 					logger.error("【智投还款】更新借款人数据时发生系统异常！", e);
+					// 更新借款人失败时将“还款处理中”状态改为“还款部分失败”状态 update by wgx 2019/02/26
+					try {
+						apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
+						apicron.setUpdateTime(new Date());
+						this.borrowApicronMapper.updateByPrimaryKeySelective(apicron);
+					} catch (Exception e2) {
+						logger.error("【智投还款】借款编号：{}，批次还款任务“还款处理中”状态修改失败！", borrowNid, e);
+					}
 				}
 			}
 		} catch (Exception e1) {
