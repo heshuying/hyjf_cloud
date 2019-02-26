@@ -1185,7 +1185,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
         IntegerResponse result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
+                .postForEntity(urlBase +"accountWithdraw/updateAccountWithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
         return result.getResultInt()>0?true:false;
     }
     /**
@@ -6732,13 +6732,6 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
-    }
-
-    @Override
-    public boolean checkAutoPayment(String creditNid) {
-        String url = urlBase + "autoTenderController/checkAutoPayment/" + creditNid;
-        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
-        return response.getResultBoolean();
     }
 
     /**

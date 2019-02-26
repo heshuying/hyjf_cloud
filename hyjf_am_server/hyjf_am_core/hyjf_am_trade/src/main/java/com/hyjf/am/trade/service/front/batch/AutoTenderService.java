@@ -140,6 +140,4 @@ public interface AutoTenderService extends BaseService {
      * @return
      */
     BigDecimal doGetPreCreditCapital(HjhDebtCredit credit);
-
-    boolean checkAutoPayment(String creditNid);
 }

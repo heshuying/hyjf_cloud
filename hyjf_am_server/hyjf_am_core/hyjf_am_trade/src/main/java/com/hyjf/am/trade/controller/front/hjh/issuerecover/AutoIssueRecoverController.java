@@ -180,7 +180,7 @@ public class AutoIssueRecoverController extends BaseController{
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
 						commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
-								MQConstant.AUTO_BORROW_RECORD_REPAIR_TAG, UUID.randomUUID().toString(), params));
+								MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("发送【自动备案消息到MQ】MQ失败...");
                     }
