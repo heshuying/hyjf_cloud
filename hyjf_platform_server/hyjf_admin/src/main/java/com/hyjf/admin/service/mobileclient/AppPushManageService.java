@@ -46,8 +46,8 @@ public interface AppPushManageService {
 
     /**
      * 根据ID 更新记录状态
-     * @param id
+     * @param requestBean
      * @return
      */
-    boolean updatePushManageStatusById(Integer id);
+    boolean updatePushManageStatusById(AppPushManageRequestBean requestBean);
 }
