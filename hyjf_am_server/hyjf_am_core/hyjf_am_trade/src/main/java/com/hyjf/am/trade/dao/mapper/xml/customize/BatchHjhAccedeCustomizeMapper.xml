@@ -147,8 +147,9 @@
         SET
             match_dates = IF(datediff(now(),create_time) >= 99,99,datediff(now(),create_time))
         WHERE
---             order_status between #{start,jdbcType=INTEGER} and #{end,jdbcType=INTEGER}
-            order_status <![CDATA[>]]> #{start,jdbcType=INTEGER}
+			MOD(order_status, 10) <![CDATA[<]]> 3 AND
+			create_time BETWEEN STR_TO_DATE(CONCAT(#{startTime}, '00:00:00'), '%Y-%m-%d %H:%i:%s') AND
+								STR_TO_DATE(CONCAT(#{endTime}, '23:59:59'), '%Y-%m-%d %H:%i:%s')
     </update>
 	<!-- add 获取发生异常且开始计息时间为空的的数据并更新其匹配期 huanghui 20181129 end-->
 </mapper>
