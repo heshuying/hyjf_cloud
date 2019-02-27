@@ -2146,6 +2146,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
                     if (!flag) {
+                        sendBidCancelMessage(userId);
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }else{
                         sendBidCancelMessage(userId);
@@ -2179,6 +2180,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     }else{
                         sendBidCancelMessage(userId);
                     }
+
                 } catch (Exception ee) {
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
