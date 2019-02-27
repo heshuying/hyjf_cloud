@@ -259,7 +259,7 @@ public class FddHandle {
 
 		//中北互金修改借款人用途取值 add by yangchangwei 20181227
 		String financePurpose;//借款用途
-		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrow.getFinancePurpose());
+		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrowInfo.getFinancePurpose());
 		JSONObject paramter = new JSONObject();
 
 		paramter.put("nid", borrowTender.getNid());//借款编号

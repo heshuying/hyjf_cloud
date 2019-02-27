@@ -353,7 +353,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             customize.setTitle(contentArticle.getTitle());
             customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
             customize.setMessageId(contentArticle.getId() + "");
-            customize.setMessageUrl("/find/contentArticle" +
+            customize.setMessageUrl(webUrl +"/find/contentArticle" +
                     "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId() + "").replace("{type}", (String) params.get("type")));
             customize.setShareTitle(contentArticle.getTitle());
             customize.setShareContent(contentArticle.getSummary());
