@@ -127,20 +127,17 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/findById/{userId}")
     public UserResponse findUserByUserId(@PathVariable Integer userId) {
-        logger.info("findUserByUserId run...userId is :{}", userId);
+        logger.info("根据userId查询ht_user表,userId:{}", userId);
         UserResponse response = new UserResponse();
-        if(userId!=null){
+        if(userId != null){
             User user = userService.findUserByUserId(userId);
-            logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
                 UserVO userVO = new UserVO();
                 BeanUtils.copyProperties(user, userVO);
                 response.setResult(userVO);
                 response.setRtn(Response.SUCCESS);
-                logger.info("AEMS资产推送user表返回信息user:{}", JSON.toJSONString(user));
-                logger.info("AEMS资产推送user表返回信息userVO:{}", JSON.toJSONString(userVO));
+                logger.info("根据userId查询ht_user表返回的信息,userVO", JSON.toJSONString(userVO));
             }
-            logger.info("AEMS资产推送返回response信息:{}", JSON.toJSONString(response));
             return response;
         }
         return null;

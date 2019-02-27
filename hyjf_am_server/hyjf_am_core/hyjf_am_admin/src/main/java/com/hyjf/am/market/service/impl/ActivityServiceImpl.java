@@ -13,10 +13,10 @@ import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,7 +55,7 @@ public class ActivityServiceImpl implements ActivityService {
         int activitycount = 0;
         ActivityListExample example = new ActivityListExample();
         ActivityListExample.Criteria criteria = example.createCriteria();
-        if (request.getTitle() != null ) {
+        if (StringUtils.isNotBlank(request.getTitle()) ) {
             criteria.andTitleEqualTo(request.getTitle());
         }
         if (request.getStartTime() != null && request.getEndTime() != null) {
@@ -88,7 +88,7 @@ public class ActivityServiceImpl implements ActivityService {
             example.setLimitStart(offset);
             example.setLimitEnd(limit);
         }
-        if (request.getTitle() != null) {
+        if (StringUtils.isNotBlank(request.getTitle())) {
             example.createCriteria().andTitleEqualTo(request.getTitle());
         }
         if (request.getStartTime() != null && request.getEndTime() != null) {

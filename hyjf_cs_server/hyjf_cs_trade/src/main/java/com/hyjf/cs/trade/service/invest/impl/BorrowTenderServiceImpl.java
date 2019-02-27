@@ -2191,8 +2191,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     }
 
     private void sendBidCancelMessage(Integer userId) throws MQException {
+        logger.info("appMsMessage：{}" ,"发送消息~~~~~~~");
         // 替换参数
-        Map<String, String> replaceMap = new HashMap<String, String>();
+        /*Map<String, String> replaceMap = new HashMap<String, String>();
         UserInfoVO info = amUserClient.findUsersInfoById(userId);
         replaceMap.put("val_name", info.getTruename().substring(0, 1));
         replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
@@ -2205,7 +2206,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                 UUID.randomUUID().toString(), smsMessage));
         commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                UUID.randomUUID().toString(), appMsMessage));
+                UUID.randomUUID().toString(), appMsMessage));*/
     }
 
     /**
