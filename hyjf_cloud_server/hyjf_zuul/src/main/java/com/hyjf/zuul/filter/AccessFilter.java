@@ -124,6 +124,14 @@ public class AccessFilter extends ZuulFilter {
 	 * @return
 	 */
 	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
+		// app分享的请求，忽略sign
+		String ignoreSign = request.getParameter("ignoreSign");
+		if(StringUtils.isNotBlank(ignoreSign)){
+			if(Boolean.getBoolean(ignoreSign)){
+				return ctx;
+			}
+		}
+
 		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
 		if (signValue == null) {
 			logger.warn("sign is invalid, sign is: {}", sign);
