@@ -54,5 +54,5 @@ public interface BankSettingService {
      * 得到江西银行功能所有数据条数
      * @return
      */
-    Integer getTotalCount();
+    Integer getTotalCount(JxBankConfig jxBankConfig);
 }
