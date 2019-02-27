@@ -2145,7 +2145,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.error("该项目只能新手出借  {} ",JSONObject.toJSONString(bean));
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
-                    sendBidCancelMessage(userId);
+                    //sendBidCancelMessage(userId);
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
@@ -2173,7 +2173,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 // 出借失败,出借撤销
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
-                    sendBidCancelMessage(userId);
+                    //sendBidCancelMessage(userId);
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
