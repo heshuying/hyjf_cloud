@@ -22,9 +22,10 @@ public class CertSSLProtocolSocketFactory implements ProtocolSocketFactory {
 	// 读取证书，并创建信任
 	public SSLContext createSSLContext(String crtPath) {
 		SSLContext sslc = null;
+		InputStream is = null;
 		try {
 			KeyStore keyStore = KeyStore.getInstance("JKS");
-			InputStream is= new FileInputStream(crtPath);
+			is= new FileInputStream(crtPath);
 			keyStore.load(is, "changeit".toCharArray());
 			// 创建TrustManagerFactory,管理授权证书
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509", "SunJSSE");
@@ -34,6 +35,13 @@ public class CertSSLProtocolSocketFactory implements ProtocolSocketFactory {
 			sslc.init(null, tmf.getTrustManagers(), null);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 		return sslc;
 	}
