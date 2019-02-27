@@ -155,7 +155,7 @@ public class WebAssetManageController extends BaseTradeController {
     }
 
     /**
-     * @Description 获取用户当前持有计划列表分页数据
+     * @Description 获取用户已回款计划列表分页数据
      * @Author pangchengchao
      * @Version v0.1
      * @Date
