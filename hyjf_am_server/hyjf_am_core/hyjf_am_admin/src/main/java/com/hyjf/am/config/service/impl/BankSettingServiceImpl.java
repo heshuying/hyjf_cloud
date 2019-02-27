@@ -109,7 +109,21 @@ public class BankSettingServiceImpl implements BankSettingService {
      * @return
      */
     @Override
-    public Integer getTotalCount() {
-        return jxBankConfigMapper.countByExample(new JxBankConfigExample());
+    public Integer getTotalCount(JxBankConfig jxBankConfig) {
+        JxBankConfigExample example = new JxBankConfigExample();
+
+        example.setOrderByClause("sort_id ASC");
+        JxBankConfigExample.Criteria criteria = example.createCriteria();
+        //删除标识
+        criteria.andDelFlagEqualTo(0);
+        //银行名称
+        if(StringUtils.isNotBlank(jxBankConfig.getBankName())){
+            criteria.andBankNameEqualTo(jxBankConfig.getBankName());
+        }
+        //银行联行号
+        if(StringUtils.isNotBlank(jxBankConfig.getPayAllianceCode())){
+            criteria.andPayAllianceCodeEqualTo(jxBankConfig.getPayAllianceCode());
+        }
+        return jxBankConfigMapper.countByExample(example);
     }
 }
