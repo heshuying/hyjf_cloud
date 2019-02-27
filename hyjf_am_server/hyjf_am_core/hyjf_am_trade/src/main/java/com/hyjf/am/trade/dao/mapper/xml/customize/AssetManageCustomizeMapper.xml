@@ -2229,10 +2229,7 @@
 		else '已结束'
 		END
 		AS creditStatusDesc,
-		CASE WHEN hbc.credit_status = 0 THEN 0
-		ELSE 1
-		END
-		AS orderByCreditStatus,
+		hbc.credit_status  orderByCreditStatus,
 		<!-- 债转详情URL -->
 		CONCAT(#{host},'?creditNid=',hbc.credit_nid,'&amp;sign=',#{sign}) AS creditRecordInfoUrl
 		FROM
@@ -2255,7 +2252,7 @@
 				AND hbc.credit_capital_assigned <![CDATA[>]]> #{creditCapitalAssigned}
 			</if>
 		</where>
-		ORDER BY orderByCreditStatus ASC , creditTime DESC
+		ORDER BY hbc.credit_status ASC , hbc.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
