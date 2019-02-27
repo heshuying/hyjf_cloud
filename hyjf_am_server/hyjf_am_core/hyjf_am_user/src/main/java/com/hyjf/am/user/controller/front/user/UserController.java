@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.front.user;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -136,7 +137,10 @@ public class UserController extends BaseController {
                 BeanUtils.copyProperties(user, userVO);
                 response.setResult(userVO);
                 response.setRtn(Response.SUCCESS);
+                logger.info("AEMS资产推送user表返回信息user:{}", JSON.toJSONString(user));
+                logger.info("AEMS资产推送user表返回信息userVO:{}", JSON.toJSONString(userVO));
             }
+            logger.info("AEMS资产推送返回response信息:{}", JSON.toJSONString(response));
             return response;
         }
         return null;

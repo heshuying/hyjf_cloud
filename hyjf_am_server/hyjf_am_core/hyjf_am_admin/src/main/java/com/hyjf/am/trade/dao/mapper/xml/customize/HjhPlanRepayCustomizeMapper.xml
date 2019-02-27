@@ -190,7 +190,7 @@
         --         LEFT JOIN ht_param_name pna_tender ON cast(hha.invite_user_attribute AS CHAR) = pna_tender.name_cd
         --         AND pna_tender.name_class = 'USER_PROPERTY'
         <include refid="Where_Clause_Repay" />
-        ORDER BY repay_should_time ASC
+        ORDER BY repay_should_time desc
         <if test="limitStart != null and limitEnd !=null" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>

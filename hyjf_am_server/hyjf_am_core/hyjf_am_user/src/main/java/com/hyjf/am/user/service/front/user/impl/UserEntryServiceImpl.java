@@ -30,7 +30,7 @@ public class UserEntryServiceImpl extends BaseServiceImpl implements UserEntrySe
      */
     @Override
     public boolean updateUserEntryInfoFromCrm(String userId) {
-        logger.info("开始更新员工入职信息，ID：" + userId);
+        logger.info("开始更新员工入职信息，CRM_ID：" + userId);
         boolean updateResult = false;
         List<UserInfo> users = this.queryEmployeeEntryList(userId);
         if (users.size() == 1) {
