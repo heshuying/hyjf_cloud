@@ -1444,7 +1444,7 @@
 		HAVING MIN(hcr.recover_status)=1
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
-			ORDER BY t.orderby_liquidate_fact_time desc,t.type,t.accede_account
+            ORDER BY t.liquidate_fact_time desc,t.accede_order_id asc
 		</if>
 		<if test="orderByFlag == 1" >
 			<if test="sortBy == 'DESC'" >
@@ -2229,10 +2229,7 @@
 		else '已结束'
 		END
 		AS creditStatusDesc,
-		CASE WHEN hbc.credit_status = 0 THEN 0
-		ELSE 1
-		END
-		AS orderByCreditStatus,
+		hbc.credit_status  orderByCreditStatus,
 		<!-- 债转详情URL -->
 		CONCAT(#{host},'?creditNid=',hbc.credit_nid,'&amp;sign=',#{sign}) AS creditRecordInfoUrl
 		FROM
@@ -2255,7 +2252,7 @@
 				AND hbc.credit_capital_assigned <![CDATA[>]]> #{creditCapitalAssigned}
 			</if>
 		</where>
-		ORDER BY orderByCreditStatus ASC , creditTime DESC
+		ORDER BY hbc.credit_status ASC , hbc.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
@@ -2478,7 +2475,7 @@
 		hcr.recover_account repay_account_wait,
 		hcr.recover_account received_interest,
 
-		IFNULL(FROM_UNIXTIME( IF(hcr.recover_time='',NULL,hcr.recover_time), '%Y-%m-%d' ),'--') AS last_payment_time,
+		IFNULL(FROM_UNIXTIME( IF(hcr.recover_yestime='',NULL,hcr.recover_yestime), '%Y-%m-%d' ),'--') AS last_payment_time,
 
 		DATE_FORMAT(hbtc.create_time,'%Y-%m-%d') as create_time,
 		hbtc.create_time as order_by_addtime,
@@ -2513,7 +2510,7 @@
 				ORDER BY t.order_by_addtime desc, t.order_id asc
 			</when>
 			<when test="type == 2">
-				ORDER BY t.orderby_quit_time desc, t.order_id asc
+				ORDER BY t.last_payment_time desc, t.order_id asc
 			</when>
 		</choose>
 		LIMIT #{limitStart} , #{limitEnd}

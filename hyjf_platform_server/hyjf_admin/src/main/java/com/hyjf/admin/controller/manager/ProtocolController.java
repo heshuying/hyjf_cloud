@@ -68,7 +68,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "根据id查询显示修改界面", notes = "根据id查询显示修改界面")
     @PostMapping("/infoInfoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH )
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW )
     public AdminResult<ProtocolTemplateCommonVO> infoInfoAction(@RequestBody  AdminProtocolRequest request){
         AdminProtocolResponse response = null;
         response = protocolService.getProtocolTemplateById(request);
