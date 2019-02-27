@@ -1072,47 +1072,64 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @throws MQException
      */
     private void sendCreditSuccessMessage(CreditTenderVO creditTender,BorrowCreditVO borrowCredit) throws MQException {
-        UserVO webUser = this.amUserClient.findUserById(borrowCredit.getCreditUserId());
-        UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(borrowCredit.getCreditUserId());
+        //获取承接人用户信息
+        UserVO webUser = this.amUserClient.findUserById(creditTender.getUserId());
+        UserInfoVO usersInfo = this.amUserClient.findUserInfoById(creditTender.getUserId());
+
         if (webUser != null) {
-            Map<String, String> appParam = new HashMap<String, String>();
-            Map<String, String> smsParam = new HashMap<String, String>();
-            if (usersInfo.getTruename() != null && usersInfo.getTruename().length() > 1) {
-                appParam.put("val_name", usersInfo.getTruename().substring(0, 1));
-                smsParam.put("val_name", usersInfo.getTruename().substring(0, 1));
-            } else {
-                appParam.put("val_name", usersInfo.getTruename());
-                smsParam.put("val_name", usersInfo.getTruename());
-            }
-            if (usersInfo.getSex() == 1) {
-                appParam.put("val_sex", "先生");
-                smsParam.put("val_sex", "先生");
-            } else if (usersInfo.getSex() == 2) {
-                appParam.put("val_sex", "女士");
-                smsParam.put("val_sex", "女士");
-            } else {
-                appParam.put("val_sex", "");
-                smsParam.put("val_sex", "");
-            }
+            //给承接人推送消息
+            Map<String, String> appParam = getCommonMessage(usersInfo);
             appParam.put("val_title", creditTender.getCreditNid() + "");
             appParam.put("val_balance", creditTender.getAssignPay() + "");
             appParam.put("val_profit", creditTender.getAssignInterest() + "");
             appParam.put("val_amount", creditTender.getAssignAccount() + "");
-            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appParam));
 
+            AppMsMessage message = new AppMsMessage(null, appParam, webUser.getMobile(), MessageConstant.SMS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_CJZQ);
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), message));
+
+            logger.info("【债转】" + borrowCredit.getBidNid() + "已认购本金：" + borrowCredit.getCreditCapitalAssigned() + "---债转本金：" + borrowCredit.getCreditCapital());
             if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
-                // 向出让人推送债转完全承接消息
-                smsParam.put("val_amount", borrowCredit.getCreditCapital() + "");
-                smsParam.put("val_profit", borrowCredit.getCreditInterestAdvanceAssigned() + "");
-                // 发送短信验证码
-                SmsMessage smsMessage = new SmsMessage(null, smsParam, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
-                        CustomConstants.CHANNEL_TYPE_NORMAL);
-                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
+                //转让人用户信息
+                UserVO creditUser = this.amUserClient.findUserById(borrowCredit.getCreditUserId());
+                UserInfoVO creditUserInfo = this.amUserClient.findUserInfoById(borrowCredit.getCreditUserId());
+                if(creditUser != null){
+                    // 向出让人推送债转完全承接消息
+                    Map<String, String> param = getCommonMessage(creditUserInfo);
 
-                AppMsMessage appMsMessage = new AppMsMessage(null, smsParam, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
+                    param.put("val_amount", borrowCredit.getCreditCapital() + "");
+                    param.put("val_profit", borrowCredit.getCreditInterestAdvanceAssigned() + "");
+                    // 发送短信验证码
+                    SmsMessage smsMessage = new SmsMessage(null, param, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
+                            CustomConstants.CHANNEL_TYPE_NORMAL);
+                    commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
+
+                    AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
+                    commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
+                }
             }
         }
+    }
+
+    /**
+     * 获取推送共同消息
+     * @param userInfoVO
+     * @return
+     */
+    private Map<String, String> getCommonMessage(UserInfoVO userInfoVO){
+        Map<String, String> param = new HashMap<String, String>();
+        if (userInfoVO.getTruename() != null && userInfoVO.getTruename().length() > 1) {
+            param.put("val_name", userInfoVO.getTruename().substring(0, 1));
+        } else {
+            param.put("val_name", userInfoVO.getTruename());
+        }
+        if (userInfoVO.getSex() == 1) {
+            param.put("val_sex", "先生");
+        } else if (userInfoVO.getSex() == 2) {
+            param.put("val_sex", "女士");
+        } else {
+            param.put("val_sex", "");
+        }
+        return param;
     }
 
     /**
