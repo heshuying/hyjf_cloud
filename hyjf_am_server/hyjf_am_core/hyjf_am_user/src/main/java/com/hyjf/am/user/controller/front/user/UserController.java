@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.front.user;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -126,16 +127,16 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/findById/{userId}")
     public UserResponse findUserByUserId(@PathVariable Integer userId) {
-        logger.info("findUserByUserId run...userId is :{}", userId);
+        logger.info("根据userId查询ht_user表,userId:{}", userId);
         UserResponse response = new UserResponse();
-        if(userId!=null){
+        if(userId != null){
             User user = userService.findUserByUserId(userId);
-            logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
                 UserVO userVO = new UserVO();
                 BeanUtils.copyProperties(user, userVO);
                 response.setResult(userVO);
                 response.setRtn(Response.SUCCESS);
+                logger.info("根据userId查询ht_user表返回的信息,userVO", JSON.toJSONString(userVO));
             }
             return response;
         }
