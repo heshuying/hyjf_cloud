@@ -7,6 +7,7 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BatchCouponTimeoutCommonCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -69,8 +70,10 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
         if (!CollectionUtils.isEmpty(userCouponThrList)) {
             for (BatchCouponTimeoutCommonCustomizeVO userCoupon : userCouponThrList) {
                 UserVO user = amUserClient.findUserById(userCoupon.getUserId());
-                userCoupon.setMobile(user.getMobile());
-                userCouponThrs.add(userCoupon);
+                if(user != null && user.getMobile() !=null){
+                    userCoupon.setMobile(user.getMobile());
+                    userCouponThrs.add(userCoupon);
+                }
             }
         }
         // 三日到期短信提醒
@@ -91,14 +94,15 @@ public class CouponExpiredSmsServiceImpl implements CouponExpiredSmsService {
                     msg.put("val_amount", userCoupon.getCouponQuota().toString());
                     SmsMessage smsMessage = null;
                     if (flag == 1) {
+
                         // 一日到期短信提醒
-                        smsMessage = new SmsMessage(userCoupon.getUserId(), msg, userCoupon.getMobile(), null, "smsSendForMobile", null,
+                        smsMessage = new SmsMessage(userCoupon.getUserId(), msg, userCoupon.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
                                 CustomConstants.PARAM_TPL_ONE_DEADLINE, CustomConstants.CHANNEL_TYPE_NORMAL);
                         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
                         logger.info("代金券一日到期短信提醒，用户编号：" + userCoupon.getUserId() + "体验金面值总额：" + userCoupon.getCouponQuota());
                     } else {
                         // 三日到期短信提醒
-                        smsMessage = new SmsMessage(userCoupon.getUserId(), msg, userCoupon.getMobile(), null, "smsSendForMobile", null,
+                        smsMessage = new SmsMessage(userCoupon.getUserId(), msg, userCoupon.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
                                 CustomConstants.PARAM_TPL_THREE_DEADLINE, CustomConstants.CHANNEL_TYPE_NORMAL);
                         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
                         logger.info("代金券三日到期短信提醒，用户编号：" + userCoupon.getUserId() + "体验金面值总额：" + userCoupon.getCouponQuota());

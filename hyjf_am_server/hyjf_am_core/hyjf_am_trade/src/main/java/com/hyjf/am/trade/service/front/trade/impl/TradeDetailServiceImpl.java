@@ -80,6 +80,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         String status = StringUtils.isNotEmpty(request.getStatus()) ? request.getStatus() : null;
         String startDate = StringUtils.isNotEmpty(request.getStartDate()) ? request.getStartDate() : null;
         String endDate = StringUtils.isNotEmpty(request.getEndDate()) ? request.getEndDate() : null;
+        logger.info("startDate -> " + startDate + "endDate -> " + endDate);
         params.put("userId", userId);
         params.put("status", status);
         params.put("startDate", startDate);

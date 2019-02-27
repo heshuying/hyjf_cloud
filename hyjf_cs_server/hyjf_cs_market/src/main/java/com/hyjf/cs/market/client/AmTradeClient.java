@@ -5,8 +5,7 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-import com.hyjf.am.vo.trade.TenderCityCountVO;
-import com.hyjf.am.vo.trade.TenderSexCountVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.math.BigDecimal;
@@ -120,4 +119,7 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	AppPushManageVO getAnnouncementsByID(Integer contentArticleId);
+
+	/** 用户测评配置 */
+	List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
 }

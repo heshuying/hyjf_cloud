@@ -331,7 +331,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setMobile(rechargeBean.getMobile());
 		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
-		bean.setRetUrl(rechargeBean.getRetUrl()+"?status=99&statusDesc=充值失败&logOrdId="+logOrderId);
+		bean.setRetUrl(rechargeBean.getRetUrl()+"&status=99&statusDesc=充值失败&logOrdId="+logOrderId);
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
 		bean.setLogOrderId(logOrderId);
 		bean.setLogOrderDate(orderDate);
@@ -514,7 +514,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("accountId", user.getBankAccount());
 		//充值提示语
 		ret.put("rcvAccountName", "惠众商务顾问（北京）有限公司<br/>");
-		ret.put("rcvAccount", "791913149300306<br/>");
+		ret.put("rcvAccount", "7919 1314 9300 306<br/>");
 		ret.put("rcvOpenBankName", "江西银行南昌铁路支行<br/>");
 		ret.put("kindlyReminder", "①用户必须使用在平台唯一绑定银行卡进行充值；<br/>②银行转账时，请选择（城市商业银行）江西银行或者南昌银行；<br/>③线下充值的到账时间一般为1-3天（具体到账时间以银行的实际到账时间为准）；");
 		// TODO  需要返回新的绑卡路径

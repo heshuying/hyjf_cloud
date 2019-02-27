@@ -540,7 +540,7 @@ public class MspApplyController extends BaseController {
 	@ResponseBody
 	@PostMapping("/mspUpdateAction")
 	@ApiOperation(value = "配置修改", notes = "配置修改")
-	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updateAction(HttpServletRequest request,
 			@RequestBody MspRequest mspRequestBean) {
 
@@ -558,7 +558,7 @@ public class MspApplyController extends BaseController {
 	@ResponseBody
 	@PostMapping("/configureNameError")
 	@ApiOperation(value = "检测标名", notes = "检测标名")
-	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult configureNameError(HttpServletRequest request,
 			@RequestBody MspRequest mspRequestBean) {
 

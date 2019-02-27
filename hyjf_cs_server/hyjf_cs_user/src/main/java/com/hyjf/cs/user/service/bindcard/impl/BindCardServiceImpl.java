@@ -236,14 +236,17 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		String notifyUrl = "http://CS-USER/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
         String forgotPwdUrl = systemConfig.getFrontHost()+systemConfig.getForgetpassword();
+		UserInfoVO userInfoVO = amUserClient.findUserInfoById(user.getUserId());
+		BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(user.getUserId());
+
 
 		// 调用开户接口
 		BankCallBean bindCardBean = new BankCallBean();
 		bindCardBean.setTxCode(BankCallConstant.TXCODE_BIND_CARD_PAGE);
 		bindCardBean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
-		bindCardBean.setIdNo(user.getIdcard());
-		bindCardBean.setName(user.getTruename());
-		bindCardBean.setAccountId(user.getBankAccount());
+		bindCardBean.setIdNo(userInfoVO.getIdcard());
+		bindCardBean.setName(userInfoVO.getTruename());
+		bindCardBean.setAccountId(bankOpenAccountVO.getAccount());
 		bindCardBean.setUserIP(userIp);
 		bindCardBean.setRetUrl(retUrl);
 		bindCardBean.setSuccessfulUrl(successfulUrl);
@@ -264,7 +267,8 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		}
 		return map;
 	}
-	
+
+
 	/**
 	 * 请求银行绑卡接口
 	 */
@@ -478,41 +482,42 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 						throw new CheckException(MsgEnum.ERR_CARD_SAVE);
 					}
 				}
+
+				// 插入操作记录表
+				String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
+				if(bankId == null) {
+					bankId = "0";
+				}
+				// 查询银行配置信息
+				JxBankConfigVO bankConfig = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
+
+				BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
+				bankCardLogRequest.setUserId(userId);
+				bankCardLogRequest.setUserName(userVO.getUsername());
+				bankCardLogRequest.setBankCode(String.valueOf(bankId));
+				bankCardLogRequest.setCardNo(cardNo);
+				if(bankConfig != null){
+					bankCardLogRequest.setBankName(bankConfig.getBankName());
+				}
+				bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
+				bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
+				bankCardLogRequest.setStatus(0);// 成功
+				bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
+				boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
+				if (!isUpdateFlag) {
+					throw new CheckException(MsgEnum.ERR_CARD_SAVE);
+				}
+				BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
+				if (retCard != null && StringUtils.isNotBlank(bean.getMobile())) {
+					BankCardRequest bankCard=new BankCardRequest();
+					bankCard.setId(retCard.getId());
+					bankCard.setMobile(bean.getMobile());
+					amUserClient.updateUserCard(bankCard);
+				}
 			}
 		}
-		
-		// 插入操作记录表
-		String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
-		if(bankId == null) {
-			bankId = "0";
-		}
-		// 查询银行配置信息
-		JxBankConfigVO bankConfig = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
 
-		BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
-		bankCardLogRequest.setUserId(userId);
-		bankCardLogRequest.setUserName(userVO.getUsername());
-		bankCardLogRequest.setBankCode(String.valueOf(bankId));
-		bankCardLogRequest.setCardNo(cardNo);
-		if(bankConfig != null){
-			bankCardLogRequest.setBankName(bankConfig.getBankName());
-		}
-		bankCardLogRequest.setCardType(0);// 卡类型 0普通提现卡1默认卡2快捷支付卡
-		bankCardLogRequest.setOperationType(0);// 操作类型 0绑定 1删除
-		bankCardLogRequest.setStatus(0);// 成功
-		bankCardLogRequest.setCreateTime(GetDate.getNowTime());// 操作时间
-		boolean isUpdateFlag = amUserClient.insertBindCardLog(bankCardLogRequest) > 0 ? true : false;
-		if (!isUpdateFlag) {
-			throw new CheckException(MsgEnum.ERR_CARD_SAVE);
-		}
-		BankCardVO retCard = amUserClient.queryUserCardValid(String.valueOf(userId), cardNo);
-        if (retCard != null && StringUtils.isNotBlank(bean.getMobile())) {
-            BankCardRequest bankCard=new BankCardRequest();
-            bankCard.setId(retCard.getId());
-            bankCard.setMobile(bean.getMobile());
-            amUserClient.updateUserCard(bankCard);
-        }
-		
+
 	}
 	
 	/**

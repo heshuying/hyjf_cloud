@@ -430,4 +430,7 @@ public interface AmTradeClient {
      * @return
      */
     List<ProtocolTemplateVO> getProtocolTypes();
+
+    /** 用户测评配置 */
+    List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
 }

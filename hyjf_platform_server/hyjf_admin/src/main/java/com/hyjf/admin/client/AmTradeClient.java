@@ -592,6 +592,8 @@ public interface AmTradeClient {
 
     HjhDebtCreditVO selectHjhDebtCreditByCreditNid(String creditNid);
 
+    HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
+
     int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
 
     int requestDebtEnd(HjhDebtCreditVO credit, String sellerUsrcustid, String sellerAuthCode);
@@ -614,6 +616,15 @@ public interface AmTradeClient {
      * @return
      */
     HjhAccedeResponse selectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+    /**
+     * 查询计划加入明细
+     * @auther: nxl
+     * @date: 2018/7/12
+     * @param tenderExceptionSolveRequest
+     * @return
+     */
+    HjhAccedeResponse doSelectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+
     /**
      * 查询计划加入明细临时表
      * @auther: nxl
@@ -706,6 +717,14 @@ public interface AmTradeClient {
      * @return
      */
     BorrowAndInfoVO selectBorrowByNid(String borrowNid);
+
+    /**
+     * 根据标的编号查询详细信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowAndInfoVO doSelectBorrowByNid(String borrowNid);
 
     /**
      * 根据标的编号查询borrowInfo
@@ -2987,17 +3006,6 @@ public interface AmTradeClient {
      * @return
      */
     FddTempletCustomizeResponse getRecordInfoById(Integer id);
-    int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request);
-
-    int getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request);
-
-    List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
-
-    HjhAccountBalanceVO getHjhAccountBalanceSum(HjhAccountBalanceRequest request);
-
-    int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request);
-
-    List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request);
 
     List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
 

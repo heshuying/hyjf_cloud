@@ -58,7 +58,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         Integer timestamp=GetDate.getTime10(certRequest.getRepayYestime());
         logger.info("timestamp:" + timestamp);
         BorrowRepayPlanExample borrowRepayPlanExample=new BorrowRepayPlanExample();
-        borrowRepayPlanExample.createCriteria().andRepayYestimeBetween(timestamp-60, timestamp).
+        borrowRepayPlanExample.createCriteria().andRepayYestimeBetween(timestamp-60, timestamp+20).
                 andBorrowNidEqualTo(certRequest.getBorrowNid());
         List<BorrowRepayPlan> borrowRepayPlans=borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
         return borrowRepayPlans;

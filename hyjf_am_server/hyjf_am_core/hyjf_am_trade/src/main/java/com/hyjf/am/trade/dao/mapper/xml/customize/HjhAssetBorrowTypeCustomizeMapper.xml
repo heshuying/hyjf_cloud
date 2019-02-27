@@ -23,10 +23,21 @@
         <result column="asset_type_name" property="assetTypeName" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="VARCHAR"/>
     </resultMap>
+    <select id="countRecord" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.AdminBorrowFlowRequest">
+        SELECT
+        COUNT(1)
+        FROM
+        ht_hjh_asset_borrowtype hab
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = hab.borrow_cd
+        where 1=1
+        <include refid="Where_Clause"/>
+    </select>
+
     <sql id="Where_Clause">
         <!-- 项目类型 -->
         <if test="borrowCdSrch != null and borrowCdSrch != ''">
-            AND hab.borrow_class = #{borrowCdSrch}
+            AND bpt.borrow_class = #{borrowCdSrch}
         </if>
         <!-- 资产来源 -->
         <if test="instCodeSrch != null and instCodeSrch != ''">
@@ -41,16 +52,6 @@
             AND hab.is_open = #{statusSrch}
         </if>
     </sql>
-
-    <select id="countRecord" resultType="java.lang.Integer"
-            parameterType="com.hyjf.am.resquest.admin.AdminBorrowFlowRequest">
-        SELECT
-        COUNT(1)
-        FROM
-        ht_hjh_asset_borrowtype hab
-        where 1=1
-        <include refid="Where_Clause"/>
-    </select>
 
     <select id="getRecordList" resultMap="selectAssetBorrowTypeListMap"
             parameterType="com.hyjf.am.resquest.admin.AdminBorrowFlowRequest">
@@ -72,7 +73,7 @@
         hab.remark,
         bpt.borrow_name,
         hic.inst_name,
-        hat.asset_type_name,
+        hat.asset_type_name
         #{paramNameVOS.name} `STATUS`
         FROM
         ht_hjh_asset_borrowtype hab
