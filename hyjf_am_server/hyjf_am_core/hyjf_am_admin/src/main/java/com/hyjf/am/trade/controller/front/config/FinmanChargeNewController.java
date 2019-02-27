@@ -158,12 +158,12 @@ public class FinmanChargeNewController extends BaseController {
 
     /**
      *
-     * 根据borrowCd查询borrowClass
+     * 根据borrowClass查询borrowClass是否存在
      * @author xiehuili
      * @return
      */
-    public String getBorrowClass(String borrowCd){
-        return finmanChargeNewService.getBorrowClass(borrowCd);
+    public String getBorrowClass(String borrowClass){
+        return finmanChargeNewService.getBorrowClass(borrowClass);
     }
 
 }

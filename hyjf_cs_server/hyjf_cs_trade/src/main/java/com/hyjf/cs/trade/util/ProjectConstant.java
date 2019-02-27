@@ -507,6 +507,21 @@ public class ProjectConstant {
                                     break;
                                 case "financePurpose":
                                     detailBean.setKey("借款用途");
+                                    if ("01".equals(result.toString())) {
+                                        detailBean.setVal("个人消费");
+                                    } else if ("02".equals(result.toString())) {
+                                        detailBean.setVal("个人经营");
+                                    } else if ("03".equals(result.toString())) {
+                                        detailBean.setVal("个人资金周转");
+                                    } else if ("04".equals(result.toString())) {
+                                        detailBean.setVal("房贷");
+                                    } else if ("05".equals(result.toString())) {
+                                        detailBean.setVal("企业经营");
+                                    } else if ("06".equals(result.toString())) {
+                                        detailBean.setVal("企业周转");
+                                    } else if ("99".equals(result.toString())) {
+                                        detailBean.setVal("其他");
+                                    }
                                     detailBeanList.add(detailBean);
                                     break;
                                 case "monthlyIncome":

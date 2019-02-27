@@ -136,7 +136,9 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
             //超活跃，投资笔数最多
             bean.setListtOneInvestMost(amAdminClient.getOneInvestMost(3));
         } else {
+            //本月成交金额
             bean.setListMonthDealMoney(amAdminClient.getMonthDealMoney(0, 1));
+            //去年本月成交金额
             bean.setListLastMonthDealMoney(amAdminClient.getMonthDealMoney(12, 13));
             bean.setListOperationReportInfoCustomize(amAdminClient.getRevenueAndYield(1, 12, 13));
             //充值金额、充值笔数

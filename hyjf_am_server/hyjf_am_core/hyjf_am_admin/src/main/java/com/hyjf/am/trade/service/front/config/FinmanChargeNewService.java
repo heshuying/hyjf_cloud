@@ -51,10 +51,10 @@ public interface FinmanChargeNewService {
 
     /**
      *
-     * 根据borrowCd查询borrowClass
+     * 根据borrowClass查询borrowClass是否存在
      * @author xiehuili
      * @return
      */
-    String getBorrowClass(String borrowCd);
+    String getBorrowClass(String borrowClass);
 
 }

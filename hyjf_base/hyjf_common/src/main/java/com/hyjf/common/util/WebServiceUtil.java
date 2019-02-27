@@ -64,8 +64,7 @@ public class WebServiceUtil {
             // 给方法传递参数，并且调用方法
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
-            return jsonMessage("系统异常！", "999999").toString();
+            return jsonMessage(e.toString(), "999999").toString();
         }
     }
 
