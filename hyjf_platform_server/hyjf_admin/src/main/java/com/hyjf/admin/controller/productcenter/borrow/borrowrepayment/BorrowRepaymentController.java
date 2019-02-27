@@ -188,7 +188,7 @@ public class BorrowRepaymentController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        copyForm.setLimitStart(1);
+        copyForm.setLimitStart(0);
         copyForm.setLimitEnd(defaultRowMaxCount);
         // 查询
         AdminBorrowRepaymentResponse resultList = this.borrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(copyForm);
