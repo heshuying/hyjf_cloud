@@ -592,6 +592,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     logger.error(logMsgHeader + "该计划没有可投标的！");
                     return FAIL;
                 }
+
+                // 智投订单状态从初始状态7X恢复为X
+                this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_INIT%10);
+
                 investCountForLog += 1;
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
