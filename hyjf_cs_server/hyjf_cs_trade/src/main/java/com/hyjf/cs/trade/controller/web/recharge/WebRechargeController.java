@@ -86,7 +86,7 @@ public class WebRechargeController extends BaseTradeController{
 		String ipAddr = CustomUtil.getIpAddr(request);
 		UserDirectRechargeBean directRechargeBean = new UserDirectRechargeBean();
 		// 拼装参数 调用江西银行
-		String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeError";
+		String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeError?token=1";
 		String bgRetUrl = "http://CS-TRADE/hyjf-web/recharge/bgreturn" + "?phone="+bankRechargeVO.getMobile();
 		String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/rechargeSuccess?money="+bankRechargeVO.getMoney();
 		directRechargeBean.setRetUrl(retUrl);
