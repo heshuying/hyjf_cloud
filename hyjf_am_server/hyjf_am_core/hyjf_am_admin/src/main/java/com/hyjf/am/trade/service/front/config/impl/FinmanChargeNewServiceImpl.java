@@ -127,19 +127,19 @@ public class FinmanChargeNewServiceImpl implements FinmanChargeNewService {
 
     /**
      *
-     * 根据borrowCd查询borrowClass
+     * 根据borrowClass查询borrowClass是否存在
      * @author xiehuili
      * @return
      */
     @Override
-    public String getBorrowClass(String borrowCd){
-        String borrowClass="";
+    public String getBorrowClass(String borrowClass){
+        String borrowClassValue="";
         BorrowProjectTypeExample example=new BorrowProjectTypeExample();
-        example.createCriteria().andBorrowCdEqualTo(Integer.valueOf(borrowCd));
+        example.createCriteria().andBorrowClassEqualTo(borrowClass);
         List<BorrowProjectType>  list = borrowProjectTypeMapper.selectByExample(example);
         if(!CollectionUtils.isEmpty(list)){
-            borrowClass=list.get(0).getBorrowClass();
+            borrowClassValue=list.get(0).getBorrowClass();
         }
-        return borrowClass;
+        return borrowClassValue;
     }
 }

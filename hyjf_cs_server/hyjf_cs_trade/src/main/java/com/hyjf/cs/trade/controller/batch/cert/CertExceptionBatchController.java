@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/certException")
+@RequestMapping("/cs-trade/batch/certException")
 public class CertExceptionBatchController {
 
     @Autowired
