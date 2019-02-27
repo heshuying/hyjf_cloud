@@ -3006,17 +3006,6 @@ public interface AmTradeClient {
      * @return
      */
     FddTempletCustomizeResponse getRecordInfoById(Integer id);
-    int getHjhAccountBalanceMonthCountNew(HjhAccountBalanceRequest request);
-
-    int getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request);
-
-    List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
-
-    HjhAccountBalanceVO getHjhAccountBalanceSum(HjhAccountBalanceRequest request);
-
-    int getHjhAccountBalancecountByDay (HjhAccountBalanceRequest request);
-
-    List<HjhAccountBalanceVO> getHjhAccountBalanceListByDay(HjhAccountBalanceRequest request);
 
     List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
 
