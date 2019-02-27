@@ -2510,7 +2510,7 @@
 				ORDER BY t.order_by_addtime desc, t.order_id asc
 			</when>
 			<when test="type == 2">
-				ORDER BY t.orderby_quit_time desc, t.order_id asc
+				ORDER BY t.last_payment_time desc, t.order_id asc
 			</when>
 		</choose>
 		LIMIT #{limitStart} , #{limitEnd}
