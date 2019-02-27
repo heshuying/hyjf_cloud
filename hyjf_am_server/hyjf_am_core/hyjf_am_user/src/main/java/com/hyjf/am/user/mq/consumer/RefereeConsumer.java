@@ -92,8 +92,7 @@ public class RefereeConsumer implements RocketMQListener<MessageExt>, RocketMQPu
         try {
             refereeService.updateSpreadsUsers(userId, spreadsUserId, operationName, ip);
         } catch (Exception e) {
-            logger.error("消费出错", e);
-            //异常时重发
+            logger.error("【客户修改推荐人】消费出错", e);
             return;
         }
         logger.info("********************更新客户推荐人信息结束*************************");

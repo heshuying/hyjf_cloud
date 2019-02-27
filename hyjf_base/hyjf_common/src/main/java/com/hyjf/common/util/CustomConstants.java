@@ -672,6 +672,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 自动放款提醒-放款修复异常 */
     public static final String PARAM_TPL_FANGKUAN_SHIBAI = "TPL_FANGKUAN_SHIBAI";
 
+    /** 投资撤销 */
+    public static final String PARAM_TPL_BIDCANCEL = "TPL_BIDCANCEL";
+
     /** 计划即将清算（二期） */
     public static final String JYTZ_HTJ_JJQS = "JYTZ_HTJ_JJQS";
 
@@ -1078,6 +1081,8 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 消息推送模板-优惠券已失效 */
     public static final String JYTZ_COUPON_INVALIDED = "JYTZ_COUPON_INVALIDED";
+    /** 消息推送模板-优惠券已失效 */
+    public static final String JYTZ_TPL_BIDCANCEL = "JYTZ_TPL_BIDCANCEL";
     
     /** 消息推送模板-第三方接口注册用户密码发送*/
     public static final String THIRD_PARTY_REGIEST_PASSWORD = "THIRD_PARTY_REGIEST_PASSWORD";
