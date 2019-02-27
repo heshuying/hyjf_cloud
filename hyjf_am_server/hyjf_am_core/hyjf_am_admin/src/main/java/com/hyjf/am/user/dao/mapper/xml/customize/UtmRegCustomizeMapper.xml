@@ -41,7 +41,7 @@
 			<if test="sourceType != null" >
 				and source_type =  #{sourceType,jdbcType=INTEGER}
 			</if>
-			<if test="sourceId != null" >
+			<if test="sourceId != null and sourceId != ''" >
 				and source_id =  #{sourceId}
 			</if>
 			<if test="sourceIdSrch != null" >
