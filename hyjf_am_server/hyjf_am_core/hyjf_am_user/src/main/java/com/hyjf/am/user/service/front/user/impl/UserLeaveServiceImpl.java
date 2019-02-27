@@ -71,6 +71,8 @@ public class UserLeaveServiceImpl extends BaseServiceImpl implements UserLeaveSe
         UserInfo userInfo = new UserInfo();
         // 用户属性(无主单)
         userInfo.setAttribute(0);
+        // 为了拦截器正确发送MQ，设置一下userId
+        userInfo.setUserId(userId);
         UserInfoExample usersInfoExample = new UserInfoExample();
         UserInfoExample.Criteria uCriteria = usersInfoExample.createCriteria();
         uCriteria.andUserIdEqualTo(userId);
