@@ -8,6 +8,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.bean.AuthBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -83,7 +84,7 @@ public class SensorsDataAuthServiceImpl extends BaseServiceImpl implements Senso
             logger.error("神策数据统计:授权相关,授权订单号为空");
             return;
         }
-        Map<String, Object> properties = new HashMap<String, Object>();
+        /*Map<String, Object> properties = new HashMap<String, Object>();
         if (!"paymentAuth".equals(authType)) {
             properties.put("auth_name", "智投授权");
             if ("autoBid".equals(authType)) {
@@ -114,6 +115,40 @@ public class SensorsDataAuthServiceImpl extends BaseServiceImpl implements Senso
             // 调用神策track事件:服务费授权
             sa.track(String.valueOf(userId), true, "fee_auth_result", properties);
             sa.shutdown();
+        }*/
+
+
+
+        Map<String, Object> properties = new HashMap<String, Object>();
+        if (AuthBean.AUTH_TYPE_PAYMENT_AUTH.equals(authType)) {
+            properties.put("auth_name", "担保机构授权");
+            if (hjhUserAuth.getAutoPaymentTime() != null) {
+                properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoPaymentTime()));
+            }
+        }else if(AuthBean.AUTH_TYPE_PAY_REPAY_AUTH.equals(authType)){
+            // 借款人授权
+            properties.put("auth_name", "借款人授权");
+            if (hjhUserAuth.getAutoRepayTime() != null) {
+                properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoRepayTime()));
+            }
+        } else {
+            properties.put("auth_name", "出借人授权");
+            if (AuthBean.AUTH_TYPE_AUTO_BID.equals(authType)) {
+                if (hjhUserAuth.getAutoBidTime() != null) {
+                    properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoBidTime()));
+                }
+            } else if (AuthBean.AUTH_TYPE_AUTO_CREDIT.equals(authType)) {
+                if (hjhUserAuth.getAutoCreditTime() != null) {
+                    properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoCreditTime()));
+                }
+            } else {
+                if (hjhUserAuth.getAutoCreditTime() != null) {
+                    properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoCreditTime()));
+                }
+            }
         }
+        // 调用神策track事件:智投授权结果
+        sa.track(String.valueOf(userId), true, "plan_auth_result", properties);
+        sa.shutdown();
     }
 }

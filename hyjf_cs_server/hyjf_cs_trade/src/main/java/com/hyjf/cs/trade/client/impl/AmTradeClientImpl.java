@@ -1390,7 +1390,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
-            return response.getResultList();
+            return CollectionUtils.isEmpty(response.getResultList()) ? new ArrayList<>() : response.getResultList();
         }
         return null;
     }
