@@ -452,7 +452,7 @@
         ) as sumAccount
         UNION ALL
         SELECT
-        '平均出借利率'  AS title,
+        '平均预期收益率'  AS title,
         sum(borrow_apr) / count(*) as  sumAccount
         FROM
         ht_borrow

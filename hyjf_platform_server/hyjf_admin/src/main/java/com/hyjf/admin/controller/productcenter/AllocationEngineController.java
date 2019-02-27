@@ -797,7 +797,7 @@ public class AllocationEngineController extends BaseController{
 		}
 		form.setPlanNidSrch(planNid);
 		//如果是修改则需要校验引擎表里面的排序，如果是添加则不需要  0 添加；1修改
-		if(form.getAddOrModify() == "1"){
+		if(form.getAddOrModify().equalsIgnoreCase("1")){
 			hjhAllocationEngineResponse = this.allocationEngineService.getHjhAllocationEngineList(form);
 			List<HjhAllocationEngineVO> hjhAllocationEngineList = hjhAllocationEngineResponse.getResultList();
 			if (hjhAllocationEngineList != null) {

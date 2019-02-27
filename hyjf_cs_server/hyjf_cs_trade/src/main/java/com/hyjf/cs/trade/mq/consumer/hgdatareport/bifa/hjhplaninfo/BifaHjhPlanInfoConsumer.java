@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 public class BifaHjhPlanInfoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BifaHjhPlanInfoConsumer.class);
-    private String thisMessName = "智投信息上报";
+    private String thisMessName = "新增智投信息上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
 
 

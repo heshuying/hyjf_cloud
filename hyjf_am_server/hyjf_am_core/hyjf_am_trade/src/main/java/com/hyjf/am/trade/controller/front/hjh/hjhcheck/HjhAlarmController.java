@@ -245,7 +245,7 @@ public class HjhAlarmController extends BaseController {
                         null,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                 commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
-                SmsMessage smsMessage = new SmsMessage(null, null, null, null, "smsSendForManager", null,
+                SmsMessage smsMessage = new SmsMessage(null, null, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null,
                         CustomConstants.JYTZ_PLAN_ORDER_EXCECEPTION, CustomConstants.CHANNEL_TYPE_NORMAL);
                 commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 logger.info("短信发送成功");

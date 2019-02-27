@@ -706,7 +706,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-        CouponRealTenderVO couponRealTenderVO=amTradeClient.selectCouponRealTenderByOrderId(logOrdId);
+        CouponRealTenderVO couponRealTenderVO=new CouponRealTenderVO();
+        logger.info("获取投标成功结果  logOrdId!=null && account!=null && !.equals(account):{} ",logOrdId!=null && account!=null && !"".equals(account));
+        if(logOrdId!=null&&!"".equals(logOrdId)){
+            couponRealTenderVO=amTradeClient.selectCouponRealTenderByOrderId(logOrdId);
+        }
+
         if (couponUser != null&&couponRealTenderVO!=null) {
             data.put("couponType", couponUser.getCouponType());
             BigDecimal couponInterest = BigDecimal.ZERO;
