@@ -843,11 +843,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         UserInfoVO usersInfo = this.amUserClient.findUsersInfoById(user.getUserId());
         BankOpenAccountVO bankOpenAccountVO=amUserClient.selectBankAccountById(user.getUserId());
         // 调用汇付接口(提现)
-        retUrl = retUrl+"?logOrdId="+orderId;
+        retUrl = retUrl+"&logOrdId="+orderId;
         if(platform.equals(CommonConstant.CLIENT_PC)){
-            successfulUrl = successfulUrl+"?withdrawmoney=" + transAmt+ "&wifee=" + fee;
+            successfulUrl = successfulUrl+"&withdrawmoney=" + transAmt+ "&wifee=" + fee;
         }else {
-            successfulUrl = successfulUrl+"?amount=" + transAmt+ "&charge=" + fee;
+            successfulUrl = successfulUrl+"&amount=" + transAmt+ "&charge=" + fee;
         }
         // 路由代码
         String routeCode = "";
