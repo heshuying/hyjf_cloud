@@ -28,14 +28,18 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
         String roleId = jsonObj.getString("roleId");
         String trueName = jsonObj.getString("truename");
 
-        if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(roleId)) {
+        //userId不为空且角色id，属性，真实姓名都不为空的情况下进行更新
+        if (StringUtils.isNotBlank(userId) && (StringUtils.isNotBlank(attribute) || StringUtils.isNotBlank(roleId) || StringUtils.isNotBlank(trueName))) {
             RUser record = new RUser();
 
             int userIdInt = Integer.parseInt(userId);
-            int roleIdInt = Integer.parseInt(roleId);
-
             record.setUserId(userIdInt);
-            record.setRoleId(roleIdInt);
+
+            if(StringUtils.isNotBlank(roleId)){
+                int roleIdInt = Integer.parseInt(roleId);
+                record.setRoleId(roleIdInt);
+            }
+
             if (StringUtils.isNotBlank(attribute)) {
                 int attributeInt = Integer.parseInt(attribute);
                 record.setAttribute(attributeInt);

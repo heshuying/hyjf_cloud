@@ -2201,7 +2201,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         replaceMap.put("val_date", GetDateUtils.formatDate(new Date()));
         SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_BIDCANCEL,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
+        logger.info("smsMessage：{}" ,JSONObject.toJSON(smsMessage));
         AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_BIDCANCEL);
+        logger.info("appMsMessage：{}" ,JSONObject.toJSON(appMsMessage));
         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                 UUID.randomUUID().toString(), smsMessage));
         commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
