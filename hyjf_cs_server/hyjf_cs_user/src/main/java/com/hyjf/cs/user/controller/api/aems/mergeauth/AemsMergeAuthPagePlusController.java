@@ -75,6 +75,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         // 数据校验不通过
         paramMap.put("callBackAction", requestBean.getRetUrl());
         if (!"1".equals(paramMap.get("status"))) {
+            logger.info("AEMS多合一授权[数据校验不通过!]----------------------------------");
             return callbackErrorView(paramMap);
         }
 
