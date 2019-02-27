@@ -58,10 +58,10 @@ public class UserLeaveConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
         //更新离职员工信息
         try {
-            userLeaveService.updateUserLeaveInfoFromCrm(userId);
+            boolean updateResult = userLeaveService.updateUserLeaveInfoFromCrm(userId);
+            logger.info("更新离职员工信息(CRM)结束，CRM_ID:{} , 更新结果:{}", userId, updateResult);
         } catch (Exception e) {
-            //异常时重发
-        	logger.error("消费出错" + userId, e);
+            logger.error("员工离职信息更新失败, CRM_ID:" + userId, e);
             return;
         }
         logger.info("********************更新离职员工信息(CRM)结束*************************");
