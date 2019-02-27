@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +43,14 @@ public class CertSendUtils {
 		HttpConnectionManagerParams httpConnectionManagerParams = httpClient.getHttpConnectionManager().getParams();
 		httpConnectionManagerParams.setConnectionTimeout(500000);
 		httpConnectionManagerParams.setSoTimeout(500000);
+		BufferedReader reader = null;
 		try {
 			// get
 			GetMethod get = new GetMethod(url);
 			//设置请求报文头的编码
 			get.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 			httpClient.executeMethod(get);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(get.getResponseBodyAsStream(), "utf-8"));
+			reader = new BufferedReader(new InputStreamReader(get.getResponseBodyAsStream(), "utf-8"));
 			String tmp = null;
 			while ((tmp = reader.readLine()) != null) {
 				strResult += tmp + "\r\n";
@@ -56,6 +58,14 @@ public class CertSendUtils {
 		} catch (Exception e) {
 
 			e.printStackTrace();
+		} finally {
+			if (reader != null){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					logger.error("io流关闭错误");
+				}
+			}
 		}
 		return removeSlash(strResult);
 	}
@@ -78,6 +88,7 @@ public class CertSendUtils {
 
 		//		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(0, false));
 
+		BufferedReader reader = null;
 		try {
 			// post请求
 			PostMethod post = new PostMethod(url);
@@ -97,14 +108,23 @@ public class CertSendUtils {
 
 			post.setRequestBody(names);
 			httpClient.executeMethod(post);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream(), "utf-8"));
+			reader = new BufferedReader(new InputStreamReader(post.getResponseBodyAsStream(), "utf-8"));
 			String tmp = null;
 			while ((tmp = reader.readLine()) != null) {
 				strResult += tmp + "\r\n";
 			}
 		} catch (Exception e) {
 			logger.info(logHeader,e);
+		} finally {
+			if (reader != null){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					logger.error("io流关闭错误");
+				}
+			}
 		}
+
 		return removeSlash(strResult);
 	}
 
@@ -124,6 +144,7 @@ public class CertSendUtils {
 		Protocol.registerProtocol("https", myhttps);
 		String strResult = "";
 		HttpClient http = new HttpClient();
+		BufferedReader reader = null;
 		try {
 			DeleteMethod delete = new DeleteMethod(url);
 
@@ -141,7 +162,7 @@ public class CertSendUtils {
 
 			delete.setQueryString(data.toArray(new NameValuePair[0])); 
 			http.executeMethod(delete);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(delete.getResponseBodyAsStream(), "utf-8"));
+			reader = new BufferedReader(new InputStreamReader(delete.getResponseBodyAsStream(), "utf-8"));
 			String tmp = null;
 			while ((tmp = reader.readLine()) != null) {
 				strResult += tmp + "\r\n";
@@ -149,6 +170,14 @@ public class CertSendUtils {
 		} catch (Exception e) {
 
 			e.printStackTrace();
+		} finally {
+			if (reader != null){
+				try {
+					reader.close();
+				} catch (IOException e) {
+					logger.error("io流关闭错误");
+				}
+			}
 		}
 		return removeSlash(strResult);
 	}

@@ -41,7 +41,7 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
         # 加入时间
         UNION ALL
         # 债转
@@ -194,10 +194,7 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]> unix_timestamp(
-        DATE_SUB(
-        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
-        INTERVAL #{startMonth} MONTH
-        )
+        DATE_SUB( DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL #{startMonth} MONTH )
         ) # 加入时间
         AND a.count_interest_time <![CDATA[ >= ]]> unix_timestamp(
         DATE_SUB(
@@ -556,13 +553,13 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time  <![CDATA[ < ]]>
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
         # 加入时间
         AND a.count_interest_time  <![CDATA[ >= ]]>
-        DATE_SUB(
+        unix_timestamp( DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
-        )
+        ) )
         AND a.order_status >= 3
         GROUP BY
         client
@@ -720,13 +717,13 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01'))
         # 加入时间
         AND a.count_interest_time <![CDATA[ >= ]]>
-        DATE_SUB(
+        unix_timestamp( DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
-        )
+        ))
         AND a.order_status >= 3
         UNION
         # 债转
@@ -808,13 +805,13 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
          # 加入时间
         AND a.count_interest_time <![CDATA[ >= ]]>
-        DATE_SUB(
+        unix_timestamp( DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
-        )
+        ))
 
         UNION
         # 债转
@@ -920,13 +917,13 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01'))
         # 加入时间
         AND a.count_interest_time <![CDATA[ >= ]]>
-        DATE_SUB(
+        unix_timestamp( DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
-        )
+        ))
 
         UNION ALL
         # 债转
@@ -1152,13 +1149,10 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
-        DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
         # 加入时间
         AND a.count_interest_time <![CDATA[ >= ]]>
-        DATE_SUB(
-        DATE_FORMAT(CURDATE(), '%Y-%m-01'),
-        INTERVAL #{intervalMonth} MONTH
-        )
+        unix_timestamp( DATE_SUB( DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL #{intervalMonth} MONTH    ))
 
         UNION ALL
         # 债转

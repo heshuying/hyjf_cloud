@@ -331,7 +331,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		bean.setMobile(rechargeBean.getMobile());
 		bean.setForgotPwdUrl(rechargeBean.getForgotPwdUrl());
 		bean.setUserIP(rechargeBean.getIp());
-		bean.setRetUrl(rechargeBean.getRetUrl()+"?status=99&statusDesc=充值失败&logOrdId="+logOrderId);
+		bean.setRetUrl(rechargeBean.getRetUrl()+"&status=99&statusDesc=充值失败&logOrdId="+logOrderId);
 		bean.setNotifyUrl(rechargeBean.getNotifyUrl());
 		bean.setLogOrderId(logOrderId);
 		bean.setLogOrderDate(orderDate);
@@ -534,7 +534,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		AccountRechargeVO vo = amTradeClient.selectByOrderId(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
 		Map<String,String> map = new HashedMap();
-		if(vo!=null){
+		if(vo!=null&&vo.getMessage().length()>0){
 			map.put("error",vo.getMessage());
 		}else{
 			map.put("error","系统异常，请稍后再试！");

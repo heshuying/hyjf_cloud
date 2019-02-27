@@ -123,7 +123,7 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 			resultMap.put("statusDesc", "用户不存在汇盈金服账户");
 			return resultMap;
 		}
-
+		logger.info("根据用户id查询用户开户状态："+user.getBankOpenAccount()+" 设置密码状态："+user.getIsSetPassword());
 		if (user.getBankOpenAccount().intValue() != 1) {// 未开户
 			logger.info("用户未开户！[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000006);
