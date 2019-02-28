@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.BankRechargeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -36,6 +37,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
     @Override
     public void recharge() {
         List<AccountRecharge> rechargeList = this.selectBankRechargeList();
+        logger.info("充值掉单记录数："+rechargeList.size());
         if (rechargeList != null && rechargeList.size() > 0) {
             // 循环处理中的充值订单
             for (AccountRecharge accountRecharge : rechargeList) {
@@ -87,6 +89,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
         try {
             // 调用江西银行
             BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+            logger.info("充值掉单修复定时任务调取银行接口返回："+JSONObject.toJSONString(resultBean));
             if (Validator.isNotNull(resultBean)) {
                 String retCode = StringUtils.isNotBlank(resultBean.getRetCode()) ? resultBean.getRetCode() : "";
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
