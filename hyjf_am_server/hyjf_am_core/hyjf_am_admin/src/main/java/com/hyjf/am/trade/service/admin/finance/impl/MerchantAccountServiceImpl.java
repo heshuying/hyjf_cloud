@@ -64,7 +64,7 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
         MerchantAccountExample.Criteria cra = example.createCriteria();
         // 子账户名称
         if (StringUtils.isNotEmpty(form.getSubAccountNameSear())) {
-            cra.andSubAccountNameLike("%" + form.getSubAccountNameSear() + "%");
+            cra.andSubAccountNameLike(form.getSubAccountNameSear() + "%");
         }
         // 子账户类型
         if (StringUtils.isNotEmpty(form.getSubAccountTypeSear())) {
@@ -81,7 +81,7 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
         MerchantAccountExample.Criteria cra = example.createCriteria();
         // 子账户名称
         if (StringUtils.isNotEmpty(request.getSubAccountNameSear())) {
-            cra.andSubAccountNameLike("%" + request.getSubAccountNameSear() + "%");
+            cra.andSubAccountNameLike( request.getSubAccountNameSear() + "%");
         }
         // 子账户类型
         if (StringUtils.isNotEmpty(request.getSubAccountTypeSear())) {
@@ -184,10 +184,10 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
         MerchantTransferExample example = new MerchantTransferExample();
         MerchantTransferExample.Criteria cra = example.createCriteria();
         if(StringUtils.isNotEmpty(form.getOrderId())){
-            cra.andOrderIdLike("%"+form.getOrderId()+"%");
+            cra.andOrderIdLike(form.getOrderId()+"%");
         }
         if(StringUtils.isNotEmpty(form.getCreateUserName())){
-            cra.andCreateUserNameLike("%"+form.getCreateUserName()+"%");
+            cra.andCreateUserNameLike(form.getCreateUserName()+"%");
         }
         if(Validator.isNotNull(form.getOutAccountId())){
             cra.andOutAccountIdEqualTo(form.getOutAccountId());
@@ -215,10 +215,10 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
         MerchantTransferExample example = new MerchantTransferExample();
         MerchantTransferExample.Criteria cra = example.createCriteria();
         if(StringUtils.isNotEmpty(form.getOrderId())){
-            cra.andOrderIdLike("%"+form.getOrderId()+"%");
+            cra.andOrderIdLike(form.getOrderId()+"%");
         }
         if(StringUtils.isNotEmpty(form.getCreateUserName())){
-            cra.andCreateUserNameLike("%"+form.getCreateUserName()+"%");
+            cra.andCreateUserNameLike(form.getCreateUserName()+"%");
         }
         if(Validator.isNotNull(form.getOutAccountId())){
             cra.andOutAccountIdEqualTo(form.getOutAccountId());
