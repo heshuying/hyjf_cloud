@@ -105,7 +105,6 @@ public class CertScatterInvestMessageConsumer implements RocketMQListener<Messag
             return;
         }finally {
             logger.info(logHeader + " 结束。");
-            return;
         }
     }
 }

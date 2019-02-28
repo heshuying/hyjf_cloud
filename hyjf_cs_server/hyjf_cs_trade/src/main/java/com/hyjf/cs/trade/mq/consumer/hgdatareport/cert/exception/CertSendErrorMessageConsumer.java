@@ -88,7 +88,6 @@ public class CertSendErrorMessageConsumer implements RocketMQListener<MessageExt
         }finally {
             logger.info(logHeader + " 结束。");
             isRun = false;
-            return;
         }
     }
 }

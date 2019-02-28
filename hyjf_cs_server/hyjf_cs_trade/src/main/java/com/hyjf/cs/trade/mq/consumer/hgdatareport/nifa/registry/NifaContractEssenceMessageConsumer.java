@@ -357,7 +357,6 @@ public class NifaContractEssenceMessageConsumer implements RocketMQListener<Mess
             logger.error(thisMessName + "生成合同要素处理失败,借款编号:" + borrowNid, e);
         } finally {
             logger.info(thisMessName + "生成合同要素处理结束,借款编号:" + borrowNid);
-            return ;
         }
     }
 
