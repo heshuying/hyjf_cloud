@@ -2883,7 +2883,7 @@ public interface AmTradeClient {
      * @param borrowStyle
      * @return
      */
-    BorrowRepayVO getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle);
+    BorrowRepayBeanVO getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle);
     /**
      * 多期还款数据
      * @param borrowNid
@@ -2891,7 +2891,7 @@ public interface AmTradeClient {
      * @param borrowStyle
      * @return
      */
-    BorrowRepayPlanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
+    BorrowRepayPlanBeanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle);
 
     /**
      * 统计总数
