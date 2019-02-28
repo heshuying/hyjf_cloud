@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.*;
@@ -76,6 +77,12 @@ public class RepayManageController extends BaseTradeController {
     private static final String VAL_FAILCOUNT = "failCount";
     // 根据用户ID和模版号给某用户发短信
     public static final String SMSSENDFORUSER = "smsSendForUser";
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
 
     @Autowired
     private CommonProducer commonProducer;
@@ -256,11 +263,27 @@ public class RepayManageController extends BaseTradeController {
                         fddStatus = 1;
                     } else {
                         //隐藏下载按钮
-                        fddStatus = 0;
+                        fddStatus = 2;
                     }
                 } else {
-                    //下载老版本协议
-                    fddStatus = 1;
+
+                    /**
+                     * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+                     * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+                     * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+                     */
+                    BorrowRecoverVO borrowRecoverVO = repayManageService.selectBorrowRecoverByNid(transferRequest.getBorrowNid());
+                    int addTime = ADD_TIME;
+                    if(borrowRecoverVO != null){
+                        addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                    }
+                    if (addTime<ADD_TIME328) {
+                        //下载老版本协议
+                        fddStatus = 1;
+                    }else{
+                        //隐藏下载按钮
+                        fddStatus = 0;
+                    }
                 }
 
                 // 计算到账金额
