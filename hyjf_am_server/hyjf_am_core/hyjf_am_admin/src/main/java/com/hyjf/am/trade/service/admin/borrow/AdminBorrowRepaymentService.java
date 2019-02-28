@@ -4,9 +4,8 @@ import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize;
-import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.AdminRepayDelayCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayBeanVO;
 
 import java.text.ParseException;
 import java.util.List;
@@ -33,9 +32,9 @@ public interface AdminBorrowRepaymentService {
 
     List<AdminBorrowRepaymentCustomize> selectBorrowRepaymentList(BorrowRepaymentRequest request);
 
-    BorrowRepay getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
+    BorrowRepayBean getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
 
-    BorrowRepayPlan getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
+    BorrowRepayPlanBean getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException;
 
     int countBorrowRepaymentPlan(BorrowRepaymentRequest request);
 

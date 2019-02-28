@@ -4,6 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 
 /**
@@ -11,4 +12,13 @@ import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
  * @version BorrowRepayResponse, v0.1 2018/6/22 19:10
  */
 public class BorrowRepayResponse extends Response<BorrowRepayVO> {
+    private BorrowRepayBeanVO borrowRepayBeanVO;
+
+    public BorrowRepayBeanVO getBorrowRepayBeanVO() {
+        return borrowRepayBeanVO;
+    }
+
+    public void setBorrowRepayBeanVO(BorrowRepayBeanVO borrowRepayBeanVO) {
+        this.borrowRepayBeanVO = borrowRepayBeanVO;
+    }
 }
