@@ -60,7 +60,6 @@ public class CertSendRepairServiceImpl extends BaseHgCertReportServiceImpl imple
     @Override
     public void insertData(CertErrLogVO item) {
         CertReportEntityVO  entity = csMessageClient.getCertSendLogByLogOrdId(item.getLogOrdId());
-        logger.info(logHeader+"mongo查询记录为"+JSONObject.toJSONString(entity));
         if(entity == null ){
             logger.info(logHeader+"mongo查询无记录！订单号:{}",item.getLogOrdId());
         }
@@ -73,7 +72,6 @@ public class CertSendRepairServiceImpl extends BaseHgCertReportServiceImpl imple
         // 开始上报数据
         Map<String, String> params = getBankParam(entity);
         String rtnMsg = CertSendUtils.postRequest(systemConfig.getCertCrtpath(),entity.getUrl(), params);
-        logger.info(logHeader+"异常返回结果为："+rtnMsg);
         updateResult(rtnMsg,entity,item.getSendCount(),item.getLogOrdId());
     }
 
