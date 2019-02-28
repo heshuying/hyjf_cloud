@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.front.account;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankCardResponse;
@@ -97,6 +98,7 @@ public class BankCardController extends BaseController {
 	 */
 	@PostMapping(value = "/updateBankCard")
 	public IntegerResponse updateBankCard(@RequestBody BankCardVO bankCardVO){
+		logger.info("updateBankCardVO:" + JSONObject.toJSONString(bankCardVO));
 		IntegerResponse response = new IntegerResponse();
 		int count = bankCardService.updateBankCard(bankCardVO);
 		response.setResultInt(count);
