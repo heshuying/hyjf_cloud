@@ -12,6 +12,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
+import com.hyjf.common.jwt.Token;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
@@ -502,9 +503,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	 */
 	protected String generatorToken(int userId, String username) {
 		AccessToken accessToken = new AccessToken(userId, username, Instant.now().getEpochSecond());
-		String token = JwtHelper.generatorToken(accessToken);
+		//String token = JwtHelper.generatorToken(accessToken);
+		String token = Token.generate(String.valueOf(userId + username + Instant.now().getEpochSecond()));
+
 		// 1.设置页面30分钟超时 2.jwt无法删除已知非法token,redis可以做到
-		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, userId, 30*60);
+		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, accessToken, 30*60);
 		return token;
 	}
 
