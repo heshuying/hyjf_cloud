@@ -258,7 +258,7 @@ public class RepayManageController extends BaseTradeController {
                 }
                 //居间协议
                 Integer fddStatus = 0;
-                List<TenderAgreementVO> tenderAgreementsNid = null;
+               /* List<TenderAgreementVO> tenderAgreementsNid = null;
                 tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
                 if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
                     TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
@@ -272,11 +272,11 @@ public class RepayManageController extends BaseTradeController {
                     }
                 } else {
 
-                    /**
+                    *//**
                      * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
                      * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
                      * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
-                     */
+                     *//*
                     BorrowRecoverVO borrowRecoverVO = repayManageService.selectBorrowRecoverByNid(transferRequest.getBorrowNid());
                     int addTime = ADD_TIME;
                     if(borrowRecoverVO != null){
@@ -289,7 +289,7 @@ public class RepayManageController extends BaseTradeController {
                         //隐藏下载按钮
                         fddStatus = 0;
                     }
-                }
+                }*/
 
                 // 计算到账金额
                 if (borrowInfo.getSucSmount() != null) {
