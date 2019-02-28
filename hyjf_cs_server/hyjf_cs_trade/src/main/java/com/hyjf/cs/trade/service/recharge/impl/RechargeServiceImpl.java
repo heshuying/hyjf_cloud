@@ -178,6 +178,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 							BankCardVO updateBankCardVO=new BankCardVO();
 							updateBankCardVO.setId(bankCardVO.getId());
 							updateBankCardVO.setMobile(params.get("mobile"));
+                            logger.info("updateBankCardVO:" + JSONObject.toJSONString(updateBankCardVO));
 							amUserClient.updateBankCard(updateBankCardVO);
 							UserVO users = amUserClient.findUserById(userId);
 							// 可以发送充值短信时
