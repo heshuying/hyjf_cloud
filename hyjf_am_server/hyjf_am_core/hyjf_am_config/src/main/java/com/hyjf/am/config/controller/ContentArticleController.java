@@ -1,5 +1,6 @@
 package com.hyjf.am.config.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
@@ -172,6 +173,7 @@ public class ContentArticleController {
      */
     @RequestMapping("/getcontentarticlelistbytype")
     public ContentArticleCustomizeResponse getContentArticleListByType(@RequestBody Map<String, Object> params) {
+        logger.info("查询文章列表, params is : {}", JSONObject.toJSONString(params));
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
         List<ContentArticleCustomize> list = contentArticleService.getContentArticleListByType(params);
         if (!CollectionUtils.isEmpty(list)) {

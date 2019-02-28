@@ -312,7 +312,7 @@
 		LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
 		LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
 		LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-		LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = spu.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = spu.user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 		LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 		LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
 		LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
