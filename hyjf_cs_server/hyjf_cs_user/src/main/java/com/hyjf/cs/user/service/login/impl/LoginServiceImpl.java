@@ -133,10 +133,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		webViewUserVO = setToken(webViewUserVO);
 		BankOpenAccountVO account = this.getBankOpenAccount(userId);
 		String accountId = null;
-		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+		/*if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
 			synBalanceService.synBalance(accountId, ip);
-		}
+		}*/
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
 			webViewUserVO.setToken(sign);
