@@ -251,28 +251,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
-        //todo wangjun 测试异常，暂时注释url
-        String retUrl = "1";
-        String successUrl = "1";
-        String bgRetUrl = "1";
-        String forgetPassWoredUrl = "1";
-//        //错误页
-//        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
-//        //成功页
-//        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
-//                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
-//        if(request.getToken() != null && !"".equals(request.getToken())){
-//            retUrl += "&token=1";
-//            successUrl += "&token=1";
-//        }
-//        if(request.getSign() != null && !"".equals(request.getSign())){
-//            retUrl += "&sign=" + request.getSign();
-//            successUrl += "&sign=" + request.getSign();
-//        }
-//        // 异步调用路
-//        String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
-//        //忘记密码url
-//        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
+        //错误页
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        //成功页
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
+        if(request.getToken() != null && !"".equals(request.getToken())){
+            retUrl += "&token=1";
+            successUrl += "&token=1";
+        }
+        if(request.getSign() != null && !"".equals(request.getSign())){
+            retUrl += "&sign=" + request.getSign();
+            successUrl += "&sign=" + request.getSign();
+        }
+        // 异步调用路
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
+        //忘记密码url
+        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
         callBean.setSuccessfulUrl(successUrl);
         callBean.setNotifyUrl(bgRetUrl);
