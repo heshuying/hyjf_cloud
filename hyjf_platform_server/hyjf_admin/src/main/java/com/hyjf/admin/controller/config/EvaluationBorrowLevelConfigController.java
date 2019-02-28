@@ -61,12 +61,18 @@ public class EvaluationBorrowLevelConfigController extends BaseController {
     }
 
 
-    @ApiOperation(value = "修改画面迁移", notes = "修改画面迁移")
+    @SuppressWarnings("unused")
+	@ApiOperation(value = "修改画面迁移", notes = "修改画面迁移")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<EvaluationBorrowLevelConfigResponseBean> info(@RequestBody EvaluationBorrowLevelConfigRequest requestBean) {
         logger.info(EvaluationBorrowLevelConfigController.class.toString(), "infoAction");
         EvaluationBorrowLevelConfigResponseBean response = new EvaluationBorrowLevelConfigResponseBean();
+        // modify by libin sonar start 非空拿到前面
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        // modify by libin sonar end
         // 风险测评投资等级
         Map<String, String> investLevelList = CacheUtil.getParamNameMap("INVEST_LEVEL");
         List<DropDownVO> investLevelDropDownVO = ConvertUtils.convertParamMapToDropDown(investLevelList);
@@ -74,9 +80,6 @@ public class EvaluationBorrowLevelConfigController extends BaseController {
             EvaluationBorrowLevelConfigVO evaluationBorrowLevelConfigVO = this.service.getEvaluationBorrowLevelConfigById(requestBean.getId());
             response.setForm(evaluationBorrowLevelConfigVO);
             response.setInvestLevel(investLevelDropDownVO);
-        }
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());

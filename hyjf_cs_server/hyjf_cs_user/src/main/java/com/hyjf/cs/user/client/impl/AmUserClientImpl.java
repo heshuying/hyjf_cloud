@@ -1,5 +1,17 @@
 package com.hyjf.cs.user.client.impl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -19,25 +31,11 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.annotation.Cilent;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author xiasq
@@ -315,19 +313,11 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public void updateLoginUser(int userId, String ip) {
-		/**
-		 * ip version等作为请求一部分的时候，用base64转码
-		 */
-		String args = "";
-		try {
-			args = new String(Base64.encodeBase64(ip.getBytes()), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage(), e);
-			throw new ReturnMessageException(Response.FAIL_MSG);
-		}
-		String url = userService+"/user/updateLoginUser/" + userId + "/" + args;
+		LoginUserRequest request = new LoginUserRequest(userId, ip);
+
+		String url = userService+"/user/updateLoginUser";
 		logger.info("url:{}", url);
-		restTemplate.getForEntity(url, String.class);
+		restTemplate.postForEntity(url, request, BooleanResponse.class);
 	}
 
 

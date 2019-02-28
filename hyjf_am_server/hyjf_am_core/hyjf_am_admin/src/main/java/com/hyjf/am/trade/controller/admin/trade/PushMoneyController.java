@@ -76,7 +76,6 @@ public class PushMoneyController extends BaseController {
 	@RequestMapping("/updatepushmoney")
 	public PushMoneyResponse updatePushMoney(@RequestBody PushMoneyRequest request) {
 		PushMoneyResponse response = new PushMoneyResponse();
-		List<PushMoney> list = pushMoneyService.getRecordList();
 		pushMoneyService.updatePushMoney(request);
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;

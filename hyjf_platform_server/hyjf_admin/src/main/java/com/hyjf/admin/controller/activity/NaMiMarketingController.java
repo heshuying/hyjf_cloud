@@ -198,7 +198,7 @@ public class NaMiMarketingController  extends BaseController {
         map.put("tenderAmount", "单笔投资金额（元）");
         map.put("term", "投资期限");
         map.put("productType", "产品类型");
-        map.put("tenderNo", "产品编号");
+        map.put("productNo", "产品编号");
         map.put("getReturnPerformance", "单笔当月产生的业绩（元）");
         map.put("returnAmount", "单笔返现金额（元）");
         map.put("regTime", "放款时间/加入时间");
