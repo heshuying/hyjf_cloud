@@ -15,6 +15,8 @@ import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,7 @@ import java.util.Map;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {
+    private Logger logger = LoggerFactory.getLogger(ContentArticleServiceImpl.class);
 
     @Resource
     private ContentArticleMapper contentArticleMapper;
@@ -399,7 +402,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
                 "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", type)
                 + "?ignoreSign=true"
         );
-
+        logger.debug("customize is: {}", customize);
         return customize;
     }
 }
