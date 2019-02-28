@@ -28,5 +28,4 @@ public interface AleveCustomizeMapper {
      * @return java.util.List<com.hyjf.am.trade.dao.model.customize.AleveLogCustomize>
      **/
     List<AleveLogCustomize> queryAleveLogList(Map<String, Object> mapParam);
-    List<AleveLogCustomize> queryAleveLogListByTranstype(List<String> tranStype);
 }

@@ -148,8 +148,8 @@ public class BaseHgDateReportServiceImpl extends BaseServiceImpl implements Base
             logger.error(logHeader + "北互金上报数据失败！！！", e);
         } finally {
             logger.info("北互金上报结果:"+JSONObject.toJSONString(data));
-            return data;
         }
+        return data;
     }
 
     /**

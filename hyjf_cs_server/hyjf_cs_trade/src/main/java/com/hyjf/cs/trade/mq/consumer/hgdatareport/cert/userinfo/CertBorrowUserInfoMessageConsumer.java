@@ -203,7 +203,6 @@ public class CertBorrowUserInfoMessageConsumer implements RocketMQListener<Messa
             return;
         }finally {
             logger.info(logHeader + " 结束。");
-            return;
         }
     }
 }

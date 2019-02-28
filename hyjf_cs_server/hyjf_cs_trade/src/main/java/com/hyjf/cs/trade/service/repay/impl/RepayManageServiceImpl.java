@@ -13,6 +13,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -1078,6 +1079,18 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String borrowNid) {
         return amTradeClient.selectTenderAgreementByNid(borrowNid);
+    }
+
+    /***
+     * 根据订单号获取用户放款信息
+     * @author Zha Daojian
+     * @date 2019/2/28 14:08
+     * @param nid
+     * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
+     **/
+    @Override
+    public BorrowRecoverVO selectBorrowRecoverByNid(String nid) {
+        return amTradeClient.selectBorrowRecoverByNid(nid);
     }
 
     @Override
