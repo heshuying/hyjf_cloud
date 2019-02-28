@@ -234,18 +234,18 @@ public class RepayManageController extends BaseTradeController {
      * @Author : huanghui
      */
     @ApiOperation(value = "用户待还标的-债转详情", notes = "用户待还标的-债转详情")
-    @PostMapping(value = "/user_repay_detail")
+    @PostMapping(value = "/user_repay_detail", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody WebUserRepayTransferRequest transferRequest){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
 
-        resultMap.put("userId", 529221);
+        resultMap.put("userId", userId);
 
-        resultMap.put("verificationFlag", "LGE19021129");
-        resultMap.put("borrowInfo", "LGE19021129");
+        resultMap.put("verificationFlag", transferRequest.getBorrowNid());
+        resultMap.put("borrowInfo", transferRequest.getBorrowNid());
         resultMap.put("fddStatus", "1");
         result.setData(resultMap);
-
+        logger.info("user_repay_detail:" + result.toString());
         return result;
     }
 
