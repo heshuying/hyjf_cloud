@@ -98,7 +98,6 @@ public class BankCardController extends BaseController {
 	 */
 	@PostMapping(value = "/updateBankCard")
 	public IntegerResponse updateBankCard(@RequestBody BankCardVO bankCardVO){
-		logger.info("updateBankCardVO:" + JSONObject.toJSONString(bankCardVO));
 		IntegerResponse response = new IntegerResponse();
 		int count = bankCardService.updateBankCard(bankCardVO);
 		response.setResultInt(count);
