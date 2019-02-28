@@ -252,10 +252,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
         //todo wangjun 测试异常，暂时注释url
-        String retUrl = "";
-        String successUrl = "";
-        String bgRetUrl = "";
-        String forgetPassWoredUrl = "";
+        String retUrl = "1";
+        String successUrl = "1";
+        String bgRetUrl = "1";
+        String forgetPassWoredUrl = "1";
 //        //错误页
 //        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
 //        //成功页
