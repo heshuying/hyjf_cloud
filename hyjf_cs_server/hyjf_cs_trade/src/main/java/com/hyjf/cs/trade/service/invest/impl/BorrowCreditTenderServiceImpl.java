@@ -1084,7 +1084,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             appParam.put("val_profit", creditTender.getAssignInterest() + "");
             appParam.put("val_amount", creditTender.getAssignAccount() + "");
 
-            AppMsMessage message = new AppMsMessage(null, appParam, webUser.getMobile(), MessageConstant.SMS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_CJZQ);
+            AppMsMessage message = new AppMsMessage(null, appParam, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_CJZQ);
             commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), message));
 
             logger.info("【债转】" + borrowCredit.getBidNid() + "已认购本金：" + borrowCredit.getCreditCapitalAssigned() + "---债转本金：" + borrowCredit.getCreditCapital());
@@ -1099,11 +1099,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     param.put("val_amount", borrowCredit.getCreditCapital() + "");
                     param.put("val_profit", borrowCredit.getCreditInterestAdvanceAssigned() + "");
                     // 发送短信验证码
-                    SmsMessage smsMessage = new SmsMessage(null, param, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
+                    SmsMessage smsMessage = new SmsMessage(null, param, creditUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
                             CustomConstants.CHANNEL_TYPE_NORMAL);
                     commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 
-                    AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
+                    AppMsMessage appMsMessage = new AppMsMessage(null, param, creditUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
                     commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
                 }
             }
