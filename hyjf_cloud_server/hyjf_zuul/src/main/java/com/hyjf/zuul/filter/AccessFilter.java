@@ -86,6 +86,14 @@ public class AccessFilter extends ZuulFilter {
 
 			Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
 			if (!appKeyIgnoreUrls.contains(originalRequestPath)) {
+				// app分享的请求，忽略sign
+				String ignoreSign = request.getParameter("ignoreSign");
+				if(StringUtils.isNotBlank(ignoreSign)){
+					if(Boolean.parseBoolean(ignoreSign)){
+						return ctx;
+					}
+				}
+
 				if (StringUtils.isBlank(sign)) {
 					logger.warn("sign is empty...");
 					// 不对其进行路由
@@ -124,14 +132,6 @@ public class AccessFilter extends ZuulFilter {
 	 * @return
 	 */
 	private Object appNomalRequestProcess(HttpServletRequest request, RequestContext ctx, String sign) {
-		// app分享的请求，忽略sign
-		String ignoreSign = request.getParameter("ignoreSign");
-		if(StringUtils.isNotBlank(ignoreSign)){
-			if(Boolean.getBoolean(ignoreSign)){
-				return ctx;
-			}
-		}
-
 		SignValue signValue = RedisUtils.getObj(RedisConstants.SIGN + sign, SignValue.class);
 		if (signValue == null) {
 			logger.warn("sign is invalid, sign is: {}", sign);
@@ -292,12 +292,13 @@ public class AccessFilter extends ZuulFilter {
 		}
 
 		// jwt解析token
-		AccessToken accessToken = null;
-		try {
-			accessToken = JwtHelper.parseToken(token);
-		} catch (Exception e) {
-			logger.warn("jwt parse token error...", e);
-		}
+//		AccessToken accessToken = null;
+//		try {
+//			accessToken = JwtHelper.parseToken(token);
+//		} catch (Exception e) {
+//			logger.warn("jwt parse token error...", e);
+//		}
+		AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
 
 		if (accessToken == null) {
 			logger.warn("user is not exist, token is : {}...", token);
@@ -313,14 +314,14 @@ public class AccessFilter extends ZuulFilter {
 		}
 
 		// 页面不活动30分钟过期
-		Integer value = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, Integer.class);
-		if (value == null) {
-			// 登陆过期
-			logger.warn("accessToken is timeout, token is : {}...", token);
-			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
-		}
+//		AccessToken accessToken1 = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
+//		if (accessToken1 == null) {
+//			// 登陆过期
+//			logger.warn("accessToken is timeout, token is : {}...", token);
+//			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
+//		}
 		// 每次操作，延长超时时间
-		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, user.getUserId(), 30 * 60);
+		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, accessToken, 30 * 60);
 
 		ctx.addZuulRequestHeader("userId", accessToken.getUserId() + "");
 		logger.info(String.format("user token:%s userId:%s", token, accessToken.getUserId()));

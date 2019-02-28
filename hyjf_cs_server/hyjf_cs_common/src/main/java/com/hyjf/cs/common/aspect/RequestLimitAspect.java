@@ -30,7 +30,7 @@ public class RequestLimitAspect {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
  
-    @Before("execution(public * com.hyjf.cs.*.controller.*.*(..)) && @annotation(limit)")
+    @Before("execution(public * com.hyjf.cs..*.controller.*.*(..)) && @annotation(limit)")
     public void requestLimit(JoinPoint joinpoint, RequestLimit limit) {
     	
         // 接收到请求，记录请求内容

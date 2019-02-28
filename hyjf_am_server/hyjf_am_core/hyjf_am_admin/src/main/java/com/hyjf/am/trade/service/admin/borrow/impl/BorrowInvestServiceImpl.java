@@ -89,7 +89,12 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
             for (BorrowInvestCustomize borrowInvestCustomize : list) {
                 borrowInvestCustomize.setOperatingDeck(clientMap.getOrDefault(borrowInvestCustomize.getOperatingDeck(), null));
                 borrowInvestCustomize.setTenderUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getTenderUserAttribute(), null));
-                borrowInvestCustomize.setInviteUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getInviteUserAttribute(), null));
+                //处理推荐人用户属性
+                if("0".equals(borrowInvestCustomize.getTenderReferrerUserId())){
+                    borrowInvestCustomize.setInviteUserAttribute("");
+                } else {
+                    borrowInvestCustomize.setInviteUserAttribute(propertyMap.getOrDefault(borrowInvestCustomize.getInviteUserAttribute(), null));
+                }
                 borrowInvestCustomize.setInvestType(investMap.getOrDefault(borrowInvestCustomize.getInvestType(), null));
             }
         }
