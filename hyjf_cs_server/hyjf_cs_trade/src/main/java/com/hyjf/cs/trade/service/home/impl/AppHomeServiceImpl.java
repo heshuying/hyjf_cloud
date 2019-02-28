@@ -539,7 +539,7 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void creatNoSignProjectListPage(JSONObject info, List<AppProjectListCustomizeVO> list, String host) {
         List<AppHomePageCustomize> homePageCustomizes = convertToAppHomePageCustomize(list,host);//新手标
-        AppHomePageRecommendProject recommendProject = null;
+        AppHomePageRecommendProject recommendProject = new AppHomePageRecommendProject();
         if (! CollectionUtils.isEmpty(homePageCustomizes)){
             AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
             pageCustomize.setTitle("新手专享");
