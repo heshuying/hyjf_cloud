@@ -311,7 +311,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             return result;
         }
 
-        try {
+        /*try {
             // 加入到消息队列
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -321,7 +321,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             logger.error("用户开户后，发送【法大大CA认证】MQ消息失败！userId:[{}]",userId);
-        }
+        }*/
         result.setStatus(true);
         result.setMessage("开户成功");
         logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId(),bean.getLogClient());
