@@ -457,9 +457,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 指定图片要存放的位置
         String imgFilePath = logoSaveFile + File.separator + fileRealName;
         // 新建一个文件输出器，并为它指定输出位置imgFilePath
+        FileOutputStream out = null;
         try{
             logger.info("开始将头像写入硬盘 -> fileName:[{}]",fileRealName);
-            FileOutputStream out = new FileOutputStream(imgFilePath);
+            out = new FileOutputStream(imgFilePath);
             // 利用文件输出器将二进制格式decodedBytes输出
             out.write(decodedBytes);
             out.close(); // 关闭文件输出器
@@ -470,6 +471,10 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
             amUserClient.updateUserById(user);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (out != null){
+                out.close();
+            }
         }
         imgFilePath = systemConfig.getFileDomainUrl()+fileUploadTempPath+fileRealName;
         return imgFilePath;
