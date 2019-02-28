@@ -381,6 +381,11 @@ public class AboutUsController extends BaseController {
 		WebResult webResult=null;
 		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
 		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
+		if(mediaReport == null){
+			webResult.setStatus("404");
+			webResult.setStatusDesc("未找到数据");
+			return webResult;
+		}
 		if(!"".equals(mediaReport.getType()) && mediaReport.getType().equals("101")){
 			// 风险教育
 			//modelAndView = new ModelAndView(AboutUsDefine.FX_REPORT_INFO_PATH);
@@ -396,10 +401,6 @@ public class AboutUsController extends BaseController {
 			}
 		}
 		webResult = new WebResult(mediaReport);
-		if(mediaReport == null){
-			webResult.setStatus("404");
-			webResult.setStatusDesc("未找到数据");
-		}
 		return webResult;
 	}
 

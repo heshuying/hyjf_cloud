@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.finance.bankaleve;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -17,9 +16,7 @@ import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
-import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BankAleveVO;
-import com.hyjf.am.vo.admin.UserTransferVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -33,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,31 +71,6 @@ public class BankAleveController {
         count = (count == null)?0:count;
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
         return new AdminResult<>(ListResult.build(bankAleveList,count));
-       /* JSONObject jsonObject = new JSONObject();
-        List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
-        String status="000";
-        String statusDesc = "未检索到相应的列表数据";
-        Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
-        if(count==null || count<1){
-            jsonObject.put("count",0);
-            jsonObject.put("record",null);
-            jsonObject.put("status",status);
-            jsonObject.put("statusDesc",statusDesc);
-            return jsonObject;
-        }
-
-        if(null!=bankAleveList&&bankAleveList.size()>0){
-            jsonObject.put("count",count);
-            jsonObject.put("record",bankAleveList);
-            status =  "000";
-            statusDesc = "查询银行账务明细成功";
-        }else{
-            jsonObject.put("count",0);
-            jsonObject.put("record",null);
-        }
-        jsonObject.put("status",status);
-        jsonObject.put("statusDesc",statusDesc);
-        return jsonObject;*/
     }
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称

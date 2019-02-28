@@ -271,7 +271,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 			query.skip(limitStart).limit(limitEnd);
 			query.addCriteria(criteria);
 		}
-		query.with(new Sort(Sort.Direction.DESC, "create_time"));
+		query.with(new Sort(Sort.Direction.DESC, "sendTime"));
 		return mongoTemplate.find(query, MessagePushMsgHistory.class);
 	}
 

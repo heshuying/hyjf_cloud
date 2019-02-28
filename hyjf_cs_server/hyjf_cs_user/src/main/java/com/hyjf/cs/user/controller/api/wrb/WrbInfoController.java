@@ -63,17 +63,16 @@ public class WrbInfoController {
         WrbNoticeinfoRequest request= null;
         try{
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbNoticeinfoRequest.class);
-        }catch(Exception e){
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        }finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        }catch(Exception e){
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
         Integer limit = request.getLimit();
         Integer page = request.getPage();
@@ -159,17 +158,16 @@ public class WrbInfoController {
         WrbBorrowInvestRequest request = null;
         try {
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbBorrowInvestRequest.class);
-        } catch (Exception e) {
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        } finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
 
         // 标的id
@@ -238,17 +236,16 @@ public class WrbInfoController {
         WrbInvestRequest request = null;
         try {
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestRequest.class);
-        } catch (Exception e) {
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        } finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
 
         Date invest_date = null;
@@ -321,17 +318,16 @@ public class WrbInfoController {
         WrbInvestSumRequest request = null;
         try {
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestSumRequest.class);
-        } catch (Exception e) {
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        } finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
 
         Date date = null;
@@ -368,17 +364,16 @@ public class WrbInfoController {
         WrbAccountRequest request = null;
         try {
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbAccountRequest.class);
-        } catch (Exception e) {
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        } finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
 
         // 获取平台用户id
@@ -416,18 +411,16 @@ public class WrbInfoController {
         WrbInvestRecordRequest request = null;
         try {
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestRecordRequest.class);
-
-        } catch (Exception e) {
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        } finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
 
         // 用户id
@@ -497,17 +490,16 @@ public class WrbInfoController {
         WrbInvestRecoverPlanRequest request = null;
         try {
             request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestRecoverPlanRequest.class);
-        } catch (Exception e) {
-            logger.error("参数解析失败....", e);
-            response.setRetcode(WrbResponse.FAIL_RETCODE);
-            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
-            return response;
-        } finally {
             if (request == null) {
                 response.setRetcode(WrbResponse.FAIL_RETCODE);
                 response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
                 return response;
             }
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
         }
         // 平台用户id
         String userId = request.getPf_user_id();

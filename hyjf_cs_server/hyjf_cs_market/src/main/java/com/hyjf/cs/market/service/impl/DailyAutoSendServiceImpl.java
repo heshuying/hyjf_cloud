@@ -67,7 +67,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
     @Override
     public void sendMail(SellDailyDistributionVO sellDailyDistribution) {
         String[] toEmail = sellDailyDistribution.getEmail().split(";");
-        if (toEmail.length < 0) {
+        if (toEmail == null || toEmail.length == 0) {
             return;
         }
         String dateStr = GetDate.getFormatDateStr();

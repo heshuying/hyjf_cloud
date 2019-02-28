@@ -964,14 +964,17 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             result = false;
         } finally {
             try {
-                csvWtriter.close();
-                return result;
+                if (csvWtriter != null){
+                    csvWtriter.close();
+                }
             } catch (IOException e) {
                 logger.error("【互金上传文件】文件关闭失败！文件名：" + outPutPath + filename);
                 e.printStackTrace();
-                return false;
             }
         }
+
+        return result;
+
     }
 
     /**
@@ -1101,8 +1104,8 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             if (null != out) {
                 out.close();
             }
-            return result;
         }
+        return result;
     }
 
     /**
