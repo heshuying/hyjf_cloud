@@ -357,6 +357,7 @@ public class ProtocolsController extends BaseController {
 	 * @param response
 	 * @throws Exception
 	 */
+	@SuppressWarnings("resource")
 	@ApiOperation(value = "导出excel", notes = "导出excel")
 	@PostMapping("/exportaction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -377,11 +378,17 @@ public class ProtocolsController extends BaseController {
 			form.setPageSize(defaultRowMaxCount);
 			form.setCurrPage(1);
 			FddTempletCustomizeResponse fddResponse = this.protocolsService.selectFddTempletList(form);
+			
+			// modify by libin sonar start 前面为空时走到 查count 这会空指针.SO判断加个else
 			if(fddResponse != null) {
 				recordList = fddResponse.getResultList();
+			} else {
+				return;
 			}
 	        Integer totalCount = fddResponse.getCount();
-
+	        // modify by libin sonar end
+	        
+	    
 	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 	        int minId = 0;
 	        Map<String, String> beanPropertyColumnMap = buildMap();
