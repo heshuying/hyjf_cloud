@@ -1048,6 +1048,14 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 
 	@Override
 	public WebResult<Object> seachUserAuthErrorMessgae(String logOrdId) {
+
+
+		try {
+			logger.info("延迟1000毫秒以后查询");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		WebResult<Object> result = new WebResult<Object>();
 		HjhUserAuthLogVO hjhUserAuthLogVO = amUserClient.selectByExample(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
