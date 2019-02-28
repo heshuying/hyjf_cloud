@@ -4,24 +4,26 @@
 package com.hyjf.am.trade.service.admin.config.impl;
 
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.trade.dao.mapper.auto.EvaluationConfigMapper;
-import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.service.admin.config.BailConfigService;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfigLog;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfigLogExample;
 import com.hyjf.am.trade.service.admin.config.EvaluationConfigService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
-import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
-import com.hyjf.am.vo.admin.EvaluationConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetSessionOrRequestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+
+import static com.hyjf.common.util.GetDate.datetimeFormat;
 
 /**
  * 风险测评配置
@@ -33,7 +35,6 @@ import java.util.*;
 @Service
 public class EvaluationConfigServiceImpl extends BaseServiceImpl implements EvaluationConfigService {
 
-    private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     /**
      * 获取风险测评-限额配置总数
      * @param request
@@ -334,6 +335,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
      * @param request
      * @return
      */
+    @Override
     public Integer getEvaluationBorrowLevelConfigCount(EvaluationBorrowLevelConfigRequest request) {
         EvaluationConfigExample example = new EvaluationConfigExample();
         return evaluationConfigMapper.countByExample(example);
@@ -345,6 +347,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
      * @param request
      * @return
      */
+    @Override
     public List<EvaluationConfig> getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest request){
         EvaluationConfigExample example = new EvaluationConfigExample();
         if (request.getLimitStart() != -1) {
@@ -361,6 +364,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
      * @param request
      * @return
      */
+    @Override
     public boolean updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest request){
         EvaluationConfig evaluationConfig = this.evaluationConfigMapper.selectByPrimaryKey(request.getId());
         BeanUtils.copyProperties(request,evaluationConfig);
@@ -395,6 +399,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
      * @param request
      * @return
      */
+    @Override
     public Integer getBorrowLevelConfigLogListCount(EvaluationBorrowLevelConfigLogRequest request){
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
         EvaluationConfigLogExample.Criteria cra = example.createCriteria();
@@ -403,7 +408,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
             cra.andUpdateUserEqualTo(request.getUpdateUserSrch());
         }
         if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
-            cra.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
+            cra.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
         }
         return evaluationConfigLogMapper.countByExample(example);
     }
@@ -415,6 +420,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
      * @param request
      * @return
      */
+    @Override
     public List<EvaluationConfigLog> getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest request){
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
         EvaluationConfigLogExample.Criteria cra = example.createCriteria();
