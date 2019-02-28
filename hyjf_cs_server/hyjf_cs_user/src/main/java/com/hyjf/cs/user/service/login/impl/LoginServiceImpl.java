@@ -168,7 +168,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
 		if (password.equals(passwordDb)) {
-		webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
+			webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
