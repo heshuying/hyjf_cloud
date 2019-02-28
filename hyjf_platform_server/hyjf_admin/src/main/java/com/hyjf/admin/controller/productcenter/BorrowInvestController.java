@@ -456,6 +456,7 @@ public class BorrowInvestController extends BaseController {
         map.put("tenderUserAttribute", "出借人用户属性（出借时）");
         map.put("inviteUserAttribute", "推荐人用户属性（出借时）");
         map.put("tenderReferrerUsername", "推荐人（出借时）");
+        //原先是在导出时处理，现在在service中处理了
         map.put("tenderReferrerUserId", "推荐人ID（出借时）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
             map.put("departmentLevel1Name", "一级分部（出借时）");

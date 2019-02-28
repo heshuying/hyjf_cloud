@@ -134,6 +134,8 @@ public class UserCenterController extends BaseController {
                 //如果没有查看脱敏权限,显示加星
                 userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getIdCard()));
                 userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getMobile()));
+                //紧急联系人手机号加密显示
+                userManagerDetailCustomizeVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
