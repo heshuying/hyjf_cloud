@@ -5555,7 +5555,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public FinmanChargeNewResponse updateFinmanChargeNewRecord(FinmanChargeNewRequest adminRequest){
         String url = "http://AM-ADMIN/am-admin/config/finmanchargenew/update";
         FinmanChargeNewResponse response = restTemplate.postForEntity(url,adminRequest,FinmanChargeNewResponse.class).getBody();
-        if (response != null && Response.FAIL.equals(response.getRtn())) {
+        if (response != null && !Response.FAIL.equals(response.getRtn())) {
             FinmanChargeNewResponse count =restTemplate.postForEntity("http://AM-ADMIN/am-admin/feerateModifyLog/update",adminRequest,FinmanChargeNewResponse.class).getBody();
             if(count != null){
                 response.setRtn(Response.SUCCESS);
