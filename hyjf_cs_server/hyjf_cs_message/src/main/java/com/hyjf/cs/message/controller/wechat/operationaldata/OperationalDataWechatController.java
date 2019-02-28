@@ -212,8 +212,8 @@ public class OperationalDataWechatController {
                 maleCount = sexMap.get(OperationGroupReport.MALE);
                 femaleCount = sexMap.get(OperationGroupReport.FEMALE);
             }
-			float malePer = (float) maleCount * 100 / (maleCount + femaleCount);
-			float femalePer = (float) femaleCount * 100 / (maleCount + femaleCount);
+			float malePer = (float) maleCount * 100 / ((maleCount + femaleCount) <= 0 ? 1 : (maleCount + femaleCount)) ;
+			float femalePer = (float) femaleCount * 100 / ((maleCount + femaleCount) <= 0 ? 1 : (maleCount + femaleCount));
 			info.put("InvestorRegionMenRate", oe.formatDate(malePer) + "%");
 			info.put("InvestorRegionWoMenRate", oe.formatDate(femalePer) + "%");
 

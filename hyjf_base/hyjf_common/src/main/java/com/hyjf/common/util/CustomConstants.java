@@ -1081,7 +1081,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 消息推送模板-优惠券已失效 */
     public static final String JYTZ_COUPON_INVALIDED = "JYTZ_COUPON_INVALIDED";
-    /** 消息推送模板-优惠券已失效 */
+    /** 消息推送模板-投资撤销 */
     public static final String JYTZ_TPL_BIDCANCEL = "JYTZ_TPL_BIDCANCEL";
     
     /** 消息推送模板-第三方接口注册用户密码发送*/

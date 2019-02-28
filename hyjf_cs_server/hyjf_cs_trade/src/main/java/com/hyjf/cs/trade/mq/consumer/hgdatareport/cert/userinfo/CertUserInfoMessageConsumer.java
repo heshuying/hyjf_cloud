@@ -153,7 +153,6 @@ public class CertUserInfoMessageConsumer implements RocketMQListener<MessageExt>
             return;
         }finally {
             logger.info(logHeader + " 结束。");
-            return;
         }
     }
 }
