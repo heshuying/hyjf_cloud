@@ -231,13 +231,18 @@ public class RepayManageController extends BaseTradeController {
     public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody WebUserRepayTransferRequest transferRequest){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
-        // 根据用户ID 查询用户信息
-        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
-        /** 当前用户已登录并且标的NID不为空 */
-        String verificationFlag = null;
-        if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
-            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
-            try {
+        logger.info("用户待还标的-债转详情. userId=" + userId + ";BorrowNid=" + transferRequest.getBorrowNid());
+        try {
+            // 根据用户ID 查询用户信息
+            WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+            logger.info("获取到用户信息为:" + userVO.getUsername());
+            resultMap.put("userId", userVO.getUserId());
+
+            /** 当前用户已登录并且标的NID不为空 */
+            String verificationFlag = null;
+            if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
+                WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
+                logger.info("获取到标的信息为:" + borrowInfo.getPlanNid());
                 // 单纯的作为验证标识.
                 if (borrowInfo.getPlanNid() != null) {
                     verificationFlag = borrowInfo.getPlanNid();
@@ -247,21 +252,22 @@ public class RepayManageController extends BaseTradeController {
                 //居间协议
                 Integer fddStatus = 0;
                 List<TenderAgreementVO> tenderAgreementsNid = null;
-                tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
-                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
-                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
-                    fddStatus = tenderAgreement.getStatus();
-                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                    if (fddStatus.equals(3)) {
-                        fddStatus = 1;
-                    } else {
-                        //隐藏下载按钮
-                        fddStatus = 0;
-                    }
-                } else {
-                    //下载老版本协议
-                    fddStatus = 1;
-                }
+                //tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
+                //logger.info("获取到协议信息为:" + tenderAgreementsNid.get(0).getPdfUrl());
+//                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
+//                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+//                    fddStatus = tenderAgreement.getStatus();
+//                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+//                    if (fddStatus.equals(3)) {
+//                        fddStatus = 1;
+//                    } else {
+//                        //隐藏下载按钮
+//                        fddStatus = 0;
+//                    }
+//                } else {
+//                    //下载老版本协议
+//                    fddStatus = 1;
+//                }
 
                 // 计算到账金额
                 if (borrowInfo.getSucSmount() != null) {
@@ -273,11 +279,10 @@ public class RepayManageController extends BaseTradeController {
                 resultMap.put("verificationFlag", verificationFlag);
                 resultMap.put("borrowInfo", borrowInfo);
                 resultMap.put("fddStatus", fddStatus);
-                resultMap.put("userId", userVO.getUserId());
                 result.setData(resultMap);
-            }catch (NullPointerException e){
-                result.setStatusDesc("暂无数据");
             }
+        }catch (NullPointerException e){
+            logger.info("getUserFromCache为:NULL. 获取用户信息为空" );
         }
         return result;
     }
