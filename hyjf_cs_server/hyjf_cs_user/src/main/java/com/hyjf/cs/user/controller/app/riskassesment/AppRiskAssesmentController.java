@@ -10,12 +10,9 @@ import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
@@ -167,25 +164,14 @@ public class AppRiskAssesmentController extends BaseUserController {
         // userEvalationResult 测评结果
         response.setResultType(userEvalationResult.getEvalType());
         // 测评金额上限增加（获取评分标准对应的上限金额并拼接）
-        switch (userEvalationResult.getEvalType()){
-            case "保守型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
-                break;
-            case "稳健型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
-                break;
-            case "成长型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
-                break;
-            case "进取型":
-                response.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                        RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
-                break;
-            default:
-                response.setRevaluationMoney("0");
+        String revaluationMoney,evalType;
+        List<EvalationCustomizeVO> evalationMoney = evaluationService.getEvalationRecord();
+        for(EvalationCustomizeVO evalationCustomizeVO:evalationMoney){
+            revaluationMoney = evalationCustomizeVO.getRevaluationMoney();
+            evalType = evalationCustomizeVO.getEvalType();
+            if(evalType.equals(userEvalationResult.getEvalType())){
+                response.setRevaluationMoney(revaluationMoney);
+            }
         }
         response.setResultText(userEvalationResult.getSummary());
         response.setStatus(RiskAssesmentResponse.SUCCESS);
