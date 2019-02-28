@@ -2145,11 +2145,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.error("该项目只能新手出借  {} ",JSONObject.toJSONString(bean));
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
-                    sendBidCancelMessage(userId);
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
+                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
+                    try {
+                        sendBidCancelMessage(userId);
+                    } catch (MQException e) {
+                        e.printStackTrace();
+                    }
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
@@ -2173,11 +2178,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 // 出借失败,出借撤销
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
-                    sendBidCancelMessage(userId);
+
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
+                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
+                    try {
+                        sendBidCancelMessage(userId);
+                    } catch (MQException e1) {
+                        e.printStackTrace();
+                    }
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
@@ -2193,7 +2204,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private void sendBidCancelMessage(Integer userId) throws MQException {
         logger.info("appMsMessage：{}" ,"发送消息~~~~~~~");
         // 替换参数
-        /*Map<String, String> replaceMap = new HashMap<String, String>();
+        Map<String, String> replaceMap = new HashMap<String, String>();
         UserInfoVO info = amUserClient.findUsersInfoById(userId);
         replaceMap.put("val_name", info.getTruename().substring(0, 1));
         replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
@@ -2206,7 +2217,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                 UUID.randomUUID().toString(), smsMessage));
         commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                UUID.randomUUID().toString(), appMsMessage));*/
+                UUID.randomUUID().toString(), appMsMessage));
     }
 
     /**

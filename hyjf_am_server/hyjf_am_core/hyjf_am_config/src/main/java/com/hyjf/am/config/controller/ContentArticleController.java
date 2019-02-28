@@ -1,5 +1,6 @@
 package com.hyjf.am.config.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.model.auto.ContentArticle;
 import com.hyjf.am.config.dao.model.customize.ContentArticleCustomize;
 import com.hyjf.am.config.dao.model.customize.HelpCategoryCustomize;
@@ -16,6 +17,8 @@ import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.config.WechatContentArticleResultVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +40,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/am-config/article")
 public class ContentArticleController {
+    private final Logger logger = LoggerFactory.getLogger(ContentArticleController.class);
 
     @Autowired
     private ContentArticleService contentArticleService;
@@ -169,6 +173,7 @@ public class ContentArticleController {
      */
     @RequestMapping("/getcontentarticlelistbytype")
     public ContentArticleCustomizeResponse getContentArticleListByType(@RequestBody Map<String, Object> params) {
+        logger.info("查询文章列表, params is : {}", JSONObject.toJSONString(params));
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
         List<ContentArticleCustomize> list = contentArticleService.getContentArticleListByType(params);
         if (!CollectionUtils.isEmpty(list)) {
@@ -190,9 +195,10 @@ public class ContentArticleController {
     public ContentArticleCustomizeResponse getContentArticleFlip(@RequestBody Map<String, Object> params) {
         String offset = (String) params.get("offset");
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
-        ContentArticleCustomize list = contentArticleService.getContentArticleFlip(params, offset);
-        if (list != null) {
-            ContentArticleCustomizeVO voList = CommonUtils.convertBean(list, ContentArticleCustomizeVO.class);
+        ContentArticleCustomize customize = contentArticleService.getContentArticleFlip(params, offset);
+        if (customize != null) {
+            logger.info("网贷知识customize is: {}", customize);
+            ContentArticleCustomizeVO voList = CommonUtils.convertBean(customize, ContentArticleCustomizeVO.class);
             response.setResult(voList);
             return response;
         }

@@ -129,13 +129,13 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         performanceReturnDetail.setTerm(activityMidauInfo.getProductStyle());
         //单笔返现金额
         if(level==1){
-            performanceReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
+            performanceReturnDetail.setReturnAmount(yearAmount.multiply(BigDecimal.valueOf(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
         }else if(level==2){
-            performanceReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
+            performanceReturnDetail.setReturnAmount(yearAmount.multiply(BigDecimal.valueOf(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
         }else if(level==3){
-            performanceReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(2)));
+            performanceReturnDetail.setReturnAmount(yearAmount.multiply(BigDecimal.valueOf(0.005)).setScale(2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(2)));
         }else if(level==4){
-            performanceReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(3)));
+            performanceReturnDetail.setReturnAmount(yearAmount.multiply(BigDecimal.valueOf(0.005)).setScale(2,BigDecimal.ROUND_DOWN).multiply(new BigDecimal(3)));
         }
         //单笔当月产生的业绩
         performanceReturnDetail.setReturnPerformance(yearAmount);
@@ -159,7 +159,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             //邀请人
             inviterReturnDetail.setUserName(inviterReturnCashCustomize.getUserName());
             inviterReturnDetail.setTrueName(inviterReturnCashCustomize.getTrueName());
-            inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
+            inviterReturnDetail.setReturnAmount(yearAmount.multiply(BigDecimal.valueOf(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
             map.put("inviterReturnDetail",inviterReturnDetail);
            // this.saveInviterReturnDetail(inviterReturnDetail);
             return map;
@@ -178,8 +178,8 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             //邀请人
             inviterReturnDetail.setUserName(inviterReturnCash.getUserName());
             inviterReturnDetail.setTrueName(inviterReturnCash.getTrueName());
-            _log.info("返现金额打印=="+yearAmount+"=="+yearAmount.multiply(new BigDecimal(0.005)));
-            inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
+            _log.info("返现金额打印=="+yearAmount+"=="+yearAmount.multiply(BigDecimal.valueOf(0.005)));
+            inviterReturnDetail.setReturnAmount(yearAmount.multiply(BigDecimal.valueOf(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
             map.put("inviterReturnDetail"+i,inviterReturnDetail);
            // this.saveInviterReturnDetail(inviterReturnDetail);
             refferId = inviterReturnCash.getRefferId();

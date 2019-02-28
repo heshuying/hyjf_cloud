@@ -78,4 +78,14 @@ public class ContentArticleCustomize implements Serializable {
     public void setShareUrl(String shareUrl) {
         this.shareUrl = shareUrl;
     }
+
+    @Override
+    public String toString() {
+        return "ContentArticleCustomize{" +
+                "title='" + title + '\'' +
+                ", messageUrl='" + messageUrl + '\'' +
+                ", shareTitle='" + shareTitle + '\'' +
+                ", shareUrl='" + shareUrl + '\'' +
+                '}';
+    }
 }

@@ -97,6 +97,8 @@ public class CertServiceImpl implements CertService {
             if (form.getQueryStatus()!=null && form.getQueryStatus().intValue()>=0) {
                 creteria.andQueryResultEqualTo(form.getQueryStatus());
             }
+        }else {
+            form = new CertReportLogRequestBean();
         }
         example.setLimitStart(form.getPaginator().getOffset());
         example.setLimitEnd(form.getPaginator().getLimit());
@@ -164,6 +166,8 @@ public class CertServiceImpl implements CertService {
             if (StringUtils.isNotEmpty(form.getLogOrdId())) {
                 creteria.andLogOrdIdEqualTo(form.getLogOrdId());
             }
+        }else {
+            form = new CertErrorReportLogRequestBean();
         }
         example.setLimitStart(form.getPaginator().getOffset());
         example.setLimitEnd(form.getPaginator().getLimit());

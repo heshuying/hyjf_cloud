@@ -100,7 +100,7 @@ public class AdminAllocationEngineController {
     public HjhRegionResponse getPlanNidAjaxCheck(@PathVariable String planNid){
     	HjhRegionResponse response = new HjhRegionResponse();
 		//计划编号未入力
-		if (StringUtils.isEmpty(planNid) && planNid == "") {
+		if (StringUtils.isEmpty(planNid) && "".equals(planNid) ) {
 			response.setMessage("错误:" +"未传入智投编号");
 			return response;
 		}
