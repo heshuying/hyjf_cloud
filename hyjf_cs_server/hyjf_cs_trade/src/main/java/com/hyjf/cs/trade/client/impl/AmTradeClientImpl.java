@@ -1385,7 +1385,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:24
      */
     @Override
-	@Cached(name="appProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.REMOTE)
+	@Cached(name="appProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
         logger.info(">>>>>>appProjectListCache - request: " + JSON.toJSON(request));
