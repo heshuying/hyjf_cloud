@@ -115,15 +115,16 @@ public class ProtocolsController extends BaseController {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
 		if (requestBean.getId() != null) {
 			response = this.protocolsService.getRecordInfo(requestBean.getId());
+			// modify by libin sonar start 非空判断拿到此处
+			if (response == null) {
+				return new AdminResult<>(FAIL, FAIL_DESC);
+			}
+			// modify by libin sonar end
 		}
 		response.setProtocolsForm(response.getResult());
 		// 协议类型下拉
 		List<ParamNameVO> paramNameList = this.protocolsService.getParamNameList("PROTOCOL_TYPE");
 		response.setProtocolTypeList(paramNameList);
-
-		if (response == null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
