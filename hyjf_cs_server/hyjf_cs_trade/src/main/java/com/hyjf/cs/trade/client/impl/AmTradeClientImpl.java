@@ -1185,7 +1185,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean updateAccountwithdrawLog(AccountWithdrawVO accountwithdraw) {
         IntegerResponse result = restTemplate
-                .postForEntity(urlBase +"accountWithdraw/updateAccountwithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
+                .postForEntity(urlBase +"accountWithdraw/updateAccountWithdrawLog", accountwithdraw, IntegerResponse.class).getBody();
         return result.getResultInt()>0?true:false;
     }
     /**
@@ -1390,7 +1390,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
-            return response.getResultList();
+            return CollectionUtils.isEmpty(response.getResultList()) ? new ArrayList<>() : response.getResultList();
         }
         return null;
     }
@@ -6046,12 +6046,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     @Cached(name="appHomeAnnouncementsCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-    @CacheRefresh(refresh = 10, stopRefreshAfterLastAccess = 10, timeUnit = TimeUnit.MINUTES)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<AppPushManageVO> getAnnouncements() {
         String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncements";
         AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResultList();
+            return CollectionUtils.isEmpty(response.getResultList()) ? new ArrayList<>() : response.getResultList();
         }
         return null;
     }
@@ -6732,13 +6732,6 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
-    }
-
-    @Override
-    public boolean checkAutoPayment(String creditNid) {
-        String url = urlBase + "autoTenderController/checkAutoPayment/" + creditNid;
-        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
-        return response.getResultBoolean();
     }
 
     /**

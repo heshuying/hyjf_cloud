@@ -316,7 +316,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
         if (accountList != null && accountList.size() > 0) {
             return accountList.get(0);
         }
-        return null;
+        return new Account();
     }
 
 }

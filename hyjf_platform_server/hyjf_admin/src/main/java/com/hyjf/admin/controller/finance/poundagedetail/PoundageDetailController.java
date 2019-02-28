@@ -269,7 +269,7 @@ public class PoundageDetailController extends BaseController {
      * @return
      */
     private String getRatio(BigDecimal ratio) {
-        if (ratio == null || ratio.compareTo(new BigDecimal(0.00)) == 0) {
+        if (ratio == null || ratio.compareTo(BigDecimal.valueOf(0.00)) == 0) {
             return "--";
         }
         return ratio.toString();

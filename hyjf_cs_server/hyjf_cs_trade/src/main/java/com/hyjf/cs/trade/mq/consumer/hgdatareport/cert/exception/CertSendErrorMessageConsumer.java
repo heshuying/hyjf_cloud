@@ -81,7 +81,6 @@ public class CertSendErrorMessageConsumer implements RocketMQListener<MessageExt
             }else {
                 logger.info(logHeader+" 无需要处理的数据~~");
             }
-            return;
         } catch (Exception e) {
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
             isRun = false;
@@ -89,7 +88,6 @@ public class CertSendErrorMessageConsumer implements RocketMQListener<MessageExt
         }finally {
             logger.info(logHeader + " 结束。");
             isRun = false;
-            return;
         }
     }
 }

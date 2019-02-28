@@ -238,13 +238,18 @@ public class RepayManageController extends BaseTradeController {
     public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody WebUserRepayTransferRequest transferRequest){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
-        // 根据用户ID 查询用户信息
-        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
-        /** 当前用户已登录并且标的NID不为空 */
-        String verificationFlag = null;
-        if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
-            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
-            try {
+        logger.info("用户待还标的-债转详情. userId=" + userId + ";BorrowNid=" + transferRequest.getBorrowNid());
+        try {
+            // 根据用户ID 查询用户信息
+            WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+            logger.info("获取到用户信息为:" + userVO.getUsername());
+            resultMap.put("userId", userVO.getUserId());
+
+            /** 当前用户已登录并且标的NID不为空 */
+            String verificationFlag = null;
+            if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
+                WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
+                logger.info("获取到标的信息为:" + borrowInfo.getPlanNid());
                 // 单纯的作为验证标识.
                 if (borrowInfo.getPlanNid() != null) {
                     verificationFlag = borrowInfo.getPlanNid();
@@ -296,11 +301,10 @@ public class RepayManageController extends BaseTradeController {
                 resultMap.put("verificationFlag", verificationFlag);
                 resultMap.put("borrowInfo", borrowInfo);
                 resultMap.put("fddStatus", fddStatus);
-                resultMap.put("userId", userVO.getUserId());
                 result.setData(resultMap);
-            }catch (NullPointerException e){
-                result.setStatusDesc("暂无数据");
             }
+        }catch (NullPointerException e){
+            logger.info("getUserFromCache为:NULL. 获取用户信息为空" );
         }
         return result;
     }

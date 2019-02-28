@@ -99,7 +99,9 @@
 			AND ar.del_flag = '0'
 			INNER JOIN ht_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
 			AND mp.del_flag = '0'
-			INNER JOIN ht_admin_menu m ON mp.menu_uuid = m.menu_uuid
+			INNER JOIN ht_admin_menu_permssions  amp on
+			amp.menu_id=mp.menu_uuid and amp.permission_id=mp.permission_uuid
+			INNER JOIN ht_admin_menu m ON amp.menu_id = m.menu_uuid
 			AND m.del_flag = '0'
 			INNER JOIN ht_admin_permissions p ON p.permission_uuid = mp.permission_uuid
 			AND p.del_flag = '0'

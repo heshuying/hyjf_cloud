@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.front.user;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -15,13 +16,10 @@ import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
@@ -129,16 +127,16 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/findById/{userId}")
     public UserResponse findUserByUserId(@PathVariable Integer userId) {
-        logger.info("findUserByUserId run...userId is :{}", userId);
+        logger.info("根据userId查询ht_user表,userId:{}", userId);
         UserResponse response = new UserResponse();
-        if(userId!=null){
+        if(userId != null){
             User user = userService.findUserByUserId(userId);
-            logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
                 UserVO userVO = new UserVO();
                 BeanUtils.copyProperties(user, userVO);
                 response.setResult(userVO);
                 response.setRtn(Response.SUCCESS);
+                logger.info("根据userId查询ht_user表返回的信息,userVO", JSON.toJSONString(userVO));
             }
             return response;
         }
@@ -631,28 +629,6 @@ public class UserController extends BaseController {
         List<Evalation> evalationList = userService.getEvalationRecord();
         if (!CollectionUtils.isEmpty(evalationList)) {
             List<EvalationCustomizeVO> evalationVOList = CommonUtils.convertBeanList(evalationList, EvalationCustomizeVO.class);
-            for(EvalationCustomizeVO evalStr : evalationVOList){
-                switch (evalStr.getEvalType()){
-                    case "保守型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
-                        break;
-                    case "稳健型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
-                        break;
-                    case "成长型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
-                        break;
-                    case "进取型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
-                        break;
-                    default:
-                        evalStr.setRevaluationMoney("0");
-                }
-            }
             response.setResultList(evalationVOList);
         }
         return response;

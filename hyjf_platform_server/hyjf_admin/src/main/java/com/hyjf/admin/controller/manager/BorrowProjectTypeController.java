@@ -77,15 +77,18 @@ public class BorrowProjectTypeController extends BaseController {
             // 根据主键检索数据
             record = this.borrowProjectTypeService.getRecord(record);
             //优惠券类型转换
-            if(record.getInterestCoupon() == 1&&record.getTasteMoney() != 1){
-                record.setCoupon("0");
-            }
-            if(record.getInterestCoupon() == 0&&record.getTasteMoney() == 1){
-                record.setCoupon("1");
-            }
-            if(record.getInterestCoupon() == 1&&record.getTasteMoney() == 1){
-                record.setCoupon("0,1");
-            }
+           if(record.getInterestCoupon() != null){
+
+               if(record.getInterestCoupon() == 1&&record.getTasteMoney() != 1){
+                   record.setCoupon("0");
+               }
+               if(record.getInterestCoupon() == 0&&record.getTasteMoney() == 1){
+                   record.setCoupon("1");
+               }
+               if(record.getInterestCoupon() == 1&&record.getTasteMoney() == 1){
+                   record.setCoupon("0,1");
+               }
+           }
             record.setModifyFlag("E");
             // 根据项目编号查询
             selectRepay = this.borrowProjectTypeService.selectRepay(record.getBorrowClass());

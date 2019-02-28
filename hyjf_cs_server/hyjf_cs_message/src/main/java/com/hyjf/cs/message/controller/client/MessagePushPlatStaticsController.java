@@ -50,6 +50,7 @@ public class MessagePushPlatStaticsController extends BaseController {
 					String tagName = templateStaticsService.selectTagName(vo.getTagId());
 					vo.setTagName(tagName);
 				}
+				vo.setStaDate(vo.getStaDate().substring(0, 10));
 			}
 			response.setResultList(voList);
 		}

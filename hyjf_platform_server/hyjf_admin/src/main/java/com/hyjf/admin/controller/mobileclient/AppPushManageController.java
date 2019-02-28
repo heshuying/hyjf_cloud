@@ -184,7 +184,7 @@ public class AppPushManageController extends BaseController {
      */
     @ApiOperation(value = "根据ID 更新 单条信息状态", notes = "根据ID 更新 单条信息状态")
     @PostMapping("/updatePushManageStatusById")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AppPushManageVO> updatePushManageStatusById(@RequestBody AppPushManageRequestBean requestBean){
 
         // ID必须不为空
@@ -196,7 +196,7 @@ public class AppPushManageController extends BaseController {
 
         logger.info("updatePushManageStatusById:更新但单条推送数据状态的ID:" + ids);
 
-        boolean pushManageResponse = appPushManageService.updatePushManageStatusById(ids);
+        boolean pushManageResponse = appPushManageService.updatePushManageStatusById(requestBean);
 
         if (pushManageResponse){
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);

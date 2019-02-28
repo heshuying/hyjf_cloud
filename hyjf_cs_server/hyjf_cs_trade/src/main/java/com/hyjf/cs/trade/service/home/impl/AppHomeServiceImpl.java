@@ -225,7 +225,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         	logger.error("获取累计出借金额为空");
         }
         // modify by libin 加缓存
-        
+
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
         if (null != totalInvestAndInterestVO){
             BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
@@ -539,13 +539,15 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     private void creatNoSignProjectListPage(JSONObject info, List<AppProjectListCustomizeVO> list, String host) {
         List<AppHomePageCustomize> homePageCustomizes = convertToAppHomePageCustomize(list,host);//新手标
-        AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
-        pageCustomize.setTitle("新手专享");
-        pageCustomize.setTag("新手限投1次");
-        pageCustomize.setBorrowDesc("100起投，最高出借5000");
-        CommonUtils.convertNullToEmptyString(pageCustomize);
-        AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(pageCustomize);
-        info.put("recommendProject", recommendProject);
+        if (! CollectionUtils.isEmpty(homePageCustomizes)){
+            AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
+            pageCustomize.setTitle("新手专享");
+            pageCustomize.setTag("新手限投1次");
+            pageCustomize.setBorrowDesc("100起投，最高出借5000");
+            CommonUtils.convertNullToEmptyString(pageCustomize);
+            AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(pageCustomize);
+            info.put("recommendProject", recommendProject);
+        }
     }
 
 
@@ -1138,7 +1140,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setType("4");
         request.setHost(host);
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> listNewInvestTemp = amTradeClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> listNewInvest = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(listNewInvestTemp)){
+            listNewInvest = CommonUtils.convertBeanList(listNewInvestTemp,AppProjectListCustomizeVO.class);
+        }
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);
@@ -1152,9 +1158,14 @@ public class AppHomeServiceImpl implements AppHomeService {
         // 新手汇项目（出借中）为空
         // 取得新手汇项目（定时发标）
         String statusNewOnTime = "14";
-        request.setStatus(statusNewOnTime);
+        AppProjectListRequest request2= CommonUtils.convertBean(request,AppProjectListRequest.class);
+        request2.setStatus(statusNewOnTime);
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewOnTime = amTradeClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> listNewOnTimeTemp = amTradeClient.searchAppProjectList(request2);
+        List<AppProjectListCustomizeVO> listNewOnTime = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(listNewOnTimeTemp)){
+            listNewOnTime = CommonUtils.convertBeanList(listNewOnTimeTemp,AppProjectListCustomizeVO.class);
+        }
         if (listNewOnTime != null && listNewOnTime.size() > 0) {
             for (int i = 0; i < listNewOnTime.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = listNewOnTime.get(i);
@@ -1168,8 +1179,13 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         //复审
         String status = "16";
-        request.setStatus(status);
-        List<AppProjectListCustomizeVO> reviewList = amTradeClient.searchAppProjectList(request);
+        AppProjectListRequest request3= CommonUtils.convertBean(request,AppProjectListRequest.class);
+        request3.setStatus(status);
+        List<AppProjectListCustomizeVO> reviewListTemp = amTradeClient.searchAppProjectList(request3);
+        List<AppProjectListCustomizeVO> reviewList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(reviewListTemp)){
+            reviewList = CommonUtils.convertBeanList(reviewListTemp,AppProjectListCustomizeVO.class);
+        }
         if (reviewList != null && reviewList.size() > 0) {
             for (int i = 0; i < reviewList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = reviewList.get(i);
@@ -1182,8 +1198,13 @@ public class AppHomeServiceImpl implements AppHomeService {
         }
         //还款
         status = "17";
-        request.setStatus(status);
-        List<AppProjectListCustomizeVO> repaymentList = amTradeClient.searchAppProjectList(request);
+        AppProjectListRequest request4= CommonUtils.convertBean(request,AppProjectListRequest.class);
+        request4.setStatus(status);
+        List<AppProjectListCustomizeVO> repaymentListTemp = amTradeClient.searchAppProjectList(request4);
+        List<AppProjectListCustomizeVO> repaymentList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(repaymentListTemp)){
+            repaymentList = CommonUtils.convertBeanList(repaymentListTemp,AppProjectListCustomizeVO.class);
+        }
         if (repaymentList != null && repaymentList.size() > 0) {
             for (int i = 0; i < repaymentList.size(); i++) {
                 AppProjectListCustomizeVO newOnTime = repaymentList.get(i);

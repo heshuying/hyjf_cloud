@@ -86,7 +86,9 @@ public class TransferController extends BaseController {
         response.setMerchantAccountListIn(merchantAccounts.getResultList());
         MerchantTransferResponse recordList = transferService.selectMerchantTransfer(form);
         if(recordList == null||recordList.getRecordTotal()==0) {
-            new AdminResult(response);
+            response.setUserTransferVOList(new ArrayList<>());
+            response.setTotal(0);
+            return new AdminResult(response);
         }
         response.setUserTransferVOList(recordList.getResultList());
         response.setTotal(recordList.getRecordTotal());

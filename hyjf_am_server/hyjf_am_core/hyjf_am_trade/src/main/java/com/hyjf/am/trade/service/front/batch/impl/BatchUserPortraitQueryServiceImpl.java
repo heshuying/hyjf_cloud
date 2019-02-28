@@ -55,13 +55,13 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 // 累计收益
                 BigDecimal interestSum =  batchUserPortraitQueryCustomizeMapper.getInterestSum(userId);
                 if(interestSum == null){
-                    interestSum = new BigDecimal(0.00);
+                    interestSum = BigDecimal.valueOf(0.00);
                 }
 
                 //散标累计年化出借金额
                 BigDecimal investSum = batchUserPortraitQueryCustomizeMapper.getInvestSum(userId);
                 if (investSum == null) {
-                    investSum = new BigDecimal(0.00);
+                    investSum = BigDecimal.valueOf(0.00);
                 }
                 //计划累计年化出借金额
                 BigDecimal planSum = batchUserPortraitQueryCustomizeMapper.getPlanSum(userId);
@@ -76,7 +76,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 //累计提现金额
                 BigDecimal withdrawSum = batchUserPortraitQueryCustomizeMapper.getWithdrawSum(userId);
                 if (withdrawSum == null) {
-                    batchUserPortraitQueryVO.setWithdrawSum(new BigDecimal(0.00));
+                    batchUserPortraitQueryVO.setWithdrawSum(BigDecimal.valueOf(0.00));
                 }else{
                     batchUserPortraitQueryVO.setWithdrawSum(withdrawSum);
                 }

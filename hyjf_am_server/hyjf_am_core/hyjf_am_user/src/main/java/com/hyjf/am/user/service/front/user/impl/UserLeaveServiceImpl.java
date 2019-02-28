@@ -28,21 +28,19 @@ public class UserLeaveServiceImpl extends BaseServiceImpl implements UserLeaveSe
      * @param userId
      */
     @Override
-    public void updateUserLeaveInfoFromCrm(String userId) throws Exception {
+    public boolean updateUserLeaveInfoFromCrm(String userId) throws Exception {
+        logger.info("开始更新员工离职信息，CRM_ID：" + userId);
+        boolean updateResult = false;
         List<User> users = this.queryEmployeeList(userId);
         if (users.size() == 1) {
-            try {
-                // 修改客户属性
-                this.updateEmployeeByExampleSelective(users.get(0));
-                // 修改 离职人员作为推荐人的情况，被推荐人属性变为‘无主单’
-                this.updateSpreadAttribute(users.get(0).getUserId());
-            } catch (Exception e) {
-                logger.error("员工离职信息更新失败, CRM_ID:" + userId, e);
-                throw e;
-            }
+            this.updateEmployeeByExampleSelective(users.get(0));
+            // 修改 离职人员作为推荐人的情况，被推荐人属性变为‘无主单’
+            this.updateSpreadAttribute(users.get(0).getUserId());
+            updateResult = true;
         } else {
             logger.error("员工离职--查询用户信息失败, CRM_ID:" + userId);
         }
+        return updateResult;
     }
 
     /**
@@ -73,6 +71,8 @@ public class UserLeaveServiceImpl extends BaseServiceImpl implements UserLeaveSe
         UserInfo userInfo = new UserInfo();
         // 用户属性(无主单)
         userInfo.setAttribute(0);
+        // 为了拦截器正确发送MQ，设置一下userId
+        userInfo.setUserId(userId);
         UserInfoExample usersInfoExample = new UserInfoExample();
         UserInfoExample.Criteria uCriteria = usersInfoExample.createCriteria();
         uCriteria.andUserIdEqualTo(userId);

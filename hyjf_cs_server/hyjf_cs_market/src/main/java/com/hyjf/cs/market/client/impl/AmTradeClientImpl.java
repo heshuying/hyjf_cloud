@@ -7,11 +7,13 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.response.trade.EvaluationConfigResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
@@ -282,5 +284,14 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return null;
 	}
 
+	/** 用户测评配置 */
+	@Override
+	public List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record){
+		EvaluationConfigResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/tradedetail/selectEvaluationConfig/", record, EvaluationConfigResponse.class).getBody();
+		if (response != null && Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
 
 }

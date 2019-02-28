@@ -64,7 +64,6 @@ public class FinmanChargeNewController extends BaseController {
             BorrowFinmanNewCharge charge = this.finmanChargeNewService.getRecordInfo(manChargeCd);
             if (null != charge) {
                 BorrowFinmanNewChargeVO chargeVO = CommonUtils.convertBean(charge, BorrowFinmanNewChargeVO.class);
-                chargeVO.setProjectType(String.valueOf(chargeVO.getAssetType()));
                 response.setResult(chargeVO);
                 response.setRtn(Response.SUCCESS);
             }
@@ -159,12 +158,12 @@ public class FinmanChargeNewController extends BaseController {
 
     /**
      *
-     * 根据borrowCd查询borrowClass
+     * 根据borrowClass查询borrowClass是否存在
      * @author xiehuili
      * @return
      */
-    public String getBorrowClass(String borrowCd){
-        return finmanChargeNewService.getBorrowClass(borrowCd);
+    public String getBorrowClass(String borrowClass){
+        return finmanChargeNewService.getBorrowClass(borrowClass);
     }
 
 }

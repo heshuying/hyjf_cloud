@@ -67,6 +67,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
+		logger.info(logHeader + "accountLists.size():"+accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
@@ -874,6 +875,8 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	}
 
 	private void repaySuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
+
+		logger.info("accountList:" + JSONObject.toJSONString(accountList));
 		//还款 发送18还款本金  19还款利息  5交易手续费（还款服务费）
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		BorrowInfoVO borrow = amTradeClient.getBorrowInfoByNid(accountList.getRemark());
@@ -883,8 +886,10 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		Map<String, Object> param2 = new HashMap<String, Object>();
-
+		logger.info("borrowAndInfoVO:" + JSONObject.toJSONString(accountList));
+		logger.info("borrow:" + JSONObject.toJSONString(accountList));
 		CertUserVO certUser=this.getCertUserByUserIdBorrowNid(borrow.getUserId(),accountList.getRemark());
+		logger.info("certUser:" + JSONObject.toJSONString(accountList));
 		if(certUser==null){
 			certUser=new CertUserVO();
 			certUser.setUserIdCardHash(getUserHashValue(borrowAndInfoVO));
@@ -1036,6 +1041,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			certRequest.setNid(accountList.getNid());
 			List<BorrowRepayPlanVO> borrowRepayPlans =this.amTradeClient.getBorrowRepayPlanListByRequest(certRequest) ;
 
+			logger.info("borrowRepayPlans.size():" + borrowRepayPlans.size());
 			for (BorrowRepayPlanVO borrowRepayPlan : borrowRepayPlans) {
 				BigDecimal repayCapitalYes=BigDecimal.ZERO;
 				BigDecimal repayInterestYes=BigDecimal.ZERO;

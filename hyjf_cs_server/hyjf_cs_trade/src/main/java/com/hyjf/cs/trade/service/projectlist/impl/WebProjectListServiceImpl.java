@@ -1316,7 +1316,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 画面有地方用 planDetail.availableInvestAccount
                 planDetail.setAvailableInvestAccount("0.00");
                 // 画面也有地方有 availableInvestAccount
-                result.put("availableInvestAccount", new BigDecimal(0.00));
+                result.put("availableInvestAccount", BigDecimal.valueOf(0.00));
             } else {
                 result.put("availableInvestAccount", new BigDecimal(planDetail.getAvailableInvestAccount()));
             }

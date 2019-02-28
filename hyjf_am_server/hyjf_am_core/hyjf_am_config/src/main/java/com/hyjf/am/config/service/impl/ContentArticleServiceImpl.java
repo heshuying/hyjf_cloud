@@ -15,12 +15,15 @@ import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,14 +32,15 @@ import java.util.Map;
 
 @Service
 public class ContentArticleServiceImpl implements ContentArticleService {
+    private Logger logger = LoggerFactory.getLogger(ContentArticleServiceImpl.class);
 
-    @Autowired
+    @Resource
     private ContentArticleMapper contentArticleMapper;
 
-    @Autowired
+    @Resource
     private HelpCustomizeMapper helpCustomizeMapper;
 
-    @Autowired
+    @Resource
     private ContentArticleCustomizeMapper contentArticleCustomizeMapper;
 
     @Value("${hyjf.web.host}")
@@ -349,19 +353,7 @@ public class ContentArticleServiceImpl implements ContentArticleService {
         List<ContentArticle> list = contentArticleCustomizeMapper.getContentArticleListByType(params);
         List<ContentArticleCustomize> knowledgeCustomizes = new ArrayList<ContentArticleCustomize>();
         for (ContentArticle contentArticle : list) {
-            ContentArticleCustomize customize = new ContentArticleCustomize();
-            customize.setTitle(contentArticle.getTitle());
-            customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
-            customize.setMessageId(contentArticle.getId() + "");
-            customize.setMessageUrl("/find/contentArticle" +
-                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId() + "").replace("{type}", (String) params.get("type")));
-            customize.setShareTitle(contentArticle.getTitle());
-            customize.setShareContent(contentArticle.getSummary());
-            customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
-            customize.setShareUrl(webUrl + "/find/contentArticle" +
-                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId() + "").replace("{type}", (String) params.get("type")));
-
-            knowledgeCustomizes.add(customize);
+            knowledgeCustomizes.add(this.buildContentArticleCustomize(contentArticle, (String) params.get("type")));
         }
         return knowledgeCustomizes;
     }
@@ -384,19 +376,33 @@ public class ContentArticleServiceImpl implements ContentArticleService {
 
 
         if (contentArticle != null) {
-            ContentArticleCustomize customize = new ContentArticleCustomize();
-            customize.setTitle(contentArticle.getTitle());
-            customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
-            customize.setMessageId(contentArticle.getId() + "");
-            customize.setMessageUrl(webUrl + "/find/contentArticle" +
-                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
-            customize.setShareTitle(contentArticle.getTitle());
-            customize.setShareContent(contentArticle.getSummary());
-            customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
-            customize.setShareUrl(webUrl + "/find/contentArticle" +
-                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
-            return customize;
+            return this.buildContentArticleCustomize(contentArticle, (String) params.get("type"));
         }
         return null;
+    }
+
+    /**
+     * 抽象出公共的方法
+     * @param contentArticle
+     * @param type
+     * @return
+     */
+    private ContentArticleCustomize buildContentArticleCustomize(ContentArticle contentArticle, String type){
+        ContentArticleCustomize customize = new ContentArticleCustomize();
+        customize.setTitle(contentArticle.getTitle());
+        customize.setTime(new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
+        customize.setMessageId(contentArticle.getId() + "");
+        customize.setMessageUrl(webUrl + "/find/contentArticle" +
+                "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", type));
+        customize.setShareTitle(contentArticle.getTitle());
+        customize.setShareContent(contentArticle.getSummary());
+        customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+        // 分享url ,添加app sign忽略标识， 在zuul不检查sign
+        customize.setShareUrl(webUrl + "/find/contentArticle" +
+                "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", type)
+                + "?ignoreSign=true"
+        );
+        logger.debug("customize is: {}", customize);
+        return customize;
     }
 }

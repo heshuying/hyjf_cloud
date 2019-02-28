@@ -61,8 +61,8 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		Criteria criteria = new Criteria();
 		Criteria criteria1 = new Criteria();
 		if (tagId != null) {
-			criteria.and("msgDestinationType").equals(tagId);
-			criteria1.and("msgDestinationType").equals(tagId);
+			criteria.and("msgDestinationType").is(tagId);
+			criteria1.and("msgDestinationType").is(tagId);
 		}
 		criteria.and("msgUserId").is(0);
 		criteria.and("msgSendStatus").is(CustomConstants.MSG_PUSH_SEND_STATUS_1);
@@ -108,7 +108,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		}
 		Criteria cr = new Criteria();
 		Query query = new Query(cr.orOperator(criteria, criteria1));
-		query.with(new Sort(Sort.Direction.DESC, "create_time"));
+		query.with(new Sort(Sort.Direction.DESC, "sendTime"));
 		query.skip(limitStart).limit(limitEnd);
 		return mongoTemplate.find(query, MessagePushMsgHistory.class);
 	}
@@ -209,7 +209,7 @@ public class MessagePushMsgHistoryDao extends BaseMongoDao<MessagePushMsgHistory
 		criteria.and("msgDestinationType").ne(CustomConstants.MSG_PUSH_SEND_STATUS_0);
 		Query query = new Query(criteria);
 		query.skip(offset).limit(limit);
-		query.with(new Sort(Sort.Direction.DESC, "createTime"));
+		query.with(new Sort(Sort.Direction.DESC, "sendTime"));
 		return mongoTemplate.find(query,MessagePushMsgHistory.class);
 	}
 

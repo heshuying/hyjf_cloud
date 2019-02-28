@@ -212,7 +212,7 @@ public class MessagePushController extends BaseController {
 		String sign = request.getParameter("sign");
 		//消息ID
 		String msgIdStr = request.getParameter("msgId");
-
+		logger.info("version:{},platform:{},sign{},msgIdStr:{}",version,platform,sign,msgIdStr);
 		// 检查参数正确性
 		if (Validator.isNull(version) || Validator.isNull(platform) ||  Validator.isNull(sign)||  Validator.isNull(msgIdStr)) {
 			ret.put("status", "1");

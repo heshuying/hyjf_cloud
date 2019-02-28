@@ -188,7 +188,7 @@ public class BorrowRepaymentController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        copyForm.setLimitStart(1);
+        copyForm.setLimitStart(0);
         copyForm.setLimitEnd(defaultRowMaxCount);
         // 查询
         AdminBorrowRepaymentResponse resultList = this.borrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(copyForm);
@@ -381,7 +381,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayAccountInterestYes","已还利息");
         map.put("repayAccountYes","已还本息");
         map.put("repayAccountCapitalWait","剩余待还本金");
-        map.put("repayAccountInterestWait","余待还利息");
+        map.put("repayAccountInterestWait","剩余待还利息");
         map.put("repayAccountWait","未还本息");
         map.put("status","还款状态");
         map.put("repayLastTime","到期日");

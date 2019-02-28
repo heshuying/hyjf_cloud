@@ -7,11 +7,14 @@ import com.hyjf.am.vo.trade.bifa.BifaHjhPlanInfoEntityVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DigitalUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.bifa.BifaHjhPlanInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,12 @@ import java.util.Date;
  */
 @Service
 public class BifaHjhPlanInfoServiceImpl extends BaseHgDateReportServiceImpl implements BifaHjhPlanInfoService {
+
+    Logger logger = LoggerFactory.getLogger(BifaHjhPlanInfoServiceImpl.class);
+
+    private String thisMessName = "新增智投信息上报";
+    private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_BIFA + " " + thisMessName + "】";
+
 
     @Autowired
     AmTradeClient amTradeClient;
@@ -64,7 +73,7 @@ public class BifaHjhPlanInfoServiceImpl extends BaseHgDateReportServiceImpl impl
             bifaHjhPlanInfoEntity.setCreateTime(currDate);
             bifaHjhPlanInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(logHeader + "新增的智投数据变换失败",e);
             return false;
         }
         return true;

@@ -353,14 +353,19 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                             logger.info(lineStr);
                             localStrBulider.append(lineStr);
                         }
-                        bufferReader.close();
-                        inputStreamReader.close();
                         logger.info("【互金上传文件】上传状态异步返回文件解析成功，文件内容：" + localStrBulider.toString());
                         return localStrBulider.toString();
                     } catch (IOException e) {
                         logger.error("【互金上传文件】上传状态异步返回文件读取失败!");
                         e.printStackTrace();
                         return "ERROR";
+                    }finally {
+                        if (bufferReader != null){
+                            bufferReader.close();
+                        }
+                        if (inputStreamReader != null){
+                            inputStreamReader.close();
+                        }
                     }
                 } catch (UnsupportedEncodingException e) {
                     logger.error("【互金上传文件】上传状态异步返回文件不支持编码格式!");
@@ -856,6 +861,8 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * @return
      */
     private boolean downLoadFromUrl(String urlStr, String fileName, String savePath) {
+        InputStream inputStream = null;
+        FileOutputStream fos = null;
         try {
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -865,7 +872,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
             //得到输入流
-            InputStream inputStream = conn.getInputStream();
+            inputStream = conn.getInputStream();
             //获取自己数组
             byte[] getData = readInputStream(inputStream);
 
@@ -875,20 +882,31 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 saveDir.mkdir();
             }
             File file = new File(saveDir + File.separator + fileName);
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             fos.write(getData);
-            if (fos != null) {
-                fos.close();
-            }
-            if (inputStream != null) {
-                inputStream.close();
-            }
+
             logger.info("【互金上传文件】info:" + url + " 下载成功。");
             return true;
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("【互金上传文件】居间服务协议模板下载失败！");
             return false;
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
+                }
+            }
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
+                }
+            }
+
         }
     }
 
@@ -946,14 +964,17 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             result = false;
         } finally {
             try {
-                csvWtriter.close();
-                return result;
+                if (csvWtriter != null){
+                    csvWtriter.close();
+                }
             } catch (IOException e) {
                 logger.error("【互金上传文件】文件关闭失败！文件名：" + outPutPath + filename);
                 e.printStackTrace();
-                return false;
             }
         }
+
+        return result;
+
     }
 
     /**
@@ -1083,8 +1104,8 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             if (null != out) {
                 out.close();
             }
-            return result;
         }
+        return result;
     }
 
     /**

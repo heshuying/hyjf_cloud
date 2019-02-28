@@ -15,5 +15,5 @@ public interface UserLeaveService extends BaseService {
      *
      * @param userId
      */
-    void updateUserLeaveInfoFromCrm(String userId) throws Exception;
+    boolean updateUserLeaveInfoFromCrm(String userId) throws Exception;
 }

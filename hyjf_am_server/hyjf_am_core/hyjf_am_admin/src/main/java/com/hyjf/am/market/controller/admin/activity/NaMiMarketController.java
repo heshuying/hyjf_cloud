@@ -120,7 +120,7 @@ public class NaMiMarketController {
         Map<String,Object> paraMap= beanToMapReffer(request);
         int count = naMiMarketingService.selectNaMiMarketingRefferTotalCount(paraMap);
         List<NaMiMarketingVO> list = new ArrayList<>();
-        BigDecimal totalAmount = new BigDecimal(0.00);
+        BigDecimal totalAmount = BigDecimal.valueOf(0.00);
         if (count > 0) {
             Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
             paraMap.put("limitStart",paginator.getOffset());

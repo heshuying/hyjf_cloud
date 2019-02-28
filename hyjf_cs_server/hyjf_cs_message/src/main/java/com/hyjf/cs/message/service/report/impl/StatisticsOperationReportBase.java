@@ -964,7 +964,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                 } else if (Integer.class.equals(t)) {
                     map.put(str, 0);
                 } else if (BigDecimal.class.equals(t)) {
-                    map.put(str, new BigDecimal(0.00));
+                    map.put(str, BigDecimal.valueOf(0.00));
                 }
             }
         }

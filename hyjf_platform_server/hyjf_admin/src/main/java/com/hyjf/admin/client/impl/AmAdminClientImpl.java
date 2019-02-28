@@ -1785,14 +1785,14 @@ public class AmAdminClientImpl implements AmAdminClient {
 
     /**
      * 根据记录更新单条记录的状态
-     * @param id
+     * @param requestBean
      * @return
      * @Author : huanghui
      */
     @Override
-    public boolean updatePushManageStatusById(Integer id) {
-        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/updatePushManageStatusById/" + id, BooleanResponse.class).getBody();
-        return response.getResultBoolean();
+    public boolean updatePushManageStatusById(AppPushManageRequestBean requestBean) {
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/updatePushManageStatusById/", requestBean, BooleanResponse.class).getBody();
+        return booleanResponse.getResultBoolean();
     }
 
     /**

@@ -9,21 +9,21 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
+import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MsgCode;
-import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.constants.*;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -657,7 +657,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
         data.put("borrowNid",borrow.getBorrowNid());
-        data.put("investDesc","恭喜您，出借成功");
+        data.put("investDesc","恭喜您出借成功");
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
         String interest = "0";
@@ -705,7 +705,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
-        if (couponUser != null) {
+        CouponRealTenderVO couponRealTenderVO=new CouponRealTenderVO();
+        logger.info("获取投标成功结果  logOrdId!=null && account!=null && !.equals(account):{} ",logOrdId!=null && account!=null && !"".equals(account));
+        if(logOrdId!=null&&!"".equals(logOrdId)){
+            couponRealTenderVO=amTradeClient.selectCouponRealTenderByOrderId(logOrdId);
+        }
+
+        if (couponUser != null&&couponRealTenderVO!=null) {
             data.put("couponType", couponUser.getCouponType());
             BigDecimal couponInterest = BigDecimal.ZERO;
             if (couponUser.getCouponType() == 1) {
@@ -2142,7 +2148,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
+                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
+                    try {
+                        sendBidCancelMessage(userId);
+                    } catch (MQException e) {
+                        e.printStackTrace();
+                    }
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
@@ -2166,10 +2178,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 // 出借失败,出借撤销
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
+
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
+                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
+                    try {
+                        sendBidCancelMessage(userId);
+                    } catch (MQException e1) {
+                        e.printStackTrace();
+                    }
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
@@ -2180,6 +2199,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 如果用了优惠券
         couponTender(bean.getLogIp(),bean.getTxAmount(),bean.getLogClient()+"",bean.getLogOrderId(),bean.getLogUserName(),
                 couponGrantId, userId, borrowNid);
+    }
+
+    private void sendBidCancelMessage(Integer userId) throws MQException {
+        logger.info("appMsMessage：{}" ,"发送消息~~~~~~~");
+        // 替换参数
+        Map<String, String> replaceMap = new HashMap<String, String>();
+        UserInfoVO info = amUserClient.findUsersInfoById(userId);
+        replaceMap.put("val_name", info.getTruename().substring(0, 1));
+        replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
+        replaceMap.put("val_date", GetDateUtils.formatDate(new Date()));
+        SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_BIDCANCEL,
+                CustomConstants.CHANNEL_TYPE_NORMAL);
+        logger.info("smsMessage：{}" ,JSONObject.toJSON(smsMessage));
+        AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_BIDCANCEL);
+        logger.info("appMsMessage：{}" ,JSONObject.toJSON(appMsMessage));
+        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                UUID.randomUUID().toString(), smsMessage));
+        commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                UUID.randomUUID().toString(), appMsMessage));
     }
 
     /**

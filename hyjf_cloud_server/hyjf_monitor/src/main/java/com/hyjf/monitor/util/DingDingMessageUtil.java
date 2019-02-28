@@ -1,12 +1,16 @@
 package com.hyjf.monitor.util;
 
-import com.alibaba.fastjson.JSONObject;
-
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @author xiasq
@@ -17,6 +21,8 @@ import java.net.URL;
  * https://oapi.dingtalk.com/robot/send?access_token=a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0
  */
 public class DingDingMessageUtil {
+	
+	protected static Logger logger = LoggerFactory.getLogger(DingDingMessageUtil.class);
 
     private static final String DingDingCallUrl = "https://oapi.dingtalk.com/robot/send?access_token=";
 
@@ -34,17 +40,33 @@ public class DingDingMessageUtil {
             byte[] data = textMessage.getBytes();
             out.write(data);
             out.flush();
-            InputStream in = conn.getInputStream();
-            byte[] data1 = new byte[in.available()];
-            in.read(data1);
+            
+//            InputStream in = conn.getInputStream();
+//            byte[] data1 = new byte[in.available()];
+//            in.read(data1);
+            
+          //获得响应状态
+            int resultCode=conn.getResponseCode();
+            if(HttpURLConnection.HTTP_OK==resultCode){
+                StringBuffer sb=new StringBuffer();
+                String readLine=new String();
+                BufferedReader responseReader=new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
+                while((readLine=responseReader.readLine())!=null){
+                    sb.append(readLine).append("\n");
+                }
+                responseReader.close();
+                logger.info(sb.toString());
+            }  
+            
+            
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error("dingding错误", e);
         } finally {
             if (out != null) {
                 try {
-                    out.close();
+                    out.close();	
                 } catch (IOException e) {
-                    e.printStackTrace();
+                	logger.error("dingding错误", e);
                 }
             }
         }

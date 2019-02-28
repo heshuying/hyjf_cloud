@@ -18,6 +18,7 @@ import com.hyjf.cs.user.constants.AemsAuthEnum;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
+import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -98,12 +99,12 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 			}
 		}
 
-		/*if (!SignUtil.AEMSVerifyRequestSign(requestBean,"/aems/mergeauth/mergeAuth/mergeAuth")) {
+		if (!SignUtil.AEMSVerifyRequestSign(requestBean,"/aems/mergeauth/mergeAuth/mergeAuth")) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000002);
 			resultMap.put("statusDesc", "验签失败");
 			return resultMap;
-		}*/
+		}
 
 		// 根据电子账户号查询用户ID
 		BankOpenAccountVO bankOpenAccount = this.amUserClient.selectBankOpenAccountByAccountId(requestBean.getAccountId());
@@ -122,7 +123,7 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 			resultMap.put("statusDesc", "用户不存在汇盈金服账户");
 			return resultMap;
 		}
-
+		logger.info("根据用户id查询用户开户状态："+user.getBankOpenAccount()+" 设置密码状态："+user.getIsSetPassword());
 		if (user.getBankOpenAccount().intValue() != 1) {// 未开户
 			logger.info("用户未开户！[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000006);

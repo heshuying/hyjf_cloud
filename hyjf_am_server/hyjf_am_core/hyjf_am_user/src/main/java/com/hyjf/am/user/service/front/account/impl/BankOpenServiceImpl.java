@@ -138,7 +138,9 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
                 e.printStackTrace();
             }
         }
-        sexInt = Integer.parseInt(idNo.substring(16, 17));
+        if (null !=idNo){
+            sexInt = Integer.parseInt(idNo.substring(16, 17));
+        }
         if (sexInt % 2 == 0) {
             sexInt = 2;
         } else {
