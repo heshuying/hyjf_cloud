@@ -36,8 +36,9 @@
 		FROM
 		ht_hjh_accede a
 		WHERE
-		a.create_time <![CDATA[ <= ]]> #{endDate} -- 加入时间
-		AND a.create_time >= #{beginDate}
+		a.count_interest_time <![CDATA[ <= ]]> #{endDate} -- 加入时间
+		AND a.count_interest_time >= #{beginDate}
+		AND a.order_status >= 3
 		UNION ALL
 		-- 债转
 		SELECT
@@ -72,8 +73,9 @@
 		FROM
 		ht_hjh_accede a
 		WHERE
-		a.create_time <![CDATA[ <= ]]> #{endDate} -- 加入时间
-		AND a.create_time >= #{beginDate}
+		a.count_interest_time <![CDATA[ <= ]]> #{endDate} -- 加入时间
+		AND a.count_interest_time >= #{beginDate}
+
 		UNION ALL
 		-- 债转
 		SELECT
