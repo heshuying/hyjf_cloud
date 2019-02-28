@@ -71,8 +71,12 @@ public class SubmissionsController extends BaseController {
         List<SubmissionsCustomizeVO> resultList = submissionList.getResultList();
         if (!CollectionUtils.isEmpty(resultList)) {
             for (SubmissionsCustomizeVO submissionsCustomizeVO : resultList) {
+                String type;
                 if (StringUtils.isNotBlank(submissionsCustomizeVO.getSysVersion())) {
-                    String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+                    type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
+                    submissionsCustomizeVO.setSysType(type);
+                } else {
+                    type = userStatus.get(submissionsCustomizeVO.getSysType());
                     submissionsCustomizeVO.setSysType(type);
                 }
                 Integer userId = submissionsCustomizeVO.getUserId();

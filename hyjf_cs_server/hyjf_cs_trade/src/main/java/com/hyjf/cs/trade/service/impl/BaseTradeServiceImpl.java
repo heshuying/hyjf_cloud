@@ -528,10 +528,13 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
      */
     @Override
     public boolean writeZip(StringBuffer sb, String zipName) {
+        OutputStream os = null;
+        ZipOutputStream zos = null;
+        BufferedInputStream bis = null;
         try {
             String[] files = sb.toString().split(",");
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
-            ZipOutputStream zos = new ZipOutputStream(os);
+            os = new BufferedOutputStream(new FileOutputStream(zipName + ".zip"));
+            zos = new ZipOutputStream(os);
             byte[] buf = new byte[8192];
             int len;
             for (int i = 0; i < files.length; i++) {
@@ -541,7 +544,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 }
                 ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
-                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                bis = new BufferedInputStream(new FileInputStream(file));
                 while ((len = bis.read(buf)) > 0) {
                     zos.write(buf, 0, len);
                 }
@@ -553,6 +556,28 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            if (bis != null){
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
+                }
+            }
+            if (zos != null){
+                try {
+                    zos.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
+                }
+            }
+            if (os != null){
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    logger.error("io流关闭错误");
+                }
+            }
         }
     }
 }

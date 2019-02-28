@@ -155,6 +155,11 @@ public class AccountConfigController extends BaseController {
         AdminResult prs =new AdminResult();
         // 子账户名称
         if ("subAccountName".equals(name)) {
+            if(StringUtils.isBlank(param)){
+                prs.setStatus(BaseResult.FAIL);
+                prs.setStatusDesc("子账户名称不能为空！");
+                return prs;
+            }
             // 根据子账户名称检索,是否重复
             int count = merchantAccountService.countAccountListInfoBySubAccountName(ids, param);
             if (count > 0) {
@@ -165,6 +170,11 @@ public class AccountConfigController extends BaseController {
         }
         // 子账户代号
         if ("subAccountCode".equals(name)) {
+            if(StringUtils.isBlank(param)){
+                prs.setStatus(BaseResult.FAIL);
+                prs.setStatusDesc("子账户代号不能为空！");
+                return prs;
+            }
             // 根据子账户代号检索,是否重复
             int result = merchantAccountService.countAccountListInfoBySubAccountCode(ids, param);
             if (result > 0) {

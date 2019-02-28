@@ -3,11 +3,9 @@
  */
 package com.hyjf.admin.controller.finance.bankjournal;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -15,17 +13,12 @@ import com.hyjf.admin.service.BankJournalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankEveRequest;
-import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.am.vo.admin.BankEveVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -68,34 +61,6 @@ public class BankJournalController {
         count = (count == null)?0:count;
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
         return new AdminResult<>(ListResult.build(bankEveList,count));
-
-      /*  JSONObject jsonObject = new JSONObject();
-
-        List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
-        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
-        String status="000";
-        String statusDesc = "未检索到相应的列表数据";
-        if(count==null ||count<1){
-            jsonObject.put("count",0);
-            jsonObject.put("record",null);
-            jsonObject.put("status",status);
-            jsonObject.put("statusDesc",statusDesc);
-            return jsonObject;
-        }
-
-        if(null!=bankEveList&&bankEveList.size()>0){
-            jsonObject.put("count",count);
-            jsonObject.put("record",bankEveList);
-            status =  "000";
-            statusDesc = "查询银行交易明细成功";
-
-        }else{
-            jsonObject.put("count",0);
-            jsonObject.put("record",null);
-        }
-        jsonObject.put("status",status);
-        jsonObject.put("statusDesc",statusDesc);
-        return jsonObject;*/
     }
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称

@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -238,4 +239,13 @@ public interface RepayManageService extends BaseTradeService {
      * @Author : huanghui
      */
    WebResult selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest);
+
+   /***
+    * 根据订单号获取用户放款信息
+   * @author Zha Daojian
+   * @date 2019/2/28 14:08
+   * @param nid
+   * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
+   **/
+   BorrowRecoverVO selectBorrowRecoverByNid(String nid);
 }
