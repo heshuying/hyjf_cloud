@@ -252,22 +252,22 @@ public class RepayManageController extends BaseTradeController {
                 //居间协议
                 Integer fddStatus = 0;
                 List<TenderAgreementVO> tenderAgreementsNid = null;
-                tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
-                logger.info("获取到协议信息为:" + tenderAgreementsNid.get(0).getPdfUrl());
-                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
-                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
-                    fddStatus = tenderAgreement.getStatus();
-                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                    if (fddStatus.equals(3)) {
-                        fddStatus = 1;
-                    } else {
-                        //隐藏下载按钮
-                        fddStatus = 0;
-                    }
-                } else {
-                    //下载老版本协议
-                    fddStatus = 1;
-                }
+                //tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
+                //logger.info("获取到协议信息为:" + tenderAgreementsNid.get(0).getPdfUrl());
+//                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
+//                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+//                    fddStatus = tenderAgreement.getStatus();
+//                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+//                    if (fddStatus.equals(3)) {
+//                        fddStatus = 1;
+//                    } else {
+//                        //隐藏下载按钮
+//                        fddStatus = 0;
+//                    }
+//                } else {
+//                    //下载老版本协议
+//                    fddStatus = 1;
+//                }
 
                 // 计算到账金额
                 if (borrowInfo.getSucSmount() != null) {
