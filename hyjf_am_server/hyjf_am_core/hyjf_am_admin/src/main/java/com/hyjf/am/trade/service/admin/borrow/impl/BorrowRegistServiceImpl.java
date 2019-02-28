@@ -289,7 +289,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                     logger.info("标的备案失败，标的号：{}，银行返回失败码：{}", borrowNid, retCode);
                     // 调用银行接口失败
                     this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
-                    String message = registResult.getRetMsg();
+                    String message = registResult == null?"":registResult.getRetMsg();
                     result.setRtn(Response.FAIL);
                     result.setMessage(StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                 }

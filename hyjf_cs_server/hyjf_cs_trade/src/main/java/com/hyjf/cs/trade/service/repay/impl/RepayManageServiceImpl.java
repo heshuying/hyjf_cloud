@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.service.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
@@ -14,36 +13,30 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.FavFTPUtil;
 import com.hyjf.common.file.SFTPParameter;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5;
-import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
-import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.WebUserRepayTransferListBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
-import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
-import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.util.PdfGenerator;
@@ -54,21 +47,14 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.*;
 
 /**
  * 还款管理列表
@@ -941,7 +927,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             if (!"".equals(respCode)) {
                 this.deleteFreezeLogByOrderId(orderId);
             }
-            logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
+            logger.info("调用还款申请冻结资金接口失败:" + callBackBean==null?"":callBackBean.getRetMsg() + "订单号:" + callBackBean==null?"":callBackBean.getOrderId());
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("还款失败，请稍后再试...");
             return webResult;
@@ -1095,6 +1081,18 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         return amTradeClient.selectTenderAgreementByNid(borrowNid);
     }
 
+    /***
+     * 根据订单号获取用户放款信息
+     * @author Zha Daojian
+     * @date 2019/2/28 14:08
+     * @param nid
+     * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
+     **/
+    @Override
+    public BorrowRecoverVO selectBorrowRecoverByNid(String nid) {
+        return amTradeClient.selectBorrowRecoverByNid(nid);
+    }
+
     @Override
     public WebResult selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
 
@@ -1115,6 +1113,9 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         List<WebUserRepayTransferCustomizeVO> resultList = new ArrayList<>();
         if (count > 0) {
             resultList = amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
+            repayTransferListBean.setList(resultList);
+        }else {
+            // 查询列表为空时, 设置list 为空数组, 防止前端取到null 报错.
             repayTransferListBean.setList(resultList);
         }
 

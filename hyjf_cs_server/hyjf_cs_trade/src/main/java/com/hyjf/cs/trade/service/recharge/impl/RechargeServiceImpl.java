@@ -174,6 +174,12 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						bankAccountBeanRequest.setIp(accountRecharge.getAddIp());
 						boolean flag = amTradeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
+							BankCardVO bankCardVO=amUserClient.getBankCardByUserId(userId);
+							BankCardVO updateBankCardVO=new BankCardVO();
+							updateBankCardVO.setId(bankCardVO.getId());
+							updateBankCardVO.setMobile(params.get("mobile"));
+                            logger.info("updateBankCardVO:" + JSONObject.toJSONString(updateBankCardVO));
+							amUserClient.updateBankCard(updateBankCardVO);
 							UserVO users = amUserClient.findUserById(userId);
 							// 可以发送充值短信时
 							if (users != null && users.getRechargeSms() != null && users.getRechargeSms() == 0) {

@@ -12,6 +12,7 @@ import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.*;
@@ -76,6 +77,12 @@ public class RepayManageController extends BaseTradeController {
     private static final String VAL_FAILCOUNT = "failCount";
     // 根据用户ID和模版号给某用户发短信
     public static final String SMSSENDFORUSER = "smsSendForUser";
+
+    //初始化放款/承接时间(大于2018年3月28号法大大上线时间)
+    private static final int ADD_TIME = 1922195200;
+
+    //放款/承接时间(2018-3-28法大大上线时间）
+    private static final int ADD_TIME328 = 1522195200;
 
     @Autowired
     private CommonProducer commonProducer;
@@ -227,58 +234,81 @@ public class RepayManageController extends BaseTradeController {
      * @Author : huanghui
      */
     @ApiOperation(value = "用户待还标的-债转详情", notes = "用户待还标的-债转详情")
-    @PostMapping(value = "/user_repay_detail")
+    @PostMapping(value = "/user_repay_detail", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody WebUserRepayTransferRequest transferRequest){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
+        logger.info("用户待还标的-债转详情. userId=" + userId + ";BorrowNid=" + transferRequest.getBorrowNid());
+
         // 根据用户ID 查询用户信息
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        if (userVO == null){
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc("无法获取到用户信息");
+            result.setData(Collections.emptyMap());
+            return result;
+        }
+
+        resultMap.put("userId", userVO.getUserId());
+
         /** 当前用户已登录并且标的NID不为空 */
         String verificationFlag = null;
         if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
             WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
-            try {
-                // 单纯的作为验证标识.
-                if (borrowInfo.getPlanNid() != null) {
-                    verificationFlag = borrowInfo.getPlanNid();
+            logger.info("获取到标的信息为:" + borrowInfo.getPlanNid());
+            // 单纯的作为验证标识.
+            if (borrowInfo.getPlanNid() != null) {
+                verificationFlag = borrowInfo.getPlanNid();
+            } else {
+                verificationFlag = null;
+            }
+            //居间协议
+            Integer fddStatus = 0;
+            List<TenderAgreementVO> tenderAgreementsNid = null;
+            tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
+            if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
+                TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                fddStatus = tenderAgreement.getStatus();
+                //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                if (fddStatus.equals(3)) {
+                    fddStatus = 1;
                 } else {
-                    verificationFlag = null;
+                    //隐藏下载按钮
+                    fddStatus = 2;
                 }
-                //居间协议
-                Integer fddStatus = 0;
-                List<TenderAgreementVO> tenderAgreementsNid = null;
-                tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
-                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
-                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
-                    fddStatus = tenderAgreement.getStatus();
-                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                    if (fddStatus.equals(3)) {
-                        fddStatus = 1;
-                    } else {
-                        //隐藏下载按钮
-                        fddStatus = 0;
-                    }
-                } else {
+            } else {
+            /**
+             * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+             * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+             * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+             */
+                BorrowRecoverVO borrowRecoverVO = repayManageService.selectBorrowRecoverByNid(transferRequest.getBorrowNid());
+                int addTime = ADD_TIME;
+                if(borrowRecoverVO != null){
+                    addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                }
+                if (addTime<ADD_TIME328) {
                     //下载老版本协议
                     fddStatus = 1;
+                }else{
+                    //隐藏下载按钮
+                    fddStatus = 0;
                 }
-
-                // 计算到账金额
-                if (borrowInfo.getSucSmount() != null) {
-                    BigDecimal oldYesAccount = borrowInfo.getSucSmount();
-                    borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
-                } else {
-                    borrowInfo.setSucSmount(new BigDecimal(0));
-                }
-                resultMap.put("verificationFlag", verificationFlag);
-                resultMap.put("borrowInfo", borrowInfo);
-                resultMap.put("fddStatus", fddStatus);
-                resultMap.put("userId", userVO.getUserId());
-                result.setData(resultMap);
-            }catch (NullPointerException e){
-                result.setStatusDesc("暂无数据");
             }
+
+            // 计算到账金额
+            if (borrowInfo.getSucSmount() != null) {
+                BigDecimal oldYesAccount = borrowInfo.getSucSmount();
+                borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
+            } else {
+                borrowInfo.setSucSmount(new BigDecimal(0));
+            }
+            resultMap.put("verificationFlag", verificationFlag);
+            resultMap.put("borrowInfo", borrowInfo);
+            resultMap.put("fddStatus", fddStatus);
+            result.setData(resultMap);
         }
+
         return result;
     }
 

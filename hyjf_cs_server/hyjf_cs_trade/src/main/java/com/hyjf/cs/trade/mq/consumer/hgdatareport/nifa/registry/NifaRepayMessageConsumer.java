@@ -94,7 +94,6 @@ public class NifaRepayMessageConsumer implements RocketMQListener<MessageExt>, R
             logger.error(thisMessName + "处理失败.....,借款编号:" + borrowNid, e);
         } finally {
             logger.info(thisMessName + "处理结束,借款编号:" + borrowNid);
-            return;
         }
     }
 }

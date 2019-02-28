@@ -6,10 +6,10 @@
         SELECT
         t1.nid,
         t1.user_id userId,
-        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/360)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
         t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
         CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
-        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/360),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
         t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_borrow_tender t1
         LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
@@ -47,10 +47,10 @@
         SELECT
         t1.accede_order_id AS nid,
         t1.user_id userId,
-        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/360)*0.07,2) END money,
         t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
-        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/360),2) END yearAccount,
         t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_hjh_accede t1
         LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
@@ -165,10 +165,10 @@
         SELECT
         t1.accede_order_id AS nid,
         t1.user_id userId,
-        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/360)*0.07,2) END money,
         t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
-        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/360),2) END yearAccount,
         t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_hjh_accede t1
         LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
@@ -248,10 +248,10 @@
         SELECT
         t1.nid,
         t1.user_id userId,
-        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/360)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
         t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
         CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
-        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/360),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
         t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_borrow_tender t1
         LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
@@ -343,7 +343,7 @@
         WHEN t4.borrow_style = 'endday' THEN
         ROUND(
         (
-        t1.account * t4.borrow_period / 365
+        t1.account * t4.borrow_period / 360
         ),
         2
         )
@@ -359,7 +359,7 @@
         WHEN t4.borrow_style = 'endday' THEN
         ROUND(
         (
-        t1.account * t4.borrow_period / 365
+        t1.account * t4.borrow_period / 360
         )*0.07,
         2
         )
@@ -426,7 +426,7 @@
         ELSE
         ROUND(
         (
-        t1.accede_account * t4.lock_period / 365
+        t1.accede_account * t4.lock_period / 360
         ) * 0.07,
         2
         )
@@ -443,7 +443,7 @@
         ELSE
         ROUND(
         (
-        t1.accede_account * t4.lock_period / 365
+        t1.accede_account * t4.lock_period / 360
         ) ,
         2
         )

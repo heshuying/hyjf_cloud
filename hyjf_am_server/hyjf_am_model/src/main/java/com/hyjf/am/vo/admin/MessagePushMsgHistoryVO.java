@@ -90,7 +90,7 @@ public class MessagePushMsgHistoryVO {
 
 
     public String getSendTimeT() {
-        if(this.sendTime != null&& !StringUtils.equals(this.createTime,"null")){
+        if(this.sendTime != null&& this.sendTime!=0){
             return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(this.sendTime);
         }
         return null;
@@ -105,7 +105,7 @@ public class MessagePushMsgHistoryVO {
     }
 
     public String getLastupdateTimeT() {
-        if(this.lastupdateTime != null&&!StringUtils.equals(this.createTime,"null")){
+        if(this.lastupdateTime != null&&!StringUtils.equals(this.lastupdateTime,"null")){
             Integer lastupdateTimeTh = Integer.valueOf(this.lastupdateTime);
             return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(lastupdateTimeTh);
         }

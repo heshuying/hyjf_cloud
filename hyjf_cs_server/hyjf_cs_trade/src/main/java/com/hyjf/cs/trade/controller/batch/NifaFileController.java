@@ -187,12 +187,12 @@ public class NifaFileController extends BaseController {
                     logger.error("【互金上传文件】更新上传结果失败!");
                 }
             }
+            return true;
         } catch (Exception e) {
             logger.error("------【互金上传文件】上传失败------", e);
             return false;
         } finally {
             logger.info("------【互金上传文件】上传结束------");
-            return true;
         }
     }
 

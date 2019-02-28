@@ -610,7 +610,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         if (listAccount != null && listAccount.size() > 0) {
             return listAccount.get(0);
         }
-        return null;
+        return new Account();
     }
 
     private int getTxDate() {
