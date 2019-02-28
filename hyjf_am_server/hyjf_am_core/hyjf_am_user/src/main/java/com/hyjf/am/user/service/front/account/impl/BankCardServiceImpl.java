@@ -91,6 +91,6 @@ public class BankCardServiceImpl extends BaseServiceImpl implements BankCardServ
 	@Override
 	public int updateBankCard(BankCardVO bankCardVO) {
 		BankCard bankCard = CommonUtils.convertBean(bankCardVO,BankCard.class);
-		return bankCardMapper.updateByPrimaryKey(bankCard);
+		return bankCardMapper.updateByPrimaryKeySelective(bankCard);
 	}
 }

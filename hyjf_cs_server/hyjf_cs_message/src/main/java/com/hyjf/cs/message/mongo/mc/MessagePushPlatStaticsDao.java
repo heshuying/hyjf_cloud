@@ -47,7 +47,7 @@ public class MessagePushPlatStaticsDao extends BaseMongoDao<MessagePushPlatStati
             int limitStart = (currPage - 1) * pageSize;
             query.skip(limitStart).limit(pageSize);
         }
-        query.with(new Sort(Sort.Direction.DESC, "_id"));
+        query.with(new Sort(Sort.Direction.DESC, "staDate"));
         return mongoTemplate.find(query, getEntityClass());
     }
 }

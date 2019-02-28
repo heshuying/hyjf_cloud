@@ -86,8 +86,13 @@ public class UserauthController extends BaseController {
 		authUser.put("invesAddTimeStart", form.getInvesAddTimeStart());
 		authUser.put("invesAddTimeEnd", form.getInvesAddTimeEnd());
 		// 签约到期日
-		authUser.put("invesEndTimeStart", form.getInvestEndTimeStart());
-		authUser.put("invesEndTimeEnd", form.getInvestEndTimeEnd());
+		if(form.getInvestEndTimeStart()!=null) {
+			authUser.put("invesEndTimeStart", form.getInvestEndTimeStart().replace("-",""));	
+		}
+		if( form.getInvestEndTimeEnd()!=null) {
+			authUser.put("invesEndTimeEnd", form.getInvestEndTimeEnd().replace("-",""));
+		}
+		
 		return authUser;
 	}
 
