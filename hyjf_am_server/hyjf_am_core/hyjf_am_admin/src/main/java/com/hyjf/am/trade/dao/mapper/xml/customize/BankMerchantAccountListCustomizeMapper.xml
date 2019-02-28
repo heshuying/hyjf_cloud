@@ -1,549 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BankMerchantAccountListCustomizeMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
-    <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
-    <result column="region_name" property="regionName" jdbcType="VARCHAR" />
-    <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
-    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="username" property="userName" jdbcType="VARCHAR"/> <!-- 用户名  -->
-    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
-    <result column="amount" property="amount" jdbcType="DECIMAL" />
-    <result column="bank_account_type" property="bankAccountType" jdbcType="VARCHAR" />
-    <result column="bank_account_code" property="bankAccountCode" jdbcType="VARCHAR" />
-    <result column="bank_account_balance" property="bankAccountBalance" jdbcType="DECIMAL" />
-    <result column="bank_account_frost" property="bankAccountFrost" jdbcType="DECIMAL" />
-    <result column="trans_type" property="transType" jdbcType="TINYINT" />
-    <result column="type" property="type" jdbcType="TINYINT" />
-    <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="seq_no" property="seqNo" jdbcType="VARCHAR" />
-    <result column="tx_date" property="txDate" jdbcType="INTEGER" />
-    <result column="tx_time" property="txTime" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
-    <result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="update_user_id" property="updateUserId" jdbcType="INTEGER" />
-    <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  <resultMap id="bankMerchantAccountListMap"
+             type="com.hyjf.am.trade.dao.model.customize.BankMerchantAccountListCustomize">
+    <result column="id" property="id" />
+    <result column="create_time" property="createTime" /> <!-- 交易日期 -->
+    <result column="seq_no" property="seqNo" /> <!-- 流水号 -->
+    <result column="order_id" property="orderId" /> <!-- 订单号 -->
+    <result column="region_name" property="regionName" /> <!-- 分公司 -->
+    <result column="branch_name" property="branchName" /> <!-- 分部  -->
+    <result column="department_name" property="departmentName" /> <!-- 团队  -->
+    <result column="username" property="userName" /> <!-- 用户名  -->
+    <result column="account_id" property="accountId" /> <!-- 电子帐号  -->
+    <result column="type" property="type" /> <!-- 收支类型  -->
+    <result column="type_str" property="typeStr" /> <!-- 收支类型  -->
+    <result column="trans_type" property="transType" /> <!-- 交易类型  -->
+    <result column="trans_type_str" property="transTypeStr" /> <!-- 交易类型 -->
+    <result column="amount" property="amount" /> <!-- 交易金额 -->
+    <result column="status" property="status" /> <!-- 交易状态  -->
+    <result column="status_str" property="statusStr" /> <!-- 交易状态  -->
+    <result column="bank_account_balance" property="bankAccountBalance" /> <!-- 账户可用金额  -->
+    <result column="bank_account_frost" property="bankAccountFrost" /> <!-- 账户冻结金额  -->
+    <result column="remark" property="remark" /> <!-- 备注  -->
   </resultMap>
-  <sql id="Example_Where_Clause" >
-    <where >
-      <foreach collection="oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and hbmal.${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and hbmal.${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause" >
-    <where >
-      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
-        <if test="criteria.valid" >
-          <trim prefix="(" suffix=")" prefixOverrides="and" >
-            <foreach collection="criteria.criteria" item="criterion" >
-              <choose >
-                <when test="criterion.noValue" >
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue" >
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue" >
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue" >
-                  and ${criterion.condition}
-                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List" >
-    id, order_id, borrow_nid, region_name, branch_name, department_name, hbmal.user_id, account_id,
-    amount, bank_account_type, bank_account_code, bank_account_balance, bank_account_frost,
-    trans_type, `type`, `status`, seq_no, tx_date, tx_time, hbmal.create_time, create_user_id,
-    create_user_name, hbmal.update_time, update_user_id, update_user_name, remark,username
-  </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample" >
-    select
-    <if test="distinct" >
-      distinct
+
+  <sql id="Where_Clause">
+    <if test="seqNo != null and seqNo != ''">
+      AND hbmal.seq_no LIKE CONCAT('%', #{seqNo,jdbcType=VARCHAR}, '%')
     </if>
-    <include refid="Base_Column_List" />
-    from ht_bank_merchant_account_list hbmal
+    <if test="orderId != null and orderId != ''">
+      AND hbmal.order_id LIKE CONCAT('%', #{orderId,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="accountId != null and accountId != ''">
+      AND hbmal.account_id LIKE CONCAT('%', #{accountId,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="type != null">
+      AND hbmal.type = #{type}
+    </if>
+    <if test="transType != null">
+      AND hbmal.trans_type = #{transType}
+    </if>
+    <if test="status != null">
+      AND hbmal.`status` = #{status}
+    </if>
+
+    <if test="typeList != null">
+      AND hbmal.type IN
+      <foreach collection="typeList" item="item" index="index" open="("  separator="," close=")" >
+        #{item}
+      </foreach>
+    </if>
+    <if test="transTypeList != null">
+      AND hbmal.trans_type IN
+      <foreach collection="transTypeList" item="item" index="index" open="("  separator="," close=")" >
+        #{item}
+      </foreach>
+    </if>
+    <if test="statusList != null">
+      AND hbmal.`status` IN
+      <foreach collection="statusList" item="item" index="index" open="("  separator="," close=")" >
+        #{item}
+      </foreach>
+    </if>
+    <if test="timeStartSrch != null ">
+      AND hbmal.create_time &gt;= #{timeStartSrch}
+    </if>
+    <if test="timeEndSrch != null">
+      AND hbmal.create_time &lt;= #{timeEndSrch}
+    </if>
+  </sql>
+
+  <select id="selectRecordList" resultMap="bankMerchantAccountListMap"
+          parameterType="com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest">
+    SELECT
+    hbmal.id id,
+    hbmal.user_id user_id,
+    hu.username username,
+    hbmal.create_time create_time,
+    hbmal.seq_no seq_no,
+    hbmal.order_id order_id,
+    hbmal.region_name region_name,
+    hbmal.branch_name branch_name,
+    hbmal.department_name department_name,
+    hbmal.account_id account_id,
+    hbmal.type type,
+    hpn2.`name` type_str,
+    hbmal.trans_type trans_type,
+    hpn1.`name` trans_type_str,
+    hbmal.amount amount,
+    hbmal.`status` status,
+    hpn3.`name` status_str,
+    hbmal.bank_account_balance bank_account_balance,
+    hbmal.bank_account_frost bank_account_frost,
+    hbmal.remark remark
+    FROM
+    ht_bank_merchant_account_list hbmal
     LEFT JOIN ht_r_user hu ON hbmal.user_id = hu.user_id
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
+    WHERE
+    hbmal.bank_account_code=#{bankAccountCode}
+    <include refid="Where_Clause"/>
+    ORDER BY hbmal.create_time DESC
     <if test="limitStart >= 0" >
-      limit #{limitStart} , #{limitEnd}
+      LIMIT #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from ht_bank_merchant_account_list hbmal
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ht_bank_merchant_account_list hbmal
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample" >
-    delete from ht_bank_merchant_account_list hbmal
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_bank_merchant_account_list hbmal (order_id, borrow_nid, region_name,
-    branch_name, department_name, user_id,
-    account_id, amount, bank_account_type,
-    bank_account_code, bank_account_balance, bank_account_frost,
-    trans_type, `type`, `status`,
-    seq_no, tx_date, tx_time,
-    create_time, create_user_id, create_user_name,
-    update_time, update_user_id, update_user_name,
-    remark)
-    values (#{orderId,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, #{regionName,jdbcType=VARCHAR},
-    #{branchName,jdbcType=VARCHAR}, #{departmentName,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER},
-    #{accountId,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{bankAccountType,jdbcType=VARCHAR},
-    #{bankAccountCode,jdbcType=VARCHAR}, #{bankAccountBalance,jdbcType=DECIMAL}, #{bankAccountFrost,jdbcType=DECIMAL},
-    #{transType,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, #{status,jdbcType=TINYINT},
-    #{seqNo,jdbcType=VARCHAR}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER},
-    #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=INTEGER}, #{createUserName,jdbcType=VARCHAR},
-    #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, #{updateUserName,jdbcType=VARCHAR},
-    #{remark,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_bank_merchant_account_list hbmal
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="orderId != null" >
-        order_id,
-      </if>
-      <if test="borrowNid != null" >
-        borrow_nid,
-      </if>
-      <if test="regionName != null" >
-        region_name,
-      </if>
-      <if test="branchName != null" >
-        branch_name,
-      </if>
-      <if test="departmentName != null" >
-        department_name,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="accountId != null" >
-        account_id,
-      </if>
-      <if test="amount != null" >
-        amount,
-      </if>
-      <if test="bankAccountType != null" >
-        bank_account_type,
-      </if>
-      <if test="bankAccountCode != null" >
-        bank_account_code,
-      </if>
-      <if test="bankAccountBalance != null" >
-        bank_account_balance,
-      </if>
-      <if test="bankAccountFrost != null" >
-        bank_account_frost,
-      </if>
-      <if test="transType != null" >
-        trans_type,
-      </if>
-      <if test="type != null" >
-        `type`,
-      </if>
-      <if test="status != null" >
-        `status`,
-      </if>
-      <if test="seqNo != null" >
-        seq_no,
-      </if>
-      <if test="txDate != null" >
-        tx_date,
-      </if>
-      <if test="txTime != null" >
-        tx_time,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="createUserId != null" >
-        create_user_id,
-      </if>
-      <if test="createUserName != null" >
-        create_user_name,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id,
-      </if>
-      <if test="updateUserName != null" >
-        update_user_name,
-      </if>
-      <if test="remark != null" >
-        remark,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="orderId != null" >
-        #{orderId,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowNid != null" >
-        #{borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="regionName != null" >
-        #{regionName,jdbcType=VARCHAR},
-      </if>
-      <if test="branchName != null" >
-        #{branchName,jdbcType=VARCHAR},
-      </if>
-      <if test="departmentName != null" >
-        #{departmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="accountId != null" >
-        #{accountId,jdbcType=VARCHAR},
-      </if>
-      <if test="amount != null" >
-        #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="bankAccountType != null" >
-        #{bankAccountType,jdbcType=VARCHAR},
-      </if>
-      <if test="bankAccountCode != null" >
-        #{bankAccountCode,jdbcType=VARCHAR},
-      </if>
-      <if test="bankAccountBalance != null" >
-        #{bankAccountBalance,jdbcType=DECIMAL},
-      </if>
-      <if test="bankAccountFrost != null" >
-        #{bankAccountFrost,jdbcType=DECIMAL},
-      </if>
-      <if test="transType != null" >
-        #{transType,jdbcType=TINYINT},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=TINYINT},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=TINYINT},
-      </if>
-      <if test="seqNo != null" >
-        #{seqNo,jdbcType=VARCHAR},
-      </if>
-      <if test="txDate != null" >
-        #{txDate,jdbcType=INTEGER},
-      </if>
-      <if test="txTime != null" >
-        #{txTime,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUserId != null" >
-        #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createUserName != null" >
-        #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserName != null" >
-        #{updateUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountListExample" resultType="java.lang.Integer" >
-    select count(*) from ht_bank_merchant_account_list hbmal
+
+  <select id="countByExample" resultType="java.lang.Integer"
+          parameterType="com.hyjf.am.resquest.admin.BankRedPacketAccountListRequest">
+    SELECT
+    COUNT(1)
+    FROM
+    ht_bank_merchant_account_list hbmal
     LEFT JOIN ht_r_user hu ON hbmal.user_id = hu.user_id
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
+    WHERE
+    hbmal.bank_account_code=#{bankAccountCode}
+    <include refid="Where_Clause"/>
+
   </select>
-  <update id="updateByExampleSelective" parameterType="map" >
-    update ht_bank_merchant_account_list hbmal
-    <set >
-      <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.orderId != null" >
-        order_id = #{record.orderId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.borrowNid != null" >
-        borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="record.regionName != null" >
-        region_name = #{record.regionName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.branchName != null" >
-        branch_name = #{record.branchName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.departmentName != null" >
-        department_name = #{record.departmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.userId != null" >
-        user_id = #{record.userId,jdbcType=INTEGER},
-      </if>
-      <if test="record.accountId != null" >
-        account_id = #{record.accountId,jdbcType=VARCHAR},
-      </if>
-      <if test="record.amount != null" >
-        amount = #{record.amount,jdbcType=DECIMAL},
-      </if>
-      <if test="record.bankAccountType != null" >
-        bank_account_type = #{record.bankAccountType,jdbcType=VARCHAR},
-      </if>
-      <if test="record.bankAccountCode != null" >
-        bank_account_code = #{record.bankAccountCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.bankAccountBalance != null" >
-        bank_account_balance = #{record.bankAccountBalance,jdbcType=DECIMAL},
-      </if>
-      <if test="record.bankAccountFrost != null" >
-        bank_account_frost = #{record.bankAccountFrost,jdbcType=DECIMAL},
-      </if>
-      <if test="record.transType != null" >
-        trans_type = #{record.transType,jdbcType=TINYINT},
-      </if>
-      <if test="record.type != null" >
-        `type` = #{record.type,jdbcType=TINYINT},
-      </if>
-      <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=TINYINT},
-      </if>
-      <if test="record.seqNo != null" >
-        seq_no = #{record.seqNo,jdbcType=VARCHAR},
-      </if>
-      <if test="record.txDate != null" >
-        tx_date = #{record.txDate,jdbcType=INTEGER},
-      </if>
-      <if test="record.txTime != null" >
-        tx_time = #{record.txTime,jdbcType=INTEGER},
-      </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.createUserId != null" >
-        create_user_id = #{record.createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.createUserName != null" >
-        create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateUserId != null" >
-        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="record.updateUserName != null" >
-        update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.remark != null" >
-        remark = #{record.remark,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map" >
-    update ht_bank_merchant_account_list hbmal
-    set id = #{record.id,jdbcType=INTEGER},
-    order_id = #{record.orderId,jdbcType=VARCHAR},
-    borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
-    region_name = #{record.regionName,jdbcType=VARCHAR},
-    branch_name = #{record.branchName,jdbcType=VARCHAR},
-    department_name = #{record.departmentName,jdbcType=VARCHAR},
-    user_id = #{record.userId,jdbcType=INTEGER},
-    account_id = #{record.accountId,jdbcType=VARCHAR},
-    amount = #{record.amount,jdbcType=DECIMAL},
-    bank_account_type = #{record.bankAccountType,jdbcType=VARCHAR},
-    bank_account_code = #{record.bankAccountCode,jdbcType=VARCHAR},
-    bank_account_balance = #{record.bankAccountBalance,jdbcType=DECIMAL},
-    bank_account_frost = #{record.bankAccountFrost,jdbcType=DECIMAL},
-    trans_type = #{record.transType,jdbcType=TINYINT},
-    `type` = #{record.type,jdbcType=TINYINT},
-    `status` = #{record.status,jdbcType=TINYINT},
-    seq_no = #{record.seqNo,jdbcType=VARCHAR},
-    tx_date = #{record.txDate,jdbcType=INTEGER},
-    tx_time = #{record.txTime,jdbcType=INTEGER},
-    create_time = #{record.createTime,jdbcType=TIMESTAMP},
-    create_user_id = #{record.createUserId,jdbcType=INTEGER},
-    create_user_name = #{record.createUserName,jdbcType=VARCHAR},
-    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-    update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-    update_user_name = #{record.updateUserName,jdbcType=VARCHAR},
-    remark = #{record.remark,jdbcType=VARCHAR}
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList" >
-    update ht_bank_merchant_account_list hbmal
-    <set >
-      <if test="orderId != null" >
-        order_id = #{orderId,jdbcType=VARCHAR},
-      </if>
-      <if test="borrowNid != null" >
-        borrow_nid = #{borrowNid,jdbcType=VARCHAR},
-      </if>
-      <if test="regionName != null" >
-        region_name = #{regionName,jdbcType=VARCHAR},
-      </if>
-      <if test="branchName != null" >
-        branch_name = #{branchName,jdbcType=VARCHAR},
-      </if>
-      <if test="departmentName != null" >
-        department_name = #{departmentName,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="accountId != null" >
-        account_id = #{accountId,jdbcType=VARCHAR},
-      </if>
-      <if test="amount != null" >
-        amount = #{amount,jdbcType=DECIMAL},
-      </if>
-      <if test="bankAccountType != null" >
-        bank_account_type = #{bankAccountType,jdbcType=VARCHAR},
-      </if>
-      <if test="bankAccountCode != null" >
-        bank_account_code = #{bankAccountCode,jdbcType=VARCHAR},
-      </if>
-      <if test="bankAccountBalance != null" >
-        bank_account_balance = #{bankAccountBalance,jdbcType=DECIMAL},
-      </if>
-      <if test="bankAccountFrost != null" >
-        bank_account_frost = #{bankAccountFrost,jdbcType=DECIMAL},
-      </if>
-      <if test="transType != null" >
-        trans_type = #{transType,jdbcType=TINYINT},
-      </if>
-      <if test="type != null" >
-        `type` = #{type,jdbcType=TINYINT},
-      </if>
-      <if test="status != null" >
-        `status` = #{status,jdbcType=TINYINT},
-      </if>
-      <if test="seqNo != null" >
-        seq_no = #{seqNo,jdbcType=VARCHAR},
-      </if>
-      <if test="txDate != null" >
-        tx_date = #{txDate,jdbcType=INTEGER},
-      </if>
-      <if test="txTime != null" >
-        tx_time = #{txTime,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUserId != null" >
-        create_user_id = #{createUserId,jdbcType=INTEGER},
-      </if>
-      <if test="createUserName != null" >
-        create_user_name = #{createUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUserId != null" >
-        update_user_id = #{updateUserId,jdbcType=INTEGER},
-      </if>
-      <if test="updateUserName != null" >
-        update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BankMerchantAccountList" >
-    update ht_bank_merchant_account_list hbmal
-    set order_id = #{orderId,jdbcType=VARCHAR},
-      borrow_nid = #{borrowNid,jdbcType=VARCHAR},
-      region_name = #{regionName,jdbcType=VARCHAR},
-      branch_name = #{branchName,jdbcType=VARCHAR},
-      department_name = #{departmentName,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER},
-      account_id = #{accountId,jdbcType=VARCHAR},
-      amount = #{amount,jdbcType=DECIMAL},
-      bank_account_type = #{bankAccountType,jdbcType=VARCHAR},
-      bank_account_code = #{bankAccountCode,jdbcType=VARCHAR},
-      bank_account_balance = #{bankAccountBalance,jdbcType=DECIMAL},
-      bank_account_frost = #{bankAccountFrost,jdbcType=DECIMAL},
-      trans_type = #{transType,jdbcType=TINYINT},
-      `type` = #{type,jdbcType=TINYINT},
-      `status` = #{status,jdbcType=TINYINT},
-      seq_no = #{seqNo,jdbcType=VARCHAR},
-      tx_date = #{txDate,jdbcType=INTEGER},
-      tx_time = #{txTime,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_user_id = #{createUserId,jdbcType=INTEGER},
-      create_user_name = #{createUserName,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      update_user_id = #{updateUserId,jdbcType=INTEGER},
-      update_user_name = #{updateUserName,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+
 </mapper>
+
