@@ -133,10 +133,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		webViewUserVO = setToken(webViewUserVO);
 		BankOpenAccountVO account = this.getBankOpenAccount(userId);
 		String accountId = null;
-		/*if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
 			synBalanceService.synBalance(accountId, ip);
-		}*/
+		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
 			webViewUserVO.setToken(sign);
@@ -168,7 +168,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
 		if (password.equals(passwordDb)) {
-		//webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
+		webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
