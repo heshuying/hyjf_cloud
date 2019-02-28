@@ -19,6 +19,7 @@ import com.hyjf.cs.message.config.properties.SmsProperties;
 import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.HttpHostConnectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,15 @@ public class SmsHandler {
 			logger.info("测试环境非白名单内不发送短信, mobile is : {}", mobile);
 			status = 1;
 		} else {
-			result = HttpDeal.post(smsSendUrl, paramMap).trim();
+			try{
+				result = HttpDeal.post(smsSendUrl, paramMap).trim();
+			} catch (Exception e){
+				if(e instanceof HttpHostConnectException){
+					logger.warn("短信运营商未配置白名单....");
+				}
+				logger.error("捕捉短信发送异常， 避免影响记录保存...", e);
+			}
+
 			logger.info("短信发送结果: {}", result);
 			if (StringUtils.isBlank(result)) {
 				logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(paramMap));
