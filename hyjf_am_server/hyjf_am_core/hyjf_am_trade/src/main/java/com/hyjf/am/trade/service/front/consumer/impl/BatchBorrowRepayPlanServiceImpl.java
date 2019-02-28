@@ -69,6 +69,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		borrow.setRepayStatus(status);
+		borrow.setUpdatetime(new Date());
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]");
@@ -274,7 +275,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 								// 更新还款信息
 								boolean flag = this.hjhDebtCreditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
 								if (!flag) {
-									throw new RuntimeException("债转还款表(ht_credit_repay)更新还款订单号失败！[承接订单号：" + creditRepay.getAssignOrderId() + "]，[出借订单号：" + tenderOrderId + "]");
+									throw new RuntimeException("债转还款表(ht_hjh_debt_credit_repay)更新还款订单号失败！[承接订单号：" + creditRepay.getAssignOrderId() + "]，[出借订单号：" + tenderOrderId + "]");
 								}
 							}
 							sumCreditAccount = sumCreditAccount.add(creditRepay.getRepayAccount());
@@ -436,7 +437,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		creditRepay.setRepayStatus(2);// 状态 0未还款1已还款2还款失败
 		int flag = this.hjhDebtCreditRepayMapper.updateByPrimaryKeySelective(creditRepay);
 		if (flag > 0) {
-			throw new Exception("债转还款表(ht_credit_repay)更新失败！[承接订单号：" + creditRepay.getAssignOrderId() + "]，[期数：" + creditRepay.getRepayPeriod() + "]");
+			throw new Exception("债转还款表(ht_hjh_debt_credit_repay)更新失败！[承接订单号：" + creditRepay.getAssignOrderId() + "]，[期数：" + creditRepay.getRepayPeriod() + "]");
 		}
 		return true;
 	}
@@ -854,7 +855,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 										// 更新债转还款表
 										boolean borrowTenderFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateCreditRepay(apicron, creditRepay);
 										if (!borrowTenderFlag) {
-											throw new Exception("债转还款表(ht_credit_repay)更新失败！[承接订单号：" + assignOrderId + "]，[还款期数：" + periodNow + "]");
+											throw new Exception("债转还款表(ht_hjh_debt_credit_repay)更新失败！[承接订单号：" + assignOrderId + "]，[还款期数：" + periodNow + "]");
 										}
 									}
 								} catch (Exception e) {
@@ -2118,7 +2119,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		creditTender.setRepayPeriod(periodNow);
 		boolean creditTenderFlag = this.hjhDebtCreditTenderMapper.updateByPrimaryKeySelective(creditTender) > 0 ? true : false;
 		if (!creditTenderFlag) {
-			throw new Exception("债转出借表(ht_credit_tender)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
+			throw new Exception("债转出借表(ht_hjh_debt_credit_tender)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
 		creditRepay.setReceiveAccountYes(creditRepay.getReceiveAccountYes().add(repayAccount));
 		creditRepay.setReceiveCapitalYes(creditRepay.getReceiveCapitalYes().add(repayCapital));
@@ -2129,7 +2130,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		creditRepay.setRepayStatus(1);
 		boolean creditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
 		if (!creditRepayFlag) {
-			throw new Exception("债转还款表(ht_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
+			throw new Exception("债转还款表(ht_hjh_debt_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
 		// 债转总表数据更新
 		// 更新债转已还款总额
@@ -2193,7 +2194,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		debtDetail.setExpireFairValue(BigDecimal.ZERO);
 		int flag = this.hjhDebtDetailMapper.updateByPrimaryKey(debtDetail);
 		if (flag > 0) {
-			logger.info("【智投还款/承接人】借款编号：{}，债权详情表(hjh_debt_detail)更新成功。承接订单号：{}", borrowNid, assignNid);
+			logger.info("【智投还款/承接人】借款编号：{}，债权详情表(ht_hjh_debt_detail)更新成功。承接订单号：{}", borrowNid, assignNid);
 		}
 		// 更新还款表（不分期）
 		borrowRecover.setRepayBatchNo(repayBatchNo);

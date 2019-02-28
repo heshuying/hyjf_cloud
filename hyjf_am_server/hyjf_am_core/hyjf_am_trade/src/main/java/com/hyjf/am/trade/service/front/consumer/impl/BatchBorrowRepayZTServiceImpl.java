@@ -652,6 +652,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		borrow.setRepayStatus(status);
+		apicron.setUpdateTime(new Date());
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]");
