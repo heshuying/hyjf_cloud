@@ -1087,7 +1087,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             AppMsMessage message = new AppMsMessage(null, appParam, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_CJZQ);
             commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), message));
 
-            logger.info("【债转】" + borrowCredit.getBidNid() + "已认购本金：" + borrowCredit.getCreditCapitalAssigned() + "---债转本金：" + borrowCredit.getCreditCapital());
             if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
                 //转让人用户信息
                 UserVO creditUser = this.amUserClient.findUserById(borrowCredit.getCreditUserId());
