@@ -17,9 +17,11 @@ import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -313,15 +316,15 @@ public class UserController extends BaseController {
         /**
          * ip version等作为请求一部分的时候，用base64解码
          */
-        String args = "219.147.28.242";
-       /* try {
+        String args = "";
+        try {
             args = new String(Base64.decodeBase64(ip.getBytes()), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             logger.error(e.getMessage(), e);
             throw new ReturnMessageException(Response.FAIL_MSG);
-        }*/
+        }
 
-        logger.info("updateLoginUser run...userId is :{}, ip is :{}", userId, "219.147.28.242");
+        logger.info("updateLoginUser run...userId is :{}, ip is :{}", userId, args);
         userService.updateLoginUser(userId, args);
     }
 
