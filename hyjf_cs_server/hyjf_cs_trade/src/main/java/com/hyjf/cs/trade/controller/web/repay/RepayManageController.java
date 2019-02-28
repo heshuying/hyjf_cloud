@@ -255,7 +255,7 @@ public class RepayManageController extends BaseTradeController {
         String verificationFlag = null;
         if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
             WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
-            logger.info("获取到标的信息为:" + borrowInfo.getPlanNid());
+
             // 单纯的作为验证标识.
             if (borrowInfo.getPlanNid() != null) {
                 verificationFlag = borrowInfo.getPlanNid();
