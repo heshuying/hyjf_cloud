@@ -245,7 +245,7 @@ public class RepayManageController extends BaseTradeController {
         resultMap.put("borrowInfo", "LGE19021129");
         resultMap.put("fddStatus", "1");
         result.setData(resultMap);
-
+        logger.info("user_repay_detail:" + result.toString());
         return result;
     }
 
