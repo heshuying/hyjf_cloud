@@ -77,13 +77,15 @@ public class ActivityListController extends BaseController {
         response.setClients(clients);
         if (request.getId() != null) {
             response = activityListService.getRecordById(request.getId());
+            // modify by libin sonar start
+            if (response == null) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            // modify by libin sonar end
             // 拆分平台
             String[] split = response.getResult().getPlatform().split(",");
             response.setPlatforms(split);
             response.setFileDomainUrl(fileDomainUrl);
-        }
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
