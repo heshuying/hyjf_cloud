@@ -89,7 +89,7 @@ public class AccessFilter extends ZuulFilter {
 				// app分享的请求，忽略sign
 				String ignoreSign = request.getParameter("ignoreSign");
 				if(StringUtils.isNotBlank(ignoreSign)){
-					if(Boolean.getBoolean(ignoreSign)){
+					if(Boolean.parseBoolean(ignoreSign)){
 						return ctx;
 					}
 				}
