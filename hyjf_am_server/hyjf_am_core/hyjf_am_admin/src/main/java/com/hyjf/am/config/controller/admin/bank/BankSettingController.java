@@ -54,7 +54,7 @@ public class BankSettingController {
 
         try {
             // 数据查询
-            totalCount = this.bankSettingService.getTotalCount();
+            totalCount = this.bankSettingService.getTotalCount(bc);
         } catch (Exception e) {
             logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString(), e);
             response.setRtn(Response.FAIL);

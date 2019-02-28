@@ -393,8 +393,11 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             customize.setShareTitle(contentArticle.getTitle());
             customize.setShareContent(contentArticle.getSummary());
             customize.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+            // 分享url ,添加app sign忽略标识， 在zuul不检查sign
             customize.setShareUrl(webUrl + "/find/contentArticle" +
-                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type")));
+                    "/{type}/{contentArticleId}".replace("{contentArticleId}", contentArticle.getId()+"").replace("{type}", (String)params.get("type"))
+                    + "?ignoreSign=true"
+            );
             return customize;
         }
         return null;

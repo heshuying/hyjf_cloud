@@ -22,31 +22,30 @@ import java.util.*;
  * @author dangzw
  * @version RepayCalendarController, v0.1 2018/7/27 11:30
  */
-@Api(tags = "app端-app日历")
+@Api(tags = "app-回款日历")
 @RestController
 @RequestMapping(value = "/hyjf-app/user/repayCalendar")
 public class RepayCalendarController extends BaseTradeController {
+
     private static final Logger logger = LoggerFactory.getLogger(RepayCalendarController.class);
+    private static final String CALENDAR = "/hyjf-app/user/repayCalendar";
+    private static final String REQUEST = "/getRepayCalendar";
     @Autowired
     private RepayCalendarService repayCalendarService;
 
+
     @ResponseBody
-    @ApiOperation(value = "日历", httpMethod = "POST", notes = "日历")
-    @PostMapping(value = "/getRepayCalendar")
+    @ApiOperation(value = "回款日历", httpMethod = "POST", notes = "回款日历")
+    @PostMapping(value = CALENDAR)
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month,
+                                       @RequestHeader(value = "userId") Integer userId,
                                        @RequestParam(value = "page", defaultValue = "1") String page,
-                                       @RequestParam(value = "pageSize", defaultValue = "10") String pageSize,
-                                       @RequestHeader(value = "userId") Integer userId
-                                       ) {
-        logger.info(this.getClass().getName(), "app端-app日历 日历查询 start", "getRepayCalendar start, year is :{}, month is :{}", year, month,
-                "/hyjf-app/user/repayCalendar/getRepayCalendar");
+                                       @RequestParam(value = "pageSize", defaultValue = "10") String pageSize) {
+        logger.info("app-回款日历列表查询[开始] 接口路径");
+        logger.info("请求参数 year:{}, month:{}, userId:{}, page:{}, pageSize:{}", year, month, userId, page, pageSize);
+
         JSONObject info = new JSONObject();
-        info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
-        info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
-        logger.info("page is :{}, pageSize is :{}", page, pageSize);
-        // 唯一标识
-        logger.debug("userId is :{}", userId);
         // 构造查询参数列表
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
@@ -57,17 +56,21 @@ public class RepayCalendarController extends BaseTradeController {
             params.put("tradeMonth", Integer.parseInt(month));
         }
 
+        // 构建分页参数
         this.buildPageCondition(page, pageSize, params);
+        // 创建分页数据
         this.createRepayCalendar(info, params, year, month);
 
-        info.put(CustomConstants.APP_REQUEST, "/hyjf-app/user/repayCalendar/getRepayCalendar");
-        logger.info(this.getClass().getName(), "app端-app日历 日历查询 end", "/hyjf-app/user/repayCalendar/getRepayCalendar");
+        info.put(CustomConstants.APP_REQUEST, CALENDAR+REQUEST);
+        info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
+        info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
+        logger.info("app-回款日历列表查询[结束]");
         return info;
     }
 
+
     /**
      * 构建分页参数
-     *
      * @param page
      * @param pageSize
      * @param params
@@ -88,11 +91,13 @@ public class RepayCalendarController extends BaseTradeController {
         return params;
     }
 
-    /***
+
+    /**
      * 创建分页数据
-     *
      * @param info
      * @param params
+     * @param year
+     * @param month
      */
     private void createRepayCalendar(JSONObject info, Map<String, Object> params, String year, String month) {
         //查询回款日历总数
@@ -114,7 +119,6 @@ public class RepayCalendarController extends BaseTradeController {
 
     /**
      * 没有交易明细的返回json
-     *
      * @param year
      * @param month
      * @return
@@ -149,5 +153,4 @@ public class RepayCalendarController extends BaseTradeController {
         list.add(customize);
         return list;
     }
-
 }
