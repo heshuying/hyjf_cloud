@@ -13,7 +13,7 @@ import java.util.Date;
  * @author PC-LIUSHOUYI
  * @version BorrowRepayVO, v0.1 2018/6/22 15:59
  */
-public class BorrowRepayBeanVO extends BaseVO implements Serializable {
+public class BorrowRepayBeanVO extends BorrowRepayVO implements Serializable {
 
     private static final long serialVersionUID = -3598731835082249723L;
 
