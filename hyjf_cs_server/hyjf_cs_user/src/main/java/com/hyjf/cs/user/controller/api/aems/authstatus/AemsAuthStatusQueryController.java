@@ -2,14 +2,16 @@ package com.hyjf.cs.user.controller.api.aems.authstatus;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.bean.AemsAuthStatusQueryRequestBean;
 import com.hyjf.cs.user.bean.AemsAuthStatusQueryResultBean;
+import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.cs.user.service.aems.authstatus.AemsAuthStatusQueryService;
 import com.hyjf.cs.user.util.SignUtil;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +38,8 @@ public class AemsAuthStatusQueryController extends BaseController {
 
     @Autowired
     private AemsAuthStatusQueryService autoPlusService;
+    @Autowired
+    private AemsAuthService aemsAuthService;
 
     /**
      *
@@ -98,39 +102,33 @@ public class AemsAuthStatusQueryController extends BaseController {
             resultBean.setStatusDesc("未设置交易密码");
             return resultBean;
         }
-        BankCallBean retBean=autoPlusService.getTermsAuthQuery(userId,channel);
-        logger.info("调用江西银行授权状态查询接口:"+(retBean==null?"空":retBean.getPaymentAuth()));
-        if(retBean==null){
-            logger.info("银行返回为空,accountId:["+accountId+"]");
-            resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE999999);
+        //直接查询汇盈授权状态
+        // 查询授权数据hyjf_hjh_user_auth
+        HjhUserAuthVO userAuth = aemsAuthService.getHjhUserAuthByUserId(userId);
+        if(null == userAuth){
+            logger.info("授权状态查询接口失败,userId:["+userId+"]授权数据不存在！");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             resultBean.setStatusDesc("授权状态查询接口失败！");
             return resultBean;
         }
-        String retCode = retBean.getRetCode();
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-            logger.info("授权状态查询接口失败,accountId:["+accountId+"]返回码["+retCode+"]！");
-            resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE999999);
-            resultBean.setStatusDesc("授权状态查询接口失败！");
-            return resultBean;
-        }
-        resultBean = getResultJosn(resultBean,retBean);
-        logger.info("授权状态查询第三方返回参数："+JSONObject.toJSONString(resultBean));
+        resultBean = getResultJosn(resultBean,userAuth,accountId);
+        logger.info("授权状态查询汇盈返回参数："+JSONObject.toJSONString(resultBean));
         resultBean.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("授权状态查询成功");
         return resultBean;
     }
 
     // 拼接返回参数
-    private AemsAuthStatusQueryResultBean getResultJosn(AemsAuthStatusQueryResultBean resultBean, BankCallBean retBean) {
-        resultBean.setAccountId(retBean.getAccountId());
-        resultBean.setAgreeWithdrawStatus(retBean.getAgreeWithdraw());
-        resultBean.setAutoBidDeadline(retBean.getAutoBidDeadline());
-        resultBean.setAutoBidStatus(retBean.getAutoBid());
-        resultBean.setAutoTransferStatus(retBean.getAutoTransfer());
-        resultBean.setPaymentAuthStatus(retBean.getPaymentAuth());
-        resultBean.setPaymentDeadline(retBean.getPaymentDeadline());
-        resultBean.setRepayAuthStatus(retBean.getRepayAuth());
-        resultBean.setRepayDeadline(retBean.getRepayDeadline());
+    private AemsAuthStatusQueryResultBean getResultJosn(AemsAuthStatusQueryResultBean resultBean, HjhUserAuthVO retBean,String accountId) {
+        resultBean.setAccountId(accountId);
+        resultBean.setAgreeWithdrawStatus(String.valueOf(retBean.getAutoWithdrawStatus()));
+        resultBean.setAutoBidDeadline(retBean.getAutoBidEndTime());
+        resultBean.setAutoBidStatus(String.valueOf(retBean.getAutoInvesStatus()));
+        resultBean.setAutoTransferStatus(String.valueOf(retBean.getAutoCreditStatus()));
+        resultBean.setPaymentAuthStatus(String.valueOf(retBean.getAutoPaymentStatus()));
+        resultBean.setPaymentDeadline(retBean.getAutoPaymentEndTime());
+        resultBean.setRepayAuthStatus(String.valueOf(retBean.getAutoRepayStatus()));
+        resultBean.setRepayDeadline(retBean.getAutoRepayEndTime());
         return resultBean;
     }
 }

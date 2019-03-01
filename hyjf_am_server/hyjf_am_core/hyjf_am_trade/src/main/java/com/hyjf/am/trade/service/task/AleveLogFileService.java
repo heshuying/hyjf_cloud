@@ -51,4 +51,8 @@ public interface AleveLogFileService extends BaseService {
      * @param list
      */
     void insertAleveErrorLogByList(List<AleveErrorLog> list);
+
+    Integer countAleveByExample(String beforeDay);
+
+    Integer countEveByExample(String beforeDay);
 }

@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.aems.auth;
 
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -70,6 +69,11 @@ public interface AemsAuthService extends BaseUserService {
      * @param authType
      */
     void updateUserAuth(Integer userId, BankCallBean bean, String authType);
+
+    	/**
+	 * 根据用户id查询授权
+	 */
+	HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
 
     /**
      * 查询授权错误信息

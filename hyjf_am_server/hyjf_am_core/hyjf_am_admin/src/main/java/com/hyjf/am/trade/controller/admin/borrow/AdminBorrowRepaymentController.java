@@ -11,13 +11,13 @@ import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepay;
 import com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan;
-import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentCustomize;
-import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize;
-import com.hyjf.am.trade.dao.model.customize.AdminRepayDelayCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentService;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayBeanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanBeanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -194,10 +194,12 @@ public class AdminBorrowRepaymentController extends BaseController {
 
         BorrowRepayResponse response = new BorrowRepayResponse();
         try{
-            BorrowRepay customize = adminBorrowRepaymentService.getBorrowRepayInfo(borrowNid,borrowApr,borrowStyle);
+            BorrowRepayBean customize = adminBorrowRepaymentService.getBorrowRepayInfo(borrowNid,borrowApr,borrowStyle);
+            logger.info("customize:" +JSONObject.toJSON(customize));
             if(customize!=null){
-                BorrowRepayVO vo = CommonUtils.convertBean(customize,BorrowRepayVO.class);
-                response.setResult(vo);
+                BorrowRepayBeanVO vo = CommonUtils.convertBean(customize,BorrowRepayBeanVO.class);
+                logger.info("vo:" +JSONObject.toJSON(vo));
+                response.setBorrowRepayBeanVO(vo);
             }
             return response;
         }catch (Exception e){
@@ -214,10 +216,12 @@ public class AdminBorrowRepaymentController extends BaseController {
 
         BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
         try{
-            BorrowRepayPlan customize = adminBorrowRepaymentService.getBorrowRepayPlanInfo(borrowNid,borrowApr,borrowStyle);
+            BorrowRepayPlanBean customize = adminBorrowRepaymentService.getBorrowRepayPlanInfo(borrowNid,borrowApr,borrowStyle);
+            logger.info("customize:" +JSONObject.toJSON(customize));
             if(customize!=null){
-                BorrowRepayPlanVO vo = CommonUtils.convertBean(customize,BorrowRepayPlanVO.class);
-                response.setResult(vo);
+                BorrowRepayPlanBeanVO vo = CommonUtils.convertBean(customize,BorrowRepayPlanBeanVO.class);
+                logger.info("vo:" +JSONObject.toJSON(vo));
+                response.setBorrowRepayPlanBeanVO(vo);
             }
             return response;
         }catch (Exception e){

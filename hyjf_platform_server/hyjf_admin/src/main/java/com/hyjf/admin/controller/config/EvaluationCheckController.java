@@ -55,18 +55,21 @@ public class EvaluationCheckController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
+	@SuppressWarnings("unused")
 	@ApiOperation(value = "修改画面迁移", notes = "修改画面迁移")
 	@PostMapping("/infoAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult info(@RequestBody EvaluationCheckRequest requestBean) {
 		logger.info(EvaluationCheckController.class.toString(), "infoAction");
 		EvaluationCheckResponse response = new EvaluationCheckResponse();
+		// modify by libin sonar start 拿到前面来
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		// modify by libin sonar end
 		if (requestBean.getId() != null) {
 			EvaluationCheckConfigVO evaluationCheckConfigVO = this.service.getEvaluationCheckById(requestBean.getId());
 			response.setForm(evaluationCheckConfigVO);
-		}
-		if (response == null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
 		}
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());

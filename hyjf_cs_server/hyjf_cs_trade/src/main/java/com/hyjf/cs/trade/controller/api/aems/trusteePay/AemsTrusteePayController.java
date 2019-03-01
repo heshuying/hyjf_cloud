@@ -274,7 +274,7 @@ public class AemsTrusteePayController extends BaseController {
         
         logger.info("借款人受托支付申请同步回调请求查询接口,返回参数为：【"+JSONObject.toJSONString(bean, true)+"】");
         
-        if (bean != null && bean!=null && ((BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
+        if (bean != null  && ((BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
                 && "1".equals(bean.getState())) || "JX900703".equals(bean.get(BankCallConstant.PARAM_RETCODE)))) {
             // 成功
             modelAndView.addObject("statusDesc", "借款人受托支付申请成功！");
@@ -284,7 +284,7 @@ public class AemsTrusteePayController extends BaseController {
             repwdResult.set("status", resultBean.getStatus());
         } else {
             // 失败
-            modelAndView.addObject("statusDesc", "借款人受托支付申请失败,失败原因：" + trusteePayService.getBankRetMsg(bean.getRetCode()));
+            modelAndView.addObject("statusDesc", "借款人受托支付申请失败");
             
             BaseResultBean resultBean = new BaseResultBean();
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE999999);
@@ -456,7 +456,7 @@ public class AemsTrusteePayController extends BaseController {
         } else {
             // 失败
         	payRequestBean.setState("0");
-            result = payRequestBean.getErrorJson(retBean.getRetCode(), "查询失败！");
+            result = payRequestBean.getErrorJson(AemsErrorCodeConstant.STATUS_CE999999, "查询失败！");
             //payRequestBean.doNotify(payRequestBean.getErrorMap(AEMSErrorCodeConstant.STATUS_CE999999, "查询失败！"));
         }
         logger.info("受托支付申请查询接口 end,银行返回应答码retCode="+retBean.getRetCode());

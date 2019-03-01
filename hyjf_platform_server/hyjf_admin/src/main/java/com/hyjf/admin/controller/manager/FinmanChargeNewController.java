@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -47,6 +46,12 @@ public class FinmanChargeNewController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult selectFinmanChargeList( @RequestBody FinmanChargeNewRequest adminRequest) {
         FinmanChargeNewResponse response =new FinmanChargeNewResponse();
+        adminRequest = setManChargeTimeRequest(adminRequest);
+        if(null == adminRequest){
+            response.setRtn(Response.FAIL);
+            response.setMessage("期限不存在，请填写：几天或几个月");
+            return new AdminResult<FinmanChargeNewResponse>(response) ;
+        }
         // 汇直投项目列表
         List<BorrowProjectTypeVO> borrowProjectTypeList = this.finmanChargeNewService.borrowProjectTypeList("HZT");
         response.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -71,6 +76,12 @@ public class FinmanChargeNewController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult getFinmanChargeList(@RequestBody FinmanChargeNewRequest adminRequest) {
         FinmanChargeNewResponse response =new FinmanChargeNewResponse();
+        adminRequest = setManChargeTimeRequest(adminRequest);
+        if(null == adminRequest){
+            response.setRtn(Response.FAIL);
+            response.setMessage("期限不存在，请填写：几天或几个月");
+            return new AdminResult<FinmanChargeNewResponse>(response) ;
+        }
         // 汇直投项目列表
         List<BorrowProjectTypeVO> borrowProjectTypeList = this.finmanChargeNewService.borrowProjectTypeList("HZT");
         response.setBorrowProjectTypeList(borrowProjectTypeList);
@@ -303,6 +314,33 @@ public class FinmanChargeNewController extends BaseController {
             message =  "相同资产来源，产品类型，期限的费率配置已经存在,请重新操作!";
         }
         return message;
+    }
+
+    public  FinmanChargeNewRequest setManChargeTimeRequest(FinmanChargeNewRequest adminRequest){
+        String manChargeTimeSear = adminRequest.getManChargeTimeSear();
+        if(org.apache.commons.lang3.StringUtils.isNotBlank(manChargeTimeSear)){
+            manChargeTimeSear = manChargeTimeSear.trim().replaceAll(" ","");
+            String manChargeTime = manChargeTimeSear.substring(0,1).matches("^[1-9]\\d*$")?manChargeTimeSear.substring(0,1):null;
+            String manChargeTimeType = manChargeTimeSear.substring(manChargeTimeSear.length()-1);
+            if(org.apache.commons.lang3.StringUtils.isNotBlank(manChargeTime)&& org.apache.commons.lang3.StringUtils.isNotBlank(manChargeTimeType)&&("月".equals(manChargeTimeType)||"天".equals(manChargeTimeType))){
+                if("月".equals(manChargeTimeType)){
+                    if(!(manChargeTime+"个月").equals(manChargeTimeSear)){
+                        return null;
+                    }
+                    adminRequest.setManChargeTypeSear("month");
+                }
+                if("天".equals(manChargeTimeType)){
+                    if(!(manChargeTime+"天").equals(manChargeTimeSear)){
+                        return null;
+                    }
+                    adminRequest.setManChargeTypeSear("endday");
+                }
+                adminRequest.setManChargeTimeSear(manChargeTime);
+                return adminRequest;
+            }
+            return null;
+        }
+        return adminRequest;
     }
 
 }

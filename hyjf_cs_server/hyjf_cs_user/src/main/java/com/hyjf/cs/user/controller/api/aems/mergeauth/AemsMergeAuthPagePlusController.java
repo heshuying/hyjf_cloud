@@ -85,8 +85,10 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         }
 
         AuthBean authBean = new AuthBean();
+        //create by walter.li 优化生成订单ID时用户ID为null的情况 start
+        BankOpenAccountVO bankOpenAccount = this.authService.getBankOpenAccountByAccount(requestBean.getAccountId());
         // 根据用户ID生成订单ID
-        String orderId = GetOrderIdUtils.getOrderId2(authBean.getUserId());
+        String orderId = GetOrderIdUtils.getOrderId2(bankOpenAccount.getUserId());
 
         // 打包参数
         authBean = paramPackage(request, requestBean, authBean, orderId);

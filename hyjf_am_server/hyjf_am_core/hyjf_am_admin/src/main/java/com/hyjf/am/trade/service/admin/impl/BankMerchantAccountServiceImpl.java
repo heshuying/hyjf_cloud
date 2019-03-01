@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
+import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.resquest.admin.BankMerchantAccountListRequest;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccount;
 import com.hyjf.am.trade.dao.model.auto.BankMerchantAccountExample;
@@ -13,6 +14,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +29,8 @@ import java.util.List;
 @Service
 public class BankMerchantAccountServiceImpl extends BaseServiceImpl implements BankMerchantAccountService {
 
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 查询商户子账户表相应的数据总数
      * @param form
@@ -71,6 +75,16 @@ public class BankMerchantAccountServiceImpl extends BaseServiceImpl implements B
             // 订单号
             bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
             bean.setLogUserId(String.valueOf(userId));
+            bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+            bean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+            bean.setBankCode(systemConfig.getBankBankcode());// 银行代码
+            bean.setTxDate(GetOrderIdUtils.getTxDate());// 交易日期
+            bean.setTxTime(GetOrderIdUtils.getTxTime());// 交易时间
+            bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));// 交易流水号6位
+            bean.setChannel(BankCallConstant.CHANNEL_PC);// 交易渠道000001手机APP
+            bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
+            bean.setLogUserId(String.valueOf(userId));
+            bean.setLogClient(0);// 平台
             // 平台
             bean.setLogClient(0);
             try {

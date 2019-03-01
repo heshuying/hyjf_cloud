@@ -22,6 +22,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -304,10 +305,13 @@ public class MessagePushTemplateController extends BaseController {
     @ApiOperation(value = "检查是否是url", notes = "检查是否是url")
     @RequestMapping(value = "/checkUrlAction", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
-    public AdminResult checkUrlAction(HttpServletRequest request) {
+    public AdminResult checkUrlAction(@RequestBody MsgPushTemplateRequest templateRequest, HttpServletRequest request) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         // 检查着名称唯一性
-        Boolean isUrl = true;// TODO Validator.isUrl2(templateActionUrl1);
+        Boolean isUrl = false;
+        if (StringUtils.isNotBlank(templateRequest.getTemplateActionUrl())) {
+            isUrl = Validator.isUrl2(templateRequest.getTemplateActionUrl());
+        }
         if (!isUrl) {
             response.setRtn(Response.FAIL);
             response.setMessage("请输入正确的http地址（全路径）!");

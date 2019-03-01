@@ -1,11 +1,13 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayBeanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -37,15 +39,17 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     }
 
     @Override
-    public BorrowRepay getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
+    public BorrowRepayBean getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
         BorrowRepayExample example = new BorrowRepayExample();
         BorrowRepayExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
+        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayBean borrowRepayBean = new BorrowRepayBean();
             BorrowRepay borrowRepay = list.get(0);
             BeanUtils.copyProperties(borrowRepay, borrowRepayBean);
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(borrowRepayBean.getRepayTime()) * 1000L);
             int distanceDays = GetDate.daysBetween(nowDate, date);
@@ -96,8 +100,10 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {
                 borrowRepayBean.setBorrowStatus("0");
             }
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             return borrowRepayBean;
         }
+
         return new BorrowRepayBean();
     }
     /**
@@ -187,7 +193,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     }
 
     @Override
-    public BorrowRepayPlan getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
+    public BorrowRepayPlanBean getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
         BorrowRepayPlanExample example = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
@@ -195,11 +201,12 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         cra.andRepayStatusEqualTo(0);
         example.setOrderByClause(" repay_period ASC ");
         List<BorrowRepayPlan> list = this.borrowRepayPlanMapper.selectByExample(example);
-
+        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayPlanBean repayPlanBean = new BorrowRepayPlanBean();
             BorrowRepayPlan repayPlan = list.get(0);
             BeanUtils.copyProperties(repayPlan, repayPlanBean);
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(repayPlan.getRepayTime()) * 1000L);
 
@@ -268,7 +275,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {// 用户当前期未还款
                 repayPlanBean.setBorrowStatus("0");
             }
-
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             return repayPlanBean;
         }
         return new BorrowRepayPlanBean();

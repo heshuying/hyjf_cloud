@@ -83,7 +83,9 @@ public class ReadExcel extends XxlsAbstract {
         titleMap = nameMaps;
         nameMap = nameMaps;
         try {
-            if (filePath != null && !EMPTY.equals(filePath)) {
+        	// modify by libin sonar start filePath 不是string 不能用 !EMPTY.equals(filePath)这种判断
+            if (filePath != null) {
+            // modify by libin sonar end
                 logger.info("文件路径 ：" + filePath);
                 readXlsx1(filePath, resumeList);
             } else {

@@ -2,278 +2,356 @@ package com.hyjf.am.vo.admin;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class BankMerchantAccountListCustomizeVO implements Serializable {
+
+
+
     private Integer id;
-
+    //交易日期
+    private String createTime;
+    //流水号
+    private String seqNo;
+    //订单号
     private String orderId;
-
-    private String borrowNid;
-
+    //分公司
     private String regionName;
-
+    //分部
     private String branchName;
-
+    //团队
     private String departmentName;
-
-    private Integer userId;
-
+    //用户名
     private String userName;
-
+    //电子帐号
     private String accountId;
-
+    //收支类型
+    private Integer type;
+    private String typeStr;
+    //交易类型
+    private Integer transType;
+    private String transTypeStr;
+    //交易金额
     private BigDecimal amount;
-
-    private String bankAccountType;
-
-    private String bankAccountCode;
-
+    //交易状态
+    private Integer status;
+    private String statusStr;
+    //账户可用金额
     private BigDecimal bankAccountBalance;
-
+    //账户冻结金额
     private BigDecimal bankAccountFrost;
 
-    private Integer transType;
-
-    private Integer type;
-
-    private Integer status;
-
-    private String seqNo;
-
-    private Integer txDate;
-
-    private Integer txTime;
-
-    private Date createTime;
-
-    private Integer createUserId;
-
-    private String createUserName;
-
-    private Date updateTime;
-
-    private Integer updateUserId;
-
-    private String updateUserName;
-
+    private String bankAccountCode;
+    //备注
     private String remark;
 
-    private static final long serialVersionUID = 1L;
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
 
-    public String getUserName() {
-        return userName;
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+
+
+    /**
+     * 检索条件 时间开始
+     */
+    private String timeStartSrch;
+
+    /**
+     * 检索条件 时间结束
+     */
+    private String timeEndSrch;
+
+
+
+    public String getCreateTime() {
+        return createTime;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId == null ? null : orderId.trim();
-    }
-
-    public String getBorrowNid() {
-        return borrowNid;
-    }
-
-    public void setBorrowNid(String borrowNid) {
-        this.borrowNid = borrowNid == null ? null : borrowNid.trim();
-    }
-
-    public String getRegionName() {
-        return regionName;
-    }
-
-    public void setRegionName(String regionName) {
-        this.regionName = regionName == null ? null : regionName.trim();
-    }
-
-    public String getBranchName() {
-        return branchName;
-    }
-
-    public void setBranchName(String branchName) {
-        this.branchName = branchName == null ? null : branchName.trim();
-    }
-
-    public String getDepartmentName() {
-        return departmentName;
-    }
-
-    public void setDepartmentName(String departmentName) {
-        this.departmentName = departmentName == null ? null : departmentName.trim();
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId == null ? null : accountId.trim();
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public String getBankAccountType() {
-        return bankAccountType;
-    }
-
-    public void setBankAccountType(String bankAccountType) {
-        this.bankAccountType = bankAccountType == null ? null : bankAccountType.trim();
-    }
-
-    public String getBankAccountCode() {
-        return bankAccountCode;
-    }
-
-    public void setBankAccountCode(String bankAccountCode) {
-        this.bankAccountCode = bankAccountCode == null ? null : bankAccountCode.trim();
-    }
-
-    public BigDecimal getBankAccountBalance() {
-        return bankAccountBalance;
-    }
-
-    public void setBankAccountBalance(BigDecimal bankAccountBalance) {
-        this.bankAccountBalance = bankAccountBalance;
-    }
-
-    public BigDecimal getBankAccountFrost() {
-        return bankAccountFrost;
-    }
-
-    public void setBankAccountFrost(BigDecimal bankAccountFrost) {
-        this.bankAccountFrost = bankAccountFrost;
-    }
-
-    public Integer getTransType() {
-        return transType;
-    }
-
-    public void setTransType(Integer transType) {
-        this.transType = transType;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 
     public String getSeqNo() {
         return seqNo;
     }
 
+
+
     public void setSeqNo(String seqNo) {
-        this.seqNo = seqNo == null ? null : seqNo.trim();
+        this.seqNo = seqNo;
     }
 
-    public Integer getTxDate() {
-        return txDate;
+
+
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setTxDate(Integer txDate) {
-        this.txDate = txDate;
+
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
-    public Integer getTxTime() {
-        return txTime;
+
+
+    public String getRegionName() {
+        return regionName;
     }
 
-    public void setTxTime(Integer txTime) {
-        this.txTime = txTime;
+
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+
+
+    public String getBranchName() {
+        return branchName;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
     }
 
-    public Integer getCreateUserId() {
-        return createUserId;
+
+
+    public String getDepartmentName() {
+        return departmentName;
     }
 
-    public void setCreateUserId(Integer createUserId) {
-        this.createUserId = createUserId;
+
+
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
-    public String getCreateUserName() {
-        return createUserName;
+
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName == null ? null : createUserName.trim();
+
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+
+
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
-    public Integer getUpdateUserId() {
-        return updateUserId;
+
+
+    public Integer getType() {
+        return type;
     }
 
-    public void setUpdateUserId(Integer updateUserId) {
-        this.updateUserId = updateUserId;
+
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public String getUpdateUserName() {
-        return updateUserName;
+
+
+    public String getTypeStr() {
+        return typeStr;
     }
 
-    public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName == null ? null : updateUserName.trim();
+
+
+    public void setTypeStr(String typeStr) {
+        this.typeStr = typeStr;
     }
+
+
+
+    public Integer getTransType() {
+        return transType;
+    }
+
+
+
+    public void setTransType(Integer transType) {
+        this.transType = transType;
+    }
+
+
+
+    public String getTransTypeStr() {
+        return transTypeStr;
+    }
+
+
+
+    public void setTransTypeStr(String transTypeStr) {
+        this.transTypeStr = transTypeStr;
+    }
+
+
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+
+
+    public Integer getStatus() {
+        return status;
+    }
+
+
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+
+
+    public String getStatusStr() {
+        return statusStr;
+    }
+
+
+
+    public void setStatusStr(String statusStr) {
+        this.statusStr = statusStr;
+    }
+
+
+
+    public BigDecimal getBankAccountBalance() {
+        return bankAccountBalance;
+    }
+
+
+
+    public void setBankAccountBalance(BigDecimal bankAccountBalance) {
+        this.bankAccountBalance = bankAccountBalance;
+    }
+
+
+
+    public BigDecimal getBankAccountFrost() {
+        return bankAccountFrost;
+    }
+
+
+
+    public void setBankAccountFrost(BigDecimal bankAccountFrost) {
+        this.bankAccountFrost = bankAccountFrost;
+    }
+
+
 
     public String getRemark() {
         return remark;
     }
 
+
+
     public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
+        this.remark = remark;
     }
+
+
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
+
+
+
+    public String getTimeStartSrch() {
+        return timeStartSrch;
+    }
+
+
+
+    public void setTimeStartSrch(String timeStartSrch) {
+        this.timeStartSrch = timeStartSrch;
+    }
+
+
+
+    public String getTimeEndSrch() {
+        return timeEndSrch;
+    }
+
+
+
+    public void setTimeEndSrch(String timeEndSrch) {
+        this.timeEndSrch = timeEndSrch;
+    }
+
+
+
+    public Integer getId() {
+        return id;
+    }
+
+
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+
+
+    public String getBankAccountCode() {
+        return bankAccountCode;
+    }
+
+
+
+    public void setBankAccountCode(String bankAccountCode) {
+        this.bankAccountCode = bankAccountCode;
+    }
+
+
 }

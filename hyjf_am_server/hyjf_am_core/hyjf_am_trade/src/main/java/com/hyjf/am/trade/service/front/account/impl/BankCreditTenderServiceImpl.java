@@ -85,8 +85,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		cra.andStatusEqualTo(0);
 		// 添加时间 <当前时间-5分钟
 		Date nowDate = GetDate.getNowTime();
-		cra.andCreateTimeLessThan(DateUtils.addMinutes(nowDate,-5));//当前时间-5分钟
-		cra.andCreateTimeGreaterThanOrEqualTo(DateUtils.addDays(nowDate,-2));//两天之前
+		cra.andCreateTimeGreaterThanOrEqualTo(DateUtils.addDays(nowDate,-2));//两天之内
+		cra.andCreateTimeLessThan(DateUtils.addMinutes(nowDate,-5));//当前时间-5分钟之前
 		return creditTenderLogMapper.selectByExample(example);
 	}
 

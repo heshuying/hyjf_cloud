@@ -11,6 +11,8 @@ import com.hyjf.am.trade.service.admin.finance.BankRedPacketAccountService;
 import com.hyjf.am.vo.admin.BankMerchantAccountListCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/am-trade/bankRedPacketAccount")
 public class BankRedPacketAccountController {
+	public final static Logger logger = LoggerFactory.getLogger(BankRedPacketAccountController.class);
+
 
     @Autowired
     BankRedPacketAccountService bankRedPacketAccountService;

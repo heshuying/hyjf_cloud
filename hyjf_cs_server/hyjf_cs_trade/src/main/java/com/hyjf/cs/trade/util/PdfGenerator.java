@@ -233,10 +233,7 @@ public class PdfGenerator {
 			ftlName = systemConfig.getBorrowContractFtlName();
 		} else if (fileType.equals(CustomConstants.BORROWER_CONTRACT_HXF)) {
 			ftlName = systemConfig.getBorrowHXFContractFtlName();
-		} else if(fileType.equals(CustomConstants.CREDIT_CONTRACT)){
-			ftlName = systemConfig.getCreditContractFtlName();
-		}//散标居间服务协议
-        else if (fileType.equals(CustomConstants.NEW_TENDER_CONTRACT_FTL_NAME)) {
+		}else if (fileType.equals(CustomConstants.NEW_TENDER_CONTRACT_FTL_NAME)) {
             ftlName = systemConfig.getTenderNewContractFtlName();
         }
         //汇计划债转协议

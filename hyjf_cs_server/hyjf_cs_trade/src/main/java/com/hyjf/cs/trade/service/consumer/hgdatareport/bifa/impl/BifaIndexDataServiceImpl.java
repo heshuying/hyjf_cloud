@@ -330,7 +330,8 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
             String currDate = GetDate.formatDate();
 
             if (userInfoSHA256EntityList == null) {
-                logger.info(logHeader + "未获取已开户且出借等于0的用户!!!" + userInfoSHA256EntityList);
+                logger.info(logHeader + "未获取已开户且出借等于0的用户!!!" );
+                return;
             }
 
             logger.info(logHeader + dataType + " DB检出记录数：" + userInfoSHA256EntityList.size());
