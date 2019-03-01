@@ -1139,12 +1139,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             if (creditCreateMap != null) {
                 projectInfo.put("assignInterestAdvance", creditCreateMap.get("assignInterestAdvance"));
                 projectInfo.put("expectHoldProfit", creditCreateMap.get("assignInterestAdvance"));// 预期持有收益
+                projectInfo.put("account", creditCreateMap.get("creditCapital"));
             }
 
             projectInfo.put("borrowApr", appTenderToCreditDetail.getBorrowApr());
             projectInfo.put("borrowPeriod", appTenderToCreditDetail.getBorrowPeriodNumber());
             projectInfo.put("borrowPeriodUnit", "endday" .equals(borrowVO.getBorrowStyle()) ? "天" : "个月");
-            projectInfo.put("account", creditCreateMap.get("creditCapital"));
             projectInfo.put("borrowId", appTenderToCreditDetail.getBorrowNid());
             projectInfo.put("tenderPeriod", appTenderToCreditDetail.getTenderPeriod());
             projectInfo.put("lastDays", appTenderToCreditDetail.getLastDays());

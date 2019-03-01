@@ -281,7 +281,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
 
         logger.info("借款人受托支付申请同步回调请求查询接口,返回参数为：【" + JSONObject.toJSONString(bean, true) + "】");
 
-        if (bean != null && bean != null && ((BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
+        if (bean != null && ((BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
                 && "1".equals(bean.getState())) || "JX900703".equals(bean.get(BankCallConstant.PARAM_RETCODE)))) {
             // 成功
             BaseResultBean resultBean = new BaseResultBean();
@@ -295,7 +295,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             resultMap.put("status", resultBean.getStatus());
             resultMap.put("chkValue", resultBean.getChkValue());
-            resultMap.put("statusDesc", "借款人受托支付申请失败,失败原因：" + this.getBankRetMsg(bean.getRetCode()));
+            resultMap.put("statusDesc", "借款人受托支付申请失败,失败原因：" + bean != null? this.getBankRetMsg(bean.getRetCode()) : "调用接口返回值为空");
         }
 
         //------------------------------------------------

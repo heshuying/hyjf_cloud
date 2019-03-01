@@ -131,7 +131,7 @@ public class BankRepairController extends BaseController {
      * @param logOrderId
      * @return
      */
-    @GetMapping(value = "/selectCreditTenderLogByOrderId")
+    @GetMapping(value = "/selectCreditTenderLogByOrderId/{logOrderId}")
     public CreditTenderLogResponse selectCreditTenderLogByOrderId(@PathVariable String logOrderId){
         logger.info("selectCreditTenderLogByOrderId...");
         CreditTenderLogResponse response = new CreditTenderLogResponse();

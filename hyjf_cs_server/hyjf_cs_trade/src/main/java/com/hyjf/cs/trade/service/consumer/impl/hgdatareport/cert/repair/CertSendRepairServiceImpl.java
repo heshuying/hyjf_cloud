@@ -62,6 +62,7 @@ public class CertSendRepairServiceImpl extends BaseHgCertReportServiceImpl imple
         CertReportEntityVO  entity = csMessageClient.getCertSendLogByLogOrdId(item.getLogOrdId());
         if(entity == null ){
             logger.info(logHeader+"mongo查询无记录！订单号:{}",item.getLogOrdId());
+            return;
         }
         try {
             setCommonParam(entity);
