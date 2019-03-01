@@ -390,7 +390,7 @@ public interface AmTradeClient {
 	/**
 	 * @param list
 	 */
-	void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list);
+	void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list);
 
     List<BorrowListCustomizeVO> selectBorrowList(Map<String, Object> requestBean);
 
