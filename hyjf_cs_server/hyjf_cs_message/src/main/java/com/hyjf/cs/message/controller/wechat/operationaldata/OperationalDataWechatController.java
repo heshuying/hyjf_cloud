@@ -77,7 +77,9 @@ public class OperationalDataWechatController {
 			List<String> ycountlist = new ArrayList<String>();
 			for (int i = list.size() - 1; i >= 0; i--) {
 				xlist.add(oe.format(String.valueOf(list.get(i).getStatisticsMonth())));
-				yMoneytlist.add(trim(list.get(i).getAccountMonth().intValue(),100000000));
+				if (list.get(i).getAccountMonth() != null) {
+					yMoneytlist.add(trim(list.get(i).getAccountMonth().intValue(), 100000000));
+				}
 				ycountlist.add(trim(list.get(i).getTradeCountMonth(),10000));
 			}
 

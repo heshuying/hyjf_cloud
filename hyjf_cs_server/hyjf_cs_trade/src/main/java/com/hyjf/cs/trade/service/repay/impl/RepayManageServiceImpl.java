@@ -873,17 +873,20 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         bean.setLogClient(0);
         try {
             BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
-            String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+            if(callBackBean == null){
+                logger.error("【冻结查询】调用单笔还款申请冻结查询接口,银行返回为空!");
+            }
+            String respCode = callBackBean.getRetCode();
             // 单笔还款申请冻结查询失败
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
-                logger.info("【冻结查询】调用单笔还款申请冻结查询接口失败:{},订单号:{}", callBackBean.getRetMsg(), callBackBean.getOrderId());
+                logger.error("【冻结查询】调用单笔还款申请冻结查询接口失败:{},订单号:{}", callBackBean.getRetMsg(), callBackBean.getOrderId());
                 return false;
             } else {
                 // 单笔还款申请冻结查询非正常
                 if (!BankCallConstant.STATUS_SUCCESS.equals(callBackBean.getState())) {
                     deleteOrgFreezeTempLogs(orderId, null);
                     RedisUtils.del("batchOrgRepayUserid_" + userId);
-                    logger.info("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
+                    logger.error("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
                     return false;
                 }
             }
@@ -927,7 +930,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             if (!"".equals(respCode)) {
                 this.deleteFreezeLogByOrderId(orderId);
             }
-            logger.info("调用还款申请冻结资金接口失败:" + callBackBean==null?"":callBackBean.getRetMsg() + "订单号:" + callBackBean==null?"":callBackBean.getOrderId());
+            logger.error("调用还款申请冻结资金接口失败:" + callBackBean==null?"":callBackBean.getRetMsg() + "订单号:" + callBackBean==null?"":callBackBean.getOrderId());
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("还款失败，请稍后再试...");
             return webResult;

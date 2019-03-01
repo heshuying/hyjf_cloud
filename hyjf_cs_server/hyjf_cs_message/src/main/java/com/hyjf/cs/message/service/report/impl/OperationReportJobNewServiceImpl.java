@@ -68,6 +68,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         oe.setInsertDate(transferDateToInt(cal, sdf));
 
         oe.setStatisticsMonth(transferDateToInt(cal, sdf));
+        logger.info("运营报告数据统计月份：" + oe.getStatisticsMonth());
         // 月交易金额
         oe.setAccountMonth(bean.getAccountMonth());
         // 月交易笔数
