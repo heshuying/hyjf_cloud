@@ -80,6 +80,11 @@ public class VipManageController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
         VipManageResponse response = vipManageService.searchList(vipManageRequest);
+        // modify by libin sonar start 挪一下位置
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        // modify by libin sonar end
         // 用户角色
         List<ParamNameVO> userRoles = this.vipManageService.getParamNameList("USER_ROLE");
         // 用户属性
@@ -113,9 +118,6 @@ public class VipManageController extends BaseController {
         response.setUserStatus(userStatus);
         response.setRegistPlat(registPlat);
         response.setDepartmentList(ret);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
