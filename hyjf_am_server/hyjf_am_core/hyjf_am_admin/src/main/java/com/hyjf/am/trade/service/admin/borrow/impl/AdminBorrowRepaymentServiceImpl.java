@@ -6,6 +6,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRepaymentService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayBeanVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -37,7 +38,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     }
 
     @Override
-    public BorrowRepay getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
+    public BorrowRepayBean getBorrowRepayInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
         BorrowRepayExample example = new BorrowRepayExample();
         BorrowRepayExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
@@ -187,7 +188,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     }
 
     @Override
-    public BorrowRepayPlan getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
+    public BorrowRepayPlanBean getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) throws ParseException{
         BorrowRepayPlanExample example = new BorrowRepayPlanExample();
         BorrowRepayPlanExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
