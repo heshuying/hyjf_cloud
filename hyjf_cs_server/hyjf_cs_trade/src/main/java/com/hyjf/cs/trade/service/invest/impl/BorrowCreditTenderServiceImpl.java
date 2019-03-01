@@ -1407,9 +1407,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/credit/bgReturn?platform="+request.getPlatform();
-        bean.setRetUrl("1111"+retUrl);
-        bean.setNotifyUrl("2222"+bgRetUrl);
-        bean.setSuccessfulUrl("3333"+successUrl);
+        bean.setRetUrl(retUrl);
+        bean.setNotifyUrl(bgRetUrl);
+        bean.setSuccessfulUrl(successUrl);
         bean.setLogRemark("债转出借");
         return bean;
     }
