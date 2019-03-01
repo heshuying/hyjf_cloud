@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.BorrowRepaymentPlanBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
@@ -24,6 +25,8 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.GenericValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +40,7 @@ import java.util.List;
  */
 @Service
 public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
-
+    public final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private AmTradeClient amTradeClient;
     @Override
@@ -142,9 +145,11 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         // 单期标
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
             BorrowRepayBeanVO borrowRepay = this.amTradeClient.getBorrowRepayInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+            logger.info("borrowRepay:" +JSONObject.toJSON(borrowRepay));
             bean.setRepayInfo(borrowRepay);
         } else {// 多期标
             BorrowRepayPlanBeanVO borrowRepayPlan = this.amTradeClient.getBorrowRepayPlanInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+            logger.info("borrowRepayPlan:" +JSONObject.toJSON(borrowRepayPlan));
             bean.setRepayInfo(borrowRepayPlan);
         }
         return bean;
