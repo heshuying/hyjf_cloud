@@ -66,7 +66,7 @@ public class PayRepayAuthController extends BaseUserController {
     @ApiOperation(value = "二合一授权(缴费授权、还款授权)", notes = "二合一授权(缴费授权、还款授权)")
     @PostMapping(value = PAY_REPAY_AUTH, produces = "application/json; charset=utf-8")
     public  WebResult<Object> auth(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
-        logger.info("缴费、还款二合一授权开始", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
+        logger.info("缴费、还款二合一授权开始------------------------------接口路径:{}", PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
         WebResult<Object> result = new WebResult<>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
@@ -76,14 +76,18 @@ public class PayRepayAuthController extends BaseUserController {
         checkUserMessage(user);
 
         // 拼装参数 调用江西银行
-        // 失败页面
-        String errorPath = "/user/autoplus/autoTenderFail";
-        // 成功页面
-        String successPath = "/user/autoplus/autoTenderSuccess";
+        // 生成唯一订单号
         String orderId = GetOrderIdUtils.getOrderId2(userId);
-        // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
+        // 成功同步调用路径
+        String successPath = "/user/autoplus/autoTenderSuccess";
+        String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="
+                + orderId + "&authType="
+                + AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
+        // 失败同步调用路径
+        String errorPath = "/user/autoplus/autoTenderFail";
+        String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath+"?logOrdId="
+                + orderId + "&authType="
+                + AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
         String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
@@ -127,12 +131,10 @@ public class PayRepayAuthController extends BaseUserController {
             authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), type);
             result.setData(map);
         } catch (Exception e) {
-            logger.info("缴费、还款二合一授权、插入日志表异常",
-                    "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH,
-                    e);
+            logger.info("缴费、还款二合一授权、插入日志表异常,异常报文如下:{}", e);
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
-        logger.info("缴费、还款二合一授权结束", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
+        logger.info("缴费、还款二合一授权结束------------------------------");
         return result;
     }
 
@@ -156,7 +158,7 @@ public class PayRepayAuthController extends BaseUserController {
     @ResponseBody
     public String payRepayAuthBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
-        logger.info("缴费、还款二合一授权[异步回调]开始", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH);
+        logger.info("缴费、还款二合一授权[异步回调]开始------------------------------接口路径:{}", PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH);
         bean.convert();
         // 用户ID
         Integer userId = Integer.parseInt(bean.getLogUserId());
@@ -166,29 +168,28 @@ public class PayRepayAuthController extends BaseUserController {
 
             authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
             logger.info("缴费、还款二合一授权[异步回调]结束");
-            result.setMessage("缴费、还款二合一授权成功");
             result.setStatus(true);
             return JSONObject.toJSONString(result, true);
         }
-        // 成功
-        if (user != null && bean != null
-                && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE)))) {
-            try {
-                bean.setOrderId(bean.getLogOrderId());
-                // 更新签约状态和日志表
-                this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH);
-            } catch (Exception e) {
-                logger.info("缴费、还款二合一授权[异步回调]更新签约状态和日志表异常！",
-                        "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH,
-                        e);
-                logger.info("code：{}；message：{}", bean.getRetCode(), authService.getBankRetMsg(bean.getRetCode()));
+
+        if (user != null
+            && bean != null
+            && (BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE)))
+            ) {
+                try {
+                    bean.setOrderId(bean.getLogOrderId());
+                    // 更新授权状态和日志表
+                    this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH);
+                    logger.info("缴费、还款二合一授权成功");
+                } catch (Exception e) {
+                    logger.error("缴费、还款二合一授权[异步回调]更新签约状态和日志表异常,异常报文如下:{}", e);
+                    authService.updateUserAuthLog(bean.getLogOrderId(), "缴费、还款二合一授权[异步回调]更新授权状态和日志表异常");
+                }
+            }else{
+                logger.info("缴费、还款二合一授权失败,银行返回码:{},失败原因:{}", bean.getRetCode(), authService.getBankRetMsg(bean.getRetCode()));
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
             }
-        }else{
-            authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
-        }
-        logger.info("缴费、还款二合一授权[异步回调]结束", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH);
-        result.setMessage("缴费、还款二合一授权成功");
+        logger.info("缴费、还款二合一授权[异步回调]结束------------------------------");
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
     }
@@ -202,10 +203,10 @@ public class PayRepayAuthController extends BaseUserController {
     @PostMapping(PAY_REPAY_SEACH_AUTH)
     @ResponseBody
     public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
-        String logOrdId = vo.getLogOrdId();
-        logger.info("缴费、还款二合一授权失败原因查询[开始],订单号:[" + logOrdId + "].");
-        WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
-        logger.info("缴费、还款二合一授权失败原因查询[结束]");
+        String orderId = vo.getLogOrdId();
+        logger.info("缴费、还款二合一授权失败原因查询[开始],orderId:{}------------------------------", orderId);
+        WebResult<Object> result = authService.seachUserAuthErrorMessgae(orderId);
+        logger.info("缴费、还款二合一授权失败原因查询[结束]------------------------------");
         return result;
     }
 
