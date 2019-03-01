@@ -733,6 +733,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (StringUtils.isBlank(operationId)) {
 			response.setRtn("1");
 			response.setMessage("失败");
+			return response;
 		}
 		if (monthlyOperationReport != null) {
 			OperationMonthlyReport entity = new OperationMonthlyReport();
@@ -902,10 +903,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (operationId == null||operationId == "") {
 				response.setRtn("1");
 				response.setMessage("失败");
+				return response;
 			}
 			if (quarterOperationReport == null) {
 				response.setRtn("1");
 				response.setMessage("失败");
+				return  response;
 			}
 			//添加季度报告
 			OperationQuarterReport entity = new OperationQuarterReport();
@@ -1148,6 +1151,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (monthlyOperationReport == null) {
 			response.setRtn("1");
 			response.setMessage("失败");
+			return response;
 		}
 		if (operationReport.getId() != null && operationReport.getId() != "") {
 			monthlyOperationReport.setOperationReportId(operationReport.getId());
@@ -1328,6 +1332,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (quarterOperationReport == null) {
 			response.setRtn("1");
 			response.setMessage("失败");
+			return response;
 		}
 		if (cnName != null && cnName != "") {
 			quarterOperationReport.setCnName(cnName);
@@ -1545,6 +1550,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (StringUtils.isBlank(operationId)) {
 				response.setRtn("1");
 				response.setMessage("失败");
+				return  response;
 			}
 			if (halfYearOperationReport != null) {
 				//添加半年度报告
@@ -1699,6 +1705,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (StringUtils.isBlank(operationId)) {
 				response.setRtn("1");
 				response.setMessage("失败");
+				return  response;
 			}
 			if (yearOperationReport != null) {
 				//添加月度报告
@@ -1741,6 +1748,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (yearOperationReport == null) {
 			response.setRtn("1");
 			response.setMessage("失败");
+			return  response;
 		}
 		if (StringUtils.isNotBlank(cnName)) {
 			yearOperationReport.setCnName(cnName);
