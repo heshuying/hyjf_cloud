@@ -341,7 +341,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,5,2);
-                recoverCapital.subtract(creditAmount);
+                //recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
@@ -447,7 +447,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,6,2);
-                recoverCapital.subtract(creditAmount);
+                //recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
@@ -548,7 +548,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,5,2);
-                recoverCapital.subtract(creditAmount);
+               // recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
@@ -649,7 +649,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,6,2);
-                recoverCapital.subtract(creditAmount);
+               // recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
