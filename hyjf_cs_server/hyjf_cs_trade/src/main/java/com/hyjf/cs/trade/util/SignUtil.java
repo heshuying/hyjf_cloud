@@ -99,6 +99,10 @@ public class SignUtil {
             AemsUserWithdrawRequestBean bean = (AemsUserWithdrawRequestBean) paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl()
                     + bean.getBgRetUrl() + bean.getTimestamp();
+        }else if(("/aems/repay/repay").equals(methodName)){
+            //aems用户还款验签
+            AemsRepayRequestBean bean = (AemsRepayRequestBean)paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

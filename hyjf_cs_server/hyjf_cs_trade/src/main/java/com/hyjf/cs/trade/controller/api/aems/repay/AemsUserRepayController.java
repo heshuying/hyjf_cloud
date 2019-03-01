@@ -38,7 +38,7 @@ import java.util.Objects;
  */
 @RestController
 @Api(value = "aems还款接口", tags ="aems还款接口")
-@RequestMapping("/aems/repay")
+@RequestMapping("/hyjf-api/aems/repay")
 public class AemsUserRepayController extends BaseTradeController {
     
     @Autowired
