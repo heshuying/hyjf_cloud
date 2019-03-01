@@ -442,7 +442,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         try {
             Integer activityId = systemConfig.getActivity888Id();
             logger.info("注册送188元新手红包:"+activityId);
-            if (!checkActivityIfAvailable(activityId)) {
+            if (checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
                 webViewUserVO.setCouponSendCount(8);
             }

@@ -33,6 +33,8 @@ public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountServ
      */
     @Override
     public List<BankMerchantAccountListCustomize> selectRecordList(BankRedPacketAccountListRequest form, int offset, int limit) {
+        form.setLimitStart(offset);
+        form.setLimitEnd(limit);
         return bankMerchantAccountListCustomizeMapper.selectRecordList(form);
     }
 

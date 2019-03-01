@@ -177,13 +177,13 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
         }
 
         // 发送mq到生成互金合同要素信息
-        try {
-            params = new JSONObject();
-            params.put("borrowNid", borrowApicron.getBorrowNid());
-            commonProducer.messageSendDelay(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC, UUID.randomUUID().toString(), params), 2);
-        } catch (Exception e) {
-            logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
-        }
+//        try {
+//            params = new JSONObject();
+//            params.put("borrowNid", borrowApicron.getBorrowNid());
+//            commonProducer.messageSendDelay(new MessageContent(MQConstant.CONTRACT_ESSENCE_TOPIC, UUID.randomUUID().toString(), params), 2);
+//        } catch (Exception e) {
+//            logger.error("发送mq到生成互金合同要素信息失败,放款标的:" + borrowApicron.getBorrowNid());
+//        }
 
         try {
             // add 合规数据上报 埋点 liubin 20181122 start
