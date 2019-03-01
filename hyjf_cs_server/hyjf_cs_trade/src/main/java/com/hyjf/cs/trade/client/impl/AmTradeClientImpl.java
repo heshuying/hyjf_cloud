@@ -6296,7 +6296,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public BooleanResponse updateHjhPlanJoinOn() {
-        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOn";
+        String url = "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOn";
         BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
         if (response != null && Response.isSuccess(response)) {
             return response;
