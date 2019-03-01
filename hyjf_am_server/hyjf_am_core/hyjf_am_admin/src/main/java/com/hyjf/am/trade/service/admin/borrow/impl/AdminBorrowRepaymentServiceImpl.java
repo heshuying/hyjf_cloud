@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -43,10 +44,12 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         BorrowRepayExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
+        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayBean borrowRepayBean = new BorrowRepayBean();
             BorrowRepay borrowRepay = list.get(0);
             BeanUtils.copyProperties(borrowRepay, borrowRepayBean);
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(borrowRepayBean.getRepayTime()) * 1000L);
             int distanceDays = GetDate.daysBetween(nowDate, date);
