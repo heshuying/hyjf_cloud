@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.vo.trade.borrow;
 
+import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author PC-LIUSHOUYI
@@ -16,7 +18,7 @@ import java.util.Date;
 public class BorrowRepayBeanVO extends BorrowRepayVO implements Serializable {
 
     private static final long serialVersionUID = -3598731835082249723L;
-
+    private List<BorrowRecover> recoverList;
     private String repayTimeStr;
 
     private String borrowStatus;
@@ -45,5 +47,13 @@ public class BorrowRepayBeanVO extends BorrowRepayVO implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public List<BorrowRecover> getRecoverList() {
+        return recoverList;
+    }
+
+    public void setRecoverList(List<BorrowRecover> recoverList) {
+        this.recoverList = recoverList;
     }
 }
