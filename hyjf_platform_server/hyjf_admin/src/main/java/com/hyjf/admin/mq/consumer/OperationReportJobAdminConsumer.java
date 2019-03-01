@@ -47,6 +47,7 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         int lastMonth = bean.getLastMonth();
         Calendar cal = bean.getCalendar();
         cal.add(Calendar.MONTH, -1);
+        bean.setCalendar(cal);
         List<OperationReportJobVO> cityGroup = amAdminClient.getTenderCityGroupByList(getLastDay(cal));
         bean.setCityGroup(cityGroup);
         List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));
