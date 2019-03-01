@@ -561,6 +561,10 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		if (users.getIsSetPassword() == 0) {
 			throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
 		}
+
+		if (users.getStatus() == 1) {
+			throw new CheckException(MsgEnum.ERR_USER_INVALID);
+		}
 		if (!this.authService.checkPaymentAuthStatus(userId)) {
 			throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
 		}
