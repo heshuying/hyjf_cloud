@@ -327,15 +327,15 @@ public class FinmanChargeNewController extends BaseController {
                     if(!(manChargeTime+"个月").equals(manChargeTimeSear)){
                         return null;
                     }
-                    adminRequest.setManChargeTimeType("month");
+                    adminRequest.setManChargeTypeSear("month");
                 }
                 if("天".equals(manChargeTimeType)){
                     if(!(manChargeTime+"天").equals(manChargeTimeSear)){
                         return null;
                     }
-                    adminRequest.setManChargeTimeType("endday");
+                    adminRequest.setManChargeTypeSear("endday");
                 }
-                adminRequest.setManChargeTime(Integer.valueOf(manChargeTime));
+                adminRequest.setManChargeTimeSear(manChargeTime);
                 return adminRequest;
             }
             return null;
