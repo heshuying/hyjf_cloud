@@ -4,7 +4,6 @@
 package com.hyjf.am.vo.trade.borrow;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
