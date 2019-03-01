@@ -239,7 +239,7 @@ public class MsgPushHandler {
 	private List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePushMsg message) {
 		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
 		if (message == null || message.getMsgDestinationType() == null) {
-			logger.warn("MsgDestinationType is null, message send fail, id is :{}", message.getId());
+			logger.warn("MsgDestinationType is null, message send fail");
 			return null;
 		}
 

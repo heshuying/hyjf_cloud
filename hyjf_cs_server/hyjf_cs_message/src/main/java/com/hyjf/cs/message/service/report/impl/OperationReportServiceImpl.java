@@ -900,7 +900,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (StringUtils.isBlank(operationId)) {
 			//运营报告插入
 			operationId = insertOperationReport(operationReport, createTime, createUserId);
-			if (operationId == null||operationId == "") {
+			if (StringUtils.isNotBlank(operationId)) {
 				response.setRtn("1");
 				response.setMessage("失败");
 				return response;
@@ -915,10 +915,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			quarterOperationReport.setOperationReportId(operationId);
 			quarterOperationReport.setCreateTime(operationReport.getCreateTime());
 			quarterOperationReport.setCreateUserId(operationReport.getCreateUserId());
-			if (cnName != null && cnName != "") {
+			if (StringUtils.isNotBlank(cnName)) {
 				quarterOperationReport.setCnName(cnName);
 			}
-			if (enName != null && enName != "") {
+			if (StringUtils.isNotBlank(enName)) {
 				quarterOperationReport.setEnName(enName);
 			}
 			BeanUtils.copyProperties(quarterOperationReport,entity);
@@ -947,7 +947,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		//运营报告插入
 		String operationId = insertOperationReport(operationReport, createTime, createUserId);
 		String quarterOperationReportId = "";
-		if (operationId != null && operationId !="") {
+		if (StringUtils.isNotBlank(operationId)) {
 			response.setOperationId(operationId);
 			if (quarterOperationReport != null) {
 				OperationQuarterReport entity = new OperationQuarterReport();
@@ -972,7 +972,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				entity.setId(null);
 				operationQuarterReportMongDao.save(entity);
 				quarterOperationReportId = entity.getId();
-				if (quarterOperationReportId != null && quarterOperationReportId != "") {
+				if (StringUtils.isNotBlank(quarterOperationReportId)) {
 					response.setQuarterOperationReportId(quarterOperationReportId);
 				}
 			}
@@ -1156,10 +1156,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (operationReport.getId() != null && operationReport.getId() != "") {
 			monthlyOperationReport.setOperationReportId(operationReport.getId());
 		}
-		if (cnName != null && cnName != "") {
+		if (StringUtils.isNotBlank(cnName)) {
 			monthlyOperationReport.setCnName(cnName);
 		}
-		if (enName != null && enName != "") {
+		if (StringUtils.isNotBlank(enName)) {
 			monthlyOperationReport.setEnName(enName);
 		}
 		//根据运营报告id查询月度报告
@@ -1334,10 +1334,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.setMessage("失败");
 			return response;
 		}
-		if (cnName != null && cnName != "") {
+		if (StringUtils.isNotBlank(cnName)) {
 			quarterOperationReport.setCnName(cnName);
 		}
-		if (enName != null && enName != "") {
+		if (StringUtils.isNotBlank(enName)) {
 			quarterOperationReport.setEnName(enName);
 		}
 		Query query = new Query();
@@ -1398,10 +1398,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (StringUtils.isNotBlank(id)) {
 			quarterOperationReport.setOperationReportId(id);
 		}
-		if (cnName != null && cnName != "") {
+		if (StringUtils.isNotBlank(cnName)) {
 			quarterOperationReport.setCnName(cnName);
 		}
-		if (enName != null && enName != "") {
+		if (StringUtils.isNotBlank(enName)) {
 			quarterOperationReport.setEnName(enName);
 		}
 		//根据运营报告id查询月度报告
@@ -1634,10 +1634,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		halfYearOperationReport.setUpdateUserId(updateUserId);
 		String cnName = form.getOperationReport().getCnName();
 		String enName = form.getOperationReport().getEnName();
-		if (cnName != null && cnName != "") {
+		if (StringUtils.isNotBlank(cnName)) {
 			halfYearOperationReport.setCnName(cnName);
 		}
-		if (enName != null && enName != "") {
+		if (StringUtils.isNotBlank(enName)) {
 			halfYearOperationReport.setEnName(enName);
 		}
 		halfYearOperationReport.setOperationReportId(operationReportId);
