@@ -195,8 +195,10 @@ public class AdminBorrowRepaymentController extends BaseController {
         BorrowRepayResponse response = new BorrowRepayResponse();
         try{
             BorrowRepayBean customize = adminBorrowRepaymentService.getBorrowRepayInfo(borrowNid,borrowApr,borrowStyle);
+            logger.info("customize:" +JSONObject.toJSON(customize));
             if(customize!=null){
                 BorrowRepayBeanVO vo = CommonUtils.convertBean(customize,BorrowRepayBeanVO.class);
+                logger.info("vo:" +JSONObject.toJSON(vo));
                 response.setBorrowRepayBeanVO(vo);
             }
             return response;
@@ -215,8 +217,10 @@ public class AdminBorrowRepaymentController extends BaseController {
         BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
         try{
             BorrowRepayPlanBean customize = adminBorrowRepaymentService.getBorrowRepayPlanInfo(borrowNid,borrowApr,borrowStyle);
+            logger.info("customize:" +JSONObject.toJSON(customize));
             if(customize!=null){
                 BorrowRepayPlanBeanVO vo = CommonUtils.convertBean(customize,BorrowRepayPlanBeanVO.class);
+                logger.info("vo:" +JSONObject.toJSON(vo));
                 response.setBorrowRepayPlanBeanVO(vo);
             }
             return response;

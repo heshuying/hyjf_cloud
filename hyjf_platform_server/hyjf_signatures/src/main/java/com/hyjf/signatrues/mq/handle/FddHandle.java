@@ -1072,12 +1072,12 @@ public class FddHandle {
 	 */
 	public void planCreditGenerateContractApply(FddGenerateContractBean bean) {
 		logger.info("开始生成生成计划垫付债转协议---------------------承接订单号:" + bean.getOrdid());
-		try {
+		/*try {
 			//计划债转是在事务内提交，可能获取不到数据，需要暂时休眠1秒，待数据提交
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 		// bean.setTransType(3);
 		//垫付协议发大大Contract_id
 		//GetDate.getNowTime10()測試
@@ -1130,12 +1130,12 @@ public class FddHandle {
 	 */
 	public void planCreditGenerateContract(FddGenerateContractBean bean) {
 		logger.info("开始生成计划债转协议---------------------承接订单号:" + bean.getAssignNid());
-		try {
+		/*try {
 			//计划债转是在事务内提交，可能获取不到数据，需要暂时休眠1秒，待数据提交
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			logger.error("计划债转失败！");
-		}
+		}*/
 		Map<String, Object> resultMap = null;
 		List<HjhDebtCreditTenderVO> hjhCreditTenderList =
 				this.amTradeClient.selectHjhCreditTenderListByAssignOrderId(bean.getAssignNid());

@@ -84,6 +84,7 @@ public class OperationReportJobController extends BaseController {
     public OperationReportJobResponse accountByMonth(@RequestBody OperationReportJobRequest request) {
         OperationReportJobResponse response = new OperationReportJobResponse();
         BigDecimal totalAccount = operationReportJobService.getAccountByMonth(request.getBeginDate(),request.getEndDate());
+        logger.info("月交易金额：" + totalAccount + ",开始时间：" + request.getBeginDate() + ", 结束时间：" + request.getEndDate() );
         response.setTotalAccount(totalAccount);
         return response;
     }

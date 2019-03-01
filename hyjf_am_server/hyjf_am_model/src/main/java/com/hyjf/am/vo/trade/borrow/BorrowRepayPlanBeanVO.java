@@ -3,11 +3,10 @@
  */
 package com.hyjf.am.vo.trade.borrow;
 
-import com.hyjf.am.vo.BaseVO;
+import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
 
 /**
  * @author PC-LIUSHOUYI
@@ -16,6 +15,8 @@ import java.util.Date;
 public class BorrowRepayPlanBeanVO extends BorrowRepayPlanVO implements Serializable {
 
     private static final long serialVersionUID = -1229013393923143695L;
+    /** 用户还款详情 */
+    private List<BorrowRecoverPlanVO> recoverPlanList;
     private String repayTimeStr;
 
     private String borrowStatus;
@@ -44,5 +45,13 @@ public class BorrowRepayPlanBeanVO extends BorrowRepayPlanVO implements Serializ
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public List<BorrowRecoverPlanVO> getRecoverPlanList() {
+        return recoverPlanList;
+    }
+
+    public void setRecoverPlanList(List<BorrowRecoverPlanVO> recoverPlanList) {
+        this.recoverPlanList = recoverPlanList;
     }
 }
