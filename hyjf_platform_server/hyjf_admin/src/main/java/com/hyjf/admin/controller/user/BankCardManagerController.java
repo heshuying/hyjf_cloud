@@ -644,7 +644,7 @@ public class BankCardManagerController extends BaseController {
             @Override
             public String format(Object object) {
                 String operationType = (String) object;
-                if(operationType == "0"){
+                if(operationType.equalsIgnoreCase("0")){
                     operationType = ("绑定");
                 }else{
                     operationType = ("删除");
