@@ -84,12 +84,9 @@
     hbmal.department_name department_name,
     hbmal.account_id account_id,
     hbmal.type type,
-    hpn2.`name` type_str,
     hbmal.trans_type trans_type,
-    hpn1.`name` trans_type_str,
     hbmal.amount amount,
     hbmal.`status` status,
-    hpn3.`name` status_str,
     hbmal.bank_account_balance bank_account_balance,
     hbmal.bank_account_frost bank_account_frost,
     hbmal.remark remark
