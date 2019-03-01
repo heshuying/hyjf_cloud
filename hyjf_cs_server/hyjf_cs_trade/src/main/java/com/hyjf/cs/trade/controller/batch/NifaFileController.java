@@ -127,8 +127,6 @@ public class NifaFileController extends BaseController {
                             .concat(nifaReportLog.getUploadPath())
                             .concat(nifaReportLog.getUploadName())
                             .concat(".zip");
-                    requestURL.replace(":", "%3A");
-                    requestURL.replace("/", "%2F");
                 }
 
                 // 统计系统拼接请求地址
@@ -138,8 +136,6 @@ public class NifaFileController extends BaseController {
                             .concat(nifaReportLog.getUploadPath())
                             .concat(nifaReportLog.getUploadName())
                             .concat(".zip");
-                    requestURL.replace(":", "%3A");
-                    requestURL.replace("/", "%2F");
                 }
 
                 if (StringUtils.isBlank(requestURL)) {
