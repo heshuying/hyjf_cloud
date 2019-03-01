@@ -1114,6 +1114,9 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if (count > 0) {
             resultList = amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
             repayTransferListBean.setList(resultList);
+        }else {
+            // 查询列表为空时, 设置list 为空数组, 防止前端取到null 报错.
+            repayTransferListBean.setList(resultList);
         }
 
         webResult.setData(repayTransferListBean);

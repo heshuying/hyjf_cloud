@@ -101,13 +101,15 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
             errLog.setSendCount(1);
             errLog.setSendTime(GetDate.getNowTime10());
             errLog.setSendStatus(Integer.parseInt(bean.getReportStatus()));
-            if(bean != null){
+            /*if(bean != null){
                 errLog.setResultCode(retCode);
                 errLog.setResultMsg(retMess);
             }else{
                 errLog.setResultCode("");
                 errLog.setResultMsg("");
-            }
+            }*/
+            errLog.setResultCode(retCode);
+            errLog.setResultMsg(retMess);
             amConfigClient.insertCertErrorLog(errLog);
         }
         return bean;

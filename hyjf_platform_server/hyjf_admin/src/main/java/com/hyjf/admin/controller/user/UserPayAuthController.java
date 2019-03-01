@@ -153,7 +153,7 @@ public class UserPayAuthController extends BaseController {
                     userPayAuthService.insertUserAuthLog2(intUserId,retBean,authType);
                     return new AdminResult<>();
                 } else {
-                    String retCode = retBean != null ? retBean.getRetCode() : "";
+                    String retCode = retBean.getRetCode() != null ? retBean.getRetCode() : "";
                     String retMessage = this.userPayAuthService.getBankRetMsg(retCode);
                     String retMsg = retBean.getRetMsg();
                     if("请联系客服！".equals(retMessage) && org.apache.commons.lang3.StringUtils.isNotBlank(retMsg)){

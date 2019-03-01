@@ -121,7 +121,9 @@ public class AdminVersionConfigController extends BaseController {
     public AdminResult<AdminVersionResponse> updateVersionConfig(@RequestBody VersionRequestBean versionRequestBean)  {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         BeanUtils.copyProperties(versionRequestBean, adminRequest);
-        AdminVersionResponse adminResponse= null;
+        // modify by libin sonar start
+        AdminVersionResponse adminResponse=  new AdminVersionResponse();
+        // modify by libin sonar end
         // 画面验证
        String message= this.validatorFieldCheck(adminRequest);
         if (StringUtils.isNotBlank(message)) {

@@ -80,7 +80,9 @@ public class BorrowFlowController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult selectBorrowFlowInfo(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         HjhAssetBorrowTypeVO record = new HjhAssetBorrowTypeVO();
-        AdminBorrowFlowResponse resList= null;
+        // modify by libin sonar start
+        AdminBorrowFlowResponse resList=  new AdminBorrowFlowResponse();
+        // modify by libin sonar end
         if(adminRequest.getId() != null){
             resList=borrowFlowService.selectBorrowFlowInfo(adminRequest);
             if(Response.isSuccess(resList)){

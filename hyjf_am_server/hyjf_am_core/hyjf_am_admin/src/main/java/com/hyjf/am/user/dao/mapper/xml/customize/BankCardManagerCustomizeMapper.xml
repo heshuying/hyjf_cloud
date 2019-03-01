@@ -111,7 +111,7 @@
         hbc.card_no AS account,
         hbc.bank AS bank,
         hbc.mobile AS bank_mobile,
-        date_format(hbc.create_time,'%Y-%c-%d %h:%i:%s') AS add_time
+        date_format(hbc.create_time,'%Y-%c-%d %H:%i:%s') AS add_time
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id

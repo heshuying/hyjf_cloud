@@ -55,19 +55,23 @@ public class EvaluationMoneyController extends BaseController {
 		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
 	}
 
+	@SuppressWarnings("unused")
 	@ApiOperation(value = "修改画面迁移", notes = "修改画面迁移")
 	@PostMapping("/infoAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult info(@RequestBody EvaluationMoneyRequest requestBean) {
 		logger.info(EvaluationMoneyController.class.toString(), "infoAction");
 		EvaluationMoneyResponse response = new EvaluationMoneyResponse();
+		// modify by libin sonar start 拿到前面
+		if (response == null) {
+			return new AdminResult<>(FAIL, FAIL_DESC);
+		}
+		// modify by libin sonar end
 		if (requestBean.getId() != null) {
 			EvaluationMoneyConfigVO evaluationMoneyConfigVO = this.service.getEvaluationMoneyById(requestBean.getId());
 			response.setForm(evaluationMoneyConfigVO);
 		}
-		if (response == null) {
-			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}

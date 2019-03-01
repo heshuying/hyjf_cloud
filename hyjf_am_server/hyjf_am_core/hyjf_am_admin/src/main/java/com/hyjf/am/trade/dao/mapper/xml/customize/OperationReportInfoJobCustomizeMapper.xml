@@ -42,6 +42,7 @@
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
         unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
+        AND a.order_status >= 3
         # 加入时间
         UNION ALL
         # 债转

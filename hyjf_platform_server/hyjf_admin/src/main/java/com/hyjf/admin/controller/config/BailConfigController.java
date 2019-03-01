@@ -180,10 +180,15 @@ public class BailConfigController extends BaseController {
         } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        
+        // modify by libin sonar start 上面已经判断了，并且返回失败了，不需要再来一次
         // 更新info表失败
-        if (!isInset) {
+/*        if (!isInset) {
             return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        }*/
+        // modify by libin sonar end
+        
+        
         // 日推标上限记录到redis
 //        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
         // 月推标上限记录到redis
@@ -227,10 +232,15 @@ public class BailConfigController extends BaseController {
         } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        
+        // modify by libin sonar start 上面已经判断，下面不用再来一次
         // 更新info表失败
-        if (!isInset) {
+/*        if (!isInset) {
             return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+        }*/
+        // modify by libin sonar end
+        
+        
         // 日推标上限记录到redis
 //        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
         // 月推标上限记录到redis

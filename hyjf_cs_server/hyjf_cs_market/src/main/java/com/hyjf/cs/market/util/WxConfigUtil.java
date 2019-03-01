@@ -75,6 +75,9 @@ public class WxConfigUtil {
             throw new ServiceException("微信接口调用失败, accessTocken is null...");
         }
         Token accessTicket = getTicket(accessTocken.getToken(), System.currentTimeMillis() / 1000);
+        if ( accessTicket == null || StringUtils.isBlank(accessTicket.getTicket())){
+            throw new ServiceException("微信接口调用失败, accessTicket is null...");
+        }
         String jsapi_ticket = accessTicket.getTicket();
         signature = signature(jsapi_ticket, cacheAddTime, noncestr, url);
         logger.info("-=-=-=-=-=-=-=-=url:" + url);

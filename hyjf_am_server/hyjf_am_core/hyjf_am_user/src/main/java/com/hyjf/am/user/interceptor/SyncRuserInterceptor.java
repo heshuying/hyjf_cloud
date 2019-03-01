@@ -4,6 +4,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserExample;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -82,6 +86,31 @@ public class SyncRuserInterceptor implements Interceptor {
                 if (paramObj instanceof Map) {
                     Object record = ((Map) paramObj).get("record");
                     if (record != null) {
+                        try{
+                            User user = (User) (record);
+                            if(user.getUserId() == null){
+                                Object example = ((Map) paramObj).get("example");
+                                if(example != null) {
+                                    logger.info("【am-user/{}/ht_user_info】user_id为null,取example中的user_id", methodName);
+                                    UserExample userExample = (UserExample) example;
+                                    for (UserExample.Criterion criterion : userExample.getOredCriteria().get(0).getAllCriteria()) {
+                                        if ("user_id=".equals(criterion.getCondition())) {
+                                            if (criterion.getValue() != null) {
+                                                user.setUserId((int) criterion.getValue());
+                                                sendToMq(user, methodName, "ht_user_info");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    logger.error("【am-user/{}/ht_user_info】example中user_id为null", methodName);
+                                }else{
+                                    logger.error("【am-user/{}/ht_user_info】user_id为null", methodName);
+                                }
+                                return result;
+                            }
+                        } catch (Exception e) {
+                            logger.error("【am-user/{}/ht_user_info】发生异常！", methodName, e);
+                        }
                         sendToMq(record, methodName, "ht_user_info");
                     } else {
                         logger.info("【am-user/{}/ht_user_info】record为null", methodName);
@@ -106,6 +135,31 @@ public class SyncRuserInterceptor implements Interceptor {
                 if (paramObj instanceof Map) {
                     Object record = ((Map) paramObj).get("record");
                     if (record != null) {
+                        try {
+                            SpreadsUser spreadsUser = (SpreadsUser) (record);
+                            if (spreadsUser.getUserId() == null) {
+                                Object example = ((Map) paramObj).get("example");
+                                if (example != null) {
+                                    logger.info("【am-user/{}/ht_spreads_user】record中user_id为null,取example中的user_id", methodName);
+                                    SpreadsUserExample spreadsUserExample = (SpreadsUserExample) example;
+                                    for (SpreadsUserExample.Criterion criterion : spreadsUserExample.getOredCriteria().get(0).getAllCriteria()) {
+                                        if ("user_id=".equals(criterion.getCondition())) {
+                                            if (criterion.getValue() != null) {
+                                                spreadsUser.setUserId((int) criterion.getValue());
+                                                sendToMq(spreadsUser, methodName, "ht_spreads_user");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    logger.error("【am-user/{}/ht_spreads_user】example中user_id为null", methodName);
+                                } else {
+                                    logger.error("【am-user/{}/ht_spreads_user】user_id为null", methodName);
+                                }
+                                return result;
+                            }
+                        } catch (Exception e) {
+                            logger.error("【am-user/{}/ht_spreads_user】发生异常！", methodName, e);
+                        }
                         sendToMq(record, methodName, "ht_spreads_user");
                     } else {
                         logger.info("【am-user/{}/ht_spreads_user】record为null", methodName);

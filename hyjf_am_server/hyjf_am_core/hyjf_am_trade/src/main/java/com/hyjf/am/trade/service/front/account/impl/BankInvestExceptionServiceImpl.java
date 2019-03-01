@@ -50,7 +50,7 @@ public class BankInvestExceptionServiceImpl extends BaseServiceImpl implements B
 	 * @param list
 	 */
 	@Override
-	public void updateAuthCode(List<BatchBorrowTenderCustomize> list) {
+	public void insertAuthCode(List<BatchBorrowTenderCustomize> list) {
 		if (CollectionUtils.isNotEmpty(list)){
 			logger.info("开始处理掉单的出借,处理件数:[" + list.size() + "].");
 			for (BatchBorrowTenderCustomize batchBorrowTenderCustomize : list) {
