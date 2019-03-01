@@ -23,6 +23,12 @@ public class PropertiesConfig {
 
 	public static JPushProperties jPushProperties;
 
+
+	/**
+	 * 生产环境全部通过，返回true, 测试环境只有在白名单内通过，其他都不通过
+	 * @param mobile
+	 * @return
+	 */
 	public static boolean isPassSend(String mobile) {
 		if (hyjfEnvProperties == null) {
 			return false;
@@ -31,14 +37,14 @@ public class PropertiesConfig {
 			return false;
 		}
 
-		final Boolean envTest = hyjfEnvProperties.isTest();
+		final boolean envTest = hyjfEnvProperties.isTest();
 		final String whiteList = hyjfEnvProperties.getWhiteList();
 
-		if (envTest == null || StringUtils.isBlank(whiteList)) {
-			return false;
-		}
+		if (envTest) {
+			if (StringUtils.isBlank(whiteList)) {
+				return false;
+			}
 
-		if (envTest.booleanValue()) {
 			if (!whiteList.contains(mobile)) {
 				return false;
 			}
