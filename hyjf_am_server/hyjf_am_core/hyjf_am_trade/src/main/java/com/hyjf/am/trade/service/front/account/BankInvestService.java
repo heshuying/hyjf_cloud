@@ -17,5 +17,5 @@ public interface BankInvestService {
 
     List<BatchBorrowTenderCustomize> queryAuthCodeBorrowTenderList();
 
-    void updateAuthCode(List<BatchBorrowTenderCustomize> list);
+    void insertAuthCode(List<BatchBorrowTenderCustomize> list);
 }

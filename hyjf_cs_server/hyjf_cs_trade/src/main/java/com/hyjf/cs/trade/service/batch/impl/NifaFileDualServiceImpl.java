@@ -799,8 +799,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             file.mkdir();
         }
 
-        savePath.replace(":", "%3A");
-        savePath.replace("/", "%2F");
+
 
         String requestURL = DOWNLOAD_URL.concat("?systemid=1&stype=").concat(feedBackType)
                 // 下载文件的地址

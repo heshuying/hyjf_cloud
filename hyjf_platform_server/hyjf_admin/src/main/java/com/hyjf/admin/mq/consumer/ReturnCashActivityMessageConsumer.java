@@ -80,7 +80,7 @@ public class ReturnCashActivityMessageConsumer implements RocketMQListener<Messa
         StringResponse response = amAdminClient.checkActivityIfAvailable(Integer.valueOf(ActivityDateUtil.RETURNCASH_ACTIVITY_ID));
         //判断活动是否开始
         if (response==null||!"000".equals(response.getResultStr())) {
-            _log.info("【纳觅返现活动】 活动有效期校验不对 orderId: " + orderId + "resultActivity:"+response.getResultStr());
+            _log.info("【纳觅返现活动】 活动有效期校验不对 orderId: " + orderId);
             return ;
         }
         String redisKey = RedisConstants.RETURN_CASH_ACTIVITY + orderId;

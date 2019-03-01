@@ -202,12 +202,12 @@ public class NewAgreementController extends BaseTradeController{
                         //ftp文件路劲
                         String basePathImage = systemConfig.getBasePathImage();
                         if(!basePathImage.endsWith("/")){
-                            basePathImage.concat("/");
+                            basePathImage = basePathImage.concat("/");
                         }
                         //ftp映射路劲
                         String basePathurl = systemConfig.getBasePathurl();
                         if (!basePathurl.endsWith("/")){
-                            basePathurl.concat("/");
+                           basePathurl = basePathurl.concat("/");
                         }
 
                         String url = basePathurl+basePathImage;
@@ -308,13 +308,13 @@ public class NewAgreementController extends BaseTradeController{
                         	/*原String basePathImage = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_IMG);*/
                         	String basePathImage = systemConfig.getBasePathImage();
                         	if (!basePathImage.endsWith("/")){
-                                basePathImage.concat("/");
+                                basePathImage = basePathImage.concat("/");
                             }
                         	//ftp映射路劲
                             /*原String basePathurl = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_URL);*/
                         	String basePathurl = systemConfig.getBasePathurl();
                         	if (!basePathurl.endsWith("/")){
-                                basePathurl.concat("/");
+                                basePathurl = basePathurl.concat("/");
                             }
 
                             String url = basePathurl+basePathImage;
@@ -473,12 +473,12 @@ public class NewAgreementController extends BaseTradeController{
                             /*原 String basePathImage = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_IMG);*/                          // ftp文件路劲
                             String basePathImage = systemConfig.getBasePathImage();
                             if (!basePathImage.endsWith("/")){
-                                basePathImage.concat("/");
+                                basePathImage = basePathImage.concat("/");
                             }
                             /*原 String basePathurl = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_URL);*/                          //ftp映射路劲
                             String basePathurl = systemConfig.getBasePathurl();
                             if (!basePathurl.endsWith("/")){
-                                basePathurl.concat("/");
+                                basePathurl = basePathurl.concat("/");
                             }
 
 
