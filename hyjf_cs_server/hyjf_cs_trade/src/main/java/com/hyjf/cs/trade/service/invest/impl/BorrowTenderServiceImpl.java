@@ -2367,7 +2367,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
                 String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
                 if (StringUtils.isNotBlank(balanceLast)) {
-                    logger.info("~~~~可投剩余金额为" + balanceLast + "元！抛出异常");
                     logger.info("PC用户:" + userId +"   borrowNid:"+borrowNid+ "***redis剩余金额：" + balanceLast);
                     BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
                     Transaction transaction = jedis.multi();
@@ -2378,7 +2377,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     } else {
                         String ret = (String) result.get(0);
                         if (ret != null && ret.equals("OK")) {
-                            logger.info("~~~~redis恢复后金额" + recoverAccount + "元！抛出异常");
                             logger.info("用户:" + userId + "*******from redis恢复redis：" + account);
                             return true;
                         } else {
@@ -2588,14 +2586,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                             redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
                             throw new CheckException(redisMsgCode);
                         } else {
-                            logger.info("~~~~可投剩余金额为" + accountRedisWait + "元！抛出异常");
-                            logger.info("~~~~投资金额金额为" + accountDecimal + "元！抛出异常");
-                            logger.info("~~~~可投剩余金额为" + accountRedisWait + "元！抛出异常");
-                            logger.info("~~~~new BigDecimal(accountRedisWait).compareTo(accountDecimal)为" + new BigDecimal(accountRedisWait).compareTo(accountDecimal) + "！抛出异常");
                             if (new BigDecimal(accountRedisWait).compareTo(accountDecimal) < 0) {
                                 // 可投剩余金额为" + accountRedisWait + "元！"
-                                logger.info("~~~~可投剩余金额为" + accountRedisWait + "元！抛出异常");
-                                logger.info("~~~~投资金额金额为" + accountDecimal + "元！抛出异常");
                                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_LESS);
                             } else {
                                 Transaction transaction = jedis.multi();
