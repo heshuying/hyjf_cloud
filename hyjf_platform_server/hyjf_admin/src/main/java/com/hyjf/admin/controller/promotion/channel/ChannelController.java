@@ -89,8 +89,9 @@ public class ChannelController extends BaseController {
             String url = "";
             if (record != null) {
                 url = getUrl(record);
+                record.setUrl(url);
             }
-            record.setUrl(url);
+
             adminResult.setUrl(url);
             adminResult.setData(record);
         }else{

@@ -117,7 +117,7 @@ public class AppProjectListController extends BaseTradeController {
     @ApiOperation(value = "债转列表", notes = "债转列表")
     @PostMapping(value = "/projectlist/creditList", produces = "application/json; charset=utf-8")
     public Object getCredittList(@ModelAttribute @Valid ProjectListRequest request) {
-        JSONObject result = null;
+        JSONObject result = new JSONObject();
         try {
             result = appProjectListService.searchAppCreditList(request);
         } catch (Exception e) {

@@ -924,8 +924,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * 插入AuthCode
 	 */
 	@Override
-	public void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
-		String url = "http://AM-TRADE/am-trade/bankException/updateAuthCode";
+	public void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
+		String url = "http://AM-TRADE/am-trade/bankException/insertAuthCode";
 		BatchBorrowTenderCustomizeRequest request = new BatchBorrowTenderCustomizeRequest();
 		request.setBatchBorrowTenderCustomizeList(list);
 		restTemplate.postForEntity(url,request,Boolean.class).getBody();
