@@ -122,6 +122,8 @@ public class AccessFilter extends ZuulFilter {
 			// 不对其进行路由
 			this.buildErrorRequestContext(ctx, 502, "illegal visit!");
 		}
+
+		logger.debug("{} request dispatch success....", originalRequestPath);
 		return null;
 	}
 
