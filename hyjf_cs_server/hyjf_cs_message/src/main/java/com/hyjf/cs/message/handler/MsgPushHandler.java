@@ -239,7 +239,7 @@ public class MsgPushHandler {
 	private List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePushMsg message) {
 		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
 		if (message == null || message.getMsgDestinationType() == null) {
-			logger.warn("MsgDestinationType is null, message send fail, id is :{}", message.getId());
+			logger.warn("MsgDestinationType is null, message send fail");
 			return null;
 		}
 
@@ -347,9 +347,8 @@ public class MsgPushHandler {
 			if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 				// 广播模式，测试环境不推送
 				logger.info("env.test: {}", PropertiesConfig.hyjfEnvProperties.isTest());
-				// if(PropertiesConfig.hyjfEnvProperties.isTest()){ todo 上线放开
-				if (true) {
-					logger.warn("广播模式下测试环境不推送.....");
+				if(PropertiesConfig.hyjfEnvProperties.isTest()){
+					logger.warn("广播模式下测试环境不推送，请勿再试.....");
 					return;
 				}
 

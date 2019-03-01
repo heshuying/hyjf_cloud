@@ -68,9 +68,9 @@
         ELSE IF(hydu.evaluation_expired_time <![CDATA[<=]]> NOW()=0,"已测评","已过期") END evaluation_status,
         huer.eval_type as evaluation_type,
         huer.score_count evaluation_score,
-        date_format(huer.create_time, '%Y-%c-%d %h:%i:%s') createtime,
-        date_format(huer.lasttime, '%Y-%c-%d %h:%i:%s') lasttime,
-        date_format(hydu.evaluation_expired_time, '%Y-%c-%d %h:%i:%s') as evalationTime
+        date_format(huer.create_time, '%Y-%c-%d %H:%i:%s') createtime,
+        date_format(huer.lasttime, '%Y-%c-%d %H:%i:%s') lasttime,
+        date_format(hydu.evaluation_expired_time, '%Y-%c-%d %H:%i:%s') as evalationTime
         FROM
         ht_user hydu
         LEFT JOIN ht_user_info hydui ON hydu.user_id = hydui.user_id

@@ -49,7 +49,7 @@ public class PushMoneyServiceImpl implements PushMoneyService {
 	public void updatePushMoney(PushMoneyRequest request) {
 		PushMoney pushMoney = new PushMoney();
 		BeanUtils.copyProperties(request, pushMoney);
-		pushMoneyMapper.updateByPrimaryKey(pushMoney);
+		pushMoneyMapper.updateByPrimaryKeySelective(pushMoney);
 	}
 
     @Override

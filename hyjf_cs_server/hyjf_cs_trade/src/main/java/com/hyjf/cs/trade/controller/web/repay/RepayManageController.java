@@ -238,14 +238,77 @@ public class RepayManageController extends BaseTradeController {
     public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody WebUserRepayTransferRequest transferRequest){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
+        logger.info("用户待还标的-债转详情. userId=" + userId + ";BorrowNid=" + transferRequest.getBorrowNid());
 
-        resultMap.put("userId", userId);
+        // 根据用户ID 查询用户信息
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        if (userVO == null){
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc("无法获取到用户信息");
+            result.setData(Collections.emptyMap());
+            return result;
+        }
 
-        resultMap.put("verificationFlag", transferRequest.getBorrowNid());
-        resultMap.put("borrowInfo", transferRequest.getBorrowNid());
-        resultMap.put("fddStatus", "1");
-        result.setData(resultMap);
-        logger.info("user_repay_detail:" + result.toString());
+        resultMap.put("userId", userVO.getUserId());
+
+        /** 当前用户已登录并且标的NID不为空 */
+        String verificationFlag = null;
+        if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
+            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
+
+            // 单纯的作为验证标识.
+            if (borrowInfo.getPlanNid() != null) {
+                verificationFlag = borrowInfo.getPlanNid();
+            } else {
+                verificationFlag = null;
+            }
+            //居间协议
+            Integer fddStatus = 0;
+            List<TenderAgreementVO> tenderAgreementsNid = null;
+            tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
+            if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
+                TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                fddStatus = tenderAgreement.getStatus();
+                //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                if (fddStatus.equals(3)) {
+                    fddStatus = 1;
+                } else {
+                    //隐藏下载按钮
+                    fddStatus = 2;
+                }
+            } else {
+            /**
+             * 1.2018年3月28号以后出借（放款时间/承接时间为准）生成的协议(法大大签章协议）如果协议状态不是"下载成功"时 点击下载按钮提示“协议生成中”。
+             * 2.2018年3月28号以前出借（放款时间/承接时间为准）生成的协议(CFCA协议）点击下载CFCA协议。
+             * 3.智投中承接债转，如果债转协议中有2018-3-28之前的，2018-3-28之前承接的下载CFCA债转协议，2018-3-28之后承接的下载法大大债转协议。
+             */
+                BorrowRecoverVO borrowRecoverVO = repayManageService.selectBorrowRecoverByNid(transferRequest.getBorrowNid());
+                int addTime = ADD_TIME;
+                if(borrowRecoverVO != null){
+                    addTime = (borrowRecoverVO.getCreateTime() == null? 0 : GetDate.getTime10(borrowRecoverVO.getCreateTime()));
+                }
+                if (addTime<ADD_TIME328) {
+                    //下载老版本协议
+                    fddStatus = 1;
+                }else{
+                    //隐藏下载按钮
+                    fddStatus = 0;
+                }
+            }
+
+            // 计算到账金额
+            if (borrowInfo.getSucSmount() != null) {
+                BigDecimal oldYesAccount = borrowInfo.getSucSmount();
+                borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
+            } else {
+                borrowInfo.setSucSmount(new BigDecimal(0));
+            }
+            resultMap.put("verificationFlag", verificationFlag);
+            resultMap.put("borrowInfo", borrowInfo);
+            resultMap.put("fddStatus", fddStatus);
+            result.setData(resultMap);
+        }
+
         return result;
     }
 

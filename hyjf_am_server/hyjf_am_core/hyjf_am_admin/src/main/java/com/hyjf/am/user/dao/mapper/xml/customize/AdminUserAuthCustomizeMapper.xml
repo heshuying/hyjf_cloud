@@ -84,11 +84,11 @@
 
       <if test="investEndTimeStart != null and investEndTimeStart != '' ">
         <!-- 优化sql(字段类型转换) -->
-        AND hydua.auto_bid_end_time >= FROM_UNIXTIME(UNIX_TIMESTAMP(CONCAT(#{invesEndTimeStart})), '%Y%m%d')
+        AND hydua.auto_bid_end_time >= #{invesEndTimeStart}
       </if>
       <if test="investEndTimeEnd != null and investEndTimeEnd != ''">
         <!-- 优化sql(字段类型转换) -->
-        AND hydua.auto_bid_end_time <![CDATA[<=]]> FROM_UNIXTIME(UNIX_TIMESTAMP(CONCAT(#{invesEndTimeEnd},' 23:59:59')), '%Y%m%d')
+        AND hydua.auto_bid_end_time <![CDATA[<=]]> #{invesEndTimeEnd}
       </if>
     </where>
   </sql>

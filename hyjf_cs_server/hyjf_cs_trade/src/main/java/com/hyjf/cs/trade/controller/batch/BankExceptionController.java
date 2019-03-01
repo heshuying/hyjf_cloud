@@ -85,11 +85,10 @@ public class BankExceptionController {
 	 */
 	@ApiOperation(value = "出借异步掉单异常处理", notes = "出借异步掉单异常处理")
 	@GetMapping(value = "/investExceptionHandle")
-	public String investExceptionHandle() {
+	public void investExceptionHandle() {
 		logger.info("出借异步掉单异常处理start...");
-		batchBankInvestService.handle();
+		batchBankInvestService.insertAuthCode();
 		logger.info("出借异步掉单异常处理end...");
-		return "SUCCESS";
 	}
 	
 	

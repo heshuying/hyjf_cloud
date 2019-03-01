@@ -53,11 +53,13 @@ public class MessagePushPlatStaticsController extends BaseController {
     @GetMapping("/get_tag_list")
     public AdminResult getMsgTagList() {
         MessagePushTagResponse response = new MessagePushTagResponse();
+        // modify by libin sonar start 修改判空逻辑
         List<MessagePushTagVO> allPushTagList = messagePushHistoryService.getAllPushTagList();
-        response.setResultList(allPushTagList);
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+        if(allPushTagList == null){
+        	 return new AdminResult<>(FAIL, FAIL_DESC);
         }
+        response.setResultList(allPushTagList);
+        // modify by libin sonar end
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }

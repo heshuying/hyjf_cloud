@@ -1,5 +1,19 @@
 package com.hyjf.am.user.controller.front.user;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
@@ -17,24 +31,9 @@ import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author xiasq
@@ -311,21 +310,11 @@ public class UserController extends BaseController {
         return response;
     }
 
-    @RequestMapping("/updateLoginUser/{userId}/{ip}")
-    public void updateLoginUser(@PathVariable int userId, @PathVariable String ip) {
-        /**
-         * ip version等作为请求一部分的时候，用base64解码
-         */
-        String args = "";
-        try {
-            args = new String(Base64.decodeBase64(ip.getBytes()), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage(), e);
-            throw new ReturnMessageException(Response.FAIL_MSG);
-        }
-
-        logger.info("updateLoginUser run...userId is :{}, ip is :{}", userId, args);
-        userService.updateLoginUser(userId, args);
+    @RequestMapping("/updateLoginUser")
+    public BooleanResponse updateLoginUser(@RequestBody LoginUserRequest request) {
+        logger.info("updateLoginUser start...request :{}", request);
+        userService.updateLoginUser(request.getUserId(), request.getIp());
+        return new BooleanResponse(Boolean.TRUE);
     }
 
     @RequestMapping("/getHjhUserAuthByUserId/{userId}")

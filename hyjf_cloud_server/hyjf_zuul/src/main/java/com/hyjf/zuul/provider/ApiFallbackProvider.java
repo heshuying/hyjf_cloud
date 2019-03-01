@@ -37,7 +37,7 @@ public class ApiFallbackProvider implements FallbackProvider {
 	 */
 	@Override
 	public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
-		logger.warn(String.format("route:%s,exceptionType:%s,message:%s", route, cause.getClass().getName(), cause.getMessage()));
+		logger.warn(String.format("route:%s,exceptionType:%s,message:%s", route, cause.getClass().getName(), cause.getMessage()), cause);
         String message = "";
         if (cause instanceof HystrixTimeoutException) {
             message = "Timeout";
