@@ -86,15 +86,9 @@ public class PlanRepayController extends BaseController {
 
         allMap.put("orderStatusList", orderStatusList);
 
-        if (orderStatusList != null){
-            jsonObject.put("status", BaseResult.SUCCESS);
-            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
-            jsonObject.put("data", allMap);
-        }else {
-            jsonObject.put("status", Response.FAIL);
-            jsonObject.put("statusDesc", Response.FAIL_MSG);
-            jsonObject.put("data", "");
-        }
+        jsonObject.put("status", BaseResult.SUCCESS);
+        jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
+        jsonObject.put("data", allMap);
 
         return jsonObject;
     }
