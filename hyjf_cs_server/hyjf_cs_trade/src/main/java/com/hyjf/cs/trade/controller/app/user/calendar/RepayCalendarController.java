@@ -36,7 +36,7 @@ public class RepayCalendarController extends BaseTradeController {
 
     @ResponseBody
     @ApiOperation(value = "回款日历", httpMethod = "POST", notes = "回款日历")
-    @PostMapping(value = CALENDAR)
+    @PostMapping(value = REQUEST)
     public JSONObject getRepayCalendar(@RequestParam(required = false) String year,
                                        @RequestParam(required = false) String month,
                                        @RequestHeader(value = "userId") Integer userId,

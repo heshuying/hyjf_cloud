@@ -317,9 +317,9 @@ public class FinmanChargeNewController extends BaseController {
     }
 
     public  FinmanChargeNewRequest setManChargeTimeRequest(FinmanChargeNewRequest adminRequest){
-        String manChargeTimeSear = adminRequest.getManChargeTimeSear().trim();
+        String manChargeTimeSear = adminRequest.getManChargeTimeSear();
         if(org.apache.commons.lang3.StringUtils.isNotBlank(manChargeTimeSear)){
-            manChargeTimeSear = manChargeTimeSear.replaceAll(" ","");
+            manChargeTimeSear = manChargeTimeSear.trim().replaceAll(" ","");
             String manChargeTime = manChargeTimeSear.substring(0,1).matches("^[1-9]\\d*$")?manChargeTimeSear.substring(0,1):null;
             String manChargeTimeType = manChargeTimeSear.substring(manChargeTimeSear.length()-1);
             if(org.apache.commons.lang3.StringUtils.isNotBlank(manChargeTime)&& org.apache.commons.lang3.StringUtils.isNotBlank(manChargeTimeType)&&("月".equals(manChargeTimeType)||"天".equals(manChargeTimeType))){
@@ -327,15 +327,15 @@ public class FinmanChargeNewController extends BaseController {
                     if(!(manChargeTime+"个月").equals(manChargeTimeSear)){
                         return null;
                     }
-                    adminRequest.setManChargeTimeType("month");
+                    adminRequest.setManChargeTypeSear("month");
                 }
                 if("天".equals(manChargeTimeType)){
                     if(!(manChargeTime+"天").equals(manChargeTimeSear)){
                         return null;
                     }
-                    adminRequest.setManChargeTimeType("endday");
+                    adminRequest.setManChargeTypeSear("endday");
                 }
-                adminRequest.setManChargeTime(Integer.valueOf(manChargeTime));
+                adminRequest.setManChargeTimeSear(manChargeTime);
                 return adminRequest;
             }
             return null;
