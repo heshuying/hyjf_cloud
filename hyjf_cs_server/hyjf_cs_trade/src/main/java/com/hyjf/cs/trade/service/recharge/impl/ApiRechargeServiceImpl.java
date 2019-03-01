@@ -335,7 +335,8 @@ public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiR
                 resultBean.setOrderId(logOrderId);
                 return resultBean;
             } else {
-                logger.info("短信充值失败,手机号:[" + mobile + "],用户ID:[" + userId + "],冲值金额:[" + bankCallBean.getTxAmount() + "],失败原因:[" + msg.get("data") + "].");
+                String message = (msg != null && msg.containsKey("data"))?msg.getString("data"):"amTrade返回的结果为 null -> [" + (msg == null) + "],如果结果不为null，就是未返回key值为data的数据";
+                logger.info("短信充值失败,手机号:[" + mobile + "],用户ID:[" + userId + "],冲值金额:[" + bankCallBean.getTxAmount() + "],失败原因:[" + message + "].");
                 // 充值失败
                 resultBean.setStatus(BaseResult.FAIL);
                 resultBean.setStatusDesc("充值失败");

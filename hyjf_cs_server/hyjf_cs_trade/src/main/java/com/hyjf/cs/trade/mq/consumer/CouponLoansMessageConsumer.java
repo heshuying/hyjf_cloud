@@ -48,11 +48,6 @@ public class CouponLoansMessageConsumer implements RocketMQListener<MessageExt>,
         logger.info("====CouponLoansMessageConsumer start=====");
     }
 
-    public static void main(String[] args) {
-        ArrayList a  =  null;
-        boolean empty = a.isEmpty();
-        System.out.println(empty);
-    }
 
     @Override
     public void onMessage(MessageExt paramBean) {

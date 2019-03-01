@@ -23,6 +23,7 @@ import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -289,10 +290,13 @@ public class MessagePushMessageController extends BaseController {
     @ApiOperation(value = "检查是否是url", notes = "检查是否是url")
     @RequestMapping(value = "/checkUrlAction", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
-    public AdminResult checkUrlAction(HttpServletRequest request) {
+    public AdminResult checkUrlAction(@RequestBody MessagePushMsgRequest templateRequest, HttpServletRequest request) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         // 检查着名称唯一性
-        Boolean isUrl = true;
+        Boolean isUrl = false;
+        if (StringUtils.isNotBlank(templateRequest.getMsgActionUrl())) {
+            isUrl = Validator.isUrl2(templateRequest.getMsgActionUrl());
+        }
         if (!isUrl) {
             response.setRtn(Response.FAIL);
             response.setMessage("请输入正确的http地址（全路径）!");
