@@ -1796,12 +1796,34 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		// ames用户还款通知
         try {
-            aemsRepayNotify(periodNow, borrowNid, borrowRepay, recoverFee, recoverCapitalWait, recoverInterestWait, lateInterest, chargeInterest, repayAccount);
+			logger.info("-----------资产是aems推送的，borrowNid为：" + borrowNid);
+			//判断是否是 aems推送的资产
+			if(aemsAssetsFlag(borrowNid)){
+				logger.info("-----------调用aems用户还款开始---------------------------------------------" );
+				// ames用户还款通知
+				aemsRepayNotify(periodNow, borrowNid, borrowRepay, recoverFee, recoverCapitalWait, recoverInterestWait, lateInterest, chargeInterest, repayAccount,repayOrderId);
+				logger.info("-----------调用aems用户还款结束---------------------------------------------" );
+			}
         }catch(Exception e){
             logger.error("【智投还款/出借人】ames发送用户还款通知时发生系统异常！", e);
         }
         logger.info("【智投还款/出借人】借款编号：{}，更新出借人的还款数据结束。还款订单号：{}，智投加入订单号：{}，判断复投时间：{}", apicron.getBorrowNid(), repayOrderId, accedeOrderId, dateStr);
         return true;
+	}
+
+	/**
+	 *判断是否是 aems推送的资产
+	 * @param borrowNid
+	 * @return
+	 */
+	public boolean aemsAssetsFlag(String  borrowNid){
+		HjhPlanAssetExample example = new HjhPlanAssetExample();
+		example.createCriteria().andBorrowNidEqualTo(borrowNid);
+		int count =hjhPlanAssetMapper.countByExample(example);
+		if(count > 0){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1816,7 +1838,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @param chargeInterest
 	 * @param repayAccount
 	 */
-	private void aemsRepayNotify(Integer borrowPeriod, String borrowNid, BorrowRepay borrowRepay, BigDecimal recoverFee, BigDecimal recoverCapitalWait, BigDecimal recoverInterestWait, BigDecimal lateInterest, BigDecimal chargeInterest, BigDecimal repayAccount) {
+	private void aemsRepayNotify(Integer borrowPeriod, String borrowNid, BorrowRepay borrowRepay, BigDecimal recoverFee, BigDecimal recoverCapitalWait, BigDecimal recoverInterestWait, BigDecimal lateInterest, BigDecimal chargeInterest, BigDecimal repayAccount,String repayOrderId) {
         logger.info("aems还款异步回调开始......borrowNid is {}", borrowNid);
 		Integer userId = borrowRepay.getUserId();
 		RUser user = getRUser(userId);
@@ -1842,6 +1864,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			params.put("dueServiceFee", lateInterest.toString());
 			// 还款总额
 			params.put("repayAccountAll", repayAccount.toString());
+			// 还款订单号
+			params.put("repayOrderId", repayOrderId);
             logger.info("aems还款异步回调......params is {}", JSONObject.toJSONString(params));
             HttpDeal.postJson(aemsNotifyUrl + "/aems/api/user_repay/async_callback", JSONObject.toJSONString(params));
 		}
