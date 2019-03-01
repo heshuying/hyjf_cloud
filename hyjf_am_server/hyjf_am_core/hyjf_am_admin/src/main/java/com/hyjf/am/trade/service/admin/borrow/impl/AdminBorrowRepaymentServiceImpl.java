@@ -44,10 +44,12 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         BorrowRepayExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
         List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
+        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayBean borrowRepayBean = new BorrowRepayBean();
             BorrowRepay borrowRepay = list.get(0);
             BeanUtils.copyProperties(borrowRepay, borrowRepayBean);
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(borrowRepayBean.getRepayTime()) * 1000L);
             int distanceDays = GetDate.daysBetween(nowDate, date);
@@ -98,8 +100,10 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {
                 borrowRepayBean.setBorrowStatus("0");
             }
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             return borrowRepayBean;
         }
+
         return new BorrowRepayBean();
     }
     /**
@@ -197,11 +201,12 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         cra.andRepayStatusEqualTo(0);
         example.setOrderByClause(" repay_period ASC ");
         List<BorrowRepayPlan> list = this.borrowRepayPlanMapper.selectByExample(example);
-
+        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayPlanBean repayPlanBean = new BorrowRepayPlanBean();
             BorrowRepayPlan repayPlan = list.get(0);
             BeanUtils.copyProperties(repayPlan, repayPlanBean);
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(repayPlan.getRepayTime()) * 1000L);
 
@@ -270,7 +275,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {// 用户当前期未还款
                 repayPlanBean.setBorrowStatus("0");
             }
-
+            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             return repayPlanBean;
         }
         return new BorrowRepayPlanBean();
