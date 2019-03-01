@@ -3032,7 +3032,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
 		BorrowRecoverPlanExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
-		criteria.andStatusEqualTo(0);
+		criteria.andStatusNotEqualTo(1);
 		criteria.andRecoverPeriodNotEqualTo(periodNow);
 		criteria.andUserIdEqualTo(userId);
 		criteria.andNidEqualTo(tenderOrderId);

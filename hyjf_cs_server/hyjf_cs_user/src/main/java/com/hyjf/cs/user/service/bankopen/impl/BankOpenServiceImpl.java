@@ -846,7 +846,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 String userName = user.getUsername();
                 // 调用江西银行短信验证码接口
                 resultBean =  this.callBankSendSms(mobile, userId, userName, channel, platform);
-                if(!ErrorCodeConstant.SUCCESS.equals(resultBean.getStatus())){
+                if(resultBean != null && !ErrorCodeConstant.SUCCESS.equals(resultBean.getStatus())){
                     return resultBean;
                 }
             } else {

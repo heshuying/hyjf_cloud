@@ -645,7 +645,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO) {
-        Integer sourceId = null;
+        Integer sourceId = -1;
         if (StringUtils.isNotBlank(version)) {
             String[] shuzu = version.split("\\.");
             if (shuzu.length >= 4) {
