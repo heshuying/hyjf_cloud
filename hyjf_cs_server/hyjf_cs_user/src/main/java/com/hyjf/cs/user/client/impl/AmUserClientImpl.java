@@ -347,6 +347,11 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.put(userService+"/user/insertLogSelective",hjhUserAuthLog);
 	}
 
+	/**
+	 * 查询授权错误信息
+	 * @param orderId
+	 * @return
+	 */
 	@Override
 	public HjhUserAuthLogVO selectByExample(String orderId) {
 		HjhUserAuthLogResponse response = restTemplate
