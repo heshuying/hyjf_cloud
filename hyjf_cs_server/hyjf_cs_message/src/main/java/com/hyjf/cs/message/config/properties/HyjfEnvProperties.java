@@ -9,9 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "hyjf.env")
 public class HyjfEnvProperties {
     /**
-     * 环境标识  true表示生产环境  false表示测试环境
+     * 环境标识  false表示生产环境  true表示测试环境，  未配置参数，默认测试环境
      */
-    private boolean test;
+    private boolean test = true;
 
     /**
      * 测试环境短信和推送白名单
