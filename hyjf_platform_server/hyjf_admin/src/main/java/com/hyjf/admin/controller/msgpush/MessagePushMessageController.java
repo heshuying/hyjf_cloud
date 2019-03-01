@@ -292,7 +292,7 @@ public class MessagePushMessageController extends BaseController {
     public AdminResult checkUrlAction(HttpServletRequest request) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         // 检查着名称唯一性
-        Boolean isUrl = true;// TODO Validator.isUrl2(templateActionUrl1);
+        Boolean isUrl = true;
         if (!isUrl) {
             response.setRtn(Response.FAIL);
             response.setMessage("请输入正确的http地址（全路径）!");
