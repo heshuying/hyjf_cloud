@@ -132,6 +132,8 @@ public class VipManageController extends BaseController {
         VipDetailListResponse vdl = new VipDetailListResponse();
         if (vdr != null) {
             vdl = vipManageService.searchDetailList(vdr);
+        } else {
+        	return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!CollectionUtils.isEmpty(vdl.getResultList())) {
             List<VipDetailListVO> vipDetailListVOS = vdl.getResultList();
@@ -142,9 +144,6 @@ public class VipManageController extends BaseController {
                     vipDetailList.setAccount(borrowTenderVO.getAccount().toPlainString());
                 }
             }
-        }
-        if (vdl == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(vdl)) {
             return new AdminResult<>(FAIL, vdl.getMessage());
