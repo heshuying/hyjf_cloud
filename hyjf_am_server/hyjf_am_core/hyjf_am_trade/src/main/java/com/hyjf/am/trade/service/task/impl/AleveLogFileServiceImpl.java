@@ -68,8 +68,8 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         para.downloadPath =systemConfig.getFtpDownloadPath()+ filePath;//ftp服务器文件目录
         para.savePath =localDir+"/"+date;
         String beforeDate = DateUtils.getBeforeDate();//当前前时间前一天的日期yyyyMMdd
-        int countsAleve = this.countAleveByExample(beforeDate);
-        int countsEve = this.countEveByExample(beforeDate);
+        Integer countsAleve = this.countAleveByExample(beforeDate);
+        Integer countsEve = this.countEveByExample(beforeDate);
 
         try {
             if(countsAleve==0 && countsEve==0){
@@ -87,6 +87,8 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
                         params.put("savePath", para.savePath);
                         params.put("filePathEve", systemConfig.getEveFileName());
                         params.put("filePathAleve", systemConfig.getAleveFileName());
+                        params.put("dualDate",beforeDate);
+                        params.put("isBOA","1");
                         try {
                             commonProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), params));
                         } catch (MQException e) {
@@ -327,15 +329,17 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         }
         return true;
     }
-    
-    private int countAleveByExample(String beforeDay){
+
+    @Override
+    public Integer countAleveByExample(String beforeDay){
         AleveLogExample example = new AleveLogExample();
         AleveLogExample.Criteria criteria = example.createCriteria();
         criteria.andCreateDayEqualTo(beforeDay);
         return aleveLogMapper.countByExample(example);
     }
 
-    private int countEveByExample(String beforeDay){
+    @Override
+    public Integer countEveByExample(String beforeDay){
         EveLogExample example = new EveLogExample();
         EveLogExample.Criteria criteria = example.createCriteria();
         criteria.andCreateDayEqualTo(beforeDay);
