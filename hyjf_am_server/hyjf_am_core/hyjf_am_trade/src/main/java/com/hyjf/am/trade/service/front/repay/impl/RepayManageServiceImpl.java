@@ -4983,7 +4983,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public boolean updateBorrowCreditStautus(String borrowNid) {
         Borrow borrow = this.getBorrowByNid(borrowNid);
         String planNid = borrow.getPlanNid();
-        BigDecimal rollBackAccount = BigDecimal.ZERO;
+        // BigDecimal rollBackAccount = BigDecimal.ZERO;
         if (StringUtils.isNotBlank(planNid)) {//计划标的
             HjhDebtCreditExample example = new HjhDebtCreditExample();
             List<Integer> list = new ArrayList<>();
@@ -4998,7 +4998,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal creditPrice = hjhDebtCredit.getCreditPrice();//已承接金额
                     BigDecimal liquidationFairValue = hjhDebtCredit.getLiquidationFairValue();//清算时债权价值
                     BigDecimal resultAmount = liquidationFairValue.subtract(creditPrice);//回滚金额
-                    rollBackAccount = rollBackAccount.add(resultAmount);
+                    // rollBackAccount = rollBackAccount.add(resultAmount);
                     hjhDebtCredit.setCreditStatus(3);
                     //更新债权结束时间 add by cwyang 2018-4-2
                     hjhDebtCredit.setEndTime(GetDate.getNowTime10());
@@ -5012,7 +5012,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     hjhAccede.setCreditCompleteFlag(2);//将清算状态置为2,以便2次清算
                     this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
                     logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "，订单号：" + planOrderId + "===================");
-
+                    //回滚开放额度 add by cwyang 2017-12-25
+                    // 回滚开放额度按未承接债权逐条回滚 update by wgx 2019/03/01
+                    if (StringUtils.isNotBlank(rollBackPlanNid)) {
+                        rollBackAccedeAccount(rollBackPlanNid, resultAmount);
+                    }
                     // add 合规数据上报 埋点 liubin 20181122 start
                     //停止债转并且没有被承接过
                     if (hjhDebtCredit.getCreditStatus().compareTo(3) == 0) {
@@ -5038,10 +5042,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     }
                     // add 合规数据上报 埋点 liubin 20181122 end
                 }
-            }
-            //回滚开放额度 add by cwyang 2017-12-25
-            if (StringUtils.isNotBlank(rollBackPlanNid)) {
-                rollBackAccedeAccount(rollBackPlanNid, rollBackAccount);
             }
         } else {//直投标的
             BorrowCreditExample example = new BorrowCreditExample();

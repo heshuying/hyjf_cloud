@@ -120,6 +120,11 @@ public interface AmUserClient {
 	 */
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 
+	/**
+	 * 查询授权错误信息
+	 * @param orderId
+	 * @return
+	 */
 	HjhUserAuthLogVO selectByExample(String orderId);
 
 	/**
