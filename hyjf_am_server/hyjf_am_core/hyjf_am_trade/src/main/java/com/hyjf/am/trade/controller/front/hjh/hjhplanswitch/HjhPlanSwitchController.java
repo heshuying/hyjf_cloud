@@ -39,8 +39,7 @@ public class HjhPlanSwitchController extends BaseController {
                 logger.info("开启了 " + result + " 个计划。");
             }
         } catch (Exception e) {
-            logger.error("定时开启计划任务 异常... ");
-            e.printStackTrace();
+            logger.error("定时开启计划任务 异常... ", e);
         }
         logger.info("定时开启计划任务 结束... ");
         return new BooleanResponse(true);
@@ -64,8 +63,7 @@ public class HjhPlanSwitchController extends BaseController {
                 logger.info("关闭了 " + result + " 个计划。");
             }
         } catch (Exception e) {
-            logger.error("定时关闭计划任务 异常... ");
-            e.printStackTrace();
+            logger.error("定时关闭计划任务 异常... ", e);
         }
         logger.info("定时关闭计划任务 结束... ");
         return new BooleanResponse(true);

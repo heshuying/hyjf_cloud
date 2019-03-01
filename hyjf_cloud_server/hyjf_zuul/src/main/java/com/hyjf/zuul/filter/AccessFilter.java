@@ -88,8 +88,10 @@ public class AccessFilter extends ZuulFilter {
 			if (!appKeyIgnoreUrls.contains(originalRequestPath)) {
 				// app分享的请求，忽略sign
 				String ignoreSign = request.getParameter("ignoreSign");
+				logger.debug("ignoreSign: {}", ignoreSign);
 				if(StringUtils.isNotBlank(ignoreSign)){
 					if(Boolean.parseBoolean(ignoreSign)){
+						logger.info("it is not check sign url, url is : {}", originalRequestPath);
 						return ctx;
 					}
 				}
