@@ -92,7 +92,7 @@ public class OperationReportController extends BaseController {
         } else if (operationReportType == 6) {
             quarterOperationReport.setQuarterType(3);
         }
-        if (year != null && year != "") {
+        if (year != null && !year.equalsIgnoreCase("")) {
             operationReport.setYear(year);
         } else {
             operationReport.setYear(String.valueOf(GetDate.getYear()));
