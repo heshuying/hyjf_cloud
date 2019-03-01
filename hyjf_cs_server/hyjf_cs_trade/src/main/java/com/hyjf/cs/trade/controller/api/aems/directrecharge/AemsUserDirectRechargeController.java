@@ -43,10 +43,13 @@ public class AemsUserDirectRechargeController extends BaseTradeController {
     public ModelAndView recharge(@RequestBody AemsUserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         logger.info("api充值AEMS用户充值请求参数request:{}" + JSONObject.toJSONString(userRechargeRequestBean, true) + "】");
         Map<String, Object> result = directRechargeService.recharge(userRechargeRequestBean, request);
+        ModelAndView modelAndView = new ModelAndView();
         if (null != result && result.get("modelAndView") == null) {
             return callbackErrorViewForMap(result);
         }
-        ModelAndView modelAndView = (ModelAndView) result.get("modelAndView");
+        if(null!=result) {
+            modelAndView = (ModelAndView) result.get("modelAndView");
+        }
         return modelAndView;
     }
 

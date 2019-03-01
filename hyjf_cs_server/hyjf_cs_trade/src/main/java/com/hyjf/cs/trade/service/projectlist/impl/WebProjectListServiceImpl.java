@@ -1143,7 +1143,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 } else {
                     result.put("loginFlag", "0");// 判断是否登录
                     result.put("openFlag", "0");
-                    result.put("loginFlag", "0");
                     result.put("setPwdFlag", "0");
                     result.put("isUserValid", "0");
                     result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评

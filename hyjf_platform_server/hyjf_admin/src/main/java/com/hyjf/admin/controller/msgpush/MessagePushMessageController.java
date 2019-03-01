@@ -294,8 +294,8 @@ public class MessagePushMessageController extends BaseController {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         // 检查着名称唯一性
         Boolean isUrl = false;
-        if (StringUtils.isNotBlank(templateRequest.getMsgActionUrl3()) || StringUtils.isNotBlank(templateRequest.getMsgActionUrl1())) {
-            isUrl = Validator.isUrl2(templateRequest.getMsgActionUrl3() == null ? templateRequest.getMsgActionUrl1() : templateRequest.getMsgActionUrl3());
+        if (StringUtils.isNotBlank(templateRequest.getMsgActionUrl())) {
+            isUrl = Validator.isUrl2(templateRequest.getMsgActionUrl());
         }
         if (!isUrl) {
             response.setRtn(Response.FAIL);

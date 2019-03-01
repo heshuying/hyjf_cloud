@@ -142,12 +142,14 @@ public class WebHomeServiceImpl implements WebHomeService {
         // modify by libin 缓存
         //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
         TotalInvestAndInterestResponse res2 =amTradeClient.getTotalInvestAndInterestResponse();//加缓存
+        TotalInvestAndInterestVO totalInvestAndInterestVO = null;
         if(res2 == null){
         	logger.error("统计信息查询为空");
+        }else {
+            // modify by libin 缓存
+            totalInvestAndInterestVO = res2.getResult();
         }
-        // modify by libin 缓存
-        
-        TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
+
         BigDecimal interestSum = (totalInvestAndInterestVO == null ||totalInvestAndInterestVO.getTotalInterestAmount() == null) ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
         result.setInterestSum(interestSum.divide(new BigDecimal("100000000")).setScale(0,BigDecimal.ROUND_DOWN).toString());
         //累计上线年数

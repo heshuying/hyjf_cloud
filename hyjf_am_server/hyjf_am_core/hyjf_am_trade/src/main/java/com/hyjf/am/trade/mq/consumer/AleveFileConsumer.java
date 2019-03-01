@@ -60,8 +60,9 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
             String msgBody = new String(msg.getBody());
             logger.info("【导入流水明细(Aleve)】接收到的消息：" + msgBody);
 
-            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+//            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
             JSONObject json = JSONObject.parseObject(msgBody);
+            String isBOA = json.getString("isBOA");
             String savePath = json.getString("savePath");
             if (StringUtils.isBlank(savePath)) {
                 logger.error("【导入流水明细(Aleve)】接收到的savePath为null");
@@ -72,6 +73,18 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 logger.error("【导入流水明细(Aleve)】接收到的filePathAleve为null");
                 return;
             }
+            String beforeDate = json.getString("dualDate");
+            if (StringUtils.isBlank(beforeDate)) {
+                logger.error("【导入流水明细(Aleve)】接收到的dualDate为null");
+                return;
+            }
+
+            Integer countsAleve = this.aleveLogFileService.countAleveByExample(beforeDate);
+            if(countsAleve > 0){
+                logger.error("【导入流水明细(eve)】eve数据库已存在数据、请核对后再做处理！");
+                return;
+            }
+
             File dir = new File(savePath);
             File fin;
             try {
@@ -105,12 +118,14 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 logger.error("AleveLog插入失败", e);
                 return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-            JSONObject params = new JSONObject();
-            params.put("status", "1");
-            try {
-                commonProducer.messageSend(new MessageContent(MQConstant.AUTO_CORRECTION_TOPIC, UUID.randomUUID().toString(), params));
-            } catch (MQException e) {
-                logger.error("发送【自动冲正】MQ失败...");
+            if (StringUtils.isNotBlank(isBOA) && "1".equals(isBOA)) {
+                JSONObject params = new JSONObject();
+                params.put("status", "1");
+                try {
+                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_CORRECTION_TOPIC, UUID.randomUUID().toString(), params));
+                } catch (MQException e) {
+                    logger.error("发送【自动冲正】MQ失败...");
+                }
             }
             logger.info("********************导入流水明细Aleve结束*************************");
             return;

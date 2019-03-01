@@ -415,6 +415,7 @@ public class AmUserClientImpl implements AmUserClient {
 		ResponseEntity<JSONObject> resp = restTemplate.getForEntity(url, JSONObject.class);
 		result = resp.getBody();
 		if (result == null) {
+			result = new JSONObject();
 			result.put("status", "1");
 			result.put("statusDesc", "修改密码失败,未作任何操作");
 		}

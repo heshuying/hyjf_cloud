@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.controller.finance.hjhcommission.HjhCommissionController;
 import com.hyjf.admin.service.HjhCommissionService;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.response.admin.OADepartmentResponse;
@@ -19,6 +20,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.chinapnr.ChinapnrBean;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,8 @@ import java.util.Map;
  */
 @Service
 public class HjhCommissionServiceImpl implements HjhCommissionService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(HjhCommissionController.class);
 	
 	@Autowired
 	public AmTradeClient amTradeClient;
@@ -139,6 +144,11 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 		// 将参数拼装
 		if(commission != null){
 			request.setTenderCommission(commission);
+		} else {
+			// modify by libin sonar start
+			logger.error("controller传过来的提成记录为空！");
+			return 0;
+			// modify by libin sonar end
 		}
 		if(resultBean != null){
 			request.setTxAmount(resultBean.getTxAmount());

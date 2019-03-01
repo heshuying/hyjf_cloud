@@ -161,10 +161,10 @@ public class WebEvaluationController extends BaseUserController {
                 resultMap.put("sendCount", sendCount);
             }
             userEvalationResult = (UserEvalationResultVO) returnMap.get("userEvalationResult");
+            resultMap.put("revaluationMoney", returnMap.get("revaluationMoney"));
         }
         // userEvalationResult 测评结果
         resultMap.put("userEvalationResult", userEvalationResult);
-        resultMap.put("revaluationMoney", returnMap.get("revaluationMoney"));
         result.setData(resultMap);
         /**
          * 调用重新登录接口
