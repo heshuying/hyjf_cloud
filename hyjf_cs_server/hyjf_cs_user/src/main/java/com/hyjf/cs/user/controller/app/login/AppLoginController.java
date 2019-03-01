@@ -146,7 +146,8 @@ public class AppLoginController extends BaseUserController {
                     logger.error("保存用户日志失败", e);
                 }
                 logger.info("appAfterLogin:"+sign);
-                this.appAfterLogin(sign, webViewUserVO, username,version);
+                // ios审核时跳转最优服务器的场景sign值重新获取
+                sign = this.appAfterLogin(sign, webViewUserVO, username,version);
 
                 if (StringUtils.isNotEmpty(presetProps)){
                     SensorsDataBean sensorsDataBean = new SensorsDataBean();
@@ -453,7 +454,7 @@ public class AppLoginController extends BaseUserController {
      * @param loginUsername
      * @param version
      */
-    private void appAfterLogin(String sign, WebViewUserVO webViewUserVO, String loginUsername, String version){
+    private String appAfterLogin(String sign, WebViewUserVO webViewUserVO, String loginUsername, String version){
         // 加密后的token
         String encryptValue;
         // 获取sign对应的加密key
@@ -475,6 +476,7 @@ public class AppLoginController extends BaseUserController {
         } else {
             throw new RuntimeException("参数异常");
         }
+        return sign;
     }
 
 }
