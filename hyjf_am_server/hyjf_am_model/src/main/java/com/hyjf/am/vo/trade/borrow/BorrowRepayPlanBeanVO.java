@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.vo.trade.borrow;
 
-import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 
 import java.io.Serializable;
