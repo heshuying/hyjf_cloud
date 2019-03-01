@@ -2588,6 +2588,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                             redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
                             throw new CheckException(redisMsgCode);
                         } else {
+                            logger.info("~~~~可投剩余金额为" + accountRedisWait + "元！抛出异常");
+                            logger.info("~~~~投资金额金额为" + accountDecimal + "元！抛出异常");
+                            logger.info("~~~~可投剩余金额为" + accountRedisWait + "元！抛出异常");
+                            logger.info("~~~~new BigDecimal(accountRedisWait).compareTo(accountDecimal)为" + new BigDecimal(accountRedisWait).compareTo(accountDecimal) + "！抛出异常");
                             if (new BigDecimal(accountRedisWait).compareTo(accountDecimal) < 0) {
                                 // 可投剩余金额为" + accountRedisWait + "元！"
                                 logger.info("~~~~可投剩余金额为" + accountRedisWait + "元！抛出异常");
