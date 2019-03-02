@@ -348,6 +348,16 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 计算担保机构批量还款总垫付金额并插入冻结日志
+     */
+    @PostMapping(value = "/get_batch_reapy_total")
+    public BigDecimalResponse getOrgBatchRepayTotal(@RequestBody BatchRepayTotalRequest requestBean) {
+        BigDecimalResponse responseBean = new BigDecimalResponse();
+        BigDecimal repayTotal = repayManageService.getOrgBatchRepayTotal(requestBean);
+        responseBean.setResultDec(repayTotal);
+        return responseBean;
+    }
+    /**
      *
      * @return
      */

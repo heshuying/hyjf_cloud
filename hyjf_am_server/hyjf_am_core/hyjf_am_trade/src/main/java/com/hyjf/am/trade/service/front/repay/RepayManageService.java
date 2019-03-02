@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.front.repay;
 
+import com.hyjf.am.resquest.trade.BatchRepayTotalRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -60,10 +61,14 @@ public interface RepayManageService extends BaseService {
 
     ProjectBean getOrgBatchRepayData(String userId, String startDate, String endDate);
 
+    BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean);
+
     boolean checkRepayInfo(Integer userId, String borrowNid);
 
     void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
                               BigDecimal repayTotal, String userName);
+
+    void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay);
 
     void deleteFreezeTempLogs(String orderId);
 
