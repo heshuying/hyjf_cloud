@@ -525,7 +525,7 @@ public class RepayManageController extends BaseTradeController {
                     return webResult;
                 }
                 //插入担保机构冻结信息日志表 add by wgx 2018-09-11
-                repayManageService.insertRepayOrgFreezeLof(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), isAllRepay);
+                repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), isAllRepay);
                 Map<String, Object> map = repayManageService.getBankRefinanceFreezePage(userId, userVO.getUsername(), ip, orderId, borrowNid, repayTotal, account);
                 webResult.setData(map);
                 return webResult;
@@ -647,7 +647,7 @@ public class RepayManageController extends BaseTradeController {
             long retTime = RedisUtils.ttl(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
             String dateStr = DateUtils.nowDateAddSecond((int) retTime);
             webResult.setData(msg);
-            webResult.setStatusDesc("该项目已提交还款，正在处理中，请" + dateStr + "后再试！");
+            webResult.setStatusDesc("您已提交过还款，正在处理中，请" + dateStr + "后再试！");
             return webResult;
         }
         boolean isTime = companyRepayTime(requestBean.getStartDate(),requestBean.getEndDate(),userVO.getUserId());
@@ -698,7 +698,7 @@ public class RepayManageController extends BaseTradeController {
                 long retTime = RedisUtils.ttl(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
                 String dateStr = DateUtils.nowDateAddSecond((int) retTime);
                 webResult.setStatus(WebResult.ERROR);
-                webResult.setStatusDesc("该项目已提交还款，正在处理中，请" + dateStr + "后再试！");
+                webResult.setStatusDesc("您已批量提交过还款，正在处理中，请" + dateStr + "后再试！");
                 webResult.setData(Collections.emptyMap());
             }
         }else{

@@ -2,7 +2,6 @@ package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BatchRepayTotalRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
@@ -3941,7 +3940,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     private BigDecimal calculateRepayPlan(RepayBean repay, Borrow borrow, int period) throws Exception {
 
-        logger.info("calculateRepayPlan, borrowNid:" + borrow.getBorrowNid() + " period:" + period);
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
         BigDecimal repayAccountAll = new BigDecimal("0");

@@ -756,7 +756,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date 2018/10/11
      */
     @Override
-    public Integer insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+    public Integer insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         BankRepayOrgFreezeLogRequest requestBean = new BankRepayOrgFreezeLogRequest();

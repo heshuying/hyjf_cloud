@@ -18,7 +18,9 @@ public interface BankRepayFreezeOrgService extends BaseAdminService {
 
     Integer selectCount(RepayFreezeOrgRequest requestBean);
 
-    BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId);
+    BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId,String borrowNid);
+
+    Integer deleteFreezeLogById(Integer id);
 
     Integer deleteOrgFreezeTempLogs(String orderId);
 
