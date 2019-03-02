@@ -27,7 +27,7 @@ import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -5434,9 +5434,20 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     @Override
     public boolean checkRepayInfo(Integer userId, String borrowNid) {
         BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
-        example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        BankRepayFreezeLogExample.Criteria criteria = example.createCriteria();
+        if(userId != null) {
+            criteria.andUserIdEqualTo(userId);
+        }
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andDelFlagEqualTo(0);
         List<BankRepayFreezeLog> list = bankRepayFreezeLogMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
+            return false;
+        }
+        BankRepayOrgFreezeLogExample orgExample = new BankRepayOrgFreezeLogExample();
+        orgExample.createCriteria().andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        List<BankRepayOrgFreezeLog> orgList = bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
+        if (orgList != null && orgList.size() > 0) {
             return false;
         }
         return true;
