@@ -61,11 +61,9 @@ public interface RepayManageService extends BaseService {
 
     ProjectBean getOrgBatchRepayData(String userId, String startDate, String endDate);
 
-    BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean);
-
     boolean checkRepayInfo(Integer userId, String borrowNid);
 
-    void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
+    void insertRepayFreezeLog(Integer userId, String orderId, String account, String borrowNid,
                               BigDecimal repayTotal, String userName);
 
     void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay);
