@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.repay;
 
 import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.trade.bean.AemsRepayResultBean;
@@ -23,7 +24,7 @@ public interface AemsUserRepayService extends BaseTradeService {
      * @param borrowNid
      * @return
      */
-    BorrowVO searchRepayProject(Integer userId, String roleId, String borrowNid);
+    BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 
     /**
      * 服务费授权和还款授权校验

@@ -2,9 +2,9 @@ package com.hyjf.cs.trade.service.aems.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -45,12 +45,12 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
 
     @Override
     public UserVO getUserByAccountId(String accountId) {
-        return null;
+        return amUserClient.getUserByAccountId(accountId);
     }
 
     @Override
-    public BorrowVO searchRepayProject(Integer userId, String roleId, String borrowNid) {
-        return null;
+    public BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid) {
+        return amTradeClient.searchRepayProject(userId,roleId,borrowNid);
     }
 
     @Override

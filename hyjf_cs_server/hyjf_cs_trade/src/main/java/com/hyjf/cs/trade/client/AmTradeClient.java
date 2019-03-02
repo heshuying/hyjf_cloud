@@ -2848,5 +2848,6 @@ public interface AmTradeClient {
     List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
+    BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 }
 
