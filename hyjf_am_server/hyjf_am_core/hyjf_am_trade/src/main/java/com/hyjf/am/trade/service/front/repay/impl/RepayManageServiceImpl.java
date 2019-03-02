@@ -5336,12 +5336,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 RepayBean repayBean = null;
                 // 计算垫付机构还款
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
+                    logger.info("userId:{},,borrow:{}",userId,JSON.toJSONString(borrow));
                     repayBean = searchRepayTotalV2(Integer.parseInt(userId), borrow);
                 } else {// 分期还款
+                    logger.info("borrow:{}",JSON.toJSONString(borrow));
                     repayBean = searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                 }
                 repayBean.setRepayUserId(Integer.parseInt(userId));
-                logger.info("borrowNid:{},userId:{},userName:{},repayBean:{}",JSON.toJSONString(repayBean));
+                logger.info("borrowNid:{},userId:{},userName:{},repayBean:{}", borrowNid, userId, userName, JSON.toJSONString(repayBean));
                 checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
                 //防止智投还款时正在发生债转操作
                 int errflag = repayBean.getFlag();
