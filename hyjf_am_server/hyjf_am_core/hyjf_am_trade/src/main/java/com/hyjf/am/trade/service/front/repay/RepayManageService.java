@@ -68,6 +68,8 @@ public interface RepayManageService extends BaseService {
     void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
                               BigDecimal repayTotal, String userName);
 
+    void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay);
+
     void deleteFreezeTempLogs(String orderId);
 
     Borrow searchRepayProject(int userId, String userName, String roleId, String borrowNid);

@@ -5354,7 +5354,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     continue;
                 }
                 //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
-                insertRepayOrgFreezeLof(Integer.parseInt(userId), orderId, account, borrowNid, repayBean, userName, false);
+                insertRepayOrgFreezeLog(Integer.parseInt(userId), orderId, account, borrowNid, repayBean, userName, false);
                 BigDecimal total = repayBean.getRepayAccountAll();
                 repayTotal = repayTotal.add(total);
             } catch (Exception e) {
@@ -5392,7 +5392,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
     }
 
-    private void insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+    @Override
+    public void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
         Borrow borrow = getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         BankRepayOrgFreezeLog log = new BankRepayOrgFreezeLog();
