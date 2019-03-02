@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.aems.repay.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -84,9 +85,11 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
     public void checkForRepayRequest(String borrowNid, UserVO user, BankOpenAccountVO bankOpenAccountVO, RepayBean repayBean) {
         // 开户校验
         if(user.getBankOpenAccount() == null){
+            logger.info("Aems还款接口借款人还款校验:开户校验失败");
             throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        logger.info("Aems还款接口借款人还款校验:borrow："+ JSONObject.toJSONString(borrow));
         if(borrow == null){
             throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
@@ -94,6 +97,7 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
 
         // 服务费授权
         boolean isPaymentAuth = this.checkPaymentAuthStatus(user.getUserId());
+        logger.info("Aems还款接口借款人还款校验:isPaymentAuth："+isPaymentAuth);
         if (!isPaymentAuth) {
             throw  new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
@@ -103,18 +107,23 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
         }
 
         AccountVO accountVO = getAccountByUserId(user.getUserId());
+        logger.info("Aems还款接口借款人还款校验:accountVO："+JSONObject.toJSONString(accountVO));
         if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
             // ** 用户符合还款条件，可以还款 *//*
             // 查询用户在银行电子账户的余额
             BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),bankOpenAccountVO.getAccount());
+            logger.info("Aems还款接口借款人还款校验:查询用户在银行电子账户的余额userBankBalance："+userBankBalance);
             if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
                 // ** 用户符合还款条件，可以还款 *//*
+                logger.info("Aems还款接口借款人还款校验:用户符合还款条件，可以还款");
             } else {
                 // 银行账户余额不足
+                logger.info("Aems还款接口借款人还款校验:银行账户余额不足");
                 throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
         } else {
             // 平台账户余额不足
+            logger.info("Aems还款接口借款人还款校验:平台账户余额不足");
             throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
     }
