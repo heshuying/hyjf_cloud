@@ -50,7 +50,7 @@ public interface AemsUserRepayService extends BaseTradeService {
      * @param bankOpenAccountVO
      * @param repay
      */
-    void checkForRepayRequest(String productId, UserVO user, BankOpenAccountVO bankOpenAccountVO,  RepayBean repay);
+    String checkForRepayRequest(String productId, UserVO user, BankOpenAccountVO bankOpenAccountVO,  RepayBean repay);
 
     AemsRepayResultBean getBalanceFreeze(UserVO user, String productId, RepayBean repay, String orderId, String account, AemsRepayResultBean resultBean, boolean isAllRepay);
 }

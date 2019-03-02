@@ -141,7 +141,15 @@ public class AemsUserRepayController extends BaseTradeController {
            // 借款人还款校验
             logger.info("Aems还款接口借款人还款校验开始------------------------------------------");
             logger.info("Aems还款接口借款人还款校验：productId:"+requestBean.getProductId()+"user:"+JSONObject.toJSONString(user)+"userBankOpenAccount:"+JSONObject.toJSONString(userBankOpenAccount)+"repay:"+JSONObject.toJSONString(repay));
-            aemsUserRepayService.checkForRepayRequest(requestBean.getProductId(), user, userBankOpenAccount, repay);
+            String mes = aemsUserRepayService.checkForRepayRequest(requestBean.getProductId(), user, userBankOpenAccount, repay);
+            logger.info("Aems还款接口借款人还款校验,mes:"+mes);
+
+            if(StringUtils.isNotEmpty(mes)){
+                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusDesc(mes);
+                return resultBean;
+            }
             logger.info("Aems还款接口借款人还款校验结束------------------------------------------");
             int errflag = repay.getFlag();
             if (1 == errflag) {
