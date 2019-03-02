@@ -434,7 +434,7 @@ public class RepayManageController extends BaseController {
             logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", userName);
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 30);// 暂时放开
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
         if (!tranactionSetFlag) {//设置失败
             logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
             long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
