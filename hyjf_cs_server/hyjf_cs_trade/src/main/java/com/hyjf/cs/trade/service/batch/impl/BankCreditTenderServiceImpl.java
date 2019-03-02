@@ -102,6 +102,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                     }
 
                     // 查询相应的债转承接记录
+                    logger.info("债转出借掉单异常处理之logOrderId："+logOrderId);
                     CreditTenderLogVO creditenderLog = this.amTradeClient.selectCreditTenderLogByOrderId(logOrderId);
                     if (creditenderLog!=null){
                         try {
