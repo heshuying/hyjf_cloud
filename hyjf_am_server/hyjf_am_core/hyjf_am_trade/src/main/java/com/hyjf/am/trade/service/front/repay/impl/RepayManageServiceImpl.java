@@ -5341,6 +5341,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     repayBean = searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                 }
                 repayBean.setRepayUserId(Integer.parseInt(userId));
+                logger.info("borrowNid:{},userId:{},userName:{},repayBean:{}",JSON.toJSONString(repayBean));
                 checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
                 //防止智投还款时正在发生债转操作
                 int errflag = repayBean.getFlag();
