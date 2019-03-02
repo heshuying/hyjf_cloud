@@ -1194,6 +1194,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”按天计息，到期还本还息“: 历史回报=出借金额*年化收益÷360*天数；
@@ -1201,6 +1202,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”先息后本“: 历史回报=出借金额*年化收益÷12*月数；
@@ -1208,6 +1210,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”等额本息“: 历史回报=出借金额*年化收益÷12*月数；
@@ -1215,6 +1218,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”等额本金“: 历史回报=出借金额*年化收益÷12*月数；
@@ -1222,6 +1226,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     default:
@@ -1229,6 +1234,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         break;
                 }
                 logger.info("散标本金历史回报:  {}", earnings);
+                //earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings
                 borrowInterest = earnings;
                 //计算优惠券历史回报
                 if (couponConfig != null && couponConfig.getId() > 0) {
