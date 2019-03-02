@@ -5336,14 +5336,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 RepayBean repayBean = null;
                 // 计算垫付机构还款
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
-                    logger.info("userId:{},,borrow:{}",userId,JSON.toJSONString(borrow));
-                    repayBean = searchRepayTotalV2(Integer.parseInt(userId), borrow);
+                    repayBean = searchRepayTotalV2(borrow.getUserId(), borrow);
                 } else {// 分期还款
-                    logger.info("borrow:{}",JSON.toJSONString(borrow));
                     repayBean = searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                 }
                 repayBean.setRepayUserId(Integer.parseInt(userId));
-                logger.info("borrowNid:{},userId:{},userName:{},repayBean:{}", borrowNid, userId, userName, JSON.toJSONString(repayBean));
                 checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
                 //防止智投还款时正在发生债转操作
                 int errflag = repayBean.getFlag();
@@ -5386,7 +5383,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", userName);
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 30);// 暂时放开
         if (!tranactionSetFlag) {//设置失败
             logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
             long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
