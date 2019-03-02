@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.controller.api.aems.repay;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -120,7 +120,7 @@ public class AemsUserRepayController extends BaseTradeController {
             resultBean.setStatusDesc("用户在银行未开户");
             return resultBean;
         }
-        BorrowVO borrow = this.aemsUserRepayService.searchRepayProject(userId, roleId, borrowNid);
+        BorrowInfoVO borrow = this.aemsUserRepayService.searchRepayProject(userId, roleId, borrowNid);
         /** redis 锁 */
         boolean isRepay = RedisUtils.tranactionSet("repay_borrow_nid" + borrowNid, 60);
         if(!isRepay){

@@ -8,7 +8,6 @@ import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.bean.AemsAuthStatusQueryRequestBean;
 import com.hyjf.cs.user.bean.AemsAuthStatusQueryResultBean;
-import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.aems.auth.AemsAuthService;
 import com.hyjf.cs.user.service.aems.authstatus.AemsAuthStatusQueryService;
 import com.hyjf.cs.user.util.SignUtil;
@@ -105,12 +104,6 @@ public class AemsAuthStatusQueryController extends BaseController {
         //直接查询汇盈授权状态
         // 查询授权数据hyjf_hjh_user_auth
         HjhUserAuthVO userAuth = aemsAuthService.getHjhUserAuthByUserId(userId);
-        if(null == userAuth){
-            logger.info("授权状态查询接口失败,userId:["+userId+"]授权数据不存在！");
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            resultBean.setStatusDesc("授权状态查询接口失败！");
-            return resultBean;
-        }
         resultBean = getResultJosn(resultBean,userAuth,accountId);
         logger.info("授权状态查询汇盈返回参数："+JSONObject.toJSONString(resultBean));
         resultBean.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
@@ -121,6 +114,18 @@ public class AemsAuthStatusQueryController extends BaseController {
     // 拼接返回参数
     private AemsAuthStatusQueryResultBean getResultJosn(AemsAuthStatusQueryResultBean resultBean, HjhUserAuthVO retBean,String accountId) {
         resultBean.setAccountId(accountId);
+        if(null == resultBean){
+            logger.info("授权状态查询接口,用户未授权！");
+            resultBean.setAgreeWithdrawStatus("0");
+            resultBean.setAutoBidDeadline("00000000");
+            resultBean.setAutoBidStatus("0");
+            resultBean.setAutoTransferStatus("0");
+            resultBean.setPaymentAuthStatus("0");
+            resultBean.setPaymentDeadline("00000000");
+            resultBean.setRepayAuthStatus("0");
+            resultBean.setRepayDeadline("00000000");
+            return resultBean;
+        }
         resultBean.setAgreeWithdrawStatus(String.valueOf(retBean.getAutoWithdrawStatus()));
         resultBean.setAutoBidDeadline(retBean.getAutoBidEndTime());
         resultBean.setAutoBidStatus(String.valueOf(retBean.getAutoInvesStatus()));

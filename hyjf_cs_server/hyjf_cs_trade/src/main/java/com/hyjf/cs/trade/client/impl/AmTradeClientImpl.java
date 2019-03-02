@@ -6917,4 +6917,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.getForEntity(url,Integer.class).getBody();
     }
 
+    /**
+     *获取当前用户的还款项目
+     * @param userId
+     * @param roleId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid){
+        BorrowInfoResponse response=restTemplate.getForEntity(" http://AM-TRADE/am-trade/aems/repay/get_borrow/"+userId+"/"+roleId+"/"+borrowNid,BorrowInfoResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            return response.getResult();
+        }
+        return null;
+    }
 }
