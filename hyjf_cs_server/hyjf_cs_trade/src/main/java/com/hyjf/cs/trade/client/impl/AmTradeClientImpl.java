@@ -6926,7 +6926,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid){
-        BorrowInfoResponse response=restTemplate.getForEntity(" http://AM-TRADE/am-trade/aems/repay/get_borrow/"+userId+"/"+roleId+"/"+borrowNid,BorrowInfoResponse.class).getBody();
+        BorrowInfoResponse response=restTemplate.getForEntity("http://AM-TRADE/am-trade/aems/repay/get_borrow/"+userId+"/"+roleId+"/"+borrowNid,BorrowInfoResponse.class).getBody();
         if (Response.SUCCESS.equals(response.getRtn())){
             return response.getResult();
         }
