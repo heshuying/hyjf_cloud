@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.BatchRepayTotalRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
@@ -17,6 +18,8 @@ import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -5299,6 +5302,133 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
 
         return repayProjectInfo;
+    }
+
+    /**
+     * 计算担保机构批量还款总垫付金额并插入冻结日志
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean) {
+        String userId = requestBean.getUserId();
+        String userName = requestBean.getUserName();
+        String orderId = requestBean.getOrderId();
+        String account = requestBean.getAccount();
+        RepayListRequest requestListBean = new RepayListRequest();
+        requestListBean.setUserId(requestBean.getUserId());
+        requestListBean.setRoleId("3");
+        requestListBean.setStartDate(requestBean.getStartDate());
+        requestListBean.setEndDate(requestBean.getEndDate());
+        requestListBean.setStatus("0");
+        requestListBean.setRepayStatus("0");
+        List<RepayListCustomizeVO> orgRepayList = selectOrgRepayList(requestListBean);
+        if(orgRepayList == null || orgRepayList.size() == 0){
+            return BigDecimal.ZERO;
+        }
+        int allRepaySize = orgRepayList.size();//所有还款标的数目
+        BigDecimal repayTotal = BigDecimal.ZERO;
+        logger.info("【批量还款垫付】冻结订单号：{}，开始计算总垫付金额。总还款笔数：{}，垫付机构用户名：{}",orderId, allRepaySize, userName);
+        for (RepayListCustomizeVO repayInfo:orgRepayList) {
+            String borrowNid = repayInfo.getBorrowNid();
+            try {
+                Borrow borrow = getBorrowByNid(borrowNid);
+                RepayBean repayBean = null;
+                // 计算垫付机构还款
+                if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
+                    repayBean = searchRepayTotalV2(Integer.parseInt(userId), borrow);
+                } else {// 分期还款
+                    repayBean = searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
+                }
+                repayBean.setRepayUserId(Integer.parseInt(userId));
+                checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
+                //防止智投还款时正在发生债转操作
+                int errflag = repayBean.getFlag();
+                if (1 == errflag) {
+                    throw new RuntimeException("借款编号：" + borrowNid + ",存在正在债转的操作,无法还款........");
+                }
+                //还款去重
+                boolean result = checkRepayInfo(null, borrowNid);
+                if (!result) {
+                    logger.error("【批量还款垫付】冻结订单号：{}，借款编号:{}，项目正在还款中...", orderId, borrowNid);
+                    continue;
+                }
+                //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
+                insertRepayOrgFreezeLof(Integer.parseInt(userId), orderId, account, borrowNid, repayBean, userName, false);
+                BigDecimal total = repayBean.getRepayAccountAll();
+                repayTotal = repayTotal.add(total);
+            } catch (Exception e) {
+                logger.error("【批量还款垫付】批量垫付单个标的发生异常！", e);
+            }
+        }
+        logger.info("【批量还款垫付】冻结订单号：{}，总垫付金额：{}",orderId, repayTotal);
+        return repayTotal;
+    }
+
+    private void checkForRepayRequestOrg(String borrowNid, String userId, String userName, RepayBean repayBean) {
+        if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(userId)) {
+            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
+        }
+        // 平台密码校验、服务费授权校验、开户校验在处理批次还款前进行校验
+        Borrow borrow = getBorrowByNid(borrowNid);
+        if (borrow == null) {
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        Account account = getAccount(Integer.parseInt(userId));
+        if (repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == -1) {
+            // 垫付机构符合还款条件，可以还款
+            // 垫付机构批量还款 ，不验证银行账户余额
+        } else {
+            // 用户平台账户余额不足
+            logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", userName);
+            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+        }
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
+        if (!tranactionSetFlag) {//设置失败
+            logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
+            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+            String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+        }
+    }
+
+    private void insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+        Borrow borrow = getBorrowByNid(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+        BankRepayOrgFreezeLog log = new BankRepayOrgFreezeLog();
+        log.setRepayUserId(userId);// 还款人用户userId
+        log.setRepayUserName(userName);// 还款人用户名
+        log.setBorrowUserId(borrow.getUserId());// 借款人userId
+        log.setBorrowUserName(borrow.getBorrowUserName());// 借款人用户名
+        log.setAccount(account);// 电子账号
+        log.setOrderId(orderId);// 订单号:txDate+txTime+seqNo
+        log.setBorrowNid(borrow.getBorrowNid());// 借款编号
+        log.setPlanNid(borrow.getPlanNid());// 计划编号
+        log.setInstCode(borrowInfo.getInstCode());// 资产来源
+        log.setAmount(borrow.getAccount());// 借款金额
+        log.setAmountFreeze(repay.getRepayAccountAll());// 冻结金额
+        log.setRepayAccount(repay.getRepayAccount());// 应还本息
+        log.setRepayFee(repay.getRepayFee());// 还款服务费
+        log.setLowerInterest(BigDecimal.ZERO.subtract(repay.getChargeInterest()));// 减息金额
+        log.setPenaltyAmount(BigDecimal.ZERO);// 违约金
+        log.setDefaultInterest(repay.getLateInterest());// 逾期罚息?
+        Integer period = borrow.getBorrowPeriod();
+        String borrowStyle = borrow.getBorrowStyle();
+        String borrowPeriod = period + (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) ? "天" : "个月");
+        String periodTotal = CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ? "1" : repay.getBorrowPeriod();
+        int remainRepayPeriod = CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ? 1 : repay.getRepayPeriod();
+        int repayPeriod = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
+        log.setBorrowPeriod(borrowPeriod);// 借款期限
+        log.setTotalPeriod(Integer.parseInt(periodTotal));// 总期数
+        log.setCurrentPeriod(repayPeriod);// 当前期数
+        log.setAllRepayFlag(isAllRepay ? 1 : 0);// 是否全部还款 0 否 1 是
+        log.setDelFlag(0);// 0 有效 1 无效
+        log.setCreateUserId(userId);
+        log.setCreateUserName(userName);
+        bankRepayOrgFreezeLogMapper.insertSelective(log);
+        logger.info("【批量还款垫付】借款编号：{}，插入垫付机构冻结表日志。", borrowNid);
     }
 
     @Override

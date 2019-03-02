@@ -817,7 +817,7 @@ public class RepayManageController extends BaseTradeController {
         if (repayStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 String retMsg = bean.getRetMsg();
-                logger.error("【还款合法性检查异步通知】数据合法性异常！银行返回信息：{}", retMsg);
+                logger.error("【还款合法性检查异步通知】借款编号：{}，数据合法性异常！银行返回信息：{}",borrowNid, retMsg);
                 apicron.setData(retMsg);
                 apicron.setFailTimes((apicron.getFailTimes() + 1));
                 // 更新任务API状态为还款校验失败
@@ -873,7 +873,7 @@ public class RepayManageController extends BaseTradeController {
                 || repayStatus == CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS) {
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 String retMsg = bean.getRetMsg();
-                logger.error("【还款业务处理结果异步通知】还款失败！银行返回信息：{}", retMsg);
+                logger.error("【还款业务处理结果异步通知】借款编号：{}，还款失败！银行返回信息：{}", retMsg, borrowNid);
                 apicron.setData(retMsg);
                 apicron.setFailTimes((apicron.getFailTimes() + 1));
                 // 更新任务API状态为放款校验失败
