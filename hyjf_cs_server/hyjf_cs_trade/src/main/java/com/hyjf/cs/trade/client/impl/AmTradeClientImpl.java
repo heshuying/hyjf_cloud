@@ -4242,9 +4242,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean) {
-        String url = "http://AM-TRADE/am-trade/repay/get_batch_reapy_total/";
+        String url = "http://AM-TRADE/am-trade/repay/get_batch_reapy_total";
         BigDecimalResponse response =restTemplate.postForEntity(url,requestBean,BigDecimalResponse.class).getBody();
-        if (Validator.isNotNull(response)&&response.getRtn().equals(Response.SUCCESS)){
+        if (Response.isSuccess(response)){
             return response.getResultDec();
         }
         return BigDecimal.ZERO;
