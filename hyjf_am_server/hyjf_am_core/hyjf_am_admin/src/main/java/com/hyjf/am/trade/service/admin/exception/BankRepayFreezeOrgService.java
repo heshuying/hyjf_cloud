@@ -15,6 +15,8 @@ public interface BankRepayFreezeOrgService {
 
     List<BankRepayFreezeOrgCustomize> selectList(RepayFreezeOrgRequest requestBean);
 
+    Integer deleteFreezeLogById(Integer id);
+
     Integer deleteOrgFreezeTempLogs(String orderId, String borrowNid);
 
     List<BankRepayOrgFreezeLog> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);

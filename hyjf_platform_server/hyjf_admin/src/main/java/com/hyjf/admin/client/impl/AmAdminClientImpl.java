@@ -38,6 +38,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1687,6 +1688,20 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 根据id删除
+     */
+    @Override
+    public Integer deleteOrgFreezeLogById(Integer id) {
+        StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/deleteById/");
+        url.append(id);
+        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
      * 根据orderId删除
      */
     @Override
@@ -1704,9 +1719,12 @@ public class AmAdminClientImpl implements AmAdminClient {
      * 根据条件查询担保机构冻结日志
      */
     @Override
-    public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId) {
+    public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid) {
         StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/getValid/");
         url.append(orderId);
+        if(StringUtils.isNotBlank(borrowNid)){
+            url.append("/").append(borrowNid);
+        }
         BankRepayOrgFreezeLogResponse response = restTemplate.getForEntity(url.toString(), BankRepayOrgFreezeLogResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();

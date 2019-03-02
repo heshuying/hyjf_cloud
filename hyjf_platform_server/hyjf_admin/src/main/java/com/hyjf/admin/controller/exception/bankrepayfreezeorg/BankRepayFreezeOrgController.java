@@ -99,12 +99,12 @@ public class BankRepayFreezeOrgController extends BaseController {
 
         String orderId = form.getOrderId();
         String borrowNid = form.getBorrowNid();
-        if (StringUtils.isBlank(orderId) || StringUtils.isBlank(borrowNid)) {
+        if (StringUtils.isBlank(orderId)) {
             logger.info("请求参数不全");
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
-        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid);
         if (Validator.isNull(repayFreezeFlog)) {
             logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
@@ -135,7 +135,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     }
 
     /**
-     * 冻结异常情况处理
+     * 冻结异常情况单个处理
      */
     @ApiOperation(value = "冻结异常情况处理", notes = "冻结异常情况处理")
     @ResponseBody
@@ -144,13 +144,13 @@ public class BankRepayFreezeOrgController extends BaseController {
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
         logger.info("请求参数：" + JSON.toJSONString(form));
         AdminResult result = new AdminResult();
-        JSONObject ret = new JSONObject();
         String orderId = form.getOrderId();
-        if (StringUtils.isBlank(orderId)) {
+        String borrowNid = form.getBorrowNid();
+        if (StringUtils.isBlank(orderId) && StringUtils.isBlank(borrowNid)) {
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
-        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid);
         if (Validator.isNull(repayFreezeFlog)) {
             logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
@@ -163,7 +163,7 @@ public class BankRepayFreezeOrgController extends BaseController {
             return updateRepayMoney(form, callApiBg);
         } else if (BankCallConstant.RESPCODE_SUCCESS.equals(form.getRetCode()) && !"0".equals(form.getState())) {
             logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！",orderId);
-            bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+            bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
             RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
             result.setStatusInfo(AdminResult.FAIL, "未冻结状态,解除冻结");
             return result;
@@ -186,13 +186,13 @@ public class BankRepayFreezeOrgController extends BaseController {
             if (Validator.isNotNull(callApiBg)) {
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && !"0".equals(callApiBg.getState())) {
                     logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！", orderId);
-                    bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                     RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
                 } else if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && "0".equals(callApiBg.getState())) {
                     return updateRepayMoney(form, callApiBg);
                 } else {
                     logger.info("【代偿冻结异常处理】订单号：{},未冻结或已解冻状态,解除冻结！", orderId);
-                    bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                 }
             } else {
                 result.setStatusInfo(AdminResult.FAIL, "处理失败，请稍后再试！");
@@ -227,7 +227,7 @@ public class BankRepayFreezeOrgController extends BaseController {
                 callApiBg.setSeqNo(orderId.substring(14));
                 boolean updateResult = this.bankRepayFreezeOrgService.updateForRepayRequest(repay, callApiBg, isAllRepay);
                 if (updateResult) {
-                    bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                     // 如果有正在出让的债权,先去把出让状态停止
                     this.bankRepayFreezeOrgService.updateBorrowCreditStautus(borrowNid);
 
