@@ -177,7 +177,7 @@ public interface RepayManageService extends BaseTradeService {
      * @author wgx
      * @date 2018/10/11
      */
-    Integer insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay,
+    Integer insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay,
                                  String userName, boolean isAllRepay);
     /**
      * 根据条件查询垫付机构冻结日志

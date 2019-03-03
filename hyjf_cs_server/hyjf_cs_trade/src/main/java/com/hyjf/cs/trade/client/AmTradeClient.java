@@ -1769,6 +1769,8 @@ public interface AmTradeClient {
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
 
+    BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean);
+
     /**
      *根据订单编号取得该订单的还款列表
      * @param couponTenderNid
@@ -2848,5 +2850,6 @@ public interface AmTradeClient {
     List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
+    BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 }
 

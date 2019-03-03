@@ -4238,6 +4238,19 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 计算担保机构批量还款总垫付金额并插入冻结日志
+     */
+    @Override
+    public BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repay/get_batch_reapy_total";
+        BigDecimalResponse response =restTemplate.postForEntity(url,requestBean,BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 根据订单号获取汇计划加入明细
      *
      * @param accedeOrderId
@@ -6296,7 +6309,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public BooleanResponse updateHjhPlanJoinOn() {
-        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOn";
+        String url = "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOn";
         BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
         if (response != null && Response.isSuccess(response)) {
             return response;
@@ -6917,4 +6930,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.getForEntity(url,Integer.class).getBody();
     }
 
+    /**
+     *获取当前用户的还款项目
+     * @param userId
+     * @param roleId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid){
+        BorrowInfoResponse response=restTemplate.getForEntity("http://AM-TRADE/am-trade/aems/repay/get_borrow/"+userId+"/"+roleId+"/"+borrowNid,BorrowInfoResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            return response.getResult();
+        }
+        return null;
+    }
 }

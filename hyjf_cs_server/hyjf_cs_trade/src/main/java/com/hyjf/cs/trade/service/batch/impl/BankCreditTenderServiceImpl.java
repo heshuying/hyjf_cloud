@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
@@ -77,6 +78,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                     continue;
                 }
                 BankCallBean tenderQueryBean = this.creditInvestQuery(logOrderId, userId);
+                logger.info("债转出借掉单异常处理请求银行接口返回结果："+JSONObject.toJSONString(tenderQueryBean));
                 if (tenderQueryBean!=null){
                     // bean实体转化
                     tenderQueryBean.convert();
@@ -100,6 +102,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                     }
 
                     // 查询相应的债转承接记录
+                    logger.info("债转出借掉单异常处理之logOrderId："+logOrderId);
                     CreditTenderLogVO creditenderLog = this.amTradeClient.selectCreditTenderLogByOrderId(logOrderId);
                     if (creditenderLog!=null){
                         try {

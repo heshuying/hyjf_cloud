@@ -25,6 +25,7 @@ import java.util.Map;
  * @Date  
  */
 public interface AmUserClient {
+	UserVO getUserByAccountId(String accountId);
 
 	UserVO findUserById(int userId);
 

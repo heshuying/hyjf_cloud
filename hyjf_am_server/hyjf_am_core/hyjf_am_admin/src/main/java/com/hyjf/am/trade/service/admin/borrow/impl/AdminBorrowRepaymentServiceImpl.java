@@ -233,7 +233,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                     exampleLast.setOrderByClause(" repay_period DESC ");
                     List<BorrowRepayPlan> listLast = this.borrowRepayPlanMapper.selectByExample(exampleLast);
                     if (listLast != null && listLast.size() > 0) {
-                        repayTimeStart = listLast.get(0).getRepayTime()+"";
+                        repayTimeStart = GetDate.getDateTimeMyTimeInMillis(listLast.get(0).getRepayTime());
                     } else {
                         repayTimeStart = GetDate.getDateTimeMyTimeInMillis(repayPlanBean.getCreateTime());
                     }
