@@ -1,7 +1,6 @@
 package com.hyjf.cs.user.service.aems.auth;
 
 import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -82,5 +81,5 @@ public interface AemsAuthService extends BaseUserService {
      * @param orderId
      * @return
      */
-    WebResult<Object> seachUserAuthErrorMessgae(String orderId);
+    String seachUserAuthErrorMessgae(String orderId);
 }
