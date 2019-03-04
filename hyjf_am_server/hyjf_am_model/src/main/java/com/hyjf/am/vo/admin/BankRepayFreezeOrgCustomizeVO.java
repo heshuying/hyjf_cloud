@@ -22,6 +22,10 @@ public class BankRepayFreezeOrgCustomizeVO extends BaseVO implements Serializabl
      */
     private String totalPeriod;
     /**
+     * 当前期数
+     */
+    private String currentPeriod;
+ /**
      * 还款人用户名
      */
     private String repayUserName;
@@ -94,6 +98,14 @@ public class BankRepayFreezeOrgCustomizeVO extends BaseVO implements Serializabl
 
     public void setTotalPeriod(String totalPeriod) {
         this.totalPeriod = totalPeriod;
+    }
+
+    public String getCurrentPeriod() {
+        return currentPeriod;
+    }
+
+    public void setCurrentPeriod(String currentPeriod) {
+        this.currentPeriod = currentPeriod;
     }
 
     public String getRepayUserName() {
