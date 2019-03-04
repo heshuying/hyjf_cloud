@@ -224,6 +224,8 @@ public class AdminBorrowRepaymentController extends BaseController {
     // 更新用户的交易明细
     @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.GET)
     public IntegerResponse updateBorrowRepayDelayDays(@PathVariable String borrowNid, @PathVariable String delayDays) {
+        logger.info("updateBorrowRepayDelayDays  delayDays:" +delayDays);
+        logger.info("updateBorrowRepayDelayDays borrowNid:" +borrowNid);
         IntegerResponse response=new IntegerResponse();
         try {
             response.setResultInt(adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays));
