@@ -74,12 +74,13 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                 String logOrderId = creditTenderLog.getLogOrderId();
                 // 根据承接订单号查询债转出借表
                 List<CreditTenderVO> creditTenderList = this.amTradeClient.selectCreditTender(assignNid);
-                if (CollectionUtils.isNotEmpty(creditTenderList)) {
+                if (creditTenderList != null && creditTenderList.size() > 0) {
                     continue;
                 }
+                // 调用相应的查询接口查询此笔承接的相应的承接状态
                 BankCallBean tenderQueryBean = this.creditInvestQuery(logOrderId, userId);
                 logger.info("债转出借掉单异常处理请求银行接口返回结果："+JSONObject.toJSONString(tenderQueryBean));
-                if (tenderQueryBean!=null){
+                if (Validator.isNotNull(tenderQueryBean)){
                     // bean实体转化
                     tenderQueryBean.convert();
                     // 获取债转查询返回码
@@ -102,21 +103,26 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                     }
 
                     // 查询相应的债转承接记录
-                    logger.info("债转出借掉单异常处理之logOrderId："+logOrderId);
                     CreditTenderLogVO creditenderLog = this.amTradeClient.selectCreditTenderLogByOrderId(logOrderId);
-                    if (creditenderLog!=null){
+                    if (Validator.isNotNull(creditenderLog)){
                         try {
                             // 此次查询的授权码
                             String authCode = tenderQueryBean.getAuthCode();
                             if (StringUtils.isNotBlank(authCode)) {
-                                int sellerUserId = creditTenderLog.getCreditUserId();
+                                List<CreditTenderLogVO> creditTenderLogs1 = amTradeClient.getCreditTenderLogs(logOrderId,userId);
+                                if (CollectionUtils.isEmpty(creditTenderLogs1)) {
+                                    logger.error("查询相应的承接log表失败，承接订单号：" + logOrderId);
+                                    continue;
+                                }
+                                CreditTenderLogVO creditTenderLog1 = creditTenderLogs1.get(0);
+                                int sellerUserId = creditTenderLog1.getCreditUserId();
                                 // 取得债权出让人的用户在汇付天下的客户号
-                                BankOpenAccountVO sellerBankAccount = this.amTradeClient.getBankOpenAccount(sellerUserId);
+                                BankOpenAccountVO sellerBankAccount = this.amUserClient.selectBankAccountById(sellerUserId);
                                 // 取得承接债转的用户在汇付天下的客户号
                                 if(userId == null){
                                     logger.info("定位一下错误，请勿删除 -> userId:[{}]",userId);
                                 }
-                                BankOpenAccountVO assignBankAccount = this.amTradeClient.getBankOpenAccount(userId);
+                                BankOpenAccountVO assignBankAccount = this.amUserClient.selectBankAccountById(userId);
                                 //查询债转承接掉单的数据
                                 List<CreditTenderLogVO> creditTenderLogVOs=this.amTradeClient.getCreditTenderLogs(logOrderId, userId);
 
@@ -158,7 +164,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 SpreadsUserVO spreadsUsersSeller = this.amUserClient.querySpreadsUsersByUserId(sellerUserId);
 
                                 //出让人
-                                UserInfoCustomizeVO userInfoCustomizeRefCr;
+                                UserInfoCustomizeVO userInfoCustomizeRefCr = null;
                                 //添加出让人承接时推荐人信息
                                 if (spreadsUsersSeller != null) {
                                     int refUserId = spreadsUsersSeller.getSpreadsUserId();
@@ -167,8 +173,6 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 }
                                 //更新网站收支明细记录
                                 EmployeeCustomizeResponse employeeCustomizeResponse=this.getEmployeeCustomize(userId,spreadsUsers);
-
-                                UserVO investUser = this.amUserClient.findUserById(userId);
 
                                 CreditTenderRequest request = new CreditTenderRequest();
                                 request.setAssignNid(logOrderId);
@@ -180,6 +184,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 request.setUserInfo(userInfo);
                                 request.setSpreadsUsers(spreadsUsers);
                                 request.setUserInfoCustomizeRefCj(userInfoCustomizeRefCj);
+                                request.setUserInfoCustomizeRefCr(userInfoCustomizeRefCr);
                                 request.setUserInfoCustomize(userInfoCustomize);
                                 request.setSpreadsUsersSeller(spreadsUsersSeller);
                                 request.setUserInfoCustomizeSeller(userInfoCustomizeSeller);
@@ -193,8 +198,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 
                                 if (tenderFlag){
 
-                                    AppUtmRegVO channelDetail
-                                            = this.amMongoClient.getAppChannelStatisticsDetailByUserId(request.getUserId());
+                                    AppUtmRegVO channelDetail = this.amMongoClient.getAppChannelStatisticsDetailByUserId(request.getUserId());
                                     if (Validator.isNotNull(channelDetail)){
                                         Map<String, Object> params = new HashMap<String, Object>();
                                         params.put("userId", request.getUserId());
@@ -287,7 +291,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
             Integer attribute = usersInfo.getAttribute();
             if (attribute != null) {
                 UserVO users =this.amUserClient.findUserById(userId);
-                Integer refUserId = spreadsUsers.getSpreadsUserId();
+                Integer refUserId = null;
+                if (Validator.isNotNull(spreadsUsers)){
+                    refUserId = spreadsUsers.getSpreadsUserId();
+                }
                 if (users != null && (attribute == 2 || attribute == 3)) {
                     EmployeeCustomizeVO employeeCustomize =this.amUserClient.selectEmployeeByUserId(userId);
                     response.setResult(employeeCustomize);
@@ -337,7 +344,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
             logger.info("定位一下错误，请勿删除 -> userId:[{}]",userId);
         }
         // 承接人用户Id
-        BankOpenAccountVO tenderOpenAccount = this.amTradeClient.getBankOpenAccount(userId);
+        BankOpenAccountVO tenderOpenAccount = this.amUserClient.selectBankAccountById(userId);
         BankCallBean bean = new BankCallBean();
         bean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         bean.setTxCode(BankCallMethodConstant.TXCODE_CREDIT_INVEST_QUERY);
