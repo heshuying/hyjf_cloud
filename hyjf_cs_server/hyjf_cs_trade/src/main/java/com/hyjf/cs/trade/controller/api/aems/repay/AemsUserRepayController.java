@@ -11,7 +11,6 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.AemsRepayRequestBean;
 import com.hyjf.cs.trade.bean.AemsRepayResultBean;
-import com.hyjf.cs.trade.bean.ResultApiBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.repay.AemsUserRepayService;
@@ -145,15 +144,16 @@ public class AemsUserRepayController extends BaseTradeController {
             logger.info("Aems还款接口借款人还款校验,mes:"+mes);
 
             if(StringUtils.isNotEmpty(mes)){
-                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK999999);
-                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK999999);
-                resultBean.setStatusDesc(mes);
+                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000010);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000010);
+                resultBean.setStatusDesc("还款来源有误！"+mes);
                 return resultBean;
             }
             logger.info("Aems还款接口借款人还款校验结束------------------------------------------");
             int errflag = repay.getFlag();
             if (1 == errflag) {
-                resultBean.setStatus(ResultApiBean.ERROR);
+                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000009);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000009);
                 resultBean.setStatusDesc(repay.getMessage());
                 return resultBean;
             }
@@ -172,7 +172,8 @@ public class AemsUserRepayController extends BaseTradeController {
                     boolean result = repayManageService.checkRepayInfo(null, requestBean.getProductId());
                     logger.info("Aems还款接口垫付机构还款还款result:"+result);
                     if (!result) {
-                        resultBean.setStatus(ResultApiBean.ERROR);
+                        resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000009);
+                        resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000009);
                         resultBean.setStatusDesc("项目正在还款中...");
                         return resultBean;
                     }
@@ -187,7 +188,8 @@ public class AemsUserRepayController extends BaseTradeController {
                     boolean result = repayManageService.checkRepayInfo(null, requestBean.getProductId());
                     logger.info("Aems还款接口借款人还款还款result:"+result);
                     if (!result) {
-                        resultBean.setStatus(ResultApiBean.ERROR);
+                        resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000009);
+                        resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000009);
                         resultBean.setStatusDesc("项目正在还款中...");
                         return resultBean;
                     }
@@ -200,7 +202,8 @@ public class AemsUserRepayController extends BaseTradeController {
                 }
             } catch (Exception e) {
                 logger.error("还款申请冻结资金异常", e);
-                resultBean.setStatus(ResultApiBean.ERROR);
+                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK999999);
                 resultBean.setStatusDesc("还款申请冻结资金异常");
                 return resultBean;
             }
