@@ -6,8 +6,10 @@ package com.hyjf.cs.user.service.pandect.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -47,11 +49,13 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
     AmDataCollectClient amDataCollectClient;
 
     @Override
-    public JSONObject pandect(UserVO user) {
+    public JSONObject pandect(Integer userId) {
         JSONObject result = new JSONObject();
+        CheckUtil.check(userId!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+        AccountPandectVO accountPandectVO = amUserClient.getAccount4Pandect(userId);
+        UserVO user = accountPandectVO.getUserVO();
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(user,webViewUserVO);
-        Integer userId = user.getUserId();
         String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
@@ -124,7 +128,14 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
 
         AccountVO account = amTradeClient.getAccount(userId);
         result.put("account", account);
-        // 获取用户的汇付信息
+        if(user.getBankOpenAccount()==1){
+            webViewUserVO.setBankOpenAccount(true);
+        }else {
+            webViewUserVO.setBankOpenAccount(false);
+        }
+        result.put("webViewUser", webViewUserVO);
+
+        /*// 获取用户的汇付信息
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
         result.put("accountChinapnr", chinapnr);
         if (chinapnr != null) {
@@ -145,6 +156,27 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
             result.put("bankCard", 0);
         }else {
             result.put("bankCard", 1);
+        }*/
+        /*优化汇付信息， 电子账户信息和银行卡号  2019年3月4日14:58:33 zyk begin*/
+
+        /*优化汇付信息， 电子账户信息和银行卡号  2019年3月4日14:58:33 zyk end*/
+        if (accountPandectVO != null){
+            AccountChinapnrVO chinapnr = accountPandectVO.getAccountChinapnrVO();
+            result.put("accountChinapnr", chinapnr);
+            if (chinapnr != null) {
+                webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
+            }
+
+            // 获取用户的银行电子账户信息
+            BankOpenAccountVO bankAccount = accountPandectVO.getBankOpenAccountVO();
+            result.put("bankOpenAccount", bankAccount);
+            // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
+            BankCardVO bankCard = accountPandectVO.getBankCardVO();
+            if(bankCard==null){
+                result.put("bankCard", 0);
+            }else {
+                result.put("bankCard", 1);
+            }
         }
 
         List<RecentPaymentListCustomizeVO> recoverLatestList = amTradeClient.selectRecentPaymentList(userId);
