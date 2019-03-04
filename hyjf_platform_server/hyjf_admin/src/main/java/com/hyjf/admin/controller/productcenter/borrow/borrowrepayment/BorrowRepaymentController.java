@@ -115,7 +115,6 @@ public class BorrowRepaymentController extends BaseController {
      */
     @ApiOperation(value = "延期", notes = "延期")
     @PostMapping(value = "/delayRepayAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "borrowNid",value = "项目编号"),
             @ApiImplicitParam(name = "delayDays",value = "延期天数"),
@@ -128,10 +127,6 @@ public class BorrowRepaymentController extends BaseController {
         String borrowNid = (String) map.get("borrowNid");
         String delayDays = (String) map.get("delayDays");
         String repayTime = (String) map.get("repayTime");
-
-        logger.info("borrowNid:" +borrowNid);
-        logger.info("delayDays:" +delayDays);
-        logger.info("repayTime:" +repayTime);
 
         DelayRepayInfoBean bean=borrowRepaymentService.updateBorrowRepayDelayDays( borrowNid,delayDays,repayTime);
         result.setStatus(AdminResult.SUCCESS);
