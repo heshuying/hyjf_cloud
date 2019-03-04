@@ -19,6 +19,12 @@
 					#{utmId}
 				</foreach>
 			</if>
+			<if test="startTime != null and startTime != ''">
+				AND DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) <![CDATA[<=]]> #{endTime}
+			</if>
 		</where>
 	</sql>
 	<resultMap id="ChannelStatisticsDetailMapResult"
