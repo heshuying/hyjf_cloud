@@ -343,7 +343,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         List<AppPushManageVO> manageInfoList = amTradeClient.getAnnouncements();
 
         // 从am_trade层获取有效公告信息
-        if(manageInfoList != null){
+        if(!CollectionUtils.isEmpty(manageInfoList)){
 
             List<Map> announMap = new ArrayList<>();
             for (AppPushManageVO manager : manageInfoList) {
@@ -360,7 +360,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 cements.put("URL", jumpUrl);
                 announMap.add(cements);
             }
-            info.put("announcements",announMap);
+            if (!CollectionUtils.isEmpty(announMap)){
+                info.put("announcements",announMap);
+            }
         }else{
             logger.info("-------------获取首页列表时，未获得有效公告！---------");
         }
