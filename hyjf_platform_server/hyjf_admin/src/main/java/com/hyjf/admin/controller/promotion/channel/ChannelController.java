@@ -21,6 +21,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -119,6 +120,33 @@ public class ChannelController extends BaseController {
         }
         return adminResult;
     }
+
+    @ApiOperation(value = "通过用户名校验用户是否存在", notes = "通过用户名校验用户是否存在")
+    @PostMapping("/getUserByUserName")
+    @ApiImplicitParam(name = "userName",value = "用户名")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
+    public UtmResultResponse getUserByUserName(HttpServletRequest request, HttpServletResponse response, @RequestBody Map map){
+        UtmResultResponse adminResult = new UtmResultResponse();
+        String userName = (String) map.get("userName");
+        //根据utmId判断，如存在，则为修改，如不存在，则为新增
+        logger.info("校验推荐人合法性，username：" + userName);
+        if(StringUtils.isNotBlank(userName)){
+            UserVO user = channelService.getUserByUserName(userName);
+            if(user == null){
+                adminResult.setStatus(UtmResultResponse.NOUSER);
+                adminResult.setStatusDesc("用户不存在");
+            }else {
+                adminResult.setStatusDesc("用户存在");
+                adminResult.setStatus(AdminResult.SUCCESS);
+            }
+        }else{
+            adminResult.setStatus(AdminResult.FAIL);
+            adminResult.setStatusDesc("用户名为空!");
+        }
+        return adminResult;
+    }
+
+
 
 
     @ApiOperation(value = "删除信息", notes = "删除信息")
