@@ -6145,7 +6145,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     public BorrowRepayPlanBeanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/getBorrowRepayPlanInfo/" + borrowNid + "/" + borrowApr + "/" + borrowStyle;
         BorrowRepayPlanResponse response = restTemplate.getForEntity(url, BorrowRepayPlanResponse.class).getBody();
-        logger.info("response:" +JSONObject.toJSON(response));
         if (response != null) {
             return response.getBorrowRepayPlanBeanVO();
         }

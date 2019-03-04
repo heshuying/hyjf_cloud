@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 
 import javax.validation.Valid;
 
+import com.hyjf.am.user.service.front.account.BankCardService;
+import com.hyjf.am.user.service.front.account.BankOpenService;
+import com.hyjf.am.user.service.front.user.UserInfoService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +38,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
 
+
 /**
  * @author xiasq
  * @version UserController, v0.1 2018/1/21 22:37
@@ -46,6 +50,15 @@ import com.hyjf.common.validator.Validator;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BankOpenService bankOpenService;
+
+    @Autowired
+    private BankCardService bankCardService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
@@ -317,6 +330,16 @@ public class UserController extends BaseController {
         return new BooleanResponse(Boolean.TRUE);
     }
 
+    @RequestMapping("/updateUser")
+    public BooleanResponse updateUser(@RequestBody LoginUserRequest request) {
+        logger.info("updateLoginUser start...request :{}", request);
+        UserVO userVO = request.getUserVO();
+        User user = new User();
+        BeanUtils.copyProperties(userVO,user);
+        userService.updateUser(request.getUserId(), request.getIp(),user);
+        return new BooleanResponse(Boolean.TRUE);
+    }
+
     @RequestMapping("/getHjhUserAuthByUserId/{userId}")
     public HjhUserAuthResponse getHjhUserAuthByUserId(@PathVariable Integer userId) {
         logger.info("getHjhUserAuthByUserId run...userId is :{}", userId);
@@ -461,6 +484,56 @@ public class UserController extends BaseController {
             BeanUtils.copyProperties(accountChinapnr, accountChinapnrVO);
             response.setResult(accountChinapnrVO);
         }
+        return response;
+    }
+
+    /**
+     * 账户中心用户信息综合查询方法
+     * @author zhangyk
+     * @date 2019/3/4 15:25
+     */
+    @RequestMapping("/getAccount4Pandect/{userId}")
+    public AccountPandectResponse getAccount4Pandect(@PathVariable Integer userId) {
+        if(userId == null ){
+            logger.error("userId is null");
+            return null;
+        }
+        AccountPandectResponse response = new AccountPandectResponse();
+        AccountPandectVO accountPandectVO = new AccountPandectVO();
+
+        User user = userService.findUserByUserId(userId);
+        if (user != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            accountPandectVO.setUserVO(userVO);
+        }
+
+        // 查询汇付信息
+        AccountChinapnr accountChinapnr = userService.getAccountChinapnr(userId);
+        if (null != accountChinapnr) {
+            AccountChinapnrVO accountChinapnrVO = new AccountChinapnrVO();
+            BeanUtils.copyProperties(accountChinapnr, accountChinapnrVO);
+            accountPandectVO.setAccountChinapnrVO(accountChinapnrVO);
+        }
+
+        //  查询账户信息
+        BankOpenAccountExample accountExample = new BankOpenAccountExample();
+        BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+        crt.andUserIdEqualTo(Integer.valueOf(userId));
+        BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(accountExample);
+        if(bankOpenAccount != null){
+            BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+            BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+            accountPandectVO.setBankOpenAccountVO(bankOpenAccountVO);
+        }
+
+
+        //   查询银行卡信息
+        BankCard card = bankCardService.getBankCard(userId);
+        if (card != null) {
+            accountPandectVO.setBankCardVO(CommonUtils.convertBean(card, BankCardVO.class));
+        }
+        response.setResult(accountPandectVO);
         return response;
     }
 
@@ -1014,5 +1087,12 @@ public class UserController extends BaseController {
         return response;
     }
 
+    @GetMapping("/getWebViewUserByUserId/{userId}")
+    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId){
+        WebViewUserResponse response = new WebViewUserResponse();
+        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId);
+        response.setResult(webViewUserVO);
+        return response;
+    }
 
 }

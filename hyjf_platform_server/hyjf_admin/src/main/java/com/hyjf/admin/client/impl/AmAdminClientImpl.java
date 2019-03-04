@@ -1663,7 +1663,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request) {
+    public List<BankRepayFreezeOrgCustomizeVO> getBankRepayFreezeOrgList(RepayFreezeOrgRequest request) {
         String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_data";
         BankRepayFreezeOrgResponse response = restTemplate.postForEntity(url,request,BankRepayFreezeOrgResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -1678,7 +1678,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request) {
+    public Integer getBankRepayFreezeOrgCount(RepayFreezeOrgRequest request) {
         String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_count";
         IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
         if (Response.isSuccess(response)) {

@@ -650,7 +650,24 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                                         detailBeanList.add(detailBean);
                                         break;
                                     case "position":
-                                        detailBean.setKey("岗位职业");
+                                        detailBean.setKey("职业类型");
+                                        if ("10000".equals(result.toString())) {
+                                            detailBean.setVal("机关企事业单位负责人");
+                                        } else if ("20000".equals(result.toString())) {
+                                            detailBean.setVal("专业技术人员");
+                                        } else if ("30000".equals(result.toString())) {
+                                            detailBean.setVal("办事人员和有关人员");
+                                        } else if ("40000".equals(result.toString())) {
+                                            detailBean.setVal("会生产服务和生活服务人员");
+                                        } else if ("50000".equals(result.toString())) {
+                                            detailBean.setVal("农、林、牧、渔业生产及辅助人员");
+                                        } else if ("60000".equals(result.toString())) {
+                                            detailBean.setVal("生产制造及有关人员");
+                                        } else if ("70000".equals(result.toString())) {
+                                            detailBean.setVal("军人");
+                                        } else if ("80000".equals(result.toString())) {
+                                            detailBean.setVal("不便分类的其他从业人员");
+                                        }
                                         detailBeanList.add(detailBean);
                                         break;
                                     case "annualIncome":
@@ -838,6 +855,21 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                                     break;
                                 case "financePurpose":
                                     detailBean.setKey("借款用途");
+                                    if ("01".equals(result.toString())) {
+                                        detailBean.setVal("个人消费");
+                                    } else if ("02".equals(result.toString())) {
+                                        detailBean.setVal("个人经营");
+                                    } else if ("03".equals(result.toString())) {
+                                        detailBean.setVal("个人资金周转");
+                                    } else if ("04".equals(result.toString())) {
+                                        detailBean.setVal("房贷");
+                                    } else if ("05".equals(result.toString())) {
+                                        detailBean.setVal("企业经营");
+                                    } else if ("06".equals(result.toString())) {
+                                        detailBean.setVal("企业周转");
+                                    } else if ("99".equals(result.toString())) {
+                                        detailBean.setVal("其他");
+                                    }
                                     detailBeanList.add(detailBean);
                                     break;
                                 case "monthlyIncome":

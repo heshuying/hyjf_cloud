@@ -655,88 +655,91 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int updateUserRe(AdminUserRecommendRequest request) {
-        // 根据推荐人用户名查询用户
-        User userRecommendNew = this.selectUserByRecommendName(request.getRecommendName());
-        String oldRecommendUser = "";
         String userId = request.getUserId();
-        if (null != userRecommendNew) {
-            // 获取新推荐人
-            // 根据主键查询用户信息
-            User user = this.selectUserByUserId(Integer.parseInt(userId));
-            SpreadsUser spreadsUserOld = this.selectSpreadsUsersByUserId(user.getUserId());
-            int spreadsUserId = 0;
-            if(null!=spreadsUserOld){
-                User spreadsOld = this.selectUserByUserId(spreadsUserOld.getUserId());
-                oldRecommendUser = spreadsOld.getUsername();
-                spreadsUserId = spreadsUserOld.getSpreadsUserId();
-            }
-            // 更新userInfo的主单与非主单信息
-            updateUserParam(user.getUserId(), spreadsUserId);
-
-            SpreadsUser spreadsUser = this.selectSpreadsUsersByUserId(Integer.parseInt(userId));
-            Integer oldSpreadUserId = null;
-            if (spreadsUser != null) {
-                oldSpreadUserId = spreadsUser.getSpreadsUserId();
-                spreadsUser.setSpreadsUserId(userRecommendNew.getUserId());
-                spreadsUser.setOperation(request.getLoginUserName());
-                spreadsUser.setUpdateTime(new Date());
-                // 保存用户推荐人信息
-                int spreadUpdFlg = spreadsUserMapper.updateByPrimaryKey(spreadsUser);
-                if (spreadUpdFlg > 0) {
-                    logger.info("==================推荐人信息表变更保存成功!======");
-                } else {
-                    throw new RuntimeException("============推荐人信息表更新失败!========");
+        String oldRecommendUser = "";
+        if (StringUtils.isNotBlank(request.getRecommendName())) {
+            // 根据推荐人用户名查询用户
+            User userRecommendNew = this.selectUserByRecommendName(request.getRecommendName());
+            if (null != userRecommendNew) {
+                // 获取新推荐人
+                // 根据主键查询用户信息
+                User user = this.selectUserByUserId(Integer.parseInt(userId));
+                SpreadsUser spreadsUserOld = this.selectSpreadsUsersByUserId(user.getUserId());
+                int spreadsUserId = 0;
+                if (null != spreadsUserOld) {
+                    User spreadsOld = this.selectUserByUserId(spreadsUserOld.getUserId());
+                    oldRecommendUser = spreadsOld.getUsername();
+                    spreadsUserId = spreadsUserOld.getSpreadsUserId();
                 }
-                SpreadsUserLog spreadsUsersLog = new SpreadsUserLog();
-                spreadsUsersLog.setOldSpreadsUserId(oldSpreadUserId);
-                spreadsUsersLog.setUserId(Integer.parseInt(userId));
-                spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
-                spreadsUsersLog.setType("web");
-                spreadsUsersLog.setOpernote(request.getRemark());
-                spreadsUsersLog.setOperation(request.getLoginUserName());
-                spreadsUsersLog.setCreateTime(new Date());
-                spreadsUsersLog.setCreateIp(request.getIp());
-                // 保存相应的更新日志信息
-                int userLogUpdFlg = spreadsUserLogMapper.insertSelective(spreadsUsersLog);
-                if (userLogUpdFlg > 0) {
-                    logger.info("==================更新用户推荐人日志表成功!======");
+                // 更新userInfo的主单与非主单信息
+                updateUserParam(user.getUserId(), spreadsUserId);
+
+                SpreadsUser spreadsUser = this.selectSpreadsUsersByUserId(Integer.parseInt(userId));
+                Integer oldSpreadUserId = null;
+                if (spreadsUser != null) {
+                    oldSpreadUserId = spreadsUser.getSpreadsUserId();
+                    spreadsUser.setSpreadsUserId(userRecommendNew.getUserId());
+                    spreadsUser.setOperation(request.getLoginUserName());
+                    spreadsUser.setUpdateTime(new Date());
+                    // 保存用户推荐人信息
+                    int spreadUpdFlg = spreadsUserMapper.updateByPrimaryKey(spreadsUser);
+                    if (spreadUpdFlg > 0) {
+                        logger.info("==================推荐人信息表变更保存成功!======");
+                    } else {
+                        throw new RuntimeException("============推荐人信息表更新失败!========");
+                    }
+                    SpreadsUserLog spreadsUsersLog = new SpreadsUserLog();
+                    spreadsUsersLog.setOldSpreadsUserId(oldSpreadUserId);
+                    spreadsUsersLog.setUserId(Integer.parseInt(userId));
+                    spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
+                    spreadsUsersLog.setType("web");
+                    spreadsUsersLog.setOpernote(request.getRemark());
+                    spreadsUsersLog.setOperation(request.getLoginUserName());
+                    spreadsUsersLog.setCreateTime(new Date());
+                    spreadsUsersLog.setCreateIp(request.getIp());
+                    // 保存相应的更新日志信息
+                    int userLogUpdFlg = spreadsUserLogMapper.insertSelective(spreadsUsersLog);
+                    if (userLogUpdFlg > 0) {
+                        logger.info("==================更新用户推荐人日志表成功!======");
+                    } else {
+                        throw new RuntimeException("============更新用户推荐人日志表失败!========");
+                    }
                 } else {
-                    throw new RuntimeException("============更新用户推荐人日志表失败!========");
+                    SpreadsUser spreadUser = new SpreadsUser();
+                    spreadUser.setUserId(Integer.parseInt(request.getUserId()));
+                    spreadUser.setSpreadsUserId(userRecommendNew.getUserId());
+                    spreadUser.setCreateIp(request.getIp());
+                    spreadUser.setCreateTime(new Date());
+                    spreadUser.setType("web");
+                    spreadUser.setOpernote("web");
+                    spreadUser.setOperation(request.getLoginUserName());
+                    // 插入推荐人
+                    int spreadInstFlg = spreadsUserMapper.insertSelective(spreadUser);
+                    if (spreadInstFlg > 0) {
+                        logger.info("==================插入推荐人成功!======");
+                    } else {
+                        throw new RuntimeException("============插入推荐人失败!========");
+                    }
+                    SpreadsUserLog spreadsUsersLog = new SpreadsUserLog();
+                    spreadsUsersLog.setOldSpreadsUserId(null);
+                    spreadsUsersLog.setUserId(Integer.parseInt(request.getUserId()));
+                    spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
+                    spreadsUsersLog.setType("web");
+                    spreadsUsersLog.setOpernote(request.getRemark());
+                    spreadsUsersLog.setOperation(request.getLoginUserName());
+                    spreadsUsersLog.setCreateTime(new Date());
+                    spreadsUsersLog.setCreateIp(request.getIp());
+                    // 保存相应的更新日志信息
+                    int spreadLogFlg = spreadsUserLogMapper.insertSelective(spreadsUsersLog);
+                    if (spreadLogFlg > 0) {
+                        logger.info("==================保存用户推荐人日志表信息成功!======");
+                    } else {
+                        throw new RuntimeException("============保存用户推荐人日志表失败!========");
+                    }
                 }
             } else {
-                SpreadsUser spreadUser = new SpreadsUser();
-                spreadUser.setUserId(Integer.parseInt(request.getUserId()));
-                spreadUser.setSpreadsUserId(userRecommendNew.getUserId());
-                spreadUser.setCreateIp(request.getIp());
-                spreadUser.setCreateTime(new Date());
-                spreadUser.setType("web");
-                spreadUser.setOpernote("web");
-                spreadUser.setOperation(request.getLoginUserName());
-                // 插入推荐人
-                int spreadInstFlg = spreadsUserMapper.insertSelective(spreadUser);
-                if (spreadInstFlg > 0) {
-                    logger.info("==================插入推荐人成功!======");
-                } else {
-                    throw new RuntimeException("============插入推荐人失败!========");
-                }
-                SpreadsUserLog spreadsUsersLog = new SpreadsUserLog();
-                spreadsUsersLog.setOldSpreadsUserId(null);
-                spreadsUsersLog.setUserId(Integer.parseInt(request.getUserId()));
-                spreadsUsersLog.setSpreadsUserId(userRecommendNew.getUserId());
-                spreadsUsersLog.setType("web");
-                spreadsUsersLog.setOpernote(request.getRemark());
-                spreadsUsersLog.setOperation(request.getLoginUserName());
-                spreadsUsersLog.setCreateTime(new Date());
-                spreadsUsersLog.setCreateIp(request.getIp());
-                // 保存相应的更新日志信息
-                int spreadLogFlg = spreadsUserLogMapper.insertSelective(spreadsUsersLog);
-                if (spreadLogFlg > 0) {
-                    logger.info("==================保存用户推荐人日志表信息成功!======");
-                } else {
-                    throw new RuntimeException("============保存用户推荐人日志表失败!========");
-                }
+                logger.error("=====用户管理修改推荐人时，根据用户名“" + request.getRecommendName() + "未找到相应用户！！");
             }
-
         } else {
             // 根据主键查询用户信息
             User user = this.selectUserByUserId(Integer.parseInt(userId));

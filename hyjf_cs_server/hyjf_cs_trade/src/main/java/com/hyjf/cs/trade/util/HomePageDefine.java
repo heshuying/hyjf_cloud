@@ -97,5 +97,14 @@ public class HomePageDefine{
 
 	public static final  String WECHAT_STATUC_DESC = "成功";
 
+	/** 首页推荐标的类型：可投标的和定时标的*/
+	public static final int INDEX_PROJECT_SHOW_TYPE_TENDER = 1;
+
+	/** 首页推荐标的类型：复审中标的*/
+	public static final int INDEX_PROJECT_SHOW_TYPE_FULL = 2;
+
+	/** 首页推荐标的类型：还款中标的*/
+	public static final int INDEX_PROJECT_SHOW_TYPE_REPAY = 3;
+
 
 }

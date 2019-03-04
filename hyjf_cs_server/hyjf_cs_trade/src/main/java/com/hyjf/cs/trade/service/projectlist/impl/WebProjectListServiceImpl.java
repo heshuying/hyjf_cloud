@@ -329,6 +329,150 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         return webResult;
     }
 
+
+    @Override
+    public WebResult getBorrowDetail4Test(Map map, String userId) {
+        logger.info(">>>>>>>>getBorrowDetail4Test<<<<<<<");
+        String borrowNid = (String) map.get(ProjectConstant.PARAM_BORROW_NID);
+        UserVO userVO = null;
+        // 原来独立于实体之外的属性，单独放在一个map中
+        Map<String, Object> other = new HashMap();
+        if (userId != null) {
+            ProjectCustomeDetailVO tempProjectCustomeDetail = amTradeClient.searchProjectDetail(map);
+            if (tempProjectCustomeDetail == null) {
+                CheckUtil.check(false, MsgEnum.STATUS_CE000013);
+            }
+            // 转换一次是排除业务操作对缓存的干扰
+            ProjectCustomeDetailVO borrow = CommonUtils.convertBean(tempProjectCustomeDetail,ProjectCustomeDetailVO.class);
+
+            /* 项目还款方式 */
+            String borrowStyle = borrow.getBorrowStyle();
+            // 收益率
+            BigDecimal borrowApr = new BigDecimal(borrow.getBorrowApr());
+
+            userVO = amUserClient.findUserById(Integer.valueOf(userId));
+            other.put("riskFlag", getRiskFlag(userVO));
+
+            HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+            //自动投标授权状态 0未授权  1已授权
+            other.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+            //自动债转授权~~
+            other.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+            //服务费授权~~
+            other.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+            //是否开启自动投标授权校验 0未开启 1已开启
+            other.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            other.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            other.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            other.put("isCheckUserRole",systemConfig.getRoleIsopen());
+
+
+
+            Integer userId2 = userVO.getUserId();
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            // 获取用户最优优惠券
+            MyCouponListRequest request = new MyCouponListRequest();
+            request.setBorrowNid(borrowNid);
+            request.setUserId(String.valueOf(userId2));
+            request.setPlatform(CustomConstants.CLIENT_PC);
+            request.setMoney("0");
+            BestCouponListVO couponConfig = new BestCouponListVO();
+            couponConfig = amTradeClient.selectBestCoupon(request);
+            if (couponConfig != null) {
+                other.put("isThereCoupon", 1);
+                if (couponConfig.getCouponType() == 1) {
+                    couponInterest = getInterestDj(couponConfig.getCouponQuota(), (int) couponConfig.getCouponProfitTime(), borrowApr);
+                } else {
+                    couponInterest = getInterest(borrowStyle, couponConfig.getCouponType(), borrowApr, couponConfig.getCouponQuota(), "0",
+                            new Integer(borrow.getBorrowPeriod() == null ? "0" : borrow.getBorrowPeriod()));
+                }
+                couponConfig.setCouponInterest(CustomConstants.DF_FOR_VIEW.format(couponInterest));
+                if (couponConfig != null && couponConfig.getCouponType() == 3) {
+                    other.put("interest", CustomConstants.DF_FOR_VIEW.format(couponInterest.subtract(couponConfig.getCouponQuota())));
+                } else {
+                    other.put("interest", CustomConstants.DF_FOR_VIEW.format(couponInterest));
+                }
+            } else {
+                other.put("isThereCoupon", 0);
+            }
+            other.put("couponConfig", couponConfig);
+            /** 可用优惠券张数开始 pccvip */
+            request.setMoney("0");
+            Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
+            other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
+            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
+            other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");
+            /** 可用优惠券张数结束 pccvip */
+            /** 计算最优优惠券结束 */
+
+            /*用户基本信息 开始*/
+            other.put("loginFlag", "1");//登录状态 0未登陆 1已登录
+            //用户信息
+            if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
+                other.put("openFlag", "1");
+            } else {
+                other.put("openFlag", "0");
+            }
+            // 用户是否出借项目
+            int count = amTradeClient.countUserInvest(userId2, borrowNid);
+            if (count > 0) {
+                other.put("investFlag", "1");//是否出借过该项目 0未出借 1已出借
+            } else {
+                other.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
+            }
+            //是否设置交易密码
+            if (userVO.getIsSetPassword() == 1) {
+                other.put("setPwdFlag", "1");
+            } else {
+                other.put("setPwdFlag", "0");
+            }
+            //账户信息
+            AccountVO account = amTradeClient.getAccountByUserId(userId2);
+            String userBalance= "";
+            if (account != null && account.getBankBalance() != null){
+                userBalance = account.getBankBalance().toString();
+            }else{
+                userBalance = "0.00";
+            }
+            other.put("userBalance", userBalance);
+        }else {
+            logger.info(">>>>>userId is null<<<<<<");
+        }
+        WebResult webResult = new WebResult();
+        webResult.setData(other);
+        return webResult;
+    }
+
+
+    @Override
+    public WebResult getBorrowDetail4Test2(Map map, String userId) {
+        logger.info(">>>>>>>>getBorrowDetail42Test<<<<<<<");
+        String borrowNid = (String) map.get(ProjectConstant.PARAM_BORROW_NID);
+        UserVO userVO = null;
+        // 原来独立于实体之外的属性，单独放在一个map中
+        Map<String, Object> other = new HashMap();
+        
+        if(map.get("mishi")!=null) {
+
+        	for (int i = 0; i < 10; i++) {
+        		int count = amTradeClient.countUserInvest(Integer.valueOf(userId), borrowNid);
+			}
+            
+            
+        }else {
+
+            
+            int count = amTradeClient.countUserInvest(Integer.valueOf(userId), borrowNid);
+        }
+        
+        
+        WebResult webResult = new WebResult();
+        webResult.setData(other);
+        return webResult;
+    }
+
     // 新标组装标的详情
     private void getProjectDetailNew(Map<String, Object> other, ProjectCustomeDetailVO borrow, UserVO userVO) {
         //标的号
@@ -393,7 +537,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setMoney("0");
             Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
-            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
             other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
