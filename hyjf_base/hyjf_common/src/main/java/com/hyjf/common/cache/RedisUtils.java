@@ -1084,7 +1084,7 @@ public class RedisUtils {
             }
 
         } catch (Exception e) {
-            if (value.equals(jedis.get(rediskey))) {
+            if (jedis.get(rediskey)!=null&&value.equals(jedis.get(rediskey))) {
                 jedis.del(rediskey);
             }
             logger.error("Redis错误", e);

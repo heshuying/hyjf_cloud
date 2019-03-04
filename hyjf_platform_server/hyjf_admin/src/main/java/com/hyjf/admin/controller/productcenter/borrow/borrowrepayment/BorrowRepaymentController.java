@@ -127,6 +127,10 @@ public class BorrowRepaymentController extends BaseController {
         String borrowNid = (String) map.get("borrowNid");
         String delayDays = (String) map.get("delayDays");
         String repayTime = (String) map.get("repayTime");
+        logger.info("请求参数 borrowNid:" +borrowNid);
+        logger.info("请求参数 delayDays:" +delayDays);
+        logger.info("请求参数 repayTime:" +repayTime);
+
         DelayRepayInfoBean bean=borrowRepaymentService.updateBorrowRepayDelayDays( borrowNid,delayDays,repayTime);
         result.setStatus(AdminResult.SUCCESS);
         result.setStatusDesc(AdminResult.SUCCESS_DESC);
