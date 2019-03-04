@@ -1587,7 +1587,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public WebViewUserVO getWebViewUserByUserId(Integer userId) {
-        //主从延迟查询主库
         User user = this.findUserByUserId(userId);
         WebViewUserVO result = new WebViewUserVO();
         result.setUserId(user.getUserId());
