@@ -188,9 +188,6 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/getBorrowRepayInfo/{borrowNid}/{borrowApr}/{borrowStyle}")
     public BorrowRepayResponse getBorrowRepayInfo(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
-        logger.info("项目订单编号:" +borrowNid);
-        logger.info("项目年化利率:" +borrowApr);
-        logger.info("项目类型:" +borrowStyle);
 
         BorrowRepayResponse response = new BorrowRepayResponse();
         try{
@@ -210,17 +207,12 @@ public class AdminBorrowRepaymentController extends BaseController {
 
     @RequestMapping(value = "/getBorrowRepayPlanInfo/{borrowNid}/{borrowApr}/{borrowStyle}")
     public BorrowRepayPlanResponse getBorrowRepayPlanInfo(@PathVariable String borrowNid,@PathVariable String borrowApr,@PathVariable String borrowStyle) throws ParseException {
-        logger.info("项目订单编号:" +borrowNid);
-        logger.info("项目年化利率:" +borrowApr);
-        logger.info("项目类型:" +borrowStyle);
 
         BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
         try{
             BorrowRepayPlanBean customize = adminBorrowRepaymentService.getBorrowRepayPlanInfo(borrowNid,borrowApr,borrowStyle);
-            logger.info("customize:" +JSONObject.toJSON(customize));
             if(customize!=null){
                 BorrowRepayPlanBeanVO vo = CommonUtils.convertBean(customize,BorrowRepayPlanBeanVO.class);
-                logger.info("vo:" +JSONObject.toJSON(vo));
                 response.setBorrowRepayPlanBeanVO(vo);
             }
             return response;

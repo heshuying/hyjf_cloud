@@ -270,6 +270,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	 */
 	@Override
 	public boolean updateTenderCreditInfo(CreditTenderRequest request) throws Exception{
+	    //承接订单号
 		String assignOrderId = request.getAssignNid();
 		Integer userId = request.getUserId();
 		String authCode = request.getAuthCode();
@@ -390,33 +391,68 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 				}
 				// 1.插入credit_tender
 				CreditTender creditTender = new CreditTender();
-				creditTender.setAssignCreateDate(creditTenderLog.getAssignCreateDate());// 认购日期
-				creditTender.setAssignPay(creditTenderLog.getAssignPay());// 支付金额
-				creditTender.setCreditFee(creditTenderLog.getCreditFee());// 服务费
-				creditTender.setAssignCapital(creditTenderLog.getAssignCapital());// 出借本金
-				creditTender.setUserId(userId);// 用户名称
-				creditTender.setCreditUserId(sellerUserId);// 出让人id
-				creditTender.setStatus(0);// 状态
-				creditTender.setBidNid(creditTenderLog.getBidNid());// 原标标号
-				creditTender.setCreditNid(creditTenderLog.getCreditNid());// 债转标号
-				creditTender.setCreditTenderNid(creditTenderLog.getCreditTenderNid());// 债转投标单号
-				creditTender.setAssignNid(creditTenderLog.getAssignNid());// 认购单号
-				creditTender.setAssignAccount(creditTenderLog.getAssignAccount());// 回收总额
-				creditTender.setAssignInterest(creditTenderLog.getAssignInterest());// 债转利息
-				creditTender.setAssignInterestAdvance(creditTenderLog.getAssignInterestAdvance());// 垫付利息
-				creditTender.setAssignPrice(creditTenderLog.getAssignPrice());// 购买价格
-				creditTender.setAssignRepayAccount(creditTenderLog.getAssignRepayAccount());// 已还总额
-				creditTender.setAssignRepayCapital(creditTenderLog.getAssignRepayCapital());// 已还本金
-				creditTender.setAssignRepayInterest(creditTenderLog.getAssignRepayInterest());// 已还利息
-				creditTender.setAssignRepayEndTime(creditTenderLog.getAssignRepayEndTime());// 最后还款日
-				creditTender.setAssignRepayLastTime(creditTenderLog.getAssignRepayLastTime());// 上次还款时间
-				creditTender.setAssignRepayNextTime(creditTenderLog.getAssignRepayNextTime());// 下次还款时间
-				creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());// 最终实际还款时间
-				creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());// 还款期数
-				creditTender.setAddIp(creditTenderLog.getAddIp());// ip
-				creditTender.setClient(0);// 客户端
-				creditTender.setAuthCode(authCode);// 银行存管新增授权码
-				creditTender.setRecoverPeriod(borrowCredit.getRecoverPeriod());// 已还款期数
+				// 认购日期
+				creditTender.setAssignCreateDate(creditTenderLog.getAssignCreateDate());
+				// 支付金额
+				creditTender.setAssignPay(creditTenderLog.getAssignPay());
+				// 服务费
+				creditTender.setCreditFee(creditTenderLog.getCreditFee());
+				// 添加时间
+				creditTender.setCreateTime(new Date());
+				// 出借本金
+				creditTender.setAssignCapital(creditTenderLog.getAssignCapital());
+				// 用户名称
+				creditTender.setUserId(userId);
+				//承接人用户名
+                creditTender.setUserName(creditTenderLog.getUserName());
+				// 出让人id
+                creditTender.setCreditUserId(sellerUserId);
+				//出让人用户名
+				creditTender.setCreditUserName(creditTenderLog.getCreditUserName());
+				creditTender.setBorrowUserId(creditTenderLog.getBorrowUserId());
+				creditTender.setBorrowUserName(creditTenderLog.getBorrowUserName());
+				// 状态
+				creditTender.setStatus(0);
+				// 原标标号
+				creditTender.setBidNid(creditTenderLog.getBidNid());
+				// 债转标号
+				creditTender.setCreditNid(creditTenderLog.getCreditNid());
+				// 债转投标单号
+				creditTender.setCreditTenderNid(creditTenderLog.getCreditTenderNid());
+				// 认购单号
+				creditTender.setAssignNid(creditTenderLog.getAssignNid());
+				// 回收总额
+				creditTender.setAssignAccount(creditTenderLog.getAssignAccount());
+				// 债转利息
+				creditTender.setAssignInterest(creditTenderLog.getAssignInterest());
+				// 垫付利息
+				creditTender.setAssignInterestAdvance(creditTenderLog.getAssignInterestAdvance());
+				// 购买价格
+				creditTender.setAssignPrice(creditTenderLog.getAssignPrice());
+				// 已还总额
+				creditTender.setAssignRepayAccount(creditTenderLog.getAssignRepayAccount());
+				// 已还本金
+				creditTender.setAssignRepayCapital(creditTenderLog.getAssignRepayCapital());
+				// 已还利息
+				creditTender.setAssignRepayInterest(creditTenderLog.getAssignRepayInterest());
+				// 最后还款日
+				creditTender.setAssignRepayEndTime(creditTenderLog.getAssignRepayEndTime());
+				// 上次还款时间
+				creditTender.setAssignRepayLastTime(creditTenderLog.getAssignRepayLastTime());
+				// 下次还款时间
+				creditTender.setAssignRepayNextTime(creditTenderLog.getAssignRepayNextTime());
+				// 最终实际还款时间
+				creditTender.setAssignRepayYesTime(creditTenderLog.getAssignRepayYesTime());
+				// 还款期数
+				creditTender.setAssignRepayPeriod(creditTenderLog.getAssignRepayPeriod());
+				// ip
+				creditTender.setAddIp(creditTenderLog.getAddIp());
+				// 客户端
+				creditTender.setClient(0);
+				// 银行存管新增授权码
+				creditTender.setAuthCode(authCode);
+				// 已还款期数
+				creditTender.setRecoverPeriod(borrowCredit.getRecoverPeriod());
 
 				// add by hesy  添加承接人承接时推荐人信息-- 开始
 				if (spreadsUsers != null){
@@ -626,8 +662,10 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 						}
 						perManageSum = perManage;
 						CreditRepay creditRepay = new CreditRepay();
-						creditRepay.setUserId(userId);// 用户名称
+						creditRepay.setUserId(userId);// 用户id
+						creditRepay.setUserName(creditTender.getUserName());//用户名称
 						creditRepay.setCreditUserId(creditTender.getCreditUserId());// 出让人id
+						creditRepay.setCreditUserName(creditTender.getCreditUserName());//出让人名称
 						creditRepay.setStatus(0);// 状态
 						creditRepay.setBidNid(creditTender.getBidNid());// 原标标号
 						creditRepay.setCreditNid(creditTender.getCreditNid());// 债转标号
@@ -831,7 +869,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			param.put("val_balance", creditTender.getAssignPay() + "");
 			param.put("val_profit", creditTender.getAssignInterest() + "");
 			param.put("val_amount", creditTender.getAssignAccount() + "");
-			commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), param));
+			AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_CJZQ);
+			commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
 		}
 	}
 

@@ -944,8 +944,6 @@ public interface AmTradeClient {
 
     List<CreditTenderVO> selectCreditTender(String assignNid);
 
-    BankOpenAccountVO getBankOpenAccount(Integer userId);
-
     Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
 
     CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId);
