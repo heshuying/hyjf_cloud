@@ -102,7 +102,7 @@ public class RedisConstants {
     public static final String HJH_PLAN_LIST = "queue:";
 
     // 汇计划自动债转中的标志 redis key (debtswaping:$borrowNid)
-    public static final String HJH_DEBT_SWAPING = "debtswaping:";
+    public static final String HJH_DEBT_SWAPING = "DebtSwaping:";
 
     // 汇计划标的队列标识 债转（债转标的） (queue:credit:$creditNid)
     public static final String HJH_BORROW_CREDIT = "credit:";

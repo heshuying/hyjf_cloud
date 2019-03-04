@@ -295,6 +295,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     if (credit == null) {
                         throw new Exception(logMsgHeader + "债转号不存在 " + redisBorrow.getBorrowNid());
                     }
+                    borrowNidForCredit = credit.getBorrowNid();
 
                     /** 4.3. 校验是否可以债转	 */
                     // 债权的转让人，和计划订单的出借人不能相同

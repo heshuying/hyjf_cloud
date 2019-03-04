@@ -944,8 +944,6 @@ public interface AmTradeClient {
 
     List<CreditTenderVO> selectCreditTender(String assignNid);
 
-    BankOpenAccountVO getBankOpenAccount(Integer userId);
-
     Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
 
     CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId);
@@ -1768,6 +1766,8 @@ public interface AmTradeClient {
     RepayBean getRepayBean(Map<String, String> paraMap);
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
+
+    BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean);
 
     /**
      *根据订单编号取得该订单的还款列表
@@ -2848,5 +2848,6 @@ public interface AmTradeClient {
     List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
+    BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 }
 

@@ -974,13 +974,15 @@ public interface AmAdminClient {
      */
     void updateBindCard(BindCardExceptionRequest request);
 
-    List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request);
+    List<BankRepayFreezeOrgCustomizeVO> getBankRepayFreezeOrgList(RepayFreezeOrgRequest request);
 
-    Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request);
+    Integer getBankRepayFreezeOrgCount(RepayFreezeOrgRequest request);
+
+    Integer deleteOrgFreezeLogById(Integer id);
 
     Integer deleteOrgFreezeLog(String orderId);
 
-    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId);
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
 
     /**
      * 移动客户端 - App 推送管理 列表

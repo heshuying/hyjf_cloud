@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.controller.api.aems.repay;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -50,6 +50,8 @@ public class AemsUserRepayController extends BaseTradeController {
     @ApiOperation(value = "还款申请", notes = "还款申请")
     @PostMapping("/repay")
     public AemsRepayResultBean userRepay(@RequestBody AemsRepayRequestBean requestBean, HttpServletRequest request) {
+        logger.info("Aems还款开始-----------------------------------------------------------------------------------" );
+        logger.info("Aems还款请求参数:" + JSONObject.toJSONString(requestBean));
         AemsRepayResultBean resultBean = new AemsRepayResultBean();
         resultBean.setProductId(requestBean.getProductId());
         resultBean.setAccountId(requestBean.getAccountId());
@@ -91,6 +93,8 @@ public class AemsUserRepayController extends BaseTradeController {
             resultBean.setStatusDesc("用户信息不存在");
             return resultBean;
         }
+        logger.info("Aems还款接口根据电子账户accountId:"+resultBean.getAccountId()+"查询到用户user:" + JSONObject.toJSONString(user));
+
         Integer userId = user.getUserId();
         String roleId = null;
         String repaySouce = requestBean.getRepaySouce();
@@ -120,7 +124,8 @@ public class AemsUserRepayController extends BaseTradeController {
             resultBean.setStatusDesc("用户在银行未开户");
             return resultBean;
         }
-        BorrowVO borrow = this.aemsUserRepayService.searchRepayProject(userId, roleId, borrowNid);
+        BorrowInfoVO borrow = this.aemsUserRepayService.searchRepayProject(userId, roleId, borrowNid);
+        logger.info("Aems还款接口根据用户id:"+userId+"borrowNid:"+borrowNid +" 查询到的borrow:"+ JSONObject.toJSONString(borrow));
         /** redis 锁 */
         boolean isRepay = RedisUtils.tranactionSet("repay_borrow_nid" + borrowNid, 60);
         if(!isRepay){
@@ -132,10 +137,20 @@ public class AemsUserRepayController extends BaseTradeController {
         // 校验用户/垫付机构的还款
         RepayBean repay = null;
         if (StringUtils.isNotEmpty(roleId) && "2".equals(roleId)) {// 借款人还款校验
-            repay = aemsUserRepayService.getRepayBean(userId, roleId, borrow.getBorrowNid(), isAllRepay);
+            repay = aemsUserRepayService.getRepayBean(userId, roleId, borrowNid, isAllRepay);
            // 借款人还款校验
-            aemsUserRepayService.checkForRepayRequest(requestBean.getProductId(), user, userBankOpenAccount, repay);
-            
+            logger.info("Aems还款接口借款人还款校验开始------------------------------------------");
+            logger.info("Aems还款接口借款人还款校验：productId:"+requestBean.getProductId()+"user:"+JSONObject.toJSONString(user)+"userBankOpenAccount:"+JSONObject.toJSONString(userBankOpenAccount)+"repay:"+JSONObject.toJSONString(repay));
+            String mes = aemsUserRepayService.checkForRepayRequest(requestBean.getProductId(), user, userBankOpenAccount, repay);
+            logger.info("Aems还款接口借款人还款校验,mes:"+mes);
+
+            if(StringUtils.isNotEmpty(mes)){
+                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusDesc(mes);
+                return resultBean;
+            }
+            logger.info("Aems还款接口借款人还款校验结束------------------------------------------");
             int errflag = repay.getFlag();
             if (1 == errflag) {
                 resultBean.setStatus(ResultApiBean.ERROR);
@@ -155,13 +170,14 @@ public class AemsUserRepayController extends BaseTradeController {
                     String orderId = txDate + txTime + seqNo;// 交易日期+交易时间+交易流水号
                     //add by cwyang 2017-07-25 还款去重
                     boolean result = repayManageService.checkRepayInfo(null, requestBean.getProductId());
+                    logger.info("Aems还款接口垫付机构还款还款result:"+result);
                     if (!result) {
                         resultBean.setStatus(ResultApiBean.ERROR);
                         resultBean.setStatusDesc("项目正在还款中...");
                         return resultBean;
                     }
                     //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
-                    repayManageService.insertRepayOrgFreezeLof(userId, orderId, account, requestBean.getProductId(), repay, user.getUsername(), isAllRepay);
+                    repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, requestBean.getProductId(), repay, user.getUsername(), isAllRepay);
                     Map<String, Object> map = repayManageService.getBankRefinanceFreezePage(userId, user.getUsername(), ip, orderId, requestBean.getProductId(), repayTotal, account);
                     resultBean.setData(map);
                     return resultBean;
@@ -169,6 +185,7 @@ public class AemsUserRepayController extends BaseTradeController {
                     String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
                     //add by cwyang 2017-07-25 还款去重
                     boolean result = repayManageService.checkRepayInfo(null, requestBean.getProductId());
+                    logger.info("Aems还款接口借款人还款还款result:"+result);
                     if (!result) {
                         resultBean.setStatus(ResultApiBean.ERROR);
                         resultBean.setStatusDesc("项目正在还款中...");
