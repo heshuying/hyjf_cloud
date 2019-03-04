@@ -29,4 +29,6 @@ public interface AppProjectListCustomizeMapper {
     List<HjhPlanCustomizeVO> getIndexHjhExtensionPlanList(Map map);
 
     List<AppProjectListCustomizeVO> selectHomeProjectList(Map map);
+
+    List<AppProjectListCustomizeVO> selectHomeRepayProjectList(Map map);
 }
