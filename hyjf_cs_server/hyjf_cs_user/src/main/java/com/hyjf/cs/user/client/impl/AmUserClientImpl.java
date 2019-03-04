@@ -452,6 +452,16 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public AccountPandectVO getAccount4Pandect(Integer userId) {
+		String url = userService + "/user/getAccount4Pandect/" + userId ;
+		AccountPandectResponse response = restTemplate.getForEntity(url,AccountPandectResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResult();
+		}
+		return null;
+	}
+
 	/**
 	 * 校验邮箱是否存在
 	 */
