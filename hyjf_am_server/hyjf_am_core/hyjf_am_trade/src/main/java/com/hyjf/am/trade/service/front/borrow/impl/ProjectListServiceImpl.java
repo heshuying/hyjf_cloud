@@ -546,4 +546,16 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         }
         return null;
     }
+
+    /**
+     * app首页获取还款中的项目
+     * add by cwyang
+     * @param map
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> getHomeRepayProjecList(Map map) {
+
+        return appProjectListCustomizeMapper.selectHomeRepayProjectList(map);
+    }
 }

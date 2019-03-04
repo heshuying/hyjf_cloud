@@ -57,7 +57,7 @@ public class AppBindCardPageController extends BaseUserController {
      * 页面请求绑卡
      * @param request
      */
-    @PostMapping("/bindCardPage")
+    @RequestMapping("/bindCardPage")
     @ApiOperation(value = "绑卡", notes = "绑卡")
     public AppResult<Object> bindCardPage(HttpServletRequest request, @RequestHeader(value = "userId") Integer userId) {
 
