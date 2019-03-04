@@ -75,7 +75,7 @@ public class SensorsDataWithdrawServiceImpl extends BaseServiceImpl implements S
         // 提现金额
         properties.put("withdraw_amount", accountwithdraw.getTotal());
         // 提现手续费
-        properties.put("fee_amount", accountwithdraw.getFee());
+        properties.put("fee_amount", new BigDecimal(accountwithdraw.getFee()));
         // 实际到账金额
         properties.put("arrive_money", accountwithdraw.getCredited());
         // 根据用户ID 查询用户银行卡信息
