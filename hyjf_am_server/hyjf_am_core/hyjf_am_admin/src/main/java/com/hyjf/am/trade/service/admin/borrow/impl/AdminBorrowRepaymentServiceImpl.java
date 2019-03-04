@@ -201,12 +201,10 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         cra.andRepayStatusEqualTo(0);
         example.setOrderByClause(" repay_period ASC ");
         List<BorrowRepayPlan> list = this.borrowRepayPlanMapper.selectByExample(example);
-        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayPlanBean repayPlanBean = new BorrowRepayPlanBean();
             BorrowRepayPlan repayPlan = list.get(0);
             BeanUtils.copyProperties(repayPlan, repayPlanBean);
-            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(repayPlan.getRepayTime()) * 1000L);
 
@@ -275,7 +273,6 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {// 用户当前期未还款
                 repayPlanBean.setBorrowStatus("0");
             }
-            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             return repayPlanBean;
         }
         return new BorrowRepayPlanBean();
@@ -508,14 +505,17 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     @Override
     public int updateBorrowRepayDelayDays(String borrowNid, String delayDays) throws ParseException{
         AdminRepayDelayCustomize repayDelay = this.selectBorrowInfo(borrowNid);
+        logger.info("repayDelay:" +JSONObject.toJSON(repayDelay));
         // 单期标
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle())
                 || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
             BorrowRepay borrowRepay = this.getBorrowRepay(borrowNid);
+            logger.info("borrowRepay:" +JSONObject.toJSON(borrowRepay));
             borrowRepay.setDelayDays(Integer.parseInt(delayDays));
             return this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay);
         } else {
             BorrowRepayPlan borrowRepay = this.getBorrowRepayPlan(borrowNid);
+            logger.info("borrowRepayPlan:" +JSONObject.toJSON(borrowRepay));
             borrowRepay.setDelayDays(Integer.parseInt(delayDays));
             return this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepay);
         }
