@@ -139,6 +139,8 @@ public interface WebProjectListService extends BaseTradeService {
      */
     public WebResult getPlanBorrowUndertake(WebBorrowRequestBean requestBean );
 
+	WebResult getBorrowDetail4Test2(Map map, String userId);
+
 
 
 }
