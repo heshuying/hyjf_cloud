@@ -163,6 +163,8 @@ public interface AmUserClient {
 	 */
     AccountChinapnrVO getAccountChinapnr(Integer userId);
 
+    AccountPandectVO  getAccount4Pandect(Integer userId);
+
 	/**
 	 * 校验邮箱
 	 * @param email

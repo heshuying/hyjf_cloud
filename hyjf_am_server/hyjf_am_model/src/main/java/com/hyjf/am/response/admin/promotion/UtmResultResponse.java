@@ -13,6 +13,7 @@ public class UtmResultResponse<T>{
     public static final String ERROR = "-1";
     public static final String ERROR_DESC = "异常";
     public static final String FAIL = "1";
+    public static final String NOUSER = "99";
     public static final String FAIL_DESC = "失败";
     public static final String NO_PERMISSION = "2";
     public static final String NO_PERMISSION_DESC = "无权限";

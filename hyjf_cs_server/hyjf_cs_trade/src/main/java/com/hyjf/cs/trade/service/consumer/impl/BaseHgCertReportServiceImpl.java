@@ -334,42 +334,48 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     private String getBathNum(){
         Jedis jedis = pool.getResource();
-        // 操作redis
-        while ("OK".equals(jedis.watch(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID))) {
-            String numberStr = RedisUtils.get(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID);
-            JSONObject number = JSONObject.parseObject(numberStr);
-            String nowData = GetDate.formatTimeYYYYMM();
-            if(nowData.equals(number.get("nowData"))) {
-                Transaction tx = jedis.multi();
-                // 如果日期相等就直接加1
-                Integer seqId = number.getInteger("seqId");
-                ++seqId;
-                number.put("seqId",seqId);
-                tx.set(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID, number.toJSONString());
-                List<Object> result1 = tx.exec();
-                if (result1 == null || result1.isEmpty()) {
-                    continue;
-                } else {
-                    // 成功
-                    return seqId+"";
+        try{
+            // 操作redis
+            while ("OK".equals(jedis.watch(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID))) {
+                String numberStr = RedisUtils.get(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID);
+                JSONObject number = JSONObject.parseObject(numberStr);
+                String nowData = GetDate.formatTimeYYYYMM();
+                if(nowData.equals(number.get("nowData"))) {
+                    Transaction tx = jedis.multi();
+                    // 如果日期相等就直接加1
+                    Integer seqId = number.getInteger("seqId");
+                    ++seqId;
+                    number.put("seqId",seqId);
+                    tx.set(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID, number.toJSONString());
+                    List<Object> result1 = tx.exec();
+                    if (result1 == null || result1.isEmpty()) {
+                        continue;
+                    } else {
+                        // 成功
+                        return seqId+"";
+                    }
+                }else {
+                    // 重置为1
+                    Transaction tx = jedis.multi();
+                    number = new JSONObject();
+                    number.put("nowData",nowData);
+                    // 如果日期相等就直接加1
+                    number.put("seqId","1");
+                    tx.set(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID, number.toJSONString());
+                    List<Object> result1 = tx.exec();
+                    if (result1 == null || result1.isEmpty()) {
+                        continue;
+                    } else {
+                        // 成功
+                        return "1";
+                    }
                 }
-            }else {
-                // 重置为1
-                Transaction tx = jedis.multi();
-                number = new JSONObject();
-                number.put("nowData",nowData);
-                // 如果日期相等就直接加1
-                number.put("seqId","1");
-                tx.set(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID, number.toJSONString());
-                List<Object> result1 = tx.exec();
-                if (result1 == null || result1.isEmpty()) {
-                    continue;
-                } else {
-                    // 成功
-                    return "1";
-                }
-            }
 
+            }
+        }catch (Exception e){
+            logger.info("抛出异常:[{}]",e);
+        }finally {
+            RedisUtils.returnResource(pool, jedis);
         }
         return null;
     }

@@ -537,7 +537,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             request.setMoney("0");
             Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
             other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
-            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
             other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");
             /** 可用优惠券张数结束 pccvip */
             /** 计算最优优惠券结束 */
