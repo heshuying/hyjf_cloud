@@ -114,7 +114,9 @@ public class MessagePushTemplateController extends BaseController {
                         form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
                     BeanUtils.copyProperties(form, record);
-                    record.setTemplateActionUrl(form.getTemplateActionUrl2());
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+                        record.setTemplateActionUrl(form.getTemplateActionUrl2());
+                    }
                 }
             } catch (Exception e) {
                 logger.error("获取消息模板详情失败，失败原因：{}", e);
