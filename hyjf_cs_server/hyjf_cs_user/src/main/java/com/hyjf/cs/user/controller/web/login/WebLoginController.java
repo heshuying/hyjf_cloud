@@ -77,7 +77,8 @@ public class WebLoginController extends BaseUserController {
         String loginPassword = user.getPassword();
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
         //判断用户输入的密码错误次数---开始
-        Map<String, String> errorInfo = loginService.insertErrorPassword(loginUserName, loginPassword, BankCallConstant.CHANNEL_PC);
+        UserVO userVO = loginService.getUser(loginUserName);
+        Map<String, String> errorInfo = loginService.insertErrorPassword(loginUserName, loginPassword, BankCallConstant.CHANNEL_PC,userVO);
         if (!errorInfo.isEmpty()) {
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.FAIL);
@@ -86,10 +87,10 @@ public class WebLoginController extends BaseUserController {
         }
         //判断用户输入的密码错误次数---结束
         long start1 = System.currentTimeMillis();
-        WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
+        WebViewUserVO webViewUserVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC,userVO);
         logger.info("web登录操作===================:"+(System.currentTimeMillis()-start1));
-        if (userVO != null) {
-            logger.info("web端登录成功 userId is :{}", userVO.getUserId());
+        if (webViewUserVO != null) {
+            logger.info("web端登录成功 userId is :{}", webViewUserVO.getUserId());
             // add by liuyang 神策数据统计追加 20181029 start
             if (user != null && StringUtils.isNotBlank(user.getPresetProps())) {
                 logger.info("Web登录事件,神策预置属性:" + user.getPresetProps());
@@ -99,7 +100,7 @@ public class WebLoginController extends BaseUserController {
                     Map<String, Object> sensorsDataMap = JSONObject.parseObject(user.getPresetProps(), new TypeReference<Map<String, Object>>() {
                     });
                     sensorsDataBean.setPresetProps(sensorsDataMap);
-                    sensorsDataBean.setUserId(userVO.getUserId());
+                    sensorsDataBean.setUserId(webViewUserVO.getUserId());
                     // 发送神策数据统计MQ
                     this.loginService.sendSensorsDataMQ(sensorsDataBean);
                 } catch (Exception e) {
@@ -114,15 +115,15 @@ public class WebLoginController extends BaseUserController {
             userOperationLogEntity.setPlatform(0);
             userOperationLogEntity.setRemark("");
             userOperationLogEntity.setOperationTime(new Date());
-            userOperationLogEntity.setUserName(userVO.getUsername());
-            userOperationLogEntity.setUserRole(userVO.getRoleId());
+            userOperationLogEntity.setUserName(webViewUserVO.getUsername());
+            userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
             logger.info("userOperationLogEntity发送数据==="+JSONObject.toJSONString(userOperationLogEntity));
             try {
                 commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败" , e);
             }
-            result.setData(userVO);
+            result.setData(webViewUserVO);
         } else {
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.FAIL);

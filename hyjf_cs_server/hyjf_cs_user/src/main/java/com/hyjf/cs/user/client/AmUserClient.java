@@ -605,4 +605,18 @@ public interface AmUserClient {
 	 * 员工离职，修改客户属性
 	 */
 	void updateUserLeave();
+
+	/**
+	 * 获取用户信息
+	 * @param userId
+	 * @return
+	 */
+    WebViewUserVO getWebViewUserByUserId(Integer userId);
+
+	/**
+	 * 更新用户信息
+	 * @param u
+	 * @param ipAddr
+	 */
+	void updateUser(UserVO u, String ipAddr);
 }
