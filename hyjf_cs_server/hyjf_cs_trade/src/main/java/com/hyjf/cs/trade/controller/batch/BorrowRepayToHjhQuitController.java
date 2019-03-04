@@ -77,6 +77,10 @@ public class BorrowRepayToHjhQuitController extends BaseTradeController {
 
         String key = RedisConstants.HJH_LOCK_REPEAT;
         Boolean sismember = RedisUtils.sismember(key, accedeOrderId);
+        if(null == sismember) {
+            logger.error("汇计划计划进入锁定期/退出计划,查询redis出错！");
+            return false;
+        }
         if (sismember){
             return false;
         }
