@@ -99,12 +99,13 @@ public class BankRepayFreezeOrgController extends BaseController {
 
         String orderId = form.getOrderId();
         String borrowNid = form.getBorrowNid();
+        Integer currentPeriod = form.getCurrentPeriod();
         if (StringUtils.isBlank(orderId)) {
             logger.info("请求参数不全");
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
-        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid);
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid, currentPeriod);
         if (Validator.isNull(repayFreezeFlog)) {
             logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
@@ -146,11 +147,12 @@ public class BankRepayFreezeOrgController extends BaseController {
         AdminResult result = new AdminResult();
         String orderId = form.getOrderId();
         String borrowNid = form.getBorrowNid();
+        Integer currentPeriod = form.getCurrentPeriod();
         if (StringUtils.isBlank(orderId) && StringUtils.isBlank(borrowNid)) {
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
-        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid);
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid, currentPeriod);
         if (Validator.isNull(repayFreezeFlog)) {
             logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");

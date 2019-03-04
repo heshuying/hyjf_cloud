@@ -51,6 +51,7 @@
 		fl.borrow_nid AS borrowNid,
 		fl.borrow_period AS borrowPeriod,
 		fl.total_period AS totalPeriod,
+		fl.current_period AS currentPeriod,
 		fl.repay_user_name AS repayUserName,
 		fl.borrow_user_name AS borrowUserName,
 		fl.inst_code AS instCode,

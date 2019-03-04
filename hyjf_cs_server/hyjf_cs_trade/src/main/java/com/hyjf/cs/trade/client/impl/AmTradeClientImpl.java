@@ -2072,23 +2072,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-
-    /**
-     * 獲取銀行開戶信息
-     * @param userId
-     * @return
-     */
-    @Override
-    public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        logger.info(ReflectUtils.getSuperiorClass(3));
-        BankOpenAccountResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
     /**
      * 更新投標記錄
      * @param creditTenderLog

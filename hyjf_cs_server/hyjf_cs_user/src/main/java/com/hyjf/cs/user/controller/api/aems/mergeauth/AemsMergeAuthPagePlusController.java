@@ -9,7 +9,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.AuthBean;
@@ -131,9 +130,8 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
         resultMap.put("acqRes", request.getParameter("acqRes"));
         resultMap.put("chkValue", ApiSignUtil.encryptByRSA(ErrorCodeConstant.SUCCESS));
         // AEMS多合一授权失败原因查询
-        WebResult<Object> result = this.seachUserAuthErrorMessgae(orderId);
-        Map data = (Map) result.getData();
-        resultMap.put("statusDesc", (String) data.get("error"));
+        String result = this.seachUserAuthErrorMessgae(orderId);
+        resultMap.put("statusDesc", result);
 
         logger.info("AEMS多合一授权[同步回调],返回给AEMS的参数:{}", JSON.toJSONString(resultMap));
         logger.info("AEMS多合一授权[同步回调]结束----------------------------------");
@@ -300,9 +298,9 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     @ApiOperation(value = "AEMS多合一授权失败原因查询", notes = "AEMS多合一授权失败原因查询")
     @PostMapping(AEMS_AUTH_ERROR_SERCH)
     @ResponseBody
-    public WebResult<Object> seachUserAuthErrorMessgae(@RequestParam(value = "orderId") String orderId) {
+    public String seachUserAuthErrorMessgae(@RequestParam(value = "orderId") String orderId) {
         logger.info("AEMS多合一授权失败原因查询[开始],orderId:{}------------------------------", orderId);
-        WebResult<Object> result = authService.seachUserAuthErrorMessgae(orderId);
+        String result = authService.seachUserAuthErrorMessgae(orderId);
         logger.info("AEMS多合一授权失败原因查询[结束]------------------------------");
         return result;
     }
