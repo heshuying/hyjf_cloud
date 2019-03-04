@@ -1,5 +1,22 @@
 package com.hyjf.am.user.controller.front.user;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
+import com.hyjf.am.user.service.front.account.BankCardService;
+import com.hyjf.am.user.service.front.account.BankOpenService;
+import com.hyjf.am.user.service.front.user.UserInfoService;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
@@ -20,18 +37,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author xiasq
@@ -44,6 +50,15 @@ import java.util.regex.Pattern;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private BankOpenService bankOpenService;
+
+    @Autowired
+    private BankCardService bankCardService;
+
+    @Autowired
+    private UserInfoService userInfoService;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody @Valid RegisterUserRequest userRequest) {
@@ -469,6 +484,56 @@ public class UserController extends BaseController {
             BeanUtils.copyProperties(accountChinapnr, accountChinapnrVO);
             response.setResult(accountChinapnrVO);
         }
+        return response;
+    }
+
+    /**
+     * 账户中心用户信息综合查询方法
+     * @author zhangyk
+     * @date 2019/3/4 15:25
+     */
+    @RequestMapping("/getAccount4Pandect/{userId}")
+    public AccountPandectResponse getAccount4Pandect(@PathVariable Integer userId) {
+        if(userId == null ){
+            logger.error("userId is null");
+            return null;
+        }
+        AccountPandectResponse response = new AccountPandectResponse();
+        AccountPandectVO accountPandectVO = new AccountPandectVO();
+
+        User user = userService.findUserByUserId(userId);
+        if (user != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            accountPandectVO.setUserVO(userVO);
+        }
+
+        // 查询汇付信息
+        AccountChinapnr accountChinapnr = userService.getAccountChinapnr(userId);
+        if (null != accountChinapnr) {
+            AccountChinapnrVO accountChinapnrVO = new AccountChinapnrVO();
+            BeanUtils.copyProperties(accountChinapnr, accountChinapnrVO);
+            accountPandectVO.setAccountChinapnrVO(accountChinapnrVO);
+        }
+
+        //  查询账户信息
+        BankOpenAccountExample accountExample = new BankOpenAccountExample();
+        BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+        crt.andUserIdEqualTo(Integer.valueOf(userId));
+        BankOpenAccount bankOpenAccount = bankOpenService.selectByExample(accountExample);
+        if(bankOpenAccount != null){
+            BankOpenAccountVO bankOpenAccountVO = new BankOpenAccountVO();
+            BeanUtils.copyProperties(bankOpenAccount, bankOpenAccountVO);
+            accountPandectVO.setBankOpenAccountVO(bankOpenAccountVO);
+        }
+
+
+        //   查询银行卡信息
+        BankCard card = bankCardService.getBankCard(userId);
+        if (card != null) {
+            accountPandectVO.setBankCardVO(CommonUtils.convertBean(card, BankCardVO.class));
+        }
+        response.setResult(accountPandectVO);
         return response;
     }
 
