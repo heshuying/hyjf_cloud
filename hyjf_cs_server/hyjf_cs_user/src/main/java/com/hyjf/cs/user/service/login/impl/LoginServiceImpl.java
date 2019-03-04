@@ -124,8 +124,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			throw new CheckException(MsgEnum.ERR_USER_INVALID);
 		}
 		// 更新登录信息
-		amUserClient.updateLoginUser(userId, ip);
-		updateUserByUserId(userVO);
+	/*	amUserClient.updateLoginUser(userId, ip);
+		updateUserByUserId(userVO);*/
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
