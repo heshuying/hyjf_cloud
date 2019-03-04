@@ -1,19 +1,5 @@
 package com.hyjf.am.user.controller.front.user;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
@@ -34,6 +20,18 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author xiasq
@@ -314,6 +312,16 @@ public class UserController extends BaseController {
     public BooleanResponse updateLoginUser(@RequestBody LoginUserRequest request) {
         logger.info("updateLoginUser start...request :{}", request);
         userService.updateLoginUser(request.getUserId(), request.getIp());
+        return new BooleanResponse(Boolean.TRUE);
+    }
+
+    @RequestMapping("/updateUser")
+    public BooleanResponse updateUser(@RequestBody LoginUserRequest request) {
+        logger.info("updateLoginUser start...request :{}", request);
+        UserVO userVO = request.getUserVO();
+        User user = new User();
+        BeanUtils.copyProperties(userVO,user);
+        userService.updateUser(request.getUserId(), request.getIp(),user);
         return new BooleanResponse(Boolean.TRUE);
     }
 
@@ -1014,5 +1022,12 @@ public class UserController extends BaseController {
         return response;
     }
 
+    @GetMapping("/getWebViewUserByUserId/{userId}")
+    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId){
+        WebViewUserResponse response = new WebViewUserResponse();
+        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId);
+        response.setResult(webViewUserVO);
+        return response;
+    }
 
 }

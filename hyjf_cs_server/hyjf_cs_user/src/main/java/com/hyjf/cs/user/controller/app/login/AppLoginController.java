@@ -120,7 +120,8 @@ public class AppLoginController extends BaseUserController {
                 return ret;
             }
             //判断用户输入的密码错误次数---开始
-            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP);
+            UserVO userVO = loginService.getUser(username);
+            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP,userVO);
             if (!errorInfo.isEmpty()){
                 ret.put("status", "1");
                 ret.put("statusDesc", errorInfo.get("info"));
@@ -128,7 +129,7 @@ public class AppLoginController extends BaseUserController {
             }
             //判断用户输入的密码错误次数---结束
             // 执行登录(登录时间，登录ip)
-            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
+            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
             if (webViewUserVO != null) {
                 logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
                 //登录成功发送mq
