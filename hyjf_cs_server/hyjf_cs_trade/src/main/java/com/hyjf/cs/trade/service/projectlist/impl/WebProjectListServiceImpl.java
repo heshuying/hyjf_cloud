@@ -294,7 +294,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 已经登录
         if (userId != null) {
             userVO = amUserClient.findUserById(Integer.valueOf(userId));
-            other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
+            //other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
+            other.put("riskFlag", getRiskFlag(userVO));
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
         if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
@@ -324,6 +325,122 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         }
         WebResult webResult = new WebResult();
         // detailCsVO.setOther(other);
+        webResult.setData(other);
+        return webResult;
+    }
+
+
+    @Override
+    public WebResult getBorrowDetail4Test(Map map, String userId) {
+        logger.info(">>>>>>>>getBorrowDetail4Test<<<<<<<");
+        String borrowNid = (String) map.get(ProjectConstant.PARAM_BORROW_NID);
+        UserVO userVO = null;
+        // 原来独立于实体之外的属性，单独放在一个map中
+        Map<String, Object> other = new HashMap();
+        if (userId != null) {
+            ProjectCustomeDetailVO tempProjectCustomeDetail = amTradeClient.searchProjectDetail(map);
+            if (tempProjectCustomeDetail == null) {
+                CheckUtil.check(false, MsgEnum.STATUS_CE000013);
+            }
+            // 转换一次是排除业务操作对缓存的干扰
+            ProjectCustomeDetailVO borrow = CommonUtils.convertBean(tempProjectCustomeDetail,ProjectCustomeDetailVO.class);
+
+            /* 项目还款方式 */
+            String borrowStyle = borrow.getBorrowStyle();
+            // 收益率
+            BigDecimal borrowApr = new BigDecimal(borrow.getBorrowApr());
+
+            userVO = amUserClient.findUserById(Integer.valueOf(userId));
+            other.put("riskFlag", getRiskFlag(userVO));
+
+            HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+            //自动投标授权状态 0未授权  1已授权
+            other.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+            //自动债转授权~~
+            other.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+            //服务费授权~~
+            other.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+            //是否开启自动投标授权校验 0未开启 1已开启
+            other.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            other.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            other.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            other.put("isCheckUserRole",systemConfig.getRoleIsopen());
+
+
+
+            Integer userId2 = userVO.getUserId();
+            BigDecimal couponInterest = BigDecimal.ZERO;
+            // 获取用户最优优惠券
+            MyCouponListRequest request = new MyCouponListRequest();
+            request.setBorrowNid(borrowNid);
+            request.setUserId(String.valueOf(userId2));
+            request.setPlatform(CustomConstants.CLIENT_PC);
+            request.setMoney("0");
+            BestCouponListVO couponConfig = new BestCouponListVO();
+            couponConfig = amTradeClient.selectBestCoupon(request);
+            if (couponConfig != null) {
+                other.put("isThereCoupon", 1);
+                if (couponConfig.getCouponType() == 1) {
+                    couponInterest = getInterestDj(couponConfig.getCouponQuota(), (int) couponConfig.getCouponProfitTime(), borrowApr);
+                } else {
+                    couponInterest = getInterest(borrowStyle, couponConfig.getCouponType(), borrowApr, couponConfig.getCouponQuota(), "0",
+                            new Integer(borrow.getBorrowPeriod() == null ? "0" : borrow.getBorrowPeriod()));
+                }
+                couponConfig.setCouponInterest(CustomConstants.DF_FOR_VIEW.format(couponInterest));
+                if (couponConfig != null && couponConfig.getCouponType() == 3) {
+                    other.put("interest", CustomConstants.DF_FOR_VIEW.format(couponInterest.subtract(couponConfig.getCouponQuota())));
+                } else {
+                    other.put("interest", CustomConstants.DF_FOR_VIEW.format(couponInterest));
+                }
+            } else {
+                other.put("isThereCoupon", 0);
+            }
+            other.put("couponConfig", couponConfig);
+            /** 可用优惠券张数开始 pccvip */
+            request.setMoney("0");
+            Integer couponAvailableCount = amTradeClient.countAvaliableCoupon(request);
+            other.put("couponAvailableCount", couponAvailableCount == null ? "0" : String.valueOf(couponAvailableCount));
+            BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(borrow.getBorrowNid());
+            other.put("borrowMeasuresMea", StringUtils.isNotBlank(borrow.getBorrowMeasuresMea()) ? borrow.getBorrowMeasuresMea() : "");
+            /** 可用优惠券张数结束 pccvip */
+            /** 计算最优优惠券结束 */
+
+            /*用户基本信息 开始*/
+            other.put("loginFlag", "1");//登录状态 0未登陆 1已登录
+            //用户信息
+            if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
+                other.put("openFlag", "1");
+            } else {
+                other.put("openFlag", "0");
+            }
+            // 用户是否出借项目
+            int count = amTradeClient.countUserInvest(userId2, borrowNid);
+            if (count > 0) {
+                other.put("investFlag", "1");//是否出借过该项目 0未出借 1已出借
+            } else {
+                other.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
+            }
+            //是否设置交易密码
+            if (userVO.getIsSetPassword() == 1) {
+                other.put("setPwdFlag", "1");
+            } else {
+                other.put("setPwdFlag", "0");
+            }
+            //账户信息
+            AccountVO account = amTradeClient.getAccountByUserId(userId2);
+            String userBalance= "";
+            if (account != null && account.getBankBalance() != null){
+                userBalance = account.getBankBalance().toString();
+            }else{
+                userBalance = "0.00";
+            }
+            other.put("userBalance", userBalance);
+        }else {
+            logger.info(">>>>>userId is null<<<<<<");
+        }
+        WebResult webResult = new WebResult();
         webResult.setData(other);
         return webResult;
     }
@@ -1138,7 +1255,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("balance", account.getBankBalance().toString());
                 // 风险测评改造 mod by liuyang 20180111 start
                 // 风险测评标识
-                result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
+                //result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
+                result.put("riskFlag",getRiskFlag(userVO));
                 // 风险测评改造 mod by liuyang 20180111 end
                 } else {
                     result.put("loginFlag", "0");// 判断是否登录
@@ -1447,7 +1565,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     result.put("forbiddenFlag", "0");
                 }
                 // 用户是否完成风险测评标识
-                result.put("riskFlag", userVO.getIsEvaluationFlag());
+                //result.put("riskFlag", userVO.getIsEvaluationFlag());
+                result.put("riskFlag", getRiskFlag(userVO));
                 result.put("loginFlag", 1);
 
 
@@ -1959,7 +2078,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }else{
                 info.put("setPwdFlag", "0");
             }
-            try {
+            /*try {
                 if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
                     //测评到期日
                     Long lCreate = user.getEvaluationExpiredTime().getTime();
@@ -1979,7 +2098,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             } catch (Exception e) {
                 logger.error("查询用户是否完成风险测评标识出错....", e);
                 info.put("riskFlag", "0");
-            }
+            }*/
+            info.put("riskFlag",getRiskFlag(user));
+
 
             AccountVO account = amTradeClient.getAccount(userId);
             String userBalance = "";
@@ -1994,7 +2115,36 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.setData(info);
     }
 
-
+    /**
+     * 风险测评封装提取
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private static String getRiskFlag(UserVO user){
+        try {
+            if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
+                //测评到期日
+                Long lCreate = user.getEvaluationExpiredTime().getTime();
+                //当前日期
+                Long lNow = System.currentTimeMillis();
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    // 前端张龙要求测评过期返回0
+                    return "0";//return "2";//info.put("riskFlag", "2");
+                } else {
+                    //未到一年有效期
+                    return "1";//info.put("riskFlag", "1");
+                }
+            }else{
+                return "0";//info.put("riskFlag", "0");
+            }
+            // modify by liuyang 20180411 用户是否完成风险测评标识 end
+        } catch (Exception e) {
+            logger.error("查询用户是否完成风险测评标识出错....", e);
+            return "0";//info.put("riskFlag", "0");
+        }
+    }
 
     /**
      * 查询计划标的组成：承接记录

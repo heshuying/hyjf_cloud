@@ -201,12 +201,10 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
         cra.andRepayStatusEqualTo(0);
         example.setOrderByClause(" repay_period ASC ");
         List<BorrowRepayPlan> list = this.borrowRepayPlanMapper.selectByExample(example);
-        logger.info("list.size():" +list.size());
         if (list != null && list.size() > 0) {
             BorrowRepayPlanBean repayPlanBean = new BorrowRepayPlanBean();
             BorrowRepayPlan repayPlan = list.get(0);
             BeanUtils.copyProperties(repayPlan, repayPlanBean);
-            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(repayPlan.getRepayTime()) * 1000L);
 
@@ -233,7 +231,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                     exampleLast.setOrderByClause(" repay_period DESC ");
                     List<BorrowRepayPlan> listLast = this.borrowRepayPlanMapper.selectByExample(exampleLast);
                     if (listLast != null && listLast.size() > 0) {
-                        repayTimeStart = listLast.get(0).getRepayTime()+"";
+                        repayTimeStart = GetDate.getDateTimeMyTimeInMillis(listLast.get(0).getRepayTime());
                     } else {
                         repayTimeStart = GetDate.getDateTimeMyTimeInMillis(repayPlanBean.getCreateTime());
                     }
@@ -275,7 +273,6 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {// 用户当前期未还款
                 repayPlanBean.setBorrowStatus("0");
             }
-            logger.info("borrowRepayBean:" +JSONObject.toJSON(repayPlanBean));
             return repayPlanBean;
         }
         return new BorrowRepayPlanBean();

@@ -646,7 +646,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setUserName(creditTenderLog.getUserName());
                 // 出让人id
                 creditTender.setCreditUserId(sellerUserId);
+
                 creditTender.setCreditUserName(creditTenderLog.getCreditUserName());
+
                 creditTender.setBorrowUserId(creditTenderLog.getBorrowUserId());
                 creditTender.setBorrowUserName(creditTenderLog.getBorrowUserName());
                 // 状态
@@ -1407,9 +1409,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/credit/bgReturn?platform="+request.getPlatform();
-        bean.setRetUrl(retUrl);
-        bean.setNotifyUrl(bgRetUrl);
-        bean.setSuccessfulUrl(successUrl);
+        bean.setRetUrl("111"+retUrl);
+        bean.setNotifyUrl("222"+bgRetUrl);
+        bean.setSuccessfulUrl("333"+successUrl);
         bean.setLogRemark("债转出借");
         return bean;
     }

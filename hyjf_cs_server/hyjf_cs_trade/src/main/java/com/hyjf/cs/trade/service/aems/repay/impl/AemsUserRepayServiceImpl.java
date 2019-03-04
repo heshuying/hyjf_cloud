@@ -1,18 +1,17 @@
 package com.hyjf.cs.trade.service.aems.repay.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.AemsRepayResultBean;
@@ -45,12 +44,12 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
 
     @Override
     public UserVO getUserByAccountId(String accountId) {
-        return null;
+        return amUserClient.getUserByAccountId(accountId);
     }
 
     @Override
-    public BorrowVO searchRepayProject(Integer userId, String roleId, String borrowNid) {
-        return null;
+    public BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid) {
+        return amTradeClient.searchRepayProject(userId,roleId,borrowNid);
     }
 
     @Override
@@ -81,42 +80,51 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
     }
 
     @Override
-    public void checkForRepayRequest(String borrowNid, UserVO user, BankOpenAccountVO bankOpenAccountVO, RepayBean repayBean) {
+    public String checkForRepayRequest(String borrowNid, UserVO user, BankOpenAccountVO bankOpenAccountVO, RepayBean repayBean) {
         // 开户校验
         if(user.getBankOpenAccount() == null){
-            throw  new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            logger.info("Aems还款接口借款人还款校验:开户校验失败");
+            return "Aems还款接口借款人还款校验:开户校验失败";
         }
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
+        logger.info("Aems还款接口借款人还款校验:borrow："+ JSONObject.toJSONString(borrow));
         if(borrow == null){
-            throw  new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+            return "Aems还款接口借款人还款校验:borrow为空";
         }
         repayBean.setRepayUserId(user.getUserId());
 
         // 服务费授权
         boolean isPaymentAuth = this.checkPaymentAuthStatus(user.getUserId());
+        logger.info("Aems还款接口借款人还款校验:isPaymentAuth："+isPaymentAuth);
         if (!isPaymentAuth) {
-            throw  new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+            return "Aems还款接口借款人还款校验:未进行服务费授权";
         }
         boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(),300);
         if (!tranactionSetFlag) {//设置失败
-            throw  new CheckException(MsgEnum.ERR_SYSTEM_BUSY);
+            return "Aems还款接口借款人还款校验:系统繁忙,请5分钟后重试.......";
         }
 
         AccountVO accountVO = getAccountByUserId(user.getUserId());
+        logger.info("Aems还款接口借款人还款校验:accountVO："+JSONObject.toJSONString(accountVO));
         if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
             // ** 用户符合还款条件，可以还款 *//*
             // 查询用户在银行电子账户的余额
             BigDecimal userBankBalance = getBankBalancePay(user.getUserId(),bankOpenAccountVO.getAccount());
+            logger.info("Aems还款接口借款人还款校验:查询用户在银行电子账户的余额userBankBalance："+userBankBalance);
             if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
                 // ** 用户符合还款条件，可以还款 *//*
+                logger.info("Aems还款接口借款人还款校验:用户符合还款条件，可以还款");
             } else {
                 // 银行账户余额不足
-                throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+                logger.info("Aems还款接口借款人还款校验:银行账户余额不足");
+                return "Aems还款接口借款人还款校验:银行账户余额不足.......";
             }
         } else {
             // 平台账户余额不足
-            throw  new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+            logger.info("Aems还款接口借款人还款校验:平台账户余额不足");
+            return "Aems还款接口借款人还款校验:平台账户余额不足";
         }
+        return "";
     }
 
     @Override
@@ -141,6 +149,7 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
         bean.setProductId(borrowNid);
         BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
         String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+        logger.info("调用还款申请冻结资金接口 respCode:" + JSONObject.toJSONString(respCode));
         // 申请冻结资金失败
         if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             if (!"".equals(respCode)) {
@@ -153,11 +162,14 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
         }
         //还款后变更数据
         boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
+        logger.info("还款后变更数据, updateResult:" + updateResult);
         if(updateResult){
             updateResult = this.updateBorrowCreditStautus(borrowNid);
+            logger.info("还款后变更数据, updateResult:" + updateResult);
             if(!updateResult){
                 resultBean.setStatus(WebResult.ERROR);
                 resultBean.setStatusDesc("还款失败，请稍后再试...");
+                logger.info("还款失败，请稍后再试...");
             }else {
                 resultBean.setStatus(ApiBean.SUCCESS);
                 resultBean.setStatusDesc("还款成功");

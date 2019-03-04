@@ -59,7 +59,14 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UserVO getUserByAccountId(String accountId){
+		UserResponse response = restTemplate.getForEntity(urlBase+"user/getby_accountid/" + accountId, UserResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
 	@Override
 	public UserInfoVO findUsersInfoById(int userId) {
 		UserInfoResponse response = restTemplate

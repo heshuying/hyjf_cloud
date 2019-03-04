@@ -124,17 +124,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			throw new CheckException(MsgEnum.ERR_USER_INVALID);
 		}
 		// 更新登录信息
-		amUserClient.updateLoginUser(userId, ip);
-		updateUserByUserId(userVO);
+	/*	amUserClient.updateLoginUser(userId, ip);
+		updateUserByUserId(userVO);*/
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
-		BankOpenAccountVO account = this.getBankOpenAccount(userId);
-		String accountId = null;
-		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-			accountId = account.getAccount();
+		String accountId = webViewUserVO.getBankAccount();
+		if (accountId != null && StringUtils.isNoneBlank(accountId)) {
 			synBalanceService.synBalance(accountId, ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
