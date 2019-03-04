@@ -62,16 +62,16 @@ public class ChannelStatisticsDetailController extends BaseController {
 			HttpServletRequest request) {
 		logger.info("PC统计明细查询开始......");
 		AdminResult adminResult = new AdminResult();
-//		AdminSystemVO user = getUser(request);
-//		// 根据用户Id查询渠道账号管理
-//		AdminUtmReadPermissionsVO adminUtmReadPermissions = null;
-//		if (user != null && StringUtils.isNotEmpty(user.getId())) {
-//			adminUtmReadPermissions = this.channelStatisticsDetailService
-//					.selectAdminUtmReadPermissions(Integer.valueOf(user.getId()));
-//		}
-//		if (adminUtmReadPermissions != null) {
-//			channelStatisticsDetailRequest.setUtmIds(adminUtmReadPermissions.getUtmIds());// 封装到页面
-//		}
+		AdminSystemVO user = getUser(request);
+		// 根据用户Id查询渠道账号管理
+		AdminUtmReadPermissionsVO adminUtmReadPermissions = null;
+		if (user != null && StringUtils.isNotEmpty(user.getId())) {
+			adminUtmReadPermissions = this.channelStatisticsDetailService
+					.selectAdminUtmReadPermissions(Integer.valueOf(user.getId()));
+		}
+		if (adminUtmReadPermissions != null) {
+			channelStatisticsDetailRequest.setUtmIds(adminUtmReadPermissions.getUtmIds());// 封装到页面
+		}
 		JSONObject json = channelStatisticsDetailService.searchAction(channelStatisticsDetailRequest);
 		if (json == null) {
 			adminResult.setStatus(FAIL);
