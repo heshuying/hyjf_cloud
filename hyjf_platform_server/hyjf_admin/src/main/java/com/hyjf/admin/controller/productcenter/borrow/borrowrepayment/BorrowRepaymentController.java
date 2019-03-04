@@ -115,7 +115,6 @@ public class BorrowRepaymentController extends BaseController {
      */
     @ApiOperation(value = "延期", notes = "延期")
     @PostMapping(value = "/delayRepayAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "borrowNid",value = "项目编号"),
             @ApiImplicitParam(name = "delayDays",value = "延期天数"),
