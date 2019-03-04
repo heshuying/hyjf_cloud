@@ -129,7 +129,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     return false;
                 }
                 //插入冻结信息日志表 add by cwyang 2017-07-08
-                repayManageService.insertRepayFreezeLof(userId,orderId,accountId,borrowNid,repayTotal,userName);
+                repayManageService.insertRepayFreezeLog(userId,orderId,accountId,borrowNid,repayTotal,userName);
                 // 申请还款冻结资金
                 // 调用江西银行还款申请冻结资金
                 BankCallBean bean = new BankCallBean();

@@ -944,8 +944,6 @@ public interface AmTradeClient {
 
     List<CreditTenderVO> selectCreditTender(String assignNid);
 
-    BankOpenAccountVO getBankOpenAccount(Integer userId);
-
     Boolean updateCreditTenderLog(CreditTenderLogVO creditTenderLog);
 
     CreditTenderLogVO selectCreditTenderLogByOrderId(String logOrderId);
@@ -1769,6 +1767,8 @@ public interface AmTradeClient {
 
     ProjectBean getOrgBatchRepayData(BatchRepayDataRequest requestBean);
 
+    BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean);
+
     /**
      *根据订单编号取得该订单的还款列表
      * @param couponTenderNid
@@ -2471,6 +2471,14 @@ public interface AmTradeClient {
     List<AppProjectListCustomizeVO> selectHomeProjectList(AppHomePageRequest request);
 
     /**
+     * 查询首页还款中的标的
+     * @Author yangchangwei 2019/3/4
+     * @param request
+     * @return
+     */
+    List<AppProjectListCustomizeVO> selectHomeRepayProjectList(AppHomePageRequest request);
+
+    /**
      * 插入垫付机构冻结日志信息
      * @author wgx
      * @date 2018/10/16
@@ -2848,5 +2856,6 @@ public interface AmTradeClient {
     List<HjhDebtCreditVO> getHjhDebtCreditListByCreditNid(String creditNid);
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
+    BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 }
 

@@ -12,7 +12,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.constants.AemsAuthEnum;
@@ -23,7 +22,6 @@ import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
@@ -500,26 +498,20 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 	 * @return
 	 */
 	@Override
-	public WebResult<Object> seachUserAuthErrorMessgae(String orderId) {
+	public String seachUserAuthErrorMessgae(String orderId) {
 		try {
 			logger.info("延迟1000毫秒以后查询");
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			logger.info("查询授权错误信息异常,异常报文如下:{}", e);
 		}
-		WebResult<Object> result = new WebResult<Object>();
 		HjhUserAuthLogVO hjhUserAuthLogVO = amUserClient.selectByExample(orderId);
-		result.setStatus(WebResult.SUCCESS);
-		Map<String,String> map = new HashedMap();
 		String remark = hjhUserAuthLogVO.getRemark();
-		if(hjhUserAuthLogVO != null || StringUtils.isNotBlank(remark)){
-			map.put("error", remark);
-			logger.info("用户授权失败原因:[" + remark + "].");
-		}else{
-			map.put("error","系统异常，请稍后再试！");
+		if(StringUtils.isBlank(remark)){
+			return "系统异常，请稍后再试!";
 		}
-		result.setData(map);
-		return result;
+		logger.info("用户授权失败原因:[" + remark + "].");
+		return remark;
 	}
 
 	/**

@@ -11,6 +11,8 @@ public class BankRepayFreezeOrgCheckRequestBean {
     private String borrowNid;
     @ApiModelProperty(value = "冻结订单号")
     private String orderId;
+    @ApiModelProperty(value = "当前期数")
+    private Integer currentPeriod;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -26,5 +28,13 @@ public class BankRepayFreezeOrgCheckRequestBean {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public Integer getCurrentPeriod() {
+        return currentPeriod;
+    }
+
+    public void setCurrentPeriod(Integer currentPeriod) {
+        this.currentPeriod = currentPeriod;
     }
 }

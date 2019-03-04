@@ -646,7 +646,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 creditTender.setUserName(creditTenderLog.getUserName());
                 // 出让人id
                 creditTender.setCreditUserId(sellerUserId);
+
                 creditTender.setCreditUserName(creditTenderLog.getCreditUserName());
+
                 creditTender.setBorrowUserId(creditTenderLog.getBorrowUserId());
                 creditTender.setBorrowUserName(creditTenderLog.getBorrowUserName());
                 // 状态

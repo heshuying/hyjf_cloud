@@ -24,7 +24,7 @@ import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3940,7 +3940,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     private BigDecimal calculateRepayPlan(RepayBean repay, Borrow borrow, int period) throws Exception {
 
-        logger.info("calculateRepayPlan, borrowNid:" + borrow.getBorrowNid() + " period:" + period);
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
         BigDecimal repayAccountAll = new BigDecimal("0");
@@ -5302,18 +5301,69 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     @Override
+    public void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+        Borrow borrow = getBorrowByNid(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+        BankRepayOrgFreezeLog log = new BankRepayOrgFreezeLog();
+        log.setRepayUserId(userId);// 还款人用户userId
+        log.setRepayUserName(userName);// 还款人用户名
+        log.setBorrowUserId(borrow.getUserId());// 借款人userId
+        log.setBorrowUserName(borrow.getBorrowUserName());// 借款人用户名
+        log.setAccount(account);// 电子账号
+        log.setOrderId(orderId);// 订单号:txDate+txTime+seqNo
+        log.setBorrowNid(borrow.getBorrowNid());// 借款编号
+        log.setPlanNid(borrow.getPlanNid());// 计划编号
+        log.setInstCode(borrowInfo.getInstCode());// 资产来源
+        log.setAmount(borrow.getAccount());// 借款金额
+        log.setAmountFreeze(repay.getRepayAccountAll());// 冻结金额
+        log.setRepayAccount(repay.getRepayAccount());// 应还本息
+        log.setRepayFee(repay.getRepayFee());// 还款服务费
+        log.setLowerInterest(BigDecimal.ZERO.subtract(repay.getChargeInterest()));// 减息金额
+        log.setPenaltyAmount(BigDecimal.ZERO);// 违约金
+        log.setDefaultInterest(repay.getLateInterest());// 逾期罚息?
+        Integer period = borrow.getBorrowPeriod();
+        String borrowStyle = borrow.getBorrowStyle();
+        String borrowPeriod = period + (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) ? "天" : "个月");
+        String periodTotal = CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ? "1" : repay.getBorrowPeriod();
+        int remainRepayPeriod = CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ? 1 : repay.getRepayPeriod();
+        int repayPeriod = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
+        log.setBorrowPeriod(borrowPeriod);// 借款期限
+        log.setTotalPeriod(Integer.parseInt(periodTotal));// 总期数
+        log.setCurrentPeriod(repayPeriod);// 当前期数
+        log.setAllRepayFlag(isAllRepay ? 1 : 0);// 是否全部还款 0 否 1 是
+        log.setDelFlag(0);// 0 有效 1 无效
+        log.setCreateUserId(userId);
+        log.setCreateUserName(userName);
+        bankRepayOrgFreezeLogMapper.insertSelective(log);
+        logger.info("【批量还款垫付】借款编号：{}，插入垫付机构冻结表日志。", borrowNid);
+    }
+
+    @Override
     public boolean checkRepayInfo(Integer userId, String borrowNid) {
         BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
-        example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        BankRepayFreezeLogExample.Criteria criteria = example.createCriteria();
+        if(userId != null) {
+            criteria.andUserIdEqualTo(userId);
+        }
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andDelFlagEqualTo(0);
         List<BankRepayFreezeLog> list = bankRepayFreezeLogMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
+            return false;
+        }
+        BankRepayOrgFreezeLogExample orgExample = new BankRepayOrgFreezeLogExample();
+        orgExample.createCriteria().andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        List<BankRepayOrgFreezeLog> orgList = bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
+        if (orgList != null && orgList.size() > 0) {
             return false;
         }
         return true;
     }
 
     @Override
-    public void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
+    public void insertRepayFreezeLog(Integer userId, String orderId, String account, String borrowNid,
                                      BigDecimal repayTotal, String userName) {
         BankRepayFreezeLog log = new BankRepayFreezeLog();
         log.setBorrowNid(borrowNid);
