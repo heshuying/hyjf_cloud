@@ -92,8 +92,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      */
     public final String HJH_ASSIGN = "assign";
 
-    public static JedisPool pool = RedisUtils.getPool();
-
     /**
      * 查询计划加入明细
      *
