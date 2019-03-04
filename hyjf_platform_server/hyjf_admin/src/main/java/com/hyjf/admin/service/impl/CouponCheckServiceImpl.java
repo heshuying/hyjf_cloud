@@ -103,7 +103,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     public synchronized CouponCheckResponse uploadFile(HttpServletRequest request, HttpServletResponse response) {
         CouponCheckResponse checkResponse = new CouponCheckResponse();
         String errorMessage = "";
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
+        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         String filePhysicalPath = PHYSICAL_PATH + FILEUPLOADPATH;
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
@@ -122,7 +122,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             Integer createTime = Integer.valueOf(fileRealName);
             String originalFilename = multipartFile.getOriginalFilename();
             String suffix = UploadFileUtils.getSuffix(multipartFile.getOriginalFilename());
-            if(StringUtils.equals(suffix,".xls") || StringUtils.equals(suffix,".xlsx")){
+            if (StringUtils.equals(suffix, ".xls") || StringUtils.equals(suffix, ".xlsx")) {
                 fileRealName = fileRealName + suffix;
                 try {
                     errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
@@ -140,7 +140,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     checkResponse.getMessage();
                     if (checkResponse.getRecordTotal() > 0) {
                         checkResponse.setMessage(errorMessage);
-                    }else {
+                    } else {
                         checkResponse.setMessage("插入数据异常失败");
                     }
                 }
@@ -154,8 +154,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public void downloadFile(String id, HttpServletResponse response) {
-        BufferedInputStream in = null;
-        OutputStream out = null;
+        BufferedInputStream in;
+        OutputStream out;
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String filePath = "";
         String fileName = "";
@@ -186,7 +186,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             // 关闭输出流
             out.close();
         } catch (Exception e) {
-            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：", e);
+            logger.error("下载失败, 失败原因 ：", e);
         }
     }
 
@@ -254,22 +254,22 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     private boolean batchInsertUserCoupon(String userName, List<String> copuncodes, int totalcouponCount, int succouponCount, Integer activityId, int couponSource, String loginUserId) {
         UserVO user = this.getUserByUserName(userName);
         logger.info("批量发放优惠券User：" + user);
-        if(user == null){
+        if (user == null) {
             return false;
         }
-        if(copuncodes ==null || copuncodes.isEmpty()){
+        if (copuncodes == null || copuncodes.isEmpty()) {
             return false;
         }
-        totalcouponCount = totalcouponCount+copuncodes.size();
+        totalcouponCount = totalcouponCount + copuncodes.size();
         // 发放优惠券
         int couponCount = 0;
         try {
             couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource, loginUserId);
         } catch (Exception e) {
-            logger.error("用户："+userName + "发送优惠券失败！",e);
+            logger.error("用户：" + userName + "发送优惠券失败！", e);
         }
         succouponCount = succouponCount + couponCount;
-        logger.info(user.getUserId()+ " 发放优惠券：" + couponCount + " 张");
+        logger.info(user.getUserId() + " 发放优惠券：" + couponCount + " 张");
         return true;
     }
 
@@ -280,13 +280,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     public int sendUserConponAction(List<String> couponCodeList, String userId, Integer sendFlg, Integer activityId,
                                     Integer couponSource, String loginUserId, String content) throws Exception {
-        logger.info("用户："+userId+",执行发券逻辑开始  " + GetDate.dateToString(new Date()));
+        logger.info("用户：" + userId + ",执行发券逻辑开始  " + GetDate.dateToString(new Date()));
         String methodName = "sendConponAction";
         int nowTime = GetDate.getNowTime10();
         // String couponGroupCode = CreateUUID.createUUID();
 
         UserInfoVO userInfo = this.getUsersInfoByUserId(Integer.parseInt(userId));
-        if(userInfo == null){
+        if (userInfo == null) {
             return 0;
         }
 
@@ -330,8 +330,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 //                CouponConfigVO config = configList.get(0);
 
                 Integer status = config.getStatus();
-                if(status==null||status==1||status==3){
-                    logger.info("优惠券审核未通过，无法发放！（coupon）"+couponCode);
+                if (status == null || status == 1 || status == 3) {
+                    logger.info("优惠券审核未通过，无法发放！（coupon）" + couponCode);
                     continue;
                 }
                 // 加息券编号
@@ -339,9 +339,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
                 if (config.getExpirationType() == 1) { // 截止日
                     couponUser.setEndTime(config.getExpirationDate());
-                } else if(config.getExpirationType() == 2) { // 时长
+                } else if (config.getExpirationType() == 2) { // 时长
                     couponUser.setEndTime((int) (GetDate.countDate(2, config.getExpirationLength()).getTime() / 1000));
-                } else if(config.getExpirationType() == 3){
+                } else if (config.getExpirationType() == 3) {
                     couponUser.setEndTime((int) (GetDate.countDate(5, config.getExpirationLengthDay()).getTime() / 1000));
                 }
                 couponUser.setCouponSource(couponSource);
@@ -352,9 +352,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 couponUser.setDelFlag(CustomConstants.FALG_NOR);
                 couponUser.setChannel(channelName);
                 couponUser.setAttribute(userInfo.getAttribute());
-                couponUser.setContent(StringUtils.isEmpty(content)?"":content);
+                couponUser.setContent(StringUtils.isEmpty(content) ? "" : content);
                 CouponUserRequest couponUserRequest = new CouponUserRequest();
-                BeanUtils.copyProperties(couponUser,couponUserRequest);
+                BeanUtils.copyProperties(couponUser, couponUserRequest);
                 couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
                 couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
                 CouponUserResponse response = amTradeClient.insertCouponUser(couponUserRequest);
@@ -362,7 +362,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             }
             logger.info("发放优惠券成功，发放张数：" + couponCount);
         }
-        logger.info("用户："+userId+",执行发券逻辑结束  " + GetDate.dateToString(new Date()));
+        logger.info("用户：" + userId + ",执行发券逻辑结束  " + GetDate.dateToString(new Date()));
         return couponCount;
     }
 
@@ -386,11 +386,12 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     /**
      * 根据用户名获取用户
+     *
      * @param userName
      * @return
      */
-    public UserVO getUserByUserName(String userName){
-        if(StringUtils.isEmpty(userName)){
+    public UserVO getUserByUserName(String userName) {
+        if (StringUtils.isEmpty(userName)) {
             return null;
         }
         UserVO user = amUserClient.getUserByUserName(userName);
@@ -414,13 +415,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     /**
-     *
      * 获取用户注册时的渠道名称
-     * @author hsy
+     *
      * @param userId
      * @return
+     * @author hsy
      */
-    public String getChannelNameByUserId(Integer userId){
+    public String getChannelNameByUserId(Integer userId) {
         UtmResponse response = amUserClient.getChannelNameByUserId(userId);
         return response.getChannelName();
     }

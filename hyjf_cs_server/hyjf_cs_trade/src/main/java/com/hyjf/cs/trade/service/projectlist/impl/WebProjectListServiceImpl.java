@@ -294,7 +294,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 已经登录
         if (userId != null) {
             userVO = amUserClient.findUserById(Integer.valueOf(userId));
-            other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
+            //other.put("riskFlag", userVO != null ? userVO.getIsEvaluationFlag() : null);
+            other.put("riskFlag", getRiskFlag(userVO));
         }
         //判断新标还是老标，老标走原来逻辑原来页面，新标走新方法 0为老标 1为新标(融通宝走原来页面)  -- 原系统注释
         if (detailCsVO.getIsNew() == 0 || "13".equals(detailCsVO.getType())) {
@@ -1138,12 +1139,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("balance", account.getBankBalance().toString());
                 // 风险测评改造 mod by liuyang 20180111 start
                 // 风险测评标识
-                result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
+                //result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
+                result.put("riskFlag",getRiskFlag(userVO));
                 // 风险测评改造 mod by liuyang 20180111 end
                 } else {
                     result.put("loginFlag", "0");// 判断是否登录
                     result.put("openFlag", "0");
-                    result.put("loginFlag", "0");
                     result.put("setPwdFlag", "0");
                     result.put("isUserValid", "0");
                     result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
@@ -1448,7 +1449,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     result.put("forbiddenFlag", "0");
                 }
                 // 用户是否完成风险测评标识
-                result.put("riskFlag", userVO.getIsEvaluationFlag());
+                //result.put("riskFlag", userVO.getIsEvaluationFlag());
+                result.put("riskFlag", getRiskFlag(userVO));
                 result.put("loginFlag", 1);
 
 
@@ -1960,7 +1962,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }else{
                 info.put("setPwdFlag", "0");
             }
-            try {
+            /*try {
                 if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
                     //测评到期日
                     Long lCreate = user.getEvaluationExpiredTime().getTime();
@@ -1980,7 +1982,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             } catch (Exception e) {
                 logger.error("查询用户是否完成风险测评标识出错....", e);
                 info.put("riskFlag", "0");
-            }
+            }*/
+            info.put("riskFlag",getRiskFlag(user));
+
 
             AccountVO account = amTradeClient.getAccount(userId);
             String userBalance = "";
@@ -1995,7 +1999,36 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.setData(info);
     }
 
-
+    /**
+     * 风险测评封装提取
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private static String getRiskFlag(UserVO user){
+        try {
+            if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
+                //测评到期日
+                Long lCreate = user.getEvaluationExpiredTime().getTime();
+                //当前日期
+                Long lNow = System.currentTimeMillis();
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    // 前端张龙要求测评过期返回0
+                    return "0";//return "2";//info.put("riskFlag", "2");
+                } else {
+                    //未到一年有效期
+                    return "1";//info.put("riskFlag", "1");
+                }
+            }else{
+                return "0";//info.put("riskFlag", "0");
+            }
+            // modify by liuyang 20180411 用户是否完成风险测评标识 end
+        } catch (Exception e) {
+            logger.error("查询用户是否完成风险测评标识出错....", e);
+            return "0";//info.put("riskFlag", "0");
+        }
+    }
 
     /**
      * 查询计划标的组成：承接记录

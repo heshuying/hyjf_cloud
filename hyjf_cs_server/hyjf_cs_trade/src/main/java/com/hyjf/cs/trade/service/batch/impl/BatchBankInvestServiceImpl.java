@@ -24,11 +24,11 @@ public class BatchBankInvestServiceImpl extends BaseTradeServiceImpl implements 
     private AmTradeClient amTradeClient;//银行提现掉单
     
 	@Override
-	public void handle() {
+	public void insertAuthCode() {
 		List<BatchBorrowTenderCustomizeVO> list=this.amTradeClient.queryAuthCodeBorrowTenderList();
 		if (CollectionUtils.isNotEmpty(list)){
 			logger.info("BatchBankInvestServiceImpl.run.start...");
-			amTradeClient.updateAuthCode(list);
+			amTradeClient.insertAuthCode(list);
 			logger.info("BatchBankInvestServiceImpl.run.end...");
 		}
 	}

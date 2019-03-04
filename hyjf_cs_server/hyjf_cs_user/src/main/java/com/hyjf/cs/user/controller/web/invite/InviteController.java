@@ -191,8 +191,11 @@ public class InviteController extends BaseUserController {
             e.printStackTrace();
         } finally {
             output.flush();
-            output.close();
-            input.close();
+            if (input != null){
+                input.close();
+            }if (output != null){
+                output.close();
+            }
         }
         return true;
     }

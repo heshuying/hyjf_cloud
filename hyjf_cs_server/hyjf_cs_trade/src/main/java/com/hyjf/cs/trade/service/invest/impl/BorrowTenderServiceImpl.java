@@ -251,28 +251,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
-        //todo wangjun 测试异常，暂时注释url
-        String retUrl = "1";
-        String successUrl = "1";
-        String bgRetUrl = "1";
-        String forgetPassWoredUrl = "1";
-//        //错误页
-//        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
-//        //成功页
-//        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
-//                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
-//        if(request.getToken() != null && !"".equals(request.getToken())){
-//            retUrl += "&token=1";
-//            successUrl += "&token=1";
-//        }
-//        if(request.getSign() != null && !"".equals(request.getSign())){
-//            retUrl += "&sign=" + request.getSign();
-//            successUrl += "&sign=" + request.getSign();
-//        }
-//        // 异步调用路
-//        String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
-//        //忘记密码url
-//        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
+        //错误页
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        //成功页
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
+        if(request.getToken() != null && !"".equals(request.getToken())){
+            retUrl += "&token=1";
+            successUrl += "&token=1";
+        }
+        if(request.getSign() != null && !"".equals(request.getSign())){
+            retUrl += "&sign=" + request.getSign();
+            successUrl += "&sign=" + request.getSign();
+        }
+        // 异步调用路
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
+        //忘记密码url
+        String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
         callBean.setSuccessfulUrl(successUrl);
         callBean.setNotifyUrl(bgRetUrl);
@@ -1199,6 +1194,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”按天计息，到期还本还息“: 历史回报=出借金额*年化收益÷360*天数；
@@ -1206,6 +1202,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”先息后本“: 历史回报=出借金额*年化收益÷12*月数；
@@ -1213,6 +1210,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”等额本息“: 历史回报=出借金额*年化收益÷12*月数；
@@ -1220,6 +1218,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     // 还款方式为”等额本金“: 历史回报=出借金额*年化收益÷12*月数；
@@ -1227,6 +1226,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money),
                                 borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                                 .setScale(2, BigDecimal.ROUND_DOWN);
+                        earnings=earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings;
                         investInfo.setInterest(CommonUtils.formatAmount(null, earnings));
                         break;
                     default:
@@ -1234,6 +1234,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         break;
                 }
                 logger.info("散标本金历史回报:  {}", earnings);
+                //earnings.compareTo(BigDecimal.ZERO)==-1?BigDecimal.ZERO:earnings
                 borrowInterest = earnings;
                 //计算优惠券历史回报
                 if (couponConfig != null && couponConfig.getId() > 0) {
@@ -2158,7 +2159,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     try {
                         sendBidCancelMessage(userId);
                     } catch (MQException e) {
-                        e.printStackTrace();
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
@@ -2174,16 +2175,19 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 // redis扣减
                 redisTender(userId, borrowNid, txAmount);
                 logger.info("userId:{}   borrowNid:{}   redis减扣成功，开始进行投资",userId,borrowNid);
-                this.borrowTender(borrow, bean);
+                try{
+                    this.borrowTender(borrow, bean);
+                }catch (Exception e){
+                    // 回滚redis
+                    logger.error("标的出借异常  开始回滚redis borrowNid:{} userId:{}   ", borrowNid,userId);
+                    redisRecover(borrowNid,userId,txAmount);
+                    logger.info("标的出借异常  结束回滚redis ");
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
+                }
             }catch (Exception e){
-                // 回滚redis
-                logger.error("标的出借异常  开始回滚redis  userId:{}   borrowNid:{}",userId, borrowNid);
-                redisRecover(borrowNid,userId,txAmount);
-                logger.info("标的出借异常  结束回滚redis ");
                 // 出借失败,出借撤销
                 try {
                     boolean flag = bidCancel(userId, borrow.getBorrowNid(), bean.getOrderId(), txAmount);
-
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
@@ -2192,7 +2196,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     try {
                         sendBidCancelMessage(userId);
                     } catch (MQException e1) {
-                        e.printStackTrace();
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
                     logger.error("投标失败,请联系客服人员!userid:{} borrownid:{}  ordid:{}",userId, borrow.getBorrowNid(), bean.getOrderId());
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
@@ -2369,7 +2373,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
                 String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
                 if (StringUtils.isNotBlank(balanceLast)) {
-                    logger.info("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
+                    logger.info("PC用户:" + userId +"   borrowNid:"+borrowNid+ "***redis剩余金额：" + balanceLast);
                     BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
                     Transaction transaction = jedis.multi();
                     transaction.set(RedisConstants.BORROW_NID+borrowNid, recoverAccount.toString());
@@ -2582,7 +2586,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
                     accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
                     if (StringUtils.isNotBlank(accountRedisWait)) {
-                        logger.info("用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
+                        logger.info("用户:" + userId + "borrowNid:"+borrowNid+"***冻结前可投金额：" + accountRedisWait);
                         if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {
                             // 您来晚了，下次再来抢吧！
                             redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
@@ -2601,7 +2605,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                                 } else {
                                     String ret = (String) result.get(0);
                                     if (ret != null && "OK".equals(ret)) {
-                                        logger.info("redis操作成功  用户:{},***冻结前减redis：{}" ,userId, accountDecimal);
+                                        logger.info("redis操作成功  用户:{},borrowNid：{}  ***冻结前减redis：{}  " ,userId,borrowNid, accountDecimal);
                                         break;
                                     } else {
                                         jedis.unwatch();

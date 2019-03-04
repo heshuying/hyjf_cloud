@@ -16,6 +16,9 @@ public class LoginUserRequest implements Serializable{
      */
     private String ip;
 
+    public LoginUserRequest() {
+    }
+
     public LoginUserRequest(int userId, String ip) {
         this.userId = userId;
         this.ip = ip;

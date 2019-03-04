@@ -257,12 +257,12 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             // 重新加密
             try {
                 phoneHash = CertCallUtil.phoneHash(item.getMobile());
+                param.put("userPhoneHash", phoneHash.getString("phone"));
+                // 用户手机盐值  使用工具包中phoneHash方法生成的salt值
+                param.put("userUuid", phoneHash.getString("salt"));
             } catch (Exception e) {
                 logger.error(logHeader + " 用户手机号哈希出错！", e);
             }
-            param.put("userPhoneHash", phoneHash.getString("phone"));
-            // 用户手机盐值  使用工具包中phoneHash方法生成的salt值
-            param.put("userUuid", phoneHash.getString("salt"));
         }
 
         // 法人代表 企业属性 用户类型（userType）=2必填 用户类型（userType）=1填写-1

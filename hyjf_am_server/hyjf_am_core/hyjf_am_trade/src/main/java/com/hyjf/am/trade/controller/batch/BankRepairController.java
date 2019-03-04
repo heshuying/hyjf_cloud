@@ -131,7 +131,7 @@ public class BankRepairController extends BaseController {
      * @param logOrderId
      * @return
      */
-    @GetMapping(value = "/selectCreditTenderLogByOrderId")
+    @GetMapping(value = "/selectCreditTenderLogByOrderId/{logOrderId}")
     public CreditTenderLogResponse selectCreditTenderLogByOrderId(@PathVariable String logOrderId){
         logger.info("selectCreditTenderLogByOrderId...");
         CreditTenderLogResponse response = new CreditTenderLogResponse();
@@ -222,11 +222,11 @@ public class BankRepairController extends BaseController {
      * 处理出借掉单
      * add by jijun 20180623
      */
-    @PostMapping("/updateAuthCode")
-    public void updateAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
+    @PostMapping("/insertAuthCode")
+    public void insertAuthCode(@RequestBody BatchBorrowTenderCustomizeRequest request){
         List<BatchBorrowTenderCustomizeVO> batchBorrowTenderCustomizeVOList = request.getBatchBorrowTenderCustomizeList();
         List<BatchBorrowTenderCustomize> list = CommonUtils.convertBeanList(batchBorrowTenderCustomizeVOList,BatchBorrowTenderCustomize.class);
-        bankInvestExceptionService.updateAuthCode(list);
+        bankInvestExceptionService.insertAuthCode(list);
 
     }
 

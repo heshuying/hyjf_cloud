@@ -33,11 +33,9 @@ public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountServ
      */
     @Override
     public List<BankMerchantAccountListCustomize> selectRecordList(BankRedPacketAccountListRequest form, int offset, int limit) {
-        BankMerchantAccountListExample example=createBankMerchantAccountListCustomize(form);
-        example.setLimitStart(offset);
-        example.setLimitEnd(limit);
-        example.setOrderByClause("create_time DESC");
-        return bankMerchantAccountListCustomizeMapper.selectByExample(example);
+        form.setLimitStart(offset);
+        form.setLimitEnd(limit);
+        return bankMerchantAccountListCustomizeMapper.selectRecordList(form);
     }
 
     /**
@@ -47,8 +45,7 @@ public class BankRedPacketAccountServiceImpl implements BankRedPacketAccountServ
      */
     @Override
     public int queryRecordTotal(BankRedPacketAccountListRequest form) {
-        BankMerchantAccountListExample example=createBankMerchantAccountListCustomize(form);
-        return bankMerchantAccountListCustomizeMapper.countByExample(example);
+        return bankMerchantAccountListCustomizeMapper.countByExample(form);
     }
 
     private BankMerchantAccountListExample createBankMerchantAccountListCustomize(BankRedPacketAccountListRequest form) {

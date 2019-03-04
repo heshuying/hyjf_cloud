@@ -924,8 +924,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 	 * 插入AuthCode
 	 */
 	@Override
-	public void updateAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
-		String url = "http://AM-TRADE/am-trade/bankException/updateAuthCode";
+	public void insertAuthCode(List<BatchBorrowTenderCustomizeVO> list) {
+		String url = "http://AM-TRADE/am-trade/bankException/insertAuthCode";
 		BatchBorrowTenderCustomizeRequest request = new BatchBorrowTenderCustomizeRequest();
 		request.setBatchBorrowTenderCustomizeList(list);
 		restTemplate.postForEntity(url,request,Boolean.class).getBody();
@@ -2068,23 +2068,6 @@ public class AmTradeClientImpl implements AmTradeClient {
                         CreditTenderResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
-        }
-        return null;
-    }
-
-
-    /**
-     * 獲取銀行開戶信息
-     * @param userId
-     * @return
-     */
-    @Override
-    public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        logger.info(ReflectUtils.getSuperiorClass(3));
-        BankOpenAccountResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
         }
         return null;
     }
@@ -4238,6 +4221,19 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 计算担保机构批量还款总垫付金额并插入冻结日志
+     */
+    @Override
+    public BigDecimal getOrgBatchRepayTotal(BatchRepayTotalRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/repay/get_batch_reapy_total";
+        BigDecimalResponse response =restTemplate.postForEntity(url,requestBean,BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 根据订单号获取汇计划加入明细
      *
      * @param accedeOrderId
@@ -6286,7 +6282,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public BooleanResponse updateHjhPlanJoinOff() {
-        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOff";
+        String url = "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOff";
         BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
         if (response != null && Response.isSuccess(response)) {
             return response;
@@ -6296,7 +6292,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public BooleanResponse updateHjhPlanJoinOn() {
-        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOn";
+        String url = "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOn";
         BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
         if (response != null && Response.isSuccess(response)) {
             return response;
@@ -6917,4 +6913,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.getForEntity(url,Integer.class).getBody();
     }
 
+    /**
+     *获取当前用户的还款项目
+     * @param userId
+     * @param roleId
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid){
+        BorrowInfoResponse response=restTemplate.getForEntity("http://AM-TRADE/am-trade/aems/repay/get_borrow/"+userId+"/"+roleId+"/"+borrowNid,BorrowInfoResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            return response.getResult();
+        }
+        return null;
+    }
 }

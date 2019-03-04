@@ -330,9 +330,9 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             }
             returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
             returnMap.put("evalType", eval_type);
+            userEvalationResult.setEvalType((String) returnMap.get("evalType"));
+            userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         }
-        userEvalationResult.setEvalType((String) returnMap.get("evalType"));
-        userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);
 
         // add 合规数据上报 埋点 liubin 20181122 start

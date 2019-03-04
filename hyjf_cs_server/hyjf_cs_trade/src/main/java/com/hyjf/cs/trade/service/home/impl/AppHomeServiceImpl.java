@@ -221,12 +221,14 @@ public class AppHomeServiceImpl implements AppHomeService {
         //TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestResponse res = this.getTotalInvestAndInterestResponse();
         // modify by libin 加缓存
+        TotalInvestAndInterestVO totalInvestAndInterestVO = null;
         if(res == null){
         	logger.error("获取累计出借金额为空");
+        }else {
+            // modify by libin 加缓存
+            totalInvestAndInterestVO = res.getResult();
         }
-        // modify by libin 加缓存
 
-        TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
         if (null != totalInvestAndInterestVO){
             BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
             String totalInvest = totalInvestAmount.toString();

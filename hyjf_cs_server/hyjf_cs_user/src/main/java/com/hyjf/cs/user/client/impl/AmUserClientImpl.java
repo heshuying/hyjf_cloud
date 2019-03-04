@@ -347,6 +347,11 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.put(userService+"/user/insertLogSelective",hjhUserAuthLog);
 	}
 
+	/**
+	 * 查询授权错误信息
+	 * @param orderId
+	 * @return
+	 */
 	@Override
 	public HjhUserAuthLogVO selectByExample(String orderId) {
 		HjhUserAuthLogResponse response = restTemplate
@@ -415,6 +420,7 @@ public class AmUserClientImpl implements AmUserClient {
 		ResponseEntity<JSONObject> resp = restTemplate.getForEntity(url, JSONObject.class);
 		result = resp.getBody();
 		if (result == null) {
+			result = new JSONObject();
 			result.put("status", "1");
 			result.put("statusDesc", "修改密码失败,未作任何操作");
 		}

@@ -55,16 +55,28 @@ public class EveFileConsumer implements RocketMQListener<MessageExt>, RocketMQPu
 
             JSONObject json = JSONObject.parseObject(msgBody);
             String savePath = json.getString("savePath");
-            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+//            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+            String beforeDate = json.getString("dualDate");
             String filePatheve = json.getString("filePathEve");
             if(StringUtils.isBlank(savePath)){
                 logger.error("【导入流水明细(eve)】接收到的savePath为null");
+                return;
+            }
+            if(StringUtils.isBlank(beforeDate)){
+                logger.error("【导入流水明细(eve)】接收到的dualDate为null");
                 return;
             }
             if(StringUtils.isBlank(filePatheve)){
                 logger.error("【导入流水明细(eve)】接收到的filePatheve为null");
                 return;
             }
+
+            Integer countsEve = this.aleveLogFileService.countEveByExample(beforeDate);
+            if(countsEve > 0){
+                logger.error("【导入流水明细(eve)】eve数据库已存在数据、请核对后再做处理！");
+                return;
+            }
+
             File dir = new File(savePath);
             File fin;
             try {
