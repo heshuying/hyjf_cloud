@@ -39,6 +39,7 @@
         FROM
         ht_user hydu
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
+        LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
         LEFT  JOIN ht_utm_reg hydur1 ON hydur1.user_id = hydu.user_id
         <include refid="Where_Clause" />
     </select>

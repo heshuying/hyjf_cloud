@@ -55,6 +55,21 @@ public class TestController extends BaseTradeController {
 
 
 
+    /**
+     * web端新手标和散标标的详情
+     * @author zhangyk
+     * 原接口：com.hyjf.web.bank.web.borrow.BorrowController.searchProjectDetail()
+     * @date 2018/6/22 16:06
+     */
+    @ApiOperation(value = "新手标和散标标的详情", notes = "新手标和散标标的详情")
+    @PostMapping(value = "/getBorrowDetail2", produces = "application/json; charset=utf-8")
+    public Object webBorrowDetail2(@RequestBody Map map, @RequestHeader(value = "userId",required = false) String userId){
+        WebResult result =  webProjectListService.getBorrowDetail4Test2(map,userId);
+        return result;
+    }
+
+
+
 
 
 
