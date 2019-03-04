@@ -370,8 +370,7 @@ public class RepayManageController extends BaseController {
         requestListBean.setRepayStatus("0");
         List<RepayListCustomizeVO> orgRepayList = repayManageService.selectOrgRepayList(requestListBean);
         if(orgRepayList == null || orgRepayList.size() == 0){
-            responseBean.setResultDec(BigDecimal.ZERO);
-            return responseBean;
+            throw new CheckException(MsgEnum.ERR_DATA_NOT_EXISTS);
         }
         int allRepaySize = orgRepayList.size();//所有还款标的数目
         BigDecimal repayTotal = BigDecimal.ZERO;
@@ -381,19 +380,22 @@ public class RepayManageController extends BaseController {
             try {
                 Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
                 RepayBean repayBean = null;
+                boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 600);
+                if (!tranactionSetFlag) {//设置失败
+                    logger.error("【批量还款垫付】借款编号：{}，正在处理项目债转！", borrowNid);
+                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+                    String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
+                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+                }
                 // 计算垫付机构还款
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
                     repayBean = repayManageService.searchRepayTotalV2(borrow.getUserId(), borrow);
                 } else {// 分期还款
+                    // 批量垫付没有一次性还款
                     repayBean = repayManageService.searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                 }
                 repayBean.setRepayUserId(Integer.parseInt(userId));
                 checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
-                //防止智投还款时正在发生债转操作
-                int errflag = repayBean.getFlag();
-                if (1 == errflag) {
-                    throw new RuntimeException("借款编号：" + borrowNid + ",存在正在债转的操作,无法还款........");
-                }
                 //还款去重
                 boolean result = repayManageService.checkRepayInfo(null, borrowNid);
                 if (!result) {
@@ -418,12 +420,19 @@ public class RepayManageController extends BaseController {
      */
     private void checkForRepayRequestOrg(String borrowNid, String userId, String userName, RepayBean repayBean) {
         if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(userId)) {
+            logger.error("【批量还款校验】还款请求参数不全！", borrowNid);
             throw new CheckException(MsgEnum.ERR_PARAM_NUM);
         }
         // 平台密码校验、服务费授权校验、开户校验在处理批次还款前进行校验
         Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
         if (borrow == null) {
+            logger.error("【批量还款校验】借款编号：{}，标的信息不存在！", borrowNid);
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        boolean hasFailCredit = repayManageService.getFailCredit(borrowNid);
+        if(hasFailCredit){//还款提交失败，请联系汇盈金服业务部门核实处理。
+            logger.error("【批量还款校验】借款编号：{}，有承接失败的债权！", borrowNid);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
         }
         Account account = repayManageService.getAccount(Integer.parseInt(userId));
         if (repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == -1) {
@@ -431,16 +440,19 @@ public class RepayManageController extends BaseController {
             // 垫付机构批量还款 ，不验证银行账户余额
         } else {
             // 用户平台账户余额不足
-            logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", userName);
+            logger.error("【批量还款校验】平台账户余额不足！担保机构用户名：{}", userName);
+            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
-        if (!tranactionSetFlag) {//设置失败
-            logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
-            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
-            String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
-            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
-        }
+    }
+
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @return
+     */
+    @GetMapping(value = "/getFailCredit/{borrowNid}")
+    public boolean getFailCredit(@PathVariable String borrowNid){
+        return repayManageService.getFailCredit(borrowNid);
     }
 
     /**

@@ -140,4 +140,10 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
         criteria.andDelFlagEqualTo(0);
         return bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
     }
+
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        Integer failCreditCount = bankRepayFreezeOrgCustomizeMapper.getFailCredit();
+        return failCreditCount != null && failCreditCount > 0;
+    }
 }

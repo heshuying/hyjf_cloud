@@ -102,4 +102,6 @@ public interface RepayManageService extends BaseService {
      * @Author : huanghui
      */
     String usernameEncryption(String name);
+
+    boolean getFailCredit(String borrowNid);
 }

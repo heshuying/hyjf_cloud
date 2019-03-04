@@ -85,4 +85,6 @@ public interface WebUserRepayListCustomizeMapper {
 	 * @date 2018/11/10
 	 */
 	BigDecimal getOrgWaitRepayPlanManageFee(Integer userId);
+
+	Integer getFailCredit();
 }
