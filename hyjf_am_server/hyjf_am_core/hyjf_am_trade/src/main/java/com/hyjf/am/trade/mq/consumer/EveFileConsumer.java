@@ -86,7 +86,7 @@ public class EveFileConsumer implements RocketMQListener<MessageExt>, RocketMQPu
                 List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
 
                 //读取文件
-                TransUtil.readFileEve(fin,eveLogs,aleveErrorLogs);
+                TransUtil.readFileEve(fin,eveLogs,aleveErrorLogs,beforeDate);
 
                 //插入数据
                 if(!CollectionUtils.isEmpty(eveLogs)){
