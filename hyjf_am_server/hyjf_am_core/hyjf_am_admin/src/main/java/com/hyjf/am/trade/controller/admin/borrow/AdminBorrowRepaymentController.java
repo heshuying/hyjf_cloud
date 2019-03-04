@@ -225,7 +225,7 @@ public class AdminBorrowRepaymentController extends BaseController {
             }
             return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(this.getClass().getName(), "bankCallFundTransQuery", e);
         }
         return response;
     }

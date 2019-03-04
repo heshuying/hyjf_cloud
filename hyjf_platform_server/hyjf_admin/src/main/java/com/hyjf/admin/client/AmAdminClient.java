@@ -978,9 +978,11 @@ public interface AmAdminClient {
 
     Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request);
 
+    Integer deleteOrgFreezeLogById(Integer id);
+
     Integer deleteOrgFreezeLog(String orderId);
 
-    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId);
+    List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
 
     /**
      * 移动客户端 - App 推送管理 列表
