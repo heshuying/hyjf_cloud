@@ -35,26 +35,6 @@ public interface RealTimeBorrowLoanService extends BaseService {
 	BankCallBean requestLoans(BorrowApicron apicron, Map map);
 
 	/**
-	 * 更新放款明细
-	 * @param apicron
-	 * @param bean
-	 * @return
-	 */
-	boolean loanBatchUpdateDetails(BorrowApicron apicron, BankCallBean bean);
-
-	/**
-	 * 处理tender,判定成功状态，recover 无需要重复获取
-	 * @param apicron
-	 * @param borrow
-	 * @param borrowInfo
-	 * @param serviceFee
-	 * @param borrowTender
-	 * @return
-	 * @throws Exception
-	 */
-	Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception;
-
-	/**
 	 * 更新借款API任务表
 	 *
 	 * @param apicron
@@ -71,8 +51,6 @@ public interface RealTimeBorrowLoanService extends BaseService {
 	 * @return
 	 */
 	BorrowApicron selApiCronByPrimaryKey(int id);
-
-	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
 
 	/**
 	 * 调用银行实时放款接口成功时，更新业务数据

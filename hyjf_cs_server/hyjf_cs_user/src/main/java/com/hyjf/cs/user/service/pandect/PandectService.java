@@ -18,5 +18,5 @@ public interface PandectService extends BaseUserService {
      * @param user
      * @return
      */
-    JSONObject pandect(UserVO user);
+    JSONObject pandect(Integer userId);
 }
