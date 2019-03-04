@@ -49,19 +49,30 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
      * 查询担保机构冻结列表
      */
     @Override
-    public BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId) {
+    public BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId, String borrowNid) {
         if (StringUtils.isBlank(orderId)) {
             return null;
         }
-        List<BankRepayOrgFreezeLogVO> listResult = amAdminClient.getBankRepayOrgFreezeLogList(orderId);
-        if(listResult != null && !listResult.isEmpty()){
+        List<BankRepayOrgFreezeLogVO> listResult = amAdminClient.getBankRepayOrgFreezeLogList(orderId, borrowNid);
+        if (listResult != null && !listResult.isEmpty()) {
             return listResult.get(0);
         }
         return null;
     }
 
     /**
-     * 删除担保机构临时日志,外部调用
+     * 根据id删除担保机构临时日志,外部调用
+     */
+    @Override
+    public Integer deleteFreezeLogById(Integer id) {
+        if (id == null) {
+            return 0;
+        }
+        return amAdminClient.deleteOrgFreezeLogById(id);
+    }
+
+    /**
+     * 根据ordId删除担保机构临时日志,外部调用
      */
     @Override
     public Integer deleteOrgFreezeTempLogs(String orderId) {
