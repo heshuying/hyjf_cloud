@@ -85,6 +85,8 @@ public class AccessFilter extends ZuulFilter {
 			String sign = request.getParameter(GatewayConstant.SIGN);
 
 			Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
+			logger.debug("appKeyIgnoreUrls: {}", appKeyIgnoreUrls);
+			logger.debug("test: {}", appKeyIgnoreUrls.contains(originalRequestPath));
 			if (!appKeyIgnoreUrls.contains(originalRequestPath)) {
 				// app分享的请求，忽略sign
 				String ignoreSign = request.getParameter("ignoreSign");
