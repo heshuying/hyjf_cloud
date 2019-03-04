@@ -680,26 +680,33 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				result.setHuifuBindBankCardUrl(apphost + ClientConstants.USER_BIND_CARD + packageStr(request));
 				// 江西银行绑卡url
 				// 江西银行绑卡接口修改
-				if (urlType == 1) {
+				/*if (urlType == 1) {
 					// 绑卡接口类型为新接口
 					result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
 							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
-				}
+				}*/
+				// 目前不需要切换了 add by hesy 2019-03-04
+				result.setBindBankCardUrl(
+						systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				// 江西银行绑卡接口修改
 			} else {
 				// 江西银行绑卡url
 				// 江西银行绑卡接口修改
-				if (urlType == 1) {
+				/*if (urlType == 1) {
 					// 绑卡接口类型为新接口
 					result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
 							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
-				}
+				}*/
+
+				// 目前不需要切换了 add by hesy 2019-03-04
+				result.setBindBankCardUrl(
+						systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 			}
 		}
 		{
