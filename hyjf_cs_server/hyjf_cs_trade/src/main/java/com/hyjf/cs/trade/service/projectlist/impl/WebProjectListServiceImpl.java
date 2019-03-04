@@ -445,6 +445,34 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         return webResult;
     }
 
+
+    @Override
+    public WebResult getBorrowDetail4Test2(Map map, String userId) {
+        logger.info(">>>>>>>>getBorrowDetail42Test<<<<<<<");
+        String borrowNid = (String) map.get(ProjectConstant.PARAM_BORROW_NID);
+        UserVO userVO = null;
+        // 原来独立于实体之外的属性，单独放在一个map中
+        Map<String, Object> other = new HashMap();
+        
+        if(map.get("mishi")!=null) {
+
+        	for (int i = 0; i < 10; i++) {
+        		int count = amTradeClient.countUserInvest(Integer.valueOf(userId), borrowNid);
+			}
+            
+            
+        }else {
+
+            
+            int count = amTradeClient.countUserInvest(Integer.valueOf(userId), borrowNid);
+        }
+        
+        
+        WebResult webResult = new WebResult();
+        webResult.setData(other);
+        return webResult;
+    }
+
     // 新标组装标的详情
     private void getProjectDetailNew(Map<String, Object> other, ProjectCustomeDetailVO borrow, UserVO userVO) {
         //标的号

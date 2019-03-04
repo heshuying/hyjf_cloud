@@ -42,6 +42,16 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 
 	private String[] utmIdsSrch;
 
+	/**
+	 * 注册时间开始
+	 */
+	private String startTime;
+
+	/**
+	 * 注册时间结束
+	 */
+	private String endTime;
+
 	protected int limitStart;
 
 	protected int limitEnd;
@@ -108,5 +118,21 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 
 	public void setUtmIds(String utmIds) {
 		this.utmIds = utmIds;
+	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 }

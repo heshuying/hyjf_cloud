@@ -500,8 +500,8 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 	@Override
 	public String seachUserAuthErrorMessgae(String orderId) {
 		try {
-			logger.info("延迟5000毫秒以后查询");
-			Thread.sleep(5000);
+			logger.info("延迟1000毫秒以后查询");
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			logger.info("查询授权错误信息异常,异常报文如下:{}", e);
 		}
