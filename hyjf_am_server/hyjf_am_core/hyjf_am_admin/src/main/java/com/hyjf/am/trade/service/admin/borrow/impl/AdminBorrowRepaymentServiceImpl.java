@@ -503,17 +503,14 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     @Override
     public int updateBorrowRepayDelayDays(String borrowNid, String delayDays) throws ParseException{
         AdminRepayDelayCustomize repayDelay = this.selectBorrowInfo(borrowNid);
-        logger.info("updateBorrowRepayDelayDays repayDelay:" +JSONObject.toJSON(repayDelay));
         // 单期标
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle())
                 || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
             BorrowRepay borrowRepay = this.getBorrowRepay(borrowNid);
-            logger.info("updateBorrowRepayDelayDays borrowRepay:" +JSONObject.toJSON(borrowRepay));
             borrowRepay.setDelayDays(Integer.parseInt(delayDays));
             return this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay);
         } else {
             BorrowRepayPlan borrowRepay = this.getBorrowRepayPlan(borrowNid);
-            logger.info("updateBorrowRepayDelayDays borrowRepayPlan:" +JSONObject.toJSON(borrowRepay));
             borrowRepay.setDelayDays(Integer.parseInt(delayDays));
             return this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepay);
         }
