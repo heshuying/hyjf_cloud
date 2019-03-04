@@ -15,8 +15,6 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -64,16 +62,16 @@ public class ChannelStatisticsDetailController extends BaseController {
 			HttpServletRequest request) {
 		logger.info("PC统计明细查询开始......");
 		AdminResult adminResult = new AdminResult();
-		AdminSystemVO user = getUser(request);
-		// 根据用户Id查询渠道账号管理
-		AdminUtmReadPermissionsVO adminUtmReadPermissions = null;
-		if (user != null && StringUtils.isNotEmpty(user.getId())) {
-			adminUtmReadPermissions = this.channelStatisticsDetailService
-					.selectAdminUtmReadPermissions(Integer.valueOf(user.getId()));
-		}
-		if (adminUtmReadPermissions != null) {
-			channelStatisticsDetailRequest.setUtmIds(adminUtmReadPermissions.getUtmIds());// 封装到页面
-		}
+//		AdminSystemVO user = getUser(request);
+//		// 根据用户Id查询渠道账号管理
+//		AdminUtmReadPermissionsVO adminUtmReadPermissions = null;
+//		if (user != null && StringUtils.isNotEmpty(user.getId())) {
+//			adminUtmReadPermissions = this.channelStatisticsDetailService
+//					.selectAdminUtmReadPermissions(Integer.valueOf(user.getId()));
+//		}
+//		if (adminUtmReadPermissions != null) {
+//			channelStatisticsDetailRequest.setUtmIds(adminUtmReadPermissions.getUtmIds());// 封装到页面
+//		}
 		JSONObject json = channelStatisticsDetailService.searchAction(channelStatisticsDetailRequest);
 		if (json == null) {
 			adminResult.setStatus(FAIL);
