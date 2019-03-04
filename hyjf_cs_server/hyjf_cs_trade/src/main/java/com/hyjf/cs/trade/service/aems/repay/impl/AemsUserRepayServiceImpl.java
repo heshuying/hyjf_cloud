@@ -149,6 +149,7 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
         bean.setProductId(borrowNid);
         BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
         String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+        logger.info("调用还款申请冻结资金接口 respCode:" + JSONObject.toJSONString(respCode));
         // 申请冻结资金失败
         if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             if (!"".equals(respCode)) {
@@ -161,11 +162,14 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
         }
         //还款后变更数据
         boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
+        logger.info("还款后变更数据, updateResult:" + updateResult);
         if(updateResult){
             updateResult = this.updateBorrowCreditStautus(borrowNid);
+            logger.info("还款后变更数据, updateResult:" + updateResult);
             if(!updateResult){
                 resultBean.setStatus(WebResult.ERROR);
                 resultBean.setStatusDesc("还款失败，请稍后再试...");
+                logger.info("还款失败，请稍后再试...");
             }else {
                 resultBean.setStatus(ApiBean.SUCCESS);
                 resultBean.setStatusDesc("还款成功");

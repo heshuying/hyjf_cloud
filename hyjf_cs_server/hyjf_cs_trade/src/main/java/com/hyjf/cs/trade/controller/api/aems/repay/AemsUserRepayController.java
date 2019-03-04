@@ -193,6 +193,7 @@ public class AemsUserRepayController extends BaseTradeController {
                     }
                     //插入冻结信息日志表 add by cwyang 2017-07-08
                     repayManageService.addFreezeLog(user.getUserId(), orderId, account, requestBean.getProductId(), repayTotal, user.getUsername());
+                    logger.info("Aems还款接口插入冻结信息日志表成功------");
                     // 申请还款冻结资金
                     // 调用江西银行还款申请冻结资金
                     return aemsUserRepayService.getBalanceFreeze(user, requestBean.getProductId(), repay, orderId, account, resultBean, isAllRepay);
