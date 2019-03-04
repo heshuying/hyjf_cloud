@@ -974,9 +974,9 @@ public interface AmAdminClient {
      */
     void updateBindCard(BindCardExceptionRequest request);
 
-    List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request);
+    List<BankRepayFreezeOrgCustomizeVO> getBankRepayFreezeOrgList(RepayFreezeOrgRequest request);
 
-    Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request);
+    Integer getBankRepayFreezeOrgCount(RepayFreezeOrgRequest request);
 
     Integer deleteOrgFreezeLogById(Integer id);
 
