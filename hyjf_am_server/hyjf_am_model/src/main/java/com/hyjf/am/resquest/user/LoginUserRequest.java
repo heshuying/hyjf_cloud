@@ -1,5 +1,7 @@
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.user.UserVO;
+
 import java.io.Serializable;
 
 /**
@@ -16,13 +18,23 @@ public class LoginUserRequest implements Serializable{
      */
     private String ip;
 
+    private UserVO userVO;
+
     public LoginUserRequest() {
     }
 
-    public LoginUserRequest(int userId, String ip) {
+    public LoginUserRequest(int userId, String ip,UserVO userVO) {
+        this.userVO = userVO;
         this.userId = userId;
         this.ip = ip;
     }
+
+    public LoginUserRequest(int userId, String ip) {
+        this.userVO = userVO;
+        this.userId = userId;
+        this.ip = ip;
+    }
+
 
     public int getUserId() {
         return userId;
@@ -38,6 +50,14 @@ public class LoginUserRequest implements Serializable{
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public UserVO getUserVO() {
+        return userVO;
+    }
+
+    public void setUserVO(UserVO userVO) {
+        this.userVO = userVO;
     }
 
     @Override
