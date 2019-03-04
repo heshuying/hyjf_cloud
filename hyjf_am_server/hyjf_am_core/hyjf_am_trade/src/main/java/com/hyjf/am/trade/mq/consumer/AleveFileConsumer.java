@@ -95,7 +95,7 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
 
                 //读取文件
-                TransUtil.readFileAleve(fin, aleveLogs, aleveErrorLogs);
+                TransUtil.readFileAleve(fin, aleveLogs, aleveErrorLogs, beforeDate);
 
                 //插入数据
                 if (!CollectionUtils.isEmpty(aleveLogs)) {

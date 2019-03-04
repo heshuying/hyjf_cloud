@@ -37,7 +37,7 @@ public class TransUtil {
      * @param aleveErrorLogs
      * @return
      */
-    public static void readFileAleve(File fin, List<AleveLog> aleveLogs, List<AleveErrorLog> aleveErrorLogs) throws IOException {
+    public static void readFileAleve(File fin, List<AleveLog> aleveLogs, List<AleveErrorLog> aleveErrorLogs, String beforeDate) throws IOException {
 
         if (fin == null) {
             return;
@@ -85,7 +85,7 @@ public class TransUtil {
             String ACCCHG = substring(line, 171, 172);//交易标识
             String SEQNO = substring(line, 172, 178);//系统跟踪号
             String ORI_NUM = substring(line, 178, 184);//原交易流水号
-            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+//            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
 
             AleveLog aleve = new AleveLog();
             aleve.setBank(StringUtils.isNotEmpty(bank) ? Integer.valueOf(bank) : 0);
@@ -116,7 +116,7 @@ public class TransUtil {
     }
 
 
-    public static void readFileEve(File fin, List<EveLog> eveLogs, List<AleveErrorLog> aleveErrorLogs) throws IOException {
+    public static void readFileEve(File fin, List<EveLog> eveLogs, List<AleveErrorLog> aleveErrorLogs, String beforeDate) throws IOException {
 
         if (fin == null) {
             return;
@@ -156,12 +156,26 @@ public class TransUtil {
                 String reserved = substring(line, 115, 134).trim();//内部保留域
                 String revind = substring(line, 134, 135).trim();//冲正、撤销标志 --1-已撤销/冲正空或0-正常交易
                 String transtype = substring(line, 135, 139).trim();//交易类型
-                String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+//                String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
                 EveLog eve = new EveLog();
                 eve.setForcode(forcode);
                 eve.setSeqno(StringUtils.isNotEmpty(seqno) ? Integer.valueOf(seqno) : 0);
-                String cendtStr = StringUtils.isNotEmpty(cendt) ? cendt : "0";
-                int cendtint = DateUtils.getBeforeYearTime(cendtStr);
+//                String cendtStr = StringUtils.isNotEmpty(cendt) ? cendt : "0";
+//                int cendtint = DateUtils.getBeforeYearTime(cendtStr);
+                // 获取当前文件年份
+                String year = substring(beforeDate,0,4);
+                // 获取当前文件月份
+                String month = substring(beforeDate,4,6);
+                String cendtYear = "";
+                // 针对1月份的文件内存在上一年12月份数据的情况
+                if("01".equals(month) && "12".equals(substring(cendt,0,2))){
+                    // 获取上一年年份
+                    Integer intYear = Integer.parseInt(year) - 1;
+                    cendtYear = intYear + cendt;
+                } else {
+                    cendtYear = year + cendt;
+                }
+                Integer cendtint = GetDate.strYYYYMMDDTimestamp(cendtYear);
                 eve.setCendt(cendtint);
                 eve.setCardnbr(cardnbr);
                 eve.setAmount(StringUtils.isNotEmpty(amount) ? BigDecimal.valueOf(Double.valueOf(amount) / 100) : BigDecimal.valueOf(0.00));
@@ -184,7 +198,6 @@ public class TransUtil {
             }
         }
     }
-
 
     /**
      * 取得标的请求项目期限

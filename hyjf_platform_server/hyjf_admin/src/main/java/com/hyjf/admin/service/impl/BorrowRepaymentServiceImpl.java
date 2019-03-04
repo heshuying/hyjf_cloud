@@ -90,12 +90,12 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
             BorrowRepayVO borrowRepay = this.amTradeClient.getBorrowRepayDelay(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
             bean.setRepayInfo(borrowRepay);
-            bean.setRepayTime(GetDate.formatDate(Long.valueOf(borrowRepay.getRepayTime()) * 1000L));
+            bean.setRepayTime(GetDate.formatDate(Long.valueOf(GetDate.countDate(borrowRepay.getRepayTime(),5,borrowRepay.getDelayDays())) * 1000L));
             bean.setDelayDays(borrowRepay.getDelayDays());
         } else {
             BorrowRepayPlanVO borrowRepayPlan = this.amTradeClient.getBorrowRepayPlanDelay(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
             bean.setRepayInfo(borrowRepayPlan);
-            bean.setRepayTime(GetDate.formatDate(Long.valueOf(borrowRepayPlan.getRepayTime()) * 1000L));
+            bean.setRepayTime(GetDate.formatDate(Long.valueOf(GetDate.countDate(borrowRepayPlan.getRepayTime(),5,borrowRepayPlan.getDelayDays())) * 1000L));
             bean.setDelayDays(borrowRepayPlan.getDelayDays());
         }
         return bean;

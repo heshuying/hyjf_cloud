@@ -12,11 +12,9 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.AemsRepayResultBean;
-import com.hyjf.cs.trade.bean.ApiBean;
-import com.hyjf.cs.trade.bean.ResultApiBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -149,30 +147,38 @@ public class AemsUserRepayServiceImpl extends BaseTradeServiceImpl implements Ae
         bean.setProductId(borrowNid);
         BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
         String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+        logger.info("调用还款申请冻结资金接口 respCode:" + JSONObject.toJSONString(respCode));
         // 申请冻结资金失败
         if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             if (!"".equals(respCode)) {
                 this.deleteFreezeLogByOrderId(orderId);
             }
             logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
-            resultBean.setStatus(ResultApiBean.ERROR);
-            resultBean.setStatusDesc("还款失败，请稍后再试...");
+            resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK000009);
+            resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000009);
+            resultBean.setStatusDesc("调用还款申请冻结资金接口失败，请稍后再试...");
             return resultBean;
         }
         //还款后变更数据
         boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
+        logger.info("还款后变更数据, updateResult:" + updateResult);
         if(updateResult){
             updateResult = this.updateBorrowCreditStautus(borrowNid);
+            logger.info("还款后变更数据, updateResult:" + updateResult);
             if(!updateResult){
-                resultBean.setStatus(WebResult.ERROR);
-                resultBean.setStatusDesc("还款失败，请稍后再试...");
+                resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK999999);
+                resultBean.setStatusDesc("还款后变更数据失败，请稍后再试...");
+                logger.info("还款后变更数据失败，请稍后再试...");
             }else {
-                resultBean.setStatus(ApiBean.SUCCESS);
-                resultBean.setStatusDesc("还款成功");
+                resultBean.setStatus(AemsErrorCodeConstant.SUCCESS);
+                resultBean.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
+                resultBean.setStatusDesc("还款申请提交成功！");
                 return resultBean;
             }
         }else {
-            resultBean.setStatus(WebResult.ERROR);
+            resultBean.setStatus(AemsErrorCodeConstant.STATUS_HK999999);
+            resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK999999);
             resultBean.setStatusDesc("还款失败，请稍后再试...");
         }
         return resultBean;
