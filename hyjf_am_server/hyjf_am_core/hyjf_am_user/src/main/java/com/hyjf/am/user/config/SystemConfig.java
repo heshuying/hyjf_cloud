@@ -15,6 +15,32 @@ public class SystemConfig {
     public String fddSecret;
     @Value("${hyjf.fdd.url}")
     public String fddUrl;
+
+    /**
+     * cds加速文件路径
+     */
+    @Value("${file.domain.url}")
+    public String fileDomainUrl;
+
+    @Value("${file.upload.real.path}")
+    public String fileUpload;
+
+    public String getFileDomainUrl() {
+        return fileDomainUrl;
+    }
+
+    public void setFileDomainUrl(String fileDomainUrl) {
+        this.fileDomainUrl = fileDomainUrl;
+    }
+
+    public String getFileUpload() {
+        return fileUpload;
+    }
+
+    public void setFileUpload(String fileUpload) {
+        this.fileUpload = fileUpload;
+    }
+
     public String getFaaAppUrl() {
         return faaAppUrl;
     }

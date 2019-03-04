@@ -102,12 +102,12 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 * @param ip
 	 */
 	@Override
-	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel) {
+	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel,UserVO userVO) {
 	    //logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
-		return this.doLogin(loginUserName, loginPassword, ip, channel);
+		return this.doLogin(loginUserName, loginPassword, ip, channel,userVO);
 	}
 
 	/**
@@ -124,8 +124,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			throw new CheckException(MsgEnum.ERR_USER_INVALID);
 		}
 		// 更新登录信息
-	/*	amUserClient.updateLoginUser(userId, ip);
-		updateUserByUserId(userVO);*/
+		amUserClient.updateUser(userVO, ip);
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
@@ -149,8 +148,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 * @param loginPassword
 	 * @return
 	 */
-	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel) {
-		UserVO userVO = amUserClient.updateByCondition(loginUserName);
+	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel,UserVO userVO) {
 		logger.info("登陆获取loginUserName:"+loginUserName+";userVO:"+(userVO==null));
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
@@ -680,26 +678,33 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				result.setHuifuBindBankCardUrl(apphost + ClientConstants.USER_BIND_CARD + packageStr(request));
 				// 江西银行绑卡url
 				// 江西银行绑卡接口修改
-				if (urlType == 1) {
+				/*if (urlType == 1) {
 					// 绑卡接口类型为新接口
 					result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
 							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
-				}
+				}*/
+				// 目前不需要切换了 add by hesy 2019-03-04
+				result.setBindBankCardUrl(
+						systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 				// 江西银行绑卡接口修改
 			} else {
 				// 江西银行绑卡url
 				// 江西银行绑卡接口修改
-				if (urlType == 1) {
+				/*if (urlType == 1) {
 					// 绑卡接口类型为新接口
 					result.setBindBankCardUrl(apphost + ClientConstants.REQUEST_BINDCARDPAGE + packageStr(request));
 				} else {
 					// 绑卡接口类型为旧接口
 					result.setBindBankCardUrl(
 							systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
-				}
+				}*/
+
+				// 目前不需要切换了 add by hesy 2019-03-04
+				result.setBindBankCardUrl(
+						systemConfig.getAppFrontHost() + ClientConstants.BINDCARD_ACTION + packageStr(request));
 			}
 		}
 		{
@@ -1032,8 +1037,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 * @return
 	 */
 	@Override
-	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
-		UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
+	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel,UserVO userVO) {
 		Map<String, String> r=new HashMap<>();
 		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
 		if(userVO!=null){
@@ -1138,8 +1142,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		// 密码正确时
 		if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
 			// 更新登录信息
-			amUserClient.updateLoginUser(userId, ipAddr);
-			updateUserByUserId(u);
+			amUserClient.updateUser(u,ipAddr);
 			// 1. 登录成功将登陆密码错误次数的key删除
 			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
