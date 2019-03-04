@@ -192,10 +192,8 @@ public class AdminBorrowRepaymentController extends BaseController {
         BorrowRepayResponse response = new BorrowRepayResponse();
         try{
             BorrowRepayBean customize = adminBorrowRepaymentService.getBorrowRepayInfo(borrowNid,borrowApr,borrowStyle);
-            logger.info("customize:" +JSONObject.toJSON(customize));
             if(customize!=null){
                 BorrowRepayBeanVO vo = CommonUtils.convertBean(customize,BorrowRepayBeanVO.class);
-                logger.info("vo:" +JSONObject.toJSON(vo));
                 response.setBorrowRepayBeanVO(vo);
             }
             return response;
@@ -217,7 +215,7 @@ public class AdminBorrowRepaymentController extends BaseController {
             }
             return response;
         }catch (Exception e){
-            logger.error(this.getClass().getName(), "bankCallFundTransQuery", e);
+            logger.error(this.getClass().getName(), "getBorrowRepayPlanInfo", e);
         }
         return response;
     }
@@ -231,7 +229,7 @@ public class AdminBorrowRepaymentController extends BaseController {
             response.setResultInt(adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays));
             return response;
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(this.getClass().getName(), "updateBorrowRepayDelayDays", e);
         }
         return response;
     }
