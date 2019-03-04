@@ -227,8 +227,6 @@ public class AdminBorrowRepaymentController extends BaseController {
     @RequestMapping(value = "/updateBorrowRepayDelayDays/{borrowNid}/{delayDays}", method = RequestMethod.GET)
     public IntegerResponse updateBorrowRepayDelayDays(@PathVariable String borrowNid, @PathVariable String delayDays) {
         IntegerResponse response=new IntegerResponse();
-        logger.info("borrowNid:" +borrowNid);
-        logger.info("delayDays:" +delayDays);
         try {
             response.setResultInt(adminBorrowRepaymentService.updateBorrowRepayDelayDays(borrowNid,delayDays));
             return response;
