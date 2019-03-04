@@ -11,7 +11,7 @@
 				AND utm.source_id <![CDATA[=]]> #{sourceIdSrch}
 			</if>
 			<if test="keySrch != null and keySrch != ''" >
-				AND utm.utm_term LIKE CONCAT( #{keyName}, '%')
+				AND utm.utm_term LIKE CONCAT( #{keySrch}, '%')
 			</if>
 			<if test="utmIdsSrch != null and utmIdsSrch != ''">
 				AND utm.source_id in
