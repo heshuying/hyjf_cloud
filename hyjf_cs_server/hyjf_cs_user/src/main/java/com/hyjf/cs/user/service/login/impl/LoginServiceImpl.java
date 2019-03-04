@@ -131,10 +131,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
-		BankOpenAccountVO account = this.getBankOpenAccount(userId);
-		String accountId = null;
-		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-			accountId = account.getAccount();
+		String accountId = webViewUserVO.getBankAccount();
+		if (accountId != null && StringUtils.isNoneBlank(accountId)) {
 			synBalanceService.synBalance(accountId, ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {

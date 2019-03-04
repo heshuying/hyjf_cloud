@@ -101,6 +101,7 @@ public class BorrowRepaymentController extends BaseController {
     public AdminResult<DelayRepayInfoBean> initDelayRepayAction(HttpServletRequest request,@RequestBody Map map) {
         String borrowNid = (String) map.get("borrowNid");
         DelayRepayInfoBean bean=borrowRepaymentService.getDelayRepayInfo(borrowNid);
+        logger.info("bean:" +JSONObject.toJSON(bean));
         AdminResult<DelayRepayInfoBean> result=new AdminResult<DelayRepayInfoBean> ();
         result.setData(bean);
         return result;
@@ -127,9 +128,10 @@ public class BorrowRepaymentController extends BaseController {
         String borrowNid = (String) map.get("borrowNid");
         String delayDays = (String) map.get("delayDays");
         String repayTime = (String) map.get("repayTime");
-        logger.info("请求参数 borrowNid:" +borrowNid);
-        logger.info("请求参数 delayDays:" +delayDays);
-        logger.info("请求参数 repayTime:" +repayTime);
+
+        logger.info("borrowNid:" +borrowNid);
+        logger.info("delayDays:" +delayDays);
+        logger.info("repayTime:" +repayTime);
 
         DelayRepayInfoBean bean=borrowRepaymentService.updateBorrowRepayDelayDays( borrowNid,delayDays,repayTime);
         result.setStatus(AdminResult.SUCCESS);

@@ -258,4 +258,13 @@ public interface ProjectListService {
      * @return
      */
     AppPushManageVO getAnnouncementsByID(String id);
+
+    /**
+     * 获取首页展示还款中的标的
+     * @param map
+     * @return
+     */
+    List<AppProjectListCustomizeVO> getHomeRepayProjecList(Map map);
+
+
 }

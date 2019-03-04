@@ -49,7 +49,6 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             BorrowRepayBean borrowRepayBean = new BorrowRepayBean();
             BorrowRepay borrowRepay = list.get(0);
             BeanUtils.copyProperties(borrowRepay, borrowRepayBean);
-            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             Date nowDate = new Date();
             Date date = new Date(Long.valueOf(borrowRepayBean.getRepayTime()) * 1000L);
             int distanceDays = GetDate.daysBetween(nowDate, date);
@@ -100,7 +99,6 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             } else {
                 borrowRepayBean.setBorrowStatus("0");
             }
-            logger.info("borrowRepayBean:" +JSONObject.toJSON(borrowRepayBean));
             return borrowRepayBean;
         }
 

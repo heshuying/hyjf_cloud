@@ -5966,7 +5966,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
 
-
+    /**
+     * 查询首页还款中的项目
+     * @Author yangchangwei 2019/3/4
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> selectHomeRepayProjectList(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectHomeRepayProjectList";
+        AppProjectListResponse response = restTemplate.postForEntity(url,request,AppProjectListResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
     /**
      * 添加
      * @author wgx
