@@ -494,18 +494,9 @@ public class RepayManageController extends BaseTradeController {
             isAllRepay = true;
         }
         String roleId = userVO.getRoleId();
+        repayManageService.checkForSingleRepayRequest(borrowNid,requestBean.getPassword(),userVO);// 校验基本信息
         RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, isAllRepay);
-        if ("3".equals(roleId)) {// 担保机构还款校验
-            repayManageService.checkForRepayRequestOrg(borrowNid, requestBean.getPassword(),userVO, repayBean,0);
-        } else { // 借款人还款校验
-            repayManageService.checkForRepayRequest(borrowNid, requestBean.getPassword(),userVO, repayBean);
-        }
-        int errflag = repayBean.getFlag();
-        if (1 == errflag) {
-            webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc(repayBean.getMessage());
-            return webResult;
-        }
+        repayManageService.checkForBankBalance(userVO,repayBean);// 校验银行余额
         String ip = GetCilentIP.getIpAddr(request);
         repayBean.setIp(ip);
         BigDecimal repayTotal = repayBean.getRepayAccountAll();
@@ -1086,6 +1077,15 @@ public class RepayManageController extends BaseTradeController {
                     // 担保机构的还款
                     RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay);
                     if (repay != null) {
+                        BigDecimal repayTotal = repay.getRepayAccountAll();
+                        if (repayTotal.compareTo(orgFreezeLog.getAmountFreeze()) != 0) {
+                            logger.error("【代偿冻结异步回调】借款编号：{}，冻结金额和还款金额不一致！冻结金额：{}，还款总金额：{}",
+                                    borrowNid, orgFreezeLog.getAmountFreeze(), repayTotal);
+                            if (!isBatchRepay) {
+                                return result;
+                            }
+                            continue;
+                        }
                         // 还款后变更数据
                         callBackBean.setOrderId(orderId);
                         //还款后变更数据

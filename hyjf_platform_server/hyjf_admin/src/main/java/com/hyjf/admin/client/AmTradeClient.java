@@ -3109,6 +3109,8 @@ public interface AmTradeClient {
 
     RepayBean getRepayBean(Map<String, String> paraMap);
 
+    boolean getFailCredit(String borrowNid);
+
     /**
      * 保证金不足列表
      * @param request

@@ -120,6 +120,9 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
         return amTradeClient.updateBorrowCreditStautus(borrowNid);
     }
 
-
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        return amTradeClient.getFailCredit(borrowNid);
+    }
 
 }
