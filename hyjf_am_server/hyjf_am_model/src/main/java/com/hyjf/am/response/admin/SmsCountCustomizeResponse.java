@@ -6,6 +6,7 @@ package com.hyjf.am.response.admin;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -16,8 +17,10 @@ import java.util.List;
 public class SmsCountCustomizeResponse extends Response<SmsCountCustomizeVO> {
     private int count;
 
+    @ApiModelProperty(name = "总金额")
     private String sumMoney;
 
+    @ApiModelProperty(name = "总条数")
     private int sumCount;
 
     List<OADepartmentCustomizeVO> list;
