@@ -544,4 +544,9 @@ public class RedisConstants {
      * 校验债转用的计算金额是否有异常数据(0:关闭；1：开启)
      */
     public static final String CHECK_HJH_CREDIT_CALC_FLAG = "check_hjh_credit_calc_flag";
+
+    /**
+     * 后台处理Aleve和eve文件增加redis锁控制、防止重复发送mq消息
+     */
+    public static final String DUAL_HISTORY_ALEVE = "DUAL_HISTORY_ALEVE:";
 }

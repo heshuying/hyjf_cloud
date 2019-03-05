@@ -17,6 +17,8 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.BankAleveVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -86,6 +88,7 @@ public class BankAleveController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult dualHistoryData(@RequestBody BankAleveRequest bankAleveRequest) {
         AdminResult result = new AdminResult();
+
         if(StringUtils.isBlank(bankAleveRequest.getDualDate())){
             result.setData("请输入处理时间！");
             return result;
@@ -106,6 +109,13 @@ public class BankAleveController {
             }
         } catch (Exception e) {
             result.setData("时间格式化失败，请输入正确处理日期！");
+            return result;
+        }
+
+        // 成功下载并发送mq后当天日期加10分钟锁、防止数据库导入数据事务未提交或数据未同步导致重复导入数据
+        boolean redisResult = RedisUtils.tranactionSet(RedisConstants.DUAL_HISTORY_ALEVE + dualDate,10 * 60);
+        if(!redisResult) {
+            result.setData("日期：" + dualDate + "的数据已提交处理，请稍后再试！");
             return result;
         }
 
