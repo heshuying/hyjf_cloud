@@ -54,7 +54,6 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -858,11 +857,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (moneyCoupon == 1) {
                     config += "1,";
                 }
-                Map<String, String> validateMap = couponService.validateCoupon(tender.getUserId(), tender.getAccount(), tender.getCouponGrantId(), tender.getPlatform(), borrow.getBorrowPeriod(), config,nowType);
+               /* Map<String, String> validateMap = couponService.validateCoupon(tender.getUserId(), tender.getAccount(), tender.getCouponGrantId(), tender.getPlatform(), borrow.getBorrowPeriod(), config,nowType);
                 if (!MapUtils.isEmpty(validateMap)) {
                     couponUser = null;
                 }
-                logger.info("优惠券出借校验完毕  结果：{}" , validateMap);
+                logger.info("优惠券出借校验完毕  结果：{}" , validateMap);*/
                 logger.info("用户优惠券信息为:{}" , JSONObject.toJSONString(couponUser));
             }
             if (couponUser != null) {
