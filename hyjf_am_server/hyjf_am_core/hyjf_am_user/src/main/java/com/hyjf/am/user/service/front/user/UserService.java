@@ -335,7 +335,7 @@ public interface UserService extends BaseService {
 	 * @return
 	 * @param userId
 	 */
-	WebViewUserVO getWebViewUserByUserId(Integer userId);
+	WebViewUserVO getWebViewUserByUserId(Integer userId,Integer platform);
 
 	/**
 	 * 更新用户信息
