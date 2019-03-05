@@ -6942,4 +6942,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @return
+     */
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/getFailCredit/" + borrowNid;
+        return restTemplate.getForEntity(url, boolean.class).getBody();
+    }
 }

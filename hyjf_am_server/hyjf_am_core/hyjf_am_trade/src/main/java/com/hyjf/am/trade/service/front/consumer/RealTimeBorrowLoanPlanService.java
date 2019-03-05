@@ -23,16 +23,9 @@ public interface RealTimeBorrowLoanPlanService extends BaseService {
 
 	BankCallBean requestLoans(BorrowApicron apicron, Map map);
 
-	boolean planLoanBatchUpdateDetails(BorrowApicron apicron, BankCallBean bean);
-
 	boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception;
 
 	BorrowApicron selApiCronByPrimaryKey(int id);
-
-	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
-
-	Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception;
-
 
 	/**
 	 * 调用银行实时放款接口成功时，更新业务数据

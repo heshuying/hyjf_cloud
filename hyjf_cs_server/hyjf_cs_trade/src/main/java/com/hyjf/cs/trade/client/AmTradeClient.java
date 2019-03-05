@@ -2857,5 +2857,7 @@ public interface AmTradeClient {
 
     List<HjhDebtCreditVO> getHjhDebtCreditListByBorrowNid(String borrowNid);
     BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
+
+    boolean getFailCredit(String borrowNid);
 }
 
