@@ -160,7 +160,7 @@
             AND vip.id =  #{vipSrch}
         </if>-->
         <include refid="where-all-page-condition"/>
-        ORDER BY t.user_id DESC
+        ORDER BY a.user_id DESC
         <if test="limitStart >= 0" >
             LIMIT #{limitStart} , #{limitEnd}
         </if>
