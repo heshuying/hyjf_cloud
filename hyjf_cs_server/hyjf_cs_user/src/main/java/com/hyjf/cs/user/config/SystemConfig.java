@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.config;
 
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.ClientConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +51,14 @@ public class SystemConfig {
     @Value("${file.upload.real.path}")
     public String fileUpload;
 
+    @Value("${file.upload.real.path.app}")
+    public String appFileUpload;
+
+    @Value("${file.upload.real.path.wechat}")
+    public String weChatFileUpload;
+
+    @Value("${file.upload.real.path.api}")
+    public String apiFileUpload;
     /**
      * 获取文件url前缀
      *
@@ -59,6 +68,20 @@ public class SystemConfig {
         String host = UploadFileUtils.getDoPath(this.getFileDomainUrl());
         String fileUploadRealPath = UploadFileUtils.getDoPath(this.getFileUpload());
         return host + fileUploadRealPath;
+    }
+
+    public String getFileUpload(int platform) {
+        switch (platform){
+            case ClientConstants.WECHAT_CLIENT:
+                return UploadFileUtils.getDoPath(this.getWeChatFileUpload());
+            case ClientConstants.APP_CLIENT:
+                return UploadFileUtils.getDoPath(this.getAppFileUpload());
+            case ClientConstants.WEB_CLIENT:
+                return UploadFileUtils.getDoPath(this.getFileUpload());
+            case ClientConstants.API_CLIENT:
+                return UploadFileUtils.getDoPath(this.getApiFileUpload());
+        }
+        return UploadFileUtils.getDoPath(this.getFileUpload());
     }
 
     @Value("${hyjf.front.app.host}")
@@ -141,6 +164,30 @@ public class SystemConfig {
     // 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
     @Value("${hyjf.app.exit.label.show.flag}")
     private String exitLabelShowFlag;
+
+    public String getAppFileUpload() {
+        return appFileUpload;
+    }
+
+    public void setAppFileUpload(String appFileUpload) {
+        this.appFileUpload = appFileUpload;
+    }
+
+    public String getWeChatFileUpload() {
+        return weChatFileUpload;
+    }
+
+    public void setWeChatFileUpload(String weChatFileUpload) {
+        this.weChatFileUpload = weChatFileUpload;
+    }
+
+    public String getApiFileUpload() {
+        return apiFileUpload;
+    }
+
+    public void setApiFileUpload(String apiFileUpload) {
+        this.apiFileUpload = apiFileUpload;
+    }
 
     public String getAppForgetpassword() {
         return appForgetpassword;
