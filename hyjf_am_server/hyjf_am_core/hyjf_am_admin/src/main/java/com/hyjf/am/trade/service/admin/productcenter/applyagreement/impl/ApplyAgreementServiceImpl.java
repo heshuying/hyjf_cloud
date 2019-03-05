@@ -127,7 +127,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         }
         if(StringUtils.isNotEmpty(request.getTimeStart()) &&
                 StringUtils.isNotEmpty(request.getTimeEnd())){
-            criteria.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStart()), GetDate.str2Timestamp(request.getTimeEnd()));
+            criteria.andCreateTimeBetween(GetDate.stringToDate(request.getTimeStart()), GetDate.stringToDate(request.getTimeEnd()));
         }
         Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
         return count;

@@ -143,7 +143,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
 
     @Override
     public boolean getFailCredit(String borrowNid) {
-        Integer failCreditCount = bankRepayFreezeOrgCustomizeMapper.getFailCredit();
+        Integer failCreditCount = bankRepayFreezeOrgCustomizeMapper.getFailCredit(borrowNid);
         return failCreditCount != null && failCreditCount > 0;
     }
 }

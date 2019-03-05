@@ -79,7 +79,7 @@ public class UserParamExceptionController extends BaseController {
 
     //会员管理列表查询
     @ApiOperation(value = "用户属性异常列表查询", notes = "用户属性异常列表查询")
-    @PostMapping(value = "/userslist")
+    @PostMapping(value = "/userparamexceptionlist")
     @ResponseBody
     public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean) {
         UserManagerRequest managerRequest = new UserManagerRequest();
