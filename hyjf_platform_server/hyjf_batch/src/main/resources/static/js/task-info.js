@@ -2,9 +2,9 @@ var TaskInfo = {
 	grid: '#taskinfo-grid',
 	form: '#taskinfoForm',
 	
-	init: function(){
+	init: function(role){
 		//初始化Grid列表数据
-		this.initGrid();
+		this.initGrid(role);
 	},
 	
 	//添加模块
@@ -155,7 +155,7 @@ var TaskInfo = {
 	},
 	
 	//初始化表单
-	initGrid: function(){
+	initGrid: function(role){
 		$(this.grid).datagrid({
 			toolbar: '#taskinfo-tbar',
 		    url:'/list',
@@ -179,13 +179,15 @@ var TaskInfo = {
                 {field:'nextFireTime',title:'nextFireTime',width:50},
 				{field:'createTime',title:'CreateTime',width:50},
 				{field:'Opr',title:'Opr',width:40,formatter:function(v,r,i){
-						var val = '';
-						if(r.jobStatus == 'NORMAL') {
-							val = '<a href="javascript:void(0)" onclick="TaskInfo.pauseTaskInfo('+i+')">暂停</a>'
-						}else if(r.jobStatus == 'PAUSED'){
-							val = '<a href="javascript:void(0)" onclick="TaskInfo.resumeTaskInfo('+i+')">开始</a>&nbsp;<a href="javascript:void(0)" onclick="TaskInfo.runOnceTaskInfo('+i+')">运行一次</a>'
+					if (role && role == 'admin') {
+							var val = '';
+							if(r.jobStatus == 'NORMAL') {
+								val = '<a href="javascript:void(0)" onclick="TaskInfo.pauseTaskInfo('+i+')">暂停</a>'
+							}else if(r.jobStatus == 'PAUSED'){
+								val = '<a href="javascript:void(0)" onclick="TaskInfo.resumeTaskInfo('+i+')">开始</a>&nbsp;<a href="javascript:void(0)" onclick="TaskInfo.runOnceTaskInfo('+i+')">运行一次</a>'
+							}
+							return val;
 						}
-						return val;
 					}
 				}
 		    ]]
