@@ -86,5 +86,5 @@ public interface WebUserRepayListCustomizeMapper {
 	 */
 	BigDecimal getOrgWaitRepayPlanManageFee(Integer userId);
 
-	Integer getFailCredit();
+	Integer getFailCredit(String borrowNid);
 }
