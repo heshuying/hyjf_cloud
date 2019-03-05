@@ -267,6 +267,7 @@ public class FavFTPUtil {
             logger.info("----------------------------开始下载FTP协议服务器fs："+fs.length);
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             for (FTPFile ff : fs) {
+                logger.info("----------------------------开始下载FTP协议--------："+ff.getName()+ "===" +para.sftpKeyFile);
                 if (ff.getName().equals(para.sftpKeyFile)) {
                     logger.info("----------------------------开始下载FTP协议："+para.savePath + "/" +para.fileName+"_"+ff.getName());
                     localFile = new File(para.savePath + "/" +para.fileName+"_"+ff.getName());
