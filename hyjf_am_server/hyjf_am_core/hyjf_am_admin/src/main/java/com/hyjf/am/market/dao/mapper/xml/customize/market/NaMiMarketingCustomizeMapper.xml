@@ -164,7 +164,7 @@
     <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
         select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
         (select u1.username from hyjf_user.ht_user u1 where u1.user_id=su.spreads_user_id) as refferName ,
-        u.reg_time as regTime
+        DATE_FORMAT(u.reg_time, '%Y-%m-%d %H:%i:%s' ) as regTime
         from hyjf_user.ht_user u
         INNER JOIN hyjf_user.ht_spreads_user su on u.user_id=su.user_id
         left join hyjf_user.ht_user_info u2 on u.user_id=u2.user_id

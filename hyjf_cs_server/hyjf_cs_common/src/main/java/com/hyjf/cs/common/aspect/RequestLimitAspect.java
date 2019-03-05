@@ -53,7 +53,7 @@ public class RequestLimitAspect {
         // 成功则是第一次，否则的话就是重复
         if (!setResult) {
         	logger.info("用户[" + userId + "]访问地址[" + uri + "]请求重复[" + limit.seconds() + "]");
-            throw new CheckException(userId+" 请求重复,访问"+uri);
+            throw new CheckException("");
         }
         
     }
