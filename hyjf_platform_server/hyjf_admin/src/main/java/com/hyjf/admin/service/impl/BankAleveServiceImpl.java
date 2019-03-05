@@ -112,7 +112,8 @@ public class BankAleveServiceImpl extends BaseServiceImpl implements BankAleveSe
                         params.put("filePathEve", systemConfig.getEveFileName());
                         params.put("filePathAleve", systemConfig.getAleveFileName());
                         params.put("dualDate",dualDate);
-                        params.put("isBOA","1");
+                        // 修复数据不冲正
+                        params.put("isBOA","0");
                         try {
                             commonProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), params));
                         } catch (MQException e) {
