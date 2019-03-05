@@ -1021,7 +1021,6 @@ public class AppHomeServiceImpl implements AppHomeService {
             AppAdsCustomizeVO appads = picList.get(0);
             info.put("imageUrl", appads.getImage());
             info.put("imageUrlOperation", appads.getUrl());
-            uniqueIdentifier = "this is test uniqueidellll";
             int requestTimes = updateCurrentDayRequestTimes(uniqueIdentifier,userId);
             if("2".equals(appads.getNewUserShow()) || ("1".equals(appads.getNewUserShow()) && userId == null)){
                 if(requestTimes <= 1){

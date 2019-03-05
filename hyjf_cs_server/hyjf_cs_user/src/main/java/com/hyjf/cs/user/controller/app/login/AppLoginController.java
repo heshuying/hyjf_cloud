@@ -466,7 +466,7 @@ public class AppLoginController extends BaseUserController {
             signValue.setToken(encryptValue);
             // 重新获取一个新sign(保证ios审核跳转最优服务器后可多用户登陆)
             if(version.substring(0,5).equals(systemConfig.getNewVersion()) && "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
-                sign = SecretUtil.createSignSec(sign);
+                sign = SecretUtil.createSign();
             }
             RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
             value =RedisUtils.get(RedisConstants.SIGN+sign);

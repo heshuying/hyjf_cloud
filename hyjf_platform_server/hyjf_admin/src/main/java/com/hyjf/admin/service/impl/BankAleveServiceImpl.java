@@ -10,6 +10,8 @@ import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.BankAleveVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FileUtil;
@@ -140,7 +142,7 @@ public class BankAleveServiceImpl extends BaseServiceImpl implements BankAleveSe
                     para.release();
                 }
                 logger.info("【手动导入对账文件】处理成功！");
-                return "处理成功";
+                return "日期：" + dualDate + " 处理成功。";
             } else {
                 logger.error("【手动导入对账文件】文件已导入数据库，请重新核对！");
                 return "文件已导入数据库，请重新核对！";
