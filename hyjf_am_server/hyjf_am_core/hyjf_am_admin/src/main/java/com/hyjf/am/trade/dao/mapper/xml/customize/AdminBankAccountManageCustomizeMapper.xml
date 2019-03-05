@@ -93,18 +93,7 @@
 
     <select id="queryAccountInfos" resultMap="accountInfoMapResult"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
-        select t.*,
-        t.account_id as account,
-        `od3`.`name` AS `regionName`,
-        `od2`.`name` AS `branchName`,
-        `od`.`name` AS `departmentName`,
-        CASE WHEN t.user_attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `user_region_name`,
-        CASE WHEN t.user_attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `user_branch_name`,
-        CASE WHEN t.user_attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `user_department_name`,
-        `od6`.`name` AS `referrer_region_name`,
-        `od5`.`name` AS `referrer_branch_name`,
-        `od4`.`name` AS `referrer_department_name`
-        from (SELECT
+        SELECT
         a.user_id,
         u.username,
         ui2.truename AS referrer_true_name,
@@ -130,7 +119,18 @@
         su.spreads_user_id,
         a.plan_balance,
         a.plan_frost,
-        a.plan_account_wait
+        a.plan_account_wait,
+
+        a.account_id as account,
+        `od3`.`name` AS `regionName`,
+        `od2`.`name` AS `branchName`,
+        `od`.`name` AS `departmentName`,
+        CASE WHEN ui.attribute = '1' THEN `od6`.`name` WHEN ui.attribute = 2 OR ui.attribute = 3 THEN `od3`.`name` ELSE `od9`.`name` END `user_region_name`,
+        CASE WHEN ui.attribute = '1' THEN `od5`.`name` WHEN ui.attribute = 2 OR ui.attribute = 3 THEN `od2`.`name` ELSE `od8`.`name` END `user_branch_name`,
+        CASE WHEN ui.attribute = '1' THEN `od4`.`name` WHEN ui.attribute = 2 OR ui.attribute = 3 THEN `od`.`name` ELSE `od7`.`name`  END `user_department_name`,
+        `od6`.`name` AS `referrer_region_name`,
+        `od5`.`name` AS `referrer_branch_name`,
+        `od4`.`name` AS `referrer_department_name`
         FROM
         ht_account a
         LEFT JOIN ht_r_user u ON a.user_id = u.user_id
@@ -139,6 +139,18 @@
         LEFT JOIN ht_r_user su ON a.user_id = su.user_id
         LEFT JOIN ht_r_user ui2 ON ui2.user_id = su.spreads_user_id
         LEFT JOIN ht_r_user spu ON spu.user_id = su.spreads_user_id
+        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = a.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21') AND (ui.attribute = 2 OR ui.attribute = 3)
+        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        LEFT JOIN ht_r_oa_users `ou2` ON `ou2`.hyd_id = su.spreads_user_id AND ou2.user_status IN ('E','Q1','Q11','Q2','Q21') AND ui.attribute <> 2 AND ui.attribute <> 3
+        LEFT JOIN ht_r_oa_department `od7` ON `od7`.`id` = `ou2`.`departmentid` AND `od7`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od8` ON `od8`.`id` = `od7`.`parentid`
+        LEFT JOIN ht_r_oa_department `od9` ON `od9`.`id` = `od8`.`parentid`
+        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = su.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
+        LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
         where
         1=1
         <if test="accountSrch != null and accountSrch != ''">
@@ -147,17 +159,6 @@
         <if test="vipSrch != null and vipSrch != ''">
             AND vip.id =  #{vipSrch}
         </if>-->
-        ) t
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
-        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = t.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
-        LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
-        LEFT JOIN ht_r_oa_department `od6` ON `od6`.`id` = `od5`.`parentid`
-        WHERE
-        1 = 1
         <include refid="where-all-page-condition"/>
         ORDER BY t.user_id DESC
         <if test="limitStart >= 0" >
