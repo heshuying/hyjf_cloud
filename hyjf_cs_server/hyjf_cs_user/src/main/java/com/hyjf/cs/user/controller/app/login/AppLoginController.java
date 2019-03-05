@@ -17,10 +17,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.AppUserToken;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.util.SignValue;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -402,7 +399,7 @@ public class AppLoginController extends BaseUserController {
                 // 实际物理路径前缀1
                 String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
                 // 实际物理路径前缀2
-                String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+                String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(ClientConstants.APP_CLIENT));
 
                 // 如果文件夹(前缀+后缀)不存在,则新建文件夹
                 String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
