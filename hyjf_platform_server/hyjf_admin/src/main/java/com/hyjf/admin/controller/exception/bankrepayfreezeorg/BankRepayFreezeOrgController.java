@@ -170,7 +170,6 @@ public class BankRepayFreezeOrgController extends BaseController {
         } else if (BankCallConstant.RESPCODE_SUCCESS.equals(form.getRetCode()) && !"0".equals(form.getState())) {
             logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！",orderId);
             bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
-            RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
             result.setStatusInfo(AdminResult.FAIL, "未冻结状态,解除冻结");
             return result;
         } else if (form.getCreateTimeInt() != null && GetDate.getNowTime10() < form.getCreateTimeInt() + 60 * 20) {
@@ -193,7 +192,6 @@ public class BankRepayFreezeOrgController extends BaseController {
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && !"0".equals(callApiBg.getState())) {
                     logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！", orderId);
                     bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
-                    RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
                 } else if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && "0".equals(callApiBg.getState())) {
                     return updateRepayMoney(form, callApiBg);
                 } else {
@@ -260,7 +258,7 @@ public class BankRepayFreezeOrgController extends BaseController {
                     // 如果有正在出让的债权,先去把出让状态停止
                     this.bankRepayFreezeOrgService.updateBorrowCreditStautus(borrowNid);
 
-                    //RedisUtils.del("batchOrgRepayUserid_" + form.getRepayUserId());
+                    RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
                     logger.info("【代偿冻结异常处理】担保机构:" + userId + "还款申请成功,标的号:" + borrowNid + ",订单号:" + orderId);
                 } else {
                     logger.error("【代偿冻结异常处理】担保机构:" + userId + "还款更新数据失败,标的号:" + borrowNid + ",订单号:" + orderId);

@@ -280,6 +280,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
         UserAuthRequest request=new UserAuthRequest();
         Date nowTime = GetDate.getNowTime();
         String orderId = retBean.getOrderId();
+        logger.info("updateUserAuth, userId:" + userId + " orderId:" + orderId);
         if (StringUtils.isNotBlank(orderId)) {
             HjhUserAuthLogVO hjhUserAuthLog = amUserClient.selectByExample(orderId);
             // 更新用户签约授权日志表
