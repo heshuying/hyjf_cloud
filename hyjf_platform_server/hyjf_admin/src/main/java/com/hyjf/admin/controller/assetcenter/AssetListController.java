@@ -391,7 +391,7 @@ public class AssetListController extends BaseController {
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 	        String sheetNameTmp = "";
 	        if(totalCount==0) {
-	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+	        	 helper.export(workbook, "第1页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 	        }else {
 		        for (int i = 1; i <= sheetCount; i++) {
 		        	sheetNameTmp = sheetName + "_第" + (i) + "页";
