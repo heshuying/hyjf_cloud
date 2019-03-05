@@ -143,7 +143,7 @@
         LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
         LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
         LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
-        LEFT JOIN ht_r_oa_users `ou2` ON `ou2`.hyd_id = su.spreads_user_id AND ou2.user_status IN ('E','Q1','Q11','Q2','Q21') AND ui.attribute <> 2 AND ui.attribute <> 3
+        LEFT JOIN ht_r_oa_users `ou2` ON `ou2`.hyd_id = su.spreads_user_id AND ou2.user_status IN ('E','Q1','Q11','Q2','Q21') AND ui.attribute <![CDATA[ <> ]]> 2 AND ui.attribute <![CDATA[ <> ]]> 3
         LEFT JOIN ht_r_oa_department `od7` ON `od7`.`id` = `ou2`.`departmentid` AND `od7`.id IS NOT NULL
         LEFT JOIN ht_r_oa_department `od8` ON `od8`.`id` = `od7`.`parentid`
         LEFT JOIN ht_r_oa_department `od9` ON `od9`.`id` = `od8`.`parentid`
