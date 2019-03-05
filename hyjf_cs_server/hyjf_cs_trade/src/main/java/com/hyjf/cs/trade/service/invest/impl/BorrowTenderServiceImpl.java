@@ -1591,7 +1591,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      */
     private void setProtocolsToResultVO(AppInvestInfoResultVO investInfo, String investType){
         List<NewAgreementBean> list=new ArrayList<NewAgreementBean>();
-        NewAgreementBean newAgreementBean=new NewAgreementBean("相关协议",  systemConfig.AppFrontHost+"/agreement/AgreementViewList?borrowType="+investType);
+        NewAgreementBean newAgreementBean=new NewAgreementBean("出借协议",  systemConfig.AppFrontHost+"/agreement/AgreementViewList?borrowType="+investType);
         list.add(newAgreementBean);
         investInfo.setProtocols(list);
         investInfo.setProtocolUrlDesc("协议列表");
