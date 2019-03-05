@@ -36,7 +36,7 @@
 
     <sql id="where-all-page-condition">
         <if test="userNameSrch != null and userNameSrch != ''">
-            AND a.username LIKE CONCAT( #{userNameSrch}, '%')
+            AND u.username LIKE CONCAT( #{userNameSrch}, '%')
         </if>
         <if test="combotreeListSrch != null and combotreeListSrch != ''">
             AND od.id in
