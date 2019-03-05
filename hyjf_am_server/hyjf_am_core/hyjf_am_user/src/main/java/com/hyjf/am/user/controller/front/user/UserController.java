@@ -1,22 +1,5 @@
 package com.hyjf.am.user.controller.front.user;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
-import com.hyjf.am.user.service.front.account.BankCardService;
-import com.hyjf.am.user.service.front.account.BankOpenService;
-import com.hyjf.am.user.service.front.user.UserInfoService;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
@@ -29,6 +12,9 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
+import com.hyjf.am.user.service.front.account.BankCardService;
+import com.hyjf.am.user.service.front.account.BankOpenService;
+import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -37,6 +23,18 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -1087,6 +1085,14 @@ public class UserController extends BaseController {
         return response;
     }
 
+/*    @GetMapping("/getWebViewUserByUserId/{userId}/{platform}")
+    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId,@PathVariable Integer platform){
+        WebViewUserResponse response = new WebViewUserResponse();
+        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId,platform);
+        response.setResult(webViewUserVO);
+        return response;
+    }
+    */
     @GetMapping("/getWebViewUserByUserId/{userId}")
     public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId){
         WebViewUserResponse response = new WebViewUserResponse();

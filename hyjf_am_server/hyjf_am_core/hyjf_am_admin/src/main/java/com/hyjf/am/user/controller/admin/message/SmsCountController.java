@@ -57,11 +57,12 @@ public class SmsCountController extends BaseController {
             configMoney = "0.042";//短信单价（0.042元/条）
         }
         response.setCount(count);
-        response.setSumMoney(decimalFormat.format(new BigDecimal(configMoney).multiply(new BigDecimal(count))));
+
 
         // 查询短信总条数
         int smsCount = smsCountService.querySmsCountNumberTotal(request);
         response.setSumCount(smsCount);
+        response.setSumMoney(decimalFormat.format(new BigDecimal(configMoney).multiply(new BigDecimal(smsCount))));
         return response;
     }
 

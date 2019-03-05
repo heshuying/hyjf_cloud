@@ -280,13 +280,15 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             logger.error("【还款申请校验】借款编号：{}，有承接失败的债权！", borrowNid);
             throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
         }
-        // 必须在计算还款金额前加锁，防止智投自动投资债转
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 300);
-        if (!tranactionSetFlag) {//设置失败
-            logger.error("【还款申请校验】借款编号：{}，正在处理项目债转！", borrowNid);
-            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
-            String dateStr = DateUtils.nowDateAddSecond((int) retTime);
-            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+        if(!"3".equals(user.getRoleId())) {
+            // 必须在计算还款明细前加锁，防止智投自动投资债转,垫付机构锁放到异步回调中
+            boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 300);
+            if (!tranactionSetFlag) {//设置失败
+                logger.error("【还款申请校验】借款编号：{}，正在处理项目债转！", borrowNid);
+                long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
+                String dateStr = DateUtils.nowDateAddSecond((int) retTime);
+                throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+            }
         }
     }
 
@@ -308,13 +310,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             } else {
                 // 银行账户余额不足
                 logger.error("【还款申请校验】银行账户余额不足！还款人用户名：{}", user.getUsername());
-                RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + repayBean.getBorrowNid());
                 throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
         } else {
             // 用户平台账户余额不足
             logger.error("【还款申请校验】平台账户余额不足！还款人用户名：{}", user.getUsername());
-            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + repayBean.getBorrowNid());
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
     }
@@ -824,7 +824,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 // 单笔还款申请冻结查询非正常
                 if (!BankCallConstant.STATUS_SUCCESS.equals(callBackBean.getState())) {
                     deleteOrgFreezeTempLogs(orderId, null);
-                    RedisUtils.del("batchOrgRepayUserid_" + userId);
+                    RedisUtils.del(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
                     logger.error("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
                     return false;
                 }
@@ -882,6 +882,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 webResult.setStatus(WebResult.ERROR);
                 webResult.setStatusDesc("还款失败，请稍后再试...");
             } else {
+                RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNid);// 还款提交成功删除锁
                 webResult.setStatus(WebResult.SUCCESS);
                 webResult.setStatusDesc(WebResult.SUCCESS_DESC);
                 return webResult;

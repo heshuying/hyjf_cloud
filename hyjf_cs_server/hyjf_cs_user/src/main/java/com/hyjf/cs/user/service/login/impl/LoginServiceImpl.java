@@ -384,7 +384,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 上传文件的CDNURL
 				if (StringUtils.isNotEmpty(iconUrl)) {
 					// 实际物理路径前缀2
-					String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+					String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(ClientConstants.APP_CLIENT));
 					result.setIconUrl(imghost + fileUploadTempPath + iconUrl);
 				} else {
 					result.setIconUrl(apphost + "/img/" + "icon.png");

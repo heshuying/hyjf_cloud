@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.controller.batch.cert;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
@@ -51,15 +52,23 @@ public class CertTransactBatchController {
         Integer page=1;
         Integer size=1000;
         CertAccountListIdCustomizeVO customize=new CertAccountListIdCustomizeVO();
+
+        // 检查redis的值是否允许运行 允许返回true  不允许返回false
+        boolean canRun = certTransactService.checkCanRun();
+        if(!canRun){
+            logger.info(logHeader + "redis不允许上报！");
+            return new StringResponse("success");
+        }
+
         do {
-            String certTransactMaxId = RedisUtils.get("certTransactOtherMaxId");
+            String certTransactMaxId = RedisUtils.get(RedisConstants.CERT_TRANSACT_OTHER_MAXID);
             Map<String, Object> param =  new HashMap<String, Object>();
             param.put("minId", certTransactMaxId==null?"0":certTransactMaxId);
             param.put("limitStart", (page-1)*size);
             param.put("limitEnd", size);
             customize=certTransactService.queryCertAccountListId(param);
             if(certTransactMaxId==null||"".equals(certTransactMaxId)){
-                RedisUtils.set("certTransactOtherMaxId", customize.getMaxId()+"");
+                RedisUtils.set(RedisConstants.CERT_TRANSACT_OTHER_MAXID, customize.getMaxId()+"");
                 logger.info(logHeader + "CertTransactBatchController execute end...");
                 return new StringResponse("success");
             }
@@ -81,7 +90,7 @@ public class CertTransactBatchController {
 
 
             }catch (Exception e){}
-            RedisUtils.set("certTransactOtherMaxId", maxId);
+            RedisUtils.set(RedisConstants.CERT_TRANSACT_OTHER_MAXID, maxId);
             page=page+1;
         } while (customize.getMaxId()>customize.getLimitMaxId());
         logger.info(logHeader + "CertTransactBatchController execute end...");
