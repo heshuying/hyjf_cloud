@@ -535,6 +535,9 @@ public class RedisConstants {
     /**合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报*/
     public static final String CERT_CAN_RUN= "CERT_CAN_RUN";
 
+    /**合规数据上报 CERT 已上报交易流水大Id*/
+    public static final String CERT_TRANSACT_OTHER_MAXID= "certTransactOtherMaxId";
+
     /**
      * 推送表的消息唯一标识
      */

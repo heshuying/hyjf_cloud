@@ -1586,7 +1586,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     @Override
-    public WebViewUserVO getWebViewUserByUserId(Integer userId) {
+    public WebViewUserVO getWebViewUserByUserId(Integer userId,Integer platform) {
         User user = this.findUserByUserId(userId);
         WebViewUserVO result = new WebViewUserVO();
         result.setUserId(user.getUserId());
@@ -1597,7 +1597,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if (StringUtils.isNotBlank(user.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(platform));
             if(StringUtils.isNotEmpty(user.getIconUrl())){
                 result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
             }
