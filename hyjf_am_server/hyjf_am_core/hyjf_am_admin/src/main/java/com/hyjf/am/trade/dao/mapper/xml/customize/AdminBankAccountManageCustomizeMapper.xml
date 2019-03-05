@@ -36,7 +36,7 @@
 
     <sql id="where-all-page-condition">
         <if test="userNameSrch != null and userNameSrch != ''">
-            AND t.username LIKE CONCAT( #{userNameSrch}, '%')
+            AND a.username LIKE CONCAT( #{userNameSrch}, '%')
         </if>
         <if test="combotreeListSrch != null and combotreeListSrch != ''">
             AND od.id in
@@ -82,8 +82,8 @@
         <if test="vipSrch != null and vipSrch != ''">
             AND vip.id =  #{vipSrch}
         </if>-->
-        ) t
-        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        ) a
+        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = a.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
         LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
         LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
         LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
