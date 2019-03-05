@@ -2360,7 +2360,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 分期时
 		if (borrowRecoverPlan != null) {
 			borrowRecover.setRecoverPeriod(periodNext); // 还款期数
-		} 
+		}
+		logger.info("【直投还款/承接人】借款编号：{}，开始更新放款记录总表。未还款总额：{}，还款额：{}",
+				borrowNid, borrowRecover.getRecoverAccountWait(), recoverAccountWait);
 		borrowRecover.setRepayBatchNo(repayBatchNo);
 		borrowRecover.setRecoverAccountYes(borrowRecover.getRecoverAccountYes().add(repayAccount));
 		borrowRecover.setRecoverCapitalYes(borrowRecover.getRecoverCapitalYes().add(repayCapital));
@@ -2377,6 +2379,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!borrowRecoverFlag) {
 			throw new Exception("放款记录总表(ht_borrow_recover)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
+		logger.info("【直投还款/承接人】借款编号：{}，更新放款记录总表完毕。未还款总额：{}",
+				borrowNid, borrowRecover.getRecoverAccountWait());
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
 			List<BorrowCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1);
