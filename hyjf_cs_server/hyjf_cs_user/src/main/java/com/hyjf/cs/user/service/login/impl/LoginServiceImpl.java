@@ -151,7 +151,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel,UserVO userVO) {
 		logger.info("登陆获取loginUserName:"+loginUserName+";userVO:"+(userVO==null));
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
-		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
+		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
 		String codeSalt = userVO.getSalt();
 		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
