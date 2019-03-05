@@ -51,6 +51,7 @@
 		fl.borrow_nid AS borrowNid,
 		fl.borrow_period AS borrowPeriod,
 		fl.total_period AS totalPeriod,
+		fl.current_period AS currentPeriod,
 		fl.repay_user_name AS repayUserName,
 		fl.borrow_user_name AS borrowUserName,
 		fl.inst_code AS instCode,
@@ -74,5 +75,11 @@
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
 		
+	</select>
+	<select id="getFailCredit" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		ht_hjh_plan_borrow_tmp tmp
+		JOIN ht_hjh_debt_credit hhdc ON hhdc.credit_nid = tmp.borrow_nid
+		WHERE tmp.borrow_type = 1 AND hhdc.borrow_nid = #{borrowNid}
 	</select>
 </mapper>

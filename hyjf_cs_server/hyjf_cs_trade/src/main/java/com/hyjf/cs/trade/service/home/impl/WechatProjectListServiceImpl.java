@@ -1431,9 +1431,12 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
 
         // 取得新手汇项目（出借中）
         String statusNewInvest = "15";
-        request.setStatus(statusNewInvest);
+        AppProjectListRequest request2 = new AppProjectListRequest();
+        request2 = CommonUtils.convertBean(request,AppProjectListRequest.class);
+        request2.setStatus(statusNewInvest);
+
         // 查询首页定时发标的项目
-        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectList(request);
+        List<AppProjectListCustomizeVO> listNewInvest = amTradeClient.searchAppProjectList(request2);
         if (listNewInvest != null && listNewInvest.size() > 0) {
             for (int i = 0; i < listNewInvest.size(); i++) {
                 AppProjectListCustomizeVO newInvest = listNewInvest.get(i);

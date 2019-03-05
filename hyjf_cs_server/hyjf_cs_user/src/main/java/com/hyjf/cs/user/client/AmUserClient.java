@@ -120,6 +120,11 @@ public interface AmUserClient {
 	 */
 	void insertUserAuthLog(HjhUserAuthLogVO hjhUserAuthLog);
 
+	/**
+	 * 查询授权错误信息
+	 * @param orderId
+	 * @return
+	 */
 	HjhUserAuthLogVO selectByExample(String orderId);
 
 	/**
@@ -157,6 +162,8 @@ public interface AmUserClient {
 	 * @return
 	 */
     AccountChinapnrVO getAccountChinapnr(Integer userId);
+
+    AccountPandectVO  getAccount4Pandect(Integer userId);
 
 	/**
 	 * 校验邮箱
@@ -600,4 +607,18 @@ public interface AmUserClient {
 	 * 员工离职，修改客户属性
 	 */
 	void updateUserLeave();
+
+	/**
+	 * 获取用户信息
+	 * @param userId
+	 * @return
+	 */
+    WebViewUserVO getWebViewUserByUserId(Integer userId);
+
+	/**
+	 * 更新用户信息
+	 * @param u
+	 * @param ipAddr
+	 */
+	void updateUser(UserVO u, String ipAddr);
 }

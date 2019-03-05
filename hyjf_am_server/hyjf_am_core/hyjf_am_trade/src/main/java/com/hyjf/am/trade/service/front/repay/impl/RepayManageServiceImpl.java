@@ -24,7 +24,7 @@ import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3940,7 +3940,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     private BigDecimal calculateRepayPlan(RepayBean repay, Borrow borrow, int period) throws Exception {
 
-        logger.info("calculateRepayPlan, borrowNid:" + borrow.getBorrowNid() + " period:" + period);
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
         BigDecimal repayAccountAll = new BigDecimal("0");
@@ -4983,7 +4982,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public boolean updateBorrowCreditStautus(String borrowNid) {
         Borrow borrow = this.getBorrowByNid(borrowNid);
         String planNid = borrow.getPlanNid();
-        BigDecimal rollBackAccount = BigDecimal.ZERO;
+        // BigDecimal rollBackAccount = BigDecimal.ZERO;
         if (StringUtils.isNotBlank(planNid)) {//计划标的
             HjhDebtCreditExample example = new HjhDebtCreditExample();
             List<Integer> list = new ArrayList<>();
@@ -4998,7 +4997,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal creditPrice = hjhDebtCredit.getCreditPrice();//已承接金额
                     BigDecimal liquidationFairValue = hjhDebtCredit.getLiquidationFairValue();//清算时债权价值
                     BigDecimal resultAmount = liquidationFairValue.subtract(creditPrice);//回滚金额
-                    rollBackAccount = rollBackAccount.add(resultAmount);
+                    // rollBackAccount = rollBackAccount.add(resultAmount);
                     hjhDebtCredit.setCreditStatus(3);
                     //更新债权结束时间 add by cwyang 2018-4-2
                     hjhDebtCredit.setEndTime(GetDate.getNowTime10());
@@ -5012,7 +5011,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     hjhAccede.setCreditCompleteFlag(2);//将清算状态置为2,以便2次清算
                     this.hjhAccedeMapper.updateByPrimaryKey(hjhAccede);
                     logger.info("===================标的：" + borrowNid + ",存在未承接债权，需要终止债权，再次清算，债权编号：" + hjhDebtCredit.getCreditNid() + "，订单号：" + planOrderId + "===================");
-
+                    //回滚开放额度 add by cwyang 2017-12-25
+                    // 回滚开放额度按未承接债权逐条回滚 update by wgx 2019/03/01
+                    if (StringUtils.isNotBlank(rollBackPlanNid)) {
+                        rollBackAccedeAccount(rollBackPlanNid, resultAmount);
+                    }
                     // add 合规数据上报 埋点 liubin 20181122 start
                     //停止债转并且没有被承接过
                     if (hjhDebtCredit.getCreditStatus().compareTo(3) == 0) {
@@ -5038,10 +5041,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     }
                     // add 合规数据上报 埋点 liubin 20181122 end
                 }
-            }
-            //回滚开放额度 add by cwyang 2017-12-25
-            if (StringUtils.isNotBlank(rollBackPlanNid)) {
-                rollBackAccedeAccount(rollBackPlanNid, rollBackAccount);
             }
         } else {//直投标的
             BorrowCreditExample example = new BorrowCreditExample();
@@ -5302,18 +5301,69 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     @Override
+    public void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+        Borrow borrow = getBorrowByNid(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+        BankRepayOrgFreezeLog log = new BankRepayOrgFreezeLog();
+        log.setRepayUserId(userId);// 还款人用户userId
+        log.setRepayUserName(userName);// 还款人用户名
+        log.setBorrowUserId(borrow.getUserId());// 借款人userId
+        log.setBorrowUserName(borrow.getBorrowUserName());// 借款人用户名
+        log.setAccount(account);// 电子账号
+        log.setOrderId(orderId);// 订单号:txDate+txTime+seqNo
+        log.setBorrowNid(borrow.getBorrowNid());// 借款编号
+        log.setPlanNid(borrow.getPlanNid());// 计划编号
+        log.setInstCode(borrowInfo.getInstCode());// 资产来源
+        log.setAmount(borrow.getAccount());// 借款金额
+        log.setAmountFreeze(repay.getRepayAccountAll());// 冻结金额
+        log.setRepayAccount(repay.getRepayAccount());// 应还本息
+        log.setRepayFee(repay.getRepayFee());// 还款服务费
+        log.setLowerInterest(BigDecimal.ZERO.subtract(repay.getChargeInterest()));// 减息金额
+        log.setPenaltyAmount(BigDecimal.ZERO);// 违约金
+        log.setDefaultInterest(repay.getLateInterest());// 逾期罚息?
+        Integer period = borrow.getBorrowPeriod();
+        String borrowStyle = borrow.getBorrowStyle();
+        String borrowPeriod = period + (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) ? "天" : "个月");
+        String periodTotal = CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ? "1" : repay.getBorrowPeriod();
+        int remainRepayPeriod = CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
+                ? 1 : repay.getRepayPeriod();
+        int repayPeriod = Integer.parseInt(periodTotal) - remainRepayPeriod + 1;
+        log.setBorrowPeriod(borrowPeriod);// 借款期限
+        log.setTotalPeriod(Integer.parseInt(periodTotal));// 总期数
+        log.setCurrentPeriod(repayPeriod);// 当前期数
+        log.setAllRepayFlag(isAllRepay ? 1 : 0);// 是否全部还款 0 否 1 是
+        log.setDelFlag(0);// 0 有效 1 无效
+        log.setCreateUserId(userId);
+        log.setCreateUserName(userName);
+        bankRepayOrgFreezeLogMapper.insertSelective(log);
+        logger.info("【批量还款垫付】借款编号：{}，插入垫付机构冻结表日志。", borrowNid);
+    }
+
+    @Override
     public boolean checkRepayInfo(Integer userId, String borrowNid) {
         BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
-        example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        BankRepayFreezeLogExample.Criteria criteria = example.createCriteria();
+        if(userId != null) {
+            criteria.andUserIdEqualTo(userId);
+        }
+        criteria.andBorrowNidEqualTo(borrowNid);
+        criteria.andDelFlagEqualTo(0);
         List<BankRepayFreezeLog> list = bankRepayFreezeLogMapper.selectByExample(example);
         if (list != null && list.size() > 0) {
+            return false;
+        }
+        BankRepayOrgFreezeLogExample orgExample = new BankRepayOrgFreezeLogExample();
+        orgExample.createCriteria().andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+        List<BankRepayOrgFreezeLog> orgList = bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
+        if (orgList != null && orgList.size() > 0) {
             return false;
         }
         return true;
     }
 
     @Override
-    public void insertRepayFreezeLof(Integer userId, String orderId, String account, String borrowNid,
+    public void insertRepayFreezeLog(Integer userId, String orderId, String account, String borrowNid,
                                      BigDecimal repayTotal, String userName) {
         BankRepayFreezeLog log = new BankRepayFreezeLog();
         log.setBorrowNid(borrowNid);
@@ -5506,5 +5556,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        Integer failCreditCount = webUserRepayListCustomizeMapper.getFailCredit();
+        return failCreditCount != null && failCreditCount > 0;
     }
 }

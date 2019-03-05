@@ -284,7 +284,7 @@ public class UnnormalRepayUtils {
 	public static BigDecimal overduePlanRepayOverdueInterest(BigDecimal termShouldPrincipalInterest, int overdueDays,
 			String planRate) {
 		BigDecimal planRateStr;
-		if (planRate == null || planRate.equals(new BigDecimal(0))) {
+		if (planRate == null || planRate.equals("0")) {
 			planRateStr = new BigDecimal("0.0006");
 		}else{
 			planRateStr = new BigDecimal(planRate);

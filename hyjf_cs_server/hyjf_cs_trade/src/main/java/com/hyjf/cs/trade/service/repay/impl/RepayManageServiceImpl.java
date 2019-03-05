@@ -242,142 +242,81 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
-     * 还款申请校验
-     *
-     * @auther: hesy
-     * @date: 2018/7/10
+     * 单个还款申请校验
+     * @auther: wgx
+     * @date: 2019/03/04
      */
     @Override
-    public void checkForRepayRequest(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean) {
+    public void checkForSingleRepayRequest(String borrowNid, String password, WebViewUserVO user) {
         if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)) {
-            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
-        }
-        // 平台密码校验
-        UserVO userVO = getUserByUserId(user.getUserId());
-        String mdPassword = MD5Utils.MD5(password + userVO.getSalt());
-        if (!mdPassword.equals(userVO.getPassword())) {
-            throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
-        }
-        // 开户校验
-        if (!user.isBankOpenAccount()) {
-            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        }
-        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
-        if (borrow == null) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
-        }
-        repayBean.setRepayUserId(user.getUserId());
-        // 服务费授权
-        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
-        if (!isPaymentAuth) {
-            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
-        }
-        AccountVO accountVO = getAccountByUserId(user.getUserId());
-        if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
-            // ** 用户符合还款条件，可以还款 *//*
-            // 查询用户在银行电子账户的余额
-            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
-            if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
-                // ** 用户符合还款条件，可以还款 *//*
-            } else {
-                // 银行账户余额不足
-                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-            }
-        } else {
-            // 平台账户余额不足
-            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-        }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
-        if (!tranactionSetFlag) {//设置失败
-            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
-            String dateStr = DateUtils.nowDateAddSecond((int) retTime);
-            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
-        }
-    }
-
-    @Override
-    public void checkForRepayRequestOrg(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean, int flag) {
-        if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)) {
+            logger.error("【还款申请校验】还款请求参数不全！", borrowNid);
             throw new CheckException(MsgEnum.ERR_PARAM_NUM);
         }
         // 平台密码校验
         UserVO userVO = getUserByUserId(user.getUserId());
         String mdPassword = MD5.toMD5Code(password + userVO.getSalt());
         if (!mdPassword.equals(userVO.getPassword())) {
+            logger.info("【还款申请校验】输入密码不正确！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
         }
         // 服务费授权校验
         boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
         if (!isPaymentAuth) {
+            logger.error("【还款申请校验】未进行服务费授权！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         // 开户校验
         if (!user.isBankOpenAccount()) {
+            logger.error("【还款申请校验】用户未开户！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if (borrow == null) {
+            logger.error("【还款申请校验】借款编号：{}，标的信息不存在！", borrowNid);
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-        AccountVO accountVO = getAccountByUserId(user.getUserId());
-        // 一次性还款
-        if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
-            if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
-                // ** 垫付机构符合还款条件，可以还款 *//*
-                // 查询用户在银行的电子账户
-                BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
-                // 获取用户在银行的电子账户余额
-                if (flag == 1) {//垫付机构批量还款
-                    repayBean.setRepayUserId(user.getUserId());// 垫付机构id
-                } else {
-                    if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
-                        // ** 垫付机构符合还款条件，可以还款 *//*
-                        repayBean.setRepayUserId(user.getUserId());// 垫付机构id
-                    } else {
-                        // 银行账户余额不足
-                        logger.error("【担保机构还款校验】银行账户余额不足！担保机构用户名：{}", user.getUsername());
-                        throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-                    }
-                }
-            } else {
-                // 用户平台账户余额不足
-                logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", user.getUsername());
-                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-            }
-        } else { // 分期还款
-            repayBean.setRepayUserId(user.getUserId());// 垫付机构id
-            if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
-                // ** 垫付机构符合还款条件，可以还款 *//*
-                // 查询用户在银行的电子账户
-                if (flag == 1) {
-                    //垫付机构批量还款 ，不验证银行账户余额
-                    ;
-                } else {
-                    BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
-                    if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
-                        // ** 用户符合还款条件，可以还款 *//*
-                        ;
-                    } else {
-                        // 银行账户余额不足
-                        logger.error("【担保机构还款校验】银行账户余额不足！担保机构用户名：{}", user.getUsername());
-                        throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-                    }
-                }
-            } else {
-                // 用户平台账户余额不足
-                logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", user.getUsername());
-                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-            }
+        boolean hasFailCredit = amTradeClient.getFailCredit(borrowNid);
+        if(hasFailCredit){//还款提交失败，请联系汇盈金服业务部门核实处理。
+            logger.error("【还款申请校验】借款编号：{}，有承接失败的债权！", borrowNid);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
         }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
+        // 必须在计算还款金额前加锁，防止智投自动投资债转
+        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 300);
         if (!tranactionSetFlag) {//设置失败
-            logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
-            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+            logger.error("【还款申请校验】借款编号：{}，正在处理项目债转！", borrowNid);
+            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
             String dateStr = DateUtils.nowDateAddSecond((int) retTime);
             throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
         }
-        // 如果有正在出让的债权,先去把出让状态停止
-        //this.updateBorrowCreditStautus(borrow.getBorrowNid()); // svn40463 未把此处注掉 update by wgx 2019/02/13
+    }
+
+    /**
+     * 还款银行余额校验
+     * @auther: wgx
+     * @date: 2019/03/04
+     */
+    @Override
+    public void checkForBankBalance(WebViewUserVO user, RepayBean repayBean) {
+        AccountVO accountVO = getAccountByUserId(user.getUserId());
+        if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
+            // ** 垫付机构符合还款条件，可以还款 *//*
+            // 查询用户在银行的电子账户
+            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
+            if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
+                // ** 用户符合还款条件，可以还款 *//*
+                ;
+            } else {
+                // 银行账户余额不足
+                logger.error("【还款申请校验】银行账户余额不足！还款人用户名：{}", user.getUsername());
+                RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + repayBean.getBorrowNid());
+                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+            }
+        } else {
+            // 用户平台账户余额不足
+            logger.error("【还款申请校验】平台账户余额不足！还款人用户名：{}", user.getUsername());
+            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + repayBean.getBorrowNid());
+            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+        }
     }
 
     @Override
@@ -782,7 +721,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date 2018/10/11
      */
     @Override
-    public Integer insertRepayOrgFreezeLof(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+    public Integer insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         BankRepayOrgFreezeLogRequest requestBean = new BankRepayOrgFreezeLogRequest();
@@ -873,17 +812,20 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         bean.setLogClient(0);
         try {
             BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
-            String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
+            if(callBackBean == null){
+                logger.error("【冻结查询】调用单笔还款申请冻结查询接口,银行返回为空!");
+            }
+            String respCode = callBackBean.getRetCode();
             // 单笔还款申请冻结查询失败
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
-                logger.info("【冻结查询】调用单笔还款申请冻结查询接口失败:{},订单号:{}", callBackBean.getRetMsg(), callBackBean.getOrderId());
+                logger.error("【冻结查询】调用单笔还款申请冻结查询接口失败:{},订单号:{}", callBackBean.getRetMsg(), callBackBean.getOrderId());
                 return false;
             } else {
                 // 单笔还款申请冻结查询非正常
                 if (!BankCallConstant.STATUS_SUCCESS.equals(callBackBean.getState())) {
                     deleteOrgFreezeTempLogs(orderId, null);
                     RedisUtils.del("batchOrgRepayUserid_" + userId);
-                    logger.info("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
+                    logger.error("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
                     return false;
                 }
             }
@@ -927,7 +869,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             if (!"".equals(respCode)) {
                 this.deleteFreezeLogByOrderId(orderId);
             }
-            logger.info("调用还款申请冻结资金接口失败:" + callBackBean==null?"":callBackBean.getRetMsg() + "订单号:" + callBackBean==null?"":callBackBean.getOrderId());
+            logger.error("调用还款申请冻结资金接口失败:" + callBackBean==null?"":callBackBean.getRetMsg() + "订单号:" + callBackBean==null?"":callBackBean.getOrderId());
             webResult.setStatus(WebResult.ERROR);
             webResult.setStatusDesc("还款失败，请稍后再试...");
             return webResult;
@@ -1017,51 +959,45 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         form.setEndDate(endDate);
         form.setStatus("0");
         form.setRepayStatus("0");
-        WebViewUserVO userVO = getUserFromCache(userId);
-        List<RepayListCustomizeVO> list = selectOrgRepayList(form);
+        WebViewUserVO user = getUserFromCache(userId);
         String account = userBankOpenAccount.getAccount();
         String txDate = GetOrderIdUtils.getTxDate();// 交易日期
         String txTime = GetOrderIdUtils.getTxTime();// 交易时间
         String seqNo = GetOrderIdUtils.getSeqNo(6);// 交易流水号
         String orderId = txDate + txTime + seqNo;// 交易日期+交易时间+交易流水号
-        BigDecimal repayTotal = BigDecimal.ZERO;
-        if (list != null && list.size() > 0) {
-            int allRepaySize = list.size();//所有还款标的数目
-            logger.info("=================cwyang 总还款笔数:" + allRepaySize + ",还款id:" + userId);
-            for (int i = 0; i < list.size(); i++) {
-                RepayListCustomizeVO repayInfo = list.get(i);
-                String borrowNid = repayInfo.getBorrowNid();
-                try {
-                    RepayBean repayBean = getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, false);
-                    int isOrg = 1;//垫付机构不校验单笔标的的冻结余额
-                    checkForRepayRequestOrg(borrowNid, password, userVO, repayBean, isOrg);
-                    //防止汇计划还款时正在发生债转操作
-                    int errflag = repayBean.getFlag();
-                    if (1 == errflag) {
-                        throw new RuntimeException("标的号:" + borrowNid + ",存在正在债转的操作,无法还款........");
-                    }
-                    //还款去重
-                    boolean result = checkRepayInfo(null, borrowNid);
-                    if (!result) {
-                        logger.info("标的号:{},项目正在还款中...", borrowNid);
-                        continue;
-                    }
-                    //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
-                    insertRepayOrgFreezeLof(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), false);
-                    BigDecimal total = repayBean.getRepayAccountAll();
-                    repayTotal = repayTotal.add(total);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.error("==============垫付机构:" + userId + "批量还款存在失败标的,标的号:" + borrowNid);
-                }
-            }
-            if (repayTotal.compareTo(BigDecimal.ZERO) == 1) {// 可正常还款金额大于0
-                // 调用江西银行还款申请冻结资金
-                return getBankRefinanceFreezePage(userId, userVO.getUsername(), ip, orderId, "", repayTotal, account);
-            }
+        if (StringUtils.isBlank(password)) {
+            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
         }
-        logger.info("==============垫付机构:" + userId + "批量还款金额为0,订单号:" + orderId);
-        return Collections.emptyMap();
+        // 平台密码校验
+        UserVO userVO = getUserByUserId(user.getUserId());
+        String mdPassword = MD5.toMD5Code(password + userVO.getSalt());
+        if (!mdPassword.equals(userVO.getPassword())) {
+            throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
+        }
+        // 服务费授权校验
+        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
+        if (!isPaymentAuth) {
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
+        }
+        // 开户校验
+        if (!user.isBankOpenAccount()) {
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        BatchRepayTotalRequest requestBean = new BatchRepayTotalRequest();
+        requestBean.setUserId(userId +"");
+        requestBean.setUserName(user.getUsername());
+        requestBean.setBankOpenAccount(user.isBankOpenAccount());
+        requestBean.setOrderId(orderId);
+        requestBean.setAccount(account);
+        requestBean.setStartDate(startDate);
+        requestBean.setEndDate(endDate);
+        BigDecimal repayTotal = amTradeClient.getOrgBatchRepayTotal(requestBean);
+        if (repayTotal.compareTo(BigDecimal.ZERO) == 1) {// 可正常还款金额大于0
+            // 调用江西银行还款申请冻结资金
+            return getBankRefinanceFreezePage(userId, user.getUsername(), ip, orderId, "", repayTotal, account);
+        }
+        logger.info("【批量还款垫付】冻结订单号：{}，总垫付金额为0。垫付机构用户名：{}", orderId, user.getUsername());
+        throw new CheckException(MsgEnum.STATUS_CE999999);
     }
 
     /**
@@ -1094,6 +1030,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     @Override
+    public boolean getFailCredit(String borrowNid) {
+        return amTradeClient.getFailCredit(borrowNid);
+    }
+
+    @Override
     public WebResult selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
 
         WebUserRepayTransferListBean repayTransferListBean = new WebUserRepayTransferListBean();
@@ -1123,4 +1064,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         webResult.setPage(page);
         return webResult;
     }
+
+
 }

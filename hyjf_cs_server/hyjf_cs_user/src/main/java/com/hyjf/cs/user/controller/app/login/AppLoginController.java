@@ -120,7 +120,8 @@ public class AppLoginController extends BaseUserController {
                 return ret;
             }
             //判断用户输入的密码错误次数---开始
-            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP);
+            UserVO userVO = loginService.getUser(username);
+            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP,userVO);
             if (!errorInfo.isEmpty()){
                 ret.put("status", "1");
                 ret.put("statusDesc", errorInfo.get("info"));
@@ -128,7 +129,7 @@ public class AppLoginController extends BaseUserController {
             }
             //判断用户输入的密码错误次数---结束
             // 执行登录(登录时间，登录ip)
-            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
+            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
             if (webViewUserVO != null) {
                 logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
                 //登录成功发送mq
@@ -146,7 +147,8 @@ public class AppLoginController extends BaseUserController {
                     logger.error("保存用户日志失败", e);
                 }
                 logger.info("appAfterLogin:"+sign);
-                this.appAfterLogin(sign, webViewUserVO, username);
+                // ios审核时跳转最优服务器的场景sign值重新获取
+                sign = this.appAfterLogin(sign, webViewUserVO, username,version);
 
                 if (StringUtils.isNotEmpty(presetProps)){
                     SensorsDataBean sensorsDataBean = new SensorsDataBean();
@@ -451,8 +453,9 @@ public class AppLoginController extends BaseUserController {
      * @param sign
      * @param webViewUserVO
      * @param loginUsername
+     * @param version
      */
-    private void appAfterLogin(String sign, WebViewUserVO webViewUserVO, String loginUsername){
+    private String appAfterLogin(String sign, WebViewUserVO webViewUserVO, String loginUsername, String version){
         // 加密后的token
         String encryptValue;
         // 获取sign对应的加密key
@@ -464,12 +467,17 @@ public class AppLoginController extends BaseUserController {
             String encryptString = JSON.toJSONString(token);
             encryptValue = DES.encryptDES_ECB(encryptString, signValue.getKey());
             signValue.setToken(encryptValue);
+            // 重新获取一个新sign(保证ios审核跳转最优服务器后可多用户登陆)
+            if(version.substring(0,5).equals(systemConfig.getNewVersion()) && "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
+                sign = SecretUtil.createSignSec(sign);
+            }
             RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
             value =RedisUtils.get(RedisConstants.SIGN+sign);
             logger.info("更新sign:"+JSON.toJSONString(value));
         } else {
             throw new RuntimeException("参数异常");
         }
+        return sign;
     }
 
 }

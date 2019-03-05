@@ -3,10 +3,14 @@
  */
 package com.hyjf.admin.mq.consumer;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmAdminClient;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
+import com.hyjf.am.vo.message.OperationReportJobBean;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -19,14 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.mq.base.CommonProducer;
-import com.hyjf.admin.mq.base.MessageContent;
-import com.hyjf.am.vo.message.OperationReportJobBean;
-import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author tyy
@@ -47,6 +46,8 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         OperationReportJobBean bean = JSONObject.parseObject(message.getBody(), OperationReportJobBean.class);
         int lastMonth = bean.getLastMonth();
         Calendar cal = bean.getCalendar();
+        cal.add(Calendar.MONTH, -1);
+        bean.setCalendar(cal);
         List<OperationReportJobVO> cityGroup = amAdminClient.getTenderCityGroupByList(getLastDay(cal));
         bean.setCityGroup(cityGroup);
         List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));
@@ -55,6 +56,7 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         bean.setAgeRangeUserIds(ageRangeUserIds);*/
         // 月交易金额
         bean.setAccountMonth(amAdminClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
+        logger.info("月交易金额 ：" + bean.getAccountMonth() + ",查询区间：" + getFirstDay(cal) + "~" + getLastDay(cal));
         // 月交易笔数
         bean.setTradeCountMonth(amAdminClient.getTradeCountByMonth(getFirstDay(cal), getLastDay(cal)));
         //借贷笔数

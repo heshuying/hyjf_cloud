@@ -494,18 +494,9 @@ public class RepayManageController extends BaseTradeController {
             isAllRepay = true;
         }
         String roleId = userVO.getRoleId();
+        repayManageService.checkForSingleRepayRequest(borrowNid,requestBean.getPassword(),userVO);// 校验基本信息
         RepayBean repayBean = repayManageService.getRepayBean(userVO.getUserId(), userVO.getRoleId(), borrowNid, isAllRepay);
-        if ("3".equals(roleId)) {// 担保机构还款校验
-            repayManageService.checkForRepayRequestOrg(borrowNid, requestBean.getPassword(),userVO, repayBean,0);
-        } else { // 借款人还款校验
-            repayManageService.checkForRepayRequest(borrowNid, requestBean.getPassword(),userVO, repayBean);
-        }
-        int errflag = repayBean.getFlag();
-        if (1 == errflag) {
-            webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc(repayBean.getMessage());
-            return webResult;
-        }
+        repayManageService.checkForBankBalance(userVO,repayBean);// 校验银行余额
         String ip = GetCilentIP.getIpAddr(request);
         repayBean.setIp(ip);
         BigDecimal repayTotal = repayBean.getRepayAccountAll();
@@ -525,7 +516,7 @@ public class RepayManageController extends BaseTradeController {
                     return webResult;
                 }
                 //插入担保机构冻结信息日志表 add by wgx 2018-09-11
-                repayManageService.insertRepayOrgFreezeLof(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), isAllRepay);
+                repayManageService.insertRepayOrgFreezeLog(userId, orderId, account, borrowNid, repayBean, userVO.getUsername(), isAllRepay);
                 Map<String, Object> map = repayManageService.getBankRefinanceFreezePage(userId, userVO.getUsername(), ip, orderId, borrowNid, repayTotal, account);
                 webResult.setData(map);
                 return webResult;
@@ -647,7 +638,7 @@ public class RepayManageController extends BaseTradeController {
             long retTime = RedisUtils.ttl(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userVO.getUserId());
             String dateStr = DateUtils.nowDateAddSecond((int) retTime);
             webResult.setData(msg);
-            webResult.setStatusDesc("该项目已提交还款，正在处理中，请" + dateStr + "后再试！");
+            webResult.setStatusDesc("您已提交过还款，正在处理中，请" + dateStr + "后再试！");
             return webResult;
         }
         boolean isTime = companyRepayTime(requestBean.getStartDate(),requestBean.getEndDate(),userVO.getUserId());
@@ -698,7 +689,7 @@ public class RepayManageController extends BaseTradeController {
                 long retTime = RedisUtils.ttl(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
                 String dateStr = DateUtils.nowDateAddSecond((int) retTime);
                 webResult.setStatus(WebResult.ERROR);
-                webResult.setStatusDesc("该项目已提交还款，正在处理中，请" + dateStr + "后再试！");
+                webResult.setStatusDesc("您已批量提交过还款，正在处理中，请" + dateStr + "后再试！");
                 webResult.setData(Collections.emptyMap());
             }
         }else{
@@ -817,7 +808,7 @@ public class RepayManageController extends BaseTradeController {
         if (repayStatus == CustomConstants.BANK_BATCH_STATUS_SENDED) {
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 String retMsg = bean.getRetMsg();
-                logger.error("【还款合法性检查异步通知】数据合法性异常！银行返回信息：{}", retMsg);
+                logger.error("【还款合法性检查异步通知】借款编号：{}，数据合法性异常！银行返回信息：{}",borrowNid, retMsg);
                 apicron.setData(retMsg);
                 apicron.setFailTimes((apicron.getFailTimes() + 1));
                 // 更新任务API状态为还款校验失败
@@ -873,7 +864,7 @@ public class RepayManageController extends BaseTradeController {
                 || repayStatus == CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS) {
             if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                 String retMsg = bean.getRetMsg();
-                logger.error("【还款业务处理结果异步通知】还款失败！银行返回信息：{}", retMsg);
+                logger.error("【还款业务处理结果异步通知】借款编号：{}，还款失败！银行返回信息：{}", retMsg, borrowNid);
                 apicron.setData(retMsg);
                 apicron.setFailTimes((apicron.getFailTimes() + 1));
                 // 更新任务API状态为放款校验失败
@@ -1086,6 +1077,15 @@ public class RepayManageController extends BaseTradeController {
                     // 担保机构的还款
                     RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay);
                     if (repay != null) {
+                        BigDecimal repayTotal = repay.getRepayAccountAll();
+                        if (repayTotal.compareTo(orgFreezeLog.getAmountFreeze()) != 0) {
+                            logger.error("【代偿冻结异步回调】借款编号：{}，冻结金额和还款金额不一致！冻结金额：{}，还款总金额：{}",
+                                    borrowNid, orgFreezeLog.getAmountFreeze(), repayTotal);
+                            if (!isBatchRepay) {
+                                return result;
+                            }
+                            continue;
+                        }
                         // 还款后变更数据
                         callBackBean.setOrderId(orderId);
                         //还款后变更数据

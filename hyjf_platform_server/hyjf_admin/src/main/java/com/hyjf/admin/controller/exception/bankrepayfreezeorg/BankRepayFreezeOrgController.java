@@ -1,7 +1,6 @@
 package com.hyjf.admin.controller.exception.bankrepayfreezeorg;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.repaybean.RepayBean;
 import com.hyjf.admin.beans.request.BankRepayFreezeOrgCheckRequestBean;
 import com.hyjf.admin.beans.request.BankRepayFreezeOrgProcessRequestBean;
@@ -19,9 +18,13 @@ import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.RepayFreezeOrgRequest;
 import com.hyjf.am.vo.admin.BankRepayFreezeOrgCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -34,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,12 +103,13 @@ public class BankRepayFreezeOrgController extends BaseController {
 
         String orderId = form.getOrderId();
         String borrowNid = form.getBorrowNid();
-        if (StringUtils.isBlank(orderId) || StringUtils.isBlank(borrowNid)) {
+        Integer currentPeriod = form.getCurrentPeriod();
+        if (StringUtils.isBlank(orderId)) {
             logger.info("请求参数不全");
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
-        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid, currentPeriod);
         if (Validator.isNull(repayFreezeFlog)) {
             logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
@@ -135,7 +140,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     }
 
     /**
-     * 冻结异常情况处理
+     * 冻结异常情况单个处理
      */
     @ApiOperation(value = "冻结异常情况处理", notes = "冻结异常情况处理")
     @ResponseBody
@@ -144,13 +149,14 @@ public class BankRepayFreezeOrgController extends BaseController {
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
         logger.info("请求参数：" + JSON.toJSONString(form));
         AdminResult result = new AdminResult();
-        JSONObject ret = new JSONObject();
         String orderId = form.getOrderId();
-        if (StringUtils.isBlank(orderId)) {
+        String borrowNid = form.getBorrowNid();
+        Integer currentPeriod = form.getCurrentPeriod();
+        if (StringUtils.isBlank(orderId) && StringUtils.isBlank(borrowNid)) {
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
-        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, borrowNid, currentPeriod);
         if (Validator.isNull(repayFreezeFlog)) {
             logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
@@ -163,7 +169,7 @@ public class BankRepayFreezeOrgController extends BaseController {
             return updateRepayMoney(form, callApiBg);
         } else if (BankCallConstant.RESPCODE_SUCCESS.equals(form.getRetCode()) && !"0".equals(form.getState())) {
             logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！",orderId);
-            bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+            bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
             RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
             result.setStatusInfo(AdminResult.FAIL, "未冻结状态,解除冻结");
             return result;
@@ -186,13 +192,13 @@ public class BankRepayFreezeOrgController extends BaseController {
             if (Validator.isNotNull(callApiBg)) {
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && !"0".equals(callApiBg.getState())) {
                     logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！", orderId);
-                    bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                     RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
                 } else if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && "0".equals(callApiBg.getState())) {
                     return updateRepayMoney(form, callApiBg);
                 } else {
                     logger.info("【代偿冻结异常处理】订单号：{},未冻结或已解冻状态,解除冻结！", orderId);
-                    bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                 }
             } else {
                 result.setStatusInfo(AdminResult.FAIL, "处理失败，请稍后再试！");
@@ -215,10 +221,33 @@ public class BankRepayFreezeOrgController extends BaseController {
         Integer userId = form.getRepayUserId();
         String orderId = form.getOrderId();
         boolean isAllRepay = form.getAllRepayFlag() == 1;
+        String planNid = form.getPlanNid();
         try {
+            if (StringUtils.isNotBlank(planNid) && !"0".equals(planNid)) {
+                boolean hasFailCredit = bankRepayFreezeOrgService.getFailCredit(borrowNid);
+                if (hasFailCredit) {//还款提交失败，请联系汇盈金服业务部门核实处理。
+                    logger.error("【批量还款校验】借款编号：{}，有承接失败的债权！", borrowNid);
+                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
+                }
+                // 必须在计算还款金额前加锁，防止智投自动投资债转
+                boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 100);
+                if (!tranactionSetFlag) {//设置失败
+                    logger.error("【批量还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
+                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
+                    String dateStr = DateUtils.nowDateAddSecond((int) retTime);
+                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+                }
+            }
             // 担保机构的还款
             RepayBean repay = bankRepayFreezeOrgService.getRepayBean(userId, "3", borrowNid, isAllRepay);
             if (repay != null) {
+                BigDecimal repayTotal = repay.getRepayAccountAll();
+                if(repayTotal.compareTo(form.getAmountFreeze()) != 0){
+                    logger.error("【代偿冻结异常处理】借款编号：{}，冻结金额和还款金额不一致！冻结金额：{}，还款总金额：{}",
+                            borrowNid, form.getAmountFreeze(), repayTotal);
+                    result.setStatusInfo(AdminResult.FAIL, "冻结金额和还款金额不一致!");
+                    return result;
+                }
                 // 还款后变更数据
                 callApiBg.setOrderId(orderId);
                 // 用于用户资金明细
@@ -227,7 +256,7 @@ public class BankRepayFreezeOrgController extends BaseController {
                 callApiBg.setSeqNo(orderId.substring(14));
                 boolean updateResult = this.bankRepayFreezeOrgService.updateForRepayRequest(repay, callApiBg, isAllRepay);
                 if (updateResult) {
-                    bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
+                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                     // 如果有正在出让的债权,先去把出让状态停止
                     this.bankRepayFreezeOrgService.updateBorrowCreditStautus(borrowNid);
 

@@ -20,6 +20,10 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDateUtils;
@@ -345,6 +349,110 @@ public class RepayManageController extends BaseController {
         ProjectBean projectBean = repayManageService.getOrgBatchRepayData(requestBean.getUserId(), requestBean.getStartDate(), requestBean.getEndDate());
         responseBean.setResultStr(JSON.toJSONString(projectBean));
         return responseBean;
+    }
+
+    /**
+     * 计算担保机构批量还款总垫付金额并插入冻结日志
+     */
+    @PostMapping(value = "/get_batch_reapy_total")
+    public BigDecimalResponse getOrgBatchRepayTotal(@RequestBody BatchRepayTotalRequest requestBean) {
+        BigDecimalResponse responseBean = new BigDecimalResponse();
+        String userId = requestBean.getUserId();
+        String userName = requestBean.getUserName();
+        String orderId = requestBean.getOrderId();
+        String account = requestBean.getAccount();
+        RepayListRequest requestListBean = new RepayListRequest();
+        requestListBean.setUserId(requestBean.getUserId());
+        requestListBean.setRoleId("3");
+        requestListBean.setStartDate(requestBean.getStartDate());
+        requestListBean.setEndDate(requestBean.getEndDate());
+        requestListBean.setStatus("0");
+        requestListBean.setRepayStatus("0");
+        List<RepayListCustomizeVO> orgRepayList = repayManageService.selectOrgRepayList(requestListBean);
+        if(orgRepayList == null || orgRepayList.size() == 0){
+            throw new CheckException(MsgEnum.ERR_DATA_NOT_EXISTS);
+        }
+        int allRepaySize = orgRepayList.size();//所有还款标的数目
+        BigDecimal repayTotal = BigDecimal.ZERO;
+        logger.info("【批量还款垫付】冻结订单号：{}，开始计算总垫付金额。总还款笔数：{}，垫付机构用户名：{}",orderId, allRepaySize, userName);
+        for (RepayListCustomizeVO repayInfo:orgRepayList) {
+            String borrowNid = repayInfo.getBorrowNid();
+            try {
+                Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
+                RepayBean repayBean = null;
+                boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 600);
+                if (!tranactionSetFlag) {//设置失败
+                    logger.error("【批量还款垫付】借款编号：{}，正在处理项目债转！", borrowNid);
+                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+                    String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
+                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+                }
+                // 计算垫付机构还款
+                if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
+                    repayBean = repayManageService.searchRepayTotalV2(borrow.getUserId(), borrow);
+                } else {// 分期还款
+                    // 批量垫付没有一次性还款
+                    repayBean = repayManageService.searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
+                }
+                repayBean.setRepayUserId(Integer.parseInt(userId));
+                checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
+                //还款去重
+                boolean result = repayManageService.checkRepayInfo(null, borrowNid);
+                if (!result) {
+                    logger.error("【批量还款垫付】冻结订单号：{}，借款编号:{}，项目正在还款中...", orderId, borrowNid);
+                    continue;
+                }
+                //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
+                repayManageService.insertRepayOrgFreezeLog(Integer.parseInt(userId), orderId, account, borrowNid, repayBean, userName, false);
+                BigDecimal total = repayBean.getRepayAccountAll();
+                repayTotal = repayTotal.add(total);
+            } catch (Exception e) {
+                logger.error("【批量还款垫付】批量垫付单个标的发生异常！", e);
+            }
+        }
+        logger.info("【批量还款垫付】冻结订单号：{}，总垫付金额：{}",orderId, repayTotal);
+        responseBean.setResultDec(repayTotal);
+        return responseBean;
+    }
+
+    /**
+     * 垫付机构校验
+     */
+    private void checkForRepayRequestOrg(String borrowNid, String userId, String userName, RepayBean repayBean) {
+        if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(userId)) {
+            logger.error("【批量还款校验】还款请求参数不全！", borrowNid);
+            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
+        }
+        // 平台密码校验、服务费授权校验、开户校验在处理批次还款前进行校验
+        Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
+        if (borrow == null) {
+            logger.error("【批量还款校验】借款编号：{}，标的信息不存在！", borrowNid);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+        }
+        boolean hasFailCredit = repayManageService.getFailCredit(borrowNid);
+        if(hasFailCredit){//还款提交失败，请联系汇盈金服业务部门核实处理。
+            logger.error("【批量还款校验】借款编号：{}，有承接失败的债权！", borrowNid);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
+        }
+        Account account = repayManageService.getAccount(Integer.parseInt(userId));
+        if (repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == -1) {
+            // 垫付机构符合还款条件，可以还款
+            // 垫付机构批量还款 ，不验证银行账户余额
+        } else {
+            // 用户平台账户余额不足
+            logger.error("【批量还款校验】平台账户余额不足！担保机构用户名：{}", userName);
+            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+        }
+    }
+
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @return
+     */
+    @GetMapping(value = "/getFailCredit/{borrowNid}")
+    public boolean getFailCredit(@PathVariable String borrowNid){
+        return repayManageService.getFailCredit(borrowNid);
     }
 
     /**

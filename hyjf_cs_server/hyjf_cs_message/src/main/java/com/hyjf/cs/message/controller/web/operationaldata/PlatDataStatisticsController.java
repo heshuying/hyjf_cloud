@@ -202,7 +202,9 @@ public class PlatDataStatisticsController {
         List<String> monthlyTenderCountData = new ArrayList<String>();
         for (int i = slist.size() - 1; i >= 0; i--) {
             monthlyTenderTitle.add(oe.formatnew(String.valueOf(slist.get(i).getStatisticsMonth())));
-            monthlyTenderData.add(trim(slist.get(i).getAccountMonth().intValue(), 100000000));
+            if (slist.get(i).getAccountMonth() != null) {
+                monthlyTenderData.add(trim(slist.get(i).getAccountMonth().intValue(), 100000000));
+            }
             monthlyTenderCountData.add(trim(slist.get(i).getTradeCountMonth(), 10000));
         }
 
@@ -255,6 +257,8 @@ public class PlatDataStatisticsController {
             if (!CollectionUtils.isEmpty(list)) {
                 if (list.get(i).getName().contains("新疆")) {
                     regionData.setName("新疆");
+                } else if (list.get(i).getName().contains("市")) {
+                    regionData.setName(list.get(i).getName().replace("市", ""));
                 } else {
                     regionData.setName(list.get(i).getName().replace("省", ""));
                 }

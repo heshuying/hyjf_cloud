@@ -152,7 +152,7 @@ public class CornerController extends BaseController {
     /**
      * 接收设备唯一标识
      * （数据库没有 存储，有 更新）
-     * @param request
+     * @param
      * @param
      * @return
      */
@@ -231,7 +231,7 @@ public class CornerController extends BaseController {
         map.put("request", "/hyjf-app/app/common/getVersion");
         map.put("statusDesc", "请求成功");
         VersionVO version = cornerService.getNewVersionByType(1);
-        map.put("url", version.getUrl());
+        map.put("url", version.getUrl()+"?ignoreSign=true");
         return map;
     }
 

@@ -120,7 +120,10 @@ public class HttpDealBank {
 			result = JSONObject.toJSONString(responseMap);
 		} catch (Exception e) {
 			log.error("请求发生异常："+e);
-			log.info(response.getStatusCode()+"响应报文：{}",response.getBody());
+			if(response.getStatusCode()!=null) {
+				log.info(response.getStatusCode()+"响应报文：{}",response.getBody());
+			}
+			
 		}
 		return result;
 	}

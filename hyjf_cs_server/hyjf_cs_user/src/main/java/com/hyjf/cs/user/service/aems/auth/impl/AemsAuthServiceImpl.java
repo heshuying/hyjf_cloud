@@ -493,6 +493,28 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
 	}
 
 	/**
+	 * 查询授权错误信息
+	 * @param orderId
+	 * @return
+	 */
+	@Override
+	public String seachUserAuthErrorMessgae(String orderId) {
+		try {
+			logger.info("延迟1000毫秒以后查询");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			logger.info("查询授权错误信息异常,异常报文如下:{}", e);
+		}
+		HjhUserAuthLogVO hjhUserAuthLogVO = amUserClient.selectByExample(orderId);
+		String remark = hjhUserAuthLogVO.getRemark();
+		if(StringUtils.isBlank(remark)){
+			return "系统异常，请稍后再试!";
+		}
+		logger.info("用户授权失败原因:[" + remark + "].");
+		return remark;
+	}
+
+	/**
 	 * 获取用户授权信息通过用户Id
 	 * @param userId
 	 * @return

@@ -291,7 +291,7 @@ public class SensorsDataCreditSerivceImpl extends BaseServiceImpl implements Sen
             // 还款方式
             properties.put("project_repayment_type", borrowStyle.getName());
             // 当前期次
-            properties.put("current_period", borrowCredit.getCreditPeriod());
+            properties.put("current_period", String.valueOf(borrowCredit.getCreditPeriod()));
             // 出借时间
             properties.put("invest_time", GetDate.getDateTimeMyTimeInMillis(borrowTenderVO.getCreateTime()));
             // 转让本金

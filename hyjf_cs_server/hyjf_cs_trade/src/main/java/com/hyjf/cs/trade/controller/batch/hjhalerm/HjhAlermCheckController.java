@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.controller.batch.hjhalerm;
 
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.controller.batch.BankExceptionController;
 import com.hyjf.cs.trade.service.batch.HjhAlarmCheckService;
@@ -55,11 +54,11 @@ public class HjhAlermCheckController extends BaseTradeController {
      */
     @ApiOperation(value = "汇计划各计划开放额度校验预警任务", notes = "汇计划各计划开放额度校验预警任务")
     @GetMapping(value = "/hjhOrderExitCheck")
-    public String hjhOrderExitCheck() {
+    public Boolean hjhOrderExitCheck() {
         logger.info("订单退出超过两天邮件预警 开始... ");
         hjhAlarmService.hjhOrderExitCheck();
         logger.info("订单退出超过两天邮件预警 结束... ");
-        return "Success";
+        return true;
     }
 
     /**
@@ -85,11 +84,11 @@ public class HjhAlermCheckController extends BaseTradeController {
      */
     @ApiOperation(value = "hjh订单匹配期超过两天短信预警", notes = "hjh订单匹配期超过两天短信预警")
     @GetMapping(value = "/hjhOrderMatchPeriodCheck")
-    public String hjhOrderMatchPeriodCheck() {
+    public Boolean hjhOrderMatchPeriodCheck() {
         logger.info("hjh订单匹配期超过两天短信预警 开始... ");
         hjhAlarmService.hjhOrderMatchPeriodCheck();
         logger.info("hjh订单匹配期超过两天短信预警 结束... ");
-        return "Success";
+        return true;
     }
 
 

@@ -48,7 +48,7 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
         log.setCreateUserId(requestBean.getRepayUserId());
         log.setCreateUserName(requestBean.getRepayUserName());
         int flag = this.bankRepayOrgFreezeLogMapper.insertSelective(log);
-        logger.info("====================插入垫付机构冻结表日志{}!============", flag > 0 ? "成功" : "失败");
+        logger.info("【还款垫付】借款编号：{}，插入垫付机构冻结表日志{}。", requestBean.getBorrowNid(), flag > 0 ? "成功" : "失败");
         return flag;
     }
 
@@ -63,7 +63,7 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
             criteria.andOrderIdEqualTo(orderId);
         }
         if(StringUtils.isNotBlank(borrowNid)) {
-            criteria.andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+            criteria.andBorrowNidEqualTo(borrowNid);
         }
         criteria.andDelFlagEqualTo(0);
         return bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
@@ -88,11 +88,7 @@ public class BankRepayOrgFreezeLogServiceImpl extends BaseServiceImpl implements
                 record.setDelFlag(1);// 0 有效 1无效
                 int flag = this.bankRepayOrgFreezeLogMapper.updateByPrimaryKey(record);
                 result += flag;
-                if (flag > 0) {
-                    logger.info("=============还款冻结成功,删除垫付机构还款冻结临时日志成功=========");
-                } else {
-                    logger.info("==============删除垫付机构还款冻结临时日志失败============");
-                }
+                logger.info("【代偿冻结处理】借款编号：{}，删除担保机构冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }
         return result;

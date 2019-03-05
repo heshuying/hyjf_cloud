@@ -87,7 +87,18 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
         }
         return bankRepayFreezeOrgCustomizeMapper.selectList(paraMap);
     }
-
+    /**
+     * 根据id删除代偿冻结记录
+     * @param id
+     * @return
+     */
+    @Override
+    public Integer deleteFreezeLogById(Integer id){
+        BankRepayOrgFreezeLog freezeLog = new BankRepayOrgFreezeLog();
+        freezeLog.setId(id);
+        freezeLog.setDelFlag(1);
+        return bankRepayOrgFreezeLogMapper.updateByPrimaryKeySelective(freezeLog);
+    }
     /**
      * 删除担保机构临时日志,外部调用
      */
@@ -107,11 +118,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
                 record.setDelFlag(1);// 0 有效 1无效
                 int flag = this.bankRepayOrgFreezeLogMapper.updateByPrimaryKey(record);
                 result += flag;
-                if (flag > 0) {
-                    logger.info("=============还款冻结成功,删除担保机构还款冻结临时日志成功=========");
-                } else {
-                    logger.info("==============删除担保机构还款冻结临时日志失败============");
-                }
+                logger.info("【代偿冻结异常处理】借款编号：{}，删除担保机构冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }
         return result;
@@ -128,9 +135,15 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
             criteria.andOrderIdEqualTo(orderId);
         }
         if(StringUtils.isNotBlank(borrowNid)) {
-            criteria.andBorrowNidEqualTo(borrowNid).andDelFlagEqualTo(0);
+            criteria.andBorrowNidEqualTo(borrowNid);
         }
         criteria.andDelFlagEqualTo(0);
         return bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
+    }
+
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        Integer failCreditCount = bankRepayFreezeOrgCustomizeMapper.getFailCredit();
+        return failCreditCount != null && failCreditCount > 0;
     }
 }
