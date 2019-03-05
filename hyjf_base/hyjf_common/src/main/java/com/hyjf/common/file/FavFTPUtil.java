@@ -252,7 +252,7 @@ public class FavFTPUtil {
         try {
             int reply;
             ftp.connect(para.hostName, para.port);
-            logger.info("----------------------------开始下载FTP协议："+para.hostName + "-" +para.port);
+            logger.info("----------------------------开始下载FTP协议服务器："+para.hostName + "-" +para.port);
             // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
             ftp.login(para.userName, para.passWord);// 登录
             reply = ftp.getReplyCode();
@@ -262,7 +262,9 @@ public class FavFTPUtil {
             }
             ftp.enterLocalPassiveMode();
             ftp.changeWorkingDirectory(para.downloadPath);// 转移到FTP服务器目录
+            logger.info("----------------------------开始下载FTP协议服务器downloadPath："+para.downloadPath);
             FTPFile[] fs = ftp.listFiles();
+            logger.info("----------------------------开始下载FTP协议服务器fs："+fs.length);
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(para.sftpKeyFile)) {
