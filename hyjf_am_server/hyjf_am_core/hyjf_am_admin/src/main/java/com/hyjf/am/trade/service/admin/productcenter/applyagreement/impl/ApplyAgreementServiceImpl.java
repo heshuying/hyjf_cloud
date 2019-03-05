@@ -177,7 +177,9 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         }
         if(StringUtils.isNotEmpty(request.getTimeStart()) &&
                 StringUtils.isNotEmpty(request.getTimeEnd())){
-            criteriaA.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStart()), GetDate.str2Timestamp(request.getTimeEnd()));
+            //criteriaA.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStart()), GetDate.str2Timestamp(request.getTimeEnd()));
+            criteriaA.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Timestamp(request.getTimeStart()));
+            criteriaA.andCreateTimeLessThanOrEqualTo(GetDate.str2Timestamp(request.getTimeEnd()));
         }
         if (request.getLimitStart()!=null && request.getLimitStart() != -1) {
             applyAgreementExample.setLimitEnd(request.getLimitEnd());
