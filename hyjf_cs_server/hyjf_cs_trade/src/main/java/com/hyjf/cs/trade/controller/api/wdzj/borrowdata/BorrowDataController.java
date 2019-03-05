@@ -50,7 +50,7 @@ public class BorrowDataController extends BaseController {
      */
     @ApiOperation(value = "标的放款数据接口", notes = "标的放款数据接口")
     @ResponseBody
-    @PostMapping("/list")
+    @RequestMapping("/list")
     public JSONObject getBorrowDataList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result = new JSONObject();
         String username = systemConfig.getUserNameWDZJ();
@@ -134,7 +134,7 @@ public class BorrowDataController extends BaseController {
      */
     @ApiOperation(value = "标的提前放款数据接口", notes = "标的提前放款数据接口")
     @ResponseBody
-    @PostMapping("/preapyslist")
+    @RequestMapping("/preapyslist")
     public JSONObject getPreapysList(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result = new JSONObject();
         String username = systemConfig.getUserNameWDZJ();
