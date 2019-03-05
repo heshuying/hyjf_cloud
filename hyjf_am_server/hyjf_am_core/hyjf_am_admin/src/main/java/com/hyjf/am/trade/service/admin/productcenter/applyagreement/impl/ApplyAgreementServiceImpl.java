@@ -129,6 +129,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                 StringUtils.isNotEmpty(request.getTimeEnd())){
             criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Timestamp(request.getTimeStart()));
             criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Timestamp(request.getTimeEnd()));
+            logger.info("----------------------------criteria："+criteria.toString());
         }
         Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
         return count;
@@ -185,7 +186,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
             applyAgreementExample.setLimitEnd(request.getLimitEnd());
             applyAgreementExample.setLimitStart(request.getLimitStart());
         }
-
+        logger.info("----------------------------countByExample："+applyAgreementExample.toString());
         Integer count = this.applyAgreementMapper.countByExample(applyAgreementExample);
         List<ApplyAgreementVO> listVo = new ArrayList<ApplyAgreementVO>();
         if (count != null && count > 0) {
