@@ -266,7 +266,7 @@ public class FavFTPUtil {
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(para.sftpKeyFile)) {
-                
+
                     localFile = new File(para.savePath + "/" +para.fileName+"_"+ff.getName());
                     if (localFile.exists()) {
                         localFile.delete();

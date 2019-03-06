@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -125,9 +126,11 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         if(StringUtils.isNotEmpty(request.getBorrowPeriod())){
             criteria.andRepayPeriodEqualTo(Integer.valueOf(request.getBorrowPeriod()));
         }
-        if(StringUtils.isNotEmpty(request.getTimeStart()) &&
-                StringUtils.isNotEmpty(request.getTimeEnd())){
-            criteria.andCreateTimeBetween(GetDate.stringToDate(request.getTimeStart()), GetDate.stringToDate(request.getTimeEnd()));
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeStart())){
+            criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(GetDate.getDayStart(request.getTimeStart()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+        }
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeEnd())){
+            criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(request.getTimeEnd()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
         }
         Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
         return count;
@@ -174,15 +177,16 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         if(StringUtils.isNotEmpty(request.getBorrowPeriod())){
             criteriaA.andRepayPeriodEqualTo(Integer.valueOf(request.getBorrowPeriod()));
         }
-        if(StringUtils.isNotEmpty(request.getTimeStart()) &&
-                StringUtils.isNotEmpty(request.getTimeEnd())){
-            criteriaA.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStart()), GetDate.str2Timestamp(request.getTimeEnd()));
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeStart())){
+            criteriaA.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(GetDate.getDayStart(request.getTimeStart()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+        }
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeEnd())){
+            criteriaA.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(request.getTimeEnd()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
         }
         if (request.getLimitStart()!=null && request.getLimitStart() != -1) {
             applyAgreementExample.setLimitEnd(request.getLimitEnd());
             applyAgreementExample.setLimitStart(request.getLimitStart());
         }
-
         Integer count = this.applyAgreementMapper.countByExample(applyAgreementExample);
         List<ApplyAgreementVO> listVo = new ArrayList<ApplyAgreementVO>();
         if (count != null && count > 0) {

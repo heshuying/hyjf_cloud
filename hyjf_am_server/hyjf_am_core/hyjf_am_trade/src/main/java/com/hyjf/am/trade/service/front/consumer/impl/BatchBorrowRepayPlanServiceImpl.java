@@ -2145,7 +2145,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				throw new Exception("放款分期数据不存在！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]，[期数：" + periodNow + "]");
 			}
 			// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/28
-			isLastUpdate = isLastAllRepay(borrowNid, periodNow, tenderUserId, tenderOrderId, isAllRepay);// TODO 判断方法要改
+			isLastUpdate = isLastAllCreditRepay(borrowNid, periodNow, creditRepay, isAllRepay);
 			// 债转状态
 			if (borrowRecoverPlan != null && !isLastUpdate && (isAllRepay || periodNext > 0)) {
 				creditTender.setStatus(0);
@@ -3049,6 +3049,31 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	}
 
 	/**
+	 * 判断一次性还款债转除当前期外是否都已还款成功
+	 * 根据债转还款表来查询
+	 * @return
+	 */
+	private boolean isLastAllCreditRepay(String borrowNid, Integer periodNow, HjhDebtCreditRepay creditRepay, boolean isAllRepay) {
+		if (!isAllRepay) {
+			return false;
+		}
+		HjhDebtCreditRepayExample example = new HjhDebtCreditRepayExample();
+		HjhDebtCreditRepayExample.Criteria criteria = example.createCriteria();
+		criteria.andBorrowNidEqualTo(borrowNid);
+		criteria.andRepayStatusNotEqualTo(1);
+		criteria.andRepayPeriodNotEqualTo(periodNow);
+		criteria.andUserIdEqualTo(creditRepay.getUserId());
+		criteria.andAssignOrderIdEqualTo(creditRepay.getAssignOrderId());
+		criteria.andDelFlagEqualTo(0);
+		int borrowRecoverPlanCount = this.hjhDebtCreditRepayMapper.countByExample(example);
+		if(borrowRecoverPlanCount > 0){
+			return false;
+		}
+		logger.info("【智投还款】借款编号：{}，债转出借表(ht_hjh_debt_credit_tender)可以更新为已还款。一次性还款当前更新期数：{}", borrowNid, periodNow);
+		return true;
+	}
+
+	/**
 	 * 判断一次性还款除当前期外是否都已还款成功
 	 * 根据放款分期表来查询
 	 * @return
@@ -3071,6 +3096,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		logger.info("【智投还款】借款编号：{}，放款记录总表(ht_borrow_recover)可以更新为还款成功。一次性还款当前更新期数：{}", borrowNid, periodNow);
 		return true;
 	}
+
 	/**
 	 * 变更资产表对应状态
 	 * @param borrowNid
