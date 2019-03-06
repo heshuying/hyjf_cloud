@@ -10,6 +10,10 @@ import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.collections.ComparatorUtils;
+import org.apache.commons.collections.comparators.ComparableComparator;
+import org.apache.commons.collections.comparators.ComparatorChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -149,6 +150,10 @@ public class PlatDataStatisticsController {
 
         Map<Integer, String> cityMap = region.getInvestorRegionMap();
         List<SubEntity> list = region.orgnizeData(cityMap);
+        if(list.size() < 10){
+            list = initList(list.size(),list);
+            list.sort((SubEntity h1, SubEntity h2) -> Integer.compare(h1.getValue() , h2.getValue()) );
+        }
         List<SubEntity> sublist = region.formatList(list);
 
         StringBuffer regionData = new StringBuffer();
@@ -242,6 +247,50 @@ public class PlatDataStatisticsController {
             }
         }
         return 0;
+    }
+
+
+    public List<SubEntity> initList(int listSzie,List<SubEntity> list){
+        int differ = 10 - listSzie;
+        List<Integer> count = new ArrayList<>();
+        List<String> city = new ArrayList<>();
+
+        for(int i =0 ;i<listSzie;i++){
+            SubEntity sub = list.get(i);
+            count.add(sub.getValue());
+            city.add(sub.getName());
+        }
+
+        String[] strCity = {"甘肃省","贵州省","辽宁省","海南省","福建省","重庆市","湖南省","四川省","河北省","江西省"};
+        for(int i = 1;i <= 10;i++){
+
+            if(differ == 0){
+                return list;
+            }
+            boolean isCountContain = count.contains(i);
+            if(!isCountContain){
+
+                differ = differ - 1;
+                String newCity = "";
+                int newcount = i ;
+                count.add(i);
+                for(int j = 0;j < strCity.length;j++){
+                    boolean isContain = city.contains(strCity[j]);
+                    if(!isContain){
+                        city.add(strCity[j]);
+                        newCity = strCity[j];
+                        break;
+                    }
+                }
+
+                SubEntity sub = new SubEntity();
+                sub.setName(newCity);
+                sub.setValue(newcount);
+                list.add(sub);
+            }
+
+        }
+        return list;
     }
 
     public List<PlatDataAgeDataBean> getTop(List<SubEntity> list) {
