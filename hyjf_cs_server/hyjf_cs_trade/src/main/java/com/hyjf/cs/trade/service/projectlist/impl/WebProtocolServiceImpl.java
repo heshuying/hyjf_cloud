@@ -339,7 +339,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
                 } catch (Exception e) {
                     logger.error("createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）", e);
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
 
             }
@@ -440,7 +440,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                                         files.add(filetender);
                                     }
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    logger.error(e.getMessage());
                                 }
 
                             }
@@ -766,7 +766,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     try {
                         tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 resultMap.put("tenderToCreditDetail", tenderToCreditDetailList.get(0));
@@ -962,7 +962,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     try {
                         tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 resultMap.put("tenderToCreditDetail", tenderToCreditDetailList.get(0));
@@ -1130,7 +1130,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                         PdfGenerator.generatePdf(request, response, planNid + "_" + accedeOrderNid + ".pdf",
                                 CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
             }
@@ -1220,7 +1220,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 PdfGenerator.generatePdf(request, response, form.getBorrowNid() + ".pdf", moban, contents);
             } catch (Exception e) {
                 logger.info(CreateAgreementController.class.toString(), "createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）", e);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         } else {
             // 判断是否是汇添金专属标的导出
@@ -1289,7 +1289,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             CustomConstants.TENDER_CONTRACT, contents);
                 } catch (Exception e) {
                     logger.info(CreateAgreementController.class.toString(), "createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）", e);
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             } else {
                 List<BorrowCustomizeVO> recordList = recordList1;
@@ -1392,7 +1392,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             CustomConstants.TENDER_CONTRACT, contents);
                 } catch (Exception e) {
                     logger.info(CreateAgreementController.class.toString(), "createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）", e);
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
 
             }

@@ -29,6 +29,8 @@ import com.hyjf.common.util.CreateUUID;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,8 @@ import java.util.Map;
  */
 @Service
 public class CouponUserServiceImpl implements CouponUserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CouponUserServiceImpl.class);
 
     @Autowired
     private CouponUserMapper couponUserMapper;
@@ -340,7 +344,7 @@ public class CouponUserServiceImpl implements CouponUserService {
                 commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequestBean.getUserId()),
                         appMsMessage));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }else{
             record.setUsedFlag(CustomConstants.USER_COUPON_STATUS_NOCHECKED);

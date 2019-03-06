@@ -8,6 +8,7 @@ import com.hyjf.am.config.service.MessagePushTagService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushTagRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-config/messagePushTag")
-public class MessagePushTagController {
+public class MessagePushTagController extends BaseController {
 
     @Autowired
     private MessagePushTagService messagePushTagService;
@@ -90,7 +91,7 @@ public class MessagePushTagController {
                 return response;
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         response.setRtn(Response.FAIL);
         return response;
@@ -114,7 +115,7 @@ public class MessagePushTagController {
                 return response;
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         response.setRtn(Response.FAIL);
         response.setMessage(Response.FAIL_MSG);
@@ -136,7 +137,7 @@ public class MessagePushTagController {
                 return response;
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         response.setRtn(Response.FAIL);
         response.setMessage(Response.FAIL_MSG);
@@ -160,7 +161,7 @@ public class MessagePushTagController {
                 return response;
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         response.setRtn(Response.FAIL);
         return response;
@@ -179,7 +180,7 @@ public class MessagePushTagController {
         try {
             result = messagePushTagService.countByTagCode(id, tagCode);
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         response.setCount(result);
         response.setRtn(Response.SUCCESS);

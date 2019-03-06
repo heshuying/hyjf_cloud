@@ -117,7 +117,7 @@ public class ActivityController {
                 response.setRtn(Response.FAIL);
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -139,7 +139,7 @@ public class ActivityController {
             }
         }catch (Exception e) {
             response.setRtn(Response.FAIL);
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }

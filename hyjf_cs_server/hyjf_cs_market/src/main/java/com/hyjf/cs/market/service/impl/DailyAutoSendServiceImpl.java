@@ -189,7 +189,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
             is = new ByteArrayResource(os.toByteArray());
             os.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return os.toByteArray();
     }

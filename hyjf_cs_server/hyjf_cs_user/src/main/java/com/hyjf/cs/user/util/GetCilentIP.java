@@ -41,7 +41,7 @@ public class GetCilentIP {
 					inet = InetAddress.getLocalHost();
 					ipAddress = inet.getHostAddress();
 				} catch (UnknownHostException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

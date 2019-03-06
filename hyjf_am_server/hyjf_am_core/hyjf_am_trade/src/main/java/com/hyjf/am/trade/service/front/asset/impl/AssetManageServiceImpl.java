@@ -567,7 +567,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return list;
     }
@@ -586,7 +586,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
             encodeData = ThreeDESUtils.Encrypt3DES(timeKey, data);
             encodeData = URLEncoder.encode(encodeData, "UTF-8");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return encodeData;

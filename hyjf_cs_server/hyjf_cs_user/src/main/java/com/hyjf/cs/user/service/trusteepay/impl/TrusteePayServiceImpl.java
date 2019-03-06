@@ -238,7 +238,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("借款人受托支付申请end");
         return modelAndView;

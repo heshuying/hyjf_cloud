@@ -224,7 +224,7 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
                     try {
                         flag = insertAccountDetails(accountUser,synBalanceBean,user, ip);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     if(flag){
                         // TODO 活动如需使用重新编写
@@ -271,7 +271,7 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
                 return startDate1;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return GetOrderIdUtils.getTxDate();
     }

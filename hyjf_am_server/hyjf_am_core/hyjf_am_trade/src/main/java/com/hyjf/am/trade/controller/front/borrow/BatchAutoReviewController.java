@@ -37,7 +37,7 @@ public class BatchAutoReviewController {
                 // 给到期未满标项目发短信
                 batchAutoReviewService.sendMsgToNotFullBorrow();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             // 获取过期时间
             Integer afterTime = batchAutoReviewService.getAfterTime(BorrowSendTypeEnum.FUSHENSEND_CD);
@@ -47,7 +47,7 @@ public class BatchAutoReviewController {
                     try {
                         batchAutoReviewService.updateBorrow(borrow, afterTime);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
             }

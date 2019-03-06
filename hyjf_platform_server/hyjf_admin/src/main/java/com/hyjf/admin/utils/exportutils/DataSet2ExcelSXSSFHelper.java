@@ -229,14 +229,14 @@ public class DataSet2ExcelSXSSFHelper<T> {
             workbook.dispose();
            // deleteSXSSFTempFiles(workbook);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (out != null) {
                 try {
                     out.flush();
                     out.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

@@ -37,7 +37,7 @@ import java.util.List;
  * @version BaseServiceImpl, v0.1 2018/6/27 9:33
  */
 public class BaseServiceImpl extends CustomizeMapper implements BaseService {
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    public static Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
     /**
      * 根据标的编号检索标的信息
      *
@@ -438,7 +438,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return balance;

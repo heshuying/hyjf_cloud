@@ -6,11 +6,15 @@ import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.*;
 
 public class TransactionProducer {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionProducer.class);
 
 	public static void main(String[] args) throws MQClientException, InterruptedException {
         TransactionListener transactionListener = new TransactionListenerImpl();
@@ -40,7 +44,7 @@ public class TransactionProducer {
 
                 Thread.sleep(10);
             } catch (MQClientException | UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 

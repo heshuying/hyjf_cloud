@@ -245,7 +245,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 return new AdminResult<>(FAIL,"更新失败！");
             }
             logger.info(this.getClass().getName(), "transferAgainAction", "transferAfter result: " + resultBean.getRetCode());
@@ -281,7 +281,7 @@ public class AdminTransferExceptionLogController extends BaseController {
                         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                 smsMessage));
                     } catch (MQException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
             }

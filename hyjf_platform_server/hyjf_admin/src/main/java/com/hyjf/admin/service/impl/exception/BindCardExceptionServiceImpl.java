@@ -124,7 +124,7 @@ public class BindCardExceptionServiceImpl extends BaseAdminServiceImpl implement
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("更新用户银行卡信息失败,用户ID:" + userId);
         }
     }

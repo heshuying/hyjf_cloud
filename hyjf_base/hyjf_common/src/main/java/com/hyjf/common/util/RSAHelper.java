@@ -1,6 +1,8 @@
 package com.hyjf.common.util;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class RSAHelper {
+
+	private static final Logger logger = LoggerFactory.getLogger(RSAHelper.class);
 	private String encoding = "UTF-8";
 	private String algorithm = "SHA1withRSA";// 加密算法 or "MD5withRSA"
 	private PublicKey publicKey;
@@ -102,7 +106,7 @@ public class RSAHelper {
 			return verify(dataBytes, signBytes);
 		} catch (UnsupportedEncodingException e) {
 			System.out.println("编码错误");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		// 取公钥匙对象
 		return false;
@@ -124,16 +128,16 @@ public class RSAHelper {
 			return sig.verify(signData); // 验证传入的签名
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("初始化加密算法时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (InvalidKeyException e) {
 			System.out.println("初始化公钥时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (SignatureException e) {
 			System.out.println("验证数据时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Throwable e) {
 			System.out.println("校验签名失败");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return false;
 	}
@@ -152,7 +156,7 @@ public class RSAHelper {
 			return Base64.encodeBase64String(signed);
 		} catch (UnsupportedEncodingException e) {
 			System.out.println("初始化加密算法时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -173,10 +177,10 @@ public class RSAHelper {
 			return signed;
 		} catch (NoSuchAlgorithmException | InvalidKeyException | SignatureException e) {
 			System.out.println("初始化加密算法时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (Throwable e) {
 			System.out.println("校验签名失败");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}

@@ -214,7 +214,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
             try {
                 resultBean = BankCallUtils.callApiBg(bean);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.debug("调用银行出错,e:[{}]",e.getMessage());
                 result.put("status", "error");
                 result.put("result", "平台转账发生错误,请重新操作!");
@@ -292,7 +292,7 @@ public class PlatformTransferServiceImpl extends BaseAdminServiceImpl implements
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return balance;
     }

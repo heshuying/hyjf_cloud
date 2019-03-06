@@ -66,7 +66,7 @@ public class CommonUtils {
 						field.set(obj, "");
 					}
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

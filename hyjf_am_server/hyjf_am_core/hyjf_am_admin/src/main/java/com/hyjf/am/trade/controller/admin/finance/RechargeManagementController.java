@@ -155,14 +155,14 @@ public class RechargeManagementController extends BaseController {
             try {
                 isAccountUpdate = this.rechargeManagementService.updateAccountAfterRecharge(userId, nid);
             }catch (Exception e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }else {
             // 充值失败,更新充值订单
             try {
                 isAccountUpdate = this.rechargeManagementService.updateAccountAfterRechargeFail(userId, nid);
             }catch (Exception e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         logger.info("Fix更新充值状态为:");

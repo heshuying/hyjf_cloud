@@ -229,7 +229,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
                 throw new Exception("调用银行接口,银行返回NULL,充值订单号:" + orderId + ",用户Id:" + userId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
 

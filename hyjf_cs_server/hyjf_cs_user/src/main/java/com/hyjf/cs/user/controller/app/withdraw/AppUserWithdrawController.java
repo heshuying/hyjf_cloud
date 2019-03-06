@@ -193,7 +193,7 @@ public class AppUserWithdrawController extends BaseUserController {
             ret.put("banks", bankcards);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             ret.put("status", "1");
             ret.put("statusDesc", "获取我的银行卡发生错误");
         }

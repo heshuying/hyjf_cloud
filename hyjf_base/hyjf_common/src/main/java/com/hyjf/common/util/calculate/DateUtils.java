@@ -412,7 +412,7 @@ public class DateUtils {
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
 			return dateFormat.format(calendar.getTime());
 		} catch (java.text.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -481,7 +481,7 @@ public class DateUtils {
 			calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
 			return dateFormat.format(calendar.getTime());
 		}  catch (java.text.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -499,7 +499,7 @@ public class DateUtils {
 			calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMinimum(Calendar.DAY_OF_YEAR));
 			return dateFormat.format(calendar.getTime());
 		} catch (java.text.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -517,7 +517,7 @@ public class DateUtils {
 			calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMaximum(Calendar.DAY_OF_YEAR));
 			return dateFormat.format(calendar.getTime());
 		}  catch (java.text.ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -545,7 +545,7 @@ public class DateUtils {
 			calendar.set(Calendar.DATE, 1);
 			now = dateFormat.format(calendar.getTime());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return now;
 	}
@@ -576,7 +576,7 @@ public class DateUtils {
 			}
 			now = dateFormat.format(calendar.getTime());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return now;
 	}
@@ -592,7 +592,7 @@ public class DateUtils {
 			SimpleDateFormat sdf = new SimpleDateFormat(format);
 			return String.valueOf(sdf.parse(date_str).getTime()/1000);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -645,7 +645,7 @@ public class DateUtils {
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return  isBefore;
 	}

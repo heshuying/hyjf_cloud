@@ -1,6 +1,8 @@
 package com.hyjf.cs.user.util;
 
 import com.hyjf.common.util.ThreeDESUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URLEncoder;
@@ -10,6 +12,8 @@ import java.net.URLEncoder;
  * @version TreeDESUtils, v0.1 2018/4/21 15:24
  */
 public class TreeDESUtils {
+
+	private static final Logger logger = LoggerFactory.getLogger(TreeDESUtils.class);
 
 	@Value("${hyjf.3des.key}")
 	private static String key;
@@ -21,7 +25,7 @@ public class TreeDESUtils {
 			encodeData = ThreeDESUtils.Encrypt3DES(kkey, data);
 			encodeData = URLEncoder.encode(encodeData, "UTF-8");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return encodeData;
 	}

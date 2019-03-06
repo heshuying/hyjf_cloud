@@ -1371,7 +1371,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 // 投资修改mongodb运营数据
                 commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
@@ -1401,7 +1401,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                         MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("渠道统计用户累计出借推送消息队列失败！！！");
             }
         }
@@ -1413,7 +1413,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         } catch (Exception e) {
             logger.error("加入计划 纳觅返现mq出错",e);
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId.intValue() >0) {
@@ -1444,7 +1444,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
             } catch (Exception e) {
                 logger.error("加入计划 优惠券出借出错",e);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return true;
@@ -1498,7 +1498,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("渠道统计用户累计出借推送消息队列失败！！！");
         }
         /*(6)更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 结束*/

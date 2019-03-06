@@ -209,7 +209,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                             }
                                         } catch (Exception e) {
                                             logger.debug("@@5@@");
-                                            e.printStackTrace();
+                                            logger.error(e.getMessage());
                                             this.updateBorrowRegist(borrowVO, 0, 4,1);
                                             result.put("success", "1");
                                             result.put("msg", "银行备案接口调用失败！");
@@ -330,7 +330,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                         }
                                     } catch (Exception e) {
                                         logger.debug("@@29@@");
-                                        e.printStackTrace();
+                                        logger.error(e.getMessage());
                                         this.updateBorrowRegist(borrowVO, 0, 4,1);
                                         result.put("success", "1");
                                         result.put("msg", "银行备案接口调用失败！");
@@ -410,7 +410,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
             BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
             return registResult;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }
@@ -477,7 +477,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
             BankCallBean registResult = BankCallUtils.callApiBg(debtRegistBean);
             return registResult;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }

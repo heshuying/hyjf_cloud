@@ -32,7 +32,7 @@ public class HttpClientHandler {
 //            byte[] bt = str.getBytes("UTF-8");
 //            str = String.valueOf(Base64.encode(bt));
 //        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //        }
 //        return str;
 //    }
@@ -46,7 +46,7 @@ public class HttpClientHandler {
 //        try {
 //            str = new String(bt, "UTF-8");
 //        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //        }
 //        return str;
 //    }

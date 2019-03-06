@@ -2,6 +2,8 @@ package com.hyjf.common.util;
 
 import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class RandomValidateCode {
+
+	private static final Logger logger = LoggerFactory.getLogger(RandomValidateCode.class);
 	private Random random = new Random();
 	private String randString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";// 随机产生的字符串
 	
@@ -84,7 +88,7 @@ public class RandomValidateCode {
 		try {
 			ImageIO.write(image, "JPEG", response.getOutputStream());// 将内存中的图片通过流动形式输出到客户端
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

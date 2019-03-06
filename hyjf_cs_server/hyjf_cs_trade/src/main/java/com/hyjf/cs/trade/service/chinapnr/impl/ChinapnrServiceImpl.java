@@ -211,7 +211,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                 Map<String, Object> map = ChinapnrUtil.callApiMap(bean);
                 return map;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         } else {
             throw new CheckException("1","请不要重复操作");
@@ -277,7 +277,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
                     JSONObject jo = JSONObject.parseObject(msgData);
                     return jo;
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

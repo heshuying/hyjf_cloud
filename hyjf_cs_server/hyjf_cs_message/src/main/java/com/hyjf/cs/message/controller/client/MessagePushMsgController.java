@@ -108,7 +108,7 @@ public class MessagePushMsgController extends BaseController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			logger.error(e.getMessage());
 		}
 	}

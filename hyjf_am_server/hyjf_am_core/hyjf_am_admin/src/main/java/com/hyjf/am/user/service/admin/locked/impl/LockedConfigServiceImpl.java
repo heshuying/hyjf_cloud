@@ -213,7 +213,7 @@ public class LockedConfigServiceImpl implements LockedConfigService {
             jedis = poolNew.getResource();
             return jedis.keys(redisKeyPrifix + "*");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             // 释放redis对象
         	poolNew.close();

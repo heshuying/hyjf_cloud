@@ -244,7 +244,7 @@ public class ProtocolsController extends BaseController {
 						String key = RedisConstants.TEMPLATE_UPLOAD_URL + templetId;
 						RedisUtils.set(key,httpUrl);
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 						logger.error("模板下载地址存入redis失败！");
 					}
 					return adminResult;
@@ -259,7 +259,7 @@ public class ProtocolsController extends BaseController {
 
 
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			logger.info("--------------法大大协议模板上传异常------------");
 		}
 

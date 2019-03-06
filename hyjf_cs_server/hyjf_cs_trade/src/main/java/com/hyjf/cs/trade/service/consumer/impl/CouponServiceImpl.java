@@ -297,7 +297,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                     commonProducer.messageSendDelay(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), params),2);
                 }catch (Exception e){
                     logger.error("优惠券放款失败  {} ",JSONObject.toJSONString(params));
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

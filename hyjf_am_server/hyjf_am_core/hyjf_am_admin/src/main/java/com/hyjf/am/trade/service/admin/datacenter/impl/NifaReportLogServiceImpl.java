@@ -52,7 +52,7 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
                     creteria.andCreateTimeLessThanOrEqualTo(dateEnd);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             if (null!=request.getFileUploadStatus()) {
                 creteria.andFileUploadStatusEqualTo(request.getFileUploadStatus());
@@ -95,7 +95,7 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
                     creteria.andCreateTimeLessThanOrEqualTo(dateEnd);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             if (null!=request.getFileUploadStatus()) {
                 creteria.andFileUploadStatusEqualTo(request.getFileUploadStatus());

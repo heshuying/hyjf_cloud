@@ -3185,7 +3185,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                     continue;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         map.put("result", null);

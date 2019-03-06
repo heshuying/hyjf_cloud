@@ -149,7 +149,7 @@ public class CouponConfigController extends BaseController {
 //                }
 //            }
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //            ccr.setRtn(Response.FAIL);
 //            ccr.setMessage(Response.FAIL_MSG);
 //        }
@@ -181,7 +181,7 @@ public class CouponConfigController extends BaseController {
 //                ccr.setRtn(Response.FAIL);
 //            }
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //            return null;
 //        }
 //        return ccr;
@@ -205,7 +205,7 @@ public class CouponConfigController extends BaseController {
 //                }
 //            }
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //        }
 //        return response;
 //    }

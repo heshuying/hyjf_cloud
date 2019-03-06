@@ -164,7 +164,7 @@ public class AppRechargeController extends BaseTradeController{
 			result.setData(data);
 		} catch (Exception e) {
 			logger.info("app端充值失败");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 

@@ -830,7 +830,7 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
                                 sensorsDataBean.setAuthType(AemsMergeAuthBean.AUTH_TYPE_AUTO_BID);
                                 this.sendSensorsDataMQ(sensorsDataBean);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                logger.error(e.getMessage());
                             }
                         }*/
 			// add by liuyang 神策数据统计修改 20180927 end
@@ -862,7 +862,7 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
                                 sensorsDataBean.setAuthType(AemsMergeAuthBean.AUTH_TYPE_AUTO_CREDIT);
                                 this.sendSensorsDataMQ(sensorsDataBean);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                logger.error(e.getMessage());
                             }
                         }*/
 			// add by liuyang 神策数据统计修改 20180927 end
@@ -892,7 +892,7 @@ public class AemsAuthServiceImpl extends BaseUserServiceImpl implements AemsAuth
                                 sensorsDataBean.setAuthType(AemsMergeAuthBean.AUTH_TYPE_PAYMENT_AUTH);
                                 this.sendSensorsDataMQ(sensorsDataBean);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                logger.error(e.getMessage());
                             }
                         }*/
 			// add by liuyang 神策数据统计修改 20180927 end

@@ -146,7 +146,7 @@ public class AppBindCardPageController extends BaseUserController {
                 bindCardService.updateAfterBindCard(bean);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("页面绑卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
         result.setStatus(true);

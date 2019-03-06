@@ -902,7 +902,7 @@ public class RepayManageController extends BaseTradeController {
                         logger.info("【还款业务处理结果异步通知】借款编号：{}，智投编号：{}，发送智投还款结果处理消息。", borrowNid, apicron.getPlanNid());
                     }
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     logger.error("【还款业务处理结果异步通知】借款编号：{}，{}发送还款结果处理消息失败！",
                             borrowNid, StringUtils.isNotBlank(apicron.getPlanNid()) ? "智投编号:" + apicron.getPlanNid() : "，");
                 }
@@ -975,7 +975,7 @@ public class RepayManageController extends BaseTradeController {
 							files.add(file);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					}
 				}
 
@@ -1006,7 +1006,7 @@ public class RepayManageController extends BaseTradeController {
 								files.add(file);
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage());
 						}
 					}
 				}

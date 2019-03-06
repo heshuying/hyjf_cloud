@@ -598,7 +598,7 @@ public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiR
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }

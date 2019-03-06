@@ -64,7 +64,7 @@ public class HolidaysConfigController extends BaseController {
             response = holidaysConfigService.getRecordList(request);
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置组合层数据查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return new AdminResult<>(FAIL, "Admin配置中心-节假日配置组合层数据查询异常！具体原因详见日志");
         }
 
@@ -90,7 +90,7 @@ public class HolidaysConfigController extends BaseController {
             response = holidaysConfigService.getInfoList(request);
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置-画面迁移(含有id更新，不含有id添加)-组合层数据查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return new AdminResult<>(FAIL, "Admin配置中心-节假日配置-画面迁移(含有id更新，不含有id添加)-组合层数据查询异常！具体原因详见日志");
         }
 
@@ -123,7 +123,7 @@ public class HolidaysConfigController extends BaseController {
             response = holidaysConfigService.insert(request);
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置-添加活动信息-组合层数据查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return new AdminResult<>(FAIL, "Admin配置中心-节假日配置-添加活动信息-组合层数据查询异常！具体原因详见日志");
         }
 
@@ -163,7 +163,7 @@ public class HolidaysConfigController extends BaseController {
             response = holidaysConfigService.update(request);
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置-修改活动维护信息-组合层数据查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return new AdminResult<>(FAIL, "Admin配置中心-节假日配置-修改活动维护信息-组合层数据查询异常！具体原因详见日志");
         }
 
@@ -233,7 +233,7 @@ public class HolidaysConfigController extends BaseController {
         try {
             date = sim.parse(dateString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return date;
     }

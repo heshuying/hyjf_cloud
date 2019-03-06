@@ -198,8 +198,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 			_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",推送脱敏队列完成1");
 
 		} catch (MQException e) {
-			e.printStackTrace();
-			_log.error("法大大发送下载脱敏消息失败...", e);	
+			_log.error("法大大发送下载脱敏消息失败...", e);
 		}
 	}
 

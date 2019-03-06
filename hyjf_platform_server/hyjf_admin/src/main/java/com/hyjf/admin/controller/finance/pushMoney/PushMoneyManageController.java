@@ -122,7 +122,7 @@ public class PushMoneyManageController extends BaseController {
             // 计算提成
             cnt = this.pushMoneyManageService.insertTenderCommissionRecord(apicron.getId(), form);
         } catch (Exception e) {
-            //e.printStackTrace();
+            //logger.error(e.getMessage());
            jsonObject.put("record","提成计算失败,请重新操作!");
             status = Response.FAIL;
             jsonObject.put("status",status);

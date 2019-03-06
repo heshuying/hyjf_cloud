@@ -316,7 +316,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
                     interestTender = interestInfo.getRepayAccountInterest(); // 利息
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("计算优惠券的利息错误,订单号:" + orderId + "].");
             }
 

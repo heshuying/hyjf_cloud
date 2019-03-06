@@ -277,7 +277,7 @@ public class MerchantAccountServiceImpl extends BaseServiceImpl implements Merch
                 return false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
     }

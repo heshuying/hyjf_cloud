@@ -177,7 +177,7 @@ public class APPAutoPlusController extends BaseUserController {
             Map<String, Object> map = BankCallUtils.callApiMap(bean);
             result.setData(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException(BaseResultBeanFrontEnd.FAIL,"调用银行接口失败！");
         }
         result.setStatus("000");

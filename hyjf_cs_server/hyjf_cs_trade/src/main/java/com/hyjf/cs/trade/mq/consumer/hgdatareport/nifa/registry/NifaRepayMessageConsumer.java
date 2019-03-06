@@ -60,7 +60,7 @@ public class NifaRepayMessageConsumer implements RocketMQListener<MessageExt>, R
         try {
             json = JSONObject.parseObject(msgBody);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error(thisMessName + "解析消息体失败...");
             return;
         }

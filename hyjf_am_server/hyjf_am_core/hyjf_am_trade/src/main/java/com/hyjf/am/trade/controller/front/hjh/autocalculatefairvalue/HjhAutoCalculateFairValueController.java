@@ -49,7 +49,7 @@ public class HjhAutoCalculateFairValueController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

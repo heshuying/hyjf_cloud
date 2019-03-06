@@ -89,7 +89,7 @@ public class LoanBankOpenController extends BaseUserController {
         try {
 			PropertyUtils.copyProperties(openBean, bankOpenVO);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
         openBean.setChannel(BankCallConstant.CHANNEL_PC);
         openBean.setUserId(user.getUserId());

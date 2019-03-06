@@ -155,7 +155,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return json;
     }
