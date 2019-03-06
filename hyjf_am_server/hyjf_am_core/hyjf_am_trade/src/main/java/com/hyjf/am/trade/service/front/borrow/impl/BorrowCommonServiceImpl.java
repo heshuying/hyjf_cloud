@@ -1,15 +1,14 @@
 package com.hyjf.am.trade.service.front.borrow.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.bean.admin.BorrowCommonBean;
-import com.hyjf.am.trade.bean.BorrowCommonFile;
-import com.hyjf.am.trade.bean.BorrowCommonFileData;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.am.vo.trade.borrow.BorrowCommonCarVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCommonCompanyAuthenVO;
+import com.hyjf.am.vo.trade.borrow.BorrowCompanyAuthenVO;
+import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -24,16 +23,12 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCommonService {
 	private Logger logger = LoggerFactory.getLogger(BorrowCommonServiceImpl.class);
-
-	@Value("${file.domain.url}")
-	private String url;
 	@Value("${file.physical.path}")
 	private String physical;
 	@Value("${file.upload.real.path}")
@@ -58,263 +53,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			return list.get(0).getBorrowClass();
 		}
 		return "";
-	}
-
-	/**
-	 *
-	 * 获取借款信息
-	 * 
-	 * @param borrowBean
-	 * @return
-	 */
-	@Override
-	public BorrowCommonBean getBorrow(BorrowCommonBean borrowBean) {
-		// 借款信息数据获取
-		BorrowWithBLOBs borrowWithBLOBs = this.getBorrowWithBLOBs(borrowBean.getBorrowNid());
-		if (borrowWithBLOBs != null) {
-			// 借款信息数据放置
-			this.getBorrowCommonFiled(borrowBean, borrowWithBLOBs);
-			if (borrowBean.getCompanyOrPersonal() == 0) {
-				if (StringUtils.isNotEmpty(borrowBean.getComName())) {
-					borrowBean.setCompanyOrPersonal(1);
-				} else if (StringUtils.isNotEmpty(borrowBean.getManname())) {
-					borrowBean.setCompanyOrPersonal(2);
-				}
-			}
-		}
-		return borrowBean;
-
-	}
-
-	/**
-	 * 借款信息数据获取
-	 * 
-	 * @param borrowBean
-	 * @param borrowWithBLOBs
-	 * @author Administrator
-	 */
-	@Override
-	public void getBorrowCommonFiled(BorrowCommonBean borrowBean, BorrowWithBLOBs borrowWithBLOBs) {
-		NumberFormat numberFormat = new DecimalFormat("####");
-		borrowBean.setRemark(this.getValue(String.valueOf(borrowWithBLOBs.getRemark())));
-		// 借款预编码（1411001意为2014年11月份第1单借款标，后借款标分期编号HDD141100101）
-		borrowBean.setBorrowPreNid(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowPreNid())));
-		// 借款状态
-		borrowBean.setStatus(this.getValue(String.valueOf(borrowWithBLOBs.getStatus())));
-		// 借款编码
-		borrowBean.setBorrowNid(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowNid())));
-		// 借款标题
-		borrowBean.setName(this.getValue(borrowWithBLOBs.getName()));
-		// 项目标题
-		borrowBean.setProjectName(this.getValue(borrowWithBLOBs.getProjectName()));
-		// 借款金额
-		borrowBean.setAccount(this.getValue(numberFormat.format(borrowWithBLOBs.getAccount())));
-		// 借款用户
-		RUser users = this.rUserMapper.selectByPrimaryKey(borrowWithBLOBs.getUserId());
-		if (users != null) {
-			borrowBean.setUsername(this.getValue(users.getUsername()));
-		}
-		// 项目申请人
-		borrowBean.setApplicant(borrowWithBLOBs.getApplicant());
-		// 垫付机构用户名
-		borrowBean.setRepayOrgName(borrowWithBLOBs.getRepayOrgName());
-		// 年利率
-		borrowBean.setBorrowApr(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowApr())));
-		// 借款期限
-		borrowBean.setBorrowPeriod(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowPeriod())));
-		// 还款方式
-		borrowBean.setBorrowStyle(this.getValue(borrowWithBLOBs.getBorrowStyle()));
-		// 借款用途
-		borrowBean.setBorrowUse(this.getValue(borrowWithBLOBs.getBorrowUse()));
-		// 担保方式
-		// borrowBean.setGuaranteeType(this.getValue(String.valueOf(borrowWithBLOBs.getGuaranteeType())));
-		// 项目类型
-		borrowBean.setProjectType((borrowWithBLOBs.getProjectType()));
-		// 资产类型
-		borrowBean.setInstCode(this.getValue(String.valueOf(borrowWithBLOBs.getInstCode())));
-		// 借款方式
-		borrowBean.setType(this.getValue(String.valueOf(borrowWithBLOBs.getType())));
-		// 借款方式
-		borrowBean.setBorrowLevel(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowLevel())));
-
-		if ("BORROW_FIRST".equals(borrowBean.getMoveFlag())) {
-			// 立即发标 20171101修改为"借款初审内，每个标的点开默认暂不发标"--查道健
-			borrowBean.setVerifyStatus("2");
-		}
-		// 资产属性
-		borrowBean.setAssetAttributes(this.getValue(String.valueOf(borrowWithBLOBs.getAssetAttributes())));
-		// 担保方式
-		// 担保机构
-		borrowBean.setBorrowMeasuresInstit(this.getValue(borrowWithBLOBs.getBorrowMeasuresInstit()));
-		// 抵押物信息
-		borrowBean.setBorrowMeasuresMort(this.getValue(borrowWithBLOBs.getBorrowMeasuresMort()));
-		// 本息保障
-		borrowBean.setBorrowMeasuresMea(this.getValue(borrowWithBLOBs.getBorrowMeasuresMea()));
-		// 机构介绍
-		borrowBean.setBorrowCompanyInstruction(this.getValue(borrowWithBLOBs.getBorrowCompanyInstruction()));
-		// 操作流程
-		borrowBean.setBorrowOperatingProcess(this.getValue(borrowWithBLOBs.getBorrowOperatingProcess()));
-		// 财务状况
-		borrowBean.setAccountContents(this.getValue(borrowWithBLOBs.getAccountContents()));
-		// 项目描述
-		borrowBean.setBorrowContents(this.getValue(borrowWithBLOBs.getBorrowContents()));
-		// 资产编号
-		borrowBean.setBorrowAssetNumber(this.getValue(borrowWithBLOBs.getBorrowAssetNumber()));
-		// 新增协议期限字段
-		// 协议期限
-		if (borrowWithBLOBs.getContractPeriod() != null) {
-			borrowBean.setContractPeriod(String.valueOf(borrowWithBLOBs.getContractPeriod()));
-		}
-		// 项目来源
-		borrowBean.setBorrowProjectSource(this.getValue(borrowWithBLOBs.getBorrowProjectSource()));
-		// 起息时间
-		borrowBean.setBorrowInterestTime(this.getValue(borrowWithBLOBs.getBorrowInterestTime()));
-		// 到期时间
-		borrowBean.setBorrowDueTime(this.getValue(borrowWithBLOBs.getBorrowDueTime()));
-		// 保障方式
-		borrowBean.setBorrowSafeguardWay(this.getValue(borrowWithBLOBs.getBorrowSafeguardWay()));
-		// 收益说明
-		borrowBean.setBorrowIncomeDescription(this.getValue(borrowWithBLOBs.getBorrowIncomeDescription()));
-		// 发行人
-		borrowBean.setBorrowPublisher(this.getValue(borrowWithBLOBs.getBorrowPublisher()));
-		// 融资用途
-		borrowBean.setFinancePurpose(this.getValue(borrowWithBLOBs.getFinancePurpose()));
-		// 月薪收入
-		borrowBean.setMonthlyIncome(this.getValue(borrowWithBLOBs.getMonthlyIncome()));
-		// 还款来源
-		borrowBean.setPayment(this.getValue(borrowWithBLOBs.getPayment()));
-		// 第一还款来源
-		borrowBean.setFirstPayment(this.getValue(borrowWithBLOBs.getFirstPayment()));
-		// 第二还款来源
-		borrowBean.setSecondPayment(this.getValue(borrowWithBLOBs.getSecondPayment()));
-		// 费用说明
-		borrowBean.setCostIntrodution(this.getValue(borrowWithBLOBs.getCostIntrodution()));
-		// 财务状况
-		borrowBean.setFianceCondition(this.getValue(borrowWithBLOBs.getFianceCondition()));
-
-		// 产品加息收益率
-		borrowBean.setBorrowExtraYield(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowExtraYield())));
-		// 最低投标金额
-		if (borrowWithBLOBs.getTenderAccountMin() == null || borrowWithBLOBs.getTenderAccountMin() == 0) {
-			borrowBean.setTenderAccountMin(StringUtils.EMPTY);
-		} else {
-			borrowBean.setTenderAccountMin(this.getValue(numberFormat.format(borrowWithBLOBs.getTenderAccountMin())));
-		}
-
-		// 最高投标金额
-		if (borrowWithBLOBs.getTenderAccountMax() == null || borrowWithBLOBs.getTenderAccountMax() == 0) {
-			borrowBean.setTenderAccountMax(StringUtils.EMPTY);
-		} else {
-			borrowBean.setTenderAccountMax(this.getValue(numberFormat.format(borrowWithBLOBs.getTenderAccountMax())));
-		}
-
-		// 有效时间
-		if (borrowWithBLOBs.getBorrowValidTime() == null || borrowWithBLOBs.getBorrowValidTime() == 0) {
-			borrowBean.setBorrowValidTime(StringUtils.EMPTY);
-		} else {
-			borrowBean.setBorrowValidTime(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowValidTime())));
-		}
-		borrowBean.setBankRegistDays(borrowWithBLOBs.getBankRegistDays().toString());
-		// 融资服务费
-		borrowBean.setBorrowServiceScale(this.getValue(borrowWithBLOBs.getServiceFeeRate()));
-		// 账户管理费率
-		borrowBean.setBorrowManagerScale(this.getValue(borrowWithBLOBs.getManageFeeRate()));
-		// 账户管理费率(上限)
-		borrowBean.setBorrowManagerScaleEnd(this.getValue(borrowWithBLOBs.getBorrowManagerScaleEnd()));
-		// 可出借平台_PC
-		borrowBean.setCanTransactionPc(this.getValue(borrowWithBLOBs.getCanTransactionPc()));
-		// 可出借平台_微网站
-		borrowBean.setCanTransactionWei(this.getValue(borrowWithBLOBs.getCanTransactionWei()));
-		// 可出借平台_IOS
-		borrowBean.setCanTransactionIos(this.getValue(borrowWithBLOBs.getCanTransactionIos()));
-		// 可出借平台_Android
-		borrowBean.setCanTransactionAndroid(this.getValue(borrowWithBLOBs.getCanTransactionAndroid()));
-		// 运营标签
-		borrowBean.setOperationLabel(this.getValue(borrowWithBLOBs.getOperationLabel()));
-		// 公司个人区分
-		borrowBean.setCompanyOrPersonal(borrowWithBLOBs.getCompanyOrPersonal());
-		// 定向标
-		borrowBean.setPublishInstCode(this.getValue(borrowWithBLOBs.getPublishInstCode()));
-		// 项目资料
-		if (StringUtils.isNotEmpty(borrowWithBLOBs.getFiles())) {
-			List<BorrowCommonFile> borrowCommonFileList = JSONArray.parseArray(borrowWithBLOBs.getFiles(),
-					BorrowCommonFile.class);
-			if (borrowCommonFileList != null && borrowCommonFileList.size() > 0) {
-				// domain URL
-				String fileDomainUrl = UploadFileUtils.getDoPath(url);
-
-				List<BorrowCommonImageVO> borrowCommonImageList = new ArrayList<BorrowCommonImageVO>();
-
-				for (BorrowCommonFile borrowCommonFile : borrowCommonFileList) {
-					List<BorrowCommonFileData> fileDataList = borrowCommonFile.getData();
-					if (fileDataList != null && fileDataList.size() > 0) {
-						int i = 0;
-						for (BorrowCommonFileData borrowCommonFileData : fileDataList) {
-							BorrowCommonImageVO borrowCommonImage = new BorrowCommonImageVO();
-							borrowCommonImage.setImageName(borrowCommonFileData.getName());
-							if (StringUtils.isNotEmpty(borrowCommonFileData.getFileRealName())) {
-								borrowCommonImage.setImageRealName(borrowCommonFileData.getFileRealName());
-							} else {
-								borrowCommonImage.setImageRealName(borrowCommonFileData.getFilename());
-							}
-							if (StringUtils.isEmpty(borrowCommonFileData.getImageSort().trim())) {
-								borrowCommonImage.setImageSort(String.valueOf(i));
-							} else {
-								borrowCommonImage.setImageSort(borrowCommonFileData.getImageSort().trim());
-							}
-
-							borrowCommonImage.setImagePath(borrowCommonFileData.getFileurl());
-							borrowCommonImage.setImageSrc(fileDomainUrl + borrowCommonFileData.getFileurl());
-							borrowCommonImageList.add(borrowCommonImage);
-							i++;
-						}
-					}
-				}
-
-				Collections.sort(borrowCommonImageList, (o1, o2) -> {
-					if (o1 != null && o2 != null) {
-						Integer sort1 = Integer.valueOf(o1.getImageSort().trim());
-						Integer sort2 = Integer.valueOf(o2.getImageSort().trim());
-						return sort1.compareTo(sort2);
-					}
-					return 0;
-				});
-				borrowBean.setBorrowCommonImageList(borrowCommonImageList);
-			}
-		}
-
-		// 售价预估
-		borrowBean.setDisposalPriceEstimate(this.getValue(borrowWithBLOBs.getDisposalPriceEstimate()));
-		// 处置周期
-		borrowBean.setDisposalPeriod(this.getValue(borrowWithBLOBs.getDisposalPeriod()));
-		// 处置渠道
-		borrowBean.setDisposalChannel(this.getValue(borrowWithBLOBs.getDisposalChannel()));
-		// 处置结果预案
-		borrowBean.setDisposalResult(this.getValue(borrowWithBLOBs.getDisposalResult()));
-		// 备注说明
-		borrowBean.setDisposalNote(this.getValue(borrowWithBLOBs.getDisposalNote()));
-
-		// 项目名称
-		borrowBean.setDisposalProjectName(this.getValue(borrowWithBLOBs.getDisposalProjectName()));
-		// 项目类型
-		borrowBean.setDisposalProjectType(this.getValue(borrowWithBLOBs.getDisposalProjectType()));
-		// 所在地区
-		borrowBean.setDisposalArea(this.getValue(borrowWithBLOBs.getDisposalArea()));
-		// 预估价值
-		borrowBean.setDisposalPredictiveValue(this.getValue(borrowWithBLOBs.getDisposalPredictiveValue()));
-		// 权属类别
-		borrowBean.setDisposalOwnershipCategory(this.getValue(borrowWithBLOBs.getDisposalOwnershipCategory()));
-		// 资产成因
-		borrowBean.setDisposalAssetOrigin(this.getValue(borrowWithBLOBs.getDisposalAssetOrigin()));
-		// 附件信息
-		borrowBean.setDisposalAttachmentInfo(this.getValue(borrowWithBLOBs.getDisposalAttachmentInfo()));
-
-		// 借款人信息数据获取
-		this.getBorrowManinfo(borrowBean);
-		// 车辆 房屋 认证信息 数据获取
-		this.getBorrowCarinfo(borrowBean);
-		// 用户信息数据获取
-		this.getBorrowUsers(borrowBean);
 	}
 
 	/**
