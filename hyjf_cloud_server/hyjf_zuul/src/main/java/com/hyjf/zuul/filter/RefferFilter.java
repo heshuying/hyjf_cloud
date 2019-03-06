@@ -74,7 +74,7 @@ public class RefferFilter extends ZuulFilter {
 				result = matcher.group();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return result;
 	}

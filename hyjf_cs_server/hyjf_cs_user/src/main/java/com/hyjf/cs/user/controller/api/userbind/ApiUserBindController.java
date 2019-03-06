@@ -28,6 +28,7 @@ import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -111,7 +112,7 @@ public class ApiUserBindController extends BaseUserController {
             baseMapBean.setCallBackAction(webHost+JUMP_BIND_HTML);
         }else{
             // 登陆
-            WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
+            WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_OTHER);
             loginService.setToken(webUser);
             //WebUtils.sessionLogin(request, response, webUser);
 

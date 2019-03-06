@@ -207,7 +207,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					} finally {
 						jedis.close();
 					}
@@ -1454,7 +1454,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					}
 				} catch (Exception e) {
 					_log.info(borrow.getBorrowNid() + " 三方资产标的标签更新失败");
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -3894,7 +3894,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public String getUploadImage(BorrowCommonBean borrowBean, String files, String borrowNid) throws Exception {
 
 		HashMap<String, String> fileMap = new HashMap<String, String>();
-		logger.error(files);
 		// 项目资料
 		if (StringUtils.isNotEmpty(files)) {
 			List<BorrowCommonFile> borrowCommonFileList = JSONArray.parseArray(files, BorrowCommonFile.class);

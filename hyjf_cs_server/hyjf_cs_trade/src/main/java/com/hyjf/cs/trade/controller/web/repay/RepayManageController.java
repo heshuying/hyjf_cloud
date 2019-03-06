@@ -19,6 +19,8 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CustomConstants;
@@ -900,7 +902,7 @@ public class RepayManageController extends BaseTradeController {
                         logger.info("【还款业务处理结果异步通知】借款编号：{}，智投编号：{}，发送智投还款结果处理消息。", borrowNid, apicron.getPlanNid());
                     }
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     logger.error("【还款业务处理结果异步通知】借款编号：{}，{}发送还款结果处理消息失败！",
                             borrowNid, StringUtils.isNotBlank(apicron.getPlanNid()) ? "智投编号:" + apicron.getPlanNid() : "，");
                 }
@@ -973,7 +975,7 @@ public class RepayManageController extends BaseTradeController {
 							files.add(file);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					}
 				}
 
@@ -1004,7 +1006,7 @@ public class RepayManageController extends BaseTradeController {
 								files.add(file);
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage());
 						}
 					}
 				}
@@ -1074,6 +1076,14 @@ public class RepayManageController extends BaseTradeController {
                 String borrowNid = orgFreezeLog.getBorrowNid();
                 boolean isAllRepay = orgFreezeLog.getAllRepayFlag() == 1;
                 try {
+                    // 必须在计算还款明细前加锁，防止智投自动投资债转,垫付机构锁放到异步回调中
+                    boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 300);
+                    if (!tranactionSetFlag) {//设置失败
+                        logger.error("【代偿冻结异步回调】借款编号：{}，正在处理项目债转！", borrowNid);
+                        long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
+                        String dateStr = DateUtils.nowDateAddSecond((int) retTime);
+                        throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+                    }
                     // 担保机构的还款
                     RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay);
                     if (repay != null) {
@@ -1094,6 +1104,7 @@ public class RepayManageController extends BaseTradeController {
                             repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);
+                            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
                             logger.info("【代偿冻结异步回调】借款编号：{}，还款申请成功。担保机构ID：{}，订单号:{}", borrowNid, userId, orderId);
                         } else {
                             logger.error("【代偿冻结异步回调】借款编号：{}，还款更新数据失败！担保机构ID：{}，订单号:{}", borrowNid, userId, orderId);
@@ -1120,7 +1131,7 @@ public class RepayManageController extends BaseTradeController {
             logger.info("【代偿冻结异步回调】还款申请处理完成。担保机构ID：{}，订单号：{}", userId, orderId);
             if (isBatchRepay) {
                 sendMessage(orgLogList.size(), orgLogList.size(), userId);
-                //RedisUtils.del("batchOrgRepayUserid_" + userId);
+                RedisUtils.del(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
             }
         } else {
             logger.error("【代偿冻结异步回调】担保机构还款未冻结！订单号：{}", orderId);

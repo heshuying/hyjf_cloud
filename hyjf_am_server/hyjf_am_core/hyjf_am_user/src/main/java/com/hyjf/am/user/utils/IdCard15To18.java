@@ -268,7 +268,7 @@ public class IdCard15To18 {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }

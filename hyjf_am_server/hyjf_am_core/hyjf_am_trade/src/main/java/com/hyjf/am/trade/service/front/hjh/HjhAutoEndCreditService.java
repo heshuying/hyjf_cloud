@@ -21,7 +21,7 @@ public interface HjhAutoEndCreditService extends BaseService {
      *
      * @return
      */
-    List<HjhDebtCredit> selectHjhDebtCreditList();
+    List<HjhDebtCredit> hjhDebtCreditList();
 
 
     /**

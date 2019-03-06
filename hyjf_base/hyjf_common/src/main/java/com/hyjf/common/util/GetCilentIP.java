@@ -1,5 +1,8 @@
 package com.hyjf.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -7,6 +10,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class GetCilentIP {
+
+	private static final Logger logger = LoggerFactory.getLogger(GetCilentIP.class);
 
 	/**
 	 * 获取主机的ip地址
@@ -33,7 +38,7 @@ public class GetCilentIP {
 						ipAddress = inet.getHostAddress();
 					}
 				} catch (UnknownHostException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

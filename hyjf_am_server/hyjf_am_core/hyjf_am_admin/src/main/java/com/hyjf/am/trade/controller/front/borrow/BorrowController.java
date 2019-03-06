@@ -272,7 +272,7 @@ public class BorrowController extends BaseController {
 			result.setResultInt(1);
 			return result;
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			result.setResultInt(0);
 			return result;
 		}
@@ -291,7 +291,7 @@ public class BorrowController extends BaseController {
 			result.setResultInt(1);
 			return result;
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			result.setResultInt(0);
 			return result;
 		}

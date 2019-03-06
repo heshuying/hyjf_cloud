@@ -254,7 +254,7 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
 //                                                    ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.amount","转出金额错误!");
                                                 }
                                             } catch (Exception e) {
-                                                e.printStackTrace();
+                                                logger.error(e.getMessage());
                                                 ret.put("99","汇付余额信息校验失败!");
 //                                                ValidatorFieldCheckUtil.validateSpecialError(modelAndView, "transferAmount", "merchant.transfer.transferAmount.success.exception","汇付余额信息校验失败!");
                                             }

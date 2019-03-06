@@ -376,7 +376,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 								debtEndFlag = 1;
 							}
 						} catch (Exception e) {
-							e.printStackTrace();
+							logger.error(e.getMessage());
 						}
 					} else {
 						throw new Exception("未查询到相应的borrowRecover数据!" + "，用户userId：" + sellerUserId + "，出借订单号：" + tenderOrderId);

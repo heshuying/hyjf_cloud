@@ -92,7 +92,7 @@ public class DynamicDataSourceContextHolder {
 //        } catch (Exception e) {
 //            logger.error("Switch slave datasource failed, error message is {}", e.getMessage());
 //            useMasterTradeDataSource();
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //        } finally {
 //            lock.unlock();
 //        }

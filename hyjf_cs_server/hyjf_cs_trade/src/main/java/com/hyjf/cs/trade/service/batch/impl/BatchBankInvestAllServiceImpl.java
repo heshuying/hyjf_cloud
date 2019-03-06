@@ -162,7 +162,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
 										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
 							} catch (MQException e) {
-								e.printStackTrace();
+								logger.error(e.getMessage());
 								logger.error("渠道统计用户累计出借推送消息队列失败！！！");
 							}
 							logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
@@ -181,7 +181,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						try {
 							this.commonProducer.messageSend(new MessageContent(MQConstant.VIP_USER_TENDER_TOPIC,UUID.randomUUID().toString(), para));
 						} catch (MQException e) {
-							e.printStackTrace();
+							logger.error(e.getMessage());
 							logger.info("保存VIP用户信息推送消息队列失败！！！");
 						}
 					}
@@ -226,7 +226,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
 				logger.info("******首投信息推送消息队列******");
 			} catch (MQException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				logger.info("******首投信息推送消息队列失败******");
 			}
 		}

@@ -613,7 +613,7 @@ public interface AmUserClient {
 	 * @param userId
 	 * @return
 	 */
-    WebViewUserVO getWebViewUserByUserId(Integer userId);
+    WebViewUserVO getWebViewUserByUserId(Integer userId,String channel);
 
 	/**
 	 * 更新用户信息

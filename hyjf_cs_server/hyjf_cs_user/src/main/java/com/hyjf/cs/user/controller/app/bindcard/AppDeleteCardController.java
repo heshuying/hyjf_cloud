@@ -9,6 +9,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +49,7 @@ public class AppDeleteCardController extends BaseUserController {
     public JSONObject deleteCard(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "token", required = true) String token, HttpServletRequest request) {
         JSONObject info = new JSONObject();
         info.put("request", "/hyjf-app/bank/app/deleteCard/deleteCard");
-        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_APP);
         String cardNo = request.getParameter("bankNumber");// 银行卡号
 
         logger.info("delete bankcard userId IS:{}, cardNo IS:{}", userId, cardNo);

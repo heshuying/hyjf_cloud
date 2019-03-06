@@ -4,6 +4,8 @@
 package com.hyjf.cs.message.bean.mc.hgdatareport.bifa;
 
 import com.hyjf.cs.message.bean.mc.hgdatareport.base.BaseHgDataReportEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.*;
@@ -15,6 +17,7 @@ import java.io.*;
 @Document(collection = "ht_bifa_credittenderinfo")
 public class BifaCreditTenderInfoEntity extends BaseHgDataReportEntity implements Serializable {
 
+    private static final Logger logger = LoggerFactory.getLogger(BifaCreditTenderInfoEntity.class);
     private static final long serialVersionUID = 1L;
     /**
      * 产品登记类别
@@ -189,9 +192,9 @@ public class BifaCreditTenderInfoEntity extends BaseHgDataReportEntity implement
             ObjectInputStream ois = new ObjectInputStream(bais);
             outer = (BifaCreditTenderInfoEntity) ois.readObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return outer;
     }

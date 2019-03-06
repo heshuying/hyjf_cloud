@@ -108,7 +108,7 @@ public class RepayAuthPagePlusController extends BaseUserController {
             authService.insertUserAuthLog(authBean.getUserId(), orderId,Integer.parseInt(authBean.getPlatform()), "6");
             result.setData(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
 
@@ -158,7 +158,7 @@ public class RepayAuthPagePlusController extends BaseUserController {
                 this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_REPAY_AUTH);
             } catch (Exception e) {
                 logger.error("授权报错了   ",e);
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
             }
         }else{

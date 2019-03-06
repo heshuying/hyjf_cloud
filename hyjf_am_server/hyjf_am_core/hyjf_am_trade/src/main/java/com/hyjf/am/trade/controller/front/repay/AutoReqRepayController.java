@@ -51,7 +51,7 @@ public class AutoReqRepayController extends BaseController {
                 logger.info("没有需要自动请求还款的标的。。。");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("自动请求还款失败。");
             return false;
         }

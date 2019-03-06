@@ -101,7 +101,7 @@ public class BorrowRepaymentInfoController extends BaseController {
 
                 copyForm.setYesTimeStartSrch(String.valueOf(date.getTime()/1000));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
         }
@@ -115,7 +115,7 @@ public class BorrowRepaymentInfoController extends BaseController {
 
                 copyForm.setYesTimeEndSrch(String.valueOf(cal.getTime().getTime()/1000));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
         }
@@ -370,7 +370,7 @@ public class BorrowRepaymentInfoController extends BaseController {
 
                 copyForm.setYesTimeStartSrch(String.valueOf(date.getTime()/1000));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
         }
@@ -384,7 +384,7 @@ public class BorrowRepaymentInfoController extends BaseController {
 
                 copyForm.setYesTimeEndSrch(String.valueOf(cal.getTime().getTime()/1000));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
         }

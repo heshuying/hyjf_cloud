@@ -236,7 +236,7 @@ public class AemsTrusteePayController extends BaseController {
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("借款人受托支付申请end");
         return modelAndView;
@@ -350,7 +350,7 @@ public class AemsTrusteePayController extends BaseController {
                     status = AemsErrorCodeConstant.STATUS_CE999999;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.info("借款人受托支付申请出错,标的编号:【"+bean.getProductId()+"】错误原因："+e.getMessage());
                 message = "借款人受托支付申请失败";
                 state = "0";

@@ -30,7 +30,7 @@ public class TestUserController extends BaseUserController {
             Thread.sleep(seconds);
             logger.info(">>>>>>>>>>>>>>>>>>>" + seconds  + "<<<<<<<<<<<<<<");
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return "OK";

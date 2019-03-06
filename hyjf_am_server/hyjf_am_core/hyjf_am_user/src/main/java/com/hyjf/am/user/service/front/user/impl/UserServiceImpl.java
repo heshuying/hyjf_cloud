@@ -1297,7 +1297,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             Integer evaluationExpiredDay = Integer.parseInt(evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, evaluationExpiredDay);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("redis测评有效日格式化失败！key：" + RedisConstants.REVALUATION_EXPIRED_DAY + "========value:" + evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, 180);
         }
@@ -1586,7 +1586,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     @Override
-    public WebViewUserVO getWebViewUserByUserId(Integer userId) {
+    public WebViewUserVO getWebViewUserByUserId(Integer userId,String channel) {
         User user = this.findUserByUserId(userId);
         WebViewUserVO result = new WebViewUserVO();
         result.setUserId(user.getUserId());
@@ -1597,7 +1597,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if (StringUtils.isNotBlank(user.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(channel));
             if(StringUtils.isNotEmpty(user.getIconUrl())){
                 result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
             }

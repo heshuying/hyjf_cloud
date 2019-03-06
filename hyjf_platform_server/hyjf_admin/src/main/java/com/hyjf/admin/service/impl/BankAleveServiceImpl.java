@@ -10,6 +10,8 @@ import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.BankAleveVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FileUtil;
@@ -84,6 +86,10 @@ public class BankAleveServiceImpl extends BaseServiceImpl implements BankAleveSe
         String filePath = dualYear+"/"+dualMonth+"/"+dualDay;
         para.downloadPath =systemConfig.getFtpDownloadPath()+ filePath;//ftp服务器文件目录
         para.savePath =localDir+"/"+dualDate;
+//        File file = new File(para.savePath);
+//        if (!file.exists()) {
+//            file.mkdir();
+//        }
 //        String beforeDate = DateUtils.getBeforeDate();//当前前时间前一天的日期yyyyMMdd
         Integer countsAleve = this.amAdminClient.countAleveByDualDate(dualDate);
         if (countsAleve < 0) {
@@ -99,8 +105,8 @@ public class BankAleveServiceImpl extends BaseServiceImpl implements BankAleveSe
 
         try {
             if(countsAleve==0 && countsEve==0){
-                //删除前一天的文件目录
-                FileUtil.deltree(localDir+"/"+dualDate);
+//                //删除前一天的文件目录
+//                FileUtil.deltree(localDir+"/"+(Integer.parseInt(dualDate) - 1));
                 if(!FtpUtil.downloadFiles(para)){
                     logger.error("【手动导入对账文件】下载ftp文件失败");
                     return "下载ftp文件失败!";
@@ -136,14 +142,14 @@ public class BankAleveServiceImpl extends BaseServiceImpl implements BankAleveSe
                     para.release();
                 }
                 logger.info("【手动导入对账文件】处理成功！");
-                return "处理成功";
+                return "日期：" + dualDate + " 处理成功。";
             } else {
                 logger.error("【手动导入对账文件】文件已导入数据库，请重新核对！");
                 return "文件已导入数据库，请重新核对！";
             }
 
         } catch (Exception e) {
-            logger.error("【手动导入对账文件】文件处理失败！");
+            logger.error("【手动导入对账文件】文件处理失败！",e);
             return "文件处理失败！";
         }
     }

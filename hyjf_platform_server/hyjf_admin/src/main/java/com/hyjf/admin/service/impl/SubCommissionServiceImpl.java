@@ -247,7 +247,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     // 发mq 插入accountWebList
                     commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebListVO));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     throw new RuntimeException("发送MQ(ht_account_web_list)失败！" + "[订单号：" + orderId + "]");
                 }
             } else {
@@ -344,7 +344,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return balance;

@@ -153,7 +153,7 @@ public class WrbServiceImpl implements WrbService {
                     try {
                     	commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                     } catch (MQException e) {
-                        e.printStackTrace();
+                        log.error(e.getMessage());
                     }
 
                 }

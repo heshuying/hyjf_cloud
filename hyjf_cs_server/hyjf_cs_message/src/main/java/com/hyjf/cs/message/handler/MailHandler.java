@@ -510,9 +510,9 @@ public class MailHandler {
 				}
 			}
 		} catch (MessagingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		// 4. 创建邮件对象, 发送

@@ -103,7 +103,7 @@ public class BankAccountManageController extends BaseController {
 //        try {
 //            fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 //        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //            logger.error("转码错误....", e);
 //        }
 //
@@ -280,7 +280,7 @@ public class BankAccountManageController extends BaseController {
                 return ret;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         int cnt = 0;

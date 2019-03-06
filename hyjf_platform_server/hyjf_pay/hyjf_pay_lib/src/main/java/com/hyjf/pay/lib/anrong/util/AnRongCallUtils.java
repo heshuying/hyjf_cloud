@@ -76,7 +76,7 @@ public class AnRongCallUtils implements Serializable {
 			// 调用安融接口
 			//String result = HttpDeal.post(paySystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams);
 			String result = restTemplate
-				.postForEntity(urlSystemConfig.getPayUrl().replace("chinapnr", "anrongcall") + REQUEST_MAPPING_CALLAPIBG, allParams, String.class).getBody();
+				.postForEntity(urlSystemConfig.getAnrongUrl() + REQUEST_MAPPING_CALLAPIBG, allParams, String.class).getBody();
 			ret = result;
 		} catch (Exception e) {
 			log.error(String.valueOf(e));

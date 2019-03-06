@@ -520,11 +520,11 @@ public class MsgPushHandler {
 				try {
 					clazz.getMethod(setMethodName, field.getType()).invoke(msg, value);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

@@ -1507,7 +1507,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
 
             //
-            HjhUserAuthVO userAuthVO = amTradeClient.getUserAuthByUserId(userId);   // TODO: 2018/6/30   业务判断是否有问题  ？？？  zyk
+            HjhUserAuthVO userAuthVO = amTradeClient.getUserAuthByUserId(userId);
             if (Validator.isNotNull(userAuthVO) && (userAuthVO.getAutoInvesStatus() == 0 || userAuthVO.getAutoCreditStatus() == 0)) {
                 userValidation.put("isAutoInves", false);
             } else {

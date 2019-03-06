@@ -78,7 +78,7 @@ public class AccountBalanceMonitoringController {
             response.setMessage("查询到的数据为空！");
             return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -100,7 +100,7 @@ public class AccountBalanceMonitoringController {
                 resp.setRtn(Response.FAIL);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return resp;
     }

@@ -63,7 +63,7 @@ public class ReadExcel extends XxlsAbstract {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return resumeList;
 
@@ -92,7 +92,7 @@ public class ReadExcel extends XxlsAbstract {
                 logger.info(NOT_EXCEL_FILE);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return resumeList;
 
@@ -128,7 +128,7 @@ public class ReadExcel extends XxlsAbstract {
         try {
             new ReadExcel().processOneSheet(path, 1, resumeList);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("读取excel文件失败,失败原因 ：", e);
         }
     }
@@ -146,7 +146,7 @@ public class ReadExcel extends XxlsAbstract {
         try {
             new ReadExcel().processOneSheet(in, 1, resumeList);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("读取excel文件失败,失败原因 ：", e);
         }
     }
@@ -235,7 +235,7 @@ public class ReadExcel extends XxlsAbstract {
                         jsonObject.put(nameMap.get(key), cellValue);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -259,7 +259,7 @@ public class ReadExcel extends XxlsAbstract {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return jsonArray;
     }

@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.vo.trade.bifa;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 
 /**
@@ -10,6 +13,8 @@ import java.io.*;
  * @version BifaCreditTenderInfoEntityVO, v0.1 2019/1/17 10:12
  */
 public class BifaCreditTenderInfoEntityVO extends BaseHgDataReportEntityVO{
+
+    private static final Logger logger = LoggerFactory.getLogger(BifaCreditTenderInfoEntityVO.class);
 
     private static final long serialVersionUID = 1L;
     /**
@@ -185,9 +190,9 @@ public class BifaCreditTenderInfoEntityVO extends BaseHgDataReportEntityVO{
             ObjectInputStream ois = new ObjectInputStream(bais);
             outer = (BifaCreditTenderInfoEntityVO) ois.readObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return outer;
     }

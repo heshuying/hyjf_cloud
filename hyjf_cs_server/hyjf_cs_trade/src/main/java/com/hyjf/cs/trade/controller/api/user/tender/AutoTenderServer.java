@@ -207,7 +207,7 @@ public class AutoTenderServer extends BaseTradeController{
 			} catch (Exception e) {
 				logger.info("出借调用接口异常---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
 				removeTenderTmp(borrowNid, userId, orderId);
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				resultBean.setStatusForResponse("TZ000098");
 				resultBean.setStatusDesc("调用出借银行接口异常");
 				return resultBean;
@@ -440,7 +440,7 @@ public class AutoTenderServer extends BaseTradeController{
 					tenderService.bidCancel(userId, borrowNid, orderId, account);
 					tenderService.deleteBorrowTenderTmpByParam(userId, borrowNid, orderId);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 					resultBean.setStatusForResponse("TZ000099");
 					resultBean.setStatusDesc("出借失败,系统错误");
 					return resultBean;
@@ -454,7 +454,7 @@ public class AutoTenderServer extends BaseTradeController{
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			resultBean.setStatusForResponse("TZ000099");
 			resultBean.setStatusDesc("出借失败,系统错误");
 			return resultBean;
@@ -479,7 +479,7 @@ public class AutoTenderServer extends BaseTradeController{
 			@SuppressWarnings("unused")
 			boolean updateFlag = tenderService.deleteBorrowTenderTmpByParam(userId, borrowNid, orderId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
     

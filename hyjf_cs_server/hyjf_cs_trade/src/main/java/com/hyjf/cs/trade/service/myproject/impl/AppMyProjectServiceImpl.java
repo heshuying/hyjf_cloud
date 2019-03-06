@@ -724,7 +724,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                         // 发送神策数据统计MQ
                         this.sendSensorsDataMQ(sensorsDataBean);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
 
@@ -855,7 +855,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     String recoverDate = GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime());
                     lastDays = GetDate.daysBetween(nowDate, recoverDate);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     throw new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
                 }
             }
@@ -1204,7 +1204,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     try {
                         lastDays = GetDate.daysBetween(GetDate.getDateTimeMyTimeInMillis(nowTime), GetDate.getDateTimeMyTimeInMillis(borrowRecoverVO.getRecoverTime()));
                     } catch (NumberFormatException | ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     // 剩余天数
                     if (borrowStyle.equals(CalculatesUtil.STYLE_ENDDAY)) {// 按天
@@ -1250,7 +1250,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                             String recoverDate = GetDate.getDateTimeMyTimeInMillis(Integer.valueOf(borrowRepayPlanList.get(0).getRepayTime()));
                             lastDays = GetDate.daysBetween(nowDate, recoverDate);
                         } catch (NumberFormatException | ParseException e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     }
                     // 债转本息

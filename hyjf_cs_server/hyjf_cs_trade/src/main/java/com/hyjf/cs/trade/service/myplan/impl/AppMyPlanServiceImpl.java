@@ -383,7 +383,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
                     appCouponCustomize.setPlanPeriod(startStrDate + "~" + endStrDate);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }*/
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 end
@@ -511,7 +511,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
                     customize.setPlanPeriod(startStrDate + "~" + endStrDate);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         customize.getPlanPeriod();

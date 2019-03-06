@@ -43,7 +43,7 @@ public class UtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQPus
 			try {
 				userService.updateFirstUtmReg(params);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				logger.error("消费失败，更新首投信息发生异常...");	
 			}	
 		}else {

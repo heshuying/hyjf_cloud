@@ -17,7 +17,10 @@ public class URLSystemConfig {
     // 法大大接口调用地址hyjf.pay.url
     @Value("${hyjf.pay.fdd.url}")
     public String fddPayUrl;
-
+    // 安融接口调用地址hyjf.pay.anrong.url
+    @Value("${hyjf.pay.anrong.url}")
+    public String anrongUrl;
+    
 //    @Value("${hyjf.chinapnr.return.url}")
 //    public  String chinapnrReturnUril;
 //
@@ -28,7 +31,15 @@ public class URLSystemConfig {
 //    public  String chinapnrCallBack;
 
 
-    public String getBankUrl() {
+    public String getAnrongUrl() {
+		return anrongUrl;
+	}
+
+	public void setAnrongUrl(String anrongUrl) {
+		this.anrongUrl = anrongUrl;
+	}
+
+	public String getBankUrl() {
         return bankUrl;
     }
 

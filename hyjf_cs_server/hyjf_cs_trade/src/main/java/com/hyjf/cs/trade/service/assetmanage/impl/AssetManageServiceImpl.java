@@ -421,7 +421,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                         hjhInvistDetailVO.setEndInterestTime(endStrDate);
                     }
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }else {
                 // mod by nxl 智投服务，修改服务期限的显示格式

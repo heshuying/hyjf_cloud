@@ -1877,7 +1877,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                                                     try {
                                                         accountWebListFlag = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
                                                     } catch (MQException e) {
-                                                        e.printStackTrace();
+                                                        logger.error(e.getMessage());
                                                         throw new RuntimeException("网站收支插入（mongo）发生异常，用户userId" + userId + ",承接订单号：" + debtCreditTender.getAssignOrderId());
                                                     }
                                                     if (accountWebListFlag) {

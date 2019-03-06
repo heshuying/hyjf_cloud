@@ -141,7 +141,7 @@ public class AdminBorrowRepaymentController extends BaseController {
         }
         return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -161,7 +161,7 @@ public class AdminBorrowRepaymentController extends BaseController {
             }
             return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -181,7 +181,7 @@ public class AdminBorrowRepaymentController extends BaseController {
             }
             return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -198,7 +198,7 @@ public class AdminBorrowRepaymentController extends BaseController {
             }
             return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }

@@ -23,6 +23,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,8 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
     @Value("${hyjf.bank.bankcode}")
     private String bankBankCode;
 
+
+    private static final Logger logger = LoggerFactory.getLogger(BankAccountManageServiceImpl.class);
     /**
      * 更新账户余额
      *
@@ -113,7 +117,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                 msg = "该用户未开户!";
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("========The " + userId + " queryAccountDetail is Error !");
             msg = userName + "对账异常!";
         }
@@ -584,7 +588,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
             try {
                 dated = format.parse(date);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return dated;

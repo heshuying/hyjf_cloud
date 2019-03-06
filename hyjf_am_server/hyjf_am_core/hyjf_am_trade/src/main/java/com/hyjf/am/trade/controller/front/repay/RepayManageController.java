@@ -380,13 +380,13 @@ public class RepayManageController extends BaseController {
             try {
                 Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
                 RepayBean repayBean = null;
-                boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 600);
-                if (!tranactionSetFlag) {//设置失败
-                    logger.error("【批量还款垫付】借款编号：{}，正在处理项目债转！", borrowNid);
-                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
-                    String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
-                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
-                }
+//                boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 600);
+//                if (!tranactionSetFlag) {//设置失败
+//                    logger.error("【批量还款垫付】借款编号：{}，正在处理项目债转！", borrowNid);
+//                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+//                    String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
+//                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+//                }
                 // 计算垫付机构还款
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
                     repayBean = repayManageService.searchRepayTotalV2(borrow.getUserId(), borrow);
@@ -441,7 +441,6 @@ public class RepayManageController extends BaseController {
         } else {
             // 用户平台账户余额不足
             logger.error("【批量还款校验】平台账户余额不足！担保机构用户名：{}", userName);
-            RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
     }

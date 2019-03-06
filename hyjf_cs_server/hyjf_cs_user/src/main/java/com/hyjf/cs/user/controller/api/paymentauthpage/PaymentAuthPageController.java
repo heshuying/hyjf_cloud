@@ -177,7 +177,7 @@ public class PaymentAuthPageController extends BaseController {
             logger.info("缴费授权页面end");
             return modelAndView;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("缴费授权页面异常,异常信息:[" + e.toString() + "]");
             return null;
         }
@@ -236,7 +236,7 @@ public class PaymentAuthPageController extends BaseController {
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("缴费授权出错,userId:【" + userId + "】错误原因：" + e.getMessage());
             message = "缴费授权失败";
             status = ErrorCodeConstant.STATUS_CE999999;

@@ -64,7 +64,7 @@ public class CouponController extends BaseController {
             couponService.updateCouponTender(couponTender);
             return 1;
         }catch (Exception e ) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("chucuole :::"+JSONObject.toJSONString(e));
             return 0;
         }

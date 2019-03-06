@@ -13,6 +13,8 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.List;
  */
 @Service
 public class SynBalanceServiceImpl implements SynBalanceService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SynBalanceServiceImpl.class);
     // 充值状态:成功
     private static final int RECHARGE_STATUS_SUCCESS = 2;
     @Autowired
@@ -144,7 +148,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             this.accountRechargeMapper.insertSelective(record);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
         }
         return true;

@@ -1218,7 +1218,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 crt.andCreateTimeGreaterThanOrEqualTo(start);
                 crt.andCreateTimeLessThanOrEqualTo(end);
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         example.setOrderByClause("create_time ASC");

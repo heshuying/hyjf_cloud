@@ -219,7 +219,7 @@ public class AemsUnBindCardServiceImpl extends BaseUserServiceImpl implements Ae
 			mv = BankCallUtils.callApiMap(bindCardBean);
 			return mv;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}

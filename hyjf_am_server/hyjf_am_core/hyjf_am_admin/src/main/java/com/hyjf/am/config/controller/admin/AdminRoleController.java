@@ -8,6 +8,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.resquest.admin.UserRoleRequest;
 import com.hyjf.am.resquest.config.AdminRoleRequest;
+import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/am-config/role")
-public class AdminRoleController {
+public class AdminRoleController extends BaseController {
     @Autowired
     private AdminRoleService adminRoleService;
 
@@ -323,7 +324,7 @@ public class AdminRoleController {
             try {
                 adminRoleService.setRolePermission(userRoleRequest);
             } catch (Exception e) {
-            	e.printStackTrace();
+            	logger.error(e.getMessage());
             	arr.setRtn(Response.FAIL);
             	arr.setMessage("角色权限修改时发生错误,请重新操作!");
             }

@@ -127,7 +127,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		amUserClient.updateUser(userVO, ip);
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
-		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
+		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId(),channel);
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
 		String accountId = webViewUserVO.getBankAccount();
@@ -151,7 +151,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel,UserVO userVO) {
 		logger.info("登陆获取loginUserName:"+loginUserName+";userVO:"+(userVO==null));
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
-		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
+		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_NOT_EXISTS);
 		String codeSalt = userVO.getSalt();
 		logger.info("salt:"+codeSalt);
 		String passwordDb = userVO.getPassword();
@@ -384,7 +384,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 上传文件的CDNURL
 				if (StringUtils.isNotEmpty(iconUrl)) {
 					// 实际物理路径前缀2
-					String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+					String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(ClientConstants.APP_CLIENT));
 					result.setIconUrl(imghost + fileUploadTempPath + iconUrl);
 				} else {
 					result.setIconUrl(apphost + "/img/" + "icon.png");

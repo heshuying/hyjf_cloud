@@ -74,7 +74,7 @@ public class SmsUtil {
             try {
                 client = new Client(SOFT_SERIALNO, KEY);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -106,7 +106,7 @@ public class SmsUtil {
                 parmMapMaketing.put("cdkey", SOFT_SERIALNO_MAKETING);
                 parmMapMaketing.put("password", KEY_MAKETING);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }

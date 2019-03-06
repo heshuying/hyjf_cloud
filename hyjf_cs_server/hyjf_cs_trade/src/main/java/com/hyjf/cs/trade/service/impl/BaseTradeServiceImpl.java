@@ -131,7 +131,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
                 return balance;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return new BigDecimal(0);
@@ -554,7 +554,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             zos.close();
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         } finally {
             if (bis != null){

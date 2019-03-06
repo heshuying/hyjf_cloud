@@ -153,7 +153,7 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return json;
     }
@@ -197,7 +197,7 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
             currdate = ca.getTime();
             enddate = format.format(currdate);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return enddate;
     }

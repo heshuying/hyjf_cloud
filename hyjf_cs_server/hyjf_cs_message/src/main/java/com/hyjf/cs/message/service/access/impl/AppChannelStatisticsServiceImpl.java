@@ -91,7 +91,7 @@ public class AppChannelStatisticsServiceImpl extends BaseServiceImpl implements 
             return appAccesStatisticsVO;
 
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }
@@ -507,7 +507,7 @@ public class AppChannelStatisticsServiceImpl extends BaseServiceImpl implements 
             return Math.toIntExact(count);
 
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return 0;
     }

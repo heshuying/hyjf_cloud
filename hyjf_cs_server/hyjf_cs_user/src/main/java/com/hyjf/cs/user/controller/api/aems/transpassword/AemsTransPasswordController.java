@@ -277,7 +277,7 @@ public class AemsTransPasswordController extends BaseController {
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         _log.info("设置交易密码end");
         return modelAndView;
@@ -378,7 +378,7 @@ public class AemsTransPasswordController extends BaseController {
                 // 开户后保存相应的数据以及日志
                 this.transPasswordService.updateUserIsSetPassword(userId);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             message = "交易密码设置成功";
             status = AemsErrorCodeConstant.SUCCESS;

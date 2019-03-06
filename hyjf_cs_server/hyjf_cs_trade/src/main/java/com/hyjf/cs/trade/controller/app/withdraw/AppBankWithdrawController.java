@@ -452,7 +452,7 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setData(data);
         } catch (Exception e) {
             logger.info("app端提现失败");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
 

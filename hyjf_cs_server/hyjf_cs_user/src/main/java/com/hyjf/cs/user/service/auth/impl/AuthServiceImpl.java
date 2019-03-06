@@ -547,7 +547,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			Map<String,Object> map = BankCallUtils.callApiMap(bean);
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -1054,14 +1054,14 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			logger.info("延迟1000毫秒以后查询");
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		WebResult<Object> result = new WebResult<Object>();
 		HjhUserAuthLogVO hjhUserAuthLogVO = amUserClient.selectByExample(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
 		Map<String,String> map = new HashedMap();
-		String remark = hjhUserAuthLogVO.getRemark();
-		if(hjhUserAuthLogVO != null || StringUtils.isNotBlank(remark)){
+		if(hjhUserAuthLogVO != null || StringUtils.isNotBlank(hjhUserAuthLogVO.getRemark())){
+			String remark = hjhUserAuthLogVO.getRemark();
 			map.put("error", remark);
 			logger.info("用户授权失败原因:[" + remark + "].");
 		}else{
@@ -1393,7 +1393,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			ModelAndView model = BankCallUtils.callApi(bean);
 			return model;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}

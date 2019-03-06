@@ -116,7 +116,7 @@ public class WeChatLoginController extends BaseUserController {
                     // 发送神策数据统计MQ
                     this.loginService.sendSensorsDataMQ(sensorsDataBean);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             //登录成功发送mq
@@ -216,7 +216,7 @@ public class WeChatLoginController extends BaseUserController {
             String str = new String(bytes, 0, nTotalRead, "utf-8");
             return str;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         }
     }

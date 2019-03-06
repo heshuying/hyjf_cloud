@@ -179,7 +179,7 @@ public class BankCallController extends BaseController {
             try {
                 jo = JSONObject.parseObject(record.getContent());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             retUrl = jo.getString(BankCallConstant.PARAM_SUCCESSFULURL);
 
@@ -236,7 +236,7 @@ public class BankCallController extends BaseController {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             // 验签
             BankCallBean result = api.verifyChinaPnr(bean);
@@ -274,7 +274,7 @@ public class BankCallController extends BaseController {
                     try {
                         jo = JSONObject.parseObject(record.getContent());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     notifyUrl = jo.getString(BankCallConstant.PARAM_NOTIFYURL);
                     String isSuccess = request.getParameter("isSuccess");
@@ -331,7 +331,7 @@ public class BankCallController extends BaseController {
                     try {
                         jo = JSONObject.parseObject(record.getContent());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     notifyUrl = jo.getString(BankCallConstant.PARAM_NOTIFYURL);
                     String isSuccess = request.getParameter("isSuccess");
@@ -460,7 +460,7 @@ public class BankCallController extends BaseController {
                     try {
                         jo = JSONObject.parseObject(record.getContent());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     notifyUrl = jo.getString(BankCallConstant.PARAM_NOTIFYURL);
                     retUrl = jo.getString(BankCallConstant.PARAM_RETURL);
@@ -503,7 +503,7 @@ public class BankCallController extends BaseController {
                                 throw new RuntimeException("异步回调后,回调异步url为空！订单号：" + bean.getLogOrderId());
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     } else {
                         // 更新数据状态为验签失败
@@ -523,7 +523,7 @@ public class BankCallController extends BaseController {
                 out.write(content);//输出结果给银行
                 out.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             } finally {
                 if (out != null) {
                     out.close();
@@ -747,7 +747,7 @@ public class BankCallController extends BaseController {
                     try {
                         jo = JSONObject.parseObject(record.getContent());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     // 如果相应的回调类型不为空
                     if (StringUtils.isNotBlank(logNotifyType)) {
@@ -795,7 +795,7 @@ public class BankCallController extends BaseController {
                                 throw new RuntimeException("异步回调后,回调异步url为空！订单号：" + bean.getLogOrderId());
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     } else {
                         // 更新数据状态为验签失败
@@ -815,7 +815,7 @@ public class BankCallController extends BaseController {
                 out.write(content);//输出结果给银行
                 out.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             } finally {
                 if (out != null) {
                     out.close();
@@ -844,7 +844,7 @@ public class BankCallController extends BaseController {
             try {
                 jo = JSONObject.parseObject(record.getContent());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             retUrl = jo.getString(BankCallConstant.PARAM_FORGOTPWDURL);
         }

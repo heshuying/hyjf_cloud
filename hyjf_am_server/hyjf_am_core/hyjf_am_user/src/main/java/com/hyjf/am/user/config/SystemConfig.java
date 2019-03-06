@@ -1,5 +1,7 @@
 package com.hyjf.am.user.config;
 
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,53 @@ public class SystemConfig {
 
     @Value("${file.upload.real.path}")
     public String fileUpload;
+
+    @Value("${file.upload.real.path.app}")
+    public String appFileUpload;
+
+    @Value("${file.upload.real.path.wechat}")
+    public String weChatFileUpload;
+
+    @Value("${file.upload.real.path.api}")
+    public String apiFileUpload;
+
+    public String getFileUpload(String channel) {
+        switch (channel){
+            case BankCallConstant.CHANNEL_WEI:
+                return UploadFileUtils.getDoPath(this.getWeChatFileUpload());
+            case BankCallConstant.CHANNEL_APP:
+                return UploadFileUtils.getDoPath(this.getAppFileUpload());
+            case BankCallConstant.CHANNEL_PC:
+                return UploadFileUtils.getDoPath(this.getFileUpload());
+            case BankCallConstant.CHANNEL_OTHER:
+                return UploadFileUtils.getDoPath(this.getApiFileUpload());
+        }
+        return UploadFileUtils.getDoPath(this.getFileUpload());
+    }
+
+    public String getAppFileUpload() {
+        return appFileUpload;
+    }
+
+    public void setAppFileUpload(String appFileUpload) {
+        this.appFileUpload = appFileUpload;
+    }
+
+    public String getWeChatFileUpload() {
+        return weChatFileUpload;
+    }
+
+    public void setWeChatFileUpload(String weChatFileUpload) {
+        this.weChatFileUpload = weChatFileUpload;
+    }
+
+    public String getApiFileUpload() {
+        return apiFileUpload;
+    }
+
+    public void setApiFileUpload(String apiFileUpload) {
+        this.apiFileUpload = apiFileUpload;
+    }
 
     public String getFileDomainUrl() {
         return fileDomainUrl;

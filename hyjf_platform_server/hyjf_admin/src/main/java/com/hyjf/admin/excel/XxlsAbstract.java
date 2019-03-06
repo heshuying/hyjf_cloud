@@ -147,7 +147,7 @@ public abstract class XxlsAbstract extends DefaultHandler {
 				try {
 					optRows(sheetIndex,curRow,rowlist,resumeLists);
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 				rowlist.clear();
 				curRow++;
