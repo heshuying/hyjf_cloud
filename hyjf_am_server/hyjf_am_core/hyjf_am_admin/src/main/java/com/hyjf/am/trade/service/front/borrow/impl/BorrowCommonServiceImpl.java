@@ -3894,7 +3894,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public String getUploadImage(BorrowCommonBean borrowBean, String files, String borrowNid) throws Exception {
 
 		HashMap<String, String> fileMap = new HashMap<String, String>();
-		logger.error(files);
 		// 项目资料
 		if (StringUtils.isNotEmpty(files)) {
 			List<BorrowCommonFile> borrowCommonFileList = JSONArray.parseArray(files, BorrowCommonFile.class);
