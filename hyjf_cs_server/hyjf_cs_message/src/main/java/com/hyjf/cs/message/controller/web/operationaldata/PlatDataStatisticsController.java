@@ -152,7 +152,7 @@ public class PlatDataStatisticsController {
         List<SubEntity> list = region.orgnizeData(cityMap);
         if(list.size() < 10){
             list = initList(list.size(),list);
-            list.sort((SubEntity h1, SubEntity h2) -> Integer.compare(h1.getValue() , h2.getValue()) );
+            list.sort((SubEntity h1, SubEntity h2) -> Integer.compare(h2.getValue() , h1.getValue()) );
         }
         List<SubEntity> sublist = region.formatList(list);
 
