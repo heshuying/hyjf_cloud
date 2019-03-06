@@ -28,7 +28,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/am-trade/hjhAutoEndCredit")
 public class HjhAutoEndCreditController extends BaseController {
-    
+
     @Autowired
     private HjhAutoEndCreditService hjhAutoEndCreditService;
     @Autowired
@@ -42,9 +42,10 @@ public class HjhAutoEndCreditController extends BaseController {
         logger.info("------汇计划自动结束转让定时任务开始------");
         try {
             // 检索出借总的债权转让
-            List<HjhDebtCredit> hjhDebtCreditList = this.hjhAutoEndCreditService.selectHjhDebtCreditList();
+            List<HjhDebtCredit> hjhDebtCreditList = this.hjhAutoEndCreditService.hjhDebtCreditList();
             // 有未结束债权
             if (CollectionUtils.isNotEmpty(hjhDebtCreditList)) {
+                logger.info("待结束的债转数据:[" + hjhDebtCreditList.size() + "].");
                 for (int i = 0; i < hjhDebtCreditList.size(); i++) {
                     HjhDebtCredit hjhDebtCredit = hjhDebtCreditList.get(i);
                     hjhAutoEndCreditService.updateHjhDebtCreditStatus(hjhDebtCredit);

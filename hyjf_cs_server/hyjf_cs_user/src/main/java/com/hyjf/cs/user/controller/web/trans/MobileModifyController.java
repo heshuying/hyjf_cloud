@@ -65,7 +65,7 @@ public class MobileModifyController extends BaseUserController {
             userVO.setMobile(paraMap.get("newMobile"));
             mobileModifyService.updateUserByUserId(userVO);
 
-            WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
+            WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId(),BankCallConstant.CHANNEL_PC);
             if (null != webUser) {
                 webUser = mobileModifyService.updateUserToCache(webUser);
                 result.setData(webUser);
@@ -122,7 +122,7 @@ public class MobileModifyController extends BaseUserController {
              userVO.setMobile(paraMap.get("newMobile"));
              mobileModifyService.updateUserByUserId(userVO);
 
-            WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId());
+            WebViewUserVO webUser = mobileModifyService.getWebViewUserByUserId(user.getUserId(),BankCallConstant.CHANNEL_PC);
             if (null != webUser) {
                 webUser = mobileModifyService.updateUserToCache(webUser);
                 result.setData(webUser);

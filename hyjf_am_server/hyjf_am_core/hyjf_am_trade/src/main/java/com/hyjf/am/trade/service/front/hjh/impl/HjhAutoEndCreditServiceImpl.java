@@ -33,7 +33,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
      * @return
      */
     @Override
-    public List<HjhDebtCredit> selectHjhDebtCreditList() {
+    public List<HjhDebtCredit> hjhDebtCreditList() {
         HjhDebtCreditExample example = new HjhDebtCreditExample();
         HjhDebtCreditExample.Criteria cra = example.createCriteria();
         List<Integer> statusList = new ArrayList<Integer>();
@@ -90,7 +90,6 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         // 债转编号
         String creditNid = hjhDebtCredit.getCreditNid();
 
-
         // 根据债转编号查询出借异常记录表里是否有数据
         HjhPlanBorrowTmpExample hjhPlanBorrowTmpExample = new HjhPlanBorrowTmpExample();
         HjhPlanBorrowTmpExample.Criteria hjhPlanBorrowTmpCra = hjhPlanBorrowTmpExample.createCriteria();
@@ -101,6 +100,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
             return;
         }
 
+        logger.info("开始结束未完全承接的债转,债转编号:[" + creditNid + "].");
         // 计划的开放额度减扣
         // 债权的公允价值
         BigDecimal liquidationFairValue = BigDecimal.ZERO;
@@ -122,6 +122,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         if (!isHjhDebtCreditStatusupdateFlag) {
             throw new RuntimeException("更新未结束债转状态失败,债转编号:[" + hjhDebtCredit.getCreditNid() + "].");
         }
+
         // 2.更新计划可投金额
         HjhPlan updateHjhPlan = new HjhPlan();
         updateHjhPlan.setPlanNid(planNid);
@@ -132,6 +133,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         }
         String oldOpenAmount = RedisUtils.get(RedisConstants.HJH_PLAN + planNid);
         logger.info("债权停止后，更新计划开放额度，计划编号:[" + planNid + "],Redis原开放额度:" + oldOpenAmount + "，应减额度:" + liquidationFairValue.toString());
+        logger.info("更新债转状态:债转编号:[" + creditNid + "],减扣额度:[" + liquidationFairValue + "].");
         // 3.减扣redis相应计划可投金额
         RedisUtils.add(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), liquidationFairValue.negate().toString());
         // 4.更新原始加入订单的清算状态

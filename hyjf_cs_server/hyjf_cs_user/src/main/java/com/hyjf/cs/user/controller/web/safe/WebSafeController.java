@@ -26,6 +26,7 @@ import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import com.hyjf.cs.user.vo.UserNoticeSetVO;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -124,7 +125,7 @@ public class WebSafeController extends BaseUserController {
         logger.info("用户通知设置, userNoticeSetVO :{}", JSONObject.toJSONString(userNoticeSetVO));
         WebResult<WebViewUserVO> result = new WebResult<WebViewUserVO>();
 
-        WebViewUserVO user = safeService.getWebViewUserByUserId(userId);
+        WebViewUserVO user = safeService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_PC);
 
         UserNoticeSetRequest noticeSetRequest = new UserNoticeSetRequest();
         BeanUtils.copyProperties(userNoticeSetVO, noticeSetRequest);
@@ -137,7 +138,7 @@ public class WebSafeController extends BaseUserController {
             return result;
         }
 
-        WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId());
+        WebViewUserVO webUser = safeService.getWebViewUserByUserId(user.getUserId(),BankCallConstant.CHANNEL_PC);
         if (null != webUser) {
             webUser = safeService.updateUserToCache(webUser);
             result.setData(webUser);
@@ -162,7 +163,7 @@ public class WebSafeController extends BaseUserController {
         WebResult<Object> result = new WebResult<Object>();
         String isUpdate = request.getParameter("isUpdate");
         safeService.checkForEmailSend(paraMap.get("email"), userId);
-        WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+        WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId,BankCallConstant.CHANNEL_PC);
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         if(org.apache.commons.lang.StringUtils.isNotEmpty(isUpdate)&&"isUpdate".equals(isUpdate)){
             userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE9);
@@ -212,7 +213,7 @@ public class WebSafeController extends BaseUserController {
 
         try {
             safeService.updateEmail(Integer.parseInt(bindEmailVO.getKey()), bindEmailVO.getEmail());
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(Integer.parseInt(bindEmailVO.getKey()));
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(Integer.parseInt(bindEmailVO.getKey()),BankCallConstant.CHANNEL_PC);
             if (null != webUser) {
                 webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
@@ -254,7 +255,7 @@ public class WebSafeController extends BaseUserController {
 
         try {
             safeService.saveContract(param.get("relationId"), param.get("rlName"), param.get("rlPhone"), userId);
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId,BankCallConstant.CHANNEL_PC);
             if (null != webUser) {
                 webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
@@ -289,7 +290,7 @@ public class WebSafeController extends BaseUserController {
         /**
          * 调用重新登录接口
          */
-        WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+        WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId,BankCallConstant.CHANNEL_PC);
         if (null != webUser) {
             webUser = safeService.updateUserToCache(webUser);
             result.setData(webUser);
@@ -337,7 +338,7 @@ public class WebSafeController extends BaseUserController {
         try {
             UserVO user = safeService.queryUserByUserId(userId);
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId,BankCallConstant.CHANNEL_PC);
             if (null != webUser) {
                 webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);

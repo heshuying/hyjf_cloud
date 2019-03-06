@@ -510,8 +510,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 	@Override
-	public WebViewUserVO getWebViewUserByUserId(Integer userId) {
-		return amUserClient.getWebViewUserByUserId(userId);
+	public WebViewUserVO getWebViewUserByUserId(Integer userId,String channel) {
+		return amUserClient.getWebViewUserByUserId(userId,channel);
 	}
 
 	@Override
