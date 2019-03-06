@@ -18,6 +18,8 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,8 @@ import java.util.List;
  */
 @Service
 public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
+
+	private static final Logger logger = LoggerFactory.getLogger(AdminHjhPlanServiceImpl.class);
 
     @Autowired
     private HjhPlanMapper hjhPlanMapper;
@@ -77,7 +81,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				start = formatter.parse(request.getAddTimeStart()).getTime()/1000;
 				end = formatter.parse(request.getAddTimeEnd()).getTime()/1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			cra.andAddTimeLessThanOrEqualTo((int)end+86399);
 			cra.andAddTimeGreaterThanOrEqualTo((int)start);
@@ -124,7 +128,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				start = formatter.parse(request.getAddTimeStart()).getTime()/1000;
 				end = formatter.parse(request.getAddTimeEnd()).getTime()/1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			cra.andAddTimeLessThanOrEqualTo((int)end+86399);
 			cra.andAddTimeGreaterThanOrEqualTo((int)start);
@@ -179,7 +183,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				start = formatter.parse(request.getAddTimeStart()).getTime()/1000;
 				end = formatter.parse(request.getAddTimeEnd()).getTime()/1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			PlanListCustomizeRequest.setAddTimeStart((int)start);
 			PlanListCustomizeRequest.setAddTimeEnd((int)end+86399);
@@ -540,7 +544,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				start = formatter.parse(request.getAddTimeStart()).getTime()/1000;
 				end = formatter.parse(request.getAddTimeEnd()).getTime()/1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			cra.andAddTimeLessThanOrEqualTo((int)end+86399);
 			cra.andAddTimeGreaterThanOrEqualTo((int)start);

@@ -353,7 +353,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                     // 发送神策数据统计MQ
                     this.sendSensorsDataMQ(sensorsDataBean);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
 
@@ -368,7 +368,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             // add 合规数据上报 埋点 liubin 20181122 end
 
         }catch (Exception e){
-        	e.printStackTrace();
+        	logger.error(e.getMessage());
             result.setStatusInfo(MsgEnum.ERR_SYSTEM_UNUSUAL);
         }
         return result;
@@ -426,7 +426,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         try{
             sendSmsCode.sendSmsCode(validCodeType, mobile,platform,ip);
         }catch (MQException e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -764,7 +764,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                     String recoverDate = GetDate.getDateTimeMyTimeInMillis(borrowRepayPlans.get(0).getRepayTime());
                     lastDays = GetDate.daysBetween(nowDate, recoverDate);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     throw new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
                 }
             }

@@ -224,7 +224,7 @@ public class BifaBorrowStatusServiceImpl extends BaseHgDateReportServiceImpl imp
             bifaBorrowStatusEntity.setCreateTime(currDate);
             bifaBorrowStatusEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;
@@ -294,7 +294,7 @@ public class BifaBorrowStatusServiceImpl extends BaseHgDateReportServiceImpl imp
             bifaHjhPlanInfoEntity.setCreateTime(currDate);
             bifaHjhPlanInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;
@@ -377,7 +377,7 @@ public class BifaBorrowStatusServiceImpl extends BaseHgDateReportServiceImpl imp
             bifaBorrowInfoEntity.setCreateTime(currDate);
             bifaBorrowInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;

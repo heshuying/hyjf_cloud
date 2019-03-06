@@ -125,7 +125,7 @@ public class ChinaPnrSignUtils implements Serializable {
                         try {
                             sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
                         } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            log.error(e.getMessage());
                         }
                     }
 
@@ -181,7 +181,7 @@ public class ChinaPnrSignUtils implements Serializable {
                         try {
                             sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
                         } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                            log.error(e.getMessage());
                         }
                     }
 
@@ -251,7 +251,7 @@ public class ChinaPnrSignUtils implements Serializable {
             bean.setMerPriv(merPriv);
             bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return merPriv;
     }
@@ -274,7 +274,7 @@ public class ChinaPnrSignUtils implements Serializable {
             bean.setMerPriv(merPriv);
             bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return merPriv;
     }

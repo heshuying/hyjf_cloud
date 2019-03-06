@@ -3388,7 +3388,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					continue;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 		map.put("result", null);

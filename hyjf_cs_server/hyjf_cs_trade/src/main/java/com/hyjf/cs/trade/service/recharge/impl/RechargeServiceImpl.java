@@ -221,7 +221,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
 								this.sendSensorsDataMQ(sensorsDataBean);
 							} catch (Exception e) {
-								e.printStackTrace();
+								logger.error(e.getMessage());
 							}
 							// 神策数据统计 add by liuyang 20180725 end
 							return jsonMessage("充值成功!", "0");

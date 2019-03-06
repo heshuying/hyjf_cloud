@@ -51,9 +51,9 @@ public class JPushTEST {
 			SMS sms = SMS.content(alert, 10);
 			result = getClientInstance().sendAndroidMessageWithAlias(title, alert, sms, alias);
 		} catch (APIConnectionException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (APIRequestException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return result;
 	}
@@ -71,9 +71,9 @@ public class JPushTEST {
 		try {
 			result = getClientInstance().sendIosMessageWithAlias(title, alert, alias);
 		} catch (APIConnectionException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (APIRequestException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return result;
 	}
@@ -90,10 +90,10 @@ public class JPushTEST {
 		try {
 			result = getClientInstance().getReportReceiveds(msgId);
 		} catch (APIConnectionException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 
 		} catch (APIRequestException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return result;
 	}

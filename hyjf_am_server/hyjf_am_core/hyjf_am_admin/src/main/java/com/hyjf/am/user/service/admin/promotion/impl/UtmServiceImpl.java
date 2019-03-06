@@ -507,7 +507,7 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return to;

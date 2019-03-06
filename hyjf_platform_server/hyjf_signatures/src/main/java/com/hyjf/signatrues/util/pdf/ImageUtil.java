@@ -168,7 +168,7 @@ public class ImageUtil {
             ImageIO.write(bi, imageType, sf); // 保存图片
             result = "图片完成添加Icon水印";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return result;
     }
@@ -229,7 +229,7 @@ public class ImageUtil {
             ImageIO.write(bi, imageType, sf); // 保存图片
             result = "图片完成添加Word水印";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return result;
     }
@@ -278,7 +278,7 @@ public class ImageUtil {
             ImageIO.write(bi, imageType, sf); // 保存图片
             result = "图片完成添加Word水印";
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return result;
     }
@@ -364,7 +364,7 @@ public class ImageUtil {
             ImageIO.write(bi, imageType, sf); // 保存图片
             result = "打马赛克成功";
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return result;
     }

@@ -239,7 +239,7 @@ public class SmsCodeController extends BaseController {
                             commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                                     smsMessage));
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     }
                 }
@@ -262,7 +262,7 @@ public class SmsCodeController extends BaseController {
                                 smsMessage));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             // 筛选条件

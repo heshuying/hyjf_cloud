@@ -16,7 +16,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class DzqzCallApiBean implements Serializable{
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 参数转换
@@ -134,8 +134,8 @@ public class DzqzCallApiBean implements Serializable{
                 }
             }
         } catch (Exception e) {
-            log.info("-----------调用FDD接口失败-----------------异常信息：");
-            e.printStackTrace();
+            logger.info("-----------调用FDD接口失败-----------------异常信息：");
+            logger.error(e.getMessage());
         }
     }
 }

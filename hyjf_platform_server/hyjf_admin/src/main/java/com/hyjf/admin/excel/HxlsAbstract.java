@@ -8,6 +8,8 @@ import org.apache.poi.hssf.model.HSSFFormulaParser;
 import org.apache.poi.hssf.record.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +22,8 @@ import java.util.Map;
 
 
 public abstract class HxlsAbstract implements HSSFListener {
+
+	private static final Logger logger = LoggerFactory.getLogger(HxlsAbstract.class);
 	private int minColumns;
 	private POIFSFileSystem fs;
 	private PrintStream output;
@@ -220,7 +224,6 @@ public abstract class HxlsAbstract implements HSSFListener {
 
 			thisRow = nrec.getRow();
 			thisColumn = nrec.getColumn();
-			// TODO: Find object to match nrec.getShapeId()
 			thisStr = '"' + "(TODO)" + '"';
 			break;
 		case NumberRecord.sid:
@@ -286,7 +289,7 @@ public abstract class HxlsAbstract implements HSSFListener {
 			try {
 				optRows(sheetIndex,curRow, rowMap);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			rowMap.clear();
 			}

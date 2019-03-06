@@ -169,7 +169,7 @@ public class WeChatRegistController extends BaseUserController {
                 // 发送神策数据统计MQ
                 this.registService.sendSensorsDataMQ(sensorsDataBean);
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         // add by liuyang 神策数据统计追加 20181029 end
@@ -251,7 +251,7 @@ public class WeChatRegistController extends BaseUserController {
         try {
             randomValidateCode.getRandcode(request, response);// 输出图片方法
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("错误信息:[{}]",e.getMessage());
         }
     }
@@ -400,7 +400,7 @@ public class WeChatRegistController extends BaseUserController {
                         this.registService.sendSensorsDataMQ(sensorsDataBean);
                         // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 end
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 String statusDesc = "注册成功";
@@ -443,7 +443,7 @@ public class WeChatRegistController extends BaseUserController {
                 return ret;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             ret.put("status", "99");
             ret.put("statusDesc", "注册发生错误,参数异常");
             ret.put("successUrl", "");
@@ -567,7 +567,7 @@ public class WeChatRegistController extends BaseUserController {
             String str = new String(bytes, 0, nTotalRead, "utf-8");
             return str;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         }
     }

@@ -114,7 +114,7 @@ public class DayMarkLineTotalController extends BaseController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("------【日、月累计额度定时任务】处理异常终止------");
             return false;
         }

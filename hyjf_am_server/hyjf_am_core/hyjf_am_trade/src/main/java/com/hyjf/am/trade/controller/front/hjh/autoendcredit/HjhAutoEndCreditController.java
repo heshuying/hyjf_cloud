@@ -78,7 +78,7 @@ public class HjhAutoEndCreditController extends BaseController {
             }
             logger.info("------汇计划自动结束转让定时任务结束------");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

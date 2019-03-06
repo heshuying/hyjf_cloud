@@ -179,7 +179,7 @@ public class RepayAuthController extends BaseController {
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("调用银行接口失败！" + e.getMessage());
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999, "系统异常！");
             payRequestBean.doNotify(params);
@@ -293,7 +293,7 @@ public class RepayAuthController extends BaseController {
                 message = "还款授权成功";
                 status = ErrorCodeConstant.SUCCESS;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.info("还款授权出错,userId:【" + userId + "】错误原因：" + e.getMessage());
                 message = "还款授权失败";
                 status = ErrorCodeConstant.STATUS_CE999999;

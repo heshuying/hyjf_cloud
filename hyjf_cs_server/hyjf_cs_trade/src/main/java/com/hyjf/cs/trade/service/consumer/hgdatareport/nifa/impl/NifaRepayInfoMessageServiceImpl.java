@@ -76,7 +76,7 @@ public class NifaRepayInfoMessageServiceImpl extends BaseTradeServiceImpl implem
         try {
             nifaRepayInfoEntity.setRecoverTime(GetDate.timestamptoStrYYYYMMDD(borrow.getRecoverLastTime()).replaceAll("-", ""));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error(logHeader + "最终放款日格式化失败！！borrowNid:{}", borrow.getBorrowNid());
             return false;
         }
@@ -99,7 +99,7 @@ public class NifaRepayInfoMessageServiceImpl extends BaseTradeServiceImpl implem
         try {
             nifaRepayInfoEntity.setBorrowEndTime(GetDate.timestamptoStrYYYYMMDD(borrowEndTime).replaceAll("-", ""));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error(logHeader + "最终放款日格式化失败！！borrowNid:{}", borrow.getBorrowNid());
             return false;
         }
@@ -275,7 +275,7 @@ public class NifaRepayInfoMessageServiceImpl extends BaseTradeServiceImpl implem
         try {
             nifaRepayInfoEntity.setBorrowDays("" + GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(borrow.getRecoverLastTime()), GetDate.timestamptoStrYYYYMMDD(lasterRepayTime)));
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error(logHeader + "借款期限计算失败！！borrowNid:{}", borrow.getBorrowNid());
             return false;
         }

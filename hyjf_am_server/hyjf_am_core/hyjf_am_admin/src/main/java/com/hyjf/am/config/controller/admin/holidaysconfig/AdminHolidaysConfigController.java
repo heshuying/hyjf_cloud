@@ -67,7 +67,7 @@ public class AdminHolidaysConfigController {
             }
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置数据原子层查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setRtn(Response.FAIL);
             response.setMessage("Admin配置中心-节假日配置数据原子层查询异常！");
             return response;
@@ -107,7 +107,7 @@ public class AdminHolidaysConfigController {
             }
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置画面迁移(含有id更新，不含有id添加)数据原子层查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setRtn(Response.FAIL);
             response.setMessage("Admin配置中心-节假日配置画面迁移(含有id更新，不含有id添加)数据原子层查询异常！");
             return response;
@@ -134,7 +134,7 @@ public class AdminHolidaysConfigController {
             result = adminHolidaysConfig.insertHolidays(request);
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置-添加活动信息-数据原子层查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setRtn(Response.FAIL);
             response.setMessage("Admin配置中心-节假日配置-添加活动信息-数据原子层查询异常！");
             return response;
@@ -165,7 +165,7 @@ public class AdminHolidaysConfigController {
             result = adminHolidaysConfig.updateHolidays(request);
         } catch (Exception e) {
             logger.info("Admin配置中心-节假日配置-修改活动维护信息-数据原子层查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setRtn(Response.FAIL);
             response.setMessage("Admin配置中心-节假日配置-修改活动维护信息-数据原子层查询异常！");
             return response;

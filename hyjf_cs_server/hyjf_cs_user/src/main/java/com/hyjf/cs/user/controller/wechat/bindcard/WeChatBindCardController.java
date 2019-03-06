@@ -144,7 +144,7 @@ public class WeChatBindCardController extends BaseUserController {
                 Thread.sleep(3000);
             }*/
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
             // 成功
@@ -187,7 +187,7 @@ public class WeChatBindCardController extends BaseUserController {
             }
         } catch (Exception e) {
             logger.error("页面绑卡异步回调更新异常", e);
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("页面绑卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
         result.setStatus(true);

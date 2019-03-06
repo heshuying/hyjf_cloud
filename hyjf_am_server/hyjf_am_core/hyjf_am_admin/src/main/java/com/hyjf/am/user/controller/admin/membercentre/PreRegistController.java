@@ -131,7 +131,7 @@ public class PreRegistController extends BaseController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		apr.setMessage("校验失败");
 		return apr;

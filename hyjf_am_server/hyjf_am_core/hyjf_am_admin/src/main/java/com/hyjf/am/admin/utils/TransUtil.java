@@ -177,7 +177,7 @@ public class TransUtil {
                 eveLogs.add(eve);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (fis != null) {
                 fis.close();
@@ -225,7 +225,7 @@ public class TransUtil {
         try {
             byteLen = message.getBytes("GBK").length;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         StringBuffer sb = new StringBuffer();
         sb.append(message);
@@ -279,7 +279,7 @@ public class TransUtil {
                 }
                 return new String(newBytes, "GBK");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return orignal;
@@ -308,7 +308,7 @@ public class TransUtil {
                 }
                 return new String(newBytes, "GBK");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return "";
@@ -378,7 +378,7 @@ public class TransUtil {
         try {
             date = sdf.parse(dateStr);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return sdf1.format(date);
     }
@@ -390,7 +390,7 @@ public class TransUtil {
         try {
             date = sdf.parse(dateStr);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return sdf2.format(date);
 

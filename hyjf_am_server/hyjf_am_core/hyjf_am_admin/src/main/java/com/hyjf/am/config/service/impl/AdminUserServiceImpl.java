@@ -20,6 +20,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,8 @@ import java.util.*;
 
 @Service
 public class AdminUserServiceImpl implements AdminUserService {
+
+	private static final Logger logger = LoggerFactory.getLogger(AdminUserServiceImpl.class);
 
     @Autowired
     AdminCustomizeMapper adminCustomizeMapper;
@@ -132,7 +136,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                     smsMessage));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 	}
 
@@ -281,7 +285,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 					commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
 		                    smsMessage));
 		        } catch (MQException e) {
-		            e.printStackTrace();
+		            logger.error(e.getMessage());
 		        }
 			}
 		}

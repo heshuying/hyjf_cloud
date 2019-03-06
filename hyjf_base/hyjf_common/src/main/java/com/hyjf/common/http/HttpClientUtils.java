@@ -83,20 +83,20 @@ public class HttpClientUtils {
                 content = EntityUtils.toString(response.getEntity());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (response != null) {
                 try {
                     response.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if (httpclient != null) {
                 try {
                     httpclient.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -117,15 +117,15 @@ public class HttpClientUtils {
         try {  
             body = EntityUtils.toString(entity);  
         } catch (ParseException e) {
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         } catch (IOException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }finally {
             try {
             	//关闭连接
 				response.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
           
@@ -139,9 +139,9 @@ public class HttpClientUtils {
         try {  
             response = (CloseableHttpResponse) httpclient.execute(httpost);  
         } catch (ClientProtocolException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         } catch (IOException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }
         return response;  
     }  
@@ -166,7 +166,7 @@ public class HttpClientUtils {
             logger.info("set utf-8 form entity to httppost");
             httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
         } catch (UnsupportedEncodingException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }  
         return httpost;  
     }  

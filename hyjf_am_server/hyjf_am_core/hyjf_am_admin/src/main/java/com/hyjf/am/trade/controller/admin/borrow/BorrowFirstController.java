@@ -90,7 +90,7 @@ public class BorrowFirstController extends BaseController {
                 borrowFirstService.sendToMQAutoPreAudit(borrowNid);
             } catch (Exception e) {
                 logger.error("发送MQ到自动初审失败、项目编号:" + borrowNid);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         response.setFlag(flag);

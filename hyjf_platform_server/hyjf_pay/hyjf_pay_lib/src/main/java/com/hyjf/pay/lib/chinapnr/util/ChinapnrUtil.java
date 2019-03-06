@@ -225,7 +225,7 @@ public class ChinapnrUtil {
             System.out.println(b.getRespCode());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 

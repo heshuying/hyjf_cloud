@@ -252,7 +252,7 @@ public class WebChinapnrWithdrawController extends BaseTradeController {
             try {
                 info = URLEncoder.encode(info, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             logger.debug("失败");
             return new ModelAndView("redirect:" + callback + "backinfo/" + info);

@@ -109,7 +109,7 @@ public class WebBankWithdrawController extends BaseTradeController {
             result.setData(data);
         } catch (Exception e) {
             logger.info("web端提现失败");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }
         return result;

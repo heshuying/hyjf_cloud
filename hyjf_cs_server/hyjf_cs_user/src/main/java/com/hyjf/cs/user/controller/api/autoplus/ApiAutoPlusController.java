@@ -89,7 +89,7 @@ public class ApiAutoPlusController extends BaseUserController {
             try {
                 modelAndView = BankCallUtils.callApi(bean);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.info("调用银行接口失败:"+e.getMessage());
                 map.put("status", ErrorCodeConstant.STATUS_CE999999);
                 map.put("acqRes", payRequestBean.getAcqRes());
@@ -126,7 +126,7 @@ public class ApiAutoPlusController extends BaseUserController {
             try {
                 modelAndView = BankCallUtils.callApi(bean);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.info("调用银行接口失败:"+e.getMessage());
 
                 map.put("status", ErrorCodeConstant.STATUS_CE999999);

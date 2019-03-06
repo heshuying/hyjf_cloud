@@ -135,7 +135,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
             try {
                 idNo = IdCard15To18.getEighteenIDCard(idNo);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if (null !=idNo){

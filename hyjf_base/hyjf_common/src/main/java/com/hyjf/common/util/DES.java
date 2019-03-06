@@ -1,5 +1,8 @@
 package com.hyjf.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -13,6 +16,8 @@ import java.security.spec.AlgorithmParameterSpec;
  * DES加密
  */
 public class DES {
+
+    private static final Logger logger = LoggerFactory.getLogger(DES.class);
     private static byte[] iv = { 1, 2, 3, 4, 5, 6, 7, 8 };
 
     // 加密模式
@@ -46,7 +51,7 @@ public class DES {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
             return BASE64.encode(cipher.doFinal(message.getBytes(ENCODING)));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }
@@ -68,7 +73,7 @@ public class DES {
             byte[] encryptedData = cipher.doFinal(encryptString.getBytes());
             return BASE64.encode(encryptedData);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }
@@ -90,7 +95,7 @@ public class DES {
             byte[] encryptedData = cipher.doFinal(encryptString.getBytes(ENCODING));
             return BASE64.encode(encryptedData);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }
@@ -132,7 +137,7 @@ public class DES {
             byte[] bytes = cipher.doFinal(data);
             return BASE64.encode(bytes);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }
@@ -155,7 +160,7 @@ public class DES {
             cipher.init(Cipher.DECRYPT_MODE, keyFactory);
             return cipher.doFinal(data);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return null;
         }
     }

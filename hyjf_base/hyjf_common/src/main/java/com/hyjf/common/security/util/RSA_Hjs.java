@@ -380,7 +380,7 @@ public class RSA_Hjs {
 //           //System.out.println(RSA_Hjs.decrypt("ScSqXSIUt3ydYvtKTJ2wZPHrjAydPUpae1rKjC2w84junOFb7hf1bRQScBGiuBSF2nUeunmVuMcIrhWlu8paRlDItVzmlKhi6RJfJ9j8tx8/w/PGi1YQb2B+1o1BTo9uWNKI2guC40/L5/NGTmu9+Ze+UnXjFHxao8m1AZRBY9o=", "utf-8"));
 //            System.out.println(RSA_Hjs.encode("123004"));
 //        } catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage());
 //        }
 //    }
 }

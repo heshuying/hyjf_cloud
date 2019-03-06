@@ -47,7 +47,7 @@ public class BaseController {
         try {
             str = URLEncoder.encode(str, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return str;
     }

@@ -144,7 +144,7 @@ public class PreRegistServiceImpl extends BaseServiceImpl implements PreRegistSe
                 resultMap.put("msg", "无需要编辑的信息");
             }
         }catch(Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return resultMap;

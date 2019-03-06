@@ -75,7 +75,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 					list.add(param);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}else{
 			String borrowNid=(String) map.get("borrowNid");
@@ -134,7 +134,7 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			
 		}

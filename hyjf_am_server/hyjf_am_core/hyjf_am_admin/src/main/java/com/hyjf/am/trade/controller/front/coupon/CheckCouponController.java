@@ -64,7 +64,7 @@ public class CheckCouponController extends BaseController {
         try {
             result = checkCouponService.batchInsertUserCoupon(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 //            }else{
 //                logger.info("用户："+ userId +",验签失败！");

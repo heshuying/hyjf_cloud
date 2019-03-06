@@ -254,7 +254,7 @@ public class AccountController extends BaseController {
         try {
             ret = accountService.updateAccountAfterWithdrawFail(userId,nid);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return ret;
     }

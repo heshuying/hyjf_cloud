@@ -55,7 +55,7 @@ public class ApiSignUtil {
 			signer = new RSAHelper(rsaKey.getPrivateKey());
 			sign = signer.sign(signStr);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return sign;
@@ -108,7 +108,7 @@ public class ApiSignUtil {
 			signer = new RSAHelper(rsaKey.getPrivateKey());
 			sign = signer.sign(signStr);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return sign;
@@ -129,7 +129,7 @@ public class ApiSignUtil {
 			RSAHelper signHelper = new RSAHelper(ru.getPublicKey());
 			b = signHelper.verify(dataText, signText);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return b;
 	}

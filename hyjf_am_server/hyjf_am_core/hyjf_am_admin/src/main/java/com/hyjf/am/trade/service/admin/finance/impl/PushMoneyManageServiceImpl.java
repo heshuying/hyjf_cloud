@@ -347,7 +347,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
                         smsMessage));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             //
             UserInfoCustomizeVO userInfo = pushMoneyCustomizeMapper.queryUserInfoByUserId(userId);

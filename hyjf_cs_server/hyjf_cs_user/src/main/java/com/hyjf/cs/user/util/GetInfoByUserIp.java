@@ -104,19 +104,19 @@ public class GetInfoByUserIp {
                 searcher.close();	
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         } catch (DbMakerConfigException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         } catch (SecurityException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         }
 		return info;
 	}

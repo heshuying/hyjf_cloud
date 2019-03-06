@@ -162,7 +162,7 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 			httpUrl = httpPath + "/" + fileName;
 
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			logger.info(e.getMessage());
 			return null;
 		}
