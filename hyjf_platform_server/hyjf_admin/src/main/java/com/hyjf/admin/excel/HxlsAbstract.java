@@ -220,7 +220,6 @@ public abstract class HxlsAbstract implements HSSFListener {
 
 			thisRow = nrec.getRow();
 			thisColumn = nrec.getColumn();
-			// TODO: Find object to match nrec.getShapeId()
 			thisStr = '"' + "(TODO)" + '"';
 			break;
 		case NumberRecord.sid:
