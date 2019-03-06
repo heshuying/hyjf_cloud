@@ -66,8 +66,8 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
-        /*// 初始化原子层请求实体
+    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
+        // 初始化原子层请求实体
         // 初始化返回LIST
         List<PushMoneyVO> pushMoneyList = null;
         // 将画面请求request赋值给原子层 request
@@ -86,18 +86,7 @@ public class PushMoneyManageController extends BaseController {
             return new AdminResult<ListResult<PushMoneyVO>>(ListResult.build(pushMoneyList, response.getCount()));
         } else {
             return new AdminResult<ListResult<PushMoneyVO>>(ListResult.build(pushMoneyList, 0));
-        }*/
-
-        Map<String,Object> result = new HashMap<>();
-        PushMoneyResponse response = pushMoneyManageService.findPushMoneyList(request);
-        Integer count = response.getCount();
-        count = (count == null)?0:count;
-        result.put("count",count);
-        List<PushMoneyVO> pushMoneyVOList = response.getResultList();
-        result.put("list",pushMoneyVOList);
-        Map<String,Object> totle = pushMoneyManageService.queryPushMoneyTotle(request);
-        result.put("pushMoneyTotle",totle);
-        return new AdminResult<>(result);
+        }
     }
     //计算提成
     @ApiOperation(value = "计算提成", notes = "计算提成")
