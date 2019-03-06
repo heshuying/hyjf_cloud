@@ -68,11 +68,10 @@ public class PushMoneyManageController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
         Map<String,Object> result = new HashMap<>();
-        PushMoneyResponse response = pushMoneyManageService.findPushMoneyList(request);
-        Integer count = response.getCount();
+        Integer count = pushMoneyManageService.getPushMoneyListCount(request);
         count = (count == null)?0:count;
         result.put("count",count);
-        List<PushMoneyVO> pushMoneyVOList = response.getResultList();
+        List<PushMoneyVO> pushMoneyVOList = pushMoneyManageService.searchPushMoneyList(request);
         result.put("list",pushMoneyVOList);
         return new AdminResult<>(result);
     }
