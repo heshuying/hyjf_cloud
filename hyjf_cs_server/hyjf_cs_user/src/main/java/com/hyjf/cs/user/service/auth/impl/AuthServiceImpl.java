@@ -1060,8 +1060,8 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		HjhUserAuthLogVO hjhUserAuthLogVO = amUserClient.selectByExample(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
 		Map<String,String> map = new HashedMap();
-		String remark = hjhUserAuthLogVO.getRemark();
-		if(hjhUserAuthLogVO != null || StringUtils.isNotBlank(remark)){
+		if(hjhUserAuthLogVO != null || StringUtils.isNotBlank(hjhUserAuthLogVO.getRemark())){
+			String remark = hjhUserAuthLogVO.getRemark();
 			map.put("error", remark);
 			logger.info("用户授权失败原因:[" + remark + "].");
 		}else{
