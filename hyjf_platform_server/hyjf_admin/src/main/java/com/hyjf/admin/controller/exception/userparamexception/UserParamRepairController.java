@@ -40,9 +40,9 @@ import java.util.Map;
  * 后台管理系统，异常中心->会员属性异常
  */
 @RestController
-@RequestMapping("/hyjf-admin/exception/userparamexception")
+@RequestMapping("/hyjf-admin/exception/userparamrepair")
 @Api(value = "异常中心-用户属性异常", tags = "异常中心-用户属性异常")
-public class UserParamExceptionController extends BaseController {
+public class UserParamRepairController extends BaseController {
 
     @Autowired
     private UserCenterService userCenterService;
@@ -53,7 +53,7 @@ public class UserParamExceptionController extends BaseController {
 
     //userParamExceptionInit
     @ApiOperation(value = "用户属性异常页面初始化(下拉列表)", notes = "用户属性异常初始化")
-    @PostMapping(value = "/userParamExceptionInit")
+    @PostMapping(value = "/userParamInit")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<UserParamExceptInitResponseBean> userParamExceptionInit() {
@@ -79,7 +79,7 @@ public class UserParamExceptionController extends BaseController {
 
     //会员管理列表查询
     @ApiOperation(value = "用户属性异常列表查询", notes = "用户属性异常列表查询")
-    @PostMapping(value = "/userparamexceptionlist")
+    @PostMapping(value = "/userparamlist")
     @ResponseBody
     public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean) {
         UserManagerRequest managerRequest = new UserManagerRequest();

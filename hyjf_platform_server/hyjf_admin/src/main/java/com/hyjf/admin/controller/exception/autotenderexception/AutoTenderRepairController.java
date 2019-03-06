@@ -58,8 +58,8 @@ import java.util.Map;
  */
 @Api(value = "异常中心-汇计划出借异常",tags = "异常中心-汇计划出借异常")
 @RestController
-@RequestMapping("/hyjf-admin/autotenderexception")
-public class AutoTenderExceptionController extends BaseController {
+@RequestMapping("/hyjf-admin/autotenderrepair")
+public class AutoTenderRepairController extends BaseController {
 
     @Autowired
     private AutoTenderExceptionService autoTenderExceptionService;
@@ -117,9 +117,9 @@ public class AutoTenderExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "异常处理", notes = "异常处理")
-    @PostMapping(value = "/tenderExceptionAction")
+    @PostMapping(value = "/tenderRepairAction")
     @ResponseBody
-    public AdminResult tenderExceptionAction(@RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
+    public AdminResult tenderRepairAction(@RequestBody TenderExceptionSolveRequestBean tenderExceptionSolveRequestBean){
         String returnMsg = autoTenderExceptionService.tenderExceptionAction(tenderExceptionSolveRequestBean);
         if(StringUtils.isNotBlank(returnMsg)){
             AdminResult adminResult = new AdminResult<>(FAIL, returnMsg);
