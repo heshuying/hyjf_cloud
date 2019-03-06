@@ -93,7 +93,7 @@ public class HjhAutoCreditContoller extends BaseController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

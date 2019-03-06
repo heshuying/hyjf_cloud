@@ -3,6 +3,8 @@ package com.hyjf.admin.utils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,6 +24,7 @@ import java.util.List;
  * @Date: 2018/8/9  15:49
  */
 public class PdfToHtml extends PDFToImage {
+	private static final Logger logger = LoggerFactory.getLogger(PdfToHtml.class);
 
     /**
      * 将pdf转换为图片 ，返回图片名字
@@ -55,13 +58,13 @@ public class PdfToHtml extends PDFToImage {
 	                listImg.add(String.valueOf(i));
 	            }
 	        } catch (Exception e) {
-	            e.printStackTrace();
+	            logger.error(e.getMessage());
 	        }finally{
 	            if(pdDocument != null){
 	                try {
 	                    pdDocument.close();
 	                } catch (IOException e) {
-	                    e.printStackTrace();
+	                    logger.error(e.getMessage());
 	                }
 	            }
 	        }

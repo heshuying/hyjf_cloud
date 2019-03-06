@@ -127,7 +127,7 @@ public class VersionConfigController extends BaseConfigController{
             this.versionConfigService.deleteVersionConfig(id);
             resp.setRtn(Response.SUCCESS);
         }catch (Exception e){
-           e.printStackTrace();
+           logger.error(e.getMessage());
         }
         return  resp;
     }

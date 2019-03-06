@@ -43,7 +43,7 @@ public class ChinaPnrPropUtils   {
 //        try {
 //            return getProperties(SYSTEM_RESOURCES_PROPERTIES_FILE_NAME);
 //        } catch (IOException ioe) {
-//            ioe.printStackTrace();
+//            iologger.error(e.getMessage());
 //        }
 //        return null;
 //    }

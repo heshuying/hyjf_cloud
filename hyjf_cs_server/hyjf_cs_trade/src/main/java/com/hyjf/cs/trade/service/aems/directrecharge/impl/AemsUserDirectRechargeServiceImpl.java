@@ -231,13 +231,13 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
                 modelAndView = BankCallUtils.callApi(bean);
             } catch (Exception e) {
                 logger.error("报错了 ",e);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
             map.put("modelAndView",modelAndView);
             return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("充值发生异常,错误信息:[" + e.getMessage() + "]");
             // 充值失败
             map.put("status", BaseResultBean.STATUS_FAIL);

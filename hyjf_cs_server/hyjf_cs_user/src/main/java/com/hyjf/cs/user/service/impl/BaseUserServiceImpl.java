@@ -560,7 +560,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		try {
 			str = URLEncoder.encode(str, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return str;
 	}

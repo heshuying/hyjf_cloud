@@ -131,7 +131,7 @@ public class AppBankOpenController extends BaseUserController {
         try {
             PropertyUtils.copyProperties(openBean, bankOpenVO);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         openBean.setChannel(BankCallConstant.CHANNEL_APP);
         openBean.setUserId(user.getUserId());

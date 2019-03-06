@@ -14,6 +14,8 @@ package com.hyjf.admin.common.util;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +43,7 @@ import java.util.regex.Pattern;
 //@Deprecated
 public class ExportExcel<T> implements Serializable {
 
+    private static final Logger logger = LoggerFactory.getLogger(ExportExcel.class);
 	/**
 	 * serialVersionUID:序列化id
 	 */
@@ -229,15 +232,15 @@ public class ExportExcel<T> implements Serializable {
 						}
 					}
 				} catch (SecurityException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} catch (NoSuchMethodException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} catch (IllegalArgumentException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				} finally {
 					// 清理资源
 				}
@@ -252,14 +255,14 @@ public class ExportExcel<T> implements Serializable {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (out != null) {
 				try {
 					out.flush();
 					out.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -308,14 +311,14 @@ public class ExportExcel<T> implements Serializable {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (out != null) {
 				try {
 					out.flush();
 					out.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -352,14 +355,14 @@ public class ExportExcel<T> implements Serializable {
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (out != null) {
 				try {
 					out.flush();
 					out.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

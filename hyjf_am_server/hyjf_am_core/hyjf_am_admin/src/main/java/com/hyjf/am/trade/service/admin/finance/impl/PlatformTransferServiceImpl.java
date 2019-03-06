@@ -340,7 +340,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
                 ret++;
             }
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new RuntimeException("平台转账 发生异常，用户userId" + platformTransferRequest.getUserId() + ",accountId：" + accountId);
         }
 

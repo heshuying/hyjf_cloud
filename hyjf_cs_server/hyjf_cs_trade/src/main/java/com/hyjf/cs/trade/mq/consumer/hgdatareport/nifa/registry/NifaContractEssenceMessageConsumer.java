@@ -73,7 +73,7 @@ public class NifaContractEssenceMessageConsumer implements RocketMQListener<Mess
         try {
             json = JSONObject.parseObject(msgBody);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error(thisMessName + "解析消息体失败...");
             return;
         }
@@ -282,7 +282,7 @@ public class NifaContractEssenceMessageConsumer implements RocketMQListener<Mess
                                 map.put("date", GetDate.timestamptoStrYYYYMMDD(lasterDay));
                             } catch (Exception e) {
                                 logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " 还款日期：" + borrowRecoverPlan.getRecoverTime());
-                                e.printStackTrace();
+                                logger.error(e.getMessage());
                                 continue;
                             }
                             map.put("principal", borrowRecoverPlan.getRecoverCapital().toString());
@@ -306,7 +306,7 @@ public class NifaContractEssenceMessageConsumer implements RocketMQListener<Mess
                             map.put("date", GetDate.timestamptoStrYYYYMMDD(lasterDay));
                         } catch (Exception e) {
                             logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " 还款日期：" + borrowRecover.getRecoverTime());
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                             continue;
                         }
                         map.put("principal", borrowRecover.getRecoverCapital().toString());
@@ -323,7 +323,7 @@ public class NifaContractEssenceMessageConsumer implements RocketMQListener<Mess
                         nifaContractEssence.setExpiryDate(GetDate.timestamptoStrYYYYMMDD(lasterDay));
                     } catch (Exception e) {
                         logger.error(thisMessName + "最后一期还款日格式化失败，borrowNid:" + borrowNid);
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                         continue;
                     }
                     // 还款方式含义及计算公式

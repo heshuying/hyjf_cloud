@@ -101,7 +101,7 @@ public class CertBorrowStatusServiceImpl extends BaseHgCertReportServiceImpl imp
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }

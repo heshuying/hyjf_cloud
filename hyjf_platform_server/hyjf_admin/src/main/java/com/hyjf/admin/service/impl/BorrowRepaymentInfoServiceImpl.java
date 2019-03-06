@@ -8,6 +8,8 @@ import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ import java.util.List;
 @Service
 public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BorrowRepaymentInfoServiceImpl.class);
     @Autowired
     private AmTradeClient amTradeClient;
     /**
@@ -61,7 +64,7 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
 
                 request.setYesTimeStartSrch(String.valueOf(date.getTime()/1000));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
         }
@@ -75,7 +78,7 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
 
                 request.setYesTimeEndSrch(String.valueOf(cal.getTime().getTime()/1000));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
         }

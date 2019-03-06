@@ -59,7 +59,7 @@ public class TestProducerController {
 		try {
 			return commonProducer.messageSend(messageContent);
 		} catch (MQException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return messageContent;
 		

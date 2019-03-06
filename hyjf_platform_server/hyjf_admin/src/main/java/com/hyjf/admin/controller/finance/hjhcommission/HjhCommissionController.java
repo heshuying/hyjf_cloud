@@ -760,7 +760,7 @@ public class HjhCommissionController extends BaseController{
 				try {
 					resultBean = BankCallUtils.callApiBg(bean);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 					ret.put("status", FAIL);
 					ret.put("result", "请求红包接口失败");
 					return ret;

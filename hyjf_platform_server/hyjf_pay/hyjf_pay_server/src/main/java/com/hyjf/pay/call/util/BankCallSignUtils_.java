@@ -91,7 +91,7 @@ public class BankCallSignUtils_ {
             sign = signer.sign(signStr);
         } catch (Exception e) {
             logger.error("获取签名异常", e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.debug((new StringBuilder()).append("签名：sign=").append(sign)
                 .toString());

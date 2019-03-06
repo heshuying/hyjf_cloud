@@ -327,7 +327,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
             commonProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,
                     MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean),2);
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("法大大发送消息失败...", e);
         }
     }

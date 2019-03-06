@@ -6,6 +6,8 @@ package com.hyjf.am.user.service.impl;
 import com.hyjf.am.user.dao.customize.CustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.BaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.text.DateFormat;
@@ -19,6 +21,8 @@ import java.util.List;
  * @version BaseServiceImpl, v0.1 2018/6/27 9:46
  */
 public class BaseServiceImpl extends CustomizeMapper implements BaseService {
+
+    protected static final Logger logger = LoggerFactory.getLogger(BaseServiceImpl.class);
 
     /**
      * 根据用户ID获取用户信息

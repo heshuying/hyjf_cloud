@@ -85,7 +85,7 @@ public class MobileSynchronizeServiceImpl extends BaseAdminServiceImpl implement
                 return ret;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }

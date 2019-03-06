@@ -630,7 +630,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	            
 	            } catch (MQException e) {
 	                logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,bean.getLogOrderId(),couponGrantId,borrowNid);
-	                e.printStackTrace();
+	                logger.error(e.getMessage());
 	            }
 	        }*/
 		}
@@ -865,7 +865,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                 commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
                 // 满标发短信在原子层
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }  
         }
         return msg;
@@ -909,7 +909,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                     commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                             MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     logger.error("渠道统计用户累计出借推送消息队列失败！！！");
                 }
             } else {
@@ -956,7 +956,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 					commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
 				}
 			} catch (MQException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				logger.error("更新huiyingdai_utm_reg的首投信息失败");
 			}
 		}

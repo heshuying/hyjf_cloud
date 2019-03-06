@@ -271,7 +271,7 @@ public class BankRepayFreezeOrgController extends BaseController {
                 return result;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("【代偿冻结异常处理】担保机构:" + userId + "更新异常,标的号:" + borrowNid + ",订单号:" + orderId);
             result.setStatusInfo(AdminResult.FAIL, "更新异常");
             return result;

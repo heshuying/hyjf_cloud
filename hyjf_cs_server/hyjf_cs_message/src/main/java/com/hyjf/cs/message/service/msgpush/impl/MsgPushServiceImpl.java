@@ -83,7 +83,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 				logger.info("无待推送消息....");
 			}
 		} catch (MQException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

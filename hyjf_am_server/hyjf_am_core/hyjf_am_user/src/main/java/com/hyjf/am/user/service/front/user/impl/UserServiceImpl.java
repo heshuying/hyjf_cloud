@@ -1297,7 +1297,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             Integer evaluationExpiredDay = Integer.parseInt(evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, evaluationExpiredDay);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("redis测评有效日格式化失败！key：" + RedisConstants.REVALUATION_EXPIRED_DAY + "========value:" + evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, 180);
         }

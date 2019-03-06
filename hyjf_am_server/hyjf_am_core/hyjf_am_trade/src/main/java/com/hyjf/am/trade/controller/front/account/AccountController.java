@@ -282,7 +282,7 @@ public class AccountController extends BaseController {
         try {
             ret = accountService.updateAccountAfterWithdrawFail(userId,nid);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return ret;
     }
@@ -299,7 +299,7 @@ public class AccountController extends BaseController {
         try {
             response.setResultInt(accountService.updateAccountNumberByUserId(userId,accountId));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }

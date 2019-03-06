@@ -12,6 +12,8 @@ import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -33,6 +35,7 @@ import java.util.Map;
 @Service
 public class PcChannelStatisticsJobServiceImpl extends BaseServiceImpl implements PcChannelStatisticsJobService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PcChannelStatisticsJobServiceImpl.class);
     @Override
     public List<UtmVO> getByPageList(Map<String, Object> map) {
         List<UtmVO> list = pcChannelStatisticsJobCustomizeMapper.getByPageList(map);
@@ -292,7 +295,7 @@ public class PcChannelStatisticsJobServiceImpl extends BaseServiceImpl implement
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return to;

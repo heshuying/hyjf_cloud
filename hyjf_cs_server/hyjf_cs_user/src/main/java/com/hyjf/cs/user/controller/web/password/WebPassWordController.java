@@ -145,7 +145,7 @@ public class WebPassWordController extends BaseUserController{
                     passWordService.setToken(webUser);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         result.setStatus("0");

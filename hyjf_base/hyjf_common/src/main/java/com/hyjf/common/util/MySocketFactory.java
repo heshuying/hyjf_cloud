@@ -4,6 +4,8 @@
 package com.hyjf.common.util;
 
 import org.apache.axis.components.net.JSSESocketFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -17,6 +19,8 @@ import java.util.Hashtable;
  * @version MySocketFactory
  */
 public class MySocketFactory extends JSSESocketFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(MySocketFactory.class);
     /**
      * Constructor JSSESocketFactory
      *
@@ -49,7 +53,7 @@ public class MySocketFactory extends JSSESocketFactory {
         try {
             sc = SSLContext.getInstance("SSL");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // Create empty HostnameVerifier
         HostnameVerifier hv = new HostnameVerifier() {
@@ -61,7 +65,7 @@ public class MySocketFactory extends JSSESocketFactory {
         try {
             sc.init(null, trustAllCerts, new java.security.SecureRandom());
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         sslFactory = sc.getSocketFactory();
     }

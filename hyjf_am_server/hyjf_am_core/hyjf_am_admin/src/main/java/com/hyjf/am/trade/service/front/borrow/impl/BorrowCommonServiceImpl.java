@@ -207,7 +207,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 							}
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					} finally {
 						jedis.close();
 					}
@@ -1454,7 +1454,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					}
 				} catch (Exception e) {
 					_log.info(borrow.getBorrowNid() + " 三方资产标的标签更新失败");
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

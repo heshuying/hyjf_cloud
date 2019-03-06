@@ -159,7 +159,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return json;
     }
@@ -222,7 +222,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return json;
     }

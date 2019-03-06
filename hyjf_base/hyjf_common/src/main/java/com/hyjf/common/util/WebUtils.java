@@ -249,7 +249,7 @@ public class WebUtils {
             }
             response.addCookie(cookie);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
@@ -331,7 +331,7 @@ public class WebUtils {
                     }
                 }
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return null;
@@ -359,7 +359,7 @@ public class WebUtils {
                     }
                 }
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return null;
@@ -396,7 +396,7 @@ public class WebUtils {
             }
             response.addCookie(cookie);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

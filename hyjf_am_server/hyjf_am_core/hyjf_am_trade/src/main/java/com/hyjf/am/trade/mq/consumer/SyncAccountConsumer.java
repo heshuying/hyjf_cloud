@@ -215,20 +215,20 @@ public class SyncAccountConsumer implements RocketMQListener<MessageExt>, Rocket
                 logger.info("=====" + CONSUMER_NAME + " 投递结果httpStatus异常=====");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (response != null) {
                 try {
                     response.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if (httpclient != null) {
                 try {
                     httpclient.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

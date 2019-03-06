@@ -102,7 +102,7 @@ public class TransferExceptionLogController extends BaseController {
         try {
             ret = transferExceptionLogService.transferAfter(jsonObject);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return ret;
     }

@@ -1,5 +1,8 @@
 package com.hyjf.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -11,6 +14,8 @@ import java.util.Map;
  * @Description: 参数转换工具类
  */
 public  class ConvertUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConvertUtils.class);
 
     /**
      * 将MAP参数转换成实体类
@@ -31,7 +36,7 @@ public  class ConvertUtils {
                 method.invoke(obj,mapParam.get(f.getName()));
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return obj;
     }
@@ -52,7 +57,7 @@ public  class ConvertUtils {
                 mapParam.put(f.getName(),f.get(bean)==null?"":f.get(bean));
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return mapParam;
     }
@@ -91,7 +96,7 @@ public  class ConvertUtils {
 
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return obj;
     }

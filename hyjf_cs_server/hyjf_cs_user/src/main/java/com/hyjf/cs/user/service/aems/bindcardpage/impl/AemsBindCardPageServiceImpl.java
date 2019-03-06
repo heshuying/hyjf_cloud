@@ -204,7 +204,7 @@ public class AemsBindCardPageServiceImpl extends BaseUserServiceImpl implements 
         try {
             mv = BankCallUtils.callApi(bindCardBean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return mv;
     }

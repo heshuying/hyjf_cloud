@@ -132,7 +132,7 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
             }
             result.setData(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
 
@@ -180,7 +180,7 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
                 // 更新签约状态和日志表
                 this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_MERGE_AUTH);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
             }
         }else{

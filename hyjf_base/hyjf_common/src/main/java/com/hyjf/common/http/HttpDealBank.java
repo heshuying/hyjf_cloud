@@ -27,6 +27,8 @@ import java.util.Map;
  *
  */
 public class HttpDealBank {
+
+
 	private static Logger log = LoggerFactory.getLogger(HttpDealBank.class);
 	/** THIS_CLASS */
 	private static final String THIS_CLASS = HttpDeal.class.getName();
@@ -154,7 +156,7 @@ public class HttpDealBank {
             Map<String,String> responseMap = (Map<String,String>) response.getBody();
             result = JSONObject.toJSONString(responseMap);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         return result;
     }

@@ -230,7 +230,7 @@ public class AssetExceptionController extends BaseController {
         try {
             fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("转码错误....", e);
         }
         String[] titles = new String[]{"序号", "资产来源", "项目编号", "借款金额", "异常类型", "异常原因", "项目状态", "异常时间"};

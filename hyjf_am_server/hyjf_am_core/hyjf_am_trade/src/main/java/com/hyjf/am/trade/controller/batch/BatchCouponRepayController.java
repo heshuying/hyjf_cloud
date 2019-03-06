@@ -119,7 +119,7 @@ public class BatchCouponRepayController extends BaseController {
         try {
             result = couponRepayService.updateCouponOnlyRecover(request);
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return 0;
         }
         return result;

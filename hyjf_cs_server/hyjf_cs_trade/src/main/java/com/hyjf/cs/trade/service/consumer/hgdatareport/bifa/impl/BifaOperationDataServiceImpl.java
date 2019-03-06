@@ -140,7 +140,7 @@ public class BifaOperationDataServiceImpl extends BaseHgDateReportServiceImpl im
             bifaOperationDataEntity.setCreateTime(currDate);
             bifaOperationDataEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;

@@ -470,7 +470,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
             // 保存到数据库
             amUserClient.updateUserById(user);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (out != null){
                 out.close();

@@ -137,7 +137,7 @@ public class DzqzCallController extends BaseController {
                 commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG, UUID.randomUUID().toString(),bean));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
             log.info("--------------合同签署异步返回异常" + e.getMessage());
             log.info("---------------合同签署异步返回异常，txcode:" + bean.getResult_code() + ",logordid:" + orderId);
 

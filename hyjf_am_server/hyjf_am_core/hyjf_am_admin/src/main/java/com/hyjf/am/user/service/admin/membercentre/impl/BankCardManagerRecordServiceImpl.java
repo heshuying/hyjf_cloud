@@ -122,7 +122,7 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
             try {
                 dateStart = smp.parse(request.getStartTime()+" 00:00:00");
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             criteria.andCreateTimeGreaterThanOrEqualTo(dateStart);
         }
@@ -130,7 +130,7 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
             try {
                 dateEnd = smp.parse(request.getEndTime()+" 23:59:59");
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             criteria.andCreateTimeLessThanOrEqualTo(dateEnd);
         }
@@ -171,7 +171,7 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
             try {
                 dateStart = smp.parse(request.getStartTime()+" 00:00:00");
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             criteria.andCreateTimeGreaterThanOrEqualTo(dateStart);
         }
@@ -179,7 +179,7 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
             try {
                 dateEnd = smp.parse(request.getEndTime()+" 23:59:59");
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             criteria.andCreateTimeLessThanOrEqualTo(dateEnd);
         }

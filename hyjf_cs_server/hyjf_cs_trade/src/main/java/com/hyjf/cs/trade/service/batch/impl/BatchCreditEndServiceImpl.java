@@ -155,7 +155,7 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
                 Thread.sleep(1000);
                 list = this.selectList(bankCreditEnd);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if (list != null) {

@@ -197,7 +197,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
                 List<BorrowTender> borrowTenderList = this.borrowTenderMapper.selectByExample(example);
                 return borrowTenderList;
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return null;

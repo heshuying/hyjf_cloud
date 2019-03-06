@@ -159,7 +159,7 @@ public class AppLoginController extends BaseUserController {
                         // 发送神策数据统计MQ
                         this.loginService.sendSensorsDataMQ(sensorsDataBean);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 ret.put("status", "0");

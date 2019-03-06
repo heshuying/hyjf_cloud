@@ -200,7 +200,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     return false;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             logger.info("还款失败，请稍后再试！");
             return false;

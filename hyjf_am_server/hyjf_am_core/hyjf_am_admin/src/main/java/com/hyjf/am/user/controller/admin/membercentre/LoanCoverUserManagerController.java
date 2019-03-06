@@ -61,7 +61,7 @@ public class LoanCoverUserManagerController extends BaseController {
                 dateStart = smp.parse(request.getStartCreate()+" 00:00:00");
                 dateEnd = smp.parse(request.getEndCreate()+" 23:59:59");
             }catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         LoanCoverUserResponse response = new LoanCoverUserResponse();

@@ -110,7 +110,7 @@ public class BifaHjhHistoryDataServiceImpl extends BaseHgDateReportServiceImpl i
             bifaHjhPlanInfoEntity.setCreateTime(currDate);
             bifaHjhPlanInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;

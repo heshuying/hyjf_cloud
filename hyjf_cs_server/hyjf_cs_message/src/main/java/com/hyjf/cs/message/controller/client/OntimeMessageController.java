@@ -40,7 +40,7 @@ public class OntimeMessageController extends BaseController {
 				try {
 					messageService.sendMessage(smsOntime);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}

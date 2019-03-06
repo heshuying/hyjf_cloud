@@ -279,7 +279,7 @@ public class BankCardRepairServiceImpl extends BaseServiceImpl implements BankCa
         try {
             ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
         } catch (Exception e) {
-            // e.printStackTrace();
+            // logger.error(e.getMessage());
             ip = "127.0.0.1";
         }
         return ip;

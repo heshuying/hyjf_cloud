@@ -166,7 +166,7 @@ public class BorrowRecoverController extends BaseController {
 				flag =this.calculateRecover(repay, borrow, repayTimeStr, delayDays,flag);
 			}catch (Exception e){
 				logger.info("判断用户是否逾期失败......");
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				return null;
 			}
 		}

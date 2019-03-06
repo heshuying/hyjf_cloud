@@ -544,7 +544,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                 }
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return attribute;
     }

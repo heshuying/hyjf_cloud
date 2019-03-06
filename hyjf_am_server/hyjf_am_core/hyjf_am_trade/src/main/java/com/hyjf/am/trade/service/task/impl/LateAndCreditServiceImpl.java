@@ -85,7 +85,7 @@ public class LateAndCreditServiceImpl extends BaseServiceImpl implements LateAnd
                 nifaContractStatus.setChangeDate(GetDate.getDateTimeMyTime(borrowRepay.getRepayActionTime()));
             } catch (NumberFormatException e) {
                 logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowRepay.getBorrowNid());
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 return false;
             }
         } else {
@@ -113,7 +113,7 @@ public class LateAndCreditServiceImpl extends BaseServiceImpl implements LateAnd
                     nifaContractStatusOld.setChangeDate(GetDate.getDateTimeMyTime(borrowRepay.getRepayActionTime()));
                 } catch (NumberFormatException e) {
                     logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowRepay.getBorrowNid());
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     return false;
                 }
         } else {

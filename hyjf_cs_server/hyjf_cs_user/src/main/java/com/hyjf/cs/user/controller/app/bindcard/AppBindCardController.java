@@ -307,7 +307,7 @@ public class AppBindCardController extends BaseUserController {
 
         } catch (Exception e) {
             // 执行结果(失败)
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return getErrorModel("执行失败");
         }
 

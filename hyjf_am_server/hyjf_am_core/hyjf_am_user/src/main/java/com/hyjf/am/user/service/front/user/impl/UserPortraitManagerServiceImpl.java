@@ -396,7 +396,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     list.add(customize);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return list;
