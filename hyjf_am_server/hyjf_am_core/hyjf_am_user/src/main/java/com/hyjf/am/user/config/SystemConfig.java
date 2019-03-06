@@ -1,7 +1,7 @@
 package com.hyjf.am.user.config;
 
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.ClientConstants;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -36,15 +36,15 @@ public class SystemConfig {
     @Value("${file.upload.real.path.api}")
     public String apiFileUpload;
 
-    public String getFileUpload(int platform) {
-        switch (platform){
-            case ClientConstants.WECHAT_CLIENT:
+    public String getFileUpload(String channel) {
+        switch (channel){
+            case BankCallConstant.CHANNEL_WEI:
                 return UploadFileUtils.getDoPath(this.getWeChatFileUpload());
-            case ClientConstants.APP_CLIENT:
+            case BankCallConstant.CHANNEL_APP:
                 return UploadFileUtils.getDoPath(this.getAppFileUpload());
-            case ClientConstants.WEB_CLIENT:
+            case BankCallConstant.CHANNEL_PC:
                 return UploadFileUtils.getDoPath(this.getFileUpload());
-            case ClientConstants.API_CLIENT:
+            case BankCallConstant.CHANNEL_OTHER:
                 return UploadFileUtils.getDoPath(this.getApiFileUpload());
         }
         return UploadFileUtils.getDoPath(this.getFileUpload());
