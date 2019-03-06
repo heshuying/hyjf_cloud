@@ -8,6 +8,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -88,7 +89,8 @@ public class WeChatLoginController extends BaseUserController {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
         }
         //判断用户输入的密码错误次数---开始
-        Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI);
+        UserVO user = loginService.getUser(userName);
+        Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI,user);
         if (!errorInfo.isEmpty()){
             logger.error("weChat端登录失败...");
             result.setStatus(ApiResult.FAIL);
@@ -96,7 +98,7 @@ public class WeChatLoginController extends BaseUserController {
             return result;
         }
         //判断用户输入的密码错误次数---结束
-        WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
         if (userVO != null) {
             // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
             // 登录成功后,将用户ID返回给前端

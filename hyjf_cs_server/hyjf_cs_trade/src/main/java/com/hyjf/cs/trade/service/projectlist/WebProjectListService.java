@@ -40,6 +40,11 @@ public interface WebProjectListService extends BaseTradeService {
     public WebResult getBorrowDetail(Map map,String userId);
 
     /**
+     * 测试方法  稍后删除
+     */
+    public WebResult getBorrowDetail4Test(Map map,String userId);
+
+    /**
      * 获取新手标和散标详情：出借记录
      * @author zhangyk
      * @date 2018/8/9 16:58
@@ -133,6 +138,8 @@ public interface WebProjectListService extends BaseTradeService {
      * @date 2018/8/24 10:23
      */
     public WebResult getPlanBorrowUndertake(WebBorrowRequestBean requestBean );
+
+	WebResult getBorrowDetail4Test2(Map map, String userId);
 
 
 

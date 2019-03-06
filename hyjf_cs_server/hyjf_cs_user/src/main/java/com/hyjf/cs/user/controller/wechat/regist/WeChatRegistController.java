@@ -9,6 +9,7 @@ import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.MQException;
@@ -143,7 +144,8 @@ public class WeChatRegistController extends BaseUserController {
                 register.getVerificationCode(), register.getPassword(),
                 register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType);
         //注册成功重新登录
-        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        UserVO user = loginService.getUser(webViewUserVO.getUsername());
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
          if(null!=userVO){
              ret.setSign(userVO.getToken());
          }else {
@@ -368,8 +370,9 @@ public class WeChatRegistController extends BaseUserController {
 
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
-        WebViewUserVO user = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
-        WebViewUserVO userVO = loginService.login(user.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
+        UserVO user = loginService.getUser(webViewUserVO.getUsername());
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
         if(null!=userVO){
             ret.put("sign",userVO.getToken());
         }else {
@@ -378,7 +381,7 @@ public class WeChatRegistController extends BaseUserController {
             ret.put("successUrl","");
             return ret;
         }
-        Integer userId = user.getUserId();
+        Integer userId = webViewUserVO.getUserId();
         try {
             if (userId != 0) {
                 // 神策数据统计 add by liuyang 20180725 start

@@ -217,8 +217,8 @@ public class NifaRepayInfoMessageServiceImpl extends BaseTradeServiceImpl implem
                 // 逾期原因 如项目状态为05、06、07、08、11、12、13，则需报送该项目的逾期原因。长度512位
                 if (borrowRepayPlanList.get(0).getAdvanceStatus() == 3) {
                     nifaRepayInfoEntity.setReverifyStatus("05");
-                    String laterRepayReason = RedisUtils.get(RedisConstants.LATER_REPAY_REASON);
-                    nifaRepayInfoEntity.setLateReason(laterRepayReason);
+//                    String laterRepayReason = RedisUtils.get(RedisConstants.LATER_REPAY_REASON);
+                    nifaRepayInfoEntity.setLateReason("借款人到期未提交银行还款");
                     // 逾期次数 指已逾期的期数，如项目状态为05、06、07、08、11、12、13，则需报送该项目的逾期次数。
                     nifaRepayInfoEntity.setLateCounts(laterCount + "");
                 }
@@ -249,10 +249,11 @@ public class NifaRepayInfoMessageServiceImpl extends BaseTradeServiceImpl implem
             } else if (borrowRepay.getAdvanceStatus() == 3) {
                 nifaRepayInfoEntity.setReverifyStatus("13");
                 // 逾期原因 如项目状态为05、06、07、08、11、12、13，则需报送该项目的逾期原因。长度512位
-                String laterRepayReason = RedisUtils.get(RedisConstants.LATER_REPAY_REASON);
-                if (StringUtils.isNotBlank(laterRepayReason)) {
-                    nifaRepayInfoEntity.setLateReason(laterRepayReason);
-                }
+//                String laterRepayReason = RedisUtils.get(RedisConstants.LATER_REPAY_REASON);
+//                if (StringUtils.isNotBlank(laterRepayReason)) {
+//                    nifaRepayInfoEntity.setLateReason(laterRepayReason);
+//                }
+                nifaRepayInfoEntity.setLateReason("借款人到期未提交银行还款");
                 // 逾期次数 指已逾期的期数，如项目状态为05、06、07、08、11、12、13，则需报送该项目的逾期次数。
                 nifaRepayInfoEntity.setLateCounts("1");
             } else {

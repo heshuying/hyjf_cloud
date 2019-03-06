@@ -12,10 +12,10 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 还款冻结异常处理
@@ -32,7 +32,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
      */
     @Override
     public List<BankRepayFreezeOrgCustomizeVO> selectList(RepayFreezeOrgRequest requestBean){
-        return amAdminClient.getBankReapyFreezeOrgList(requestBean);
+        return amAdminClient.getBankRepayFreezeOrgList(requestBean);
     }
 
     /**
@@ -42,19 +42,27 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
      */
     @Override
     public Integer selectCount(RepayFreezeOrgRequest requestBean){
-        return amAdminClient.getBankReapyFreezeOrgCount(requestBean);
+        return amAdminClient.getBankRepayFreezeOrgCount(requestBean);
     }
 
     /**
      * 查询担保机构冻结列表
      */
     @Override
-    public BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId, String borrowNid) {
+    public BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId, String borrowNid, Integer currentPeriod) {
         if (StringUtils.isBlank(orderId)) {
             return null;
         }
         List<BankRepayOrgFreezeLogVO> listResult = amAdminClient.getBankRepayOrgFreezeLogList(orderId, borrowNid);
         if (listResult != null && !listResult.isEmpty()) {
+            if (currentPeriod != null && listResult.size() > 1) {
+                logger.info("currentPeriod:{}",currentPeriod);
+                List<BankRepayOrgFreezeLogVO> filterList = listResult.stream().filter(item->currentPeriod.equals(item.getCurrentPeriod())).collect(Collectors.toList());
+               if(filterList != null && !filterList.isEmpty()) {
+                   logger.info("filterList.currentPeriod:{}",currentPeriod);
+                   return filterList.get(0);
+               }
+            }
             return listResult.get(0);
         }
         return null;
@@ -112,6 +120,9 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
         return amTradeClient.updateBorrowCreditStautus(borrowNid);
     }
 
-
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        return amTradeClient.getFailCredit(borrowNid);
+    }
 
 }

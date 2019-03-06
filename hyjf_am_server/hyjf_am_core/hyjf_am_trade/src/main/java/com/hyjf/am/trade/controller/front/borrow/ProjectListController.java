@@ -526,6 +526,21 @@ public class ProjectListController extends BaseController {
     }
 
     /**
+     * 首页还款中项目 - 首页显示
+     * @Author yangchangwei 2019/3/3
+     * @param request
+     * @return
+     */
+    @PostMapping("/apphomepage/selectHomeRepayProjectList")
+    public AppProjectListResponse selectRepayHomeProjectList(@RequestBody @Valid AppHomePageRequest request){
+        AppProjectListResponse response = new AppProjectListResponse();
+        Map map = ConvertUtils.convertObjectToMap(request);
+        List<AppProjectListCustomizeVO> resultList = projectListService.getHomeRepayProjecList(map);
+        response.setResultList(resultList);
+        return response;
+    }
+
+    /**
      * app首页获取有效公告
      * @Author yangchangwei 2018/10/18
      * @return

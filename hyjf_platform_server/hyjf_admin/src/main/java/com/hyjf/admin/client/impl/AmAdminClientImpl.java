@@ -1663,7 +1663,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public List<BankRepayFreezeOrgCustomizeVO> getBankReapyFreezeOrgList(RepayFreezeOrgRequest request) {
+    public List<BankRepayFreezeOrgCustomizeVO> getBankRepayFreezeOrgList(RepayFreezeOrgRequest request) {
         String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_data";
         BankRepayFreezeOrgResponse response = restTemplate.postForEntity(url,request,BankRepayFreezeOrgResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -1678,7 +1678,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public Integer getBankReapyFreezeOrgCount(RepayFreezeOrgRequest request) {
+    public Integer getBankRepayFreezeOrgCount(RepayFreezeOrgRequest request) {
         String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/list_count";
         IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -2050,5 +2050,37 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response;
         }
         return null;
+    }
+
+    /**
+     * 根据创建日期查询该天导入aleve的条数
+     *
+     * @param dualDate
+     * @return
+     */
+    @Override
+    public Integer countAleveByDualDate(String dualDate) {
+        String url = "http://AM-ADMIN/am-trade/bankaleve/countAleveByDualDate/" + dualDate;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if(response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return -1;
+    }
+
+    /**
+     * 根据创建日期查询该天导入eve的条数
+     *
+     * @param dualDate
+     * @return
+     */
+    @Override
+    public Integer countEveByDualDate(String dualDate) {
+        String url = "http://AM-ADMIN/am-trade/bankaleve/countEveByDualDate/" + dualDate;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if(response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return -1;
     }
 }

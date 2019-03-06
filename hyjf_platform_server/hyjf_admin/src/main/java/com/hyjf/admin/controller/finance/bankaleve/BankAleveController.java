@@ -17,11 +17,14 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
 import com.hyjf.am.vo.admin.BankAleveVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -72,6 +75,56 @@ public class BankAleveController {
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
         return new AdminResult<>(ListResult.build(bankAleveList,count));
     }
+
+    /**
+     * 对账文件手动导入
+     * @author liushouyi
+     * @date 2018/8/21 9:56
+     * @param bankAleveRequest
+     **/
+    @ApiOperation(value = "银行账务明细", notes = "对账文件导入")
+    @PostMapping(value = "/dualHistoryData")
+    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult dualHistoryData(@RequestBody BankAleveRequest bankAleveRequest) {
+        AdminResult result = new AdminResult();
+
+        if(StringUtils.isBlank(bankAleveRequest.getDualDate())){
+            result.setData("请输入处理时间！");
+            return result;
+        }
+
+        String dualDate = "";
+        try {
+            dualDate = GetDate.dataformat(bankAleveRequest.getDualDate(),"yyyy-MM-dd").replaceAll("-","");
+            if(StringUtils.isBlank(dualDate)) {
+                result.setData("时间格式化失败，请输入正确处理日期！");
+                return result;
+            }
+            // 判断20180228-20190228期间数据、已通过程序入库不可再手动修复
+            Integer dualDateInt = Integer.parseInt(dualDate);
+            if(dualDateInt > 20180228 && dualDateInt < 20190301) {
+                result.setData("暂不支持2018-03-01到2019-02-28时间段的数据修复，如有疑问请与开发人员联系！");
+                return result;
+            }
+        } catch (Exception e) {
+            result.setData("时间格式化失败，请输入正确处理日期！");
+            return result;
+        }
+
+        // 成功下载并发送mq后当天日期加10分钟锁、防止数据库导入数据事务未提交或数据未同步导致重复导入数据
+        boolean redisResult = RedisUtils.tranactionSet(RedisConstants.DUAL_HISTORY_ALEVE + dualDate,10 * 60);
+        if(!redisResult) {
+            result.setData("日期：" + dualDate + "的数据已提交处理，请稍后再试！");
+            return result;
+        }
+
+        // 文件下载
+        String re = bankAleveService.dualHistoryData(dualDate);
+        result.setData(re);
+        return result;
+    }
+
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
      * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题

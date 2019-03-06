@@ -81,7 +81,7 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
             Integer countsAleve = this.aleveLogFileService.countAleveByExample(beforeDate);
             if(countsAleve > 0){
-                logger.error("【导入流水明细(eve)】eve数据库已存在数据、请核对后再做处理！");
+                logger.error("【导入流水明细(Aleve)】eve数据库已存在数据、请核对后再做处理！");
                 return;
             }
 
@@ -95,7 +95,7 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
 
                 //读取文件
-                TransUtil.readFileAleve(fin, aleveLogs, aleveErrorLogs);
+                TransUtil.readFileAleve(fin, aleveLogs, aleveErrorLogs, beforeDate);
 
                 //插入数据
                 if (!CollectionUtils.isEmpty(aleveLogs)) {

@@ -464,4 +464,10 @@
 		AND htba.id is null AND htbi.repay_org_user_id = #{userId}
 		AND (htb.`status` = 4 AND htb.repay_full_status = 0)
 	</select>
+    <select id="getFailCredit" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		ht_hjh_plan_borrow_tmp tmp
+		JOIN ht_hjh_debt_credit hhdc ON hhdc.credit_nid = tmp.borrow_nid
+		WHERE tmp.borrow_type = 1 AND hhdc.borrow_nid = #{borrowNid}
+	</select>
 </mapper>

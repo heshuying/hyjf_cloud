@@ -113,7 +113,7 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
             criteria.andBankNameLike("%" + bankName.trim());
         }
         if (StringUtils.isNotEmpty(request.getUserName())) {
-            criteria.andUserNameLike("%" + request.getUserName() + "%");
+            criteria.andUserNameLike(request.getUserName() + "%");
         }
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStart = null;
@@ -155,10 +155,14 @@ public class BankCardManagerRecordServiceImpl extends BaseServiceImpl implements
         // 条件查询
         if (StringUtils.isNotEmpty(request.getBankName())) {
 //            criteria.andBankCodeEqualTo(request.getBankCode());
-            criteria.andBankNameEqualTo(request.getBankName().trim());
+            String bankName =request.getBankName();
+            if(request.getBankName().contains("中国")){
+                bankName = request.getBankName().split("中国")[1];
+            }
+            criteria.andBankNameLike("%" + bankName.trim());
         }
         if (StringUtils.isNotEmpty(request.getUserName())) {
-            criteria.andUserNameLike("%" + request.getUserName() + "%");
+            criteria.andUserNameLike(request.getUserName() + "%");
         }
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateStart = null;

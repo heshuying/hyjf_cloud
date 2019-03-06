@@ -874,6 +874,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
     private void updateUtm(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
         //更新汇计划列表成功的前提下
         // 更新渠道统计用户累计出借
+		logger.info("=======开始更新用户渠道统计信息，userID：" + userId);
         // 出借人信息
         UserVO users = amUserClient.findUserById(userId);
         /*projectType = 8 是汇消费　不需要判断了*/
@@ -926,6 +927,8 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	 * @param borrow
 	 */
 	private void updateUtmReg(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
+		logger.info("=======开始更新用户汇直投pc渠道统计信息，userID：" + userId);
+
 		UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
 		if (utmReg != null) {
 			Map<String, Object> params = new HashMap<String, Object>();
@@ -947,7 +950,9 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			params.put("investProjectPeriod", investProjectPeriod);
 			// 更新渠道统计用户累计出借
 			try {
+				logger.info("=======开始校验汇直投用户渠道统计信息，userID：" + userId);
 				if(this.checkIsNewUserCanInvest(userId)){
+					logger.info("=======开始推送汇直投用户渠道统计信息，userID：" + userId);
 					commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
 				}
 			} catch (MQException e) {

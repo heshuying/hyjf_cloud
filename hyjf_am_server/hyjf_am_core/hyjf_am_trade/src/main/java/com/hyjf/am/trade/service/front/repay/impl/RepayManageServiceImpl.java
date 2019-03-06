@@ -5557,4 +5557,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
         return null;
     }
+
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        Integer failCreditCount = webUserRepayListCustomizeMapper.getFailCredit(borrowNid);
+        return failCreditCount != null && failCreditCount > 0;
+    }
 }

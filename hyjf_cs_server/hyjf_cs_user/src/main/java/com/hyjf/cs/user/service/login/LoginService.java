@@ -26,7 +26,7 @@ public interface LoginService extends BaseUserService {
      * @param loginPassword
      * @param ip
      */
-    WebViewUserVO login(String loginUserName, String loginPassword, String ip,String channel);
+    WebViewUserVO login(String loginUserName, String loginPassword, String ip,String channel,UserVO userVO);
 
     /**
      * 通过密码验证后的纯登录操作
@@ -116,7 +116,7 @@ public interface LoginService extends BaseUserService {
      * @param channel 渠道
      * @return
      */
-    public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel);
+    public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel,UserVO userVO);
 
     /**
      * 发送神策数据统计MQ

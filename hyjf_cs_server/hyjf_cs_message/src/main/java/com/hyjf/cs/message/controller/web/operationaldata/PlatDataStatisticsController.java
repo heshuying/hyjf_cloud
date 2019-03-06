@@ -257,6 +257,8 @@ public class PlatDataStatisticsController {
             if (!CollectionUtils.isEmpty(list)) {
                 if (list.get(i).getName().contains("新疆")) {
                     regionData.setName("新疆");
+                } else if (list.get(i).getName().contains("市")) {
+                    regionData.setName(list.get(i).getName().replace("市", ""));
                 } else {
                     regionData.setName(list.get(i).getName().replace("省", ""));
                 }

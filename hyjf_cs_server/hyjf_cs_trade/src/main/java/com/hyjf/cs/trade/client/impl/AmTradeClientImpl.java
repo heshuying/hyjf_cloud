@@ -5966,7 +5966,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
 
-
+    /**
+     * 查询首页还款中的项目
+     * @Author yangchangwei 2019/3/4
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AppProjectListCustomizeVO> selectHomeRepayProjectList(AppHomePageRequest request) {
+        String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/selectHomeRepayProjectList";
+        AppProjectListResponse response = restTemplate.postForEntity(url,request,AppProjectListResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
     /**
      * 添加
      * @author wgx
@@ -6927,5 +6941,15 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @return
+     */
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/getFailCredit/" + borrowNid;
+        return restTemplate.getForEntity(url, boolean.class).getBody();
     }
 }

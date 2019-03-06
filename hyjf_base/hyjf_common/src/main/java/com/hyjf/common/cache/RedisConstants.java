@@ -535,10 +535,9 @@ public class RedisConstants {
     /**合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报*/
     public static final String CERT_CAN_RUN= "CERT_CAN_RUN";
 
-    /**
-     * 逾期原因
-     */
-    public static final String LATER_REPAY_REASON = "NIFA:LATER_REPAY_REASON";
+    /**合规数据上报 CERT 已上报交易流水大Id*/
+    public static final String CERT_TRANSACT_OTHER_MAXID= "certTransactOtherMaxId";
+
     /**
      * 推送表的消息唯一标识
      */
@@ -548,4 +547,9 @@ public class RedisConstants {
      * 校验债转用的计算金额是否有异常数据(0:关闭；1：开启)
      */
     public static final String CHECK_HJH_CREDIT_CALC_FLAG = "check_hjh_credit_calc_flag";
+
+    /**
+     * 后台处理Aleve和eve文件增加redis锁控制、防止重复发送mq消息
+     */
+    public static final String DUAL_HISTORY_ALEVE = "DUAL_HISTORY_ALEVE:";
 }
