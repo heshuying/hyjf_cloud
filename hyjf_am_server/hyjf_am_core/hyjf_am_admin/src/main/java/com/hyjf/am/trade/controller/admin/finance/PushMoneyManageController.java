@@ -42,6 +42,22 @@ public class PushMoneyManageController extends BaseController {
     private TenderCommissionService tenderCommissionService;
 
 
+
+    /**
+     * 直投提成列表count
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @PostMapping(value = "/findPushMoneyRecordListCount")
+    public PushMoneyResponse findPushMoneyRecordListCount(@RequestBody PushMoneyRequest request){
+        PushMoneyResponse response = new PushMoneyResponse();
+        int count = pushMoneyManagerService.countPushMoney(request);
+        response.setCount(count);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
     /**
      * 根据筛选条件查找(查找提成管理)
      *
@@ -50,34 +66,31 @@ public class PushMoneyManageController extends BaseController {
      */
     @RequestMapping("/findPushMoneyRecordList")
     public PushMoneyResponse findPushMoneyRecordList(@RequestBody PushMoneyRequest request) {
-        logger.info("---findPushMoneyRecordList by param---  " + JSONObject.toJSON(request));
         PushMoneyResponse response = new PushMoneyResponse();
-        int pushMoneyTotal = pushMoneyManagerService.countPushMoney(request);
-        // 查询列表传入分页
+        Integer count = pushMoneyManagerService.countPushMoney(request);
+        // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),pushMoneyTotal,request.getPageSize());
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
-        logger.info(request.getLimitStart() + "    " + request.getLimitEnd());
-        if (pushMoneyTotal > 0) {
-            List<PushMoneyCustomize> pushMoneyCustomizeList = pushMoneyManagerService.selectPushMoneyList(request);
-            if (!CollectionUtils.isEmpty(pushMoneyCustomizeList)) {
-                List<PushMoneyVO> userBankRecord = CommonUtils.convertBeanList(pushMoneyCustomizeList, PushMoneyVO.class);
-                response.setResultList(userBankRecord);
-                response.setCount(pushMoneyTotal);
-                response.setRtn(Response.SUCCESS);//代表成功
-            }
+        logger.info("searchPushMoneyList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
+        List<PushMoneyCustomize> pushMoneyCustomizeList = pushMoneyManagerService.selectPushMoneyList(request);
+        if(!CollectionUtils.isEmpty(pushMoneyCustomizeList)){
+            List<PushMoneyVO> pushMoneyVOList = CommonUtils.convertBeanList(pushMoneyCustomizeList,PushMoneyVO.class);
+            response.setResultList(pushMoneyVOList);
+            response.setRtn(Response.SUCCESS);
         }
         return response;
     }
 
     /**
-     * 直投提成列表count
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
+     * 取得提成配置
+     * @author Zha Daojian
+     * @date 2019/3/6 13:50
+     * @param request
+     * @return com.hyjf.am.response.trade.PushMoneyResponse
+     **/
     @PostMapping(value = "/getPushMoney")
     public PushMoneyResponse getPushMoney(@RequestBody PushMoneyRequest request){
         PushMoneyResponse response = new PushMoneyResponse();
