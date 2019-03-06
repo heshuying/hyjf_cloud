@@ -142,7 +142,7 @@
 		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
 		b.repay_account_all-b.repay_account_yes AS repayAccountWait,
 		if(b.status=4,0,if(b.status=5 ,1,'')) AS status,
-		ba.repay_status as repayStatus,
+		br.repay_status as repayStatus,
 		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 		b.repay_last_time, '%Y-%m-%d' )) AS repayLastTime,
 		if(br.repay_time='' OR br.repay_time='0' OR br.repay_time='null','',FROM_UNIXTIME(
@@ -164,7 +164,7 @@
 		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+
 
 		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
 		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
@@ -187,7 +187,7 @@
 		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+
 
 		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
 		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
@@ -206,7 +206,7 @@
 		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-		LEFT JOIN ht_borrow_apicron as ba on b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
+
 
 		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
 		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
