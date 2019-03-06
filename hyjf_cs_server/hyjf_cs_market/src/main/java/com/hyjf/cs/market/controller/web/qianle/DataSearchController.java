@@ -159,7 +159,7 @@ public class DataSearchController {
         try {
             result = commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // checkCode过期时间，默认120秒
         RedisUtils.set(mobile + ":MaxValidTime", checkCode, smsConfig.getMaxValidTime() == null ? 120 : smsConfig.getMaxValidTime() * 60);

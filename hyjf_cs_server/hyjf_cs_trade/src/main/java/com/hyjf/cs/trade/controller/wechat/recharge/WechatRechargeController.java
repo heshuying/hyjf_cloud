@@ -86,7 +86,7 @@ public class WechatRechargeController extends BaseTradeController{
 		try {
 			map = BankCallUtils.callApiMap(bean);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		result.setData(map);

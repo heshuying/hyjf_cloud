@@ -2,6 +2,8 @@ package com.hyjf.admin.utils;
 
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.common.file.UploadFileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import java.util.LinkedList;
 @Component
 public class FileUpLoadUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(FileUpLoadUtil.class);
     @Value("${file.domain.url}")
     private String DOMAIN_URL;
 
@@ -53,7 +56,7 @@ public class FileUpLoadUtil {
             try {
                 errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
             fileMeta = new BorrowCommonImage();

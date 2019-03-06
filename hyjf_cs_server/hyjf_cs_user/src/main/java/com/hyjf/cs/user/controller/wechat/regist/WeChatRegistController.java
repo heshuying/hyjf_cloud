@@ -9,6 +9,7 @@ import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.MQException;
@@ -143,7 +144,8 @@ public class WeChatRegistController extends BaseUserController {
                 register.getVerificationCode(), register.getPassword(),
                 register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType);
         //注册成功重新登录
-        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        UserVO user = loginService.getUser(webViewUserVO.getUsername());
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
          if(null!=userVO){
              ret.setSign(userVO.getToken());
          }else {
@@ -167,7 +169,7 @@ public class WeChatRegistController extends BaseUserController {
                 // 发送神策数据统计MQ
                 this.registService.sendSensorsDataMQ(sensorsDataBean);
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         // add by liuyang 神策数据统计追加 20181029 end
@@ -249,7 +251,7 @@ public class WeChatRegistController extends BaseUserController {
         try {
             randomValidateCode.getRandcode(request, response);// 输出图片方法
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("错误信息:[{}]",e.getMessage());
         }
     }
@@ -368,8 +370,9 @@ public class WeChatRegistController extends BaseUserController {
 
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
-        WebViewUserVO user = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
-        WebViewUserVO userVO = loginService.login(user.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
+        UserVO user = loginService.getUser(webViewUserVO.getUsername());
+        WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI,user);
         if(null!=userVO){
             ret.put("sign",userVO.getToken());
         }else {
@@ -378,7 +381,7 @@ public class WeChatRegistController extends BaseUserController {
             ret.put("successUrl","");
             return ret;
         }
-        Integer userId = user.getUserId();
+        Integer userId = webViewUserVO.getUserId();
         try {
             if (userId != 0) {
                 // 神策数据统计 add by liuyang 20180725 start
@@ -397,7 +400,7 @@ public class WeChatRegistController extends BaseUserController {
                         this.registService.sendSensorsDataMQ(sensorsDataBean);
                         // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 end
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 String statusDesc = "注册成功";
@@ -440,7 +443,7 @@ public class WeChatRegistController extends BaseUserController {
                 return ret;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             ret.put("status", "99");
             ret.put("statusDesc", "注册发生错误,参数异常");
             ret.put("successUrl", "");
@@ -564,7 +567,7 @@ public class WeChatRegistController extends BaseUserController {
             String str = new String(bytes, 0, nTotalRead, "utf-8");
             return str;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         }
     }

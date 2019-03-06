@@ -96,7 +96,7 @@ public class OperationalDataWechatController {
 			result.put("info", info);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e.getMessage());
 			result.put("status", "99");
 			result.put("statusDesc", "失败");
 		}
@@ -149,7 +149,7 @@ public class OperationalDataWechatController {
 			result.put("info", detail);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e.getMessage());
 			result.put("status", "99");
 			result.put("statusDesc", "失败");
 		}
@@ -183,7 +183,7 @@ public class OperationalDataWechatController {
 			ObjectMapper mapper = new ObjectMapper();
 			result.put("InvestorRegionList", mapper.writeValueAsString(sublist));
 		} catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e.getMessage());
 			result.put("status", "99");
 			result.put("statusDesc", "获取出借人地域分布数据失败");
 		}
@@ -241,7 +241,7 @@ public class OperationalDataWechatController {
 
 			result.put("info", info);
 		} catch (Exception e) {
-			e.printStackTrace();
+			_log.error(e.getMessage());
 			result.put("status", "99");
 			result.put("statusDesc", "失败");
 		}

@@ -291,7 +291,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 			logger.info("发送收支明细---" + request.getAccount() + "---------" + accountList.getAmount());
 			commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 		
 		/*原if(bankBean !=null){*/

@@ -95,12 +95,12 @@ public class FavFTPUtil {
             result = true;
         } catch (IOException e) {
             logger.error("上传文件失败，上传路径：" + filePath,e);
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (ftp.isConnected()) {
                 try {
                     ftp.disconnect();
-                } catch (IOException ioe) {ioe.printStackTrace();
+                } catch (IOException e) {logger.error(e.getMessage());
                 }
             }
         }
@@ -158,7 +158,7 @@ public class FavFTPUtil {
             ftp.logout();
             result = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (ftp.isConnected()) {
                 try {
@@ -221,7 +221,7 @@ public class FavFTPUtil {
             //ZIPGenerator.generateZip(response, files, fileName);
             ftp.logout();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (ftp.isConnected()) {
                 try {
@@ -266,7 +266,7 @@ public class FavFTPUtil {
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(para.sftpKeyFile)) {
-                
+
                     localFile = new File(para.savePath + "/" +para.fileName+"_"+ff.getName());
                     if (localFile.exists()) {
                         localFile.delete();
@@ -280,7 +280,7 @@ public class FavFTPUtil {
             }
             ftp.logout();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (ftp.isConnected()) {
                 try {
@@ -352,7 +352,7 @@ public class FavFTPUtil {
             ftp.logout();
             result = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (ftp.isConnected()) {
                 try {
@@ -404,14 +404,14 @@ public class FavFTPUtil {
             success = ftp.deleteFile(remotePath + "/" + fileName);
             ftp.logout();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             success = false;
         } finally {
             if (ftp.isConnected()) {
                 try {
                     ftp.disconnect();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -435,7 +435,7 @@ public class FavFTPUtil {
             fs = ftp.listFiles();
             ftp.logout();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (ftp.isConnected()) {
                 try {

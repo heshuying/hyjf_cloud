@@ -13,6 +13,7 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,6 +69,42 @@ public class BankAleveController extends BaseController {
 		Map<String, Object> mapParam = paramSet(request);
 		int count = aleveService.countRecord(mapParam);
 		response.setResultInt(count);
+		return response;
+	}
+
+	/**
+	 * 根据创建日期查询该天导入aleve的条数
+	 * @param dualDate
+	 * @return
+	 */
+	@RequestMapping("/countAleveByDualDate/{dualDate}")
+	public IntegerResponse countAleveByDualDate(@PathVariable(value = "dualDate") String dualDate){
+		IntegerResponse response = new IntegerResponse();
+		try {
+			response.setResultInt(aleveService.countAleveByDualDate(dualDate));
+			response.setRtn(Response.SUCCESS);
+		} catch (Exception e) {
+			response.setRtn(Response.FAIL);
+			logger.error("根据创建日期查询该天导入aleve的条数失败！",e);
+		}
+		return response;
+	}
+
+	/**
+	 * 根据创建日期查询该天导入eve的条数
+	 * @param dualDate
+	 * @return
+	 */
+	@RequestMapping("/countEveByDualDate/{dualDate}")
+	public IntegerResponse countEveByDualDate(@PathVariable(value = "dualDate") String dualDate){
+		IntegerResponse response = new IntegerResponse();
+		try {
+			response.setResultInt(aleveService.countEveByDualDate(dualDate));
+			response.setRtn(Response.SUCCESS);
+		} catch (Exception e) {
+			response.setRtn(Response.FAIL);
+			logger.error("根据创建日期查询该天导入eve的条数失败！",e);
+		}
 		return response;
 	}
 

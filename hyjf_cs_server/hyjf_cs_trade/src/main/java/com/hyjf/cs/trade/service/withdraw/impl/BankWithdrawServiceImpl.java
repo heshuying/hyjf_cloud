@@ -218,7 +218,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                         throw new Exception("大额提现成功后,更新用户银行卡的银联行号失败~~~!" + bankCard.getId());
                                     }
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    logger.error(e.getMessage());
                                 }
                             }
                             // 提现金额
@@ -278,13 +278,13 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
                                 this.sendSensorsDataMQ(sensorsDataBean);
                             }catch (Exception e){
-                                e.printStackTrace();
+                                logger.error(e.getMessage());
                             }
 
                             return jsonMessage("提现成功!", "0");
                         } catch (Exception e) {
                             // 回滚事务
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                             return jsonMessage("提现失败,请联系客服!", "1");
                         }
                     }

@@ -392,7 +392,7 @@ public class FtpUtil {
             System.exit(1);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             System.exit(1);
         } */
     }

@@ -287,7 +287,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                         sensorsDataBean.setEventCode("open_success");
                         this.sendSensorsDataMQ(sensorsDataBean);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
             }
@@ -1062,7 +1062,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }

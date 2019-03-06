@@ -41,6 +41,9 @@ public class BankAleveRequest extends BasePage implements Serializable {
 	@ApiModelProperty(value = "自然日期结束")
 	private String endReldate;
 
+	@ApiModelProperty(value = "历史数据处理日期")
+	private String dualDate;
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -135,6 +138,14 @@ public class BankAleveRequest extends BasePage implements Serializable {
 
 	public void setTranstype(String transtype) {
 		this.transtype = transtype;
+	}
+
+	public String getDualDate() {
+		return dualDate;
+	}
+
+	public void setDualDate(String dualDate) {
+		this.dualDate = dualDate;
 	}
 
 	/**

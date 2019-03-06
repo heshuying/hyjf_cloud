@@ -45,9 +45,9 @@ public class PandectController extends BaseUserController{
     @PostMapping(value = "/pandect")
         public String pandect(@RequestHeader(value = "userId") Integer userId,Model model) {
             WebResult<Map<String,Object>> result = new WebResult<>();
-            UserVO user = pandectService.getUsersById(userId);
-            CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
-            JSONObject map = pandectService.pandect(user);
+//            UserVO user = pandectService.getUsersById(userId);
+//            CheckUtil.check(user!=null, MsgEnum.ERR_USER_NOT_LOGIN);
+            JSONObject map = pandectService.pandect(userId);
             result.setData(map);
             model.addAttribute("datas",result);
         return "pandect";

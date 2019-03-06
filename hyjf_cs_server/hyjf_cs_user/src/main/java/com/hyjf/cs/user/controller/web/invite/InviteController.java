@@ -137,7 +137,7 @@ public class InviteController extends BaseUserController {
             }
             QRCodeUtil.encode(downloadUrl, String.valueOf(userId),systemConfig.getPhysicalPath() + systemConfig.getFileUpload(), false);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         String webhost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
@@ -188,7 +188,7 @@ public class InviteController extends BaseUserController {
                 output.write(buffer, 0, count);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             output.flush();
             if (input != null){

@@ -120,7 +120,7 @@ public class WebRegistController extends BaseUserController {
                     // 发送神策数据统计MQ
                     this.registService.sendSensorsDataMQ(sensorsDataBean);
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             // add by liuyang 神策数据统计追加 20181029 end

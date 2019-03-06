@@ -10,6 +10,8 @@ import com.hyjf.am.config.service.ContentLinksService;
 import com.hyjf.am.resquest.admin.ContentLinksRequest;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.List;
  */
 @Service
 public class ContentLinksServiceImpl implements ContentLinksService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContentLinksServiceImpl.class);
     @Autowired
     private LinkMapper linkMapper;
 
@@ -54,7 +58,7 @@ public class ContentLinksServiceImpl implements ContentLinksService {
                 criteria.andCreateTimeGreaterThanOrEqualTo
                         (GetDate.parseDate(GetDate.getDayStart(bean.getStartCreate()),GetDate.datetimeFormat_key));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if (StringUtils.isNotEmpty(bean.getEndCreate())) {
@@ -62,7 +66,7 @@ public class ContentLinksServiceImpl implements ContentLinksService {
                 criteria.andCreateTimeLessThanOrEqualTo
                 (GetDate.parseDate(GetDate.getDayEnd(bean.getEndCreate()),GetDate.datetimeFormat_key));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         example.setOrderByClause("`partner_type` ASC,`order` Asc ,`create_time` Desc");

@@ -267,21 +267,21 @@ public class CrmInvestMessageConsumer implements RocketMQListener<MessageExt>, R
             // 网络异常 重试
             return TRY;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return TRY;
         } finally {
             if (response != null) {
                 try {
                     response.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
             if (httpclient != null) {
                 try {
                     httpclient.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

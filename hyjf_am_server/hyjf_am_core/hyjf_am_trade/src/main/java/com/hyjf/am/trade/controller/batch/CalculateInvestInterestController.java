@@ -41,7 +41,7 @@ public class CalculateInvestInterestController extends BaseController {
                 calculateInvestInterestService.insertAYearTenderInfo();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("插入出借记录失败");
             return new StringResponse("fail");
         }

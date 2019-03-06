@@ -212,7 +212,7 @@ public class AppPassWordController extends BaseUserController {
                 // 开户后保存相应的数据以及日志
                 passWordService.updateUserIsSetPassword(user.getUserId());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         result.setMessage("交易密码设置成功");

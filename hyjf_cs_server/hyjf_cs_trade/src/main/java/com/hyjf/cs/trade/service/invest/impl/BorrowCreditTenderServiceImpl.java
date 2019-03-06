@@ -907,7 +907,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                             this.sendCreditSuccessMessage(creditTender,borrowCredit);
                         } catch (MQException e) {
                             logger.error("e   :",e);
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                         }
                     }
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
@@ -930,7 +930,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
                         // 满标发短信在原子层
                     } catch (MQException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
@@ -970,7 +970,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         logger.info("承接成功后发送神策数据统计MQ,承接订单号:[" + creditTender.getAssignNid() + "].");
                         this.sendSensorsDataMQ(sensorsDataBean);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     // 神策数据统计 add by liuyang 20180726 end
                     return true;
@@ -1010,7 +1010,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                         MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("渠道统计用户累计出借推送消息队列失败！！！");
             }
         }
@@ -1060,7 +1060,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("渠道统计用户累计出借推送消息队列失败！！！");
         }
 
@@ -1409,9 +1409,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/credit/bgReturn?platform="+request.getPlatform();
-        bean.setRetUrl("111"+retUrl);
-        bean.setNotifyUrl("222"+bgRetUrl);
-        bean.setSuccessfulUrl("333"+successUrl);
+        bean.setRetUrl(retUrl);
+        bean.setNotifyUrl(bgRetUrl);
+        bean.setSuccessfulUrl(successUrl);
         bean.setLogRemark("债转出借");
         return bean;
     }

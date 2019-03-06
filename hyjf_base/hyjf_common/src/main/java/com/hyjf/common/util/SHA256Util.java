@@ -3,6 +3,9 @@
  */
 package com.hyjf.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +15,8 @@ import java.security.NoSuchAlgorithmException;
  * @version SHA256Util, v0.1 2018/12/7 14:59
  */
 public class SHA256Util {
+
+    private static final Logger logger = LoggerFactory.getLogger(SHA256Util.class);
     /**
      * 字符串sha256加密
      *
@@ -29,7 +34,7 @@ public class SHA256Util {
                 sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
             }
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return sb.toString();
     }

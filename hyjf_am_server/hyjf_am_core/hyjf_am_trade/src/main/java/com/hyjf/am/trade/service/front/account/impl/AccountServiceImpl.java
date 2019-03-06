@@ -276,7 +276,7 @@ public class AccountServiceImpl extends BaseServiceImpl implements AccountServic
                         }
                         return isAccountListFlag;
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
             }

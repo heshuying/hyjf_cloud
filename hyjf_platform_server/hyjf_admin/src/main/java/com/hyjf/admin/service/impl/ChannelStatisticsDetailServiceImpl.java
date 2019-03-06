@@ -43,6 +43,8 @@ public class ChannelStatisticsDetailServiceImpl implements ChannelStatisticsDeta
             }
             flag = 1;
         }
+        request.setStartTime(request.getStartTime() == null ? null : request.getStartTime() + " 00:00:00");
+        request.setEndTime(request.getEndTime() == null ? null : request.getEndTime() + " 23:59:59");
         IntegerResponse count = this.amAdminClient.countList(request);
         if (count.getResultInt()!=null&&count.getResultInt() > 0) {
             total = count.getResultInt();

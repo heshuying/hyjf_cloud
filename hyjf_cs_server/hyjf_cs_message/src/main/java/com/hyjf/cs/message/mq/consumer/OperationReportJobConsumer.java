@@ -88,7 +88,7 @@ public class OperationReportJobConsumer implements RocketMQListener<MessageExt>,
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
             RedisUtils.del(RedisConstants.Statistics_Operation_Report);

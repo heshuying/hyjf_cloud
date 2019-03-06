@@ -113,7 +113,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 result.setUsername(user.getUsername());
                 result.setAccountId(bankOpenAccountVO.getAccount());
                 result.setMobile(phone);
-                result.setRegTimeEnd(GetDate.date2Str(bankOpenAccountVO.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                result.setRegTimeEnd(GetDate.date2Str(bankOpenAccountVO.getCreateTime(),new SimpleDateFormat("yyyyMMdd")));
                 result.setRoleId(userInfoVO.getRoleId()+"");
                 result.setName(userInfoVO.getTruename());
                 result.setIdcard(userInfoVO.getIdcard());

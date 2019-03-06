@@ -243,7 +243,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
 				logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
             } catch (Exception e) {
                 logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }

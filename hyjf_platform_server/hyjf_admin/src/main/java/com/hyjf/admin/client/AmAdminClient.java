@@ -1187,4 +1187,20 @@ public interface AmAdminClient {
      * @return
      */
     MapResponse queryHjhDebtCreditTotal(HjhDebtCreditListRequest request);
+
+    /**
+     * 根据创建日期查询该天导入aleve的条数
+     *
+     * @param dualDate
+     * @return
+     */
+    Integer countAleveByDualDate(String dualDate);
+
+    /**
+     * 根据创建日期查询该天导入eve的条数
+     *
+     * @param dualDate
+     * @return
+     */
+    Integer countEveByDualDate(String dualDate);
 }

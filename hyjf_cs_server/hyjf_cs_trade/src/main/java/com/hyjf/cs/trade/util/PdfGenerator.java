@@ -110,13 +110,13 @@ public class PdfGenerator {
 				// 加章完删除文件
 				file.delete();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				if (file.exists()) {
 					file.delete();
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			logger.error("****协议生成异常2***: ",e);
 		} finally {
 			if (outputStream != null) {
@@ -124,7 +124,7 @@ public class PdfGenerator {
 					outputStream.flush();
 					outputStream.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -205,7 +205,7 @@ public class PdfGenerator {
 			System.out.println(pdfUrl + "...................................................");
 			FileUtil.getServletFile(request, response, pdfUrl.substring(0, pdfUrl.length() - 1), fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			logger.error("****协议生成异常***: ",e);
 
 		}
@@ -279,20 +279,20 @@ public class PdfGenerator {
 				// 加章完成删除文件
 				file.delete();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				if (file.exists()) {
 					file.delete();
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (outputStream != null) {
 				try {
 					outputStream.flush();
 					outputStream.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -371,7 +371,7 @@ public class PdfGenerator {
 			String pdfUrl = r1.item(0).getFirstChild().getNodeValue();
 			file = FileUtil.getFile(pdfUrl.substring(0, pdfUrl.length() - 1), fileName);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 
 		}
 		return file;

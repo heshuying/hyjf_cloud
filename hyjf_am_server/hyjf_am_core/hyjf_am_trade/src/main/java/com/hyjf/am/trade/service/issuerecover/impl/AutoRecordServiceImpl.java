@@ -198,7 +198,7 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 				result.put("msg", StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			this.updateBorrowRegist(borrow, 0, 4);
 			result.put("success", "1");
 			result.put("msg", "银行备案接口调用失败！");

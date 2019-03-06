@@ -106,9 +106,9 @@ public interface RepayManageService extends BaseTradeService {
 
     JSONObject getRepayDetailData(RepayRequestDetailRequest requestBean);
 
-    void checkForRepayRequest(String borrowNid, String password,  WebViewUserVO user, RepayBean repayBean);
+    void checkForSingleRepayRequest(String borrowNid, String password,  WebViewUserVO user);
 
-    void checkForRepayRequestOrg(String borrowNid, String password,  WebViewUserVO user, RepayBean repayBean, int flag);
+    void checkForBankBalance(WebViewUserVO user, RepayBean repayBean);
 
     RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay);
     /**
@@ -248,4 +248,11 @@ public interface RepayManageService extends BaseTradeService {
    * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
    **/
    BorrowRecoverVO selectBorrowRecoverByNid(String nid);
+
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @author liubin & wgx
+     * @date 2019/03/04
+     */
+   boolean getFailCredit(String borrowNid);
 }

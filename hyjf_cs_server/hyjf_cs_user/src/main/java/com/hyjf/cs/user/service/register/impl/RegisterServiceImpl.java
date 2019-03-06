@@ -309,7 +309,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         logger.info("注册之后user值是否为空："+(userVO==null));
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
         // 3.注册后处理
-        return this.afterRegisterHandle(userVO);
+        return this.afterRegisterHandle(userVO,Integer.parseInt(platform));
     }
 
     /**
@@ -426,11 +426,11 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      *
      * @param userVO
      */
-    private WebViewUserVO afterRegisterHandle(UserVO userVO) {
+    private WebViewUserVO afterRegisterHandle(UserVO userVO,int platform) {
         int userId = userVO.getUserId();
         // 1. 注册成功之后登录
         String token = generatorToken(userId, userVO.getUsername());
-        WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO);
+        WebViewUserVO webViewUserVO = this.assembleWebViewUserVO(userVO,platform);
         webViewUserVO.setToken(token);
         RedisUtils.setObjEx(RedisConstants.USERID_KEY + userId, webViewUserVO, 7 * 24 * 60 * 60);
 
@@ -669,7 +669,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                         commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                         logger.error("app注册推广保存用户数据！！！");
                     }
             }
@@ -773,7 +773,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param
      * @return
      */
-    private WebViewUserVO assembleWebViewUserVO(UserVO paramUser) {
+    private WebViewUserVO assembleWebViewUserVO(UserVO paramUser,int platform) {
 
         // 此时userVO只包含传递参数数据，数据库初始化的数据(非空字段有默认值)并不包含，所以调用一次查询
         UserVO userVO = amUserClient.findUserById(paramUser.getUserId());
@@ -792,7 +792,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             webViewUserVO.setRoleId(usersInfo.getRoleId() + "");
             webViewUserVO.setBorrowerType(usersInfo.getBorrowerType());
         }
-        webViewUserVO.setIconUrl(this.assembleIconUrl(userVO));
+        webViewUserVO.setIconUrl(this.assembleIconUrl(userVO,platform));
         webViewUserVO.setOpenAccount(false);
         webViewUserVO.setBankOpenAccount(false);
         if (null != userVO.getOpenAccount() && userVO.getOpenAccount() == 1) {
@@ -823,12 +823,12 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param userVO
      * @return
      */
-    private String assembleIconUrl(UserVO userVO) {
+    private String assembleIconUrl(UserVO userVO,int platform) {
         String iconUrl = userVO.getIconUrl();
         if (StringUtils.isNotBlank(iconUrl)) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(platform));
             return imghost + fileUploadTempPath + iconUrl;
         }
         return "";

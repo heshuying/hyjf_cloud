@@ -90,7 +90,7 @@ public class MessagePushController extends BaseController {
 				msgTypeList.add(tagbean);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			ret.put("status", "1");
 			ret.put("statusDesc", "获取消息失败");
 			return ret;

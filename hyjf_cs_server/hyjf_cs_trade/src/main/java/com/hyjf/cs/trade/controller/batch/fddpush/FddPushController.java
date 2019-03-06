@@ -43,7 +43,7 @@ public class FddPushController {
             }
             _log.info("------法大大放款推送定时任务结束------");
         } catch (Exception e) {
-            e.printStackTrace();
+            _log.error(e.getMessage());
         }
         return "success";
     }

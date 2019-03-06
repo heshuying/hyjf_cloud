@@ -6145,7 +6145,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     public BorrowRepayPlanBeanVO getBorrowRepayPlanInfo(String borrowNid, String borrowApr, String borrowStyle) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/getBorrowRepayPlanInfo/" + borrowNid + "/" + borrowApr + "/" + borrowStyle;
         BorrowRepayPlanResponse response = restTemplate.getForEntity(url, BorrowRepayPlanResponse.class).getBody();
-        logger.info("response:" +JSONObject.toJSON(response));
         if (response != null) {
             return response.getBorrowRepayPlanBeanVO();
         }
@@ -6749,6 +6748,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @return
+     */
+    @Override
+    public boolean getFailCredit(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/repay/getFailCredit/" + borrowNid;
+        return restTemplate.getForEntity(url, boolean.class).getBody();
+    }
+
     /**
      * 删除 自动出借临时表
      * @auther: nxl

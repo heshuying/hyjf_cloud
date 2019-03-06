@@ -189,7 +189,7 @@ public class ChinapnrController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 验签
         ChinapnrBean result = api.verifyChinaPnr(bean);
@@ -234,7 +234,7 @@ public class ChinapnrController extends BaseController {
             try {
                 jo = JSONObject.parseObject(record.getContent());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             callBackUrl = jo.getString("RetUrl");
             bean.setMerPriv(jo.getString("MerPriv"));
@@ -306,7 +306,7 @@ public class ChinapnrController extends BaseController {
                     }
                     bean.getAllParams().put("UsrName", URLDecoder.decode(bean.getUsrName(), CustomConstants.UTF8));
                 } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -352,7 +352,7 @@ public class ChinapnrController extends BaseController {
             try {
                 jo = JSONObject.parseObject(record.getContent());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             callBackUrl = jo.getString("BgRetUrl");
             bean.setMerPriv(jo.getString("MerPriv"));
@@ -417,7 +417,7 @@ public class ChinapnrController extends BaseController {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
             }
@@ -538,7 +538,7 @@ public class ChinapnrController extends BaseController {
                     bean.setMerPriv(merPriv);
                     bean.set(ChinaPnrConstant.PARAM_MERPRIV, merPriv);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
                  merPriv = bean.getMerPriv();
                 // 得到接口API对象

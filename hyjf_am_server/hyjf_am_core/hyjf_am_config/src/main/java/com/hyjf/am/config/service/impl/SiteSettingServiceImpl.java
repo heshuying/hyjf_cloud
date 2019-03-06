@@ -116,7 +116,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
             try {
                 Thread.sleep(num*1000);
             } catch (InterruptedException e) {
-                 e.printStackTrace();
+                 logger.error(e.getMessage());
             }
 
 		*//*if (1 == 1) {

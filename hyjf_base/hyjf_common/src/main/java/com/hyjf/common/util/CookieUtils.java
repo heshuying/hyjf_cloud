@@ -12,6 +12,8 @@
 package com.hyjf.common.util;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import javax.servlet.http.Cookie;
@@ -28,6 +30,8 @@ import java.util.Map;
  */
 
 public class CookieUtils {
+
+	private static final Logger logger = LoggerFactory.getLogger(CookieUtils.class);
 
 	/** cookieDomain */
 	private static final String cookieDomain = "";
@@ -135,7 +139,7 @@ public class CookieUtils {
 			}
 			response.addCookie(cookie);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -217,7 +221,7 @@ public class CookieUtils {
 					}
 				}
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 		return null;
@@ -245,7 +249,7 @@ public class CookieUtils {
 					}
 				}
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 		return null;
@@ -282,7 +286,7 @@ public class CookieUtils {
 			}
 			response.addCookie(cookie);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

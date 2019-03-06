@@ -672,7 +672,7 @@ public class BankMerchantAccountController extends BaseController {
                 return ret;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         int cnt = 0;
         try {
@@ -733,7 +733,7 @@ public class BankMerchantAccountController extends BaseController {
         try {
             resultBean = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException("1","请求红包接口失败");
         }
         return result;

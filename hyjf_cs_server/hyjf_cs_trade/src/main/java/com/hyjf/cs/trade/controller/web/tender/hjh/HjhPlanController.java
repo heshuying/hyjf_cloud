@@ -76,7 +76,7 @@ public class HjhPlanController extends BaseTradeController {
             try {
                 presetProps = URLDecoder.decode(presetProps,"UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             logger.info("神策预置属性presetProps2:[" + presetProps + "]");
             SensorsDataBean sensorsDataBean = new SensorsDataBean();
@@ -91,7 +91,7 @@ public class HjhPlanController extends BaseTradeController {
                 // 发送神策数据统计MQ
                 this.hjhTenderService.sendSensorsDataMQ(sensorsDataBean);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         // 神策数据统计 add by liuyang 20180726 end

@@ -1,5 +1,8 @@
 package com.hyjf.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +13,9 @@ import java.util.Date;
 * @version 1.0 
 * @date 2009-10-21 16:38:51 
 */  
-public class DateDistance {  
+public class DateDistance {
+
+    private static final Logger logger = LoggerFactory.getLogger(DateDistance.class);
       
     /** 
      * 两个时间之间相差距离多少天 
@@ -36,7 +41,7 @@ public class DateDistance {
             }  
             days = diff / (1000 * 60 * 60 * 24);  
         } catch (ParseException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }  
         return days;  
     }  
@@ -64,7 +69,7 @@ public class DateDistance {
             }  
             days = diff / (1000 * 60 * 60 * 24);  
         } catch (ParseException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }  
         return days;  
     } 
@@ -99,7 +104,7 @@ public class DateDistance {
             min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);  
             sec = (diff/1000-day*24*60*60-hour*60*60-min*60);  
         } catch (ParseException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }  
         long[] times = {day, hour, min, sec};  
         return times;  
@@ -134,7 +139,7 @@ public class DateDistance {
             min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);  
             sec = (diff/1000-day*24*60*60-hour*60*60-min*60);  
         } catch (ParseException e) {  
-            e.printStackTrace();  
+            logger.error(e.getMessage());
         }  
         return day + "天" + hour + "小时" + min + "分" + sec + "秒";  
     }  

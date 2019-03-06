@@ -16,6 +16,8 @@ import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ import java.util.List;
  */
 @Service
 public class ContentAdsServiceImpl implements ContentAdsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContentAdsServiceImpl.class);
 
     @Autowired
     private AdsMapper adsMapper;
@@ -114,7 +118,7 @@ public class ContentAdsServiceImpl implements ContentAdsService {
                 criteria.andCreateTimeGreaterThanOrEqualTo
                         (GetDate.parseDate(GetDate.getDayStart(bean.getStartCreate()),GetDate.datetimeFormat_key));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if (StringUtils.isNotEmpty(bean.getEndCreate())) {
@@ -122,7 +126,7 @@ public class ContentAdsServiceImpl implements ContentAdsService {
                 criteria.andCreateTimeLessThanOrEqualTo
                         (GetDate.parseDate(GetDate.getDayEnd(bean.getEndCreate()),GetDate.datetimeFormat_key));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if (limitStart != -1) {
@@ -159,7 +163,7 @@ public class ContentAdsServiceImpl implements ContentAdsService {
                 criteria.andCreateTimeGreaterThanOrEqualTo
                         (GetDate.parseDate(GetDate.getDayStart(bean.getStartCreate()),GetDate.datetimeFormat_key));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if (StringUtils.isNotEmpty(bean.getEndCreate())) {
@@ -167,7 +171,7 @@ public class ContentAdsServiceImpl implements ContentAdsService {
                 criteria.andCreateTimeLessThanOrEqualTo
                         (GetDate.parseDate(GetDate.getDayEnd(bean.getEndCreate()),GetDate.datetimeFormat_key));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 

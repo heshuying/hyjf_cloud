@@ -201,7 +201,7 @@ public class TransferController extends BaseController {
                         result.setData(map);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     boolean afterFlag = this.transferService.updateMerchantTransfer(orderId,2,"调用子账户转账接口异常")>0?true:false;
                     if(afterFlag){
                         logger.info("调用子账户转账接口异常，转账失败,订单号："+orderId);

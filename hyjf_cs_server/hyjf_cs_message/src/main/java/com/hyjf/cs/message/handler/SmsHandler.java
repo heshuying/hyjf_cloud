@@ -78,7 +78,7 @@ public class SmsHandler {
 				paramMapMaketing.put("cdkey", smsProperties.getMarketSoftSerialNo());
 				paramMapMaketing.put("password", smsProperties.getMarketKey());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 	}

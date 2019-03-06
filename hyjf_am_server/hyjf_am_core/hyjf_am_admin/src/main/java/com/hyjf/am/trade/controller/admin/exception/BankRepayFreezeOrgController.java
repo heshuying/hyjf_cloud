@@ -105,4 +105,12 @@ public class BankRepayFreezeOrgController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据借款编号查询当前标的是否有承接失败的债权
+     * @return
+     */
+    @GetMapping(value = "/getFailCredit/{borrowNid}")
+    public boolean getFailCredit(@PathVariable String borrowNid){
+        return bankRepayFreezeOrgService.getFailCredit(borrowNid);
+    }
 }

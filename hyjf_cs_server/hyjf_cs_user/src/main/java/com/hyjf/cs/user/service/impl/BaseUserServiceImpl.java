@@ -10,8 +10,6 @@ import com.hyjf.common.bean.AccessToken;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.jwt.Token;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -512,101 +510,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 	@Override
-	public WebViewUserVO getWebViewUserByUserId(Integer userId) {
-		//主从延迟查询主库
-		UserVO user = this.updateUsersById(userId);
-		WebViewUserVO result = new WebViewUserVO();
-		result.setUserId(user.getUserId());
-		result.setUsername(user.getUsername());
-		if (StringUtils.isNotBlank(user.getMobile())) {
-			result.setMobile(user.getMobile());
-		}
-		if (StringUtils.isNotBlank(user.getIconUrl())) {
-			String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
-			imghost = imghost.substring(0, imghost.length() - 1);
-			String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
-			if(StringUtils.isNotEmpty(user.getIconUrl())){
-				result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
-			}
-		}
-		if (StringUtils.isNotBlank(user.getEmail())) {
-			result.setEmail(user.getEmail());
-		}
-		if (user.getOpenAccount() != null) {
-			if (user.getOpenAccount().intValue() == 1) {
-				result.setOpenAccount(true);
-			} else {
-				result.setOpenAccount(false);
-			}
-		}
-		if (user.getBankOpenAccount() != null) {
-			if (user.getBankOpenAccount() == 1) {
-				result.setBankOpenAccount(true);
-			} else {
-				result.setBankOpenAccount(false);
-			}
-		}
-		result.setRechargeSms(user.getRechargeSms());
-		result.setWithdrawSms(user.getWithdrawSms());
-		result.setInvestSms(user.getInvestSms());
-		result.setRecieveSms(user.getRecieveSms());
-		result.setIsSetPassword(user.getIsSetPassword());
-		try {
-			if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
-				//测评到期日
-				Long lCreate = user.getEvaluationExpiredTime().getTime();
-				//当前日期
-				Long lNow = System.currentTimeMillis();
-				if (lCreate <= lNow) {
-					//已过期需要重新评测
-					result.setIsEvaluationFlag(2);
-					result.setEvaluationExpiredTime(user.getEvaluationExpiredTime());
-				} else {
-					//未到一年有效期
-					result.setIsEvaluationFlag(1);
-					result.setEvaluationExpiredTime(user.getEvaluationExpiredTime());
-				}
-			}else{
-				result.setIsEvaluationFlag(0);
-			}
-			// 用户是否完成风险测评标识 end
-		} catch (Exception e) {
-			result.setIsEvaluationFlag(0);
-		}
-		result.setIsSmtp(user.getIsSmtp());
-		result.setUserType(user.getUserType());
-		UserInfoVO userInfoVO = this.getUserInfo(userId);
-		if (userInfoVO != null && userInfoVO.getSex() != null) {
-			result.setSex(userInfoVO.getSex());
-			if (StringUtils.isNotBlank(userInfoVO.getNickname())) {
-				result.setNickname(userInfoVO.getNickname());
-			}
-			if (StringUtils.isNotBlank(userInfoVO.getTruename())) {
-				result.setTruename(userInfoVO.getTruename());
-			}
-			if (StringUtils.isNotBlank(userInfoVO.getIdcard())) {
-				result.setIdcard(userInfoVO.getIdcard());
-			}
-			result.setBorrowerType(userInfoVO.getBorrowerType());
-			result.setRoleId(userInfoVO.getRoleId() + "");
-		}
-		AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(userId);
-		if (chinapnr != null) {
-			result.setChinapnrUsrid(chinapnr.getChinapnrUsrid());
-			result.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
-		}
-		BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(userId);
-		if (bankOpenAccount != null && StringUtils.isNotEmpty(bankOpenAccount.getAccount())) {
-			if (result.isBankOpenAccount()) {
-				result.setBankAccount(bankOpenAccount.getAccount());
-			}
-		}
-		// 用户紧急联系人
-		UsersContactVO usersContactVO = amUserClient.selectUserContact(userId);
-		if (usersContactVO != null) {
-			result.setUsersContact(usersContactVO);
-		}
-		return result;
+	public WebViewUserVO getWebViewUserByUserId(Integer userId,String channel) {
+		return amUserClient.getWebViewUserByUserId(userId,channel);
 	}
 
 	@Override
@@ -655,7 +560,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		try {
 			str = URLEncoder.encode(str, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return str;
 	}

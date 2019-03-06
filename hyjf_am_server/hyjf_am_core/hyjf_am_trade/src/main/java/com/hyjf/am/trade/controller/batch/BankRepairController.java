@@ -270,7 +270,7 @@ public class BankRepairController extends BaseController {
         try {
             bankInvestAllExceptionService.updateTenderStart(request);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             ret = false;
         }
 
@@ -302,7 +302,7 @@ public class BankRepairController extends BaseController {
         try {
             this.bankTenderCancelService.updateBidCancelRecord(request);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             ret = false;
         }
         return ret;

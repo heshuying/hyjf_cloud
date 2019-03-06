@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -16,10 +17,7 @@ import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -27,6 +25,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.StringUtils;
@@ -58,6 +57,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Autowired
     private CommonProducer smsProducer;
+
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 注册
      *
@@ -274,6 +276,36 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             userLoginLog.setUpdateTime(new Date());
             userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
         }
+    }
+
+    @Override
+    public void updateUser(int userId, String ip,User user) {
+        UserLoginLog userLoginLog = findUserLoginLogByUserId(userId);
+        if (userLoginLog == null) {
+            userLoginLog = new UserLoginLog();
+            userLoginLog.setUserId(userId);
+            userLoginLog.setLoginIp(ip);
+            userLoginLog.setLoginTime(new Date());
+            userLoginLog.setLastIp(userLoginLog.getLoginIp());
+            userLoginLog.setLastTime(userLoginLog.getLoginTime());
+            userLoginLog.setLoginTimes(1);
+            userLoginLog.setCreateTime(new Date());
+            userLoginLogMapper.insertSelective(userLoginLog);
+        } else {
+            if (userLoginLog.getLoginIp() != null) {
+                userLoginLog.setLastIp(userLoginLog.getLoginIp());
+            }
+            if (userLoginLog.getLoginTime() != null) {
+                userLoginLog.setLastTime(userLoginLog.getLoginTime());
+            }
+            userLoginLog.setLoginIp(ip);
+            userLoginLog.setLoginTime(new Date());
+            // 登录次数
+            userLoginLog.setLoginTimes(userLoginLog.getLoginTimes() + 1);
+            userLoginLog.setUpdateTime(new Date());
+            userLoginLogMapper.updateByPrimaryKeySelective(userLoginLog);
+        }
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     /**
@@ -1265,7 +1297,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             Integer evaluationExpiredDay = Integer.parseInt(evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, evaluationExpiredDay);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("redis测评有效日格式化失败！key：" + RedisConstants.REVALUATION_EXPIRED_DAY + "========value:" + evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, 180);
         }
@@ -1551,5 +1583,99 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Override
     public BifaIndexUserInfoBean getBifaIndexUserInfo(Integer userId) {
         return bifaUserCustomizeMapper.selectUserCorpInfoByUserId(userId);
+    }
+
+    @Override
+    public WebViewUserVO getWebViewUserByUserId(Integer userId,String channel) {
+        User user = this.findUserByUserId(userId);
+        WebViewUserVO result = new WebViewUserVO();
+        result.setUserId(user.getUserId());
+        result.setUsername(user.getUsername());
+        if (StringUtils.isNotBlank(user.getMobile())) {
+            result.setMobile(user.getMobile());
+        }
+        if (StringUtils.isNotBlank(user.getIconUrl())) {
+            String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
+            imghost = imghost.substring(0, imghost.length() - 1);
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(channel));
+            if(StringUtils.isNotEmpty(user.getIconUrl())){
+                result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
+            }
+        }
+        if (StringUtils.isNotBlank(user.getEmail())) {
+            result.setEmail(user.getEmail());
+        }
+        if (user.getOpenAccount() != null) {
+            if (user.getOpenAccount().intValue() == 1) {
+                result.setOpenAccount(true);
+            } else {
+                result.setOpenAccount(false);
+            }
+        }
+        if (user.getBankOpenAccount() != null) {
+            if (user.getBankOpenAccount() == 1) {
+                result.setBankOpenAccount(true);
+            } else {
+                result.setBankOpenAccount(false);
+            }
+        }
+        result.setRechargeSms(user.getRechargeSms());
+        result.setWithdrawSms(user.getWithdrawSms());
+        result.setInvestSms(user.getInvestSms());
+        result.setRecieveSms(user.getRecieveSms());
+        result.setIsSetPassword(user.getIsSetPassword());
+        try {
+            if(user.getIsEvaluationFlag()==1 && null != user.getEvaluationExpiredTime()){
+                //测评到期日
+                Long lCreate = user.getEvaluationExpiredTime().getTime();
+                //当前日期
+                Long lNow = System.currentTimeMillis();
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    result.setIsEvaluationFlag(2);
+                    result.setEvaluationExpiredTime(user.getEvaluationExpiredTime());
+                } else {
+                    //未到一年有效期
+                    result.setIsEvaluationFlag(1);
+                    result.setEvaluationExpiredTime(user.getEvaluationExpiredTime());
+                }
+            }else{
+                result.setIsEvaluationFlag(0);
+            }
+            // 用户是否完成风险测评标识 end
+        } catch (Exception e) {
+            result.setIsEvaluationFlag(0);
+        }
+        result.setIsSmtp(user.getIsSmtp());
+        result.setUserType(user.getUserType());
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
+        if (userInfo != null && userInfo.getSex() != null) {
+            result.setSex(userInfo.getSex());
+            if (StringUtils.isNotBlank(userInfo.getTruename())) {
+                result.setTruename(userInfo.getTruename());
+            }
+            if (StringUtils.isNotBlank(userInfo.getIdcard())) {
+                result.setIdcard(userInfo.getIdcard());
+            }
+            result.setBorrowerType(userInfo.getBorrowerType());
+            result.setRoleId(userInfo.getRoleId() + "");
+        }
+        BankOpenAccount bankOpenAccount = selectBankAccountById(userId);
+        if (bankOpenAccount != null && StringUtils.isNotEmpty(bankOpenAccount.getAccount())) {
+            if (result.isBankOpenAccount()) {
+                result.setBankAccount(bankOpenAccount.getAccount());
+            }
+        }
+        // 用户紧急联系人
+        UserContact usersContact = selectUserContact(userId);
+        if(null!=usersContact){
+            UsersContactVO userContactVO = new UsersContactVO();
+            BeanUtils.copyProperties(usersContact, userContactVO);
+            if (usersContact != null) {
+                result.setUsersContact(userContactVO);
+            }
+        }
+
+        return result;
     }
 }

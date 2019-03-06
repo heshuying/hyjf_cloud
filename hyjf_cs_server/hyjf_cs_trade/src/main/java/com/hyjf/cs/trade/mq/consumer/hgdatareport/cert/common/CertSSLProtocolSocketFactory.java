@@ -3,6 +3,8 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
@@ -14,6 +16,8 @@ import java.net.*;
 import java.security.KeyStore;
 
 public class CertSSLProtocolSocketFactory implements ProtocolSocketFactory {
+
+	private static final Logger logger = LoggerFactory.getLogger(CertSSLProtocolSocketFactory.class);
 
 	private SSLContext sslcontext = null;
 
@@ -34,7 +38,7 @@ public class CertSSLProtocolSocketFactory implements ProtocolSocketFactory {
 			sslc = SSLContext.getInstance("SSLv3");
 			sslc.init(null, tmf.getTrustManagers(), null);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (is != null){
 				try {

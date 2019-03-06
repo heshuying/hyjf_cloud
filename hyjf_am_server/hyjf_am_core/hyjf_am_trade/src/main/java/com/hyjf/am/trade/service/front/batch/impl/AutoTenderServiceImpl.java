@@ -92,8 +92,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      */
     public final String HJH_ASSIGN = "assign";
 
-    public static JedisPool pool = RedisUtils.getPool();
-
     /**
      * 查询计划加入明细
      *
@@ -2066,7 +2064,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                     try {
                                                         accountWebListFlag = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
                                                     } catch (MQException e) {
-                                                        e.printStackTrace();
+                                                        logger.error(e.getMessage());
                                                         throw new RuntimeException("网站收支插入（mongo）发生异常，用户userId" + userId + ",承接订单号：" + debtCreditTender.getAssignOrderId());
                                                     }
                                                     if (accountWebListFlag) {

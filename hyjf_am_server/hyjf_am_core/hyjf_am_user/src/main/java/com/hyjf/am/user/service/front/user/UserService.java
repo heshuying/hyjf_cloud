@@ -10,6 +10,7 @@ import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
@@ -328,4 +329,19 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
     BifaIndexUserInfoBean getBifaIndexUserInfo(Integer userId);
+
+	/**
+	 * 获取用户基本信息
+	 * @return
+	 * @param userId
+	 */
+	WebViewUserVO getWebViewUserByUserId(Integer userId,String channel);
+
+	/**
+	 * 更新用户信息
+	 * @param userId
+	 * @param ip
+	 * @param user
+	 */
+	void updateUser(int userId, String ip, User user);
 }

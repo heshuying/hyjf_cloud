@@ -95,7 +95,7 @@ public class CouponUserController extends BaseController {
                 response.setCount(count);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -116,7 +116,7 @@ public class CouponUserController extends BaseController {
                 response.setCount(count);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setRtn("1");
             response.setMessage("发放失败");
         }

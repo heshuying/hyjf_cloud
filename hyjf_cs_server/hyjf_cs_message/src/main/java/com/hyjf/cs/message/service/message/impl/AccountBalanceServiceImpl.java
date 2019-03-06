@@ -9,6 +9,8 @@ import com.hyjf.cs.message.service.message.AccountBalanceService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Query;
@@ -23,6 +25,7 @@ import java.util.*;
 @Service
 public class AccountBalanceServiceImpl implements AccountBalanceService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AccountBalanceServiceImpl.class);
     @Autowired
     private HjhAccountBalanceDao hjhAccountBalanceDao;
 
@@ -61,7 +64,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             return appAccesStatisticsVO;
 
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }
@@ -161,7 +164,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             return appAccesStatisticsVO;
 
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return null;
     }

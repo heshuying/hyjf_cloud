@@ -108,7 +108,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
             authService.insertUserAuthLog(authBean.getUserId(), orderId,Integer.parseInt(authBean.getPlatform()), "4");
             result.setData(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
 
@@ -158,7 +158,7 @@ public class CreditAuthPagePlusController extends BaseUserController {
                 // 更新签约状态和日志表
                 this.authService.updateUserAuth(Integer.parseInt(bean.getLogUserId()), bean, AuthBean.AUTH_TYPE_AUTO_CREDIT);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
             }
         }else{

@@ -206,7 +206,7 @@ public class PnrApiBean implements Serializable {
 //                        try {
 //                            sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
 //                        } catch (UnsupportedEncodingException e) {
-//                            e.printStackTrace();
+//                            logger.error(e.getMessage());
 //                        }
 //                    }
 //
@@ -262,7 +262,7 @@ public class PnrApiBean implements Serializable {
 //                        try {
 //                            sb.append(StringUtils.trimToEmpty(URLDecoder.decode(paramMap.get(key), "UTF-8")));
 //                        } catch (UnsupportedEncodingException e) {
-//                            e.printStackTrace();
+//                            logger.error(e.getMessage());
 //                        }
 //                    }
 //
