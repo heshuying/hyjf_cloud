@@ -85,7 +85,6 @@ public class PushMoneyManageController extends BaseController {
         List<PushMoneyVO> pushMoneyVOList = CommonUtils.convertBeanList(pushMoneyList,PushMoneyVO.class);
         response.setResultList(pushMoneyVOList);
         response.setRtn(Response.SUCCESS);
-        response.setRtn(Response.SUCCESS);
         return response;
     }
 

@@ -66,27 +66,15 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
-        // 初始化原子层请求实体
-        // 初始化返回LIST
-        List<PushMoneyVO> pushMoneyList = null;
-        // 将画面请求request赋值给原子层 request
-        // 根据删选条件获取计划列表
-
+    public AdminResult getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
+        Map<String,Object> result = new HashMap<>();
         PushMoneyResponse response = pushMoneyManageService.findPushMoneyList(request);
-        if(response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        if(CollectionUtils.isNotEmpty(response.getResultList())){
-            // 将原子层返回集合转型为组合层集合用于返回 response为原子层 AssetListCustomizeVO，在此转成组合层AdminAssetListCustomizeVO
-            pushMoneyList = CommonUtils.convertBeanList(response.getResultList(), PushMoneyVO.class);
-            return new AdminResult<ListResult<PushMoneyVO>>(ListResult.build(pushMoneyList, response.getCount()));
-        } else {
-            return new AdminResult<ListResult<PushMoneyVO>>(ListResult.build(pushMoneyList, 0));
-        }
+        Integer count = response.getCount();
+        count = (count == null)?0:count;
+        result.put("count",count);
+        List<PushMoneyVO> pushMoneyVOList = response.getResultList();
+        result.put("list",pushMoneyVOList);
+        return new AdminResult<>(result);
     }
     //计算提成
     @ApiOperation(value = "计算提成", notes = "计算提成")
