@@ -126,7 +126,7 @@ public class AppBindCardController extends BaseUserController {
         SendSmsResultBean result = new SendSmsResultBean();
 
         logger.info("绑卡发送验证码接口开始：userId：" + userId);
-        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_APP);
 
         if (webViewUserVO == null) {
             result.setStatus(SendSmsResultBean.FAIL);
@@ -210,7 +210,7 @@ public class AppBindCardController extends BaseUserController {
         ModelAndView modelAndView = new ModelAndView();
 
         logger.info("用户绑卡开始：userId:" + userId);
-        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_APP);
         if (webViewUserVO == null) {
             return getErrorModel("用户未登录");
         }

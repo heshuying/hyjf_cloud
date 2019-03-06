@@ -1085,12 +1085,21 @@ public class UserController extends BaseController {
         return response;
     }
 
-    @GetMapping("/getWebViewUserByUserId/{userId}/{platform}")
-    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId,@PathVariable Integer platform){
+    @GetMapping("/getWebViewUserByUserId/{userId}/{channel}")
+    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId,@PathVariable String channel){
         WebViewUserResponse response = new WebViewUserResponse();
-        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId,platform);
+        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId,channel);
         response.setResult(webViewUserVO);
         return response;
     }
+/*
+    @GetMapping("/getWebViewUserByUserId/{userId}")
+    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId){
+        WebViewUserResponse response = new WebViewUserResponse();
+        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId);
+        response.setResult(webViewUserVO);
+        return response;
+    }
+*/
 
 }

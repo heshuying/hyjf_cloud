@@ -242,9 +242,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public WebViewUserVO getWebViewUserByUserId(Integer userId) {
+	public WebViewUserVO getWebViewUserByUserId(Integer userId,String channel) {
 		WebViewUserResponse response = restTemplate
-				.getForEntity(userService + "/user/getWebViewUserByUserId/"+ userId, WebViewUserResponse.class).getBody();
+				.getForEntity(userService + "/user/getWebViewUserByUserId/"+ userId+"/"+channel, WebViewUserResponse.class).getBody();
 		return response.getResult();
 	}
 

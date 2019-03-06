@@ -12,6 +12,7 @@ import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.safe.SafeService;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class AppSafeController extends BaseUserController {
         // 取得加密用的Key
         String key = SecretUtil.getKey(sign);
 
-        WebViewUserVO webViewUserVO = safeService.getWebViewUserByUserId(userId);
+        WebViewUserVO webViewUserVO = safeService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_APP);
         // 业务逻辑
         try {
             if (userId != null) {
