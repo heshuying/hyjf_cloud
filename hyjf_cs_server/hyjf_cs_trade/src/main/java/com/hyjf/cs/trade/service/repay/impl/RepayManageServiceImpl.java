@@ -300,6 +300,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public void checkForBankBalance(WebViewUserVO user, RepayBean repayBean) {
         AccountVO accountVO = getAccountByUserId(user.getUserId());
+        repayBean.setRepayUserId(user.getUserId());
         if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
             // ** 垫付机构符合还款条件，可以还款 *//*
             // 查询用户在银行的电子账户
