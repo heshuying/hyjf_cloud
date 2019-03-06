@@ -43,6 +43,7 @@
           FROM
             ht_r_oa_department
           WHERE NAME = #{primaryDivision})
+          AND flag = 1
     </select>
 
 </mapper>
