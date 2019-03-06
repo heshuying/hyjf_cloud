@@ -818,7 +818,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 28){//法人
 							resultMap.put("comLegalPerson", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 29){//注册地区
-							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("comLocationCity", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 30){//主营业务
 							resultMap.put("comMainBusiness", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 31){//在平台逾期次数
@@ -1000,7 +1000,7 @@ public class BorrowCommonController extends BaseController {
 						/** 原个人勾选内容改上传 end */
 						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
 						else if(rowNum == 87){//(企业)企业注册地
-							resultMap.put("registration", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
 						}
 						else if(rowNum == 88){//(个人)借款人地址
 							resultMap.put("address", this.getValue(hssfRow.getCell(1)));
