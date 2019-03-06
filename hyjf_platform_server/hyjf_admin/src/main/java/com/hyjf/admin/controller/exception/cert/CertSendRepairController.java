@@ -34,12 +34,12 @@ import java.util.UUID;
  */
 @Api(value = "数据中心-应急中心错误日志", tags = "数据中心-应急中心错误日志")
 @RestController
-@RequestMapping("/hyjf-admin/exception/certsendexception")
-public class CertSendExceptionController extends BaseController{
+@RequestMapping("/hyjf-admin/repair/certsendrepair")
+public class CertSendRepairController extends BaseController{
 
     @Autowired
     private CertReportLogService certReportLogService;
-    Logger _log = LoggerFactory.getLogger(CertSendExceptionController.class);
+    Logger _log = LoggerFactory.getLogger(CertSendRepairController.class);
 
     private static final String PERMISSIONS = "certerrorlog";
     @Autowired
@@ -47,7 +47,7 @@ public class CertSendExceptionController extends BaseController{
 
 
     @ApiOperation(value = "应急中心错误日志列表显示", notes = "应急中心错误日志列表显示")
-    @PostMapping("/selectCertErrorLogList")
+    @PostMapping("/selectCertRepairLogList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertErrLogVO>> selectCertErrorLogList(@RequestBody CertErrorReportLogRequestBean requestBean){
         CertErrorReportLogResponse response = certReportLogService.selectCertErrorReportLogList(requestBean);
