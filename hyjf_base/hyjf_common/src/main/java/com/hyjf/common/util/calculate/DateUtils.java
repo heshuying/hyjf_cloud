@@ -644,7 +644,6 @@ public class DateUtils {
 				isBefore = false;
 			}
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			logger.error(e.getMessage());
 		}
 		return  isBefore;

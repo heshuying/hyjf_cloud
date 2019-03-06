@@ -81,7 +81,6 @@ public class RandomValidateCode {
 		// }
 
 		HttpSession session = request.getSession();
-		//TODO 获取sessionid方法有变化
 		RedisUtils.set(CLASSNAME+"RandomValidateCode_" + session.getId(), randomString, 10 * 60);// 10分钟有效
 		// SessionUtils.setSession(RANDOMCODEKEY, randomString);
 		g.dispose();
@@ -131,7 +130,6 @@ public class RandomValidateCode {
 	 * @return
 	 */
 	public boolean checkRandomCode(HttpServletRequest request, String randomCode) {
-		//TODO 获取sessionid方法有变化
 		HttpSession session = request.getSession();
 		String oldCode = RedisUtils.get(CLASSNAME+"RandomValidateCode_" + session.getId());
 		if (oldCode != null && StringUtils.equalsIgnoreCase(oldCode, randomCode)) {
