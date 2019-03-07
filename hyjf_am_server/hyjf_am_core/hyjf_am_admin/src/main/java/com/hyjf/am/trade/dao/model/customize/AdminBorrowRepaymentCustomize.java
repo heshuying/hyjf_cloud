@@ -51,7 +51,7 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
     private String repayActionTime; //实际还款时间
     private String planNid;//计划编号
     private String instName; //机构名称
-
+    private String freezeOrderId; //冻结订单号
 
     public String getBorrowNid() {
         return borrowNid;
@@ -333,6 +333,14 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
         this.instName = instName;
     }
 
+    public String getFreezeOrderId() {
+        return freezeOrderId;
+    }
+
+    public void setFreezeOrderId(String freezeOrderId) {
+        this.freezeOrderId = freezeOrderId;
+    }
+
     /***
      * 融通宝加息还款
      *
@@ -584,5 +592,6 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
         public void setRepayInterestYes(BigDecimal repayInterestYes) {
             this.repayInterestYes = repayInterestYes;
         }
+
     }
 }

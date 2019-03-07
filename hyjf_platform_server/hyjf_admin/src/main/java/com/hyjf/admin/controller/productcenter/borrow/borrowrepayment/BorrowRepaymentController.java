@@ -392,6 +392,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayOrgUserName" ,"担保机构用户名");
         map.put("createUserName","添加标的人员");
         map.put("registUserName","备案人员");
+        map.put("freezeOrderId","还款冻结订单号");
         return map;
     }
     private Map<String, IValueFormatter> exportBuildValueAdapter() {
