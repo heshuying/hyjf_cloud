@@ -233,9 +233,10 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
    /*     String startDate = getTxDate(bankOpenAccount);
         String endDate = GetOrderIdUtils.getTxDate();
 */
+        //todo wangjun test
         // 测试环境
         String startDate = "20180428";
-        String endDate = "20180428";
+        String endDate = GetOrderIdUtils.getTxDate();
 
 
 
