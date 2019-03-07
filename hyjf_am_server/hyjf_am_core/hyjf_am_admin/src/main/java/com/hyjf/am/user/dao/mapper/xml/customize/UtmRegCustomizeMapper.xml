@@ -830,7 +830,7 @@
 		a.invest_amount,
 		r.source_name as utm_name,
 		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
-		DATE_FORMAT(r.register_time,'%Y-%m-%d %H:%i:%s') as reg_time,
+		DATE_FORMAT(hu.register_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
 		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
 		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
@@ -881,6 +881,7 @@
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		) AS a
 		INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
+		INNER JOIN  ht_user hu on r.user_id = hu.user_id
 		where 1=1
 		<if test="sourceId != null and sourceId != ''">
 			and r.source_id = #{sourceId}
@@ -928,7 +929,7 @@
 		a.invest_amount,
 		r.source_name as utm_name,
 		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
-		DATE_FORMAT(r.register_time,'%Y-%m-%d %H:%i:%s') as reg_time,
+		DATE_FORMAT(hu.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
 		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
 		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
@@ -979,6 +980,7 @@
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		) AS a
 		INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
+		INNER JOIN  ht_user hu on r.user_id = hu.user_id
 		where 1=1
 		<if test="sourceId != null and sourceId != ''">
 			and r.source_id = #{sourceId}
