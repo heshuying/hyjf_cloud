@@ -119,12 +119,10 @@ public class TenderCancelRepairServiceImpl extends BaseServiceImpl implements Te
         BorrowTenderTmpExample.Criteria criteria = example.createCriteria();
         // 5分钟之前
         criteria.andCreateTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime(),-5));
-
         // 用户名
-        if(StringUtils.isNotEmpty(request.getUserName())){
-            criteria.andUserNameLike("%"+request.getUserName()+"%");
-        }
+        criteria.andUserNameLike("%"+request.getUserName()+"%");
         criteria.andIsBankTenderEqualTo(1);
+
         // 标的号
         if (StringUtils.isNotBlank(request.getBorrowNid())) {
             criteria.andBorrowNidLike("%"+request.getBorrowNid()+"%");
