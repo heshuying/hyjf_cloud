@@ -39,7 +39,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
+		logger.debug("admin接收到请求,请求接口为:" + request.getRequestURI());
 		try {
 			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
 			String val = RedisUtils.get(RedisConstants.ADMIN_UNIQUE_ID + username);
