@@ -288,9 +288,9 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
         //匹配验证
         //提现金额
         BigDecimal txAmount = new BigDecimal(bean.getTxAmount());
-        if (!txAmount.equals(accountWithdraw.getCredited())) {
+        if (txAmount.compareTo(accountWithdraw.getCredited())!=0) {
             resultBool = false;
-            resultMsg = "本地记录的提现金额与银行返回的交易金额不一致:本地记录的提现金额:" + accountWithdraw.getTotal() + ",银行返回的充值金额:" + txAmount;
+            resultMsg = "本地记录的提现金额与银行返回的交易金额不一致:本地记录的提现金额:" + accountWithdraw.getTotal() + ",银行返回的提现金额:" + txAmount;
         }
 
         //匹配结果

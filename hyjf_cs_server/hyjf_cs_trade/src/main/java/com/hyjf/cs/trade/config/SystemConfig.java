@@ -81,9 +81,6 @@ public class SystemConfig {
     @Value("${hyjf.notice.ios.version}")
     public String iosNoticeVersion;
 
-    @Value("${hyjf.pay.fdd.nofify.url}")
-    private String hyjfPayFddNotifyUrl;
-
     @Value("${hyjf.fdd.customerid}")
     private String hyjfFddCustomerid;
 
@@ -262,9 +259,6 @@ public class SystemConfig {
 
     @Value("${new.hjh.diary.ftl.name}")
     private String neweHhjDiaryFtlName;
-
-    @Value("${hyjf.wechat.invite.url}")
-    private String wechatInviteUrl;
 
     @Value("${hyjf.online.type}")
     private String hyjfOnlineType;
@@ -495,14 +489,6 @@ public class SystemConfig {
 
     public void setBankBankcode(String bankBankcode) {
         this.bankBankcode = bankBankcode;
-    }
-
-    public String getHyjfPayFddNotifyUrl() {
-        return hyjfPayFddNotifyUrl;
-    }
-
-    public void setHyjfPayFddNotifyUrl(String hyjfPayFddNotifyUrl) {
-        this.hyjfPayFddNotifyUrl = hyjfPayFddNotifyUrl;
     }
 
     public String getHyjfFddCustomerid() {
@@ -846,14 +832,6 @@ public class SystemConfig {
 
     public void setFileUploadRealPath(String fileUploadRealPath) {
         this.fileUploadRealPath = fileUploadRealPath;
-    }
-
-    public String getWechatInviteUrl() {
-        return wechatInviteUrl;
-    }
-
-    public void setWechatInviteUrl(String wechatInviteUrl) {
-        this.wechatInviteUrl = wechatInviteUrl;
     }
 
     public String getRoleIsopen() {

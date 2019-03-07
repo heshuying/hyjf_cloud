@@ -124,9 +124,7 @@
         where
         `status`=0
         and borrow_name != '融通宝'
-        <if test="limitStart >= 0" >
-            and borrowProjectType = 'HZT'
-        </if>
+        and borrow_project_type = 'HZT'
 
         GROUP BY
         borrow_class
