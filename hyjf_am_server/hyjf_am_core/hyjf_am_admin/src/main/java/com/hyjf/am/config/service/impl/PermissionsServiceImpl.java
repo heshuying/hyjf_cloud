@@ -131,13 +131,15 @@ public class PermissionsServiceImpl implements PermissionsService {
     private AdminPermissionsExample convertExample(AdminPermissionsRequest request){
         AdminPermissionsExample example = new AdminPermissionsExample();
         AdminPermissionsExample.Criteria criteria = example.createCriteria();
+        criteria.andDelFlagEqualTo(0);
         if(StringUtils.isNotBlank(request.getPermissionSrch())){
             criteria.andPermissionLike("%"+request.getPermissionSrch()+"%");
         }
         if(StringUtils.isNotBlank(request.getPermissionNameSrch())){
             criteria.andPermissionNameLike("%"+request.getPermissionNameSrch()+"%");
         }
-        example.setOrderByClause("create_time desc");
+        // 权限不需要排序
+        // example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());

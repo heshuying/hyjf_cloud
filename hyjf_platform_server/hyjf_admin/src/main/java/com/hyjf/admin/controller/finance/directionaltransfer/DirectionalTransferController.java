@@ -37,6 +37,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
 import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 
 @Api(value = "资金中心-定向转账-定向转账",tags = "资金中心-定向转账-定向转账")
+@Deprecated
 @RestController
 @RequestMapping(value = "/hyjf-admin/finance/directionaltransfer")
 public class DirectionalTransferController extends BaseController {

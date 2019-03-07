@@ -336,15 +336,6 @@ public class AmConfigClientImpl implements AmConfigClient {
         return null;
     }
 
-    @Override
-    public AppChannelReconciliationResponse getReconciliationPage(AppChannelReconciliationRequest form) {
-//		return restTemplate.postForObject("http://AM-ADMIN/am-config/extensioncenter/adminutmreadpermissions/getreconciliationpage",form,
-//				AppChannelReconciliationResponse.class);
-        return null;
-    }
-
-
-
     /**
      * 查询银行配置列表
      *
