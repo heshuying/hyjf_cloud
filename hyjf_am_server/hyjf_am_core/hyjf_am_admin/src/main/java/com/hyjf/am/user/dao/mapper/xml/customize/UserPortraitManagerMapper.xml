@@ -102,7 +102,7 @@
 		COUNT(hup.user_id)
 		FROM
 		ht_user_portrait hup
-		 inner JOIN ht_user hydur ON hydur.user_id = hup.user_id
+		LEFT JOIN ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
 	</select>
 	<!--查询用户画像记录 -->
@@ -157,7 +157,7 @@
 		hup.bank_frost
 		FROM
 		ht_user_portrait hup
-		inner JOIN ht_user hydur ON hydur.user_id = hup.user_id
+		LEFT JOIN ht_user hydur ON hydur.user_id = hup.user_id
 		<include refid="Where_Clause_UserPortrait"/>
 		ORDER BY hydur.reg_time DESC
 		<if test="limitStart != null and limitEnd !=null ">

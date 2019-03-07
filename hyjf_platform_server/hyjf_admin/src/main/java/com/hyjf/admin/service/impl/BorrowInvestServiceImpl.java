@@ -91,12 +91,6 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     @Autowired
     private CommonProducer commonProducer;
 
-    @Value("${hyjf.ftp.url}")
-    private String FTP_URL;
-
-    @Value("${hyjf.ftp.basepath.img}")
-    private String FTP_BASEPATH_IMG;
-
     private static final String OK = "OK";
     private static final String VAL_NAME = "val_name";
     private static final String VAL_SEX = "val_sex";

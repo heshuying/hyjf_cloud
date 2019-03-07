@@ -16,7 +16,6 @@ import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -887,7 +886,7 @@ public class AppHomeServiceImpl implements AppHomeService {
     /**
      *
      * 获取IOS强制更新
-     * @author hsy
+     * @author zhangyunkai
      * @param info
      */
     private void createForceUpdateInfo(JSONObject info, String platform, String version, String HOST){

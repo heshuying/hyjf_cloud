@@ -67,7 +67,6 @@ public class FddGenerateContractConstant {
     public static final String HYJF_FTP_BASEPATH_IMG ="hyjf.ftp.basepath.img";
     public static final String HYJF_FTP_URL ="hyjf.ftp.url";
     public static final String HYJF_FTP_BASEPATH_PDF ="hyjf.ftp.basepath.pdf";
-    public static final String HYJF_FTP_DOMAIN = "hyjf.ftp.domain";
     /**法大大打包临时存放文件*/
     public static final String HYJF_LOC_SAVEPATH ="hyjf.loc.savepath";
 
