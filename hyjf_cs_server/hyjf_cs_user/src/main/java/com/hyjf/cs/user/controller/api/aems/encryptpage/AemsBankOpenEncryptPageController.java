@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.api.aems.encryptpage;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.AemsBankOpenEncryptPageRequestBean;
@@ -75,6 +76,16 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
         }
 
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
+
+        logger.info("AEMS系统请求页面开户查询用户,手机号:" + requestBean.getMobile() + "---用户："+JSONObject.toJSONString(user));
+        // 判断是否已经开户 AEMS系统追加
+        if(this.isOpenAccount(user)){
+            logger.info("用户重复开户,手机号:[" + requestBean.getMobile() + "]");
+            paramMap.put("status", AemsErrorCodeConstant.STATUS_CE000016);
+            paramMap.put("statusDesc", "用户重复开户");
+            return callbackErrorView(paramMap);
+        }
+
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
         openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
@@ -97,6 +108,19 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
         return modelAndView;
     }
 
+    /**
+     * 判断用户是否已经开户
+     * @param user
+     * @return
+     */
+    private boolean isOpenAccount(UserVO user) {
+        if(user.getBankOpenAccount() == 1 && this.bankOpenService.existBankAccountId(user.getUserId())){
+            logger.info("AEMS系统请求页面开户查询用户已经开户");
+            return true;
+        }
+        logger.info("AEMS系统请求页面开户查询用户未开户");
+        return false;
+    }
 
     public BankCallBean getCallbankMV(OpenAccountPageBean openBean) {
         // 根据身份证号码获取性别
