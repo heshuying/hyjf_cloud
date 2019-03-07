@@ -1,5 +1,8 @@
 package com.hyjf.common.util;  
   
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,6 +13,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;  
   
 public class MD5Util2 {
+
+    private static final Logger logger = LoggerFactory.getLogger(MD5Util2.class);
     /**
      * 默认的密码字符串组合，用来将字节转换成 16 进制表示的字符,apache校验下载的文件的正确性用的就是默认的这个组合
      */
@@ -64,7 +69,7 @@ public class MD5Util2 {
                 messagedigest.update(buffer, 0, numRead);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return bufferToHex(messagedigest.digest());  
@@ -89,7 +94,7 @@ public class MD5Util2 {
                     file.length());
             messagedigest.update(byteBuffer);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return bufferToHex(messagedigest.digest());
     }  

@@ -92,7 +92,7 @@ public class TaskService {
 				}
 			}
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return list;
@@ -211,7 +211,7 @@ public class TaskService {
 				logger.info("===> Resume success, triggerKey:{}", triggerKey);
 			}
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -229,7 +229,7 @@ public class TaskService {
 				logger.info("===> runOnce success, JobKey:{}", jobKey);
 			}
 		} catch (SchedulerException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 

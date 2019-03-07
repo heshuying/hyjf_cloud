@@ -151,7 +151,7 @@ public class AppRegistController extends BaseUserController {
                     // 发送神策数据统计MQ
                     this.registService.sendSensorsDataMQ(sensorsDataBean);
                 } catch (MQException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -173,7 +173,7 @@ public class AppRegistController extends BaseUserController {
             try {
                 baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             baseMapBean.set("imageUrlOperation", "");
             // 用户属性 0: 个人用户; 1,企业用户
@@ -208,7 +208,7 @@ public class AppRegistController extends BaseUserController {
                  */
                 operationUrlBase = Base64.getEncoder().encodeToString(operationUrl.getBytes("utf-8"));
             }catch (UnsupportedEncodingException e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             BaseMapBean baseMapBean = new BaseMapBean();
             baseMapBean.set("imageUrl", record.getImage());
@@ -216,7 +216,7 @@ public class AppRegistController extends BaseUserController {
             try {
                 baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             baseMapBean.set("imageUrlOperation", operationUrlBase);
 

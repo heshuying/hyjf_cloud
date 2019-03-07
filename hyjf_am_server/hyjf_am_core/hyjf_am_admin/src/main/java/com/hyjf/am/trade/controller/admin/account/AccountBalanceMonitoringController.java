@@ -78,7 +78,7 @@ public class AccountBalanceMonitoringController {
             response.setMessage("查询到的数据为空！");
             return response;
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }
@@ -100,7 +100,7 @@ public class AccountBalanceMonitoringController {
                 resp.setRtn(Response.FAIL);
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return resp;
     }
@@ -116,7 +116,6 @@ public class AccountBalanceMonitoringController {
         for (int i = 0; i < recordList.size(); i++) {
             MerchantAccountVO record = new MerchantAccountVO();
             BeanUtils.copyProperties(recordList.get(i), record);
-            //todo 联调时注意下，用id代替ids行不？
 //            record.setIds(String.valueOf(recordList.get(i).getId()));
             result.add(record);
         }

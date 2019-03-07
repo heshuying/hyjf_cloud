@@ -21,6 +21,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +38,8 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
     public static final Integer CHANGELOG_TYPE_IDCARD = 3;
     public static final Integer CHANGELOG_TYPE_USERINFO = 2;
     public static final Integer CHANGELOG_TYPE_RECOMMEND = 1;
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminMobileSynchronizeServiceImpl.class);
 
     @Autowired
     private SystemConfig systemConfig;
@@ -178,7 +182,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return false;

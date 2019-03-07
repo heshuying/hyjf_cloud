@@ -41,8 +41,8 @@ public class AdminCouponCheckController extends BaseConfigController {
         CouponCheckResponse response = new CouponCheckResponse();
         int count = checkService.countCouponCheck(request);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
-        if (request.getLimit() == 0) {
-            paginator = new Paginator(request.getPaginatorPage(), count,request.getPageSize());
+        if (request.getPageSize() == 0) {
+            paginator = new Paginator(request.getCurrPage(), count);
         }
         List<CouponCheck> couponChecks = checkService.searchCouponCheck(request, paginator.getOffset(), paginator.getLimit());
         if (count > 0) {

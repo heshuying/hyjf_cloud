@@ -1364,10 +1364,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
 
         String ftpIP = systemConfig.getFtpIp();
         String port = systemConfig.getFtpPort();
-        String basePath = systemConfig.getFtpBasePath();
         String password = systemConfig.getFtpPassword();
         String username = systemConfig.getFtpUsername();
-        String domain = systemConfig.getFtpDomain();
         String basePathImage = systemConfig.getHyjfFtpBasepathImg();
         String basePathPdf = systemConfig.getHyjfFtpBasepathPdf();
 

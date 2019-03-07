@@ -29,6 +29,8 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -53,6 +55,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/hyjf-api/aems")
 public class AemsUserBindController extends BaseUserController {
+	private static final Logger logger = LoggerFactory.getLogger(AemsUserBindController.class);
+
 	@Autowired
 	SystemConfig systemConfig;
 	@Autowired
@@ -343,7 +347,7 @@ public class AemsUserBindController extends BaseUserController {
                 map.put(field.getName(), String.valueOf(field.get(obj)));
             }catch (Exception e){
                 // logger.error("转换异常！");
-				e.printStackTrace();
+				logger.error(e.getMessage());
             }
         }
 

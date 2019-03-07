@@ -129,7 +129,7 @@ public class WxConfigUtil {
             byte[] digest = md.digest(content.toString().getBytes());
             tmpStr = byteToStr(digest);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return tmpStr;
     }

@@ -90,7 +90,7 @@ public class BaseAdminServiceImpl extends BaseServiceImpl implements BaseAdminSe
 				balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return balance;

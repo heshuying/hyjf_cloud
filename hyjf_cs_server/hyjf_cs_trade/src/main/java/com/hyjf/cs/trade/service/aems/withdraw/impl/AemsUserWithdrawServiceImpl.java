@@ -98,7 +98,6 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 		// 银联行号
 		String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
 		int nowTime = GetDate.getNowTime10(); // 当前时间
-		// TODO
 		Date nowDate = new Date();
 		List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
 
@@ -130,7 +129,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 										throw new Exception("大额提现成功后,更新用户银行卡的银联行号失败~~~!" + bankCard.getId());
 									}
 								} catch (Exception e) {
-									e.printStackTrace();
+									logger.error(e.getMessage());
 								}
 							}
 							// 提现金额
@@ -179,7 +178,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}
-							// TODO 活动统计 需要的时候放开
+							// 活动统计 需要的时候放开
 							/*CommonSoaUtils.listedTwoWithdraw(userId, total);*/
 
 							try{
@@ -190,13 +189,13 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 								sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
 								this.sendSensorsDataMQ(sensorsDataBean);
 							}catch (Exception e){
-								e.printStackTrace();
+								logger.error(e.getMessage());
 							}
 
 							return jsonMessage("提现成功!", "0");
 						} catch (Exception e) {
 							// 回滚事务
-							e.printStackTrace();
+							logger.error(e.getMessage());
 							return jsonMessage("提现失败,请联系客服!", "1");
 						}
 					}
@@ -344,7 +343,6 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 
 	private BankWithdrawBeanRequest createBankWithdrawBeanRequest(AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee, BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
 		BankWithdrawBeanRequest bankWithdrawBeanRequest = new BankWithdrawBeanRequest();
-		// TODO
 		Date nowDate = new Date();
 		bankWithdrawBeanRequest.setUserId(userId);
 		bankWithdrawBeanRequest.setTransAmt(transAmt);
@@ -1067,7 +1065,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 			result.setCardNo((cardNo==null || "".equals(cardNo))?"银行卡已删除":cardNo);
 			result.setBank(accountWithdrawVO.getBank());
 			result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
-			//TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
+			//这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
 			// result.setWithdrawTime(accountWithdrawVO.getAddtime());
 			result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
 			resultList.add(result);

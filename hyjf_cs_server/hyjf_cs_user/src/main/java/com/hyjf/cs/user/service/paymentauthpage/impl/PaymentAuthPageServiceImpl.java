@@ -143,7 +143,7 @@ public class PaymentAuthPageServiceImpl extends BaseUserServiceImpl implements P
 
             mv = BankCallUtils.callApi(openAccoutBean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return mv;
     }

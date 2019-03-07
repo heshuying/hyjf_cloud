@@ -88,7 +88,7 @@ public class SynParamController extends BaseConfigController {
         try {
             siteSettingService.updateTest1();
         } catch (Exception e) {
-             e.printStackTrace();
+             logger.error(e.getMessage());
         }
         
         return response;
@@ -115,7 +115,7 @@ public class SynParamController extends BaseConfigController {
 //            try {
 //                testProducer.messageSend(message);
 //            } catch (MQException e) {
-//                 e.printStackTrace();
+//                 logger.error(e.getMessage());
 //            }
             
         }
@@ -169,7 +169,7 @@ public class SynParamController extends BaseConfigController {
 			FileUtils.writeLines(appfilePath, keys);
 			logger.info("清除临时文件成功  "+appkeytempPath);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		
@@ -199,7 +199,7 @@ public class SynParamController extends BaseConfigController {
 			try {
 				FileUtils.writeLines(appfilePath, appkeys, true);
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			
 		} while (!"0".equals(cursor));
@@ -234,7 +234,7 @@ public class SynParamController extends BaseConfigController {
 			
 			logger.info("processed keys "+apptotal);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			jedis.close();
 		}

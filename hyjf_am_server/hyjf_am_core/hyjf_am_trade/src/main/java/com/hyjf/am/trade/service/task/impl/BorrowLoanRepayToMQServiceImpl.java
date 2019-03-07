@@ -277,7 +277,7 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 			        new MessageContent(topic, apiCron.getBorrowNid(), apiCron), 2);
 			
 		} catch (MQException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
     }
 	

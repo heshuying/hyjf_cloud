@@ -99,7 +99,7 @@ public class WebUnBindCardPageController extends BaseUserController{
                 unBindCardService.updateAfterUnBindCard(bean, userId);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("页面解卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
         result.setStatus(true);

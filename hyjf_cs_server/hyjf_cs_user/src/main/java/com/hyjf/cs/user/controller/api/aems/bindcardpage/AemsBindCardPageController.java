@@ -133,7 +133,7 @@ public class AemsBindCardPageController extends BaseController {
             return modelAndView;
         } catch (Exception e) {
             logger.info("---调用银行接口失败~!---");
-            e.printStackTrace();
+            logger.error(e.getMessage());
 
             paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
             paramMap.put("statusDesc","调用银行接口失败");
@@ -206,7 +206,7 @@ public class AemsBindCardPageController extends BaseController {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             status = ErrorCodeConstant.STATUS_CE999999;
             statusDesc = "调用银行接口失败";
         }

@@ -1,6 +1,8 @@
 package com.hyjf.common.pdf;
 
 import freemarker.template.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -8,6 +10,8 @@ import java.io.IOException;
 import java.util.Locale;
 
 public class FreemarkerConfiguration {
+
+	private static final Logger logger = LoggerFactory.getLogger(FreemarkerConfiguration.class);
 
 	private static Configuration config = null;
 
@@ -41,7 +45,7 @@ public class FreemarkerConfiguration {
 			config.setDirectoryForTemplateLoading(new File(filePath));
 			config.setEncoding(Locale.CHINA, "UTF-8");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return config;
 	}

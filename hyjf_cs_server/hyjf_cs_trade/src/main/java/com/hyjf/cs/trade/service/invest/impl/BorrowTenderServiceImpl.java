@@ -1645,7 +1645,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 try {
                     presetProps = URLEncoder.encode(presetProps, "UTF-8");
                 } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
                 url += ("&presetProps=") + (presetProps);
             }
@@ -2263,7 +2263,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
                 logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,ordid,couponGrantId,borrowNid);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
     }
@@ -2531,7 +2531,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
                 // 满标发短信在原子层
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
 
             // 查询出借来源
@@ -2556,7 +2556,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 sensorsDataBean.setEventCode("submit_tender");
                 this.sendSensorsDataMQ(sensorsDataBean);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             // add by liuyang 神策数据统计 20180823 end
         }else{

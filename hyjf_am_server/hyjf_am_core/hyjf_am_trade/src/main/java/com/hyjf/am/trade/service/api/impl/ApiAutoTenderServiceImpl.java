@@ -79,7 +79,7 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 			try {
 				throw new Exception("插入borrowTenderTmp表失败，出借订单号：" + autoTenderComboRequest.getGenerateOrderId());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 		// 2.更新 BorrowTenderTmpinfo 表
@@ -101,7 +101,7 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 			try {
 				throw new Exception("插入borrowTenderTmpInfo表失败，出借订单号：" + autoTenderComboRequest.getGenerateOrderId());
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			return 0;
 		}

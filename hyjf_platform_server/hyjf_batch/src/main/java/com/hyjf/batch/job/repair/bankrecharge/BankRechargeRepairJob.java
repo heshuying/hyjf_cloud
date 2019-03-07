@@ -20,7 +20,7 @@ public class BankRechargeRepairJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BankRechargeRepairJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/recharge", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/recharge", null);
         logger.info("BankRechargeRepairJob execute end...");
     }
 }

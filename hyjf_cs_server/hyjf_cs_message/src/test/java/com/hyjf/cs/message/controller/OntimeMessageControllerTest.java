@@ -5,6 +5,8 @@ import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.service.message.MessageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,6 +21,8 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CsMessageApplication.class)
 public class OntimeMessageControllerTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(OntimeMessageControllerTest.class);
     private static final Integer STATUS_WAIT = 0;
 
     @Autowired
@@ -32,7 +36,7 @@ public class OntimeMessageControllerTest {
                 try {
                     messageService.sendMessage(smsOntime);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

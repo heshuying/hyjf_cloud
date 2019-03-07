@@ -127,14 +127,14 @@ public class WithdrawController extends BaseController {
 			try {
 				isAccountUpdate = this.withdrawService.updateAccountAfterWithdraw(param);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		} else {
 			// 充值失败,更新充值订单
 			try {
 				isAccountUpdate = this.withdrawService.updateAccountAfterWithdrawFail(userId, nid);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 		}
 		// 提现确认成功

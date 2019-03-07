@@ -211,7 +211,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
             logger.info("weChat端提现失败");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }
         result.setData(map);

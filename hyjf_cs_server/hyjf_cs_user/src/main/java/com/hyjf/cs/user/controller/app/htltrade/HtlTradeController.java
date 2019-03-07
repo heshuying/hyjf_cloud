@@ -116,7 +116,7 @@ public class HtlTradeController extends BaseController {
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				ret.put("status", "1");
 				ret.put("statusDesc", "获取购买列表失败");
 				return ret;
@@ -145,7 +145,7 @@ public class HtlTradeController extends BaseController {
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				ret.put("status", "1");
 				ret.put("statusDesc", "获取赎回列表失败");
 				return ret;

@@ -298,7 +298,7 @@ public class WithdrawController extends BaseController {
                         + bean.getPayAllianceCode() + " 】");
                 modelAndView = BankCallUtils.callApi(bean);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         } else {
             message = "请不要重复操作";

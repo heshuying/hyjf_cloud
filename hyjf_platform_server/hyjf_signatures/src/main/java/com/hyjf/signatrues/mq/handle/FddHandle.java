@@ -627,7 +627,7 @@ public class FddHandle {
 					logger.info("------------------------------------调用法大大发送下载脱敏消息:"+update);
 					commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),bean));
 				} catch (MQException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 					logger.error("法大大发送下载脱敏消息失败...", e);	
 				}
             }
@@ -807,7 +807,7 @@ public class FddHandle {
                     try {
                         tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
 
@@ -1076,7 +1076,7 @@ public class FddHandle {
 			//计划债转是在事务内提交，可能获取不到数据，需要暂时休眠1秒，待数据提交
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}*/
 		// bean.setTransType(3);
 		//垫付协议发大大Contract_id
@@ -1331,7 +1331,7 @@ public class FddHandle {
 					try {
 						tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
 					} catch (ParseException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					}
 				}
 				resultMap.put("tenderToCreditDetail", tenderToCreditDetailList.get(0));
@@ -1994,7 +1994,7 @@ public class FddHandle {
 				logger.info("结束发送邮件。出借订单号:" + orderId);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 
@@ -2395,7 +2395,7 @@ public class FddHandle {
 			}
 
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			logger.info(e.getMessage());
 			ret = false;
 		}

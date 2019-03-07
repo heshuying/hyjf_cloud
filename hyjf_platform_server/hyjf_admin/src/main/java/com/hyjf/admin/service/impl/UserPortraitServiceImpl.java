@@ -100,7 +100,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
                     errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
                     logger.info("文件上传状态：" + errorMessage);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             } else {
                 response.setRtn(Response.FAIL);
@@ -204,7 +204,7 @@ public class UserPortraitServiceImpl implements UserPortraitService {
         try {
             this.importData(request);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return true;
     }

@@ -281,7 +281,7 @@ public class CreditTenderController extends BaseController {
             bankCreditTenderService.insertCreditBgData(request);
             response.setResultInt(1);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setResultInt(0);
         }
         return response;

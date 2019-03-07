@@ -188,7 +188,7 @@ public class AemsAutoTenderServer extends BaseTradeController{
 			} catch (Exception e) {
 				logger.info("投资调用接口异常---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
 				removeTenderTmp(borrowNid, userId, orderId);
-				e.printStackTrace();
+				logger.error(e.getMessage());
 				resultBean.setStatusForResponse("TZ000098");
 				resultBean.setStatusDesc("调用投资银行接口异常");
 				return resultBean;
@@ -249,7 +249,7 @@ public class AemsAutoTenderServer extends BaseTradeController{
 					tenderService.bidCancel(userId, borrowNid, orderId, account);
 					tenderService.deleteBorrowTenderTmpByParam(userId, borrowNid, orderId);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage());
 					resultBean.setStatusForResponse("TZ000099");
 					resultBean.setStatusDesc("投资失败,系统错误");
 					return resultBean;
@@ -263,7 +263,7 @@ public class AemsAutoTenderServer extends BaseTradeController{
 				
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			resultBean.setStatusForResponse("TZ000099");
 			resultBean.setStatusDesc("投资失败,系统错误");
 			return resultBean;
@@ -288,7 +288,7 @@ public class AemsAutoTenderServer extends BaseTradeController{
 			@SuppressWarnings("unused")
 			boolean updateFlag = tenderService.deleteBorrowTenderTmpByParam(userId, borrowNid, orderId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
     

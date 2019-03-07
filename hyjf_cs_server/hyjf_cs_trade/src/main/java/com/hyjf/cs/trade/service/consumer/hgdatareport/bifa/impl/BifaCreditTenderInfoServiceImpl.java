@@ -82,7 +82,7 @@ public class BifaCreditTenderInfoServiceImpl extends BaseHgDateReportServiceImpl
             bifaCreditInfoEntity.setCreateTime(currDate);
             bifaCreditInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;
@@ -128,7 +128,7 @@ public class BifaCreditTenderInfoServiceImpl extends BaseHgDateReportServiceImpl
             bifaCreditInfoEntity.setCreateTime(currDate);
             bifaCreditInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;

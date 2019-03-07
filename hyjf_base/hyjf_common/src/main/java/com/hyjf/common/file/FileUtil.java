@@ -400,7 +400,7 @@ public class FileUtil {
                 output.write(buffer, 0, count);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
         	if(output!=null){
                 output.flush();
@@ -446,7 +446,7 @@ public class FileUtil {
 			//数据写入文件
 			fos.write(getData);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();
@@ -485,7 +485,7 @@ public class FileUtil {
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(getData);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();

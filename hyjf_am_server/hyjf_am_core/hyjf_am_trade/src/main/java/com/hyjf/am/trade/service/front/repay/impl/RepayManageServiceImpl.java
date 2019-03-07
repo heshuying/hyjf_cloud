@@ -4970,7 +4970,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
                     "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("【还款】发起还款消息发生异常 ", e);
         }
     }
@@ -5294,7 +5294,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             return repayProjectInfo;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return repayProjectInfo;

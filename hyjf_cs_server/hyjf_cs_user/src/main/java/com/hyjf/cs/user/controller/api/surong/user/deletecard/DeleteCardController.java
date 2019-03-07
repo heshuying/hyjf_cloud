@@ -147,7 +147,7 @@ public class DeleteCardController extends BaseUserController {
         try {
             retBean = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         // 回调数据处理
         if (retBean == null || !(BankCallStatusConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode()))) {

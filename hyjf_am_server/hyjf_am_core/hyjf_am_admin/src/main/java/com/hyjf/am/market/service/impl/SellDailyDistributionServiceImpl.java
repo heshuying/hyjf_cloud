@@ -7,6 +7,8 @@ import com.hyjf.am.market.service.SellDailyDistributionService;
 import com.hyjf.am.resquest.admin.EmailRecipientRequest;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import java.util.List;
  */
 @Service
 public class SellDailyDistributionServiceImpl implements SellDailyDistributionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SellDailyDistributionServiceImpl.class);
     @Autowired
     SellDailyDistributionMapper sellDailyDistributionMapper;
     SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -114,7 +118,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
                 SellDailyDistribution.setCreateTime(parse);
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         if (StringUtils.isNotBlank(form.getEmail())) {
@@ -163,7 +167,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
                 SellDailyDistribution.setCreateTime(parse);
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         if (StringUtils.isNotBlank(form.getEmail())) {
             SellDailyDistribution.setEmail(form.getEmail());

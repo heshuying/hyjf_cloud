@@ -57,7 +57,7 @@ public class CertSendUtils {
 			}
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (reader != null){
 				try {
@@ -169,7 +169,7 @@ public class CertSendUtils {
 			}
 		} catch (Exception e) {
 
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (reader != null){
 				try {

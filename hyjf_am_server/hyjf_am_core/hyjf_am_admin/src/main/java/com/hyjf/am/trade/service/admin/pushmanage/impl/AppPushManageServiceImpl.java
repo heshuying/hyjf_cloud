@@ -8,6 +8,8 @@ import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @Service
 public class AppPushManageServiceImpl implements AppPushManageService {
+    private static final Logger logger = LoggerFactory.getLogger(AppPushManageServiceImpl.class);
 
     @Autowired
     private AppPushManageMapper appPushManageMapper;
@@ -103,7 +106,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
                 pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStartDiy()));
                 pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEndDiy()));
             }catch (ParseException e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return appPushManageMapper.insertSelective(pushManage);
@@ -126,7 +129,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
                 pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStartDiy()));
                 pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEndDiy()));
             }catch (ParseException e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return appPushManageMapper.updateByPrimaryKeySelective(pushManage);

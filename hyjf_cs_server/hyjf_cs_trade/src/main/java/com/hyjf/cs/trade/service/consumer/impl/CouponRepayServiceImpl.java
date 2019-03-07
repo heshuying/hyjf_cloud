@@ -1105,7 +1105,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), nids));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("体验金按收益期限还款消息队列 失败");
         }
     }

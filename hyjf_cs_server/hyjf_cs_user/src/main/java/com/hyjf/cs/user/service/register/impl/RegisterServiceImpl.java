@@ -669,7 +669,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                         commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                 MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                         logger.error("app注册推广保存用户数据！！！");
                     }
             }

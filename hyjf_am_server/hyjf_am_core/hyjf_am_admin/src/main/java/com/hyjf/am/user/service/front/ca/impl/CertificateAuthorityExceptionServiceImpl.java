@@ -70,7 +70,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
             try {
 				cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
         }
         // 检索条件转账时间结束
@@ -78,7 +78,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
             try {
 				cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
         }
 
@@ -126,7 +126,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 				cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
 				
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
         }
         // 检索条件转账时间结束
@@ -135,7 +135,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 				cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
 			} catch (ParseException e) {
 		
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
         }
         cra.andCodeEqualTo("1000");
@@ -207,7 +207,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
             try {
                 cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         // 检索条件转账时间结束
@@ -215,7 +215,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
             try {
                 cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         //检索条件（状态）
@@ -264,7 +264,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
                 cra.andCreateTimeGreaterThanOrEqualTo(GetDate.parseDate(form.getStartTimeSrch() + " 00:00:00","yyyy-MM-dd HH:mm:ss"));
 
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         // 检索条件转账时间结束
@@ -273,7 +273,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
                 cra.andCreateTimeLessThanOrEqualTo(GetDate.parseDate(form.getEndTimeSrch() + " 23:59:59","yyyy-MM-dd HH:mm:ss"));
             } catch (ParseException e) {
 
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 

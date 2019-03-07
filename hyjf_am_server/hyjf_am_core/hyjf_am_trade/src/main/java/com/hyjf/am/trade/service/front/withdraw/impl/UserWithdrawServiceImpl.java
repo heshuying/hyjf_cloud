@@ -269,7 +269,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                         } catch (Exception e) {
                             // 回滚事务
                             transactionManager.rollback(txStatus);
-                            e.printStackTrace();
+                            logger.error(e.getMessage());
                             jsonObject.put("status","1");
                             jsonObject.put("statusDesc","提现失败,请联系客服");
                             return jsonObject.toJSONString();

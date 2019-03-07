@@ -408,7 +408,7 @@ public class ProtocolServiceImpl implements ProtocolService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             fileMeta = new BorrowCommonImage();
             int index = originalFilename.lastIndexOf(".");

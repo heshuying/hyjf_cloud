@@ -1,5 +1,8 @@
 package com.hyjf.common.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.PropertyEditorSupport;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -13,6 +16,8 @@ import java.util.*;
  * @version 1.0
  */
 public class GetDate extends PropertyEditorSupport {
+
+	private static final Logger logger = LoggerFactory.getLogger(GetDate.class);
 
 
 	private static ThreadLocal<Map<String,SimpleDateFormat>> dateFormatThreadLocal = new ThreadLocal<>();
@@ -421,7 +426,7 @@ public class GetDate extends PropertyEditorSupport {
 			date = sdf.parse(str);
 			return date;
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -451,7 +456,7 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			date = sformat.parse(data);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return sformat.format(date);
 	}
@@ -1067,7 +1072,7 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			date2 = temp.parse(date1);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return date2;
 	}
@@ -1174,7 +1179,7 @@ public class GetDate extends PropertyEditorSupport {
         try{
             date2 = d.parse(dayStartString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         
         return date2;
@@ -1188,7 +1193,7 @@ public class GetDate extends PropertyEditorSupport {
 		try{
 			date2 = d.parse(dayStartString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return date2;
@@ -1209,7 +1214,7 @@ public class GetDate extends PropertyEditorSupport {
 		try{
 			date2 = d.parse(dayStartString);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return (int)(date2.getTime()/1000);
@@ -1231,7 +1236,7 @@ public class GetDate extends PropertyEditorSupport {
         try{
             date2 = d.parse(dayStartString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         
         return (int)(date2.getTime()/1000);
@@ -1252,7 +1257,7 @@ public class GetDate extends PropertyEditorSupport {
        try{
            date2 = d.parse(dayStartString);
        } catch (ParseException e) {
-           e.printStackTrace();
+           logger.error(e.getMessage());
        }
        
        return (int)(date2.getTime()/1000);
@@ -1273,7 +1278,7 @@ public class GetDate extends PropertyEditorSupport {
        try{
            date2 = d.parse(dayStartString);
        } catch (ParseException e) {
-           e.printStackTrace();
+           logger.error(e.getMessage());
        }
        
        return (int)(date2.getTime()/1000);
@@ -1307,7 +1312,7 @@ public class GetDate extends PropertyEditorSupport {
         try{
             date2 = d.parse(dayStartString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         
         return (int)(date2.getTime()/1000);
@@ -1736,7 +1741,7 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			date2 = d.parse(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return null;
 		}
 		return date2;
@@ -1773,7 +1778,7 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			date2 = d.parse(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return null;
 		}
 		return date2;
@@ -1995,7 +2000,7 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			date2 = d.parse(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return null;
 		}
 		return date2;
@@ -2100,7 +2105,7 @@ public class GetDate extends PropertyEditorSupport {
 		try {
 			return short_time_sdf.parse(hhmm);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -2266,7 +2271,7 @@ public class GetDate extends PropertyEditorSupport {
 		try{
 			date =  new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);

@@ -232,7 +232,7 @@ public class ApiBindCardController extends BaseUserController {
             retBean  = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
             logger.info("---调用银行接口失败~!---");
-            e.printStackTrace();
+            logger.error(e.getMessage());
 
             ret.setStatus(BaseResultBean.STATUS_FAIL);
             ret.setStatusDesc("调用银行接口失败~!");
@@ -271,7 +271,7 @@ public class ApiBindCardController extends BaseUserController {
             }
         } catch (Exception e) {
             // 执行结果(失败)
-            e.printStackTrace();
+            logger.error(e.getMessage());
             ret.setStatus(BaseResultBean.STATUS_FAIL);
             ret.setStatusDesc("绑卡失败");
             return ret;
@@ -364,7 +364,7 @@ public class ApiBindCardController extends BaseUserController {
         try {
             retBean = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             logger.info("调用银行接口失败~!"+bankCardRequestBean.getAccountId());
             resultBean.setStatusDesc("调用银行接口失败~!");

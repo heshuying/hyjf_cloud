@@ -81,7 +81,7 @@ public class RSAJSPUtil {
 		try (ObjectInputStream oos = new ObjectInputStream(fis)) {
 			kp = (KeyPair) oos.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (fis != null) {
 				fis.close();
@@ -95,7 +95,7 @@ public class RSAJSPUtil {
 		try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 			oos.writeObject(kp);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (fos != null) {
 				fos.close();
@@ -276,12 +276,12 @@ public class RSAJSPUtil {
 		try (FileInputStream in = new FileInputStream(file)) {
 			in.read(filecontent);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		try {
 			return new String(filecontent, encoding);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return null;
 		}
 	}

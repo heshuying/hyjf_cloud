@@ -224,7 +224,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

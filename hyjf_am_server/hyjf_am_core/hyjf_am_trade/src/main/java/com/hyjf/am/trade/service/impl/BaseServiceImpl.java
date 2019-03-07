@@ -414,7 +414,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 				balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return balance;
@@ -537,7 +537,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 			zos.close();
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			return false;
 		}
 	}

@@ -350,7 +350,7 @@ public class FileUtil {
 				output.write(buffer, 0, count);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (input != null) {
 				input.close();
@@ -396,7 +396,7 @@ public class FileUtil {
                 output.write(buffer, 0, count);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             output.flush();
             output.close();
@@ -438,7 +438,7 @@ public class FileUtil {
 			//数据写入文件
 			fos.write(getData);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();
@@ -480,7 +480,7 @@ public class FileUtil {
 			//数据写入文件
 			fos.write(getData);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();

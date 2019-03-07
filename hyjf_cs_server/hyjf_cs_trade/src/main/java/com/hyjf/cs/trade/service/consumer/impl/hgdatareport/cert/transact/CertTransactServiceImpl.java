@@ -76,7 +76,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 				return null;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return JSONArray.parseArray(JSON.toJSONString(list));

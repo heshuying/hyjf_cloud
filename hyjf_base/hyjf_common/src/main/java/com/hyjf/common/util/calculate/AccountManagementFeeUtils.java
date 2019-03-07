@@ -12,6 +12,8 @@
 package com.hyjf.common.util.calculate;
 
 import com.hyjf.common.util.GetDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -22,6 +24,8 @@ import java.text.ParseException;
  */
 
 public class AccountManagementFeeUtils {
+
+	private static final Logger logger = LoggerFactory.getLogger(AccountManagementFeeUtils.class);
 
 	/**
 	 * 按月计息，到期还本还息 账户管理费
@@ -56,7 +60,7 @@ public class AccountManagementFeeUtils {
             }
             count = count.setScale(2, BigDecimal.ROUND_DOWN);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 		return count;
 	}
@@ -95,7 +99,7 @@ public class AccountManagementFeeUtils {
             }
             count = count.setScale(2, BigDecimal.ROUND_DOWN);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return count;
 	}
@@ -147,7 +151,7 @@ public class AccountManagementFeeUtils {
             }
             count = count.setScale(2, BigDecimal.ROUND_DOWN);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return count;
 	}
@@ -198,7 +202,7 @@ public class AccountManagementFeeUtils {
             }
             count = count.setScale(2, BigDecimal.ROUND_DOWN);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return count;
 	}
@@ -252,7 +256,7 @@ public class AccountManagementFeeUtils {
             }
             count = count.setScale(2, BigDecimal.ROUND_DOWN);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return count;
 	}

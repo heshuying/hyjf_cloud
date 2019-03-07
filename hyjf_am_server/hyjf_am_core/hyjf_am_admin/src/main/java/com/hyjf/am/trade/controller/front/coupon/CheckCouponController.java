@@ -34,8 +34,6 @@ public class CheckCouponController extends BaseController {
     CheckCouponService checkCouponService;
     @Value("${release.coupon.accesskey}")
     public String SOA_COUPON_KEY;
-    @Value("${hyjf.api.web.url}")
-    public String HYJF_API_WEB_URL;
 
     /**
      * 批量上传发券接口
@@ -64,7 +62,7 @@ public class CheckCouponController extends BaseController {
         try {
             result = checkCouponService.batchInsertUserCoupon(map);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 //            }else{
 //                logger.info("用户："+ userId +",验签失败！");

@@ -196,7 +196,7 @@ public class RepayReminderSmsNoticeBatchController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("【还款前三天提醒借款人还款短信定时】结束。。。");
     }

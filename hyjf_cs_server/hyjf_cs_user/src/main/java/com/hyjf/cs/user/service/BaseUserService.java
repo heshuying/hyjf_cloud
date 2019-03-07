@@ -154,7 +154,7 @@ public interface BaseUserService extends BaseService{
 	 * @param userId
 	 * @return
 	 */
-	WebViewUserVO getWebViewUserByUserId(Integer userId);
+	WebViewUserVO getWebViewUserByUserId(Integer userId,String channel);
 	/**
 	 * @Description 根据用户信息查询用户绑卡列表
 	 * @Author pangchengchao

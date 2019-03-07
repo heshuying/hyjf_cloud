@@ -9,6 +9,8 @@ import com.hyjf.am.config.dao.model.auto.HolidaysConfigExample;
 import com.hyjf.am.config.service.AdminHolidaysConfigService;
 import com.hyjf.am.resquest.admin.AdminHolidaysConfigRequest;
 import com.hyjf.common.util.GetDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.List;
  */
 @Service
 public class AdminHolidaysConfigServiceImpl implements AdminHolidaysConfigService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AdminHolidaysConfigServiceImpl.class);
 
     @Autowired
     private HolidaysConfigMapper holidaysConfigMapper;
@@ -116,7 +120,7 @@ public class AdminHolidaysConfigServiceImpl implements AdminHolidaysConfigServic
         try {
             date = sim.parse(dateString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return rsim.format(date);
     }
@@ -134,7 +138,7 @@ public class AdminHolidaysConfigServiceImpl implements AdminHolidaysConfigServic
         try {
             date = sim.parse(dateString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return rsim.format(date);
     }
