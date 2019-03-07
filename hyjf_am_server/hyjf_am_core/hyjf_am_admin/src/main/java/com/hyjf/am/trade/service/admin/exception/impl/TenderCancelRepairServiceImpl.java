@@ -4,9 +4,6 @@
 package com.hyjf.am.trade.service.admin.exception.impl;
 
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpMapper;
-import com.hyjf.am.trade.dao.mapper.auto.FreezeHistoryMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.exception.TenderCancelRepairService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -14,7 +11,6 @@ import com.hyjf.am.vo.admin.FreezeHistoryVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,15 +22,6 @@ import java.util.List;
  */
 @Service(value = "tradeTenderCancelRepairServiceImpl")
 public class TenderCancelRepairServiceImpl extends BaseServiceImpl implements TenderCancelRepairService {
-
-    @Autowired
-    private BorrowTenderTmpMapper borrowTenderTmpMapper;
-
-    @Autowired
-    private BorrowTenderMapper borrowTenderMapper;
-
-    @Autowired
-    private FreezeHistoryMapper freezeHistoryMapper;
 
     /**
      * 根据筛选条件查询银行出借撤销异常的数据count
@@ -130,7 +117,9 @@ public class TenderCancelRepairServiceImpl extends BaseServiceImpl implements Te
     private BorrowTenderTmpExample convertExample(TenderCancelExceptionRequest request){
         BorrowTenderTmpExample example = new BorrowTenderTmpExample();
         BorrowTenderTmpExample.Criteria criteria = example.createCriteria();
-        criteria.andCreateTimeLessThan(GetDate.getNowTime());
+        // 5分钟之前
+        criteria.andCreateTimeLessThan(GetDate.getMinutesAfter(GetDate.getNowTime(),-5));
+
         // 用户名
         if(StringUtils.isNotEmpty(request.getUserName())){
             criteria.andUserNameLike("%"+request.getUserName()+"%");

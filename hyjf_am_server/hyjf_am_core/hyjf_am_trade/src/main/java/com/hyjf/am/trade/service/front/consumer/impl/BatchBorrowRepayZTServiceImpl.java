@@ -1321,8 +1321,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             }
 		}
 		// 更新还款金额数据 update by wgx 2019/03/07
-		logger.info("【直投还款/承接人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}",
-				borrowNid, repayAccount, assignAccount);
+		logger.info("【直投还款/承接人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}，未还款利息减少：{}",
+				borrowNid, repayAccount, assignAccount, assignInterest);
 		Borrow updateBorrow = new Borrow();
 		updateBorrow.setId(borrow.getId());
 		updateBorrow.setRepayAccountYes(repayAccount);// 总还款增加
@@ -2490,8 +2490,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
 		// 更新还款金额数据 update by wgx 2019/03/07
-		logger.info("【直投还款/出借人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}",
-				borrowNid, repayAccount, recoverAccountWait);
+		logger.info("【直投还款/出借人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}，未还款利息减少：{}",
+				borrowNid, repayAccount, recoverAccountWait, recoverInterestWait);
 		Borrow updateBorrow = new Borrow();
 		updateBorrow.setId(borrow.getId());
 		updateBorrow.setRepayAccountYes(repayAccount); // 总还款增加
