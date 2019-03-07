@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDebtVO;
 
 import java.util.List;
@@ -27,14 +28,12 @@ public interface HjhReInvestDebtCustomizeMapper {
      */
     List<HjhReInvestDebtVO> queryReinvestDebtList(Map<String, Object> param);
 
-    //    List<HjhReInvestDebtCustomize> queryReInvestDebts(HjhReInvestDebtCustomize hjhReInvestDebtCustomize);
     /**
      * 合计值
-     *
-     * @param hjhReInvestDebtCustomize
+     * @param param
      * @return
      */
-//    HjhReInvestDebtCustomize queryReInvestDebtTotal(HjhReInvestDebtCustomize hjhReInvestDebtCustomize);
+    HjhReInvestDebtCustomize queryReInvestDebtTotal(Map<String, Object> param);
 
     /**
      * 导出

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.admin.impl;
 
 import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import com.hyjf.am.trade.service.admin.DayCreditDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,15 @@ public class DayCreditDetailServiceImpl extends BaseServiceImpl implements DayCr
     public List<HjhDayCreditDetailCustomize> selectDebtCreditList(Map<String, Object> params) {
         List<HjhDayCreditDetailCustomize> recordList = hjhDayCreditDetailCustomizeMapper.selectDebtCreditList(params);
         return recordList;
+    }
+
+    /**
+     * 总计
+     * @param params
+     * @return
+     */
+    @Override
+    public HjhReInvestDebtCustomize sumRecord(Map<String, Object> params) {
+        return this.hjhDayCreditDetailCustomizeMapper.selectSumRecord(params);
     }
 }

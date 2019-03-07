@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.admin.hjhplan;
 
 import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDebtVO;
 
 import java.util.List;
@@ -24,5 +25,12 @@ public interface HjhReInvestDebtService {
      * @return
      */
     List<HjhReInvestDebtVO> getReinvestDebtList(HjhReInvestDebtRequest request);
+
+    /**
+     * 取合计值
+     * @param request
+     * @return
+     */
+    HjhReInvestDebtCustomize queryReInvestDebtTotal(HjhReInvestDebtRequest request);
 
 }

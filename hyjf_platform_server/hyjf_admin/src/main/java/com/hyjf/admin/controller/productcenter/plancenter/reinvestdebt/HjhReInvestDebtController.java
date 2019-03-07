@@ -147,7 +147,7 @@ public class HjhReInvestDebtController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(response.getResultList())) {
             returnList = CommonUtils.convertBeanList(response.getResultList(), HjhReInvestDebtVO.class);
-            return new AdminResult<ListResult<HjhReInvestDebtVO>>(ListResult.build(returnList, response.getCount()));
+            return new AdminResult<ListResult<HjhReInvestDebtVO>>(ListResult.build2(returnList, response.getCount(), response.getSumHjhReInvestDebtVO()));
         } else {
             return new AdminResult<ListResult<HjhReInvestDebtVO>>(ListResult.build(returnList, 0));
         }
