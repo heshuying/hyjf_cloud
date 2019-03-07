@@ -28,9 +28,6 @@ public class SystemConfig {
     @Value("${hyjf.ftp.username}")
     public String ftpUsername;
 
-    @Value("${hyjf.ftp.url}")
-    public String ftpDomain;
-
     @Value("${hyjf.ftp.basepath.img}")
     private String hyjfFtpBasepathImg;
 
@@ -233,14 +230,6 @@ public class SystemConfig {
 
     public void setFtpUsername(String ftpUsername) {
         this.ftpUsername = ftpUsername;
-    }
-
-    public String getFtpDomain() {
-        return ftpDomain;
-    }
-
-    public void setFtpDomain(String ftpDomain) {
-        this.ftpDomain = ftpDomain;
     }
 
     public String getDefaultRowMaxCount() {

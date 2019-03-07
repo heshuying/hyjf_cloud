@@ -147,7 +147,7 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 		String basePath = systemConfig.getFtpBasePath();
 		String password = systemConfig.getFtpPassword();
 		String username = systemConfig.getFtpUsername();
-		String domain = systemConfig.getFtpDomain();
+		String domain = systemConfig.getFtpurl();
 		String httpPath = domain + basePath + "/" + fddTemplet;
 		String httpUrl;
 		try {
