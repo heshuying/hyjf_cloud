@@ -78,7 +78,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
      * @return
      */
     @Override
-    public List<HjhAccede> selectDeadLineAccedeList() {
+    public List<HjhAccede> hjhDeadLineAccedeList() {
         HjhAccedeExample example = new HjhAccedeExample();
         HjhAccedeExample.Criteria cra = example.createCriteria();
         List<Integer> statusList = new ArrayList<Integer>();
@@ -322,7 +322,11 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         }
                         // 计算债权价值 = 剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
                         // F=Ar+I+Ir/D*Dr
+                        logger.info("当前期利息:[" + interest + "].");
+                        logger.info("当前期持有天数:[" + holdDays + "].");
+                        logger.info("当前期计息天数:[" + duringDays + "].");
                         creditValue = (interest.multiply(new BigDecimal(holdDays)).divide(new BigDecimal(duringDays), 8, BigDecimal.ROUND_DOWN).setScale(2, BigDecimal.ROUND_DOWN));
+                        logger.info("垫付利息:[" + creditValue + "].");
                         // 承接所在期数
                         hjhDebtCredit.setAssignPeriod(1);
                         // 清算期数
@@ -362,6 +366,8 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         // 加入订单的债权价值
                         totalFairValue = totalFairValue.add(fairValue);
                         //  剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
+                        logger.info("剩余未还债权本金:[" + capital + "].");
+                        logger.info("计划订单的债权价值 = 剩余未还债权本金 + 垫付利息,[" + totalFairValue + "].");
                         hjhDebtCredit.setLiquidationFairValue(capital.add(creditValue));
                         // 已还总额
                         hjhDebtCredit.setRepayAccount(BigDecimal.ZERO);
@@ -435,7 +441,11 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         }
                         // 计算债权价值 = 剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
                         // F=Ar+I+Ir/D*Dr
+                        logger.info("当前期利息:[" + interest + "].");
+                        logger.info("当前期持有天数:[" + holdDays + "].");
+                        logger.info("当前期计息天数:[" + duringDays + "].");
                         creditValue = (interest.multiply(new BigDecimal(holdDays)).divide(new BigDecimal(duringDays), 8, BigDecimal.ROUND_DOWN).setScale(2, BigDecimal.ROUND_DOWN));
+                        logger.info("垫付利息:[" + creditValue + "].");
                         // 承接所在期数
                         hjhDebtCredit.setAssignPeriod(1);
                         // 清算期数
@@ -475,6 +485,8 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         // 加入订单的债权价值
                         totalFairValue = totalFairValue.add(fairValue);
                         //  剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
+                        logger.info("剩余未还债权本金:[" + capital + "].");
+                        logger.info("计划订单的债权价值 = 剩余未还债权本金 + 垫付利息,[" + totalFairValue + "].");
                         hjhDebtCredit.setLiquidationFairValue(fairValue);
                         // 已还总额
                         hjhDebtCredit.setRepayAccount(BigDecimal.ZERO);
@@ -588,15 +600,20 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         // 下期还款时间
                         hjhDebtCredit.setCreditRepayNextTime(hjhDebtDetailCur.getRepayTime());
                         // 计算待垫付的利息
+                        logger.info("分期项目,当前期利息:[" + hjhDebtDetailCur.getRepayInterestWait() + "].");
                         creditValue = ((hjhDebtDetailCur.getRepayInterestWait().multiply(new BigDecimal(holdDays))).divide(new BigDecimal(duringDays), 2, BigDecimal.ROUND_DOWN));
                         // 检索是否有之前期有逾期
                         List<HjhDebtDetail> overdueDetailList = this.selectOverdueDetailList(hjhDebtDetailCur.getOrderId(), hjhDebtDetailCur.getRepayPeriod());
                         if (overdueDetailList != null && overdueDetailList.size() > 0) {
                             for (HjhDebtDetail overdueDetail : overdueDetailList) {
+                                logger.info("之前期逾期利息:[" + overdueDetail.getRepayInterestWait() + "].");
                                 creditValue = creditValue.add(overdueDetail.getRepayInterestWait());
                             }
                             hjhDebtCredit.setIsLateCredit(1);
                         }
+
+                        logger.info("分期项目,当前期持有天数:[" + holdDays + "].");
+                        logger.info("分期项目,当前期计息天数:[" + duringDays + "].");
                         // 垫付利息
                         hjhDebtCredit.setCreditInterestAdvance(creditValue);
                         // 待垫付利息
@@ -680,6 +697,10 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                                     // 提前还款，债权价值计算
                                     // 提前还款债权价值减扣部分
                                     advanceCreditValue = ((currentPeriodDebtDetail.getRepayInterestYes().multiply(new BigDecimal(currentPeriodAdvanceDays))).divide(new BigDecimal(currentPeriodDuringDays), 2, BigDecimal.ROUND_DOWN));
+                                    logger.info("提前还款债权价值减扣部分:[" + advanceCreditValue + "].");
+                                    logger.info("已还利息:[" + currentPeriodDebtDetail.getRepayInterestYes() + "].");
+                                    logger.info("提前天数:[" + currentPeriodAdvanceDays + "].");
+                                    logger.info("当前期计息天数:[" + currentPeriodDuringDays + "].");
                                 }
                             }
                         }
@@ -897,6 +918,10 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                                         // 提前还款，债权价值计算
                                         // 提前还款债权价值减扣部分
                                         advanceCreditValue = ((currentPeriodDebtDetail.getRepayInterestYes().multiply(new BigDecimal(currentPeriodAdvanceDays))).divide(new BigDecimal(currentPeriodDuringDays), 2, BigDecimal.ROUND_DOWN));
+                                        logger.info("提前还款债权价值减扣部分:[" + advanceCreditValue + "].");
+                                        logger.info("已还利息:[" + currentPeriodDebtDetail.getRepayInterestYes() + "].");
+                                        logger.info("提前天数:[" + currentPeriodAdvanceDays + "].");
+                                        logger.info("当前期计息天数:[" + currentPeriodDuringDays + "].");
                                     }
                                 }
                             }
@@ -989,11 +1014,11 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
         // 清算出债权之后,更新自动债转是否完成标示
         if (isRepayFlag == 0) {
             // 如果没有正在还款的债权,更新清算完成标志位为1.
-            this.updateAccedeCreditCompleteFlag(accedeOrderId,1);
+            this.updateAccedeCreditCompleteFlag(accedeOrderId, 1);
         }
 
         // 根据加入订单号查询出借的标的
-        List<BorrowTender> borrowTenderList =  this.selectBorrowTenderList(accedeOrderId);
+        List<BorrowTender> borrowTenderList = this.selectBorrowTenderList(accedeOrderId);
 
         if (borrowTenderList != null && borrowTenderList.size() > 0) {
             // 循环已出借的出借记录
@@ -1234,10 +1259,11 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
 
     /**
      * 更新加入订单的是否清算完成状态
+     *
      * @param accedeOrderId
      * @param creditCompleteFlag
      */
-    private void updateAccedeCreditCompleteFlag(String accedeOrderId,Integer creditCompleteFlag) {
+    private void updateAccedeCreditCompleteFlag(String accedeOrderId, Integer creditCompleteFlag) {
         // 根据订单号查询加入订单
         HjhAccedeExample example = new HjhAccedeExample();
         HjhAccedeExample.Criteria cra = example.createCriteria();
@@ -1252,6 +1278,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             }
         }
     }
+
     /**
      * 更新加入明细表的相关状态
      *
@@ -1296,22 +1323,23 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
      * @param creditNid
      */
     @Override
-	public void sendBorrowIssueMQ(String creditNid) {
-		try {
-			// 加入到消息队列
-			JSONObject params = new JSONObject();
-			params.put("creditNid", creditNid);
-			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
-					MQConstant.AUTO_ASSOCIATE_PLAN_CLEAR_TAG, creditNid, params), 2);
-			logger.info("清算完成后,发送MQ成功,债转编号:[" + creditNid + "].");
-		} catch (MQException e) {
-			e.printStackTrace();
-			logger.error("清算完成后,发送MQ失败,债转编号:[" + creditNid + "].");
-		}
-	}
+    public void sendBorrowIssueMQ(String creditNid) {
+        try {
+            // 加入到消息队列
+            JSONObject params = new JSONObject();
+            params.put("creditNid", creditNid);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+                    MQConstant.AUTO_ASSOCIATE_PLAN_CLEAR_TAG, creditNid, params), 2);
+            logger.info("清算完成后,发送MQ成功,债转编号:[" + creditNid + "].");
+        } catch (MQException e) {
+            e.printStackTrace();
+            logger.error("清算完成后,发送MQ失败,债转编号:[" + creditNid + "].");
+        }
+    }
 
     /**
      * 根据出借订单号查询出借的原始标的
+     *
      * @param accedeOrderId
      * @return
      */
