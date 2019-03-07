@@ -71,7 +71,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		Borrow newBorrow = new Borrow();
 		newBorrow.setId(borrow.getId());
 		newBorrow.setRepayStatus(status);
-		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(newBorrow) > 0 ? true : false;
+		boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBorrow) > 0 ? true : false;
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]");
 		}
