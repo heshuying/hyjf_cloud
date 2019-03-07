@@ -234,9 +234,9 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         String endDate = GetOrderIdUtils.getTxDate();
 
         // 测试环境
-        /*String startDate = "20161226";
-        String endDate = "20161226";*/
-
+     /*   String startDate = "20180428";
+        String endDate = GetOrderIdUtils.getTxDate();
+*/
 
 
         //页码定义
