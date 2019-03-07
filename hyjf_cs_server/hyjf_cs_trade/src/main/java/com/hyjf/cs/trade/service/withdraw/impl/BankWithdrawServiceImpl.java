@@ -463,6 +463,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         try {
             //调用银行接口
             BankCallBean bean = this.bankCallFundTransQuery(accountwithdraw);
+            logger.info("提现掉单调用银行接口返回："+JSONObject.toJSONString(bean));
             if (bean != null) {
                 int userId = accountwithdraw.getUserId();
                 BankCardVO bankCard = this.amUserClient.selectBankCardByUserId(userId);
