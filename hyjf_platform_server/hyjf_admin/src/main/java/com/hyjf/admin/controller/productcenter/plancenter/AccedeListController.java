@@ -1082,9 +1082,9 @@ public class AccedeListController extends BaseController{
     			String[] imgs = imgUrl.split(";");
     			List<String> imgList = Arrays.asList(imgs);
     			jsonObject.put("imgList",imgList);
-/*    			// 文件服务器
+    			// 文件服务器
     			String fileDomainUrl = systemConfig.getFtpurl() + systemConfig.getFtpbasepathimg();
-    			jsonObject.put("fileDomainUrl",fileDomainUrl);*/
+    			jsonObject.put("fileDomainUrl",fileDomainUrl);
     		}
     	}
     	return jsonObject;
