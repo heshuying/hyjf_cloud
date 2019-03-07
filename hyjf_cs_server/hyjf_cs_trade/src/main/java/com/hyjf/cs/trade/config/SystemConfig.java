@@ -13,22 +13,22 @@ public class SystemConfig {
     @Value("${hyjf.app.host}")
     public String appHost;
     /**
-     *  app 3.1.1 注册协议链接
+     * app 3.1.1 注册协议链接
      */
     @Value("${hyjf.app.regist.agreement.url}")
     public String appRegistAgreementUrl;
     /**
-     *  app 3.1.1 服务协议
+     * app 3.1.1 服务协议
      */
     @Value("${hyjf.app.service.agreement.url}")
     public String appServiceAgreementUrl;
     /**
-     *  app 3.1.1 隐私政策
+     * app 3.1.1 隐私政策
      */
     @Value("${hyjf.app.privacy.Policy.url}")
     public String appPrivacyPolicyUrl;
     /**
-     *app 3.1.1 公告内容链接
+     * app 3.1.1 公告内容链接
      */
     @Value("${hyjf.app.push.manager.url}")
     public String appPushManagerUrl;
@@ -168,6 +168,7 @@ public class SystemConfig {
     /*角色验证是否开启 add by cwyang 合规角色验证需求 */
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
+
     public String getAppRegistAgreementUrl() {
         return appRegistAgreementUrl;
     }
@@ -267,24 +268,36 @@ public class SystemConfig {
     private String hyjfCdnDomainUrl;
 
     //国家应急中心配置文件添加 add by nxl start
-    /** //合规数据上报 CERT 国家互联网应急中心 请求地址 https://api.ifcert.org.cn * 正式地址和测试地址区别 去掉【/test】 例 p2p/userInfo/test**/
+    /**
+     * //合规数据上报 CERT 国家互联网应急中心 请求地址 https://api.ifcert.org.cn * 正式地址和测试地址区别 去掉【/test】 例 p2p/userInfo/test
+     **/
     @Value("${hyjf.cert.sever.path}")
     public String certSeverPath;
-    /** //合规数据上报 CERT 国家互联网应急中心是否测试环境 true 测试环境 false 生产环境 */
+    /**
+     * //合规数据上报 CERT 国家互联网应急中心是否测试环境 true 测试环境 false 生产环境
+     */
     @Value("${hyjf.cert.is.test}")
-    public  String certIsTest ;
-    /** //合规数据上报 CERT 国家互联网应急中心 企业自己的sourceCode*/
+    public String certIsTest;
+    /**
+     * //合规数据上报 CERT 国家互联网应急中心 企业自己的sourceCode
+     */
     @Value("${hyjf.cert.source.code}")
-    public  String certSourceCode;
-    /** //合规数据上报 CERT 国家互联网应急中心 企业自己的apiKey */
+    public String certSourceCode;
+    /**
+     * //合规数据上报 CERT 国家互联网应急中心 企业自己的apiKey
+     */
     @Value("${hyjf.cert.api.key}")
-    public  String certApiKey;
-    /**合规数据上报 CERT 国家互联网应急中心 金协议地址*/
+    public String certApiKey;
+    /**
+     * 合规数据上报 CERT 国家互联网应急中心 金协议地址
+     */
     @Value("${hyjf.cert.crt.path}")
-    public  String certCrtpath;
-    /** 查询批次数据入库消息 */
+    public String certCrtpath;
+    /**
+     * 查询批次数据入库消息
+     */
     @Value("${hyjf.cert.yibu.path}")
-    public  String certWebYibu;
+    public String certWebYibu;
     //国家应急中心配置文件添加 add by nxl end
 
     public String getHyjfOnlineType() {
@@ -659,6 +672,7 @@ public class SystemConfig {
     public void setHyjfReqPasswordPath(String hyjfReqPasswordPath) {
         this.hyjfReqPasswordPath = hyjfReqPasswordPath;
     }
+
     public String getAopAccesskey() {
         return aopAccesskey;
     }
@@ -666,6 +680,7 @@ public class SystemConfig {
     public void setAopAccesskey(String aopAccesskey) {
         this.aopAccesskey = aopAccesskey;
     }
+
     public boolean isHyjfEnvTest() {
         return hyjfEnvTest;
     }
@@ -841,7 +856,6 @@ public class SystemConfig {
     public void setRoleIsopen(String roleIsopen) {
         this.roleIsopen = roleIsopen;
     }
-
 
 
     public String getSensorsDataLogPath() {
