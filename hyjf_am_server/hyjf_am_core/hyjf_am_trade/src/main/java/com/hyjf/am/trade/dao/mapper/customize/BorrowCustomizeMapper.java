@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -163,4 +164,11 @@ public interface BorrowCustomizeMapper {
      * @return
      */
     List<BorrowCustomizeVO> searchBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
+
+    /**
+     * 更新标的表还款金额
+     * @param borrow
+     * @return
+     */
+    int updateRepayOfBorrow(Borrow borrow);
 }

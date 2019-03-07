@@ -180,7 +180,7 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 			@Override
 			public String format(Object object) {
 				Integer repayTime = (Integer) object;
-				return (repayTime==null ? 0 : repayTime) == 0 ? "" :  GetDate.getDateTimeMyTime(repayTime);
+				return (repayTime==null ? 0 : repayTime) == 0 ? "" :  GetDate.getDateMyTimeInMillis(repayTime);
 			}
 		};
 
