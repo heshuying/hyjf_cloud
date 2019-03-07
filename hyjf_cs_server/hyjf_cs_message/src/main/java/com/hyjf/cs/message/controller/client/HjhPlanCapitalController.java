@@ -154,6 +154,8 @@ public class HjhPlanCapitalController extends BaseController {
         //总计条数
         Integer count = this.hjhPlanCapitalService.getPlanCapitalCount(request);
 
+        List<HjhPlanCapital> recordAllList = this.hjhPlanCapitalService.getPlanCapitalList(request);
+
         // 分页
         if (request.getCurrPage() > 0 && request.getPageSize() > 0){
             Paginator paginator = new Paginator(request.getCurrPage(), count.intValue(), request.getPageSize());
@@ -167,18 +169,22 @@ public class HjhPlanCapitalController extends BaseController {
         BigDecimal sumAccedeAccount = BigDecimal.ZERO;
         BigDecimal sumRepayInterest = BigDecimal.ZERO;
 
-        for (int i = 0; i < recordList.size(); i++){
-            if (recordList.get(i).getReinvestAccount() == null){
+        // 统计复投总额和债转总额
+        for (int i = 0; i < recordAllList.size(); i++){
+            if (recordAllList.get(i).getReinvestAccount() == null){
                 sumAccedeAccount = BigDecimal.ZERO;
             }else {
-                sumAccedeAccount = sumAccedeAccount.add(recordList.get(i).getReinvestAccount());
+                sumAccedeAccount = sumAccedeAccount.add(recordAllList.get(i).getReinvestAccount());
             }
-            if (recordList.get(i).getCreditAccount() == null){
+            if (recordAllList.get(i).getCreditAccount() == null){
                 sumRepayInterest = BigDecimal.ZERO;
             }else {
-                sumRepayInterest = sumRepayInterest.add(recordList.get(i).getCreditAccount());
+                sumRepayInterest = sumRepayInterest.add(recordAllList.get(i).getCreditAccount());
             }
+        }
 
+        // 为服务回报期限 添加单位
+        for (int i = 0; i < recordList.size(); i++){
             if(recordList.get(i).getIsMonth() == 0){
                 recordList.get(i).setLockPeriodView(recordList.get(i).getLockPeriod() + "天");
             }else{

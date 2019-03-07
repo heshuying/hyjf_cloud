@@ -1,5 +1,7 @@
 package com.hyjf.am.trade.dao.model.customize;
 
+import java.math.BigDecimal;
+
 public class HjhReInvestDebtCustomize {
 
     //计划订单号（检索）
@@ -54,6 +56,11 @@ public class HjhReInvestDebtCustomize {
     //前画面传入
     private String planNid;
     private String date;
+
+    private BigDecimal sumCreditCapital;
+    private BigDecimal sumLiquidationFairValue;
+    private BigDecimal sumAssignCapital;
+    private BigDecimal sumAssignAdvanceInterest;
 
     public String getAssignPlanOrderIdSrch() {
         return assignPlanOrderIdSrch;
@@ -261,5 +268,37 @@ public class HjhReInvestDebtCustomize {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public BigDecimal getSumCreditCapital() {
+        return sumCreditCapital;
+    }
+
+    public void setSumCreditCapital(BigDecimal sumCreditCapital) {
+        this.sumCreditCapital = sumCreditCapital;
+    }
+
+    public BigDecimal getSumLiquidationFairValue() {
+        return sumLiquidationFairValue;
+    }
+
+    public void setSumLiquidationFairValue(BigDecimal sumLiquidationFairValue) {
+        this.sumLiquidationFairValue = sumLiquidationFairValue;
+    }
+
+    public BigDecimal getSumAssignCapital() {
+        return sumAssignCapital;
+    }
+
+    public void setSumAssignCapital(BigDecimal sumAssignCapital) {
+        this.sumAssignCapital = sumAssignCapital;
+    }
+
+    public BigDecimal getSumAssignAdvanceInterest() {
+        return sumAssignAdvanceInterest;
+    }
+
+    public void setSumAssignAdvanceInterest(BigDecimal sumAssignAdvanceInterest) {
+        this.sumAssignAdvanceInterest = sumAssignAdvanceInterest;
     }
 }

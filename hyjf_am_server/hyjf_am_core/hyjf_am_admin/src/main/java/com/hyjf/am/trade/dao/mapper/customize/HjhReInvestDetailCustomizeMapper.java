@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
 
 import java.util.List;
@@ -34,12 +33,5 @@ public interface HjhReInvestDetailCustomizeMapper {
      */
     String queryReInvestDetailTotal(Map<String, Object> param);
 
-    /**
-     * 导出
-     *
-     * @param hjhPlanCapitalRequest
-     * @return
-     */
-    List<HjhPlanCapitalRequest> exportReInvestDetails(HjhPlanCapitalRequest hjhPlanCapitalRequest);
 
 }

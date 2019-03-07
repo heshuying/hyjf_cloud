@@ -194,7 +194,7 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "校验入力的计划编号相关", notes = "校验入力的计划编号相关")
 	@PostMapping(value = "/ajaxcheck")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	/*@ApiImplicitParam(name = "planNidSrch", value = "计划编号查询", required = true, dataType = "String")*/
 	public AdminResult<String> planNidAjaxCheck(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) {
 		HjhRegionResponse response = this.allocationEngineService.getPlanNidAjaxCheck(viewRequest.getPlanNidSrch());

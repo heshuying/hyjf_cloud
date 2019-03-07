@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.admin.hjhplan.impl;
 
 import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhReInvestDebtService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDebtVO;
@@ -61,5 +62,21 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
 
         List<HjhReInvestDebtVO> recordList = hjhReInvestDebtCustomizeMapper.queryReinvestDebtList(param);
         return recordList;
+    }
+
+    @Override
+    public HjhReInvestDebtCustomize queryReInvestDebtTotal(HjhReInvestDebtRequest request) {
+        Map<String, Object> param = new HashMap<String, Object>();
+
+        //起始时间
+        param.put("dateStart", request.getDate() + " 00:00:00");
+        // 结束时间
+        param.put("dateEnd", request.getDate() + " 23:59:59");
+
+        if (StringUtils.isNotEmpty(request.getPlanNid())){
+            param.put("planNid", request.getPlanNid());
+        }
+        HjhReInvestDebtCustomize total = hjhReInvestDebtCustomizeMapper.queryReInvestDebtTotal(param);
+        return total;
     }
 }
