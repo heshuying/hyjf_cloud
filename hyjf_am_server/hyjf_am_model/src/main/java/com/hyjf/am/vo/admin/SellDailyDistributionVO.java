@@ -24,7 +24,7 @@ public class SellDailyDistributionVO implements Serializable {
     private Integer timePoint;
 
     @JsonFormat(pattern="HH:mm:ss",timezone="GMT+8")
-    private Date sendTime;
+    private Date time;
 
     private Integer status;
 
@@ -71,12 +71,13 @@ public class SellDailyDistributionVO implements Serializable {
     public void setTimePoint(Integer timePoint) {
         this.timePoint = timePoint;
     }
-    public Date getSendTime() {
-        return sendTime;
+
+    public Date getTime() {
+        return time;
     }
 
-    public void setSendTime(Date sendTime) {
-        this.sendTime = sendTime;
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public Integer getStatus() {
