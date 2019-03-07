@@ -84,7 +84,6 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
 
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.STATUS_ZC000003);
 
-        // TODO: 2018/6/23 原代码平台推荐人未作处理
         if (StringUtils.isNotEmpty(reffer)) {
             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
