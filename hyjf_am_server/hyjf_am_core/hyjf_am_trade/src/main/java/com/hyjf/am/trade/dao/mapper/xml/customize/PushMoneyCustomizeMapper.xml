@@ -303,7 +303,7 @@
     <select id="queryUserInfoByUserId" resultType="com.hyjf.am.vo.user.UserInfoCustomizeVO"
             parameterType="java.lang.Integer">
         SELECT u.user_id AS userId, u.username AS userName, u.truename AS trueName,u.mobile,u.attribute,
-        od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+        od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName,ou.sex
         FROM ht_r_user u
         LEFT JOIN ht_r_oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
         LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid
