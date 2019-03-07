@@ -1050,7 +1050,8 @@
 		DATE_FORMAT(
 		hbt.create_time,
 		'%Y-%m-%d'
-		) add_time
+		) add_time,
+		hcc.content AS couponContent
 
 		FROM
 		ht_coupon_tender hct
@@ -1137,7 +1138,8 @@
 		hbt.create_time,
 		'%Y-%m-%d'
 		) add_time,
-		IFNULL(hcr.transfer_id,'') transfer_id
+		IFNULL(hcr.transfer_id,'') transfer_id,
+		hcc.content AS couponContent
 		FROM
 		ht_coupon_tender hct
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -1191,7 +1193,8 @@
 		DATE_FORMAT(
 		hbt.create_time,
 		'%Y-%m-%d'
-		) add_time
+		) add_time,
+		hcc.content AS couponContent
 		FROM
 		ht_coupon_tender hct
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -1335,7 +1338,8 @@
 		DATE_FORMAT(
 		hbt.create_time,
 		'%Y-%m-%d'
-		) add_time
+		) add_time,
+		hcc.content AS couponContent
 		FROM
 		ht_coupon_tender hct
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -1424,8 +1428,8 @@
 		hbt.create_time,
 		'%Y-%m-%d'
 		) add_time,
-		IFNULL(hcr.transfer_id,'') transfer_id
-
+		IFNULL(hcr.transfer_id,'') transfer_id,
+		hcc.content AS couponContent
 		FROM
 		ht_coupon_tender hct
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
@@ -1478,7 +1482,8 @@
 		DATE_FORMAT(
 		hbt.create_time,
 		'%Y-%m-%d'
-		) add_time
+		) add_time,
+		hcc.content AS couponContent
 		FROM
 		ht_coupon_tender hct
 		INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id

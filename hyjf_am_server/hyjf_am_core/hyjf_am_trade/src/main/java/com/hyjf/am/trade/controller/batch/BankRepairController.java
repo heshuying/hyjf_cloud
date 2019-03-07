@@ -182,6 +182,7 @@ public class BankRepairController extends BaseController {
             bankWithdrawService.updateHandlerAfterCash(request);
         }catch (Exception e){
             ret = false;
+            logger.error("提现掉单修复失败！！！",e);
         }
         return ret;
 
