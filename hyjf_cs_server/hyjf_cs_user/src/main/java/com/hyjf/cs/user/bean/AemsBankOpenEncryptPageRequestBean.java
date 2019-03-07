@@ -3,6 +3,9 @@
  */
 package com.hyjf.cs.user.bean;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * AEMS系统:用户开户请求Bean
  *
@@ -26,6 +29,23 @@ public class AemsBankOpenEncryptPageRequestBean extends BaseBean {
     private String acctUse;
     // 商户名称
     private String coinstName;
+
+    // 返回信息
+    private String returnMsg;
+
+    // 用户是否开户
+    private String isOpenAccount;
+    // 电子账户号
+    private String accountId;
+    //银行卡联行号
+    private String payAllianceCode;
+    private String callBackAction;
+    private String  acqRes;
+    /**
+     * 参数Map
+     */
+    private Map<String, String> paramMap = new LinkedHashMap<String, String>();
+
 
     public String getMobile() {
         return mobile;
@@ -73,5 +93,76 @@ public class AemsBankOpenEncryptPageRequestBean extends BaseBean {
 
     public void setCoinstName(String coinstName) {
         this.coinstName = coinstName;
+    }
+
+    public String getReturnMsg() {
+        return returnMsg;
+    }
+
+    public void setReturnMsg(String returnMsg) {
+        this.returnMsg = returnMsg;
+    }
+
+    public String getIsOpenAccount() {
+        return isOpenAccount;
+    }
+
+    public void setIsOpenAccount(String isOpenAccount) {
+        this.isOpenAccount = isOpenAccount;
+    }
+
+    @Override
+    public String getAccountId() {
+        return accountId;
+    }
+
+    @Override
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getPayAllianceCode() {
+        return payAllianceCode;
+    }
+
+    public void setPayAllianceCode(String payAllianceCode) {
+        this.payAllianceCode = payAllianceCode;
+    }
+
+    public String getCallBackAction() {
+        return callBackAction;
+    }
+
+    public void setCallBackAction(String callBackAction) {
+        this.callBackAction = callBackAction;
+    }
+
+    @Override
+    public String getAcqRes() {
+        return acqRes;
+    }
+
+    @Override
+    public void setAcqRes(String acqRes) {
+        this.acqRes = acqRes;
+    }
+
+    /**
+     * 设置属性值
+     *
+     * @param key
+     * @param value
+     */
+    public void set(String key, String value) {
+        paramMap.put(key, value);
+    }
+    /**
+     * 根据Key取得值
+     *
+     * @param key
+     * @return
+     */
+    public String get(String key) {
+        return paramMap.get(key);
     }
 }

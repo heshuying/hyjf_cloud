@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.bankopen;
 
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.*;
@@ -96,5 +97,5 @@ public interface BankOpenService extends BaseUserService {
 	 * @param userId
 	 * @return
 	 */
-	boolean existBankAccountId(Integer userId);
+	BankOpenAccountVO existBankAccountId(Integer userId);
 }

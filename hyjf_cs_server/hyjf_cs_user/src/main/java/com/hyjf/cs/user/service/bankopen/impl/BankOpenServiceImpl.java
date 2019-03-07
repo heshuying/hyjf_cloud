@@ -1164,11 +1164,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @return
      */
     @Override
-    public boolean existBankAccountId(Integer userId) {
-        BankOpenAccountVO borrowUserAccount = this.amUserClient.queryBankOpenAccountByUserId(userId);
-        if (null != borrowUserAccount) {
-            return true;
-        }
-        return false;
+    public BankOpenAccountVO existBankAccountId(Integer userId) {
+        return this.amUserClient.queryBankOpenAccountByUserId(userId);
     }
 }
