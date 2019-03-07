@@ -90,4 +90,11 @@ public interface BankOpenService extends BaseUserService {
 	 * @return
 	 */
 	String getBankOpenAccountByMobile(String mobile);
+	/**
+	 * 判断用户是否存在电子账户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	boolean existBankAccountId(Integer userId);
 }

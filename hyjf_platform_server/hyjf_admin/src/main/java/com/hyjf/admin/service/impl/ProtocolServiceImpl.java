@@ -82,6 +82,16 @@ public class ProtocolServiceImpl implements ProtocolService {
     public AdminProtocolResponse getProtocolTemplateById(AdminProtocolRequest request) {
         AdminProtocolResponse response = new AdminProtocolResponse();
         ProtocolTemplateCommonVO vo = client.getProtocolTemplateById(request);
+        ProtocolTemplateVO protocolTemplateVO = vo.getProtocolTemplateVO();
+        if(null != protocolTemplateVO && null != protocolTemplateVO.getUpdateUserId()){
+            AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(protocolTemplateVO.getUpdateUserId());
+            if(adminSystemVO != null){
+                protocolTemplateVO.setUpdateUserName(adminSystemVO.getUsername());
+            }else{
+                protocolTemplateVO.setUpdateUserName("admin");
+            }
+            vo.setProtocolTemplateVO(protocolTemplateVO);
+        }
         if(vo.getProtocolVersion().size() > 0){
             ProtocolVersionVO protocolVersionVO = null;
             for(int i=0;i<vo.getProtocolVersion().size();i++){

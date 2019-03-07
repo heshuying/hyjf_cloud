@@ -79,6 +79,7 @@
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = hab.borrow_cd
         LEFT JOIN ht_hjh_inst_config hic ON hab.inst_code = hic.inst_code
         LEFT JOIN ht_hjh_asset_type hat on hab.inst_code = hat.inst_code AND hab.asset_type = hat.asset_type
+        LEFT JOIN hyjf_config.ht_param_name fs on cast(hab.is_open AS CHAR) = fs.name_cd AND fs.name_class = 'FLOW_STATUS'
         where 1=1
         <include refid="Where_Clause" />
         ORDER BY

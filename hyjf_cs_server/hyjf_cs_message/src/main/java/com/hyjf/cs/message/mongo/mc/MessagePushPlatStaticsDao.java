@@ -4,6 +4,7 @@
 package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.mc.MessagePushPlatStatics;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
@@ -34,8 +35,8 @@ public class MessagePushPlatStaticsDao extends BaseMongoDao<MessagePushPlatStati
         Query query = new Query();
         Criteria criteria = new Criteria();
 		if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
-			criteria.and("staDate").gte(request.getStartDateSrch() + " 00:00:00")
-					.lte(request.getEndDateSrch() + " 23:59:59");
+			criteria.and("staDate").gte(request.getStartDateSrch())
+					.lte(request.getEndDateSrch());
 		}
         if (StringUtils.isNotBlank(request.getTagIdSrch())) {
             criteria.and("tagId").is(request.getTagIdSrch());
@@ -50,4 +51,7 @@ public class MessagePushPlatStaticsDao extends BaseMongoDao<MessagePushPlatStati
         query.with(new Sort(Sort.Direction.DESC, "staDate"));
         return mongoTemplate.find(query, getEntityClass());
     }
+
+
+
 }

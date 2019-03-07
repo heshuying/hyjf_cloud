@@ -156,25 +156,4 @@ public class HjhReInvestDetailVO extends BaseVO implements Serializable {
     public void setBorrowPeriodView(String borrowPeriodView) {
         this.borrowPeriodView = borrowPeriodView;
     }
-
-    @Override
-    public String toString() {
-        return "HjhReInvestDetailVO{" +
-                "accedeOrderId='" + accedeOrderId + '\'' +
-                ", planNid='" + planNid + '\'' +
-                ", userName='" + userName + '\'' +
-                ", inviteUserName='" + inviteUserName + '\'' +
-                ", userAttribute='" + userAttribute + '\'' +
-                ", borrowNid='" + borrowNid + '\'' +
-                ", expectApr='" + expectApr + '\'' +
-                ", borrowPeriod='" + borrowPeriod + '\'' +
-                ", borrowPeriodView='" + borrowPeriodView + '\'' +
-                ", isMonth='" + isMonth + '\'' +
-                ", accedeAccount='" + accedeAccount + '\'' +
-                ", borrowStyle='" + borrowStyle + '\'' +
-                ", investType='" + investType + '\'' +
-                ", countInterestTime='" + countInterestTime + '\'' +
-                ", addTime='" + addTime + '\'' +
-                '}';
-    }
 }

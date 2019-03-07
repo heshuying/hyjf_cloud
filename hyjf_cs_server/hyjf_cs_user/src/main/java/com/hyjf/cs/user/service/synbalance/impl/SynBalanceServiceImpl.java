@@ -218,7 +218,7 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         }
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
-        if(systemConfig.isHyjfEnvTest()){
+     /*   if(systemConfig.isHyjfEnvTest()){
             resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
             resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
             resultBean.setBankBalance(df.format(accountUser.getBankBalance()));
@@ -226,16 +226,17 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             resultBean.setStatusDesc("成功");
             return resultBean;
-        }
+        }*/
 
         //查询时间段 (只查当天)
         //上线需放开
-        String startDate = getTxDate(bankOpenAccount);
+   /*     String startDate = getTxDate(bankOpenAccount);
         String endDate = GetOrderIdUtils.getTxDate();
-
+*/
+        //todo wangjun test
         // 测试环境
-        /*String startDate = "20161226";
-        String endDate = "20161226";*/
+        String startDate = "20180428";
+        String endDate = GetOrderIdUtils.getTxDate();
 
 
 
@@ -408,21 +409,6 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         return GetOrderIdUtils.getTxDate();
     }
 
-    /**
-     * 是否属于线下充值类型
-     * @param tranType
-     * @return
-     */
-    private boolean isRechargeTransTypeOld(String tranType) {
-
-        if(BankCallConstant.TRANS_TYPE_7617.equals(tranType)||BankCallConstant.TRANS_TYPE_7820.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7821.equals(tranType)||BankCallConstant.TRANS_TYPE_7823.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7826.equals(tranType)||BankCallConstant.TRANS_TYPE_7938.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7939.equals(tranType)){
-            return true;
-        }
-        return false;
-    }
     /**
      * 判断是否属于线下充值类型.
      * 	优先从Redis中取数据,当Redis中的数据为空时,从数据表中读取数据
