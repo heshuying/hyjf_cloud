@@ -522,7 +522,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		ret.put("rcvAccount", "7919 1314 9300 306<br/>");
 		ret.put("rcvOpenBankName", "江西银行南昌铁路支行<br/>");
 		ret.put("kindlyReminder", "①用户必须使用在平台唯一绑定银行卡进行充值；<br/>②银行转账时，请选择（城市商业银行）江西银行或者南昌银行；<br/>③线下充值的到账时间一般为1-3天（具体到账时间以银行的实际到账时间为准）；");
-		// TODO  需要返回新的绑卡路径
 		//ret.put("bindCardUrl", RechargeDefine.HOST+BindCardPageDefine.REQUEST_MAPPING+BindCardPageDefine.REQUEST_BINDCARDPAGE+".do");
 		ret.put("bindCardUrl", "");
 		// 江西银行绑卡接口修改 update by wj 2018-5-17 start
