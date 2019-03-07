@@ -26,9 +26,9 @@ public class LandingPageVo extends BaseVO implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -80,19 +80,19 @@ public class LandingPageVo extends BaseVO implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
 }
