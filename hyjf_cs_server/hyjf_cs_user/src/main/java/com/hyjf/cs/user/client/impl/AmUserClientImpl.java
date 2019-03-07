@@ -265,7 +265,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public BankOpenAccountVO queryBankOpenAccountByUserId(int userId) {
 		BankOpenAccountResponse response = restTemplate
-				.getForEntity(userService+"/am-user/userManager/queryBankOpenAccountByUserId/" + userId,
+				.getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/" + userId,
 						BankOpenAccountResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
