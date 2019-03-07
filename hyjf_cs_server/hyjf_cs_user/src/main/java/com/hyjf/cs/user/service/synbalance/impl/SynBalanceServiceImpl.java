@@ -218,7 +218,7 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         }
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
-     /*   if(systemConfig.isHyjfEnvTest()){
+        if(systemConfig.isHyjfEnvTest()){
             resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
             resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
             resultBean.setBankBalance(df.format(accountUser.getBankBalance()));
@@ -226,18 +226,17 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             resultBean.setStatusDesc("成功");
             return resultBean;
-        }*/
+        }
 
         //查询时间段 (只查当天)
         //上线需放开
-   /*     String startDate = getTxDate(bankOpenAccount);
-        String endDate = GetOrderIdUtils.getTxDate();
-*/
-        //todo wangjun test
-        // 测试环境
-        String startDate = "20180428";
+        String startDate = getTxDate(bankOpenAccount);
         String endDate = GetOrderIdUtils.getTxDate();
 
+        // 测试环境
+     /*   String startDate = "20180428";
+        String endDate = GetOrderIdUtils.getTxDate();
+*/
 
 
         //页码定义
