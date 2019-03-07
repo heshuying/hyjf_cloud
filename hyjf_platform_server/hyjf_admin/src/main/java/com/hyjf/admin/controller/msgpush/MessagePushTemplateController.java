@@ -352,8 +352,10 @@ public class MessagePushTemplateController extends BaseController {
         if (request.getTagId() == null) {
             message = "标签id不能为空";
         }
-        if (StringUtils.isBlank(request.getTemplateCode().substring(4)) || request.getTemplateCode().length() > 40) {
-            message = "模板编码不能为空或长度大于40字符";
+        if (request.getTemplateCode().length() > 4) {
+            if (StringUtils.isBlank(request.getTemplateCode().substring(4)) || request.getTemplateCode().length() > 40) {
+                message = "模板编码不能为空或长度大于40字符";
+            }
         }
         if (StringUtils.isBlank(request.getTemplateTitle()) || request.getTemplateTitle().length() > 20) {
             message = "模板名称不能为空或长度大于20字符";
