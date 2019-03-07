@@ -50,7 +50,7 @@ public class FindController {
 			detailsJson.put("shareContent", article.getSummary());
 			detailsJson.put("sharePicUrl", "https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
 			detailsJson.put("shareUrl", appHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
-					.replace("{contentArticleId}", article.getId() + "").replace("{type}", "20"));
+					.replace("{contentArticleId}", article.getId() + "").replace("{type}", "20") + "?ignoreSign=true");
 			jsonArray.add(detailsJson);
 		}
 		ret.put("status", "000");
