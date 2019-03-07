@@ -95,7 +95,8 @@ public class ParamNameServiceImpl implements ParamNameService {
         if(StringUtils.isNotBlank(request.getNameSrch())){
             criteria.andNameLike("%"+request.getNameSrch()+"%");
         }
-        example.setOrderByClause("create_time desc");
+        // 数据字典列表不需要排序
+        //example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
