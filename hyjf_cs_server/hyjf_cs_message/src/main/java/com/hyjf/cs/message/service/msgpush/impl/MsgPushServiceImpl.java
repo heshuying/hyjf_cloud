@@ -180,7 +180,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 		platStatics.setReadCount(0);
 		platStatics.setSendCount(0);
 		platStatics.setDestinationCount(0);
-		platStatics.setStaDate(GetDate.dateToString(today));
+		platStatics.setStaDate(GetDate.dateToString2(today));
 		platStatics.setTagId(String.valueOf(messagePushTagVO.getId()));
 
 		if (msgHistoryList != null && msgHistoryList.size() != 0) {
