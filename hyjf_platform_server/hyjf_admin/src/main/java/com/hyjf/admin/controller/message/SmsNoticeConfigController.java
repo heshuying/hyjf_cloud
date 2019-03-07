@@ -77,7 +77,7 @@ public class SmsNoticeConfigController extends BaseController {
 
     @ApiOperation(value = "修改通知配置详情", notes = "修改通知配置详情")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult  updateSmsNoticeConfig(@RequestBody SmsNoticeConfigRequest adminRequest) {
         SmsNoticeConfigResponse result= smsNoticeConfigService.updateSmsNoticeConfig(adminRequest);
         if (result == null) {
