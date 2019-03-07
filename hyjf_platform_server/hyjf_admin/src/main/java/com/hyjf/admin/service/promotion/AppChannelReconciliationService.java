@@ -21,14 +21,4 @@ public interface AppChannelReconciliationService {
      */
     AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(Integer userId);
 
-    /**
-     * @Author walter.limeng
-     * @user walter.limeng
-     * @Description  分页查询APP渠道
-     * @Date 17:03 2018/7/24
-     * @Param AppChannelReconciliationRequest
-     * @return
-     */
-    AppChannelReconciliationResponse getReconciliationPage(AppChannelReconciliationRequest form);
-
 }

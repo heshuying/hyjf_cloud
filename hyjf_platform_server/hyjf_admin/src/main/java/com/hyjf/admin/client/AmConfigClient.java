@@ -185,18 +185,6 @@ public interface AmConfigClient {
 	AdminUtmReadPermissionsVO selectAdminUtmReadPermissions(Integer userId);
 
 	/**
-	 * @Author walter.limeng
-	 * @user walter.limeng
-	 * @Description  分页查询APP渠道
-	 * @Date 17:23 2018/7/24
-	 * @Param AppChannelReconciliationRequest
-	 * @return
-	 */
-	AppChannelReconciliationResponse getReconciliationPage(AppChannelReconciliationRequest form);
-
-
-
-	/**
 	 * 查询银行配置列表
 	 * @param adminRequest
 	 * @return
