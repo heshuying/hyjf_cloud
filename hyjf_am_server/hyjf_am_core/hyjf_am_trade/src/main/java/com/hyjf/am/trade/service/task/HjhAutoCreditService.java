@@ -35,7 +35,7 @@ public interface HjhAutoCreditService extends BaseService {
      *
      * @return
      */
-    List<HjhAccede> selectDeadLineAccedeList();
+    List<HjhAccede> hjhDeadLineAccedeList();
 
     /**
      * 汇计划自动清算
