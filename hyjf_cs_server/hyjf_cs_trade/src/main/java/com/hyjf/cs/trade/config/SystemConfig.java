@@ -260,9 +260,6 @@ public class SystemConfig {
     @Value("${new.hjh.diary.ftl.name}")
     private String neweHhjDiaryFtlName;
 
-    @Value("${hyjf.wechat.invite.url}")
-    private String wechatInviteUrl;
-
     @Value("${hyjf.online.type}")
     private String hyjfOnlineType;
 
@@ -835,14 +832,6 @@ public class SystemConfig {
 
     public void setFileUploadRealPath(String fileUploadRealPath) {
         this.fileUploadRealPath = fileUploadRealPath;
-    }
-
-    public String getWechatInviteUrl() {
-        return wechatInviteUrl;
-    }
-
-    public void setWechatInviteUrl(String wechatInviteUrl) {
-        this.wechatInviteUrl = wechatInviteUrl;
     }
 
     public String getRoleIsopen() {

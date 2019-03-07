@@ -15,9 +15,6 @@ public class DzqzConstant implements Serializable{
     /**法大大pay工程实现URL*/
     public static final  String HYJF_PAY_FDD_URL = "hyjf.pay.fdd.url";
 
-    /**法大大pay工程实现URL*/
-    public static final  String HYJF_PAY_FDD_NOTIFY_URL = "hyjf.pay.fdd.nofify.url";
-
     /**法大大接口实现方法*/
     public static final String REQUEST_MAPPING_CALLAPIBG = "/callApiBg";
     /**法大大接口异步通知实现方法*/
