@@ -81,9 +81,6 @@ public class SystemConfig {
     @Value("${hyjf.notice.ios.version}")
     public String iosNoticeVersion;
 
-    @Value("${hyjf.fdd.customerid}")
-    private String hyjfFddCustomerid;
-
     @Value("${hyjf.ftp.ip}")
     private String hyjfFtpIp;
 
@@ -502,14 +499,6 @@ public class SystemConfig {
 
     public void setBankBankcode(String bankBankcode) {
         this.bankBankcode = bankBankcode;
-    }
-
-    public String getHyjfFddCustomerid() {
-        return hyjfFddCustomerid;
-    }
-
-    public void setHyjfFddCustomerid(String hyjfFddCustomerid) {
-        this.hyjfFddCustomerid = hyjfFddCustomerid;
     }
 
     public String getHyjfFtpIp() {
