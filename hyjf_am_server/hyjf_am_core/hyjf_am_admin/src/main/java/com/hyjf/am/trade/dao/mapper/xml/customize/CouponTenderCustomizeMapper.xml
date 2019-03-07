@@ -1200,7 +1200,7 @@
         hu.username username,
         hui.truename truename,
         hu.mobile mobile,
-        "" chinapnr_usrcustid,
+        hac.chinapnr_usrcustid chinapnr_usrcustid,
         hbt.nid nid,
         hbi.name borrow_name,
         hb.borrow_period borrow_period,
@@ -1231,6 +1231,7 @@
         INNER JOIN hyjf_config.ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
+        LEFT JOIN hyjf_user.ht_account_chinapnr hac ON hac.user_id = hu.user_id
         <include refid="selectCouponBackMoneyList_Where_Clause" />
         ORDER BY hcr.recover_time DESC
         <if test="limitStart >= 0" >

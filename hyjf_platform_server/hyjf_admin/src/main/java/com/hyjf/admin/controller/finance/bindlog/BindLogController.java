@@ -44,6 +44,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
  * @version: BindLogController, v0.1 2018/7/5 15:36
  */
 @Api(value = "资金中心-定向转账-绑定日志",tags ="资金中心-定向转账-绑定日志")
+@Deprecated
 @RestController
 @RequestMapping(value = "/hyjf-admin/finance/bindlog")
 public class BindLogController extends BaseController {
