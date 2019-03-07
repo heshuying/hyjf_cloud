@@ -1674,8 +1674,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
         // 更新还款金额数据 update by wgx 2019/03/07
-        logger.info("【智投还款/出借人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}",
-                borrowNid, repayAccount, recoverAccountWait);
+        logger.info("【智投还款/出借人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}，未还款利息减少：{}",
+                borrowNid, repayAccount, recoverAccountWait, recoverInterestWait);
 		Borrow updateBorrow = new Borrow();
         updateBorrow.setId(borrow.getId());
         updateBorrow.setId(borrow.getId());
@@ -2307,7 +2307,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecoverPlan.setRecoverInterestYes(borrowRecoverPlan.getRecoverInterestYes().add(repayInterest));
 			// 待还金额
 			borrowRecoverPlan.setRecoverAccountWait(borrowRecoverPlan.getRecoverAccountWait().subtract(assignAccount));
-			logger.info("--------------------------标的号：" + borrowNid + ",债转还款记录任务表金额，原金额：" + borrowRecoverPlan.getRecoverAccountWait() + ",扣减金额：" + assignAccount);
+			logger.info("【智投还款/承接人】借款编号：{}，开始更新债转还款记录任务表金额。原金额：{}，扣减金额：{}",
+					borrowNid, borrowRecoverPlan.getRecoverAccountWait(), assignAccount);
 			// 待还本金
 			borrowRecoverPlan.setRecoverCapitalWait(borrowRecoverPlan.getRecoverCapitalWait().subtract(assignCapital));
 			// 待还利息
@@ -2364,8 +2365,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			}
 		}
         // 更新还款金额数据 update by wgx 2019/03/07
-		logger.info("【智投还款/承接人】借款编号：{}，开始更新标的表。总还款增加：{}，未还款总额减少：{}",
-				borrowNid, repayAccount, assignAccount);
+		logger.info("【智投还款/承接人】借款编号：{}，开始更新标的表。总还款增加：{}，未还款总额减少：{}，未还款利息减少：{}",
+				borrowNid, repayAccount, assignAccount, assignInterest);
 		Borrow updateBorrow = new Borrow();
         updateBorrow.setId(borrow.getId());
         updateBorrow.setRepayAccountYes(repayAccount);// 总还款增加
