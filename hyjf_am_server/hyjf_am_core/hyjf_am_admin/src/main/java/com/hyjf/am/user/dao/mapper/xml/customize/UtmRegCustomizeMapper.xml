@@ -830,7 +830,7 @@
 		a.invest_amount,
 		r.source_name as utm_name,
 		DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
-		DATE_FORMAT(hu.register_time,'%Y-%m-%d %H:%i:%s') as reg_time,
+		DATE_FORMAT(hu.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
 		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
 		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
 		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
