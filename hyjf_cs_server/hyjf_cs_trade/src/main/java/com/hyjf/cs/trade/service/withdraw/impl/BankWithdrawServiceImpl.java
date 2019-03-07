@@ -435,6 +435,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     public void batchWithdraw() {
         List<AccountWithdrawVO> withdrawList = this.amTradeClient.selectBankWithdrawList();
         if (CollectionUtils.isNotEmpty(withdrawList)){
+            logger.info("获取的提现掉单记录数："+withdrawList.size());
             for (AccountWithdrawVO accountWithdraw : withdrawList) {
                 updateWithdraw(accountWithdraw);
             }
