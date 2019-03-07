@@ -81,9 +81,6 @@ public class SystemConfig {
     @Value("${hyjf.notice.ios.version}")
     public String iosNoticeVersion;
 
-    @Value("${hyjf.pay.fdd.nofify.url}")
-    private String hyjfPayFddNotifyUrl;
-
     @Value("${hyjf.fdd.customerid}")
     private String hyjfFddCustomerid;
 
@@ -495,14 +492,6 @@ public class SystemConfig {
 
     public void setBankBankcode(String bankBankcode) {
         this.bankBankcode = bankBankcode;
-    }
-
-    public String getHyjfPayFddNotifyUrl() {
-        return hyjfPayFddNotifyUrl;
-    }
-
-    public void setHyjfPayFddNotifyUrl(String hyjfPayFddNotifyUrl) {
-        this.hyjfPayFddNotifyUrl = hyjfPayFddNotifyUrl;
     }
 
     public String getHyjfFddCustomerid() {
