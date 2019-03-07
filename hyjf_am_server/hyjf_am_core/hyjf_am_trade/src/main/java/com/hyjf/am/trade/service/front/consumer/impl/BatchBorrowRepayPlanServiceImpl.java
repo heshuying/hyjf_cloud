@@ -68,9 +68,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			throw new Exception("批次还款任务表(ht_borrow_apicron)更新失败！[借款编号：" + borrowNid + "]");
 		}
 		Borrow borrow = this.getBorrowByNid(borrowNid);
-		borrow.setRepayStatus(status);
-		borrow.setUpdatetime(new Date());
-		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
+		Borrow newBorrow = new Borrow();
+		newBorrow.setId(borrow.getId());
+		newBorrow.setRepayStatus(status);
+		boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBorrow) > 0 ? true : false;
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]");
 		}
@@ -1102,6 +1103,32 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			// 还款时间
 			recoverTime = borrowRecover.getRecoverTime();
 		}
+		// 分期时
+		if (Validator.isNotNull(borrowRecoverPlan)) {
+			// 更新放款记录分期信息
+			borrowRecoverPlan.setRepayBatchNo(repayBatchNo);
+			borrowRecoverPlan.setRecoverStatus(1);
+			borrowRecoverPlan.setRecoverYestime(String.valueOf(nowTime));
+			borrowRecoverPlan.setRecoverType(TYPE_YES);
+			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
+			if (!borrowRecoverPlanFlag) {
+				throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+			}
+			// 更新总的还款计划
+			BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
+			if (Validator.isNotNull(borrowRepayPlan)) {
+				borrowRepayPlan.setRepayType(TYPE_WAIT_YES);
+				borrowRepayPlan.setRepayActionTime(String.valueOf(nowTime));
+				borrowRepayPlan.setRepayStatus(1);
+				borrowRepayPlan.setRepayYestime(nowTime);
+				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
+				if (!borrowRepayPlanFlag) {
+					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+				}
+			} else {
+				throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+			}
+		}
 		boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;// 是否是一次性还款
 		// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/28
 		boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, tenderUserId, tenderOrderId, isAllRepay);
@@ -1161,33 +1188,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					}
 				}
 			}
-		}
-		// 分期时
-		if (Validator.isNotNull(borrowRecoverPlan)) {
-			// 更新放款记录分期信息
-			borrowRecoverPlan.setRepayBatchNo(repayBatchNo);
-			borrowRecoverPlan.setRecoverStatus(1);
-			borrowRecoverPlan.setRecoverYestime(String.valueOf(nowTime));
-			borrowRecoverPlan.setRecoverType(TYPE_YES);
-			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
-			if (!borrowRecoverPlanFlag) {
-				throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
-			}
-			// 更新总的还款计划
-			BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
-			if (Validator.isNotNull(borrowRepayPlan)) {
-				borrowRepayPlan.setRepayType(TYPE_WAIT_YES);
-				borrowRepayPlan.setRepayActionTime(String.valueOf(nowTime));
-				borrowRepayPlan.setRepayStatus(1);
-				borrowRepayPlan.setRepayYestime(nowTime);
-				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
-				if (!borrowRepayPlanFlag) {
-					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
-				}
-			} else {
-				throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
-			}
-
 		}
 		logger.info("【智投还款/出借人】借款编号：{}，更新出借人的还款数据结束。还款订单号：{}", apicron.getBorrowNid(), repayOrderId);
 		return true;
@@ -1383,7 +1383,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		// 判断该收支明细存在时,跳出本次循环
 		if (countAccountListByNid(repayOrderId)) {
-			logger.info("【智投还款/出借人】出借人收支明细已经存在。还款订单号：{}", repayOrderId);
+			logger.error("【智投还款/出借人】借款编号：{}，出借人收支明细已经存在。还款订单号：{}", borrowNid, repayOrderId);
 			return true;
 		}
 		//redis
@@ -1513,11 +1513,72 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!investAccountListFlag) {
 			throw new Exception("收支明细(ht_account_list)写入失败！[出借订单号：" + tenderOrderId + "]");
 		}
+		// 分期时
+		if (Validator.isNotNull(borrowRecoverPlan)) {
+			// 更新还款计划表
+			borrowRecoverPlan.setRepayBatchNo(repayBatchNo);
+			borrowRecoverPlan.setRecoverStatus(1);
+			borrowRecoverPlan.setRecoverYestime(String.valueOf(nowTime));
+			borrowRecoverPlan.setRecoverAccountYes(borrowRecoverPlan.getRecoverAccountYes().add(repayAccount));
+			borrowRecoverPlan.setRecoverCapitalYes(borrowRecoverPlan.getRecoverCapitalYes().add(repayCapital));
+			borrowRecoverPlan.setRecoverInterestYes(borrowRecoverPlan.getRecoverInterestYes().add(repayInterest));
+			borrowRecoverPlan.setRecoverAccountWait(borrowRecoverPlan.getRecoverAccountWait().subtract(recoverAccountWait));
+			borrowRecoverPlan.setRecoverCapitalWait(borrowRecoverPlan.getRecoverCapitalWait().subtract(recoverCapitalWait));
+			borrowRecoverPlan.setRecoverInterestWait(borrowRecoverPlan.getRecoverInterestWait().subtract(recoverInterestWait));
+			borrowRecoverPlan.setRepayChargeInterest(borrowRecoverPlan.getRepayChargeInterest().add(chargeInterest));
+			borrowRecoverPlan.setRepayDelayInterest(borrowRecoverPlan.getRepayDelayInterest().add(delayInterest));
+			borrowRecoverPlan.setRepayLateInterest(borrowRecoverPlan.getRepayLateInterest().add(lateInterest));
+			borrowRecoverPlan.setRecoverFeeYes(borrowRecoverPlan.getRecoverFeeYes().add(manageFee));
+			borrowRecoverPlan.setRecoverType(TYPE_YES);
+			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
+			if (!borrowRecoverPlanFlag) {
+				throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+			}
+			// 更新总的还款计划
+			BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
+			if (Validator.isNotNull(borrowRepayPlan)) {
+				borrowRepayPlan.setRepayType(TYPE_WAIT_YES);
+				borrowRepayPlan.setRepayActionTime(String.valueOf(nowTime));
+				borrowRepayPlan.setRepayStatus(1);
+				borrowRepayPlan.setRepayYestime(nowTime);
+				borrowRepayPlan.setRepayAccountAll(borrowRepayPlan.getRepayAccountAll().add(repayAccount).add(manageFee));
+				borrowRepayPlan.setRepayAccountYes(borrowRepayPlan.getRepayAccountYes().add(repayAccount));
+				borrowRepayPlan.setRepayCapitalYes(borrowRepayPlan.getRepayCapitalYes().add(repayCapital));
+				borrowRepayPlan.setRepayInterestYes(borrowRepayPlan.getRepayInterestYes().add(repayInterest));
+				borrowRepayPlan.setLateDays(lateDays);
+				borrowRepayPlan.setLateInterest(borrowRepayPlan.getLateInterest().add(lateInterest));
+				borrowRepayPlan.setDelayDays(delayDays);
+				borrowRepayPlan.setDelayInterest(borrowRepayPlan.getDelayInterest().add(delayInterest));
+				borrowRepayPlan.setChargeDays(chargeDays);
+				borrowRepayPlan.setChargeInterest(borrowRepayPlan.getChargeInterest().add(chargeInterest));
+				// 用户是否提前还款
+				borrowRepayPlan.setAdvanceStatus(borrowRecoverPlan.getAdvanceStatus());
+				// 还款来源
+				if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
+					// 还款来源（1、借款人还款，2、机构垫付，3、保证金垫付）
+					borrowRepayPlan.setRepayMoneySource(2);
+				} else {
+					borrowRepayPlan.setRepayMoneySource(1);
+				}
+				// 实际还款人（借款人、垫付机构、保证金）的用户ID
+				borrowRepayPlan.setRepayUserId(repayUserId);
+				// 实际还款人（借款人、垫付机构、保证金）的用户名
+				borrowRepayPlan.setRepayUsername(repayUserName);
+				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
+				if (!borrowRepayPlanFlag) {
+					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+				}
+			} else {
+				throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
+			}
+		}
 		boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;// 是否是一次性还款
 		// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/28
 		boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, tenderUserId, tenderOrderId, isAllRepay);
 		// 更新放款记录
 		borrowRecover = selectBorrowRecoverByNid(borrowRecover.getNid());
+		logger.info("【智投还款/承接人】借款编号：{}，开始更新放款记录总表。未还款总额：{}，还款额：{}",
+				borrowNid, borrowRecover.getRecoverAccountWait(), recoverAccountWait);
 		if (borrowRecoverPlan != null && periodNext > 0 && !isLastUpdate) {// 分期并且不是最后一期,而且不是一次性还款最后一期需要更新的
 			borrowRecover.setRecoverStatus(0); // 未还款
 			// 取得分期还款计划表下一期的还款
@@ -1612,26 +1673,23 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!borrowRepayFlag) {
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
-		// 更新借款表
-		borrow = this.getBorrowByNid(borrowNid);
-		Borrow newBrrow = new Borrow();
-		newBrrow.setId(borrow.getId());
-		BigDecimal borrowManager = borrow.getBorrowManager() == null ? BigDecimal.ZERO : new BigDecimal(borrow.getBorrowManager());
-		newBrrow.setBorrowManager(borrowManager.add(manageFee).toString());
-		newBrrow.setRepayAccountYes(borrow.getRepayAccountYes().add(repayAccount)); // 总还款利息
-		newBrrow.setRepayAccountCapitalYes(borrow.getRepayAccountCapitalYes().add(repayCapital)); // 总还款本金
-		newBrrow.setRepayAccountInterestYes(borrow.getRepayAccountInterestYes().add(repayInterest)); // 总还款利息
-		newBrrow.setRepayAccountWait(borrow.getRepayAccountWait().subtract(recoverAccountWait)); // 未还款总额
-		newBrrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().subtract(recoverCapitalWait)); // 未还款本金
-		newBrrow.setRepayAccountInterestWait(borrow.getRepayAccountInterestWait().subtract(recoverInterestWait)); // 未还款利息
-		newBrrow.setRepayFeeNormal(borrow.getRepayFeeNormal().add(manageFee));
-		boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBrrow) > 0 ? true : false;
+        // 更新还款金额数据 update by wgx 2019/03/07
+        logger.info("【智投还款/出借人】借款编号：{}，开始更新标的表还款金额。总还款增加：{}，未还款总额减少：{}",
+                borrowNid, repayAccount, recoverAccountWait);
+		Borrow updateBorrow = new Borrow();
+        updateBorrow.setId(borrow.getId());
+        updateBorrow.setId(borrow.getId());
+        updateBorrow.setRepayAccountYes(repayAccount);// 总还款增加
+        updateBorrow.setRepayAccountCapitalYes(repayCapital);// 总还款本金增加
+        updateBorrow.setRepayAccountInterestYes(repayInterest);// 总还款利息增加
+        updateBorrow.setRepayAccountWait(recoverAccountWait);// 未还款总额减少
+        updateBorrow.setRepayAccountCapitalWait(recoverCapitalWait);// 未还款本金减少
+        updateBorrow.setRepayAccountInterestWait(recoverInterestWait);// 未还款利息减少
+        updateBorrow.setRepayFeeNormal(manageFee);// 借款的管理费增加
+        boolean borrowFlag = this.borrowCustomizeMapper.updateRepayOfBorrow(updateBorrow) > 0 ? true : false;
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
-		// BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
-		logger.info("【智投还款/承接人】借款编号：{}，更新标的表完毕。总还款：{}，未还款总额：{}",
-				borrowNid, borrow.getRepayAccountYes(), borrow.getRepayAccountWait());
 		// 更新出借表
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
 		borrowTender.setRecoverAccountCapitalYes(borrowTender.getRecoverAccountCapitalYes().add(repayCapital));
@@ -1688,65 +1746,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		int flag = this.hjhDebtDetailMapper.updateByPrimaryKey(debtDetail);
 		if (flag > 0) {
 			logger.info("【智投还款/出借人】债权详情表(hjh_debt_detail)更新完成。出借订单号:{}", tenderOrderId);
-		}
-		// 分期时
-		if (Validator.isNotNull(borrowRecoverPlan)) {
-			// 更新还款计划表
-			borrowRecoverPlan.setRepayBatchNo(repayBatchNo);
-			borrowRecoverPlan.setRecoverStatus(1);
-			borrowRecoverPlan.setRecoverYestime(String.valueOf(nowTime));
-			borrowRecoverPlan.setRecoverAccountYes(borrowRecoverPlan.getRecoverAccountYes().add(repayAccount));
-			borrowRecoverPlan.setRecoverCapitalYes(borrowRecoverPlan.getRecoverCapitalYes().add(repayCapital));
-			borrowRecoverPlan.setRecoverInterestYes(borrowRecoverPlan.getRecoverInterestYes().add(repayInterest));
-			borrowRecoverPlan.setRecoverAccountWait(borrowRecoverPlan.getRecoverAccountWait().subtract(recoverAccountWait));
-			borrowRecoverPlan.setRecoverCapitalWait(borrowRecoverPlan.getRecoverCapitalWait().subtract(recoverCapitalWait));
-			borrowRecoverPlan.setRecoverInterestWait(borrowRecoverPlan.getRecoverInterestWait().subtract(recoverInterestWait));
-			borrowRecoverPlan.setRepayChargeInterest(borrowRecoverPlan.getRepayChargeInterest().add(chargeInterest));
-			borrowRecoverPlan.setRepayDelayInterest(borrowRecoverPlan.getRepayDelayInterest().add(delayInterest));
-			borrowRecoverPlan.setRepayLateInterest(borrowRecoverPlan.getRepayLateInterest().add(lateInterest));
-			borrowRecoverPlan.setRecoverFeeYes(borrowRecoverPlan.getRecoverFeeYes().add(manageFee));
-			borrowRecoverPlan.setRecoverType(TYPE_YES);
-			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
-			if (!borrowRecoverPlanFlag) {
-				throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
-			}
-			// 更新总的还款计划
-			BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
-			if (Validator.isNotNull(borrowRepayPlan)) {
-				borrowRepayPlan.setRepayType(TYPE_WAIT_YES);
-				borrowRepayPlan.setRepayActionTime(String.valueOf(nowTime));
-				borrowRepayPlan.setRepayStatus(1);
-				borrowRepayPlan.setRepayYestime(nowTime);
-				borrowRepayPlan.setRepayAccountAll(borrowRepayPlan.getRepayAccountAll().add(repayAccount).add(manageFee));
-				borrowRepayPlan.setRepayAccountYes(borrowRepayPlan.getRepayAccountYes().add(repayAccount));
-				borrowRepayPlan.setRepayCapitalYes(borrowRepayPlan.getRepayCapitalYes().add(repayCapital));
-				borrowRepayPlan.setRepayInterestYes(borrowRepayPlan.getRepayInterestYes().add(repayInterest));
-				borrowRepayPlan.setLateDays(lateDays);
-				borrowRepayPlan.setLateInterest(borrowRepayPlan.getLateInterest().add(lateInterest));
-				borrowRepayPlan.setDelayDays(delayDays);
-				borrowRepayPlan.setDelayInterest(borrowRepayPlan.getDelayInterest().add(delayInterest));
-				borrowRepayPlan.setChargeDays(chargeDays);
-				borrowRepayPlan.setChargeInterest(borrowRepayPlan.getChargeInterest().add(chargeInterest));
-				// 用户是否提前还款
-				borrowRepayPlan.setAdvanceStatus(borrowRecoverPlan.getAdvanceStatus());
-				// 还款来源
-				if (isRepayOrgFlag == 1 && isApicronRepayOrgFlag == 1) {
-					// 还款来源（1、借款人还款，2、机构垫付，3、保证金垫付）
-					borrowRepayPlan.setRepayMoneySource(2);
-				} else {
-					borrowRepayPlan.setRepayMoneySource(1);
-				}
-				// 实际还款人（借款人、垫付机构、保证金）的用户ID
-				borrowRepayPlan.setRepayUserId(repayUserId);
-				// 实际还款人（借款人、垫付机构、保证金）的用户名
-				borrowRepayPlan.setRepayUsername(repayUserName);
-				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
-				if (!borrowRepayPlanFlag) {
-					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
-				}
-			} else {
-				throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
-			}
 		}
 		// 更新批次还款任务
 		apicron.setSucAmount(apicron.getSucAmount().add(repayAccount.add(manageFee)));
@@ -1982,10 +1981,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 出借用户银行账户
 		String assignAccountId = assignBankAccount.getAccountId();
 		// 判断该收支明细存在时,跳出本次循环
-		if (countCreditAccountListByNid(repayOrderId)) {
-			logger.error("【智投还款/承接人】承接人收支明细已存在！债转订单号：{}");
-			return true;
-		}
+        if (countCreditAccountListByNid(repayOrderId)) {
+            logger.error("【智投还款/承接人】借款编号：{}，承接人收支明细已存在！债转订单号：{}", borrowNid, repayOrderId);
+            return true;
+        }
 		// 查询相应的债权承接记录
 		HjhDebtCreditTender creditTender = this.getCreditTenderHjh(assignNid);
 		if (Validator.isNull(creditTender)) {
@@ -2124,6 +2123,18 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!assignAccountListFlag) {
 			throw new Exception("收支明细表(ht_account_list)写入失败！[承接人用户ID：" + assignUserId + "]，[承接订单号：" + assignNid + "]");
 		}
+		// 债转还款表更新数据
+		creditRepay.setReceiveAccountYes(creditRepay.getReceiveAccountYes().add(repayAccount));
+		creditRepay.setReceiveCapitalYes(creditRepay.getReceiveCapitalYes().add(repayCapital));
+		creditRepay.setReceiveInterestYes(creditRepay.getReceiveInterestYes().add(repayInterest));
+		creditRepay.setAssignRepayLastTime(nowTime);
+		creditRepay.setAssignRepayYesTime(nowTime);
+		creditRepay.setManageFee(manageFee);
+		creditRepay.setRepayStatus(1);
+		boolean creditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
+		if (!creditRepayFlag) {
+			throw new Exception("债转还款表(ht_hjh_debt_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
+		}
 		boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;// 是否是一次性还款
 		// 更新相应的债转出借表
 		// 债转已还款总额
@@ -2164,17 +2175,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		boolean creditTenderFlag = this.hjhDebtCreditTenderMapper.updateByPrimaryKeySelective(creditTender) > 0 ? true : false;
 		if (!creditTenderFlag) {
 			throw new Exception("债转出借表(ht_hjh_debt_credit_tender)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
-		}
-		creditRepay.setReceiveAccountYes(creditRepay.getReceiveAccountYes().add(repayAccount));
-		creditRepay.setReceiveCapitalYes(creditRepay.getReceiveCapitalYes().add(repayCapital));
-		creditRepay.setReceiveInterestYes(creditRepay.getReceiveInterestYes().add(repayInterest));
-		creditRepay.setAssignRepayLastTime(nowTime);
-		creditRepay.setAssignRepayYesTime(nowTime);
-		creditRepay.setManageFee(manageFee);
-		creditRepay.setRepayStatus(1);
-		boolean creditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
-		if (!creditRepayFlag) {
-			throw new Exception("债转还款表(ht_hjh_debt_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
 		// 债转总表数据更新
 		// 更新债转已还款总额
@@ -2363,33 +2363,22 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]，[期数：" + periodNow + "]");
 			}
 		}
-		// 更新标的表
-        borrow = getBorrowByNid(borrowNid);
-		Borrow newBrrow = new Borrow();
-		newBrrow.setId(borrow.getId());
-		BigDecimal borrowManager = borrow.getBorrowManager() == null ? BigDecimal.ZERO : new BigDecimal(borrow.getBorrowManager());
-		newBrrow.setBorrowManager(borrowManager.add(manageFee).toString());
-		// 总还款
-		newBrrow.setRepayAccountYes(borrow.getRepayAccountYes().add(repayAccount));
-		// 总还款利息
-		newBrrow.setRepayAccountInterestYes(borrow.getRepayAccountInterestYes().add(repayInterest));
-		// 总还款本金
-		newBrrow.setRepayAccountCapitalYes(borrow.getRepayAccountCapitalYes().add(repayCapital));
-		// 未还款总额
-		newBrrow.setRepayAccountWait(borrow.getRepayAccountWait().subtract(assignAccount));
-		// 未还款本金
-		newBrrow.setRepayAccountCapitalWait(borrow.getRepayAccountCapitalWait().subtract(assignCapital));
-		// 未还款利息
-		newBrrow.setRepayAccountInterestWait(borrow.getRepayAccountInterestWait().subtract(assignInterest));
-		// 借款的管理费
-		newBrrow.setRepayFeeNormal(borrow.getRepayFeeNormal().add(manageFee));
-		boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBrrow) > 0 ? true : false;
+        // 更新还款金额数据 update by wgx 2019/03/07
+		logger.info("【智投还款/承接人】借款编号：{}，开始更新标的表。总还款增加：{}，未还款总额减少：{}",
+				borrowNid, repayAccount, assignAccount);
+		Borrow updateBorrow = new Borrow();
+        updateBorrow.setId(borrow.getId());
+        updateBorrow.setRepayAccountYes(repayAccount);// 总还款增加
+        updateBorrow.setRepayAccountInterestYes(repayInterest);// 总还款利息增加
+        updateBorrow.setRepayAccountCapitalYes(repayCapital);// 总还款本金增加
+        updateBorrow.setRepayAccountWait(assignAccount);// 未还款总额减少
+        updateBorrow.setRepayAccountCapitalWait(assignCapital);// 未还款本金减少
+        updateBorrow.setRepayAccountInterestWait(assignInterest);// 未还款利息减少
+        updateBorrow.setRepayFeeNormal(manageFee);// 借款的管理费增加
+        boolean borrowFlag = this.borrowCustomizeMapper.updateRepayOfBorrow(updateBorrow) > 0 ? true : false;
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
-		// BeanUtils.copyProperties(newBrrow, borrow);// 更新还款金额数据 update by wgx 2019/02/22
-        logger.info("【智投还款/承接人】借款编号：{}，更新标的表完毕。总还款：{}，未还款总额：{}",
-                borrowNid, borrow.getRepayAccountYes(), borrow.getRepayAccountWait());
 		// 更新出借表
 		// 已还款金额
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
@@ -2445,13 +2434,13 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			accountWebList.setFlag(1);
 			//网站首支明细队列
 			try {
-				logger.info("【智投还款/承接人】发送收支明细。还款人id：{}，管理费：{}", repayUserId, manageFee);
+				logger.info("【智投还款/承接人】借款编号：{}，发送收支明细。还款人id：{}，管理费：{}", borrowNid, repayUserId, manageFee);
 				commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
 			} catch (MQException e) {
 				logger.error("【智投还款/承接人】发送收支明细时发生系统异常！", e);
 			}
 		}
-		logger.info("【智投还款/承接人】出借人的还款数据更新结束。承接订单号：{}，还款订单号：{}", assignNid, repayOrderId);
+		logger.info("【智投还款/承接人】借款编号：{}，承接人的还款数据更新结束。承接订单号：{}，还款订单号：{}", borrowNid, assignNid, repayOrderId);
 		return true;
 	}
 
@@ -3001,7 +2990,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
             }
             return CustomConstants.BANK_BATCH_STATUS_PART_FAIL;
         }
-		logger.info("【智投还款/借款人】更新借款人的还款数据结束。借款编号：{}，还款期数：{}", apicron.getBorrowNid(), periodNow);
+		logger.info("【智投还款/借款人】借款编号：{}，更新借款人的还款数据结束。还款期数：{}", apicron.getBorrowNid(), periodNow);
 		return CustomConstants.BANK_BATCH_STATUS_SUCCESS;
 	}
 
