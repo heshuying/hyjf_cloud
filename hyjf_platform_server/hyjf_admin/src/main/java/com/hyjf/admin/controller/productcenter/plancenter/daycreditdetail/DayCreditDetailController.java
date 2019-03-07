@@ -178,6 +178,12 @@ public class DayCreditDetailController extends BaseController {
         DayCreditDetailRequest copyRequest = new DayCreditDetailRequest();
         BeanUtils.copyProperties(planCreditBean, copyRequest);
 
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+
+        //请求第一页5000条
+        copyRequest.setPageSize(defaultRowMaxCount);
+        copyRequest.setCurrPage(1);
         //初始化返回List
         List<DayCreditDetailVO> resultList = new ArrayList<>();
 

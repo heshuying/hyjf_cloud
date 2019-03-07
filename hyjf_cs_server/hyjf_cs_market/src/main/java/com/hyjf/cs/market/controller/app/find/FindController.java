@@ -25,8 +25,8 @@ public class FindController {
     @Autowired
     private AppFindService appFindService;
 
-    @Value("${hyjf.web.host}")
-    public String webHost;
+    @Value("${hyjf.app.host}")
+    public String appHost;
     private final static String DATE_FORMAT = "yyyy-MM-dd";
     /** REQUEST_MAPPING */
     public static final String REQUEST_MAPPING = "/find/contentArticle";
@@ -49,7 +49,7 @@ public class FindController {
 			detailsJson.put("shareTitle", article.getTitle());
 			detailsJson.put("shareContent", article.getSummary());
 			detailsJson.put("sharePicUrl", "https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
-			detailsJson.put("shareUrl", webHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
+			detailsJson.put("shareUrl", appHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
 					.replace("{contentArticleId}", article.getId() + "").replace("{type}", "20"));
 			jsonArray.add(detailsJson);
 		}
