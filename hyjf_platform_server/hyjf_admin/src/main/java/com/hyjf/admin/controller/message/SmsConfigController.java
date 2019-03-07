@@ -59,7 +59,7 @@ public class SmsConfigController extends BaseController {
     }
     @ApiOperation(value = "短信加固添加模块", notes = "短信加固添加模块")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateSmsConfig(@RequestBody SmsConfigRequest request) {
         SmsConfigResponse response=smsConfigService.updateSmsConfig(request);
         if(response==null) {
