@@ -52,6 +52,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.*;
  * @version: CustomerTransferController, v0.1 2018/7/5 18:00
  */
 @Api(value = "资金中心-转账管理-用户转账",tags = "资金中心-转账管理-用户转账")
+@Deprecated
 @RestController
 @RequestMapping(value = "/hyjf-admin/finance/customertransfer")
 public class CustomerTransferController extends BaseController {
