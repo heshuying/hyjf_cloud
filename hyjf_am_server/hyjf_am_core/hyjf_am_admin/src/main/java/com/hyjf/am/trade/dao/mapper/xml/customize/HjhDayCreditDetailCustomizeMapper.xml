@@ -241,4 +241,17 @@
         </if>
     </select>
 
+    <select id="selectSumRecord" resultType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize" parameterType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize">
+        SELECT
+        SUM(dc.credit_capital)  AS sumCreditCapital,
+        SUM(dc.liquidation_fair_value) AS sumLiquidationFairValue,
+        SUM(dc.credit_capital_assigned) AS sumAssignCapital,
+        SUM(dc.credit_interest_advance_assigned) AS sumAssignAdvanceInterest
+        FROM
+        ht_hjh_debt_credit dc
+        INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+        INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        <include refid="Where_Clause_New" />
+    </select>
 </mapper>

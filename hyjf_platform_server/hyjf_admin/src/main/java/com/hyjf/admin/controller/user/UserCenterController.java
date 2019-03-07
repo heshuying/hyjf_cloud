@@ -135,7 +135,7 @@ public class UserCenterController extends BaseController {
                 userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getIdCard()));
                 userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getMobile()));
                 //紧急联系人手机号加密显示
-                userManagerDetailCustomizeVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
+                userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }

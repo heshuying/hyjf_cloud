@@ -109,9 +109,9 @@
         ht_borrow_tender bt
         LEFT JOIN ht_hjh_accede ha ON bt.accede_order_id = ha.accede_order_id
         LEFT JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
-        LEFT JOIN ht_users hu ON hu.user_id = bt.user_id
-        LEFT JOIN ht_users hur ON hu.referrer = hur.user_id
-        LEFT JOIN ht_users_info hui ON hui.user_id = bt.user_id
+--         LEFT JOIN ht_users hu ON hu.user_id = bt.user_id
+--         LEFT JOIN ht_users hur ON hu.referrer = hur.user_id
+--         LEFT JOIN ht_users_info hui ON hui.user_id = bt.user_id
         LEFT JOIN ht_borrow hb ON hb.borrow_nid = bt.borrow_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = hb.borrow_style
         <include refid="Where_Clause" />
