@@ -175,6 +175,10 @@ public class SubConfigController extends BaseController {
         Map<String, Object> conditionMap = new HashMap<String, Object>();
         conditionMap.put("userNameSrch", userNameSrch);
         conditionMap.put("trueNameSrch", trueNameSrch);
+        if(StringUtils.isNotBlank(roleNameSrch)&&!("投资人".equals(roleNameSrch)||"出借人".equals(roleNameSrch)||"担保机构".equals(roleNameSrch)||"垫付机构".equals(roleNameSrch))){
+            //('投资人','出借人')('担保机构','垫付机构')
+            conditionMap.put("roleNameSrchS", "其他");
+        }
         conditionMap.put("roleNameSrch", roleNameSrch);
         conditionMap.put("userTypeSrch", userTypeSrch);
         conditionMap.put("accountSrch", accountSrch);

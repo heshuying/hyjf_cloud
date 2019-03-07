@@ -431,6 +431,14 @@ public class BorrowRepaymentCustomizeVO extends BaseVO implements Serializable {
         this.everyRepayActionTime = everyRepayActionTime;
     }
 
+    public String getFreezeOrderId() {
+        return freezeOrderId;
+    }
+
+    public void setFreezeOrderId(String freezeOrderId) {
+        this.freezeOrderId = freezeOrderId;
+    }
+
     /**
      * 检索条件 limitStart
      */
@@ -518,6 +526,6 @@ public class BorrowRepaymentCustomizeVO extends BaseVO implements Serializable {
 
     private String everyRepayActionTime; //每期实际还款时间
 
-
+    private String freezeOrderId; //冻结订单号
 
 }

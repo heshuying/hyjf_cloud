@@ -4,6 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhReInvestDebtResponse;
 import com.hyjf.am.resquest.admin.HjhReInvestDebtRequest;
 import com.hyjf.am.resquest.admin.Paginator;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhReInvestDebtService;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDebtVO;
 import io.swagger.annotations.Api;
@@ -43,8 +44,11 @@ public class HjhReInvestDebtController {
 
         Integer count = this.hjhReInvestDebtService.getReinvestDebtCount(request);
 
+
         if (count > 0 && count != null){
 
+            // 取合计值
+            HjhReInvestDebtCustomize total = this.hjhReInvestDebtService.queryReInvestDebtTotal(request);
             Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
@@ -53,9 +57,15 @@ public class HjhReInvestDebtController {
             // 获取数据列表
             List<HjhReInvestDebtVO> responseList = this.hjhReInvestDebtService.getReinvestDebtList(request);
 
+
             if (!CollectionUtils.isEmpty(responseList)){
+                HjhReInvestDebtVO hjhReInvestDebtVO = new HjhReInvestDebtVO();
                 response.setResultList(responseList);
                 response.setCount(count);
+                hjhReInvestDebtVO.setAssignCapital(total.getAssignCapital());
+                hjhReInvestDebtVO.setAssignInterestAdvance(total.getAssignInterestAdvance());
+                hjhReInvestDebtVO.setAssignPay(total.getAssignPay());
+                response.setSumHjhReInvestDebtVO(hjhReInvestDebtVO);
                 response.setRtn(Response.SUCCESS);
             }
         }

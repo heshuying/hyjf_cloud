@@ -51,6 +51,9 @@ public class PcChannelReconciliationController extends BaseController {
     @ApiOperation(value = "散标列表查询", notes = "散标列表查询")
     @PostMapping("/search")
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
+        if (request.getInvestEndTime()==null || request.getInvestStartTime()==null) {
+            new AdminResult(FAIL,"出借时间不能为空");
+        }
         List<UtmVO> list = channelService.searchUtmList(0);
         if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();

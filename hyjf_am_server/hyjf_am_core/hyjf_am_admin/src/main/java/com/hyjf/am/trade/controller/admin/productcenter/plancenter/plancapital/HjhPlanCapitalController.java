@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -45,6 +46,9 @@ public class HjhPlanCapitalController {
         Integer count = this.hjhPlanCapitalService.queryReInvestDetailCount(request);
 
         if (count > 0 && count != null){
+            // 初始化总计数据
+            String sumAccount = this.hjhPlanCapitalService.queryReInvestDetailTotal(request);
+
             Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
@@ -52,9 +56,14 @@ public class HjhPlanCapitalController {
 
             List<HjhReInvestDetailVO> reInvestDetailVOList = this.hjhPlanCapitalService.getReinvestInfo(request);
 
+
+
             if (!CollectionUtils.isEmpty(reInvestDetailVOList)){
+                HjhReInvestDetailVO hjhReInvestDetailVO = new HjhReInvestDetailVO();
                 response.setResultList(reInvestDetailVOList);
                 response.setCount(count);
+                hjhReInvestDetailVO.setAccedeAccount(sumAccount);
+                response.setSumHjhReInvestDetailVO(hjhReInvestDetailVO);
                 response.setRtn(Response.SUCCESS);
             }
         }

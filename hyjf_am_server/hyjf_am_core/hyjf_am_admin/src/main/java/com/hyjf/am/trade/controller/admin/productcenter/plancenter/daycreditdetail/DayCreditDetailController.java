@@ -5,6 +5,7 @@ import com.hyjf.am.response.admin.DayCreditDetailResponse;
 import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.dao.model.customize.HjhDayCreditDetailCustomize;
+import com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize;
 import com.hyjf.am.trade.service.admin.DayCreditDetailService;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -76,6 +77,9 @@ public class DayCreditDetailController {
 
         if (count > 0 && count != null) {
 
+            // 统计
+            HjhReInvestDebtCustomize sumRecord = this.dayCreditDetailService.sumRecord(params);
+
             paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
 
             params.put("limitStart", paginator.getOffset());
@@ -103,39 +107,15 @@ public class DayCreditDetailController {
                         vo.setRepayStatusName(hjhDebtRepayStatusEntry.getValue());
                     }
                 }
-
-                if (vo.getCreditCapital() == null){
-                    sumCreditCapital = BigDecimal.ZERO;
-                }else {
-                    sumCreditCapital = sumCreditCapital.add(vo.getCreditCapital());
-                }
-
-                if (vo.getLiquidationFairValue() == null){
-                    sumLiquidationFairValue = BigDecimal.ZERO;
-                }else {
-                    sumLiquidationFairValue = sumLiquidationFairValue.add(vo.getLiquidationFairValue());
-                }
-
-                if (vo.getAssignCapital() == null){
-                    sumAssignCapital = BigDecimal.ZERO;
-                }else {
-                    sumAssignCapital = sumAssignCapital.add(vo.getAssignCapital());
-                }
-
-                if (vo.getAssignAdvanceInterest() == null){
-                    sumAssignAdvanceInterest = BigDecimal.ZERO;
-                }else {
-                    sumAssignAdvanceInterest = sumAssignAdvanceInterest.add(vo.getAssignAdvanceInterest());
-                }
             }
 
             if (!CollectionUtils.isEmpty(responseList)){
                 DayCreditDetailVO dayCreditDetailVO = new DayCreditDetailVO();
                 List<DayCreditDetailVO> responseLista = CommonUtils.convertBeanList(responseList, DayCreditDetailVO.class);
-                dayCreditDetailVO.setCreditCapital(sumCreditCapital);
-                dayCreditDetailVO.setLiquidationFairValue(sumLiquidationFairValue);
-                dayCreditDetailVO.setAssignCapital(sumAssignCapital);
-                dayCreditDetailVO.setAssignAdvanceInterest(sumAssignAdvanceInterest);
+                dayCreditDetailVO.setCreditCapital(sumRecord.getSumCreditCapital());
+                dayCreditDetailVO.setLiquidationFairValue(sumRecord.getSumLiquidationFairValue());
+                dayCreditDetailVO.setAssignCapital(sumRecord.getSumAssignCapital());
+                dayCreditDetailVO.setAssignAdvanceInterest(sumRecord.getSumAssignAdvanceInterest());
                 response.setSumDayCreditDetailVO(dayCreditDetailVO);
                 response.setResultList(responseLista);
                 response.setCount(count);

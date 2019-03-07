@@ -409,21 +409,6 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
     }
 
     /**
-     * 是否属于线下充值类型
-     * @param tranType
-     * @return
-     */
-    private boolean isRechargeTransTypeOld(String tranType) {
-
-        if(BankCallConstant.TRANS_TYPE_7617.equals(tranType)||BankCallConstant.TRANS_TYPE_7820.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7821.equals(tranType)||BankCallConstant.TRANS_TYPE_7823.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7826.equals(tranType)||BankCallConstant.TRANS_TYPE_7938.equals(tranType)
-                || BankCallConstant.TRANS_TYPE_7939.equals(tranType)){
-            return true;
-        }
-        return false;
-    }
-    /**
      * 判断是否属于线下充值类型.
      * 	优先从Redis中取数据,当Redis中的数据为空时,从数据表中读取数据
      * @param tranType

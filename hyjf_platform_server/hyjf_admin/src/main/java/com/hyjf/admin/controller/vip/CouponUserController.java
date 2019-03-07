@@ -826,8 +826,8 @@ public class CouponUserController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("couponUserCode", "优惠券ID");
         map.put("couponCode", "优惠券类别编号");
-        map.put("couponUserCode", "优惠券用户编号");
         map.put("username", "用户名");
         map.put("attribute", "发券时属性");
         map.put("channel", "注册渠道");

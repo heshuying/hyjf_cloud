@@ -35,8 +35,8 @@ public class MessagePushPlatStaticsServiceImpl implements MessagePushPlatStatics
         Query query = new Query();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
-            criteria.and("staDate").gte(request.getStartDateSrch() + " 00:00:00")
-                    .lte(request.getEndDateSrch() + " 23:59:59");
+            criteria.and("staDate").gte(request.getStartDateSrch())
+                    .lte(request.getEndDateSrch());
         }
         if (StringUtils.isNotBlank(request.getTagIdSrch())) {
             criteria.and("tagId").is(request.getTagIdSrch());
