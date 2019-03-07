@@ -66,20 +66,24 @@ public class PushMoneyManageController extends BaseController {
      */
     @RequestMapping("/findPushMoneyRecordList")
     public PushMoneyResponse findPushMoneyRecordList(@RequestBody PushMoneyRequest request) {
+        logger.info("---findPushMoneyRecordList by param---  " + JSONObject.toJSON(request));
         PushMoneyResponse response = new PushMoneyResponse();
-        Integer count = pushMoneyManagerService.countPushMoney(request);
-        // currPage<0 为全部,currPage>0 为具体某一页
+        int pushMoneyTotal = pushMoneyManagerService.countPushMoney(request);
+        // 查询列表传入分页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
+            Paginator paginator = new Paginator(request.getCurrPage(),pushMoneyTotal,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
         }
-        logger.info("searchPushMoneyList::::::::::currPage=[{}],limitStart=[{}],limitEnd=[{}]",request.getCurrPage(),request.getLimitStart(),request.getLimitEnd());
-        List<PushMoneyCustomize> pushMoneyCustomizeList = pushMoneyManagerService.selectPushMoneyList(request);
-        if(!CollectionUtils.isEmpty(pushMoneyCustomizeList)){
-            List<PushMoneyVO> pushMoneyVOList = CommonUtils.convertBeanList(pushMoneyCustomizeList,PushMoneyVO.class);
-            response.setResultList(pushMoneyVOList);
-            response.setRtn(Response.SUCCESS);
+        logger.info(request.getLimitStart() + "    " + request.getLimitEnd());
+        if (pushMoneyTotal > 0) {
+            List<PushMoneyCustomize> pushMoneyCustomizeList = pushMoneyManagerService.selectPushMoneyList(request);
+            if (!CollectionUtils.isEmpty(pushMoneyCustomizeList)) {
+                List<PushMoneyVO> userBankRecord = CommonUtils.convertBeanList(pushMoneyCustomizeList, PushMoneyVO.class);
+                response.setResultList(userBankRecord);
+                response.setCount(pushMoneyTotal);
+                response.setRtn(Response.SUCCESS);//代表成功
+            }
         }
         return response;
     }
