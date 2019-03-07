@@ -12,7 +12,6 @@ import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
 import com.hyjf.am.vo.config.LandingPageVo;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +35,7 @@ public class LandingPageServiceImpl implements LandingPageService {
 
 	@Override
 	public LandingPageResponse searchAction(LandingPageRequest request) {
+		List<LandingPageVo> voList = new ArrayList<>();
 		LandingPageResponse response = new LandingPageResponse();
 		LandingPageExample example = new LandingPageExample();
 		LandingPageExample.Criteria criteria = example.createCriteria();
@@ -61,7 +62,14 @@ public class LandingPageServiceImpl implements LandingPageService {
 			example.setLimitEnd(paginator.getLimit());
 			List<LandingPage> list = landingPageMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(list)) {
-				List<LandingPageVo> voList = CommonUtils.convertBeanList(list, LandingPageVo.class);
+				LandingPageVo vo = null;
+				for (LandingPage ca : list) {
+					vo = new LandingPageVo();
+					BeanUtils.copyProperties(ca, vo);
+					vo.setCreateTime(GetDate.dateToString(ca.getCreateTime()));
+					vo.setUpdateTime(GetDate.dateToString(ca.getUpdateTime()));
+					voList.add(vo);
+				}
 				response.setResultList(voList);
 			}
 		}
