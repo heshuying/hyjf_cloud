@@ -37,7 +37,7 @@ public class EmailRecipientController extends BaseController {
 
     @ApiOperation(value = "收件人邮件配置分页查询", notes = "收件人邮件配置分页查询")
     @PostMapping("/init")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<SellDailyDistributionVO>> init(@RequestBody EmailRecipientRequest recipientRequest) {
         EmailRecipientResponse recordList = emailRecipientService.getRecordList(recipientRequest);
         if (recordList == null) {
@@ -48,7 +48,7 @@ public class EmailRecipientController extends BaseController {
 
     @ApiOperation(value = "收件人邮件配置详情查询", notes = "收件人邮件配置详情查询")
     @PostMapping("/get_record_by_id")
-   // @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<SellDailyDistributionVO> getRecordById(@RequestBody EmailRecipientRequest recipientRequest) {
         EmailRecipientResponse recordList = emailRecipientService.getRecordById(recipientRequest);
         if (recordList == null) {
@@ -59,7 +59,7 @@ public class EmailRecipientController extends BaseController {
 
     @ApiOperation(value = "收件人邮件配置添加", notes = "收件人邮件配置添加")
     @PostMapping("/insertAction")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertAction(@RequestBody EmailRecipientRequest recipientRequest, HttpServletRequest request) {
         AdminSystemVO user = getUser(request);
         recipientRequest.setCreateName(user.getUsername());
@@ -76,7 +76,7 @@ public class EmailRecipientController extends BaseController {
 
     @ApiOperation(value = "收件人邮件配置修改", notes = "收件人邮件配置修改")
     @PostMapping("/updateAction")
-   // @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateAction(@RequestBody EmailRecipientRequest recipientRequest, HttpServletRequest request) {
         AdminSystemVO user = getUser(request);
         recipientRequest.setUpdateName(user.getUsername());
@@ -92,7 +92,7 @@ public class EmailRecipientController extends BaseController {
 
     @ApiOperation(value = "收件人邮件配置禁用和启用", notes = "收件人邮件配置禁用和启用")
     @PostMapping("/forbiddenAction")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult forbiddenAction(@RequestBody EmailRecipientRequest recipientRequest, HttpServletRequest request) {
         AdminSystemVO user = getUser(request);
         recipientRequest.setUpdateName(user.getUsername());
