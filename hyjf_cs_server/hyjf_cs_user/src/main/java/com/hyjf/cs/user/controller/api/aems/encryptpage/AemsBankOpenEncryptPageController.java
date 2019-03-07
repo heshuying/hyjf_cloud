@@ -113,7 +113,7 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
      * @param user
      * @return
      */
-    private boolean isOpenAccount(UserVO user) {
+    public boolean isOpenAccount(UserVO user) {
         if(user.getBankOpenAccount() == 1 && this.bankOpenService.existBankAccountId(user.getUserId())){
             logger.info("AEMS系统请求页面开户查询用户已经开户");
             return true;
