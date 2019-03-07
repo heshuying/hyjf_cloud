@@ -1647,4 +1647,18 @@ WHERE
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
 	</select>
+
+	<update id="updateRepayOfBorrow" parameterType="com.hyjf.am.trade.dao.model.auto.Borrow">
+		UPDATE ht_borrow hb SET
+			hb.borrow_manager = cast(IFNULL(hb.borrow_manager,0) as decimal(11,2)) + #{repayFeeNormal,jdbcType=DECIMAL},
+			hb.repay_account_yes = IFNULL(hb.repay_account_yes,0) + #{repayAccountYes,jdbcType=DECIMAL},
+			hb.repay_account_interest_yes = IFNULL(hb.repay_account_interest_yes,0) + #{repayAccountInterestYes,jdbcType=DECIMAL},
+			hb.repay_account_capital_yes = IFNULL(hb.repay_account_capital_yes,0) + #{repayAccountCapitalYes,jdbcType=DECIMAL},
+			hb.repay_account_wait = IFNULL(hb.repay_account_wait,0) - #{repayAccountWait,jdbcType=DECIMAL},
+			hb.repay_account_interest_wait = IFNULL(hb.repay_account_interest_wait,0) - #{repayAccountInterestWait,jdbcType=DECIMAL},
+			hb.repay_account_capital_wait = IFNULL(hb.repay_account_capital_wait,0) - #{repayAccountCapitalWait,jdbcType=DECIMAL},
+			hb.repay_fee_normal = IFNULL(hb.repay_fee_normal,0) + #{repayFeeNormal,jdbcType=DECIMAL}
+		WHERE
+			hb.id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>
