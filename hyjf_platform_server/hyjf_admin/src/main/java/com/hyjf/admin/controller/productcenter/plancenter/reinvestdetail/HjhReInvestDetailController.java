@@ -153,7 +153,7 @@ public class HjhReInvestDetailController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(investDetailResponse.getResultList())){
             returnList = CommonUtils.convertBeanList(investDetailResponse.getResultList(), HjhReInvestDetailVO.class);
-            return new AdminResult<ListResult<HjhReInvestDetailVO>>(ListResult.build(returnList, investDetailResponse.getCount()));
+            return new AdminResult<ListResult<HjhReInvestDetailVO>>(ListResult.build2(returnList, investDetailResponse.getCount(), investDetailResponse.getSumHjhReInvestDetailVO()));
         }else {
             return new AdminResult<ListResult<HjhReInvestDetailVO>>(ListResult.build(returnList, 0));
         }

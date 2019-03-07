@@ -11,11 +11,21 @@ public class HjhReInvestDetailResponse extends Response<HjhReInvestDetailVO> {
 
     private int count;
 
+    private HjhReInvestDetailVO sumHjhReInvestDetailVO;
+
     public int getCount() {
         return count;
     }
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public HjhReInvestDetailVO getSumHjhReInvestDetailVO() {
+        return sumHjhReInvestDetailVO;
+    }
+
+    public void setSumHjhReInvestDetailVO(HjhReInvestDetailVO sumHjhReInvestDetailVO) {
+        this.sumHjhReInvestDetailVO = sumHjhReInvestDetailVO;
     }
 }
