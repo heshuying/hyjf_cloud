@@ -138,7 +138,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                 commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                         UUID.randomUUID().toString(), params));
             } catch (MQException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
 
             }
         }
@@ -461,7 +461,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             Integer evaluationExpiredDay = Integer.parseInt(evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, evaluationExpiredDay);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("redis测评有效日格式化失败！key：" + RedisConstants.REVALUATION_EXPIRED_DAY + "========value:" + evaluationExpiredDayStr);
             return GetDate.countDate(beginTime, 5, 180);
         }

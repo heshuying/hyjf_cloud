@@ -2,6 +2,8 @@ package com.hyjf.common.util;
 
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -16,6 +18,8 @@ import java.text.DecimalFormat;
  * @version 1.0.0
  */
 public class CustomUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomUtil.class);
 
     /**
      * 获得客户端真实IP地址
@@ -46,7 +50,7 @@ public class CustomUtil {
             BigDecimal b = new BigDecimal(number);
             ret = new DecimalFormat("############0.00").format(b.doubleValue());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return ret;

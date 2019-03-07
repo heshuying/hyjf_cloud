@@ -144,7 +144,7 @@ public class AccountWithdrawController extends BaseController {
         try {
 			accountWithdrawService.selectAndUpdateAccountWithdraw(pamaMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
     }
 

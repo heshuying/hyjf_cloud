@@ -12,7 +12,6 @@ import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +28,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/cs-message/msgpush/error")
 public class MessagePushErrorController {
-
-    @Value("file.domain.url")
-    private String FILE_DOMAIN_URL;
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;

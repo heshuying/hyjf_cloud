@@ -80,7 +80,7 @@ public class ApiBankOpenController extends BaseUserController {
             BankCallBean bean = getCallbankMV(openAccountPageBean);
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(),

@@ -221,7 +221,7 @@ public class AutoIssueRecoverController extends BaseController{
 
             logger.debug("------汇计划自动发标修复定时任务结束------");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

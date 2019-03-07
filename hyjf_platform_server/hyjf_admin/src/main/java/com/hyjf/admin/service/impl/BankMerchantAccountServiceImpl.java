@@ -26,6 +26,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.*;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,8 @@ import java.util.Map;
  */
 @Service
 public class BankMerchantAccountServiceImpl implements BankMerchantAccountService {
+
+    private static final Logger logger = LoggerFactory.getLogger(BankMerchantAccountServiceImpl.class);
     private static final String REQUEST_MAPPING = "/bank/merchant/account";
     private static final String OPT_SUCCESS_URL = "/result/success";
     private static final String OPT_ERROR_URL = "/result/fail";
@@ -226,7 +230,7 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         try {
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException("1","调用银行接口失败!");
         }
         result.setData(map);
@@ -350,7 +354,7 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
                 balance = new BigDecimal(resultBean.getAvailBal().replace(",", ""));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return balance;

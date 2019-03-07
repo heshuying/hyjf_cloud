@@ -1,17 +1,5 @@
 package com.hyjf.cs.user.client.impl;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -36,6 +24,17 @@ import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author xiasq
@@ -242,6 +241,21 @@ public class AmUserClientImpl implements AmUserClient {
 		restTemplate.getForEntity("http://AM-USER/am-user/batch/leaveupdate", String.class);
 	}
 
+	@Override
+	public WebViewUserVO getWebViewUserByUserId(Integer userId,String channel) {
+		WebViewUserResponse response = restTemplate
+				.getForEntity(userService + "/user/getWebViewUserByUserId/"+ userId+"/"+channel, WebViewUserResponse.class).getBody();
+		return response.getResult();
+	}
+
+	@Override
+	public void updateUser(UserVO u, String ipAddr) {
+		LoginUserRequest request = new LoginUserRequest(u.getUserId(), ipAddr,u);
+		String url = userService+"/user/updateUser";
+		logger.info("url:{}", url);
+		restTemplate.postForEntity(url, request, BooleanResponse.class);
+	}
+
 	/**
 	 * 保存验证码
 	 * @param mobile
@@ -433,6 +447,16 @@ public class AmUserClientImpl implements AmUserClient {
 		AccountChinapnrResponse response = restTemplate
 				.getForEntity(userService+"/user/getAccountChinapnr/" + userId, AccountChinapnrResponse.class).getBody();
 		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountPandectVO getAccount4Pandect(Integer userId) {
+		String url = userService + "/user/getAccount4Pandect/" + userId ;
+		AccountPandectResponse response = restTemplate.getForEntity(url,AccountPandectResponse.class).getBody();
+		if (Response.isSuccess(response)){
 			return response.getResult();
 		}
 		return null;

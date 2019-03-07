@@ -14,6 +14,7 @@ public interface BankRepayFreezeOrgCustomizeMapper {
 
 	int selectCount(Map<String, Object> paraMap);
 
+	Integer getFailCredit(String borrowNid);
 }
 
 	

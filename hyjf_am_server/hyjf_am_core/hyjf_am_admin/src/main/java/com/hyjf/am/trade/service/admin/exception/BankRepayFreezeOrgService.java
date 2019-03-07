@@ -20,4 +20,6 @@ public interface BankRepayFreezeOrgService {
     Integer deleteOrgFreezeTempLogs(String orderId, String borrowNid);
 
     List<BankRepayOrgFreezeLog> getBankRepayOrgFreezeLogList(String orderId, String borrowNid);
+
+    boolean getFailCredit(String borrowNid);
 }

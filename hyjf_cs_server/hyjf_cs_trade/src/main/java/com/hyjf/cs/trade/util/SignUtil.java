@@ -104,7 +104,7 @@ public class SignUtil {
             AemsRepayRequestBean bean = (AemsRepayRequestBean)paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
         }
-        // TODO AEMS验签修改
+        //  AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
     }
     /**

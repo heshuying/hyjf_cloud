@@ -56,7 +56,7 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 				start = formatter.parse(request.getStartCreateSrch()).getTime()/1000;
 				end = formatter.parse(request.getEndCreateSrch()).getTime()/1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
 			/*int starti=(int)start;*/
 			crt.andConfigAddTimeLessThanOrEqualTo((int)end+86399);
@@ -100,7 +100,7 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
  				start = formatter.parse(request.getStartCreateSrch()).getTime()/1000;
  				end = formatter.parse(request.getEndCreateSrch()).getTime()/1000;
  			} catch (ParseException e) {
- 				e.printStackTrace();
+ 				logger.error(e.getMessage());
  			}
  			/*int starti=(int)start;*/
  			crt.andConfigAddTimeLessThanOrEqualTo((int)end+86399);
@@ -231,7 +231,7 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
  				start = formatter.parse(request.getStartCreateSrch()).getTime()/1000;
  				end = formatter.parse(request.getEndCreateSrch()).getTime()/1000;
  			} catch (ParseException e) {
- 				e.printStackTrace();
+ 				logger.error(e.getMessage());
  			}
  			crt.andConfigAddTimeLessThanOrEqualTo((int)end+86399);
  			crt.andConfigAddTimeGreaterThanOrEqualTo((int)start);

@@ -72,7 +72,7 @@ public class ApiPassWordController extends BaseController {
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return modelAndView;
     }
@@ -163,7 +163,7 @@ public class ApiPassWordController extends BaseController {
                 // 开户后保存相应的数据以及日志
                 passWordService.updateUserIsSetPassword(userId);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             message = "交易密码处理成功";
             status = ErrorCodeConstant.SUCCESS;
@@ -209,7 +209,7 @@ public class ApiPassWordController extends BaseController {
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return modelAndView;
     }

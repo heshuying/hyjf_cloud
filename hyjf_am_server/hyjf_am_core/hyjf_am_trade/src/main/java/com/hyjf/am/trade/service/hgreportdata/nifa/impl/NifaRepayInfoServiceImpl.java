@@ -76,7 +76,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
             nifaRepayInfo.setPaymentDate(GetDate.getDateMyTimeInMillis(borrowRepay.getRepayActionTime()));
         } catch (NumberFormatException e) {
             logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowRepay.getBorrowNid());
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         // 还款来源 1、借款人还款，2、机构垫付，3、保证金垫付
@@ -317,7 +317,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
                         nifaReceivedPayments.setReturnDate(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrowRecoverPlan.getRecoverYestime())));
                     } catch (NumberFormatException e) {
                         logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                         return false;
                     }
                 } else {
@@ -474,7 +474,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
                     nifaReceivedPayments.setReturnDate(GetDate.getDateMyTimeInMillis(borrowRepay.getRepayActionTime()));
                 } catch (NumberFormatException e) {
                     logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     return false;
                 }
                 // 回款本金计算
@@ -607,7 +607,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
                 nifaContractStatus.setChangeDate(GetDate.getDateTimeMyTime(borrowRepay.getRepayActionTime()));
             } catch (NumberFormatException e) {
                 logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowRepay.getBorrowNid());
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 return false;
             }
         } else {
@@ -634,7 +634,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
                 nifaContractStatusOld.setChangeDate(GetDate.getDateTimeMyTime(borrowRepay.getRepayActionTime()));
             } catch (NumberFormatException e) {
                 logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowRepay.getBorrowNid());
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 return false;
             }
         } else {

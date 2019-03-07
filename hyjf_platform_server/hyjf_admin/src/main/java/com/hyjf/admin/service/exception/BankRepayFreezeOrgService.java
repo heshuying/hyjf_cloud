@@ -29,4 +29,6 @@ public interface BankRepayFreezeOrgService extends BaseAdminService {
     Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay);
 
     Boolean updateBorrowCreditStautus(String borrowNid);
+
+    boolean getFailCredit(String borrowNid);
 }

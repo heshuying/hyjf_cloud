@@ -74,8 +74,8 @@ public class TransferController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody MerchantTransferListRequest form) {
         TransferResponse response = new TransferResponse();
-        Map<String, String> transferStatus = CacheUtil.getParamNameMap("TRANSFER_STATUS");
-        Map<String, String> transferTypes = CacheUtil.getParamNameMap("TRANSFER_TYPE");
+        Map<String, String> transferStatus = CacheUtil.getParamNameMap("MER_TRANS_STATUS");
+        Map<String, String> transferTypes = CacheUtil.getParamNameMap("MER_TRANS_TYPE");
         // 转账状态
         response.setTransferStatus(ConvertUtils.convertParamMapToDropDown(transferStatus));
         // 交易类型
@@ -201,7 +201,7 @@ public class TransferController extends BaseController {
                         result.setData(map);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     boolean afterFlag = this.transferService.updateMerchantTransfer(orderId,2,"调用子账户转账接口异常")>0?true:false;
                     if(afterFlag){
                         logger.info("调用子账户转账接口异常，转账失败,订单号："+orderId);

@@ -352,7 +352,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 			Map<String,Object> map = BankCallUtils.callApiMap(bindCardBean);
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -388,7 +388,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		try {
 			mv = BankCallUtils.callApi(bindCardBean);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return mv;
 	}

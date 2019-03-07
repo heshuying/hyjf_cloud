@@ -219,7 +219,7 @@ public class AdminAccountDetailController {
         try {
             response.setResultInt(accountDetailService.updateAccountNumberByUserId(userId,accountId));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }

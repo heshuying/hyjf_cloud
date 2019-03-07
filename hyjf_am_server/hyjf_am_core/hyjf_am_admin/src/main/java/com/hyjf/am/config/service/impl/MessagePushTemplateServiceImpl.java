@@ -94,10 +94,10 @@ public class MessagePushTemplateServiceImpl implements MessagePushTemplateServic
 		if (request.getTagId() != null) {
 			criteria.andTagIdEqualTo(request.getTagId());
 		}
-		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateTitle())) {
-			criteria.andTemplateTitleLike("%"+request.getTemplateTitle()+ "%");
+		if (StringUtils.isNotEmpty(request.getTemplateTitle())) {
+			criteria.andTemplateTitleLike("%"+request.getTemplateTitle().trim() + "%");
 		}
-		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateCode())) {
+		if (StringUtils.isNotEmpty(request.getTemplateCode())) {
 			criteria.andTemplateCodeLike("%"+request.getTemplateCode()+ "%");
 		}
 		if (request.getStatus() != null) {
@@ -119,7 +119,7 @@ public class MessagePushTemplateServiceImpl implements MessagePushTemplateServic
 			criteria.andTagIdEqualTo(request.getTagId());
 		}
 		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateTitle())) {
-			criteria.andTemplateTitleLike("%"+request.getTemplateTitle()+ "%");
+			criteria.andTemplateTitleLike("%"+request.getTemplateTitle().trim() + "%");
 		}
 		if (org.apache.commons.lang.StringUtils.isNotEmpty(request.getTemplateCode())) {
 			criteria.andTemplateCodeLike("%"+request.getTemplateCode()+ "%");

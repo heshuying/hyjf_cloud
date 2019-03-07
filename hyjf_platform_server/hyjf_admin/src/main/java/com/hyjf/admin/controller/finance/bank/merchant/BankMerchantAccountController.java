@@ -20,6 +20,7 @@ import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.http.URLCodec;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -624,7 +625,9 @@ public class BankMerchantAccountController extends BaseController {
         BigDecimal frost = BigDecimal.ZERO;
         // 账面余额
         BigDecimal currBalance = BigDecimal.ZERO;
-        BankCallBean bean = new BankCallBean();
+        // 订单号
+        Integer userId = Integer.valueOf(getUser(request).getId());
+        BankCallBean bean = new BankCallBean(userId, BankCallMethodConstant.TXCODE_BALANCE_QUERY, ClientConstants.WEB_CLIENT);
         // 版本号
         bean.setVersion(BankCallConstant.VERSION_10);
         // 获取共同参数
@@ -638,18 +641,13 @@ public class BankMerchantAccountController extends BaseController {
         bean.setTxTime(GetOrderIdUtils.getTxTime());
         //交易流水号
         bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
-        // 交易代码
-        bean.setTxCode(BankCallMethodConstant.TXCODE_BALANCE_QUERY);
         // 交易渠道
         bean.setChannel(channel);
         // 电子账号
         bean.setAccountId(accountCode);
-        // 订单号
-        Integer userId = Integer.valueOf(getUser(request).getId());
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+
         // 订单时间(必须)格式为yyyyMMdd，例如：20130307
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
-        bean.setLogUserId(userId+"");
         // 平台
         bean.setLogClient(0);
         try {
@@ -672,7 +670,7 @@ public class BankMerchantAccountController extends BaseController {
                 return ret;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         int cnt = 0;
         try {
@@ -733,7 +731,7 @@ public class BankMerchantAccountController extends BaseController {
         try {
             resultBean = BankCallUtils.callApiBg(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             throw new CheckException("1","请求红包接口失败");
         }
         return result;

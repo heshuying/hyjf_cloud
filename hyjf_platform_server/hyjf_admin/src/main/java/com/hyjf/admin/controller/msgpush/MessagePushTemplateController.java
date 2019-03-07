@@ -114,7 +114,9 @@ public class MessagePushTemplateController extends BaseController {
                         form.setTemplateCode(record.getTemplateCode().substring(record.getTemplateCode().indexOf("_") + 1, record.getTemplateCode().length()));
                     }
                     BeanUtils.copyProperties(form, record);
-                    record.setTemplateActionUrl(form.getTemplateActionUrl2());
+                    if (record.getTemplateAction() == CustomConstants.MSG_PUSH_TEMP_ACT_2) {
+                        record.setTemplateActionUrl(form.getTemplateActionUrl2());
+                    }
                 }
             } catch (Exception e) {
                 logger.error("获取消息模板详情失败，失败原因：{}", e);
@@ -350,8 +352,10 @@ public class MessagePushTemplateController extends BaseController {
         if (request.getTagId() == null) {
             message = "标签id不能为空";
         }
-        if (StringUtils.isBlank(request.getTemplateCode().substring(4)) || request.getTemplateCode().length() > 40) {
-            message = "模板编码不能为空或长度大于40字符";
+        if (request.getTemplateCode().length() > 4) {
+            if (StringUtils.isBlank(request.getTemplateCode().substring(4)) || request.getTemplateCode().length() > 40) {
+                message = "模板编码不能为空或长度大于40字符";
+            }
         }
         if (StringUtils.isBlank(request.getTemplateTitle()) || request.getTemplateTitle().length() > 20) {
             message = "模板名称不能为空或长度大于20字符";

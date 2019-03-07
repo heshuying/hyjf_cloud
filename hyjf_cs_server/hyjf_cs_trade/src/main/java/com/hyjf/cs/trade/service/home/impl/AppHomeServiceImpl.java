@@ -16,7 +16,6 @@ import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -343,7 +342,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         List<AppPushManageVO> manageInfoList = amTradeClient.getAnnouncements();
 
         // 从am_trade层获取有效公告信息
-        if(manageInfoList != null){
+        if(!CollectionUtils.isEmpty(manageInfoList)){
 
             List<Map> announMap = new ArrayList<>();
             for (AppPushManageVO manager : manageInfoList) {
@@ -360,7 +359,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 cements.put("URL", jumpUrl);
                 announMap.add(cements);
             }
-            info.put("announcements",announMap);
+            if (!CollectionUtils.isEmpty(announMap)){
+                info.put("announcements",announMap);
+            }
         }else{
             logger.info("-------------获取首页列表时，未获得有效公告！---------");
         }
@@ -449,17 +450,47 @@ public class AppHomeServiceImpl implements AppHomeService {
         }
         //无可投计划
         if(!hasInvestment){
-            List<AppProjectListCustomizeVO> projectList = this.createAppOldUserProject(info, version, HOST);
+            List<AppProjectListCustomizeVO> projectList = this.createAppOldUserProject(info, version, HOST,
+                    HomePageDefine.INDEX_PROJECT_SHOW_TYPE_TENDER);
             if(projectList.size() > 0){
                 List<AppProjectListCustomizeVO> list = new ArrayList<AppProjectListCustomizeVO>();
                 AppProjectListCustomizeVO customize = projectList.get(0);
                 customize.setTag("优质资产");
                 customize.setBorrowDesc("项目剩余" + customize.getBorrowAccountWait());
+                if(StringUtils.isNotBlank(customize.getBorrowAccountWait())){
+                    customize.setBorrowDesc("项目剩余" + CommonUtils.formatAmount(customize.getBorrowAccountWait()));
+                }
                 customize.setStatusName("立即出借");
                 list.add(customize);
                 return  list;
             }else{
                 planList = this.selectIndexHjhExtensionPlanListByLockTime(params);
+                if(planList == null || planList.size() == 0){
+                    //查询复审中的标的
+                    List<AppProjectListCustomizeVO> fullProjectList = this.createAppOldUserProject(info, version, HOST,
+                            HomePageDefine.INDEX_PROJECT_SHOW_TYPE_FULL);
+                    if(fullProjectList.size() > 0){
+                        List<AppProjectListCustomizeVO> list = new ArrayList<AppProjectListCustomizeVO>();
+                        AppProjectListCustomizeVO customize = fullProjectList.get(0);
+                        customize.setTag("优质资产");
+                        customize.setBorrowDesc("项目剩余:0");
+                        customize.setStatusName("复审中");
+                        list.add(customize);
+                        return  list;
+                    }else{//没有复审标的显示还款中标的
+                        List<AppProjectListCustomizeVO> repayProjectList = this.createAppOldUserProject(info, version, HOST,
+                                HomePageDefine.INDEX_PROJECT_SHOW_TYPE_REPAY);
+                        if(repayProjectList.size() > 0) {
+                            List<AppProjectListCustomizeVO> list = new ArrayList<AppProjectListCustomizeVO>();
+                            AppProjectListCustomizeVO customize = repayProjectList.get(0);
+                            customize.setTag("优质资产");
+                            customize.setBorrowDesc("项目剩余:0");
+                            customize.setStatusName("还款中");
+                            list.add(customize);
+                            return list;
+                        }
+                    }
+                }
             }
 
         }
@@ -468,6 +499,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 projectListCustomizes) {
             appInfo.setTag("稳健回报");
             appInfo.setBorrowDesc("开放额度" + appInfo.getAvailableInvestAccountNew());
+            if(StringUtils.isNotBlank(appInfo.getAvailableInvestAccountNew())){
+                appInfo.setBorrowDesc("开放额度" + CommonUtils.formatAmount(appInfo.getAvailableInvestAccountNew()));
+            }
         }
         return projectListCustomizes;
     }
@@ -498,7 +532,7 @@ public class AppHomeServiceImpl implements AppHomeService {
      * @param version
      * @param HOST
      */
-    private List<AppProjectListCustomizeVO> createAppOldUserProject(JSONObject info, String version, String HOST) {
+    private List<AppProjectListCustomizeVO> createAppOldUserProject(JSONObject info, String version, String HOST,int type) {
         Map<String, Object> projectMap = new HashMap<String, Object>();
         projectMap.put("host", HOST + HomePageDefine.REQUEST_HOME + HomePageDefine.PROJECT_REQUEST_MAPPING
                 + HomePageDefine.PROJECT_DETAIL_ACTION);
@@ -507,26 +541,54 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         // 汇盈金服app首页定向标过滤
         projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
-        List<AppProjectListCustomizeVO> list = this.searchProjectList_new(projectMap);
+        List<AppProjectListCustomizeVO> list = this.searchProjectList_new(projectMap,type);
         return list;
     }
 
     /***
      * 查询首页项目列表 3.0.9
      */
-    public List<AppProjectListCustomizeVO> searchProjectList_new(Map<String, Object> projectMap) {
+    public List<AppProjectListCustomizeVO> searchProjectList_new(Map<String, Object> projectMap,int type) {
 
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
 
         AppHomePageRequest request = (AppHomePageRequest) ConvertUtils.convertMapToObject(projectMap, AppHomePageRequest.class);
         //查询首页定时发标,出借中,复审中的项目
-        List<AppProjectListCustomizeVO> list = amTradeClient.selectHomeProjectList(request);
+       /* List<AppProjectListCustomizeVO> list = amTradeClient.selectHomeProjectList(request);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 AppProjectListCustomizeVO appProjec = list.get(i);
                 String status = appProjec.getStatus();
                 if("10".equals(status) || "11".equals(status)){
                     projectList.add(appProjec);
+                }
+            }
+        }*/
+
+        if(HomePageDefine.INDEX_PROJECT_SHOW_TYPE_TENDER == type || HomePageDefine.INDEX_PROJECT_SHOW_TYPE_FULL == type){
+            //查询首页定时发标,出借中,复审中的项目
+            List<AppProjectListCustomizeVO> list = amTradeClient.selectHomeProjectList(request);
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    AppProjectListCustomizeVO appProjec = list.get(i);
+                    String status = appProjec.getStatus();
+                    if(HomePageDefine.INDEX_PROJECT_SHOW_TYPE_TENDER == type){//可投标的
+                        if("10".equals(status) || "11".equals(status)){
+                            projectList.add(appProjec);
+                        }
+                    }else if(HomePageDefine.INDEX_PROJECT_SHOW_TYPE_FULL == type){//复审标的
+                        if("12".equals(status)){
+                            projectList.add(appProjec);
+                        }
+                    }
+                }
+            }
+        }else if(HomePageDefine.INDEX_PROJECT_SHOW_TYPE_REPAY == type){//还款中标的
+            List<AppProjectListCustomizeVO> listRepay = amTradeClient.selectHomeRepayProjectList(request);
+            if (listRepay != null && listRepay.size() > 0) {
+                AppProjectListCustomizeVO repay = listRepay.get(0);
+                if (repay != null) {
+                    projectList.add(repay);
                 }
             }
         }
@@ -726,12 +788,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 // 20.立即加入  21.稍后开启
                 homePageCustomize.setStatus("21");
                 homePageCustomize.setStatusName("稍后开启");
-            }
-            // mod by nxl 智投服务 立即加入->授权服务
-            /*else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
-                homePageCustomize.setStatus("20");
-                homePageCustomize.setStatusName("立即加入");
-            }*/else if("授权服务".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
+            }else if("授权服务".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("授权服务");
             }else if("立即出借".equals(listCustomize.getStatusName())){
@@ -739,19 +796,30 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setTitle("推荐产品");
                 homePageCustomize.setStatus(listCustomize.getStatus());
                 homePageCustomize.setStatusName("立即出借");
+                String onTime = listCustomize.getOnTime();
+                if(!("0".equals(onTime)||"".equals(onTime))){
+                    homePageCustomize.setStatusName(onTime);
+                }
                 homePageCustomize.setBorrowTheSecondDesc("项目期限");
                 // add by nxl 智投服务 推荐产品显示历史年回报率
                 homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
                 homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
                 String borrowExtraYield = listCustomize.getBorrowExtraYield();
-                //if(StringUtils.isNotBlank(borrowExtraYield)){
-                    //borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
-                //}
                 homePageCustomize.setBorrowExtraYield(borrowExtraYield);
-            }else {
-                homePageCustomize.setStatus("21");
-                homePageCustomize.setStatusName("稍后开启");
-                homePageCustomize.setStatusNameDesc("");
+            }else if("复审中".equals(listCustomize.getStatusName()) || "还款中".equals(listCustomize.getStatusName()) ){
+                //add by nxl 智投服务->添加推荐服务标题
+                homePageCustomize.setTitle("推荐产品");
+                homePageCustomize.setStatus(listCustomize.getStatus());
+                homePageCustomize.setStatusName(listCustomize.getStatusName());
+                homePageCustomize.setBorrowTheSecondDesc("项目期限");
+                // add by nxl 智投服务 推荐产品显示历史年回报率
+                homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
+                homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
+                String borrowExtraYield = listCustomize.getBorrowExtraYield();
+                if(StringUtils.isNotBlank(borrowExtraYield)){
+                    borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
+                }
+                homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());
@@ -818,7 +886,7 @@ public class AppHomeServiceImpl implements AppHomeService {
     /**
      *
      * 获取IOS强制更新
-     * @author hsy
+     * @author zhangyunkai
      * @param info
      */
     private void createForceUpdateInfo(JSONObject info, String platform, String version, String HOST){
@@ -952,7 +1020,6 @@ public class AppHomeServiceImpl implements AppHomeService {
             AppAdsCustomizeVO appads = picList.get(0);
             info.put("imageUrl", appads.getImage());
             info.put("imageUrlOperation", appads.getUrl());
-            uniqueIdentifier = "this is test uniqueidellll";
             int requestTimes = updateCurrentDayRequestTimes(uniqueIdentifier,userId);
             if("2".equals(appads.getNewUserShow()) || ("1".equals(appads.getNewUserShow()) && userId == null)){
                 if(requestTimes <= 1){

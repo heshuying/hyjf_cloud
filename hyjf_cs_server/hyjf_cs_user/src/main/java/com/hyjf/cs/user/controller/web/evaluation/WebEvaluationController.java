@@ -3,8 +3,6 @@
  */
 package com.hyjf.cs.user.controller.web.evaluation;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -21,6 +19,7 @@ import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,7 +168,7 @@ public class WebEvaluationController extends BaseUserController {
         /**
          * 调用重新登录接口
          */
-        WebViewUserVO webUser = evaluationService.getWebViewUserByUserId(userId);
+        WebViewUserVO webUser = evaluationService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_PC);
         if (null != webUser) {
             evaluationService.setToken(webUser);
         }

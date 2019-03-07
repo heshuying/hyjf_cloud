@@ -103,7 +103,7 @@ public class WebRechargeController extends BaseTradeController{
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		return result;

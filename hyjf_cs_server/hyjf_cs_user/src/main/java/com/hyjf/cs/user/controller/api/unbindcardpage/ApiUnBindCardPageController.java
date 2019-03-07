@@ -158,7 +158,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
             logger.info("-----------------------------" + unbindCardPageRequestBean.getAccountId() + "用户解除绑定银行卡结束-----------------------------");
             return modelAndView;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("解卡异常,异常信息:[" + e.toString() + "]");
             return null;
         }

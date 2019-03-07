@@ -171,7 +171,7 @@ public class TransPasswordController extends BaseUserController{
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             modelAndView = new ModelAndView("/bank/user/personalsetting/error");//TransPasswordDefine.PASSWORD_ERROR_PATH
             modelAndView.addObject("message", "调用银行接口失败！");
         }
@@ -267,7 +267,7 @@ public class TransPasswordController extends BaseUserController{
                 // 开户后保存相应的数据以及日志
             	this.passWordService.updateUserIsSetPassword(user.getUserId());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         logger.info("设置交易密码异步回调end");
@@ -373,7 +373,7 @@ public class TransPasswordController extends BaseUserController{
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             modelAndView = new ModelAndView("/bank/user/personalsetting/error");//TransPasswordDefine.PASSWORD_ERROR_PATH
             modelAndView.addObject("message", "调用银行接口失败！");
         }

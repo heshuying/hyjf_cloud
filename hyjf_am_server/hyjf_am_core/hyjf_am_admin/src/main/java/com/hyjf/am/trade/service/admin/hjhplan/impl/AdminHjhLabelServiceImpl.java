@@ -90,7 +90,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
                 crt.andCreateTimeGreaterThanOrEqualTo(start);
                 crt.andCreateTimeLessThanOrEqualTo(end);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
         }
         
@@ -104,7 +104,7 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
                 crt.andUpdateTimeGreaterThanOrEqualTo(start);
                 crt.andUpdateTimeLessThanOrEqualTo(end);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage());
 			}
         }
         

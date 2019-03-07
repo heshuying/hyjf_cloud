@@ -140,7 +140,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
                     return jsonObject;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         if(StringUtils.isNotBlank(retCode)){

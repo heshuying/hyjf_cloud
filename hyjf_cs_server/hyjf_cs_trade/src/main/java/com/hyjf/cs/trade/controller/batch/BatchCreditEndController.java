@@ -47,7 +47,7 @@ public class BatchCreditEndController extends BaseTradeController {
             }
             return new BooleanResponse(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("-----------------批次结束债权请求失败-------------------");
             return new BooleanResponse(false);
         }

@@ -7,22 +7,6 @@ import com.hyjf.am.trade.service.BaseService;
 public interface BorrowCommonService extends BaseService {
 
 	/**
-	 * 借款数据获取
-	 * 
-	 * @param borrowCommonBean
-	 * @return
-	 */
-	BorrowCommonBean getBorrow(BorrowCommonBean borrowCommonBean);
-
-	/**
-	 * 借款数据获取
-	 * 
-	 * @param borrowBean
-	 * @param borrowWithBLOBs
-	 */
-	void getBorrowCommonFiled(BorrowCommonBean borrowBean, BorrowWithBLOBs borrowWithBLOBs);
-
-	/**
 	 * 借款人信息数据获取
 	 * 
 	 * @param borrowBean

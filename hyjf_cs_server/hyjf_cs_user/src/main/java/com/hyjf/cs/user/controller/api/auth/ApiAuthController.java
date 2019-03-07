@@ -121,7 +121,7 @@ public class ApiAuthController extends BaseUserController {
                     Integer.parseInt(authBean.getPlatform()), type);
             logger.info("多合一授权页面end");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("多合一授权页面异常,异常信息:[" + e.toString() + "]");
             return null;
         }
@@ -224,7 +224,7 @@ public class ApiAuthController extends BaseUserController {
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("多合一授权出错,userId:【"+userId+"】错误原因："+e.getMessage());
             message = "多合一授权失败";
             status = ErrorCodeConstant.STATUS_CE999999;

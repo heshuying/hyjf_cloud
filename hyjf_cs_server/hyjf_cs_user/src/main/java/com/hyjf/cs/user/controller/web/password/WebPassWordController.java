@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.web.password;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -85,7 +84,7 @@ public class WebPassWordController extends BaseUserController{
         passWordService.checkParam(userVO,oldPW,newPW,pwSure);
         int result = passWordService.updatePassword(userVO, newPW);
        if(result>0){
-           WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId);
+           WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId,BankCallConstant.CHANNEL_PC);
            if (null != webUser) {
                webUser = passWordService.setToken(webUser);
                RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+webUser.getUserId());
@@ -141,12 +140,12 @@ public class WebPassWordController extends BaseUserController{
             try {
                 // 修改密码后保存相应的数据以及日志
                 passWordService.updateUserIsSetPassword(userId);
-                WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId);
+                WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId,BankCallConstant.CHANNEL_PC);
                 if (null != webUser) {
                     passWordService.setToken(webUser);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         result.setStatus("0");

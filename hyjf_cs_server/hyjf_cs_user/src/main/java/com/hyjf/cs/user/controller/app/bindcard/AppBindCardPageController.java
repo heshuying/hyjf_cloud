@@ -1,7 +1,5 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -67,7 +65,7 @@ public class AppBindCardPageController extends BaseUserController {
         String token = request.getParameter("token");
         String platform = request.getParameter("platform");
         logger.info("bindCardPage请求参数：sign=" + sign + " token=" + token + " platform=" + platform);
-        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
+        WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId, BankCallConstant.CHANNEL_APP);
         // 检查参数
         String checkResult = bindCardService.checkParamBindCardPageAPP(webViewUserVO);
 
@@ -148,7 +146,7 @@ public class AppBindCardPageController extends BaseUserController {
                 bindCardService.updateAfterBindCard(bean);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("页面绑卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
         result.setStatus(true);

@@ -250,7 +250,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 												params));
                                     } catch (Exception e) {
                                         logger.error("发送MQ到审核保证金失败，borrowNid：" + borrowNid);
-                                        e.printStackTrace();
+                                        logger.error(e.getMessage());
                                     }
                                 }
                             } else {
@@ -272,7 +272,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
 															borrow.getBorrowNid(), params));
 										} catch (Exception e) {
                                             logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
-                                            e.printStackTrace();
+                                            logger.error(e.getMessage());
                                         }
                                     } else {
                                         result.setRtn(Response.SUCCESS);

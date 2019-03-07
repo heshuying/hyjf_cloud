@@ -4,6 +4,8 @@ package com.hyjf.signatrues.util.pdf;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class PDFToImage {
+
+    private static final Logger logger = LoggerFactory.getLogger(PDFToImage.class);
     public final  static String  IMG_TYPE_JPG = "jpg";
     public final  static String  IMG_TYPE_PNG = "png";
 
@@ -50,13 +54,13 @@ public class PDFToImage {
 				
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }finally{
             if(pdDocument != null){
                 try {
                     pdDocument.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

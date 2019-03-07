@@ -43,7 +43,7 @@ public class HjhAutoCreditContoller extends BaseController {
         try {
             List<String> accedeOrderList = new ArrayList<String>();
             // 检索到期的计划加入订单,用于清算
-            List<HjhAccede> hjhAccedeList = this.hjhAutoCreditService.selectDeadLineAccedeList();
+            List<HjhAccede> hjhAccedeList = this.hjhAutoCreditService.hjhDeadLineAccedeList();
             if (CollectionUtils.isNotEmpty(hjhAccedeList)) {
                 logger.info("到期的计划加入订单:[" + hjhAccedeList.size() + "].");
                 // 循环到期的计划加入订单
@@ -93,7 +93,7 @@ public class HjhAutoCreditContoller extends BaseController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 }

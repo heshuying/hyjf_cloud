@@ -17,10 +17,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
-import com.hyjf.common.util.AppUserToken;
-import com.hyjf.common.util.DES;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.util.SignValue;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -120,7 +117,8 @@ public class AppLoginController extends BaseUserController {
                 return ret;
             }
             //判断用户输入的密码错误次数---开始
-            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP);
+            UserVO userVO = loginService.getUser(username);
+            Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP,userVO);
             if (!errorInfo.isEmpty()){
                 ret.put("status", "1");
                 ret.put("statusDesc", errorInfo.get("info"));
@@ -128,7 +126,7 @@ public class AppLoginController extends BaseUserController {
             }
             //判断用户输入的密码错误次数---结束
             // 执行登录(登录时间，登录ip)
-            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
+            WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
             if (webViewUserVO != null) {
                 logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
                 //登录成功发送mq
@@ -161,7 +159,7 @@ public class AppLoginController extends BaseUserController {
                         // 发送神策数据统计MQ
                         this.loginService.sendSensorsDataMQ(sensorsDataBean);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 ret.put("status", "0");
@@ -401,7 +399,7 @@ public class AppLoginController extends BaseUserController {
                 // 实际物理路径前缀1
                 String filePhysicalPath = UploadFileUtils.getDoPath(systemConfig.getPhysicalPath());
                 // 实际物理路径前缀2
-                String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+                String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(ClientConstants.APP_CLIENT));
 
                 // 如果文件夹(前缀+后缀)不存在,则新建文件夹
                 String logoRealPathDir = filePhysicalPath + fileUploadTempPath;
@@ -468,7 +466,7 @@ public class AppLoginController extends BaseUserController {
             signValue.setToken(encryptValue);
             // 重新获取一个新sign(保证ios审核跳转最优服务器后可多用户登陆)
             if(version.substring(0,5).equals(systemConfig.getNewVersion()) && "6bcbd50a-27c4-4aac-b448-ea6b1b9228f43GYE604".equals(sign)) {
-                sign = SecretUtil.createSignSec(sign);
+                sign = SecretUtil.createSign();
             }
             RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
             value =RedisUtils.get(RedisConstants.SIGN+sign);

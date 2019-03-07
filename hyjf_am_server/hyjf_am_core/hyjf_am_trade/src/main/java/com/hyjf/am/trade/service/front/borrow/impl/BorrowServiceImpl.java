@@ -508,7 +508,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
                         UUID.randomUUID().toString(), smsMessage));
             }catch (Exception e){
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("发送短信失败");
             }
 

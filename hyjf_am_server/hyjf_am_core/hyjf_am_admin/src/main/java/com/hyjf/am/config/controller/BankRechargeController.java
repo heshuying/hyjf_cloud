@@ -84,7 +84,7 @@ public class BankRechargeController  extends BaseConfigController{
                 response.setMessage("添加失败！");
             }
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response;
     }

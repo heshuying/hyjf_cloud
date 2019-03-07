@@ -2051,4 +2051,36 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    /**
+     * 根据创建日期查询该天导入aleve的条数
+     *
+     * @param dualDate
+     * @return
+     */
+    @Override
+    public Integer countAleveByDualDate(String dualDate) {
+        String url = "http://AM-ADMIN/am-trade/bankaleve/countAleveByDualDate/" + dualDate;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if(response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return -1;
+    }
+
+    /**
+     * 根据创建日期查询该天导入eve的条数
+     *
+     * @param dualDate
+     * @return
+     */
+    @Override
+    public Integer countEveByDualDate(String dualDate) {
+        String url = "http://AM-ADMIN/am-trade/bankaleve/countEveByDualDate/" + dualDate;
+        IntegerResponse response = restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+        if(response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return -1;
+    }
 }

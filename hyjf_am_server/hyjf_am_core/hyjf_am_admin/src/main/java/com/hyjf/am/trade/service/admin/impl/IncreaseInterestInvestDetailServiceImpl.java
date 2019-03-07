@@ -60,7 +60,7 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
                 timeStart = (Date)formatter.parseObject(request.getTimeStartSrch() + " 00:00:00");
                 timeEnd = StringUtil.delOneSecond((Date)formatter.parseObject(request.getTimeEndSrch() + " 00:00:00"));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             //cra.andCreateTimeBetween(timeStart,timeEnd);
             cra.andCreateTimeLessThanOrEqualTo(timeEnd);
@@ -96,7 +96,7 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
                 timeStart = (Date)formatter.parseObject(request.getTimeStartSrch() + " 00:00:00");
                 timeEnd = StringUtil.delOneSecond((Date)formatter.parseObject(request.getTimeEndSrch() + " 00:00:00"));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             //cra.andCreateTimeBetween(timeStart,timeEnd);
             cra.andCreateTimeLessThanOrEqualTo(timeEnd);
@@ -149,7 +149,7 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
                 timeStart = (Date)formatter.parseObject(form.getTimeStartSrch() + " 00:00:00");
                 timeEnd = StringUtil.delOneSecond((Date)formatter.parseObject(form.getTimeEndSrch() + " 00:00:00"));
             } catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             //cra.andCreateTimeBetween(timeStart,timeEnd);
             cra.andCreateTimeLessThanOrEqualTo(timeEnd);

@@ -30,24 +30,12 @@
         count(z.id)
         FROM
         (select typ.id from ht_borrow_project_type typ
+        LEFT JOIN hyjf_config.ht_param_name pn1 ON typ.borrow_project_type = pn1.name_cd AND pn1.name_class = 'BORROW_PROJTCT'
+        LEFT JOIN hyjf_config.ht_param_name pn2 ON typ.invest_user_type = pn2.name_cd AND pn2.name_class = 'INVEST_USER'
+        LEFT JOIN hyjf_config.ht_param_name pn3 ON typ.`status` = pn3.name_cd AND pn3.name_class = 'USER_STATUS'
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         GROUP BY
-        pr.borrow_class	,
-        typ.borrow_project_type,
-        typ.id,
-        typ.borrow_cd,
-        typ.borrow_name,
-        typ.borrow_class,
-        typ.invest_start,
-        typ.invest_end,
-        typ.increase_money,
-        typ.interest_coupon,
-        typ.taste_money,
-        typ.invest_user_type,
-        typ. status,
-        typ.remark,
-        typ.create_user_id,
-        typ.update_user_id
+        pr.borrow_class
         <include refid="Where_Clause" />
         ORDER BY
         typ.id)z
@@ -74,24 +62,11 @@
         FROM
         ht_borrow_project_type typ
         LEFT JOIN hyjf_config.ht_param_name pn1 ON typ.borrow_project_type = pn1.name_cd AND pn1.name_class = 'BORROW_PROJTCT'
+        LEFT JOIN hyjf_config.ht_param_name pn2 ON typ.invest_user_type = pn2.name_cd AND pn2.name_class = 'INVEST_USER'
+        LEFT JOIN hyjf_config.ht_param_name pn3 ON typ.`status` = pn3.name_cd AND pn3.name_class = 'USER_STATUS'
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         GROUP BY
-        pr.borrow_class	,
-        typ.borrow_project_type,
-        typ.id,
-        typ.borrow_cd,
-        typ.borrow_name,
-        typ.borrow_class,
-        typ.invest_start,
-        typ.invest_end,
-        typ.increase_money,
-        typ.interest_coupon,
-        typ.taste_money,
-        typ.invest_user_type,
-        typ. status,
-        typ.remark,
-        typ.create_user_id,
-        typ.update_user_id
+        pr.borrow_class
         <include refid="Where_Clause" />
         ORDER BY
         typ.id
@@ -149,9 +124,7 @@
         where
         `status`=0
         and borrow_name != '融通宝'
-        <if test="limitStart >= 0" >
-            and borrowProjectType = 'HZT'
-        </if>
+        and borrow_project_type = 'HZT'
 
         GROUP BY
         borrow_class

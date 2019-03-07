@@ -242,116 +242,82 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
-     * 还款申请校验
-     *
-     * @auther: hesy
-     * @date: 2018/7/10
+     * 单个还款申请校验
+     * @auther: wgx
+     * @date: 2019/03/04
      */
     @Override
-    public void checkForRepayRequest(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean) {
+    public void checkForSingleRepayRequest(String borrowNid, String password, WebViewUserVO user) {
         if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)) {
-            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
-        }
-        // 平台密码校验
-        UserVO userVO = getUserByUserId(user.getUserId());
-        String mdPassword = MD5Utils.MD5(password + userVO.getSalt());
-        if (!mdPassword.equals(userVO.getPassword())) {
-            throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
-        }
-        // 开户校验
-        if (!user.isBankOpenAccount()) {
-            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        }
-        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
-        if (borrow == null) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
-        }
-        repayBean.setRepayUserId(user.getUserId());
-        // 服务费授权
-        boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
-        if (!isPaymentAuth) {
-            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
-        }
-        AccountVO accountVO = getAccountByUserId(user.getUserId());
-        if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
-            // ** 用户符合还款条件，可以还款 *//*
-            // 查询用户在银行电子账户的余额
-            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
-            if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
-                // ** 用户符合还款条件，可以还款 *//*
-            } else {
-                // 银行账户余额不足
-                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-            }
-        } else {
-            // 平台账户余额不足
-            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-        }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
-        if (!tranactionSetFlag) {//设置失败
-            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
-            String dateStr = DateUtils.nowDateAddSecond((int) retTime);
-            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
-        }
-    }
-
-    @Override
-    public void checkForRepayRequestOrg(String borrowNid, String password, WebViewUserVO user, RepayBean repayBean, int flag) {
-        if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(password)) {
+            logger.error("【还款申请校验】还款请求参数不全！", borrowNid);
             throw new CheckException(MsgEnum.ERR_PARAM_NUM);
         }
         // 平台密码校验
         UserVO userVO = getUserByUserId(user.getUserId());
         String mdPassword = MD5.toMD5Code(password + userVO.getSalt());
         if (!mdPassword.equals(userVO.getPassword())) {
+            logger.info("【还款申请校验】输入密码不正确！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_PASSWORD_INVALID);
         }
         // 服务费授权校验
         boolean isPaymentAuth = this.authService.checkPaymentAuthStatus(user.getUserId());
         if (!isPaymentAuth) {
+            logger.error("【还款申请校验】未进行服务费授权！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         // 开户校验
         if (!user.isBankOpenAccount()) {
+            logger.error("【还款申请校验】用户未开户！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         if (borrow == null) {
+            logger.error("【还款申请校验】借款编号：{}，标的信息不存在！", borrowNid);
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        boolean hasFailCredit = amTradeClient.getFailCredit(borrowNid);
+        if(hasFailCredit){//还款提交失败，请联系汇盈金服业务部门核实处理。
+            logger.error("【还款申请校验】借款编号：{}，有承接失败的债权！", borrowNid);
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
+        }
+        if(!"3".equals(user.getRoleId())) {
+            // 必须在计算还款明细前加锁，防止智投自动投资债转,垫付机构锁放到异步回调中
+            boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrowNid, 300);
+            if (!tranactionSetFlag) {//设置失败
+                logger.error("【还款申请校验】借款编号：{}，正在处理项目债转！", borrowNid);
+                long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
+                String dateStr = DateUtils.nowDateAddSecond((int) retTime);
+                throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+            }
+        }
+    }
+
+    /**
+     * 还款银行余额校验
+     * @auther: wgx
+     * @date: 2019/03/04
+     */
+    @Override
+    public void checkForBankBalance(WebViewUserVO user, RepayBean repayBean) {
         AccountVO accountVO = getAccountByUserId(user.getUserId());
-        repayBean.setRepayUserId(user.getUserId());// 垫付机构id
+        repayBean.setRepayUserId(user.getUserId());
         if (repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(accountVO.getBankBalance()) == -1) {
             // ** 垫付机构符合还款条件，可以还款 *//*
             // 查询用户在银行的电子账户
-            if (flag == 1) {
-                //垫付机构批量还款 ，不验证银行账户余额
+            BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
+            if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
+                // ** 用户符合还款条件，可以还款 *//*
                 ;
             } else {
-                BigDecimal userBankBalance = getBankBalancePay(user.getUserId(), user.getBankAccount());
-                if (repayBean.getRepayAccountAll().compareTo(userBankBalance) == 0 || repayBean.getRepayAccountAll().compareTo(userBankBalance) == -1) {
-                    // ** 用户符合还款条件，可以还款 *//*
-                    ;
-                } else {
-                    // 银行账户余额不足
-                    logger.error("【担保机构还款校验】银行账户余额不足！担保机构用户名：{}", user.getUsername());
-                    throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
-                }
+                // 银行账户余额不足
+                logger.error("【还款申请校验】银行账户余额不足！还款人用户名：{}", user.getUsername());
+                throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
             }
         } else {
             // 用户平台账户余额不足
-            logger.error("【担保机构还款校验】平台账户余额不足！担保机构用户名：{}", user.getUsername());
+            logger.error("【还款申请校验】平台账户余额不足！还款人用户名：{}", user.getUsername());
             throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
         }
-        boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 300);
-        if (!tranactionSetFlag) {//设置失败
-            logger.error("【担保机构还款校验】借款编号：{}，正在处理项目债转！", borrowNid);
-            long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
-            String dateStr = DateUtils.nowDateAddSecond((int) retTime);
-            throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
-        }
-        // 如果有正在出让的债权,先去把出让状态停止
-        //this.updateBorrowCreditStautus(borrow.getBorrowNid()); // svn40463 未把此处注掉 update by wgx 2019/02/13
     }
 
     @Override
@@ -859,14 +825,14 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 // 单笔还款申请冻结查询非正常
                 if (!BankCallConstant.STATUS_SUCCESS.equals(callBackBean.getState())) {
                     deleteOrgFreezeTempLogs(orderId, null);
-                    RedisUtils.del("batchOrgRepayUserid_" + userId);
+                    RedisUtils.del(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
                     logger.error("【冻结查询】单笔还款申请冻结未成功，订单号:{}", callBackBean.getOrderId());
                     return false;
                 }
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
     }
@@ -917,6 +883,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 webResult.setStatus(WebResult.ERROR);
                 webResult.setStatusDesc("还款失败，请稍后再试...");
             } else {
+                RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNid);// 还款提交成功删除锁
                 webResult.setStatus(WebResult.SUCCESS);
                 webResult.setStatusDesc(WebResult.SUCCESS_DESC);
                 return webResult;
@@ -1032,7 +999,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             return getBankRefinanceFreezePage(userId, user.getUsername(), ip, orderId, "", repayTotal, account);
         }
         logger.info("【批量还款垫付】冻结订单号：{}，总垫付金额为0。垫付机构用户名：{}", orderId, user.getUsername());
-        return Collections.emptyMap();
+        throw new CheckException(MsgEnum.STATUS_CE999999);
     }
 
     /**
@@ -1065,6 +1032,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     @Override
+    public boolean getFailCredit(String borrowNid) {
+        return amTradeClient.getFailCredit(borrowNid);
+    }
+
+    @Override
     public WebResult selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
 
         WebUserRepayTransferListBean repayTransferListBean = new WebUserRepayTransferListBean();
@@ -1094,4 +1066,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         webResult.setPage(page);
         return webResult;
     }
+
+
 }

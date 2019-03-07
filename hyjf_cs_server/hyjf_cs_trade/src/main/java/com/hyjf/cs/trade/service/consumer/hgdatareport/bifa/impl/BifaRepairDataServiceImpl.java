@@ -166,7 +166,7 @@ public class BifaRepairDataServiceImpl extends BaseHgDateReportServiceImpl imple
             bifaHjhPlanInfoEntity.setCreateTime(currDate);
             bifaHjhPlanInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;
@@ -308,7 +308,7 @@ public class BifaRepairDataServiceImpl extends BaseHgDateReportServiceImpl imple
             bifaBorrowInfoEntity.setCreateTime(currDate);
             bifaBorrowInfoEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return false;
         }
         return true;

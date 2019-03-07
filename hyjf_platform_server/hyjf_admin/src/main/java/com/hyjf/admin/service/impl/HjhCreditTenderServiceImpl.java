@@ -94,8 +94,7 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
         try {
 			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),bean));
 		} catch (MQException e) {
-			e.printStackTrace();
-			_log.error("法大大发送下载脱敏消息失败...", e);	
+			_log.error("法大大发送下载脱敏消息失败...", e);
 		}
 	}
 

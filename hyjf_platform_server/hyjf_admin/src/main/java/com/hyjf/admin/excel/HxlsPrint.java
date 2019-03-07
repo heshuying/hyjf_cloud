@@ -1,6 +1,8 @@
 package com.hyjf.admin.excel;
 
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class HxlsPrint extends HxlsAbstract {
+
+	private static final Logger logger = LoggerFactory.getLogger(HxlsPrint.class);
 
 	private Map<String, Integer> rowIndexMap;
 	private static Map<String, String> titleMap = null;
@@ -74,11 +78,11 @@ public class HxlsPrint extends HxlsAbstract {
 			xls2csv = new HxlsPrint(feth);
 			xls2csv.process();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 }

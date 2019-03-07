@@ -111,7 +111,7 @@ public class HjhAlarmController extends BaseController {
             }
         } catch (Exception e) {
             logger.error("汇计划各计划开放额度校验预警任务 异常！！！ ");
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return new BooleanResponse(true);
     }

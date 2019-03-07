@@ -143,7 +143,7 @@ public class BorrowTenderController extends BaseController {
         try {
             response.setResultInt(borrowTenderService.saveCreditTenderAssignLog(bean));
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage());
             response.setResultInt(0);
         }
 

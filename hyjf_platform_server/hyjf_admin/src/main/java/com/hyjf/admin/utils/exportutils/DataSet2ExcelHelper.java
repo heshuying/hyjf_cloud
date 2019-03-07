@@ -26,7 +26,7 @@ import java.util.Map;
  * Created by cuigq on 2018/1/23.
  */
 public class DataSet2ExcelHelper<T> {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(DataSet2ExcelHelper.class);
 
     /**
      * 查询结果导出到Excel
@@ -112,14 +112,14 @@ public class DataSet2ExcelHelper<T> {
             out.flush();
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             if (out != null) {
                 try {
                     out.flush();
                     out.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                 }
             }
         }

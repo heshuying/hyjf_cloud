@@ -28,9 +28,6 @@ public class SystemConfig {
     @Value("${hyjf.ftp.username}")
     public String ftpUsername;
 
-    @Value("${hyjf.ftp.url}")
-    public String ftpDomain;
-
     @Value("${hyjf.ftp.basepath.img}")
     private String hyjfFtpBasepathImg;
 
@@ -152,6 +149,33 @@ public class SystemConfig {
     @Value("${hyjf.wechat.qrcode.url}")
     private String wechatLandingPageUrl;
 
+    /**
+     * 对账文件手动下载导入数据用
+     */
+    @Value("${hostFtp.hostName}")
+    public String ftpHostName;
+
+    @Value("${hostFtp.userName}")
+    public String ftpUserName;
+
+    @Value("${hostFtp.passWord}")
+    public String ftpPassWord;
+
+    @Value("${hostFtp.downloadPath}")
+    public String ftpDownloadPath;
+
+    @Value("${hostFtp.port}")
+    public String evePort;
+
+    @Value("${localDir}")
+    public String localDir;
+
+    @Value("${alevefile.name}")
+    public String aleveFileName;
+
+    @Value("${evefile.name}")
+    public String eveFileName;
+
     public String getFileDomainUrl() {
         return fileDomainUrl;
     }
@@ -206,14 +230,6 @@ public class SystemConfig {
 
     public void setFtpUsername(String ftpUsername) {
         this.ftpUsername = ftpUsername;
-    }
-
-    public String getFtpDomain() {
-        return ftpDomain;
-    }
-
-    public void setFtpDomain(String ftpDomain) {
-        this.ftpDomain = ftpDomain;
     }
 
     public String getDefaultRowMaxCount() {
@@ -536,5 +552,69 @@ public class SystemConfig {
 
     public void setWechatLandingPageUrl(String wechatLandingPageUrl) {
         this.wechatLandingPageUrl = wechatLandingPageUrl;
+    }
+
+    public String getFtpHostName() {
+        return ftpHostName;
+    }
+
+    public void setFtpHostName(String ftpHostName) {
+        this.ftpHostName = ftpHostName;
+    }
+
+    public String getFtpUserName() {
+        return ftpUserName;
+    }
+
+    public void setFtpUserName(String ftpUserName) {
+        this.ftpUserName = ftpUserName;
+    }
+
+    public String getFtpPassWord() {
+        return ftpPassWord;
+    }
+
+    public void setFtpPassWord(String ftpPassWord) {
+        this.ftpPassWord = ftpPassWord;
+    }
+
+    public String getFtpDownloadPath() {
+        return ftpDownloadPath;
+    }
+
+    public void setFtpDownloadPath(String ftpDownloadPath) {
+        this.ftpDownloadPath = ftpDownloadPath;
+    }
+
+    public String getEvePort() {
+        return evePort;
+    }
+
+    public void setEvePort(String evePort) {
+        this.evePort = evePort;
+    }
+
+    public String getLocalDir() {
+        return localDir;
+    }
+
+    public void setLocalDir(String localDir) {
+        this.localDir = localDir;
+    }
+
+    public String getAleveFileName() {
+        return aleveFileName;
+    }
+
+    public void setAleveFileName(String aleveFileName) {
+        this.aleveFileName = aleveFileName;
+    }
+
+    public String getEveFileName() {
+        return eveFileName;
+    }
+
+    public void setEveFileName(String eveFileName) {
+        this.eveFileName = eveFileName;
     }
 }

@@ -456,7 +456,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.FDD_USERINFO_CHANGE_TOPIC, UUID.randomUUID().toString(),params));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("修改手机号后 发送更新客户信息MQ失败...", e);
         }
     }
@@ -469,7 +469,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
         } catch (MQException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error(" 修改身份证号后 发送更新客户信息MQ失败...", e);
         }
         // add by liushouyi 20180228 修改身份证号后 发送更新客户信息MQ end

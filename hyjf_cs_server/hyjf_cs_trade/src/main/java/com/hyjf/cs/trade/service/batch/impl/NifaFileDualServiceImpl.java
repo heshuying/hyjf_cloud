@@ -357,7 +357,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                         return localStrBulider.toString();
                     } catch (IOException e) {
                         logger.error("【互金上传文件】上传状态异步返回文件读取失败!");
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                         return "ERROR";
                     }finally {
                         if (bufferReader != null){
@@ -369,7 +369,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                     }
                 } catch (UnsupportedEncodingException e) {
                     logger.error("【互金上传文件】上传状态异步返回文件不支持编码格式!");
-                    e.printStackTrace();
+                    logger.error(e.getMessage());
                     return "ERROR";
                 }
             } else {
@@ -378,7 +378,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             }
         } catch (Exception e) {
             logger.error("【互金上传文件】上传状态异步返回文件解析错误！");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "ERROR";
         }
     }
@@ -441,7 +441,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.info("【互金下载反馈文件】下载ftp文件失败、文件夹名称：" + filePathDate);
         }
         return re;
@@ -508,7 +508,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 return false;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("【互金上传文件】统计二期标的信息生成txt抛出异常！！");
             return false;
         }
@@ -571,7 +571,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 }
             } catch (IOException e) {
                 result = false;
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("【互金上传文件】统计二期标的信息生成txt失败！！");
             }
         }
@@ -595,7 +595,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 }
             } catch (IOException e) {
                 result = false;
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("【互金上传文件】统计二期标的信息生成txt失败！！");
             }
         } else {
@@ -703,7 +703,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             }
         } catch (IOException e) {
             result = false;
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("【互金上传文件】统计二期债转标的信息生成txt抛出异常！！");
         }
 
@@ -728,7 +728,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                     logger.info("【互金上传文件】:审计二期债转债转标的承接人信息导出TXT失败！");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("【互金上传文件】统计二期债转标的承接人信息生成txt抛出异常！！");
             }
         }
@@ -887,7 +887,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             logger.info("【互金上传文件】info:" + url + " 下载成功。");
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             logger.error("【互金上传文件】居间服务协议模板下载失败！");
             return false;
         } finally {
@@ -959,7 +959,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             csvWtriter.flush();
         } catch (Exception e) {
             logger.error("【互金上传文件】文件生成失败！文件名：" + outPutPath + filename);
-            e.printStackTrace();
+            logger.error(e.getMessage());
             result = false;
         } finally {
             try {
@@ -968,7 +968,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 }
             } catch (IOException e) {
                 logger.error("【互金上传文件】文件关闭失败！文件名：" + outPutPath + filename);
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 
@@ -1032,15 +1032,15 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             return result;
         } catch (NoSuchMethodException e) {
             logger.error("【互金上传文件】拼接数据失败！");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         } catch (IllegalAccessException e) {
             logger.error("【互金上传文件】拼接数据失败！");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         } catch (InvocationTargetException e) {
             logger.error("【互金上传文件】拼接数据失败！");
-            e.printStackTrace();
+            logger.error(e.getMessage());
             return "";
         }
     }
@@ -1096,7 +1096,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             // 把缓存区内容压入文件
             out.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             result = false;
         } finally {
             // 最后关闭文件

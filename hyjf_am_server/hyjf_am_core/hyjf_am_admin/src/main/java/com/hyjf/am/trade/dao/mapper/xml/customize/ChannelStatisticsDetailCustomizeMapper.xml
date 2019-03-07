@@ -11,13 +11,19 @@
 				AND utm.source_id <![CDATA[=]]> #{sourceIdSrch}
 			</if>
 			<if test="keySrch != null and keySrch != ''" >
-				AND utm.utm_term LIKE CONCAT( #{keyName}, '%')
+				AND utm.utm_term LIKE CONCAT( #{keySrch}, '%')
 			</if>
 			<if test="utmIdsSrch != null and utmIdsSrch != ''">
 				AND utm.source_id in
 				<foreach collection="utmIdsSrch" open="(" close=")" separator="," item="utmId">
 					#{utmId}
 				</foreach>
+			</if>
+			<if test="startTime != null and startTime != ''">
+				AND DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				AND DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) <![CDATA[<=]]> #{endTime}
 			</if>
 		</where>
 	</sql>

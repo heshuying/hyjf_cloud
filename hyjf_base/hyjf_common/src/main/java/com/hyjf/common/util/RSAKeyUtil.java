@@ -1,6 +1,8 @@
 package com.hyjf.common.util;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.security.*;
@@ -13,6 +15,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Enumeration;
 
 public class RSAKeyUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(RSAKeyUtil.class);
 	private PublicKey publicKey;
 	private PrivateKey privateKey;
 
@@ -93,10 +97,10 @@ public class RSAKeyUtil {
 			}
 		} catch (IOException e) {
 			System.out.println("无法获取url连接");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (CertificateException e) {
 			System.out.println("获取证书失败");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -114,10 +118,10 @@ public class RSAKeyUtil {
 			return publicKey;
 		} catch (NoSuchAlgorithmException e) {
 			System.out.println("初始化加密算法时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (InvalidKeySpecException e) {
 			System.out.println("初始化公钥时报错");
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -211,9 +215,9 @@ public class RSAKeyUtil {
 			PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
 			return privateKey;
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
@@ -249,7 +253,7 @@ public class RSAKeyUtil {
 			}
 			is.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		PrivateKey prikey = getPrivateKey(bout.toByteArray());
 		return prikey;

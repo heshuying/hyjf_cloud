@@ -92,7 +92,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             //调用pay接口
             map = BankCallUtils.callApiMap(bean);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
             CheckUtil.check(false, MsgEnum.ERR_BANK_CALL);
         }
         return map;
@@ -196,7 +196,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
                     amUserClient.updateUserAuthInves(bankRequest);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 logger.error("bgReturn", e);
             }
         }
@@ -806,7 +806,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
                 amUserClient.updateUserAuthInves(bankRequest);
                 status = ErrorCodeConstant.SUCCESS;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
                 message = "授权失败";
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
