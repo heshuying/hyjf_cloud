@@ -169,7 +169,7 @@ public class DayCreditDetailController extends BaseController {
      */
     @ApiOperation(value = "资金计划 - 转让详情导出", notes = "资金计划转让详情列表导出")
     @PostMapping(value = "/exportExcel")
-    public void exportAction(HttpServletRequest request, HttpServletResponse response, DayCreditDetailRequestBean planCreditBean) throws Exception {
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody DayCreditDetailRequestBean planCreditBean) throws Exception {
 
         DayCreditDetailRequest copyRequest = new DayCreditDetailRequest();
         BeanUtils.copyProperties(planCreditBean, copyRequest);
