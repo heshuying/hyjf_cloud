@@ -52,7 +52,8 @@ public class HjhPlanCapitalController {
             Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
-            logger.info(HjhPlanCapitalController.class + ":" + request.toString());
+
+            logger.info("复投原始标的入参==>date:" + request.getDate() + ";planNid:" + request.getPlanNid() + "; 分页:" + request.getLimitStart() + "::" + request.getLimitEnd());
 
             List<HjhReInvestDetailVO> reInvestDetailVOList = this.hjhPlanCapitalService.getReinvestInfo(request);
 
