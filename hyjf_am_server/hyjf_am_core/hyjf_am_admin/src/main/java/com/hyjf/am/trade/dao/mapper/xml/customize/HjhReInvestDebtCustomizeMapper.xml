@@ -25,7 +25,7 @@
 
     <sql id="Where_Clause">
         <where>
-            1=1
+            ct.tender_type = 1
             <if test="planNid != null and planNid != ''">
                 AND hp.plan_nid = #{planNid }
             </if>
