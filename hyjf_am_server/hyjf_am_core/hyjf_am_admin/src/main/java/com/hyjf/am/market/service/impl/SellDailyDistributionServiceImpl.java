@@ -115,7 +115,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
         try {
             Date parse = format.parse(form.getSendTime());
             if (form.getSendTime()!=null) {
-                SellDailyDistribution.setCreateTime(parse);
+                SellDailyDistribution.setTime(parse);
             }
         } catch (ParseException e) {
             logger.error(e.getMessage());
@@ -164,7 +164,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
             SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
             Date parse = format.parse(form.getSendTime());
             if (form.getSendTime()!=null) {
-                SellDailyDistribution.setCreateTime(parse);
+                SellDailyDistribution.setTime(parse);
             }
         } catch (ParseException e) {
             logger.error(e.getMessage());
