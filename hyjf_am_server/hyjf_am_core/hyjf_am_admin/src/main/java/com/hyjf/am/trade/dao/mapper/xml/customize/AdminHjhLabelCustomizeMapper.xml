@@ -122,6 +122,16 @@
 		</if>
 	</select>
 
-
+	<select id="getAdminHjhLabelCount" resultType="int" parameterType="java.util.Map">
+		select
+		count(0)
+		FROM
+		ht_hjh_label la
+		left join
+		ht_hjh_allocation_engine en ON la.id = en.label_id
+		left join hyjf_config.ht_admin ha on la.create_user_id = ha.id
+		left join hyjf_config.ht_admin ha1 on la.update_user_id = ha1.id
+		<include refid="Where_Clause" />
+	</select>
 
 </mapper>
