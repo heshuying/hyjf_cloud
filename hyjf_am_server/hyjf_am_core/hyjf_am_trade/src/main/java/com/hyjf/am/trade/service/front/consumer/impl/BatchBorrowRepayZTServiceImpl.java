@@ -2867,6 +2867,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		criteria.andBorrowNidEqualTo(borrowNid);
 		example.setOrderByClause("id for update");
 		List<BorrowApicron> list = borrowApicronMapper.selectByExample(example);
+        if (list == null || list.size() == 0) {
+            return true;
+        }
 		for (BorrowApicron borrowApicron : list) {
 			if(borrowApicron.getApiType() ==1 && borrowApicron.getPeriodNow() != periodNow &&
 					!CustomConstants.BANK_BATCH_STATUS_SUCCESS.equals(borrowApicron.getStatus())){
