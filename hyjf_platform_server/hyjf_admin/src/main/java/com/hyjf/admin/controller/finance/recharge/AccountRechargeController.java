@@ -9,6 +9,7 @@ import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -214,6 +215,7 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理列表", notes = "资金中心->充值管理")
     @PostMapping(value = "/hjhDayCreditDetailList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AccountRechargeCustomizeVO>> queryRechargeList(HttpServletRequest request, @RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
@@ -268,6 +270,7 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "更新充值状态", notes = "资金中心->更新充值状态")
     @PostMapping(value = "/modifyRechargeStatus")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject modifyRechargeStatus(@RequestBody AccountRechargeRequestBean requestBean){
 
         JSONObject jsonObject = new JSONObject();
@@ -304,6 +307,7 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "确认充值(FIX) 操作", notes = "资金中心->确认充值(FIX) 操作")
     @PostMapping(value = "/rechargeFix")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CONFIRM)
     public JSONObject rechargeFix(@RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
@@ -351,6 +355,7 @@ public class AccountRechargeController extends BaseController {
 
     @ApiOperation(value = "充值管理数据导出",notes = "资金中心->充值管理数据导出")
     @PostMapping(value = "/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRechargeRequestBean accountRechargeRequestBean) throws Exception {
 
         // 是否具有组织机构查看权限
