@@ -94,11 +94,9 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             logger.info("用户重复开户,手机号:[" + requestBean.getMobile() + "]");
             paramMap.put("status", AemsErrorCodeConstant.STATUS_CE000016);
             paramMap.put("statusDesc", "用户重复开户");
-            paramMap = getErrorMV(requestBean, modelAndView, AemsErrorCodeConstant.STATUS_CE000016, "用户重复开户",paramMap);
-            paramMap.put("checkValue", ApiSignUtil.encryptByRSA(String.valueOf(paramMap.get("status"))));
+            getErrorMV(requestBean, modelAndView, AemsErrorCodeConstant.STATUS_CE000016, "用户重复开户",paramMap);
             logger.info("AEMS系统请求页面开户用户重复开户,callBackAction" + paramMap.get("callBackAction")+",status:"+paramMap.get("status")+",statusDesc:"+paramMap.get("statusDesc"));
-            logger.info("AEMS系统请求页面开户用户重复开户,paramMap" + JSONObject.toJSONString(paramMap));
-            modelAndView.addObject("callBackForm",paramMap);
+            logger.info("AEMS系统请求页面开户用户重复开户,modelAndView" + JSONObject.toJSONString(modelAndView));
             return modelAndView;
         }
 
@@ -138,43 +136,42 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
         return false;
     }
 
-    public  Map getErrorMV(AemsBankOpenEncryptPageRequestBean requestBean, ModelAndView modelAndView,
+    public  ModelAndView getErrorMV(AemsBankOpenEncryptPageRequestBean requestBean, ModelAndView modelAndView,
                                     String status, String des,Map<String, String> paramMap) {
         AemsBankOpenEncryptPageRequestBean repwdResult = new AemsBankOpenEncryptPageRequestBean();
         BaseResultBean resultBean = new BaseResultBean();
-        resultBean.setStatusForResponse(status);
+        repwdResult.setStatusForResponse(status);
         repwdResult.setCallBackAction(requestBean.getRetUrl());
-        repwdResult.set("chkValue", resultBean.getChkValue());
+        repwdResult.set("chkValue", ApiSignUtil.encryptByRSA(String.valueOf(paramMap.get("status"))));
         repwdResult.set("status", resultBean.getStatus());
-        paramMap.put("phone", requestBean.getMobile());
-        paramMap.put("acqRes",requestBean.getAcqRes());
+        repwdResult.set("phone", requestBean.getMobile());
+        repwdResult.set("acqRes",requestBean.getAcqRes());
         if (AemsErrorCodeConstant.STATUS_CE000016.equals(status)){
             // 重复开户
             // 根据手机号查询用户
             UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
             if (user == null ){
                 logger.info("根据手机号查询用户失败,手机号:[" + requestBean.getMobile() + "]");
-                paramMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
-                paramMap.put("statusDesc", "根据手机号查询用户失败");
-                return paramMap;
+                return modelAndView;
             }
             if (this.isOpenAccount(user)){
                 // 如果已经开户,根据用户ID查询用户银行信息
                 BankOpenAccountVO bankOpenAccount = this.bankOpenService.getBankOpenAccount(user.getUserId());
                 if(bankOpenAccount != null){
-                    paramMap.put("accountId",bankOpenAccount.getAccount());
-                    paramMap.put("isOpenAccount","1");
+                    repwdResult.set("accountId",bankOpenAccount.getAccount());
+                    repwdResult.set("isOpenAccount","1");
                     UserInfoVO userinfo = this.myAssetService.getUsersInfoByUserId(user.getUserId());
-                    paramMap.put("idNo",userinfo.getIdcard());
+                    repwdResult.set("idNo",userinfo.getIdcard());
                     BankCardVO bankCard = this.appRechargeService.selectBankCardByUserId(user.getUserId());
                     if (bankCard != null) {
-                        paramMap.put("cardNo",bankCard.getCardNo());
-                        paramMap.put("payAllianceCode", StringUtils.isNotBlank(bankCard.getPayAllianceCode()) ? bankCard.getPayAllianceCode() : "");
+                        repwdResult.set("cardNo",bankCard.getCardNo());
+                        repwdResult.set("payAllianceCode", StringUtils.isNotBlank(bankCard.getPayAllianceCode()) ? bankCard.getPayAllianceCode() : "");
                     }
                 }
             }
         }
-        return paramMap;
+        modelAndView.addObject("callBackForm", repwdResult);
+        return modelAndView;
     }
 
 
