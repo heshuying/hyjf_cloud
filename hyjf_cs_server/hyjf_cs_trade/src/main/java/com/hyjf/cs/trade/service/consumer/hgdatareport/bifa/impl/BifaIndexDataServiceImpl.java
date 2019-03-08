@@ -101,7 +101,7 @@ public class BifaIndexDataServiceImpl extends BaseHgDateReportServiceImpl implem
         // 执行借贷用户(已放款)索引数据上报
         this.prepareBorrowedUserReportData(startDate, endDate);
         // 执行数据上报操作 测试时关闭北互金索引数据上报
-        //this.executeDataReport();
+        this.executeDataReport();
     }
 
     @Override
