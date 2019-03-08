@@ -1824,7 +1824,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				if (!apicronFlag) {
 					throw new Exception("批次还款任务表(ht_borrow_apicron)更新失败！[借款编号：" + borrowNid + "]");
 				}
-				if(isLastUpdate){//一次性还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
+				if(isLastUpdate2){//一次性还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
                     BigDecimal sum = getRepayPlanAccountSum(borrowNid);
                     logger.info("【直投还款】借款编号：{}，一次性还款插入交易明细。总还款金额：{}", borrowNid, sum);
                     AccountList repayAllAccountList = new AccountList();
@@ -2742,7 +2742,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					// 债转编号
 					int creditNid = borrowCredit.getCreditNid();
 					// 债转状态
-					if (borrowRecoverPlan != null && !isLastUpdate && (isAllRepay || periodNext > 0)) {
+					if (borrowRecoverPlan != null && !isLastUpdate2 && (isAllRepay || periodNext > 0)) {
 						borrowCredit.setRepayStatus(0);
 					} else {
 						borrowCredit.setRepayStatus(1);
