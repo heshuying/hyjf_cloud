@@ -15,6 +15,7 @@
     <result column="auto_credit_end_time" property="autoCreditEndTime" jdbcType="VARCHAR" />
     <result column="inves_max_amt" property="invesMaxAmt" jdbcType="VARCHAR" />
     <result column="credit_max_amt" property="creditMaxAmt" jdbcType="VARCHAR" />
+      <result column="auto_credit_order_id" property="autoCreditOrderId" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap id="BaseResultLogMap" type="com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize" >
@@ -139,7 +140,8 @@
     DATE_FORMAT(STR_TO_DATE(hydua.auto_bid_end_time,'%Y%m%d'),'%Y-%m-%d') as auto_bid_end_time,
     DATE_FORMAT(STR_TO_DATE(hydua.auto_credit_end_time,'%Y%m%d'),'%Y-%m-%d') as auto_credit_end_time,
     hydua.inves_max_amt inves_max_amt,
-    hydua.credit_max_amt
+    hydua.credit_max_amt,
+    hydua.auto_credit_order_id AS auto_credit_order_id
     FROM
     ht_hjh_user_auth hydua
     LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydua.user_id
