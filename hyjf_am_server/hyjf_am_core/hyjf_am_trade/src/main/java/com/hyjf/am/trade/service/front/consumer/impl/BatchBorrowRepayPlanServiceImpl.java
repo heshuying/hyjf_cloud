@@ -1270,8 +1270,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		/** 基本变量 */
 		// 剩余还款期数
 		int periodNext = borrowPeriod - periodNow;
-		// 出借信息
-		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 出借用户开户信息
 		Account tenderBankAccount = this.getAccount(tenderUserId);
 		// 出借用户银行账户
@@ -1451,7 +1449,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			throw new Exception("账户信息表(ht_account)更新失败！[出借人ID：" + tenderUserId + "]，[出借订单号：" + tenderOrderId + "]");
 		}
 		// 取得账户信息(出借人)
-		tenderAccount = this.getAccount(borrowTender.getUserId());
+		tenderAccount = this.getAccount(tenderUserId);
 		if (Validator.isNull(tenderAccount)) {
 			throw new Exception("出借人账户信息不存在！[用户ID：" + tenderUserId + "]，[出借订单号：" + tenderOrderId + "]");
 		}
@@ -1641,6 +1639,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!borrowRepayFlag) {
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
+        // 出借信息
+        BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 更新出借表
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
 		borrowTender.setRecoverAccountCapitalYes(borrowTender.getRecoverAccountCapitalYes().add(repayCapital));
@@ -1980,10 +1980,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		/** 基本变量 */
 		// 剩余还款期数
 		Integer periodNext = borrowPeriod - periodNow;
-		// 出借信息
-		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
-		// 查询相应的债权转让
-		HjhDebtCredit borrowCredit = this.getBorrowCredit(creditNid);
 		// 出借用户开户信息
 		Account assignBankAccount = this.getAccount(assignUserId);
 		// 出借用户银行账户
@@ -2199,6 +2195,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!creditRepayFlag) {
 			throw new Exception("债转还款表(ht_hjh_debt_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
+        // 查询相应的债权转让
+        HjhDebtCredit borrowCredit = this.getBorrowCredit(creditNid);
 		// 债转总表数据更新
 		// 更新债转已还款总额
 		borrowCredit.setRepayAccount(borrowCredit.getRepayAccount().add(repayAccount));
@@ -2389,6 +2387,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]，[期数：" + periodNow + "]");
 			}
 		}
+        // 出借信息
+        BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 更新出借表
 		// 已还款金额
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
@@ -3036,12 +3036,13 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		BorrowApicronExample example = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
-		criteria.andApiTypeEqualTo(1);
-		criteria.andPeriodNowNotEqualTo(periodNow);
-		criteria.andStatusNotEqualTo(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-		int borrowApicronCount = this.borrowApicronMapper.countByExample(example);
-		if(borrowApicronCount > 0){
-			return false;
+		example.setOrderByClause("id for update");
+		List<BorrowApicron> list = borrowApicronMapper.selectByExample(example);
+		for (BorrowApicron borrowApicron : list) {
+			if(borrowApicron.getApiType() ==1 && borrowApicron.getPeriodNow() != periodNow &&
+					!CustomConstants.BANK_BATCH_STATUS_SUCCESS.equals(borrowApicron.getStatus())){
+				return false;
+			}
 		}
         logger.info("【智投还款】借款编号：{}，标的表(ht_borrow)可以更新为还款成功。一次性还款当前更新期数：{}", borrowNid, periodNow);
 		return true;

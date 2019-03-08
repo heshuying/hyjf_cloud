@@ -1023,10 +1023,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		/** 基本变量 */
 		// 剩余还款期数
 		Integer periodNext = borrowPeriod - periodNow;
-		// 出借信息
-		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
-		// 查询相应的债权转让
-		BorrowCredit borrowCredit = this.getBorrowCredit(creditNid);
 		// 出借用户开户信息
 		Account assignBankAccount = getAccountByUserId(assignUserId);
 		// 出借用户银行账户
@@ -1194,6 +1190,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("债转还款表(ht_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
 		// 债转总表数据更新
+        // 查询相应的债权转让
+        BorrowCredit borrowCredit = this.getBorrowCredit(creditNid);
 		// 更新债转已还款总额
 		borrowCredit.setCreditRepayAccount(borrowCredit.getCreditRepayAccount().add(repayAccount));
 		// 更新债转已还款本金
@@ -1335,6 +1333,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 throw new Exception("分期还款记录不存在！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]，[期数：" + periodNow + "]");
             }
 		}
+        // 出借信息
+        BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 更新出借表
 		// 已还款金额
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
@@ -2127,8 +2127,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		/** 基本变量 */
 		// 剩余还款期数
 		int periodNext = borrowPeriod - periodNow;
-		// 出借信息
-		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 出借用户开户信息
 		Account tenderBankAccount = getAccountByUserId(tenderUserId);
 		// 出借用户银行账户
@@ -2264,7 +2262,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("账户信息表(ht_account)更新失败！[出借人ID：" + tenderUserId + "][出借订单号：" + tenderOrderId + "]");
 		}
 		// 取得账户信息(出借人)
-		tenderAccount = this.getAccountByUserId(borrowTender.getUserId());
+		tenderAccount = this.getAccountByUserId(tenderUserId);
 		if (Validator.isNull(tenderAccount)) {
 			throw new Exception("出借人账户信息不存在！[用户ID：" + tenderUserId + "]，[出借订单号：" + tenderOrderId + "]");
 		}
@@ -2445,6 +2443,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!borrowRepayFlag) {
 			throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
+        // 出借信息
+        BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 更新出借表
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
 		borrowTender.setRecoverAccountCapitalYes(borrowTender.getRecoverAccountCapitalYes().add(repayCapital));
@@ -2858,20 +2858,21 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 根据还款任务表查询
 	 * @return
 	 */
-    private boolean isLastAllRepay(String borrowNid, Integer periodNow, boolean isAllRepay) {
+    private boolean isLastAllRepay(String borrowNid, int periodNow, boolean isAllRepay) {
         if (!isAllRepay) {
             return false;
         }
         BorrowApicronExample example = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
-		criteria.andApiTypeEqualTo(1);
-		criteria.andPeriodNowNotEqualTo(periodNow);
-		criteria.andStatusNotEqualTo(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-        int borrowApicronCount = this.borrowApicronMapper.countByExample(example);
-        if (borrowApicronCount > 0) {
-            return false;
-        }
+		example.setOrderByClause("id for update");
+		List<BorrowApicron> list = borrowApicronMapper.selectByExample(example);
+		for (BorrowApicron borrowApicron : list) {
+			if(borrowApicron.getApiType() ==1 && borrowApicron.getPeriodNow() != periodNow &&
+					!CustomConstants.BANK_BATCH_STATUS_SUCCESS.equals(borrowApicron.getStatus())){
+				return false;
+			}
+		}
 		logger.info("【直投还款】借款编号：{}，标的表(ht_borrow)可以更新为还款成功。一次性还款当前更新期数：{}", borrowNid, periodNow);
         return true;
     }
