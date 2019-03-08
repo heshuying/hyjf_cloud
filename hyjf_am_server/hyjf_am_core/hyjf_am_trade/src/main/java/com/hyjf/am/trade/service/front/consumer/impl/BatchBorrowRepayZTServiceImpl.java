@@ -1189,26 +1189,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!creditRepayFlag) {
 			throw new Exception("债转还款表(ht_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
-		// 债转总表数据更新
-        // 查询相应的债权转让
-        BorrowCredit borrowCredit = this.getBorrowCredit(creditNid);
-		// 更新债转已还款总额
-		borrowCredit.setCreditRepayAccount(borrowCredit.getCreditRepayAccount().add(repayAccount));
-		// 更新债转已还款本金
-		borrowCredit.setCreditRepayCapital(borrowCredit.getCreditRepayCapital().add(repayCapital));
-		// 更新债转已还款利息
-		borrowCredit.setCreditRepayInterest(borrowCredit.getCreditRepayInterest().add(repayInterest));
-		// 债转下次还款时间
-		borrowCredit.setCreditRepayNextTime(isMonth && !isAllRepay ? creditRepayNextTime : 0);
-		if (borrowCredit.getCreditStatus() == 0) {
-			borrowCredit.setCreditStatus(1);
-		}
-		// 更新债转总表
-		boolean borrowCreditFlag = this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit) > 0 ? true : false;
-		// 债转总表更新成功
-		if (!borrowCreditFlag) {
-			throw new Exception("债转标的表(ht_borrow_credit)更新失败！[债转编号：" + creditNid + "]，[承接订单号：" + assignNid + "]");
-		}
 		// 更新还款表（不分期）
         borrowRecover = selectBorrowRecoverByNid(borrowRecover.getNid());
 		borrowRecover.setRepayBatchNo(repayBatchNo);
@@ -1235,6 +1215,26 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		boolean creditBorrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 		if (!creditBorrowRecoverFlag) {
 			throw new Exception("放款记录总表(ht_borrow_recover)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
+		}
+		// 债转总表数据更新
+		// 查询相应的债权转让
+		BorrowCredit borrowCredit = this.getBorrowCredit(creditNid);
+		// 更新债转已还款总额
+		borrowCredit.setCreditRepayAccount(borrowCredit.getCreditRepayAccount().add(repayAccount));
+		// 更新债转已还款本金
+		borrowCredit.setCreditRepayCapital(borrowCredit.getCreditRepayCapital().add(repayCapital));
+		// 更新债转已还款利息
+		borrowCredit.setCreditRepayInterest(borrowCredit.getCreditRepayInterest().add(repayInterest));
+		// 债转下次还款时间
+		borrowCredit.setCreditRepayNextTime(isMonth && !isAllRepay ? creditRepayNextTime : 0);
+		if (borrowCredit.getCreditStatus() == 0) {
+			borrowCredit.setCreditStatus(1);
+		}
+		// 更新债转总表
+		boolean borrowCreditFlag = this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit) > 0 ? true : false;
+		// 债转总表更新成功
+		if (!borrowCreditFlag) {
+			throw new Exception("债转标的表(ht_borrow_credit)更新失败！[债转编号：" + creditNid + "]，[承接订单号：" + assignNid + "]");
 		}
 		// 取得还款详情
 		BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
@@ -1645,6 +1645,33 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					repayYesTime = nowTime;
 					status = 5;
 				}
+				// 非一次性还款和一次性还款最后一期才更新
+				if(!isAllRepay || isLastUpdate){
+					// 更新Borrow
+					newBorrow.setRepayFullStatus(repayStatus);
+					newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+					newBorrow.setStatus(status);
+					BorrowExample borrowExample = new BorrowExample();
+					borrowExample.createCriteria().andIdEqualTo(borrowId);
+					boolean borrowFlag = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample) > 0 ? true : false;
+					if (!borrowFlag) {
+						throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
+					}
+				}
+				boolean isLastUpdate2 = isLastAllRepay(borrowNid, periodNow, isAllRepay);
+				if(isLastUpdate2 && !isLastUpdate){
+					logger.error("【直投还款】借款编号：{}，一次性还款重新更新标的表(ht_borrow)状态为成功！", apicron.getBorrowNid());
+					repayType = TYPE_WAIT_YES;
+					repayStatus = 1;
+					repayYesTime = nowTime;
+					status = 5;
+					newBorrow.setRepayFullStatus(repayStatus);
+					newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+					newBorrow.setStatus(status);
+					BorrowExample borrowExample = new BorrowExample();
+					borrowExample.createCriteria().andIdEqualTo(borrowId);
+					borrowMapper.updateByExampleSelective(newBorrow, borrowExample);
+				}
 				// 还款总表
 				BorrowRepay borrowRepay = this.getBorrowRepay(borrowNid);
 				borrowRepay.setRepayType(repayType);
@@ -1671,6 +1698,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					// 还款成功最后时间
 					borrowRepay.setRepayYestime(repayYesTime);
 				}
+				// 更新BorrowRepay
+				BorrowRepayExample repayExample = new BorrowRepayExample();
+				repayExample.createCriteria().andBorrowNidEqualTo(borrowNid);
+				boolean borrowRepayFlag = this.borrowRepayMapper.updateByExampleSelective(borrowRepay, repayExample) > 0 ? true : false;
+				if (!borrowRepayFlag) {
+					throw new Exception("还款记录总表(ht_borrow_repay)更新失败！[借款编号：" + borrowNid + "]，[还款期数：" + periodNow + "]");
+				}
 				// 更新相应的还款计划表
 				BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
 				if (Validator.isNull(borrowRepayPlan)) {
@@ -1682,13 +1716,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRepayPlan.setRepayYestime(nowTime);
 				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
 				if (!borrowRepayPlanFlag) {
-					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[还款期数：" + periodNow + "]");
-				}
-				// 更新BorrowRepay
-				BorrowRepayExample repayExample = new BorrowRepayExample();
-				repayExample.createCriteria().andBorrowNidEqualTo(borrowNid);
-				boolean borrowRepayFlag = this.borrowRepayMapper.updateByExampleSelective(borrowRepay, repayExample) > 0 ? true : false;
-				if (!borrowRepayFlag) {
 					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[还款期数：" + periodNow + "]");
 				}
 				Account repayUserAccount = this.getAccountByUserId(repayUserId);
@@ -1787,19 +1814,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					boolean repayAccountListFlag = this.accountListMapper.insertSelective(repayAccountList) > 0 ? true : false;
 					if (!repayAccountListFlag) {
 						throw new Exception("收支明细表(ht_account_list)写入失败，[借款人用户ID：" + repayUserId + "]，[借款编号:" + borrowNid + "]");
-					}
-				}
-				// 非一次性还款和一次性还款最后一期才更新
-				if(!isAllRepay || isLastUpdate){
-					// 更新Borrow
-					newBorrow.setRepayFullStatus(repayStatus);
-					newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-					newBorrow.setStatus(status);
-					BorrowExample borrowExample = new BorrowExample();
-					borrowExample.createCriteria().andIdEqualTo(borrowId);
-					boolean borrowFlag = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample) > 0 ? true : false;
-					if (!borrowFlag) {
-						throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
 					}
 				}
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
@@ -2865,17 +2879,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         BorrowApicronExample example = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
-		example.setOrderByClause("id for update");
-		List<BorrowApicron> list = borrowApicronMapper.selectByExample(example);
-        if (list == null || list.size() == 0) {
-            return true;
+		criteria.andApiTypeEqualTo(1);
+		criteria.andPeriodNowNotEqualTo(periodNow);
+		criteria.andStatusNotEqualTo(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+        int borrowApicronCount = this.borrowApicronMapper.countByExample(example);
+        if (borrowApicronCount > 0) {
+            return false;
         }
-		for (BorrowApicron borrowApicron : list) {
-			if(borrowApicron.getApiType() ==1 && borrowApicron.getPeriodNow() != periodNow &&
-					!CustomConstants.BANK_BATCH_STATUS_SUCCESS.equals(borrowApicron.getStatus())){
-				return false;
-			}
-		}
 		logger.info("【直投还款】借款编号：{}，标的表(ht_borrow)可以更新为还款成功。一次性还款当前更新期数：{}", borrowNid, periodNow);
         return true;
     }
