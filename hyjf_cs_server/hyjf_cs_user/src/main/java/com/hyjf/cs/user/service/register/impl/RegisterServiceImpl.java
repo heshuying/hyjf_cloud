@@ -828,7 +828,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         if (StringUtils.isNotBlank(iconUrl)) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(platform));
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(ClientConstants.APP_CLIENT));
             return imghost + fileUploadTempPath + iconUrl;
         }
         return "";
