@@ -105,9 +105,9 @@
 
 		LEFT JOIN
 		(
-		SELECT u.bank_account_esb AS client, COUNT(temp.user_id) AS account_number FROM hyjf_user.ht_user u INNER JOIN hyjf_user.ht_bank_open_account temp ON temp.user_id = u.user_id
+		SELECT u.account_esb AS client, COUNT(temp.user_id) AS account_number FROM hyjf_user.ht_user u INNER JOIN hyjf_user.ht_bank_open_account temp ON temp.user_id = u.user_id
 		<include refid="Where_Invest_htj_time" />
-		GROUP BY u.bank_account_esb
+		GROUP BY u.account_esb
 		) account_number ON pn.client = account_number.client
 
 		LEFT JOIN
