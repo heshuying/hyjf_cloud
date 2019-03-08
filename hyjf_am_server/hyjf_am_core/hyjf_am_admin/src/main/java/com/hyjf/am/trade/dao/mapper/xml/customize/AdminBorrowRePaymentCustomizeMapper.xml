@@ -109,6 +109,7 @@
 		<result column="instName" property="instName" jdbcType="VARCHAR" />
 		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
 		<result column="regist_user_name" property="registUserName" jdbcType="VARCHAR" />
+		<result column="freezeOrderId" property="freezeOrderId" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT

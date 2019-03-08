@@ -621,4 +621,11 @@ public interface AmUserClient {
 	 * @param ipAddr
 	 */
 	void updateUser(UserVO u, String ipAddr);
+	/**
+	 * 单表查询开户信息
+	 *
+	 * @return
+	 * @auth nxl
+	 */
+	BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
 }

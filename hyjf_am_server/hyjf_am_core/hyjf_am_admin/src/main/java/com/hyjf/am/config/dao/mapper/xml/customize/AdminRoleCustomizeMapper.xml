@@ -51,7 +51,7 @@
 			LEFT JOIN ht_admin_menu_permssions amp ON menu.menu_uuid = amp.menu_id
 			LEFT JOIN ht_admin_permissions perm ON perm.permission_uuid = amp.permission_id AND perm.del_flag = '0'
 			<if test="roleId != null" >
-				LEFT JOIN ht_admin_role_menu_permissions armp ON menu.menu_uuid = armp.menu_uuid
+				LEFT JOIN ht_admin_role_menu_permissions armp ON menu.menu_uuid = armp.menu_uuid 
 				AND perm.permission_uuid = armp.permission_uuid
 				AND armp.role_id = #{roleId, jdbcType=VARCHAR}
 				
@@ -66,7 +66,7 @@
 			perm.permission_uuid
 	</select>
 	    <select id="getPermissionId" resultType="java.lang.String" >
-        select CONCAT(menu_uuid,'_',permission_uuid) from  ht_admin_role_menu_permissions where role_id= #{menuId,jdbcType=VARCHAR}
+        select CONCAT(menu_uuid,'_',permission_uuid) from  ht_admin_role_menu_permissions where role_id= #{menuId,jdbcType=VARCHAR} and del_flag='0'
     </select>
     	    <delete id="deleteRole" parameterType="java.lang.String" >
         delete from  ht_admin_role_menu_permissions where menu_uuid in (select menu_uuid from ht_admin_menu where del_flag=1 )  and role_id = #{roleId,jdbcType=VARCHAR}

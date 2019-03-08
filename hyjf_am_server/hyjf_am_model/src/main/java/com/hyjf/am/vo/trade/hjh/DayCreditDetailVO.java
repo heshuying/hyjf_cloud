@@ -133,6 +133,8 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
      */
     private String endTime;
 
+    private String liquidatesPeriodView;
+
     public String getId() {
         return id;
     }
@@ -331,5 +333,13 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public String getLiquidatesPeriodView() {
+        return this.getLiquidatesPeriod() + "/" + this.getBorrowPeriod();
+    }
+
+    public void setLiquidatesPeriodView(String liquidatesPeriodView) {
+        this.liquidatesPeriodView = liquidatesPeriodView;
     }
 }

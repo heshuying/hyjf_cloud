@@ -257,6 +257,23 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
+	 * 单表查询开户信息
+	 *
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public BankOpenAccountVO queryBankOpenAccountByUserId(int userId) {
+		BankOpenAccountResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/userManager/queryBankOpenAccountByUserId/" + userId,
+						BankOpenAccountResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+	/**
 	 * 保存验证码
 	 * @param mobile
 	 * @param checkCode

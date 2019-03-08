@@ -29,7 +29,7 @@
             <if test="trueNameSrch != null and trueNameSrch != ''">
                 AND c.truename LIKE CONCAT( #{trueNameSrch}, '%')
             </if>
-            <if test="roleNameSrch != null and roleNameSrch != '' and roleNameSrch == '借款人'">
+            <if test="roleNameSrch != null and roleNameSrch != '' and roleNameSrchS == '其他'">
                 AND c.role_name = #{roleNameSrch}
             </if>
             <if test="roleNameSrch != null and roleNameSrch != '' and (roleNameSrch == '投资人' or roleNameSrch == '出借人')">

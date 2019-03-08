@@ -214,7 +214,7 @@
         dc.credit_capital_assigned AS assign_capital,
         dc.credit_interest_advance_assigned AS assign_advance_interest,
         dc.credit_income AS account_receive,
-        dc.create_time AS liquidates_time,
+        IF(dc.create_time=0, NULL,  DATE_FORMAT(dc.create_time, '%Y-%m-%d %H:%i:%s')) AS liquidates_time,
         dc.repay_status,
         dc.credit_status,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN 1 ELSE b.borrow_period END AS borrow_period,
@@ -225,8 +225,6 @@
         FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time,
         dc.label_name,
         ( dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned ) as remain_credit,
-        --         pa.`name` AS credit_status_name,
-        --         par.`name` AS repay_status_name,
         CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN FROM_UNIXTIME(dc.credit_repay_end_time,'%Y-%m-%d %H:%i:%s')  ELSE
         FROM_UNIXTIME(dc.credit_repay_next_time,'%Y-%m-%d %H:%i:%s') END AS repay_next_time
         FROM
@@ -241,4 +239,17 @@
         </if>
     </select>
 
+    <select id="selectSumRecord" resultType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize" parameterType="com.hyjf.am.trade.dao.model.customize.HjhReInvestDebtCustomize">
+        SELECT
+        SUM(dc.credit_capital)  AS sumCreditCapital,
+        SUM(dc.liquidation_fair_value) AS sumLiquidationFairValue,
+        SUM(dc.credit_capital_assigned) AS sumAssignCapital,
+        SUM(dc.credit_interest_advance_assigned) AS sumAssignAdvanceInterest
+        FROM
+        ht_hjh_debt_credit dc
+        INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
+        INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        <include refid="Where_Clause_New" />
+    </select>
 </mapper>

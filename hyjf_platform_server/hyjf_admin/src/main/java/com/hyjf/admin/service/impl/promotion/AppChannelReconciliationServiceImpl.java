@@ -26,11 +26,4 @@ public class AppChannelReconciliationServiceImpl implements AppChannelReconcilia
         return amConfigClient.selectAdminUtmReadPermissions(userId);
     }
 
-    @Override
-    public AppChannelReconciliationResponse getReconciliationPage(AppChannelReconciliationRequest form) {
-        return amConfigClient.getReconciliationPage(form);
-    }
-
-
-
 }

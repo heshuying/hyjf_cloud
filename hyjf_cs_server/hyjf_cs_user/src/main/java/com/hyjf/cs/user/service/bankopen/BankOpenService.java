@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.bankopen;
 
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.*;
@@ -90,4 +91,11 @@ public interface BankOpenService extends BaseUserService {
 	 * @return
 	 */
 	String getBankOpenAccountByMobile(String mobile);
+	/**
+	 * 判断用户是否存在电子账户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	BankOpenAccountVO existBankAccountId(Integer userId);
 }

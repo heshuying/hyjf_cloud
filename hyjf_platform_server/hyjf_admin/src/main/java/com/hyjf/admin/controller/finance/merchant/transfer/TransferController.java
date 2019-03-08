@@ -74,8 +74,8 @@ public class TransferController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(@RequestBody MerchantTransferListRequest form) {
         TransferResponse response = new TransferResponse();
-        Map<String, String> transferStatus = CacheUtil.getParamNameMap("TRANSFER_STATUS");
-        Map<String, String> transferTypes = CacheUtil.getParamNameMap("TRANSFER_TYPE");
+        Map<String, String> transferStatus = CacheUtil.getParamNameMap("MER_TRANS_STATUS");
+        Map<String, String> transferTypes = CacheUtil.getParamNameMap("MER_TRANS_TYPE");
         // 转账状态
         response.setTransferStatus(ConvertUtils.convertParamMapToDropDown(transferStatus));
         // 交易类型

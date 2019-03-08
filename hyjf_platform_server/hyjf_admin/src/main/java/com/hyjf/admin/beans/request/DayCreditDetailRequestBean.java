@@ -1,8 +1,9 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
-public class DayCreditDetailRequestBean {
+public class DayCreditDetailRequestBean extends BasePage {
 
     //转让状态
     @ApiModelProperty(value = "转让状态")

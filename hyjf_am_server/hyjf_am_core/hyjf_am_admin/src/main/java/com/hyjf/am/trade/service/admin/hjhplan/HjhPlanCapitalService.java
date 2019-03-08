@@ -3,6 +3,7 @@ package com.hyjf.am.trade.service.admin.hjhplan;
 import com.hyjf.am.resquest.admin.HjhReInvestDetailRequest;
 import com.hyjf.am.vo.trade.hjh.HjhReInvestDetailVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -24,5 +25,7 @@ public interface HjhPlanCapitalService {
      * @return
      */
     List<HjhReInvestDetailVO> getReinvestInfo(HjhReInvestDetailRequest request);
+
+    String queryReInvestDetailTotal(HjhReInvestDetailRequest request);
 
 }

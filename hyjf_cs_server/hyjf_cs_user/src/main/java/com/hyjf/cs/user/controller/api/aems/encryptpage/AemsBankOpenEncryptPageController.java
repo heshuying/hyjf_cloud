@@ -4,9 +4,14 @@
 package com.hyjf.cs.user.controller.api.aems.encryptpage;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.AemsBankOpenEncryptPageRequestBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
@@ -14,6 +19,8 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
+import com.hyjf.cs.user.service.myasset.MyAssetService;
+import com.hyjf.cs.user.service.recharge.AppRechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -47,6 +54,10 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
 
     @Autowired
     private BankOpenService bankOpenService;
+    @Autowired
+    private MyAssetService myAssetService;
+    @Autowired
+    private AppRechargeService appRechargeService;
 
     @Autowired
     SystemConfig systemConfig;
@@ -75,6 +86,20 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
         }
 
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
+
+        logger.info("AEMS系统请求页面开户查询用户,手机号:" + requestBean.getMobile() + "---用户："+JSONObject.toJSONString(user));
+        // 判断是否已经开户 AEMS系统追加
+        if(this.isOpenAccount(user)){
+            modelAndView= new ModelAndView("surong/callback_post.html");
+            logger.info("用户重复开户,手机号:[" + requestBean.getMobile() + "]");
+            paramMap.put("status", AemsErrorCodeConstant.STATUS_CE000016);
+            paramMap.put("statusDesc", "用户重复开户");
+            getErrorMV(requestBean, modelAndView, AemsErrorCodeConstant.STATUS_CE000016, "用户重复开户",paramMap);
+            logger.info("AEMS系统请求页面开户用户重复开户,callBackAction" + paramMap.get("callBackAction")+",status:"+paramMap.get("status")+",statusDesc:"+paramMap.get("statusDesc"));
+            logger.info("AEMS系统请求页面开户用户重复开户,modelAndView" + JSONObject.toJSONString(modelAndView));
+            return modelAndView;
+        }
+
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
         openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
@@ -94,6 +119,58 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             return callbackErrorView(paramMap);
         }
         logger.info("开户end");
+        return modelAndView;
+    }
+
+    /**
+     * 判断用户是否已经开户
+     * @param user
+     * @return
+     */
+    public boolean isOpenAccount(UserVO user) {
+        if(user.getBankOpenAccount() == 1 && null != this.bankOpenService.existBankAccountId(user.getUserId())){
+            logger.info("AEMS系统请求页面开户查询用户已经开户");
+            return true;
+        }
+        logger.info("AEMS系统请求页面开户查询用户未开户");
+        return false;
+    }
+
+    public  ModelAndView getErrorMV(AemsBankOpenEncryptPageRequestBean requestBean, ModelAndView modelAndView,
+                                    String status, String des,Map<String, String> paramMap) {
+        AemsBankOpenEncryptPageRequestBean repwdResult = new AemsBankOpenEncryptPageRequestBean();
+        BaseResultBean resultBean = new BaseResultBean();
+        repwdResult.setStatusForResponse(status);
+        repwdResult.setCallBackAction(requestBean.getRetUrl());
+        repwdResult.set("chkValue", ApiSignUtil.encryptByRSA(String.valueOf(paramMap.get("status"))));
+        repwdResult.set("status", resultBean.getStatus());
+        repwdResult.set("phone", requestBean.getMobile());
+        repwdResult.set("acqRes",requestBean.getAcqRes());
+        if (AemsErrorCodeConstant.STATUS_CE000016.equals(status)){
+            // 重复开户
+            // 根据手机号查询用户
+            UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
+            if (user == null ){
+                logger.info("根据手机号查询用户失败,手机号:[" + requestBean.getMobile() + "]");
+                return modelAndView;
+            }
+            if (this.isOpenAccount(user)){
+                // 如果已经开户,根据用户ID查询用户银行信息
+                BankOpenAccountVO bankOpenAccount = this.bankOpenService.getBankOpenAccount(user.getUserId());
+                if(bankOpenAccount != null){
+                    repwdResult.set("accountId",bankOpenAccount.getAccount());
+                    repwdResult.set("isOpenAccount","1");
+                    UserInfoVO userinfo = this.myAssetService.getUsersInfoByUserId(user.getUserId());
+                    repwdResult.set("idNo",userinfo.getIdcard());
+                    BankCardVO bankCard = this.appRechargeService.selectBankCardByUserId(user.getUserId());
+                    if (bankCard != null) {
+                        repwdResult.set("cardNo",bankCard.getCardNo());
+                        repwdResult.set("payAllianceCode", StringUtils.isNotBlank(bankCard.getPayAllianceCode()) ? bankCard.getPayAllianceCode() : "");
+                    }
+                }
+            }
+        }
+        modelAndView.addObject("callBackForm", repwdResult);
         return modelAndView;
     }
 
@@ -254,4 +331,6 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
         CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
         return result;
     }
+
+
 }

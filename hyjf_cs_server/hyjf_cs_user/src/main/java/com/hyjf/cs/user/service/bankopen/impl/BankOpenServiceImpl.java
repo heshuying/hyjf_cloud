@@ -1157,4 +1157,14 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         return resultMap;
     }
 
+    /**
+     * 判断用户是否存在电子账户号
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BankOpenAccountVO existBankAccountId(Integer userId) {
+        return this.amUserClient.queryBankOpenAccountByUserId(userId);
+    }
 }
