@@ -152,7 +152,7 @@ public class PlanListController extends BaseController{
 	@ApiOperation(value = "计划列表", notes = "计划列表初始添加计划画面")
 	@PostMapping(value = "/addplan")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD) 
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY}) 
 	public JSONObject getAddPlanView(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid PlanListViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		//添加时---获取还款方式  月/日 无需初始化 end/endday
