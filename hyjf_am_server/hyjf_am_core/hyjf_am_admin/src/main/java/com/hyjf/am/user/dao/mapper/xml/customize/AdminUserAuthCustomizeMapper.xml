@@ -15,7 +15,7 @@
     <result column="auto_credit_end_time" property="autoCreditEndTime" jdbcType="VARCHAR" />
     <result column="inves_max_amt" property="invesMaxAmt" jdbcType="VARCHAR" />
     <result column="credit_max_amt" property="creditMaxAmt" jdbcType="VARCHAR" />
-      <result column="auto_credit_order_id" property="autoCreditOrderId" jdbcType="VARCHAR" />
+    <result column="auto_credit_order_id" property="autoCreditOrderId" jdbcType="VARCHAR" />
   </resultMap>
 
   <resultMap id="BaseResultLogMap" type="com.hyjf.am.user.dao.model.customize.AdminUserAuthLogListCustomize" >
@@ -30,27 +30,27 @@
 
 
   <resultMap id="BaseResultPayMap" type="com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize" >
-  	<id column="user_id" property="userid" jdbcType="INTEGER" />
+    <id column="user_id" property="userid" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
     <result column="auto_payment_end_time" property="signEndDate" jdbcType="VARCHAR" />
-	<result column="auto_payment_status" property="authType" jdbcType="INTEGER" />
+    <result column="auto_payment_status" property="authType" jdbcType="INTEGER" />
     <result column="account" property="bankid" jdbcType="VARCHAR" />
     <result column="auto_payment_time" property="signDate" jdbcType="VARCHAR" />
     <result column="payment_max_amt" property="paymentMaxAmt" jdbcType="VARCHAR" />
   </resultMap>
-  
+
   <resultMap id="BaseResultRePayMap" type="com.hyjf.am.user.dao.model.customize.AdminUserRePayAuthCustomize" >
-  	<id column="user_id" property="userid" jdbcType="INTEGER" />
+    <id column="user_id" property="userid" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="auto_repay_end_time" property="signEndDate" jdbcType="VARCHAR" />
-	<result column="auto_repay_status" property="authType" jdbcType="INTEGER" />
+    <result column="auto_repay_status" property="authType" jdbcType="INTEGER" />
     <result column="account" property="bankid" jdbcType="VARCHAR" />
     <result column="auto_repay_time" property="signDate" jdbcType="VARCHAR" />
     <result column="repay_max_amt" property="repayMaxAmt" jdbcType="VARCHAR" />
   </resultMap>
-  
-  
+
+
   <sql id="Where_Clause">
     <where>
       hydua.`del_flag` = 0
@@ -176,7 +176,7 @@
     SELECT
     hydual.order_id AS order_id,
     hydual.user_name AS user_name,
-     CASE
+    CASE
     WHEN hydual.order_status = 0
     THEN '初始'
     WHEN hydual.order_status = 1
@@ -193,17 +193,17 @@
       LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
     </if>
   </select>
-  
-  
+
+
   <update id="updatePayAuthRecord" >
     update ht_hjh_user_auth
-     <set >
-        auto_payment_end_time = #{1,jdbcType=VARCHAR},
-        auto_payment_status = #{2,jdbcType=INTEGER}
+    <set >
+      auto_payment_end_time = #{1,jdbcType=VARCHAR},
+      auto_payment_status = #{2,jdbcType=INTEGER}
     </set>
     where user_id  = #{0,jdbcType=INTEGER}
   </update>
-  
+
   <select id="countRecordTotalPay" resultType="java.lang.Integer" parameterType="Map">
     SELECT
     COUNT(hydual.user_id)
@@ -211,33 +211,33 @@
     ht_hjh_user_auth hydual,ht_bank_open_account bank
     <include refid="Where_Clause_Pay" />
   </select>
-  
- 
-  
+
+
+
   <select id="selectUserPayAuthList" resultMap="BaseResultPayMap" parameterType="Map">
-    SELECT 
-    	hydual.user_id,
-	    hydual.user_name,
-        hydur.mobile,
-	        CASE   
-	        	WHEN hydual.auto_payment_status = 0 and (hydual.payment_cancel_time is not null or  <![CDATA[ hydual.payment_cancel_time <>'' ]]> )  then 2
-		        WHEN hydual.auto_payment_status = 0 and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='') then 0
-		    	WHEN (hydual.auto_payment_status = 1)  then 1
-		    END AS auto_payment_status,
+    SELECT
+    hydual.user_id,
+    hydual.user_name,
+    hydur.mobile,
     CASE
-      WHEN hydual.auto_payment_status = 0 THEN ''
-    ELSE
-	    DATE_FORMAT(STR_TO_DATE(hydual.auto_payment_end_time, '%Y%m%d'),'%Y-%m-%d') END AS auto_payment_end_time,
-<!-- 	    hydual.auto_payment_status, -->
-<!-- 	    FROM_UNIXTIME(hydual.auto_payment_time,'%Y-%m-%d %H:%i:%s') AS auto_payment_time, -->
+    WHEN hydual.auto_payment_status = 0 and (hydual.payment_cancel_time is not null or  <![CDATA[ hydual.payment_cancel_time <>'' ]]> )  then 2
+    WHEN hydual.auto_payment_status = 0 and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='') then 0
+    WHEN (hydual.auto_payment_status = 1)  then 1
+    END AS auto_payment_status,
     CASE
     WHEN hydual.auto_payment_status = 0 THEN ''
     ELSE
-		FROM_UNIXTIME(hydual.auto_payment_time,'%Y-%m-%d') END AS auto_payment_time,
-	    bank.account,
-        hydual.payment_max_amt
+    DATE_FORMAT(STR_TO_DATE(hydual.auto_payment_end_time, '%Y%m%d'),'%Y-%m-%d') END AS auto_payment_end_time,
+    <!-- 	    hydual.auto_payment_status, -->
+    <!-- 	    FROM_UNIXTIME(hydual.auto_payment_time,'%Y-%m-%d %H:%i:%s') AS auto_payment_time, -->
+    CASE
+    WHEN hydual.auto_payment_status = 0 THEN ''
+    ELSE
+    FROM_UNIXTIME(hydual.auto_payment_time,'%Y-%m-%d') END AS auto_payment_time,
+    bank.account,
+    hydual.payment_max_amt
     FROM
-      ht_hjh_user_auth hydual
+    ht_hjh_user_auth hydual
     LEFT JOIN ht_bank_open_account bank ON bank.user_id = hydual.user_id
     LEFT JOIN ht_user hydur ON hydur.user_id = hydual.user_id
     <include refid="Where_Clause_Pay" />
@@ -246,7 +246,7 @@
       LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
     </if>
   </select>
-  
+
   <sql id="Where_Clause_Pay">
     <where>
       hydual.user_id = bank.user_id
@@ -257,7 +257,7 @@
         AND bank.account  LIKE CONCAT( #{bankid}, '%')
       </if>
       <if test="authType != null and authType !='' and authType !=2 ">
-        AND hydual.auto_payment_status = #{authType,jdbcType=INTEGER} and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='') 
+        AND hydual.auto_payment_status = #{authType,jdbcType=INTEGER} and (hydual.payment_cancel_time is null or hydual.payment_cancel_time='')
       </if>
       <if test="authTimeStart != null and authTimeStart != '' ">
         <!-- 优化sql(字段类型转换) int-->
@@ -269,11 +269,11 @@
         AND hydual.auto_payment_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{authTimeEnd},' 23:59:59'))
         AND auto_payment_status = 1
       </if>
-	  
-	  <if test="authType ==2">
+
+      <if test="authType ==2">
         AND (hydual.payment_cancel_time is not null or <![CDATA[ hydual.payment_cancel_time <>'' ]]>) AND hydual.auto_payment_status = 0
       </if>
-	  
+
       <if test="signTimeStart != null and signTimeStart != '' ">
         <!-- 优化sql(字段类型转换) varchar-->
         AND hydual.auto_payment_end_time <![CDATA[>=]]> CONCAT(UNIX_TIMESTAMP(#{signTimeStart}))
@@ -285,7 +285,7 @@
       </if>
     </where>
   </sql>
-  
+
   <select id="countRecordTotalRePay" resultType="java.lang.Integer" parameterType="Map">
     SELECT
     COUNT(hydual.user_id)
@@ -294,7 +294,7 @@
     LEFT JOIN ht_bank_open_account bank ON bank.user_id = hydual.user_id
     <include refid="Where_Clause_RePay" />
   </select>
-  
+
   <sql id="Where_Clause_RePay">
     <where>
       hydual.user_id = bank.user_id
@@ -305,8 +305,8 @@
         AND bank.account  LIKE CONCAT( #{bankid}, '%')
       </if>
       <if test="authType != null and authType !='' and authType !=2 ">
-<!--         AND hydual.auto_repay_status = #{authType,jdbcType=INTEGER} -->
- 		AND hydual.auto_repay_status = #{authType,jdbcType=INTEGER} and (hydual.repay_cancel_time is null or hydual.repay_cancel_time='')
+        <!--         AND hydual.auto_repay_status = #{authType,jdbcType=INTEGER} -->
+        AND hydual.auto_repay_status = #{authType,jdbcType=INTEGER} and (hydual.repay_cancel_time is null or hydual.repay_cancel_time='')
       </if>
       <!--  authTimeStart authTimeEnd signTimeStart signTimeEnd auto_repay_time auto_repay_end_time 是否有错误？-->
       <if test="authTimeStart != null and authTimeStart != ''">
@@ -318,8 +318,8 @@
         AND hydual.auto_repay_end_time <![CDATA[<=]]> CONCAT(UNIX_TIMESTAMP(CONCAT(#{authTimeStart},' 23:59:59'))) AND auto_repay_status = 1
       </if>
 
- 	  <if test="authType ==2">
-<!--         AND hydual.repay_cancel_time IS NOT NULL AND hydual.auto_repay_status = 0 -->
+      <if test="authType ==2">
+        <!--         AND hydual.repay_cancel_time IS NOT NULL AND hydual.auto_repay_status = 0 -->
         AND (hydual.repay_cancel_time is not null or <![CDATA[ hydual.repay_cancel_time <>'' ]]>) AND hydual.auto_repay_status = 0
       </if>
       <if test="signTimeStart != null and signTimeStart != ''">
@@ -370,19 +370,19 @@
       LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
     </if>
   </select>
-  
-  
+
+
   <update id="updateRePayAuthRecord" >
     update ht_hjh_user_auth
-     <set >
-        auto_repay_end_time = #{1,jdbcType=VARCHAR},
-        auto_repay_status = #{2,jdbcType=INTEGER}
+    <set >
+      auto_repay_end_time = #{1,jdbcType=VARCHAR},
+      auto_repay_status = #{2,jdbcType=INTEGER}
     </set>
     where user_id  = #{0,jdbcType=INTEGER}
   </update>
-  
-  
-<!--   判断是否可以解决 缴费授权 -->
+
+
+  <!--   判断是否可以解决 缴费授权 -->
   <select id="selectCanDismissPay" resultType="int">
   	SELECT 
    		SUM(count)
@@ -401,9 +401,9 @@
 	    WHERE
 	        status = 0 and user_id=#{0}) tmp
   </select>
-  
+
   <select id="selectCanDismissRePay" resultType="int">
   	select count(*) from ht_borrow_repay where   repay_status=0 and   user_id=  #{0}
   </select>
-  
+
 </mapper>
