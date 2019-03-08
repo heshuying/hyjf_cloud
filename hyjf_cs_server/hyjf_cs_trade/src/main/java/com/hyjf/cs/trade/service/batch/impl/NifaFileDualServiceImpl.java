@@ -359,11 +359,11 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                         logger.error("【互金上传文件】上传状态异步返回文件读取失败!");
                         logger.error(e.getMessage());
                         return "ERROR";
-                    }finally {
-                        if (bufferReader != null){
+                    } finally {
+                        if (bufferReader != null) {
                             bufferReader.close();
                         }
-                        if (inputStreamReader != null){
+                        if (inputStreamReader != null) {
                             inputStreamReader.close();
                         }
                     }
@@ -513,10 +513,6 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             return false;
         }
 
-        List<String> listQuery = new ArrayList<>();
-        for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoEntities) {
-            listQuery.add(nifaBorrowInfoVO.getProjectNo());
-        }
         // 处理借款人和出借人数据
 //        for (NifaBorrowInfoVO nifaBorrowInfoEntity : nifaBorrowInfoEntities) {
 //            // --> 获取出借人信息
@@ -547,9 +543,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
 //        Criteria criteriaTender = Criteria.where("reportStatus").is("2");
 //        queryTender.addCriteria(criteriaTender);
 //        List<NifaTenderInfoVO> nifaTenderInfoEntities = this.nifaTenderInfoDao.find(queryTender);
-        List<NifaTenderInfoVO> nifaTenderInfoEntities = selectNifaTenderInfo(listQuery);
+        List<NifaTenderInfoVO> nifaTenderInfoEntities = selectNifaTenderInfo(nifaBorrowInfoEntities);
         if (null == nifaTenderInfoEntities || nifaTenderInfoEntities.size() <= 0) {
-            logger.error("【互金上传文件】统计二期标获取出借人信息失败！！" + listQuery);
+            logger.error("【互金上传文件】统计二期标获取出借人信息失败！！" + nifaBorrowInfoEntities);
             return false;
         } else {
             // list类型转换
@@ -564,7 +560,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
 //                Update update = new Update();
 //                update.set("reportStatus", "1").set("updateTime", new Date());
 //                nifaTenderInfoDao.updateAll(queryTender, update);
-                    updateTenderInfo(listQuery);
+                    updateTenderInfo(nifaBorrowInfoEntities);
                 } else {
                     result = false;
                     logger.info("【互金上传文件】:互联网债权类融资出借人信息导出TXT失败！");
@@ -577,7 +573,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         }
 
         // --> 获取借款人信息
-        List<NifaBorrowerInfoVO> nifaBorrowerInfoEntities = selectNifaBorrowerInfo(listQuery);
+        List<NifaBorrowerInfoVO> nifaBorrowerInfoEntities = selectNifaBorrowerInfo(nifaBorrowInfoEntities);
         if (null != nifaBorrowerInfoEntities && nifaBorrowerInfoEntities.size() > 0) {
             // list类型转换
             List<Object> listBerIE = toObject(nifaBorrowerInfoEntities);
@@ -588,7 +584,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 if (re) {
                     sb.append(UPLOAD_PATH).append(CustomConstants.NIFA_BORROWER_INFO_TYPE).append(".txt,");
                     // 更新相应借款人信息
-                    updateBorrowerInfo(listQuery);
+                    updateBorrowerInfo(nifaBorrowInfoEntities);
                 } else {
                     result = false;
                     logger.info("【互金上传文件】:互联网债权类融资借款人信息导出TXT失败！");
@@ -599,7 +595,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 logger.error("【互金上传文件】统计二期标的信息生成txt失败！！");
             }
         } else {
-            logger.error("【互金上传文件】统计二期标获取投资人信息失败！！" + listQuery);
+            logger.error("【互金上传文件】统计二期标获取投资人信息失败！！" + nifaBorrowInfoEntities);
             return false;
         }
 
@@ -708,11 +704,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         }
 
         // --> 生成债转标的信息文件
-        List<String> listQuery = new ArrayList<>();
-        for (NifaCreditInfoVO nifaCreditInfoVO : nifaCreditInfoEntities) {
-            listQuery.add(nifaCreditInfoVO.getProjectNo());
-        }
-        List<NifaCreditTransferVO> nifaCreditTransferEntities = selectNifaCreditTransfer(listQuery);
+        List<NifaCreditTransferVO> nifaCreditTransferEntities = selectNifaCreditTransfer(nifaCreditInfoEntities);
         if (null != nifaCreditTransferEntities && nifaCreditTransferEntities.size() > 0) {
             // list类型转换
             List<Object> listCerIE = toObject(nifaCreditTransferEntities);
@@ -722,7 +714,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 re = createTxtFile(listCerIE, null, UPLOAD_PATH, CustomConstants.NIFA_CREDITER_INFO_TYPE, "|");
                 if (re) {
                     sbCredit.append(UPLOAD_PATH).append(CustomConstants.NIFA_CREDITER_INFO_TYPE).append(".txt,");
-                    updateCreditTransfer(listQuery);
+                    updateCreditTransfer(nifaCreditInfoEntities);
                 } else {
                     result = false;
                     logger.info("【互金上传文件】:审计二期债转债转标的承接人信息导出TXT失败！");
@@ -798,7 +790,6 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         if (!file.exists() && !file.isDirectory()) {
             file.mkdir();
         }
-
 
 
         String requestURL = DOWNLOAD_URL.concat("?systemid=1&stype=").concat(feedBackType)
@@ -963,7 +954,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             result = false;
         } finally {
             try {
-                if (csvWtriter != null){
+                if (csvWtriter != null) {
                     csvWtriter.close();
                 }
             } catch (IOException e) {
@@ -1323,9 +1314,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * @param listQuery
      * @return
      */
-    private List<NifaTenderInfoVO> selectNifaTenderInfo(List<String> listQuery) {
-        String url = baseMessageUrl + "selectNifaTenderInfo/" + listQuery;
-        NifaTenderInfoResponse response = this.baseClient.getExe(url, NifaTenderInfoResponse.class);
+    private List<NifaTenderInfoVO> selectNifaTenderInfo(List<NifaBorrowInfoVO> listQuery) {
+        String url = baseMessageUrl + "selectNifaTenderInfo";
+        NifaTenderInfoResponse response = this.baseClient.postExe(url, listQuery, NifaTenderInfoResponse.class);
         List<NifaTenderInfoVO> list = response.getResultList();
         if (null != list && list.size() > 0) {
             return list;
@@ -1338,9 +1329,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      *
      * @param listQuery
      */
-    private boolean updateTenderInfo(List<String> listQuery) {
-        String url = baseMessageUrl + "updateTenderInfo/" + listQuery;
-        BooleanResponse response = this.baseClient.getExe(url, BooleanResponse.class);
+    private boolean updateTenderInfo(List<NifaBorrowInfoVO> listQuery) {
+        String url = baseMessageUrl + "updateTenderInfo";
+        BooleanResponse response = this.baseClient.postExe(url,listQuery, BooleanResponse.class);
         return response.getResultBoolean();
     }
 
@@ -1350,9 +1341,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * @param listQuery
      * @return
      */
-    private List<NifaBorrowerInfoVO> selectNifaBorrowerInfo(List<String> listQuery) {
-        String url = baseMessageUrl + "selectNifaBorrowerInfo/" + listQuery;
-        NifaBorrowerInfoResponse response = this.baseClient.getExe(url, NifaBorrowerInfoResponse.class);
+    private List<NifaBorrowerInfoVO> selectNifaBorrowerInfo(List<NifaBorrowInfoVO> listQuery) {
+        String url = baseMessageUrl + "selectNifaBorrowerInfo";
+        NifaBorrowerInfoResponse response = this.baseClient.postExe(url,listQuery, NifaBorrowerInfoResponse.class);
         List<NifaBorrowerInfoVO> list = response.getResultList();
         if (null != list && list.size() > 0) {
             return list;
@@ -1365,9 +1356,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      *
      * @param listQuery
      */
-    private boolean updateBorrowerInfo(List<String> listQuery) {
-        String url = baseMessageUrl + "updateBorrowerInfo/" + listQuery;
-        BooleanResponse response = this.baseClient.getExe(url, BooleanResponse.class);
+    private boolean updateBorrowerInfo(List<NifaBorrowInfoVO> listQuery) {
+        String url = baseMessageUrl + "updateBorrowerInfo";
+        BooleanResponse response = this.baseClient.postExe(url,listQuery, BooleanResponse.class);
         return response.getResultBoolean();
     }
 
@@ -1404,9 +1395,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * @param listQuery
      * @return
      */
-    private List<NifaCreditTransferVO> selectNifaCreditTransfer(List<String> listQuery) {
-        String url = baseMessageUrl + "selectNifaCreditTransfer/" + listQuery;
-        NifaCreditTransferResponse response = this.baseClient.getExe(url, NifaCreditTransferResponse.class);
+    private List<NifaCreditTransferVO> selectNifaCreditTransfer(List<NifaCreditInfoVO> listQuery) {
+        String url = baseMessageUrl + "selectNifaCreditTransfer";
+        NifaCreditTransferResponse response = this.baseClient.postExe(url,listQuery, NifaCreditTransferResponse.class);
         List<NifaCreditTransferVO> list = response.getResultList();
         if (null != list && list.size() > 0) {
             return list;
@@ -1419,9 +1410,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      *
      * @param listQuery
      */
-    private boolean updateCreditTransfer(List<String> listQuery) {
-        String url = baseMessageUrl + "updateCreditTransfer/" + listQuery;
-        BooleanResponse response = this.baseClient.getExe(url, BooleanResponse.class);
+    private boolean updateCreditTransfer(List<NifaCreditInfoVO> listQuery) {
+        String url = baseMessageUrl + "updateCreditTransfer";
+        BooleanResponse response = this.baseClient.postExe(url,listQuery, BooleanResponse.class);
         return response.getResultBoolean();
     }
 
