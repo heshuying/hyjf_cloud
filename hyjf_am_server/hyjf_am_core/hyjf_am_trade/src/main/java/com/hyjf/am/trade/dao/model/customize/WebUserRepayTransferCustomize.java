@@ -22,7 +22,7 @@ public class WebUserRepayTransferCustomize implements Serializable {
     private String undertakerUserName;
 
     /** 承接日期 */
-    private Date assignOrderDate;
+    private String assignOrderDate;
     private String assignOrderDateStr;
 
     /** 承接金额 */
@@ -63,11 +63,11 @@ public class WebUserRepayTransferCustomize implements Serializable {
         this.undertakerUserName = undertakerUserName;
     }
 
-    public Date getAssignOrderDate() {
+    public String getAssignOrderDate() {
         return assignOrderDate;
     }
 
-    public void setAssignOrderDate(Date assignOrderDate) {
+    public void setAssignOrderDate(String assignOrderDate) {
         this.assignOrderDate = assignOrderDate;
     }
 
