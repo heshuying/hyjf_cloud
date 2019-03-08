@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.bean;
 
+import com.hyjf.cs.common.util.ApiSignUtil;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,6 +47,12 @@ public class AemsBankOpenEncryptPageRequestBean extends BaseBean {
      * 参数Map
      */
     private Map<String, String> paramMap = new LinkedHashMap<String, String>();
+    private String status;
+    public void setStatusForResponse(String status) {
+        this.status = status;
+        String chkvalue = ApiSignUtil.encryptByRSA(status);
+        setChkValue(chkvalue);
+    }
 
 
     public String getMobile() {
@@ -164,5 +172,13 @@ public class AemsBankOpenEncryptPageRequestBean extends BaseBean {
      */
     public String get(String key) {
         return paramMap.get(key);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -3,7 +3,6 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.admin.PlatformCountCustomizeMapper">
 
 	<sql id="And_Addtime">
-		<!-- ht_account_recharge ht_borrow_tender 都没有addtime字段 改成create_time wgx-->
 		<if test="timeStartSrch != null and timeStartSrch != ''">
 			<!-- 优化sql(字段类型转换) timestamp-->
 			AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
@@ -46,22 +45,72 @@
 		</where>
 	</sql>
 
+	<sql id="Where_add_time">
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				<!-- 优化sql(字段类型转换) timestamp-->
+				AND temp.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+			</if>
+		</where>
+	</sql>
+
 	<sql id="Select_Clause">
 		SELECT
-		tender_number.client source_name,
+		pn.source_name,
 		0 AS access_number,
-		tender_number.tender_number,
-		recharge_price.recharge_price,
+		IF(regist_number.regist_number IS null,0,regist_number.regist_number) AS regist_number,
+		IF(account_number.account_number IS null,0,account_number.account_number) AS account_number,
+		IF(tender_number.tender_number IS null,0,tender_number.tender_number) AS tender_number,
+		IF(recharge_price.recharge_price IS null,0,recharge_price.recharge_price) AS recharge_price,
 		IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount)
 		+ IF(hxf_tender_price.amount IS null,0,hxf_tender_price.amount)
 		+ IF(htl_tender_price.amount IS null,0,htl_tender_price.amount)
-		+ IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount) AS tender_price,
-		hzt_tender_price.amount AS hzt_tender_price,
-		hxf_tender_price.amount AS hxf_tender_price,
-		htl_tender_price.amount AS htl_tender_price,
-		htj_tender_price.amount AS htj_tender_price,
-		hjh_tender_price.amount AS hjh_tender_price
+		+ IF(htj_tender_price.amount IS NULL,0,htj_tender_price.amount)
+		+ IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount)
+		+ IF(hzr_tender_price.amount IS NULL,0,hzr_tender_price.amount) AS tender_price,
+		IF(hzt_tender_price.amount IS null,0, hzt_tender_price.amount) AS hzt_tender_price,
+		IF(hxf_tender_price.amount IS null,0,hxf_tender_price.amount) AS hxf_tender_price,
+		IF(htl_tender_price.amount IS null,0,htl_tender_price.amount) AS htl_tender_price,
+		IF(htj_tender_price.amount IS NULL,0,htj_tender_price.amount) AS htj_tender_price,
+		IF(hjh_tender_price.amount IS NULL,0,hjh_tender_price.amount) AS hjh_tender_price,
+		IF(hzr_tender_price.amount IS NULL,0,hzr_tender_price.amount) AS hzr_tender_price
 		FROM
+		(
+		SELECT DISTINCT
+		n.name_cd AS client,
+		n.`name` AS source_name
+		FROM
+		hyjf_config.ht_param_name n
+		WHERE
+		n.name_class = 'CLIENT'
+		) pn
+
+		LEFT JOIN
+		(
+		SELECT temp.reg_esb AS client, COUNT(temp.user_id) AS regist_number FROM hyjf_user.ht_user temp
+		<where>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND  temp.create_time <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND  temp.create_time <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+		</where>
+		GROUP BY temp.reg_esb
+		) regist_number ON pn.client = regist_number.client
+
+		LEFT JOIN
+		(
+		SELECT u.account_esb AS client, COUNT(temp.user_id) AS account_number FROM hyjf_user.ht_user u INNER JOIN hyjf_user.ht_bank_open_account temp ON temp.user_id = u.user_id
+		<include refid="Where_Invest_htj_time" />
+		GROUP BY u.account_esb
+		) account_number ON pn.client = account_number.client
+
+		LEFT JOIN
 		(
 		SELECT t.client AS client, COUNT(DISTINCT t.user_id) tender_number
 		FROM
@@ -76,7 +125,7 @@
 		<include refid="Where_Invest_htj_time" />
 		) t
 		GROUP BY t.client
-		) tender_number
+		) tender_number ON pn.client = tender_number.client
 
 		LEFT JOIN
 		(
@@ -128,22 +177,29 @@
 		SELECT accede.client, sum(hjhTen.assign_pay) sumAcount  FROM ht_hjh_accede accede
 		INNER  JOIN ht_hjh_debt_credit_tender hjhTen on accede.accede_order_id = hjhTen.assign_plan_order_id
 		<if test="timeStartSrch != null and timeStartSrch != ''">
-			<!-- 优化sql(字段类型转换) timestamp-->
-			AND hjhTen.create_time >= STR_TO_DATE(#{timeStartSrch},'%Y-%m-%d %H:%i:%s')
+			AND hjhTen.create_time <![CDATA[>=]]> #{timeStartSrch}
 		</if>
 		<if test="timeEndSrch != null and timeEndSrch != ''">
-			<!-- 优化sql(字段类型转换) timestamp-->
-			AND hjhTen.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{timeEndSrch},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+			AND hjhTen.create_time <![CDATA[<=]]> #{timeEndSrch}
 		</if>
 		GROUP BY accede.client
 		) ss
 		GROUP BY ss.client
 		) hjh_tender_price ON pn.client = hjh_tender_price.client
+		LEFT JOIN
+		(
+		<!-- 新增汇转让出借金额 20180817 add by yaoyong -->
+		SELECT temp.client AS client, sum(temp.assign_capital) amount FROM ht_credit_tender temp
+		<include refid="Where_add_time"/>
+		GROUP BY temp.client
+		)hzr_tender_price ON pn.client = hzr_tender_price.client
 	</sql>
 
 	<resultMap id="selectListMap" type="com.hyjf.am.trade.dao.model.customize.PlatformCountCustomize">
 		<result column="source_name" property="sourceName" jdbcType="VARCHAR" />
 		<result column="access_number" property="accessNumber" jdbcType="VARCHAR" />
+		<result column="regist_number" property="registNumber" jdbcType="VARCHAR" />
+		<result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
 		<result column="tender_number" property="tenderNumber" jdbcType="VARCHAR" />
 		<result column="recharge_price" property="rechargePrice" jdbcType="VARCHAR" />
 		<result column="tender_price" property="tenderPrice" jdbcType="VARCHAR" />
@@ -152,6 +208,7 @@
 		<result column="htl_tender_price" property="htlTenderPrice" jdbcType="VARCHAR" />
 		<result column="htj_tender_price" property="htjTenderPrice" jdbcType="VARCHAR" />
 		<result column="hjh_tender_price" property="hjhTenderPrice" jdbcType="VARCHAR" />
+		<result column="hzr_tender_price" property="hzrTenderPrice" jdbcType="VARCHAR" />
 	</resultMap>
 
 	<select id="selectList" resultMap="selectListMap" parameterType="com.hyjf.am.resquest.admin.PlatformCountRequest">
@@ -159,5 +216,16 @@
 		<if test="limitStart >= 0" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
+	</select>
+	<select id="selectRegistNumber"  resultMap="selectListMap" parameterType="com.hyjf.am.resquest.admin.PlatformCountRequest">
+	SELECT temp.reg_esb AS client, COUNT(temp.user_id) AS regist_number FROM ht_user temp
+	<where>
+		<if test="timeStartSrch != null and timeStartSrch != ''">
+			AND  temp.reg_time <![CDATA[>=]]> #{timeStartSrch}
+		</if>
+		<if test="timeEndSrch != null and timeEndSrch != ''">
+			AND temp.reg_time <![CDATA[<=]]> #{timeEndSrch}
+		</if>
+	</where>
 	</select>
 </mapper>
