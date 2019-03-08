@@ -2,6 +2,7 @@ package com.hyjf.am.vo.admin;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class BankMerchantAccountListCustomizeVO implements Serializable {
 
@@ -9,7 +10,7 @@ public class BankMerchantAccountListCustomizeVO implements Serializable {
 
     private Integer id;
     //交易日期
-    private String createTime;
+    private Date createTime;
     //流水号
     private String seqNo;
     //订单号
@@ -66,18 +67,13 @@ public class BankMerchantAccountListCustomizeVO implements Serializable {
     private String timeEndSrch;
 
 
-
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-
-
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
-
-
 
     public String getSeqNo() {
         return seqNo;
