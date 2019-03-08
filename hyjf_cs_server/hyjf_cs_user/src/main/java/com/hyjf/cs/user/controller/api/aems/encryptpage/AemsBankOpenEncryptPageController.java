@@ -96,7 +96,8 @@ public class AemsBankOpenEncryptPageController extends BaseUserController {
             paramMap.put("statusDesc", "用户重复开户");
             paramMap = getErrorMV(requestBean, modelAndView, AemsErrorCodeConstant.STATUS_CE000016, "用户重复开户",paramMap);
             paramMap.put("checkValue", ApiSignUtil.encryptByRSA(String.valueOf(paramMap.get("status"))));
-            modelAndView.addObject("callBackForm",modelAndView);
+            logger.info("AEMS系统请求页面开户用户重复开户,paramMap" + JSONObject.toJSONString(paramMap));
+            modelAndView.addObject("callBackForm",paramMap);
             return modelAndView;
         }
 
