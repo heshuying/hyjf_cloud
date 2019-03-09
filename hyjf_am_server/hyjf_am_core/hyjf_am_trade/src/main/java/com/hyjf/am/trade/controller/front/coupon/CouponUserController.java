@@ -33,10 +33,10 @@ public class CouponUserController extends BaseController {
     @Autowired
     private CouponUserService couponUserService;
 
-    @RequestMapping("/selectCouponUser/{nowBeginDate}/{nowEndDate}")
-    public CouponUserResponse selectCouponUser(@PathVariable int nowBeginDate, @PathVariable int nowEndDate) {
+    @RequestMapping("/selectCouponUser/{nowBeginDate}/{nowEndDate}/{type}")
+    public CouponUserResponse selectCouponUser(@PathVariable int nowBeginDate, @PathVariable int nowEndDate, @PathVariable int type) {
         CouponUserResponse response = new CouponUserResponse();
-        List<CouponUser> couponUserList = couponUserService.selectCouponUser(nowBeginDate, nowEndDate);
+        List<CouponUser> couponUserList = couponUserService.selectCouponUser(nowBeginDate, nowEndDate,type);
         if (!CollectionUtils.isEmpty(couponUserList)) {
             List<CouponUserVO> couponUserVOList = CommonUtils.convertBeanList(couponUserList, CouponUserVO.class);
             response.setResultList(couponUserVOList);

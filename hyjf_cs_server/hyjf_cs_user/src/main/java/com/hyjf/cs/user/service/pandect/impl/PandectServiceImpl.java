@@ -8,6 +8,7 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmDataCollectClient;
@@ -59,7 +60,8 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+        //String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(ClientConstants.APP_CLIENT));
         if(StringUtils.isNotEmpty(user.getIconUrl())){
             user.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
         }

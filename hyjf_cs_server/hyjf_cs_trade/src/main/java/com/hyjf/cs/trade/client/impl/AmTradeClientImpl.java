@@ -5149,8 +5149,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         return result;
     }
     @Override
-    public List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate) {
-        CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/selectCouponUser/" + nowBeginDate + "/" + nowEndDate, CouponUserResponse.class).getBody();
+    public List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate,Integer type) {
+        CouponUserResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponUser/selectCouponUser/" + nowBeginDate + "/" + nowEndDate+ "/" + type, CouponUserResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
