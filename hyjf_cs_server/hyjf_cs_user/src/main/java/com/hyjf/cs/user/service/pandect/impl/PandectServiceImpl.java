@@ -59,7 +59,7 @@ public class PandectServiceImpl extends BaseUserServiceImpl implements PandectSe
         String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
         imghost = imghost.substring(0, imghost.length() - 1);
         // 实际物理路径前缀2
-        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+        String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getAppFileUpload());
         if(StringUtils.isNotEmpty(user.getIconUrl())){
             user.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
         }
