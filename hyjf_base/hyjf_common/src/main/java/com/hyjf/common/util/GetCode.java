@@ -135,7 +135,7 @@ public class GetCode {
   //随机密码生成
   	public static String makeRandomPassword(int len){
 
-  		char charr[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890[_`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]".toCharArray();
+  		char charr[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray();
   		StringBuilder sb = new StringBuilder();
   		Random r = new Random();
   		for (int x = 0; x < len; ++x) {
