@@ -18,8 +18,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,37 +49,52 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 
 	@Override
 	public Integer countRecordTotal(HjhLabelRequest request) {
-		List<HjhLabel> list = null;
-		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		HjhLabelExample example = new HjhLabelExample();
-		HjhLabelExample.Criteria crt = example.createCriteria();
+//		List<HjhLabel> list = null;
+//		SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		HjhLabelExample example = new HjhLabelExample();
+//		HjhLabelExample.Criteria crt = example.createCriteria();
+
+		Map<String, Object> paraMap = new HashMap<String, Object>();
+
         // 标签名称搜索
         if (StringUtils.isNotEmpty(request.getLabelNameSrch())) {
-        	crt.andLabelNameLike("%" + request.getLabelNameSrch() + "%");
+        	//crt.andLabelNameLike("%" + request.getLabelNameSrch() + "%");
+			paraMap.put("labelNameSrch",request.getLabelNameSrch());
         }
+
+		//智投编号搜索
+		if (StringUtils.isNotEmpty(request.getPlanNidSrch())){
+			paraMap.put("planNidSrch",request.getPlanNidSrch());
+		}
+
         // 资产来源
         if (StringUtils.isNotEmpty(request.getInstCodeSrch())) {
-        	crt.andInstCodeEqualTo(request.getInstCodeSrch());
+        	//crt.andInstCodeEqualTo(request.getInstCodeSrch());
+			paraMap.put("instCodeSrch",request.getInstCodeSrch());
         }
         // 产品类型
         if (StringUtils.isNotEmpty(request.getAssetTypeSrch())) {
-        	crt.andAssetTypeEqualTo(Integer.valueOf(request.getAssetTypeSrch()));
+//        	crt.andAssetTypeEqualTo(Integer.valueOf(request.getAssetTypeSrch()));
+			paraMap.put("assetTypeSrch",request.getAssetTypeSrch());
         }
         //项目类型  
         if (StringUtils.isNotEmpty(request.getProjectTypeSrch())) {
-        	crt.andProjectTypeEqualTo(Integer.valueOf(request.getProjectTypeSrch()));
+//        	crt.andProjectTypeEqualTo(Integer.valueOf(request.getProjectTypeSrch()));
+			paraMap.put("projectTypeSrch",request.getProjectTypeSrch());
         }
         // 还款方式
         if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())) {
-        	crt.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
+//        	crt.andBorrowStyleEqualTo(request.getBorrowStyleSrch());
+			paraMap.put("borrowStyleSrch",request.getBorrowStyleSrch());
         }
         // 标签状态
         if (StringUtils.isNotEmpty(request.getLabelStateSrch())) {
-        	crt.andLabelStateEqualTo(Integer.valueOf(request.getLabelStateSrch()));
+//        	crt.andLabelStateEqualTo(Integer.valueOf(request.getLabelStateSrch()));
+			paraMap.put("labelStateSrch",request.getLabelStateSrch());
         }
         // 使用状态(DB中已经没有 isEngine 字段了)
 
-        if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch()) && StringUtils.isNotEmpty(request.getCreateTimeEndSrch())) {
+        /*if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch()) && StringUtils.isNotEmpty(request.getCreateTimeEndSrch())) {
             String strStart = request.getCreateTimeStartSrch() + " 00:00:00";
             String strEnd = request.getCreateTimeEndSrch() + " 23:59:59";
             try {
@@ -92,10 +105,17 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 			} catch (ParseException e) {
 				logger.error(e.getMessage());
 			}
-        }
-        
+        }*/
+
+		if (StringUtils.isNotEmpty(request.getCreateTimeStartSrch())) {
+			paraMap.put("createTimeStartSrch",request.getCreateTimeStartSrch());
+		}
+		if(StringUtils.isNotEmpty(request.getCreateTimeEndSrch())){
+			paraMap.put("createTimeEndSrch",request.getCreateTimeEndSrch());
+		}
+
         // 添加更新时间
-        if (StringUtils.isNotEmpty(request.getUpdateTimeStartSrch()) && StringUtils.isNotEmpty(request.getUpdateTimeEndSrch())) {
+       /*if (StringUtils.isNotEmpty(request.getUpdateTimeStartSrch()) && StringUtils.isNotEmpty(request.getUpdateTimeEndSrch())) {
             String strStart = request.getUpdateTimeStartSrch() + " 00:00:00";
             String strEnd = request.getUpdateTimeEndSrch() + " 23:59:59";
             try {
@@ -106,12 +126,20 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 			} catch (ParseException e) {
 				logger.error(e.getMessage());
 			}
-        }
-        
+        }*/
+		if (StringUtils.isNotEmpty(request.getUpdateTimeStartSrch())) {
+			paraMap.put("updateTimeStartSrch",request.getUpdateTimeStartSrch());
+		}
+		if(StringUtils.isNotEmpty(request.getUpdateTimeEndSrch())){
+			paraMap.put("updateTimeEndSrch",request.getUpdateTimeEndSrch());
+		}
+
 		// 传入排序
-		example.setOrderByClause("create_time Desc");
-        list = hjhLabelMapper.selectByExample(example);
-		return list.size();
+		//example.setOrderByClause("create_time Desc");
+        //list = hjhLabelMapper.selectByExample(example);
+		int count = adminHjhLabelCustomizeMapper.getAdminHjhLabelCount(paraMap);
+//		return list.size();
+		return count;
 	}
 
 	@Override

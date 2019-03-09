@@ -507,7 +507,7 @@ public class RepayManageController extends BaseController {
                 re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
                 re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
                 re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
-                re.setAssignOrderDateStr(GetDateUtils.formatDate(re.getAssignOrderDate()));
+                re.setAssignOrderDateStr(re.getAssignOrderDate());
             }
         }
 

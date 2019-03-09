@@ -35,7 +35,7 @@ public class HjhReInvestDebtRequest extends BasePage implements Serializable {
     private String borrowNidSrch;
 
     @ApiModelProperty(value = "承接方式")
-    private int assignTypeSrch;
+    private String assignTypeSrch;
 
     @ApiModelProperty(value = "还款方式")
     private String borrowStyleSrch;
@@ -119,11 +119,11 @@ public class HjhReInvestDebtRequest extends BasePage implements Serializable {
         this.borrowNidSrch = borrowNidSrch;
     }
 
-    public int getAssignTypeSrch() {
+    public String getAssignTypeSrch() {
         return assignTypeSrch;
     }
 
-    public void setAssignTypeSrch(int assignTypeSrch) {
+    public void setAssignTypeSrch(String assignTypeSrch) {
         this.assignTypeSrch = assignTypeSrch;
     }
 

@@ -81,7 +81,11 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
         // modify  by liubin 原交易时间 补全6位 start
         bean.setOrgTxTime(String.format("%06d", txTime));// 原交易时间
         // modify  by liubin 原交易时间 补全6位 end
-        bean.setOrgSeqNo(String.valueOf(seqNo));// 原交易流水号
+
+        // modify by jijun 原交易流水号 补全6位 start
+        bean.setOrgSeqNo(String.format("%06d",seqNo));// 原交易流水号
+        // modify by jijun 原交易流水号 补全6位 end
+
         bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());

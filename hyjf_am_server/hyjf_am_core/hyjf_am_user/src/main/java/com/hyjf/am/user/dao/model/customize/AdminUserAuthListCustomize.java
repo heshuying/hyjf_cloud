@@ -90,6 +90,11 @@ public class AdminUserAuthListCustomize {
 	private String autoCreditEndTime;
 
 	/**
+	 * 自动债转授权订单号
+	 */
+	private String autoCreditOrderId;
+
+	/**
 	 * 构造方法不带参数
 	 */
 	public AdminUserAuthListCustomize() {
@@ -253,6 +258,14 @@ public class AdminUserAuthListCustomize {
 
 	public void setAutoCreditEndTime(String autoCreditEndTime) {
 		this.autoCreditEndTime = autoCreditEndTime;
+	}
+
+	public String getAutoCreditOrderId() {
+		return autoCreditOrderId;
+	}
+
+	public void setAutoCreditOrderId(String autoCreditOrderId) {
+		this.autoCreditOrderId = autoCreditOrderId;
 	}
 }
 

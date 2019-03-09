@@ -26,4 +26,11 @@ public interface AdminHjhLabelCustomizeMapper {
 	 * @return
 	 */
 	List<AdminHjhLabelCustomize> selectHjhLabelList(Map<String, Object> paraMap);
+
+	/**
+	 * 获取count
+	 * @param paraMap
+	 * @return
+	 */
+	int getAdminHjhLabelCount(Map<String,Object> paraMap);
 }

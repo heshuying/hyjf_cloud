@@ -90,6 +90,12 @@ public class AdminUserAuthListCustomize {
 	 * 自动债转单笔最大金额
 	 */
 	private String creditMaxAmt;
+
+	/**
+	 * 自动债转授权订单号
+	 */
+	private String autoCreditOrderId;
+
 	/**
 	 * 构造方法不带参数
 	 */
@@ -262,6 +268,14 @@ public class AdminUserAuthListCustomize {
 
 	public void setCreditMaxAmt(String creditMaxAmt) {
 		this.creditMaxAmt = creditMaxAmt;
+	}
+
+	public String getAutoCreditOrderId() {
+		return autoCreditOrderId;
+	}
+
+	public void setAutoCreditOrderId(String autoCreditOrderId) {
+		this.autoCreditOrderId = autoCreditOrderId;
 	}
 }
 
