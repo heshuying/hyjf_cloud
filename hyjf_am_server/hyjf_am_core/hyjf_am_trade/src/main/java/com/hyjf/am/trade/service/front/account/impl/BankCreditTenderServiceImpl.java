@@ -1432,13 +1432,18 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 							BigDecimal creditDiscount = new BigDecimal(1).subtract(borrowCredit.getCreditDiscount().divide(new BigDecimal(100)));
 							BigDecimal sum = sellerCapitalWait.multiply(creditDiscount).add(sellerInterestAdvanceWait);
 							logger.info("sum:{}   creditDiscount{}   balance{}",sum,creditDiscount,creditDiscount);
-							BigDecimal max = sellerCapitalWait.multiply(balance).divide(sum, 8, RoundingMode.DOWN);
-							if (max.compareTo(sellerCapitalWait) > 0) {
+							if(sum.compareTo(BigDecimal.ZERO)==0){
 								// 全投金额
 								tenderToCreditAssign.setAssignCapitalMax((String.valueOf(sellerCapitalWait.intValue())));
-							} else {
-								// 全投金额
-								tenderToCreditAssign.setAssignCapitalMax(String.valueOf(max.intValue()));
+							}else{
+								BigDecimal max = sellerCapitalWait.multiply(balance).divide(sum, 8, RoundingMode.DOWN);
+								if (max.compareTo(sellerCapitalWait) > 0) {
+									// 全投金额
+									tenderToCreditAssign.setAssignCapitalMax((String.valueOf(sellerCapitalWait.intValue())));
+								} else {
+									// 全投金额
+									tenderToCreditAssign.setAssignCapitalMax(String.valueOf(max.intValue()));
+								}
 							}
 						}
 					}

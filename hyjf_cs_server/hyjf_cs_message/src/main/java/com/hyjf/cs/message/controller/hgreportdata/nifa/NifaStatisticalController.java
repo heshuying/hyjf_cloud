@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -183,13 +184,17 @@ public class NifaStatisticalController extends BaseController {
     /**
      * 查询相应标的的投资人信息
      *
-     * @param projectNo
+     * @param nifaBorrowInfoVOList
      * @return
      */
-    @GetMapping("/selectNifaTenderInfo/{projectNo}")
-    public NifaTenderInfoResponse selectNifaTenderInfo(@PathVariable List<String> projectNo) {
+    @GetMapping("/selectNifaTenderInfo")
+    public NifaTenderInfoResponse selectNifaTenderInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         NifaTenderInfoResponse response = new NifaTenderInfoResponse();
-        List<NifaTenderInfoEntity> list = nifaStatisticalService.selectNifaTenderInfo(projectNo);
+        List<String> listQuery = new ArrayList<>();
+        for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
+            listQuery.add(nifaBorrowInfoVO.getProjectNo());
+        }
+        List<NifaTenderInfoEntity> list = nifaStatisticalService.selectNifaTenderInfo(listQuery);
         if (null != list && list.size()>0) {
             List<NifaTenderInfoVO> result = CommonUtils.convertBeanList(list, NifaTenderInfoVO.class);
             response.setResultList(result);
@@ -202,22 +207,32 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateTenderInfo/{projectNo}")
-    public BooleanResponse updateTenderInfo(@PathVariable List<String> projectNo) {
-        nifaStatisticalService.updateTenderInfo(projectNo);
+    @GetMapping("/updateTenderInfo")
+    public BooleanResponse updateTenderInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
+        List<String> listQuery = new ArrayList<>();
+        for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
+            listQuery.add(nifaBorrowInfoVO.getProjectNo());
+        }
+
+        nifaStatisticalService.updateTenderInfo(listQuery);
         return new BooleanResponse(true);
     }
 
     /**
      * 拉取相应借款人信息
      *
-     * @param projectNo
+     * @param nifaBorrowInfoVOList
      * @return
      */
-    @GetMapping("/selectNifaBorrowerInfo/{projectNo}")
-    public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@PathVariable List<String> projectNo) {
+    @GetMapping("/selectNifaBorrowerInfo")
+    public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@RequestBody @Valid  List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         NifaBorrowerInfoResponse response = new NifaBorrowerInfoResponse();
-        List<NifaBorrowerInfoEntity> list = nifaStatisticalService.selectNifaBorrowerInfo(projectNo);
+        List<String> listQuery = new ArrayList<>();
+        for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
+            listQuery.add(nifaBorrowInfoVO.getProjectNo());
+        }
+
+        List<NifaBorrowerInfoEntity> list = nifaStatisticalService.selectNifaBorrowerInfo(listQuery);
         if (null != list && list.size()>0) {
             List<NifaBorrowerInfoVO> result = CommonUtils.convertBeanList(list, NifaBorrowerInfoVO.class);
             response.setResultList(result);
@@ -230,9 +245,13 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateBorrowerInfo/{projectNo}")
-    public BooleanResponse updateBorrowerInfo(@PathVariable List<String> projectNo) {
-        nifaStatisticalService.updateBorrowerInfo(projectNo);
+    @GetMapping("/updateBorrowerInfo")
+    public BooleanResponse updateBorrowerInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
+        List<String> listQuery = new ArrayList<>();
+        for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
+            listQuery.add(nifaBorrowInfoVO.getProjectNo());
+        }
+        nifaStatisticalService.updateBorrowerInfo(listQuery);
         return new BooleanResponse(true);
     }
 
@@ -268,13 +287,17 @@ public class NifaStatisticalController extends BaseController {
     /**
      * 查询未上送的债转承接人信息
      *
-     * @param projectNo
+     * @param nifaCreditInfoEntities
      * @return
      */
-    @GetMapping("/selectNifaCreditTransfer/{projectNo}")
-    public NifaCreditTransferResponse selectNifaCreditTransfer(@PathVariable List<String> projectNo) {
+    @GetMapping("/selectNifaCreditTransfer")
+    public NifaCreditTransferResponse selectNifaCreditTransfer(@RequestBody @Valid List<NifaCreditInfoVO> nifaCreditInfoEntities) {
         NifaCreditTransferResponse response = new NifaCreditTransferResponse();
-        List<NifaCreditTransferEntity> list = nifaStatisticalService.selectNifaCreditTransfer(projectNo);
+        List<String> listQuery = new ArrayList<>();
+        for (NifaCreditInfoVO nifaCreditInfoVO : nifaCreditInfoEntities) {
+            listQuery.add(nifaCreditInfoVO.getProjectNo());
+        }
+        List<NifaCreditTransferEntity> list = nifaStatisticalService.selectNifaCreditTransfer(listQuery);
         if (null != list && list.size()>0) {
             List<NifaCreditTransferVO> result = CommonUtils.convertBeanList(list, NifaCreditTransferVO.class);
             response.setResultList(result);
@@ -287,9 +310,13 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateCreditTransfer/{projectNo}")
-    public BooleanResponse updateCreditTransfer(@PathVariable List<String> projectNo) {
-        nifaStatisticalService.updateCreditTransfer(projectNo);
+    @GetMapping("/updateCreditTransfer")
+    public BooleanResponse updateCreditTransfer(@RequestBody @Valid List<NifaCreditInfoVO> nifaCreditInfoEntities) {
+        List<String> listQuery = new ArrayList<>();
+        for (NifaCreditInfoVO nifaCreditInfoVO : nifaCreditInfoEntities) {
+            listQuery.add(nifaCreditInfoVO.getProjectNo());
+        }
+        nifaStatisticalService.updateCreditTransfer(listQuery);
         return new BooleanResponse(true);
     }
 }
