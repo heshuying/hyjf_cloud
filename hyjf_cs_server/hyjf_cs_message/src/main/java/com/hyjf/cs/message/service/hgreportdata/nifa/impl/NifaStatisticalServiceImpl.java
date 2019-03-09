@@ -319,7 +319,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         query.addCriteria(criteria);
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
-        nifaBorrowInfoDao.update(query, update);
+        nifaCreditInfoDao.update(query, update);
     }
 
     /**
