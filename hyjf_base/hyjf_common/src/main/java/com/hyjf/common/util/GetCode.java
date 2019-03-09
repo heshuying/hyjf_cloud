@@ -123,10 +123,10 @@ public class GetCode {
     //获取含数字、字母、字符中的最少两种指定位数的字符串
    	public static String getRandomPassword(int len) {
    		String result = null;
-   		String regEx = "[_`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+//   		String regEx = "[_`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
    		while(true){
    			result = makeRandomPassword(len);
-   			if (!result.matches("[0-9]{1,}")&&!result.matches("[a-zA-Z]")&&!result.matches(regEx)) {
+   			if (!result.matches("[0-9]{1,}")&&!result.matches("[a-zA-Z]")) {
    				return result;
    			} 
    			result = makeRandomPassword(len);
