@@ -192,6 +192,8 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 nifaReportLogVO.setUploadName(contractTemplateFileName);
                 // 上传文件路径
                 nifaReportLogVO.setUploadPath(uploadPath);
+                // 数据日期
+                nifaReportLogVO.setHistoryDate(beforDay);
                 nifaReportLogVO.setCreateTime(new Date());
                 nifaReportLogVO.setCreateUserId(3);
                 // 更新放到原子层
@@ -308,6 +310,8 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
                 nifaReportLog.setUploadName(businessDataFileName);
                 // 上传文件路径
                 nifaReportLog.setUploadPath(uploadPath);
+                // 数据日期
+                nifaReportLog.setHistoryDate(beforDay);
                 nifaReportLog.setCreateTime(new Date());
                 nifaReportLog.setCreateUserId(3);
                 if (!insertNifaReportLog(nifaReportLog)) {
