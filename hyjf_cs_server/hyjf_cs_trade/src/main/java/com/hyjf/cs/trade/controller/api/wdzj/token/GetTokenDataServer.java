@@ -30,7 +30,7 @@ public class GetTokenDataServer extends BaseTradeController {
     SystemConfig systemConfig;
 
     @ApiOperation(value = "token值获取", notes = "token值获取")
-    @PostMapping(value = "/getToken")
+    @RequestMapping(value = "/getToken")
     public JSONObject getToken(HttpServletRequest request, HttpServletResponse response) {
         JSONObject result;
         String usernameRight = systemConfig.getUserNameWDZJ();
