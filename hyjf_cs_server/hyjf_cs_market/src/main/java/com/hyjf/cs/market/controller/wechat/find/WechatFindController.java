@@ -10,7 +10,9 @@ import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +33,9 @@ import java.util.Map;
 public class WechatFindController extends BaseMarketController {
     @Autowired
     private AppFindService appFindService;
+
+    @Value("${hyjf.app.host}")
+    public String appHost;
 
     @ApiOperation(value = "根据类型获取文章", notes = "根据类型获取文章")
     @GetMapping("/contentArticle/getContentArticleListByType.do")
@@ -66,9 +71,22 @@ public class WechatFindController extends BaseMarketController {
                 List<ContentArticleCustomizeVO> list=appFindService.getContentArticleListByType(params);
 
                 if (!CollectionUtils.isEmpty(list)) {
+
+                    // todo 上面的方法用错了，原子层不具有通用新，拼接的host是app独有的，应该拿出来在调用者添加  临时代码，需要优化
+                    List<ContentArticleCustomizeVO> targetList = new ArrayList<>(list.size());
+                    ContentArticleCustomizeVO entity = null;
+                    for(ContentArticleCustomizeVO vo: list){
+                        entity = new ContentArticleCustomizeVO();
+                        BeanUtils.copyProperties(vo,entity);
+                        entity.setMessageUrl(vo.getMessageUrl().replace(appHost,""));
+                        entity.setShareUrl(vo.getShareUrl().replace(appHost,""));
+                        targetList.add(entity);
+                    }
+
+
                     ret.put("messageCount", count);
-                    ret.put("messageList", list);
-                    if (list.size() == (pageSize+1)) {
+                    ret.put("messageList", targetList);
+                    if (targetList.size() == (pageSize+1)) {
                         // 0:不是组后一页
                         ret.put("endPage", 0);
                     }

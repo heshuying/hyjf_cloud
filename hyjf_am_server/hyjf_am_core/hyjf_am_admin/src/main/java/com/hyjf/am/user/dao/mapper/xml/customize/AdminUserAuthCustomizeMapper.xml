@@ -160,7 +160,7 @@
     FROM
     ht_hjh_user_auth hydua
     LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydua.user_id
-    LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.user_id
+    LEFT JOIN ht_user hydur ON hydur.user_id = hydsu.spreads_user_id
     <include refid="Where_Clause" />
   </select>
 
