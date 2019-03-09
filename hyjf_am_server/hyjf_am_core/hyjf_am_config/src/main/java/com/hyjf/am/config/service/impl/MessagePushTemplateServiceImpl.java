@@ -44,6 +44,8 @@ public class MessagePushTemplateServiceImpl implements MessagePushTemplateServic
 				messagePushTemplate = messagePushTemplateList.get(0);
 				RedisUtils.setObjEx(RedisConstants.MESSAGE_PUSH_TEMPLATE, messagePushTemplate, 24 * 60 * 60);
 				return messagePushTemplate;
+			}else{
+				return null;
 			}
 		}
 		return messagePushTemplate;
