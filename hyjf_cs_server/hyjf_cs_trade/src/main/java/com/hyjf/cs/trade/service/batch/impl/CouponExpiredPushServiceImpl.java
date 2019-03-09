@@ -51,7 +51,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
         int yestodayEndDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf));
 
         // 取得体验金出借（无真实出借）的还款列表
-        List<CouponUserVO> couponUsers = couponUserClient.selectCouponUser(nowBeginDate, nowEndDate);
+        List<CouponUserVO> couponUsers = couponUserClient.selectCouponUser(nowBeginDate, nowEndDate,1);
 
         if (!CollectionUtils.isEmpty(couponUsers)) {
             for (CouponUserVO cUser : couponUsers) {
@@ -81,7 +81,7 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
             }
         }
 
-        List<CouponUserVO> couponUsersExp = couponUserClient.selectCouponUser(yestodayBeginDate, yestodayEndDate);
+        List<CouponUserVO> couponUsersExp = couponUserClient.selectCouponUser(yestodayBeginDate, yestodayEndDate,2);
         if (!CollectionUtils.isEmpty(couponUsersExp)) {
             for (CouponUserVO cUser : couponUsersExp) {
                 CouponConfigVO config = couponUserClient.selectCouponConfig(cUser.getCouponCode());
