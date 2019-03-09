@@ -2215,7 +2215,7 @@ public interface AmTradeClient {
 
 	List<BorrowCreditVO> selectBorrowCreditList();
 
-	List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate);
+	List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate,Integer type);
 
 	List<BatchCouponTimeoutCommonCustomizeVO> selectCouponQuota(int threeBeginDate, int threeEndDate);
 

@@ -187,7 +187,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaBorrowInfoVOList
      * @return
      */
-    @GetMapping("/selectNifaTenderInfo")
+    @PostMapping("/selectNifaTenderInfo")
     public NifaTenderInfoResponse selectNifaTenderInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         NifaTenderInfoResponse response = new NifaTenderInfoResponse();
         List<String> listQuery = new ArrayList<>();
@@ -207,7 +207,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateTenderInfo")
+    @PostMapping("/updateTenderInfo")
     public BooleanResponse updateTenderInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         List<String> listQuery = new ArrayList<>();
         for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
@@ -224,7 +224,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaBorrowInfoVOList
      * @return
      */
-    @GetMapping("/selectNifaBorrowerInfo")
+    @PostMapping("/selectNifaBorrowerInfo")
     public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@RequestBody @Valid  List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         NifaBorrowerInfoResponse response = new NifaBorrowerInfoResponse();
         List<String> listQuery = new ArrayList<>();
@@ -245,7 +245,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateBorrowerInfo")
+    @PostMapping("/updateBorrowerInfo")
     public BooleanResponse updateBorrowerInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         List<String> listQuery = new ArrayList<>();
         for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
@@ -290,7 +290,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaCreditInfoEntities
      * @return
      */
-    @GetMapping("/selectNifaCreditTransfer")
+    @PostMapping("/selectNifaCreditTransfer")
     public NifaCreditTransferResponse selectNifaCreditTransfer(@RequestBody @Valid List<NifaCreditInfoVO> nifaCreditInfoEntities) {
         NifaCreditTransferResponse response = new NifaCreditTransferResponse();
         List<String> listQuery = new ArrayList<>();
@@ -310,7 +310,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateCreditTransfer")
+    @PostMapping("/updateCreditTransfer")
     public BooleanResponse updateCreditTransfer(@RequestBody @Valid List<NifaCreditInfoVO> nifaCreditInfoEntities) {
         List<String> listQuery = new ArrayList<>();
         for (NifaCreditInfoVO nifaCreditInfoVO : nifaCreditInfoEntities) {
