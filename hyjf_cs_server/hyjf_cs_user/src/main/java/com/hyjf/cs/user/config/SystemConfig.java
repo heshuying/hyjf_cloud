@@ -66,7 +66,7 @@ public class SystemConfig {
      */
     public String getFilePrefixUrl() {
         String host = UploadFileUtils.getDoPath(this.getFileDomainUrl());
-        String fileUploadRealPath = UploadFileUtils.getDoPath(this.getFileUpload());
+        String fileUploadRealPath = UploadFileUtils.getDoPath(this.getAppFileUpload());
         return host + fileUploadRealPath;
     }
 
