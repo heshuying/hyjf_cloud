@@ -125,7 +125,7 @@ public class SmsHandler {
 				logger.error("捕捉短信发送异常， 避免影响记录保存...", e);
 			}
 
-			logger.info("短信发送结果: {}", result);
+			logger.debug("短信发送结果: {}", result);
 			if (StringUtils.isBlank(result)) {
 				logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(paramMap));
 				return 0;
