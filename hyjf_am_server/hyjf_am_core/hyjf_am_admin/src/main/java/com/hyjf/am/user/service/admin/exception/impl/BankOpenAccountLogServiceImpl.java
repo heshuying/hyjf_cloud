@@ -331,14 +331,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         }
 
         // 开户更新开户渠道统计开户时间
-        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-        if (appUtmReg != null) {
-            User appUtmRegUser =  new User();
-            //BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
-            BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
-            appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-            userService.updateUser(appUtmRegUser);
-        }
+//        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+//        if (appUtmReg != null) {
+//            User appUtmRegUser =  new User();
+//            BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
+//            BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
+//            appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
+//            userService.updateUser(appUtmRegUser);
+//        }
         // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
         // 加入到消息队列
         Map<String, String> params = new HashMap<String, String>();
