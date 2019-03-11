@@ -1738,21 +1738,24 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             params2.put("limitEnd", page.getLimit());
             //HjhAccedeListResponse res = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL, params, HjhAccedeListResponse.class);
             HjhAccedeListResponse res = cacheService.getPlanAccedeList(params2);
-            List<HjhAccedeCustomizeVO> list = res.getResultList();
+            List<HjhAccedeCustomizeVO> listTemp = res.getResultList();
+            List<HjhAccedeCustomizeVO> resultList = new ArrayList<>();
             // 查询redis，转化client属性，
-            if (!CollectionUtils.isEmpty(list)) {
+            if (!CollectionUtils.isEmpty(listTemp)) {
+                for (HjhAccedeCustomizeVO voTemp : listTemp){
+                    resultList.add(CommonUtils.convertBean(voTemp,HjhAccedeCustomizeVO.class));
+                }
                 Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
                 if (!CollectionUtils.isEmpty(map)){
-                    for (HjhAccedeCustomizeVO votemp : list){
-                        HjhAccedeCustomizeVO vo = CommonUtils.convertBean(votemp,HjhAccedeCustomizeVO.class);
+                    for (HjhAccedeCustomizeVO vo : resultList){
                         if (StringUtils.isNotBlank(vo.getClient())){
                             vo.setClient(map.get(vo.getClient()));
                         }
                     }
                 }
             }
-            CommonUtils.convertNullToEmptyString(list);
-            info.put("planAccedeList", list);
+            CommonUtils.convertNullToEmptyString(resultList);
+            info.put("planAccedeList", resultList);
         }
 
         info.put("accedeTimes", count);
