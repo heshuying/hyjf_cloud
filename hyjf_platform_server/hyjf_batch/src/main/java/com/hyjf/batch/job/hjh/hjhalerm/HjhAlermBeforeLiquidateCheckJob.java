@@ -20,8 +20,8 @@ public class HjhAlermBeforeLiquidateCheckJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("HjhAlermBeforeLiquidateCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        Boolean result = restTemplate.getForEntity(
-                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck", Boolean.class).getBody();
+        restTemplate.getForEntity(
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck", null);
 
         logger.info("HjhAlermBeforeLiquidateCheckJob execute end...");
     }
