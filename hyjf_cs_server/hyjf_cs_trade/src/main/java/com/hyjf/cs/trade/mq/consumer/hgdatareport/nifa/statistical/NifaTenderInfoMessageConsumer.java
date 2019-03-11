@@ -127,7 +127,8 @@ public class NifaTenderInfoMessageConsumer implements RocketMQListener<MessageEx
             // 取江西银行绑定的银行卡信息
             BankCardVO bankCard = this.nifaTenderInfoMessageService.selectBankCardByUserId(borrow.getUserId());
             if (null == bankCard || StringUtils.isBlank(bankCard.getBank())) {
-                throw new Exception(logHeader + "未获取到借款人的相关银行卡信息！！borrowNid:" + borrowNid);
+                bankCard = new BankCardVO();
+                bankCard.setBank("工商银行");
             }
 
             // 查询到符合条件的数据上报状态变成1、数据重新做成

@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.batch.HjhAlarmCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,8 @@ public class HjhAlarmCheckServiceImpl implements HjhAlarmCheckService {
      * @return
      */
     @Override
-    public void alermBeforeLiquidateCheck(){
-        amTradeClient.alermBeforeLiquidateCheck();
+    public Boolean alermBeforeLiquidateCheck(){
+       return amTradeClient.alermBeforeLiquidateCheck();
     }
 
     /**
