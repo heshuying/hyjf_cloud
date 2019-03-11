@@ -90,16 +90,17 @@ public class CacheServiceImpl implements CacheService {
     }
 
     @Override
-    @Cached(name="planBorrowListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @Cached(name="planAccedeCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 20, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public HjhAccedeResponse getPlanAccedeCount(Map<String, Object> params) {
-
         String url = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeCount";
         HjhAccedeResponse response = baseClient.postExe(url, params, HjhAccedeResponse.class);
         return response;
     }
 
     @Override
+    @Cached(name="planAccedeListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 20, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public HjhAccedeListResponse getPlanAccedeList(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeList";
         HjhAccedeListResponse response = baseClient.postExe(url, params, HjhAccedeListResponse.class);
