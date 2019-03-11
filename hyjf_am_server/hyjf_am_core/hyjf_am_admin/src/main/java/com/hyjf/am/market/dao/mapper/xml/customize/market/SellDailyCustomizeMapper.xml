@@ -572,12 +572,12 @@
         SELECT
           NAME
         FROM
-          hyjf_user.oa_department
+          hyjf_crm.oa_department
         WHERE parentid IN
           (SELECT
             id
           FROM
-            hyjf_user.oa_department
+            hyjf_crm.oa_department
           WHERE NAME = #{primaryDivision})
     </select>
 
@@ -732,13 +732,10 @@
 
     <update id="batchUpdate" parameterType="java.util.List">
 
-
         <foreach collection="list" item="record" index="index" separator=";">
             UPDATE ht_sell_daily
-
             <set >
-                update_time=CURRENT_TIMESTAMP,
-                <if test="record.investTotalMonth != null and record.investTotalMonth>0 " >
+                <if test="record.investTotalMonth != null  " >
                     invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
                 </if>
                 <if test="record.repaymentTotalMonth != null and record.repaymentTotalMonth>0" >
@@ -801,6 +798,7 @@
                 <if test="record.investGt3000MonthUserNum != null and record.investGt3000MonthUserNum>0" >
                     invest_gt3000_month_user_num = #{record.investGt3000MonthUserNum,jdbcType=INTEGER},
                 </if>
+
             </set>
 
             WHERE date_str = #{record.dateStr}
