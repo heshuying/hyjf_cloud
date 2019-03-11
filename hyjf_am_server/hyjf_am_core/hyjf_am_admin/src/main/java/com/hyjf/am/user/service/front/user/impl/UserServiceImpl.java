@@ -1147,7 +1147,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		UserVO userVO = new UserVO();
 		UserExample example = new UserExample();
 		UserExample.Criteria cra = example.createCriteria();
-		if (StringUtils.isNotEmpty(utmReferrer)) {
+		if (StringUtils.isNotEmpty(utmReferrer)||!"null".equals(utmReferrer)) {
 			cra.andUsernameEqualTo(utmReferrer);
 		}
 		if (StringUtils.isNotEmpty(userId)) {
