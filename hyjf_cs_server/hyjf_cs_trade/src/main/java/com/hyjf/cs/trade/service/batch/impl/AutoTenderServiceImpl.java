@@ -387,7 +387,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     //防止钱不够也承接校验(投资人的问题)
-                    HjhAccedeVO hjhAccedeCheck = this.amTradeClient.getHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
+                    HjhAccedeVO hjhAccedeCheck = this.amTradeClient.doGetHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
                     if (assignPay.compareTo(hjhAccedeCheck.getAvailableInvestAccount()) == 1) {
                         noPushRedis = false;//finally推回队列
                         throw new Exception(logMsgHeader + "/finally推回队列/ 承接支付金额" + assignPay + ">当前计划订单的剩余可投金额" + hjhAccedeCheck.getAvailableInvestAccount()
@@ -513,7 +513,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         continue;
                     }
                     //防止钱不够也出借校验(投资人的问题)
-                    HjhAccedeVO hjhAccedeCheck = this.amTradeClient.getHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
+                    HjhAccedeVO hjhAccedeCheck = this.amTradeClient.doGetHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
                     if (realAmoust.compareTo(hjhAccedeCheck.getAvailableInvestAccount()) == 1) {
                         noPushRedis = false;//finally推回队列
                         throw new Exception(logMsgHeader + "/finally推回队列/ 出借支付金额" + realAmoust + ">当前计划订单的剩余可投金额" + hjhAccedeCheck.getAvailableInvestAccount()

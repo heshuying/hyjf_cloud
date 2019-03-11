@@ -254,7 +254,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         logger.info("startTime :" + GetDate.formatTime(startTime) + ", endTime is :" + GetDate.formatTime(endTime)
                 + ", column:" + column);
         JSONObject params = new JSONObject();
-        params.put("colum", column);
+        params.put("column", column);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 		try {

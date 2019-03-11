@@ -159,6 +159,7 @@ public class BankOpenController extends BaseController {
 	public CorpOpenAccountRecordResponse getCorpOpenAccountRecord(@PathVariable Integer userId){
 		CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
 		CorpOpenAccountRecord corpOpenAccountRecord= bankOpenService.getCorpOpenAccountRecord(userId);
+		logger.info("corpOpenAccountRecord :{}", JSONObject.toJSONString(corpOpenAccountRecord));
 		if(null != corpOpenAccountRecord){
 			CorpOpenAccountRecordVO corpOpenAccountRecordVO = new CorpOpenAccountRecordVO();
 			BeanUtils.copyProperties(corpOpenAccountRecord,corpOpenAccountRecordVO);

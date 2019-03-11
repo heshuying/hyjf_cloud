@@ -229,6 +229,13 @@ public interface AmTradeClient {
     HjhAccedeVO getHjhAccedeByAccedeOrderId(String contract_id);
 
     /**
+     * 根据加入计划订单，取得加入订单
+     * @author liubin
+     * @date 2018/7/04 19:26
+     */
+    HjhAccedeVO doGetHjhAccedeByAccedeOrderId(String contract_id);
+
+    /**
      * 更新加入计划状态
      * @author liubin
      * @date 2018/7/04 19:26
