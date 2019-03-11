@@ -258,13 +258,21 @@ public class AutoIssueMessageServiceImpl extends BaseServiceImpl implements Auto
 
 		// 增加redis相应计划可投金额
 		// 更新汇计划表
+		HjhPlan hjhPlanNew = null;
+		HjhPlanExample hjhPlanExample = new HjhPlanExample();
+		HjhPlanExample.Criteria cra =  hjhPlanExample.createCriteria();
+		cra.andPlanNidEqualTo(planNid);
+		List<HjhPlan> hjhPlanList = this.hjhPlanMapper.selectByExample(hjhPlanExample);
+		if(hjhPlanList!=null && hjhPlanList.size()>0){
+			hjhPlanNew = hjhPlanList.get(0);
+		}
 		HjhPlan hjhPlan = new HjhPlan();
 		hjhPlan.setPlanNid(planNid);
 		hjhPlan.setAvailableInvestAccount(credit.getLiquidationFairValue());
 		// hjhPlan.setJoinTotal(credit.getLiquidationFairValue());
 		this.hjhPlanCustomizeMapper.updatePlanAccount(hjhPlan);
 		logger.info(credit.getCreditNid() + " 成功更新计划池" + planNid + "总额 + " + credit.getLiquidationFairValue());
-
+        logger.info("计划:["+planNid +"],原开放额度:["+hjhPlanNew.getAvailableInvestAccount()+"],债转编号:["+credit.getCreditNid()+"],债转的债权价值:["+ credit.getLiquidationFairValue()+"]");
 		redisAdd(RedisConstants.HJH_PLAN + planNid, credit.getLiquidationFairValue().toString());// 增加redis相应计划可投金额
 		RedisBorrow redisBorrow = new RedisBorrow();
 		redisBorrow.setBorrowNid(credit.getCreditNid());

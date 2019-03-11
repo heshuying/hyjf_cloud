@@ -28,6 +28,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
@@ -1597,7 +1598,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         if (StringUtils.isNotBlank(user.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(channel));
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload(BankCallConstant.CHANNEL_APP));
             if(StringUtils.isNotEmpty(user.getIconUrl())){
                 result.setIconUrl(imghost + fileUploadTempPath + user.getIconUrl());
             }

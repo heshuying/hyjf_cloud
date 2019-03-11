@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.trade.util.CdnUrlUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -197,7 +198,11 @@ public class WebHomeServiceImpl implements WebHomeService {
             result.setBannerList(new ArrayList<>());
         }*/
         
-        List<AppAdsCustomizeVO> bannerList = amTradeClient.getWebHomeBannerList(adsRequest);//加缓存
+        List<AppAdsCustomizeVO> AppAdsCustomizeTemp = amTradeClient.getWebHomeBannerList(adsRequest);//加缓存
+        List<AppAdsCustomizeVO> bannerList = new ArrayList<>();
+        for (AppAdsCustomizeVO vo : AppAdsCustomizeTemp){
+            bannerList.add(CommonUtils.convertBean(vo,AppAdsCustomizeVO.class));
+        }
         if ( !CollectionUtils.isEmpty(bannerList)){
             String cdnDomainUrl = CdnUrlUtil.getCdnUrl();
             if (StringUtils.isNotBlank(cdnDomainUrl)){

@@ -278,10 +278,10 @@ public class AmAdminClientImpl implements AmAdminClient {
         Map<String, Object> params = new HashMap<>();
         if ("pc".equals(type)) {
             params.put("sourceType", 0);// 渠道0 PC
-            params.put("flagType", 0);// 未删除
+            params.put("delFlag", 0);// 未删除
         } else if ("app".equals(type)) {
             params.put("sourceType", 1);// 渠道1 APP
-            params.put("flagType", 0);// 未删除
+            params.put("delFlag", 0);// 未删除
         }
         List<UtmVO> getResultListS = new ArrayList<>();
         HttpEntity httpEntity = new HttpEntity(params);

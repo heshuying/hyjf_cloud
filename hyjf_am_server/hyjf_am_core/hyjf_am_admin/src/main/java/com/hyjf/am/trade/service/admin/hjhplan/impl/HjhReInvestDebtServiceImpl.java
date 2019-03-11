@@ -36,6 +36,33 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
         if (StringUtils.isNotEmpty(request.getPlanNid())){
             param.put("planNid", request.getPlanNid());
         }
+        if (StringUtils.isNotEmpty(request.getAssignPlanOrderIdSrch())){
+            param.put("assignPlanOrderIdSrch", request.getAssignPlanOrderIdSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignPlanNidSrch())){
+            param.put("assignPlanNidSrch", request.getAssignPlanNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignOrderIdSrch())){
+            param.put("assignOrderIdSrch", request.getAssignOrderIdSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getUserNameSrch())){
+            param.put("userNameSrch", request.getUserNameSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getCreditUserNameSrch())){
+            param.put("creditUserNameSrch", request.getCreditUserNameSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getCreditNidSrch())){
+            param.put("creditNidSrch", request.getCreditNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getBorrowNidSrch())){
+            param.put("borrowNidSrch", request.getBorrowNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignTypeSrch())){
+            param.put("assignTypeSrch", request.getAssignTypeSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
+            param.put("borrowStyleSrch", request.getBorrowStyleSrch());
+        }
 
         return hjhReInvestDebtCustomizeMapper.queryReInvestDebtCount(param);
     }
@@ -57,6 +84,33 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
         if (StringUtils.isNotEmpty(request.getPlanNid())){
             param.put("planNid", request.getPlanNid());
         }
+        if (StringUtils.isNotEmpty(request.getAssignPlanOrderIdSrch())){
+            param.put("assignPlanOrderIdSrch", request.getAssignPlanOrderIdSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignPlanNidSrch())){
+            param.put("assignPlanNidSrch", request.getAssignPlanNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignOrderIdSrch())){
+            param.put("assignOrderIdSrch", request.getAssignOrderIdSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getUserNameSrch())){
+            param.put("userNameSrch", request.getUserNameSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getCreditUserNameSrch())){
+            param.put("creditUserNameSrch", request.getCreditUserNameSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getCreditNidSrch())){
+            param.put("creditNidSrch", request.getCreditNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getBorrowNidSrch())){
+            param.put("borrowNidSrch", request.getBorrowNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignTypeSrch())){
+            param.put("assignTypeSrch", request.getAssignTypeSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
+            param.put("borrowStyleSrch", request.getBorrowStyleSrch());
+        }
         param.put("limitStart", request.getLimitStart());
         param.put("limitEnd", request.getLimitEnd());
 
@@ -75,6 +129,33 @@ public class HjhReInvestDebtServiceImpl extends BaseServiceImpl implements HjhRe
 
         if (StringUtils.isNotEmpty(request.getPlanNid())){
             param.put("planNid", request.getPlanNid());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignPlanOrderIdSrch())){
+            param.put("assignPlanOrderIdSrch", request.getAssignPlanOrderIdSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignPlanNidSrch())){
+            param.put("assignPlanNidSrch", request.getAssignPlanNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignOrderIdSrch())){
+            param.put("assignOrderIdSrch", request.getAssignOrderIdSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getUserNameSrch())){
+            param.put("userNameSrch", request.getUserNameSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getCreditUserNameSrch())){
+            param.put("creditUserNameSrch", request.getCreditUserNameSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getCreditNidSrch())){
+            param.put("creditNidSrch", request.getCreditNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getBorrowNidSrch())){
+            param.put("borrowNidSrch", request.getBorrowNidSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getAssignTypeSrch())){
+            param.put("assignTypeSrch", request.getAssignTypeSrch());
+        }
+        if (StringUtils.isNotEmpty(request.getBorrowStyleSrch())){
+            param.put("borrowStyleSrch", request.getBorrowStyleSrch());
         }
         HjhReInvestDebtCustomize total = hjhReInvestDebtCustomizeMapper.queryReInvestDebtTotal(param);
         return total;

@@ -400,6 +400,7 @@
 		from
 		ht_borrow_repay_plan AS rp
 		INNER JOIN ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
+		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
 		<include refid="Borrow_Repayment_Plan_Where_Clause" />
 	</select>
 

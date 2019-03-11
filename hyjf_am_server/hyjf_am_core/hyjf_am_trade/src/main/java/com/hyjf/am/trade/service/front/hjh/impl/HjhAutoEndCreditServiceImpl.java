@@ -135,7 +135,7 @@ public class HjhAutoEndCreditServiceImpl extends BaseServiceImpl implements HjhA
         logger.info("债权停止后，更新计划开放额度，计划编号:[" + planNid + "],Redis原开放额度:" + oldOpenAmount + "，应减额度:" + liquidationFairValue.toString());
         logger.info("更新债转状态:债转编号:[" + creditNid + "],减扣额度:[" + liquidationFairValue + "].");
         // 3.减扣redis相应计划可投金额
-        RedisUtils.add(RedisConstants.HJH_PLAN + hjhAccede.getPlanNid(), liquidationFairValue.negate().toString());
+        RedisUtils.add(RedisConstants.HJH_PLAN + planNid, liquidationFairValue.negate().toString());
         // 4.更新原始加入订单的清算状态
         // 更新计划订单的状态
         // 只有是退出中状态,并且清算标志位是已完成,计划订单的清算标志位才能更新

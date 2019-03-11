@@ -400,6 +400,7 @@ public class AppHomeServiceImpl implements AppHomeService {
      */
     public List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads) {
 
+        logger.info("-------首页查询banner列表转换开始-----");
         AdsRequest request = (AdsRequest) ConvertUtils.convertMapToObject(ads, AdsRequest.class);
         List<AppAdsCustomizeVO> homeBannerList = amTradeClient.getHomeBannerList(request);
         return homeBannerList;
@@ -510,6 +511,7 @@ public class AppHomeServiceImpl implements AppHomeService {
      * 首页汇计划推广计划列表 - 首页显示 ②	若没有可投计划，则显示锁定期限短的
      */
     public List<HjhPlanCustomizeVO> selectIndexHjhExtensionPlanListByLockTime(Map<String, Object> params) {
+        logger.info("-------首页查询锁定期计划转换开始-----");
         AppHomePageRequest request = (AppHomePageRequest) ConvertUtils.convertMapToObject(params, AppHomePageRequest.class);
         List<HjhPlanCustomizeVO> hjhPlanList = this.amTradeClient.selectIndexHjhExtensionPlanListByLockTime(request);
         return hjhPlanList;
@@ -521,6 +523,7 @@ public class AppHomeServiceImpl implements AppHomeService {
 	@Cached(name="appIndexHjhExtensionPlanListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchIndexHjhExtensionPlanList(Map<String, Object> params) {
+        logger.info("-------首页查询计划列表转换开始-----");
         AppHomePageRequest request  = (AppHomePageRequest) ConvertUtils.convertMapToObject(params,AppHomePageRequest.class);
         List<HjhPlanCustomizeVO> hjhPlanList = this.amTradeClient.selectIndexHjhExtensionPlanList(request);
         return hjhPlanList;
@@ -552,6 +555,7 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
 
+        logger.info("-------首页查询新手标列表转换开始-----");
         AppHomePageRequest request = (AppHomePageRequest) ConvertUtils.convertMapToObject(projectMap, AppHomePageRequest.class);
         //查询首页定时发标,出借中,复审中的项目
        /* List<AppProjectListCustomizeVO> list = amTradeClient.selectHomeProjectList(request);

@@ -81,7 +81,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
     @Override
     public List<NifaReportLog> selectNifaReportLogByFileName(String fileName) {
         NifaReportLogExample example = new NifaReportLogExample();
-        NifaReportLogExample.Criteria cra = example.createCriteria();
+//        NifaReportLogExample.Criteria cra = example.createCriteria();
         // 获取状态不是成功的数据
         example.createCriteria().andUploadNameEqualTo(fileName);
         List<NifaReportLog> nifaReportLogList = this.nifaReportLogMapper.selectByExample(example);

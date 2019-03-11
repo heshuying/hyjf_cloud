@@ -379,11 +379,11 @@
 		<result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
 		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
 		<result column="user_name" property="undertakerUserName" jdbcType="VARCHAR" />
-		<result column="assign_order_date" property="assignOrderDate" jdbcType="DATE" />
+		<result column="assign_order_date" property="assignOrderDate" />
 		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectUserRepayTransferListByHjhCreditTender" resultMap="HjhCreditTenderListMap" parameterType="Map">
-		select credit_user_id, user_name,credit_user_name, create_time as assign_order_date, assign_account, assign_capital from ht_hjh_debt_credit_tender
+		select credit_user_id, user_name,credit_user_name, DATE_FORMAT(create_time, '%Y-%m-%d %k:%i')AS assign_order_date, assign_account, assign_capital from ht_hjh_debt_credit_tender
 		where borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		<if test="limitStart != null and limitStart >= 0 and limitEnd !=null and limitEnd >= 0" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
@@ -394,7 +394,7 @@
 		<result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
 		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
 		<result column="undertaker_user_name" property="undertakerUserName" jdbcType="VARCHAR" />
-		<result column="assign_order_date" property="assignOrderDate" jdbcType="DATE" />
+		<result column="assign_order_date" property="assignOrderDate" />
 		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectUserRepayTransferListByCreditTender" resultMap="CreditTenderListMap" parameterType="Map">
@@ -404,7 +404,7 @@
 		hu.username as credit_user_name,
 		ct.assign_capital,
 		ct.assign_price,
-		ct.create_time AS assign_order_date,
+		DATE_FORMAT(ct.create_time, '%Y-%m-%d %k:%i')AS assign_order_date,
 		ct.assign_pay
 		from ht_credit_tender ct
 		LEFT JOIN ht_r_user u on u.user_id = ct.user_id

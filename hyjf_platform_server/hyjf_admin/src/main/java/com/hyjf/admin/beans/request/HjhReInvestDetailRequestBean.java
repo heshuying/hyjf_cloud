@@ -1,11 +1,12 @@
 package com.hyjf.admin.beans.request;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @Author : huanghui
  */
-public class HjhReInvestDetailRequestBean {
+public class HjhReInvestDetailRequestBean extends BasePage {
 
     @ApiModelProperty(value = "日期,默认值")
     private String date;

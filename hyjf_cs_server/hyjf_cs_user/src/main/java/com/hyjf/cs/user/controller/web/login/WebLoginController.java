@@ -155,7 +155,7 @@ public class WebLoginController extends BaseUserController {
         if (StringUtils.isNotBlank(userVO.getIconUrl())) {
             String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
             imghost = imghost.substring(0, imghost.length() - 1);
-            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getAppFileUpload());
             if(StringUtils.isNotEmpty(userVO.getIconUrl())){
                 userInfoMap.put("iconurl",imghost + fileUploadTempPath + userVO.getIconUrl());
             }

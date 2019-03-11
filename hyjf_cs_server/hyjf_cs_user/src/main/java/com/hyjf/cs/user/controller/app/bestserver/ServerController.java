@@ -106,7 +106,10 @@ public class ServerController extends BaseUserController {
 					resultBean.setSign(sign);
 					// 保存InitKey
 				}
+
+				logger.debug(">>>>>issafe=== false：appId={}, appKey={}, randomString={}, secretKey={}",appId, appKey, randomString, secretKey);
 			} else {
+				logger.info(">>>>>issafe=== false：appId={}, appKey={}, randomString={}, secretKey={}",appId, appKey, randomString, secretKey);
 				resultBean.setStatus("1");
 				resultBean.setStatusDesc("安全码错误");
 			}
