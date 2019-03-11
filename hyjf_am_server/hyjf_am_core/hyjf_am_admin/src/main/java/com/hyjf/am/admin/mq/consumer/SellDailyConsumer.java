@@ -280,7 +280,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 logger.info("填充数据耗时: " + (timeTmp - timeStart) + "ms, 批量更新开始，column: " + column);
 
                 DynamicDataSourceContextHolder.useMasterConfigDataSource();
-                sellDailyService.batchUpdate(list);
+                //sellDailyService.batchUpdate(list);
                 for(SellDailyVO vo : list){
                     logger.debug("vo: {}", JSONObject.toJSONString(vo));
                     sellDailyService.update(vo);
