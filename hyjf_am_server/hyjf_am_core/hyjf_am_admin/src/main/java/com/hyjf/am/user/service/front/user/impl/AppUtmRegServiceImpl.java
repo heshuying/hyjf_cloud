@@ -40,7 +40,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
     }
 
     /***
-     * 开户更新开户渠道统计开户时间
+     * 开户更新开户渠道统计开户时间_test
      * @author Zha Daojian
      * @date 2019/3/11 11:19
      * @param entity
