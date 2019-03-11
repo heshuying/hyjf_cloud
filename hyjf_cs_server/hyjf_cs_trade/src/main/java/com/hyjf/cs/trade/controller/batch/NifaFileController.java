@@ -38,25 +38,25 @@ public class NifaFileController extends BaseController {
      * 获取上传地址前缀
      */
     @Value("${hyjf.nifa.upload.url}")
-    private String UPLOAD_URL;
+    private static String UPLOAD_URL;
 
     /**
      * 获取18位社会信用代码
      */
     @Value("${hyjf.com.social.credit.code}")
-    private String COM_SOCIAL_CREDIT_CODE;
+    private static String COM_SOCIAL_CREDIT_CODE;
 
     /**
      * 反馈文件下载地址
      */
     @Value("${hyjf.nifa.feedback.path}")
-    private String FEED_BACK_PATH;
+    private static String FEED_BACK_PATH;
 
     /**
      * 互金反馈文件下载地址
      */
     @Value("${hyjf.nifa.download.path}")
-    private String DOWNLOAD_PATH;
+    private static String DOWNLOAD_PATH;
 
     /**
      * 互金上传文件上报数据
