@@ -732,12 +732,9 @@
 
     <update id="batchUpdate" parameterType="java.util.List">
 
-
         <foreach collection="list" item="record" index="index" separator=";">
             UPDATE ht_sell_daily
-
             <set >
-                update_time=CURRENT_TIMESTAMP,
                 <if test="record.investTotalMonth != null and record.investTotalMonth>0 " >
                     invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
                 </if>
@@ -801,6 +798,7 @@
                 <if test="record.investGt3000MonthUserNum != null and record.investGt3000MonthUserNum>0" >
                     invest_gt3000_month_user_num = #{record.investGt3000MonthUserNum,jdbcType=INTEGER},
                 </if>
+
             </set>
 
             WHERE date_str = #{record.dateStr}
