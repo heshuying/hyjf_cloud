@@ -690,6 +690,7 @@ public class UserManagerController extends BaseController {
         }
         User user = userManagerService.selectUserByUserId(Integer.parseInt(userId));
         String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
+        logger.info("==============企业信息补录,获取的bankId = "+bankId+"==============");
         String bankName = null;
         String payAllianceCode = null;
         if (StringUtils.isNotBlank(bankId)) {
