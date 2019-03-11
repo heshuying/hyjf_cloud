@@ -314,4 +314,9 @@ public class SellDailyServiceImpl implements SellDailyService {
     public void batchUpdate(List<SellDailyVO> list) {
         sellDailyCustomizeMapper.batchUpdate(list);
     }
+
+    @Override
+    public void update(SellDailyVO vo) {
+        sellDailyCustomizeMapper.update(vo);
+    }
 }

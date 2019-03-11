@@ -225,7 +225,7 @@ public class MsgPushHandler {
 
 			return history;
 		} else {
-			logger.error("推送失败，未找到目标用户.....");
+			logger.error("推送失败，未找到目标用户， mobile is: {}.....", mobile);
 			throw new RuntimeException("推送失败，未找到目标用户.....");
 		}
 	}

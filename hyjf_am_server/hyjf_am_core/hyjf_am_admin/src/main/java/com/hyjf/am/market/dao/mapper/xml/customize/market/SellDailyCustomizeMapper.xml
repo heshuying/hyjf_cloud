@@ -808,4 +808,81 @@
         </foreach>
 
     </update>
+
+
+    <update id="update" parameterType="com.hyjf.am.vo.market.SellDailyVO">
+
+        UPDATE ht_sell_daily
+        <set >
+            update_time=CURRENT_TIMESTAMP,
+            <if test="investTotalMonth != null and investTotalMonth>0 " >
+                invest_total_month = #{investTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="repaymentTotalMonth != null and repaymentTotalMonth>0" >
+                repayment_total_month = #{repaymentTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investTotalPreviousMonth != null and investTotalPreviousMonth>0" >
+                invest_total_previous_month = #{investTotalPreviousMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investRatioGrowth != null and investRatioGrowth>0" >
+                invest_ratio_growth = #{investRatioGrowth,jdbcType=VARCHAR},
+            </if>
+            <if test="withdrawTotalMonth != null and withdrawTotalMonth>0" >
+                withdraw_total_month = #{withdrawTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="withdrawRate != null and withdrawRate>0" >
+                withdraw_rate = #{withdrawRate,jdbcType=VARCHAR},
+            </if>
+            <if test="rechargeTotalMonth != null and rechargeTotalMonth>0" >
+                recharge_total_month = #{rechargeTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnualTotalMonth != null and investAnnualTotalMonth>0" >
+                invest_annual_total_month = #{investAnnualTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnualTotalPreviousMonth != null and investAnnualTotalPreviousMonth>0" >
+                invest_annual_total_previous_month = #{investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnularRatioGrowth != null and investAnnularRatioGrowth>0" >
+                invest_annular_ratio_growth = #{investAnnularRatioGrowth,jdbcType=VARCHAR},
+            </if>
+            <if test="investTotalYesterday != null and investTotalYesterday>0" >
+                invest_total_yesterday = #{investTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="repaymentTotalYesterday != null and repaymentTotalYesterday>0" >
+                repayment_total_yesterday = #{repaymentTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnualTotalYesterday != null and investAnnualTotalYesterday>0" >
+                invest_annual_total_yesterday = #{investAnnualTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="withdrawTotalYesterday != null and withdrawTotalYesterday>0" >
+                withdraw_total_yesterday = #{withdrawTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="rechargeTotalYesterday != null and rechargeTotalYesterday>0" >
+                recharge_total_yesterday = #{rechargeTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="netCapitalInflowYesterday != null and netCapitalInflowYesterday>0" >
+                net_capital_inflow_yesterday = #{netCapitalInflowYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="nonRepaymentToday != null and nonRepaymentToday>0" >
+                non_repayment_today = #{nonRepaymentToday,jdbcType=DECIMAL},
+            </if>
+            <if test="registerTotalYesterday != null and registerTotalYesterday>0" >
+                register_total_yesterday = #{registerTotalYesterday,jdbcType=INTEGER},
+            </if>
+            <if test="rechargeGt3000UserNum != null and rechargeGt3000UserNum>0" >
+                recharge_gt3000_user_num = #{rechargeGt3000UserNum,jdbcType=INTEGER},
+            </if>
+            <if test="investGt3000UserNum != null and investGt3000UserNum>0" >
+                invest_gt3000_user_num = #{investGt3000UserNum,jdbcType=INTEGER},
+            </if>
+            <if test="investGt3000MonthUserNum != null and investGt3000MonthUserNum>0" >
+                invest_gt3000_month_user_num = #{investGt3000MonthUserNum,jdbcType=INTEGER},
+            </if>
+        </set>
+
+        WHERE date_str = #{dateStr}
+        AND primary_division = #{primaryDivision}
+        AND two_division = #{twoDivision}
+
+    </update>
 </mapper>
