@@ -1951,10 +1951,13 @@ public class FddHandle {
 			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users = this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail())) {
+					logger.info("发送邮件居间服务协议用户或者邮箱为空==="+JSONObject.toJSONString(users));
 					return;
 				}
 				String email = users.getEmail();
 				if (StringUtils.isBlank(email) || users.getIsSmtp()==1) {
+					logger.info("发送邮件居间服务协议用户邮箱不发送==="+JSONObject.toJSONString(users));
+
 					return;
 				}
 				logger.info("开始发送邮件。出借订单号:" + orderId);
