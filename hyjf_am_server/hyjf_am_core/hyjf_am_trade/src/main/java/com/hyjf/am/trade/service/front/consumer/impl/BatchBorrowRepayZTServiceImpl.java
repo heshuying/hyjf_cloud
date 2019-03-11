@@ -2719,7 +2719,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			newBorrowRecover.setRecoverPeriod(periodNext);
 		}
 		newBorrowRecover.setRepayBatchNo(repayBatchNo);
-		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
+		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
 			throw new Exception("放款记录总表(ht_borrow_recover)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 		}
@@ -2733,7 +2733,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				newBorrowRecover.setRecoverYestime(nowTime); // 实际还款时间
 				newBorrowRecover.setRecoverTime(recoverTime);
 				newBorrowRecover.setRecoverType(TYPE_YES);
-				this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover);
+				this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover);
 			}
 			if (borrowCredits != null && borrowCredits.size() > 0) {
 				for (int i = 0; i < borrowCredits.size(); i++) {
