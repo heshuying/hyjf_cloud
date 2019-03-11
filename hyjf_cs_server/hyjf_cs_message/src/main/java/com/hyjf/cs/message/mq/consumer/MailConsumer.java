@@ -62,12 +62,12 @@ public class MailConsumer implements RocketMQListener<MessageExt>, RocketMQPushC
                     logger.info("销售日报发送邮件消费者接受参数 : {}", mailMessage.getToMailArray(), mailMessage.getSubject(), fileNames, mailMessage.getIs());
                     try {
                         logger.info("465端口发送....");
-                        mailHandler.sendAttachmentsMailOnPort465(mailMessage.getToMailArray(), mailMessage.getSubject(),
-                                content, fileNames, mailMessage.getIs());
+//                        mailHandler.sendAttachmentsMailOnPort465(mailMessage.getToMailArray(), mailMessage.getSubject(),
+//                                content, fileNames, mailMessage.getIs());
 
 //                        logger.info("25发送");
-//                        mailHandler.sendAttachmentsMailOnPort25(mailMessage.getToMailArray(), mailMessage.getSubject(),
-//                                content, fileNames[0], new ByteArrayResource(mailMessage.getIs()));
+                        mailHandler.sendAttachmentsMailOnPort25(mailMessage.getToMailArray(), mailMessage.getSubject(),
+                                content, fileNames[0], new ByteArrayResource(mailMessage.getIs()));
                     } catch (Exception e) {
                         throw new MailSendException("发送销售邮件失败");
                     }
