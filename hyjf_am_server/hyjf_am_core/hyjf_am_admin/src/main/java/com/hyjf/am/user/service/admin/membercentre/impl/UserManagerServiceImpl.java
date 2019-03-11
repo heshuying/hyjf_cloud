@@ -1000,8 +1000,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         CorpOpenAccountRecord record = new CorpOpenAccountRecord();
         if (bankOpenFlag == 1) {//获取修改信息
-            CorpOpenAccountRecord corpOpenAccountRecord = this.selectCorpOpenAccountRecordByUserId(user.getUserId());
-            BeanUtils.copyProperties(corpOpenAccountRecord, record);
+            record = this.selectCorpOpenAccountRecordByUserId(user.getUserId());
         } else {
             record = new CorpOpenAccountRecord();
         }
@@ -1039,8 +1038,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if (bankOpenFlag == 1) {
             List<BankCard> bankCardList = this.findBankCardByUserId(user.getUserId());
             if (null != bankCardList && bankCardList.size() > 0) {
-                BankCard bankCardVO = bankCardList.get(0);
-                BeanUtils.copyProperties(bankCardVO, bankCard);
+                bankCard = bankCardList.get(0);
             }
         } else {
             bankCard = new BankCard();

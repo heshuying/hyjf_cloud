@@ -1203,7 +1203,7 @@ public class FddHandle {
 
 		//ZDJ 20190311 受让时间取值不正确,应该取承接时间 ht_hjh_debt_credit_tender create_time
 		//paramter.put("creditTime", GetDate.dateToString2(borrowCredit.getCreateTime(),"yyyyMMdd"));
-		paramter.put("creditTime",resultMap.get("createTime"));
+		paramter.put("creditTime",signTime);
 
 		// 标的编号
 		paramter.put("borrowNid", borrow.getBorrowNid());
