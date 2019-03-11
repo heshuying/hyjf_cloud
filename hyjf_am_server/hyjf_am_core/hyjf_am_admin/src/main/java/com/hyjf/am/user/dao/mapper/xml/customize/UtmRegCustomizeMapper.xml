@@ -353,6 +353,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -381,6 +387,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -405,6 +417,12 @@
 		</if>
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
 		</if>
 		) AS a
 		) mm
@@ -515,6 +533,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -543,6 +567,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -567,6 +597,12 @@
 		</if>
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
 		</if>
 		) AS a
 		) mm
@@ -705,6 +741,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
 		) mm
@@ -812,6 +854,12 @@
 		</if>
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
 		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
