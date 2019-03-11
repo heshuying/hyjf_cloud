@@ -331,14 +331,13 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         }
 
         // 开户更新开户渠道统计开户时间
-//        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-//        if (appUtmReg != null) {
-//            User appUtmRegUser =  new User();
-//            //BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
-//            BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
-//            appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-//            userService.updateUser(appUtmRegUser);
-//        }
+        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+        if (appUtmReg != null) {
+            AppUtmReg appUtmRegUser =  new AppUtmReg();
+            BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
+            appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(),GetDate.yyyyMMdd));
+            appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
+        }
 
         // add 合规数据上报 埋点 liubin 20181122 start
         // 推送数据到MQ 开户 出借人
