@@ -52,7 +52,7 @@ public class PcChannelReconciliationController extends BaseController {
     @PostMapping("/search")
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
         if (request.getInvestEndTime()==null || request.getInvestStartTime()==null) {
-            new AdminResult(FAIL,"出借时间不能为空");
+            return new AdminResult(FAIL,"出借时间不能为空");
         }
         List<UtmVO> list = channelService.searchUtmList(0);
         if (request.getUtmPlat() == null) {
@@ -71,6 +71,9 @@ public class PcChannelReconciliationController extends BaseController {
     @ApiOperation(value = "智投列表查询", notes = "智投列表查询")
     @PostMapping("/search_hjh")
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
+        if (request.getInvestEndTime()==null || request.getInvestStartTime()==null) {
+            return new AdminResult(FAIL,"出借时间不能为空");
+        }
         List<UtmVO> list = channelService.searchUtmList(0);
         if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
