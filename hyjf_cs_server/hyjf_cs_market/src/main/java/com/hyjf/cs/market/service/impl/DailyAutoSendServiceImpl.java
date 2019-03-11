@@ -71,7 +71,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
             return;
         }
         String dateStr = GetDate.getFormatDateStr();
-        String fileName = "销售日报-" + dateStr + ".xlsx";
+        String fileName = "销售日报-" + dateStr + ".xls";
         String[] fileNames = {fileName};
         // 将excel作为附件
         byte[] is = this.drawExcel(dateStr);
