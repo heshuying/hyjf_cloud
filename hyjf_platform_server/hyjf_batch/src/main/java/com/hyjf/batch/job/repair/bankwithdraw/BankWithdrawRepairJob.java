@@ -17,7 +17,7 @@ public class BankWithdrawRepairJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info(".................BankWithdrawRepairJob: {} execute.................", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/bankWithdrawExceptionHandle", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/bankException/bankWithdrawExceptionHandle", null);
         logger.info(".................BankWithdrawRepairJob execute end.................");
     }
 }
