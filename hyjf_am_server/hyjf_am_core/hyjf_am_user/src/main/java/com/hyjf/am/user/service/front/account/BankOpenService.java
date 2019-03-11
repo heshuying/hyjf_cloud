@@ -2,6 +2,7 @@ package com.hyjf.am.user.service.front.account;
 
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.BankCard;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
 import com.hyjf.am.user.service.BaseService;
 
@@ -74,4 +75,9 @@ public interface BankOpenService extends BaseService {
 	 * @return
 	 */
 	List<BankCard> selectBankCardByUserIdAndStatus(Integer userId, Integer status);
+
+	/**
+	 * 获取微服务上线三天后的开户用户
+	 */
+	void getBankOpenAccountForCrmRepair(BankOpenAccountExample bankOpenAccountExample);
 }
