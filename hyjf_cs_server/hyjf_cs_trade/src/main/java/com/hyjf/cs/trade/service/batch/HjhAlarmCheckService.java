@@ -1,7 +1,5 @@
 package com.hyjf.cs.trade.service.batch;
 
-import com.hyjf.am.response.BooleanResponse;
-
 /**
  * @author xiehuili on 2018/12/18.
  */
@@ -11,7 +9,7 @@ public interface HjhAlarmCheckService {
      * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
      * @return
      */
-    void alermBeforeLiquidateCheck();
+    Boolean alermBeforeLiquidateCheck();
     /**
      * 汇计划各计划开放额度校验预警任务
      */
