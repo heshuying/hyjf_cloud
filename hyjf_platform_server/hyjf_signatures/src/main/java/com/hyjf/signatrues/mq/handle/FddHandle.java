@@ -816,7 +816,7 @@ public class FddHandle {
                 // 债转时间
                // paramter.put("creditTime", tenderToCreditDetailList.get(0).getCreditTime());
 				//ZDJ 20190311 受让时间取值不正确,应该取承接时间 ht_borrow_credit create_time
-                  paramter.put("creditTime", creditTender.getCreateTime());
+                  paramter.put("creditTime", tenderToCreditDetailList.get(0).getSignTime());
                 // 转让债权本金
                 paramter.put("assignCapital", creditTender.getAssignCapital().toString());
                 //转让价款
