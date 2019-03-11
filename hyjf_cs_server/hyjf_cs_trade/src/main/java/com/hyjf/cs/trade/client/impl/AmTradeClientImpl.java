@@ -615,6 +615,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据加入计划订单，取得加入订单
+     * @author liubin
+     * @date 2018/7/04 19:26
+     */
+    @Override
+    public HjhAccedeVO doGetHjhAccedeByAccedeOrderId(String accedeOrderId) {
+        String url = urlBase + "hjhAccede/doGetHjhAccedeByAccedeOrderId/" + accedeOrderId;
+        HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResult();
+    }
+
+    /**
      * 更新加入计划状态
      * @author liubin
      * @date 2018/7/04 19:26

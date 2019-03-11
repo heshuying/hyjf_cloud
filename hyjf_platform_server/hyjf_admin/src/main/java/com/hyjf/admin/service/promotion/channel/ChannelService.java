@@ -62,6 +62,15 @@ public interface ChannelService {
     UserVO getUser(String utmReferrer, String userId);
 
     /**
+     * 通过userid获取user
+     *
+     * @param
+     * @return
+     * @Title selectAccedeRecordList
+     */
+    UserVO getUserByUserId(int userId);
+
+    /**
      * @Author walter.limeng
      * @Description  新增或者修改对象
      * @Date 10:02 2018/7/16

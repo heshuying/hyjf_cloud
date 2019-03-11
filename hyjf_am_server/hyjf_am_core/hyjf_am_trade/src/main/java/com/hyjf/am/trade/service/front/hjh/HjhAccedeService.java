@@ -34,6 +34,12 @@ public interface HjhAccedeService extends BaseService {
      */
     HjhAccede getHjhAccedeByAccedeOrderId(String accedeOrderId);
 
+    /**
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    HjhAccede doGetHjhAccedeByAccedeOrderId(String accedeOrderId);
 
     /**
      * 计算加入总数
