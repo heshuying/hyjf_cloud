@@ -281,6 +281,8 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 if(logger.isDebugEnabled()){
                     for(SellDailyVO vo : list){
                         logger.debug("vo: {}", JSONObject.toJSONString(vo));
+                        //打印一条就够了
+                        break;
                     }
                 }
 
