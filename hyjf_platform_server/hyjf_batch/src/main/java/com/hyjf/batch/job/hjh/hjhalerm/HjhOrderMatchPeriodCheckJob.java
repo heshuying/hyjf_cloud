@@ -21,8 +21,8 @@ public class HjhOrderMatchPeriodCheckJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("HjhOrderMatchPeriodCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        Boolean result = restTemplate.getForEntity(
-                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck", Boolean.class).getBody();
+        restTemplate.getForEntity(
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck",null);
 
         logger.info("HjhOrderMatchPeriodCheckJob execute end...");
     }
