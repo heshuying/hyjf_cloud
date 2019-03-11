@@ -381,6 +381,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * @param bean
      */
     private void updateCardNoToBank(BankCallBean bean,User user) {
+        logger.info("保存银行卡信息，发送MQ，BankCallBean:[{}],User:[{}]",JSONObject.toJSONString(bean),JSONObject.toJSONString(user));
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 调用银行接口(4.2.2 用户绑卡接口)
         BankCallBean cardBean = new BankCallBean();
@@ -408,6 +409,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             if (array != null && array.size() != 0) {
                 obj = array.getJSONObject(0);
             }
+            logger.info("保存银行卡信息，银行接口调用成功,返回JSON:",JSONObject.toJSONString(obj));
             BankCardRequest bankCard = new BankCardRequest();
             bankCard.setUserId(userId);
             bankCard.setUserName(user.getUsername());
@@ -443,6 +445,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             }
             BankCard bankCardbean = new BankCard();
             BeanUtils.copyProperties(bankCardbean, bankCard);
+            logger.info("保存银行卡信息，插入用户银行卡,bankCardbean:",JSONObject.toJSONString(bankCardbean));
             boolean bankFlag = bankCardMapper.insertSelective(bankCardbean) > 0 ? true : false;
             if (!bankFlag) {
                 logger.error("插入用户银行卡失败！");
