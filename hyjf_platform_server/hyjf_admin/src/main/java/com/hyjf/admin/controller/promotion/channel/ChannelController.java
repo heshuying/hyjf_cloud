@@ -84,7 +84,7 @@ public class ChannelController extends BaseController {
             if (null == record || record.getUtmReferrer() == null || record.getUtmReferrer() == 0) {
                 adminResult.setUtmReferrer("");
             } else {
-                UserVO user = this.channelService.getUser(null, String.valueOf(record.getUtmReferrer()));
+                UserVO user = this.channelService.getUserByUserId(record.getUtmReferrer());
                 adminResult.setUtmReferrer(user.getUsername());
             }
             String url = "";
