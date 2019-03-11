@@ -572,12 +572,12 @@
         SELECT
           NAME
         FROM
-          hyjf_user.oa_department
+          hyjf_crm.oa_department
         WHERE parentid IN
           (SELECT
             id
           FROM
-            hyjf_user.oa_department
+            hyjf_crm.oa_department
           WHERE NAME = #{primaryDivision})
     </select>
 
@@ -735,7 +735,7 @@
         <foreach collection="list" item="record" index="index" separator=";">
             UPDATE ht_sell_daily
             <set >
-                <if test="record.investTotalMonth != null and record.investTotalMonth>0 " >
+                <if test="record.investTotalMonth != null  " >
                     invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
                 </if>
                 <if test="record.repaymentTotalMonth != null and record.repaymentTotalMonth>0" >
