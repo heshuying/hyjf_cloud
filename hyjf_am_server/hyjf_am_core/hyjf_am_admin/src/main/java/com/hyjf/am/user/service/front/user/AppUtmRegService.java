@@ -24,15 +24,6 @@ public interface AppUtmRegService {
      */
     void update(AppUtmReg entity);
 
-    /***
-     * 开户更新开户渠道统计开户时间
-     * @author Zha Daojian
-     * @date 2019/3/11 11:19
-     * @param entity
-     * @return void
-     **/
-    void updateByPrimaryKeySelective(AppUtmReg entity);
-
     /**
      * 保存app推广用户信息
      * @param entity

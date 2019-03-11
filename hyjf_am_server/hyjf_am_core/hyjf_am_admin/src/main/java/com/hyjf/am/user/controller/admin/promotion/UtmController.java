@@ -15,6 +15,7 @@ import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -283,6 +284,9 @@ public class UtmController extends BaseController {
         int count = utmService.selectPcChannelReconciliationCount(request);
         if (count > 0) {
             // 查询pc统计明细
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecord(request);
             if (!CollectionUtils.isEmpty(list)) {
                 response.setResultList(list);
@@ -299,13 +303,19 @@ public class UtmController extends BaseController {
     @RequestMapping("/select_pc_channel_reconciliation_record_hjh")
     public ChannelReconciliationResponse selectPcChannelReconciliationRecordHjh(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = new ChannelReconciliationResponse();
-        // 查询pc统计明细
-        List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecordHjh(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            response.setResultList(list);
-        }
         // 查询符合条件的数量
         int count = utmService.selectPcChannelReconciliationHjhCount(request);
+        if(count > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+            // 查询pc统计明细
+            List<ChannelReconciliationVO> list = utmService.selectPcChannelReconciliationRecordHjh(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+            }
+        }
+
         response.setCount(count);
         return response;
     }
@@ -319,6 +329,9 @@ public class UtmController extends BaseController {
         ChannelReconciliationResponse response = new ChannelReconciliationResponse();
         int count = utmService.selectAppChannelReconciliationCount(request);
         if (count > 0) {
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
             // 查询app统计明细
             List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecord(request);
             if (!CollectionUtils.isEmpty(list)) {
@@ -350,13 +363,20 @@ public class UtmController extends BaseController {
     @RequestMapping("/select_app_channel_reconciliation_record_hjh")
     public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(@RequestBody ChannelReconciliationRequest request) {
         ChannelReconciliationResponse response = new ChannelReconciliationResponse();
-        // 查询app统计明细
-        List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecordHjh(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            response.setResultList(list);
-        }
+
         // 查询符合条件的数量
         int count = utmService.selectAppChannelReconciliationHjhCount(request);
+        if(count > 0){
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize()==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+            // 查询app统计明细
+            List<ChannelReconciliationVO> list = utmService.selectAppChannelReconciliationRecordHjh(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                response.setResultList(list);
+            }
+        }
+
         response.setCount(count);
         return response;
     }
