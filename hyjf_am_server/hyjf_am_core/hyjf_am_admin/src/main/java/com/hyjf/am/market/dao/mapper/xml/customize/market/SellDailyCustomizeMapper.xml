@@ -735,7 +735,8 @@
         <foreach collection="list" item="record" index="index" separator=";">
             UPDATE ht_sell_daily
             <set >
-                <if test="record.investTotalMonth != null  " >
+                update_time=CURRENT_TIMESTAMP,
+                <if test="record.investTotalMonth != null and record.investTotalMonth>0 " >
                     invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
                 </if>
                 <if test="record.repaymentTotalMonth != null and record.repaymentTotalMonth>0" >
