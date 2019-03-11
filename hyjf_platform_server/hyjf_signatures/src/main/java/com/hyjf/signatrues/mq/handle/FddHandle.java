@@ -814,7 +814,9 @@ public class FddHandle {
                 // 债转期限
                 paramter.put("creditTerm", tenderToCreditDetailList.get(0).getCreditTerm());
                 // 债转时间
-                paramter.put("creditTime", tenderToCreditDetailList.get(0).getCreditTime());
+               // paramter.put("creditTime", tenderToCreditDetailList.get(0).getCreditTime());
+				//ZDJ 20190311 受让时间取值不正确,应该取承接时间 ht_borrow_credit create_time
+                  paramter.put("creditTime", creditTender.getCreateTime());
                 // 转让债权本金
                 paramter.put("assignCapital", creditTender.getAssignCapital().toString());
                 //转让价款
@@ -1198,7 +1200,10 @@ public class FddHandle {
 		//转让剩余期限
 		paramter.put("creditTerm", creditTerm);
 		//转让日期
-		paramter.put("creditTime", GetDate.dateToString2(borrowCredit.getCreateTime(),"yyyyMMdd"));
+
+		//ZDJ 20190311 受让时间取值不正确,应该取承接时间 ht_hjh_debt_credit_tender create_time
+		//paramter.put("creditTime", GetDate.dateToString2(borrowCredit.getCreateTime(),"yyyyMMdd"));
+		paramter.put("creditTime",resultMap.get("createTime"));
 
 		// 标的编号
 		paramter.put("borrowNid", borrow.getBorrowNid());
