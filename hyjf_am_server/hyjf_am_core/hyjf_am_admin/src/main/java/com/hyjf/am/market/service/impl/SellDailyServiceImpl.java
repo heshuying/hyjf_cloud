@@ -78,7 +78,7 @@ public class SellDailyServiceImpl implements SellDailyService {
 
     @Override
     public List<SellDailyVO> countTotalRepayOnMonth(Date startTime, Date endTime, Integer type) {
-        return sellDailyCustomizeMapper.countTotalInvestOnMonth(startTime, endTime, type);
+        return sellDailyCustomizeMapper.countTotalRepayOnMonth(startTime, endTime, type);
     }
 
     @Override
@@ -313,5 +313,10 @@ public class SellDailyServiceImpl implements SellDailyService {
     @Override
     public void batchUpdate(List<SellDailyVO> list) {
         sellDailyCustomizeMapper.batchUpdate(list);
+    }
+
+    @Override
+    public void update(SellDailyVO vo) {
+        sellDailyCustomizeMapper.update(vo);
     }
 }

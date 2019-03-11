@@ -77,6 +77,20 @@ public class HjhAccedeController extends BaseController {
         return response;
     }
 
+    /**
+     * 根据加入计划订单，取得加入订单
+     * @return
+     */
+    @GetMapping("/doGetHjhAccedeByAccedeOrderId/{accedeOrderId}")
+    public HjhAccedeResponse doGetHjhAccedeByAccedeOrderId(@PathVariable String accedeOrderId){
+        HjhAccedeResponse response = new HjhAccedeResponse();
+        HjhAccede hjhAccede=hjhAccedeService.doGetHjhAccedeByAccedeOrderId(accedeOrderId);
+        if (Validator.isNotNull(hjhAccede)){
+            response.setResult(CommonUtils.convertBean(hjhAccede,HjhAccedeVO.class));
+        }
+        return response;
+    }
+
     @GetMapping("/countAccede/{planNid}")
     public HjhAccedeResponse selectByAssignNidAndUserId(@PathVariable String planNid) {
         HjhAccedeResponse response = new HjhAccedeResponse();

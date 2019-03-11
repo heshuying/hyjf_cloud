@@ -79,6 +79,22 @@ public class HjhAccedeServiceImpl extends BaseServiceImpl implements HjhAccedeSe
     }
 
     /**
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public HjhAccede doGetHjhAccedeByAccedeOrderId(String accedeOrderId) {
+        HjhAccedeExample example = new HjhAccedeExample();
+        example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
+        List<HjhAccede> hjhAccedes = this.hjhAccedeMapper.selectByExample(example);
+        if (CollectionUtils.isNotEmpty(hjhAccedes)){
+            return hjhAccedes.get(0);
+        }
+        return null;
+    }
+
+    /**
      * 计算加入总数
      * @author zhangyk
      * @date 2018/6/27 19:10
