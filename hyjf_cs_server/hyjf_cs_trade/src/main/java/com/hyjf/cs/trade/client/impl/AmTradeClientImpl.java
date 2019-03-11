@@ -4994,7 +4994,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(Response.isSuccess(response)){
             return response.getResultBoolean();
         }
-        return null;
+        return false;
     }
     /**
      * 查询产品加息信息
