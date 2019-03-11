@@ -323,7 +323,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
 
             BankCard card = userService.getBankCardByUserId(userId);
             if(card==null){
-                logger.info("开始保存银行卡信息。。。");
+                logger.info("开始保存银行卡信息。。。"+requestBean.getAccountId());
                 BankCallBean bean = new BankCallBean();
                 bean.setAccountId(requestBean.getAccountId());
                 bean.setLogUserId(requestBean.getUserid());
@@ -377,6 +377,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * @param bean
      */
     private void updateCardNoToBank(BankCallBean bean,User user) {
+        logger.info("------------保存银行卡信息");
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 调用银行接口(4.2.2 用户绑卡接口)
         BankCallBean cardBean = new BankCallBean();
@@ -439,6 +440,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             }
             BankCard bankCardbean = new BankCard();
             BeanUtils.copyProperties(bankCardbean, bankCard);
+            logger.info("--------插入用户银行bankCardbean:"+JSONObject.toJSONString(bankCardbean));
             boolean bankFlag = bankCardMapper.insertSelective(bankCardbean) > 0 ? true : false;
             if (!bankFlag) {
                 logger.error("插入用户银行卡失败！");
