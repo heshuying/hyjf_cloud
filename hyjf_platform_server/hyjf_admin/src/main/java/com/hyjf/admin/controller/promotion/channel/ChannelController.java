@@ -136,6 +136,7 @@ public class ChannelController extends BaseController {
                 adminResult.setStatus(UtmResultResponse.NOUSER);
                 adminResult.setStatusDesc("用户不存在");
             }else {
+                adminResult.setData(user);
                 adminResult.setStatusDesc("用户存在");
                 adminResult.setStatus(AdminResult.SUCCESS);
             }
