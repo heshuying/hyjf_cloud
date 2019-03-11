@@ -214,7 +214,7 @@ public class AccountRechargeController extends BaseController {
      * @return
      */
     @ApiOperation(value = "充值管理列表", notes = "资金中心->充值管理")
-    @PostMapping(value = "/hjhDayCreditDetailList")
+    @PostMapping(value = "/accountRechargeList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AccountRechargeCustomizeVO>> queryRechargeList(HttpServletRequest request, @RequestBody AccountRechargeRequestBean requestBean){
 
