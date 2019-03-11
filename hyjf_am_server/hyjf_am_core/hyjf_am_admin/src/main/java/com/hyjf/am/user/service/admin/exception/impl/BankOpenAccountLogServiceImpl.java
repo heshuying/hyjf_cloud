@@ -339,6 +339,24 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
 //            appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
 //            userService.updateUser(appUtmRegUser);
 //        }
+
+        // 开户更新开户渠道统计开户时间
+        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+        if (appUtmReg != null) {
+            AppUtmReg appUtmRegUser =  new AppUtmReg();
+            BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
+            appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(),GetDate.yyyyMMdd));
+            appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
+        }
+
+        // add 合规数据上报 埋点 liubin 20181122 start
+        // 推送数据到MQ 开户 出借人
+        if(requestBean.getRoleId().equals("1")){
+            JSONObject params = new JSONObject();
+            params.put("userId", userId);
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.OPEN_ACCOUNT_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+        }
         // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
         // 加入到消息队列
         Map<String, String> params = new HashMap<String, String>();
