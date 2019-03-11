@@ -405,6 +405,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             if (array != null && array.size() != 0) {
                 obj = array.getJSONObject(0);
             }
+            logger.info("--------插入用户银行obj:"+JSONObject.toJSONString(obj));
             BankCardRequest bankCard = new BankCardRequest();
             bankCard.setUserId(userId);
             bankCard.setUserName(user.getUsername());
