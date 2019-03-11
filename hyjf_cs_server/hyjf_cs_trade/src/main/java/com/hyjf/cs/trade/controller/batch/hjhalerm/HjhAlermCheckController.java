@@ -35,7 +35,7 @@ public class HjhAlermCheckController extends BaseTradeController {
         try {
             response = hjhAlarmService.alermBeforeLiquidateCheck();
         } catch (Exception e) {
-            logger.error("清算日前一天，扫描处于复审中或者投资中的原始标的进行预警 异常 e :" + e);
+            logger.error("清算日前一天，扫描处于复审中或者投资中的原始标的进行预警异常 e :" + e);
         }
 
         logger.info("清算日前一天，扫描处于复审中或者投资中的原始标的进行预警HjhAlermBeforeLiquidateCheckControllerend...");
