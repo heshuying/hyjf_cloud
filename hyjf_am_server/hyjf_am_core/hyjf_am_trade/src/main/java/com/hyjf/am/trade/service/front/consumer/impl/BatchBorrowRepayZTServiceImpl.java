@@ -2363,7 +2363,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			BorrowRecoverPlan borrowRecoverPlanNext = getBorrowRecoverPlan(borrowNid, periodNow + 1, tenderUserId, tenderOrderId);
 			borrowRecover.setRecoverTime(borrowRecoverPlanNext.getRecoverTime()); // 计算下期时间
 			borrowRecover.setRecoverType(TYPE_WAIT);
-		} else if(borrowRecoverPlan != null && periodNext == 0 && !isLastUpdate){ // 一次性还款最后一期且还有其他期未还完
+		} else if(borrowRecoverPlan != null && periodNext == 0 && isLastUpdate){ // 一次性还款最后一期且还有其他期未还完
 			borrowRecover.setRecoverStatus(0); // 未还款
 			borrowRecover.setRecoverYestime(nowTime); // 实际还款时间
 			borrowRecover.setRecoverTime(recoverTime);
@@ -2703,7 +2703,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			BorrowRecoverPlan borrowRecoverPlanNext = getBorrowRecoverPlan(borrowNid, periodNow + 1, tenderUserId, tenderOrderId);
 			newBorrowRecover.setRecoverTime(borrowRecoverPlanNext.getRecoverTime()); // 计算下期时间
 			newBorrowRecover.setRecoverType(TYPE_WAIT);
-		} else if(borrowRecoverPlan != null && periodNext == 0 && !isLastUpdate){ // 一次性还款最后一期且还有其他期未还完
+		} else if(borrowRecoverPlan != null && periodNext == 0 && isLastUpdate){ // 一次性还款最后一期且还有其他期未还完
 			newBorrowRecover.setRecoverStatus(0); // 未还款
 			newBorrowRecover.setRecoverYestime(nowTime); // 实际还款时间
 			newBorrowRecover.setRecoverTime(recoverTime);
