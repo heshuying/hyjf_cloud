@@ -29,7 +29,7 @@ public class SynBalanceMessageConsumer implements RocketMQListener<MessageExt>, 
     Logger logger = LoggerFactory.getLogger(SynBalanceMessageConsumer.class);
 
     private String thisMessName = "同步余额";
-    private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + " " + thisMessName + "】";
+    private String logHeader = "【===="+ thisMessName + "====】";
 
     @Autowired
     private SynBalanceService synBalanceService;
