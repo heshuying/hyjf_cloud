@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.login.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
@@ -132,7 +133,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		webViewUserVO = setToken(webViewUserVO);
 		String accountId = webViewUserVO.getBankAccount();
 		if (accountId != null && StringUtils.isNoneBlank(accountId)) {
-			synBalanceService.synBalance(accountId, ip);
+			//synBalanceService.synBalance(accountId, ip);
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("accountId", accountId);
+			params.put("ip", ip);
+			try {
+				commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.SYNBALANCE_TAG, UUID.randomUUID().toString(),params));
+			} catch (MQException e) {
+				e.printStackTrace();
+			}
+
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
