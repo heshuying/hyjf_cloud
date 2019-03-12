@@ -712,8 +712,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             updateAccedeDate(hjhAccede);
             //更新还款信息表
             updateHjhPlanRepayInfo(hjhAccede);
-            //推送消息
-            loanSendMessage(hjhAccede);
+            //推送消息 modify by cwyang 2019-3-11 已经和产品同事沟通确定，计划投资成功app消息不再推送
+//            loanSendMessage(hjhAccede);
             //汇计划二期修改清算时间
             updateEndDate(hjhAccede);
             // 更新资金明细   Account+AccountList
@@ -927,21 +927,21 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      * @param hjhAccede
      * @author Administrator
      */
-    private void loanSendMessage(HjhAccede hjhAccede) {
-        int userId = hjhAccede.getUserId();
-        BigDecimal amount = hjhAccede.getWaitTotal();
-        Map<String, String> msg = new HashMap<String, String>();
-        msg.put(VAL_AMOUNT, amount.toString());// 待收金额
-        msg.put(VAL_USER_ID, String.valueOf(userId));
-        // 推送消息队列
-        AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-                    smsMessage));
-        } catch (MQException e) {
-            logger.error("发送app消息失败..", e);
-        }
-    }
+//    private void loanSendMessage(HjhAccede hjhAccede) {
+//        int userId = hjhAccede.getUserId();
+//        BigDecimal amount = hjhAccede.getWaitTotal();
+//        Map<String, String> msg = new HashMap<String, String>();
+//        msg.put(VAL_AMOUNT, amount.toString());// 待收金额
+//        msg.put(VAL_USER_ID, String.valueOf(userId));
+//        // 推送消息队列
+//        AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
+//        try {
+//            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+//                    smsMessage));
+//        } catch (MQException e) {
+//            logger.error("发送app消息失败..", e);
+//        }
+//    }
 
     /**
      * 修改清算时间

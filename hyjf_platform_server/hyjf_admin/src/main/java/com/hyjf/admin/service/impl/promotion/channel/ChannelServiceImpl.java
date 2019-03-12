@@ -59,6 +59,12 @@ public class ChannelServiceImpl implements ChannelService {
     public UserVO getUser(String utmReferrer, String userId) {
         return amUserClient.getUser(utmReferrer, userId);
     }
+    @Override
+    public  UserVO getUserByUserId(int userId){
+        return amUserClient.getUserByUserId(userId);
+
+    }
+
 
     @Override
     public boolean insertOrUpdateUtm(ChannelCustomizeVO channelCustomizeVO) {
