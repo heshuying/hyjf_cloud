@@ -69,8 +69,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
     @Autowired
     private JxBankConfigMapper jxBankConfigMapper;
 
-    @Autowired
-    private CardBinMapper cardBinMapper;
 
 
     /**
@@ -415,9 +413,8 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     bank.setCreateUsername(user.getUsername());
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
-                    //String bankId = queryBankIdByCardNo(bank.getCardNo());
-                    String bankId ="";
-                            logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
+                    String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
+                    logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
                     if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
                         JxBankConfig banksConfigVO = getJxBankConfigByBankId(Integer.parseInt(bankId));
@@ -473,88 +470,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         bean.setLogRemark("联行号查询");
         bean.setLogClient(0);
         return BankCallUtils.callApiBg(bean);
-    }
-
-    /**
-     * 根据银行卡号获取bankId
-     * @param cardNo
-     * @return
-     */
-    private String queryBankIdByCardNo(String cardNo) {
-        logger.info("-------------根据银行卡号获取bankId  cardNo  {}   ",cardNo);
-        String bankId = null;
-        if (cardNo == null || cardNo.length() < 14 || cardNo.length() > 19) {
-            return "";
-        }
-        // 把常用的卡BIN放到最前面
-        // 6位卡BIN
-        String cardBin_6 = cardNo.substring(0, 6);
-        bankId = this.getBankId(6, cardBin_6);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 7位卡BIN
-        String cardBin_7 = cardNo.substring(0, 7);
-        bankId = this.getBankId(7, cardBin_7);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 8位卡BIN
-        String cardBin_8 = cardNo.substring(0, 8);
-        bankId = this.getBankId(8, cardBin_8);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 9位卡BIN
-        String cardBin_9 = cardNo.substring(0, 9);
-        bankId = this.getBankId(9, cardBin_9);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 2位卡BIN
-        String cardBin_2 = cardNo.substring(0, 2);
-        bankId = this.getBankId(2, cardBin_2);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 3位卡BIN
-        String cardBin_3 = cardNo.substring(0, 3);
-        bankId = this.getBankId(3, cardBin_3);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 4位卡BIN
-        String cardBin_4 = cardNo.substring(0, 4);
-        bankId = this.getBankId(4, cardBin_4);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 5位卡BIN
-        String cardBin_5 = cardNo.substring(0, 5);
-        bankId = this.getBankId(5, cardBin_5);
-        if (StringUtils.isNotBlank(bankId)) {
-            return bankId;
-        }
-        // 10位卡BIN
-        String cardBin_10 = cardNo.substring(0, 10);
-        bankId = this.getBankId(10, cardBin_10);
-        if (StringUtils.isNotBlank(cardBin_10)) {
-            return bankId;
-        }
-        logger.info("=================根据银行卡号获取bankId  cardNo  {}   ",cardNo);
-        return bankId;
-    }
-
-    private String getBankId(int cardBinLength, String cardBin) {
-        CardBinExample example = new CardBinExample();
-        CardBinExample.Criteria cra = example.createCriteria();
-        cra.andBinLengthEqualTo(cardBinLength);
-        cra.andBinValueEqualTo(cardBin);
-        List<CardBin> list = this.cardBinMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0).getBankId();
-        }
-        return null;
     }
 
     /**
