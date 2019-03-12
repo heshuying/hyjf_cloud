@@ -206,7 +206,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * 保存开户(User)的数据
      */
     public OpenAccountEnquiryResponse updateUser(OpenAccountEnquiryDefineRequest requestBean) {
-        logger.info("==========保存开户(User)的数据" );
+        logger.info("==========保存开户(User)的数据=======================" );
         OpenAccountEnquiryDefineResultBeanVO resultBean= new OpenAccountEnquiryDefineResultBeanVO();
         OpenAccountEnquiryResponse response =  new OpenAccountEnquiryResponse();
         String idCard = requestBean.getIdcard();
