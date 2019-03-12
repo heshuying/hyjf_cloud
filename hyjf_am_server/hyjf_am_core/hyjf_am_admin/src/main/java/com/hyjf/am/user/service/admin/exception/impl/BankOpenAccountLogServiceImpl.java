@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.admin.exception.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.config.SystemConfig;
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder;
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
@@ -416,7 +417,9 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     logger.info("---------------------------保存用户银行卡信息  userId  {}   ",userId);
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
+                    DynamicDataSourceContextHolder.useSlaveConfigDataSource();
                     String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
+                    DynamicDataSourceContextHolder.useMasterUserDataSource();
                     logger.info("-----------保存用户银行卡信息  bankId  {}   ",bankId);
                     if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
