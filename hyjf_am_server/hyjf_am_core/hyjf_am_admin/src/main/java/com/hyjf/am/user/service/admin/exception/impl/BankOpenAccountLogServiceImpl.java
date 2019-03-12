@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.admin.mq.base.CommonProducer;
+import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
+import com.hyjf.am.config.dao.model.auto.CardBin;
+import com.hyjf.am.config.dao.model.auto.CardBinExample;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
 import com.hyjf.am.config.service.BankConfigService;
@@ -65,6 +68,9 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
 
     @Autowired
     private JxBankConfigMapper jxBankConfigMapper;
+
+    @Autowired
+    private CardBinMapper cardBinMapper;
 
 
     /**
@@ -409,7 +415,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     bank.setCreateUsername(user.getUsername());
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
-                    String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
+                    String bankId = queryBankIdByCardNo(bank.getCardNo());
                     logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
                     if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
@@ -469,39 +475,85 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
     }
 
     /**
-     * 查看是否设置交易密码
-     * @param account
-     * @param userId
+     * 根据银行卡号获取bankId
+     * @param cardNo
      * @return
      */
-    private Integer getIsSetPassword(String account,Integer userId) {
-        // 调用查询电子账户密码是否设置
-        BankCallBean selectbean = new BankCallBean();
-        selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-        selectbean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET_QUERY);
-        selectbean.setInstCode(systemConfig.getBankInstcode());// 机构代码
-        selectbean.setBankCode(systemConfig.getBankBankcode());
-        selectbean.setTxDate(GetOrderIdUtils.getTxDate());
-        selectbean.setTxTime(GetOrderIdUtils.getTxTime());
-        selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
-        selectbean.setChannel(BankCallConstant.CHANNEL_PC);
-        // 电子账号
-        selectbean.setAccountId(account);
-
-        // 操作者ID
-        selectbean.setLogUserId(userId+"");
-        selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        selectbean.setLogClient(0);
-        // 返回参数
-        BankCallBean retBean = BankCallUtils.callApiBg(selectbean);
-
-        if(retBean==null){
-            return 0;
+    private String queryBankIdByCardNo(String cardNo) {
+        logger.info("-------------根据银行卡号获取bankId  cardNo  {}   ",cardNo);
+        String bankId = null;
+        if (cardNo == null || cardNo.length() < 14 || cardNo.length() > 19) {
+            return "";
         }
-        if("1".equals(retBean.getPinFlag())){
-            return 1;
+        // 把常用的卡BIN放到最前面
+        // 6位卡BIN
+        String cardBin_6 = cardNo.substring(0, 6);
+        bankId = this.getBankId(6, cardBin_6);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
         }
-        return 0;
+        // 7位卡BIN
+        String cardBin_7 = cardNo.substring(0, 7);
+        bankId = this.getBankId(7, cardBin_7);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 8位卡BIN
+        String cardBin_8 = cardNo.substring(0, 8);
+        bankId = this.getBankId(8, cardBin_8);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 9位卡BIN
+        String cardBin_9 = cardNo.substring(0, 9);
+        bankId = this.getBankId(9, cardBin_9);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 2位卡BIN
+        String cardBin_2 = cardNo.substring(0, 2);
+        bankId = this.getBankId(2, cardBin_2);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 3位卡BIN
+        String cardBin_3 = cardNo.substring(0, 3);
+        bankId = this.getBankId(3, cardBin_3);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 4位卡BIN
+        String cardBin_4 = cardNo.substring(0, 4);
+        bankId = this.getBankId(4, cardBin_4);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 5位卡BIN
+        String cardBin_5 = cardNo.substring(0, 5);
+        bankId = this.getBankId(5, cardBin_5);
+        if (StringUtils.isNotBlank(bankId)) {
+            return bankId;
+        }
+        // 10位卡BIN
+        String cardBin_10 = cardNo.substring(0, 10);
+        bankId = this.getBankId(10, cardBin_10);
+        if (StringUtils.isNotBlank(cardBin_10)) {
+            return bankId;
+        }
+        logger.info("=================根据银行卡号获取bankId  cardNo  {}   ",cardNo);
+        return bankId;
+    }
+
+    private String getBankId(int cardBinLength, String cardBin) {
+        CardBinExample example = new CardBinExample();
+        CardBinExample.Criteria cra = example.createCriteria();
+        cra.andBinLengthEqualTo(cardBinLength);
+        cra.andBinValueEqualTo(cardBin);
+        List<CardBin> list = this.cardBinMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list.get(0).getBankId();
+        }
+        return null;
     }
 
     /**
