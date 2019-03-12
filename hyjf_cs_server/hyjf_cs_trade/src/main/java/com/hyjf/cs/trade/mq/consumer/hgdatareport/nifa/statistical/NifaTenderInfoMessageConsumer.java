@@ -98,7 +98,8 @@ public class NifaTenderInfoMessageConsumer implements RocketMQListener<MessageEx
             }
             // 增加防重校验（已报送过的不再处理和入库、未报送过的重新编辑写入一遍）
             NifaBorrowInfoVO nifaBorrowInfoVO = this.nifaTenderInfoMessageService.selectNifaBorrowInfoByBorrowNid(borrowNid, msgBody);
-            if (null != nifaBorrowInfoVO && "1".equals(nifaBorrowInfoVO.getReportStatus())) {
+            // 放款数据已存在mongo库不再生成数据、确认相关信息手动清理完成后再推送处理消息
+            if (null != nifaBorrowInfoVO ) {
                 // 已经上报成功
                 logger.info(logHeader + " 借款详情已经上报。" + msgBody);
                 return;
