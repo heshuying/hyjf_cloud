@@ -223,12 +223,17 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
         logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
-        UserVO user = amUserClient.findUserById(Integer.valueOf(userid));
-        BankCallBean bean = new BankCallBean();
-        bean.setAccountId(requestBean.getAccountId());
-        bean.setLogUserId(requestBean.getUserid());
-        bean.setMobile(requestBean.getMobile());
-        updateCardNoToBank(bean,user);
+        if(openAccountEnquiryDefineRequestBeanVO !=null){
+            if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())) {
+                UserVO user = amUserClient.findUserById(Integer.valueOf(userid));
+                BankCallBean bean = new BankCallBean();
+                bean.setAccountId(requestBean.getAccountId());
+                bean.setLogUserId(requestBean.getUserid());
+                bean.setMobile(requestBean.getMobile());
+                updateCardNoToBank(bean, user);
+            }
+        }
+
         return requestBean;
     }
     /**
