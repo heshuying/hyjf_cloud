@@ -454,10 +454,10 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                     // 更新联行号
                     bank.setPayAllianceCode(payAllianceCode);
                     logger.info("--------------保存银行卡信息，插入用户银行卡,bank:",JSONObject.toJSONString(bank));
-                    boolean bankFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
+                    /*boolean bankFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
                     if (!bankFlag) {
                         logger.error("插入用户银行卡失败！");
-                    }
+                    }*/
                 } else {
                     logger.error("更新银行卡信息出错，转换array失败，userId:{}", userId);
                 }
