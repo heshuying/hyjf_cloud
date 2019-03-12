@@ -334,10 +334,10 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "担保机构待还款列表", notes = "担保机构待还款列表")
     @PostMapping(value = "/wait_org_list", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> selectOrgRepayWaitList(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
+        logger.info("担保机构待还款列表开始，userId:{}, requestBean:{}", userId, JSON.toJSONString(requestBean));
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
-        logger.info("担保机构待还款列表开始，userId:{}", userVO.getUserId());
         requestBean.setStatus("0");
         requestBean.setUserId(String.valueOf(userVO.getUserId()));
         // 请求参数校验
@@ -361,6 +361,7 @@ public class RepayManageController extends BaseTradeController {
             result.setStatusDesc(WebResult.ERROR_DESC);
         }
         result.setPage(page);
+        logger.info("担保机构待还款列表结束，userId:{}, result:{}", userId, JSON.toJSONString(result));
         return result;
     }
 
