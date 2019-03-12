@@ -82,7 +82,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         MailMessage mailMessage = new MailMessage(null, null, subject, null, fileNames, toEmail, null, MessageConstant.MAIL_SEND_FRO_SELL_DAILY, is);
         try {
             // 包含附件
-            commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
+            commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, "sell_daily_excel", mailMessage));
             logger.info("发送销售日报成功>>>>>>>>>>>>>>>>>>>>>");
         } catch (Exception e) {
             logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);
