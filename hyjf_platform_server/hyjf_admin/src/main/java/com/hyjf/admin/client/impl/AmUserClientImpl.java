@@ -669,7 +669,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int insertUserCard(BankCardRequest request) {
-		logger.info("--------------保存银行卡信息，插入用户银行卡,BankCardRequest:"+JSONObject.toJSONString(request));
+		logger.info("------==========================--------保存银行卡信息，插入用户银行卡,BankCardRequest:"+JSONObject.toJSONString(request));
 		int result = restTemplate.postForEntity(userService+"/card/insertUserCard", request, Integer.class)
 				.getBody();
 		return result;
