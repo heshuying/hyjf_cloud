@@ -371,14 +371,15 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         // 如果调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
-            logger.info("保存用户银行卡信息  usrCardInfolist:{},   ",JSONObject.toJSONString(usrCardInfolist));
+            logger.info("保存用户银行卡信息  usrCardInfolist:{} ",JSONObject.toJSONString(usrCardInfolist));
             if (!StringUtils.isEmpty(usrCardInfolist)) {
                 JSONArray array = JSONObject.parseArray(usrCardInfolist);
                 if (array != null && array.size() > 0) {
-                    logger.info("保存用户银行卡信息  array:{},   ",JSONObject.toJSONString(array));
+                    logger.info("保存用户银行卡信息  array:{}",JSONObject.toJSONString(array));
                     // 查询有结果  取第一条
                     JSONObject obj = null;
                     obj = array.getJSONObject(0);
+                    logger.info("保存用户银行卡信息  obj:{}",JSONObject.toJSONString(obj));
                     BankCardRequest bank = new BankCardRequest();
                     bank.setUserId(userId);
                     // 设置绑定的手机号
@@ -389,12 +390,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     // 银行联号
                     String payAllianceCode = "";
                     // 调用江西银行接口查询银行联号
+                    logger.info("调用江西银行接口查询银行联号  cardNo:{},  userId:{} ",obj.getString("cardNo"),userId);
                     BankCallBean payAllianceCodeQueryBean = this.payAllianceCodeQuery(obj.getString("cardNo"), userId);
                     if (payAllianceCodeQueryBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(payAllianceCodeQueryBean.getRetCode())) {
                         payAllianceCode = payAllianceCodeQueryBean.getPayAllianceCode();
                     } else {
                         logger.error("调用江西银行查询联行号失败，userId:{}", userId);
                     }
+                    logger.info("保存用户银行卡信息  payAllianceCode:{}",payAllianceCode);
                     SimpleDateFormat sdf = GetDate.yyyymmddhhmmss;
                     try {
                         bank.setCreateTime(sdf.parse(obj.getString("txnDate") + obj.getString("txnTime")));
