@@ -43,5 +43,5 @@ public interface SellDailyCustomizeMapper {
     /**
      * 计算第四、六、十列速率,第十六列净资金流
      */
-    void calculateRate();
+    void calculateRate(String dateStr);
 }

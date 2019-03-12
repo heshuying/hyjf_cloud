@@ -30,21 +30,21 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 
 	private Integer tenderNumber;
 
-	private BigDecimal cumulativeRecharge;
+	private BigDecimal cumulativeRecharge = BigDecimal.ZERO;
 
-	private BigDecimal cumulativeInvestment;
+	private BigDecimal cumulativeInvestment = BigDecimal.ZERO;;
 
-	private BigDecimal hztTenderPrice;
+	private BigDecimal hztTenderPrice = BigDecimal.ZERO;;
 
-	private BigDecimal hxfTenderPrice;
+	private BigDecimal hxfTenderPrice = BigDecimal.ZERO;;
 
-	private BigDecimal htlTenderPrice;
+	private BigDecimal htlTenderPrice = BigDecimal.ZERO;;
 
-	private BigDecimal htjTenderPrice;
+	private BigDecimal htjTenderPrice = BigDecimal.ZERO;;
 
-	private BigDecimal rtbTenderPrice;
+	private BigDecimal rtbTenderPrice = BigDecimal.ZERO;;
 
-	private BigDecimal hzrTenderPrice;
+	private BigDecimal hzrTenderPrice = BigDecimal.ZERO;;
 	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
 	private Date addTime;
 
@@ -200,4 +200,6 @@ public class PcChannelStatisticsVO extends BaseVO implements Serializable {
 	public void setAddTime(Date addTime) {
 		this.addTime = addTime;
 	}
+
+
 }
