@@ -426,7 +426,6 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_MODIFYPHONE})
     public AdminResult checkAction(@RequestParam(value = "userId") String userId,@RequestParam(value = "mobile") String mobile) {
         // 检查手机号码唯一性
         if(StringUtils.isNotBlank(userId)){
