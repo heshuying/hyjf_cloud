@@ -6967,4 +6967,36 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/repay/getFailCredit/" + borrowNid;
         return restTemplate.getForEntity(url, boolean.class).getBody();
     }
+
+
+    /**
+     * 获取crm投资
+     *
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> selectCrmBorrowTenderList() {
+        String url = "http://AM-TRADE/am-trade/crm/selectCrmBorrowTenderList/";
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取crm智投投资
+     *
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectCrmHjhAccedeList() {
+        String url = "http://AM-TRADE/am-trade/crm/selectCrmHjhAccedeList/";
+        HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }
