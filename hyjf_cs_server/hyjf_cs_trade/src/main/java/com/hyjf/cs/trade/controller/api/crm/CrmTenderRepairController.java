@@ -23,7 +23,7 @@ import java.util.List;
  * @author liuyang
  * @version CrmTenderRepairController, v0.1 2019/3/12 9:32
  */
-@Api(value = "api端-获取回款记录接口", tags = "api端-获取回款记录接口")
+@Api(value = "api端-CRM投资数据同步修复", tags = "api端-CRM投资数据同步修复")
 @RestController
 @RequestMapping("/hyjf-api/crm")
 public class CrmTenderRepairController extends BaseTradeController {
