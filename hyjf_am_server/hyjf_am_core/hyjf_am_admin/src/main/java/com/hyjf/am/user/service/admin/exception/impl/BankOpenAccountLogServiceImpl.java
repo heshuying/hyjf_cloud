@@ -232,7 +232,29 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 return response;
             }
             Integer userId = Integer.parseInt(requestBean.getUserid());
-           boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+            // 获取用户信息
+            User user = userService.findUserByUserId(userId);
+            // 开户更新开户渠道统计开户时间
+            AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+            logger.info("----------开户更新开户渠道统计开户时间。。。appUtmReg:[{}],userId:[{}]："+JSONObject.toJSONString(appUtmReg),userId);
+            if (appUtmReg != null) {
+                AppUtmReg appUtmRegUser = new AppUtmReg();
+                BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
+                appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
+                logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
+                appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
+            }
+            BankCard card = userService.getBankCardByUserId(userId);
+            if (card == null) {
+                logger.info("开始保存银行卡信息。。。");
+                BankCallBean bean = new BankCallBean();
+                bean.setAccountId(requestBean.getAccountId());
+                bean.setLogUserId(requestBean.getUserid());
+                bean.setMobile(requestBean.getMobile());
+                updateCardNoToBank(bean, user);
+            }
+
+           /* boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
             }
@@ -243,8 +265,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.error("==========该电子账号已被用户关联,无法完成掉单修复!============关联电子账号: " + requestBean.getAccountId());
                 throw new Exception("该电子账号已被用户关联,无法完成掉单修复!");
             }
-            // 获取用户信息
-            User user = userService.findUserByUserId(userId);
+
             String trueName = requestBean.getName();
             if (idCard.length() < 18) {
                 try {
@@ -305,26 +326,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.error("插入用户开户表失败！");
                 throw new Exception("插入用户开户表失败！");
             }
-            BankCard card = userService.getBankCardByUserId(userId);
-            if (card == null) {
-                logger.info("开始保存银行卡信息。。。");
-                BankCallBean bean = new BankCallBean();
-                bean.setAccountId(requestBean.getAccountId());
-                bean.setLogUserId(requestBean.getUserid());
-                bean.setMobile(requestBean.getMobile());
-                updateCardNoToBank(bean, user);
-            }
-
-            // 开户更新开户渠道统计开户时间
-            AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-            logger.info("----------开户更新开户渠道统计开户时间。。。appUtmReg:[{}],userId:[{}]："+JSONObject.toJSONString(appUtmReg),userId);
-            if (appUtmReg != null) {
-                AppUtmReg appUtmRegUser = new AppUtmReg();
-                BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
-                appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
-                logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
-                appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
-            }
 
             // add 合规数据上报 埋点 liubin 20181122 start
             // 推送数据到MQ 开户 出借人
@@ -345,7 +346,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
             } catch (Exception e) {
                 logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]", userId);
-            }
+            }*/
         }catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！");
         }
@@ -376,9 +377,11 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         // 如果调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
+            logger.info("保存用户银行卡信息  usrCardInfolist:{},   ",JSONObject.toJSONString(usrCardInfolist));
             if (!StringUtils.isEmpty(usrCardInfolist)) {
                 JSONArray array = JSONObject.parseArray(usrCardInfolist);
                 if (array != null && array.size() > 0) {
+                    logger.info("保存用户银行卡信息  array:{},   ",JSONObject.toJSONString(array));
                     // 查询有结果  取第一条
                     JSONObject obj = null;
                     obj = array.getJSONObject(0);
@@ -437,6 +440,8 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             } else {
                 logger.error("更新银行卡信息出错，返回空，userId:{}", userId);
             }
+        } else {
+            logger.error("更新银行卡信息出错，银行返回码  {},  BankCallConstant.RESPCODE_SUCCESS{}", respCode,BankCallConstant.RESPCODE_SUCCESS);
         }
     }
 

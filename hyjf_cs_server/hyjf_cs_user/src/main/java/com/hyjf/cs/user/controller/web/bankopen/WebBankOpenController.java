@@ -160,7 +160,7 @@ public class WebBankOpenController extends BaseUserController {
     @ResponseBody
     public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String mobile,@RequestParam("roleId")String roleId,@RequestParam("openclient")String openclient) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
-        /*bean.setMobile(mobile);
+       /*bean.setMobile(mobile);
         bean.setLogClient(Integer.parseInt(openclient));
         bean.setIdentity(roleId);
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
