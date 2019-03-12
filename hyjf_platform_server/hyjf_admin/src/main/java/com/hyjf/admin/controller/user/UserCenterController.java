@@ -957,9 +957,6 @@ public class UserCenterController extends BaseController {
     @ResponseBody
     @PostMapping(value = "/initUpdateUserInfos")
     @ApiOperation(value = "初始化用户信息", notes = "初始化用户信息(修改手机号,邮箱,用户角色,银行卡)")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFYPHONE,
-            ShiroConstants.PERMISSION_MODIFYEMAIL,ShiroConstants.PERMISSION_MODIFYUSERROLE,
-            ShiroConstants.PERMISSION_MODIFYBANKCARD})
     public AdminResult<InitUserBaseInfoResponseBean> initUpdateUserInfos(@RequestParam(value = "userId") String userId,@RequestParam(value = "updType") String updType) {
         InitUserBaseInfoResponseBean initUserBaseInfoResponseBean = new InitUserBaseInfoResponseBean();
         initUserBaseInfoResponseBean.setUpdType(updType);
@@ -1056,9 +1053,6 @@ public class UserCenterController extends BaseController {
     @ResponseBody
     @PostMapping(value = "/updateUserBaseInfo")
     @ApiOperation(value = "保存用户基本信息", notes = "保存用户基本信息")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFYPHONE,
-            ShiroConstants.PERMISSION_MODIFYEMAIL,ShiroConstants.PERMISSION_MODIFYUSERROLE,
-            ShiroConstants.PERMISSION_MODIFYBANKCARD})
     public AdminResult<Response> updateUserBaseInfo(HttpServletRequest request, @RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
         AdminSystemVO  adminSystemVO = this.getUser(request);
         UserInfosUpdCustomizeRequest userInfosUpdCustomizeRequest = new UserInfosUpdCustomizeRequest();
