@@ -401,6 +401,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         BankCallBean call = BankCallUtils.callApiBg(cardBean);
         String respCode = call == null ? "" : call.getRetCode();
         // 如果接口调用成功
+        logger.info("--------------保存银行卡信息，插入用户银行卡,respCode:",respCode);
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
             JSONArray array = JSONObject.parseArray(usrCardInfolist);
@@ -408,13 +409,15 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             if (array != null && array.size() != 0) {
                 obj = array.getJSONObject(0);
             }
+            logger.info("--------------保存银行卡信息，插入用户银行卡,obj:",JSONObject.toJSONString(obj));
             BankCardRequest bankCard = new BankCardRequest();
             bankCard.setUserId(userId);
             bankCard.setUserName(user.getUsername());
             // 设置银行卡
             String bankId = amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
+            logger.info("--------------保存银行卡信息，插入用户银行卡,bankId:",bankId);
             JxBankConfigVO banksConfigVO = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
-
+            logger.info("--------------保存银行卡信息，插入用户银行卡,banksConfigVO:",JSONObject.toJSONString(banksConfigVO));
             bankCard.setCardNo(obj.getString("cardNo"));
             bankCard.setBank(banksConfigVO.getBankName());
             bankCard.setStatus(1);
@@ -441,6 +444,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                     bankCard.setPayAllianceCode(payAllianceCode);
                 }
             }
+            logger.info("--------------保存银行卡信息，插入用户银行卡,bank:",JSONObject.toJSONString(bankCard));
             boolean bankFlag = amUserClient.insertUserCard(bankCard) > 0 ? true : false;
             if (!bankFlag) {
                 logger.error("插入用户银行卡失败！");

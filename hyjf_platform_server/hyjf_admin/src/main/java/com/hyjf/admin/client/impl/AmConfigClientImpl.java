@@ -83,10 +83,11 @@ public class AmConfigClientImpl implements AmConfigClient {
 
     /**
      * 根据银行id查询江西银行配置
-     * @auth sunpeikai
-     * @param id 银行id
-     * @return
-     */
+     * @author Zha Daojian
+     * @date 2019/3/12 18:49
+     * @param id
+     * @return com.hyjf.am.vo.trade.JxBankConfigVO
+     **/
     @Override
     public JxBankConfigVO getJxBankConfigById(Integer id) {
         JxBankConfigResponse response = restTemplate
