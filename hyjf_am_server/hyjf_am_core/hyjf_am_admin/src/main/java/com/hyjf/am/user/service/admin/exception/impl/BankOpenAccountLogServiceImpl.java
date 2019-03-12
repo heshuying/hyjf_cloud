@@ -4,16 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.admin.mq.base.CommonProducer;
-import com.hyjf.am.config.dao.mapper.auto.CardBinMapper;
+import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
-import com.hyjf.am.config.dao.model.auto.CardBin;
-import com.hyjf.am.config.dao.model.auto.CardBinExample;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
 import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
 import com.hyjf.am.resquest.admin.OpenAccountEnquiryDefineRequest;
-import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize;
@@ -23,8 +20,11 @@ import com.hyjf.am.user.service.front.user.AppUtmRegService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -38,7 +38,10 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @version BankOpenAccountLogSrviceImpl, v0.1 2018/8/21 14:41
@@ -252,7 +255,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 updateCardNoToBank(bean, user);
             }
 
-           /* boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+            boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
             }
@@ -344,7 +347,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
             } catch (Exception e) {
                 logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]", userId);
-            }*/
+            }
         }catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！");
         }
@@ -430,8 +433,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     }
                     // 更新联行号
                     bank.setPayAllianceCode(payAllianceCode);
-                   /* BankCard bankCardbean = new BankCard();
-                    BeanUtils.copyProperties(bank,bankCardbean);*/
                     logger.info("--------------保存银行卡信息，插入用户银行卡,bank:",JSONObject.toJSONString(bank));
                     boolean bankFlag = bankCardMapper.insertSelective(bank) > 0 ? true : false;
                     if (!bankFlag) {
@@ -491,5 +492,78 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             return jxBankConfigList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 查看是否设置交易密码
+     * @param account
+     * @param userId
+     * @return
+     */
+    private Integer getIsSetPassword(String account,Integer userId) {
+        // 调用查询电子账户密码是否设置
+        BankCallBean selectbean = new BankCallBean();
+        selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+        selectbean.setTxCode(BankCallConstant.TXCODE_PASSWORD_SET_QUERY);
+        selectbean.setInstCode(systemConfig.getBankInstcode());// 机构代码
+        selectbean.setBankCode(systemConfig.getBankBankcode());
+        selectbean.setTxDate(GetOrderIdUtils.getTxDate());
+        selectbean.setTxTime(GetOrderIdUtils.getTxTime());
+        selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        selectbean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        selectbean.setAccountId(account);
+
+        // 操作者ID
+        selectbean.setLogUserId(userId+"");
+        selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        selectbean.setLogClient(0);
+        // 返回参数
+        BankCallBean retBean = BankCallUtils.callApiBg(selectbean);
+
+        if(retBean==null){
+            return 0;
+        }
+        if("1".equals(retBean.getPinFlag())){
+            return 1;
+        }
+        return 0;
+    }
+
+    //reg_esb   hyjf_user表
+    private String accountEsbStates(int string) {
+        if (string==0) {
+            return "PC";
+        }
+        if (string==1) {
+            return "微信";
+        }
+        if (string==2) {
+            return "Android";
+        }
+        if (string==3) {
+            return "iOS";
+        }
+        if (string==4) {
+            return "其他";
+        }
+        return null;
+
+    }
+    private String accountState(String string) {
+        if (string.isEmpty()) {
+            return "正常";
+        }
+        if (string.equals("A")) {
+            return "待激活";
+        }
+        if (string.equals("C")) {
+            return "止付";
+        }
+        if (string.equals("Z")) {
+            return "注销";
+        }
+        return null;
+
     }
 }
