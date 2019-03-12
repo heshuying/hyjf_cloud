@@ -154,8 +154,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				}
 			}
 		} else {
-			borrowRecover.setRecoverStatus(2);
-			boolean flag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
+            BorrowRecover newBorrowRecover = new BorrowRecover();
+            newBorrowRecover.setId(borrowRecover.getId());
+            newBorrowRecover.setRecoverStatus(2);
+			boolean flag = this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover) > 0 ? true : false;
 			if (!flag) {
 				throw new Exception("放款记录总表(ht_borrow_recover)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
 			}
@@ -964,7 +966,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         BorrowRecover newBorrowRecover = new BorrowRecover();
         newBorrowRecover.setId(borrowRecover.getId());
         newBorrowRecover.setDebtStatus(1);
-		return this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
+		return this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover) > 0 ? true : false;
 	}
 
 	/**
