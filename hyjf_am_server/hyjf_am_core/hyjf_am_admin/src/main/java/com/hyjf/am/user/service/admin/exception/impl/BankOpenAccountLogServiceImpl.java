@@ -311,6 +311,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
 
             // 开户更新开户渠道统计开户时间
             AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+            logger.info("开户更新开户渠道统计开户时间。。。appUtmReg:[{}],userId:[{}]："+JSONObject.toJSONString(appUtmReg),userId);
             if (appUtmReg != null) {
                 AppUtmReg appUtmRegUser = new AppUtmReg();
                 BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
