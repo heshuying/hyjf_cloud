@@ -255,7 +255,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 updateCardNoToBank(bean, user);
             }
 
-            boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+          /*  boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
             }
@@ -347,7 +347,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
             } catch (Exception e) {
                 logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]", userId);
-            }
+            }*/
         }catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！");
         }
