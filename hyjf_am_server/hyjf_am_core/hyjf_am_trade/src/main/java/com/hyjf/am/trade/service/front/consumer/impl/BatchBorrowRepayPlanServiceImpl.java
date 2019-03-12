@@ -961,7 +961,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @return
 	 */
 	private boolean updateDebtStatus(BorrowRecover borrowRecover, boolean isMonth) {
-		borrowRecover.setDebtStatus(1);
+        BorrowRecover newBorrowRecover = new BorrowRecover();
+        newBorrowRecover.setId(borrowRecover.getId());
+        newBorrowRecover.setDebtStatus(1);
 		return this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 	}
 

@@ -1560,8 +1560,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * @return
 	 */
 	private boolean updateDebtStatus(BorrowRecover borrowRecover, boolean isMonth) {
-		borrowRecover.setDebtStatus(1);
-		return this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
+		BorrowRecover newBorrowRecover = new BorrowRecover();
+		newBorrowRecover.setId(borrowRecover.getId());
+		newBorrowRecover.setDebtStatus(1);
+		return this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover) > 0 ? true : false;
 	}
 
 	/**
