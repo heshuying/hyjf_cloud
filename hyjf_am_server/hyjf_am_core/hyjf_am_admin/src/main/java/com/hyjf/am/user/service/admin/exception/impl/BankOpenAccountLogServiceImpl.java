@@ -411,12 +411,12 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     } catch (ParseException e) {
                         logger.error("银行返回日期格式化失败，userId:{}", userId);
                     }
-                    logger.info("保存用户银行卡信息  setCreateTime:{}",bank.getCreateTime());
+                    logger.info("-------------保存用户银行卡信息  setCreateTime:{}",bank.getCreateTime());
                     bank.setCreateUserId(userId);
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
                     String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
-                    logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
+                    logger.info("-----------保存用户银行卡信息  bankId  {}   ",bankId);
                     if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
                         JxBankConfig banksConfigVO = getJxBankConfigByBankId(Integer.parseInt(bankId));
