@@ -415,8 +415,9 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     bank.setCreateUsername(user.getUsername());
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
-                    String bankId = queryBankIdByCardNo(bank.getCardNo());
-                    logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
+                    //String bankId = queryBankIdByCardNo(bank.getCardNo());
+                    String bankId ="";
+                            logger.info("保存用户银行卡信息  bankId  {}   ",bankId);
                     if (!StringUtils.isEmpty(bankId)) {
                         bank.setBankId(Integer.parseInt(bankId));
                         JxBankConfig banksConfigVO = getJxBankConfigByBankId(Integer.parseInt(bankId));
