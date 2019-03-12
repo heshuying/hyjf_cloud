@@ -225,7 +225,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 return response;
             }
             Integer userId = Integer.parseInt(requestBean.getUserid());
-            boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+           /* boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
             }
@@ -235,7 +235,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 // 校验未通过
                 logger.error("==========该电子账号已被用户关联,无法完成掉单修复!============关联电子账号: " + requestBean.getAccountId());
                 throw new Exception("该电子账号已被用户关联,无法完成掉单修复!");
-            }
+            }*/
             // 获取用户信息
             User user = userService.findUserByUserId(userId);
             String trueName = requestBean.getName();
