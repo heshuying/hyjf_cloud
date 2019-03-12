@@ -602,8 +602,8 @@
         LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
         LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id=1
-        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
           GROUP BY u.user_id
     </sql>
 
@@ -665,15 +665,15 @@
         LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
         LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id=1
-        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
          GROUP BY u.user_id) z
         LEFT JOIN (SELECT u.user_id, SUM(t.account) AS total_invest_amount FROM hyjf_user.ht_user u
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
         LEFT JOIN hyjf_trade.ht_borrow_tender t ON u.user_id=t.user_id
         WHERE ui.role_id=1
-        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
           GROUP BY u.user_id) y ON z.user_id=y.user_id
     </sql>
 

@@ -105,13 +105,13 @@ public class AmMarketClientImpl implements AmMarketClient {
     @Override
     public void batchInsertSellDaily(List<SellDailyVO> list) {
 		restTemplate.postForObject("http://AM-MARKET/am-market/sell_daily/batch_insert_sell_daily", list,
-				Object.class);
+                BooleanResponse.class);
     }
 
     @Override
     public void calculateRate() {
         restTemplate.getForObject("http://AM-MARKET/am-market/sell_daily/calculate_rate",
-                Object.class);
+                BooleanResponse.class);
     }
 
     @Override
