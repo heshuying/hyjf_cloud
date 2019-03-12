@@ -1213,7 +1213,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 已还款管理费
 		newBorrowRecover.setRecoverFeeYes(manageFee);
 		// 更新还款表
-		boolean creditBorrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover) > 0 ? true : false;
+        logger.info("【直投还款/承接人】借款编号：{}，开始更新放款记录总表。未还款总额：{}，还款额：{}",
+                borrowNid, borrowRecover.getRecoverAccountWait(), assignAccount);
+        // 再更新已还待还 update by wgx 2019/03/11
+        boolean creditBorrowRecoverFlag = batchBorrowRecoverCustomizeMapper.updateRepayOfBorrowRecover(newBorrowRecover) > 0 ? true : false;
 		if (!creditBorrowRecoverFlag) {
 			throw new Exception("放款记录总表(ht_borrow_recover)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}

@@ -1547,7 +1547,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 更新放款记录
 		BorrowRecover newBorrowRecover = new BorrowRecover();
 		newBorrowRecover.setId(borrowRecover.getId());
-		logger.info("【智投还款/承接人】借款编号：{}，开始更新放款记录总表。未还款总额：{}，还款额：{}",
+		logger.info("【智投还款/出借人】借款编号：{}，开始更新放款记录总表。未还款总额：{}，还款额：{}",
 				borrowNid, borrowRecover.getRecoverAccountWait(), recoverAccountWait);
 		if (borrowRecoverPlan != null && periodNext > 0 && !isLastUpdate) {// 分期并且不是最后一期,而且不是一次性还款最后一期需要更新的
 			newBorrowRecover.setRecoverStatus(0); // 未还款
@@ -2275,6 +2275,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		newBorrowRecover.setRepayLateInterest(lateInterest);
 		// 已还款管理费
 		newBorrowRecover.setRecoverFeeYes(manageFee);
+        logger.info("【智投还款/承接人】借款编号：{}，开始更新放款记录总表。未还款总额：{}，还款额：{}",
+                borrowNid, borrowRecover.getRecoverAccountWait(), assignAccount);
 		// 更新还款表
 		boolean creditBorrowRecoverFlag = batchBorrowRecoverCustomizeMapper.updateRepayOfBorrowRecover(newBorrowRecover) > 0 ? true : false;
 		if (!creditBorrowRecoverFlag) {
