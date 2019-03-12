@@ -92,7 +92,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				}
 
 			} catch (Exception e) {
-				logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：" + e + "=============");
+				logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：" + e.getMessage()	+ "=============");
 				return;
 			}
 			logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
