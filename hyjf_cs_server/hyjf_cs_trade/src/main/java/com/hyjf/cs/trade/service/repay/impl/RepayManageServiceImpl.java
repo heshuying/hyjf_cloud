@@ -126,12 +126,16 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             requestBean.setPageSize(10);
         }
 
+        logger.info("startDate:" + requestBean.getStartDate());
+        logger.info("endDate:" + requestBean.getEndDate());
         if(StringUtils.isBlank(requestBean.getStartDate())){
             requestBean.setStartDate(GetDate.formatDate(new Date()));
         }
         if(StringUtils.isBlank(requestBean.getEndDate())){
             requestBean.setEndDate(GetDate.formatDate(new Date()));
         }
+        logger.info("startDate:" + requestBean.getStartDate());
+        logger.info("endDate:" + requestBean.getEndDate());
     }
 
     /**
