@@ -471,7 +471,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
 
   /*  *//**
      * 保存银行卡信息
-     * @param bean
      *//*
     private void updateCardNoToBank(BankCallBean bean,UserVO user) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
