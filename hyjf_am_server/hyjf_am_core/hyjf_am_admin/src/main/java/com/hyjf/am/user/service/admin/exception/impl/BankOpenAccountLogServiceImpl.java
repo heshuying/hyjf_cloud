@@ -206,7 +206,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * 保存开户(User)的数据
      */
     public OpenAccountEnquiryResponse updateUser(OpenAccountEnquiryDefineRequest requestBean) {
-        logger.info("==========保存开户(User)的数据=======================" );
+        logger.info("==========保存开户(User)的数据" );
         OpenAccountEnquiryDefineResultBeanVO resultBean= new OpenAccountEnquiryDefineResultBeanVO();
         OpenAccountEnquiryResponse response =  new OpenAccountEnquiryResponse();
         String idCard = requestBean.getIdcard();
@@ -225,7 +225,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 return response;
             }
             Integer userId = Integer.parseInt(requestBean.getUserid());
-           /* boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+           boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
             }
@@ -235,7 +235,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 // 校验未通过
                 logger.error("==========该电子账号已被用户关联,无法完成掉单修复!============关联电子账号: " + requestBean.getAccountId());
                 throw new Exception("该电子账号已被用户关联,无法完成掉单修复!");
-            }*/
+            }
             // 获取用户信息
             User user = userService.findUserByUserId(userId);
             String trueName = requestBean.getName();
@@ -298,8 +298,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.error("插入用户开户表失败！");
                 throw new Exception("插入用户开户表失败！");
             }
-
-           /* BankCard card = userService.getBankCardByUserId(userId);
+            BankCard card = userService.getBankCardByUserId(userId);
             if (card == null) {
                 logger.info("开始保存银行卡信息。。。");
                 BankCallBean bean = new BankCallBean();
@@ -307,17 +306,11 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 bean.setLogUserId(requestBean.getUserid());
                 bean.setMobile(requestBean.getMobile());
                 updateCardNoToBank(bean, user);
-            }*/
-            logger.info("开始保存银行卡信息。。。");
-            BankCallBean bean = new BankCallBean();
-            bean.setAccountId(requestBean.getAccountId());
-            bean.setLogUserId(requestBean.getUserid());
-            bean.setMobile(requestBean.getMobile());
-            updateCardNoToBank(bean, user);
+            }
 
             // 开户更新开户渠道统计开户时间
             AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-            logger.info("开户更新开户渠道统计开户时间。。。appUtmReg:[{}],userId:[{}]："+JSONObject.toJSONString(appUtmReg),userId);
+            logger.info("----------开户更新开户渠道统计开户时间。。。appUtmReg:[{}],userId:[{}]："+JSONObject.toJSONString(appUtmReg),userId);
             if (appUtmReg != null) {
                 AppUtmReg appUtmRegUser = new AppUtmReg();
                 BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
@@ -377,12 +370,9 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         cardBean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         cardBean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         cardBean.setLogUserId(String.valueOf(userId));
-        logger.info("保存银行卡信息，cardBean:[{}]",JSONObject.toJSONString(cardBean));
         // 调用银行接口 4.4.11 银行卡查询接口
         BankCallBean call = BankCallUtils.callApiBg(cardBean);
-
         String respCode = call == null ? "" : call.getRetCode();
-        logger.info("保存银行卡信息，银行接口调用成功,返回RetCode:",call.getRetCode());
         // 如果接口调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
@@ -398,7 +388,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             // 设置银行卡
             String bankId = "";//amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
             JxBankConfigVO banksConfigVO = null;//amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
-
             bankCard.setCardNo(obj.getString("cardNo"));
             bankCard.setBank(banksConfigVO.getBankName());
             bankCard.setStatus(1);
