@@ -47,7 +47,6 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
     public void onMessage(MessageExt  message) {
         // 查询所有pc渠道
         List<UtmVO> voList = amAdminClient.selectUtmPlatList("pc");
-        logger.info("查询所有pc渠道开始"+ JSONObject.toJSONString(voList));
         if (!CollectionUtils.isEmpty(voList)) {
             for (UtmVO vo : voList) {
                 Integer sourceId = vo.getSourceId();
@@ -73,7 +72,6 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
                 }
                 // 累计充值
                 BigDecimal cumulativeRecharge = amAdminClient.getCumulativeRecharge(sourceId, "pc");
-                logger.info("pc渠道统计累计充值金额=="+cumulativeRecharge);
                 if (cumulativeRecharge == null) {
                     cumulativeRecharge = BigDecimal.ZERO;
                 }
