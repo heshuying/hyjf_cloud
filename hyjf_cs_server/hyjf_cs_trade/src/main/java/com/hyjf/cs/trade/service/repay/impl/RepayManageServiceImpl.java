@@ -122,9 +122,15 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if (requestBean.getCurrPage() <= 0) {
             requestBean.setCurrPage(1);
         }
-
         if (requestBean.getPageSize() <= 0) {
             requestBean.setPageSize(10);
+        }
+
+        if(StringUtils.isBlank(requestBean.getStartDate())){
+            requestBean.setStartDate(GetDate.formatDate(new Date()));
+        }
+        if(StringUtils.isBlank(requestBean.getEndDate())){
+            requestBean.setEndDate(GetDate.formatDate(new Date()));
         }
     }
 
