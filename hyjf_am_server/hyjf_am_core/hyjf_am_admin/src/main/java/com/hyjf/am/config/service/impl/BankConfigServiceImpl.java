@@ -159,7 +159,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 
 	private String getBankId(int cardBinLength, String cardBin) {
 
-		logger.info("------------start---------------getBankId根据银行卡号获取bankId  cardBinLength  {} ,cardBin{}  ",cardBinLength,cardBin);
+		logger.info("------22222222222------start---------------getBankId根据银行卡号获取bankId  cardBinLength  {} ,cardBin{}  ",cardBinLength,cardBin);
 		CardBinExample example = new CardBinExample();
 		CardBinExample.Criteria cra = example.createCriteria();
 		cra.andBinLengthEqualTo(cardBinLength);
