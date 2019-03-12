@@ -299,7 +299,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 throw new Exception("插入用户开户表失败！");
             }
 
-            BankCard card = userService.getBankCardByUserId(userId);
+           /* BankCard card = userService.getBankCardByUserId(userId);
             if (card == null) {
                 logger.info("开始保存银行卡信息。。。");
                 BankCallBean bean = new BankCallBean();
@@ -307,7 +307,13 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 bean.setLogUserId(requestBean.getUserid());
                 bean.setMobile(requestBean.getMobile());
                 updateCardNoToBank(bean, user);
-            }
+            }*/
+            logger.info("开始保存银行卡信息。。。");
+            BankCallBean bean = new BankCallBean();
+            bean.setAccountId(requestBean.getAccountId());
+            bean.setLogUserId(requestBean.getUserid());
+            bean.setMobile(requestBean.getMobile());
+            updateCardNoToBank(bean, user);
 
             // 开户更新开户渠道统计开户时间
             AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
