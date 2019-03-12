@@ -413,6 +413,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     }
                     logger.info("-------------保存用户银行卡信息  setCreateTime:{}",bank.getCreateTime());
                     bank.setCreateUserId(userId);
+                    logger.info("---------------------------保存用户银行卡信息  userId  {}   ",userId);
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
                     String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
