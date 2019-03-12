@@ -1,6 +1,5 @@
 package com.hyjf.am.config.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.mapper.auto.*;
 import com.hyjf.am.config.dao.mapper.customize.JXBankConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.*;
@@ -9,8 +8,6 @@ import com.hyjf.am.resquest.admin.AdminBankConfigRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +18,6 @@ import java.util.List;
 
 @Service
 public class BankConfigServiceImpl implements BankConfigService {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	protected BankConfigMapper bankConfigMapper;
@@ -93,7 +88,6 @@ public class BankConfigServiceImpl implements BankConfigService {
 	 */
 	@Override
 	public String queryBankIdByCardNo(String cardNo) {
-		logger.info("-----------start----------------根据银行卡号获取bankId  cardNo  {}   ",cardNo);
 		String bankId = null;
 		if (cardNo == null || cardNo.length() < 14 || cardNo.length() > 19) {
 			return "";
@@ -153,20 +147,15 @@ public class BankConfigServiceImpl implements BankConfigService {
 		if (StringUtils.isNotBlank(cardBin_10)) {
 			return bankId;
 		}
-		logger.info("------------end---------------根据银行卡号获取bankId  cardNo  {}   ",cardNo);
 		return bankId;
 	}
 
 	private String getBankId(int cardBinLength, String cardBin) {
-
-		logger.info("------22222222222------start---------------getBankId根据银行卡号获取bankId  cardBinLength  {} ,cardBin{}  ",cardBinLength,cardBin);
 		CardBinExample example = new CardBinExample();
 		CardBinExample.Criteria cra = example.createCriteria();
 		cra.andBinLengthEqualTo(cardBinLength);
 		cra.andBinValueEqualTo(cardBin);
-		logger.info("---------111111111111111111-------------getBankId根据银行卡号获取bankId  list  {} ");
 		List<CardBin> list = this.cardBinMapper.selectByExample(example);
-		logger.info("------------list---------------getBankId根据银行卡号获取bankId  list  {} ",JSONObject.toJSONString(list));
 		if (list != null && list.size() > 0) {
 			return list.get(0).getBankId();
 		}

@@ -417,7 +417,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     logger.info("---------------------------保存用户银行卡信息  userId  {}   ",userId);
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
-                    DynamicDataSourceContextHolder.useSlaveConfigDataSource();
+                    /*DynamicDataSourceContextHolder.useSlaveConfigDataSource();
                     String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
                     DynamicDataSourceContextHolder.useMasterUserDataSource();
                     logger.info("-----------保存用户银行卡信息  bankId  {}   ",bankId);
@@ -436,7 +436,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                         logger.error("根据银行卡号查询所  bankId失败，bankId:{}", bankId);
                     }
                     // 更新联行号
-                    bank.setPayAllianceCode(payAllianceCode);
+                    bank.setPayAllianceCode(payAllianceCode);*/
                     logger.info("--------------保存银行卡信息，插入用户银行卡,bank:",JSONObject.toJSONString(bank));
                     boolean bankFlag = bankCardMapper.insertSelective(bank) > 0 ? true : false;
                     if (!bankFlag) {
