@@ -237,7 +237,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             logger.info("----------开户更新开户渠道统计开户时间。。。,userId:"+userId);
             if (appUtmReg != null) {
                 AppUtmReg appUtmRegUser = new AppUtmReg();
-                BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
+                BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
                 appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
                 logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
                 appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
@@ -432,7 +432,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     // 更新联行号
                     bank.setPayAllianceCode(payAllianceCode);
                     BankCard bankCardbean = new BankCard();
-                    BeanUtils.copyProperties(bankCardbean, bank);
+                    BeanUtils.copyProperties(bank,bankCardbean);
                     logger.info("保存银行卡信息，插入用户银行卡,bankCardbean:",JSONObject.toJSONString(bankCardbean));
                     boolean bankFlag = bankCardMapper.insertSelective(bankCardbean) > 0 ? true : false;
                     if (!bankFlag) {
