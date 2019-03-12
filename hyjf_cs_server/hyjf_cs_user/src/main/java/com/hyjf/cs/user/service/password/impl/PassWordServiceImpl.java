@@ -113,8 +113,8 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         int accountFlag = user.getBankOpenAccount();
         // 未开户
         CheckUtil.check(accountFlag == 1, MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
-        CheckUtil.check(count > 0, MsgEnum.ERR_CARD_NOT_BIND);
+        /*int count = amUserClient.countUserCardValid(String.valueOf(user.getUserId()));
+        CheckUtil.check(count > 0, MsgEnum.ERR_CARD_NOT_BIND);*/
         // 判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
         CheckUtil.check(passwordFlag != 1, MsgEnum.STATUS_TP000001);

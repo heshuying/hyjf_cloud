@@ -626,7 +626,7 @@
 			</if>
 			<!-- 资产来源 -->
 			<if test="instCodeSrch != null and instCodeSrch != ''">
-				AND b.inst_code = #{instCodeSrch}
+				AND hbi.inst_code = #{instCodeSrch}
 			</if>
 			<!-- 借款编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
@@ -634,7 +634,7 @@
 			</if>
 			<!-- 借款标题 -->
 			<if test="borrowName != null and borrowName != ''">
-				AND b.name LIKE CONCAT('%', #{borrowName},
+				AND hbi.name LIKE CONCAT('%', #{borrowName},
 				'%')
 			</if>
 			<!-- 还款状态 -->
@@ -675,7 +675,7 @@
 			</if>
 			<!-- 资产来源 -->
 			<if test="instCodeSrch != null and instCodeSrch != ''">
-				AND b.inst_code = #{instCodeSrch}
+				AND hbi.inst_code = #{instCodeSrch}
 			</if>
 			<!-- 借款编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
@@ -683,7 +683,7 @@
 			</if>
 			<!-- 借款标题 -->
 			<if test="borrowName != null and borrowName != ''">
-				AND b.name LIKE CONCAT('%', #{borrowName},
+				AND hbi.name LIKE CONCAT('%', #{borrowName},
 				'%')
 			</if>
 			<!-- 还款状态 -->

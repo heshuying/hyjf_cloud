@@ -346,7 +346,7 @@ public class NifaContractEssenceMessageConsumer implements RocketMQListener<Mess
                     nifaContractEssence.setUpdateUserId(0);
                     // 插入数据库
                     boolean result = nifaContractEssenceMessageService.insertNifaContractEssence(nifaContractEssence) > 0 ? true : false;
-                    if (result) {
+                    if (!result) {
                         logger.error(thisMessName + "互金合同要素信息插入失败，合同订单号：" + nid);
                     }
                 }

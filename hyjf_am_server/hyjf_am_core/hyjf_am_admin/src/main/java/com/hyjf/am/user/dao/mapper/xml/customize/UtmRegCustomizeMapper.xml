@@ -353,6 +353,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -381,6 +387,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -406,13 +418,19 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		) AS a
 		) mm
 		<include refid="Where_Clause2" />
 		ORDER BY
 		mm.invest_time DESC
-		<if test="limitStart != null and limitStart >0" >
-			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		<if test="limitStart >= 0" >
+			limit #{limitStart} , #{limitEnd}
 		</if>
 
 	</select>
@@ -515,6 +533,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -543,6 +567,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -567,6 +597,12 @@
 		</if>
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> unix_timestamp(#{registEndTime})
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
 		</if>
 		) AS a
 		) mm
@@ -705,13 +741,19 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
 		) mm
 		<include refid="Where_Clause_Hjh" />
 		ORDER BY
 		mm.invest_time DESC
-		<if test="limitStart != null and limitStart >0" >
+		<if test="limitStart != null and limitStart >= 0" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</select>
@@ -813,6 +855,12 @@
 		<if test="registEndTime != null">
 			AND reg_time <![CDATA[<=]]> DATE_FORMAT(#{registEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		) AS a
 		LEFT JOIN ht_user u ON a.utm_id = u.user_id
 		) mm
@@ -854,6 +902,12 @@
 		hyjf_trade.ht_borrow_tender ten
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		where ten.accede_order_id IS NULL
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -868,6 +922,13 @@
 		FROM
 		hyjf_trade.ht_debt_plan_accede ten
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
+		where 1=1
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -875,10 +936,17 @@
 		CONCAT('HZR', ten.credit_nid) AS borrow_nid,
 		CONCAT(b.credit_term, '天') AS borrow_period,
 		ten.assign_capital AS invest_amount,
-		cast(ten.create_time AS SIGNED) AS invest_time
+		ten.create_time  AS invest_time
 		FROM
 		hyjf_trade.ht_credit_tender ten
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
+		where 1=1
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		) AS a
 		INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
 		INNER JOIN  ht_user hu on r.user_id = hu.user_id
@@ -904,12 +972,6 @@
 		</if>
 		<if test="borrowNid != null and borrowNid !=''">
 			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
-		</if>
-		<if test="investStartTime != null">
-			AND tmp.invest_time <![CDATA[>=]]> DATE_FORMAT(#{investStartTime},'%Y-%m-%d %H:%i:%s')
-		</if>
-		<if test="investEndTime != null">
-			AND tmp.invest_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
 		</if>
 
 		order by tmp.invest_time desc
@@ -953,6 +1015,12 @@
 		hyjf_trade.ht_borrow_tender ten
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		where ten.accede_order_id IS NULL
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -967,6 +1035,13 @@
 		FROM
 		hyjf_trade.ht_debt_plan_accede ten
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
+		where 1=1
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -974,10 +1049,17 @@
 		CONCAT('HZR', ten.credit_nid) AS borrow_nid,
 		CONCAT(b.credit_term, '天') AS borrow_period,
 		ten.assign_capital AS invest_amount,
-		cast(ten.create_time AS SIGNED) AS invest_time
+		ten.create_time as invest_time
 		FROM
 		hyjf_trade.ht_credit_tender ten
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
+		where 1=1
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[>=]]> #{investStartTime}
+		</if>
+		<if test="investStartTime != null">
+			AND ten.create_time <![CDATA[<=]]> #{investEndTime}
+		</if>
 		) AS a
 		INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
 		INNER JOIN  ht_user hu on r.user_id = hu.user_id
@@ -1004,12 +1086,7 @@
 		<if test="borrowNid != null and borrowNid !=''">
 			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
-		<if test="investStartTime != null">
-			AND tmp.invest_time <![CDATA[>=]]> DATE_FORMAT(#{investStartTime},'%Y-%m-%d %H:%i:%s')
-		</if>
-		<if test="investEndTime != null">
-			AND tmp.invest_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
-		</if>
+
 	</select>
 
 	<select id="selectAppChannelReconciliationRecordHjh" parameterType="com.hyjf.am.resquest.admin.ChannelReconciliationRequest" resultMap="PcChannelReconciliationMap">
