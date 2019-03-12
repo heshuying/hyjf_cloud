@@ -5,6 +5,9 @@ package com.hyjf.am.market.controller.selldaily;
 
 import java.util.List;
 
+import com.hyjf.common.util.GetDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -27,7 +30,7 @@ import com.hyjf.common.util.CommonUtils;
 @RestController
 @RequestMapping("/am-market/sell_daily")
 public class SellDailyController {
-
+    private Logger logger = LoggerFactory.getLogger(SellDailyController.class);
     @Autowired
     private SellDailyService sellDailyService;
 
@@ -90,12 +93,17 @@ public class SellDailyController {
      * 批量插入
      */
     @RequestMapping("/batch_insert_sell_daily")
-    public void batchInsertSellDaily(@RequestBody List<SellDailyVO> voList) {
+    public BooleanResponse batchInsertSellDaily(@RequestBody List<SellDailyVO> voList) {
+        logger.info("SellDailyController 批量插入....");
         sellDailyService.batchInsertSellDaily(voList);
+        return new BooleanResponse(Boolean.TRUE);
     }
 
     @RequestMapping("/calculate_rate")
-    public void calculateRate() {
-        sellDailyService.calculateRate();
+    public BooleanResponse calculateRate() {
+        logger.info("SellDailyController 更新增长率以及净资金流....");
+        sellDailyService.calculateRate(GetDate.getFormatDateStr());
+
+        return new BooleanResponse(Boolean.TRUE);
     }
 }
