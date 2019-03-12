@@ -52,6 +52,9 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
+        if (request.getInvestEndTime()==null || request.getInvestStartTime()==null) {
+            return new AdminResult(FAIL,"出借时间不能为空");
+        }
         ChannelReconciliationResponse response = channelService.searchAppAction(request);
         return new AdminResult(response);
     }
@@ -60,6 +63,9 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search_hjh")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
+        if (request.getInvestEndTime()==null || request.getInvestStartTime()==null) {
+            return new AdminResult(FAIL,"出借时间不能为空");
+        }
         ChannelReconciliationResponse response = channelService.searchAppHJHAction(request);
         return new AdminResult(response);
     }

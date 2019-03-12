@@ -4,6 +4,7 @@
 package com.hyjf.am.user.service.front.account.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.mq.base.CommonProducer;
@@ -19,15 +20,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
-    
+
     @Autowired
     private CommonProducer commonProducer;
 
@@ -389,5 +392,26 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         return this.bankCardMapper.selectByExample(accountBankExample);
     }
 
-
+    /**
+     * 获取微服务上线三天后的开户用户
+     * @param bankOpenAccountExample
+     * @return
+     */
+    @Override
+    public void getBankOpenAccountForCrmRepair(BankOpenAccountExample bankOpenAccountExample) {
+        List<BankOpenAccount> list =  bankOpenAccountMapper.selectByExample(bankOpenAccountExample);
+        if(!CollectionUtils.isEmpty(list)){
+            for(BankOpenAccount bankOpenAccount : list){
+                logger.info("修复crm开户数据开始:" + bankOpenAccount.getUserId());
+                Map<String, String> map = Maps.newHashMap();
+                map.put("userId", bankOpenAccount.getUserId().toString());
+                //发送MQ
+                try {
+                    commonProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), map));
+                } catch (Exception e){
+                    logger.error("修复crm开户数据发送MQ失败");
+                }
+            }
+        }
+    }
 }

@@ -4,6 +4,7 @@
 package com.hyjf.am.admin.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder;
 import com.hyjf.am.market.service.SellDailyService;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.common.constants.MQConstant;
@@ -277,7 +278,14 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                 // 3. 批量更新
                 long timeTmp = System.currentTimeMillis();
                 logger.info("填充数据耗时: " + (timeTmp - timeStart) + "ms, 批量更新开始，column: " + column);
-                sellDailyService.batchUpdate(list);
+
+                DynamicDataSourceContextHolder.useMasterConfigDataSource();
+                //sellDailyService.batchUpdate(list);
+                for(SellDailyVO vo : list){
+                    logger.debug("vo: {}", JSONObject.toJSONString(vo));
+                    sellDailyService.update(vo);
+                }
+
                 long timeEnd = System.currentTimeMillis();
                 logger.info("批量更新结束， column: " + column + ", 耗时: " + (timeEnd - timeTmp) + "ms");
 

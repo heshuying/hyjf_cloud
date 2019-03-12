@@ -76,15 +76,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
 
-    public static final String HJH_DETAIL_BORROW_LIST_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowListCount";
-
-    public static final String HJH_DETAIL_BORROW_LIST_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanBorrowList";
-
-    /*hjh加入记录count*/
-    public static final String HJH_DETAIL_ACCEDE_COUNT_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeCount";
-
-    /*hjh加入记录list*/
-    public static final String HJH_DETAIL_ACCEDE_LIST_URL = "http://AM-TRADE/am-trade/hjhPlan/getPlanAccedeList";
 
     public static final String CREDIT_DETAIL_TENDER_COUNT_URL = "http://AM-TRADE/am-trade/creditTender/getCreditDetailTenderCount";
 
@@ -1688,13 +1679,19 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         params.put("startTime", dayStart10);
         params.put("endTime", dayEnd10);
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-        HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_BORROW_LIST_COUNT_URL, params, HjhAccedeResponse.class);
+        //HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_BORROW_LIST_COUNT_URL, params, HjhAccedeResponse.class);
+        HjhAccedeResponse response = cacheService.getPlanBorrowListCount(params);
         int count = response.getAccedeCount();
         result.setData(new ArrayList<>());
         if (count > 0) {
-            params.put("limitStart", page.getOffset());
-            params.put("limitEnd", page.getLimit());
-            BorrowResponse res = baseClient.postExe(HJH_DETAIL_BORROW_LIST_URL, params, BorrowResponse.class);
+            Map<String, Object> params2 = new HashMap<>();
+            params2.put("planNid", planNid);
+            params2.put("startTime", dayStart10);
+            params2.put("endTime", dayEnd10);
+            params2.put("limitStart", page.getOffset());
+            params2.put("limitEnd", page.getLimit());
+            //BorrowResponse res = baseClient.postExe(HJH_DETAIL_BORROW_LIST_URL, params, BorrowResponse.class);
+            BorrowResponse res = cacheService.getPlanBorrowList(params2);
             List<BorrowAndInfoVO> list = res.getResultList();
             formatUserName(list);
             List<WebPlanBorrowBean> resultList = CommonUtils.convertBeanList(list,WebPlanBorrowBean.class);
@@ -1720,7 +1717,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("planNid", requestBean.getPlanNid());
-        HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_ACCEDE_COUNT_URL, params, HjhAccedeResponse.class);
+        //HjhAccedeResponse response = baseClient.postExe(HJH_DETAIL_ACCEDE_COUNT_URL, params, HjhAccedeResponse.class);
+        HjhAccedeResponse response = cacheService.getPlanAccedeCount(params);
         Map<String, Object> totalData = response.getTotalData();
         int count;
         double accedeTotal;
@@ -1734,23 +1732,30 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
         info.put("planAccedeList", new ArrayList<>());
         if (count > 0) {
-            params.put("limitStart", page.getOffset());
-            params.put("limitEnd", page.getLimit());
-            HjhAccedeListResponse res = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL, params, HjhAccedeListResponse.class);
-            List<HjhAccedeCustomizeVO> list = res.getResultList();
+            Map<String,Object> params2 = new HashMap<>();
+            params2.put("planNid", requestBean.getPlanNid());
+            params2.put("limitStart", page.getOffset());
+            params2.put("limitEnd", page.getLimit());
+            //HjhAccedeListResponse res = baseClient.postExe(HJH_DETAIL_ACCEDE_LIST_URL, params, HjhAccedeListResponse.class);
+            HjhAccedeListResponse res = cacheService.getPlanAccedeList(params2);
+            List<HjhAccedeCustomizeVO> listTemp = res.getResultList();
+            List<HjhAccedeCustomizeVO> resultList = new ArrayList<>();
             // 查询redis，转化client属性，
-            if (!CollectionUtils.isEmpty(list)) {
+            if (!CollectionUtils.isEmpty(listTemp)) {
+                for (HjhAccedeCustomizeVO voTemp : listTemp){
+                    resultList.add(CommonUtils.convertBean(voTemp,HjhAccedeCustomizeVO.class));
+                }
                 Map<String, String> map = CacheUtil.getParamNameMap(RedisConstants.CLIENT);
                 if (!CollectionUtils.isEmpty(map)){
-                    for (HjhAccedeCustomizeVO vo : list){
+                    for (HjhAccedeCustomizeVO vo : resultList){
                         if (StringUtils.isNotBlank(vo.getClient())){
                             vo.setClient(map.get(vo.getClient()));
                         }
                     }
                 }
             }
-            CommonUtils.convertNullToEmptyString(list);
-            info.put("planAccedeList", list);
+            CommonUtils.convertNullToEmptyString(resultList);
+            info.put("planAccedeList", resultList);
         }
 
         info.put("accedeTimes", count);

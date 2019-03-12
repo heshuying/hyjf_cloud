@@ -21,8 +21,8 @@ public class HjhOrderInvestRepairCheckJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("HjhOrderExitCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        Boolean result = restTemplate.getForEntity(
-                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck", Boolean.class).getBody();
+        restTemplate.getForEntity(
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck", null);
 
         logger.info("HjhOrderExitCheckJob execute end...");
     }
