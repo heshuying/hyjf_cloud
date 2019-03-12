@@ -397,13 +397,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     } else {
                         logger.error("调用江西银行查询联行号失败，userId:{}", userId);
                     }
-                    logger.info("保存用户银行卡信息  payAllianceCode:{}",payAllianceCode);
+                    logger.info("------------------------------保存用户银行卡信息  payAllianceCode:{}",payAllianceCode);
                     SimpleDateFormat sdf = GetDate.yyyymmddhhmmss;
                     try {
                         bank.setCreateTime(sdf.parse(obj.getString("txnDate") + obj.getString("txnTime")));
                     } catch (ParseException e) {
                         logger.error("银行返回日期格式化失败，userId:{}", userId);
                     }
+                    logger.info("保存用户银行卡信息  setCreateTime:{}",bank.getCreateTime());
                     bank.setCreateUserId(userId);
                     bank.setCreateUsername(user.getUsername());
                     // 根据银行卡号查询所  bankId
