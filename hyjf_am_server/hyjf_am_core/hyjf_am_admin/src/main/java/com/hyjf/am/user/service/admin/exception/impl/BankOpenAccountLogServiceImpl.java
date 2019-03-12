@@ -424,6 +424,8 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                                 payAllianceCode = banksConfigVO.getPayAllianceCode();
                             }
                         }
+                    }else {
+                        logger.error("根据银行卡号查询所  bankId失败，bankId:{}", bankId);
                     }
                     // 更新联行号
                     bank.setPayAllianceCode(payAllianceCode);
