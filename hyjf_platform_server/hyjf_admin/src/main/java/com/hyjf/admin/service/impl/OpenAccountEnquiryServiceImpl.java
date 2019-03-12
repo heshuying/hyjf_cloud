@@ -388,7 +388,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         // 调用江西银行查询银行卡
         BankCallBean call = BankCallUtils.callApiBg(cardBean);
         String respCode = call == null ? "" : call.getRetCode();
-        logger.info("保存用户银行卡信息  银行返回码  {}   ",respCode);
+        logger.info("保存用户银行卡信息  银行返回码:",respCode);
         // 如果调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
