@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.mapper.auto.*;
 import com.hyjf.am.config.dao.mapper.customize.JXBankConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.*;
@@ -157,11 +158,14 @@ public class BankConfigServiceImpl implements BankConfigService {
 	}
 
 	private String getBankId(int cardBinLength, String cardBin) {
+
+		logger.info("------------start---------------getBankId根据银行卡号获取bankId  cardBinLength  {} ,cardBin{}  ",cardBinLength,cardBin);
 		CardBinExample example = new CardBinExample();
 		CardBinExample.Criteria cra = example.createCriteria();
 		cra.andBinLengthEqualTo(cardBinLength);
 		cra.andBinValueEqualTo(cardBin);
 		List<CardBin> list = this.cardBinMapper.selectByExample(example);
+		logger.info("------------list---------------getBankId根据银行卡号获取bankId  list  {} ",JSONObject.toJSONString(list));
 		if (list != null && list.size() > 0) {
 			return list.get(0).getBankId();
 		}
