@@ -30,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -54,6 +55,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${am.config.service.name}")
+    private String configService;
+
     /**
      * 用loginUserId去am-config查询登录的用户信息
      *
@@ -66,6 +70,27 @@ public class AmConfigClientImpl implements AmConfigClient {
 //        String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         AdminSystemResponse response = restTemplate.getForEntity(url, AdminSystemResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+    @Override
+    public String getBankIdByCardNo(String cardNo) {
+        return restTemplate
+                .getForEntity(configService+"/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+    }
+
+    /**
+     * 根据银行id查询江西银行配置
+     * @auth sunpeikai
+     * @param id 银行id
+     * @return
+     */
+    @Override
+    public JxBankConfigVO getJxBankConfigById(Integer id) {
+        JxBankConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/getJxBankConfigByBankId/" + id, JxBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

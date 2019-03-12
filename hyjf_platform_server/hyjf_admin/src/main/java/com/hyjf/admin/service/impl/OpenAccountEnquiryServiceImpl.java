@@ -3,6 +3,7 @@ package com.hyjf.admin.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -62,7 +63,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     @Autowired
     AmTradeClient amTradeClient;
     @Autowired
-    private CommonProducer commonProducer;
+    private AmConfigClient amConfigClient;
 
     /**
      * 用户按照手机号和身份证号查询开户掉单
@@ -221,6 +222,12 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
         logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
+        UserVO user = amUserClient.findUserById(Integer.valueOf(userid));
+        BankCallBean bean = new BankCallBean();
+        bean.setAccountId(requestBean.getAccountId());
+        bean.setLogUserId(requestBean.getUserid());
+        bean.setMobile(requestBean.getMobile());
+        updateCardNoToBank(bean,user);
         return requestBean;
     }
     /**
@@ -391,7 +398,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         cardBean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         cardBean.setLogUserId(String.valueOf(userId));
         // 调用银行接口 4.4.11 银行卡查询接口
-        BankCallBean call = BankCallUtils.callApiBg(bean);
+        BankCallBean call = BankCallUtils.callApiBg(cardBean);
         String respCode = call == null ? "" : call.getRetCode();
         // 如果接口调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
@@ -405,8 +412,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             bankCard.setUserId(userId);
             bankCard.setUserName(user.getUsername());
             // 设置银行卡
-            String bankId = "";//amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
-            JxBankConfigVO banksConfigVO = null;//amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
+            String bankId = amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
+            JxBankConfigVO banksConfigVO = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
 
             bankCard.setCardNo(obj.getString("cardNo"));
             bankCard.setBank(banksConfigVO.getBankName());

@@ -246,16 +246,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
                 appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
             }
-            BankCard card = userService.getBankCardByUserId(userId);
-            if (card == null) {
-                logger.info("开始保存银行卡信息。。。");
-                BankCallBean bean = new BankCallBean();
-                bean.setAccountId(requestBean.getAccountId());
-                bean.setLogUserId(requestBean.getUserid());
-                bean.setMobile(requestBean.getMobile());
-                updateCardNoToBank(bean, user);
-            }
-
           /*  boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
