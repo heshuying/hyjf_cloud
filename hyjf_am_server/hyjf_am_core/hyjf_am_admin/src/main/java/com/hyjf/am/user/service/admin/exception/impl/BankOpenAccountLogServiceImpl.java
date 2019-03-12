@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.config.SystemConfig;
 import com.hyjf.am.admin.mq.base.CommonProducer;
-import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.config.dao.mapper.auto.JxBankConfigMapper;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
@@ -21,11 +20,8 @@ import com.hyjf.am.user.service.front.user.AppUtmRegService;
 import com.hyjf.am.user.service.front.user.UserInfoService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
@@ -39,10 +35,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @version BankOpenAccountLogSrviceImpl, v0.1 2018/8/21 14:41
@@ -231,12 +224,13 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
                 return response;
             }
-            Integer userId = Integer.parseInt(requestBean.getUserid());
+            Integer userId = Integer.valueOf(requestBean.getUserid());
             // 获取用户信息
             User user = userService.findUserByUserId(userId);
             // 开户更新开户渠道统计开户时间
             AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-            logger.info("----------开户更新开户渠道统计开户时间。。。appUtmReg:[{}],userId:[{}]："+JSONObject.toJSONString(appUtmReg),userId);
+            logger.info("----------开户更新开户渠道统计开户时间。。。appUtmReg:"+JSONObject.toJSONString(appUtmReg));
+            logger.info("----------开户更新开户渠道统计开户时间。。。,userId:"+userId);
             if (appUtmReg != null) {
                 AppUtmReg appUtmRegUser = new AppUtmReg();
                 BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
@@ -448,6 +442,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
     }
 
     private BankCallBean payAllianceCodeQuery(String cardNo, Integer userId) {
+        logger.info("调用江西银行接口查询银行联号");
         BankCallBean bean = new BankCallBean();
         String channel = BankCallConstant.CHANNEL_PC;
         String orderDate = GetOrderIdUtils.getOrderDate();
