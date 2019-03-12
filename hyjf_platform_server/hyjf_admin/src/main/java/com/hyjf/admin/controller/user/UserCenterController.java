@@ -228,7 +228,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取用户编辑初始信息", notes = "获取用户编辑初始信息")
     @PostMapping(value = "/initUserUpdate")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<InitUserUpdResponseBean> initUserUpdate(@RequestBody String userId) {
 
         InitUserUpdResponseBean initUserUpdResponseBean = new InitUserUpdResponseBean();
