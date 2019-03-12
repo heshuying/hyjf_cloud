@@ -384,7 +384,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     JSONObject obj = null;
                     obj = array.getJSONObject(0);
                     logger.info("保存用户银行卡信息  obj:{}",JSONObject.toJSONString(obj));
-                    BankCardRequest bank = new BankCardRequest();
+                    BankCard bank = new BankCard();
                     bank.setUserId(userId);
                     // 设置绑定的手机号
                     bank.setMobile(bean.getMobile());
@@ -410,7 +410,6 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     }
                     logger.info("保存用户银行卡信息  setCreateTime:{}",bank.getCreateTime());
                     bank.setCreateUserId(userId);
-                    bank.setCreateUsername(user.getUsername());
                     // 根据银行卡号查询所  bankId
                     // 调用config原子层
                     String bankId = bankConfigService.queryBankIdByCardNo(bank.getCardNo());
@@ -431,10 +430,10 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     }
                     // 更新联行号
                     bank.setPayAllianceCode(payAllianceCode);
-                    BankCard bankCardbean = new BankCard();
-                    BeanUtils.copyProperties(bank,bankCardbean);
-                    logger.info("保存银行卡信息，插入用户银行卡,bankCardbean:",JSONObject.toJSONString(bankCardbean));
-                    boolean bankFlag = bankCardMapper.insertSelective(bankCardbean) > 0 ? true : false;
+                   /* BankCard bankCardbean = new BankCard();
+                    BeanUtils.copyProperties(bank,bankCardbean);*/
+                    logger.info("--------------保存银行卡信息，插入用户银行卡,bank:",JSONObject.toJSONString(bank));
+                    boolean bankFlag = bankCardMapper.insertSelective(bank) > 0 ? true : false;
                     if (!bankFlag) {
                         logger.error("插入用户银行卡失败！");
                     }
