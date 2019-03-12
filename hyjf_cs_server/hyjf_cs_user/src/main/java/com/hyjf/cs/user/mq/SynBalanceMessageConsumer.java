@@ -65,7 +65,8 @@ public class SynBalanceMessageConsumer implements RocketMQListener<MessageExt>, 
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
-
+        logger.error(logHeader + "同步余额开始");
         synBalanceService.synBalance(accountId, ip);
+        logger.error(logHeader + "同步余额结束");
     }
 }
