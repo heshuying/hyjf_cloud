@@ -17,11 +17,13 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -266,5 +268,15 @@ public class BankOpenController extends BaseController {
 			response.setResult(bankOpenAccountVO);
 		}
 		return response;
+	}
+
+	@RequestMapping("/getBankOpenAccountForCrmRepair")
+	public void getBankOpenAccountForCrmRepair() {
+		//设置条件，为上线三天的数据
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		BankOpenAccountExample accountExample = new BankOpenAccountExample();
+		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
+		crt.andCreateTimeBetween(GetDate.str2Date("2019-03-09 00:00:00", dateFormat), GetDate.str2Date("2019-03-11 23:59:59", dateFormat));
+		bankOpenService.getBankOpenAccountForCrmRepair(accountExample);
 	}
 }

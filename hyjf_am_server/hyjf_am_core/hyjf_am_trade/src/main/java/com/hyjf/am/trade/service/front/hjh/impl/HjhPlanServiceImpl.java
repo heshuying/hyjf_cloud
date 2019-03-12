@@ -345,6 +345,10 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         // 更新用户计划账户
         // mod by liuyang 20190221 更新账户时,可用大于投资金额时,才更新 start
         boolean accountFlag = hjhPlanCustomizeMapper.updateOfHjhPlanJoin(account)> 0 ? true : false;
+        if (!accountFlag) {
+            logger.error("用户账户信息表更新失败");
+            throw new RuntimeException("用户账户信息表更新失败");
+        }
         // mod by liuyang 20190221 更新账户时,可用大于投资金额时,才更新 end
         logger.info("加入计划账户 操作account结果 :{}",accountFlag);
         accedeAccount = getAccount(request.getUserId());

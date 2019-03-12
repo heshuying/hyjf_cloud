@@ -91,6 +91,7 @@ public class MailHandler {
 		props.setProperty(CustomConstants.MAIL_SMTP_AUTH, smtpAuth);
 		// 设置邮件服务器主机名
 		props.setProperty(CustomConstants.MAIL_SMTP_HOST, setting.getSmtpServer());
+		// props.setProperty(CustomConstants.MAIL_HOST, setting.getSmtpServer());
 		// 发送邮件协议名称
 		// props.setProperty("mail.transport.protocol", "SMTP");
 		props.setProperty(CustomConstants.MAIL_SMTP_SOCKETFACTORY_CLASS,

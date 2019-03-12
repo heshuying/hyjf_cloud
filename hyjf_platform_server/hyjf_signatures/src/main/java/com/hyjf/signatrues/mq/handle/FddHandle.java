@@ -814,9 +814,7 @@ public class FddHandle {
                 // 债转期限
                 paramter.put("creditTerm", tenderToCreditDetailList.get(0).getCreditTerm());
                 // 债转时间
-               // paramter.put("creditTime", tenderToCreditDetailList.get(0).getCreditTime());
-				//ZDJ 20190311 受让时间取值不正确,应该取承接时间 ht_borrow_credit create_time
-                  paramter.put("creditTime", creditTender.getCreateTime());
+                paramter.put("creditTime", tenderToCreditDetailList.get(0).getSignTime());
                 // 转让债权本金
                 paramter.put("assignCapital", creditTender.getAssignCapital().toString());
                 //转让价款
@@ -1200,10 +1198,7 @@ public class FddHandle {
 		//转让剩余期限
 		paramter.put("creditTerm", creditTerm);
 		//转让日期
-
-		//ZDJ 20190311 受让时间取值不正确,应该取承接时间 ht_hjh_debt_credit_tender create_time
-		//paramter.put("creditTime", GetDate.dateToString2(borrowCredit.getCreateTime(),"yyyyMMdd"));
-		paramter.put("creditTime",signTime);
+		paramter.put("creditTime", signTime);
 
 		// 标的编号
 		paramter.put("borrowNid", borrow.getBorrowNid());
@@ -1951,10 +1946,13 @@ public class FddHandle {
 			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users = this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail())) {
+					logger.info("发送邮件居间服务协议用户或者邮箱为空==="+JSONObject.toJSONString(users));
 					return;
 				}
 				String email = users.getEmail();
 				if (StringUtils.isBlank(email) || users.getIsSmtp()==1) {
+					logger.info("发送邮件居间服务协议用户邮箱不发送==="+JSONObject.toJSONString(users));
+
 					return;
 				}
 				logger.info("开始发送邮件。出借订单号:" + orderId);
