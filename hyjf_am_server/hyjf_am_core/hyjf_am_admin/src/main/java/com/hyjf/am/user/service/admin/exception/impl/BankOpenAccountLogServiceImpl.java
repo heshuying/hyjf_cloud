@@ -371,7 +371,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         cardBean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         cardBean.setLogUserId(String.valueOf(userId));
         // 调用银行接口 4.4.11 银行卡查询接口
-        BankCallBean call = BankCallUtils.callApiBg(bean);
+        BankCallBean call = BankCallUtils.callApiBg(cardBean);
         String respCode = call == null ? "" : call.getRetCode();
         logger.info("保存银行卡信息，银行接口调用成功,返回RetCode:",call.getRetCode());
         // 如果接口调用成功
