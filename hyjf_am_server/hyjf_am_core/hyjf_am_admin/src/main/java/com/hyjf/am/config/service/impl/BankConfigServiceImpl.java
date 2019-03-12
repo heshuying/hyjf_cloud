@@ -164,6 +164,7 @@ public class BankConfigServiceImpl implements BankConfigService {
 		CardBinExample.Criteria cra = example.createCriteria();
 		cra.andBinLengthEqualTo(cardBinLength);
 		cra.andBinValueEqualTo(cardBin);
+		logger.info("---------111111111111111111-------------getBankId根据银行卡号获取bankId  list  {} ");
 		List<CardBin> list = this.cardBinMapper.selectByExample(example);
 		logger.info("------------list---------------getBankId根据银行卡号获取bankId  list  {} ",JSONObject.toJSONString(list));
 		if (list != null && list.size() > 0) {
