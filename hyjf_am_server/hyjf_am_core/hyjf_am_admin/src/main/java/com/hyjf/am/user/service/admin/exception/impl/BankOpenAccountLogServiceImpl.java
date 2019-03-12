@@ -211,169 +211,140 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         OpenAccountEnquiryResponse response =  new OpenAccountEnquiryResponse();
         String idCard = requestBean.getIdcard();
         String platform = requestBean.getPlatform();//开户平台
-        if(StringUtils.isEmpty(idCard)){
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("身份不能为空");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-        if(StringUtils.isEmpty(platform)){
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("开户平台platform不能为空");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-        Integer userId = Integer.parseInt(requestBean.getUserid());
-        boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
-        if (!deleteLogFlag) {
-            logger.error("删除用户开户日志表失败，用户userId:" + userId);
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("删除用户开户日志表失败");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-        // 查询返回的电子账号是否已开户
-        boolean result = checkAccountByAccountId(requestBean.getAccountId());
-        if (result) {
-            // 校验未通过
-            logger.error("==========该电子账号已被用户关联,无法完成掉单修复!============关联电子账号: " + requestBean.getAccountId());
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("该电子账号已被用户关联,无法完成掉单修复!");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-        // 获取用户信息
-        User user = userService.findUserByUserId(userId);
-        String trueName = requestBean.getName();
-        if (idCard.length() < 18) {
-            try {
-                idCard = IdCard15To18.getEighteenIDCard(idCard);
-            } catch (Exception e) {
-                logger.error("===========身份证转换异常!=============");
+        try {
+            if (StringUtils.isEmpty(idCard)) {
                 resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-                resultBean.setResult("身份证转换异常");
+                resultBean.setResult("身份不能为空");
                 response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
                 return response;
             }
-        }
-        int sexInt = Integer.parseInt(idCard.substring(16, 17));// 性别
-        if (sexInt % 2 == 0) {
-            sexInt = 2;
-        } else {
-            sexInt = 1;
-        }
-        String birthDayTemp = idCard.substring(6, 14);// 出生日期
-        String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
-        user.setBankOpenAccount(1);
-        user.setBankAccountEsb(Integer.parseInt(requestBean.getPlatform()));
-        user.setRechargeSms(0);
-        user.setWithdrawSms(0);
-        user.setUserType(0);
-        user.setIsSetPassword(getIsSetPassword(requestBean.getAccountId(),userId));
-        user.setMobile(requestBean.getMobile());
-        // 更新相应的用户表
-        boolean usersFlag = userService.updateUserSelective(user)> 0 ? true : false;
-        if (!usersFlag) {
-            logger.error("更新用户表失败！");
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("更新用户表失败!");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
+            if (StringUtils.isEmpty(platform)) {
+                resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
+                resultBean.setResult("开户平台platform不能为空");
+                response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
+                return response;
+            }
+            Integer userId = Integer.parseInt(requestBean.getUserid());
+            boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
+            if (!deleteLogFlag) {
+                throw new Exception("删除用户开户日志表失败");
+            }
+            // 查询返回的电子账号是否已开户
+            boolean result = checkAccountByAccountId(requestBean.getAccountId());
+            if (result) {
+                // 校验未通过
+                logger.error("==========该电子账号已被用户关联,无法完成掉单修复!============关联电子账号: " + requestBean.getAccountId());
+                throw new Exception("该电子账号已被用户关联,无法完成掉单修复!");
+            }
+            // 获取用户信息
+            User user = userService.findUserByUserId(userId);
+            String trueName = requestBean.getName();
+            if (idCard.length() < 18) {
+                try {
+                    idCard = IdCard15To18.getEighteenIDCard(idCard);
+                } catch (Exception e) {
+                    logger.error("===========身份证转换异常!=============");
+                    throw new Exception("身份证转换异常!");
+                }
+            }
+            int sexInt = Integer.parseInt(idCard.substring(16, 17));// 性别
+            if (sexInt % 2 == 0) {
+                sexInt = 2;
+            } else {
+                sexInt = 1;
+            }
+            String birthDayTemp = idCard.substring(6, 14);// 出生日期
+            String birthDay = StringUtils.substring(birthDayTemp, 0, 4) + "-" + StringUtils.substring(birthDayTemp, 4, 6) + "-" + StringUtils.substring(birthDayTemp, 6, 8);
+            user.setBankOpenAccount(1);
+            user.setBankAccountEsb(Integer.parseInt(requestBean.getPlatform()));
+            user.setRechargeSms(0);
+            user.setWithdrawSms(0);
+            user.setUserType(0);
+            user.setIsSetPassword(getIsSetPassword(requestBean.getAccountId(), userId));
+            user.setMobile(requestBean.getMobile());
+            // 更新相应的用户表
+            boolean usersFlag = userService.updateUserSelective(user) > 0 ? true : false;
+            if (!usersFlag) {
+                logger.error("更新用户表失败！");
+                throw new Exception("更新用户表失败！");
 
-        }
-        UserInfo userInfo = userInfoService.findUsersInfo(userId);
-        if (userInfo == null) {
-            logger.error("用户详情表数据错误，用户id：" + user.getUserId());
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("用户详情表数据错误!");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-        userInfo.setTruename(trueName);
-        userInfo.setIdcard(idCard);
-        userInfo.setSex(sexInt);
-        userInfo.setBirthday(birthDay);
-        userInfo.setTruenameIsapprove(1);
-        userInfo.setMobileIsapprove(1);
-        // 更新用户详细信息表
-        boolean userInfoFlag = userService.updateUserInfoByUserInfoSelective(userInfo) > 0 ? true : false;
-        if (!userInfoFlag) {
-            logger.error("更新用户详情表失败！");
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("更新用户详情表失败!");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
-        // 插入江西银行关联表
-        BankOpenAccount openAccount = new BankOpenAccount();
-        openAccount.setUserId(userId);
-        openAccount.setUserName(user.getUsername());
-        openAccount.setAccount(requestBean.getAccountId());
-        //openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-        openAccount.setCreateUserId(userId);
-        boolean openAccountFlag = userService.insertBankOpenAccount(openAccount)> 0 ? true : false;
-        if (!openAccountFlag) {
-            logger.error("插入用户开户表失败！");
-            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
-            resultBean.setResult("插入用户开户表失败!");
-            response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
-            return response;
-        }
+            }
+            UserInfo userInfo = userInfoService.findUsersInfo(userId);
+            if (userInfo == null) {
+                logger.error("用户详情表数据错误，用户id：" + user.getUserId());
+                throw new Exception("用户详情表数据错误！");
+            }
+            userInfo.setTruename(trueName);
+            userInfo.setIdcard(idCard);
+            userInfo.setSex(sexInt);
+            userInfo.setBirthday(birthDay);
+            userInfo.setTruenameIsapprove(1);
+            userInfo.setMobileIsapprove(1);
+            // 更新用户详细信息表
+            boolean userInfoFlag = userService.updateUserInfoByUserInfoSelective(userInfo) > 0 ? true : false;
+            if (!userInfoFlag) {
+                logger.error("更新用户详情表失败！");
+                throw new Exception("更新用户详情表失败！");
+            }
+            // 插入江西银行关联表
+            BankOpenAccount openAccount = new BankOpenAccount();
+            openAccount.setUserId(userId);
+            openAccount.setUserName(user.getUsername());
+            openAccount.setAccount(requestBean.getAccountId());
+            //openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
+            openAccount.setCreateUserId(userId);
+            boolean openAccountFlag = userService.insertBankOpenAccount(openAccount) > 0 ? true : false;
+            if (!openAccountFlag) {
+                logger.error("插入用户开户表失败！");
+                throw new Exception("插入用户开户表失败！");
+            }
 
-        BankCard card = userService.getBankCardByUserId(userId);
-        if(card==null){
-            logger.info("开始保存银行卡信息。。。");
-            BankCallBean bean = new BankCallBean();
-            bean.setAccountId(requestBean.getAccountId());
-            bean.setLogUserId(requestBean.getUserid());
-            bean.setMobile(requestBean.getMobile());
-            updateCardNoToBank(bean,user);
-        }
+            BankCard card = userService.getBankCardByUserId(userId);
+            if (card == null) {
+                logger.info("开始保存银行卡信息。。。");
+                BankCallBean bean = new BankCallBean();
+                bean.setAccountId(requestBean.getAccountId());
+                bean.setLogUserId(requestBean.getUserid());
+                bean.setMobile(requestBean.getMobile());
+                updateCardNoToBank(bean, user);
+            }
 
-        // 开户更新开户渠道统计开户时间
-//        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-//        if (appUtmReg != null) {
-//            User appUtmRegUser =  new User();
-//            //BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
-//            BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
-//            appUtmReg.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-//            userService.updateUser(appUtmRegUser);
-//        }
+            // 开户更新开户渠道统计开户时间
+            AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+            if (appUtmReg != null) {
+                AppUtmReg appUtmRegUser = new AppUtmReg();
+                BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
+                appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
+                appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
+            }
 
-        // 开户更新开户渠道统计开户时间
-        AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-        if (appUtmReg != null) {
-            AppUtmReg appUtmRegUser =  new AppUtmReg();
-            BeanUtils.copyProperties(appUtmRegUser,appUtmReg);
-            appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(),GetDate.yyyyMMdd));
-            appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
-        }
+            // add 合规数据上报 埋点 liubin 20181122 start
+            // 推送数据到MQ 开户 出借人
+            if (requestBean.getRoleId().equals("1")) {
+                JSONObject params = new JSONObject();
+                params.put("userId", userId);
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.OPEN_ACCOUNT_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
+            }
+            // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
+            // 加入到消息队列
+            Map<String, String> params = new HashMap<String, String>();
+            params.put("mqMsgId", GetCode.getRandomCode(10));
+            params.put("userId", String.valueOf(userId));
+            try {
+                logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]", userId, params.get("mqMsgId"));
 
-        // add 合规数据上报 埋点 liubin 20181122 start
-        // 推送数据到MQ 开户 出借人
-        if(requestBean.getRoleId().equals("1")){
-            JSONObject params = new JSONObject();
-            params.put("userId", userId);
-            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.OPEN_ACCOUNT_SUCCESS_TAG, UUID.randomUUID().toString(), params),
-                    MQConstant.HG_REPORT_DELAY_LEVEL);
-        }
-        // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
-        // 加入到消息队列
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        params.put("userId", String.valueOf(userId));
-        try {
-            logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
-
-            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
-        } catch (Exception e) {
-            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (Exception e) {
+                logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]", userId);
+            }
+        }catch (Exception e) {
+            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！");
         }
         resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y);
         resultBean.setResult("开户掉单同步用户成功!");
         response.setOpenAccountEnquiryDefineResultBeanVO(resultBean);
         return response;
-
     }
 
     /**
