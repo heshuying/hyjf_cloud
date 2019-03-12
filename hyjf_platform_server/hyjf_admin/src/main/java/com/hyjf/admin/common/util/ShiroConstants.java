@@ -208,5 +208,15 @@ public class ShiroConstants {
 	/** 出借人投标申请查询权限 */
 	public static final String PERMISSION_QUERY_INVEST_DEBT_VIEW = "QUERY_INVEST_DEBT";
 
+	//合规四期,添加修改手机号,邮箱,用户角色,修改银行卡权限 add by nxl Start
+	public static final String PERMISSION_MODIFYPHONE = "MODIFYPHONE";
+
+	public static final String PERMISSION_MODIFYEMAIL = "MODIFYEMAIL";
+
+	public static final String PERMISSION_MODIFYUSERROLE = "MODIFYUSERROLE";
+
+	public static final String PERMISSION_MODIFYBANKCARD = "MODIFYBANKCARD";
+	//合规四期,添加修改手机号,邮箱,用户角色,修改银行卡权限 add by nxl End
+
 
 }
