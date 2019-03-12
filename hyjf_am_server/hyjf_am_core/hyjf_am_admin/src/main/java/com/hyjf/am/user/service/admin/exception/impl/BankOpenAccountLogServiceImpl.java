@@ -315,6 +315,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 AppUtmReg appUtmRegUser = new AppUtmReg();
                 BeanUtils.copyProperties(appUtmRegUser, appUtmReg);
                 appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
+                logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
                 appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
             }
 
@@ -351,7 +352,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * 保存银行卡信息
      * @param bean
      */
-    private void updateCardNoToBank(BankCallBean bean,User user) {
+    private void updateCardNoToBank(BankCallBean bean,User user) throws Exception {
         logger.info("保存银行卡信息，发送MQ，BankCallBean:[{}],User:[{}]",JSONObject.toJSONString(bean),JSONObject.toJSONString(user));
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 调用银行接口(4.2.2 用户绑卡接口)
@@ -372,6 +373,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         // 调用银行接口 4.4.11 银行卡查询接口
         BankCallBean call = BankCallUtils.callApiBg(bean);
         String respCode = call == null ? "" : call.getRetCode();
+        logger.info("保存银行卡信息，银行接口调用成功,返回RetCode:",call.getRetCode());
         // 如果接口调用成功
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
@@ -420,7 +422,10 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             boolean bankFlag = bankCardMapper.insertSelective(bankCardbean) > 0 ? true : false;
             if (!bankFlag) {
                 logger.error("插入用户银行卡失败！");
+                throw new Exception("插入用户银行卡失败,");
             }
+        }else{
+            throw new Exception("调用银行接口失败！");
         }
     }
 
