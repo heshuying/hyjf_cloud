@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -46,6 +47,7 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
     public void onMessage(MessageExt  message) {
         // 查询所有pc渠道
         List<UtmVO> voList = amAdminClient.selectUtmPlatList("pc");
+        logger.info("查询所有pc渠道开始"+ JSONObject.toJSONString(voList));
         if (!CollectionUtils.isEmpty(voList)) {
             for (UtmVO vo : voList) {
                 Integer sourceId = vo.getSourceId();
@@ -71,6 +73,7 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
                 }
                 // 累计充值
                 BigDecimal cumulativeRecharge = amAdminClient.getCumulativeRecharge(sourceId, "pc");
+                logger.info("pc渠道统计累计充值金额=="+cumulativeRecharge);
                 if (cumulativeRecharge == null) {
                     cumulativeRecharge = BigDecimal.ZERO;
                 }
@@ -109,6 +112,7 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
                         hxfTenderPrice, htlTenderPrice, htjTenderPrice, rtbTenderPrice, hzrTenderPrice, new Date());
                 statisticsVO.setCumulativeInvestment(hztTenderPrice.add(hxfTenderPrice).add(htlTenderPrice)
                         .add(htjTenderPrice).add(rtbTenderPrice).add(hzrTenderPrice));
+                logger.info("发送的PcChannelStatisticsVO=="+JSONObject.toJSONString(statisticsVO));
                 try {
                     //  对应INSERT
                     commonProducer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
