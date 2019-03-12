@@ -354,7 +354,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * @param bean
      */
     private void updateCardNoToBank(BankCallBean bean,User user) throws Exception {
-        logger.info("保存银行卡信息，发送MQ，BankCallBean:[{}],User:[{}]",JSONObject.toJSONString(bean),JSONObject.toJSONString(user));
+        logger.info("保存银行卡信息，BankCallBean:[{}],User:[{}]",JSONObject.toJSONString(bean),JSONObject.toJSONString(user));
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 调用银行接口(4.2.2 用户绑卡接口)
         BankCallBean cardBean = new BankCallBean();
@@ -371,8 +371,10 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         cardBean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
         cardBean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         cardBean.setLogUserId(String.valueOf(userId));
+        logger.info("保存银行卡信息，cardBean:[{}]",JSONObject.toJSONString(cardBean));
         // 调用银行接口 4.4.11 银行卡查询接口
         BankCallBean call = BankCallUtils.callApiBg(cardBean);
+
         String respCode = call == null ? "" : call.getRetCode();
         logger.info("保存银行卡信息，银行接口调用成功,返回RetCode:",call.getRetCode());
         // 如果接口调用成功
