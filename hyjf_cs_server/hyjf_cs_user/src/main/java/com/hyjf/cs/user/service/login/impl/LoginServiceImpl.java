@@ -132,7 +132,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		webViewUserVO = setToken(webViewUserVO);
 		String accountId = webViewUserVO.getBankAccount();
 		if (accountId != null && StringUtils.isNoneBlank(accountId)) {
-			synBalanceService.synBalance(accountId, ip);
+			//synBalanceService.synBalance(accountId, ip);
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("accountId", accountId);
+			params.put("ip", ip);
+			try {
+				commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.SYNBALANCE_TAG, UUID.randomUUID().toString(),params));
+			} catch (MQException e) {
+				logger.error("同步线下充值异常:"+e.getMessage());
+			}
+
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
@@ -709,13 +718,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			//通过用户ID 获取用户关联渠道 add by huanghui
+			// 合规自查添加
+			// 20181205 产品需求, 屏蔽渠道,只保留用户ID
 			String linkUrl = null;
 			UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
-			if (userUtmInfoCustomizeVO != null){
-				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
-			}else {
+//			if (userUtmInfoCustomizeVO != null){
+//				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
+//			}else {
 				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-			}
+//			}
 			// 二维码
 			result.setQrCodeUrl(linkUrl);
 		}
