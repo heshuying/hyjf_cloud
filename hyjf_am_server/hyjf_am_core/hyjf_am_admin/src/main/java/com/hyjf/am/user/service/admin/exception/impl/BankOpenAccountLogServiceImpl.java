@@ -226,7 +226,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             if (appUtmReg != null) {
                 AppUtmReg appUtmRegUser = new AppUtmReg();
                 BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
-                appUtmReg.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
+                appUtmRegUser.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
                 logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
                 appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
             }
