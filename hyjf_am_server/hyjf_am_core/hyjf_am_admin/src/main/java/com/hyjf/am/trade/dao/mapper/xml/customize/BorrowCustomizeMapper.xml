@@ -852,9 +852,9 @@ WHERE
 		  b.borrow_nid,
 		  b.user_id,
 		  b.borrow_user_name AS username,
-		  bi.applicant,
-		  bi.`name` AS borrow_name,
-		  bi.project_name,
+		  bb.applicant,
+		  bb.`name` AS borrow_name,
+		  bb.project_name,
 		  bpt.borrow_name AS borrow_project_type_name,
 		  b.account,
 		  CASE WHEN b.borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END AS borrow_period,
@@ -862,19 +862,19 @@ WHERE
 		  bs.`name` AS borrow_style,
 		  b.service_fee_rate AS borrow_service_scale,
 		  b.manage_fee_rate AS borrow_manager_scale,
-		  bi.borrow_measures_instit AS borrow_measures_instit,
+		  bb.borrow_measures_instit AS borrow_measures_instit,
 		  b.borrow_account_yes,
 		  b.borrow_account_wait,
 		  b.reverify_user_name,
-		  bi.repay_org_name,
-		  bi.entrusted_flg AS entrustedFlg,
-		  bi.entrusted_user_name AS entrustedUsername,
+		  bb.repay_org_name,
+		  bb.entrusted_flg AS entrustedFlg,
+		  bb.entrusted_user_name AS entrustedUsername,
 		  b.create_user_name,
 		  b.regist_user_name,
 		  b.create_user_name AS createname,
 		  b.regist_user_name AS registname,
-		  bi.borrow_extra_yield,
-		  bi.remark,
+		  bb.borrow_extra_yield,
+		  bb.remark,
 		  IFNULL(label.label_name, '--') AS labelName,
 		  DATE_FORMAT(b.regist_time,'%Y-%c-%d %h:%i:%s') AS regist_time,
 		  CONCAT(b.borrow_account_scale, '%') borrow_account_scale,
@@ -891,32 +891,32 @@ WHERE
 		  b.plan_nid,
 		  hic.inst_name,
 		CASE 
-			WHEN bi.company_or_personal=2  THEN hbm.name
-			WHEN bi.company_or_personal=1 THEN hbu.username
+			WHEN bb.company_or_personal=2  THEN hbm.name
+			WHEN bb.company_or_personal=1 THEN hbu.username
 			ELSE
 				''
 			END AS borrower_name,
 
 			CASE 
-			WHEN bi.company_or_personal=2  THEN hbm.city
-			WHEN bi.company_or_personal=1 THEN ''
+			WHEN bb.company_or_personal=2  THEN hbm.city
+			WHEN bb.company_or_personal=1 THEN ''
 			ELSE
 				''
 			END AS location,
 
 			CASE 
-			WHEN bi.company_or_personal=2  THEN '个人'
-			WHEN bi.company_or_personal=1 THEN '企业'
+			WHEN bb.company_or_personal=2  THEN '个人'
+			WHEN bb.company_or_personal=1 THEN '企业'
 			ELSE
 				''
 			END AS attribute
 		FROM
 		  ht_borrow b
-		  LEFT JOIN ht_borrow_info bi on b.borrow_nid=bi.borrow_nid
+		  LEFT JOIN ht_borrow_info bb on b.borrow_nid=bb.borrow_nid
 		  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
+		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  LEFT JOIN ht_borrow_user hbu ON hbu.borrow_nid=b.borrow_nid
 		  LEFT JOIN ht_borrow_maninfo hbm ON hbm.borrow_nid=b.borrow_nid
 		<include refid="Where_Clause" />
