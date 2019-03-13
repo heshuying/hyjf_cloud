@@ -1049,6 +1049,7 @@ public class UserCenterController extends BaseController {
         }
     }
 
+
     @ResponseBody
     @PostMapping(value = "/updateUserBaseInfo")
     @ApiOperation(value = "保存用户基本信息", notes = "保存用户基本信息")
