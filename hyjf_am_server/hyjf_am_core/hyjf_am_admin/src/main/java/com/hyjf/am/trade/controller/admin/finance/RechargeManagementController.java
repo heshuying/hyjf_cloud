@@ -53,13 +53,9 @@ public class RechargeManagementController extends BaseController {
 
         // currPage<0 为全部,currPage>0 为具体某一页
         if(request.getCurrPage()>0){
-            Paginator paginator = new Paginator(request.getCurrPage(),count);
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
             request.setLimitStart(paginator.getOffset());
-            if (request.getPageSize() > 0){
-                request.setLimitEnd(request.getPageSize());
-            }else {
-                request.setLimitEnd(paginator.getLimit());
-            }
+            request.setLimitEnd(paginator.getLimit());
         }
 
         List<RechargeManagementCustomize> responseList = this.rechargeManagementService.getAccountRechargeList(request);
