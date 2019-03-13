@@ -496,6 +496,8 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		ProtocolTemplateExample exampleT=new ProtocolTemplateExample();
 		ProtocolTemplateExample.Criteria criteriaT = exampleT.createCriteria();
 		criteriaT.andIsShowEqualTo(byteShow);
+		//状态(0.协议不显示1.协议显示)
+        criteriaT.andStatusEqualTo(1);
 		List<ProtocolTemplate>  protocolTemplateList =protocolTemplateMapper.selectByExample(exampleT);
 		return protocolTemplateList;
 	}
