@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -354,5 +355,23 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
         nifaCreditTransferDao.update(query, update);
+    }
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<NifaBorrowInfoEntity> selectBorrowRepayPlanByHistoryData(String historyData) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("historyData").is(historyData);
+        query.addCriteria(criteria);
+        List<NifaBorrowInfoEntity> list = nifaBorrowInfoDao.find(query);
+        if(CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
     }
 }

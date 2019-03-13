@@ -11,6 +11,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.*;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -318,5 +319,22 @@ public class NifaStatisticalController extends BaseController {
         }
         nifaStatisticalService.updateCreditTransfer(listQuery);
         return new BooleanResponse(true);
+    }
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    @GetMapping("/selectBorrowRepayPlanByHistoryData/{historyData}")
+    public NifaBorrowInfoResponse selectBorrowRepayPlanByHistoryData(@PathVariable String historyData) {
+        NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
+        List<NifaBorrowInfoEntity> list = this.nifaStatisticalService.selectBorrowRepayPlanByHistoryData(historyData);
+        if(!CollectionUtils.isEmpty(list)) {
+            List<NifaBorrowInfoVO> listVO = CommonUtils.convertBeanList(list,NifaBorrowInfoVO.class);
+            response.setResultList(listVO);
+        }
+        return response;
     }
 }

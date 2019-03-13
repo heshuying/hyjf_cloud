@@ -8,11 +8,17 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaReportLogResponse;
 import com.hyjf.am.response.hgreportdata.nifa.*;
+import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
+import com.hyjf.am.response.trade.BorrowRepayResponse;
 import com.hyjf.am.response.trade.FddTempletResponse;
 import com.hyjf.am.vo.admin.NifaContractTemplateVO;
 import com.hyjf.am.vo.admin.NifaReportLogVO;
 import com.hyjf.am.vo.hgreportdata.nifa.*;
 import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.file.SFTPParameter;
@@ -818,6 +824,74 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             return false;
         }
         return true;
+    }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> selectBorrowApicron(String historyData) {
+        String url = baseTradeUrl + "selectBorrowApicron/" + historyData;
+        BorrowApicronResponse response = this.baseClient.getExe(url, BorrowApicronResponse.class);
+        List<BorrowApicronVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天还款成功数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowRepayVO> selectBorrowRepayByHistoryData(String historyData) {
+        String url = baseTradeUrl + "selectBorrowRepayByHistoryData/" + historyData;
+        BorrowRepayResponse response = this.baseClient.getExe(url, BorrowRepayResponse.class);
+        List<BorrowRepayVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天分期还款成功数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowRepayPlanVO> selectBorrowRepayPlanByHistoryData(String historyData) {
+        String url = baseTradeUrl + "selectBorrowRepayPlanByHistoryData/" + historyData;
+        BorrowRepayPlanResponse response = this.baseClient.getExe(url, BorrowRepayPlanResponse.class);
+        List<BorrowRepayPlanVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<NifaBorrowInfoVO> selectNifaBorrowInfoByHistoryData(String historyData) {
+        String url = baseMessageUrl + "selectNifaBorrowInfoByHistoryData/" +historyData;
+        NifaBorrowInfoResponse response = this.baseClient.getExe(url,NifaBorrowInfoResponse.class);
+        List<NifaBorrowInfoVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
     }
 
     /**
