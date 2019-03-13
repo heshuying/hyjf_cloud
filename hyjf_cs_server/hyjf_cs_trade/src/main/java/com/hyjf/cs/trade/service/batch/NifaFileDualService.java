@@ -4,6 +4,10 @@
 package com.hyjf.cs.trade.service.batch;
 
 import com.hyjf.am.vo.admin.NifaReportLogVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 
 import java.util.List;
 
@@ -87,4 +91,37 @@ public interface NifaFileDualService {
      * @return
      */
     boolean downloadFilesByUrl(NifaReportLogVO nifaReportLog, String feedBackType, String filePathDate);
+
+    /**
+     * 查询该天放款数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowApicronVO> selectBorrowApicron(String historyData);
+
+    /**
+     * 查询该天还款成功数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowRepayVO> selectBorrowRepayByHistoryData(String historyData);
+
+    /**
+     * 查询该天分期还款成功数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowRepayPlanVO> selectBorrowRepayPlanByHistoryData(String historyData);
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    List<NifaBorrowInfoVO> selectNifaBorrowInfoByHistoryData(String historyData);
+
 }
