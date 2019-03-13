@@ -594,6 +594,8 @@ public interface AmTradeClient {
      */
     HjhAccedeResponse doSelectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest);
 
+    int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
+
     /**
      * 查询计划加入明细临时表
      * @auther: nxl

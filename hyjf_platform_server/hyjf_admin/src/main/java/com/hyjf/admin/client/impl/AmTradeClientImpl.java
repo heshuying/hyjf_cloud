@@ -6897,4 +6897,24 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return updateFlag.getResultInt().intValue();
 	}
+
+
+    /**
+     * 银行结束债权后，更新债权表为完全承接
+     *
+     * @auther: hesy
+     * @date: 2018/7/12
+     */
+    @Override
+    public int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO) {
+        String url = "http://AM-ADMIN/am-trade/hjhDebtCredit/updateHjhDebtCreditByPK";
+        hjhDebtCreditVO.setCreditStatus(2);//转让状态 2完全承接
+        hjhDebtCreditVO.setIsLiquidates(1);
+        Response<Integer> response = restTemplate.postForEntity(url, hjhDebtCreditVO, Response.class).getBody();
+        if (!Response.isSuccess(response)) {
+            return 0;
+        }
+        return response.getResult().intValue();
+    }
+
 }
