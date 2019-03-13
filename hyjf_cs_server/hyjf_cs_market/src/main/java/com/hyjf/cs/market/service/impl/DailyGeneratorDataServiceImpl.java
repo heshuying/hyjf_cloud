@@ -222,8 +222,8 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         // 第四列: 计算环比增速
         // 第六列: 计算提现占比
         // 第十列: 计算环比增速
-        // 第十六列: 计算昨日净资金流（充值-提现）
-        amMarketClient.calculateRate();
+        // 第十六列: 计算昨日净资金流（充值-提现） 不能保证更新时间， 调整到在发送邮件前更新
+        //amMarketClient.calculateRate();
 
         // 第十七列: 查询当日待还（工作日计算当天， 如果工作日次日是节假日，那么计算当天到节假日过后第一个工作日）
         Date endDate = getNextWorkDate(currentDate) ;

@@ -1,8 +1,10 @@
 package com.hyjf.admin.service.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -62,7 +64,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     @Autowired
     AmTradeClient amTradeClient;
     @Autowired
-    private CommonProducer commonProducer;
+    private AmConfigClient amConfigClient;
 
     /**
      * 用户按照手机号和身份证号查询开户掉单
@@ -118,6 +120,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 result.setName(userInfoVO.getTruename());
                 result.setIdcard(userInfoVO.getIdcard());
                 result.setUserid(user.getUserId()+"");
+                result.setPlatform(user.getBankAccountEsb()+"");
             } else {
                 // 未查询到该用户  允许操作开户掉单
                 result.setIsOpen("0");
@@ -209,17 +212,28 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             return resultBean;
         }
         //同步保存Account信息
-        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
+       OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
         if(openAccountEnquiryDefineRequestBeanVO !=null){
             ////同步保存user信息成
             if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
                 //同步保存user信息
                 openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+                logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
+                BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
+                logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
+                if(openAccountEnquiryDefineRequestBeanVO !=null){
+                    if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())) {
+                        UserVO user = amUserClient.findUserById(Integer.valueOf(userid));
+                        BankCallBean bean = new BankCallBean();
+                        bean.setAccountId(requestBean.getAccountId());
+                        bean.setLogUserId(requestBean.getUserid());
+                        bean.setMobile(requestBean.getMobile());
+                        updateCardNoToBank(bean, user);
+                    }
+                }
             }
         }
-        logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
-        BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
-        logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
+
         return requestBean;
     }
     /**
@@ -367,11 +381,97 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         return resultBean;
 
     }*/
+    private void updateCardNoToBank(BankCallBean bean,UserVO user) {
+        Integer userId = Integer.parseInt(bean.getLogUserId());
+        logger.info("保存用户银行卡信息  userId {}   ",userId);
+        // 调用江西银行接口查询用户绑定的银行卡
+        BankCallBean cardBean = new BankCallBean(userId, BankCallConstant.TXCODE_CARD_BIND_DETAILS_QUERY, bean.getLogClient());
+        cardBean.setChannel(bean.getChannel());// 交易渠道
+        cardBean.setAccountId(bean.getAccountId());// 存管平台分配的账号
+        cardBean.setState("1"); // 查询状态 0-所有（默认） 1-当前有效的绑定卡
+        cardBean.setLogRemark("银行卡关系查询");
+        // 调用江西银行查询银行卡
+        BankCallBean call = BankCallUtils.callApiBg(cardBean);
+        String respCode = call == null ? "" : call.getRetCode();
+        logger.info("保存用户银行卡信息  银行返回码:",respCode);
+        // 如果调用成功
+        if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
+            String usrCardInfolist = call.getSubPacks();
+            logger.info("保存用户银行卡信息  usrCardInfolist:{} ",JSONObject.toJSONString(usrCardInfolist));
+            if (!StringUtils.isEmpty(usrCardInfolist)) {
+                JSONArray array = JSONObject.parseArray(usrCardInfolist);
+                if (array != null && array.size() > 0) {
+                    logger.info("保存用户银行卡信息  array:{}",JSONObject.toJSONString(array));
+                    // 查询有结果  取第一条
+                    JSONObject obj = null;
+                    obj = array.getJSONObject(0);
+                    logger.info("保存用户银行卡信息  obj:{}",JSONObject.toJSONString(obj));
+                    BankCardRequest bank = new BankCardRequest();
+                    bank.setUserId(userId);
+                    // 设置绑定的手机号
+                    bank.setMobile(bean.getMobile());
+                    bank.setUserName(user.getUsername());
+                    bank.setStatus(1);// 默认都是1
+                    bank.setCardNo(obj.getString("cardNo"));
+                    // 银行联号
+                    String payAllianceCode = "";
+                    // 调用江西银行接口查询银行联号
+                    logger.info("调用江西银行接口查询银行联号  cardNo:{},  userId:{} ",obj.getString("cardNo"),userId);
+                    BankCallBean payAllianceCodeQueryBean = this.payAllianceCodeQuery(obj.getString("cardNo"), userId);
+                    if (payAllianceCodeQueryBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(payAllianceCodeQueryBean.getRetCode())) {
+                        payAllianceCode = payAllianceCodeQueryBean.getPayAllianceCode();
+                    } else {
+                        logger.error("调用江西银行查询联行号失败，userId:{}", userId);
+                    }
+                    logger.info("------------------------------保存用户银行卡信息  payAllianceCode:{}",payAllianceCode);
+                    SimpleDateFormat sdf = GetDate.yyyymmddhhmmss;
+                    try {
+                        bank.setCreateTime(sdf.parse(obj.getString("txnDate") + obj.getString("txnTime")));
+                    } catch (ParseException e) {
+                        logger.error("银行返回日期格式化失败，userId:{}", userId);
+                    }
+                    logger.info("-------------保存用户银行卡信息  setCreateTime:{}",bank.getCreateTime());
+                    bank.setCreateUserId(userId);
+                    logger.info("---------------------------保存用户银行卡信息  userId  {}   ",userId);
+                    // 根据银行卡号查询所  bankId
+                    // 调用config原子层
+                    String bankId = amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
+                    logger.info("--------------保存银行卡信息，插入用户银行卡,bankId:",bankId);
+                    if (!StringUtils.isEmpty(bankId)) {
+                        bank.setBankId(Integer.parseInt(bankId));
+                        JxBankConfigVO banksConfigVO = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
+                        if (banksConfigVO != null) {
+                            bank.setBank(banksConfigVO.getBankName());
+                            logger.info("保存用户银行卡所属银行  banksConfigVO.getBankName()  {}   ",banksConfigVO.getBankName());
+                            // 如果联行号为空  则更新联行号
+                            if (StringUtils.isEmpty(payAllianceCode)) {
+                                payAllianceCode = banksConfigVO.getPayAllianceCode();
+                            }
+                        }
+                    }else {
+                        logger.error("根据银行卡号查询所  bankId失败，bankId:{}", bankId);
+                    }
+                    // 更新联行号
+                    bank.setPayAllianceCode(payAllianceCode);
+                    logger.info("--------------保存银行卡信息，插入用户银行卡,bank:"+JSONObject.toJSONString(bank));
+                    boolean bankFlag = amUserClient.insertUserCard(bank) > 0 ? true : false;
+                    if (!bankFlag) {
+                        logger.error("插入用户银行卡失败！");
+                    }
+                } else {
+                    logger.error("更新银行卡信息出错，转换array失败，userId:{}", userId);
+                }
+            } else {
+                logger.error("更新银行卡信息出错，返回空，userId:{}", userId);
+            }
+        } else {
+            logger.error("更新银行卡信息出错，银行返回码  {},  BankCallConstant.RESPCODE_SUCCESS{}", respCode,BankCallConstant.RESPCODE_SUCCESS);
+        }
+    }
 
-    /**
+  /*  *//**
      * 保存银行卡信息
-     * @param bean
-     */
+     *//*
     private void updateCardNoToBank(BankCallBean bean,UserVO user) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
         // 调用银行接口(4.2.2 用户绑卡接口)
@@ -390,9 +490,10 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         cardBean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         cardBean.setLogUserId(String.valueOf(userId));
         // 调用银行接口 4.4.11 银行卡查询接口
-        BankCallBean call = BankCallUtils.callApiBg(bean);
+        BankCallBean call = BankCallUtils.callApiBg(cardBean);
         String respCode = call == null ? "" : call.getRetCode();
         // 如果接口调用成功
+        logger.info("--------------保存银行卡信息，插入用户银行卡,respCode:",respCode);
         if (BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             String usrCardInfolist = call.getSubPacks();
             JSONArray array = JSONObject.parseArray(usrCardInfolist);
@@ -400,13 +501,15 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             if (array != null && array.size() != 0) {
                 obj = array.getJSONObject(0);
             }
+            logger.info("--------------保存银行卡信息，插入用户银行卡,obj:",JSONObject.toJSONString(obj));
             BankCardRequest bankCard = new BankCardRequest();
             bankCard.setUserId(userId);
             bankCard.setUserName(user.getUsername());
             // 设置银行卡
-            String bankId = "";//amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
-            JxBankConfigVO banksConfigVO = null;//amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
-
+            String bankId = amConfigClient.getBankIdByCardNo(obj.getString("cardNo"));
+            logger.info("--------------保存银行卡信息，插入用户银行卡,bankId:",bankId);
+            JxBankConfigVO banksConfigVO = amConfigClient.getJxBankConfigById(Integer.parseInt(bankId));
+            logger.info("--------------保存银行卡信息，插入用户银行卡,banksConfigVO:",JSONObject.toJSONString(banksConfigVO));
             bankCard.setCardNo(obj.getString("cardNo"));
             bankCard.setBank(banksConfigVO.getBankName());
             bankCard.setStatus(1);
@@ -433,13 +536,14 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                     bankCard.setPayAllianceCode(payAllianceCode);
                 }
             }
+            logger.info("--------------保存银行卡信息，插入用户银行卡,bank:",JSONObject.toJSONString(bankCard));
             boolean bankFlag = amUserClient.insertUserCard(bankCard) > 0 ? true : false;
             if (!bankFlag) {
                 logger.error("插入用户银行卡失败！");
             }
         }
     }
-
+*/
 
     private BankCallBean payAllianceCodeQuery(String cardNo, Integer userId) {
         BankCallBean bean = new BankCallBean();

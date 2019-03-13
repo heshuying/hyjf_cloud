@@ -66,6 +66,8 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
 
     @Override
     public void sendMail(SellDailyDistributionVO sellDailyDistribution) {
+        beforeSend();
+
         String[] toEmail = sellDailyDistribution.getEmail().split(";");
         if (toEmail == null || toEmail.length == 0) {
             return;
@@ -87,6 +89,16 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         } catch (Exception e) {
             logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);
         }
+    }
+
+    private void beforeSend() {
+        // 由于生成拆分成消息队列， 不能保证更新顺序，对某些字段加工挪在这
+        // 统一计算第四、六、十列速率,第十六列净资金流
+        // 第四列: 计算环比增速
+        // 第六列: 计算提现占比
+        // 第十列: 计算环比增速
+        // 第十六列: 计算昨日净资金流（充值-提现） 不能保证更新时间， 调整到在发送邮件前更新
+        amMarketClient.calculateRate();
     }
 
     /**

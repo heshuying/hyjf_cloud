@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.user.dao.mapper.auto.EmployeeCustomizeMapper">
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper">
 	<resultMap id="EmployeeMapResult"
 		type="com.hyjf.am.user.dao.model.customize.EmployeeCustomize">
 		<result column="user_id" property="userId" /> <!-- 员工ID -->
@@ -14,8 +14,7 @@
 	</resultMap>
 
 
-	<select id="selectEmployeeByUserId" resultMap="EmployeeMapResult"
-		parameterType="com.hyjf.am.user.dao.mapper.customize.EmployeeCustomizeMapper">
+	<select id="selectEmployeeByUserId" resultMap="EmployeeMapResult" parameterType="Integer">
 		SELECT distinct u.hyd_id as user_id, u.hyd_name as user_name, 
 		d3.id as region_id, d3.name as region_name, 
 		d2.id as branch_id, d2.name as branch_name, 

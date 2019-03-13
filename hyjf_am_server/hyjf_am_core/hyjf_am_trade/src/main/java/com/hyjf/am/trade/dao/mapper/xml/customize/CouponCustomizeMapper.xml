@@ -195,10 +195,10 @@
 		SELECT
 			hcr.tender_id nid,
 			hcr.recover_period recoverPeriod,
-			hcr.recover_account recoverAccountWait,
-			hcr.recover_capital recoverCapitalWait,
-			IF(hcr.recover_capital>0,hcr.recover_account-hcr.recover_capital,hcr.recover_interest) recoverInterestWait,
-			hcr.recover_account_yes recoverAccount,
+			FORMAT(hcr.recover_account,2) recoverAccountWait,
+			FORMAT(hcr.recover_capital,2) recoverCapitalWait,
+			FORMAT(IF(hcr.recover_capital>0,hcr.recover_account-hcr.recover_capital,hcr.recover_interest),2) recoverInterestWait,
+			FORMAT(hcr.recover_account_yes,2) recoverAccount,
 			FROM_UNIXTIME(hcr.recover_time, '%Y-%m-%d' ) recoverTime,
 			IF(hcr.recover_status=0,'未回款','已回款') recoveStatus
 		FROM

@@ -102,11 +102,11 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
             if (null != creditTenderList && creditTenderList.size() > 0) {
                 for (CreditTenderVO creditTender : creditTenderList) {
                     Map<String, Object> param = new LinkedHashMap<String, Object>();
-                    int intCredit = Integer.parseInt(creditTender.getCreditNid());
                     //查找汇转让标的表
-                    BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(String.valueOf(intCredit));
+                    BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(creditTender.getCreditNid());
+                    logger.info(logHeader+"根据债转编号:" + creditTender.getCreditNid()+"获取的转让信息为："+JSONArray.toJSONString(borrowCredit));
                     if (null == borrowCredit) {
-                        throw new Exception("承接(散标)记录推送,标的转让信息为空！！债转编号:" + intCredit);
+                        throw new Exception("承接(散标)记录推送,标的转让信息为空！！债转编号:" + creditTender.getCreditNid());
                     }
                     BigDecimal creditD = borrowCredit.getCreditDiscount().divide(new BigDecimal("100"));
                     //承接人用户标示 Hash
@@ -178,6 +178,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     Map<String, Object> param = new LinkedHashMap<String, Object>();
                     //查找计划信息
                     HjhPlanVO hjhPlan = amTradeClient.getHjhPlan(hjhDebtCreditTender.getAssignPlanNid());
+                    logger.info(logHeader+"根据计划计划编号："+hjhDebtCreditTender.getAssignPlanNid()+"获取的计划信息为："+ JSONArray.toJSONString(hjhPlan));
                     if (null == hjhPlan) {
                         throw new Exception("承接(计划)记录推送,计划的信息为空！！承接的计划编号:" + hjhDebtCreditTender.getAssignPlanNid());
                     }

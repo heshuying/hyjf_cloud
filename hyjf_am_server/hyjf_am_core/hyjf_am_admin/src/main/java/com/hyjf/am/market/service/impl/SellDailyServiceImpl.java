@@ -218,36 +218,12 @@ public class SellDailyServiceImpl implements SellDailyService {
 
     @Override
     public SellDailyVO constructionSellDaily(SellDailyVO ocSellDaily, String primaryDivision, String twoDivision, int drawOrder, int storeNum) {
-        SellDailyVO record = new SellDailyVO();
-        record.setDateStr(GetDate.getFormatDateStr());
-        record.setPrimaryDivision(primaryDivision);
-        record.setTwoDivision(twoDivision);
-        record.setDrawOrder(drawOrder);
-        record.setStoreNum(storeNum);
-        record.setInvestTotalMonth(BigDecimal.ZERO);
-        record.setInvestTotalPreviousMonth(BigDecimal.ZERO);
-        record.setRepaymentTotalMonth(BigDecimal.ZERO);
-        record.setRepaymentTotalYesterday(BigDecimal.ZERO);
-        record.setNonRepaymentToday(BigDecimal.ZERO);
-        record.setInvestAnnualTotalMonth(BigDecimal.ZERO);
-        record.setInvestAnnualTotalPreviousMonth(BigDecimal.ZERO);
-        record.setInvestTotalPreviousMonth(BigDecimal.ZERO);
-        record.setInvestAnnualTotalYesterday(BigDecimal.ZERO);
-        record.setInvestTotalYesterday(BigDecimal.ZERO);
-        record.setNonRepaymentToday(BigDecimal.ZERO);
-        record.setRechargeTotalMonth(BigDecimal.ZERO);
-        record.setRechargeTotalYesterday(BigDecimal.ZERO);
-        record.setNetCapitalInflowYesterday(BigDecimal.ZERO);
-        record.setWithdrawTotalMonth(BigDecimal.ZERO);
-        record.setWithdrawTotalYesterday(BigDecimal.ZERO);
-        record.setInvestAnnularRatioGrowth("");
-        record.setInvestRatioGrowth("");
-        record.setWithdrawRate("");
-        record.setRegisterTotalYesterday(0);
-        record.setInvestGt3000MonthUserNum(0);
-        record.setInvestGt3000UserNum(0);
-        record.setRechargeGt3000UserNum(0);
-        return record;
+        ocSellDaily.setDateStr(GetDate.getFormatDateStr());
+        ocSellDaily.setPrimaryDivision(primaryDivision);
+        ocSellDaily.setTwoDivision(twoDivision);
+        ocSellDaily.setDrawOrder(drawOrder);
+        ocSellDaily.setStoreNum(storeNum);
+        return ocSellDaily;
     }
 
     @Override

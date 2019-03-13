@@ -2866,6 +2866,20 @@ public interface AmTradeClient {
     BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 
     boolean getFailCredit(String borrowNid);
+
+    /**
+     * 获取crm修复投资
+     *
+     * @return
+     */
+    List<BorrowTenderVO> selectCrmBorrowTenderList();
+
+    /**
+     * 获取crm修复智投投资
+     *
+     * @return
+     */
+    List<HjhAccedeVO> selectCrmHjhAccedeList();
     /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313
