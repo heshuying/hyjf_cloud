@@ -91,7 +91,10 @@ public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageEx
             // --> 调用service组装数据
             JSONArray listRepay = certCreditInfoService.getBorrowTender(creditTenderNid, flag);
             logger.info("数据：" + listRepay.toString());
-
+            if (null == listRepay || listRepay.size() <= 0) {
+                logger.error(logHeader + "组装参数为空！！！参数为：" + creditTenderNid+",标识为:"+flag);
+                return;
+            }
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_UNDER_TAKE, creditTenderNid, listRepay);
             try {

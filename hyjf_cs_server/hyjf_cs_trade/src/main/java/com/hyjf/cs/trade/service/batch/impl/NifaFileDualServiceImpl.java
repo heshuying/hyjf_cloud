@@ -74,43 +74,43 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * 获取上传地址前缀
      */
     @Value("${hyjf.nifa.upload.path}")
-    private static String UPLOAD_PATH;
+    private String UPLOAD_PATH;
 
     /**
      * 下载保存路径
      */
     @Value("${hyjf.nifa.download.path}")
-    private static String DOWNLOAD_PATH;
+    private String DOWNLOAD_PATH;
 
     /**
      * ftp服务器地址
      */
     @Value("${hyjf.nifa.hostName}")
-    private static String HOST_NAME;
+    private String HOST_NAME;
 
     /**
      * ftp服务器用户名
      */
     @Value("${hyjf.nifa.userName}")
-    private static String USER_NAME;
+    private String USER_NAME;
 
     /**
      * ftp服务器密码
      */
     @Value("${hyjf.nifa.passWord}")
-    private static String PASS_WORD;
+    private String PASS_WORD;
 
     /**
      * ftp服务器端口
      */
     @Value("${hyjf.nifa.hostPost}")
-    private static String HOST_POST;
+    private String HOST_POST;
 
     /**
      * ftp服务器下载地址
      */
     @Value("${hyjf.nifa.download.url}")
-    private static String DOWNLOAD_URL;
+    private String DOWNLOAD_URL;
 
     private String baseTradeUrl = "http://AM-TRADE/am-trade/nifaFileDeal/";
     private String baseMessageUrl = "http://CS-MESSAGE/cs-message/nifaStatistical/";
