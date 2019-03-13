@@ -140,8 +140,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.SYNBALANCE_TAG, UUID.randomUUID().toString(),params));
 			} catch (MQException e) {
-				logger.error("同步线下充值异常");
-				e.printStackTrace();
+				logger.error("同步线下充值异常:"+e.getMessage());
 			}
 
 		}
