@@ -132,7 +132,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		webViewUserVO = setToken(webViewUserVO);
 		String accountId = webViewUserVO.getBankAccount();
 		if (accountId != null && StringUtils.isNoneBlank(accountId)) {
-			synBalanceService.synBalance(accountId, ip);
+			//synBalanceService.synBalance(accountId, ip);
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("accountId", accountId);
+			params.put("ip", ip);
+			try {
+				commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.SYNBALANCE_TAG, UUID.randomUUID().toString(),params));
+			} catch (MQException e) {
+				logger.error("同步线下充值异常:"+e.getMessage());
+			}
+
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);

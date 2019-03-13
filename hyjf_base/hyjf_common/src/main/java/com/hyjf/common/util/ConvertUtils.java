@@ -33,7 +33,9 @@ public  class ConvertUtils {
                 f.setAccessible(true); //设置些属性是可以访问的
                 String mtdName = "set"+ f.getName().substring(0,1).toUpperCase() + f.getName().substring(1);
                 Method method = T.getMethod(mtdName, f.getType());
-                method.invoke(obj,mapParam.get(f.getName()));
+                if(mapParam.get(f.getName()) != null){
+                    method.invoke(obj,mapParam.get(f.getName()));
+                }
             }
         }catch (Exception e){
             logger.error(e.getMessage());

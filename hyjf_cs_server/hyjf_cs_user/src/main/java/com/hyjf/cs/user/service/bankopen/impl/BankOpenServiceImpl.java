@@ -242,18 +242,20 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         logger.info("页面开户异步处理start,UserId:{} 开户平台为：{} 银行返回响应代码为：{} status为{}", bean.getLogUserId(), bean.getLogClient(),retCode,bean.getStatus());
         // State为0时候为0：交易失败 1：交易成功 2：开户成功设置交易密码失败
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || "0".equals(bean.getStatus())) {
-            // 开户失败   将开户记录状态改为4
-            // 查询失败原因
-            String retMsg = bean.getRetMsg();
-            BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
-            if (retMsgVo != null) {
-                retMsg = retMsgVo.getErrorMsg();
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
+            if("0".equals(bean.getStatus())){
+                // 开户失败   将开户记录状态改为4
+                // 查询失败原因
+                String retMsg = bean.getRetMsg();
+                BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
+                if (retMsgVo != null) {
+                    retMsg = retMsgVo.getErrorMsg();
+                }
+                this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4,retCode,retMsg);
+                logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
+                result.setStatus(false);
+                return result;
             }
-            this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4,retCode,retMsg);
-            logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
-            result.setStatus(false);
-            return result;
         }
         // 开户成功后,保存用户的开户信息
         Integer saveBankAccountFlag = this.amUserClient.saveUserAccount(bean);

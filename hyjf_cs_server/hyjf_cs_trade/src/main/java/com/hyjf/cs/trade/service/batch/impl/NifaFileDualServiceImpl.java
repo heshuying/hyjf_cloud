@@ -107,7 +107,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
     private String HOST_POST;
 
     /**
-     * ftp服务器端口
+     * ftp服务器下载地址
      */
     @Value("${hyjf.nifa.download.url}")
     private String DOWNLOAD_URL;
@@ -489,10 +489,11 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
 
         boolean result = true;
         // 上传文件生成地址
-        if (!UPLOAD_PATH.endsWith("/")) {
-            UPLOAD_PATH = UPLOAD_PATH.concat("/").concat(beforDay).concat("/");
+        String uploadPath = UPLOAD_PATH;
+        if (!uploadPath.endsWith("/")) {
+            uploadPath = uploadPath.concat("/").concat(beforDay).concat("/");
         } else {
-            UPLOAD_PATH = UPLOAD_PATH.concat(beforDay).concat("/");
+            uploadPath = uploadPath.concat(beforDay).concat("/");
         }
 
         // 需要打压缩zip的文件集合
@@ -504,9 +505,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         logger.info("【互金上传文件】统计二期标的信息生成txt！！");
         boolean re;
         try {
-            re = createTxtFile(listBIE, null, UPLOAD_PATH, CustomConstants.NIFA_BORROW_INFO_TYPE, "|");
+            re = createTxtFile(listBIE, null, uploadPath, CustomConstants.NIFA_BORROW_INFO_TYPE, "|");
             if (re) {
-                sb.append(UPLOAD_PATH).append(CustomConstants.NIFA_BORROW_INFO_TYPE).append(".txt,");
+                sb.append(uploadPath).append(CustomConstants.NIFA_BORROW_INFO_TYPE).append(".txt,");
             } else {
                 logger.error("【互金上传文件】:互联网债权类融资项目信息导出TXT失败！");
                 return false;
@@ -557,9 +558,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             // 导出csv文件
             logger.info("【互金上传文件】统计二期标的信息生成txt！！");
             try {
-                re = createTxtFile(listTIE, null, UPLOAD_PATH, CustomConstants.NIFA_LENDER_INFO_TYPE, "|");
+                re = createTxtFile(listTIE, null, uploadPath, CustomConstants.NIFA_LENDER_INFO_TYPE, "|");
                 if (re) {
-                    sb.append(UPLOAD_PATH).append(CustomConstants.NIFA_LENDER_INFO_TYPE).append(".txt,");
+                    sb.append(uploadPath).append(CustomConstants.NIFA_LENDER_INFO_TYPE).append(".txt,");
                     // 导出到文件后处理数据库数据为1:处理成功
 //                Update update = new Update();
 //                update.set("reportStatus", "1").set("updateTime", new Date());
@@ -584,9 +585,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             // 导出txt文件
             logger.info("【互金上传文件】统计二期标的信息生成txt！！");
             try {
-                re = createTxtFile(listBerIE, null, UPLOAD_PATH, CustomConstants.NIFA_BORROWER_INFO_TYPE, "|");
+                re = createTxtFile(listBerIE, null, uploadPath, CustomConstants.NIFA_BORROWER_INFO_TYPE, "|");
                 if (re) {
-                    sb.append(UPLOAD_PATH).append(CustomConstants.NIFA_BORROWER_INFO_TYPE).append(".txt,");
+                    sb.append(uploadPath).append(CustomConstants.NIFA_BORROWER_INFO_TYPE).append(".txt,");
                     // 更新相应借款人信息
                     updateBorrowerInfo(nifaBorrowInfoEntities);
                 } else {
@@ -620,7 +621,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             // 上传文件包名
             nifaReportLog.setUploadName(businessZhaiqFileName);
             // 上传文件路径
-            nifaReportLog.setUploadPath(UPLOAD_PATH);
+            nifaReportLog.setUploadPath(uploadPath);
             nifaReportLog.setCreateTime(new Date());
             nifaReportLog.setCreateUserId(3);
             boolean flag = insertNifaReportLog(nifaReportLog);
@@ -632,7 +633,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         // zip打压缩包
         if (result && StringUtils.isNotBlank(sb)) {
             logger.info("【互金上传文件】统计二期压缩包生成！！");
-            if (writeZip(sb, UPLOAD_PATH + businessZhaiqFileName)) {
+            if (writeZip(sb, uploadPath + businessZhaiqFileName)) {
                 updateNifaBorrowInfoByHistoryDate(request);
             } else {
                 result = false;
@@ -680,10 +681,11 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
 
         boolean result = true;
         // 上传文件生成地址
-        if (!UPLOAD_PATH.endsWith("/")) {
-            UPLOAD_PATH = UPLOAD_PATH.concat("/").concat(beforDay).concat("/");
+        String uploadPath = UPLOAD_PATH;
+        if (!uploadPath.endsWith("/")) {
+            uploadPath = uploadPath.concat("/").concat(beforDay).concat("/");
         } else {
-            UPLOAD_PATH = UPLOAD_PATH.concat(beforDay).concat("/");
+            uploadPath = uploadPath.concat(beforDay).concat("/");
         }
         // 需要打压缩zip的文件集合
         StringBuffer sbCredit = new StringBuffer();
@@ -694,9 +696,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         logger.info("【互金上传文件】统计二期债转标的信息生成txt！！");
         boolean re = false;
         try {
-            re = createTxtFile(listCIE, null, UPLOAD_PATH, CustomConstants.NIFA_CREDIT_INFO_TYPE, "|");
+            re = createTxtFile(listCIE, null, uploadPath, CustomConstants.NIFA_CREDIT_INFO_TYPE, "|");
             if (re) {
-                sbCredit.append(UPLOAD_PATH).append(CustomConstants.NIFA_CREDIT_INFO_TYPE).append(".txt,");
+                sbCredit.append(uploadPath).append(CustomConstants.NIFA_CREDIT_INFO_TYPE).append(".txt,");
             } else {
                 result = false;
                 logger.info("【互金上传文件】:互联网金融产品及收益权转让融资项目信息导出TXT失败！");
@@ -715,9 +717,9 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             // 导出csv文件
             logger.info("【互金上传文件】统计二期债转标的信息生成txt！！");
             try {
-                re = createTxtFile(listCerIE, null, UPLOAD_PATH, CustomConstants.NIFA_CREDITER_INFO_TYPE, "|");
+                re = createTxtFile(listCerIE, null, uploadPath, CustomConstants.NIFA_CREDITER_INFO_TYPE, "|");
                 if (re) {
-                    sbCredit.append(UPLOAD_PATH).append(CustomConstants.NIFA_CREDITER_INFO_TYPE).append(".txt,");
+                    sbCredit.append(uploadPath).append(CustomConstants.NIFA_CREDITER_INFO_TYPE).append(".txt,");
                     updateCreditTransfer(nifaCreditInfoEntities);
                 } else {
                     result = false;
@@ -746,7 +748,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
             // 上传文件包名
             nifaReportLog.setUploadName(businessJinrFileName);
             // 上传文件路径
-            nifaReportLog.setUploadPath(UPLOAD_PATH);
+            nifaReportLog.setUploadPath(uploadPath);
             nifaReportLog.setCreateTime(new Date());
             nifaReportLog.setCreateUserId(3);
             boolean flag = insertNifaReportLog(nifaReportLog);
@@ -758,7 +760,7 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         // zip打压缩包
         if (result && StringUtils.isNotBlank(sbCredit)) {
             logger.info("【互金上传文件】审计二期债转信息压缩包生成！！");
-            if (writeZip(sbCredit, UPLOAD_PATH + businessJinrFileName)) {
+            if (writeZip(sbCredit, uploadPath + businessJinrFileName)) {
                 updateNifaCreditInfo(request);
             } else {
                 result = false;

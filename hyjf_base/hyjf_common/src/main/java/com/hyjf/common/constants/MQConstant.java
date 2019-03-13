@@ -706,6 +706,10 @@ public interface MQConstant {
 	String REPAY_ALL_SUCCESS_TAG = "REPAY_ALL_SUCCESS_TAG";
 	// TAG：新增智投
 	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
+	// TAG：同步余额
+	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
+	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
+	String SYNBALANCE_TAG = "SYNBALANCE_TAG";
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
 
 	// 合规互金上报用MQ延迟发送等级（30s）

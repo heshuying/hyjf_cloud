@@ -1000,8 +1000,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         CorpOpenAccountRecord record = new CorpOpenAccountRecord();
         if (bankOpenFlag == 1) {//获取修改信息
-            CorpOpenAccountRecord corpOpenAccountRecord = this.selectCorpOpenAccountRecordByUserId(user.getUserId());
-            BeanUtils.copyProperties(corpOpenAccountRecord, record);
+            record = this.selectCorpOpenAccountRecordByUserId(user.getUserId());
         } else {
             record = new CorpOpenAccountRecord();
         }
@@ -1035,12 +1034,11 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             }
         }
         //保存银行卡信息
-        BankCard bankCard = new BankCard();
+       /* BankCard bankCard = new BankCard();
         if (bankOpenFlag == 1) {
             List<BankCard> bankCardList = this.findBankCardByUserId(user.getUserId());
             if (null != bankCardList && bankCardList.size() > 0) {
-                BankCard bankCardVO = bankCardList.get(0);
-                BeanUtils.copyProperties(bankCardVO, bankCard);
+                bankCard = bankCardList.get(0);
             }
         } else {
             bankCard = new BankCard();
@@ -1069,7 +1067,33 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                     throw new RuntimeException("银行卡信息修改保存异常!");
                 }
             }
+        }*/
+        //企业开户信息补录_插入银行卡修改 start
+        BankCard bankCard =null;
+        List<BankCard> bankCardList = this.findBankCardByUserId(user.getUserId());
+        if (null != bankCardList && bankCardList.size() > 0) {
+            bankCard = bankCardList.get(0);
         }
+        //
+        if(null!=bankCard){
+            bankCard = getBankCardValue(updCompanyRequest, bankName, payAllianceCode, user, bankId,bankCard);
+            int updateflag = bankCardMapper.updateByPrimaryKeySelective(bankCard);
+            if (updateflag > 0) {
+                logger.info("=============银行卡信息更新成功==================");
+            }else {
+                throw new RuntimeException("银行卡信息更新异常!");
+            }
+        }else{
+            bankCard = new BankCard();
+            bankCard = getBankCardValue(updCompanyRequest, bankName, payAllianceCode, user, bankId,bankCard);
+            int insertcard = bankCardMapper.insertSelective(bankCard);
+            if (insertcard > 0) {
+                logger.info("=============银行卡信息保存成功==================");
+            }else {
+                throw new RuntimeException("银行卡信息保存异常!");
+            }
+        }
+        //企业开户信息补录_插入银行卡修改 end
         //保存开户信息
         BankOpenAccount openAccount = new BankOpenAccount();
         openAccount.setUserId(user.getUserId());
@@ -1551,5 +1575,31 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             return bankCardList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 设置银行卡信息
+     * @param updCompanyRequest
+     * @param bankName
+     * @param payAllianceCode
+     * @param user
+     * @param bankId
+     * @param bankCard
+     * @return
+     */
+    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId,BankCard bankCard){
+        if(StringUtils.isNotBlank(bankId)){
+            bankCard.setBankId(Integer.parseInt(bankId));
+        }else{
+            bankCard.setBankId(0);
+        }
+        bankCard.setUserId(user.getUserId());
+        bankCard.setUserName(user.getUsername());
+        bankCard.setCardNo(updCompanyRequest.getAccount());
+        bankCard.setCreateTime(GetDate.getDate());
+        bankCard.setCreateUserId(user.getUserId());
+        bankCard.setBank(bankName);
+        bankCard.setPayAllianceCode(payAllianceCode);
+        return bankCard;
     }
 }

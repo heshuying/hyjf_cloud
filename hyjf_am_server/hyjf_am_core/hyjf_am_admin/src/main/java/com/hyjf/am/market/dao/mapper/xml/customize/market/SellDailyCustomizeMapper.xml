@@ -77,19 +77,19 @@
         CASE ui.attribute WHEN 0 THEN   d3. NAME WHEN 1 THEN   d3. NAME WHEN 2 THEN   dd3. NAME WHEN 3 THEN   dd3. NAME END AS three_division,
         CASE bt.client WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END client
         FROM  hyjf_trade.ht_borrow_tender bt
-        LEFT JOIN (SELECT borrow_nid,borrow_style,borrow_period FROM ht_borrow) AS b ON bt.borrow_nid = b.borrow_nid
+        LEFT JOIN (SELECT borrow_nid,borrow_style,borrow_period FROM hyjf_trade.ht_borrow) AS b ON bt.borrow_nid = b.borrow_nid
         LEFT JOIN hyjf_user.ht_user_info ui ON bt.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON bt.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_userid
-        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_userid
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = bt.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = bt.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE bt.create_time <![CDATA[>=]]> #{startTime}
         AND bt.create_time <![CDATA[<=]]> #{endTime}
         AND bt.accede_order_id IS NULL
@@ -104,20 +104,20 @@
         CASE ui.attribute WHEN 0 THEN   d2. NAME WHEN 1 THEN  d2. NAME  WHEN 2 THEN   dd2. NAME WHEN 3 THEN   dd2. NAME END AS two_division,
         CASE ui.attribute WHEN 0 THEN   d3. NAME WHEN 1 THEN   d3. NAME WHEN 2 THEN   dd3. NAME WHEN 3 THEN   dd3. NAME END AS three_division,
         CASE a.client  WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END AS client
-        FROM  hyjf_trade.ht_hjh_accedde a
+        FROM  hyjf_trade.ht_hjh_accede a
         LEFT JOIN hyjf_trade.ht_hjh_plan AS b ON a.plan_nid=b.plan_nid
         LEFT JOIN hyjf_user.ht_user_info ui ON a.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON a.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_userid
-        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_userid
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = a.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = a.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE a.create_time <![CDATA[>=]]> #{startTime}
         AND a.create_time  <![CDATA[<=]]> #{endTime}
         AND ui.role_id = 1
@@ -134,16 +134,16 @@
         hyjf_trade.ht_borrow_recover br
         LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid = uui.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id = uui.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
         AND br.accede_order_id IS NULL
         AND br.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
@@ -158,19 +158,19 @@
         CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
         CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
-        hyjf_trade.ht_hjh_repaybr
+        hyjf_trade.ht_hjh_repay br
         LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid = uui.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id = uui.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
         AND br.repay_actual_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
         AND br.repay_actual_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
@@ -178,23 +178,23 @@
     </sql>
 
     <sql id="countTotalWithdrawSql">
-        SELECT w.total AS withdraw_amount,
+      SELECT w.total AS withdraw_amount,
         CASE ui.attribute WHEN 0 THEN d1.name WHEN 1 THEN d1.name WHEN 2 THEN dd1.name WHEN 3 THEN dd1.name END AS  primary_division,
         CASE ui.attribute WHEN 0 THEN d2.name WHEN 1 THEN d2.name WHEN 2 THEN dd2.name WHEN 3 THEN dd2.name END AS  two_division,
         CASE ui.attribute WHEN 0 THEN d3.name WHEN 1 THEN d3.name WHEN 2 THEN dd3.name WHEN 3 THEN dd3.name END AS  three_division
         FROM hyjf_trade.ht_account_withdraw w
         LEFT JOIN hyjf_user.ht_user_info ui ON w.user_id=ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON w.user_id=su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid=uu.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid=uui.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = w.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id=uu.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = w.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE  ui.role_id=1
         AND w.status=2
         AND w.create_time <![CDATA[>=]]> #{startTime}
@@ -210,16 +210,16 @@
         FROM hyjf_trade.ht_account_recharge r
         LEFT JOIN hyjf_user.ht_user_info ui ON r.user_id=ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON r.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id=su.spreads_userid
-        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_userid
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = r.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id=su.spreads_user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = r.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id=1
         AND r.status=2
         AND r.create_time <![CDATA[>=]]> #{startTime}
@@ -228,7 +228,7 @@
 
     <sql id="countTotalNoneRepaySql">
       #汇直投待还#
-        SELECT
+      SELECT
         br.recover_account AS none_repay,
         CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
         CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
@@ -238,15 +238,15 @@
         LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
         LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
         AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
         AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
@@ -261,19 +261,19 @@
         CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
         CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
-        hyjf_trade.ht_hjh_repaybr
+        hyjf_trade.ht_hjh_repay br
         LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
         LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
         AND br.repay_should_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
         AND br.repay_should_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
@@ -572,17 +572,17 @@
         SELECT
           NAME
         FROM
-          hyjf_user.oa_department
+          hyjf_crm.oa_department
         WHERE parentid IN
           (SELECT
             id
           FROM
-            hyjf_user.oa_department
+            hyjf_crm.oa_department
           WHERE NAME = #{primaryDivision})
     </select>
 
     <sql id="countRegisterTotalYesterday">
-        SELECT
+ SELECT
         u.user_id, SUM(r.money) AS total_recharge_amount,
         CASE ui.attribute WHEN 0 THEN d1.name WHEN 1 THEN d1.name WHEN 2 THEN dd1.name WHEN 3 THEN dd1.name END AS  primary_division,
         CASE ui.attribute WHEN 0 THEN d2.name WHEN 1 THEN d2.name WHEN 2 THEN dd2.name WHEN 3 THEN dd2.name END AS  two_division,
@@ -592,18 +592,18 @@
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
         LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
         LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid=uui.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id=1
-        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
           GROUP BY u.user_id
     </sql>
 
@@ -655,25 +655,25 @@
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
         LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
         LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid=uui.user_id
-        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
-        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
-        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
-        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
-        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
-        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id=1
-        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
          GROUP BY u.user_id) z
         LEFT JOIN (SELECT u.user_id, SUM(t.account) AS total_invest_amount FROM hyjf_user.ht_user u
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
         LEFT JOIN hyjf_trade.ht_borrow_tender t ON u.user_id=t.user_id
         WHERE ui.role_id=1
-        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
           GROUP BY u.user_id) y ON z.user_id=y.user_id
     </sql>
 
@@ -732,10 +732,8 @@
 
     <update id="batchUpdate" parameterType="java.util.List">
 
-
         <foreach collection="list" item="record" index="index" separator=";">
             UPDATE ht_sell_daily
-
             <set >
                 update_time=CURRENT_TIMESTAMP,
                 <if test="record.investTotalMonth != null and record.investTotalMonth>0 " >
@@ -801,12 +799,90 @@
                 <if test="record.investGt3000MonthUserNum != null and record.investGt3000MonthUserNum>0" >
                     invest_gt3000_month_user_num = #{record.investGt3000MonthUserNum,jdbcType=INTEGER},
                 </if>
+
             </set>
 
             WHERE date_str = #{record.dateStr}
             AND primary_division = #{record.primaryDivision}
             AND two_division = #{record.twoDivision}
         </foreach>
+
+    </update>
+
+
+    <update id="update" parameterType="com.hyjf.am.vo.market.SellDailyVO">
+
+        UPDATE ht_sell_daily
+        <set >
+            update_time=CURRENT_TIMESTAMP,
+            <if test="investTotalMonth != null and investTotalMonth>0 " >
+                invest_total_month = #{investTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="repaymentTotalMonth != null and repaymentTotalMonth>0" >
+                repayment_total_month = #{repaymentTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investTotalPreviousMonth != null and investTotalPreviousMonth>0" >
+                invest_total_previous_month = #{investTotalPreviousMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investRatioGrowth != null and investRatioGrowth>0" >
+                invest_ratio_growth = #{investRatioGrowth,jdbcType=VARCHAR},
+            </if>
+            <if test="withdrawTotalMonth != null and withdrawTotalMonth>0" >
+                withdraw_total_month = #{withdrawTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="withdrawRate != null and withdrawRate>0" >
+                withdraw_rate = #{withdrawRate,jdbcType=VARCHAR},
+            </if>
+            <if test="rechargeTotalMonth != null and rechargeTotalMonth>0" >
+                recharge_total_month = #{rechargeTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnualTotalMonth != null and investAnnualTotalMonth>0" >
+                invest_annual_total_month = #{investAnnualTotalMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnualTotalPreviousMonth != null and investAnnualTotalPreviousMonth>0" >
+                invest_annual_total_previous_month = #{investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnularRatioGrowth != null and investAnnularRatioGrowth>0" >
+                invest_annular_ratio_growth = #{investAnnularRatioGrowth,jdbcType=VARCHAR},
+            </if>
+            <if test="investTotalYesterday != null and investTotalYesterday>0" >
+                invest_total_yesterday = #{investTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="repaymentTotalYesterday != null and repaymentTotalYesterday>0" >
+                repayment_total_yesterday = #{repaymentTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="investAnnualTotalYesterday != null and investAnnualTotalYesterday>0" >
+                invest_annual_total_yesterday = #{investAnnualTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="withdrawTotalYesterday != null and withdrawTotalYesterday>0" >
+                withdraw_total_yesterday = #{withdrawTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="rechargeTotalYesterday != null and rechargeTotalYesterday>0" >
+                recharge_total_yesterday = #{rechargeTotalYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="netCapitalInflowYesterday != null and netCapitalInflowYesterday>0" >
+                net_capital_inflow_yesterday = #{netCapitalInflowYesterday,jdbcType=DECIMAL},
+            </if>
+            <if test="nonRepaymentToday != null and nonRepaymentToday>0" >
+                non_repayment_today = #{nonRepaymentToday,jdbcType=DECIMAL},
+            </if>
+            <if test="registerTotalYesterday != null and registerTotalYesterday>0" >
+                register_total_yesterday = #{registerTotalYesterday,jdbcType=INTEGER},
+            </if>
+            <if test="rechargeGt3000UserNum != null and rechargeGt3000UserNum>0" >
+                recharge_gt3000_user_num = #{rechargeGt3000UserNum,jdbcType=INTEGER},
+            </if>
+            <if test="investGt3000UserNum != null and investGt3000UserNum>0" >
+                invest_gt3000_user_num = #{investGt3000UserNum,jdbcType=INTEGER},
+            </if>
+            <if test="investGt3000MonthUserNum != null and investGt3000MonthUserNum>0" >
+                invest_gt3000_month_user_num = #{investGt3000MonthUserNum,jdbcType=INTEGER},
+            </if>
+        </set>
+
+        WHERE date_str = #{dateStr}
+        AND primary_division = #{primaryDivision}
+        AND two_division = #{twoDivision}
 
     </update>
 </mapper>
