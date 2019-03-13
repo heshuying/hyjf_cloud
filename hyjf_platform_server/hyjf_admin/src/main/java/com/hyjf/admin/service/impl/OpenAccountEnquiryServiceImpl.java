@@ -120,6 +120,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                 result.setName(userInfoVO.getTruename());
                 result.setIdcard(userInfoVO.getIdcard());
                 result.setUserid(user.getUserId()+"");
+                result.setPlatform(user.getBankAccountEsb()+"");
             } else {
                 // 未查询到该用户  允许操作开户掉单
                 result.setIsOpen("0");
