@@ -4,13 +4,21 @@
 package com.hyjf.cs.trade.controller.wechat.agreement;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.ProtocolEnum;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.newagreement.NewAgreementService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author libin
@@ -42,4 +50,43 @@ public class AgreementController extends BaseTradeController{
         return jsonObject;
     }
 
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    @ApiOperation(value = "app-获取在帮助中心显示的协议模板名称", httpMethod = "POST", notes = "app-获取在帮助中心显示的协议模板名称")
+    @PostMapping("/getShowProtocolTemp")
+    public JSONObject getShowProtocolTemp(){
+        JSONObject jsonObject = null;
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        logger.info("*******************************协议名称-动态获得************************************");
+        jsonObject = JSONObject.parseObject(RedisUtils.get(RedisConstants.PROTOCOL_PARAMS));
+        if (jsonObject == null) {
+            jsonObject = new JSONObject();
+            try {
+                List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
+                //是否在枚举中有定义
+                if (CollectionUtils.isNotEmpty(list)){
+                    for (ProtocolTemplateVO p : list) {
+                        String protocolType = p.getProtocolType();
+                        String alia = ProtocolEnum.getAlias(protocolType);
+                        if (alia != null){
+                            map.put(alia, p.getDisplayName());
+                        }
+                    }
+                }
+                jsonObject.put("status","000");
+                jsonObject.put("statusDesc","成功");
+                jsonObject.put("displayName",map);
+            } catch (Exception e) {
+                logger.error("协议查询异常：" + e);
+                jsonObject.put("status","99");
+                jsonObject.put("statusDesc","失败");
+            }
+            RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
+        }
+        return jsonObject;
+    }
 }
