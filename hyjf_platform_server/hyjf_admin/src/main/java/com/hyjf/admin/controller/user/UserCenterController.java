@@ -399,7 +399,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkReAction")
     @ResponseBody
     @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult checkReAction(@RequestParam(value = "userId") String userId,HttpServletRequest request,@RequestParam(value = "userName") String userName) {
         //校验推荐人
         if (Validator.isNotNull(userId)) {
@@ -1082,7 +1082,7 @@ public class UserCenterController extends BaseController {
      */
     @GetMapping(value = "/syncRoleAction/{userId}")
     @ApiOperation(value = "同步用户角色", notes = "同步用户角色")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult syncRoleAction(HttpServletRequest request,@PathVariable String userId){
         if (StringUtils.isBlank(userId)){
             return new AdminResult<>(FAIL, "获取用户userId失败!");
