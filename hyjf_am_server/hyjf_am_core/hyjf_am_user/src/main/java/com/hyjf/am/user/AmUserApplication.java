@@ -8,12 +8,14 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {"com.hyjf.am.user","com.hyjf.common","com.hyjf.pay.lib"})
+@EnableAspectJAutoProxy(exposeProxy = true)
 public class AmUserApplication {
 
 	@Bean
