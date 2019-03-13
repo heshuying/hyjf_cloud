@@ -164,5 +164,5 @@ public interface NifaStatisticalService extends BaseService {
      * @param historyData
      * @return
      */
-    List<NifaBorrowInfoEntity> selectBorrowRepayPlanByHistoryData(String historyData);
+    List<NifaBorrowInfoEntity> selectNifaBorrowInfoByHistoryData(String historyData);
 }

@@ -327,10 +327,10 @@ public class NifaStatisticalController extends BaseController {
      * @param historyData
      * @return
      */
-    @GetMapping("/selectBorrowRepayPlanByHistoryData/{historyData}")
-    public NifaBorrowInfoResponse selectBorrowRepayPlanByHistoryData(@PathVariable String historyData) {
+    @GetMapping("/selectNifaBorrowInfoByHistoryData/{historyData}")
+    public NifaBorrowInfoResponse selectNifaBorrowInfoByHistoryData(@PathVariable String historyData) {
         NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
-        List<NifaBorrowInfoEntity> list = this.nifaStatisticalService.selectBorrowRepayPlanByHistoryData(historyData);
+        List<NifaBorrowInfoEntity> list = this.nifaStatisticalService.selectNifaBorrowInfoByHistoryData(historyData);
         if(!CollectionUtils.isEmpty(list)) {
             List<NifaBorrowInfoVO> listVO = CommonUtils.convertBeanList(list,NifaBorrowInfoVO.class);
             response.setResultList(listVO);

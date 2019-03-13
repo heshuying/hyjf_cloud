@@ -42,6 +42,13 @@ public interface NifaFileDualService {
     boolean updateNifaReportLog(NifaReportLogVO nifaReportLog);
 
     /**
+     * 判断文件是否生成过
+     *
+     * @param fileName
+     * @return
+     */
+    boolean selectNifaReportLogByFileName(String fileName);
+    /**
      * 解析实时反馈文件
      *
      * @param filePathName
