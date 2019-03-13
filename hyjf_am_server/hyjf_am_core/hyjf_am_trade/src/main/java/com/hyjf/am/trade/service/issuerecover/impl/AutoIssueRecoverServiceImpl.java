@@ -530,8 +530,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	private String getBorrowPreNid() {
 		String yyyymm = GetDate.getServerDateTime(13, new Date());
 		String mmdd = yyyymm.substring(2);
-		 String borrowPreNid = this.borrowCustomizeMapper.getBorrowPreNid(mmdd);
-//		String borrowPreNid = StringUtils.EMPTY;
+		// String borrowPreNid =
+		// this.borrowCustomizeMapper.getBorrowPreNid(mmdd);
+		String borrowPreNid = StringUtils.EMPTY;
 		if (StringUtils.isEmpty(borrowPreNid)) {
 			return mmdd + "00000001";
 		}
