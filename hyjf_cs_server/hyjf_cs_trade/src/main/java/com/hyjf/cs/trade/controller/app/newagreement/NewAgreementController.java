@@ -6,10 +6,7 @@ package com.hyjf.cs.trade.controller.app.newagreement;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.TenderToCreditDetailCustomizeVO;
-import com.hyjf.am.vo.trade.UserHjhInvistDetailCustomizeVO;
+import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -17,6 +14,9 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.ProtocolEnum;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.SecretUtil;
@@ -1149,5 +1149,45 @@ public class NewAgreementController extends BaseTradeController{
         JSONObject jsonObject = agreementService.getdisplayNameDynamicMethod();
         return jsonObject;
     }
-    
+
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    @ApiOperation(value = "app-获取在帮助中心显示的协议模板名称", httpMethod = "POST", notes = "app-获取在帮助中心显示的协议模板名称")
+    @PostMapping("/getShowProtocolTemp")
+    public JSONObject getShowProtocolTemp(){
+        JSONObject jsonObject = null;
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        logger.info("*******************************协议名称-动态获得************************************");
+        jsonObject = JSONObject.parseObject(RedisUtils.get(RedisConstants.PROTOCOL_PARAMS));
+        if (jsonObject == null) {
+            jsonObject = new JSONObject();
+            try {
+                List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
+                //是否在枚举中有定义
+                if (CollectionUtils.isNotEmpty(list)){
+                    for (ProtocolTemplateVO p : list) {
+                        String protocolType = p.getProtocolType();
+                        String alia = ProtocolEnum.getAlias(protocolType);
+                        if (alia != null){
+                            map.put(alia, p.getDisplayName());
+                        }
+                    }
+                }
+                jsonObject.put("status","000");
+                jsonObject.put("statusDesc","成功");
+                jsonObject.put("displayName",map);
+            } catch (Exception e) {
+                logger.error("协议查询异常：" + e);
+                jsonObject.put("status","99");
+                jsonObject.put("statusDesc","失败");
+            }
+            RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
+        }
+        return jsonObject;
+    }
+
 }

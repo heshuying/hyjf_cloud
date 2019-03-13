@@ -6967,4 +6967,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = "http://AM-TRADE/am-trade/repay/getFailCredit/" + borrowNid;
         return restTemplate.getForEntity(url, boolean.class).getBody();
     }
+
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getAllShowProtocolTemp() {
+        String url = "http://AM-TRADE/am-trade/protocol/getAllShowProtocolTemp";
+        ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

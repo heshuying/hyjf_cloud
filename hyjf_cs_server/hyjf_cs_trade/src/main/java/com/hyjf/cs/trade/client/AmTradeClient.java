@@ -2866,5 +2866,12 @@ public interface AmTradeClient {
     BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 
     boolean getFailCredit(String borrowNid);
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    List<ProtocolTemplateVO> getAllShowProtocolTemp();
 }
 

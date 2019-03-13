@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.front.config;
 
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.resquest.admin.ProtocolLogRequest;
+import com.hyjf.am.trade.dao.model.auto.ProtocolTemplate;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
@@ -108,4 +109,12 @@ public interface ProtocolTemplateService {
     int updateProtocolVersionSize(ProtocolTemplateVO protocolTemplate);
 
     Map<String,Object> validatorFieldCheck(String protocolName, String versionNumber, String displayName, String protocolUrl, String protocolType, String oldDisplayName, String flagT);
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    List<ProtocolTemplate> selectAllShowProtocolTemplate();
+
 }
