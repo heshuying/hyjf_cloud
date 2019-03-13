@@ -912,11 +912,11 @@ WHERE
 			END AS attribute
 		FROM
 		  ht_borrow b
-		  LEFT JOIN ht_borrow_info bi on b.borrow_nid=bi.borrow_nid
+		  LEFT JOIN ht_borrow_info bb on b.borrow_nid=bb.borrow_nid
 		  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
 		  LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		  LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
+		  LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bb.inst_code
 		  LEFT JOIN ht_borrow_user hbu ON hbu.borrow_nid=b.borrow_nid
 		  LEFT JOIN ht_borrow_maninfo hbm ON hbm.borrow_nid=b.borrow_nid
 		<include refid="Where_Clause" />
