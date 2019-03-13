@@ -718,13 +718,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			//通过用户ID 获取用户关联渠道 add by huanghui
+			// 合规自查添加
+			// 20181205 产品需求, 屏蔽渠道,只保留用户ID
 			String linkUrl = null;
 			UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
-			if (userUtmInfoCustomizeVO != null){
-				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
-			}else {
+//			if (userUtmInfoCustomizeVO != null){
+//				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
+//			}else {
 				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-			}
+//			}
 			// 二维码
 			result.setQrCodeUrl(linkUrl);
 		}
