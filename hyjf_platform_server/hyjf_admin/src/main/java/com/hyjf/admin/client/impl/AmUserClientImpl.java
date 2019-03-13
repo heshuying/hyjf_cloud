@@ -34,7 +34,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -2526,7 +2525,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public HjhUserAuthLogVO selectByExample(String orderId) {
 		HjhUserAuthLogResponse response = restTemplate
-				.getForEntity(userService+"/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
+				.getForEntity("http://AM-ADMIN/am-user/user/selectByExample/"+orderId, HjhUserAuthLogResponse.class)
 				.getBody();
 		if (response != null) {
 			return response.getResult();

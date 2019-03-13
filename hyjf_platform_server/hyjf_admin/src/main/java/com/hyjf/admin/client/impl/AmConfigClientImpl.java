@@ -9,7 +9,6 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.BankConfigResponse;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -17,7 +16,9 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.CategoryVO;
+import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -78,7 +79,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public String getBankIdByCardNo(String cardNo) {
         return restTemplate
-                .getForEntity(configService+"/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-config/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
     }
 
     /**
