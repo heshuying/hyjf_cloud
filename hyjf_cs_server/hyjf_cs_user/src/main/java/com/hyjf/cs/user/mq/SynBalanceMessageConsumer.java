@@ -2,7 +2,6 @@ package com.hyjf.cs.user.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -29,7 +28,7 @@ public class SynBalanceMessageConsumer implements RocketMQListener<MessageExt>, 
     Logger logger = LoggerFactory.getLogger(SynBalanceMessageConsumer.class);
 
     private String thisMessName = "同步余额";
-    private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + " " + thisMessName + "】";
+    private String logHeader = "【===="+ thisMessName + "====】";
 
     @Autowired
     private SynBalanceService synBalanceService;
@@ -61,11 +60,16 @@ public class SynBalanceMessageConsumer implements RocketMQListener<MessageExt>, 
         String accountId = jsonObject.getString("accountId");
         String ip = jsonObject.getString("ip");
 
-        if (StringUtils.isBlank(accountId)||StringUtils.isBlank(accountId)) {
+        if (StringUtils.isBlank(accountId)) {
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
-
-        synBalanceService.synBalance(accountId, ip);
+        logger.info(logHeader + "同步余额开始");
+        try {
+            synBalanceService.synBalance(accountId, ip);
+        }catch (Exception e){
+            logger.error(logHeader + "同步余额失败");
+        }
+        logger.info(logHeader + "同步余额结束");
     }
 }
