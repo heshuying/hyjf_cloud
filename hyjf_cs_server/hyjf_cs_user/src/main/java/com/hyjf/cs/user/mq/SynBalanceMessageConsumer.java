@@ -65,7 +65,11 @@ public class SynBalanceMessageConsumer implements RocketMQListener<MessageExt>, 
             return;
         }
         logger.info(logHeader + "同步余额开始");
-        synBalanceService.synBalance(accountId, ip);
+        try {
+            synBalanceService.synBalance(accountId, ip);
+        }catch (Exception e){
+            logger.error(logHeader + "同步余额失败");
+        }
         logger.info(logHeader + "同步余额结束");
     }
 }
