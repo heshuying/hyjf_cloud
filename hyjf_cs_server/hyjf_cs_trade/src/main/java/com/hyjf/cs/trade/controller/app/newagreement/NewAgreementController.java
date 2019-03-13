@@ -1158,34 +1158,29 @@ public class NewAgreementController extends BaseTradeController{
      */
     @ApiOperation(value = "app-获取在帮助中心显示的协议模板名称", httpMethod = "POST", notes = "app-获取在帮助中心显示的协议模板名称")
     @PostMapping("/getShowProtocolTemp")
-    public JSONObject getShowProtocolTemp(){
-        JSONObject jsonObject = null;
+    public JSONObject getShowProtocolTemp() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         logger.info("*******************************协议名称-动态获得************************************");
-        jsonObject = JSONObject.parseObject(RedisUtils.get(RedisConstants.PROTOCOL_PARAMS));
-        if (jsonObject == null) {
-            jsonObject = new JSONObject();
-            try {
-                List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
-                //是否在枚举中有定义
-                if (CollectionUtils.isNotEmpty(list)){
-                    for (ProtocolTemplateVO p : list) {
-                        String protocolType = p.getProtocolType();
-                        String alia = ProtocolEnum.getAlias(protocolType);
-                        if (alia != null){
-                            map.put(alia, p.getDisplayName());
-                        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
+            //是否在枚举中有定义
+            if (CollectionUtils.isNotEmpty(list)) {
+                for (ProtocolTemplateVO p : list) {
+                    String protocolType = p.getProtocolType();
+                    String alia = ProtocolEnum.getAlias(protocolType);
+                    if (alia != null) {
+                        map.put(alia, p.getDisplayName());
                     }
                 }
-                jsonObject.put("status","000");
-                jsonObject.put("statusDesc","成功");
-                jsonObject.put("displayName",map);
-            } catch (Exception e) {
-                logger.error("协议查询异常：" + e);
-                jsonObject.put("status","99");
-                jsonObject.put("statusDesc","失败");
             }
-            RedisUtils.set(RedisConstants.PROTOCOL_PARAMS,jsonObject.toString());
+            jsonObject.put("status", "000");
+            jsonObject.put("statusDesc", "成功");
+            jsonObject.put("displayName", map);
+        } catch (Exception e) {
+            logger.error("协议查询异常：" + e);
+            jsonObject.put("status", "99");
+            jsonObject.put("statusDesc", "失败");
         }
         return jsonObject;
     }
