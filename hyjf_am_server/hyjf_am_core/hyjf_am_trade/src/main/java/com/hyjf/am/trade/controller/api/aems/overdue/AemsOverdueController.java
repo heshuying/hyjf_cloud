@@ -7,7 +7,6 @@ import com.hyjf.am.trade.service.hgreportdata.nifa.NifaRepayInfoService;
 import com.hyjf.am.vo.trade.AemsOverdueVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.UnnormalRepayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,11 +57,11 @@ public class AemsOverdueController {
             boolean isMonth = "principal".equals(aemsOverdueVO.getBorrowStyle()) || "month".equals(aemsOverdueVO.getBorrowStyle()) || "endmonth".equals(aemsOverdueVO.getBorrowStyle());
             //单期
             if(!isMonth){
-                String days= isOverdueFlag(aemsOverdueVO,false);
+                Integer days= isOverdueFlag(aemsOverdueVO,false);
                 //逾期
-                if(StringUtils.isNotBlank(days)){
+                if(null != days &&(days ==1||days%30 == 0)){
                     logger.info("查询到相应的还款信息，逾期"+days);
-                    aemsOverdueVO.setOverdueDays(days);
+                    aemsOverdueVO.setOverdueDays(String.valueOf(days));
                     //设置逾期数据
                     setOverdueDate(aemsOverdueVO,false);
                     aemsOverdues.add(aemsOverdueVO);
@@ -79,11 +78,11 @@ public class AemsOverdueController {
             //多期
             List<AemsOverdueVO> aemsOverdueVOList = aemsOverdueService.selectRepayPlanOverdue(params);
             for(AemsOverdueVO aemsOverdueVO:aemsOverdueVOList){
-                String days= isOverdueFlag(aemsOverdueVO,true);
+                Integer days= isOverdueFlag(aemsOverdueVO,true);
                 logger.info("查询到相应的还款信息，逾期"+days);
                 //逾期
-                if(StringUtils.isNotBlank(days)){
-                    aemsOverdueVO.setOverdueDays(days);
+                if(null != days &&(days==1||days%30 == 0)){
+                    aemsOverdueVO.setOverdueDays(String.valueOf(days));
                     //设置逾期数据
                     setOverdueDate(aemsOverdueVO,true);
                     aemsOverdues.add(aemsOverdueVO);
@@ -140,7 +139,7 @@ public class AemsOverdueController {
      * @param isMonth
      * @return
      */
-    public String isOverdueFlag(AemsOverdueVO aemsOverdueVO,Boolean isMonth) {
+    public Integer isOverdueFlag(AemsOverdueVO aemsOverdueVO,Boolean isMonth) {
 
         //还款状态 0:未还款,1:已还款
         Integer status = Integer.valueOf(aemsOverdueVO.getRepayStatus());
@@ -171,10 +170,10 @@ public class AemsOverdueController {
             if (lateDay < 0) {
                 lateDay = -lateDay;
                 logger.info("查询到相应的还款信息，borrowNid:"+ aemsOverdueVO.getBorrowNid()+"逾期了" + lateDay + "天");
-                return String.valueOf(lateDay);
+                return lateDay;
             }
         }
-        return "";
+        return null;
     }
 
 
