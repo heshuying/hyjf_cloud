@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AemsOverdueCustomizeMapper">
+    <resultMap id="selectOverdue" type="com.hyjf.am.vo.trade.AemsOverdueVO">
+        <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+        <result column="repay_period" property="currPeriods" jdbcType="INTEGER" />
+        <result column="repay_status" property="repayStatus" jdbcType="VARCHAR" />
+        <result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+
+        <result column="repay_yestime" property="repayYesTime" jdbcType="VARCHAR" />
+        <result column="repay_account" property="planRepayAmount" jdbcType="VARCHAR" />
+        <result column="repay_account_all" property="repayAmount" jdbcType="VARCHAR" />
+        <result column="overdueDays" property="overdueDays" jdbcType="VARCHAR" />
+        <result column="delay_days" property="delayDays" jdbcType="VARCHAR" />
+        <result column="confirmStatusTime" property="confirmStatusTime" jdbcType="VARCHAR" />
+        <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+        <result column="truename" property="truename" jdbcType="VARCHAR" />
+        <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+
+        <result column="targetAmount" property="targetAmount" jdbcType="VARCHAR" />
+        <result column="overdueAmount" property="overdueAmount" jdbcType="VARCHAR" />
+        <result column="remainAmount" property="remainAmount" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+        <result column="yesRepayTime" property="yesRepayTime" jdbcType="VARCHAR" />
+        <result column="repay_fee" property="repayFee" jdbcType="VARCHAR" />
+
+    </resultMap>
+    <select id="selectRepayOverdue" resultMap="selectOverdue" parameterType="java.util.Map">
+        select  b.borrow_nid,b.repay_period,b.repay_status,FROM_UNIXTIME(b.repay_time,'%Y-%m-%d') repay_time,
+        (select i.borrow_style from ht_borrow i  where i.borrow_nid = b.borrow_nid) borrow_style,
+        (select ii.repay_account_wait+b.repay_fee from ht_borrow ii where ii.borrow_nid = b.borrow_nid)remainAmount,
+        FROM_UNIXTIME(b.repay_yestime,'%Y-%m-%d') repay_yestime,b.repay_account,b.repay_fee,
+        (b.repay_account+b.repay_fee+b.delay_interest)overdueAmount,
+        b.repay_account_all,b.delay_days,date_format(NOW(),'%Y-%m-%d %H:%i:%s') confirmStatusTime,
+        (b.repay_account+b.repay_fee+b.delay_interest)targetAmount,u.mobile,ui.truename,ui.idcard
+        from ht_borrow_repay b
+        inner JOIN ht_r_user u on u.user_id=b.user_id
+        inner JOIN hyjf_user.ht_user_info ui on u.user_id=ui.user_id
+        WHERE b.repay_status=0 and b.repay_time<![CDATA[ <]]>#{repayTime} and  b.borrow_nid in
+        <foreach collection="borrowNids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectRepayPlanOverdue" resultMap="selectOverdue" parameterType="java.util.Map">
+        select  b.borrow_nid,u.mobile,ui.truename,ui.idcard,'0' repay_status,0 status,
+        (select b1.repay_period from ht_borrow_repay_plan b1 where b1.borrow_nid=b.borrow_nid and b1.repay_time<![CDATA[ <]]>#{repayTime} and b1.repay_status=0  order by b1.repay_period  desc limit 1)repay_period,
+        (select FROM_UNIXTIME(b2.repay_time,'%Y-%m-%d') from ht_borrow_repay_plan b2 where b2.borrow_nid=b.borrow_nid and b2.repay_time<![CDATA[ <]]>#{repayTime} and b2.repay_status=0  order by b2.repay_period desc limit 1)repay_time,
+        (select FROM_UNIXTIME(b3.repay_time,'%Y-%m-%d') from ht_borrow_repay_plan b3 where b3.borrow_nid=b.borrow_nid and b3.repay_time<![CDATA[ <]]>#{repayTime} and b3.repay_status=0  order by b3.repay_period asc limit 1)yesRepayTime,
+        (select b4.repay_account from ht_borrow_repay_plan b4 where b4.borrow_nid=b.borrow_nid and b4.repay_time<![CDATA[ <]]>#{repayTime} and b4.repay_status=0  order by b4.repay_period desc limit 1)repay_account,
+        (select b8.repay_fee from ht_borrow_repay_plan b8 where b8.borrow_nid=b.borrow_nid and b8.repay_time<![CDATA[ <]]>#{repayTime} and b8.repay_status=0  order by b8.repay_period desc limit 1)repay_fee,
+        (select bb.repay_account+bb.repay_fee+b.delay_interest from ht_borrow_repay_plan bb where bb.borrow_nid=b.borrow_nid and bb.repay_time<![CDATA[ <]]>#{repayTime} and bb.repay_status=0  order by bb.repay_period desc limit 1)targetAmount,
+        (select sum(b5.repay_account) from ht_borrow_repay_plan b5 where b5.borrow_nid=b.borrow_nid and b5.repay_time<![CDATA[ <]]>#{repayTime} and b5.repay_status=0 )overdueAmount,
+        (select sum(b6.delay_days) from ht_borrow_repay_plan b6 where b6.borrow_nid=b.borrow_nid and b6.repay_time <![CDATA[ <]]>#{repayTime} and b6.repay_status=0 )delay_days,
+        (select b7.delay_days from ht_borrow_repay_plan b7 where b7.borrow_nid=b.borrow_nid and b7.repay_time <![CDATA[ <]]>#{repayTime} and b7.repay_status=0  order by b7.repay_period desc limit 1)overdueDays,
+        (select i.repay_account_wait+sum(b.repay_fee) from ht_borrow i where i.borrow_nid = b.borrow_nid)remainAmount,
+        (select ii.borrow_style from ht_borrow ii  where ii.borrow_nid = b.borrow_nid) borrow_style
+        from ht_borrow_repay_plan b
+        inner JOIN ht_r_user u on u.user_id=b.user_id
+        inner JOIN hyjf_user.ht_user_info ui on u.user_id=ui.user_id
+        where b.repay_status=0  and b.repay_time<![CDATA[ <]]>#{repayTime} and b.borrow_nid in
+        <foreach collection="borrowNids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        group by borrow_nid
+
+    </select>
+
+</mapper>

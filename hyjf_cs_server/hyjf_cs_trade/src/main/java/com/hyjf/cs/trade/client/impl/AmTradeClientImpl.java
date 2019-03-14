@@ -95,11 +95,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.util.ReflectUtils;
-import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import com.hyjf.cs.trade.bean.MyCreditDetailBean;
-import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
-import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -6966,5 +6962,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     public boolean getFailCredit(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/repay/getFailCredit/" + borrowNid;
         return restTemplate.getForEntity(url, boolean.class).getBody();
+    }
+    /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean){
+        AemsOverdueResultBean aemsOverdueResultBean = new AemsOverdueResultBean();
+        AemsOverdueCustomizeResponse response=restTemplate.postForEntity("http://AM-TRADE/am-trade/aems/overdue/selectRepayOverdue",requestBean,AemsOverdueCustomizeResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            aemsOverdueResultBean.setAemsOverdueVO(response.getResultList());
+            aemsOverdueResultBean.setOverdue("overdue");
+            return aemsOverdueResultBean;
+        }
+        return null;
     }
 }
