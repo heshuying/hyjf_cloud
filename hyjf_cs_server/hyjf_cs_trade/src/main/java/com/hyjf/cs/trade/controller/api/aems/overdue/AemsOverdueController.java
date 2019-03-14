@@ -5,6 +5,7 @@ import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.cs.trade.bean.AemsOverdueRequestBean;
 import com.hyjf.cs.trade.bean.AemsOverdueResultBean;
 import com.hyjf.cs.trade.service.aems.overdue.AemsOverdueService;
+import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -43,12 +44,12 @@ public class AemsOverdueController {
         }
 
 //        //验签
-//        if(!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/overdue/query")){
-//            resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000012);
-//            resultBean.setStatusDesc("验签失败！");
-//            logger.info("-------------------验签失败！--------------------");
-//            return resultBean;
-//        }
+        if(!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/overdue/query")){
+            resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_HK000012);
+            resultBean.setStatusDesc("验签失败！");
+            logger.info("-------------------验签失败！--------------------");
+            return resultBean;
+        }
         //逾期，返回逾期数据
         resultBean = aemsOverdueService.selectRepayOverdue(requestBean);
         if(null == resultBean){
