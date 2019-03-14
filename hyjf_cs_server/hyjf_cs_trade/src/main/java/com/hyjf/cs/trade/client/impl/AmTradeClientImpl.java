@@ -104,6 +104,7 @@ import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -7402,4 +7403,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResultList();
     }
     // 应急中心二期，历史数据上报 add by nxl end
+    /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean){
+        AemsOverdueResultBean aemsOverdueResultBean = new AemsOverdueResultBean();
+        AemsOverdueCustomizeResponse response=restTemplate.postForEntity("http://AM-TRADE/am-trade/aems/overdue/selectRepayOverdue",requestBean,AemsOverdueCustomizeResponse.class).getBody();
+        if (Response.SUCCESS.equals(response.getRtn())){
+            aemsOverdueResultBean.setAemsOverdueVO(response.getResultList());
+            aemsOverdueResultBean.setOverdue("overdue");
+            return aemsOverdueResultBean;
+        }
+        return null;
+    }
 }

@@ -61,10 +61,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
-import com.hyjf.cs.trade.bean.BatchCenterCustomize;
-import com.hyjf.cs.trade.bean.MyCreditDetailBean;
-import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
-import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -3024,5 +3021,11 @@ public interface AmTradeClient {
 
     // 应急中心二期，历史数据上报 add by nxl end
 
+    /**
+     * 查询逾期相关数据
+     * @param requestBean
+     * @return
+     */
+    AemsOverdueResultBean selectRepayOverdue(AemsOverdueRequestBean requestBean);
 }
 
