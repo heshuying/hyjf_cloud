@@ -75,7 +75,16 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
 		 // 获取债转信息
         BorrowCreditExample borrowCreditExample = new BorrowCreditExample();
         BorrowCreditExample.Criteria borrowCreditCra = borrowCreditExample.createCriteria();
-        borrowCreditCra.andCreditNidEqualTo(Integer.parseInt(request1.getCreditNid())).andBidNidEqualTo(request1.getBidNid()).andTenderNidEqualTo(request1.getTenderNid());
+        if(request1.getCreditNid()!=null){
+            borrowCreditCra.andCreditNidEqualTo(Integer.parseInt(request1.getCreditNid()));
+        }
+        if(request1.getBidNid()!=null){
+            borrowCreditCra.andBidNidEqualTo(request1.getBidNid());
+        }
+        if(request1.getTenderNid()!=null){
+            borrowCreditCra.andTenderNidEqualTo(request1.getTenderNid());
+        }
+
         List<BorrowCredit> borrowCredit = this.borrowCreditMapper.selectByExample(borrowCreditExample);
 		return borrowCredit;
 	}
