@@ -3,12 +3,11 @@
  */
 package com.hyjf.am.admin.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder;
-import com.hyjf.am.market.service.SellDailyService;
-import com.hyjf.am.vo.market.SellDailyVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetDate;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -23,10 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder;
+import com.hyjf.am.market.service.SellDailyService;
+import com.hyjf.am.vo.market.SellDailyVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.GetDate;
 
 @Service
 @RocketMQMessageListener(topic = MQConstant.SELL_DAILY_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SELL_DAILY_GROUP)
@@ -91,7 +92,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
                         appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
                                 : appSellDailyList.get(0);
@@ -101,7 +102,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalRepayOnMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 3:
                         list = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
@@ -109,7 +110,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
                                 QUERY_APP_TYPE);
                         appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
@@ -120,21 +121,21 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 7:
                         list = sellDailyService.countTotalRechargeOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countTotalRechargeOnMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 8:
                         list = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
                                 QUERY_APP_TYPE);
                         appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
@@ -146,7 +147,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
                                 QUERY_APP_TYPE);
                         appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
@@ -157,7 +158,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
                         appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
                                 : appSellDailyList.get(0);
@@ -167,7 +168,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalRepayYesterday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 13:
                         list = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
@@ -175,7 +176,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
                                 QUERY_APP_TYPE);
                         appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
@@ -186,49 +187,49 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                         ocSellDailyList = sellDailyService.countTotalWithdrawYesterday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 15:
                         list = sellDailyService.countTotalRechargeYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countTotalRechargeYesterday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 17:
                         list = sellDailyService.countNoneRepayToday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countNoneRepayToday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 18:
                         list = sellDailyService.countRegisterTotalYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countRegisterTotalYesterday(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 19:
                         list = sellDailyService.countRechargeGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countRechargeGt3000UserNum(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 20:
                         list = sellDailyService.countInvestGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countInvestGt3000UserNum(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                     case 21:
                         list = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
                         ocSellDailyList = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime,
                                 QUERY_OC_THREE_DIVISION_TYPE);
                         shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                                : ocSellDailyList.get(0);
+                                : mergeOC(ocSellDailyList);
                         break;
                 }
 
@@ -249,7 +250,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                     }
                 }
 
-                // 2.1 网络运营部特指：上海运营中心-网络运营部 单独查询
+                // 2.1 网络运营部特指：上海运营中心-网络运营部, 青岛运营中心-网络运营部 单独查询
                 if (shOCSellDaily != null) {
                     list.add(sellDailyService.constructionSellDaily(shOCSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
                 }
@@ -308,4 +309,81 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
         logger.info("====销售日报 消费端开始执行=====");
     }
+
+
+    /**
+     * 合并上海运营中心和青岛运营中心的数据
+     * @param ocSellDailyList
+     * @return
+     */
+	private SellDailyVO mergeOC(List<SellDailyVO> ocSellDailyList) {
+		SellDailyVO sellDailyVO = sellDailyService.constructionSellDaily(null, null);
+		for (SellDailyVO vo : ocSellDailyList) {
+			if (vo.getInvestTotalMonth() != null) {
+				sellDailyVO.setInvestTotalMonth(sellDailyVO.getInvestTotalMonth().add(vo.getInvestTotalMonth()));
+			}
+			if (vo.getRepaymentTotalMonth() != null) {
+				sellDailyVO
+						.setRepaymentTotalMonth(sellDailyVO.getRepaymentTotalMonth().add(vo.getRepaymentTotalMonth()));
+			}
+			if (vo.getInvestTotalPreviousMonth() != null) {
+				sellDailyVO.setInvestTotalPreviousMonth(
+						sellDailyVO.getInvestTotalPreviousMonth().add(vo.getInvestTotalPreviousMonth()));
+			}
+			if (vo.getWithdrawTotalMonth() != null) {
+				sellDailyVO.setWithdrawTotalMonth(sellDailyVO.getWithdrawTotalMonth().add(vo.getWithdrawTotalMonth()));
+			}
+			if (vo.getRechargeTotalMonth() != null) {
+				sellDailyVO.setRechargeTotalMonth(sellDailyVO.getRechargeTotalMonth().add(vo.getRechargeTotalMonth()));
+			}
+
+			if (vo.getInvestAnnualTotalMonth() != null) {
+				sellDailyVO.setInvestAnnualTotalMonth(
+						sellDailyVO.getInvestAnnualTotalMonth().add(vo.getInvestAnnualTotalMonth()));
+			}
+
+			sellDailyVO.setInvestRatioGrowth("");
+			sellDailyVO.setWithdrawRate("");
+			if (vo.getInvestAnnualTotalPreviousMonth() != null) {
+				sellDailyVO.setInvestAnnualTotalPreviousMonth(
+						sellDailyVO.getInvestAnnualTotalPreviousMonth().add(vo.getInvestAnnualTotalPreviousMonth()));
+			}
+			if (vo.getInvestTotalYesterday() != null) {
+				sellDailyVO.setInvestTotalYesterday(
+						sellDailyVO.getInvestTotalYesterday().add(vo.getInvestTotalYesterday()));
+			}
+			if (vo.getRepaymentTotalYesterday() != null) {
+				sellDailyVO.setRepaymentTotalYesterday(
+						sellDailyVO.getRepaymentTotalYesterday().add(vo.getRepaymentTotalYesterday()));
+			}
+			if (vo.getInvestAnnualTotalYesterday() != null) {
+				sellDailyVO.setInvestAnnualTotalYesterday(
+						sellDailyVO.getInvestAnnualTotalYesterday().add(vo.getInvestAnnualTotalYesterday()));
+			}
+			sellDailyVO.setInvestAnnularRatioGrowth("");
+
+			if (vo.getWithdrawTotalYesterday() != null) {
+				sellDailyVO.setWithdrawTotalYesterday(
+						sellDailyVO.getWithdrawTotalYesterday().add(vo.getWithdrawTotalYesterday()));
+			}
+			if (vo.getRechargeTotalYesterday() != null) {
+				sellDailyVO.setRechargeTotalYesterday(
+						sellDailyVO.getRechargeTotalYesterday().add(vo.getRechargeTotalYesterday()));
+			}
+			if (vo.getNonRepaymentToday() != null) {
+				sellDailyVO.setNonRepaymentToday(sellDailyVO.getNonRepaymentToday().add(vo.getNonRepaymentToday()));
+			}
+
+			sellDailyVO.setNetCapitalInflowYesterday(BigDecimal.ZERO);
+			sellDailyVO.setRegisterTotalYesterday(
+					sellDailyVO.getRegisterTotalYesterday() + vo.getRegisterTotalYesterday());
+			sellDailyVO
+					.setRechargeGt3000UserNum(sellDailyVO.getRechargeGt3000UserNum() + vo.getRechargeGt3000UserNum());
+			sellDailyVO.setInvestGt3000UserNum(sellDailyVO.getInvestGt3000UserNum() + vo.getInvestGt3000UserNum());
+			sellDailyVO.setInvestGt3000MonthUserNum(
+					sellDailyVO.getInvestGt3000MonthUserNum() + vo.getInvestGt3000MonthUserNum());
+		}
+		return sellDailyVO;
+	}
+
 }
