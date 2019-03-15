@@ -42,6 +42,10 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
 
             if (StringUtils.isNotBlank(attribute)) {
                 int attributeInt = Integer.parseInt(attribute);
+                //如果客户属性为员工，删除推荐人
+                if(attributeInt == 2 || attributeInt == 3){
+                    record.setSpreadsUserId(0);
+                }
                 record.setAttribute(attributeInt);
             }
             if (StringUtils.isNotBlank(trueName)) {
