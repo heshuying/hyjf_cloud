@@ -342,8 +342,8 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 						sellDailyVO.getInvestAnnualTotalMonth().add(vo.getInvestAnnualTotalMonth()));
 			}
 
-			sellDailyVO.setInvestRatioGrowth("/");
-			sellDailyVO.setWithdrawRate("/");
+			sellDailyVO.setInvestRatioGrowth("");
+			sellDailyVO.setWithdrawRate("");
 			if (vo.getInvestAnnualTotalPreviousMonth() != null) {
 				sellDailyVO.setInvestAnnualTotalPreviousMonth(
 						sellDailyVO.getInvestAnnualTotalPreviousMonth().add(vo.getInvestAnnualTotalPreviousMonth()));
@@ -360,7 +360,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				sellDailyVO.setInvestAnnualTotalYesterday(
 						sellDailyVO.getInvestAnnualTotalYesterday().add(vo.getInvestAnnualTotalYesterday()));
 			}
-			sellDailyVO.setInvestAnnularRatioGrowth("/");
+			sellDailyVO.setInvestAnnularRatioGrowth("");
 
 			if (vo.getWithdrawTotalYesterday() != null) {
 				sellDailyVO.setWithdrawTotalYesterday(
