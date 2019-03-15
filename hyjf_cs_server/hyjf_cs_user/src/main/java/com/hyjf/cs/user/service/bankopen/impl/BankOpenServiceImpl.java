@@ -257,7 +257,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 return result;
             }else{
                 // 先调用一下银行按照手机号查询接口  给即信补录一下
-                getAccountBymobile(userId,bean.getMobile());
+                getAccountBymobile(userId,bean.getRemark());
             }
         }
         // 开户成功后,保存用户的开户信息
@@ -341,6 +341,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         callBean.setChannel(BankCallConstant.CHANNEL_PC);
         callBean.setMobile(mobile);
         callBean.setLogRemark("根据手机号查询电子账户号");
+        callBean.setLogUserId(userId+"");
         callBean = BankCallUtils.callApiBg(callBean);
         logger.info("根据手机号查询电子帐户号 结果：{}  ",JSONObject.toJSONString(callBean));
     }
