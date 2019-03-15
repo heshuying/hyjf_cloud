@@ -50,10 +50,6 @@ public interface AmConfigClient {
 	 */
 	DebtConfigResponse getDebtConfig();
 
-	String getBankIdByCardNo(String cardNo);
-
-	JxBankConfigVO getJxBankConfigById(Integer id);
-
 	/**
 	 * 债转配置更新
 	 * @auth

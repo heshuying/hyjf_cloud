@@ -367,6 +367,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         }
         return 0;
     }
-
+    /**
+     * 插入用户绑定的银行卡
+     * @param bankCard
+     * @return
+     */
+    @Override
+    public int insertUserCard(BankCard bankCard) {
+        return this.bankCardMapper.insertSelective(bankCard);
+    }
 
 }
