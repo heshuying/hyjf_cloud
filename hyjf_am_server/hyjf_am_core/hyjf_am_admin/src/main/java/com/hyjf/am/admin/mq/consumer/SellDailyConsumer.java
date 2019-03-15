@@ -317,7 +317,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
      * @return
      */
 	private SellDailyVO mergeOC(List<SellDailyVO> ocSellDailyList) {
-		SellDailyVO sellDailyVO = new SellDailyVO();
+		SellDailyVO sellDailyVO = sellDailyService.constructionSellDaily(null, null);
 		for (SellDailyVO vo : ocSellDailyList) {
 			sellDailyVO.setInvestTotalMonth(sellDailyVO.getInvestTotalMonth().add(vo.getInvestTotalMonth()));
 			sellDailyVO.setRepaymentTotalMonth(sellDailyVO.getRepaymentTotalMonth().add(vo.getRepaymentTotalMonth()));
