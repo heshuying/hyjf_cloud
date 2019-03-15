@@ -647,8 +647,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         logger.debug(logHeader + "校验债转用的计算金额是否有异常数据 开启！");
 
         // 承接的应该大于等于支付的
-        if(resultVO.getAssignPay().compareTo(resultVO.getAssignAccount()) > 0){
-            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息");
+        if(resultVO.getAssignPay().compareTo(resultVO.getAssignAccount().subtract(new BigDecimal(0.1))) > 0){
+            return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息-0.1");
         }
         // 承接服务率不能大于1
         if(resultVO.getServiceApr().compareTo(BigDecimal.ONE) >= 0){
