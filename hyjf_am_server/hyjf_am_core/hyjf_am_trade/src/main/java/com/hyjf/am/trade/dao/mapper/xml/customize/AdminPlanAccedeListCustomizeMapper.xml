@@ -365,81 +365,78 @@
 		<result column="sumFairValue" property="sumFairValue" />
 	</resultMap>
 	<select id="sumAccedeRecord" resultMap="SumResultMap" parameterType="Map">
-			SELECT
-				SUM(hdpa.accede_account) AS accede_account,
-				SUM(hdpa.already_invest) AS already_invest,
-				SUM(hdpa.wait_total) AS wait_total,
-				SUM(hdpa.wait_captical) AS wait_captical,
-				SUM(hdpa.wait_interest) AS wait_interest,
-				
-				SUM(hdpa.available_invest_account) AS sumAvailableInvestAccount,
-				SUM(hdpa.frost_account) AS sumFrostAccount,
-				CASE WHEN hdpa.order_status =5 OR hdpa.order_status =7 THEN  SUM(hdpa.fair_value)
-				ELSE 0 END AS sumFairValue
-				
-			FROM
-				ht_hjh_accede hdpa
-			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  
-			LEFT JOIN ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
-			LEFT JOIN ht_coupon_real_tender hcrt ON hcrt.real_tender_id = hdpa.accede_order_id
-			LEFT JOIN ht_coupon_tender hct ON hct.order_id = hcrt.coupon_tender_id
-			LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
-			LEFT JOIN ht_coupon_config hcc ON hcc.coupon_code = hcu.coupon_code
-			LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = hdpa.accede_order_id
-			LEFT JOIN ht_r_user ruser2 ON ruser2.user_id = hdpa.user_id
-			LEFT JOIN ht_r_oa_users ou ON ou.hyd_id = hdpa.invite_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-			LEFT JOIN ht_r_oa_department od ON od.id = ou.departmentid AND od.id IS NOT NULL
-			LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
-			LEFT JOIN ht_r_oa_department od3 ON od3.id = od2.parentid
-			LEFT JOIN ht_r_oa_users oux ON oux.hyd_id = hdpa.user_id AND oux.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
-			LEFT JOIN ht_r_oa_department odx ON odx.id = oux.departmentid AND odx.id IS NOT NULL
-			LEFT JOIN ht_r_oa_department odx2 ON odx2.id = odx.parentid
-			LEFT JOIN ht_r_oa_department odx3 ON odx3.id = odx2.parentid
-			<where>
-				<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
-					AND hdp.plan_nid LIKE CONCAT( #{debtPlanNidSrch}, '%')
-				</if>
-				<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
-					AND hdpa.accede_order_id = #{accedeOrderIdSrch} 
-				</if>
-				<if test="userNameSrch != null and userNameSrch != ''">
-					AND hdpa.user_name LIKE CONCAT( #{userNameSrch},'%')
-				</if>
-				<if test="refereeNameSrch != null and refereeNameSrch != ''">
-					AND hydui.username LIKE CONCAT( #{refereeNameSrch},'%')
-				</if>
-				<if test="orderStatus != null and orderStatus != ''">
-					AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
-				</if>
-				<if test="platformSrch != null and platformSrch != ''">
-					AND hdpa.client = #{platformSrch}
-				</if>
-				<if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
-					AND hdpa.lock_period = #{debtLockPeriodSrch}
-				</if>
-				
-				<if test="searchStartDate != null and searchStartDate != ''">
-		            AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
-		        </if>
-		        <if test="searchEndDate != null and searchEndDate != ''">
-		            AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d %H:%i:%s')
-		        </if>
-				<if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
-					<!-- sqlbug(类型不一致) -->
-					AND hdpa.count_interest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{countInterestTimeStartDate})
-				</if>
-				<if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
-					<!-- sqlbug(类型不一致) -->
-					AND hdpa.count_interest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{countInterestTimeEndDate},' 23:59:59'))
-				</if>
-				
-				<if test="matchDatesSrch != null and matchDatesSrch != ''">
-					AND hdpa.match_dates = #{matchDatesSrch}
-				</if>
-				<if test="investCountsSrch != null and investCountsSrch != ''">
-					AND hdpa.invest_counts = #{investCountsSrch}
-				</if>
-			</where>
+		SELECT
+		SUM(hdpa.accede_account) AS accede_account,
+		SUM(hdpa.already_invest) AS already_invest,
+		SUM(hdpa.wait_total) AS wait_total,
+		SUM(hdpa.wait_captical) AS wait_captical,
+		SUM(hdpa.wait_interest) AS wait_interest,
+
+		SUM(hdpa.available_invest_account) AS sumAvailableInvestAccount,
+		SUM(hdpa.frost_account) AS sumFrostAccount,
+		CASE WHEN hdpa.order_status =5 OR hdpa.order_status =7 THEN SUM(hdpa.fair_value)
+		ELSE 0 END AS sumFairValue
+
+		FROM
+		ht_hjh_accede hdpa
+		<where>
+			<if test="debtPlanNidSrch != null and debtPlanNidSrch != ''">
+				AND hdpa.plan_nid LIKE CONCAT('%', #{debtPlanNidSrch}, '%')
+			</if>
+			<if test="accedeOrderIdSrch != null and accedeOrderIdSrch != ''">
+				AND hdpa.accede_order_id = #{accedeOrderIdSrch}
+			</if>
+			<if test="userNameSrch != null and userNameSrch != ''">
+				AND hdpa.user_name LIKE CONCAT( #{userNameSrch},'%')
+			</if>
+			<if test="orderStatus != null and orderStatus != ''">
+				AND hdpa.order_status LIKE CONCAT( #{orderStatus},'%')
+			</if>
+			<if test="platformSrch != null and platformSrch != ''">
+				AND hdpa.client = #{platformSrch}
+			</if>
+			<if test="debtLockPeriodSrch != null and debtLockPeriodSrch != ''">
+				AND hdpa.lock_period = #{debtLockPeriodSrch}
+			</if>
+
+			<if test="searchStartDate != null and searchStartDate != ''">
+				AND hdpa.create_time <![CDATA[>=]]> STR_TO_DATE(#{searchStartDate}, '%Y-%m-%d %H:%i:%s')
+			</if>
+			<if test="searchEndDate != null and searchEndDate != ''">
+				AND hdpa.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{searchEndDate}, ' 23:59:59'),'%Y-%m-%d
+				%H:%i:%s')
+			</if>
+			<if test="countInterestTimeStartDate != null and countInterestTimeStartDate != ''">
+				<!-- sqlbug(类型不一致) -->
+				AND hdpa.count_interest_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{countInterestTimeStartDate})
+			</if>
+			<if test="countInterestTimeEndDate != null and countInterestTimeEndDate != ''">
+				<!-- sqlbug(类型不一致) -->
+				AND hdpa.count_interest_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{countInterestTimeEndDate},'
+				23:59:59'))
+			</if>
+
+			<if test="matchDatesSrch != null and matchDatesSrch != ''">
+				AND hdpa.match_dates = #{matchDatesSrch}
+			</if>
+			<if test="investCountsSrch != null and investCountsSrch != ''">
+				AND hdpa.invest_counts = #{investCountsSrch}
+			</if>
+
+			<if test="endDateStartSrch != null and endDateStartSrch!=''">
+				and hdpa.end_date <![CDATA[>=]]> CONCAT(#{endDateStartSrch},' 00:00:00')
+			</if>
+			<if test="endDateEndSrch != null and endDateEndSrch!=''">
+				and hdpa.end_date <![CDATA[<=]]> CONCAT(#{endDateEndSrch},' 23:59:59')
+			</if>
+
+			<if test="acctualPaymentTimeStartSrch != null and acctualPaymentTimeStartSrch !='' ">
+				AND FROM_UNIXTIME( hdpa.acctual_payment_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{acctualPaymentTimeStartSrch}
+			</if>
+			<if test="acctualPaymentTimeEndSrch != null and acctualPaymentTimeEndSrch !='' ">
+				AND FROM_UNIXTIME( hdpa.acctual_payment_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{acctualPaymentTimeEndSrch}
+			</if>
+		</where>
 	</select>
 	
 	
