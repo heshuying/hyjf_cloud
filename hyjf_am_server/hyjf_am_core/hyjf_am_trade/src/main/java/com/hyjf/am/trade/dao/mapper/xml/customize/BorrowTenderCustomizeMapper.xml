@@ -169,10 +169,10 @@
 				borrow.project_type = 8
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[>=]]> #{timeStartSrch}
+				AND tender.create_time  <![CDATA[>=]]>  timestamp(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[<=]]> #{timeEndSrch}
+				AND tender.create_time  <![CDATA[<=]]>  timestamp(#{timeEndSrch})
 			</if>
 		</where>
 	</select>
@@ -185,10 +185,10 @@
 		ht_credit_tender hct
 		<where>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND  hct.create_time <![CDATA[>=]]>  timestamp(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND hct.create_time <![CDATA[<=]]>  timestamp(#{timeEndSrch})
 			</if>
 		</where>
 	</select>
@@ -202,10 +202,10 @@
 		<where>
 			recharge.`status` = 2
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND recharge.create_time <![CDATA[>=]]> timestamp(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND recharge.create_time <![CDATA[<=]]>  timestamp(#{timeEndSrch})
 			</if>
 		</where>
 	</select>
@@ -230,10 +230,10 @@
 			</if>
 
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND  tender.create_time <![CDATA[>=]]>  timestamp(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND  tender.create_time <![CDATA[<=]]>  timestamp(#{timeEndSrch})
 			</if>
 		</where>
 	</select>
@@ -260,10 +260,10 @@
 			</if>
 			AND list.invest_status = 0
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND  list.invest_time <![CDATA[>=]]>  UNIX_TIMESTAMP(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND list.invest_time<![CDATA[<=]]>  UNIX_TIMESTAMP(#{timeEndSrch})
 			</if>
 		</where>
 
@@ -288,10 +288,10 @@
 				hdpa.client = 1
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND hdpa.create_time <![CDATA[>=]]>  timestamp(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND hdpa.create_time <![CDATA[<=]]>  timestamp(#{timeEndSrch})
 			</if>
 		</where>
 
@@ -316,10 +316,10 @@
 				hct.client = 1
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND hct.create_time  <![CDATA[>=]]>  timestamp(#{timeStartSrch})
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND hct.create_time <![CDATA[<=]]>  timestamp(#{timeEndSrch})
 			</if>
 		</where>
 
