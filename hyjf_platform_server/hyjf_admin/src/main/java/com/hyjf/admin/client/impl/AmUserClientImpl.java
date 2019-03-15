@@ -658,22 +658,7 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 		return result;
 	}
-
-	/**
-	 * 保存用户绑定的银行卡
-	 *
-	 * @auther: nxl
-	 * @param request
-	 * @return
-	 */
-	@Override
-	public int insertUserCard(BankCardRequest request) {
-		logger.info("------==========================--------保存银行卡信息，插入用户银行卡,BankCardRequest:"+JSONObject.toJSONString(request));
-		int result = restTemplate.postForEntity(userService+"/card/insertUserCard", request, Integer.class)
-				.getBody();
-		return result;
-	}
-
+	
 	/**
 	 * 单表查询开户信息
 	 *
@@ -2793,6 +2778,22 @@ public class AmUserClientImpl implements AmUserClient {
 			return null;
 		}
 		return response.getOpenAccountEnquiryDefineResultBeanVO();
+	}
+
+	/***
+	 * 开户掉单，保存用户绑定的银行卡
+	* @author Zha Daojian
+	* @date 2019/3/15 10:13
+	* @param requestBean
+	* @return com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO
+	**/
+	@Override
+	public int insertUserCard(BankCardRequest requestBean){
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/insertUserCard", requestBean, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 
 	/***
