@@ -293,9 +293,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("serviceAgreementUrl",HOST + serviceAgreementUrl);//服务协议
         info.put("privacyPolicyUrl",HOST + privacyPolicyUrl);//隐私政策
         //add by nxl app首页新加相关协议 20190315
-//        String agreementTempUrl = systemConfig.getAgreementTempUrl();
-        info.put("agreementTempUrl",HOST + "/agreement/relatedagreementlist");//隐私政策
-
+        info.put("agreementTempUrl",HOST + "/agreement/relatedagreementlist");
 
         // add by liushouyi 新增固定发标时间提醒 start
         info.put("staticIssueTime","散标更新时间  10:00  15:00");
