@@ -180,7 +180,7 @@ public class BankCallUtils implements Serializable {
 	 * @throws Exception
 	 */
 	public static BankCallBean callApiBg(BankCallBean bean) {
-		logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+        logger.debug("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		BankCallBean ret = null;
 		try {
 			// bean转换成参数
