@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -50,9 +49,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Autowired
 	private RestTemplate restTemplate;
-
-	@Value("${am.user.service.name}")
-	private String userService;
 
 	/**
 	 * 根据userName查询user信息
