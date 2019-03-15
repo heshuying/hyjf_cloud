@@ -30,7 +30,7 @@ public class BaseClientImpl implements BaseClient {
     public <T> T postExe(String url, Object param, Class<T> clazz) {
         try {
             T t = restTemplate.postForEntity(url, param, clazz).getBody();
-            logger.debug("调用原子层返回结果response = {}", JSON.toJSON(t));
+            //logger.debug("调用原子层返回结果response = {}", JSON.toJSON(t));
             if (checkSuccess(t,clazz)){
                 return t;
             }
@@ -54,7 +54,7 @@ public class BaseClientImpl implements BaseClient {
     public <T> T getExe(String url, Class<T> clazz) {
         try {
             T t = restTemplate.getForEntity(url,  clazz).getBody();
-            logger.debug("调用原子层返回结果response = {}", JSON.toJSON(t));
+            //logger.debug("调用原子层返回结果response = {}", JSON.toJSON(t));
             if (checkSuccess(t,clazz)){
                 return t;
             }
