@@ -56,8 +56,8 @@ public class WebAgreementController extends BaseTradeController {
      * PC 1.1.2
      * @return
      */
-    @ApiOperation(value = "web-获取在帮助中心显示的协议模板名称", httpMethod = "POST", notes = "app-获取在帮助中心显示的协议模板名称")
-    @PostMapping("/getShowProtocolTemp")
+    @ApiOperation(value = "web-获取在帮助中心显示的协议模板名称", httpMethod = "GET", notes = "app-获取在帮助中心显示的协议模板名称")
+    @GetMapping("/getShowProtocolTemp")
     public JSONObject getShowProtocolTemp() {
         HashMap<String, Object> map = new HashMap<String, Object>();
         logger.info("*******************************协议名称-动态获得************************************");
