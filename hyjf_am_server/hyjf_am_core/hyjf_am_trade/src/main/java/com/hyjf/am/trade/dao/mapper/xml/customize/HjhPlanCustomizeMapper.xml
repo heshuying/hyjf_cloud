@@ -678,7 +678,7 @@ ORDER BY
 		-- LEFT JOIN ht_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
 		WHERE dpa.plan_nid=#{planNid}
 		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
-		and dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid}),INTERVAL 3 DAY))
+        AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
