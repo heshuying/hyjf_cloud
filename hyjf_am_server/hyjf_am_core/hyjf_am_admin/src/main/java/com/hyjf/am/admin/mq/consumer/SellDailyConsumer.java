@@ -319,31 +319,61 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 	private SellDailyVO mergeOC(List<SellDailyVO> ocSellDailyList) {
 		SellDailyVO sellDailyVO = sellDailyService.constructionSellDaily(null, null);
 		for (SellDailyVO vo : ocSellDailyList) {
-			sellDailyVO.setInvestTotalMonth(sellDailyVO.getInvestTotalMonth().add(vo.getInvestTotalMonth()));
-			sellDailyVO.setRepaymentTotalMonth(sellDailyVO.getRepaymentTotalMonth().add(vo.getRepaymentTotalMonth()));
-			sellDailyVO.setInvestTotalPreviousMonth(
-					sellDailyVO.getInvestTotalPreviousMonth().add(vo.getInvestTotalPreviousMonth()));
-			sellDailyVO.setInvestRatioGrowth("/");
-			sellDailyVO.setWithdrawTotalMonth(sellDailyVO.getWithdrawTotalMonth().add(vo.getWithdrawTotalMonth()));
+		    if(vo.getInvestTotalMonth()!=null){
+                sellDailyVO.setInvestTotalMonth(sellDailyVO.getInvestTotalMonth().add(vo.getInvestTotalMonth()));
+            }
+            if(vo.getRepaymentTotalMonth()!=null){
+                sellDailyVO.setRepaymentTotalMonth(sellDailyVO.getRepaymentTotalMonth().add(vo.getRepaymentTotalMonth()));
+            }
+            if(vo.getInvestTotalPreviousMonth()!=null){
+                sellDailyVO.setInvestTotalPreviousMonth(
+                        sellDailyVO.getInvestTotalPreviousMonth().add(vo.getInvestTotalPreviousMonth()));
+            }
+            if(vo.getWithdrawTotalMonth()!=null){
+                sellDailyVO.setWithdrawTotalMonth(sellDailyVO.getWithdrawTotalMonth().add(vo.getWithdrawTotalMonth()));
+            }
+            if(vo.getRechargeTotalMonth()!=null){
+                sellDailyVO.setRechargeTotalMonth(sellDailyVO.getRechargeTotalMonth().add(vo.getRechargeTotalMonth()));
+            }
+
+            if(vo.getInvestAnnualTotalMonth()!=null){
+                sellDailyVO.setInvestAnnualTotalMonth(
+                        sellDailyVO.getInvestAnnualTotalMonth().add(vo.getInvestAnnualTotalMonth()));
+            }
+
+            sellDailyVO.setInvestRatioGrowth("/");
 			sellDailyVO.setWithdrawRate("/");
-			sellDailyVO.setRechargeTotalMonth(sellDailyVO.getRechargeTotalMonth().add(vo.getRechargeTotalMonth()));
-			sellDailyVO.setInvestAnnualTotalMonth(
-					sellDailyVO.getInvestAnnualTotalMonth().add(vo.getInvestAnnualTotalMonth()));
-			sellDailyVO.setInvestAnnualTotalPreviousMonth(
-					sellDailyVO.getInvestAnnualTotalPreviousMonth().add(vo.getInvestAnnualTotalPreviousMonth()));
+            if(vo.getInvestAnnualTotalPreviousMonth()!=null){
+                sellDailyVO.setInvestAnnualTotalPreviousMonth(
+                        sellDailyVO.getInvestAnnualTotalPreviousMonth().add(vo.getInvestAnnualTotalPreviousMonth()));
+            }
+            if(vo.getInvestTotalYesterday()!=null){
+                sellDailyVO
+                        .setInvestTotalYesterday(sellDailyVO.getInvestTotalYesterday().add(vo.getInvestTotalYesterday()));
+            }
+            if(vo.getRepaymentTotalYesterday()!=null){
+                sellDailyVO.setRepaymentTotalYesterday(
+                        sellDailyVO.getRepaymentTotalYesterday().add(vo.getRepaymentTotalYesterday()));
+            }
+            if(vo.getInvestAnnualTotalYesterday()!=null){
+                sellDailyVO.setInvestAnnualTotalYesterday(
+                        sellDailyVO.getInvestAnnualTotalYesterday().add(vo.getInvestAnnualTotalYesterday()));
+            }
 			sellDailyVO.setInvestAnnularRatioGrowth("/");
-			sellDailyVO
-					.setInvestTotalYesterday(sellDailyVO.getInvestTotalYesterday().add(vo.getInvestTotalYesterday()));
-			sellDailyVO.setRepaymentTotalYesterday(
-					sellDailyVO.getRepaymentTotalYesterday().add(vo.getRepaymentTotalYesterday()));
-			sellDailyVO.setInvestAnnualTotalYesterday(
-					sellDailyVO.getInvestAnnualTotalYesterday().add(vo.getInvestAnnualTotalYesterday()));
-			sellDailyVO.setWithdrawTotalYesterday(
-					sellDailyVO.getWithdrawTotalYesterday().add(vo.getWithdrawTotalYesterday()));
-			sellDailyVO.setRechargeTotalYesterday(
-					sellDailyVO.getRechargeTotalYesterday().add(vo.getRechargeTotalYesterday()));
+
+			if(vo.getWithdrawTotalYesterday()!=null){
+                sellDailyVO.setWithdrawTotalYesterday(
+                        sellDailyVO.getWithdrawTotalYesterday().add(vo.getWithdrawTotalYesterday()));
+            }
+            if(vo.getRechargeTotalYesterday()!=null){
+                sellDailyVO.setRechargeTotalYesterday(
+                        sellDailyVO.getRechargeTotalYesterday().add(vo.getRechargeTotalYesterday()));
+            }
+            if(vo.getNonRepaymentToday()!=null){
+                sellDailyVO.setNonRepaymentToday(sellDailyVO.getNonRepaymentToday().add(vo.getNonRepaymentToday()));
+            }
+
 			sellDailyVO.setNetCapitalInflowYesterday(BigDecimal.ZERO);
-			sellDailyVO.setNonRepaymentToday(sellDailyVO.getNonRepaymentToday().add(vo.getNonRepaymentToday()));
 			sellDailyVO.setRegisterTotalYesterday(
 					sellDailyVO.getRegisterTotalYesterday() + vo.getRegisterTotalYesterday());
 			sellDailyVO
