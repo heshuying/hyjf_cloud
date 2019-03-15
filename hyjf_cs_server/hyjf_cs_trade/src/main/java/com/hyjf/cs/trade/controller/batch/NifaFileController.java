@@ -5,21 +5,30 @@ package com.hyjf.cs.trade.controller.batch;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.NifaReportLogVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.batch.NifaFileDualService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author yaoyong
@@ -250,5 +259,4 @@ public class NifaFileController extends BaseController {
         logger.info("------【互金下载反馈文件】处理结束------");
         return true;
     }
-
 }

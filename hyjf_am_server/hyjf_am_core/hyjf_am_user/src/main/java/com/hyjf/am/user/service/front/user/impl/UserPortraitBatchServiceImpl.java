@@ -232,7 +232,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
            return 0;
         }
         userPortrait.setId(userPortraits.get(0).getId());
-        return userPortraitMapper.updateByPrimaryKey(userPortrait);
+        return userPortraitMapper.updateByPrimaryKeySelective(userPortrait);
     }
     /**
      * 插入用户画像
