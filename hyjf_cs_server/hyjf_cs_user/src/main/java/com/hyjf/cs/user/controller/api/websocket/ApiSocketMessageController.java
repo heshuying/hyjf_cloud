@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -27,14 +28,18 @@ public class ApiSocketMessageController extends BaseUserController {
 
     //页面请求
     @GetMapping("/socket/{cid}")
-    public ModelAndView socket(@PathVariable String cid) {
+    public ModelAndView socket(@PathVariable String cid,HttpServletRequest request) {
         ModelAndView mav=new ModelAndView("/socket/user_picture");
+        StringBuffer bf = new StringBuffer();
+        bf.append("ws://").append(request.getServerName()).append(":").append(request.getServerPort()).append("/hyjf-api/websocket/").append(cid);
+        logger.info(bf.toString());
+        mav.addObject("url",bf.toString());
         mav.addObject("cid", cid);
         return mav;
     }
     //推送数据接口
     @ResponseBody
-    @RequestMapping("/socket/push/{cid}")
+    @GetMapping("/socket/push/{cid}")
     public ApiResult pushToWeb(@PathVariable String cid,String message) {
         ApiResult result = new ApiResult();
         JSONObject jsonObject = new JSONObject();

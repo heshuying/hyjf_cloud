@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <form>
+        <input type="hidden" id="url" th:value='${url}' >
+    </form>
+</head>
+<body>
 <script>
     var socket;
     if(typeof(WebSocket) == "undefined") {
@@ -5,6 +14,8 @@
     }else{
         console.log("您的浏览器支持WebSocket");
         //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
+        var url = document.getElementById("url").value;
+        alert(url);
         socket = new WebSocket("ws://localhost:8081/hyjf-api/websocket/20");
       // socket = new WebSocket("${basePath}websocket/${cid}".replace("http","ws"));
         alert(JSON.stringify(socket));
@@ -34,3 +45,5 @@
         //});
     }
 </script>
+</body>
+</html>
