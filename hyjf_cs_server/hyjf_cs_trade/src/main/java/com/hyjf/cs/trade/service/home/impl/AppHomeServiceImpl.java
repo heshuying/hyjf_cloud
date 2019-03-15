@@ -293,7 +293,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("serviceAgreementUrl",HOST + serviceAgreementUrl);//服务协议
         info.put("privacyPolicyUrl",HOST + privacyPolicyUrl);//隐私政策
         //add by nxl app首页新加相关协议 20190315
-        String agreementTempUrl = systemConfig.getAgreementTempUrl();
+//        String agreementTempUrl = systemConfig.getAgreementTempUrl();
         info.put("agreementTempUrl",HOST + "/agreement/relatedagreementlist");//隐私政策
 
 
