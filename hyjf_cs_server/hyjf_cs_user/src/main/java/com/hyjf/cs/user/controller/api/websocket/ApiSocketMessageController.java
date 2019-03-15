@@ -27,7 +27,7 @@ import java.io.IOException;
 @RequestMapping(value = "/hyjf-api/api/user_picture")
 public class ApiSocketMessageController{
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    //页面请求
+/*    //页面请求
     @GetMapping("/socket/{cid}")
     public ModelAndView socket(@PathVariable String cid,HttpServletRequest request) {
         logger.info("进入接口=====");
@@ -38,7 +38,7 @@ public class ApiSocketMessageController{
         mav.addObject("url",bf.toString());
         mav.addObject("cid", cid);
         return mav;
-    }
+    }*/
     //推送数据接口
     @ResponseBody
     @GetMapping("/socket/push/{cid}")
