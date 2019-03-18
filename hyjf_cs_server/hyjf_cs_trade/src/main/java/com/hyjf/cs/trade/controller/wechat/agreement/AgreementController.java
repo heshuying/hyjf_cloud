@@ -60,7 +60,7 @@ public class AgreementController extends BaseTradeController{
     @GetMapping("/getShowProtocolTemp")
     public JSONObject getShowProtocolTemp() {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        logger.info("*******************************协议名称-动态获得************************************");
+        logger.info("*******************************协议名称-获取在帮助中心显示的协议模板名称************************************");
         JSONObject jsonObject = new JSONObject();
         try {
             List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
