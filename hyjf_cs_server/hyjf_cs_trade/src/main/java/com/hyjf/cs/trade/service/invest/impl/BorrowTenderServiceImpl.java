@@ -2203,6 +2203,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
+                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
                     try {
                         sendBidCancelMessage(userId);
