@@ -12,7 +12,6 @@ import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.HomePageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,57 +28,59 @@ import java.util.Map;
  * @author dangzw
  * @version HomePageController, v0.1 2018/7/26 10:15
  */
-@Api(tags = "app端-app起始页信息获取")
+@Api(tags = "App-起始页信息获取")
 @RestController
-@RequestMapping("/hyjf-app/homepage")
+@RequestMapping(CustomConstants.REQUEST_HOME + CustomConstants.REQUEST_MAPPING)
 public class HomePageController extends BaseMarketController {
     private static final Logger logger = LoggerFactory.getLogger(HomePageController.class);
-    @Autowired
-    private HomePageService homePageService;
 
-    @Value("file.domain.url")
-    private String FILE_DOMAIN_URL;
+	@Value("${file.domain.url}")
+	private String FILE_DOMAIN_URL;
 
-    /**
-     * 获取起始页banner
-     * @param
-     * @param
-     * @return
-     */
-	@ApiOperation(value = "获取起始页广告信息", httpMethod = "POST", notes = "获取起始页广告信息")
-	@ApiParam(required = true, name = "request", value = "查询条件")
-	@PostMapping("/getStartPage")
+	/**
+	 * 获取起始页banner
+	 * @param platform
+	 * @param realPlatform
+	 * @return
+	 */
+	@PostMapping(CustomConstants.START_PAGE_ACTION)
+	@ApiOperation(value = "App-获取起始页广告信息", httpMethod = "POST", notes = "App-获取起始页广告信息")
 	public JSONObject getStartPage(@RequestParam(value = "platform", required = false) String platform,
-			@RequestParam(value = "realPlatform", required = false) String realPlatform) {
-		logger.info(this.getClass().getName(), "获取起始页广告信息 start",
-				"platform：{}" + platform + ",realPlatform：{}" + realPlatform, "/hyjf-app/homepage/getStartPage");
+								   @RequestParam(value = "realPlatform", required = false) String realPlatform) {
+
+		logger.info("App-获取起始页广告信息:[开始]");
+		logger.info("请求路径:{},请求参数:platform:{},realPlatform:{}", CustomConstants.REQUEST_HOME + CustomConstants.REQUEST_MAPPING + CustomConstants.START_PAGE_ACTION, platform, realPlatform);
+
 		JSONObject result = new JSONObject();
+		result.put(CustomConstants.APP_REQUEST, CustomConstants.REQUEST_HOME + CustomConstants.REQUEST_MAPPING + CustomConstants.START_PAGE_ACTION);
+
 		String platformT = realPlatform;
 		if (StringUtils.isBlank(platformT)) {
 			platformT = platform;
 		}
-		result.put(CustomConstants.APP_REQUEST,
-				CustomConstants.REQUEST_HOME + CustomConstants.REQUEST_MAPPING + CustomConstants.START_PAGE_ACTION);
+
 		try {
 			Map<String, Object> ads = new HashMap<String, Object>();
 			ads.put("limitStart", 0);
 			ads.put("limitEnd", 1);
-			ads.put("host", FILE_DOMAIN_URL);
 			ads.put("code", "startpage");
+			ads.put("host", FILE_DOMAIN_URL);
+
 			if (platformT.equals("2")) {
 				ads.put("platformType", "1");
 			} else if (platformT.equals("3")) {
 				ads.put("platformType", "2");
 			}
+
 			List<AppAdsCustomizeVO> picList = homePageService.searchBannerList(ads);
+
 			if (CollectionUtils.isEmpty(picList)) {
 				result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
 				result.put(CustomConstants.APP_STATUS_DESC, "获取banner失败,暂无数据");
 				return result;
 			}
-			logger.info("platform======" + platform);
-			logger.info("picUrl======" + picList.get(0).getImage());
-			logger.info("actionUrl======" + picList.get(0).getUrl());
+			logger.info("picUrl:{},actionUrl:{}", picList.get(0).getImage(), picList.get(0).getUrl());
+
 			result.put("picUrl", picList.get(0).getImage());
 			if (StringUtils.isNotEmpty(picList.get(0).getUrl())) {
 				result.put("actionUrl", picList.get(0).getUrl());
@@ -89,18 +90,21 @@ public class HomePageController extends BaseMarketController {
 			result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
 			result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
 		} catch (Exception e) {
-			logger.info(this.getClass().getName(), "获取起始页广告信息 异常", "/hyjf-app/homepage/getStartPage", e);
+			logger.info("App-获取起始页广告信息:[异常],异常详情如下:{}", e);
 			result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_FAIL);
 			result.put(CustomConstants.APP_STATUS_DESC, "获取banner出现异常");
 			return result;
 		}
-		logger.info(this.getClass().getName(), "获取起始页广告信息 end", "/hyjf-app/homepage/getStartPage");
+
+		logger.info("App-获取起始页广告信息:[结束]");
 		return result;
 	}
 
+    @Autowired
+    private HomePageService homePageService;
+
 	/**
 	 * 获取JumpCommend
-	 * 
 	 * @return
 	 */
 	@ResponseBody
@@ -117,7 +121,7 @@ public class HomePageController extends BaseMarketController {
 
 	/**
 	 * 评分标准接口
-	 *
+	 * @return
 	 */
 	@ApiOperation(value = "评分标准", httpMethod = "POST", notes = "评分标准")
 	@PostMapping(value = "/gradingStandardResult")
