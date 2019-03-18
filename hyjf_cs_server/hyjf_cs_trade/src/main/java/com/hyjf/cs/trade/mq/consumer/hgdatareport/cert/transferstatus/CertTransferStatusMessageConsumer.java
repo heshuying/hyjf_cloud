@@ -111,10 +111,8 @@ public class CertTransferStatusMessageConsumer implements RocketMQListener<Messa
             if(map==null){
                 return;
             }
-            logger.info(logHeader +"map :"+ JSONObject.toJSONString(map));
             // --> 调用service组装数据
             JSONArray data =certTransferStatusService.createDate(map,flag);
-            logger.info(logHeader +"JSONArray :"+ JSONObject.toJSONString(data));
             if(data==null){
                 return;
             }
