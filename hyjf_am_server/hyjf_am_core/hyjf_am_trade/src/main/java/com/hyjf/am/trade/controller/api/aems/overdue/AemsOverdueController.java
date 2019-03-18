@@ -42,7 +42,7 @@ public class AemsOverdueController {
     public AemsOverdueCustomizeResponse selectRepayOverdue(@RequestBody Map<String, Object> params) {
         Integer t = GetDate.getDayStart10(GetDate.getNowTime());
         params.put("repayTime",t);
-        logger.error("判断当期是否逾期请求参数为params:" + JSONObject.toJSONString(params));
+        logger.info("判断当期是否逾期请求参数为params:" + JSONObject.toJSONString(params));
         AemsOverdueCustomizeResponse response = new AemsOverdueCustomizeResponse();
         //查询borrowRepay表
         List<AemsOverdueVO> aemsOverdueVOs = aemsOverdueService.selectRepayOverdue(params);
@@ -102,34 +102,12 @@ public class AemsOverdueController {
      */
     public AemsOverdueVO setOverdueDate(AemsOverdueVO aemsOverdueVO,Boolean isMonth){
         // 计算用户逾期总额
-        BigDecimal userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(new BigDecimal(aemsOverdueVO.getPlanRepayAmount()),Integer.valueOf(aemsOverdueVO.getOverdueDays()));
+        BigDecimal userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(aemsOverdueVO.getPlanRepayAmount(),Integer.valueOf(aemsOverdueVO.getOverdueDays()));
         BigDecimal targetAmount = BigDecimal.ZERO;
-        if(!isMonth){
-            targetAmount = new BigDecimal(aemsOverdueVO.getOverdueAmount()).add(userOverdueInterest);
-            //设置逾期天数
-            aemsOverdueVO.setOverdueDays("D"+aemsOverdueVO.getOverdueDays());
-            aemsOverdueVO.setTargetAmount(String.valueOf(targetAmount));
-            aemsOverdueVO.setOverdueAmount(String.valueOf(targetAmount));
-        }else{
-            BigDecimal overdueAmount = BigDecimal.ZERO;
-            //当前期的逾期费
-            Date rep =  GetDate.stringToDate2(aemsOverdueVO.getRepayTime());
-            int d = 0;
-            try {
-                d =  GetDate.daysBetween(new Date(), rep)+Integer.valueOf(aemsOverdueVO.getDelayDays());
-                d = -d;
-            } catch (Exception e) {
-                logger.info("请求：/am-trade/aems/overdue/getRepayOverdueFlag转换时间异常");
-            }
-            userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(new BigDecimal(aemsOverdueVO.getOverdueAmount()),Integer.valueOf(aemsOverdueVO.getOverdueDays()));
-            BigDecimal userOverdue = UnnormalRepayUtils.overdueRepayOverdueInterest(new BigDecimal(aemsOverdueVO.getPlanRepayAmount()),d);
-            targetAmount = new BigDecimal(aemsOverdueVO.getTargetAmount()).add(userOverdue);
-            overdueAmount= new BigDecimal(aemsOverdueVO.getOverdueAmount()).add(userOverdueInterest);
-            //设置逾期天数
-            aemsOverdueVO.setOverdueDays("D"+aemsOverdueVO.getOverdueDays());
-            aemsOverdueVO.setTargetAmount(String.valueOf(targetAmount));
-            aemsOverdueVO.setOverdueAmount(String.valueOf(overdueAmount));
-        }
+        targetAmount = aemsOverdueVO.getTargetAmount().add(userOverdueInterest);
+        //设置逾期天数
+        aemsOverdueVO.setOverdueDays("D"+aemsOverdueVO.getOverdueDays());
+        aemsOverdueVO.setTargetAmount(targetAmount);
         return aemsOverdueVO;
     }
 
@@ -144,12 +122,7 @@ public class AemsOverdueController {
         //还款状态 0:未还款,1:已还款
         Integer status = Integer.valueOf(aemsOverdueVO.getRepayStatus());
         //应还时间
-        Date repayTime;
-        if(!isMonth){
-            repayTime =  GetDate.stringToDate2(aemsOverdueVO.getRepayTime());
-        }else{
-            repayTime =  GetDate.stringToDate2(aemsOverdueVO.getYesRepayTime());
-        }
+        Date repayTime=GetDate.stringToDate2(aemsOverdueVO.getRepayTime());
 
         // 延迟天数（所有逾期的未还款的）
         String delayDays = aemsOverdueVO.getDelayDays();

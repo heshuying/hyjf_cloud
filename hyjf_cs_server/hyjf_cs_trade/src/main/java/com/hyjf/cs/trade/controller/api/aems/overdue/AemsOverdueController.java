@@ -61,7 +61,7 @@ public class AemsOverdueController {
         }
         resultBean.setStatusForResponse(AemsErrorCodeConstant.SUCCESS);
         resultBean.setStatusDesc("逾期查询成功");
-        logger.info("aems逾期查询接口查询结束--------------" );
+        logger.info("aems逾期查询接口查询结束，查询结果resultBean："+JSONObject.toJSONString(resultBean));
         return resultBean;
     }
 
