@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.controller.api.websocket;
+package com.hyjf.cs.trade.controller.api.websocket;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
