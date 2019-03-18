@@ -58,6 +58,15 @@ public abstract class BaseMongoDao<T> {
 	public void update(Query query, Update update){
 		this.mongoTemplate.upsert(query, update, getEntityClass());
 	}
+	/**
+	 * 未查询到数据不创建新数据、批量更新
+	 * @Authod liushouyi
+	 * @param query
+	 * @param update
+	 */
+	public void updateAll(Query query, Update update){
+		this.mongoTemplate.updateMulti(query, update, getEntityClass());
+	}
 
 	public void del(Query query){
 		this.mongoTemplate.remove(query, getEntityClass());

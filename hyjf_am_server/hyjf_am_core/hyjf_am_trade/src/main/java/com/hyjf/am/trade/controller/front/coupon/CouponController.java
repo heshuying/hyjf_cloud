@@ -46,15 +46,15 @@ public class CouponController extends BaseController {
     @GetMapping("/getCouponUser/{couponId}/{userId}")
     public CoupUserResponse getCouponUser(@PathVariable(value = "couponId") String couponId,
                                                        @PathVariable(value = "userId") Integer userId) {
-        logger.info("根据用户ID和优惠券编号查询优惠券。userId:{}   couponId:{} 。",userId,couponId);
+        logger.info("根据用户ID和优惠券编号查询优惠券, couponId is: {}, userId is: {}", couponId, userId);
         CoupUserResponse response = new CoupUserResponse();
         CouponCustomize couponUser  = couponService.getCouponUser(couponId,userId);
         if(null != couponUser){
             CouponUserVO couponUserVO = new CouponUserVO();
             BeanUtils.copyProperties(couponUser,couponUserVO);
             response.setResult(couponUserVO);
+            logger.debug("根据用户ID和优惠券编号查询优惠券, couponUserVO is: {}", JSONObject.toJSONString(couponUserVO));
         }
-        logger.info("返回给cs层:",JSONObject.toJSONString(couponUser));
         return response;
     }
 

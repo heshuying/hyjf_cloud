@@ -815,6 +815,7 @@ public class FddHandle {
                 paramter.put("creditTerm", tenderToCreditDetailList.get(0).getCreditTerm());
                 // 债转时间
                 paramter.put("creditTime", tenderToCreditDetailList.get(0).getSignTime());
+				logger.info("法大大散标债转协议受让时间，转让日期:[{}],订单号:[{}]",tenderToCreditDetailList.get(0).getSignTime(),bean.getAssignNid());
                 // 转让债权本金
                 paramter.put("assignCapital", creditTender.getAssignCapital().toString());
                 //转让价款
@@ -1199,6 +1200,7 @@ public class FddHandle {
 		paramter.put("creditTerm", creditTerm);
 		//转让日期
 		paramter.put("creditTime", signTime);
+		logger.info("法大大计划债转协议受让时间，转让日期:[{}],订单号:[{}]",signTime,bean.getAssignNid());
 
 		// 标的编号
 		paramter.put("borrowNid", borrow.getBorrowNid());
