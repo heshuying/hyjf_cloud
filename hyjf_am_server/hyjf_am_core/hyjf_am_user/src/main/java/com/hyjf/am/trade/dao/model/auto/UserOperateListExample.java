@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

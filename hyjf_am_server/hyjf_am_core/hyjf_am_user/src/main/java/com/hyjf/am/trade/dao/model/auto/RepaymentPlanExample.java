@@ -1,8 +1,9 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class RepaymentPlanExample {
@@ -124,6 +125,32 @@ public class RepaymentPlanExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
+        }
+
+        protected void addCriterionForJDBCDate(String condition, Date value, String property) {
+            if (value == null) {
+                throw new RuntimeException("Value for " + property + " cannot be null");
+            }
+            addCriterion(condition, new java.sql.Date(value.getTime()), property);
+        }
+
+        protected void addCriterionForJDBCDate(String condition, List<Date> values, String property) {
+            if (values == null || values.size() == 0) {
+                throw new RuntimeException("Value list for " + property + " cannot be null or empty");
+            }
+            List<java.sql.Date> dateList = new ArrayList<java.sql.Date>();
+            Iterator<Date> iter = values.iterator();
+            while (iter.hasNext()) {
+                dateList.add(new java.sql.Date(iter.next().getTime()));
+            }
+            addCriterion(condition, dateList, property);
+        }
+
+        protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property) {
+            if (value1 == null || value2 == null) {
+                throw new RuntimeException("Between values for " + property + " cannot be null");
+            }
+            addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
         }
 
         public Criteria andIdIsNull() {
@@ -386,63 +413,53 @@ public class RepaymentPlanExample {
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeEqualTo(String value) {
-            addCriterion("repayment_time =", value, "repaymentTime");
+        public Criteria andRepaymentTimeEqualTo(Date value) {
+            addCriterionForJDBCDate("repayment_time =", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeNotEqualTo(String value) {
-            addCriterion("repayment_time <>", value, "repaymentTime");
+        public Criteria andRepaymentTimeNotEqualTo(Date value) {
+            addCriterionForJDBCDate("repayment_time <>", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeGreaterThan(String value) {
-            addCriterion("repayment_time >", value, "repaymentTime");
+        public Criteria andRepaymentTimeGreaterThan(Date value) {
+            addCriterionForJDBCDate("repayment_time >", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeGreaterThanOrEqualTo(String value) {
-            addCriterion("repayment_time >=", value, "repaymentTime");
+        public Criteria andRepaymentTimeGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("repayment_time >=", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeLessThan(String value) {
-            addCriterion("repayment_time <", value, "repaymentTime");
+        public Criteria andRepaymentTimeLessThan(Date value) {
+            addCriterionForJDBCDate("repayment_time <", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeLessThanOrEqualTo(String value) {
-            addCriterion("repayment_time <=", value, "repaymentTime");
+        public Criteria andRepaymentTimeLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("repayment_time <=", value, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeLike(String value) {
-            addCriterion("repayment_time like", value, "repaymentTime");
+        public Criteria andRepaymentTimeIn(List<Date> values) {
+            addCriterionForJDBCDate("repayment_time in", values, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeNotLike(String value) {
-            addCriterion("repayment_time not like", value, "repaymentTime");
+        public Criteria andRepaymentTimeNotIn(List<Date> values) {
+            addCriterionForJDBCDate("repayment_time not in", values, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeIn(List<String> values) {
-            addCriterion("repayment_time in", values, "repaymentTime");
+        public Criteria andRepaymentTimeBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("repayment_time between", value1, value2, "repaymentTime");
             return (Criteria) this;
         }
 
-        public Criteria andRepaymentTimeNotIn(List<String> values) {
-            addCriterion("repayment_time not in", values, "repaymentTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepaymentTimeBetween(String value1, String value2) {
-            addCriterion("repayment_time between", value1, value2, "repaymentTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andRepaymentTimeNotBetween(String value1, String value2) {
-            addCriterion("repayment_time not between", value1, value2, "repaymentTime");
+        public Criteria andRepaymentTimeNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("repayment_time not between", value1, value2, "repaymentTime");
             return (Criteria) this;
         }
 

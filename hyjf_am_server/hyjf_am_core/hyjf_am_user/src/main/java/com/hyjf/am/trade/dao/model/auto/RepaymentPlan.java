@@ -1,4 +1,4 @@
-package com.hyjf.am.user.dao.model.auto;
+package com.hyjf.am.trade.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -33,7 +33,7 @@ public class RepaymentPlan implements Serializable {
      *
      * @mbggenerated
      */
-    private String repaymentTime;
+    private Date repaymentTime;
 
     /**
      * 创建时间
@@ -83,12 +83,12 @@ public class RepaymentPlan implements Serializable {
         this.money = money;
     }
 
-    public String getRepaymentTime() {
+    public Date getRepaymentTime() {
         return repaymentTime;
     }
 
-    public void setRepaymentTime(String repaymentTime) {
-        this.repaymentTime = repaymentTime == null ? null : repaymentTime.trim();
+    public void setRepaymentTime(Date repaymentTime) {
+        this.repaymentTime = repaymentTime;
     }
 
     public Date getCreateTime() {

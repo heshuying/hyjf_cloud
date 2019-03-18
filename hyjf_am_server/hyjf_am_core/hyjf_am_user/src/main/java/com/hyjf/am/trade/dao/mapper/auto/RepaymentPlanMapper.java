@@ -1,7 +1,7 @@
-package com.hyjf.am.user.dao.mapper.auto;
+package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.user.dao.model.auto.RepaymentPlan;
-import com.hyjf.am.user.dao.model.auto.RepaymentPlanExample;
+import com.hyjf.am.trade.dao.model.auto.RepaymentPlan;
+import com.hyjf.am.trade.dao.model.auto.RepaymentPlanExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

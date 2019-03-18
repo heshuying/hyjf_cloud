@@ -1,7 +1,7 @@
-package com.hyjf.am.user.dao.mapper.auto;
+package com.hyjf.am.trade.dao.mapper.auto;
 
-import com.hyjf.am.user.dao.model.auto.UserOperateList;
-import com.hyjf.am.user.dao.model.auto.UserOperateListExample;
+import com.hyjf.am.trade.dao.model.auto.UserOperateList;
+import com.hyjf.am.trade.dao.model.auto.UserOperateListExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
