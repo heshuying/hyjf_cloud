@@ -162,6 +162,7 @@ public class AboutUsController extends BaseController {
 	@ApiOperation(value = "根据ID获取公司历程详情", notes = "信息披露 - 公司历程")
 	@GetMapping(value = "getEventDetailById/{ids}")
 	public WebResult<Map<String, Object>> getEventDetailById(@PathVariable String ids){
+        logger.info("开始根据ID获取公司历程详情,getEventDetailById");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
@@ -377,6 +378,7 @@ public class AboutUsController extends BaseController {
 	@ApiOperation(value = "获取媒体报道（风险教育 +网贷知识）详情", notes = "获取媒体报道（风险教育 +网贷知识）详情")
 	@PostMapping("/getMediaReportInfo")
 	public WebResult<ContentArticleVO>  getMediaReportInfo(@RequestParam String id) {
+        logger.info("开始获取媒体报道（风险教育 +网贷知识）");
 		WebResult webResult=new WebResult();
 		try {
             Integer ids = Integer.valueOf(id);
