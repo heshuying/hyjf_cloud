@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowCreditInfoResponse;
 import com.hyjf.am.response.admin.AdminBorrowCreditResponse;
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;
@@ -78,8 +79,10 @@ public class BorrowCreditController extends BaseController {
 
     @PostMapping("/getBorrowCreditList")
     public BorrowCreditResponse getBorrowCreditList(@RequestBody BorrowCreditRequest request1) {
+        logger.info("request1:  " + JSONObject.toJSON(request1));
     	BorrowCreditResponse response = new BorrowCreditResponse();
     	List<BorrowCredit> borrowCredits =borrowCreditService.getBorrowCreditList(request1);
+        logger.info("borrowCredits:  " + JSONObject.toJSON(borrowCredits));
     	if(CollectionUtils.isNotEmpty(borrowCredits)) {
     		response.setResultList(CommonUtils.convertBeanList(borrowCredits, BorrowCreditVO.class));
     	}

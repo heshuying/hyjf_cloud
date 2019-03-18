@@ -81,11 +81,14 @@ public class CertTransferStatusServiceImpl extends BaseHgCertReportServiceImpl i
 		}else{
 			String borrowNid=(String) map.get("borrowNid");
 			//Borrow borrow=this.getBorrowByBorrowNid(borrowNid);
+			logger.info(logHeader +"borrowNid :"+ borrowNid);
 			try {
 				if("1".equals(flag)){
 					BorrowCreditRequest BorrowCreditRequest=new BorrowCreditRequest();
 					BorrowCreditRequest.setBidNid(borrowNid);
+					logger.info(logHeader +"BorrowCreditRequest :"+ JSONObject.toJSONString(BorrowCreditRequest));
 					List<BorrowCreditVO> creditList=amTradeClient.getBorrowCreditList(BorrowCreditRequest);
+					logger.info(logHeader +"JSONArray :"+ JSONObject.toJSONString(creditList));
 					if(creditList==null||creditList.size()==0){
 						return null;
 					}
