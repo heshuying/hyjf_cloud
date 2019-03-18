@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.trade;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * AEMS系统:查询逾期数据返回
@@ -38,21 +39,13 @@ public class AemsOverdueVO implements Serializable {
      */
     private String repayTime;
     /**
-     * 早期应还时间
-     */
-    private String yesRepayTime;
-    /**
-     * 本期实际还款时间
-     */
-    private String repayYesTime;
-    /**
      * 本期计划还款金额
      */
-    private String planRepayAmount;
+    private BigDecimal planRepayAmount;
     /**
      * 本次还款金额
      */
-    private String repayAmount;
+    private BigDecimal repayAmount;
     /**
      * 当前逾期天数
      */
@@ -70,19 +63,7 @@ public class AemsOverdueVO implements Serializable {
      * 本期剩余应还金额
      * @return
      */
-    private String targetAmount;
-
-    /**
-     * 逾期总额
-     * @return
-     */
-    private String overdueAmount;
-
-    /**
-     * 贷款余额
-     * @return
-     */
-    private String remainAmount;
+    private BigDecimal targetAmount;
 
     /**
      * 本笔贷款状态
@@ -158,27 +139,19 @@ public class AemsOverdueVO implements Serializable {
         this.repayTime = repayTime;
     }
 
-    public String getRepayYesTime() {
-        return repayYesTime;
-    }
-
-    public void setRepayYesTime(String repayYesTime) {
-        this.repayYesTime = repayYesTime;
-    }
-
-    public String getPlanRepayAmount() {
+    public BigDecimal getPlanRepayAmount() {
         return planRepayAmount;
     }
 
-    public void setPlanRepayAmount(String planRepayAmount) {
+    public void setPlanRepayAmount(BigDecimal planRepayAmount) {
         this.planRepayAmount = planRepayAmount;
     }
 
-    public String getRepayAmount() {
+    public BigDecimal getRepayAmount() {
         return repayAmount;
     }
 
-    public void setRepayAmount(String repayAmount) {
+    public void setRepayAmount(BigDecimal repayAmount) {
         this.repayAmount = repayAmount;
     }
 
@@ -206,28 +179,12 @@ public class AemsOverdueVO implements Serializable {
         this.borrowStyle = borrowStyle;
     }
 
-    public String getTargetAmount() {
+    public BigDecimal getTargetAmount() {
         return targetAmount;
     }
 
-    public void setTargetAmount(String targetAmount) {
+    public void setTargetAmount(BigDecimal targetAmount) {
         this.targetAmount = targetAmount;
-    }
-
-    public String getOverdueAmount() {
-        return overdueAmount;
-    }
-
-    public void setOverdueAmount(String overdueAmount) {
-        this.overdueAmount = overdueAmount;
-    }
-
-    public String getRemainAmount() {
-        return remainAmount;
-    }
-
-    public void setRemainAmount(String remainAmount) {
-        this.remainAmount = remainAmount;
     }
 
     public int getStatus() {
@@ -238,21 +195,12 @@ public class AemsOverdueVO implements Serializable {
         this.status = status;
     }
 
-
     public String getDelayDays() {
         return delayDays;
     }
 
     public void setDelayDays(String delayDays) {
         this.delayDays = delayDays;
-    }
-
-    public String getYesRepayTime() {
-        return yesRepayTime;
-    }
-
-    public void setYesRepayTime(String yesRepayTime) {
-        this.yesRepayTime = yesRepayTime;
     }
 
     public String getRepayFee() {
