@@ -87,8 +87,9 @@ public class AdminAccountDetailController {
      */
     private Map<String, Object> paramSet(AccountDetailRequest userRequest) {
         Map<String, Object> mapParam = new HashMap<String, Object>();
-        
-        if(userRequest.getUsername().isEmpty()&&userRequest.getReferrerName().isEmpty()&&userRequest.getTradeTypeSearch().isEmpty()) {
+        if(userRequest.getUsername()==null&&userRequest.getReferrerName()==null&&userRequest.getTradeTypeSearch()==null) {
+        	mapParam.put("whereFlag",0);
+        }else if(userRequest.getUsername().isEmpty()&&userRequest.getReferrerName().isEmpty()&&userRequest.getTradeTypeSearch().isEmpty()) {
         	mapParam.put("whereFlag",0);
         }else {
         	mapParam.put("whereFlag",1);
