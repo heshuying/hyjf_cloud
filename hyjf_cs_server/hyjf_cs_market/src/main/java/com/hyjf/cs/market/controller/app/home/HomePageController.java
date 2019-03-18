@@ -34,8 +34,8 @@ import java.util.Map;
 public class HomePageController extends BaseMarketController {
     private static final Logger logger = LoggerFactory.getLogger(HomePageController.class);
 
-	@Value("${file.domain.url}")
-	private String FILE_DOMAIN_URL;
+	@Value("${hyjf.app.host}")
+	private String APP_PRE_URL;
 
 	/**
 	 * 获取起始页banner
@@ -64,7 +64,7 @@ public class HomePageController extends BaseMarketController {
 			ads.put("limitStart", 0);
 			ads.put("limitEnd", 1);
 			ads.put("code", "startpage");
-			ads.put("host", FILE_DOMAIN_URL);
+			ads.put("host", APP_PRE_URL);
 
 			if (platformT.equals("2")) {
 				ads.put("platformType", "1");
