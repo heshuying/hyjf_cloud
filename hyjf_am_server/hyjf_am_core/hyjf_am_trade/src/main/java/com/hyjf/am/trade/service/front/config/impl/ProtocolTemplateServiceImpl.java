@@ -498,6 +498,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		criteriaT.andIsShowEqualTo(byteShow);
 		//状态(0.协议不显示1.协议显示)
         criteriaT.andStatusEqualTo(1);
+        exampleT.setOrderByClause(" update_time DESC ");
 		List<ProtocolTemplate>  protocolTemplateList =protocolTemplateMapper.selectByExample(exampleT);
 		return protocolTemplateList;
 	}
