@@ -18,9 +18,9 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.nifa.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +41,7 @@ import java.util.UUID;
 @Api(tags = "web端-债转出借")
 @RestController
 @RequestMapping("/hyjf-web/credit")
-public class CreditController {
+public class CreditController extends BaseTradeController {
 
     private static final Logger logger = LoggerFactory.getLogger(CreditController.class);
     @Autowired
