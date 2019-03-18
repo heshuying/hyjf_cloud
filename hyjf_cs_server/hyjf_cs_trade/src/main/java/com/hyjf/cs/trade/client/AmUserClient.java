@@ -1,6 +1,9 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
@@ -483,4 +486,12 @@ public interface AmUserClient {
 	 * @return
 	 */
     BifaIndexUserInfoBeanVO getBifaIndexUserInfo(Integer userId);
+
+
+	/**
+	 * 查询用户归属那个运营部
+	 * @param screenDataBean
+	 * @return
+	 */
+	ScreenDataResponse findUserGroup(ScreenDataBean screenDataBean);
 }
