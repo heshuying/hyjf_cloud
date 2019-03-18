@@ -939,6 +939,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 				resultBean.setAmt(String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
 				resultBean.setArrivalAmount(String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
 				resultBean.setFee(accountWithdrawVO.getFee());// 提现手续费
+				params.put("amt",String.valueOf(accountWithdrawVO.getTotal()));
 				message="提现成功";
 			} else {
 				logger.info("银行处理中,请稍后查询交易明细");
