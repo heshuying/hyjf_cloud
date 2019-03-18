@@ -156,7 +156,6 @@ public class AboutUsController extends BaseController {
 
 	/**
 	 * 根据ID获取公司历程详情
-	 * @param id
 	 * @return
 	 * @Author : huanghui
 	 */
@@ -182,6 +181,7 @@ public class AboutUsController extends BaseController {
 			resultMap.put("eventNotice", eventVO);
 			result.setData(resultMap);
 		}catch (Exception e){
+			logger.info("根据ID获取公司历程详情,getEventDetailById:",e);
 			result.setStatus("404");
 			result.setStatusDesc("未找到数据");
 		}
@@ -404,7 +404,8 @@ public class AboutUsController extends BaseController {
             webResult = new WebResult(mediaReport);
             return webResult;
         }catch (Exception e) {
-            webResult.setStatus("404");
+			logger.info("获取媒体报道（风险教育 +网贷知识）详情,getMediaReportInfo:",e);
+			webResult.setStatus("404");
             webResult.setStatusDesc("未找到数据");
             return webResult;
         }
