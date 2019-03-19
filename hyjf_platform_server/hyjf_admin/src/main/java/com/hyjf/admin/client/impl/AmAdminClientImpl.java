@@ -37,6 +37,7 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -2082,5 +2083,50 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultInt();
         }
         return -1;
+    }
+
+    /**
+     * 大屏运营部数据配置列表查询
+     * @param request
+     * @return
+     */
+    @Override
+    public List<ScreenConfigVO> getScreenConfigList(ScreenConfigRequest request) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/list";
+        Response<ScreenConfigVO> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 大屏运营部数据配置数据新增
+     * @param screenConfigVO
+     * @return
+     */
+    @Override
+    public int addScreenConfig(ScreenConfigVO screenConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/add";
+        IntegerResponse response = restTemplate.postForEntity(url, screenConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 大屏运营部数据配置数据编辑
+     * @param screenConfigVO
+     * @return
+     */
+    @Override
+    public int updateScreenConfig(ScreenConfigVO screenConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/update";
+        IntegerResponse response = restTemplate.postForEntity(url, screenConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
     }
 }

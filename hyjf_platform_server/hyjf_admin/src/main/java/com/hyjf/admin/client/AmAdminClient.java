@@ -37,6 +37,7 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.math.BigDecimal;
@@ -1203,4 +1204,25 @@ public interface AmAdminClient {
      * @return
      */
     Integer countEveByDualDate(String dualDate);
+
+    /**
+     * 大屏运营部数据配置列表查询
+     * @param request
+     * @return
+     */
+    List<ScreenConfigVO> getScreenConfigList(ScreenConfigRequest request);
+
+    /**
+     * 大屏运营部数据配置数据新增
+     * @param screenConfigVO
+     * @return
+     */
+    int addScreenConfig(ScreenConfigVO screenConfigVO);
+
+    /**
+     * 大屏运营部数据配置数据编辑
+     * @param screenConfigVO
+     * @return
+     */
+    int updateScreenConfig(ScreenConfigVO screenConfigVO);
 }
