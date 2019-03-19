@@ -364,7 +364,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     //test
-                    resultVO.setAssignAccount(new BigDecimal(99.90));
+                    resultVO.setAssignAccount(new BigDecimal("99.90"));
 
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
