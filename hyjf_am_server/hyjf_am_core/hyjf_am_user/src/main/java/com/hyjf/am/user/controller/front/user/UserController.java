@@ -1104,7 +1104,13 @@ public class UserController extends BaseController {
     public ScreenDataResponse getUserGroup(@RequestBody ScreenDataBean screenDataBean){
         ScreenDataResponse response = new ScreenDataResponse();
         Integer userId = screenDataBean.getUserId();
-        
+        HashMap<String, String> userGroup = userService.findUserGroup(userId);
+        if (userGroup != null) {
+            response.setGroup(Integer.valueOf(userGroup.get("customerGroup")));
+            response.setCurrentOwner(userGroup.get("name"));
+        } else {
+            response.setGroup(-1);
+        }
         return response;
     }
 
