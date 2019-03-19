@@ -1155,7 +1155,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     public JSONObject searchAppCreditList(ProjectListRequest request) {
         // 初始化分页参数，并组合到请求参数
         JSONObject info = new JSONObject();
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        Page page = Page.initPage(request.getPage(), request.getPageSize());
         request.setLimitStart(page.getOffset());
         request.setLimitEnd(page.getLimit());
         request.setCreditStatus("0");
