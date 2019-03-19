@@ -363,6 +363,9 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         throw new Exception(logMsgHeader + "/finally推回队列/ 计算计划债转实际金额 和 保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
 
+                    //test
+                    resultVO.setAssignAccount(new BigDecimal(99.90));
+
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
