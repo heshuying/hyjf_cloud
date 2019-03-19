@@ -230,6 +230,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
                 appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
             }
+            logger.info("----------删除用户开户日志表失败---------------------");
             boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
