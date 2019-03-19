@@ -41,6 +41,14 @@ public class HolidaysConfigNewController extends BaseConfigController{
         return response;
     }
 
+    @RequestMapping("/is_workdateOn")
+    public BooleanResponse queryIsWorkdate(@RequestBody Date date) {
+        BooleanResponse response = new BooleanResponse();
+        boolean result = holidaysConfigNewService.isWorkdateOnSomeDay(date);
+        response.setResultBoolean(result);
+        return response;
+    }
+
     @RequestMapping("/is_firstworkdate")
     public BooleanResponse selectFirstWorkdayOnMonth() {
         BooleanResponse response = new BooleanResponse();
