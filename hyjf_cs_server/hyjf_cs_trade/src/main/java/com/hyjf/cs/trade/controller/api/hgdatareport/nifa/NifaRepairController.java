@@ -95,20 +95,23 @@ public class NifaRepairController {
                 }
             }
         }
-        // 线上有还款数据
-        if(CollectionUtils.isNotEmpty(repayList)) {
-            for (BorrowRepayVO vo : repayList) {
-                // 该日还款成功数据、到期还款期数为1
-                if (mongoRepayList.add("1".concat(vo.getBorrowNid()))) {
-                    re.add("1".concat(vo.getBorrowNid()));
-                }
-            }
-        }
+        Set<String> tmp = new TreeSet<>();
         if(CollectionUtils.isNotEmpty(repayPlanList)) {
             for (BorrowRepayPlanVO vo : repayPlanList) {
+                // 分期的borrowNid数据先存一下
+                tmp.add(vo.getBorrowNid());
                 // 该日分期还款成功数据
                 if (mongoRepayList.add(vo.getRepayPeriod().toString().concat(vo.getBorrowNid()))) {
                     re.add(vo.getRepayPeriod().toString().concat(vo.getBorrowNid()));
+                }
+            }
+        }
+        // 分期表里存在数据的、此处不再处理  线上有还款数据
+        if(CollectionUtils.isNotEmpty(repayList)) {
+            for (BorrowRepayVO vo : repayList) {
+                // 该日还款成功数据、到期还款期数为1
+                if (tmp.add(vo.getBorrowNid()) && mongoRepayList.add("1".concat(vo.getBorrowNid()))) {
+                    re.add("1".concat(vo.getBorrowNid()));
                 }
             }
         }
@@ -170,15 +173,18 @@ public class NifaRepairController {
                 }
             }
         }
-        // 还款未生成数据
-        if(CollectionUtils.isNotEmpty(repayList)) {
-            for (BorrowRepayVO vo : repayList) {
-                // 该日还款成功数据、到期还款期数为1
-                if (mongoRepayList.add("1".concat(vo.getBorrowNid()))) {
-                    re.add("1".concat(vo.getBorrowNid()));
+        Set<String> tmp = new TreeSet<>();
+        // 分期还款未生成数据
+        if(CollectionUtils.isNotEmpty(repayPlanList)) {
+            for (BorrowRepayPlanVO vo : repayPlanList) {
+                // 分期的borrowNid数据先存一下
+                tmp.add(vo.getBorrowNid());
+                // 该日分期还款成功数据
+                if (mongoRepayList.add(vo.getRepayPeriod().toString().concat(vo.getBorrowNid()))) {
+                    re.add(vo.getRepayPeriod().toString().concat(vo.getBorrowNid()));
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", vo.getBorrowNid());
-                    params.put("repayPeriod", "1");
+                    params.put("repayPeriod", vo.getRepayPeriod());
                     params.put("historyData", historyData);
                     // 推送数据到MQ 还款（每期）
                     commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
@@ -186,15 +192,15 @@ public class NifaRepairController {
                 }
             }
         }
-        // 分期还款未生成数据
-        if(CollectionUtils.isNotEmpty(repayPlanList)) {
-            for (BorrowRepayPlanVO vo : repayPlanList) {
-                // 该日分期还款成功数据
-                if (mongoRepayList.add(vo.getRepayPeriod().toString().concat(vo.getBorrowNid()))) {
-                    re.add(vo.getRepayPeriod().toString().concat(vo.getBorrowNid()));
+        // 还款未生成数据
+        if(CollectionUtils.isNotEmpty(repayList)) {
+            for (BorrowRepayVO vo : repayList) {
+                // 分期表里存在数据的、此处不再处理  该日还款成功数据、到期还款期数为1
+                if (tmp.add(vo.getBorrowNid()) && mongoRepayList.add("1".concat(vo.getBorrowNid()))) {
+                    re.add("1".concat(vo.getBorrowNid()));
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", vo.getBorrowNid());
-                    params.put("repayPeriod", vo.getRepayPeriod());
+                    params.put("repayPeriod", "1");
                     params.put("historyData", historyData);
                     // 推送数据到MQ 还款（每期）
                     commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.REPAY_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
