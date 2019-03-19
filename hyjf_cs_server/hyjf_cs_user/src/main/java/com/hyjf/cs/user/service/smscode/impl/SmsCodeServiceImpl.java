@@ -195,8 +195,8 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         if (StringUtils.isBlank(currentMaxPhoneCount)) {
             currentMaxPhoneCount = "0";
         }
-        RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(currentMaxIpCount) + 1) + "", 24 * 60 * 60);
-        RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(currentMaxPhoneCount) + 1) + "", 24 * 60 * 60);
+        RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, (Integer.valueOf(currentMaxIpCount) + 1) + "", 24 * 60 * 60);
+        RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, (Integer.valueOf(currentMaxPhoneCount) + 1) + "", 24 * 60 * 60);
     }
 
     /**
