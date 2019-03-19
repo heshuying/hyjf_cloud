@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.mq.consumer.screendata;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.common.constants.MQConstant;
@@ -46,24 +45,29 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
         screenDataBean.setUserName(users.getUsername());
         screenDataBean.setOperating(4);
 */
-
         //查询用户是否归属运营部
         ScreenDataResponse userGroup = amUserClient.findUserGroup(data);
         if (userGroup != null) {
-            Integer resultInt = userGroup.getGroup();
-            if (resultInt == -1) {
+            Integer group = userGroup.getGroup();
+            String currentOwner = userGroup.getCurrentOwner();
+            data.setCurrentOwner(currentOwner);
+            data.setCustomerGroup(group);
+            if (group == -1) {
                 logger.info("当前用户不属于运营部，userId：{}", data.getUserId());
-                return;
             } else {
-
                 switch (data.getOperating()) {
+                    //投资
                     case 1:
 
-                        break;
+                    break;
+                     //充值
                     case 2:
-                        break;
+
+                    break;
+                    //回款
                     case 3:
-                        break;
+                    break;
+                    //提现
                     case 4:
                         amTradeClient.insertScreenData(data);
                         break;
@@ -73,8 +77,6 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                 }
             }
         }
-
-
     }
 
     @Override

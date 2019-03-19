@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.ScreenDataCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
@@ -55,7 +56,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     QianleUserCustomizeMapper qianleUserCustomizeMapper;
     @Autowired
     protected LockedUserInfoMapper lockedUserInfoMapper;
-
+    @Autowired
+    ScreenDataCustomizeMapper screenDataCustomizeMapper;
     @Autowired
     private CommonProducer smsProducer;
 
@@ -1676,7 +1678,27 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                 result.setUsersContact(userContactVO);
             }
         }
-
         return result;
+    }
+
+    @Override
+    public HashMap<String, String> findUserGroup(Integer userId) {
+        HashMap<String, String> userGroupNotQianLe = screenDataCustomizeMapper.findUserGroupNotQianLe(userId);
+        if (!CollectionUtils.isEmpty(userGroupNotQianLe)) {
+            String customerGroup = userGroupNotQianLe.get("customerGroup");
+            if (StringUtils.isBlank(customerGroup)) {
+                userGroupNotQianLe.put("customerGroup", "4");
+            }
+            return userGroupNotQianLe;
+        }
+        HashMap<String, String> userGroup = screenDataCustomizeMapper.findUserGroup(userId);
+        if (!CollectionUtils.isEmpty(userGroup)) {
+            String customerGroup = userGroupNotQianLe.get("customerGroup");
+            if (StringUtils.isBlank(customerGroup)) {
+                userGroupNotQianLe.put("customerGroup", "3");
+            }
+            return userGroup;
+        }
+        return null;
     }
 }
