@@ -209,4 +209,5 @@ public class ShiroConstants {
 	public static final String PERMISSION_QUERY_INVEST_DEBT_VIEW = "QUERY_INVEST_DEBT";
 
 
+
 }

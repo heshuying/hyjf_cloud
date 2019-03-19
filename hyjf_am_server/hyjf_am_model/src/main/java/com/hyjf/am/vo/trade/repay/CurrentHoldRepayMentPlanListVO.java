@@ -52,25 +52,25 @@ public class CurrentHoldRepayMentPlanListVO extends BaseVO implements Serializab
         this.recoverPeriod = recoverPeriod;
     }
     public String getRecoverAccountWait() {
-        return df.format(new BigDecimal(recoverAccountWait));
+        return recoverAccountWait;
     }
     public void setRecoverAccountWait(String recoverAccountWait) {
         this.recoverAccountWait = recoverAccountWait;
     }
     public String getRecoverCapitalWait() {
-        return df.format(new BigDecimal(recoverCapitalWait));
+        return recoverCapitalWait;
     }
     public void setRecoverCapitalWait(String recoverCapitalWait) {
         this.recoverCapitalWait = recoverCapitalWait;
     }
     public String getRecoverInterestWait() {
-        return df.format(new BigDecimal(recoverInterestWait));
+        return recoverInterestWait;
     }
     public void setRecoverInterestWait(String recoverInterestWait) {
         this.recoverInterestWait = recoverInterestWait;
     }
     public String getRecoverAccount() {
-        return df.format(new BigDecimal(recoverAccount));
+        return recoverAccount;
     }
     public void setRecoverAccount(String recoverAccount) {
         this.recoverAccount = recoverAccount;
