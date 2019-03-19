@@ -587,6 +587,14 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         return vo;
     }
 
+    @Override
+    public void checkReffer(String reffer) {
+        if (StringUtils.isNotEmpty(reffer)) {
+            //无效推荐人
+            CheckUtil.check(amUserClient.countUserByRecommendName(reffer) > 0, MsgEnum.ERR_OBJECT_INVALID, "推荐人");
+        }
+    }
+
     /**
      * 登录操作
      *
