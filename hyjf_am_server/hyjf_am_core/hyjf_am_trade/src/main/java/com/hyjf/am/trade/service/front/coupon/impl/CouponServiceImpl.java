@@ -58,6 +58,7 @@ public class CouponServiceImpl extends CustomizeMapper implements CouponService{
 		if (!CollectionUtils.isEmpty(list)) {
 			return list.get(0);
 		}
+		logger.info("根据用户ID和优惠券编号查询优惠券, get nothing...");
 		return null;
 	}
 

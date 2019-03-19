@@ -192,4 +192,70 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
         }
         return null;
     }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowApicron> selectBorrowApicron(String historyData) {
+        // 当天开始时间
+        Date startTime = GetDate.stringToDate(historyData.concat(" 00:00:00"));
+        // 当天结束时间
+        Date endTime = GetDate.stringToDate(historyData.concat(" 23:59:59"));
+
+        BorrowApicronExample example = new BorrowApicronExample();
+        example.createCriteria().andApiTypeEqualTo(0).andStatusEqualTo(6).andUpdateTimeGreaterThanOrEqualTo(startTime).andUpdateTimeLessThanOrEqualTo(endTime);
+        List<BorrowApicron> list = borrowApicronMapper.selectByExample(example);
+        if (null != list && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowRepay> selectBorrowRepayByHistoryData(String historyData) {
+        // 当天开始时间
+        Integer startTime = GetDate.dateString2Timestamp(historyData.concat(" 00:00:00"));
+        // 当天结束时间
+        Integer endTime = GetDate.dateString2Timestamp(historyData.concat(" 23:59:59"));
+
+        BorrowRepayExample example = new BorrowRepayExample();
+        example.createCriteria().andRepayTypeEqualTo("wait_yes").andRepayYestimeGreaterThanOrEqualTo(startTime).andRepayYestimeLessThanOrEqualTo(endTime);
+        List<BorrowRepay> list = borrowRepayMapper.selectByExample(example);
+        if (null != list && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowRepayPlan> selectBorrowRepayPlanByHistoryData(String historyData) {
+        // 当天开始时间
+        Integer startTime = GetDate.dateString2Timestamp(historyData.concat(" 00:00:00"));
+        // 当天结束时间
+        Integer endTime = GetDate.dateString2Timestamp(historyData.concat(" 23:59:59"));
+
+        BorrowRepayPlanExample example = new BorrowRepayPlanExample();
+        example.createCriteria().andRepayTypeEqualTo("wait_yes").andRepayYestimeGreaterThanOrEqualTo(startTime).andRepayYestimeLessThanOrEqualTo(endTime);
+        List<BorrowRepayPlan> list = borrowRepayPlanMapper.selectByExample(example);
+        if (null != list && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
 }

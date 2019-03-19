@@ -10,11 +10,11 @@ import com.hyjf.cs.message.bean.hgreportdata.nifa.*;
 import com.hyjf.cs.message.mongo.hgreportdata.nifa.*;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -126,7 +126,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         if (null != nifaBorrowerInfoEntities && nifaBorrowerInfoEntities.size() > 0) {
             Update update = new Update();
             update.set("reportStatus", "1");
-            this.nifaBorrowInfoDao.update(query,update);
+            this.nifaBorrowerInfoDao.updateAll(query,update);
         }
     }
 
@@ -145,7 +145,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         if (null != nifaTenderInfoEntities && nifaTenderInfoEntities.size() > 0) {
             Update update = new Update();
             update.set("reportStatus", "1");
-            this.nifaTenderInfoDao.update(query,update);
+            this.nifaTenderInfoDao.updateAll(query,update);
         }
     }
 
@@ -218,7 +218,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         query.addCriteria(criteria);
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
-        nifaBorrowInfoDao.update(query, update);
+        nifaBorrowInfoDao.updateAll(query, update);
     }
 
     /**
@@ -252,7 +252,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         query.addCriteria(criteria);
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
-        nifaTenderInfoDao.update(query, update);
+        nifaTenderInfoDao.updateAll(query, update);
     }
 
     /**
@@ -286,7 +286,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         query.addCriteria(criteria);
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
-        nifaBorrowerInfoDao.update(query, update);
+        nifaBorrowerInfoDao.updateAll(query, update);
     }
 
     /**
@@ -319,7 +319,7 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         query.addCriteria(criteria);
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
-        nifaCreditInfoDao.update(query, update);
+        nifaCreditInfoDao.updateAll(query, update);
     }
 
     /**
@@ -353,6 +353,24 @@ public class NifaStatisticalServiceImpl extends BaseServiceImpl implements NifaS
         query.addCriteria(criteria);
         Update update = new Update();
         update.set("reportStatus", "1").set("updateTime", new Date());
-        nifaCreditTransferDao.update(query, update);
+        nifaCreditTransferDao.updateAll(query, update);
+    }
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<NifaBorrowInfoEntity> selectNifaBorrowInfoByHistoryData(String historyData) {
+        Query query = new Query();
+        Criteria criteria = Criteria.where("historyData").is(historyData);
+        query.addCriteria(criteria);
+        List<NifaBorrowInfoEntity> list = nifaBorrowInfoDao.find(query);
+        if(CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
     }
 }

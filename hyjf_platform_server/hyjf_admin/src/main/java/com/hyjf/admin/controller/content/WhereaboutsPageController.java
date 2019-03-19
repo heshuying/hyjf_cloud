@@ -21,6 +21,8 @@ import com.hyjf.am.vo.config.WhereaboutsPageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,10 @@ public class WhereaboutsPageController extends BaseController {
 	private WhereaboutsPageService whereaboutsPageService;
 	/** 查看权限 */
 	public static final String PERMISSIONS = "WHEREABOUTSPAGE";
+	@Value("${wx.preview.url}")
+	private String wxUrl;
+	@Value("${wxcunguan.preview.url}")
+	private String wxcunguanUrl;
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "移动端着陆页管理列表查询")
 	@PostMapping("/searchaction")
@@ -51,7 +57,17 @@ public class WhereaboutsPageController extends BaseController {
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<>(ListResult.build(response.getResultList(), response.getCount()));
+		List<WhereaboutsPageVo> vos = response.getResultList();
+		for(WhereaboutsPageVo vo:vos){
+			if(null == vo.getStyle()){
+
+			}else if (1 == vo.getStyle().intValue()){
+				vo.setJumpPath(wxcunguanUrl.replace("xxxx", vo.getId()+""));
+			} else {
+				vo.setJumpPath(wxUrl.replace("xxxx", vo.getId()+""));
+			}
+		}
+		return new AdminResult<>(ListResult.build(vos, response.getCount()));
 	}
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "添加移动端着陆页管理")
