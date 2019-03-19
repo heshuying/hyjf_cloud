@@ -1179,8 +1179,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         int count = res.getCount();
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         if (count > 0) {
+            ProjectListRequest request2 = CommonUtils.convertBean(request,ProjectListRequest.class);
             info.put(ProjectConstant.APP_PROJECT_TOTAL, count);
-            ProjectListResponse dataResponse = amTradeClient.searchAppCreditList(request);
+            ProjectListResponse dataResponse = amTradeClient.searchAppCreditList(request2);
             if (!Response.isSuccess(dataResponse)) {
                 logger.error("查询债权转让原子层list数据异常");
                 throw new RuntimeException("查询债权转让原子层list数据异常");
