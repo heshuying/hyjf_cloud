@@ -581,6 +581,11 @@ public interface MQConstant {
 	String SELL_DAILY_GROUP = "SELL_DAILY_GROUP";
 	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
     String SELL_DAILY_SELECT_TAG = "SELL_DAILY_SELECT_TAG";
+	/** ------------------------------ 运营大屏数据统计 start ------------------------------ */
+	String SCREEN_DATA_GROUP = "SCREEN_DATA_GROUP";
+	String SCREEN_DATA_TOPIC = "SCREEN_DATA_TOPIC";
+
+	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
 
     /**--------------------------------- 应急中心 -------------------------------------*/
 
@@ -710,6 +715,7 @@ public interface MQConstant {
 	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
 	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
 	String SYNBALANCE_TAG = "SYNBALANCE_TAG";
+
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
 
 	// 合规互金上报用MQ延迟发送等级（30s）

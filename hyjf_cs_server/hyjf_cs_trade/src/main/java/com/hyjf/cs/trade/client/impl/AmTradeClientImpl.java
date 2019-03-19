@@ -6999,4 +6999,11 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    @Override
+    public IntegerResponse insertScreenData(ScreenDataBean screenDataBean) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/screen_data/insert_data",
+                screenDataBean, IntegerResponse.class);
+    }
 }

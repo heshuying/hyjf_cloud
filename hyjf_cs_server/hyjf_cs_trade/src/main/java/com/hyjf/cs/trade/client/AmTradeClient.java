@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -2880,5 +2881,13 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhAccedeVO> selectCrmHjhAccedeList();
+
+    /**
+     * 插入大屏数据
+     * @param screenDataBean
+     * @return
+     */
+    IntegerResponse insertScreenData(ScreenDataBean screenDataBean);
+
 }
 
