@@ -376,6 +376,8 @@ public class WeChatRegistController extends BaseUserController {
         register.setVerificationCode(bean.getVerificationCode());
         UserRegistResult registResult = registService.wechatCheckParam(mobile,password,refferUserId,bean.getVerificationCode());
         if(null!=registResult.getStatus()&&!registResult.getStatus().equals("000")){
+            ret.put("status", registResult.getStatus());
+            ret.put("statusDesc", registResult.getStatusDesc());
             return ret;
         }
 
