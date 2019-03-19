@@ -86,7 +86,7 @@
 	      limit #{limitStart} , #{limitEnd}
 	    </if>
 	</select>
-	<select id="selectAdminListCount" resultMap="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminCustomize">
+	<select id="selectAdminListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminCustomize">
 		SELECT
 			count(1)
 		FROM
