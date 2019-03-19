@@ -83,7 +83,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 	@Override
 	public void updateAction(WhereaboutsPageRequest form) {
 		WhereaboutsPageConfig whereaboutsPageConfig=createWhereaboutsPageConfig(form);
-		whereaboutsPageConfigMapper.updateByPrimaryKeySelective(whereaboutsPageConfig);
+		whereaboutsPageConfigMapper.updateByPrimaryKey(whereaboutsPageConfig);
 
 		WhereaboutsPagePictureExample example=new WhereaboutsPagePictureExample();
 		example.createCriteria().andWhereaboutsIdEqualTo(whereaboutsPageConfig.getId());

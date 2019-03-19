@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.admin.AdminBorrowCreditInfoResponse;
 import com.hyjf.am.response.admin.AdminBorrowCreditResponse;
 import com.hyjf.am.response.trade.BorrowCreditDetailResponse;

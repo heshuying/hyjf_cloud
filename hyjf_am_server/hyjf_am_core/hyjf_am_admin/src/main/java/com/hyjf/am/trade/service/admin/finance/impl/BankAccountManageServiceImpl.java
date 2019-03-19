@@ -68,6 +68,9 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         if (Validator.isNotNull(accountVO.getFrost())) {
             account.setBankFrostCash(accountVO.getFrost());
         }
+        if (Validator.isNotNull(accountVO.getUserId())){
+            account.setUserId(accountVO.getUserId());
+        }
         AccountExample example = new AccountExample();
         example.createCriteria().andUserIdEqualTo(accountVO.getUserId());
         // 更新账户表

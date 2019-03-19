@@ -99,7 +99,7 @@ public class RepayPlanServiceImpl implements RepayPlanService {
         BigDecimal yearRate = borrow.getBorrowApr();
         Integer totalMonth = borrow.getBorrowPeriod();
         BigDecimal account = borrow.getAccount();
-        Integer time = borrow.getBorrowSuccessTime();
+        Integer time = borrow.getVerifyTime();
         if (time == null) {
             time = (int) (System.currentTimeMillis() / 1000);
         }

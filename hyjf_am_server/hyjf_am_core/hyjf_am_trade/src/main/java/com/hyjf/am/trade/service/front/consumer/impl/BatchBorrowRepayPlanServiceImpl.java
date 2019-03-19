@@ -2949,20 +2949,21 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         }
         if(failCount == 0){
             // add by hsy 优惠券还款请求加入到消息队列 start
-            Map<String, String> params = new HashMap<String, String>();
-            params.put("mqMsgId", GetCode.getRandomCode(10));
+            // delete by wgx and hsy 2019/03/13 智投优惠券是在退出计划时发送
+            // Map<String, String> params = new HashMap<String, String>();
+            // params.put("mqMsgId", GetCode.getRandomCode(10));
             // 借款编号
-            params.put("borrowNid", borrowNid);
+            // params.put("borrowNid", borrowNid);
             // 当前期
-            params.put("periodNow", String.valueOf(periodNow));
+            // params.put("periodNow", String.valueOf(periodNow));
 
             // 核对参数
-            try {
-                logger.info("【智投还款/借款人】借款编号:{}，发送优惠券还款队列。", borrowNid);
-                commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
-            } catch (MQException e) {
-                logger.error("【智投还款/借款人】发送优惠券还款队列时发生系统异常！", e);
-            }
+            // try {
+            //     logger.info("【智投还款/借款人】借款编号:{}，发送优惠券还款延时队列。", borrowNid);
+            //     commonProducer.messageSendDelay(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params), 1);
+            // } catch (MQException e) {
+            //    logger.error("【智投还款/借款人】发送优惠券还款队列时发生系统异常！", e);
+            // }
             // 优惠券还款请求
             // rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_COUPONREPAY, JSONObject.toJSONString(params));
             // add by hsy 优惠券还款请求加入到消息队列 end
