@@ -8,6 +8,27 @@ public class RepaymentPlan implements Serializable {
     private Integer id;
 
     /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
+    private Integer userId;
+
+    /**
+     * 标的编号
+     *
+     * @mbggenerated
+     */
+    private String borrowNid;
+
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
+    private String accedeOrderId;
+
+    /**
      * 坐席姓名
      *
      * @mbggenerated
@@ -57,6 +78,30 @@ public class RepaymentPlan implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid == null ? null : borrowNid.trim();
+    }
+
+    public String getAccedeOrderId() {
+        return accedeOrderId;
+    }
+
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId == null ? null : accedeOrderId.trim();
     }
 
     public String getCustomerName() {
