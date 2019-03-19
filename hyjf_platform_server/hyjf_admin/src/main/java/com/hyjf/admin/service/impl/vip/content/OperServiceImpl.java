@@ -94,12 +94,14 @@ public class OperServiceImpl implements OperService {
         if (this.blankCheck(7, null, null, request)){
             resultMap.put("status", "3");
             resultMap.put("statusDesc", "必传字段未传");
+            return resultMap;
         }
         boolean resultFlag = false;
         if(1 == request.getFlag()){
             if (this.blankCheck(8, null, null, request)){
                 resultMap.put("status", "3");
                 resultMap.put("statusDesc", "必传字段未传");
+                return resultMap;
             }
             ScreenConfigRequest screenConfigRequest = new ScreenConfigRequest();
             screenConfigRequest.setTaskTime(request.getTaskTime());
@@ -111,6 +113,7 @@ public class OperServiceImpl implements OperService {
             if (this.blankCheck(9, null, null, request)){
                 resultMap.put("status", "3");
                 resultMap.put("statusDesc", "必传字段未传");
+                return resultMap;
             }
             List<CustomerTaskConfigVO> result = this.taskList(request);
             if (null != result){
@@ -135,7 +138,8 @@ public class OperServiceImpl implements OperService {
         boolean resultFlag = false;
         switch (flag) {
             case 1:
-                if(StringUtils.isBlank(screenConfigVO.getTaskTime()) ||
+                if(null == screenConfigVO ||
+                        StringUtils.isBlank(screenConfigVO.getTaskTime()) ||
                         null == screenConfigVO.getNewPassengerGoal() ||
                         null == screenConfigVO.getOldPassengerGoal() ||
                         null == screenConfigVO.getOperationalGoal() ||
@@ -144,7 +148,8 @@ public class OperServiceImpl implements OperService {
                 }
                 return resultFlag;
             case 2:
-                if(StringUtils.isBlank(screenConfigVO.getTaskTime()) ||
+                if(null == screenConfigVO ||
+                        StringUtils.isBlank(screenConfigVO.getTaskTime()) ||
                         null == screenConfigVO.getNewPassengerGoal() ||
                         null == screenConfigVO.getOldPassengerGoal() ||
                         null == screenConfigVO.getOperationalGoal() ||
@@ -154,14 +159,16 @@ public class OperServiceImpl implements OperService {
                 }
                 return resultFlag;
             case 3:
-                if(null == screenConfigVO.getUpdateUserId()||
+                if(null == screenConfigVO ||
+                        null == screenConfigVO.getUpdateUserId()||
                         null == screenConfigVO.getStatus() ||
                         null == screenConfigVO.getId()){
                     resultFlag = true;
                 }
                 return resultFlag;
             case 4:
-                if(StringUtils.isBlank(customerTaskConfigVO.getCustomerName()) ||
+                if(null == customerTaskConfigVO ||
+                        StringUtils.isBlank(customerTaskConfigVO.getCustomerName()) ||
                         StringUtils.isBlank(customerTaskConfigVO.getTaskTime()) ||
                         null == customerTaskConfigVO.getCustomerGroup() ||
                         null == customerTaskConfigVO.getCreateUserId() ||
@@ -171,7 +178,8 @@ public class OperServiceImpl implements OperService {
                 }
                 return resultFlag;
             case 5:
-                if(StringUtils.isBlank(customerTaskConfigVO.getCustomerName()) ||
+                if(null == customerTaskConfigVO ||
+                        StringUtils.isBlank(customerTaskConfigVO.getCustomerName()) ||
                         StringUtils.isBlank(customerTaskConfigVO.getTaskTime()) ||
                         null == customerTaskConfigVO.getCustomerGroup() ||
                         null == customerTaskConfigVO.getUpdateUserId() ||
@@ -182,23 +190,26 @@ public class OperServiceImpl implements OperService {
                 }
                 return resultFlag;
             case 6:
-                if(null == customerTaskConfigVO.getUpdateUserId()||
+                if(null == customerTaskConfigVO ||
+                        null == customerTaskConfigVO.getUpdateUserId()||
                         null == customerTaskConfigVO.getStatus() ||
                         null == customerTaskConfigVO.getId()){
                     resultFlag = true;
                 }
                 return resultFlag;
             case 7:
-                if(null == request.getFlag()){
+                if(null == request || null == request.getFlag()){
                     resultFlag = true;
                 }
             case 8:
-                if(StringUtils.isBlank(request.getTaskTime()) ||
+                if(null == request ||
+                        StringUtils.isBlank(request.getTaskTime()) ||
                         null == request.getFlag()){
                     resultFlag = true;
                 }
             case 9:
-                if(StringUtils.isBlank(request.getCustomerName()) ||
+                if(null == request ||
+                        StringUtils.isBlank(request.getCustomerName()) ||
                         StringUtils.isBlank(request.getTaskTime()) ||
                         null == request.getFlag()){
                     resultFlag = true;
