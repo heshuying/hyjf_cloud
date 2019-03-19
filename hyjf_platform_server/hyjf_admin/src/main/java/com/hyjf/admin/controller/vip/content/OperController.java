@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "会员中心-内容中心 admin", tags = "会员中心-内容中心 admin")
-@RequestMapping("/hyjf-admin/login")
+@Api(value = "会员中心-内容中心", tags = "会员中心-内容中心")
+@RequestMapping("/hyjf-admin/content")
 @RestController
 public class OperController {
 
