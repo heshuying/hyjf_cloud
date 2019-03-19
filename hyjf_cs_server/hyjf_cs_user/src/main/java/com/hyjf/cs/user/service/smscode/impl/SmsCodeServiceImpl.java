@@ -187,11 +187,13 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         // 累加IP次数
         String currentMaxIpCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
+        logger.info("CACHE_MAX_IP_COUNT--------------ip"+ip+"------count:"+currentMaxIpCount);
         if (StringUtils.isBlank(currentMaxIpCount)) {
             currentMaxIpCount = "0";
         }
         // 累加手机次数
         String currentMaxPhoneCount = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
+        logger.info("currentMaxPhoneCount--------------ip"+ip+"------count:"+currentMaxPhoneCount);
         if (StringUtils.isBlank(currentMaxPhoneCount)) {
             currentMaxPhoneCount = "0";
         }
