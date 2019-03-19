@@ -2,9 +2,12 @@ package com.hyjf.am.user.controller.admin.vip.content;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
+import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.service.admin.vip.content.OperService;
+import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ public class OperController {
     @Autowired
     private OperService operService;
 
+    // 大屏运营部数据配置
+
     /**
      * 大屏运营部数据配置列表查询
      * @param request
@@ -29,10 +34,10 @@ public class OperController {
      */
     @PostMapping("/oper/list")
     @ResponseBody
-    private Response<ScreenConfigVO> list(ScreenConfigRequest request){
+    private Response<ScreenConfigVO> operList(ScreenConfigRequest request){
         Response<ScreenConfigVO> response = new Response<>();
 
-        List<ScreenConfig> list = operService.list(request);
+        List<ScreenConfig> list = operService.operList(request);
         if (null == list){
             response.setRtn(Response.FAIL);
             response.setMessage(Response.FAIL_MSG);
@@ -50,10 +55,10 @@ public class OperController {
      */
     @PostMapping("/oper/add")
     @ResponseBody
-    private IntegerResponse insert(ScreenConfigVO screenConfigVO){
+    private IntegerResponse operAdd(ScreenConfigVO screenConfigVO){
         IntegerResponse response = new IntegerResponse();
 
-        int insertFlag = operService.insert(screenConfigVO);
+        int insertFlag = operService.operAdd(screenConfigVO);
         if (insertFlag != 1){
             response.setRtn(Response.FAIL);
             response.setMessage(Response.FAIL_MSG);
@@ -70,10 +75,73 @@ public class OperController {
      */
     @PostMapping("/oper/update")
     @ResponseBody
-    private IntegerResponse update(ScreenConfigVO screenConfigVO){
+    private IntegerResponse operUpdate(ScreenConfigVO screenConfigVO){
         IntegerResponse response = new IntegerResponse();
 
-        int updatetFlag = operService.update(screenConfigVO);
+        int updatetFlag = operService.operUpdate(screenConfigVO);
+        if (updatetFlag != 1){
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+            return response;
+        }
+        response.setResultInt(updatetFlag);
+        return response;
+    }
+
+    // 坐席月任务配置
+
+    /**
+     * 坐席月任务配置列表查询
+     * @param request
+     * @return
+     */
+    @PostMapping("/task/list")
+    @ResponseBody
+    private Response<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request){
+        Response<CustomerTaskConfigVO> response = new Response<>();
+
+        List<CustomerTaskConfig> list = operService.taskList(request);
+        if (null == list){
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+            return response;
+        }
+        List<CustomerTaskConfigVO> customerTaskConfigVOs = CommonUtils.convertBeanList(list, CustomerTaskConfigVO.class);
+        response.setResultList(customerTaskConfigVOs);
+        return response;
+    }
+
+    /**
+     * 坐席月任务配置数据新增
+     * @param customerTaskConfigVO
+     * @return
+     */
+    @PostMapping("/task/add")
+    @ResponseBody
+    private IntegerResponse taskAdd(CustomerTaskConfigVO customerTaskConfigVO){
+        IntegerResponse response = new IntegerResponse();
+
+        int insertFlag = operService.taskAdd(customerTaskConfigVO);
+        if (insertFlag != 1){
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+            return response;
+        }
+        response.setResultInt(insertFlag);
+        return response;
+    }
+
+    /**
+     * 坐席月任务配置数据编辑/启用/禁用
+     * @param customerTaskConfigVO
+     * @return
+     */
+    @PostMapping("/task/update")
+    @ResponseBody
+    private IntegerResponse taskUpdate(CustomerTaskConfigVO customerTaskConfigVO){
+        IntegerResponse response = new IntegerResponse();
+
+        int updatetFlag = operService.taskUpdate(customerTaskConfigVO);
         if (updatetFlag != 1){
             response.setRtn(Response.FAIL);
             response.setMessage(Response.FAIL_MSG);

@@ -36,6 +36,7 @@ import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
+import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -2124,6 +2125,50 @@ public class AmAdminClientImpl implements AmAdminClient {
     public int updateScreenConfig(ScreenConfigVO screenConfigVO) {
         String url = "http://AM-ADMIN/am-user/vip/content/oper/update";
         IntegerResponse response = restTemplate.postForEntity(url, screenConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 坐席月任务配置列表查询
+     * @param request
+     * @return
+     */
+    @Override
+    public List<CustomerTaskConfigVO> getCustomerTaskConfigList(CustomerTaskConfigRequest request) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/list";
+        Response<CustomerTaskConfigVO> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 坐席月任务配置数据新增
+     * @return
+     */
+    @Override
+    public int addCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/add";
+        IntegerResponse response = restTemplate.postForEntity(url, customerTaskConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 坐席月任务配置数据编辑/启用/禁用
+     * @param customerTaskConfigVO
+     * @return
+     */
+    @Override
+    public int updateCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/update";
+        IntegerResponse response = restTemplate.postForEntity(url, customerTaskConfigVO, IntegerResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultInt();
         }

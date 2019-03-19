@@ -1,7 +1,10 @@
 package com.hyjf.am.user.service.admin.vip.content;
 
+import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
+import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
+import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 
 import java.util.List;
@@ -11,9 +14,15 @@ import java.util.List;
  */
 public interface OperService {
 
-    List<ScreenConfig> list(ScreenConfigRequest request);
+    List<ScreenConfig> operList(ScreenConfigRequest request);
 
-    int insert(ScreenConfigVO screenConfigVO);
+    int operAdd(ScreenConfigVO screenConfigVO);
 
-    int update(ScreenConfigVO screenConfigVO);
+    int operUpdate(ScreenConfigVO screenConfigVO);
+
+    List<CustomerTaskConfig> taskList(CustomerTaskConfigRequest request);
+
+    int taskAdd(CustomerTaskConfigVO customerTaskConfigVO);
+
+    int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO);
 }

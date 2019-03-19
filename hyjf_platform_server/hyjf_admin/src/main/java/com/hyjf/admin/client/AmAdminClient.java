@@ -36,6 +36,7 @@ import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
+import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -1225,4 +1226,24 @@ public interface AmAdminClient {
      * @return
      */
     int updateScreenConfig(ScreenConfigVO screenConfigVO);
+
+    /**
+     * 坐席月任务配置列表查询
+     * @param request
+     * @return
+     */
+    List<CustomerTaskConfigVO> getCustomerTaskConfigList(CustomerTaskConfigRequest request);
+
+    /**
+     * 坐席月任务配置数据新增
+     * @return
+     */
+    int addCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO);
+
+    /**
+     * 坐席月任务配置数据编辑/启用/禁用
+     * @param customerTaskConfigVO
+     * @return
+     */
+    int updateCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO);
 }
