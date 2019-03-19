@@ -6,6 +6,7 @@ import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfigExample;
 import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.ScreenConfigVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,10 @@ public class OperServiceImpl implements OperService {
     @Override
     public List<ScreenConfig> list(ScreenConfigRequest request) {
         ScreenConfigExample example = new ScreenConfigExample();
-        ScreenConfigExample.Criteria cra = example.createCriteria();
-        cra.andTaskTimeEqualTo(request.getTaskTime());
+        if(StringUtils.isNotBlank(request.getTaskTime())){
+            ScreenConfigExample.Criteria cra = example.createCriteria();
+            cra.andTaskTimeEqualTo(request.getTaskTime());
+        }
         return screenConfigMapper.selectByExample(example);
     }
 
