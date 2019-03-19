@@ -899,7 +899,7 @@ WHERE
 
 			CASE 
 			WHEN bb.company_or_personal=2  THEN hbm.city
-			WHEN bb.company_or_personal=1 THEN hbu.city
+			WHEN bb.company_or_personal=1 THEN ''
 			ELSE
 				''
 			END AS location,
