@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ScreenYearMoneyCustomizeMapper">
+
+
+	<select id="queryTenderList" resultType="java.lang.String" >
+		SELECT
+		CASE
+		WHEN bn.borrow_style = 'endday' THEN
+		CONCAT(bn.borrow_period, '天')
+		ELSE
+		CONCAT(bn.borrow_period, '个月')
+		END AS productStyle
+		FROM
+		ht_borrow_tender te
+		LEFT JOIN ht_borrow bn ON te.borrow_nid = bn.borrow_nid
+		WHERE
+		te.nid = #{orderId,jdbcType=VARCHAR} and te.user_id = #{userId,jdbcType=INTEGER};
+	</select>
+
+	<select id="queryPlanList" resultType="java.lang.String" >
+		SELECT
+			CASE
+		WHEN hdp.is_month = '0' THEN
+			CONCAT(hdpa.lock_period, '天')
+		WHEN hdp.is_month = '1' THEN
+			CONCAT(hdpa.lock_period, '个月')
+		END AS productStyle
+		FROM
+			ht_hjh_accede hdpa
+		LEFT JOIN ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+		WHERE
+			hdpa.user_id = #{userId,jdbcType=INTEGER}
+		AND hdpa.accede_order_id = #{orderId,jdbcType=VARCHAR};
+	</select>
+
+</mapper>

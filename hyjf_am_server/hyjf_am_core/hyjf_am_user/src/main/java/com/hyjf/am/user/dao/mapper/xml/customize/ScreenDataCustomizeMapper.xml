@@ -19,7 +19,7 @@
 
     <select id="findUserGroup" resultType="java.util.Map">
        SELECT
-            u.username,
+           u.username,
            c.customer_name as name,
            c.customer_group as customerGroup
         FROM
@@ -34,7 +34,7 @@
         where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
                and d3.`name`='惠众'
                and (d1.`name`='电销' or d1.`name`='网络运营部')
-            and   u.user_id=#{userId,jdbcType=INTEGER}
+               and u.user_id=#{userId,jdbcType=INTEGER}
     </select>
 </mapper>
 

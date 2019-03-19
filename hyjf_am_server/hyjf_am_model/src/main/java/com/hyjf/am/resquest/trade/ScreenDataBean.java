@@ -82,6 +82,15 @@ public class ScreenDataBean {
      */
     private Date updateTime;
 
+    /**
+     *订单id
+     */
+    String orderId;
+    /**
+     *投资类型
+     */
+    Integer productType;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -170,5 +179,21 @@ public class ScreenDataBean {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Integer getProductType() {
+        return productType;
+    }
+
+    public void setProductType(Integer productType) {
+        this.productType = productType;
     }
 }
