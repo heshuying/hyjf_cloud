@@ -165,7 +165,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      */
     @Override
     public void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws Exception {
-
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);
 
@@ -187,13 +186,11 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         // 累加IP次数
         String currentMaxIpCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
-        logger.info("CACHE_MAX_IP_COUNT--------------ip"+ip+"------count:"+currentMaxIpCount);
         if (StringUtils.isBlank(currentMaxIpCount)) {
             currentMaxIpCount = "0";
         }
         // 累加手机次数
         String currentMaxPhoneCount = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
-        logger.info("currentMaxPhoneCount--------------ip"+ip+"------count:"+currentMaxPhoneCount);
         if (StringUtils.isBlank(currentMaxPhoneCount)) {
             currentMaxPhoneCount = "0";
         }
@@ -389,7 +386,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     }
 
     @Override
-    public JSONObject wechatCheckParam(String verificationType, String mobile, String ip,JSONObject ret) {
+    public JSONObject wechatCheckParam(String verificationType, String mobile, String ip, JSONObject ret, SmsConfigVO smsConfig) {
         // 解密
         if (Validator.isNull(verificationType)) {
             ret.put("status", "99");
@@ -440,18 +437,12 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0", 24 * 60 * 60);
         }
         logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
-        SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
         if (smsConfig == null){
             ret.put("status", "1");
             ret.put("statusDesc", "获取短信配置失败");
             return ret;
         }
         if (Integer.valueOf(ipCount) >= smsConfig.getMaxIpCount()) {
-            if (!Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount())){
-                ret.put("status", "1");
-                ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
-                return ret;
-            }
             try {
                 // 发送短信通知
                 Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -482,6 +473,11 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 return ret;
             }
             RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT + ip, (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
+            if (!Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount())){
+                ret.put("status", "1");
+                ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
+                return ret;
+            }
         }
         // 判断最大发送数max_phone_count
         String count = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile);
@@ -491,11 +487,6 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         }
         logger.info(mobile + "----------MaxPhoneCount-----------" + count);
         if (Integer.valueOf(count) >= smsConfig.getMaxPhoneCount()) {
-            if (!Integer.valueOf(count).equals(smsConfig.getMaxPhoneCount())){
-                ret.put("status", "1");
-                ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
-                return ret;
-            }
             try {
                 // 发送短信通知
                 Map<String, String> replaceStrs = new HashMap<String, String>();
@@ -516,11 +507,23 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 return ret;
             }
             RedisUtils.set(RedisConstants.CACHE_MAX_PHONE_COUNT+mobile, (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
+            if (!Integer.valueOf(ipCount).equals(smsConfig.getMaxIpCount())){
+                ret.put("status", "1");
+                ret.put("statusDesc", "手机发送次数超限");
+                return ret;
+            }
+        }
+
+        // 判断发送间隔时间
+        String intervalTime = RedisUtils.get("IntervalTime:" + verificationType + ":"+mobile);
+        if (StringUtils.isNotBlank(intervalTime)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "验证码发送过于频繁");
+            return ret;
         }
         // 发送checkCode最大时间间隔，默认60秒
-        RedisUtils.set(mobile + ":" + verificationType + ":IntervalTime", mobile,
+        RedisUtils.set( "IntervalTime:" + verificationType + ":"+mobile, mobile,
                 smsConfig.getMaxIntervalTime() == null ? 60 : smsConfig.getMaxIntervalTime());
-
         return ret;
     }
 }
