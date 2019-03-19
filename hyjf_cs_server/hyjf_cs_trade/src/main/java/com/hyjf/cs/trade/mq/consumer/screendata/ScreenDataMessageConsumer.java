@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * 大屏数据统计
  * @author lisheng
@@ -37,14 +39,10 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
     public void onMessage(MessageExt messageExt) {
         logger.info("ScreenDataMessageConsumer 收到消息，开始处理....msgId is :{}", messageExt.getMsgId());
         ScreenDataBean data = JSONObject.parseObject(messageExt.getBody(), ScreenDataBean.class);
-
-/*
-        ScreenDataBean screenDataBean = new ScreenDataBean();
-        screenDataBean.setUserId(users.getUserId());
-        screenDataBean.setMoney(transAmt);
-        screenDataBean.setUserName(users.getUsername());
-        screenDataBean.setOperating(4);
-*/
+        Integer userId = data.getUserId();
+        String orderId = data.getOrderId();
+        BigDecimal investMoney = data.getMoney();
+        Integer productType = data.getProductType();
         //查询用户是否归属运营部
         ScreenDataResponse userGroup = amUserClient.findUserGroup(data);
         if (userGroup != null) {
@@ -53,31 +51,20 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
             data.setCurrentOwner(currentOwner);
             data.setCustomerGroup(group);
             if (group == -1) {
-                logger.info("当前用户不属于运营部，userId：{}", data.getUserId());
+                logger.info("当前用户不属于运营部，userId：{}", userId);
             } else {
-                switch (data.getOperating()) {
-                    //投资
-                    case 1:
-
-                    break;
-                     //充值
-                    case 2:
-
-                    break;
-                    //回款
-                    case 3:
-                    break;
-                    //提现
-                    case 4:
-                        amTradeClient.insertScreenData(data);
-                        break;
-                    default:
-                        logger.error("error ScreenDataMessageConsumer type...");
-
+                BigDecimal userFreeMoney = amTradeClient.findUserFreeMoney(userId);
+                if (userFreeMoney != null) {
+                    data.setBalance(userFreeMoney);
+                }
+                if (data.getOperating()==1) {
+                    BigDecimal yearMoney = amTradeClient.findYearMoney(userId, orderId, productType, investMoney);
+                    data.setYearMoney(yearMoney);
+                }
+                amTradeClient.insertScreenData(data);
                 }
             }
         }
-    }
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {

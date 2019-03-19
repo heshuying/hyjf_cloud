@@ -1,6 +1,9 @@
 package com.hyjf.am.trade.service.screen;
 
 import com.hyjf.am.resquest.trade.ScreenDataBean;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.math.BigDecimal;
 
 /**
  * @author lisheng
@@ -14,4 +17,20 @@ public interface ScreenDataService {
      * @return
      */
     Integer addUserOperateList(ScreenDataBean screenDataBean);
+
+    /**
+     * 查询用户的空闲
+     * @param userId
+     * @return
+     */
+    BigDecimal findUserFreeMoney(Integer userId);
+
+    /**
+     * 查询用户的年化投资金额
+     *
+     * @param userId
+     * @return
+     */
+    BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
+
 }

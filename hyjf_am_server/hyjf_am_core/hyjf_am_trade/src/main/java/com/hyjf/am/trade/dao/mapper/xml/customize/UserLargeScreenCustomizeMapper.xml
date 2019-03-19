@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.UserLargeScreenCustomizeMapper">
+
+    <!-- 运营部总业绩（元） -->
+    <select id="getTotalAmount" resultType="com.hyjf.am.vo.api.UserLargeScreenVO">
+        select
+        (select IFNULL(SUM(money),0)  from ht_user_operate_list where operating=1 and (customer_group =0 or customer_group =3) and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as totalAmount,
+
+        (select IFNULL(SUM(money),0) moneyNew from ht_user_operate_list where operating=1  and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as achievementDistribution
+
+        from ht_user_operate_list LIMIT 0,1
+    </select>
+    <!-- 本月运营部业绩完成分布 -->
+    <select id="getAchievementDistributionList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
+       select IFNULL(SUM(money),0) as money , customer_group as customerGroup
+       from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY customer_group
+    </select>
+
+    <!-- 规模业绩 -->
+    <select id="getScalePerformance" resultType="com.hyjf.am.vo.api.UserLargeScreenVO">
+           select
+        (select IFNULL(SUM(money),0)  from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as scalePerformanceNew,
+
+        (select IFNULL(SUM(money),0)  from ht_user_operate_list where operating=1 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as scalePerformanceOld
+
+        from ht_user_operate_list LIMIT 0,1
+    </select>
+    <!-- 坐席月规模业绩 -->
+    <select id="getMonthScalePerformanceList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
+      select IFNULL(SUM(money),0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner -- 坐席月规模业绩（新客组）
+      UNION ALL
+      select IFNULL(SUM(money),0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner -- 坐席月规模业绩（老客组）
+    </select>
+
+    <!-- 坐席月回款情况 -->
+    <select id="getMonthReceivedPayments" resultType="com.hyjf.am.vo.api.EchartsResultVO">
+
+      select  IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 GROUP BY t1.current_owner
+      UNION ALL
+      select  IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 GROUP BY t1.current_owner
+
+    </select>
+</mapper>

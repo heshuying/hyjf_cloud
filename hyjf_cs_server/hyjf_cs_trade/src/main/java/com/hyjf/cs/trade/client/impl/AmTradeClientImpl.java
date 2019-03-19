@@ -7006,4 +7006,26 @@ public class AmTradeClientImpl implements AmTradeClient {
         return restTemplate.postForObject("http://AM-TRADE/am-trade/screen_data/insert_data",
                 screenDataBean, IntegerResponse.class);
     }
+
+    @Override
+    public BigDecimal findUserFreeMoney(Integer userId) {
+        String url = "http://AM-TRADE/am-trade/screen_data/find_free_money/" + userId;
+        BigDecimalResponse body = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+        if (body != null) {
+          return body.getResultDec();
+        }
+        return null;
+
+    }
+
+    @Override
+    public BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney) {
+        String url = "http://AM-TRADE/am-trade/screen_data/find_year_money/" + userId+"/"+orderId+"/"+productType+"/"+investMoney;
+        BigDecimalResponse body = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+        if (body != null) {
+            return body.getResultDec();
+        }
+        return null;
+
+    }
 }

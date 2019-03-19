@@ -1,12 +1,21 @@
 package com.hyjf.am.trade.service.screen.impl;
 
 import com.hyjf.am.resquest.trade.ScreenDataBean;
+import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.UserOperateListMapper;
+import com.hyjf.am.trade.dao.mapper.customize.ScreenYearMoneyCustomizeMapper;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.AccountListExample;
 import com.hyjf.am.trade.dao.model.auto.UserOperateList;
 import com.hyjf.am.trade.service.screen.ScreenDataService;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -16,11 +25,54 @@ import org.springframework.stereotype.Service;
 public class ScreenDataServiceImpl implements ScreenDataService {
     @Autowired
     UserOperateListMapper userOperateListMapper;
+    @Autowired
+    AccountListMapper accountListMapper;
+    @Autowired
+    ScreenYearMoneyCustomizeMapper screenYearMoneyCustomizeMapper;
 
     @Override
     public Integer addUserOperateList(ScreenDataBean screenDataBean) {
         UserOperateList userOperateList = CommonUtils.convertBean(screenDataBean, UserOperateList.class);
 
         return userOperateListMapper.insertSelective(userOperateList);
+    }
+
+    @Override
+    public BigDecimal findUserFreeMoney(Integer userId) {
+        AccountListExample accountListExample = new AccountListExample();
+        AccountListExample.Criteria criteria = accountListExample.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        List<AccountList> accountLists = accountListMapper.selectByExample(accountListExample);
+        if (!CollectionUtils.isEmpty(accountLists)) {
+            accountLists.get(0).getBankBalance();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal findYearMoney(Integer userId, String orderId, Integer productType,BigDecimal investMoney) {
+        String productStyle = "";
+        BigDecimal yearAmount = new BigDecimal(0);
+        if (productType == 3) {
+            productStyle = screenYearMoneyCustomizeMapper.queryPlanList(orderId, userId);
+        } else {
+            productStyle=screenYearMoneyCustomizeMapper.queryTenderList(orderId, userId);
+        }
+        if (productStyle.contains("个月")) {
+            String number = StringUtils.substringBefore(productStyle, "个月");
+            if (StringUtils.isEmpty(number)) {
+                return null;
+            }
+            yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(12), 4, BigDecimal.ROUND_HALF_UP);
+        }
+        //天=出借金额*天数/360 (产品要求按照360天计算)
+        else if (productStyle.contains("天")) {
+            String number = StringUtils.substringBefore(productStyle, "天");
+            if (StringUtils.isEmpty(number)) {
+                return null;
+            }
+            yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360), 4, BigDecimal.ROUND_HALF_UP);
+        }
+        return yearAmount;
     }
 }

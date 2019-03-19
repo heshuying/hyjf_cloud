@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
@@ -2889,5 +2890,19 @@ public interface AmTradeClient {
      */
     IntegerResponse insertScreenData(ScreenDataBean screenDataBean);
 
+    /**
+     * 查询用户站岗金额
+     * @param userId
+     * @return
+     */
+    BigDecimal findUserFreeMoney(Integer userId);
+
+    /**
+     * 查询年化金额
+     *
+     * @param userId
+     * @return
+     */
+    BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
 }
 
