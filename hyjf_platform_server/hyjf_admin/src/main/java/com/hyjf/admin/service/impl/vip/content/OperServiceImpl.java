@@ -20,7 +20,7 @@ public class OperServiceImpl implements OperService {
 
     /**
      *大屏运营部数据配置列表查询
-     * @param screenConfigVO
+     * @param request
      * @return
      */
     @Override
@@ -39,7 +39,7 @@ public class OperServiceImpl implements OperService {
     }
 
     /**
-     *大屏运营部数据配置数据编辑
+     *大屏运营部数据配置数据编辑/启用/禁用
      * @param screenConfigVO
      * @return
      */

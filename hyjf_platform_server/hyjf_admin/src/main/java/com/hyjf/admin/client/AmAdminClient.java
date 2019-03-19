@@ -1220,7 +1220,7 @@ public interface AmAdminClient {
     int addScreenConfig(ScreenConfigVO screenConfigVO);
 
     /**
-     * 大屏运营部数据配置数据编辑
+     * 大屏运营部数据配置数据编辑/启用/禁用
      * @param screenConfigVO
      * @return
      */

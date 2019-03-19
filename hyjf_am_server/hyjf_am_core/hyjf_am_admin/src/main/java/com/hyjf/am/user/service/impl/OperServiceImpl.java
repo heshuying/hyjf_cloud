@@ -19,6 +19,11 @@ public class OperServiceImpl implements OperService {
     @Autowired
     private ScreenConfigMapper screenConfigMapper;
 
+    /**
+     * 大屏运营部数据配置列表查询
+     * @param request
+     * @return
+     */
     @Override
     public List<ScreenConfig> list(ScreenConfigRequest request) {
         ScreenConfigExample example = new ScreenConfigExample();
@@ -29,6 +34,11 @@ public class OperServiceImpl implements OperService {
         return screenConfigMapper.selectByExample(example);
     }
 
+    /**
+     * 大屏运营部数据配置数据新增
+     * @param screenConfigVO
+     * @return
+     */
     @Override
     public int insert(ScreenConfigVO screenConfigVO) {
         ScreenConfig screenConfig = new ScreenConfig();
@@ -36,6 +46,11 @@ public class OperServiceImpl implements OperService {
         return screenConfigMapper.insertSelective(screenConfig);
     }
 
+    /**
+     * 大屏运营部数据配置数据编辑/启用/禁用
+     * @param screenConfigVO
+     * @return
+     */
     @Override
     public int update(ScreenConfigVO screenConfigVO) {
         ScreenConfig screenConfig = new ScreenConfig();
