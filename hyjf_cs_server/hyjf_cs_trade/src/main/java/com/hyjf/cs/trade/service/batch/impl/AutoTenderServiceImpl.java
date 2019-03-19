@@ -363,9 +363,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         throw new Exception(logMsgHeader + "/finally推回队列/ 计算计划债转实际金额 和 保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                     }
 
-                    //test
-                    resultVO.setAssignAccount(new BigDecimal("99.9"));
-
                     //承接支付金额
                     BigDecimal assignPay = resultVO.getAssignPay();
                     //承接本金
@@ -649,7 +646,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
         logger.debug(logHeader + "校验债转用的计算金额是否有异常数据 开启！");
 
-        logger.info("承接的应该大于等于支付的"+resultVO.getAssignPay() +">" +resultVO.getAssignAccount() +"+"+new BigDecimal("0.1"));
         // 承接的应该大于等于支付的
         if(resultVO.getAssignPay().compareTo(resultVO.getAssignAccount().add(new BigDecimal("0.1"))) > 0){
             return new CheckResult(false, "校验债转用的计算金额：承接支付金额 > 承接本金+利息+0.1");
