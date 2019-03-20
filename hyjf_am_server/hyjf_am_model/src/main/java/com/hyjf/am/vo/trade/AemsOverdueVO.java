@@ -11,6 +11,10 @@ public class AemsOverdueVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
+     * 记录唯一标识
+     */
+    private String nid;
+    /**
      * 项目编号
      */
     private String borrowNid;
@@ -82,6 +86,14 @@ public class AemsOverdueVO implements Serializable {
      * @return
      */
     private String repayFee;
+
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
 
     public String getBorrowNid() {
         return borrowNid;
