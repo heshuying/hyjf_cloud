@@ -5,6 +5,8 @@ package com.hyjf.cs.trade.controller.api.hgdatareport.nifa;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
+import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -55,7 +57,9 @@ public class NifaRepairController {
 
         //-----------------查询数据------------------------------------
         // 查询该天日期所有放款标的
-        List<BorrowApicronVO> loanList = this.nifaFileDealService.selectBorrowApicron(historyData);
+        // 如果晚上11：59放款、法大大batch在第二天执行、api放款成功的update_time的时间变成第二天了、此处查询存在风险
+//        List<BorrowApicronVO> loanList = this.nifaFileDealService.selectBorrowApicron(historyData);
+        List<BorrowAndInfoVO> loanList = this.nifaFileDealService.selectBorrowByHistoryDate(historyData);
         // 查询该天日期所有还款标的
         List<BorrowRepayVO> repayList = this.nifaFileDealService.selectBorrowRepayByHistoryData(historyData);
         List<BorrowRepayPlanVO> repayPlanList = this.nifaFileDealService.selectBorrowRepayPlanByHistoryData(historyData);
@@ -88,7 +92,7 @@ public class NifaRepairController {
         // 线上有放款数据
         if(CollectionUtils.isNotEmpty(loanList)) {
             // 判断是否生成mongo数据
-            for (BorrowApicronVO vo : loanList) {
+            for (BorrowAndInfoVO vo : loanList) {
                 // 该日放款成功数据
                 if (mongoLoanList.add(vo.getBorrowNid())) {
                     re.add(vo.getBorrowNid());
