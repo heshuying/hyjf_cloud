@@ -163,8 +163,7 @@ public class OperServiceImpl implements OperService {
                         StringUtils.isBlank(screenConfigVO.getTaskTime()) ||
                         null == screenConfigVO.getNewPassengerGoal() ||
                         null == screenConfigVO.getOldPassengerGoal() ||
-                        null == screenConfigVO.getOperationalGoal() ||
-                        null == screenConfigVO.getCreateUserId()){
+                        null == screenConfigVO.getOperationalGoal()){
                     resultFlag = true;
                 }
                 return resultFlag;
@@ -174,14 +173,12 @@ public class OperServiceImpl implements OperService {
                         null == screenConfigVO.getNewPassengerGoal() ||
                         null == screenConfigVO.getOldPassengerGoal() ||
                         null == screenConfigVO.getOperationalGoal() ||
-                        null == screenConfigVO.getUpdateUserId()||
                         null == screenConfigVO.getId()){
                     resultFlag = true;
                 }
                 return resultFlag;
             case 3:
                 if(null == screenConfigVO ||
-                        null == screenConfigVO.getUpdateUserId()||
                         null == screenConfigVO.getStatus() ||
                         null == screenConfigVO.getId()){
                     resultFlag = true;
@@ -192,9 +189,7 @@ public class OperServiceImpl implements OperService {
                         StringUtils.isBlank(customerTaskConfigVO.getCustomerName()) ||
                         StringUtils.isBlank(customerTaskConfigVO.getTaskTime()) ||
                         null == customerTaskConfigVO.getCustomerGroup() ||
-                        null == customerTaskConfigVO.getCreateUserId() ||
-                        null == customerTaskConfigVO.getMonthGoal()
-                        ){
+                        null == customerTaskConfigVO.getMonthGoal()){
                     resultFlag = true;
                 }
                 return resultFlag;
@@ -203,7 +198,6 @@ public class OperServiceImpl implements OperService {
                         StringUtils.isBlank(customerTaskConfigVO.getCustomerName()) ||
                         StringUtils.isBlank(customerTaskConfigVO.getTaskTime()) ||
                         null == customerTaskConfigVO.getCustomerGroup() ||
-                        null == customerTaskConfigVO.getUpdateUserId() ||
                         null == customerTaskConfigVO.getMonthGoal() ||
                         null == customerTaskConfigVO.getId()
                         ){
@@ -212,7 +206,6 @@ public class OperServiceImpl implements OperService {
                 return resultFlag;
             case 6:
                 if(null == customerTaskConfigVO ||
-                        null == customerTaskConfigVO.getUpdateUserId()||
                         null == customerTaskConfigVO.getStatus() ||
                         null == customerTaskConfigVO.getId()){
                     resultFlag = true;
