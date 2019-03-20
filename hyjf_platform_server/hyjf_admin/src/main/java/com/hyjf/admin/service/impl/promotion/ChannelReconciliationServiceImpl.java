@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl.promotion;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.ChannelReconciliationService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
@@ -52,6 +53,13 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
     @Override
     public ChannelReconciliationResponse searchAppAction(ChannelReconciliationRequest request) {
 
+        if(request.getInvestStartTime() == null || request.getInvestEndTime() == null ){
+            ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+            response.setRtn(Response.FAIL);
+            response.setMessage("出借时间不能为空");
+            return response;
+        }
+
         // 出借信息
         if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request.setSourceId(request.getUtmPlat()[0]);
@@ -71,6 +79,13 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
     }
     @Override
     public ChannelReconciliationResponse searchAppHJHAction(ChannelReconciliationRequest request) {
+
+        if(request.getInvestStartTime() == null || request.getInvestEndTime() == null ){
+            ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+            response.setRtn(Response.FAIL);
+            response.setMessage("出借时间不能为空");
+            return response;
+        }
 
         // 出借信息
         if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {

@@ -15,10 +15,14 @@ import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * @author xiasq
@@ -57,7 +61,7 @@ public class MailConsumer implements RocketMQListener<MessageExt>, RocketMQPushC
                     String[] fileNames = mailMessage.getFileNames();
                     logger.info("销售日报发送邮件消费者接受参数 : {}", mailMessage.getToMailArray(), mailMessage.getSubject(), fileNames, mailMessage.getIs());
                     try {
-                        mailHandler.sendAttachmentsMailOnPort465(mailMessage.getToMailArray(), mailMessage.getSubject(),
+                        mailHandler.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
                                 content, fileNames, mailMessage.getIs());
                     } catch (Exception e) {
                         throw new MailSendException("发送销售邮件失败");

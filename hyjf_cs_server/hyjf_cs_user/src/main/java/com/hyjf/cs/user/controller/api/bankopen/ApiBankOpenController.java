@@ -201,6 +201,8 @@ public class ApiBankOpenController extends BaseUserController {
                                               @RequestParam("roleId") String roleId,
                                               @RequestParam("openclient") String openclient) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
+        // 查询用
+        bean.setRemark(bean.getMobile());
         bean.setMobile(mobile);
         bean.setLogClient(Integer.parseInt(openclient));
         bean.setIdentity(roleId);
@@ -223,12 +225,26 @@ public class ApiBankOpenController extends BaseUserController {
             return result;
         }
         // 开户失败
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || "0".equals(bean.getStatus())) {
-            params.put("status", ErrorCodeConstant.STATUS_CE999999);
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            params.put("statusDesc", "开户失败,调用银行接口失败");
-            params.put("chkValue", resultBean.getChkValue());
-            result.setStatus(true);
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
+            if("0".equals(bean.getStatus())) {
+                params.put("status", ErrorCodeConstant.STATUS_CE999999);
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+                params.put("statusDesc", "开户失败,调用银行接口失败");
+                params.put("chkValue", resultBean.getChkValue());
+                params.put("openStatus", "0");
+                result.setStatus(true);
+            }else{
+                params.put("status", ErrorCodeConstant.SUCCESS);
+                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+                params.put("statusDesc", "开户成功");
+                params.put("chkValue", resultBean.getChkValue());
+                params.put("accountId", bean.getAccountId());
+                params.put("payAllianceCode", bean.getPayAllianceCode());
+                params.put("idNo", bean.getIdNo());
+                params.put("isOpenAccount", "1");
+                params.put("openStatus", "2");
+                result.setStatus(true);
+            }
         } else {
             params.put("status", ErrorCodeConstant.SUCCESS);
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
@@ -238,6 +254,10 @@ public class ApiBankOpenController extends BaseUserController {
             params.put("payAllianceCode", bean.getPayAllianceCode());
             params.put("idNo", bean.getIdNo());
             params.put("isOpenAccount", "1");
+            // 交易状态0：交易失败
+            //1：交易成功
+            //2：开户成功设置交易密码失败
+            params.put("openStatus", "1");
             result.setStatus(true);
         }
         CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);

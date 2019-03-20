@@ -628,4 +628,9 @@ public interface AmUserClient {
 	 * @auth nxl
 	 */
 	BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
+
+	/**
+	 * 修复微服务上线三天的crm开户数据
+	 */
+	void getBankOpenAccountForCrmRepair();
 }

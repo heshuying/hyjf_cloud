@@ -615,6 +615,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 根据加入计划订单，取得加入订单
+     * @author liubin
+     * @date 2018/7/04 19:26
+     */
+    @Override
+    public HjhAccedeVO doGetHjhAccedeByAccedeOrderId(String accedeOrderId) {
+        String url = urlBase + "hjhAccede/doGetHjhAccedeByAccedeOrderId/" + accedeOrderId;
+        HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResult();
+    }
+
+    /**
      * 更新加入计划状态
      * @author liubin
      * @date 2018/7/04 19:26
@@ -4994,7 +5009,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(Response.isSuccess(response)){
             return response.getResultBoolean();
         }
-        return null;
+        return false;
     }
     /**
      * 查询产品加息信息
@@ -6951,5 +6966,53 @@ public class AmTradeClientImpl implements AmTradeClient {
     public boolean getFailCredit(String borrowNid) {
         String url = "http://AM-TRADE/am-trade/repay/getFailCredit/" + borrowNid;
         return restTemplate.getForEntity(url, boolean.class).getBody();
+    }
+
+
+    /**
+     * 获取crm投资
+     *
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> selectCrmBorrowTenderList() {
+        String url = "http://AM-TRADE/am-trade/crm/selectCrmBorrowTenderList/";
+        BorrowTenderResponse response = restTemplate.getForEntity(url, BorrowTenderResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取crm智投投资
+     *
+     * @return
+     */
+    @Override
+    public List<HjhAccedeVO> selectCrmHjhAccedeList() {
+        String url = "http://AM-TRADE/am-trade/crm/selectCrmHjhAccedeList/";
+        HjhAccedeResponse response = restTemplate.getForEntity(url, HjhAccedeResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getAllShowProtocolTemp() {
+        String url = "http://AM-TRADE/am-trade/protocol/getAllShowProtocolTemp";
+        ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
     }
 }

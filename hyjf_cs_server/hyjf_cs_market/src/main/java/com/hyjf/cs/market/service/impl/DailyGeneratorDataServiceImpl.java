@@ -1,12 +1,5 @@
 package com.hyjf.cs.market.service.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.hyjf.cs.market.mq.base.CommonProducer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.common.constants.MQConstant;
@@ -15,9 +8,15 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.DailyGeneratorDataService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author fuqiang
@@ -222,8 +221,8 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         // 第四列: 计算环比增速
         // 第六列: 计算提现占比
         // 第十列: 计算环比增速
-        // 第十六列: 计算昨日净资金流（充值-提现）
-        amMarketClient.calculateRate();
+        // 第十六列: 计算昨日净资金流（充值-提现） 不能保证更新时间， 调整到在发送邮件前更新
+        //amMarketClient.calculateRate();
 
         // 第十七列: 查询当日待还（工作日计算当天， 如果工作日次日是节假日，那么计算当天到节假日过后第一个工作日）
         Date endDate = getNextWorkDate(currentDate) ;
@@ -254,7 +253,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         logger.info("startTime :" + GetDate.formatTime(startTime) + ", endTime is :" + GetDate.formatTime(endTime)
                 + ", column:" + column);
         JSONObject params = new JSONObject();
-        params.put("colum", column);
+        params.put("column", column);
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 		try {
@@ -337,7 +336,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         Date yesterday = calendar.getTime();
 
         // 昨天非工作日， 前推到第一个工作日
-        if (!amConfigClient.isWorkdateOnSomeDay()) {
+        if (!amConfigClient.isWorkdateOnSomeDay(yesterday)) {
             yesterday = amConfigClient.getFirstWorkdateBeforeSomeDate(yesterday);
         }
 
@@ -356,7 +355,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         Date torrowDate = calendar.getTime();
 
         // 昨天非工作日， 前推到第一个工作日
-        if (!amConfigClient.isWorkdateOnSomeDay()) {
+        if (!amConfigClient.isWorkdateOnSomeDay(torrowDate)) {
             torrowDate = amConfigClient.getFirstWorkdateAfterSomeDate(torrowDate);
             // 取昨日
             calendar.setTime(torrowDate);

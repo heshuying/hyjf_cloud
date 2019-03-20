@@ -123,10 +123,10 @@ public class GetCode {
     //获取含数字、字母、字符中的最少两种指定位数的字符串
    	public static String getRandomPassword(int len) {
    		String result = null;
-   		String regEx = "[_`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+//   		String regEx = "[_`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
    		while(true){
    			result = makeRandomPassword(len);
-   			if (!result.matches("[0-9]{1,}")&&!result.matches("[a-zA-Z]")&&!result.matches(regEx)) {
+   			if (!result.matches("[0-9]{1,}")&&!result.matches("[a-zA-Z]")) {
    				return result;
    			} 
    			result = makeRandomPassword(len);
@@ -135,7 +135,7 @@ public class GetCode {
   //随机密码生成
   	public static String makeRandomPassword(int len){
 
-  		char charr[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890[_`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]".toCharArray();
+  		char charr[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray();
   		StringBuilder sb = new StringBuilder();
   		Random r = new Random();
   		for (int x = 0; x < len; ++x) {

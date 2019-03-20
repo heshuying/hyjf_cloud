@@ -484,4 +484,22 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		return json;
 	}
 
+	/**
+	 * 获取所有在帮助中心显示的模板列表
+	 * add by nxl 20190313
+	 * PC 1.1.2
+	 * @return
+	 */
+	@Override
+	public List<ProtocolTemplate> selectAllShowProtocolTemplate(){
+		Byte byteShow = 1;
+		ProtocolTemplateExample exampleT=new ProtocolTemplateExample();
+		ProtocolTemplateExample.Criteria criteriaT = exampleT.createCriteria();
+		criteriaT.andIsShowEqualTo(byteShow);
+		//状态(0.协议不显示1.协议显示)
+        criteriaT.andStatusEqualTo(1);
+        exampleT.setOrderByClause(" update_time DESC ");
+		List<ProtocolTemplate>  protocolTemplateList =protocolTemplateMapper.selectByExample(exampleT);
+		return protocolTemplateList;
+	}
 }

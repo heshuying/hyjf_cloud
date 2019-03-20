@@ -213,4 +213,6 @@ public interface SellDailyService {
      * @param list
      */
     void batchUpdate(List<SellDailyVO> list);
+
+    void update(SellDailyVO vo);
 }

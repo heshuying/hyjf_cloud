@@ -368,6 +368,8 @@ public class WeChatRegistController extends BaseUserController {
         logger.info("utmSource: {}", bean.getUtmSource());
         logger.info("verificationCode: {}", bean.getVerificationCode());
 
+        registService.checkReffer(refferUserId);
+
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
         WebViewUserVO webViewUserVO = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
