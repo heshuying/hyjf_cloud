@@ -1,9 +1,7 @@
 package com.hyjf.cs.user.service.smscode.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsConfigVO;
-import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -306,7 +304,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }
-                String[] toMailArray = new String[1];
+/*                String[] toMailArray = new String[1];
                 SiteSettingsVO siteSettingsVO = amConfigClient.selectSiteSetting();
                 if(siteSettingsVO == null){
                     logger.error("邮件配置无效");
@@ -316,7 +314,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 MailMessage mailMessage = new MailMessage(null, replaceStrs, "IP访问次数超限" + ip, null, null, toMailArray,
                         CustomConstants.EMAILPARAM_TPL_DUANXINCHAOXIAN, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                 // 发送邮件
-                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
+                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));*/
             } catch (Exception e) {
                     ret.put("status", "1");
                     ret.put("statusDesc", "IP访问次数超限");
@@ -457,7 +455,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }
-                String[] toMailArray = new String[1];
+/*                String[] toMailArray = new String[1];
                 SiteSettingsVO siteSettingsVO = amConfigClient.selectSiteSetting();
                 if(siteSettingsVO == null){
                     throw new Exception("邮件配置无效");
@@ -466,7 +464,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 MailMessage mailMessage = new MailMessage(null, replaceStrs, "IP访问次数超限" + ip, null, null, toMailArray,
                         CustomConstants.EMAILPARAM_TPL_DUANXINCHAOXIAN, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                 // 发送邮件
-                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
+                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));*/
             } catch (Exception e) {
                 ret.put("status", "1");
                 ret.put("statusDesc", "IP访问次数超限");
@@ -501,6 +499,16 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }
+/*                String[] toMailArray = new String[1];
+                SiteSettingsVO siteSettingsVO = amConfigClient.selectSiteSetting();
+                if(siteSettingsVO == null){
+                    throw new Exception("邮件配置无效");
+                }
+                toMailArray[0] = siteSettingsVO.getSmtpReply();
+                MailMessage mailMessage = new MailMessage(null, replaceStrs, "手机验证码发送次数超限" + mobile, null, null, toMailArray,
+                        CustomConstants.EMAILPARAM_TPL_DUANXINCHAOXIAN, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+                // 发送邮件
+                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));*/
             } catch (Exception e) {
                 ret.put("status", "1");
                 ret.put("statusDesc", "该设备短信请求次数超限，请明日再试");
