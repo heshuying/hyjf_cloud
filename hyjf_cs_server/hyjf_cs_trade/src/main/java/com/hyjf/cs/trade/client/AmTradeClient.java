@@ -30,6 +30,7 @@ import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
+import com.hyjf.am.vo.api.UserLargeScreenVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -2904,5 +2905,35 @@ public interface AmTradeClient {
      * @return
      */
     BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
+
+    /**
+     * 规模业绩
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getScalePerformance();
+
+    /**
+     * 坐席月规模业绩
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getMonthScalePerformanceList();
+    /**
+     * 运营部总业绩（元）和 本月业绩完成率
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getTotalAmount();
+    /**
+     * 本月运营部业绩完成分布 - 饼图返回
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getAchievementDistributionList();
+
+    /**
+     * 坐席月回款情况
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO  getMonthReceivedPayments();
+
+    UserLargeScreenVO getUserCapitalDetails();
 }
 

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.api.userlargescreen;
 
+import com.hyjf.am.response.api.UserLargeScreenResponse;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
 import io.swagger.annotations.Api;
@@ -26,35 +27,52 @@ public class UserLargeScreenController {
 
     @ApiOperation(value = " 规模业绩(新老客户组所有数据)",notes = " 规模业绩(新老客户组所有数据)")
     @GetMapping(value = "/getscaleperformance")
-    public UserLargeScreenVO getScalePerformance() {
+    public UserLargeScreenResponse getScalePerformance() {
+        UserLargeScreenResponse response = new UserLargeScreenResponse();
         UserLargeScreenVO vo = userLargeScreenService.getScalePerformance();
-        return vo;
+        response.setResult(vo);
+        return response;
     }
     @ApiOperation(value = " 坐席月规模业绩(新老客户组所有数据)",notes = " 坐席月规模业绩(新老客户组所有数据)")
     @GetMapping(value = "/getmonthscaleperformancelist")
-    public UserLargeScreenVO getMonthScalePerformanceList() {
+    public UserLargeScreenResponse getMonthScalePerformanceList() {
+        UserLargeScreenResponse response = new UserLargeScreenResponse();
         UserLargeScreenVO vo = userLargeScreenService.getMonthScalePerformanceList();
-        return vo;
+        response.setResult(vo);
+        return response;
     }
 
     @ApiOperation(value = " 运营部总业绩",notes = " 运营部总业绩")
     @GetMapping(value = "/gettotalamount")
-    public UserLargeScreenVO getTotalAmount() {
+    public UserLargeScreenResponse getTotalAmount() {
+        UserLargeScreenResponse response = new UserLargeScreenResponse();
         UserLargeScreenVO vo = userLargeScreenService.getTotalAmount();
-        return vo;
+        response.setResult(vo);
+        return response;
     }
 
     @ApiOperation(value = " 运营部业绩完成分布",notes = " 运营部业绩完成分布")
     @GetMapping(value = "/getachievementdistributionlist")
-    public UserLargeScreenVO getAchievementDistributionList() {
+    public UserLargeScreenResponse getAchievementDistributionList() {
+        UserLargeScreenResponse response = new UserLargeScreenResponse();
         UserLargeScreenVO vo = userLargeScreenService.getAchievementDistributionList();
-        return vo;
+        response.setResult(vo);
+        return response;
     }
     @ApiOperation(value = " 坐席月回款情况(新老客户组所有数据)",notes = " 坐席月回款情况(新老客户组所有数据)")
     @GetMapping(value = "/getmonthreceivedpayments")
-    public UserLargeScreenVO getMonthReceivedPayments() {
+    public UserLargeScreenResponse getMonthReceivedPayments() {
+        UserLargeScreenResponse response = new UserLargeScreenResponse();
         UserLargeScreenVO vo = userLargeScreenService.getMonthReceivedPayments();
-        return vo;
+        response.setResult(vo);
+        return response;
     }
-
+    @ApiOperation(value = " 用户资金明细",notes = " 用户资金明细")
+    @GetMapping(value = "/getusercapitaldetails")
+    public UserLargeScreenResponse getUserCapitalDetails() {
+        UserLargeScreenResponse response = new UserLargeScreenResponse();
+        UserLargeScreenVO vo = userLargeScreenService.getUserCapitalDetails();
+        response.setResult(vo);
+        return response;
+    }
 }

@@ -11,6 +11,7 @@ import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.*;
@@ -1143,6 +1144,20 @@ public class AmUserClientImpl implements AmUserClient {
 	public ScreenDataResponse findUserGroup(ScreenDataBean screenDataBean) {
 		return restTemplate.postForObject("http://AM-USER/am-user/user/getGroup",
 				screenDataBean, ScreenDataResponse.class);
+
+	}
+
+	@Override
+	public UserScreenConfigResponse getScreenConfig(UserLargeScreenRequest request) {
+		return restTemplate.postForObject("http://AM-USER//am-user/user_large_screen/screenconfig",
+				request, UserScreenConfigResponse.class);
+
+	}
+
+	@Override
+	public UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request) {
+		return restTemplate.postForObject("http://AM-USER//am-user/user_large_screen/customertaskconfig",
+				request, UserCustomerTaskConfigResponse.class);
 
 	}
 }

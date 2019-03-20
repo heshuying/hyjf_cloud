@@ -7,7 +7,7 @@
         select
         (select IFNULL(SUM(money),0)  from ht_user_operate_list where operating=1 and (customer_group =0 or customer_group =3) and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as totalAmount,
 
-        (select IFNULL(SUM(money),0) moneyNew from ht_user_operate_list where operating=1  and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as achievementDistribution
+        (select IFNULL(SUM(money),0)  from ht_user_operate_list where operating=1  and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as achievementDistribution
 
         from ht_user_operate_list LIMIT 0,1
     </select>
@@ -36,9 +36,15 @@
     <!-- 坐席月回款情况 -->
     <select id="getMonthReceivedPayments" resultType="com.hyjf.am.vo.api.EchartsResultVO">
 
-      select  IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 GROUP BY t1.current_owner
+      select  IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY t1.current_owner
       UNION ALL
-      select  IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 GROUP BY t1.current_owner
+      select  IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY t1.current_owner
 
     </select>
+    <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
+
+        select  user_name userName,current_owner currentOwner,operating operating,money money,year_money yearMoney,create_time createTime
+        from  ht_user_operate_list where operating &lt;&gt; 3 and create_time &gt;= #{star} AND create_time &lt;=#{end}
+    </select>
+
 </mapper>

@@ -1,12 +1,14 @@
-package com.hyjf.am.vo.api;
+package com.hyjf.cs.trade.bean;
 
+import com.hyjf.am.vo.api.EchartsResultVO;
+import com.hyjf.am.vo.api.UserCapitalDetailsVO;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class UserLargeScreenVO implements Serializable {
+public class UserLargeScreenResultBean implements Serializable {
 
     @ApiModelProperty(value = "规模业绩（新客组）")
     private BigDecimal scalePerformanceNew = BigDecimal.ZERO;
@@ -30,9 +32,12 @@ public class UserLargeScreenVO implements Serializable {
     private BigDecimal userCapitalDetails = BigDecimal.ZERO;
     @ApiModelProperty(value = "本月运营部业绩完成分布")
     private List<EchartsResultVO> achievementDistributionList;
+    @ApiModelProperty(value = "新客组月目标")
+    private BigDecimal newPassengerGoal;
+    @ApiModelProperty(value = "老客组月目标")
+    private BigDecimal oldPassengerGoal;
     @ApiModelProperty(value = "用户资金明细")
     private  List<UserCapitalDetailsVO> userCapitalDetailList;
-
     public BigDecimal getScalePerformanceNew() {
         return scalePerformanceNew;
     }
@@ -119,6 +124,22 @@ public class UserLargeScreenVO implements Serializable {
 
     public void setAchievementDistributionList(List<EchartsResultVO> achievementDistributionList) {
         this.achievementDistributionList = achievementDistributionList;
+    }
+
+    public BigDecimal getNewPassengerGoal() {
+        return newPassengerGoal;
+    }
+
+    public void setNewPassengerGoal(BigDecimal newPassengerGoal) {
+        this.newPassengerGoal = newPassengerGoal;
+    }
+
+    public BigDecimal getOldPassengerGoal() {
+        return oldPassengerGoal;
+    }
+
+    public void setOldPassengerGoal(BigDecimal oldPassengerGoal) {
+        this.oldPassengerGoal = oldPassengerGoal;
     }
 
     public List<UserCapitalDetailsVO> getUserCapitalDetailList() {

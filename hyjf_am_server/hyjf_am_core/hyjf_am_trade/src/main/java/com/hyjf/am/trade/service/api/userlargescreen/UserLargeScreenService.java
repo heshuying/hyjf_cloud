@@ -39,6 +39,6 @@ public interface UserLargeScreenService {
      **/
     UserLargeScreenVO  getMonthReceivedPayments();
 
-
+    UserLargeScreenVO getUserCapitalDetails();
 
 }
