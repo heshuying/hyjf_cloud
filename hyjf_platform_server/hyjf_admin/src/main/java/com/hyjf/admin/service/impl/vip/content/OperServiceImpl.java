@@ -201,19 +201,20 @@ public class OperServiceImpl implements OperService {
                 if(null == request || null == request.getFlag()){
                     resultFlag = true;
                 }
+                return resultFlag;
             case 8:
                 if(null == request ||
-                        StringUtils.isBlank(request.getTaskTime()) ||
-                        null == request.getFlag()){
+                        StringUtils.isBlank(request.getTaskTime())){
                     resultFlag = true;
                 }
+                return resultFlag;
             case 9:
                 if(null == request ||
                         StringUtils.isBlank(request.getCustomerName()) ||
-                        StringUtils.isBlank(request.getTaskTime()) ||
-                        null == request.getFlag()){
+                        StringUtils.isBlank(request.getTaskTime())){
                     resultFlag = true;
                 }
+                return resultFlag;
             default:
                 break;
         }
