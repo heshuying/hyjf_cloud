@@ -46,8 +46,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, task_time, customer_name, customer_group, month_goal, `status`, del_flag, create_user_id, 
-    update_user_id, create_time, update_time, admin.username update_user_name
+    task.id, task_time, customer_name, customer_group, month_goal, task.status, task.del_flag, task.create_user_id,
+    task.update_user_id, task.create_time, task.update_time, admin.username update_user_name
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample" >
     select

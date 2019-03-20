@@ -45,8 +45,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, task_time, new_passenger_goal, old_passenger_goal, operational_goal, `status`, 
-    del_flag, create_user_id, update_user_id, create_time, update_time, admin.username update_user_name
+    screen.id, task_time, new_passenger_goal, old_passenger_goal, operational_goal, screen.status,
+    screen.del_flag, screen.create_user_id, screen.update_user_id, screen.create_time, screen.update_time,
+    admin.username update_user_name
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.auto.ScreenConfigExample" >
     select
