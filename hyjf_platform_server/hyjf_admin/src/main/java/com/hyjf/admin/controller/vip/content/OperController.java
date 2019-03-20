@@ -65,9 +65,12 @@ public class OperController extends BaseController {
     @ApiOperation(value = "大屏运营部数据配置-数据详情",notes = "大屏运营部数据配置-数据详情")
     @PostMapping("/oper/info")
     @ResponseBody
-    private AdminResult operInfo(@RequestBody Integer id){
+    private AdminResult operInfo(@RequestBody ScreenConfigVO screenConfigVO){
+        if(blankCheck(10, screenConfigVO, null, null)){
+            return new AdminResult("3", "必传字段未传");
+        }
         AdminResult result = new AdminResult();
-        result.setData(operService.operInfo(id));
+        result.setData(operService.operInfo(screenConfigVO));
         return result;
     }
 
@@ -140,9 +143,12 @@ public class OperController extends BaseController {
     @ApiOperation(value = "坐席月任务配置-数据详情",notes = "坐席月任务配置-数据详情")
     @PostMapping("/task/info")
     @ResponseBody
-    private AdminResult taskInfo(@RequestBody Integer id){
+    private AdminResult taskInfo(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
+        if(blankCheck(11, null, customerTaskConfigVO, null)){
+            return new AdminResult("3", "必传字段未传");
+        }
         AdminResult result = new AdminResult();
-        result.setData(operService.taskInfo(id));
+        result.setData(operService.taskInfo(customerTaskConfigVO));
         return result;
     }
 

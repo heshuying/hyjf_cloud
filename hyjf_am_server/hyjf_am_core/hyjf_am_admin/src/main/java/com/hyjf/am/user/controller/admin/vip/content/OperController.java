@@ -64,19 +64,19 @@ public class OperController {
 
     /**
      * 大屏运营部数据配置数据详情
-     * @param id
+     * @param screenConfigVO
      * @return
      */
     @PostMapping("/oper/info")
     @ResponseBody
-    private Response<ScreenConfigVO> operInfo(@RequestBody Integer id){
+    private Response<ScreenConfigVO> operInfo(@RequestBody ScreenConfigVO screenConfigVO){
         Response<ScreenConfigVO> response = new Response<>();
 
-        ScreenConfig result = operService.operInfo(id);
+        ScreenConfig result = operService.operInfo(screenConfigVO.getId());
         if (null != result){
-            ScreenConfigVO screenConfigVO = new ScreenConfigVO();
-            BeanUtils.copyProperties(result, screenConfigVO);
-            response.setResult(screenConfigVO);
+            ScreenConfigVO resultBean = new ScreenConfigVO();
+            BeanUtils.copyProperties(result, resultBean);
+            response.setResult(resultBean);
         }
         return response;
     }
@@ -142,19 +142,19 @@ public class OperController {
 
     /**
      * 坐席月任务配置数据详情
-     * @param id
+     * @param customerTaskConfigVO
      * @return
      */
     @PostMapping("/task/info")
     @ResponseBody
-    private Response<CustomerTaskConfigVO> taskInfo(@RequestBody Integer id){
+    private Response<CustomerTaskConfigVO> taskInfo(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         Response<CustomerTaskConfigVO> response = new Response<>();
 
-        CustomerTaskConfig result = operService.taskInfo(id);
+        CustomerTaskConfig result = operService.taskInfo(customerTaskConfigVO.getId());
         if (null != result){
-            CustomerTaskConfigVO customerTaskConfigVO = new CustomerTaskConfigVO();
-            BeanUtils.copyProperties(result, customerTaskConfigVO);
-            response.setResult(customerTaskConfigVO);
+            CustomerTaskConfigVO resultBean = new CustomerTaskConfigVO();
+            BeanUtils.copyProperties(result, resultBean);
+            response.setResult(resultBean);
         }
         return response;
     }

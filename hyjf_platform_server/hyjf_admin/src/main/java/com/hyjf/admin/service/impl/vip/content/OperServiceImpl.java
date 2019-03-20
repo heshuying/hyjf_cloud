@@ -47,12 +47,12 @@ public class OperServiceImpl implements OperService {
 
     /**
      * 大屏运营部数据配置数据详情
-     * @param id
+     * @param screenConfigVO
      * @return
      */
     @Override
-    public ScreenConfigVO operInfo(Integer id) {
-        return amAdminClient.screenConfigInfo(id);
+    public ScreenConfigVO operInfo(ScreenConfigVO screenConfigVO) {
+        return amAdminClient.screenConfigInfo(screenConfigVO);
     }
 
     /**
@@ -62,6 +62,11 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int operUpdate(ScreenConfigVO screenConfigVO) {
+        if (1 == screenConfigVO.getStatus()){
+            screenConfigVO.setStatus(2);
+        }else {
+            screenConfigVO.setStatus(1);
+        }
         return amAdminClient.updateScreenConfig(screenConfigVO);
     }
 
@@ -86,12 +91,12 @@ public class OperServiceImpl implements OperService {
 
     /**
      * 坐席月任务配置数据详情
-     * @param id
+     * @param customerTaskConfigVO
      * @return
      */
     @Override
-    public CustomerTaskConfigVO taskInfo(Integer id) {
-        return amAdminClient.customerTaskConfigInfo(id);
+    public CustomerTaskConfigVO taskInfo(CustomerTaskConfigVO customerTaskConfigVO) {
+        return amAdminClient.customerTaskConfigInfo(customerTaskConfigVO);
     }
 
     /**
@@ -101,6 +106,11 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO) {
+        if (1 == customerTaskConfigVO.getStatus()){
+            customerTaskConfigVO.setStatus(2);
+        }else {
+            customerTaskConfigVO.setStatus(1);
+        }
         return amAdminClient.updateCustomerTaskConfig(customerTaskConfigVO);
     }
 
@@ -226,6 +236,18 @@ public class OperServiceImpl implements OperService {
                 if(null == request ||
                         StringUtils.isBlank(request.getCustomerName()) ||
                         StringUtils.isBlank(request.getTaskTime())){
+                    resultFlag = true;
+                }
+                return resultFlag;
+            case 10:
+                if(null == screenConfigVO ||
+                        null == screenConfigVO.getId()){
+                    resultFlag = true;
+                }
+                return resultFlag;
+            case 11:
+                if(null == customerTaskConfigVO ||
+                        null == customerTaskConfigVO.getId()){
                     resultFlag = true;
                 }
                 return resultFlag;
