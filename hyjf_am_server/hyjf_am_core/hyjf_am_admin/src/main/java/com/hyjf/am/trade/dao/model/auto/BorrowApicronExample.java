@@ -2545,6 +2545,66 @@ public class BorrowApicronExample {
             addCriterion("submitter not between", value1, value2, "submitter");
             return (Criteria) this;
         }
+
+        public Criteria andIsLateIsNull() {
+            addCriterion("is_late is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateIsNotNull() {
+            addCriterion("is_late is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateEqualTo(Integer value) {
+            addCriterion("is_late =", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateNotEqualTo(Integer value) {
+            addCriterion("is_late <>", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateGreaterThan(Integer value) {
+            addCriterion("is_late >", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_late >=", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateLessThan(Integer value) {
+            addCriterion("is_late <", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateLessThanOrEqualTo(Integer value) {
+            addCriterion("is_late <=", value, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateIn(List<Integer> values) {
+            addCriterion("is_late in", values, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateNotIn(List<Integer> values) {
+            addCriterion("is_late not in", values, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateBetween(Integer value1, Integer value2) {
+            addCriterion("is_late between", value1, value2, "isLate");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsLateNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_late not between", value1, value2, "isLate");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
