@@ -722,6 +722,23 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 查询批次中心-批次还款记录
+     * yangchangwei
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecoverLog/getList", request, BatchBorrowRecoverReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 查询批次中心-批次放款列表
      * yangchangwei
      * @param request

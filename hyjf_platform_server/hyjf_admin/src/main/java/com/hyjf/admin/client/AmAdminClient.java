@@ -394,6 +394,8 @@ public interface AmAdminClient {
     int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
 
 
+    BatchBorrowRecoverReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request);
+
     /**
      * 查询批次中心-批次放款列表
      * @param request
