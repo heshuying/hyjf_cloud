@@ -87,10 +87,10 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     @Override
     public UserLargeScreenVO getUserCapitalDetails(){
         UserLargeScreenVO vo = new UserLargeScreenVO();
-        Calendar cal = Calendar.getInstance();
+        /*Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.set(Calendar.MINUTE,-2);
-        List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails(cal.getTime(),new Date());
+        cal.set(Calendar.MINUTE,2);*/
+        List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails();
         vo.setUserCapitalDetailList(userCapitalDetailsVOList);
         return vo;
     }

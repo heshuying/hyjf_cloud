@@ -44,7 +44,8 @@
     <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
 
         select  user_name userName,current_owner currentOwner,operating operating,money money,year_money yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
-        from  ht_user_operate_list where operating &lt;&gt; 3 and create_time &gt;= #{star} AND create_time &lt;=#{end}
+        from  ht_user_operate_list where operating &lt;&gt; 3
+        ORDER  BY create_time DESC
     </select>
 
 </mapper>
