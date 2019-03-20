@@ -13,6 +13,7 @@ import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,9 @@ import java.util.List;
 @Service
 public class OperServiceImpl implements OperService {
 
+    @Autowired
     private ScreenConfigMapper screenConfigMapper;
+    @Autowired
     private CustomerTaskConfigMapper customerTaskConfigMapper;
 
     /**
@@ -31,11 +34,19 @@ public class OperServiceImpl implements OperService {
     @Override
     public List<ScreenConfig> operList(ScreenConfigRequest request) {
         ScreenConfigExample example = new ScreenConfigExample();
+        // 当前页
+        int currentPage = request.getCurrPage();
+        // 当前页条数
+        int pageSize = request.getPageSize();
+        example.setLimitStart(currentPage == 0 ? 0 : (currentPage - 1) * pageSize);
+        example.setLimitEnd(pageSize);
+
         // 任务时间,精确到月 yyyy-mm
         if(StringUtils.isNotBlank(request.getTaskTime())){
             ScreenConfigExample.Criteria cra = example.createCriteria();
             cra.andTaskTimeEqualTo(request.getTaskTime());
         }
+
         return screenConfigMapper.selectByExample(example);
     }
 
@@ -72,6 +83,13 @@ public class OperServiceImpl implements OperService {
     public List<CustomerTaskConfig> taskList(CustomerTaskConfigRequest request) {
         CustomerTaskConfigExample example = new CustomerTaskConfigExample();
         CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        // 当前页
+        int currentPage = request.getCurrPage();
+        // 当前页条数
+        int pageSize = request.getPageSize();
+        example.setLimitStart(currentPage == 0 ? 0 : (currentPage - 1) * pageSize);
+        example.setLimitEnd(pageSize);
+
         // 任务时间,精确到月 yyyy-mm
         if(StringUtils.isNotBlank(request.getTaskTime())){
             cra.andTaskTimeEqualTo(request.getTaskTime());
