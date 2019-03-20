@@ -105,92 +105,94 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
         /*String startDate = "20161226";
         String endDate = "20161226";*/
 
-
-
-        //页码定义
-        int pageNum = 1;
-        int pageSize = 10;
-        // 查询参数定义
-        String inpDate = "";
-        String inpTime = "";
-        String relDate = "";
-        String traceNo = "";
-        //调用查询明细接口 查线下充值数据
-        BankCallBean retBean = queryAccountDetails(user.getUserId(), bankOpenAccount.getAccount(),
-                startDate, endDate, "1", "", String.valueOf(pageNum), String.valueOf(pageSize),inpDate,inpTime,relDate,traceNo);
-
-        if(retBean == null){
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            logger.info("-------------------同步余额失败--------------------");
-            resultBean.setStatusDesc("同步余额失败");
-            return resultBean;
-        }
-        //返回失败
-        if(!BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())){
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            logger.info("-------------------调用查询接口失败，失败原因：" + getBankRetMsg(retBean.getRetCode())+"--------------------");
-            resultBean.setStatusDesc("调用查询接口失败，失败原因：" + getBankRetMsg(retBean.getRetCode()));
-
-            logger.info(this.getClass().getName(), "/synbalance");
-            return resultBean;
-        }
-
-        //解析返回数据(记录为空)
-        String content = retBean.getSubPacks();
-        if(StringUtils.isEmpty(content)){
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
-            resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
-            resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
-            resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
-            resultBean.setBankBalance(df.format(accountBalance));
-
-            logger.info(this.getClass().getName(), "/synbalance");
-            return resultBean;
-        }
-        //返回结果记录数
-        //转换结果
+        List<UnderLineRechargeVO> codeList=getUnderLineRechargeList();
         List<BankResultBean> recordList = new ArrayList<BankResultBean>();
-        List<BankResultBean> list = new ArrayList<BankResultBean>();
-        list = JSONArray.parseArray(retBean.getSubPacks(), BankResultBean.class);
-        if(list==null|| list.size()==0){
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
-            resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
-            resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
-            resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
-            resultBean.setBankBalance(df.format(accountBalance));
-            logger.info(this.getClass().getName(), "/synbalance");
-            return resultBean;
-        }else{
-            BankResultBean lastResult = CommonUtils.convertBean(list.get(list.size()-1),BankResultBean.class);
-            inpDate = lastResult.getInpDate();
-            inpTime = lastResult.getInpTime();
-            relDate = lastResult.getRelDate();
-            traceNo = String.valueOf(lastResult.getTraceNo());
-        }
-        recordList.addAll(list);
-
-        while (list.size()==pageSize) {
-            pageNum ++;
+        int pageSize = 10;
+        for (UnderLineRechargeVO code : codeList){
+            //页码定义
+            int pageNum = 1;
+            // 查询参数定义
+            String inpDate = "";
+            String inpTime = "";
+            String relDate = "";
+            String traceNo = "";
             //调用查询明细接口 查线下充值数据
-            BankCallBean bean = queryAccountDetails(user.getUserId(), bankOpenAccount.getAccount(),
-                    startDate, endDate, "1", "", String.valueOf(pageNum), String.valueOf(pageSize),inpDate,inpTime,relDate,traceNo);
-            if(bean == null){
-                continue;
+            BankCallBean retBean = queryAccountDetailsNew(user.getUserId(), bankOpenAccount.getAccount(),
+                    startDate, endDate, code.getCode(), String.valueOf(pageNum),inpDate,inpTime,relDate,traceNo);
+
+            if(retBean == null){
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+                logger.info("-------------------同步余额失败--------------------");
+                resultBean.setStatusDesc("同步余额失败");
+                return resultBean;
             }
-            list = JSONArray.parseArray(bean.getSubPacks(), BankResultBean.class);
-            recordList.addAll(list);
-            if(list!=null&&list.size()>0){
+            //返回失败
+            if(!BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())){
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+                logger.info("-------------------调用查询接口失败，失败原因：" + getBankRetMsg(retBean.getRetCode())+"--------------------");
+                resultBean.setStatusDesc("调用查询接口失败，失败原因：" + getBankRetMsg(retBean.getRetCode()));
+
+                logger.info(this.getClass().getName(), "/synbalance");
+                return resultBean;
+            }
+
+            //解析返回数据(记录为空)
+            String content = retBean.getSubPacks();
+            if(StringUtils.isEmpty(content)){
+                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+                resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
+                resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
+                resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
+                resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
+                resultBean.setBankBalance(df.format(accountBalance));
+
+                logger.info(this.getClass().getName(), "/synbalance");
+                return resultBean;
+            }
+            //返回结果记录数
+            //转换结果
+            List<BankResultBean> list = new ArrayList<BankResultBean>();
+            list = JSONArray.parseArray(retBean.getSubPacks(), BankResultBean.class);
+            if(list==null|| list.size()==0){
+                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+                resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
+                resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
+                resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
+                resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
+                resultBean.setBankBalance(df.format(accountBalance));
+                logger.info(this.getClass().getName(), "/synbalance");
+                return resultBean;
+            }else{
                 BankResultBean lastResult = CommonUtils.convertBean(list.get(list.size()-1),BankResultBean.class);
                 inpDate = lastResult.getInpDate();
                 inpTime = lastResult.getInpTime();
                 relDate = lastResult.getRelDate();
                 traceNo = String.valueOf(lastResult.getTraceNo());
             }
+            recordList.addAll(list);
+
+            while (list.size()==pageSize) {
+                pageNum ++;
+                //调用查询明细接口 查线下充值数据
+                BankCallBean bean = queryAccountDetailsNew(user.getUserId(), bankOpenAccount.getAccount(),
+                        startDate, endDate, code.getCode(), String.valueOf(pageNum),inpDate,inpTime,relDate,traceNo);
+                if(bean == null){
+                    continue;
+                }
+                list = JSONArray.parseArray(bean.getSubPacks(), BankResultBean.class);
+                recordList.addAll(list);
+                if(list!=null&&list.size()>0){
+                    BankResultBean lastResult = CommonUtils.convertBean(list.get(list.size()-1),BankResultBean.class);
+                    inpDate = lastResult.getInpDate();
+                    inpTime = lastResult.getInpTime();
+                    relDate = lastResult.getRelDate();
+                    traceNo = String.valueOf(lastResult.getTraceNo());
+                }
+            }
         }
+
+
         logger.info("-------------------"+recordList.size()+"同步余额总条数--------------------");
-        logger.info("-------------------"+pageNum+"同步余额请求次数userid:"+user.getUserId()+"--------------------");
         /**redis 锁 */
         boolean reslut = RedisUtils.tranactionSet(RedisConstants.SYNBALANCE+user.getUserId(),30);
         // 如果没有设置成功，说明有请求来设置过
@@ -249,6 +251,32 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
         return resultBean;
     }
 
+    /**
+     * 从Redis获取线下充值类型List
+     * @return
+     * @Author pcc
+     */
+    private List<UnderLineRechargeVO> getUnderLineRechargeList() {
+        //从Redis获取线下充值类型List
+        String codeStringList = RedisUtils.get(RedisConstants.UNDER_LINE_RECHARGE_TYPE);
+        JSONArray redisCodeList = JSONArray.parseArray(codeStringList);
+
+        if (StringUtils.isBlank(codeStringList) || redisCodeList.size() <= 0) {
+            logger.info(this.getClass().getName(), "---------------------------线下充值类型Redis为空!-------------------------");
+            UnderLineRechargeRequest request = new UnderLineRechargeRequest();
+            List<UnderLineRechargeVO> codeList = selectUnderLineRechargeList(request);
+            return codeList;
+        }else{
+            List<UnderLineRechargeVO> codeList =new ArrayList<UnderLineRechargeVO>();
+            for(Object code : redisCodeList) {
+                UnderLineRechargeVO codeListVO=new UnderLineRechargeVO();
+                codeListVO.setCode(code.toString());
+                codeList.add(codeListVO);
+            }
+            return codeList;
+        }
+    }
+
     private String getTxDate(BankOpenAccountVO bankOpenAccount) {
         SimpleDateFormat dft = new SimpleDateFormat("yyyyMMdd");
         Date beginDate = new Date();
@@ -303,7 +331,7 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
      * @Version v0.1
      * @Date
      */
-
+    @Deprecated
     private BankCallBean queryAccountDetails(Integer userId, String accountId, String startDate, String endDate, String type, String transType, String pageNum, String pageSize, String inpDate, String inpTime, String relDate, String traceNo) {
         // 参数不正确
         if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(startDate) || StringUtils.isEmpty(endDate) || StringUtils.isEmpty(type)) {
@@ -345,6 +373,60 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
         // 订单时间
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         bean.setLogRemark("资金交易明细查询");
+        bean.setLogUserId(String.valueOf(userId));
+        // 调用接口
+        return BankCallUtils.callApiBg(bean);
+    }
+
+    /**
+     * 调用近两日线下充值明细查询获得交易明细
+     *
+     * @param userId
+     * @param accountId
+     * @param startDate
+     * @param endDate
+     * @param transType
+     * @param pageNum
+     * @return
+     */
+    public BankCallBean queryAccountDetailsNew(Integer userId, String accountId, String startDate, String endDate, String transType, String pageNum, String inpDate, String inpTime, String relDate, String traceNo) {
+        // 参数不正确
+        if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(startDate) || StringUtils.isEmpty(endDate) || StringUtils.isEmpty(transType)) {
+            return null;
+        }
+        BankCallBean bean = new BankCallBean();
+        // 接口版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
+        // 消息类型
+        bean.setTxCode(BankCallConstant.TXCODE_OFFLINE_RECHARGE_DETAILS_QUERY);
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        bean.setAccountId(accountId);
+        // 起始日期
+        bean.setStartDate(startDate);
+        // 结束日期
+        bean.setEndDate(endDate);
+
+        // 交易类型
+        bean.setTranType(transType);
+        // 翻页标识  空：首次查询；1：翻页查询；
+        if (StringUtils.isNotEmpty(pageNum)&&!"1".equals(pageNum)) {
+            bean.setRtnInd("1");
+        } else {
+            bean.setRtnInd("");
+        }
+        bean.setInpDate(inpDate);
+        bean.setInpTime(inpTime);
+        bean.setRelDate(relDate);
+        bean.setTraceNo(traceNo);
+        // 操作者ID
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        // 订单时间
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        bean.setLogRemark("Aems线下充值明细查询");
         bean.setLogUserId(String.valueOf(userId));
         // 调用接口
         return BankCallUtils.callApiBg(bean);
