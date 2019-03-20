@@ -52,6 +52,7 @@ public class OperController extends BaseController {
         }
         AdminSystemVO user = getUser(httpServletRequest);
         screenConfigVO.setCreateUserId(Integer.valueOf(user.getId()));
+        screenConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         screenConfigVO.setStatus(1);
         int insertFlag = operService.operAdd(screenConfigVO);
         if (insertFlag < 1){
@@ -127,6 +128,7 @@ public class OperController extends BaseController {
         }
         AdminSystemVO user = getUser(httpServletRequest);
         customerTaskConfigVO.setCreateUserId(Integer.valueOf(user.getId()));
+        customerTaskConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         customerTaskConfigVO.setStatus(1);
         int insertFlag = operService.taskAdd(customerTaskConfigVO);
         if (insertFlag < 1){

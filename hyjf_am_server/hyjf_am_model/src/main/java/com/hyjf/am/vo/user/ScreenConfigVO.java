@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.vo.user;
 
-import com.hyjf.am.vo.BaseVO;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -90,6 +88,13 @@ public class ScreenConfigVO implements Serializable {
      * @mbggenerated
      */
     private Date updateTime;
+
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
+    private Integer updateUserName;
 
     private static final long serialVersionUID = 1L;
 
@@ -179,5 +184,13 @@ public class ScreenConfigVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(Integer updateUserName) {
+        this.updateUserName = updateUserName;
     }
 }
