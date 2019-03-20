@@ -94,7 +94,7 @@ public class ScreenConfigVO implements Serializable {
      *
      * @mbggenerated
      */
-    private Integer updateUserName;
+    private String updateUserName;
 
     private static final long serialVersionUID = 1L;
 
@@ -186,11 +186,11 @@ public class ScreenConfigVO implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getUpdateUserName() {
+    public String getUpdateUserName() {
         return updateUserName;
     }
 
-    public void setUpdateUserName(Integer updateUserName) {
+    public void setUpdateUserName(String updateUserName) {
         this.updateUserName = updateUserName;
     }
 }
