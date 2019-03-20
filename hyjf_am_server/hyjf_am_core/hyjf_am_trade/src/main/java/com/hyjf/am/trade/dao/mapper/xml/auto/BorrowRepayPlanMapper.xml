@@ -40,6 +40,7 @@
     <result column="advance_status" property="advanceStatus" jdbcType="TINYINT" />
     <result column="add_ip" property="addIp" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="charge_penalty_interest" property="chargePenaltyInterest" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -106,7 +107,7 @@
     repay_interest_yes, repay_capital_yes, repay_capital_wait, repay_interest_wait, charge_days, 
     charge_interest, late_days, late_interest, delay_days, delay_interest, delay_remark, 
     repay_money_source, repay_sms_reminder, auto_repay, `status`, repay_status, advance_status, 
-    add_ip, create_time
+    add_ip, create_time, charge_penalty_interest
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepayPlanExample" >
     select
@@ -157,7 +158,7 @@
       delay_interest, delay_remark, repay_money_source, 
       repay_sms_reminder, auto_repay, `status`, 
       repay_status, advance_status, add_ip, 
-      create_time)
+      create_time, charge_penalty_interest)
     values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{borrowNid,jdbcType=VARCHAR}, 
       #{repayUserId,jdbcType=INTEGER}, #{repayUsername,jdbcType=VARCHAR}, #{nid,jdbcType=VARCHAR}, 
       #{repayType,jdbcType=VARCHAR}, #{repayFee,jdbcType=DECIMAL}, #{repayActionTime,jdbcType=VARCHAR}, 
@@ -170,7 +171,7 @@
       #{delayInterest,jdbcType=DECIMAL}, #{delayRemark,jdbcType=VARCHAR}, #{repayMoneySource,jdbcType=TINYINT}, 
       #{repaySmsReminder,jdbcType=TINYINT}, #{autoRepay,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
       #{repayStatus,jdbcType=TINYINT}, #{advanceStatus,jdbcType=TINYINT}, #{addIp,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{chargePenaltyInterest,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRepayPlan" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -289,6 +290,9 @@
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="chargePenaltyInterest != null" >
+        charge_penalty_interest,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userId != null" >
@@ -401,6 +405,9 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="chargePenaltyInterest != null" >
+        #{chargePenaltyInterest,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -527,6 +534,9 @@
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.chargePenaltyInterest != null" >
+        charge_penalty_interest = #{record.chargePenaltyInterest,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -571,7 +581,8 @@
       repay_status = #{record.repayStatus,jdbcType=TINYINT},
       advance_status = #{record.advanceStatus,jdbcType=TINYINT},
       add_ip = #{record.addIp,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      charge_penalty_interest = #{record.chargePenaltyInterest,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -690,6 +701,9 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="chargePenaltyInterest != null" >
+        charge_penalty_interest = #{chargePenaltyInterest,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -731,7 +745,8 @@
       repay_status = #{repayStatus,jdbcType=TINYINT},
       advance_status = #{advanceStatus,jdbcType=TINYINT},
       add_ip = #{addIp,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      charge_penalty_interest = #{chargePenaltyInterest,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

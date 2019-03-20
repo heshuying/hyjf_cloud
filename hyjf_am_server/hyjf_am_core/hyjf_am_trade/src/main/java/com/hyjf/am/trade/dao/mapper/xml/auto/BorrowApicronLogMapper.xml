@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowApicronMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.BorrowApicronLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="nid" property="nid" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="web_status" property="webStatus" jdbcType="TINYINT" />
-    <result column="api_type" property="apiType" jdbcType="TINYINT" />
-    <result column="repay_status" property="repayStatus" jdbcType="TINYINT" />
     <result column="period_now" property="periodNow" jdbcType="INTEGER" />
-    <result column="credit_repay_status" property="creditRepayStatus" jdbcType="TINYINT" />
-    <result column="extra_yield_status" property="extraYieldStatus" jdbcType="TINYINT" />
-    <result column="extra_yield_repay_status" property="extraYieldRepayStatus" jdbcType="TINYINT" />
     <result column="is_repay_org_flag" property="isRepayOrgFlag" jdbcType="TINYINT" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="borrow_account" property="borrowAccount" jdbcType="DECIMAL" />
@@ -24,7 +18,6 @@
     <result column="batch_service_fee" property="batchServiceFee" jdbcType="DECIMAL" />
     <result column="tx_amount" property="txAmount" jdbcType="DECIMAL" />
     <result column="tx_counts" property="txCounts" jdbcType="INTEGER" />
-    <result column="fail_times" property="failTimes" jdbcType="TINYINT" />
     <result column="suc_counts" property="sucCounts" jdbcType="INTEGER" />
     <result column="suc_amount" property="sucAmount" jdbcType="DECIMAL" />
     <result column="fail_counts" property="failCounts" jdbcType="INTEGER" />
@@ -37,12 +30,10 @@
     <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     <result column="ordid" property="ordid" jdbcType="VARCHAR" />
     <result column="is_allrepay" property="isAllrepay" jdbcType="TINYINT" />
-    <result column="agreement_status" property="agreementStatus" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="submitter" property="submitter" jdbcType="VARCHAR" />
   </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowApicron" extends="BaseResultMap" >
+  <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" extends="BaseResultMap" >
     <result column="data" property="data" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -104,17 +95,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, nid, user_id, borrow_nid, `status`, web_status, api_type, repay_status, period_now, 
-    credit_repay_status, extra_yield_status, extra_yield_repay_status, is_repay_org_flag, 
-    user_name, borrow_account, borrow_period, batch_no, batch_amount, batch_counts, batch_service_fee, 
-    tx_amount, tx_counts, fail_times, suc_counts, suc_amount, fail_counts, fail_amount, 
-    service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, is_allrepay, 
-    agreement_status, create_time, update_time, submitter
+    id, nid, user_id, borrow_nid, `status`, period_now, is_repay_org_flag, user_name, 
+    borrow_account, borrow_period, batch_no, batch_amount, batch_counts, batch_service_fee, 
+    tx_amount, tx_counts, suc_counts, suc_amount, fail_counts, fail_amount, service_fee, 
+    tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, is_allrepay, create_time, 
+    update_time
   </sql>
   <sql id="Blob_Column_List" >
     `data`
   </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronExample" >
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLogExample" >
     select
     <if test="distinct" >
       distinct
@@ -122,7 +112,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from ht_borrow_apicron
+    from ht_borrow_apicron_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -133,13 +123,13 @@
       limit #{limitStart} , #{limitEnd}
     </if>
   </select>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLogExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from ht_borrow_apicron
+    from ht_borrow_apicron_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -155,57 +145,51 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from ht_borrow_apicron
+    from ht_borrow_apicron_log
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from ht_borrow_apicron
+    delete from ht_borrow_apicron_log
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronExample" >
-    delete from ht_borrow_apicron
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLogExample" >
+    delete from ht_borrow_apicron_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_borrow_apicron (nid, user_id, borrow_nid, 
-      `status`, web_status, api_type, 
-      repay_status, period_now, credit_repay_status, 
-      extra_yield_status, extra_yield_repay_status, 
-      is_repay_org_flag, user_name, borrow_account, 
-      borrow_period, batch_no, batch_amount, 
-      batch_counts, batch_service_fee, tx_amount, 
-      tx_counts, fail_times, suc_counts, 
-      suc_amount, fail_counts, fail_amount, 
-      service_fee, tx_date, tx_time, 
-      seq_no, bank_seq_no, plan_nid, 
-      ordid, is_allrepay, agreement_status, 
-      create_time, update_time, submitter, 
-      `data`)
+    insert into ht_borrow_apicron_log (nid, user_id, borrow_nid, 
+      `status`, period_now, is_repay_org_flag, 
+      user_name, borrow_account, borrow_period, 
+      batch_no, batch_amount, batch_counts, 
+      batch_service_fee, tx_amount, tx_counts, 
+      suc_counts, suc_amount, fail_counts, 
+      fail_amount, service_fee, tx_date, 
+      tx_time, seq_no, bank_seq_no, 
+      plan_nid, ordid, is_allrepay, 
+      create_time, update_time, `data`
+      )
     values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, 
-      #{status,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, #{apiType,jdbcType=TINYINT}, 
-      #{repayStatus,jdbcType=TINYINT}, #{periodNow,jdbcType=INTEGER}, #{creditRepayStatus,jdbcType=TINYINT}, 
-      #{extraYieldStatus,jdbcType=TINYINT}, #{extraYieldRepayStatus,jdbcType=TINYINT}, 
-      #{isRepayOrgFlag,jdbcType=TINYINT}, #{userName,jdbcType=VARCHAR}, #{borrowAccount,jdbcType=DECIMAL}, 
-      #{borrowPeriod,jdbcType=INTEGER}, #{batchNo,jdbcType=VARCHAR}, #{batchAmount,jdbcType=DECIMAL}, 
-      #{batchCounts,jdbcType=INTEGER}, #{batchServiceFee,jdbcType=DECIMAL}, #{txAmount,jdbcType=DECIMAL}, 
-      #{txCounts,jdbcType=INTEGER}, #{failTimes,jdbcType=TINYINT}, #{sucCounts,jdbcType=INTEGER}, 
-      #{sucAmount,jdbcType=DECIMAL}, #{failCounts,jdbcType=INTEGER}, #{failAmount,jdbcType=DECIMAL}, 
-      #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
-      #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
-      #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{agreementStatus,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{submitter,jdbcType=VARCHAR}, 
-      #{data,jdbcType=LONGVARCHAR})
+      #{status,jdbcType=TINYINT}, #{periodNow,jdbcType=INTEGER}, #{isRepayOrgFlag,jdbcType=TINYINT}, 
+      #{userName,jdbcType=VARCHAR}, #{borrowAccount,jdbcType=DECIMAL}, #{borrowPeriod,jdbcType=INTEGER}, 
+      #{batchNo,jdbcType=VARCHAR}, #{batchAmount,jdbcType=DECIMAL}, #{batchCounts,jdbcType=INTEGER}, 
+      #{batchServiceFee,jdbcType=DECIMAL}, #{txAmount,jdbcType=DECIMAL}, #{txCounts,jdbcType=INTEGER}, 
+      #{sucCounts,jdbcType=INTEGER}, #{sucAmount,jdbcType=DECIMAL}, #{failCounts,jdbcType=INTEGER}, 
+      #{failAmount,jdbcType=DECIMAL}, #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, 
+      #{txTime,jdbcType=INTEGER}, #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, 
+      #{planNid,jdbcType=VARCHAR}, #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_borrow_apicron
+    insert into ht_borrow_apicron_log
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="nid != null" >
         nid,
@@ -219,26 +203,8 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="webStatus != null" >
-        web_status,
-      </if>
-      <if test="apiType != null" >
-        api_type,
-      </if>
-      <if test="repayStatus != null" >
-        repay_status,
-      </if>
       <if test="periodNow != null" >
         period_now,
-      </if>
-      <if test="creditRepayStatus != null" >
-        credit_repay_status,
-      </if>
-      <if test="extraYieldStatus != null" >
-        extra_yield_status,
-      </if>
-      <if test="extraYieldRepayStatus != null" >
-        extra_yield_repay_status,
       </if>
       <if test="isRepayOrgFlag != null" >
         is_repay_org_flag,
@@ -269,9 +235,6 @@
       </if>
       <if test="txCounts != null" >
         tx_counts,
-      </if>
-      <if test="failTimes != null" >
-        fail_times,
       </if>
       <if test="sucCounts != null" >
         suc_counts,
@@ -309,17 +272,11 @@
       <if test="isAllrepay != null" >
         is_allrepay,
       </if>
-      <if test="agreementStatus != null" >
-        agreement_status,
-      </if>
       <if test="createTime != null" >
         create_time,
       </if>
       <if test="updateTime != null" >
         update_time,
-      </if>
-      <if test="submitter != null" >
-        submitter,
       </if>
       <if test="data != null" >
         `data`,
@@ -338,26 +295,8 @@
       <if test="status != null" >
         #{status,jdbcType=TINYINT},
       </if>
-      <if test="webStatus != null" >
-        #{webStatus,jdbcType=TINYINT},
-      </if>
-      <if test="apiType != null" >
-        #{apiType,jdbcType=TINYINT},
-      </if>
-      <if test="repayStatus != null" >
-        #{repayStatus,jdbcType=TINYINT},
-      </if>
       <if test="periodNow != null" >
         #{periodNow,jdbcType=INTEGER},
-      </if>
-      <if test="creditRepayStatus != null" >
-        #{creditRepayStatus,jdbcType=TINYINT},
-      </if>
-      <if test="extraYieldStatus != null" >
-        #{extraYieldStatus,jdbcType=TINYINT},
-      </if>
-      <if test="extraYieldRepayStatus != null" >
-        #{extraYieldRepayStatus,jdbcType=TINYINT},
       </if>
       <if test="isRepayOrgFlag != null" >
         #{isRepayOrgFlag,jdbcType=TINYINT},
@@ -388,9 +327,6 @@
       </if>
       <if test="txCounts != null" >
         #{txCounts,jdbcType=INTEGER},
-      </if>
-      <if test="failTimes != null" >
-        #{failTimes,jdbcType=TINYINT},
       </if>
       <if test="sucCounts != null" >
         #{sucCounts,jdbcType=INTEGER},
@@ -428,31 +364,25 @@
       <if test="isAllrepay != null" >
         #{isAllrepay,jdbcType=TINYINT},
       </if>
-      <if test="agreementStatus != null" >
-        #{agreementStatus,jdbcType=TINYINT},
-      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="submitter != null" >
-        #{submitter,jdbcType=VARCHAR},
-      </if>
       <if test="data != null" >
         #{data,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronExample" resultType="java.lang.Integer" >
-    select count(*) from ht_borrow_apicron
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_borrow_apicron_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update ht_borrow_apicron
+    update ht_borrow_apicron_log
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -469,26 +399,8 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=TINYINT},
       </if>
-      <if test="record.webStatus != null" >
-        web_status = #{record.webStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.apiType != null" >
-        api_type = #{record.apiType,jdbcType=TINYINT},
-      </if>
-      <if test="record.repayStatus != null" >
-        repay_status = #{record.repayStatus,jdbcType=TINYINT},
-      </if>
       <if test="record.periodNow != null" >
         period_now = #{record.periodNow,jdbcType=INTEGER},
-      </if>
-      <if test="record.creditRepayStatus != null" >
-        credit_repay_status = #{record.creditRepayStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.extraYieldStatus != null" >
-        extra_yield_status = #{record.extraYieldStatus,jdbcType=TINYINT},
-      </if>
-      <if test="record.extraYieldRepayStatus != null" >
-        extra_yield_repay_status = #{record.extraYieldRepayStatus,jdbcType=TINYINT},
       </if>
       <if test="record.isRepayOrgFlag != null" >
         is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
@@ -519,9 +431,6 @@
       </if>
       <if test="record.txCounts != null" >
         tx_counts = #{record.txCounts,jdbcType=INTEGER},
-      </if>
-      <if test="record.failTimes != null" >
-        fail_times = #{record.failTimes,jdbcType=TINYINT},
       </if>
       <if test="record.sucCounts != null" >
         suc_counts = #{record.sucCounts,jdbcType=INTEGER},
@@ -559,17 +468,11 @@
       <if test="record.isAllrepay != null" >
         is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
       </if>
-      <if test="record.agreementStatus != null" >
-        agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
-      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.submitter != null" >
-        submitter = #{record.submitter,jdbcType=VARCHAR},
       </if>
       <if test="record.data != null" >
         `data` = #{record.data,jdbcType=LONGVARCHAR},
@@ -580,19 +483,13 @@
     </if>
   </update>
   <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update ht_borrow_apicron
+    update ht_borrow_apicron_log
     set id = #{record.id,jdbcType=INTEGER},
       nid = #{record.nid,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
-      web_status = #{record.webStatus,jdbcType=TINYINT},
-      api_type = #{record.apiType,jdbcType=TINYINT},
-      repay_status = #{record.repayStatus,jdbcType=TINYINT},
       period_now = #{record.periodNow,jdbcType=INTEGER},
-      credit_repay_status = #{record.creditRepayStatus,jdbcType=TINYINT},
-      extra_yield_status = #{record.extraYieldStatus,jdbcType=TINYINT},
-      extra_yield_repay_status = #{record.extraYieldRepayStatus,jdbcType=TINYINT},
       is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
       user_name = #{record.userName,jdbcType=VARCHAR},
       borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
@@ -603,7 +500,6 @@
       batch_service_fee = #{record.batchServiceFee,jdbcType=DECIMAL},
       tx_amount = #{record.txAmount,jdbcType=DECIMAL},
       tx_counts = #{record.txCounts,jdbcType=INTEGER},
-      fail_times = #{record.failTimes,jdbcType=TINYINT},
       suc_counts = #{record.sucCounts,jdbcType=INTEGER},
       suc_amount = #{record.sucAmount,jdbcType=DECIMAL},
       fail_counts = #{record.failCounts,jdbcType=INTEGER},
@@ -616,29 +512,21 @@
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      submitter = #{record.submitter,jdbcType=VARCHAR},
       `data` = #{record.data,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update ht_borrow_apicron
+    update ht_borrow_apicron_log
     set id = #{record.id,jdbcType=INTEGER},
       nid = #{record.nid,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=TINYINT},
-      web_status = #{record.webStatus,jdbcType=TINYINT},
-      api_type = #{record.apiType,jdbcType=TINYINT},
-      repay_status = #{record.repayStatus,jdbcType=TINYINT},
       period_now = #{record.periodNow,jdbcType=INTEGER},
-      credit_repay_status = #{record.creditRepayStatus,jdbcType=TINYINT},
-      extra_yield_status = #{record.extraYieldStatus,jdbcType=TINYINT},
-      extra_yield_repay_status = #{record.extraYieldRepayStatus,jdbcType=TINYINT},
       is_repay_org_flag = #{record.isRepayOrgFlag,jdbcType=TINYINT},
       user_name = #{record.userName,jdbcType=VARCHAR},
       borrow_account = #{record.borrowAccount,jdbcType=DECIMAL},
@@ -649,7 +537,6 @@
       batch_service_fee = #{record.batchServiceFee,jdbcType=DECIMAL},
       tx_amount = #{record.txAmount,jdbcType=DECIMAL},
       tx_counts = #{record.txCounts,jdbcType=INTEGER},
-      fail_times = #{record.failTimes,jdbcType=TINYINT},
       suc_counts = #{record.sucCounts,jdbcType=INTEGER},
       suc_amount = #{record.sucAmount,jdbcType=DECIMAL},
       fail_counts = #{record.failCounts,jdbcType=INTEGER},
@@ -662,16 +549,14 @@
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      submitter = #{record.submitter,jdbcType=VARCHAR}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
-    update ht_borrow_apicron
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" >
+    update ht_borrow_apicron_log
     <set >
       <if test="nid != null" >
         nid = #{nid,jdbcType=VARCHAR},
@@ -685,26 +570,8 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=TINYINT},
       </if>
-      <if test="webStatus != null" >
-        web_status = #{webStatus,jdbcType=TINYINT},
-      </if>
-      <if test="apiType != null" >
-        api_type = #{apiType,jdbcType=TINYINT},
-      </if>
-      <if test="repayStatus != null" >
-        repay_status = #{repayStatus,jdbcType=TINYINT},
-      </if>
       <if test="periodNow != null" >
         period_now = #{periodNow,jdbcType=INTEGER},
-      </if>
-      <if test="creditRepayStatus != null" >
-        credit_repay_status = #{creditRepayStatus,jdbcType=TINYINT},
-      </if>
-      <if test="extraYieldStatus != null" >
-        extra_yield_status = #{extraYieldStatus,jdbcType=TINYINT},
-      </if>
-      <if test="extraYieldRepayStatus != null" >
-        extra_yield_repay_status = #{extraYieldRepayStatus,jdbcType=TINYINT},
       </if>
       <if test="isRepayOrgFlag != null" >
         is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
@@ -735,9 +602,6 @@
       </if>
       <if test="txCounts != null" >
         tx_counts = #{txCounts,jdbcType=INTEGER},
-      </if>
-      <if test="failTimes != null" >
-        fail_times = #{failTimes,jdbcType=TINYINT},
       </if>
       <if test="sucCounts != null" >
         suc_counts = #{sucCounts,jdbcType=INTEGER},
@@ -775,17 +639,11 @@
       <if test="isAllrepay != null" >
         is_allrepay = #{isAllrepay,jdbcType=TINYINT},
       </if>
-      <if test="agreementStatus != null" >
-        agreement_status = #{agreementStatus,jdbcType=TINYINT},
-      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="submitter != null" >
-        submitter = #{submitter,jdbcType=VARCHAR},
       </if>
       <if test="data != null" >
         `data` = #{data,jdbcType=LONGVARCHAR},
@@ -793,19 +651,13 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
-    update ht_borrow_apicron
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" >
+    update ht_borrow_apicron_log
     set nid = #{nid,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
-      web_status = #{webStatus,jdbcType=TINYINT},
-      api_type = #{apiType,jdbcType=TINYINT},
-      repay_status = #{repayStatus,jdbcType=TINYINT},
       period_now = #{periodNow,jdbcType=INTEGER},
-      credit_repay_status = #{creditRepayStatus,jdbcType=TINYINT},
-      extra_yield_status = #{extraYieldStatus,jdbcType=TINYINT},
-      extra_yield_repay_status = #{extraYieldRepayStatus,jdbcType=TINYINT},
       is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
       user_name = #{userName,jdbcType=VARCHAR},
       borrow_account = #{borrowAccount,jdbcType=DECIMAL},
@@ -816,7 +668,6 @@
       batch_service_fee = #{batchServiceFee,jdbcType=DECIMAL},
       tx_amount = #{txAmount,jdbcType=DECIMAL},
       tx_counts = #{txCounts,jdbcType=INTEGER},
-      fail_times = #{failTimes,jdbcType=TINYINT},
       suc_counts = #{sucCounts,jdbcType=INTEGER},
       suc_amount = #{sucAmount,jdbcType=DECIMAL},
       fail_counts = #{failCounts,jdbcType=INTEGER},
@@ -829,26 +680,18 @@
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{agreementStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      submitter = #{submitter,jdbcType=VARCHAR},
       `data` = #{data,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
-    update ht_borrow_apicron
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicronLog" >
+    update ht_borrow_apicron_log
     set nid = #{nid,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=INTEGER},
       borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=TINYINT},
-      web_status = #{webStatus,jdbcType=TINYINT},
-      api_type = #{apiType,jdbcType=TINYINT},
-      repay_status = #{repayStatus,jdbcType=TINYINT},
       period_now = #{periodNow,jdbcType=INTEGER},
-      credit_repay_status = #{creditRepayStatus,jdbcType=TINYINT},
-      extra_yield_status = #{extraYieldStatus,jdbcType=TINYINT},
-      extra_yield_repay_status = #{extraYieldRepayStatus,jdbcType=TINYINT},
       is_repay_org_flag = #{isRepayOrgFlag,jdbcType=TINYINT},
       user_name = #{userName,jdbcType=VARCHAR},
       borrow_account = #{borrowAccount,jdbcType=DECIMAL},
@@ -859,7 +702,6 @@
       batch_service_fee = #{batchServiceFee,jdbcType=DECIMAL},
       tx_amount = #{txAmount,jdbcType=DECIMAL},
       tx_counts = #{txCounts,jdbcType=INTEGER},
-      fail_times = #{failTimes,jdbcType=TINYINT},
       suc_counts = #{sucCounts,jdbcType=INTEGER},
       suc_amount = #{sucAmount,jdbcType=DECIMAL},
       fail_counts = #{failCounts,jdbcType=INTEGER},
@@ -872,10 +714,8 @@
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{agreementStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      submitter = #{submitter,jdbcType=VARCHAR}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

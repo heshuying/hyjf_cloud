@@ -257,6 +257,13 @@ public class BorrowApicron implements Serializable {
     private Date updateTime;
 
     /**
+     * 还款提交人
+     *
+     * @mbggenerated
+     */
+    private String submitter;
+
+    /**
      * 错误信息
      *
      * @mbggenerated
@@ -567,6 +574,14 @@ public class BorrowApicron implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSubmitter() {
+        return submitter;
+    }
+
+    public void setSubmitter(String submitter) {
+        this.submitter = submitter == null ? null : submitter.trim();
     }
 
     public String getData() {

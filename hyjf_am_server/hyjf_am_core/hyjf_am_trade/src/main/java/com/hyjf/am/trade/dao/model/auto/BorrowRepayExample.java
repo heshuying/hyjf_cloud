@@ -2475,6 +2475,66 @@ public class BorrowRepayExample {
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
+
+        public Criteria andChargePenaltyInterestIsNull() {
+            addCriterion("charge_penalty_interest is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestIsNotNull() {
+            addCriterion("charge_penalty_interest is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestEqualTo(BigDecimal value) {
+            addCriterion("charge_penalty_interest =", value, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestNotEqualTo(BigDecimal value) {
+            addCriterion("charge_penalty_interest <>", value, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestGreaterThan(BigDecimal value) {
+            addCriterion("charge_penalty_interest >", value, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("charge_penalty_interest >=", value, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestLessThan(BigDecimal value) {
+            addCriterion("charge_penalty_interest <", value, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("charge_penalty_interest <=", value, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestIn(List<BigDecimal> values) {
+            addCriterion("charge_penalty_interest in", values, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestNotIn(List<BigDecimal> values) {
+            addCriterion("charge_penalty_interest not in", values, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("charge_penalty_interest between", value1, value2, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andChargePenaltyInterestNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("charge_penalty_interest not between", value1, value2, "chargePenaltyInterest");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

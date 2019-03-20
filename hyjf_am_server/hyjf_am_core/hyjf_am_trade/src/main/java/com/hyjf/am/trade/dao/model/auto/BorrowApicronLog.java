@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class BorrowApicron implements Serializable {
+public class BorrowApicronLog implements Serializable {
     private Integer id;
 
     /**
@@ -14,65 +14,33 @@ public class BorrowApicron implements Serializable {
      */
     private String nid;
 
+    /**
+     * 还款人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 标的编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
     /**
-     * 放款状态0未完成1已完成2放款执行中9放款失败
+     * 还款状态:0初始4校验失败5还款失败6还款成功8还款部分成功 其余状态关联获取
      *
      * @mbggenerated
      */
     private Integer status;
 
     /**
-     * 计算状态
-     *
-     * @mbggenerated
-     */
-    private Integer webStatus;
-
-    /**
-     * 0放款1还款
-     *
-     * @mbggenerated
-     */
-    private Integer apiType;
-
-    /**
-     * 还款状态0未完成1已完成
-     *
-     * @mbggenerated
-     */
-    private Integer repayStatus;
-
-    /**
-     * 汇租赁当前期数
+     * 当前期数
      *
      * @mbggenerated
      */
     private Integer periodNow;
-
-    /**
-     * 债转还款状态
-     *
-     * @mbggenerated
-     */
-    private Integer creditRepayStatus;
-
-    /**
-     * 融通宝加息利息放款状态0未完成1已完成2放款执行中9放款失败
-     *
-     * @mbggenerated
-     */
-    private Integer extraYieldStatus;
-
-    /**
-     * 融通宝加息利息还款状态0未完成1已完成
-     *
-     * @mbggenerated
-     */
-    private Integer extraYieldRepayStatus;
 
     /**
      * 是否是担保机构还款(0:否,1:是)
@@ -82,7 +50,7 @@ public class BorrowApicron implements Serializable {
     private Integer isRepayOrgFlag;
 
     /**
-     * 用户名
+     * 还款人用户名
      *
      * @mbggenerated
      */
@@ -110,28 +78,28 @@ public class BorrowApicron implements Serializable {
     private String batchNo;
 
     /**
-     * 应放款本金，或者是还款金额，共用
+     * 应还款金额
      *
      * @mbggenerated
      */
     private BigDecimal batchAmount;
 
     /**
-     * 批次放款总数或者还款总记录数
+     * 批次还款总记录数
      *
      * @mbggenerated
      */
     private Integer batchCounts;
 
     /**
-     * 放款总服务费或还款总服务费
+     * 还款总服务费
      *
      * @mbggenerated
      */
     private BigDecimal batchServiceFee;
 
     /**
-     * 应放款金额
+     * 应还款金额
      *
      * @mbggenerated
      */
@@ -143,13 +111,6 @@ public class BorrowApicron implements Serializable {
      * @mbggenerated
      */
     private Integer txCounts;
-
-    /**
-     * 失败次数
-     *
-     * @mbggenerated
-     */
-    private Integer failTimes;
 
     /**
      * 成功笔数
@@ -208,7 +169,7 @@ public class BorrowApicron implements Serializable {
     private Integer seqNo;
 
     /**
-     * 交易日期+交易时间+交易流水号
+     * 银行交易流水号(交易日期+交易时间+交易流水号)
      *
      * @mbggenerated
      */
@@ -236,13 +197,6 @@ public class BorrowApicron implements Serializable {
     private Integer isAllrepay;
 
     /**
-     * 是否生成合同
-     *
-     * @mbggenerated
-     */
-    private Integer agreementStatus;
-
-    /**
      * 创建时间
      *
      * @mbggenerated
@@ -255,13 +209,6 @@ public class BorrowApicron implements Serializable {
      * @mbggenerated
      */
     private Date updateTime;
-
-    /**
-     * 还款提交人
-     *
-     * @mbggenerated
-     */
-    private String submitter;
 
     /**
      * 错误信息
@@ -312,60 +259,12 @@ public class BorrowApicron implements Serializable {
         this.status = status;
     }
 
-    public Integer getWebStatus() {
-        return webStatus;
-    }
-
-    public void setWebStatus(Integer webStatus) {
-        this.webStatus = webStatus;
-    }
-
-    public Integer getApiType() {
-        return apiType;
-    }
-
-    public void setApiType(Integer apiType) {
-        this.apiType = apiType;
-    }
-
-    public Integer getRepayStatus() {
-        return repayStatus;
-    }
-
-    public void setRepayStatus(Integer repayStatus) {
-        this.repayStatus = repayStatus;
-    }
-
     public Integer getPeriodNow() {
         return periodNow;
     }
 
     public void setPeriodNow(Integer periodNow) {
         this.periodNow = periodNow;
-    }
-
-    public Integer getCreditRepayStatus() {
-        return creditRepayStatus;
-    }
-
-    public void setCreditRepayStatus(Integer creditRepayStatus) {
-        this.creditRepayStatus = creditRepayStatus;
-    }
-
-    public Integer getExtraYieldStatus() {
-        return extraYieldStatus;
-    }
-
-    public void setExtraYieldStatus(Integer extraYieldStatus) {
-        this.extraYieldStatus = extraYieldStatus;
-    }
-
-    public Integer getExtraYieldRepayStatus() {
-        return extraYieldRepayStatus;
-    }
-
-    public void setExtraYieldRepayStatus(Integer extraYieldRepayStatus) {
-        this.extraYieldRepayStatus = extraYieldRepayStatus;
     }
 
     public Integer getIsRepayOrgFlag() {
@@ -446,14 +345,6 @@ public class BorrowApicron implements Serializable {
 
     public void setTxCounts(Integer txCounts) {
         this.txCounts = txCounts;
-    }
-
-    public Integer getFailTimes() {
-        return failTimes;
-    }
-
-    public void setFailTimes(Integer failTimes) {
-        this.failTimes = failTimes;
     }
 
     public Integer getSucCounts() {
@@ -552,14 +443,6 @@ public class BorrowApicron implements Serializable {
         this.isAllrepay = isAllrepay;
     }
 
-    public Integer getAgreementStatus() {
-        return agreementStatus;
-    }
-
-    public void setAgreementStatus(Integer agreementStatus) {
-        this.agreementStatus = agreementStatus;
-    }
-
     public Date getCreateTime() {
         return createTime;
     }
@@ -574,14 +457,6 @@ public class BorrowApicron implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getSubmitter() {
-        return submitter;
-    }
-
-    public void setSubmitter(String submitter) {
-        this.submitter = submitter == null ? null : submitter.trim();
     }
 
     public String getData() {

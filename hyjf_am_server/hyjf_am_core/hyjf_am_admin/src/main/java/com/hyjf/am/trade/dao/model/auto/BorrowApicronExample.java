@@ -2475,6 +2475,76 @@ public class BorrowApicronExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andSubmitterIsNull() {
+            addCriterion("submitter is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterIsNotNull() {
+            addCriterion("submitter is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterEqualTo(String value) {
+            addCriterion("submitter =", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotEqualTo(String value) {
+            addCriterion("submitter <>", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterGreaterThan(String value) {
+            addCriterion("submitter >", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterGreaterThanOrEqualTo(String value) {
+            addCriterion("submitter >=", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterLessThan(String value) {
+            addCriterion("submitter <", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterLessThanOrEqualTo(String value) {
+            addCriterion("submitter <=", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterLike(String value) {
+            addCriterion("submitter like", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotLike(String value) {
+            addCriterion("submitter not like", value, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterIn(List<String> values) {
+            addCriterion("submitter in", values, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotIn(List<String> values) {
+            addCriterion("submitter not in", values, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterBetween(String value1, String value2) {
+            addCriterion("submitter between", value1, value2, "submitter");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubmitterNotBetween(String value1, String value2) {
+            addCriterion("submitter not between", value1, value2, "submitter");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
