@@ -29,5 +29,5 @@ public interface UserLargeScreenCustomizeMapper {
 
     List<EchartsResultVO> getMonthReceivedPayments();
 
-    List<UserCapitalDetailsVO> getUserCapitalDetails(@Param("star")Date star, @Param("end")Date end);
+    List<UserCapitalDetailsVO> getUserCapitalDetails();
 }
