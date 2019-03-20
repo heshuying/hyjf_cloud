@@ -10,6 +10,7 @@ import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +61,25 @@ public class OperController {
             return response;
         }
         response.setResultInt(insertFlag);
+        return response;
+    }
+
+    /**
+     * 大屏运营部数据配置数据详情
+     * @param id
+     * @return
+     */
+    @PostMapping("/oper/info")
+    @ResponseBody
+    private Response<ScreenConfigVO> operInfo(@RequestBody Integer id){
+        Response<ScreenConfigVO> response = new Response<>();
+
+        ScreenConfig result = operService.operInfo(id);
+        if (null != result){
+            ScreenConfigVO screenConfigVO = new ScreenConfigVO();
+            BeanUtils.copyProperties(result, screenConfigVO);
+            response.setResult(screenConfigVO);
+        }
         return response;
     }
 
@@ -120,6 +140,25 @@ public class OperController {
             return response;
         }
         response.setResultInt(insertFlag);
+        return response;
+    }
+
+    /**
+     * 坐席月任务配置数据详情
+     * @param id
+     * @return
+     */
+    @PostMapping("/task/info")
+    @ResponseBody
+    private Response<CustomerTaskConfigVO> taskInfo(@RequestBody Integer id){
+        Response<CustomerTaskConfigVO> response = new Response<>();
+
+        CustomerTaskConfig result = operService.taskInfo(id);
+        if (null != result){
+            CustomerTaskConfigVO customerTaskConfigVO = new CustomerTaskConfigVO();
+            BeanUtils.copyProperties(result, customerTaskConfigVO);
+            response.setResult(customerTaskConfigVO);
+        }
         return response;
     }
 

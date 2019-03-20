@@ -2114,6 +2114,18 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 大屏运营部数据配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ScreenConfigVO screenConfigInfo(Integer id) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/info";
+        Response<ScreenConfigVO> response = restTemplate.postForEntity(url, id, Response.class).getBody();
+        return response.getResult();
+    }
+
+    /**
      * 大屏运营部数据配置数据编辑/启用/禁用
      * @param screenConfigVO
      * @return
@@ -2152,6 +2164,18 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultInt();
         }
         return 0;
+    }
+
+    /**
+     * 坐席月任务配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public CustomerTaskConfigVO customerTaskConfigInfo(Integer id) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/info";
+        Response<CustomerTaskConfigVO> response = restTemplate.postForEntity(url, id, Response.class).getBody();
+        return response.getResult();
     }
 
     /**

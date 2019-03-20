@@ -55,6 +55,14 @@ public class OperController {
         return new AdminResult();
     }
 
+    @ApiOperation(value = "大屏运营部数据配置-数据详情",notes = "大屏运营部数据配置-数据详情")
+    @PostMapping("/oper/info")
+    @ResponseBody
+    private AdminResult operInfo(@RequestBody Integer id){
+        AdminResult result = new AdminResult();
+        result.setData(operService.operInfo(id));
+        return result;
+    }
 
     @ApiOperation(value = "大屏运营部数据配置-数据编辑",notes = "大屏运营部数据配置-数据编辑")
     @PostMapping("/oper/update")
@@ -115,6 +123,14 @@ public class OperController {
         return new AdminResult();
     }
 
+    @ApiOperation(value = "坐席月任务配置-数据详情",notes = "坐席月任务配置-数据详情")
+    @PostMapping("/task/info")
+    @ResponseBody
+    private AdminResult taskInfo(@RequestBody Integer id){
+        AdminResult result = new AdminResult();
+        result.setData(operService.taskInfo(id));
+        return result;
+    }
 
     @ApiOperation(value = "坐席月任务配置-数据编辑",notes = "坐席月任务配置-数据编辑")
     @PostMapping("/task/update")

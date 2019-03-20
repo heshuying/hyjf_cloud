@@ -46,6 +46,16 @@ public class OperServiceImpl implements OperService {
     }
 
     /**
+     * 大屏运营部数据配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ScreenConfigVO operInfo(Integer id) {
+        return amAdminClient.screenConfigInfo(id);
+    }
+
+    /**
      *大屏运营部数据配置数据编辑/启用/禁用
      * @param screenConfigVO
      * @return
@@ -72,6 +82,16 @@ public class OperServiceImpl implements OperService {
     @Override
     public int taskAdd(CustomerTaskConfigVO customerTaskConfigVO) {
         return amAdminClient.addCustomerTaskConfig(customerTaskConfigVO);
+    }
+
+    /**
+     * 坐席月任务配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public CustomerTaskConfigVO taskInfo(Integer id) {
+        return amAdminClient.customerTaskConfigInfo(id);
     }
 
     /**

@@ -18,11 +18,15 @@ public interface OperService {
 
     int operAdd(ScreenConfigVO screenConfigVO);
 
+    ScreenConfig operInfo(Integer id);
+
     int operUpdate(ScreenConfigVO screenConfigVO);
 
     List<CustomerTaskConfig> taskList(CustomerTaskConfigRequest request);
 
     int taskAdd(CustomerTaskConfigVO customerTaskConfigVO);
+
+    CustomerTaskConfig taskInfo(Integer id);
 
     int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO);
 }

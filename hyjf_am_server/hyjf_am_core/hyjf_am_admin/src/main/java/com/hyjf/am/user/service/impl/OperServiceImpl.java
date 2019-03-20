@@ -63,6 +63,16 @@ public class OperServiceImpl implements OperService {
     }
 
     /**
+     * 大屏运营部数据配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ScreenConfig operInfo(Integer id) {
+        return screenConfigMapper.selectByPrimaryKey(id);
+    }
+
+    /**
      * 大屏运营部数据配置数据编辑/启用/禁用
      * @param screenConfigVO
      * @return
@@ -116,9 +126,31 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskAdd(CustomerTaskConfigVO customerTaskConfigVO) {
+        int flag = 0;
         CustomerTaskConfig customerTaskConfig = new CustomerTaskConfig();
         BeanUtils.copyProperties(customerTaskConfigVO, customerTaskConfig);
-        return customerTaskConfigMapper.insertSelective(customerTaskConfig);
+        int addFlag = customerTaskConfigMapper.insertSelective(customerTaskConfig);
+
+        CustomerTaskConfig updateParam = new CustomerTaskConfig();
+        updateParam.setCustomerGroup(customerTaskConfigVO.getCustomerGroup());
+        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
+        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
+        int updateFlag = customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
+        if (addFlag == 1 && updateFlag ==1){
+            flag = 1;
+        }
+        return flag;
+    }
+
+    /**
+     * 坐席月任务配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public CustomerTaskConfig taskInfo(Integer id) {
+        return customerTaskConfigMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -128,9 +160,21 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO) {
+        int flag = 0;
         CustomerTaskConfig customerTaskConfig = new CustomerTaskConfig();
         BeanUtils.copyProperties(customerTaskConfigVO, customerTaskConfig);
-        return customerTaskConfigMapper.updateByPrimaryKeySelective(customerTaskConfig);
+        int updateFlagO = customerTaskConfigMapper.updateByPrimaryKeySelective(customerTaskConfig);
+
+        CustomerTaskConfig updateParam = new CustomerTaskConfig();
+        updateParam.setCustomerGroup(customerTaskConfigVO.getCustomerGroup());
+        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
+        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
+        int updateFlagT = customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
+        if (updateFlagO == 1 && updateFlagT ==1){
+            flag = 1;
+        }
+        return flag;
     }
 
 

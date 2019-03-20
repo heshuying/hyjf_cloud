@@ -1221,6 +1221,13 @@ public interface AmAdminClient {
     int addScreenConfig(ScreenConfigVO screenConfigVO);
 
     /**
+     * 大屏运营部数据配置数据详情
+     * @param id
+     * @return
+     */
+    ScreenConfigVO screenConfigInfo(Integer id);
+
+    /**
      * 大屏运营部数据配置数据编辑/启用/禁用
      * @param screenConfigVO
      * @return
@@ -1240,6 +1247,12 @@ public interface AmAdminClient {
      */
     int addCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO);
 
+    /**
+     * 坐席月任务配置数据详情
+     * @param id
+     * @return
+     */
+    CustomerTaskConfigVO customerTaskConfigInfo(Integer id);
     /**
      * 坐席月任务配置数据编辑/启用/禁用
      * @param customerTaskConfigVO
