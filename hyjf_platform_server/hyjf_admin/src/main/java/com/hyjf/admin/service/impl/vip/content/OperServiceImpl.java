@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl.vip.content;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.vip.content.OperService;
 import com.hyjf.am.bean.result.BaseResult;
@@ -110,7 +111,7 @@ public class OperServiceImpl implements OperService {
             ScreenConfigRequest screenConfigRequest = new ScreenConfigRequest();
             screenConfigRequest.setTaskTime(request.getTaskTime());
             List<ScreenConfigVO> result = this.operList(screenConfigRequest);
-            logger.info("返回值为:{}", result);
+            logger.info("返回值为:{}", JSON.toJSONString(result));
             if (null != result){
                 resultFlag = true;
             }
