@@ -4,6 +4,8 @@ import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.user.dao.mapper.auto.CustomerTaskConfigMapper;
 import com.hyjf.am.user.dao.mapper.auto.ScreenConfigMapper;
+import com.hyjf.am.user.dao.mapper.customize.CustomerTaskConfigMapperCustomize;
+import com.hyjf.am.user.dao.mapper.customize.ScreenConfigMapperCustomize;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
@@ -25,6 +27,10 @@ public class OperServiceImpl implements OperService {
     private ScreenConfigMapper screenConfigMapper;
     @Autowired
     private CustomerTaskConfigMapper customerTaskConfigMapper;
+    @Autowired
+    private ScreenConfigMapperCustomize screenConfigMapperCustomize;
+    @Autowired
+    private CustomerTaskConfigMapperCustomize customerTaskConfigMapperCustomize;
 
     /**
      * 大屏运营部数据配置列表查询
@@ -32,7 +38,7 @@ public class OperServiceImpl implements OperService {
      * @return
      */
     @Override
-    public List<ScreenConfig> operList(ScreenConfigRequest request) {
+    public List<ScreenConfigVO> operList(ScreenConfigRequest request) {
         ScreenConfigExample example = new ScreenConfigExample();
         // 当前页
         int currentPage = request.getCurrPage();
@@ -47,7 +53,7 @@ public class OperServiceImpl implements OperService {
             cra.andTaskTimeEqualTo(request.getTaskTime());
         }
 
-        return screenConfigMapper.selectByExample(example);
+        return screenConfigMapperCustomize.selectByExample(example);
     }
 
     /**
@@ -60,6 +66,16 @@ public class OperServiceImpl implements OperService {
         ScreenConfig screenConfig = new ScreenConfig();
         BeanUtils.copyProperties(screenConfigVO, screenConfig);
         return screenConfigMapper.insertSelective(screenConfig);
+    }
+
+    /**
+     * 大屏运营部数据配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public ScreenConfig operInfo(Integer id) {
+        return screenConfigMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -80,7 +96,7 @@ public class OperServiceImpl implements OperService {
      * @return
      */
     @Override
-    public List<CustomerTaskConfig> taskList(CustomerTaskConfigRequest request) {
+    public List<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request) {
         CustomerTaskConfigExample example = new CustomerTaskConfigExample();
         CustomerTaskConfigExample.Criteria cra = example.createCriteria();
         // 当前页
@@ -106,7 +122,7 @@ public class OperServiceImpl implements OperService {
         if(null != request.getStatus()){
             cra.andStatusEqualTo(request.getStatus());
         }
-        return customerTaskConfigMapper.selectByExample(example);
+        return customerTaskConfigMapperCustomize.selectByExample(example);
     }
 
     /**
@@ -116,9 +132,31 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskAdd(CustomerTaskConfigVO customerTaskConfigVO) {
+        int flag = 0;
         CustomerTaskConfig customerTaskConfig = new CustomerTaskConfig();
         BeanUtils.copyProperties(customerTaskConfigVO, customerTaskConfig);
-        return customerTaskConfigMapper.insertSelective(customerTaskConfig);
+        int addFlag = customerTaskConfigMapper.insertSelective(customerTaskConfig);
+
+        CustomerTaskConfig updateParam = new CustomerTaskConfig();
+        updateParam.setCustomerGroup(customerTaskConfigVO.getCustomerGroup());
+        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
+        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
+        int updateFlag = customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
+        if (addFlag == 1 && updateFlag ==1){
+            flag = 1;
+        }
+        return flag;
+    }
+
+    /**
+     * 坐席月任务配置数据详情
+     * @param id
+     * @return
+     */
+    @Override
+    public CustomerTaskConfig taskInfo(Integer id) {
+        return customerTaskConfigMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -128,9 +166,21 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO) {
+        int flag = 0;
         CustomerTaskConfig customerTaskConfig = new CustomerTaskConfig();
         BeanUtils.copyProperties(customerTaskConfigVO, customerTaskConfig);
-        return customerTaskConfigMapper.updateByPrimaryKeySelective(customerTaskConfig);
+        int updateFlagO = customerTaskConfigMapper.updateByPrimaryKeySelective(customerTaskConfig);
+
+        CustomerTaskConfig updateParam = new CustomerTaskConfig();
+        updateParam.setCustomerGroup(customerTaskConfigVO.getCustomerGroup());
+        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
+        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
+        int updateFlagT = customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
+        if (updateFlagO == 1 && updateFlagT ==1){
+            flag = 1;
+        }
+        return flag;
     }
 
 

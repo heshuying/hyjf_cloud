@@ -89,6 +89,13 @@ public class CustomerTaskConfigVO implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
+    private Integer updateUserName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -177,5 +184,13 @@ public class CustomerTaskConfigVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(Integer updateUserName) {
+        this.updateUserName = updateUserName;
     }
 }

@@ -1,10 +1,12 @@
 package com.hyjf.admin.controller.vip.content;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.vip.content.OperService;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import io.swagger.annotations.Api;
@@ -13,13 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
 @Api(value = "会员中心-内容中心", tags = "会员中心-内容中心")
 @RequestMapping("/hyjf-admin/content")
 @RestController
-public class OperController {
+public class OperController extends BaseController {
 
     @Autowired
     private OperService operService;
@@ -43,26 +46,40 @@ public class OperController {
     @ApiOperation(value = "大屏运营部数据配置-数据新增",notes = "大屏运营部数据配置-数据新增")
     @PostMapping("/oper/add")
     @ResponseBody
-    private AdminResult operAdd(@RequestBody ScreenConfigVO screenConfigVO){
+    private AdminResult operAdd(HttpServletRequest httpServletRequest, @RequestBody ScreenConfigVO screenConfigVO){
         if(blankCheck(1, screenConfigVO, null, null)){
             return new AdminResult("3", "必传字段未传");
         }
+        AdminSystemVO user = getUser(httpServletRequest);
+        screenConfigVO.setCreateUserId(Integer.valueOf(user.getId()));
+        screenConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         screenConfigVO.setStatus(1);
         int insertFlag = operService.operAdd(screenConfigVO);
         if (insertFlag < 1){
             return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
         }
+
         return new AdminResult();
     }
 
+    @ApiOperation(value = "大屏运营部数据配置-数据详情",notes = "大屏运营部数据配置-数据详情")
+    @PostMapping("/oper/info")
+    @ResponseBody
+    private AdminResult operInfo(@RequestBody Integer id){
+        AdminResult result = new AdminResult();
+        result.setData(operService.operInfo(id));
+        return result;
+    }
 
     @ApiOperation(value = "大屏运营部数据配置-数据编辑",notes = "大屏运营部数据配置-数据编辑")
     @PostMapping("/oper/update")
     @ResponseBody
-    private AdminResult operUpdate(@RequestBody ScreenConfigVO screenConfigVO){
+    private AdminResult operUpdate(HttpServletRequest httpServletRequest, @RequestBody ScreenConfigVO screenConfigVO){
         if(blankCheck(2, screenConfigVO, null, null)){
             return new AdminResult("3", "必传字段未传");
         }
+        AdminSystemVO user = getUser(httpServletRequest);
+        screenConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         int updateFlag = operService.operUpdate(screenConfigVO);
         if (updateFlag < 1){
             return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
@@ -73,10 +90,12 @@ public class OperController {
     @ApiOperation(value = "大屏运营部数据配置-数据启用/禁用",notes = "大屏运营部数据配置-数据启用/禁用")
     @PostMapping("/oper/able")
     @ResponseBody
-    private AdminResult operAble(@RequestBody ScreenConfigVO screenConfigVO){
+    private AdminResult operAble(HttpServletRequest httpServletRequest, @RequestBody ScreenConfigVO screenConfigVO){
         if(blankCheck(3, screenConfigVO, null, null)){
             return new AdminResult("3", "必传字段未传");
         }
+        AdminSystemVO user = getUser(httpServletRequest);
+        screenConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         int updateFlag = operService.operUpdate(screenConfigVO);
         if (updateFlag < 1){
             return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
@@ -103,10 +122,13 @@ public class OperController {
     @ApiOperation(value = "坐席月任务配置-数据新增",notes = "坐席月任务配置-数据新增")
     @PostMapping("/task/add")
     @ResponseBody
-    private AdminResult taskAdd(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
+    private AdminResult taskAdd(HttpServletRequest httpServletRequest, @RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         if(blankCheck(4, null, customerTaskConfigVO, null)){
             return new AdminResult("3", "必传字段未传");
         }
+        AdminSystemVO user = getUser(httpServletRequest);
+        customerTaskConfigVO.setCreateUserId(Integer.valueOf(user.getId()));
+        customerTaskConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         customerTaskConfigVO.setStatus(1);
         int insertFlag = operService.taskAdd(customerTaskConfigVO);
         if (insertFlag < 1){
@@ -115,14 +137,24 @@ public class OperController {
         return new AdminResult();
     }
 
+    @ApiOperation(value = "坐席月任务配置-数据详情",notes = "坐席月任务配置-数据详情")
+    @PostMapping("/task/info")
+    @ResponseBody
+    private AdminResult taskInfo(@RequestBody Integer id){
+        AdminResult result = new AdminResult();
+        result.setData(operService.taskInfo(id));
+        return result;
+    }
 
     @ApiOperation(value = "坐席月任务配置-数据编辑",notes = "坐席月任务配置-数据编辑")
     @PostMapping("/task/update")
     @ResponseBody
-    private AdminResult taskUpdate(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
+    private AdminResult taskUpdate(HttpServletRequest httpServletRequest, @RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         if(blankCheck(5, null, customerTaskConfigVO, null)){
             return new AdminResult("3", "必传字段未传");
         }
+        AdminSystemVO user = getUser(httpServletRequest);
+        customerTaskConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         int updateFlag = operService.taskUpdate(customerTaskConfigVO);
         if (updateFlag < 1){
             return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
@@ -133,10 +165,12 @@ public class OperController {
     @ApiOperation(value = "坐席月任务配置-数据启用/禁用",notes = "坐席月任务配置-数据启用/禁用")
     @PostMapping("/task/able")
     @ResponseBody
-    private AdminResult taskAble(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
+    private AdminResult taskAble(HttpServletRequest httpServletRequest, @RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         if(blankCheck(6, null, customerTaskConfigVO, null)){
             return new AdminResult("3", "必传字段未传");
         }
+        AdminSystemVO user = getUser(httpServletRequest);
+        customerTaskConfigVO.setUpdateUserId(Integer.valueOf(user.getId()));
         int updateFlag = operService.taskUpdate(customerTaskConfigVO);
         if (updateFlag < 1){
             return new AdminResult(BaseResult.FAIL, BaseResult.FAIL_DESC);
