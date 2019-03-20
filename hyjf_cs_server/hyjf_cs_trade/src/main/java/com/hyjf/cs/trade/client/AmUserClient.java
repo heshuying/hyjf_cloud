@@ -2,6 +2,9 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
+import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
+import com.hyjf.am.response.user.UserScreenConfigResponse;
+import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.BankCardRequest;
@@ -494,4 +497,15 @@ public interface AmUserClient {
 	 * @return
 	 */
 	ScreenDataResponse findUserGroup(ScreenDataBean screenDataBean);
+
+	/**
+	 * 大屏幕运营部配置获取
+	 * @return
+	 */
+	UserScreenConfigResponse getScreenConfig(UserLargeScreenRequest request);
+	/**
+	 * 坐席月任务配置
+	 * @return
+	 */
+	UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request);
 }

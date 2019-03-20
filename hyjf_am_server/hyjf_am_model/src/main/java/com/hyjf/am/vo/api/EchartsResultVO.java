@@ -47,4 +47,5 @@ public class EchartsResultVO implements Serializable {
     public void setMoney2(String money2) {
         this.money2 = money2;
     }
+
 }

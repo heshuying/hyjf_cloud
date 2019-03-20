@@ -5,8 +5,11 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 import com.hyjf.am.vo.api.EchartsResultVO;
+import com.hyjf.am.vo.api.UserCapitalDetailsVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +28,6 @@ public interface UserLargeScreenCustomizeMapper {
     List<EchartsResultVO> getMonthScalePerformanceList();
 
     List<EchartsResultVO> getMonthReceivedPayments();
+
+    List<UserCapitalDetailsVO> getUserCapitalDetails(@Param("star")Date star, @Param("end")Date end);
 }

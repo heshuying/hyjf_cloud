@@ -6,11 +6,14 @@ package com.hyjf.am.trade.service.api.userlargescreen.impl;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.EchartsResultVO;
+import com.hyjf.am.vo.api.UserCapitalDetailsVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -79,6 +82,16 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         }
         vo.setMonthReceivedPaymentsNew(monthReceivedPaymentsNew);
         vo.setMonthReceivedPaymentsOld(monthReceivedPaymentsOld);
+        return vo;
+    }
+    @Override
+    public UserLargeScreenVO getUserCapitalDetails(){
+        UserLargeScreenVO vo = new UserLargeScreenVO();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.MINUTE,-2);
+        List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails(cal.getTime(),new Date());
+        vo.setUserCapitalDetailList(userCapitalDetailsVOList);
         return vo;
     }
 
