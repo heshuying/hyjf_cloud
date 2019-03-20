@@ -26,9 +26,9 @@ public class OperServiceImpl implements OperService {
     @Autowired
     private ScreenConfigMapper screenConfigMapper;
     @Autowired
-    private ScreenConfigMapperCustomize screenConfigMapperCustomize;
-    @Autowired
     private CustomerTaskConfigMapper customerTaskConfigMapper;
+    @Autowired
+    private ScreenConfigMapperCustomize screenConfigMapperCustomize;
     @Autowired
     private CustomerTaskConfigMapperCustomize customerTaskConfigMapperCustomize;
 
