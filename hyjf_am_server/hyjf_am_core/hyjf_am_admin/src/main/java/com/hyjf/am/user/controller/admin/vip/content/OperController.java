@@ -11,10 +11,7 @@ import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class OperController {
      */
     @PostMapping("/oper/list")
     @ResponseBody
-    private Response<ScreenConfigVO> operList(ScreenConfigRequest request){
+    private Response<ScreenConfigVO> operList(@RequestBody ScreenConfigRequest request){
         Response<ScreenConfigVO> response = new Response<>();
 
         List<ScreenConfig> list = operService.operList(request);
@@ -55,7 +52,7 @@ public class OperController {
      */
     @PostMapping("/oper/add")
     @ResponseBody
-    private IntegerResponse operAdd(ScreenConfigVO screenConfigVO){
+    private IntegerResponse operAdd(@RequestBody ScreenConfigVO screenConfigVO){
         IntegerResponse response = new IntegerResponse();
 
         int insertFlag = operService.operAdd(screenConfigVO);
@@ -75,7 +72,7 @@ public class OperController {
      */
     @PostMapping("/oper/update")
     @ResponseBody
-    private IntegerResponse operUpdate(ScreenConfigVO screenConfigVO){
+    private IntegerResponse operUpdate(@RequestBody ScreenConfigVO screenConfigVO){
         IntegerResponse response = new IntegerResponse();
 
         int updatetFlag = operService.operUpdate(screenConfigVO);
@@ -97,7 +94,7 @@ public class OperController {
      */
     @PostMapping("/task/list")
     @ResponseBody
-    private Response<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request){
+    private Response<CustomerTaskConfigVO> taskList(@RequestBody CustomerTaskConfigRequest request){
         Response<CustomerTaskConfigVO> response = new Response<>();
 
         List<CustomerTaskConfig> list = operService.taskList(request);
@@ -118,7 +115,7 @@ public class OperController {
      */
     @PostMapping("/task/add")
     @ResponseBody
-    private IntegerResponse taskAdd(CustomerTaskConfigVO customerTaskConfigVO){
+    private IntegerResponse taskAdd(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         IntegerResponse response = new IntegerResponse();
 
         int insertFlag = operService.taskAdd(customerTaskConfigVO);
@@ -138,7 +135,7 @@ public class OperController {
      */
     @PostMapping("/task/update")
     @ResponseBody
-    private IntegerResponse taskUpdate(CustomerTaskConfigVO customerTaskConfigVO){
+    private IntegerResponse taskUpdate(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         IntegerResponse response = new IntegerResponse();
 
         int updatetFlag = operService.taskUpdate(customerTaskConfigVO);
