@@ -13,6 +13,7 @@ import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +21,9 @@ import java.util.List;
 @Service
 public class OperServiceImpl implements OperService {
 
+    @Autowired
     private ScreenConfigMapper screenConfigMapper;
+    @Autowired
     private CustomerTaskConfigMapper customerTaskConfigMapper;
 
     /**
@@ -30,12 +33,18 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public List<ScreenConfig> operList(ScreenConfigRequest request) {
+        // 页码
+        int currentPage = request.getCurrPage();
+        // 每页展示数
+        int pageSize = request.getPageSize();
         ScreenConfigExample example = new ScreenConfigExample();
         // 任务时间,精确到月 yyyy-mm
         if(StringUtils.isNotBlank(request.getTaskTime())){
             ScreenConfigExample.Criteria cra = example.createCriteria();
             cra.andTaskTimeEqualTo(request.getTaskTime());
         }
+        example.setLimitStart(currentPage == 0 ? 0 : (currentPage - 1) * pageSize);
+        example.setLimitEnd(pageSize);
         return screenConfigMapper.selectByExample(example);
     }
 
