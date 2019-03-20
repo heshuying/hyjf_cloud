@@ -201,6 +201,8 @@ public class ApiBankOpenController extends BaseUserController {
                                               @RequestParam("roleId") String roleId,
                                               @RequestParam("openclient") String openclient) {
         logger.info("开户异步处理start,userId:{}", bean.getLogUserId());
+        // 查询用
+        bean.setRemark(bean.getMobile());
         bean.setMobile(mobile);
         bean.setLogClient(Integer.parseInt(openclient));
         bean.setIdentity(roleId);
