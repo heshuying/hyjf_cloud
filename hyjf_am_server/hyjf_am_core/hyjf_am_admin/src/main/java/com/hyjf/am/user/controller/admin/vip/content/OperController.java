@@ -11,6 +11,7 @@ import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,13 +36,10 @@ public class OperController {
         Response<ScreenConfigVO> response = new Response<>();
 
         List<ScreenConfig> list = operService.operList(request);
-        if (null == list){
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
-            return response;
+        if (!CollectionUtils.isEmpty(list)){
+            List<ScreenConfigVO> screenConfigVOs = CommonUtils.convertBeanList(list, ScreenConfigVO.class);
+            response.setResultList(screenConfigVOs);
         }
-        List<ScreenConfigVO> screenConfigVOs = CommonUtils.convertBeanList(list, ScreenConfigVO.class);
-        response.setResultList(screenConfigVOs);
         return response;
     }
 
@@ -98,13 +96,10 @@ public class OperController {
         Response<CustomerTaskConfigVO> response = new Response<>();
 
         List<CustomerTaskConfig> list = operService.taskList(request);
-        if (null == list){
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
-            return response;
+        if (!CollectionUtils.isEmpty(list)){
+            List<CustomerTaskConfigVO> customerTaskConfigVOs = CommonUtils.convertBeanList(list, CustomerTaskConfigVO.class);
+            response.setResultList(customerTaskConfigVOs);
         }
-        List<CustomerTaskConfigVO> customerTaskConfigVOs = CommonUtils.convertBeanList(list, CustomerTaskConfigVO.class);
-        response.setResultList(customerTaskConfigVOs);
         return response;
     }
 
