@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -106,7 +107,7 @@ public class OperServiceImpl implements OperService {
             ScreenConfigRequest screenConfigRequest = new ScreenConfigRequest();
             screenConfigRequest.setTaskTime(request.getTaskTime());
             List<ScreenConfigVO> result = this.operList(screenConfigRequest);
-            if (null != result){
+            if (!CollectionUtils.isEmpty(result)){
                 resultFlag = true;
             }
         }else {
@@ -116,7 +117,7 @@ public class OperServiceImpl implements OperService {
                 return resultMap;
             }
             List<CustomerTaskConfigVO> result = this.taskList(request);
-            if (null != result){
+            if (!CollectionUtils.isEmpty(result)){
                 resultFlag = true;
             }
         }
