@@ -2095,10 +2095,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     public List<ScreenConfigVO> getScreenConfigList(ScreenConfigRequest request) {
         String url = "http://AM-ADMIN/am-user/vip/content/oper/list";
         Response<ScreenConfigVO> response = restTemplate.postForEntity(url, request, Response.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
+        return response.getResultList();
     }
 
     /**
@@ -2140,10 +2137,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     public List<CustomerTaskConfigVO> getCustomerTaskConfigList(CustomerTaskConfigRequest request) {
         String url = "http://AM-ADMIN/am-user/vip/content/task/list";
         Response<CustomerTaskConfigVO> response = restTemplate.postForEntity(url, request, Response.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
+        return response.getResultList();
     }
 
     /**

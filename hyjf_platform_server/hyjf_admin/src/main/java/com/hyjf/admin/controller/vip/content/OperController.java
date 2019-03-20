@@ -10,6 +10,7 @@ import com.hyjf.am.vo.user.ScreenConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class OperController {
         AdminResult result = new AdminResult();
         result.setTotalCount(0);
         List<ScreenConfigVO> list = operService.operList(request);
-        if (list != null){
+        if (!CollectionUtils.isEmpty(list)){
             result.setTotalCount(list.size());
         }
         result.setData(list);
@@ -92,7 +93,7 @@ public class OperController {
         AdminResult result = new AdminResult();
         result.setTotalCount(0);
         List<CustomerTaskConfigVO> list = operService.taskList(request);
-        if (list != null){
+        if (!CollectionUtils.isEmpty(list)){
             result.setTotalCount(list.size());
         }
         result.setData(list);
