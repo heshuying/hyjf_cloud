@@ -8,6 +8,8 @@ import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import java.util.Map;
  */
 @Service
 public class OperServiceImpl implements OperService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OperServiceImpl.class);
 
     @Autowired
     private AmAdminClient amAdminClient;
@@ -106,6 +110,7 @@ public class OperServiceImpl implements OperService {
             ScreenConfigRequest screenConfigRequest = new ScreenConfigRequest();
             screenConfigRequest.setTaskTime(request.getTaskTime());
             List<ScreenConfigVO> result = this.operList(screenConfigRequest);
+            logger.info("返回值为:{}", result);
             if (null != result){
                 resultFlag = true;
             }
