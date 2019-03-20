@@ -264,6 +264,13 @@ public class BorrowApicron implements Serializable {
     private String submitter;
 
     /**
+     * 批次任务是否逾期还款 0：否 1：是
+     *
+     * @mbggenerated
+     */
+    private Integer isLate;
+
+    /**
      * 错误信息
      *
      * @mbggenerated
@@ -582,6 +589,14 @@ public class BorrowApicron implements Serializable {
 
     public void setSubmitter(String submitter) {
         this.submitter = submitter == null ? null : submitter.trim();
+    }
+
+    public Integer getIsLate() {
+        return isLate;
+    }
+
+    public void setIsLate(Integer isLate) {
+        this.isLate = isLate;
     }
 
     public String getData() {
