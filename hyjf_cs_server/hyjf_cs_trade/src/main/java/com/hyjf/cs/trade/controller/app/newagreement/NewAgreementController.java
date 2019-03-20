@@ -41,10 +41,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * APP端协议controller
@@ -1159,7 +1156,7 @@ public class NewAgreementController extends BaseTradeController{
     @ApiOperation(value = "app-获取在帮助中心显示的协议模板名称", httpMethod = "GET", notes = "app-获取在帮助中心显示的协议模板名称")
     @GetMapping("/getShowProtocolTemp")
     public JSONObject getShowProtocolTemp() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> linkedHashMap = new LinkedHashMap<String, Object>();
         logger.info("*******************************协议名称-获取在帮助中心显示的协议模板名称************************************");
         JSONObject jsonObject = new JSONObject();
         try {
@@ -1170,13 +1167,13 @@ public class NewAgreementController extends BaseTradeController{
                     String protocolType = p.getProtocolType();
                     String alia = ProtocolEnum.getAlias(protocolType);
                     if (alia != null) {
-                        map.put(alia, p.getDisplayName());
+                        linkedHashMap.put(alia, p.getDisplayName());
                     }
                 }
             }
             jsonObject.put("status", "000");
             jsonObject.put("statusDesc", "成功");
-            jsonObject.put("displayName", map);
+            jsonObject.put("displayName", linkedHashMap);
         } catch (Exception e) {
             logger.error("协议查询异常：" + e);
             jsonObject.put("status", "99");
