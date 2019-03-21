@@ -3,6 +3,7 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
@@ -2121,7 +2122,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public ScreenConfigVO screenConfigInfo(ScreenConfigVO screenConfigVO) {
         String url = "http://AM-ADMIN/am-user/vip/content/oper/info";
-        Response<ScreenConfigVO> response = restTemplate.postForEntity(url, screenConfigVO, Response.class).getBody();
+        ScreenConfigVOResponse response = restTemplate.postForEntity(url, screenConfigVO, ScreenConfigVOResponse.class).getBody();
         return response.getResult();
     }
 

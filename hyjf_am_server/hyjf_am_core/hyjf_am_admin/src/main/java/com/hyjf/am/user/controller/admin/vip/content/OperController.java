@@ -2,6 +2,7 @@ package com.hyjf.am.user.controller.admin.vip.content;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
@@ -70,8 +71,8 @@ public class OperController {
      */
     @PostMapping("/oper/info")
     @ResponseBody
-    private Response<ScreenConfigVO> operInfo(@RequestBody ScreenConfigVO screenConfigVO){
-        Response<ScreenConfigVO> response = new Response<>();
+    private ScreenConfigVOResponse operInfo(@RequestBody ScreenConfigVO screenConfigVO){
+        ScreenConfigVOResponse response = new ScreenConfigVOResponse();
 
         ScreenConfig screenConfig = operService.operInfo(screenConfigVO.getId());
         if (null != screenConfig){
