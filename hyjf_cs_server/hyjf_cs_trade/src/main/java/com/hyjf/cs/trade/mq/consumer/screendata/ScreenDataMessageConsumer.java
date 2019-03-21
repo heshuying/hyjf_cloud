@@ -67,11 +67,12 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                 if (data.getOperating()==1) {
                     //消息推送开始
                     if(data.getMoney().compareTo(new BigDecimal(100000))!=-1){
-                        StringBuffer buffer = new StringBuffer();
                         JSONObject jsonObject = new JSONObject();
                         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-                        buffer.append(currentOwner).append("的客户").append(data.getUserName()).append("于").append(formatter.format(new Date())).append("分投资").append(data.getMoney()).append("元");
-                        jsonObject.put("msg",buffer.toString());
+                        jsonObject.put("currentOwner",currentOwner);
+                        jsonObject.put("userName",data.getUserName());
+                        jsonObject.put("time",formatter.format(new Date()));
+                        jsonObject.put("money",data.getMoney());
                         try {
                             WebSocketServer.sendInfo(jsonObject.toJSONString(),"user_picture_1");
                         } catch (IOException e) {
