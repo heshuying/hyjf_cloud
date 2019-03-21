@@ -67,6 +67,19 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
+     * 普通借款人总借款金额
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectUserBorrowAccountTotal(Integer userId){
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("userId", userId);
+        BigDecimal accountTotal = repayManageCustomizeMapper.selectUserBorrowAccountTotal(paraMap);
+        return accountTotal;
+    }
+
+    /**
      * 担保机构管理费总待还
      * @param userId
      * @return
@@ -84,7 +97,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      * @return
      */
     @Override
-    public BigDecimal selectRepayOrgRepaywait(Integer userId){
+    public Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId){
         return repayManageCustomizeMapper.selectRepayOrgRepaywait(userId);
     }
 
@@ -119,42 +132,46 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+                RepayListCustomizeVO record = list.get(i);
                 // 查询承接条数(标的发生过债转,并且已有人承接)
                 int listCount = 0;
-                if (org.apache.commons.lang3.StringUtils.isNotEmpty(list.get(i).getPlanNid())){
-                    listCount =  webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByHjhCreditTender(list.get(i).getBorrowNid());
+                if (org.apache.commons.lang3.StringUtils.isNotEmpty(record.getPlanNid())){
+                    listCount =  webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByHjhCreditTender(record.getBorrowNid());
                 }else {
-                    listCount = webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByCreditTender(list.get(i).getBorrowNid());
+                    listCount = webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByCreditTender(record.getBorrowNid());
                 }
 
                 // 承接条数
-                list.get(i).setListCount(listCount);
+                record.setListCount(listCount);
 
                 BigDecimal accountFee = BigDecimal.ZERO;
                 BigDecimal borrowTotal = BigDecimal.ZERO;
                 BigDecimal realAccountTotal = BigDecimal.ZERO;
                 BigDecimal allAccountFee = BigDecimal.ZERO;
                 BigDecimal serviceFee = BigDecimal.ZERO;
-                if (StringUtils.isNotBlank(list.get(i).getRepayFee())) {
-                    accountFee = new BigDecimal(list.get(i).getRepayFee());
+                if (StringUtils.isNotBlank(record.getRepayFee())) {
+                    accountFee = new BigDecimal(record.getRepayFee());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getBorrowTotal())) {
-                    borrowTotal = new BigDecimal(list.get(i).getBorrowTotal());
+                if (StringUtils.isNotBlank(record.getBorrowTotal())) {
+                    borrowTotal = new BigDecimal(record.getBorrowTotal());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getRealAccountYes())) {
-                    realAccountTotal = new BigDecimal(list.get(i).getRealAccountYes());
+                if (StringUtils.isNotBlank(record.getRealAccountYes())) {
+                    realAccountTotal = new BigDecimal(record.getRealAccountYes());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getAllRepayFee())) {
-                    allAccountFee = new BigDecimal(list.get(i).getAllRepayFee());
+                if (StringUtils.isNotBlank(record.getAllRepayFee())) {
+                    allAccountFee = new BigDecimal(record.getAllRepayFee());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
-                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
+                if (StringUtils.isNotBlank(record.getServiceFee())) {
+                    serviceFee = new BigDecimal(record.getServiceFee());
                 }
-                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount());
+                BigDecimal oldYesAccount = new BigDecimal(record.getYesAccount());
                 BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
-                list.get(i).setYesAccount(yesAccount.toString());
-                list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
-                list.get(i).setRealAccountYes(realAccountTotal.add(accountFee).toString());
+                record.setYesAccount(yesAccount.toString());
+                record.setBorrowTotal(borrowTotal.add(allAccountFee).toString());
+                record.setRealAccountYes(realAccountTotal.add(accountFee).toString());
+
+                //当前还款期数页面展示
+                record.setCurrentPeriodView(record.getCurrentPeriod() + "/" + record.getBorrowPeriodInt() + "期");
             }
         }
 
@@ -297,26 +314,26 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 BigDecimal realAccountTotal = BigDecimal.ZERO;
                 BigDecimal allAccountFee = BigDecimal.ZERO;
 //                BigDecimal serviceFee = BigDecimal.ZERO;
-                if (StringUtils.isNotBlank(list.get(i).getRepayFee())) {
-                    accountFee = new BigDecimal(list.get(i).getRepayFee());
+                if (StringUtils.isNotBlank(info.getRepayFee())) {
+                    accountFee = new BigDecimal(info.getRepayFee());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getBorrowTotal())) {
-                    borrowTotal = new BigDecimal(list.get(i).getBorrowTotal());
+                if (StringUtils.isNotBlank(info.getBorrowTotal())) {
+                    borrowTotal = new BigDecimal(info.getBorrowTotal());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getRealAccountYes())) {
-                    realAccountTotal = new BigDecimal(list.get(i).getRealAccountYes());
+                if (StringUtils.isNotBlank(info.getRealAccountYes())) {
+                    realAccountTotal = new BigDecimal(info.getRealAccountYes());
                 }
-                if (StringUtils.isNotBlank(list.get(i).getAllRepayFee())) {
-                    allAccountFee = new BigDecimal(list.get(i).getAllRepayFee());
+                if (StringUtils.isNotBlank(info.getAllRepayFee())) {
+                    allAccountFee = new BigDecimal(info.getAllRepayFee());
                 }
-//                if (StringUtils.isNotBlank(list.get(i).getServiceFee())) {
-//                    serviceFee = new BigDecimal(list.get(i).getServiceFee());
+//                if (StringUtils.isNotBlank(info.getServiceFee())) {
+//                    serviceFee = new BigDecimal(info.getServiceFee());
 //                }
-//                BigDecimal oldYesAccount = new BigDecimal(list.get(i).getYesAccount()==null?"0":list.get(i).getYesAccount());
+//                BigDecimal oldYesAccount = new BigDecimal(info.getYesAccount()==null?"0":info.getYesAccount());
 //                BigDecimal yesAccount = oldYesAccount.subtract(serviceFee);
-//                list.get(i).setYesAccount(yesAccount.toString());
-                list.get(i).setBorrowTotal(borrowTotal.add(allAccountFee).toString());
-                list.get(i).setRealAccountYes(realAccountTotal.add(accountFee).toString());
+//                info.setYesAccount(yesAccount.toString());
+                info.setBorrowTotal(borrowTotal.add(allAccountFee).toString());
+                info.setRealAccountYes(realAccountTotal.add(accountFee).toString());
 
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)||CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {//日标
                     info.setOrgBorrowPeriod("1");
@@ -332,6 +349,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     int orgBorrowPeriod = borrowPeriod - repayPeriod + 1;
                     info.setOrgBorrowPeriod(orgBorrowPeriod+"");
                 }
+
+                //当前还款期数页面展示
+                info.setCurrentPeriodView(info.getCurrentPeriod() + "/" + info.getBorrowPeriodInt() + "期");
             }
         }
 
@@ -461,6 +481,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.searchOrgRepayedList(param);
 
         for(RepayListCustomizeVO record : list){
+            //当前还款期数页面展示
+            record.setCurrentPeriodView(record.getCurrentPeriod() + "/" + record.getBorrowPeriodInt() + "期");
+
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){
                 //放款时间

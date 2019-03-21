@@ -3973,6 +3973,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 借款人总借款金额
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserBorrowAccountTotal(Integer userId) {
+        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/borrowaccount_total_user/" + userId, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 担保机构管理费总待还
      * @param userId
      * @return
@@ -3992,12 +4006,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
-        BigDecimalResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, BigDecimalResponse.class).getBody();
+    public RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId) {
+        RepayWaitOrgResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/repaywait_total_org/" + userId, RepayWaitOrgResponse.class).getBody();
         if (Response.isSuccess(response)) {
-            return response.getResultDec();
+            return response.getResult();
         }
-        return BigDecimal.ZERO;
+        return null;
     }
 
 

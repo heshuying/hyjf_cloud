@@ -1672,9 +1672,11 @@ public interface AmTradeClient {
 
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal getUserBorrowAccountTotal(Integer userId);
+
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
 
-    BigDecimal getOrgRepayWaitTotal(Integer userId);
+    RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId);
 
     /**
      * 查询广告列表

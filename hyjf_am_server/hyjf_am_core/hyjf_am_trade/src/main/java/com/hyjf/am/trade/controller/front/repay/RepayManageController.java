@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.front.repay;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.response.trade.RepayWaitOrgResponse;
 import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
 import com.hyjf.am.resquest.trade.*;
@@ -18,6 +19,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -66,6 +68,20 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 普通借款人总借款金额
+     * @return
+     */
+    @RequestMapping(value = "/borrowaccount_total_user/{userId}")
+    public BigDecimalResponse userBorrowAccountTotal(@PathVariable Integer userId) {
+        logger.info("普通借款人总借款金额borrowaccount_total_user，userId：" + userId);
+        BigDecimalResponse response = new BigDecimalResponse();
+        BigDecimal waitTotal = repayManageService.selectUserBorrowAccountTotal(userId);
+        response.setResultDec(waitTotal);
+        logger.info("response: {}", JSON.toJSONString(response));
+        return response;
+    }
+
+    /**
      * 担保机构管理费总待还
      * @return
      */
@@ -86,10 +102,18 @@ public class RepayManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/repaywait_total_org/{userId}")
-    public BigDecimalResponse orgRepayWaitTotal(@PathVariable Integer userId) {
-        BigDecimalResponse response = new BigDecimalResponse();
-        BigDecimal waitTotal = repayManageService.selectRepayOrgRepaywait(userId);
-        response.setResultDec(waitTotal);
+    public RepayWaitOrgResponse orgRepayWaitTotal(@PathVariable Integer userId) {
+        RepayWaitOrgResponse response = new RepayWaitOrgResponse();
+        Map<String, BigDecimal> resultMap = repayManageService.selectRepayOrgRepaywait(userId);
+        BigDecimal capitalWaitTotal = resultMap.get("repay_account_capital_wait");
+        BigDecimal interestWaitTotal = resultMap.get("repay_account_interest_wait");
+        BigDecimal waitTotal = resultMap.get("repay_account_wait");
+
+        RepayWaitOrgVO repayWaitOrgVO = new RepayWaitOrgVO();
+        repayWaitOrgVO.setCapitalWaitTotal(capitalWaitTotal);
+        repayWaitOrgVO.setInterestWaitTotal(interestWaitTotal);
+        repayWaitOrgVO.setWaitTotal(waitTotal);
+        response.setResult(repayWaitOrgVO);
         return response;
     }
 

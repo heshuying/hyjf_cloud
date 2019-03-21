@@ -31,6 +31,8 @@
 	   <result column="all_repay_fee" property="allRepayFee" jdbcType="VARCHAR" />
 	   <result column="batch_service_fee" property="serviceFee" jdbcType="VARCHAR" />
 	   <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+	   <result column="current_period" property="currentPeriod" jdbcType="VARCHAR" />
+	   <result column="borrow_period_int" property="borrowPeriodInt" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectRepayList" resultMap="repayListResultMap" parameterType="java.util.Map">
@@ -57,6 +59,7 @@
 		'个月'
 		)
 		END AS borrow_period,
+		hydb.borrow_period AS borrow_period_int,
 		hbi.company_or_personal AS com_or_per,
 		FROM_UNIXTIME(
 		hydb.verify_time,
@@ -124,7 +127,11 @@
 		plan.repay_fee
 		END AS repay_fee,
 		hydbr.repay_fee AS all_repay_fee,
-		hydb.plan_nid
+		hydb.plan_nid,
+		CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN 1
+		ELSE hydb.borrow_period - hydbr.repay_period + 1
+		END AS current_period
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
@@ -227,6 +234,7 @@
 		'个月'
 		)
 		END AS borrow_period,
+        hydb.borrow_period AS borrow_period_int,
 		hbi.company_or_personal AS com_or_per,
 		FROM_UNIXTIME(
 		hydb.verify_time,
@@ -308,7 +316,11 @@
 		)
 		ELSE
 		FROM_UNIXTIME(plan.repay_time, '%Y-%m-%d')
-		END AS repayYesTime
+		END AS repayYesTime,
+		CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN 1
+		ELSE hydb.borrow_period - hydbr.repay_period + 1
+		END AS current_period
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
@@ -421,7 +433,12 @@
 		hba.period_now AS repay_period,
 		hba.batch_amount AS repay_total,
 		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_time,'%Y-%m-%d')
-		ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repayYesTime
+		ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repayYesTime,
+        hydb.borrow_period AS borrow_period_int,
+		CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN 1
+		ELSE hydb.borrow_period - hydbr.repay_period + 1
+		END AS current_period
 		FROM
 		ht_borrow_apicron hba
 		INNER JOIN ht_borrow hydb ON hba.borrow_nid = hydb.borrow_nid
@@ -502,13 +519,23 @@
 		AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
 	</select>
 	<!-- 待垫付总额 -->
-	<select id="selectRepayOrgRepaywait" resultType="java.math.BigDecimal" parameterType="java.lang.Integer">
+	<select id="selectRepayOrgRepaywait" resultType="Map" parameterType="java.lang.Integer">
 		SELECT
 		IF (
 			sum(b.repay_account_wait) IS NULL,
 			0,
 			sum(b.repay_account_wait)
-		)
+		) AS repay_account_wait,
+		IF (
+			sum(b.repay_account_interest_wait) IS NULL,
+			0,
+			sum(b.repay_account_interest_wait)
+		) AS repay_account_interest_wait,
+		IF (
+			sum(b.repay_account_capital_wait) IS NULL,
+			0,
+			sum(b.repay_account_capital_wait)
+		) AS repay_account_capital_wait
 		FROM
 			ht_borrow b
 		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
@@ -564,5 +591,14 @@
 			) log on log.borrow_nid = hydb.borrow_nid
 		</if>
 		<include refid="Where_Clause_Repay_Org_List" />
+	</select>
+
+    <select id="selectUserBorrowAccountTotal" resultType="java.math.BigDecimal" parameterType="Map">
+		SELECT
+		IFNULL(SUM(IFNULL(hydb.account,0)),0) AS accountTotal
+		FROM
+		ht_borrow hydb
+		where
+		 hydb.user_id = #{userId,jdbcType=VARCHAR}
 	</select>
 </mapper>

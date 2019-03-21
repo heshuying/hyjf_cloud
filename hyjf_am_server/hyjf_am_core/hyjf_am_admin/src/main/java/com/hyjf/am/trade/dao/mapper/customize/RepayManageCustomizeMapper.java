@@ -23,5 +23,6 @@ public interface RepayManageCustomizeMapper {
 
     BigDecimal selectOrgRepayFeeWaitTotal(Map<String,Object> paraMap);
 
-    BigDecimal selectRepayOrgRepaywait(Integer userId);
+    Map<String,BigDecimal> selectRepayOrgRepaywait(Integer userId);
+
 }

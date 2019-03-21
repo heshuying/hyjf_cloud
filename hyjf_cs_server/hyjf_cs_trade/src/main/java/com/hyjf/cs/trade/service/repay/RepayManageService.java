@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
@@ -38,6 +39,9 @@ public interface RepayManageService extends BaseTradeService {
      * @return
      */
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getUserBorrowAccountTotal(Integer userId);
+
     /**
      * 担保机构管理费总待还
      * @param userId
@@ -49,7 +53,7 @@ public interface RepayManageService extends BaseTradeService {
      * @param userId
      * @return
      */
-    BigDecimal getOrgRepayWaitTotal(Integer userId);
+    RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId);
     /**
      * 请求参数校验
      *

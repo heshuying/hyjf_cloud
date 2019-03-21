@@ -16,6 +16,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 还款管理
@@ -25,9 +26,11 @@ import java.util.List;
 public interface RepayManageService extends BaseService {
     BigDecimal selectUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal selectUserBorrowAccountTotal(Integer userId);
+
     BigDecimal selectOrgRepayFeeWaitTotal(Integer userId);
 
-    BigDecimal selectRepayOrgRepaywait(Integer userId);
+    Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId);
 
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);
 

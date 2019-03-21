@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -109,16 +110,23 @@ public class RepayManageController extends BaseTradeController {
             // 1.待还款总额
             BigDecimal repay = account.getBankWaitCapital().add(account.getBankWaitInterest());
             BigDecimal repayMangeFee = repayManageService.getUserRepayFeeWaitTotal(userVO.getUserId());
+            BigDecimal borrowAccountTotal = repayManageService.getUserBorrowAccountTotal(userVO.getUserId());
             repay = repay.add(repayMangeFee);
+            resultMap.put("capitalTotal", CustomConstants.DF_FOR_VIEW.format(borrowAccountTotal));
+            resultMap.put("capitalWaitTotal",CustomConstants.DF_FOR_VIEW.format(account.getBankWaitCapital()));
+            resultMap.put("interestWaitTotal",CustomConstants.DF_FOR_VIEW.format(account.getBankWaitInterest()));
+            resultMap.put("feeWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayMangeFee));
             resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
         }
         // 根据RoleId 判断用户为担保机构
         else if ("3".equals(userVO.getRoleId())) {
             // 1.待垫付总额
-            BigDecimal repay = repayManageService.getOrgRepayWaitTotal(userVO.getUserId());
+            RepayWaitOrgVO repayWaitOrgVO = repayManageService.getOrgRepayWaitTotal(userVO.getUserId());
             BigDecimal repayMangeFee = repayManageService.getOrgRepayFeeWaitTotal(userVO.getUserId());
-            repay = repay.add(repayMangeFee);
-            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repay));
+            resultMap.put("capitalWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getCapitalWaitTotal()));
+            resultMap.put("interestWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getInterestWaitTotal()));
+            resultMap.put("feeWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayMangeFee));
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getWaitTotal().add(repayMangeFee)));
         }
         resultMap.put("roleId", userVO.getRoleId());
         resultMap.put("userId", userVO.getUserId());

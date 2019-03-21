@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -91,6 +92,17 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
+     * 借款人总借款金额
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserBorrowAccountTotal(Integer userId) {
+        return amTradeClient.getUserBorrowAccountTotal(userId);
+    }
+
+    /**
      * 担保机构管理费总待还
      *
      * @param userId
@@ -108,7 +120,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @return
      */
     @Override
-    public BigDecimal getOrgRepayWaitTotal(Integer userId) {
+    public RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId) {
         return amTradeClient.getOrgRepayWaitTotal(userId);
     }
 
