@@ -116,7 +116,7 @@ public class OperServiceImpl implements OperService {
         }
         // 坐席姓名 1:新客组,2:老客组
         if(StringUtils.isNotBlank(request.getCustomerName())){
-            cra.andCustomerNameEqualTo(request.getCustomerName());
+            cra.andCustomerNameLike(request.getCustomerName());
         }
         // 是否有效 1:有效,2:无效
         if(null != request.getStatus()){
