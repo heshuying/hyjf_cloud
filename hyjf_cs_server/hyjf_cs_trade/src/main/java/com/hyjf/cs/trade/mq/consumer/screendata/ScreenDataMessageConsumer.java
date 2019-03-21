@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.calculate.DateUtils;
+import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.controller.api.websocket.WebSocketServer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -18,7 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 大屏数据统计
@@ -58,6 +64,20 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                     data.setBalance(userFreeMoney);
                 }
                 if (data.getOperating()==1) {
+                    //消息推送开始
+                    if(data.getMoney().compareTo(new BigDecimal(100000))!=-1){
+                        StringBuffer buffer = new StringBuffer();
+                        JSONObject jsonObject = new JSONObject();
+                        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                        buffer.append(currentOwner).append("的客户").append(data.getUserName()).append("于").append(formatter.format(new Date())).append("分投资").append(data.getMoney()).append("元");
+                        jsonObject.put("msg",buffer.toString());
+                        try {
+                            WebSocketServer.sendInfo(jsonObject.toJSONString(),"user_picture_1");
+                        } catch (IOException e) {
+                            logger.info("推送数据接口出现异常"+e.getMessage());
+                        }
+                    }
+                    //消息推送结束
                     BigDecimal yearMoney = amTradeClient.findYearMoney(userId, orderId, productType, investMoney);
                     data.setYearMoney(yearMoney);
                 }
