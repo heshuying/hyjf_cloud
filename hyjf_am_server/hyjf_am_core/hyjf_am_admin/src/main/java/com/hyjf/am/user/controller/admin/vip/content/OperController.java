@@ -9,6 +9,7 @@ import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -72,11 +73,10 @@ public class OperController {
     private Response<ScreenConfigVO> operInfo(@RequestBody ScreenConfigVO screenConfigVO){
         Response<ScreenConfigVO> response = new Response<>();
 
-        ScreenConfig result = operService.operInfo(screenConfigVO.getId());
-        if (null != result){
-            ScreenConfigVO resultBean = new ScreenConfigVO();
-            BeanUtils.copyProperties(result, resultBean);
-            response.setResult(resultBean);
+        ScreenConfig screenConfig = operService.operInfo(screenConfigVO.getId());
+        if (null != screenConfig){
+            ScreenConfigVO poundageCustomizeVO = CommonUtils.convertBean(screenConfig, ScreenConfigVO.class);
+            response.setResult(poundageCustomizeVO);
         }
         return response;
     }
