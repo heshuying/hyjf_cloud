@@ -62,10 +62,12 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int operUpdate(ScreenConfigVO screenConfigVO) {
-        if (1 == screenConfigVO.getStatus()){
-            screenConfigVO.setStatus(2);
-        }else {
-            screenConfigVO.setStatus(1);
+        if(null != screenConfigVO.getStatus()){
+            if (1 == screenConfigVO.getStatus()){
+                screenConfigVO.setStatus(2);
+            }else {
+                screenConfigVO.setStatus(1);
+            }
         }
         return amAdminClient.updateScreenConfig(screenConfigVO);
     }
@@ -106,10 +108,12 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO) {
-        if (1 == customerTaskConfigVO.getStatus()){
-            customerTaskConfigVO.setStatus(2);
-        }else {
-            customerTaskConfigVO.setStatus(1);
+        if(null != customerTaskConfigVO.getStatus()){
+            if (1 == customerTaskConfigVO.getStatus()){
+                customerTaskConfigVO.setStatus(2);
+            }else {
+                customerTaskConfigVO.setStatus(1);
+            }
         }
         return amAdminClient.updateCustomerTaskConfig(customerTaskConfigVO);
     }
