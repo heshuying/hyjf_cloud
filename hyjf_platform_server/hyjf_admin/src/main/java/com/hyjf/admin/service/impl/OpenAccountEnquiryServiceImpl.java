@@ -217,11 +217,12 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             ////同步保存user信息成
             if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
                 //同步保存user信息
-                OpenAccountEnquiryDefineResultBeanVO openAuserVO =  amUserClient.updateUser(requestBean);
-                logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAuserVO));
+                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+                logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
+                BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
                 logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
-                if(openAuserVO !=null){
-                    if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAuserVO.getStatus())) {
+                if(openAccountEnquiryDefineRequestBeanVO !=null){
+                    if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())) {
                         UserVO user = amUserClient.findUserById(Integer.valueOf(userid));
                         BankCallBean bean = new BankCallBean();
                         bean.setAccountId(requestBean.getAccountId());
@@ -237,11 +238,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     }
     private void updateCardNoToBank(BankCallBean bean,UserVO user) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
-        List<BankCardVO> bankCardList =  amUserClient.selectBankCardByUserId(userId);
-        if(bankCardList!=null && bankCardList.size()<1){
-            logger.info("该用户银行卡已存在");
-            return;
-        }
         logger.info("保存用户银行卡信息  userId {}   ",userId);
         // 调用江西银行接口查询用户绑定的银行卡
         BankCallBean cardBean = new BankCallBean(userId, BankCallConstant.TXCODE_CARD_BIND_DETAILS_QUERY, bean.getLogClient());
