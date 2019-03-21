@@ -1,36 +1,19 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
-import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BatchBorrowRecoverLogService;
-import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.response.admin.BatchBorrowRecoverLogReponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo;
-import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
-import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
-import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
-import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
