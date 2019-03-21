@@ -275,14 +275,14 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
 
         //查询时间段 (只查当天)
         //上线需放开
-        String startDate = getTxDate(bankOpenAccount);
-        String endDate = GetOrderIdUtils.getTxDate();
+        /*String startDate = getTxDate(bankOpenAccount);
+        String endDate = GetOrderIdUtils.getTxDate();*/
 
         // 测试环境
-        /*
-            String startDate = "20180428";
+
+            String startDate = "20170310";
             String endDate = GetOrderIdUtils.getTxDate();
-        */
+        
         List<UnderLineRechargeVO> codeList=getUnderLineRechargeList();
         List<BankResultBean> recordList = new ArrayList<BankResultBean>();
         int pageSize = 10;
