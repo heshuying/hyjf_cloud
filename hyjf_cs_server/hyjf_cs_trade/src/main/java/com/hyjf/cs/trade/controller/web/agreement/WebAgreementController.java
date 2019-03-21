@@ -29,7 +29,7 @@ import java.util.Map;
 @RequestMapping(value = "/hyjf-web/agreement")
 public class WebAgreementController extends BaseTradeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgreementController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebAgreementController.class);
 
     @Autowired
     private NewAgreementService agreementService;
