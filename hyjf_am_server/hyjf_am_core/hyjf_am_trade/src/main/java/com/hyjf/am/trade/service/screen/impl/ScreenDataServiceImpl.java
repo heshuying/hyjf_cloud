@@ -2,20 +2,24 @@ package com.hyjf.am.trade.service.screen.impl;
 
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
+import com.hyjf.am.trade.dao.mapper.auto.RepaymentPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.UserOperateListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.ScreenYearMoneyCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountListExample;
+import com.hyjf.am.trade.dao.model.auto.RepaymentPlan;
 import com.hyjf.am.trade.dao.model.auto.UserOperateList;
 import com.hyjf.am.trade.service.screen.ScreenDataService;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,7 +34,8 @@ public class ScreenDataServiceImpl implements ScreenDataService {
     AccountListMapper accountListMapper;
     @Autowired
     ScreenYearMoneyCustomizeMapper screenYearMoneyCustomizeMapper;
-
+    @Autowired
+    RepaymentPlanMapper repaymentPlanMapper;
     @Override
     public Integer addUserOperateList(ScreenDataBean screenDataBean) {
         UserOperateList userOperateList = CommonUtils.convertBean(screenDataBean, UserOperateList.class);
@@ -81,5 +86,20 @@ public class ScreenDataServiceImpl implements ScreenDataService {
     @Override
     public Integer addRepayUserList(List<RepaymentPlanVO> repaymentPlanVOS) {
         return screenYearMoneyCustomizeMapper.addRepayUserList(repaymentPlanVOS);
+    }
+
+    @Override
+    public Integer updateRepayMoney(ScreenDataBean screenDataBean, Integer startTime,Integer endTime) {
+        return screenYearMoneyCustomizeMapper.updateRepayMoney(screenDataBean,startTime,endTime);
+    }
+
+    @Override
+    public RepaymentPlan findRepayUser(ScreenDataBean screenDataBean, Integer startTime, Integer endTime) {
+        return screenYearMoneyCustomizeMapper.findRepayUser(screenDataBean,startTime,endTime);
+    }
+
+    @Override
+    public Integer insertRepayUser(RepaymentPlan repaymentPlan) {
+        return repaymentPlanMapper.insertSelective(repaymentPlan);
     }
 }

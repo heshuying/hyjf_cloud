@@ -16,7 +16,7 @@
 	<select id="findRepayUser"  resultMap="repayListResultMap">
 		select * from (
 		SELECT
-				r.borrow_nid,
+				r.nid as borrow_nid,
 				null as accede_order_id,
 				r.user_id,
 				from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,
@@ -43,7 +43,7 @@
 		AND r.recover_time <![CDATA[<=]]> #{endTime}
 		union all
 		SELECT
-			r.borrow_nid,
+			r.nid as borrow_nid,
 			null as accede_order_id,
 			r.user_id,
 			from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,

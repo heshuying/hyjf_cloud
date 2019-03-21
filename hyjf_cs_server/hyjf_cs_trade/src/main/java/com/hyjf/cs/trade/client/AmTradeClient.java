@@ -2906,7 +2906,11 @@ public interface AmTradeClient {
      */
     BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
 
-
+    /**
+     * 处理待回款金额
+     * @param screenDataBean
+     */
+    IntegerResponse dealRepayMoney(ScreenDataBean screenDataBean);
 
     /**
      * 规模业绩

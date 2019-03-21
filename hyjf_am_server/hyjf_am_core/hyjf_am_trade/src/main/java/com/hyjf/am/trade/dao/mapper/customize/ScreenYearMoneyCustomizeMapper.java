@@ -3,9 +3,12 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.resquest.trade.ScreenDataBean;
+import com.hyjf.am.trade.dao.model.auto.RepaymentPlan;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,4 +42,19 @@ public interface ScreenYearMoneyCustomizeMapper {
      */
     Integer addRepayUserList(@Param("repaymentPlanVOS") List<RepaymentPlanVO> repaymentPlanVOS);
 
+    /**
+     * 修改待回款金额
+     * @param screenDataBean
+     * @return
+     */
+    Integer updateRepayMoney(@Param("screenDataBean")ScreenDataBean screenDataBean,@Param("startTime") Integer startTime,@Param("endTime")Integer endTime);
+
+    /**
+     *查询用户这笔订单是否是本月应还的
+     * @param screenDataBean
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    RepaymentPlan  findRepayUser(@Param("screenDataBean") ScreenDataBean screenDataBean, @Param("startTime") Integer startTime, @Param("endTime") Integer endTime);
 }

@@ -21,6 +21,11 @@ public class ScreenDataBean {
      * @mbggenerated
      */
     private Integer userId;
+
+    /**
+     * 承接人id
+     */
+    private Integer tenderUserId;
     /**
      * 用户id集合
      *
@@ -109,7 +114,13 @@ public class ScreenDataBean {
         this.money = money;
         this.operating = operating;
     }
-
+    public ScreenDataBean(String orderId,Integer userId, String userName, BigDecimal money, Integer operating) {
+        this.orderId = orderId;
+        this.userId = userId;
+        this.userName = userName;
+        this.money = money;
+        this.operating = operating;
+    }
     public ScreenDataBean() {
     }
 
@@ -233,5 +244,13 @@ public class ScreenDataBean {
 
     public void setRepaymentPlanVOS(List<RepaymentPlanVO> repaymentPlanVOS) {
         this.repaymentPlanVOS = repaymentPlanVOS;
+    }
+
+    public Integer getTenderUserId() {
+        return tenderUserId;
+    }
+
+    public void setTenderUserId(Integer tenderUserId) {
+        this.tenderUserId = tenderUserId;
     }
 }

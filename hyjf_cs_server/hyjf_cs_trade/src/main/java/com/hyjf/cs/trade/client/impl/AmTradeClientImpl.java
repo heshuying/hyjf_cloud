@@ -7030,7 +7030,12 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     }
 
+    @Override
+    public IntegerResponse dealRepayMoney(ScreenDataBean screenDataBean) {
+        return restTemplate.postForObject("http://AM-TRADE/am-trade/screen_data/deal_repay_money",
+                screenDataBean, IntegerResponse.class);
 
+    }
 
 
     @Override
