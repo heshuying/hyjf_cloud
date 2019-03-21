@@ -29,11 +29,11 @@ public class OperController extends BaseController {
     /**
      * 大屏运营部数据配置-权限关键字
      */
-    public static final String PERMISSIONS = "vip_content_oper";
+    public static final String PERMISSIONS = "vipcontentoper";
     /**
      * 坐席月任务配置-权限关键字
      */
-    public static final String PERMISSIONST = "vip_content_task";
+    public static final String PERMISSIONST = "vipcontenttask";
     @Autowired
     private OperService operService;
 
@@ -54,7 +54,7 @@ public class OperController extends BaseController {
         return result;
     }
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     @ApiOperation(value = "大屏运营部数据配置-数据新增",notes = "大屏运营部数据配置-数据新增")
     @PostMapping("/oper/add")
     @ResponseBody
