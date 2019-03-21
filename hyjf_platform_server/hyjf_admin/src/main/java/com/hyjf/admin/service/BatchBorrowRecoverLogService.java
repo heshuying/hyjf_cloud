@@ -3,6 +3,7 @@ package com.hyjf.admin.service;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.service.BaseService;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
@@ -18,7 +19,9 @@ import java.util.List;
 public interface BatchBorrowRecoverLogService extends BaseService{
     JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
 
-    void queryBatchCenterStatusName(List<BatchBorrowRecoverVo> listAccountDetail, String nameClass);
+    int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
+
+    void queryBatchCenterStatusName(List<BatchBorrowRecoverLogVo> listAccountDetail, String nameClass);
 
     JSONObject initPage(String nameClass);
 

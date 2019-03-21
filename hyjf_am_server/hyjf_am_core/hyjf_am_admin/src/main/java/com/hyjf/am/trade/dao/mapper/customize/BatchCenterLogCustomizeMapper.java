@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface BatchCenterLogCustomizeMapper {
      * @param request
      * @return
      */
-    List<BatchBorrowRecoverVo> queryBatchCenterList(BatchBorrowRecoverRequest request);
+    List<BatchBorrowRecoverLogVo> queryBatchCenterList(BatchBorrowRecoverRequest request);
 
 
 }

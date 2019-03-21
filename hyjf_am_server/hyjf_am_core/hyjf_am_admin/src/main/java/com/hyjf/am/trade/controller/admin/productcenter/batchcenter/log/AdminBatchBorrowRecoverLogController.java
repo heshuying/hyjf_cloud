@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.log;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BatchBorrowRecoverLogReponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
@@ -10,6 +11,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.admin.productcenter.batchcenter.borrowRecover.BatchCenterBorrowRecoverService;
 import com.hyjf.am.trade.service.admin.productcenter.batchcenter.log.BatchCenterBorrowRecoverLogService;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.common.paginator.Paginator;
@@ -33,6 +35,12 @@ public class AdminBatchBorrowRecoverLogController extends BaseController {
     @Autowired
     private BatchCenterBorrowRecoverLogService batchBorrowRecoverService;
 
+    @PostMapping("/getListCount")
+    public IntegerResponse getListCount(@RequestBody BatchBorrowRecoverRequest request) {
+        Integer count = batchBorrowRecoverService.getListTotal(request);
+        return new IntegerResponse(count);
+    }
+
     /**
      *
      * @param request
@@ -47,10 +55,10 @@ public class AdminBatchBorrowRecoverLogController extends BaseController {
 
     @ApiOperation(value = "放款列表查询")
     @PostMapping("/getList")
-    public BatchBorrowRecoverReponse getList(@RequestBody BatchBorrowRecoverRequest request){
+    public BatchBorrowRecoverLogReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
         logger.info("BatchBorrowRecoverRequest:::::::[{}]", JSON.toJSONString(request));
-        BatchBorrowRecoverReponse reponse = new BatchBorrowRecoverReponse();
+        BatchBorrowRecoverLogReponse reponse = new BatchBorrowRecoverLogReponse();
         Integer total = getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
         if(request.getPageSize() ==0){
@@ -64,7 +72,7 @@ public class AdminBatchBorrowRecoverLogController extends BaseController {
             limitEnd = -1;
         }
 
-        List<BatchBorrowRecoverVo> list =  batchBorrowRecoverService.getList(request,limitStart,limitEnd);
+        List<BatchBorrowRecoverLogVo> list =  batchBorrowRecoverService.getList(request,limitStart,limitEnd);
         reponse.setRecordTotal(total);
         reponse.setResultList(list);
         reponse.setRtn(Response.SUCCESS);

@@ -514,4 +514,12 @@ public class BatchBorrowRecoverLogVo extends BaseVO implements Serializable {
     public void setSeqNo(String seqNo) {
         this.seqNo = seqNo;
     }
+
+    public String getBankSeqNo() {
+        return bankSeqNo;
+    }
+
+    public void setBankSeqNo(String bankSeqNo) {
+        this.bankSeqNo = bankSeqNo;
+    }
 }

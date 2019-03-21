@@ -9,9 +9,11 @@ import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.service.BatchBorrowRecoverLogService;
 import com.hyjf.admin.service.BatchBorrowRecoverService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.am.response.admin.BatchBorrowRecoverLogReponse;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import com.hyjf.am.vo.admin.BatchBorrowRepayBankInfoVO;
 import com.hyjf.am.vo.admin.BorrowRecoverBankInfoVo;
@@ -55,9 +57,9 @@ public class BatchBorrowRecoverLogServiceImpl extends BaseServiceImpl implements
     public JSONObject queryBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
 
         JSONObject jsonObject = new JSONObject();
-        BatchBorrowRecoverReponse batchBorrowRepayReponse = amAdminClient.getBatchBorrowRecoverLogList(request);
+        BatchBorrowRecoverLogReponse batchBorrowRepayReponse = amAdminClient.getBatchBorrowRecoverLogList(request);
         if (null != batchBorrowRepayReponse) {
-            List<BatchBorrowRecoverVo> listAccountDetail = batchBorrowRepayReponse.getResultList();
+            List<BatchBorrowRecoverLogVo> listAccountDetail = batchBorrowRepayReponse.getResultList();
             Integer recordCount = batchBorrowRepayReponse.getRecordTotal();
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 this.queryBatchCenterStatusName(listAccountDetail,request.getNameClass());
@@ -82,16 +84,26 @@ public class BatchBorrowRecoverLogServiceImpl extends BaseServiceImpl implements
         return jsonObject;
     }
 
+    /**
+     * 批次中心-批次还款记录导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request) {
+        return amAdminClient.getBatchBorrowRecoverLogCount(request);
+    }
+
 
     /**
      * 获取批次内容的显示状态描述
      * @param listAccountDetail
      */
     @Override
-    public void queryBatchCenterStatusName(List<BatchBorrowRecoverVo> listAccountDetail, String nameClass) {
+    public void queryBatchCenterStatusName(List<BatchBorrowRecoverLogVo> listAccountDetail, String nameClass) {
         //获取放款相关状态描述
         Map<String, String> paramNameMap = CacheUtil.getParamNameMap(nameClass);
-        for (BatchBorrowRecoverVo vo:
+        for (BatchBorrowRecoverLogVo vo:
              listAccountDetail) {
             vo.setStatusStr(paramNameMap.get(vo.getStatus()));
             if("0".equals(vo.getIncreaseInterestFlag())){//不加息

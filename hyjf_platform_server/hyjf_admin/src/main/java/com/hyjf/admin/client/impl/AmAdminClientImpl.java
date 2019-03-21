@@ -722,15 +722,30 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 批次中心-批次还款记录列表导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getBatchBorrowRecoverLogCount(BatchBorrowRecoverRequest request) {
+        IntegerResponse response =
+                restTemplate.postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecoverLog/getListCount", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
      * 查询批次中心-批次还款记录
      * yangchangwei
      * @param request
      * @return
      */
     @Override
-    public BatchBorrowRecoverReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request) {
-        BatchBorrowRecoverReponse response = restTemplate.
-                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecoverLog/getList", request, BatchBorrowRecoverReponse.class).
+    public BatchBorrowRecoverLogReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverLogReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecoverLog/getList", request, BatchBorrowRecoverLogReponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;

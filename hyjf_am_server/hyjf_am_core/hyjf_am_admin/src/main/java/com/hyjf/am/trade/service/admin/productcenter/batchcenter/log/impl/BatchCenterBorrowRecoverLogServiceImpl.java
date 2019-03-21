@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.service.admin.productcenter.batchcenter.borrowRecover.BatchCenterBorrowRecoverService;
 import com.hyjf.am.trade.service.admin.productcenter.batchcenter.log.BatchCenterBorrowRecoverLogService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.BatchBorrowRecoverLogVo;
 import com.hyjf.am.vo.admin.BatchBorrowRecoverVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -39,11 +40,11 @@ public class BatchCenterBorrowRecoverLogServiceImpl extends BaseServiceImpl impl
      * @return
      */
     @Override
-    public List<BatchBorrowRecoverVo> getList(BatchBorrowRecoverRequest request, int limitStart, int limitEnd) {
+    public List<BatchBorrowRecoverLogVo> getList(BatchBorrowRecoverRequest request, int limitStart, int limitEnd) {
 
         request.setLimitStart(limitStart);
         request.setLimitEnd(limitEnd);
-        List<BatchBorrowRecoverVo> recoverVoList = this.batchCenterLogCustomizeMapper.queryBatchCenterList(request);
+        List<BatchBorrowRecoverLogVo> recoverVoList = this.batchCenterLogCustomizeMapper.queryBatchCenterList(request);
         return recoverVoList;
     }
 
