@@ -132,7 +132,8 @@ public class NifaRepairController {
 
         //-----------------查询数据------------------------------------
         // 查询该天日期所有放款标的
-        List<BorrowApicronVO> loanList = this.nifaFileDealService.selectBorrowApicron(historyData);
+//        List<BorrowApicronVO> loanList = this.nifaFileDealService.selectBorrowApicron(historyData);
+        List<BorrowAndInfoVO> loanList = this.nifaFileDealService.selectBorrowByHistoryDate(historyData);
         // 查询该天日期所有还款标的
         List<BorrowRepayVO> repayList = this.nifaFileDealService.selectBorrowRepayByHistoryData(historyData);
         List<BorrowRepayPlanVO> repayPlanList = this.nifaFileDealService.selectBorrowRepayPlanByHistoryData(historyData);
@@ -165,7 +166,7 @@ public class NifaRepairController {
         // 判断是否生成mongo数据
         // 放款未生成数据
         if(CollectionUtils.isNotEmpty(loanList)) {
-            for (BorrowApicronVO vo : loanList) {
+            for (BorrowAndInfoVO vo : loanList) {
                 // 该日放款成功数据
                 if (mongoLoanList.add(vo.getBorrowNid())) {
                     re.add(vo.getBorrowNid());
