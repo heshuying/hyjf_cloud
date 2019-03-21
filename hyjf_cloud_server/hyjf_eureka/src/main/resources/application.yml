@@ -10,7 +10,7 @@ eureka:
   environment: ${spring.profiles.active}
   datacenter: Main
   client:
-    register-with-eureka: false
+    register-with-eureka: true
     fetch-registry: true
     serviceUrl:
       defaultZone: '@eureka.serviceUrl.default@'
