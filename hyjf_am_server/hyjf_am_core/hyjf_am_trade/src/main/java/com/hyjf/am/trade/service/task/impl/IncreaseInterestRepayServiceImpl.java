@@ -408,7 +408,9 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 			txTime = StringUtils.isNotBlank(transferBean.getTxTime()) ? Integer.parseInt(transferBean.getTxTime()) : 0;
 			seqNo = StringUtils.isNotBlank(transferBean.getSeqNo()) ? Integer.parseInt(transferBean.getSeqNo()) : 0;
 		} else {
-			logger.info("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[出借订单号:" + investOrderId + "]");
+			//logger.info("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[出借订单号:" + investOrderId + "]");
+			logger.error("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[出借订单号:" + investOrderId + "]");
+			throw  new RuntimeException("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[出借订单号:" + investOrderId + "]");
 		}
 
 		// 判断该收支明细是否存在时,跳出本次循环
