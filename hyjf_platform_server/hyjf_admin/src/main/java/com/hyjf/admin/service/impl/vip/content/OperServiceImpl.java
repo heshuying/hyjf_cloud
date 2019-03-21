@@ -126,6 +126,7 @@ public class OperServiceImpl implements OperService {
     @Override
     public Map saveCheck(CustomerTaskConfigRequest request) {
         Map resultMap = new HashMap<String, Object>();
+        resultMap.put("customerGroup", null);
         if (this.blankCheck(7, null, null, request)){
             resultMap.put("status", "3");
             resultMap.put("statusDesc", "必传字段未传");
@@ -153,6 +154,8 @@ public class OperServiceImpl implements OperService {
             List<CustomerTaskConfigVO> result = this.taskList(request);
             if (!CollectionUtils.isEmpty(result)){
                 resultFlag = true;
+            }else {
+                resultMap.put("customerGroup", result.get(1).getCustomerGroup());
             }
         }
         resultMap.put("result", resultFlag);
