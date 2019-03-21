@@ -110,6 +110,13 @@
 		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
 		<result column="regist_user_name" property="registUserName" jdbcType="VARCHAR" />
 		<result column="freezeOrderId" property="freezeOrderId" jdbcType="VARCHAR" />
+		<result column="repayFeeWait" property="repayFeeWait" jdbcType="VARCHAR" />
+		<result column="repayFeeYes" property="repayFeeYes" jdbcType="VARCHAR" />
+		<result column="chargeInterest" property="chargeInterest" jdbcType="VARCHAR" />
+		<result column="chargePenaltyInterest" property="chargePenaltyInterest" jdbcType="VARCHAR" />
+		<result column="lateInterest" property="lateInterest" jdbcType="VARCHAR" />
+		<result column="borrowFullTime" property="borrowFullTime" jdbcType="VARCHAR" />
+		<result column="recoverLastTime" property="recoverLastTime" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
@@ -158,15 +165,20 @@
 		hic.inst_name as instName,
 
 		binfo.borrow_measures_instit as webName,
-		rflg.order_id AS freezeOrderId
+		rflg.order_id AS freezeOrderId,
+		br.repay_fee-b.repay_fee_normal as repayFeeWait,
+		b.repay_fee_normal as repayFeeYes,
+		br.charge_interest as chargeInterest,
+		br.charge_penalty_interest as chargePenaltyInterest,
+		br.late_interest as lateInterest,
+		b.borrow_full_time as borrowFullTime,
+		b.recover_last_time as recoverLastTime
 		FROM ht_borrow AS b
 		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
 		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
 		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-
-
 		LEFT JOIN ht_hjh_inst_config hic on binfo.inst_code = hic.inst_code
 		LEFT JOIN ht_bank_repay_freeze_log rflg on rflg.borrow_nid = b.borrow_nid and rflg.del_flag = 0
 		<include refid="Where_Clause" />

@@ -385,6 +385,13 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayAccountInterestWait","剩余待还利息");
         map.put("repayAccountWait","未还本息");
         map.put("status","还款状态");
+        map.put("chargeInterest","已提前减息");
+        map.put("chargePenaltyInterest","已收提前还款违约金");
+        map.put("lateInterest"," 已收逾期违约金");
+        map.put("repayFeeYes","已还服务费");
+        map.put("borrowFullTime","满标时间");
+        map.put("verifyTime","发标时间");
+        map.put("recoverLastTime","放款时间");
         map.put("repayLastTime","到期日");
         map.put("repayNextTime","下期还款日");
         map.put("repayMoneySource","还款来源");

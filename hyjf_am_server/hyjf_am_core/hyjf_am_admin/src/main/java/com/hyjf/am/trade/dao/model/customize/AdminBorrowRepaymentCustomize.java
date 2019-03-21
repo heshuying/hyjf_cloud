@@ -52,8 +52,72 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
     private String planNid;//计划编号
     private String instName; //机构名称
     private String freezeOrderId; //冻结订单号
+    private String repayFeeYes; //已还服务费
+    private String repayFeeWait; //未还服务费
+    private String chargeInterest; //提前还款减息(已加罚息)
+    private String chargePenaltyInterest; //提前还款罚息
+    private String lateInterest; //逾期利息
+    private String borrowFullTime; //满标书简
+    private String recoverLastTime; //最后一笔的放款完成时间
+    
+    
+    public String getChargeInterest() {
+		return chargeInterest;
+	}
 
-    public String getBorrowNid() {
+	public void setChargeInterest(String chargeInterest) {
+		this.chargeInterest = chargeInterest;
+	}
+
+	public String getChargePenaltyInterest() {
+		return chargePenaltyInterest;
+	}
+
+	public void setChargePenaltyInterest(String chargePenaltyInterest) {
+		this.chargePenaltyInterest = chargePenaltyInterest;
+	}
+
+	public String getLateInterest() {
+		return lateInterest;
+	}
+
+	public void setLateInterest(String lateInterest) {
+		this.lateInterest = lateInterest;
+	}
+
+	public String getBorrowFullTime() {
+		return borrowFullTime;
+	}
+
+	public void setBorrowFullTime(String borrowFullTime) {
+		this.borrowFullTime = borrowFullTime;
+	}
+
+	public String getRecoverLastTime() {
+		return recoverLastTime;
+	}
+
+	public void setRecoverLastTime(String recoverLastTime) {
+		this.recoverLastTime = recoverLastTime;
+	}
+
+	public String getRepayFeeYes() {
+		return repayFeeYes;
+	}
+
+	public void setRepayFeeYes(String repayFeeYes) {
+		this.repayFeeYes = repayFeeYes;
+	}
+
+	public String getRepayFeeWait() {
+		return repayFeeWait;
+	}
+
+	public void setRepayFeeWait(String repayFeeWait) {
+		this.repayFeeWait = repayFeeWait;
+	}
+
+	public String getBorrowNid() {
         return borrowNid;
     }
 
