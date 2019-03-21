@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.admin.exception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankOpenAccountLogResponse;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
@@ -144,6 +145,7 @@ public class OpenAccountEnquiryController extends BaseController {
     @ApiOperation(value = "开户掉单，同步保存开户(user)数据", notes = "开户掉单，同步保存开户数据")
     @PostMapping(value = "/updateUser")
     public OpenAccountEnquiryResponse updateUser(@RequestBody OpenAccountEnquiryDefineRequest request){
+        logger.info("开户掉单，同步保存开户数据：" +JSONObject.toJSONString(request));
         OpenAccountEnquiryResponse response = bankOpenAccountLogSrvice.updateUser(request);
         return response;
     }

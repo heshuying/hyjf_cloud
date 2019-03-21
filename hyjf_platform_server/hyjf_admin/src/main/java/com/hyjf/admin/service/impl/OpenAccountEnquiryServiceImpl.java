@@ -217,12 +217,11 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             ////同步保存user信息成
             if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
                 //同步保存user信息
-                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
-                logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAccountEnquiryDefineRequestBeanVO));
-                BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
+                OpenAccountEnquiryDefineResultBeanVO openAuserVO =  amUserClient.updateUser(requestBean);
+                logger.info("==========保存开户掉单user的数据openAccountEnquiryDefineRequestBeanVO：" +JSONObject.toJSONString(openAuserVO));
                 logger.info("==========保存开户掉单user的数据requestBean：" +JSONObject.toJSONString(requestBean));
-                if(openAccountEnquiryDefineRequestBeanVO !=null){
-                    if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())) {
+                if(openAuserVO !=null){
+                    if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAuserVO.getStatus())) {
                         UserVO user = amUserClient.findUserById(Integer.valueOf(userid));
                         BankCallBean bean = new BankCallBean();
                         bean.setAccountId(requestBean.getAccountId());
