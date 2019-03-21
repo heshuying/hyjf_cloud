@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.BifaOperationReportJobCustomizeMapper">
 
 	<select id="getLoanBalanceNum" resultType="int">
-		select count(*) from ht_borrow where status in (4,7)
+		select count(*) from ht_borrow where status in (4,8)
 	</select>
 
 </mapper>
