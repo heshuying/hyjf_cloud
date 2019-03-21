@@ -1035,6 +1035,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                         if (new BigDecimal(balance).compareTo(BigDecimal.ZERO) == 0) {
                             logger.info("planNid:{},可加入剩余金额为{}元", plan.getPlanNid(), balance);
                             redisMsgCode = MsgEnum.ERR_AMT_TENDER_YOU_ARE_LATE;
+                            throw new CheckException(redisMsgCode);
                         } else {
                             Transaction tx = jedis.multi();
                             // 事务：计划当前可用额度 = 计划未投前可用余额 - 用户出借额度
