@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ScreenYearMoneyCustomizeMapper">
-
+	<resultMap id="repayListResultMap" type="com.hyjf.am.vo.trade.RepaymentPlanVO" >
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		<result column="customer_group" property="customerGroup" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="repayment_time" property="repaymentTime" jdbcType="TIMESTAMP" />
+	</resultMap>
 
 	<select id="queryTenderList" resultType="java.lang.String" >
 		SELECT
@@ -34,4 +42,12 @@
 		AND hdpa.accede_order_id = #{orderId,jdbcType=VARCHAR};
 	</select>
 
+	<insert id="addRepayUserList">
+		insert into ht_repayment_plan
+		(`user_id`, `borrow_nid`, `accede_order_id`, `customer_name`, `customer_group`, `money`, `repayment_time`)
+		values
+		<foreach collection="repaymentPlanVOS" item="item" index="index" separator=",">
+			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.repaymentTime})
+		</foreach>
+	</insert>
 </mapper>

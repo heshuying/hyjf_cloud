@@ -190,11 +190,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 							}
 							try{
 								// 提现成功后,发送大屏数据统计MQ
-								ScreenDataBean screenDataBean = new ScreenDataBean();
-								screenDataBean.setUserId(users.getUserId());
-								screenDataBean.setMoney(transAmt);
-								screenDataBean.setUserName(users.getUsername());
-								screenDataBean.setOperating(4);
+								ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),transAmt,4);
 								this.sendScreenDataMQ(screenDataBean);
 							}catch (Exception e){
 								logger.error("提现成功后,发送大屏数据统计MQ失败",e.getMessage());

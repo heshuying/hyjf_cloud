@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.service.screen;
 
 import com.hyjf.am.resquest.trade.ScreenDataBean;
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -27,10 +29,16 @@ public interface ScreenDataService {
 
     /**
      * 查询用户的年化投资金额
-     *
      * @param userId
      * @return
      */
     BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
 
+
+    /**
+     * 批量插入本月待回款用户数据
+     * @param repaymentPlanVOS
+     * @return
+     */
+   Integer addRepayUserList(List<RepaymentPlanVO> repaymentPlanVOS);
 }

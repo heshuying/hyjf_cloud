@@ -8,6 +8,7 @@ import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountListExample;
 import com.hyjf.am.trade.dao.model.auto.UserOperateList;
 import com.hyjf.am.trade.service.screen.ScreenDataService;
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,11 @@ public class ScreenDataServiceImpl implements ScreenDataService {
             yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360), 4, BigDecimal.ROUND_HALF_UP);
         }
         return yearAmount;
+    }
+
+
+    @Override
+    public Integer addRepayUserList(List<RepaymentPlanVO> repaymentPlanVOS) {
+        return screenYearMoneyCustomizeMapper.addRepayUserList(repaymentPlanVOS);
     }
 }

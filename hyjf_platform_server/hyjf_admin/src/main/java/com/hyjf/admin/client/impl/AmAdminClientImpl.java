@@ -36,6 +36,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
@@ -51,6 +52,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -2141,6 +2143,15 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return 0;
     }
+
+    @Override
+    public RepayResponse findRepayUser(Integer startTime, Integer endTime,Integer currPage, Integer pageSize) {
+        String url = "http://AM-ADMIN/am-admin/screen/data/find_repay_user/"+startTime+"/"+endTime+"/"+currPage+"/"+pageSize;
+        RepayResponse response = restTemplate.getForEntity(url, RepayResponse.class).getBody();
+        return response;
+    }
+
+
 
     /**
      * 坐席月任务配置列表查询

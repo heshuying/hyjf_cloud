@@ -63,6 +63,7 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                 if (userFreeMoney != null) {
                     data.setBalance(userFreeMoney);
                 }
+                // 投资需要查询年化金额
                 if (data.getOperating()==1) {
                     //消息推送开始
                     if(data.getMoney().compareTo(new BigDecimal(100000))!=-1){
