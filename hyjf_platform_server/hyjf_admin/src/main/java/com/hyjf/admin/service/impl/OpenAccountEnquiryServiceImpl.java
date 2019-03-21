@@ -238,6 +238,11 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     }
     private void updateCardNoToBank(BankCallBean bean,UserVO user) {
         Integer userId = Integer.parseInt(bean.getLogUserId());
+        List<BankCardVO> bankCardList =  amUserClient.selectBankCardByUserId(userId);
+        if(bankCardList!=null && bankCardList.size()<1){
+            logger.info("该用户银行卡已存在");
+            return;
+        }
         logger.info("保存用户银行卡信息  userId {}   ",userId);
         // 调用江西银行接口查询用户绑定的银行卡
         BankCallBean cardBean = new BankCallBean(userId, BankCallConstant.TXCODE_CARD_BIND_DETAILS_QUERY, bean.getLogClient());
