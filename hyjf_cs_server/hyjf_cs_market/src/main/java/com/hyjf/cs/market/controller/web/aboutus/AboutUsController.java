@@ -156,24 +156,23 @@ public class AboutUsController extends BaseController {
 
 	/**
 	 * 根据ID获取公司历程详情
-	 * @param id
 	 * @return
 	 * @Author : huanghui
 	 */
 	@ApiOperation(value = "根据ID获取公司历程详情", notes = "信息披露 - 公司历程")
-	@GetMapping(value = "getEventDetailById/{id}")
-	public WebResult<Map<String, Object>> getEventDetailById(@PathVariable Integer id){
+	@GetMapping(value = "getEventDetailById/{ids}")
+	public WebResult<Map<String, Object>> getEventDetailById(@PathVariable String ids){
+        logger.info("开始根据ID获取公司历程详情,getEventDetailById");
 		WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
 		Map<String, Object> resultMap = new HashMap<>();
-
-		// ID不 能为空
-		if (id <= 0 || id == null){
-			result.setStatus("404");
-			result.setStatusDesc("未找到数据");
-			return result;
-		}
-
 		try {
+            Integer id = Integer.valueOf(ids);
+            // ID不 能为空
+            if (id <= 0 || id == null){
+                result.setStatus("404");
+                result.setStatusDesc("未找到数据");
+                return result;
+            }
 			EventVO eventVO = this.aboutUsService.getEventDetailById(id);
 			if(eventVO == null){
 				result.setStatus("404");
@@ -183,6 +182,7 @@ public class AboutUsController extends BaseController {
 			resultMap.put("eventNotice", eventVO);
 			result.setData(resultMap);
 		}catch (Exception e){
+			logger.info("根据ID获取公司历程详情,getEventDetailById:",e);
 			result.setStatus("404");
 			result.setStatusDesc("未找到数据");
 		}
@@ -377,31 +377,40 @@ public class AboutUsController extends BaseController {
 	 */
 	@ApiOperation(value = "获取媒体报道（风险教育 +网贷知识）详情", notes = "获取媒体报道（风险教育 +网贷知识）详情")
 	@PostMapping("/getMediaReportInfo")
-	public WebResult<ContentArticleVO>  getMediaReportInfo(@RequestParam Integer id) {
-		WebResult webResult=null;
-		// 根据type查询 风险教育 或 媒体报道 或 网贷知识
-		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
-		if(mediaReport == null){
+	public WebResult<ContentArticleVO>  getMediaReportInfo(@RequestParam String id) {
+        logger.info("开始获取媒体报道（风险教育 +网贷知识）");
+		WebResult webResult=new WebResult();
+		try {
+            Integer ids = Integer.valueOf(id);
+            // 根据type查询 风险教育 或 媒体报道 或 网贷知识
+            ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(ids);
+            if (mediaReport == null) {
+                webResult.setStatus("404");
+                webResult.setStatusDesc("未找到数据");
+                return webResult;
+            }
+            if (!"".equals(mediaReport.getType()) && mediaReport.getType().equals("101")) {
+                // 风险教育
+                //modelAndView = new ModelAndView(AboutUsDefine.FX_REPORT_INFO_PATH);
+            } else if (!"".equals(mediaReport.getType()) && mediaReport.getType().equals("3")) {
+                // 网贷知识
+                //modelAndView = new ModelAndView(AboutUsDefine.MEDIA_REPORT_INFO_PATH);
+            }
+            if (mediaReport != null) {
+                if (mediaReport.getContent().contains("../../../..")) {
+                    mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
+                } else if (mediaReport.getContent().contains("src=\"/")) {
+                    mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()));
+                }
+            }
+            webResult = new WebResult(mediaReport);
+            return webResult;
+        }catch (Exception e) {
+			logger.info("获取媒体报道（风险教育 +网贷知识）详情,getMediaReportInfo:",e);
 			webResult.setStatus("404");
-			webResult.setStatusDesc("未找到数据");
-			return webResult;
-		}
-		if(!"".equals(mediaReport.getType()) && mediaReport.getType().equals("101")){
-			// 风险教育
-			//modelAndView = new ModelAndView(AboutUsDefine.FX_REPORT_INFO_PATH);
-		} else if(!"".equals(mediaReport.getType()) && mediaReport.getType().equals("3")){
-			// 网贷知识
-			//modelAndView = new ModelAndView(AboutUsDefine.MEDIA_REPORT_INFO_PATH);
-		}
-		if (mediaReport != null) {
-			if (mediaReport.getContent().contains("../../../..")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
-			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()));
-			}
-		}
-		webResult = new WebResult(mediaReport);
-		return webResult;
+            webResult.setStatusDesc("未找到数据");
+            return webResult;
+        }
 	}
 
 	/**
