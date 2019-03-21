@@ -3,8 +3,6 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
-import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.*;
@@ -13,6 +11,8 @@ import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.*;
@@ -20,6 +20,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
@@ -2175,7 +2176,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public CustomerTaskConfigVO customerTaskConfigInfo(CustomerTaskConfigVO customerTaskConfigVO) {
         String url = "http://AM-ADMIN/am-user/vip/content/task/info";
-        Response<CustomerTaskConfigVO> response = restTemplate.postForEntity(url, customerTaskConfigVO, Response.class).getBody();
+        CustomerTaskConfigVOResponse response = restTemplate.postForEntity(url, customerTaskConfigVO, CustomerTaskConfigVOResponse.class).getBody();
         return response.getResult();
     }
 

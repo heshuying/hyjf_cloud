@@ -11,7 +11,6 @@ import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -151,11 +150,10 @@ public class OperController {
     private Response<CustomerTaskConfigVO> taskInfo(@RequestBody CustomerTaskConfigVO customerTaskConfigVO){
         Response<CustomerTaskConfigVO> response = new Response<>();
 
-        CustomerTaskConfig result = operService.taskInfo(customerTaskConfigVO.getId());
-        if (null != result){
-            CustomerTaskConfigVO resultBean = new CustomerTaskConfigVO();
-            BeanUtils.copyProperties(result, resultBean);
-            response.setResult(resultBean);
+        CustomerTaskConfig customerTaskConfig = operService.taskInfo(customerTaskConfigVO.getId());
+        if (null != customerTaskConfig){
+            CustomerTaskConfigVO poundageCustomizeVO = CommonUtils.convertBean(customerTaskConfig, CustomerTaskConfigVO.class);
+            response.setResult(poundageCustomizeVO);
         }
         return response;
     }
