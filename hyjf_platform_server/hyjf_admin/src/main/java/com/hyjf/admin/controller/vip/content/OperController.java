@@ -1,9 +1,7 @@
 package com.hyjf.admin.controller.vip.content;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.vip.content.OperService;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
@@ -39,7 +37,7 @@ public class OperController extends BaseController {
 
     // 大屏运营部数据配置
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     @ApiOperation(value = "大屏运营部数据配置-列表查询",notes = "大屏运营部数据配置-列表查询")
     @PostMapping("/oper/list")
     @ResponseBody
@@ -54,7 +52,7 @@ public class OperController extends BaseController {
         return result;
     }
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     @ApiOperation(value = "大屏运营部数据配置-数据新增",notes = "大屏运营部数据配置-数据新增")
     @PostMapping("/oper/add")
     @ResponseBody
@@ -74,7 +72,7 @@ public class OperController extends BaseController {
         return new AdminResult();
     }
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "大屏运营部数据配置-数据详情",notes = "大屏运营部数据配置-数据详情")
     @PostMapping("/oper/info")
     @ResponseBody
@@ -87,7 +85,7 @@ public class OperController extends BaseController {
         return result;
     }
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "大屏运营部数据配置-数据编辑",notes = "大屏运营部数据配置-数据编辑")
     @PostMapping("/oper/update")
     @ResponseBody
@@ -104,7 +102,7 @@ public class OperController extends BaseController {
         return new AdminResult();
     }
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "大屏运营部数据配置-数据启用/禁用",notes = "大屏运营部数据配置-数据启用/禁用")
     @PostMapping("/oper/able")
     @ResponseBody
@@ -123,7 +121,7 @@ public class OperController extends BaseController {
 
     // 坐席月任务配置
 
-    @AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_VIEW)
+    //@AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_VIEW)
     @ApiOperation(value = "坐席月任务配置-列表查询",notes = "坐席月任务配置-列表查询")
     @PostMapping("/task/list")
     @ResponseBody
@@ -138,7 +136,7 @@ public class OperController extends BaseController {
         return result;
     }
 
-    @AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_ADD)
+    //@AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_ADD)
     @ApiOperation(value = "坐席月任务配置-数据新增",notes = "坐席月任务配置-数据新增")
     @PostMapping("/task/add")
     @ResponseBody
@@ -157,7 +155,7 @@ public class OperController extends BaseController {
         return new AdminResult();
     }
 
-    @AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_MODIFY)
+    //@AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "坐席月任务配置-数据详情",notes = "坐席月任务配置-数据详情")
     @PostMapping("/task/info")
     @ResponseBody
@@ -170,7 +168,7 @@ public class OperController extends BaseController {
         return result;
     }
 
-    @AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_MODIFY)
+    //@AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "坐席月任务配置-数据编辑",notes = "坐席月任务配置-数据编辑")
     @PostMapping("/task/update")
     @ResponseBody
@@ -187,7 +185,7 @@ public class OperController extends BaseController {
         return new AdminResult();
     }
 
-    @AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_MODIFY)
+    //@AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_MODIFY)
     @ApiOperation(value = "坐席月任务配置-数据启用/禁用",notes = "坐席月任务配置-数据启用/禁用")
     @PostMapping("/task/able")
     @ResponseBody
@@ -204,7 +202,7 @@ public class OperController extends BaseController {
         return new AdminResult();
     }
 
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
+    //@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     @ApiOperation(value = "添加/编辑重复检验",notes = "添加/编辑重复检验")
     @PostMapping("/common/save_check")
     @ResponseBody
