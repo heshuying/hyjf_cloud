@@ -91,7 +91,7 @@
         log.suc_counts suc_counts,
         log.fail_amount fail_amount,
         log.fail_counts fail_counts,
-        log.`status`,
+        IF(log.`status`=0,hba.`status`,log.`status`),
         log.seq_no,
         log.bank_seq_no,
         DATE_FORMAT(
