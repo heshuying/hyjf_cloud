@@ -1,7 +1,10 @@
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -18,6 +21,15 @@ public class ScreenDataBean {
      * @mbggenerated
      */
     private Integer userId;
+    /**
+     * 用户id集合
+     *
+     * @mbggenerated
+     */
+    private List<Integer> userIds;
+
+
+    List<RepaymentPlanVO> repaymentPlanVOS;
 
     /**
      * 用户名
@@ -90,6 +102,16 @@ public class ScreenDataBean {
      *投资类型
      */
     Integer productType;
+
+    public ScreenDataBean(Integer userId, String userName, BigDecimal money, Integer operating) {
+        this.userId = userId;
+        this.userName = userName;
+        this.money = money;
+        this.operating = operating;
+    }
+
+    public ScreenDataBean() {
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -195,5 +217,21 @@ public class ScreenDataBean {
 
     public void setProductType(Integer productType) {
         this.productType = productType;
+    }
+
+    public List<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<Integer> userIds) {
+        this.userIds = userIds;
+    }
+
+    public List<RepaymentPlanVO> getRepaymentPlanVOS() {
+        return repaymentPlanVOS;
+    }
+
+    public void setRepaymentPlanVOS(List<RepaymentPlanVO> repaymentPlanVOS) {
+        this.repaymentPlanVOS = repaymentPlanVOS;
     }
 }

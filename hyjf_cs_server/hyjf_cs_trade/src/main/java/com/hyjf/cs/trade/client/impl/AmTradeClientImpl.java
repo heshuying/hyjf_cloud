@@ -7031,6 +7031,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
 
+
+
     @Override
     public UserLargeScreenVO getScalePerformance(){
         String url = "http://AM-TRADE/am-trade/user_large_screen/getscaleperformance";

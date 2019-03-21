@@ -3,6 +3,7 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
+import com.hyjf.am.response.trade.RepayResponse;
 import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.*;
@@ -34,6 +35,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
@@ -1259,4 +1261,10 @@ public interface AmAdminClient {
      * @return
      */
     int updateCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO);
+
+    /**
+     * 查询本月待回款用户信息
+     * @return
+     */
+    RepayResponse findRepayUser(Integer startTime, Integer endTime, Integer currPage, Integer pageSize);
 }

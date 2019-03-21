@@ -6986,4 +6986,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return updateFlag.getResultInt().intValue();
 	}
+
+    @Override
+    public void addRepayUserList(List<RepaymentPlanVO> resultList) {
+        ScreenDataBean screenDataBean = new ScreenDataBean();
+        screenDataBean.setRepaymentPlanVOS(resultList);
+        restTemplate.postForObject("http://AM-TRADE/am-trade/screen_data/add_repay_userList",
+                screenDataBean, IntegerResponse.class);
+    }
+
+
+
+
 }

@@ -3391,5 +3391,11 @@ public interface AmTradeClient {
      * @param request
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
+
+    /**
+     *批量添加待回款用户信息
+     * @param resultList
+     */
+    void addRepayUserList(List<RepaymentPlanVO> resultList);
 }
 

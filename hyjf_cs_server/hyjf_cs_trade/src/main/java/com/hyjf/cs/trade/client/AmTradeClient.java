@@ -2906,6 +2906,8 @@ public interface AmTradeClient {
      */
     BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
 
+
+
     /**
      * 规模业绩
      * @return UserLargeScreenVO
