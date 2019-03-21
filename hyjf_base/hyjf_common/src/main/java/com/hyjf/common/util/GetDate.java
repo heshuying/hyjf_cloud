@@ -2277,4 +2277,26 @@ public class GetDate extends PropertyEditorSupport {
 		calendar.setTime(date);
 		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)+"";
 	}
+
+	/**
+	 * 获取当前月最后一天
+	 * @return
+	 */
+	public static Integer getLastDayOfMonth() {
+		Calendar ca = Calendar.getInstance();
+		ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return  getDayEnd10(ca.getTime());
+	}
+	/**
+	 * 获取当前月第一天
+	 * @return
+	 */
+	public static Integer getFirstDayOfMonth() {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, 0);
+		//设置为1号,当前日期既为本月第一天
+		c.set(Calendar.DAY_OF_MONTH,1);
+		return getDayStart11(c.getTime());
+	}
+
 }

@@ -6,14 +6,18 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.RepayResponse;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.RepaymentPlan;
 import com.hyjf.am.trade.service.screen.ScreenDataService;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
+import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +62,21 @@ public class ScreenDataController extends BaseController {
         return response;
     }
 
-
+    @PostMapping(value = "/deal_repay_money")
+    private IntegerResponse dealRepayMoney(@RequestBody ScreenDataBean screenDataBean) {
+        IntegerResponse response = new IntegerResponse();
+        Integer startTime = GetDate.getFirstDayOfMonth();
+        Integer endTime = GetDate.getLastDayOfMonth();
+        if (screenDataBean.getTenderUserId()!=null&&screenDataBean.getTenderUserId()!=0) {
+            RepaymentPlan repayUser = service.findRepayUser(screenDataBean, startTime, endTime);
+            if (repayUser !=null) {
+                repayUser.setUserId(screenDataBean.getTenderUserId());
+                service.insertRepayUser(repayUser);
+            }
+        }
+        Integer result = service.updateRepayMoney(screenDataBean,startTime,endTime);
+        response.setResultInt(result);
+        return response;
+    }
 
 }

@@ -66,27 +66,40 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                 // 投资需要查询年化金额
                 if (data.getOperating()==1) {
                     //消息推送开始
-                    if(data.getMoney().compareTo(new BigDecimal(100000))!=-1){
-                        JSONObject jsonObject = new JSONObject();
-                        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
-                        jsonObject.put("currentOwner",currentOwner);
-                        jsonObject.put("userName",data.getUserName());
-                        jsonObject.put("time",formatter.format(new Date()));
-                        jsonObject.put("money",data.getMoney());
-                        try {
-                            WebSocketServer.sendInfo(jsonObject.toJSONString(),"user_picture_1");
-                        } catch (IOException e) {
-                            logger.info("推送数据接口出现异常"+e.getMessage());
-                        }
-                    }
+                    pushMessage(data, currentOwner);
                     //消息推送结束
                     BigDecimal yearMoney = amTradeClient.findYearMoney(userId, orderId, productType, investMoney);
                     data.setYearMoney(yearMoney);
+                }
+                //回款处理
+                if (data.getOperating() == 3) {
+                    amTradeClient.dealRepayMoney(data);
                 }
                 amTradeClient.insertScreenData(data);
                 }
             }
         }
+
+    /**
+     * 推送接口
+     * @param data
+     * @param currentOwner
+     */
+    private void pushMessage(ScreenDataBean data, String currentOwner) {
+        if(data.getMoney().compareTo(new BigDecimal(100000))!=-1){
+            JSONObject jsonObject = new JSONObject();
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+            jsonObject.put("currentOwner",currentOwner);
+            jsonObject.put("userName",data.getUserName());
+            jsonObject.put("time",formatter.format(new Date()));
+            jsonObject.put("money",data.getMoney());
+            try {
+                WebSocketServer.sendInfo(jsonObject.toJSONString(),"user_picture_1");
+            } catch (IOException e) {
+                logger.info("推送数据接口出现异常"+e.getMessage());
+            }
+        }
+    }
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {

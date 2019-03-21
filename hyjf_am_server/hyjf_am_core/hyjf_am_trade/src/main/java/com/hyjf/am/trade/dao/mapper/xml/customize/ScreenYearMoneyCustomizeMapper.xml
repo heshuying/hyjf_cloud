@@ -50,4 +50,19 @@
 			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.repaymentTime})
 		</foreach>
 	</insert>
+
+	<update id="updateRepayMoney">
+		update `ht_repayment_plan` set `money`=`money`-#{screenDataBean.money}
+		where (accede_order_id=#{screenDataBean.orderId} or borrow_nid=#{screenDataBean.orderId})
+				and repayment_time <![CDATA[>=]]> FROM_UNIXTIME(#{startTime},'%Y-%m-%d')
+				and  repayment_time <![CDATA[<=]]> FROM_UNIXTIME(#{endTime},'%Y-%m-%d')
+	</update>
+
+	<select id="findRepayUser" resultType="com.hyjf.am.trade.dao.model.auto.RepaymentPlan">
+		select * from  `ht_repayment_plan`
+		where borrow_nid=#{screenDataBean.orderId}
+				and repayment_time <![CDATA[>=]]> FROM_UNIXTIME(#{startTime},'%Y-%m-%d')
+				and  repayment_time <![CDATA[<=]]> FROM_UNIXTIME(#{endTime},'%Y-%m-%d')
+
+	</select>
 </mapper>
