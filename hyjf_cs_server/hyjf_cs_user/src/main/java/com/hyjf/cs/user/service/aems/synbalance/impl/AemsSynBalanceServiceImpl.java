@@ -98,12 +98,12 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
 
         //查询时间段 (只查当天)
         //上线需放开
-        /*String startDate = getTxDate(bankOpenAccount);
-        String endDate = GetOrderIdUtils.getTxDate();*/
+        String startDate = getTxDate(bankOpenAccount);
+        String endDate = GetOrderIdUtils.getTxDate();
 
         // 测试环境
-        String startDate = "20170310";
-        String endDate = "20170310";
+        /*String startDate = "20170310";
+        String endDate = "20170310";*/
 
         List<UnderLineRechargeVO> codeList=getUnderLineRechargeList();
         List<BankResultBean> recordList = new ArrayList<BankResultBean>();
