@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,4 +43,7 @@ public interface RepayManageCustomizeMapper {
      * @return
      */
     BigDecimal selectUserBorrowAccountTotal(Map<String, Object> params);
+
+    /** 用户还款计划列表*/
+    List<RepayPlanListVO> selectRepayPlanList(Map<String,Object> paraMap);
 }

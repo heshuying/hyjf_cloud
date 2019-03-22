@@ -601,4 +601,37 @@
 		where
 		 hydb.user_id = #{userId,jdbcType=VARCHAR}
 	</select>
+
+	<resultMap id="repayPlanListResultMap" type="com.hyjf.am.vo.trade.repay.RepayPlanListVO" >
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+		<result column="repay_capital" property="repayCapital" jdbcType="VARCHAR" />
+		<result column="repay_interest" property="repayInterest" jdbcType="VARCHAR" />
+		<result column="repay_fee" property="repayFee" jdbcType="VARCHAR" />
+		<result column="repay_account_yes" property="repayAccountYes" jdbcType="VARCHAR" />
+		<result column="repay_yestime" property="repayYestime" jdbcType="VARCHAR" />
+		<result column="period" property="period" jdbcType="VARCHAR" />
+		<result column="repay_status" property="repayStatus" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 还款期次列表 -->
+	<select id="selectRepayPlanList" resultMap="repayPlanListResultMap" parameterType="Map">
+		SELECT
+			plan.borrow_nid,
+			FROM_UNIXTIME(plan.repay_time, '%Y-%m-%d') AS repay_time,
+			plan.repay_capital,
+			plan.repay_interest,
+			plan.repay_fee,
+			plan.repay_account_yes,
+			IFNULL(FROM_UNIXTIME(
+				IF(plan.repay_yestime=0,null,plan.repay_yestime),
+				'%Y-%m-%d'
+			),'') AS repay_yestime,
+		  CONCAT(plan.repay_period,'/',b.borrow_period) AS period,
+			IF(plan.repay_status=0,'未还款','已还款') AS repay_status
+		FROM
+			ht_borrow_repay_plan plan
+		JOIN ht_borrow b ON plan.borrow_nid = b.borrow_nid
+		WHERE plan.borrow_nid = #{borrowNid}
+	</select>
 </mapper>

@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -31,6 +32,8 @@ public interface RepayManageService extends BaseService {
     BigDecimal selectOrgRepayFeeWaitTotal(Integer userId);
 
     Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId);
+
+    List<RepayPlanListVO> selectRepayPlanList(String borrowNid);
 
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);
 

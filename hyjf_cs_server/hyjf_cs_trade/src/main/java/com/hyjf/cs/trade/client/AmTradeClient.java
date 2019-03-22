@@ -1486,6 +1486,8 @@ public interface AmTradeClient {
 
     List<RepayListCustomizeVO> repayList(RepayListRequest requestBean);
 
+    List<RepayPlanListVO> repayPlanList(String borrowNid);
+
     List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean);

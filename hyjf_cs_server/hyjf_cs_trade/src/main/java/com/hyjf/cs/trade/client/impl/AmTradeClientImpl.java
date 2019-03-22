@@ -3392,6 +3392,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 用户待还款/已还款列表
+     */
+    @Override
+    public List<RepayPlanListVO> repayPlanList(String borrowNid) {
+        RepayPlanListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/repay_plan_list/" + borrowNid,
+                RepayPlanListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
      * 垫付机构待还款列表
      * @param requestBean
      * @return

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 
 import java.math.BigDecimal;
 import java.util.List;

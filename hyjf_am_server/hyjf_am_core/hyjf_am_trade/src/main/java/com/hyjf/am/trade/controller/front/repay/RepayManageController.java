@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.front.repay;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.response.trade.RepayPlanListResponse;
 import com.hyjf.am.response.trade.RepayWaitOrgResponse;
 import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
@@ -19,6 +20,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
@@ -115,6 +117,18 @@ public class RepayManageController extends BaseController {
         repayWaitOrgVO.setWaitTotal(waitTotal);
         response.setResult(repayWaitOrgVO);
         return response;
+    }
+
+    /**
+     * 检索还款计划列表
+     */
+    @RequestMapping(value = "/repay_plan_list/{borrowNid}")
+    public RepayPlanListResponse repayPlanList(@PathVariable String borrowNid) {
+        RepayPlanListResponse responseBean = new RepayPlanListResponse();
+        List<RepayPlanListVO> resultList = repayManageService.selectRepayPlanList(borrowNid);
+        responseBean.setResultList(resultList);
+
+        return responseBean;
     }
 
     /**

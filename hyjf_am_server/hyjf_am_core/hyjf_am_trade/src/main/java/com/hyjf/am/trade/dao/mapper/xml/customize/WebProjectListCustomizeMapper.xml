@@ -266,6 +266,9 @@
             '12'
             WHEN htb.`status` = 4 THEN
             '13'
+            <!-- add by hesy 新增逾期状态8，返回前端值为14 -->
+            WHEN htb.`status` = 8 THEN
+            '14'
             ELSE
             ''
             END AS status,

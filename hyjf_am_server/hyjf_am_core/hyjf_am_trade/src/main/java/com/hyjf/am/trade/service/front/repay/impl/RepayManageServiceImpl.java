@@ -14,6 +14,7 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -99,6 +100,23 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     @Override
     public Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId){
         return repayManageCustomizeMapper.selectRepayOrgRepaywait(userId);
+    }
+
+    /**
+     * 还款计划列表
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<RepayPlanListVO> selectRepayPlanList(String borrowNid){
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", borrowNid);
+
+        List<RepayPlanListVO> resultList = repayManageCustomizeMapper.selectRepayPlanList(paraMap);
+        if(resultList == null){
+            return new ArrayList<>();
+        }
+        return resultList;
     }
 
     /**

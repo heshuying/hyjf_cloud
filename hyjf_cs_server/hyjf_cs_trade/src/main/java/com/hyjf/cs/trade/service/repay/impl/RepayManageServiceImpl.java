@@ -14,10 +14,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
-import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
+import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -151,6 +148,18 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         List<RepayListCustomizeVO> resultList = amTradeClient.repayList(requestBean);
         if (resultList == null) {
             return new ArrayList<RepayListCustomizeVO>();
+        }
+        return resultList;
+    }
+
+    /**
+     * 用户还款计划列表
+     */
+    @Override
+    public List<RepayPlanListVO> selectRepayPlanList(String borrowNid) {
+        List<RepayPlanListVO> resultList = amTradeClient.repayPlanList(borrowNid);
+        if (resultList == null) {
+            return new ArrayList<RepayPlanListVO>();
         }
         return resultList;
     }
