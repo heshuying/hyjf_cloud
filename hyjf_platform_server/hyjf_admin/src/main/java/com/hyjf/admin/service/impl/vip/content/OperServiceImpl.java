@@ -154,7 +154,6 @@ public class OperServiceImpl implements OperService {
             List<CustomerTaskConfigVO> result = this.taskList(request);
             if (!CollectionUtils.isEmpty(result)){
                 resultFlag = true;
-            }else {
                 resultMap.put("customerGroup", result.get(0).getCustomerGroup());
             }
         }
