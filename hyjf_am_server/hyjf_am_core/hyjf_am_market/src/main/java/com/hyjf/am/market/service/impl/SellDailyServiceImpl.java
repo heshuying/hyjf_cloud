@@ -107,8 +107,8 @@ public class SellDailyServiceImpl implements SellDailyService {
     }
 
     @Override
-    public void calculateRate() {
-        sellDailyCustomizeMapper.calculateRate();
+    public void calculateRate(String dateStr) {
+        sellDailyCustomizeMapper.calculateRate(dateStr);
     }
 
 }

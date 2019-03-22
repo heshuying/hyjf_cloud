@@ -8,10 +8,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.TransferService;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
-import com.hyjf.am.response.admin.UserTransferResponse;
 import com.hyjf.am.response.trade.account.MerchantTransferResponse;
 import com.hyjf.am.resquest.admin.MerchantTransferListRequest;
-import com.hyjf.am.resquest.admin.TransferListRequest;
 import com.hyjf.am.vo.admin.MerchantAccountVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.AccountChinapnrVO;
@@ -38,11 +36,6 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
 
     @Autowired
     AmTradeClient amTradeClient;
-
-    @Override
-    public UserTransferResponse getRecordList(TransferListRequest form) {
-        return amTradeClient.getRecordList(form);
-    }
 
     @Override
     public void checkTransfer(String outUserName) {

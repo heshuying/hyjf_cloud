@@ -205,17 +205,17 @@ public class UserCenterController extends BaseController {
             // 微信着陆页Url 二维码使用
             String linkUrlQr = null;
 
-            if (userUtmInfo != null) {
-                logger.info("获取用户所在渠道信息:" + userUtmInfo.getSourceId() + ":" + userUtmInfo.getSourceName());
-
-                linkUrl = systemConfig.getWebLandingPageUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-                linkUrlQr = systemConfig.getWechatLandingPageUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-
-            }else {
+//            if (userUtmInfo != null) {
+//                logger.info("获取用户所在渠道信息:" + userUtmInfo.getSourceId() + ":" + userUtmInfo.getSourceName());
+//
+//                linkUrl = systemConfig.getWebLandingPageUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//                linkUrlQr = systemConfig.getWechatLandingPageUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//
+//            }else {
                 // 已确认未关联渠道的用户
                 linkUrl = systemConfig.getWebLandingPageUrl() + "refferUserId=" + userId;
                 linkUrlQr = systemConfig.getWechatLandingPageUrl() + "refferUserId=" + userId;
-            }
+//            }
 
             information.put("linkUrl", linkUrl);
             information.put("linkUrlQr", linkUrlQr);
@@ -228,7 +228,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取用户编辑初始信息", notes = "获取用户编辑初始信息")
     @PostMapping(value = "/initUserUpdate")
     @ResponseBody
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<InitUserUpdResponseBean> initUserUpdate(@RequestBody String userId) {
 
         InitUserUpdResponseBean initUserUpdResponseBean = new InitUserUpdResponseBean();
@@ -399,7 +399,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkReAction")
     @ResponseBody
     @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult checkReAction(@RequestParam(value = "userId") String userId,HttpServletRequest request,@RequestParam(value = "userName") String userName) {
         //校验推荐人
         if (Validator.isNotNull(userId)) {
@@ -426,7 +426,6 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult checkAction(@RequestParam(value = "userId") String userId,@RequestParam(value = "mobile") String mobile) {
         // 检查手机号码唯一性
         if(StringUtils.isNotBlank(userId)){
@@ -1050,6 +1049,7 @@ public class UserCenterController extends BaseController {
         }
     }
 
+
     @ResponseBody
     @PostMapping(value = "/updateUserBaseInfo")
     @ApiOperation(value = "保存用户基本信息", notes = "保存用户基本信息")
@@ -1083,7 +1083,7 @@ public class UserCenterController extends BaseController {
      */
     @GetMapping(value = "/syncRoleAction/{userId}")
     @ApiOperation(value = "同步用户角色", notes = "同步用户角色")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult syncRoleAction(HttpServletRequest request,@PathVariable String userId){
         if (StringUtils.isBlank(userId)){
             return new AdminResult<>(FAIL, "获取用户userId失败!");

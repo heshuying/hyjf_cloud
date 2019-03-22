@@ -90,14 +90,16 @@ public class MyProfileController extends BaseUserController {
 
         // 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
         // 合规自查添加
+        // 合规自查添加
+        // 20181205 产品需求, 屏蔽渠道,只保留用户ID
         UserUtmInfoCustomizeVO userUtmInfo = myProfileService.getUserUtmInfo(userId);
         String userQrCodeUrl = null;
-        if (userUtmInfo != null) {
-            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-        }else {
+//        if (userUtmInfo != null) {
+//            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//        }else {
             // 已确认未关联渠道的用户
             userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-        }
+//        }
         myProfileVO.getUserAccountInfo().setQrcodeUrl(userQrCodeUrl);
         //        myProfileVO.getUserAccountInfo().setQrcodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
     }

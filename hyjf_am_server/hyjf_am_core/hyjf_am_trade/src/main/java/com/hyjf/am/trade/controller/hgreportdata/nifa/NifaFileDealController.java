@@ -7,10 +7,9 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaReportLogResponse;
 import com.hyjf.am.response.hgreportdata.nifa.*;
-import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.FddTemplet;
-import com.hyjf.am.trade.dao.model.auto.NifaReportLog;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.hgreportdata.nifa.NifaFileDealService;
 import com.hyjf.am.vo.admin.NifaContractTemplateVO;
@@ -20,6 +19,10 @@ import com.hyjf.am.vo.hgreportdata.nifa.NifaContractStatusVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaReceivedPaymentsVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaRepayInfoVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -224,5 +227,69 @@ public class NifaFileDealController extends BaseController {
         NifaReportLog nifaReportLog = CommonUtils.convertBean(nifaReportLogVO, NifaReportLog.class);
         boolean uploadFlg = nifaFileDealService.insertNifaReportLog(nifaReportLog);
         return new BooleanResponse(uploadFlg);
+    }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @return
+     */
+    @GetMapping("/selectBorrowApicron/{historyData}")
+    public BorrowApicronResponse selectBorrowApicron(@PathVariable String historyData) {
+        BorrowApicronResponse response = new BorrowApicronResponse();
+        List<BorrowApicron> list = nifaFileDealService.selectBorrowApicron(historyData);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<BorrowApicronVO> voList = CommonUtils.convertBeanList(list, BorrowApicronVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @return
+     */
+    @GetMapping("/selectBorrowByHistoryDate/{historyData}")
+    public BorrowResponse selectBorrowByHistoryDate(@PathVariable String historyData) {
+        BorrowResponse response = new BorrowResponse();
+        List<Borrow> list = nifaFileDealService.selectBorrowByHistoryDate(historyData);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<BorrowAndInfoVO> voList = CommonUtils.convertBeanList(list, BorrowAndInfoVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 查询该天还款成功的数据
+     *
+     * @return
+     */
+    @GetMapping("/selectBorrowRepayByHistoryData/{historyData}")
+    public BorrowRepayResponse selectBorrowRepayByHistoryData(@PathVariable String historyData) {
+        BorrowRepayResponse response = new BorrowRepayResponse();
+        List<BorrowRepay> list = nifaFileDealService.selectBorrowRepayByHistoryData(historyData);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<BorrowRepayVO> voList = CommonUtils.convertBeanList(list, BorrowRepayVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 查询该天分期还款成功的数据
+     *
+     * @return
+     */
+    @GetMapping("/selectBorrowRepayPlanByHistoryData/{historyData}")
+    public BorrowRepayPlanResponse selectBorrowRepayPlanByHistoryData(@PathVariable String historyData) {
+        BorrowRepayPlanResponse response = new BorrowRepayPlanResponse();
+        List<BorrowRepayPlan> list = nifaFileDealService.selectBorrowRepayPlanByHistoryData(historyData);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<BorrowRepayPlanVO> voList = CommonUtils.convertBeanList(list, BorrowRepayPlanVO.class);
+            response.setResultList(voList);
+        }
+        return response;
     }
 }

@@ -8,11 +8,16 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaReportLogResponse;
 import com.hyjf.am.response.hgreportdata.nifa.*;
-import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.vo.admin.NifaContractTemplateVO;
 import com.hyjf.am.vo.admin.NifaReportLogVO;
 import com.hyjf.am.vo.hgreportdata.nifa.*;
+import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.file.SFTPParameter;
@@ -74,43 +79,43 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * 获取上传地址前缀
      */
     @Value("${hyjf.nifa.upload.path}")
-    private static String UPLOAD_PATH;
+    private String UPLOAD_PATH;
 
     /**
      * 下载保存路径
      */
     @Value("${hyjf.nifa.download.path}")
-    private static String DOWNLOAD_PATH;
+    private String DOWNLOAD_PATH;
 
     /**
      * ftp服务器地址
      */
     @Value("${hyjf.nifa.hostName}")
-    private static String HOST_NAME;
+    private String HOST_NAME;
 
     /**
      * ftp服务器用户名
      */
     @Value("${hyjf.nifa.userName}")
-    private static String USER_NAME;
+    private String USER_NAME;
 
     /**
      * ftp服务器密码
      */
     @Value("${hyjf.nifa.passWord}")
-    private static String PASS_WORD;
+    private String PASS_WORD;
 
     /**
      * ftp服务器端口
      */
     @Value("${hyjf.nifa.hostPost}")
-    private static String HOST_POST;
+    private String HOST_POST;
 
     /**
      * ftp服务器下载地址
      */
     @Value("${hyjf.nifa.download.url}")
-    private static String DOWNLOAD_URL;
+    private String DOWNLOAD_URL;
 
     private String baseTradeUrl = "http://AM-TRADE/am-trade/nifaFileDeal/";
     private String baseMessageUrl = "http://CS-MESSAGE/cs-message/nifaStatistical/";
@@ -821,6 +826,91 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
     }
 
     /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> selectBorrowApicron(String historyData) {
+        String url = baseTradeUrl + "selectBorrowApicron/" + historyData;
+        BorrowApicronResponse response = this.baseClient.getExe(url, BorrowApicronResponse.class);
+        List<BorrowApicronVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天还款成功数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowRepayVO> selectBorrowRepayByHistoryData(String historyData) {
+        String url = baseTradeUrl + "selectBorrowRepayByHistoryData/" + historyData;
+        BorrowRepayResponse response = this.baseClient.getExe(url, BorrowRepayResponse.class);
+        List<BorrowRepayVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天分期还款成功数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowRepayPlanVO> selectBorrowRepayPlanByHistoryData(String historyData) {
+        String url = baseTradeUrl + "selectBorrowRepayPlanByHistoryData/" + historyData;
+        BorrowRepayPlanResponse response = this.baseClient.getExe(url, BorrowRepayPlanResponse.class);
+        List<BorrowRepayPlanVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<NifaBorrowInfoVO> selectNifaBorrowInfoByHistoryData(String historyData) {
+        String url = baseMessageUrl + "selectNifaBorrowInfoByHistoryData/" +historyData;
+        NifaBorrowInfoResponse response = this.baseClient.getExe(url,NifaBorrowInfoResponse.class);
+        List<NifaBorrowInfoVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天放款数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowAndInfoVO> selectBorrowByHistoryDate(String historyData) {
+        String url = baseTradeUrl + "selectBorrowByHistoryDate/" + historyData;
+        BorrowResponse response = this.baseClient.getExe(url, BorrowResponse.class);
+        List<BorrowAndInfoVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
      * 字符串+1方法，该方法将其结尾的整数+1,适用于任何以整数结尾的字符串,不限格式，不限分隔符。
      *
      * @param testStr 要+1的字符串
@@ -1142,7 +1232,8 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
      * @param fileName
      * @return
      */
-    private boolean selectNifaReportLogByFileName(String fileName) {
+    @Override
+    public boolean selectNifaReportLogByFileName(String fileName) {
         String url = baseTradeUrl + "selectNifaReportLogByFileName/" + fileName;
         NifaFileReportLogResponse response = this.baseClient.getExe(url, NifaFileReportLogResponse.class);
         List<NifaReportLogVO> nifaReportLogVOList = response.getResultList();

@@ -127,10 +127,12 @@ public class RepayManageController extends BaseController {
      */
     @RequestMapping(value = "/orgrepaylist")
     public RepayListResponse orgRepayList(@RequestBody @Valid RepayListRequest requestBean) {
+        logger.info("垫付机构待还款列表开始，requestBean: " + JSON.toJSONString(requestBean));
         RepayListResponse responseBean = new RepayListResponse();
         List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayList(requestBean);
         responseBean.setResultList(resultList);
 
+        logger.info("垫付机构待还款列表结束，responseBean:" + JSON.toJSONString(responseBean));
         return responseBean;
     }
 

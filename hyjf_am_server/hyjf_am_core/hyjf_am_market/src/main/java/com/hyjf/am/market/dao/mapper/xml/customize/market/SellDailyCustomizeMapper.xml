@@ -127,6 +127,8 @@
         (CASE WHEN invest_annual_total_previous_month=0.00 THEN '/' ELSE CONCAT(ROUND((invest_annual_total_month/invest_annual_total_previous_month-1)*100),'%') END),
 
         net_capital_inflow_yesterday=recharge_total_yesterday-withdraw_total_yesterday
+
+      WHERE date_str = #{dateStr}
     </update>
 
 
