@@ -3,8 +3,7 @@
  */
 package com.hyjf.am.trade.service.hgreportdata.nifa;
 
-import com.hyjf.am.trade.dao.model.auto.FddTemplet;
-import com.hyjf.am.trade.dao.model.auto.NifaReportLog;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.NifaReportLogVO;
@@ -90,4 +89,36 @@ public interface NifaFileDealService extends BaseService {
     List<NifaContractStatusCustomize> selectNifaContractStatus();
 
     List<NifaReceivedPaymentsCustomize> selectNifaReceivedPaymentsList();
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowApicron> selectBorrowApicron(String historyData);
+
+    /**
+     * 查询该天还款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowRepay> selectBorrowRepayByHistoryData(String historyData);
+
+    /**
+     * 查询该天分期还款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowRepayPlan> selectBorrowRepayPlanByHistoryData(String historyData);
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<Borrow> selectBorrowByHistoryDate(String historyData);
 }

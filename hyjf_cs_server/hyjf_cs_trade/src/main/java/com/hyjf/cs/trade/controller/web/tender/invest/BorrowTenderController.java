@@ -130,7 +130,10 @@ public class BorrowTenderController extends BaseTradeController {
             }
             result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
         }catch (CheckException e){
-            throw e;
+            logger.info(e.getMessage());
+            BankCallResult resultError = new BankCallResult();
+            resultError.setStatus(true);
+            return resultError;
         }finally {
             RedisUtils.del(RedisConstants.BORROW_TENDER_REPEAT + bean.getLogUserId());
         }

@@ -184,7 +184,12 @@
 		r.id, r.cardid,r.message,
 		r.bank_seq_no,
 		DATE_FORMAT(r.tx_date,'%Y-%m-%d') as tx_date,
-		CONCAT(MID(lpad(r.tx_time,6,0),1,2),':',MID(lpad(r.tx_time,6,0),3,2),':',MID(lpad(r.tx_time,6,0),5,2)) as tx_time,
+		case when length(r.tx_time) > 6 and mod(length(r.tx_time), 2) > 0 then
+		-- 解决当tx_time (9542196) 大于6位并且长度为奇数时,  时间拼接的错误!
+		-- 时间小于10时时, 插入数据库会丢失第一位 0.
+		CONCAT(MID(lpad(CONCAT('0', r.tx_time),6,0),1,2),':',MID(lpad(CONCAT('0', r.tx_time),6,0),3,2),':',MID(lpad(CONCAT('0', r.tx_time),6,0),5,2))
+		else
+		CONCAT(MID(lpad(r.tx_time,6,0),1,2),':',MID(lpad(r.tx_time,6,0),3,2),':',MID(lpad(r.tx_time,6,0),5,2)) end as tx_time,
 		r.seq_no,
 		r.account_id,
 		UNIX_TIMESTAMP()-UNIX_TIMESTAMP(r.create_time) as outtime,
