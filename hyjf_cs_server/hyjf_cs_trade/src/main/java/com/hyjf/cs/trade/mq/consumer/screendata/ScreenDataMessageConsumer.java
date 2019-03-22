@@ -43,7 +43,7 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
 
     @Override
     public void onMessage(MessageExt messageExt) {
-        logger.info("ScreenDataMessageConsumer 收到消息，开始处理....msgId is :{}", messageExt.getMsgId());
+        logger.info("ScreenDataMessageConsumer 收到消息，开始处理....msgId is :{} ,msgbody:{}", messageExt.getMsgId(),messageExt.getBody());
         ScreenDataBean data = JSONObject.parseObject(new String(messageExt.getBody()), ScreenDataBean.class);
         logger.info("ScreenDataMessageConsumer 收到参数:"+data.toString());
         Integer userId = data.getUserId();

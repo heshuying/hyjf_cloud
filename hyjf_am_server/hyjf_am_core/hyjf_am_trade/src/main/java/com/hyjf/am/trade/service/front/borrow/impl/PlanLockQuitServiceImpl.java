@@ -574,7 +574,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
      * @param screenDataBean
      */
     private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
-        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(screenDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
     /**
      * 计划退出推送消息

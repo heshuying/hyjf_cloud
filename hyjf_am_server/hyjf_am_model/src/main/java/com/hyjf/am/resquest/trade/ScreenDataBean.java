@@ -2,6 +2,7 @@ package com.hyjf.am.resquest.trade;
 
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -11,7 +12,8 @@ import java.util.List;
  * @version ScreenDataBean, v0.1 2019/3/18 14:08
  */
 
-public class ScreenDataBean {
+public class ScreenDataBean implements Serializable {
+    private static final long serialVersionUID = 4243928297959602371L;
 
     private Integer id;
 
@@ -124,7 +126,6 @@ public class ScreenDataBean {
     public ScreenDataBean() {
     }
 
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
