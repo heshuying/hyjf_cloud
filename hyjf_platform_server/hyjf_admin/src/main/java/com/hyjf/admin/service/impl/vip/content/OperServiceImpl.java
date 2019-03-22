@@ -150,9 +150,11 @@ public class OperServiceImpl implements OperService {
                 resultMap.put("statusDesc", "必传字段未传");
                 return resultMap;
             }
+            resultMap.put("customerGroup", null);
             List<CustomerTaskConfigVO> result = this.taskList(request);
             if (!CollectionUtils.isEmpty(result)){
                 resultFlag = true;
+                resultMap.put("customerGroup", result.get(0).getCustomerGroup());
             }
         }
         resultMap.put("result", resultFlag);
