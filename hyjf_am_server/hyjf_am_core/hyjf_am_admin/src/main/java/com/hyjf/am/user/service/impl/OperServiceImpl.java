@@ -166,19 +166,17 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO) {
-        int flag = 0;
         CustomerTaskConfig customerTaskConfig = new CustomerTaskConfig();
         BeanUtils.copyProperties(customerTaskConfigVO, customerTaskConfig);
-        int updateFlagO = customerTaskConfigMapper.updateByPrimaryKeySelective(customerTaskConfig);
+        int flag = customerTaskConfigMapper.updateByPrimaryKeySelective(customerTaskConfig);
 
-        CustomerTaskConfig updateParam = new CustomerTaskConfig();
-        updateParam.setCustomerGroup(customerTaskConfigVO.getCustomerGroup());
-        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
-        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
-        cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
-        int updateFlagT = customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
-        if (updateFlagO == 1 && updateFlagT ==1){
-            flag = 1;
+        if(StringUtils.isNotBlank(customerTaskConfigVO.getCustomerName())){
+            CustomerTaskConfig updateParam = new CustomerTaskConfig();
+            updateParam.setCustomerGroup(customerTaskConfigVO.getCustomerGroup());
+            CustomerTaskConfigExample example = new CustomerTaskConfigExample();
+            CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+            cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
+            customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
         }
         return flag;
     }

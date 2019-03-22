@@ -2,6 +2,7 @@ package com.hyjf.am.user.controller.admin.vip.content;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
 import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
@@ -33,8 +34,8 @@ public class OperController {
      */
     @PostMapping("/oper/list")
     @ResponseBody
-    private Response<ScreenConfigVO> operList(@RequestBody ScreenConfigRequest request){
-        Response<ScreenConfigVO> response = new Response<>();
+    private ScreenConfigVOResponse operList(@RequestBody ScreenConfigRequest request){
+        ScreenConfigVOResponse response = new ScreenConfigVOResponse();
 
         List<ScreenConfigVO> list = operService.operList(request);
         if (!CollectionUtils.isEmpty(list)){
@@ -110,8 +111,8 @@ public class OperController {
      */
     @PostMapping("/task/list")
     @ResponseBody
-    private Response<CustomerTaskConfigVO> taskList(@RequestBody CustomerTaskConfigRequest request){
-        Response<CustomerTaskConfigVO> response = new Response<>();
+    private CustomerTaskConfigVOResponse taskList(@RequestBody CustomerTaskConfigRequest request){
+        CustomerTaskConfigVOResponse response = new CustomerTaskConfigVOResponse();
 
         List<CustomerTaskConfigVO> list = operService.taskList(request);
         if (!CollectionUtils.isEmpty(list)){

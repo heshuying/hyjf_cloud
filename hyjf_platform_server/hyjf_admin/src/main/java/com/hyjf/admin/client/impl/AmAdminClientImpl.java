@@ -36,7 +36,6 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
@@ -52,7 +51,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -2098,7 +2096,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public List<ScreenConfigVO> getScreenConfigList(ScreenConfigRequest request) {
         String url = "http://AM-ADMIN/am-user/vip/content/oper/list";
-        Response<ScreenConfigVO> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        ScreenConfigVOResponse response = restTemplate.postForEntity(url, request, ScreenConfigVOResponse.class).getBody();
         return response.getResultList();
     }
 
@@ -2151,8 +2149,6 @@ public class AmAdminClientImpl implements AmAdminClient {
         return response;
     }
 
-
-
     /**
      * 坐席月任务配置列表查询
      * @param request
@@ -2161,7 +2157,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public List<CustomerTaskConfigVO> getCustomerTaskConfigList(CustomerTaskConfigRequest request) {
         String url = "http://AM-ADMIN/am-user/vip/content/task/list";
-        Response<CustomerTaskConfigVO> response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        CustomerTaskConfigVOResponse response = restTemplate.postForEntity(url, request, CustomerTaskConfigVOResponse.class).getBody();
         return response.getResultList();
     }
 
