@@ -48,9 +48,10 @@ public class ScreenDataServiceImpl implements ScreenDataService {
         AccountListExample accountListExample = new AccountListExample();
         AccountListExample.Criteria criteria = accountListExample.createCriteria();
         criteria.andUserIdEqualTo(userId);
+        accountListExample.setOrderByClause("id desc");
         List<AccountList> accountLists = accountListMapper.selectByExample(accountListExample);
         if (!CollectionUtils.isEmpty(accountLists)) {
-            accountLists.get(0).getBankBalance();
+           return accountLists.get(0).getBankBalance();
         }
         return null;
     }

@@ -45,6 +45,7 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
     public void onMessage(MessageExt messageExt) {
         logger.info("ScreenDataMessageConsumer 收到消息，开始处理....msgId is :{}", messageExt.getMsgId());
         ScreenDataBean data = JSONObject.parseObject(messageExt.getBody(), ScreenDataBean.class);
+        logger.info("ScreenDataMessageConsumer 收到参数:"+data.toString());
         Integer userId = data.getUserId();
         String orderId = data.getOrderId();
         BigDecimal investMoney = data.getMoney();
@@ -64,7 +65,7 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                     data.setBalance(userFreeMoney);
                 }
                 // 投资需要查询年化金额
-                if (data.getOperating()==1) {
+                if (data.getOperating() == 1) {
                     //消息推送开始
                     pushMessage(data, currentOwner);
                     //消息推送结束
@@ -76,9 +77,9 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                     amTradeClient.dealRepayMoney(data);
                 }
                 amTradeClient.insertScreenData(data);
-                }
             }
         }
+    }
 
     /**
      * 推送接口
