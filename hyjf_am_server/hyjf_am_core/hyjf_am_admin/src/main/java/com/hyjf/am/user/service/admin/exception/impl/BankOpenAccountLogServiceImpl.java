@@ -61,14 +61,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
 
     /**
      * 通过手机号和身份证查询用户信息
-    * @author Zha Daojian
-    * @date 2018/8/21 18:53
-    * @param request
-    * @return com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize
-    **/
+     * @author Zha Daojian
+     * @date 2018/8/21 18:53
+     * @param request
+     * @return com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize
+     **/
     @Override
     public OpenAccountEnquiryCustomize accountEnquiry(BankOpenAccountLogRequest request) {
-         return this.adminAccountCustomizeQuiryMapper.selectAccountEnquiry(request);
+        return this.adminAccountCustomizeQuiryMapper.selectAccountEnquiry(request);
     }
 
 
@@ -198,7 +198,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
      * 保存开户(User)的数据
      */
     public OpenAccountEnquiryResponse updateUser(OpenAccountEnquiryDefineRequest requestBean) {
-        logger.info("==========保存开户(User)的数据" );
+        logger.info("==========保存开户(User)的数据requestBean:"+JSONObject.toJSONString(requestBean) );
         OpenAccountEnquiryDefineResultBeanVO resultBean= new OpenAccountEnquiryDefineResultBeanVO();
         OpenAccountEnquiryResponse response =  new OpenAccountEnquiryResponse();
         String idCard = requestBean.getIdcard();
@@ -228,12 +228,16 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 BeanUtils.copyProperties(appUtmReg,appUtmRegUser);
                 appUtmRegUser.setOpenAccountTime(GetDate.str2Date(requestBean.getRegTimeEnd(), GetDate.yyyyMMdd));
                 logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
-                appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
+                int appUtmRegFlag =  appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
+                logger.info("开户更新开户渠道统计开户时间。。。appUtmRegFlag："+appUtmRegFlag);
+                if(appUtmRegFlag <1){
+                    throw new RuntimeException("开户更新开户渠道统计开户时间失败");
+                }
             }
             logger.info("----------删除用户开户日志表start---------------------");
             boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
-                throw new Exception("删除用户开户日志表失败");
+                throw new RuntimeException("删除用户开户日志表失败");
             }
             logger.info("----------删除用户开户日志表end---------------------");
             // 查询返回的电子账号是否已开户
@@ -250,7 +254,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     idCard = IdCard15To18.getEighteenIDCard(idCard);
                 } catch (Exception e) {
                     logger.error("===========身份证转换异常!=============");
-                    throw new Exception("身份证转换异常!");
+                    throw new RuntimeException("身份证转换异常!");
                 }
             }
             logger.info("===========身份证转换---------------------"+idCard);
@@ -274,13 +278,13 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             boolean usersFlag = userService.updateUserSelective(user) > 0 ? true : false;
             if (!usersFlag) {
                 logger.error("更新用户表失败！");
-                throw new Exception("更新用户表失败！");
+                throw new RuntimeException("更新用户表失败！");
 
             }
             UserInfo userInfo = userInfoService.findUsersInfo(userId);
             if (userInfo == null) {
                 logger.error("用户详情表数据错误，用户id：" + user.getUserId());
-                throw new Exception("用户详情表数据错误！");
+                throw new RuntimeException("用户详情表数据错误！");
             }
             userInfo.setTruename(trueName);
             userInfo.setIdcard(idCard);
@@ -293,7 +297,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             boolean userInfoFlag = userService.updateUserInfoByUserInfoSelective(userInfo) > 0 ? true : false;
             if (!userInfoFlag) {
                 logger.error("更新用户详情表失败！");
-                throw new Exception("更新用户详情表失败！");
+                throw new RuntimeException("更新用户详情表失败！");
             }
             // 插入江西银行关联表
             BankOpenAccount openAccount = new BankOpenAccount();
@@ -306,7 +310,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             boolean openAccountFlag = userService.insertBankOpenAccount(openAccount) > 0 ? true : false;
             if (!openAccountFlag) {
                 logger.error("插入江西银行关联表失败！");
-                throw new Exception("插入江西银行关联表失败！");
+                throw new RuntimeException("插入江西银行关联表失败！");
             }
 
             // add 合规数据上报 埋点 liubin 20181122 start
@@ -327,10 +331,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
 
                 commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]", userId);
+                throw new RuntimeException("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！");
             }
         }catch (Exception e) {
-            logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！");
+            logger.error("开户掉单同步用户失败!");
+            e.printStackTrace();
+            throw new RuntimeException("开户掉单同步用户失败！");
         }
         resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y);
         resultBean.setResult("开户掉单同步用户成功!");
