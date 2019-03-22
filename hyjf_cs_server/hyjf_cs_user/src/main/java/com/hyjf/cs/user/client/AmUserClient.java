@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -628,4 +629,12 @@ public interface AmUserClient {
 	 * @auth nxl
 	 */
 	BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
+
+
+	/**
+	 * 根据sourceID 获取utm信息
+	 * @param utmId
+	 * @return
+	 */
+    UtmVO selectUtmBySourceId(String utmId);
 }
