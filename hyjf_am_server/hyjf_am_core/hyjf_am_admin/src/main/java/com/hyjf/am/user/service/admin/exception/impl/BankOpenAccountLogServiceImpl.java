@@ -230,10 +230,12 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.info("开户更新开户渠道统计开户时间。。。appUtmRegUser："+JSONObject.toJSONString(appUtmRegUser));
                 appUtmRegService.updateByPrimaryKeySelective(appUtmRegUser);
             }
+            logger.info("----------删除用户开户日志表start---------------------");
             boolean deleteLogFlag = this.deleteBankOpenAccountLogByUserId(userId);
             if (!deleteLogFlag) {
                 throw new Exception("删除用户开户日志表失败");
             }
+            logger.info("----------删除用户开户日志表end---------------------");
             // 查询返回的电子账号是否已开户
             boolean result = checkAccountByAccountId(requestBean.getAccountId());
             if (result) {
@@ -251,6 +253,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                     throw new Exception("身份证转换异常!");
                 }
             }
+            logger.info("===========身份证转换---------------------"+idCard);
             int sexInt = Integer.parseInt(idCard.substring(16, 17));// 性别
             if (sexInt % 2 == 0) {
                 sexInt = 2;
@@ -267,6 +270,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             user.setIsSetPassword(getIsSetPassword(requestBean.getAccountId(), userId));
             user.setMobile(requestBean.getMobile());
             // 更新相应的用户表
+            logger.info("===========更新用户表---------------------user:"+JSONObject.toJSONString(user));
             boolean usersFlag = userService.updateUserSelective(user) > 0 ? true : false;
             if (!usersFlag) {
                 logger.error("更新用户表失败！");
@@ -285,6 +289,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             userInfo.setTruenameIsapprove(1);
             userInfo.setMobileIsapprove(1);
             // 更新用户详细信息表
+            logger.info("===========更新用户详细信息表---------------------user:"+JSONObject.toJSONString(userInfo));
             boolean userInfoFlag = userService.updateUserInfoByUserInfoSelective(userInfo) > 0 ? true : false;
             if (!userInfoFlag) {
                 logger.error("更新用户详情表失败！");
@@ -297,10 +302,11 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
             openAccount.setAccount(requestBean.getAccountId());
             //openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
             openAccount.setCreateUserId(userId);
+            logger.info("===========插入江西银行关联表---------------------user:"+JSONObject.toJSONString(openAccount));
             boolean openAccountFlag = userService.insertBankOpenAccount(openAccount) > 0 ? true : false;
             if (!openAccountFlag) {
-                logger.error("插入用户开户表失败！");
-                throw new Exception("插入用户开户表失败！");
+                logger.error("插入江西银行关联表失败！");
+                throw new Exception("插入江西银行关联表失败！");
             }
 
             // add 合规数据上报 埋点 liubin 20181122 start
@@ -367,6 +373,14 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         }
         return 0;
     }
-
+    /**
+     * 插入用户绑定的银行卡
+     * @param bankCard
+     * @return
+     */
+    @Override
+    public int insertUserCard(BankCard bankCard) {
+        return this.bankCardMapper.insertSelective(bankCard);
+    }
 
 }

@@ -3,6 +3,7 @@ package com.hyjf.am.user.service.admin.exception;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
 import com.hyjf.am.resquest.admin.OpenAccountEnquiryDefineRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
+import com.hyjf.am.user.dao.model.auto.BankCard;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
 import com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize;
 import com.hyjf.am.user.service.BaseService;
@@ -76,5 +77,7 @@ public interface BankOpenAccountLogService extends BaseService {
      * @return
      */
     OpenAccountEnquiryResponse updateUser(OpenAccountEnquiryDefineRequest requestBean);
+
+    int insertUserCard(BankCard bankCard);
 
 }
