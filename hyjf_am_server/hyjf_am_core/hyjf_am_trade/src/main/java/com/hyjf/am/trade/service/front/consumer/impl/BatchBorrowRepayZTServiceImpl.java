@@ -3,8 +3,10 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
@@ -828,7 +830,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									String txState = assignRepayDetail.getString(BankCallConstant.PARAM_TXSTATE);// 交易状态
 									// 如果处理状态为成功
 									if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
-										// 调用债转还款
 										boolean creditRepayFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateCreditRepay(apicron, borrow, borrowInfo, borrowRecover, creditRepay, assignRepayDetail);
 										if (creditRepayFlag) {
 											// 结束债转已在updateCreditRepay中处理 update by wgx in 2019/01/10
@@ -862,6 +863,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									// 如果处理状态为成功
 									if (txState.equals(BankCallConstant.BATCH_TXSTATE_TYPE_SUCCESS)) {
 										try {
+
 											((BatchBorrowRepayZTService)AopContext.currentProxy()).updateTenderRepay(apicron, borrow, borrowInfo, borrowRecover, repayDetail, creditEndAllFlag);
 											// 结束债转已在updateTenderRepay中处理 update by wgx in 2019/01/10
 										} catch (Exception e) {
@@ -1406,6 +1408,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest);
             // 推送消息
             this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest);
+            //发送大屏统计数据
+ 			ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,assignUserId,creditRepay.getUserName(),assignAccount,3);
+			this.sendScreenDataMQ(screenDataBean);
         } catch (Exception e) {
             logger.error("【直投还款/承接人】发送短信和推送消息时发生系统异常！", e);
         }
@@ -2595,7 +2600,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest);
             // 推送消息
             this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest);
-        } catch (Exception e) {
+			//发送大屏统计数据
+			ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,tenderUserId,borrowRecover.getUserName(),repayAccount,3);
+			this.sendScreenDataMQ(screenDataBean);
+
+		} catch (Exception e) {
             logger.error("【直投还款/出借人】发送短信和推送消息时发生系统异常！", e);
         }
 		// 直投类还款成功之后， 判断是风车理财的出借，发送到队列，准备回调通知
@@ -2861,6 +2870,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				logger.error("【直投还款】发送app消息失败..", e);
 			}
 		}
+	}
+
+	/**
+	 * 还款成功后,发送大屏数据统计MQ
+	 * @param screenDataBean
+	 */
+	private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(screenDataBean)), 2);
 	}
 
 	private BigDecimal getRepayPlanAccountSum(String borrowNid) {

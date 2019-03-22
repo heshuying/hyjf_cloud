@@ -2299,4 +2299,15 @@ public class GetDate extends PropertyEditorSupport {
 		return getDayStart11(c.getTime());
 	}
 
+	/**
+	 * 获取当前月第一天
+	 * @return
+	 */
+	public static Date getFirstDayOfMonthDate() {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, 0);
+		//设置为1号,当前日期既为本月第一天
+		c.set(Calendar.DAY_OF_MONTH,1);
+		return c.getTime();
+	}
 }

@@ -253,4 +253,16 @@ public class ScreenDataBean {
     public void setTenderUserId(Integer tenderUserId) {
         this.tenderUserId = tenderUserId;
     }
+
+    @Override
+    public String toString() {
+        return "ScreenDataBean{" +
+                "userId=" + userId +
+                ", tenderUserId=" + tenderUserId +
+                ", userName='" + userName + '\'' +
+                ", money=" + money +
+                ", orderId='" + orderId + '\'' +
+                ", productType=" + productType +
+                '}';
+    }
 }

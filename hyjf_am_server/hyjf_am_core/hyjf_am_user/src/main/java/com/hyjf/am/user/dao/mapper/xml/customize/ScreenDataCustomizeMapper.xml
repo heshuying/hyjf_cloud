@@ -14,7 +14,7 @@
         LEFT JOIN ht_utm_reg r  ON r.user_id = i.user_id
         LEFT JOIN ht_utm u1 ON u1.utm_id = r.utm_id
         LEFT JOIN ht_utm_plat p ON  u1.utm_source=p.source_name
-        WHERE p.source_id <![CDATA[<>]]> 349 and i.attribute=0 and u.user_id=#{userId,jdbcType=INTEGER}
+        WHERE (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null) and i.attribute=0 and u.user_id=#{userId,jdbcType=INTEGER}
     </select>
 
     <select id="findUserGroup" resultType="java.util.Map">
@@ -32,8 +32,8 @@
         LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
         LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
         where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
-               and d3.`name`='惠众'
-               and (d1.`name`='电销' or d1.`name`='网络运营部')
+               and d3.`name`='惠众商务'
+               and (d1.`name`='电销部' or d1.`name`='网络运营部')
                and u.user_id=#{userId,jdbcType=INTEGER}
     </select>
 </mapper>
