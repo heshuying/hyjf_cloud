@@ -5,6 +5,8 @@ package com.hyjf.cs.trade.service.batch;
 
 import com.hyjf.am.vo.admin.NifaReportLogVO;
 import com.hyjf.am.vo.hgreportdata.nifa.NifaBorrowInfoVO;
+import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -131,4 +133,11 @@ public interface NifaFileDualService {
      */
     List<NifaBorrowInfoVO> selectNifaBorrowInfoByHistoryData(String historyData);
 
+    /**
+     * 查询该天放款数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<BorrowAndInfoVO> selectBorrowByHistoryDate(String historyData);
 }

@@ -113,4 +113,12 @@ public interface NifaFileDealService extends BaseService {
      * @return
      */
     List<BorrowRepayPlan> selectBorrowRepayPlanByHistoryData(String historyData);
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    List<Borrow> selectBorrowByHistoryDate(String historyData);
 }
