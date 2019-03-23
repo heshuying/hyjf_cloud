@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author: tanyy
@@ -77,9 +76,9 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
         // 运营部所有用户id
-        List<Integer> userIds = amUserClient.getOperUserIds();
+        //List<Integer> userIds = amUserClient.getOperUserIds();
         // 运营部月度业绩数据
-        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData(userIds);
+        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData(null);
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
     }

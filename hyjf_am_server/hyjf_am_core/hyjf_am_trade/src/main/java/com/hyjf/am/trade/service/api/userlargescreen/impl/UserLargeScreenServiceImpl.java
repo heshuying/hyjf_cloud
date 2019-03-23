@@ -266,7 +266,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 运营部-回款
         OperMonthPerformanceDataVO listFi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFi();
         // 获得坐席月初站岗资金
-        AccountListExample alexample = new AccountListExample();
+        /*AccountListExample alexample = new AccountListExample();
         AccountListExample.Criteria alcrt = alexample.createCriteria();
         alcrt.andUserIdIn(userIds);
         alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key),
@@ -275,28 +275,28 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         BigDecimal monthBeginBalanceStart = new BigDecimal("0");
         for(AccountList accountListStartSon : accountListStart){
             monthBeginBalanceStart.add(accountListStartSon.getBankBalance());
-        }
+        }*/
         // 获得坐席月末站岗资金
-        alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key),
+        /*alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key),
                 GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key));
         List<AccountList> accountListStartEnd = accountListMapper.selectByExample(alexample);
         BigDecimal monthBeginBalanceEnd = new BigDecimal("0");
         for(AccountList accountListStartEndSon : accountListStartEnd){
             monthBeginBalanceEnd.add(accountListStartEndSon.getBankBalance());
-        }
+        }*/
         // 月末运营部用总待换金额
-        BigDecimal allWaitRepay = new BigDecimal("0");
+        /*BigDecimal allWaitRepay = new BigDecimal("0");
         for(AccountList accountListStartEndSon : accountListStartEnd){
             allWaitRepay.add(accountListStartEndSon.getRepay());
-        }
+        }*/
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
         operMonthPerformanceDataVO.setYearAmount(listO.getYearAmount());
         // 站岗资金
-        operMonthPerformanceDataVO.setBalance(monthBeginBalanceEnd);
+        operMonthPerformanceDataVO.setBalance(BigDecimal.ZERO);
         // 增资
-        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(monthBeginBalanceStart).subtract(monthBeginBalanceEnd);
+        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(BigDecimal.ZERO).subtract(BigDecimal.ZERO);
         if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
             additionalShare = new BigDecimal("0");
         }
@@ -306,7 +306,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 充值
         operMonthPerformanceDataVO.setRecharge(listT.getRecharge());
         // 总待还金额
-        operMonthPerformanceDataVO.setAllWaitRepay(allWaitRepay);
+        operMonthPerformanceDataVO.setAllWaitRepay(BigDecimal.ZERO);
         // 已还金额
         operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
         vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
