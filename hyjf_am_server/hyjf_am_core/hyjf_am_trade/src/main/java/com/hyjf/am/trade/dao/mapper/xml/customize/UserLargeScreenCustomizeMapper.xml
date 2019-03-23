@@ -57,9 +57,9 @@
 
     <!-- 坐席日回款情况 -->
     <select id="getDayReceivedPayments" resultType="com.hyjf.am.vo.api.EchartsResultVO">
-        select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 and DATE_FORMAT(t1.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY t1.current_owner
+        select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money2,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 and DATE_FORMAT(t1.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY t1.current_owner
         UNION ALL
-        select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 and DATE_FORMAT(t1.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY t1.current_owner
+        select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money2,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 and DATE_FORMAT(t1.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY t1.current_owner
     </select>
 
     <!-- 本月数据统计 坐席、年化业绩、充值 -->
