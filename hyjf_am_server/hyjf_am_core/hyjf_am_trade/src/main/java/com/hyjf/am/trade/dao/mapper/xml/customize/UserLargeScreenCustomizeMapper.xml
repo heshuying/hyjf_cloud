@@ -48,4 +48,65 @@
         ORDER  BY create_time DESC
     </select>
 
+    <!-- 坐席日规模业绩 -->
+    <select id="getDayScalePerformanceList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
+        select IFNULL(SUM(money),0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY current_owner -- 坐席日规模业绩（新客组）
+        UNION ALL
+        select IFNULL(SUM(money),0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY current_owner -- 坐席日规模业绩（老客组）
+    </select>
+
+    <!-- 坐席日回款情况 -->
+    <select id="getDayReceivedPayments" resultType="com.hyjf.am.vo.api.EchartsResultVO">
+        select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 and DATE_FORMAT(t1.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY t1.current_owner
+        UNION ALL
+        select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money1,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 and DATE_FORMAT(t1.create_time,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') GROUP BY t1.current_owner
+    </select>
+
+    <!-- 本月数据统计 坐席、年化业绩、充值 -->
+    <select id="getMonthDataStatisticsO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+        select IFNULL(SUM(year_money),0) as yearMoney, IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+        UNION ALL
+        select IFNULL(SUM(year_money),0) as yearMoney, IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+    </select>
+
+    <!-- 本月数据统计 坐席、提现 -->
+    <select id="getMonthDataStatisticsT" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+        select IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list  where operating=4 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+        UNION ALL
+        select IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=4 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+    </select>
+
+    <!-- 本月数据统计 坐席、站岗资金 -->
+    <select id="getMonthDataStatisticsTh" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+        select IFNULL(SUM(balance),0) as guardFund, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+        UNION ALL
+        select IFNULL(SUM(balance),0) as guardFund, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+    </select>
+
+    <!-- 本月数据统计 坐席、回款 -->
+    <select id="getMonthDataStatisticsFi" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+        select IFNULL(SUM(money),0) as received, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=3 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+        UNION ALL
+        select IFNULL(SUM(money),0) as received, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=3 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner
+    </select>
+
+    <!-- 运营部-年化业绩、充值 -->
+    <select id="getOperMonthPerformanceDataO" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+        select IFNULL(SUM(year_money),0) as yearAmount, IFNULL(SUM(money),0) as recharge from ht_user_operate_list where operating=2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
+
+    <!-- 运营部-提现 -->
+    <select id="getOperMonthPerformanceDataT" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+        select IFNULL(SUM(money),0) as withdraw from ht_user_operate_list where operating=4 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
+
+    <!-- 运营部-投资 -->
+    <select id="getOperMonthPerformanceDataTh" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+        select IFNULL(SUM(money),0) as invest from ht_user_operate_list where operating=1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
+
+    <!-- 运营部-回款 -->
+    <select id="getOperMonthPerformanceDataFi" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+        select IFNULL(SUM(money),0) as allRepay from ht_user_operate_list where operating=3 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
 </mapper>

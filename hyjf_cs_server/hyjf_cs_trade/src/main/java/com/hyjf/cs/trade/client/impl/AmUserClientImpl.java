@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.bifa.BifaIndexUserInfoBeanResponse;
@@ -1159,5 +1160,12 @@ public class AmUserClientImpl implements AmUserClient {
 		return restTemplate.postForObject("http://AM-USER//am-user/user_large_screen/customertaskconfig",
 				request, UserCustomerTaskConfigResponse.class);
 
+	}
+
+	@Override
+	public List<Integer> getOperUserIds() {
+		String url = "http://AM-USER/am-user/user_large_screen/getoperuserids";
+		StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+		return response.getResultList();
 	}
 }

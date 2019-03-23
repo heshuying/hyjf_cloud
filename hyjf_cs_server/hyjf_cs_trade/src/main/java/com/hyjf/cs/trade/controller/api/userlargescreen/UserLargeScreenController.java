@@ -4,12 +4,12 @@
 package com.hyjf.cs.trade.controller.api.userlargescreen;
 
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
+import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
 import com.hyjf.cs.trade.service.userlargescreen.UserLargeScreenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,4 +32,10 @@ public class UserLargeScreenController {
         return bean;
     }
 
+    @ApiOperation(value = " 屏幕二数据获取", notes = " 屏幕二数据获取")
+    @GetMapping(value = "/two")
+    public UserLargeScreenTwoResultBean getTwoPage() {
+        UserLargeScreenTwoResultBean bean = userLargeScreenService.getTwoPage();
+        return bean;
+    }
 }

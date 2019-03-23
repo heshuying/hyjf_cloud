@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.client;
 
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
@@ -13,11 +12,11 @@ import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 
@@ -508,4 +507,10 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request);
+
+	/**
+	 * 运营部所有用户id
+	 * @return
+	 */
+    List<Integer> getOperUserIds();
 }

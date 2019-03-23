@@ -3,12 +3,13 @@
  */
 package com.hyjf.cs.trade.service.userlargescreen.impl;
 
-import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
+import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
+import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.service.userlargescreen.UserLargeScreenService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: tanyy
@@ -59,6 +61,29 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         return bean;
     }
 
+    @Override
+    public UserLargeScreenTwoResultBean getTwoPage() {
+        UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
+        // 日业绩(新客组、老客组)
+        UserLargeScreenTwoVO dayScalePerformanceListVo =  amTradeClient.getDayScalePerformanceList();
+        bean.setDayScalePerformanceListNew(dayScalePerformanceListVo.getDayScalePerformanceListNew());
+        bean.setDayScalePerformanceListOld(dayScalePerformanceListVo.getDayScalePerformanceListOld());
+        // 日回款(新客组、老客组)
+        UserLargeScreenTwoVO dayReceivedPaymentsVo =  amTradeClient.getDayReceivedPayments();
+        bean.setDayReceivedPaymentsNew(dayReceivedPaymentsVo.getDayReceivedPaymentsNew());
+        bean.setDayReceivedPaymentsOld(dayReceivedPaymentsVo.getDayReceivedPaymentsOld());
+        // 本月数据统计(新客组、老客组)
+        UserLargeScreenTwoVO monthDataStatisticsVo =  amTradeClient.getMonthDataStatistics();
+        bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
+        bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
+        // 运营部所有用户id
+        List<Integer> userIds = amUserClient.getOperUserIds();
+        // 运营部月度业绩数据
+        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData(userIds);
+        bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
+        return bean;
+    }
+
     /**
      * 获取现在时间
      *
@@ -70,5 +95,4 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         String dateString = formatter.format(currentTime);
         return dateString;
     }
-
 }

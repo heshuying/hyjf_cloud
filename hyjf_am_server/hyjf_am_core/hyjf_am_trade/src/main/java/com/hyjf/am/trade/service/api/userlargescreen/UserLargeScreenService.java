@@ -3,7 +3,10 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen;
 
+import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
+
+import java.util.List;
 
 /**
  * @author tanyy
@@ -41,4 +44,28 @@ public interface UserLargeScreenService {
 
     UserLargeScreenVO getUserCapitalDetails();
 
+    /**
+     * 屏幕二日业绩(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayScalePerformanceList();
+
+    /**
+     * 屏幕二日回款(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayReceivedPayments();
+
+    /**
+     * 本月数据统计(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getMonthDataStatistics();
+
+    /**
+     * 运营部月度业绩数据
+     * @param userIds
+     * @return
+     */
+    UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds);
 }

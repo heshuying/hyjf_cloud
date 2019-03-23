@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
@@ -27,10 +26,7 @@ import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
-import com.hyjf.am.vo.api.UserLargeScreenVO;
+import com.hyjf.am.vo.api.*;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -2941,5 +2937,29 @@ public interface AmTradeClient {
     UserLargeScreenVO  getMonthReceivedPayments();
 
     UserLargeScreenVO getUserCapitalDetails();
+
+    /**
+     * 屏幕二日业绩(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayScalePerformanceList();
+
+    /**
+     * 屏幕二日回款(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayReceivedPayments();
+
+    /**
+     * 本月数据统计(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getMonthDataStatistics();
+
+    /**
+     * 运营部月度业绩数据
+     * @return
+     */
+    UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds);
 }
 

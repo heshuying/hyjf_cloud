@@ -9,6 +9,7 @@ import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.api.ApiAssetStatusCustomizeResponse;
 import com.hyjf.am.response.api.UserLargeScreenResponse;
+import com.hyjf.am.response.api.UserLargeScreenTwoResponse;
 import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
@@ -54,10 +55,7 @@ import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
-import com.hyjf.am.vo.api.UserLargeScreenVO;
+import com.hyjf.am.vo.api.*;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -6893,7 +6891,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /**
      * 累计借贷余额
-     * @param time
      * @return
      */
     @Override
@@ -7094,4 +7091,43 @@ public class AmTradeClientImpl implements AmTradeClient {
         return new UserLargeScreenVO();
     }
 
+    @Override
+    public UserLargeScreenTwoVO getDayScalePerformanceList() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayscaleperformancelist";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenTwoVO();
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getDayReceivedPayments() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayreceivedpayments";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenTwoVO();
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getMonthDataStatistics() {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenTwoVO();
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds) {
+        String url = "http://AM-TRADE/am-trade/user_large_screen_two/getopermonthperformancedata";
+        UserLargeScreenTwoResponse response = restTemplate.postForEntity(url, userIds, UserLargeScreenTwoResponse.class).getBody();
+        if(response!=null){
+            return response.getResult();
+        }
+        return new UserLargeScreenTwoVO();
+    }
 }

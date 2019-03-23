@@ -3,15 +3,9 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
-import com.hyjf.am.vo.api.EchartsResultVO;
-import com.hyjf.am.vo.api.UserCapitalDetailsVO;
-import com.hyjf.am.vo.api.UserLargeScreenVO;
-import org.apache.ibatis.annotations.Param;
+import com.hyjf.am.vo.api.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author tanyy
@@ -30,4 +24,24 @@ public interface UserLargeScreenCustomizeMapper {
     List<EchartsResultVO> getMonthReceivedPayments();
 
     List<UserCapitalDetailsVO> getUserCapitalDetails();
+
+    List<EchartsResultVO> getDayScalePerformanceList();
+
+    List<EchartsResultVO> getDayReceivedPayments();
+
+    List<MonthDataStatisticsVO> getMonthDataStatisticsO();
+
+    List<MonthDataStatisticsVO> getMonthDataStatisticsT();
+
+    List<MonthDataStatisticsVO> getMonthDataStatisticsTh();
+
+    List<MonthDataStatisticsVO> getMonthDataStatisticsFi();
+
+    OperMonthPerformanceDataVO getOperMonthPerformanceDataO();
+
+    OperMonthPerformanceDataVO getOperMonthPerformanceDataT();
+
+    OperMonthPerformanceDataVO getOperMonthPerformanceDataTh();
+
+    OperMonthPerformanceDataVO getOperMonthPerformanceDataFi();
 }

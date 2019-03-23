@@ -3,16 +3,22 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen.impl;
 
+import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
+import com.hyjf.am.trade.dao.mapper.auto.UserOperateListMapper;
+import com.hyjf.am.trade.dao.model.auto.AccountList;
+import com.hyjf.am.trade.dao.model.auto.AccountListExample;
+import com.hyjf.am.trade.dao.model.auto.UserOperateList;
+import com.hyjf.am.trade.dao.model.auto.UserOperateListExample;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.api.EchartsResultVO;
-import com.hyjf.am.vo.api.UserCapitalDetailsVO;
-import com.hyjf.am.vo.api.UserLargeScreenVO;
+import com.hyjf.am.vo.api.*;
+import com.hyjf.common.util.GetDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +29,10 @@ import java.util.List;
 @Service
 public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserLargeScreenService {
 
+    @Autowired
+    private AccountListMapper accountListMapper;
+    @Autowired
+    private UserOperateListMapper userOperateListMapper;
 
     @Override
     public UserLargeScreenVO getTotalAmount(){
@@ -92,6 +102,214 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         cal.set(Calendar.MINUTE,2);*/
         List<UserCapitalDetailsVO> userCapitalDetailsVOList = userLargeScreenCustomizeMapper.getUserCapitalDetails();
         vo.setUserCapitalDetailList(userCapitalDetailsVOList);
+        return vo;
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getDayScalePerformanceList() {
+        UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
+        List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getDayScalePerformanceList();
+        List<EchartsResultVO> dayScalePerformanceListNew = new ArrayList<>();
+        List<EchartsResultVO> dayScalePerformanceListOld = new ArrayList<>();
+        for(EchartsResultVO echartsResultVO : list){
+            if("1".equals(echartsResultVO.getCustomerGroup())){
+                dayScalePerformanceListNew.add(echartsResultVO);
+            }else {
+                dayScalePerformanceListOld.add(echartsResultVO);
+            }
+        }
+        vo.setDayScalePerformanceListNew(dayScalePerformanceListNew);
+        vo.setDayScalePerformanceListOld(dayScalePerformanceListOld);
+        return vo;
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getDayReceivedPayments() {
+        List<EchartsResultVO> dayReceivedPaymentsNew = new ArrayList<>();
+        List<EchartsResultVO> dayReceivedPaymentsOld = new ArrayList<>();
+        UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
+
+        List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getDayReceivedPayments();
+        for(EchartsResultVO echartsResultVO:list){
+            if("1".equals(echartsResultVO.getCustomerGroup())){
+                dayReceivedPaymentsNew.add(echartsResultVO);
+            }else {
+                dayReceivedPaymentsOld.add(echartsResultVO);
+            }
+        }
+        vo.setDayReceivedPaymentsNew(dayReceivedPaymentsNew);
+        vo.setDayReceivedPaymentsOld(dayReceivedPaymentsOld);
+        return vo;
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getMonthDataStatistics() {
+        List<MonthDataStatisticsVO> monthDataStatisticsNew = new ArrayList<>();
+        List<MonthDataStatisticsVO> monthDataStatisticsOld = new ArrayList<>();
+        UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
+
+        // 坐席、年化业绩、充值
+        List<MonthDataStatisticsVO> listO =  userLargeScreenCustomizeMapper.getMonthDataStatisticsO();
+        // 坐席、提现
+        List<MonthDataStatisticsVO> listT =  userLargeScreenCustomizeMapper.getMonthDataStatisticsT();
+        // 坐席、回款
+        List<MonthDataStatisticsVO> listTh =  userLargeScreenCustomizeMapper.getMonthDataStatisticsTh();
+        // 坐席、站岗资金
+        List<MonthDataStatisticsVO> listFi =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFi();
+
+        // 坐席、年化业绩、充值
+        if(!CollectionUtils.isEmpty(listO)){
+            for(MonthDataStatisticsVO monthDataStatisticsVOO : listO){
+                if("1".equals(monthDataStatisticsVOO.getCustomerGroup())){
+                    // 提现
+                    if(!CollectionUtils.isEmpty(listT)){
+                        for(MonthDataStatisticsVO monthDataStatisticsVOT : listT){
+                            if ("1".equals(monthDataStatisticsVOT.getCustomerGroup()) &&
+                                    monthDataStatisticsVOT.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setWithdraw(monthDataStatisticsVOT.getWithdraw());
+                            }
+                        }
+                    }
+                    // 站岗资金
+                    if(!CollectionUtils.isEmpty(listTh)){
+                        for(MonthDataStatisticsVO monthDataStatisticsVOTh : listTh){
+                            if ("1".equals(monthDataStatisticsVOTh.getCustomerGroup()) &&
+                                    monthDataStatisticsVOTh.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setGuardFund(monthDataStatisticsVOTh.getGuardFund());
+                            }
+                        }
+                    }
+                    monthDataStatisticsNew.add(monthDataStatisticsVOO);
+                }else {
+                    // 回款
+                    if(!CollectionUtils.isEmpty(listFi)){
+                        for(MonthDataStatisticsVO listFiSon : listFi){
+                            if (!"1".equals(listFiSon.getCustomerGroup()) &&
+                                    listFiSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setReceived(listFiSon.getReceived());
+                            }
+                        }
+                    }
+                    // 提现
+                    if(!CollectionUtils.isEmpty(listT)){
+                        for(MonthDataStatisticsVO listTSon : listT){
+                            if (!"1".equals(listTSon.getCustomerGroup()) &&
+                                    listTSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setWithdraw(listTSon.getWithdraw());
+                            }
+                        }
+                    }
+                    // 站岗资金
+                    if(!CollectionUtils.isEmpty(listTh)){
+                        for(MonthDataStatisticsVO listThSon : listTh){
+                            if (!"1".equals(listThSon.getCustomerGroup()) &&
+                                    listThSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setGuardFund(listThSon.getGuardFund());
+                            }
+                        }
+                    }
+                    // 查询每个坐席下的所有用户
+                    UserOperateListExample uolexample = new UserOperateListExample();
+                    UserOperateListExample.Criteria uolcrt = uolexample.createCriteria();
+                    uolcrt.andCurrentOwnerEqualTo(monthDataStatisticsVOO.getCurrentOwner());
+                    List<UserOperateList> listFo =  userOperateListMapper.selectByExample(uolexample);
+                    List<Integer> userIds = new ArrayList<>();
+                    for(UserOperateList listFoSon : listFo){
+                        userIds.add(listFoSon.getUserId());
+                    }
+                    // 获得坐席月初站岗资金
+                    AccountListExample alexample = new AccountListExample();
+                    AccountListExample.Criteria alcrt = alexample.createCriteria();
+                    alcrt.andUserIdIn(userIds);
+                    alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key),
+                                                    GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key));
+                    List<AccountList> accountList = accountListMapper.selectByExample(alexample);
+                    // 定义坐席用户总站岗资金
+                    BigDecimal monthBeginBalance = new BigDecimal("0");
+                    for(AccountList accountListSon : accountList){
+                        monthBeginBalance.add(accountListSon.getBankBalance());
+                    }
+                    // 增资
+                    BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthDataStatisticsVOO.getGuardFund());
+                    if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
+                        additionalShare = new BigDecimal("0");
+                    }
+                    monthDataStatisticsVOO.setAdditionalShare(additionalShare);
+                    // 提现率
+                    BigDecimal extractionRate = new BigDecimal("0");
+                    if(monthDataStatisticsVOO.getWithdraw().compareTo(BigDecimal.ZERO) > 0 &&
+                            monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
+                        extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance));
+                    }
+                    monthDataStatisticsVOO.setExtractionRate(extractionRate);
+
+                    monthDataStatisticsOld.add(monthDataStatisticsVOO);
+                }
+            }
+        }
+
+        vo.setMonthDataStatisticsNew(monthDataStatisticsNew);
+        vo.setMonthDataStatisticsOld(monthDataStatisticsOld);
+        return vo;
+    }
+
+    @Override
+    public UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds) {
+        UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
+        OperMonthPerformanceDataVO operMonthPerformanceDataVO = new OperMonthPerformanceDataVO();
+        // 运营部-年化业绩、充值
+        OperMonthPerformanceDataVO listO =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataO();
+        // 运营部-提现
+        OperMonthPerformanceDataVO listT =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataT();
+        // 运营部-投资
+        OperMonthPerformanceDataVO listTh =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataTh();
+        // 运营部-回款
+        OperMonthPerformanceDataVO listFi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFi();
+        // 获得坐席月初站岗资金
+        AccountListExample alexample = new AccountListExample();
+        AccountListExample.Criteria alcrt = alexample.createCriteria();
+        alcrt.andUserIdIn(userIds);
+        alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key),
+                GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key));
+        List<AccountList> accountListStart = accountListMapper.selectByExample(alexample);
+        BigDecimal monthBeginBalanceStart = new BigDecimal("0");
+        for(AccountList accountListStartSon : accountListStart){
+            monthBeginBalanceStart.add(accountListStartSon.getBankBalance());
+        }
+        // 获得坐席月末站岗资金
+        alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key),
+                GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key));
+        List<AccountList> accountListStartEnd = accountListMapper.selectByExample(alexample);
+        BigDecimal monthBeginBalanceEnd = new BigDecimal("0");
+        for(AccountList accountListStartEndSon : accountListStartEnd){
+            monthBeginBalanceEnd.add(accountListStartEndSon.getBankBalance());
+        }
+        // 月末运营部用总待换金额
+        BigDecimal allWaitRepay = new BigDecimal("0");
+        for(AccountList accountListStartEndSon : accountListStartEnd){
+            allWaitRepay.add(accountListStartEndSon.getRepay());
+        }
+        // 规模业绩
+        operMonthPerformanceDataVO.setInvest(listTh.getInvest());
+        // 年化业绩
+        operMonthPerformanceDataVO.setYearAmount(listO.getYearAmount());
+        // 站岗资金
+        operMonthPerformanceDataVO.setBalance(monthBeginBalanceEnd);
+        // 增资
+        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(monthBeginBalanceStart).subtract(monthBeginBalanceEnd);
+        if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
+            additionalShare = new BigDecimal("0");
+        }
+        operMonthPerformanceDataVO.setAdditionalShare(additionalShare);
+        // 提现
+        operMonthPerformanceDataVO.setWithdraw(listT.getWithdraw());
+        // 充值
+        operMonthPerformanceDataVO.setRecharge(listT.getRecharge());
+        // 总待还金额
+        operMonthPerformanceDataVO.setAllWaitRepay(allWaitRepay);
+        // 已还金额
+        operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
+        vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
         return vo;
     }
 
