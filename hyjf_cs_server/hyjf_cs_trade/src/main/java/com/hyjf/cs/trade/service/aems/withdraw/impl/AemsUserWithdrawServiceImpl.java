@@ -188,13 +188,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 							}catch (Exception e){
 								logger.error(e.getMessage());
 							}
-							try{
-								// 提现成功后,发送大屏数据统计MQ
-								ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),transAmt,4);
-								this.sendScreenDataMQ(screenDataBean);
-							}catch (Exception e){
-								logger.error("提现成功后,发送大屏数据统计MQ失败",e.getMessage());
-							}
+
 							return jsonMessage("提现成功!", "0");
 						} catch (Exception e) {
 							// 回滚事务
@@ -1086,12 +1080,5 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 	}
 
 
-	/**
-	 * 提现成功后,发送大屏数据统计MQ
-	 *
-	 * @param screenDataBean
-	 */
-	private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
-		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(screenDataBean)), 2);
-	}
+
 }

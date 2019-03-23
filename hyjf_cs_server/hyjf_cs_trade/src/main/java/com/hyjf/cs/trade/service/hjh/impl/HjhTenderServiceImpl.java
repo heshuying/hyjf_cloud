@@ -1482,7 +1482,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         screenDataBean.setOperating(1);
         screenDataBean.setOrderId(orderId);
         screenDataBean.setProductType(projectType);
-        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(screenDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
     /**
      * 更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始

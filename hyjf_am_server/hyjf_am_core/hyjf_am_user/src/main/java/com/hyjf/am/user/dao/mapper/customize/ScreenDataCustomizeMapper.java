@@ -18,10 +18,5 @@ public interface ScreenDataCustomizeMapper {
      */
     HashMap<String,String> findUserGroupNotQianLe(@Param(value = "userId") Integer userId);
 
-    /**
-     * 查询用户为有主单
-     * @return
-     */
-    HashMap<String,String> findUserGroup(@Param(value = "userId") Integer userId);
 
 }

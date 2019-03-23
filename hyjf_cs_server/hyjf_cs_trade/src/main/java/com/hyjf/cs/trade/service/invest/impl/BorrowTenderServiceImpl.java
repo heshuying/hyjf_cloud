@@ -2732,6 +2732,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         screenDataBean.setOperating(1);
         screenDataBean.setOrderId(orderId);
         screenDataBean.setProductType(projectType);
-        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(screenDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
 }
