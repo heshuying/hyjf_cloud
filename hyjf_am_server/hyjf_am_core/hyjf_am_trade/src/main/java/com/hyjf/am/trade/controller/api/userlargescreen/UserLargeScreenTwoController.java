@@ -9,9 +9,10 @@ import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "用户大屏二接口", tags = "用户大屏二接口")
 @RestController
@@ -50,9 +51,9 @@ public class UserLargeScreenTwoController {
 
     @ApiOperation(value = "运营部月度业绩数据",notes = " 运营部月度业绩数据")
     @PostMapping(value = "/getopermonthperformancedata")
-    public UserLargeScreenTwoResponse getOperMonthPerformanceData(@RequestBody List<Integer> userIds) {
+    public UserLargeScreenTwoResponse getOperMonthPerformanceData() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
-        UserLargeScreenTwoVO vo = userLargeScreenService.getOperMonthPerformanceData(userIds);
+        UserLargeScreenTwoVO vo = userLargeScreenService.getOperMonthPerformanceData(null);
         response.setResult(vo);
         return response;
     }
