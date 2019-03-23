@@ -47,6 +47,13 @@ public interface ScreenDataService {
    Integer addRepayUserList(List<RepaymentPlanVO> repaymentPlanVOS);
 
     /**
+     * 查询本月是否已生成数据
+     * @return
+     */
+    Integer countRepayUserList(Date startTime, Date endTime);
+
+
+    /**
      * 修改待回款金额
      * @param screenDataBean
      * @return

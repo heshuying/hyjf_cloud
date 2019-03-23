@@ -16,9 +16,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.hyjf.common.util.GetDate.date_sdf_key;
 
 /**
  * @author lisheng
@@ -58,6 +61,14 @@ public class ScreenDataController extends BaseController {
     private IntegerResponse addRepayUserList(@RequestBody ScreenDataBean screenDataBean) {
         IntegerResponse response = new IntegerResponse();
         Integer result = service.addRepayUserList(screenDataBean.getRepaymentPlanVOS());
+        response.setResultInt(result);
+        return response;
+    }
+
+    @GetMapping(value = "/count_repay_userList")
+    private IntegerResponse countRepayUserList() {
+        IntegerResponse response = new IntegerResponse();
+        Integer result = service.countRepayUserList(GetDate.getFirstDayOfMonthDate(),GetDate.getLastDayOfMonthDate());
         response.setResultInt(result);
         return response;
     }

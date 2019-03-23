@@ -3397,5 +3397,11 @@ public interface AmTradeClient {
      * @param resultList
      */
     void addRepayUserList(List<RepaymentPlanVO> resultList);
+
+    /**
+     * 查询本月待会款是否已经统计
+     * @return
+     */
+    IntegerResponse countRepayUserList();
 }
 

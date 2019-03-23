@@ -2287,6 +2287,16 @@ public class GetDate extends PropertyEditorSupport {
 		ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
 		return  getDayEnd10(ca.getTime());
 	}
+
+	/**
+	 * 获取当前月最后一天
+	 * @return
+	 */
+	public static Date getLastDayOfMonthDate() {
+		Calendar ca = Calendar.getInstance();
+		ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return  ca.getTime();
+	}
 	/**
 	 * 获取当前月第一天
 	 * @return

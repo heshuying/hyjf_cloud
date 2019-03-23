@@ -102,13 +102,22 @@ public class ScreenDataBean implements Serializable {
     private Date updateTime;
 
     /**
-     *订单id
+     * 订单id
      */
     String orderId;
     /**
-     *投资类型
+     * 投资类型
      */
     Integer productType;
+    /**
+     * 锁定期
+     */
+    Integer planPeriod;
+    /**
+     * 还款方式
+     */
+    String borrowStyle;
+
 
     public ScreenDataBean(Integer userId, String userName, BigDecimal money, Integer operating) {
         this.userId = userId;
@@ -116,13 +125,15 @@ public class ScreenDataBean implements Serializable {
         this.money = money;
         this.operating = operating;
     }
-    public ScreenDataBean(String orderId,Integer userId, String userName, BigDecimal money, Integer operating) {
+
+    public ScreenDataBean(String orderId, Integer userId, String userName, BigDecimal money, Integer operating) {
         this.orderId = orderId;
         this.userId = userId;
         this.userName = userName;
         this.money = money;
         this.operating = operating;
     }
+
     public ScreenDataBean() {
     }
 
@@ -253,6 +264,22 @@ public class ScreenDataBean implements Serializable {
 
     public void setTenderUserId(Integer tenderUserId) {
         this.tenderUserId = tenderUserId;
+    }
+
+    public Integer getPlanPeriod() {
+        return planPeriod;
+    }
+
+    public void setPlanPeriod(Integer planPeriod) {
+        this.planPeriod = planPeriod;
+    }
+
+    public String getBorrowStyle() {
+        return borrowStyle;
+    }
+
+    public void setBorrowStyle(String borrowStyle) {
+        this.borrowStyle = borrowStyle;
     }
 
     @Override

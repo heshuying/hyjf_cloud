@@ -1422,7 +1422,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
                     sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
                     // 投标成功后,发送大屏数据统计MQ
-                    sendScreenDataMQ(request.getUser().getUsername(), userId, planOrderId, new BigDecimal(accountStr), 3);
+                    sendScreenDataMQ(request.getUser().getUsername(), userId, planOrderId, new BigDecimal(accountStr), 3,planPeriod,borrowStyle);
 
                 } catch (Exception e) {
                     logger.error("加入计划 纳觅返现mq出错",e);
@@ -1474,7 +1474,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * 投资计划成功后,发送大屏数据统计MQ
      *
      */
-    private void sendScreenDataMQ(String username,Integer userId,String orderId,BigDecimal investMoney,Integer projectType) throws MQException {
+    private void sendScreenDataMQ(String username,Integer userId,String orderId,BigDecimal investMoney,Integer projectType,Integer planPeriod,String borrowStyle) throws MQException {
         ScreenDataBean screenDataBean = new ScreenDataBean();
         screenDataBean.setUserId(userId);
         screenDataBean.setMoney(investMoney);
@@ -1482,6 +1482,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         screenDataBean.setOperating(1);
         screenDataBean.setOrderId(orderId);
         screenDataBean.setProductType(projectType);
+        screenDataBean.setPlanPeriod(planPeriod);
+        screenDataBean.setBorrowStyle(borrowStyle);
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
     /**

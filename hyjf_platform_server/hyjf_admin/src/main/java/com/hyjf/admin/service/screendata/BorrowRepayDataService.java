@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.screendata;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.RepayResponse;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
 
@@ -24,5 +25,11 @@ public interface BorrowRepayDataService {
      * @param resultList
      */
     void addRepayUserList(List<RepaymentPlanVO> resultList);
+
+    /**
+     * 查询本月待回款是否已经统计
+     * @return
+     */
+    IntegerResponse countRepayUserList();
 
 }
