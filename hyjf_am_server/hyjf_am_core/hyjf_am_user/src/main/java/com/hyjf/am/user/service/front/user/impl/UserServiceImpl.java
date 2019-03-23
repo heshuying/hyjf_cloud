@@ -1683,22 +1683,6 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public HashMap<String, String> findUserGroup(Integer userId) {
-        HashMap<String, String> userGroupNotQianLe = screenDataCustomizeMapper.findUserGroupNotQianLe(userId);
-        if (!CollectionUtils.isEmpty(userGroupNotQianLe)) {
-            String customerGroup = userGroupNotQianLe.get("customerGroup");
-            if (StringUtils.isBlank(customerGroup)) {
-                userGroupNotQianLe.put("customerGroup", "4");
-            }
-            return userGroupNotQianLe;
-        }
-        HashMap<String, String> userGroup = screenDataCustomizeMapper.findUserGroup(userId);
-        if (!CollectionUtils.isEmpty(userGroup)) {
-            String customerGroup = userGroupNotQianLe.get("customerGroup");
-            if (StringUtils.isBlank(customerGroup)) {
-                userGroupNotQianLe.put("customerGroup", "3");
-            }
-            return userGroup;
-        }
-        return null;
+        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId);
     }
 }
