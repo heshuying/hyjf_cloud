@@ -8,6 +8,7 @@ import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.user.dao.mapper.auto.CustomerTaskConfigMapper;
 import com.hyjf.am.user.dao.mapper.auto.ScreenConfigMapper;
+import com.hyjf.am.user.dao.mapper.customize.UserLargeScreenTwoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
@@ -33,6 +34,9 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     ScreenConfigMapper screenConfigMapper;
     @Resource
     CustomerTaskConfigMapper customerTaskConfigMapper;
+    @Resource
+    UserLargeScreenTwoCustomizeMapper userLargeScreenTwoCustomizeMapper;
+
     @Override
    public UserScreenConfigResponse getScreenConfig(UserLargeScreenRequest request){
         UserScreenConfigResponse response = new UserScreenConfigResponse();
@@ -61,6 +65,11 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         }
         response.setResult(vo);
         return response;
+    }
+
+    @Override
+    public List<Integer> getOperUserIds() {
+        return userLargeScreenTwoCustomizeMapper.getOperUserIds();
     }
 
 

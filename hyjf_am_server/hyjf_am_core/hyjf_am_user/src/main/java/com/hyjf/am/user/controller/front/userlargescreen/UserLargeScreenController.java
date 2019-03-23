@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.controller.front.userlargescreen;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
@@ -11,6 +12,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author tanyy
@@ -35,6 +38,15 @@ public class UserLargeScreenController {
     @PostMapping(value = "/customertaskconfig")
     public UserCustomerTaskConfigResponse getCustomerTaskConfig(@RequestBody UserLargeScreenRequest request) {
         UserCustomerTaskConfigResponse response = userLargeScreenService.getCustomerTaskConfig(request);
+        return response;
+    }
+
+    @ApiOperation(value = " 运营部所有用户id",notes = " 运营部所有用户id")
+    @GetMapping(value = "/getoperuserids")
+    public StringResponse getOperUserIds() {
+        StringResponse response = new StringResponse();
+        List<Integer> userIds = userLargeScreenService.getOperUserIds();
+        response.setResultList(userIds);
         return response;
     }
 }

@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.userlargescreen;
 
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
+import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
 
 /**
  * @author tanyy
@@ -13,4 +14,5 @@ public interface UserLargeScreenService {
 
     UserLargeScreenResultBean getOnePage();
 
+    UserLargeScreenTwoResultBean getTwoPage();
 }
