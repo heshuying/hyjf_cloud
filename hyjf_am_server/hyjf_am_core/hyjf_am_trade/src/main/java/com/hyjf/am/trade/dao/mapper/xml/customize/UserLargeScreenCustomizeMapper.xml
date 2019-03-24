@@ -109,4 +109,9 @@
     <select id="getOperMonthPerformanceDataFi" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
         select IFNULL(SUM(money),0) as allRepay from ht_user_operate_list where operating=3 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
     </select>
+
+    <!-- 运营部-待回款 -->
+    <select id="getOperMonthPerformanceDataFo" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+        select IFNULL(SUM(money),0) as allWaitRepay from ht_repayment_plan where DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+    </select>
 </mapper>

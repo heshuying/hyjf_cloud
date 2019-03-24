@@ -44,4 +44,6 @@ public interface UserLargeScreenCustomizeMapper {
     OperMonthPerformanceDataVO getOperMonthPerformanceDataTh();
 
     OperMonthPerformanceDataVO getOperMonthPerformanceDataFi();
+
+    OperMonthPerformanceDataVO getOperMonthPerformanceDataFo();
 }

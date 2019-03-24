@@ -587,6 +587,12 @@ public interface MQConstant {
 
 	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
 
+	/** ------------------------------ 运营大屏二月初、末站岗资金统计 start ------------------------------ */
+	String SCREEN_DATA_TWO_GROUP = "SCREEN_DATA_TWO_GROUP";
+	String SCREEN_DATA_TWO_TOPIC = "SCREEN_DATA_TWO_TOPIC";
+	String SCREEN_DATA_TWO_SELECT_TAG = "SCREEN_DATA_TWO_SELECT_TAG";
+	/** ------------------------------ 运营大屏二月初、末站岗资金统计 end ------------------------------ */
+
     /**--------------------------------- 应急中心 -------------------------------------*/
 
     /**用户信息*/

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.UserLargeScreenTwoCustomizeMapper">
+
+	<select id="getOperMonthStartBalance" parameterType="java.util.Date" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+		SELECT
+		IFNULL(SUM(l.balance),0) AS monthStartBalance
+        FROM
+        hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_portrait p1 ON u.user_id = p1.user_id
+        LEFT JOIN hyjf_user.ht_customer_task_config c on p1.current_owner=c.customer_name
+        LEFT JOIN hyjf_user.ht_user_info i ON u.user_id = i.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r  ON r.user_id = i.user_id
+        LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p ON  u1.utm_source=p.source_name
+        LEFT JOIN hyjf_trade.ht_account_list l ON  u.user_id = l.user_id
+        WHERE (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+        	  and i.attribute=0
+			  and DATE_FORMAT(l.create_time,'%Y-%m-%d') = DATE_FORMAT(#{time},'%Y-%m-%d')
+
+        union all
+
+        SELECT
+        IFNULL(SUM(l.balance),0) AS monthStartBalance
+        FROM
+            hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info i ON u.user_id = i.user_id
+        LEFT JOIN hyjf_user.ht_user_portrait p ON u.user_id=p.user_id
+        LEFT JOIN hyjf_user.ht_customer_task_config c on p.current_owner=c.customer_name
+        LEFT JOIN hyjf_user.ht_spreads_user s ON u.user_id = s.user_id
+        LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+        LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
+        LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+        LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+        LEFT JOIN hyjf_trade.ht_account_list l ON  u.user_id = l.user_id
+        where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+               and d3.`name`='惠众商务'
+               and (d1.`name`='电销部' or d1.`name`='网络运营部')
+               and i.attribute <![CDATA[<>]]> 0
+               and DATE_FORMAT(l.create_time,'%Y-%m-%d') = DATE_FORMAT(#{time},'%Y-%m-%d')
+	</select>
+
+	<select id="getOperMonthEndBalance" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+        SELECT
+		IFNULL(SUM(l.balance),0) AS monthEndBalance
+        FROM
+        hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_portrait p1 ON u.user_id = p1.user_id
+        LEFT JOIN hyjf_user.ht_customer_task_config c on p1.current_owner=c.customer_name
+        LEFT JOIN hyjf_user.ht_user_info i ON u.user_id = i.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r  ON r.user_id = i.user_id
+        LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p ON  u1.utm_source=p.source_name
+        LEFT JOIN hyjf_trade.ht_account_list l ON  u.user_id = l.user_id
+        WHERE (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+        	  and i.attribute=0
+			  and DATE_FORMAT(l.create_time,'%Y-%m-%d') = DATE_FORMAT(#{time},'%Y-%m-%d')
+
+        union all
+
+        SELECT
+        IFNULL(SUM(l.balance),0) AS monthEndBalance
+        FROM
+            hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info i ON u.user_id = i.user_id
+        LEFT JOIN hyjf_user.ht_user_portrait p ON u.user_id=p.user_id
+        LEFT JOIN hyjf_user.ht_customer_task_config c on p.current_owner=c.customer_name
+        LEFT JOIN hyjf_user.ht_spreads_user s ON u.user_id = s.user_id
+        LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+        LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
+        LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+        LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+        LEFT JOIN hyjf_trade.ht_account_list l ON  u.user_id = l.user_id
+        where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+               and d3.`name`='惠众商务'
+               and (d1.`name`='电销部' or d1.`name`='网络运营部')
+               and i.attribute <![CDATA[<>]]> 0
+               and DATE_FORMAT(l.create_time,'%Y-%m-%d') = DATE_FORMAT(#{time},'%Y-%m-%d')
+	</select>
+	
+</mapper>

@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.api.userlargescreen.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
+import com.hyjf.am.trade.dao.mapper.auto.RepaymentPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.UserOperateListMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountListExample;
@@ -12,7 +13,9 @@ import com.hyjf.am.trade.dao.model.auto.UserOperateListExample;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -265,38 +268,26 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         OperMonthPerformanceDataVO listTh =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataTh();
         // 运营部-回款
         OperMonthPerformanceDataVO listFi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFi();
+        // 运营部-待回款
+        OperMonthPerformanceDataVO listFo =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFo();
         // 获得坐席月初站岗资金
-        /*AccountListExample alexample = new AccountListExample();
-        AccountListExample.Criteria alcrt = alexample.createCriteria();
-        alcrt.andUserIdIn(userIds);
-        alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key),
-                GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key));
-        List<AccountList> accountListStart = accountListMapper.selectByExample(alexample);
-        BigDecimal monthBeginBalanceStart = new BigDecimal("0");
-        for(AccountList accountListStartSon : accountListStart){
-            monthBeginBalanceStart.add(accountListStartSon.getBankBalance());
-        }*/
+        BigDecimal start = BigDecimal.ZERO;
+        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE")){
+            start = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", BigDecimal.class);
+        }
         // 获得坐席月末站岗资金
-        /*alcrt.andCreateTimeBetween(GetDate.stringToFormatDate(GetDate.getDayStart(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key),
-                GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getLastDayOnMonth(new Date())), GetDate.datetimeFormat_key));
-        List<AccountList> accountListStartEnd = accountListMapper.selectByExample(alexample);
-        BigDecimal monthBeginBalanceEnd = new BigDecimal("0");
-        for(AccountList accountListStartEndSon : accountListStartEnd){
-            monthBeginBalanceEnd.add(accountListStartEndSon.getBankBalance());
-        }*/
-        // 月末运营部用总待换金额
-        /*BigDecimal allWaitRepay = new BigDecimal("0");
-        for(AccountList accountListStartEndSon : accountListStartEnd){
-            allWaitRepay.add(accountListStartEndSon.getRepay());
-        }*/
+        BigDecimal now = BigDecimal.ZERO;
+        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE")){
+            now = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", BigDecimal.class);
+        }
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
         operMonthPerformanceDataVO.setYearAmount(listO.getYearAmount());
         // 站岗资金
-        operMonthPerformanceDataVO.setBalance(BigDecimal.ZERO);
+        operMonthPerformanceDataVO.setBalance(now);
         // 增资
-        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(BigDecimal.ZERO).subtract(BigDecimal.ZERO);
+        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(start).subtract(now);
         if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
             additionalShare = new BigDecimal("0");
         }
@@ -305,10 +296,11 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         operMonthPerformanceDataVO.setWithdraw(listT.getWithdraw());
         // 充值
         operMonthPerformanceDataVO.setRecharge(listT.getRecharge());
-        // 总待还金额
-        operMonthPerformanceDataVO.setAllWaitRepay(BigDecimal.ZERO);
+        // 总待回金额
+        operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay());
         // 已还金额
         operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
+
         vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
         return vo;
     }

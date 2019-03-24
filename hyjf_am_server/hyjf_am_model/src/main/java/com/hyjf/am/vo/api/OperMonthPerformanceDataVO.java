@@ -33,13 +33,21 @@ public class OperMonthPerformanceDataVO implements Serializable {
      */
     private BigDecimal recharge = BigDecimal.ZERO;
     /**
-     * 总待还金额
+     * 总待回金额
      */
     private BigDecimal allWaitRepay = BigDecimal.ZERO;
     /**
      * 已还金额
      */
     private BigDecimal allRepay = BigDecimal.ZERO;
+    /**
+     * 运营部月初站岗资金
+     */
+    private BigDecimal monthStartBalance;
+    /**
+     * 运营部月末站岗资金
+     */
+    private BigDecimal monthEndBalance;
 
     public BigDecimal getInvest() {
         return invest;
@@ -103,5 +111,21 @@ public class OperMonthPerformanceDataVO implements Serializable {
 
     public void setAllRepay(BigDecimal allRepay) {
         this.allRepay = allRepay;
+    }
+
+    public BigDecimal getMonthStartBalance() {
+        return monthStartBalance;
+    }
+
+    public void setMonthStartBalance(BigDecimal monthStartBalance) {
+        this.monthStartBalance = monthStartBalance;
+    }
+
+    public BigDecimal getMonthEndBalance() {
+        return monthEndBalance;
+    }
+
+    public void setMonthEndBalance(BigDecimal monthEndBalance) {
+        this.monthEndBalance = monthEndBalance;
     }
 }

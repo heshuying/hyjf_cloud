@@ -8,16 +8,23 @@ import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
 import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.userlargescreen.UserLargeScreenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author: tanyy
@@ -25,10 +32,14 @@ import java.util.Date;
  */
 @Service
 public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
+    private static final Logger logger = LoggerFactory.getLogger(UserLargeScreenServiceImpl.class);
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
     public AmTradeClient amTradeClient;
+    @Autowired
+    private CommonProducer commonProducer;
+
     @Override
     public UserLargeScreenResultBean getOnePage(){
         UserLargeScreenResultBean bean = new UserLargeScreenResultBean();
@@ -62,6 +73,12 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
 
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
+        try {
+            commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
+                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), null));
+        } catch (MQException e) {
+            logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
+        }
         UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
         // 日业绩(新客组、老客组)
         UserLargeScreenTwoVO dayScalePerformanceListVo =  amTradeClient.getDayScalePerformanceList();
