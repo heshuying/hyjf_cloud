@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.userlargescreen.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
@@ -75,7 +76,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     public UserLargeScreenTwoResultBean getTwoPage() {
         try {
             commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), null));
+                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), new JSONObject()));
         } catch (MQException e) {
             logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
         }
