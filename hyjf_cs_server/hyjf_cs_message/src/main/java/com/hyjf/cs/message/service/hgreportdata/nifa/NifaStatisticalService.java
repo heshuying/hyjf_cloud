@@ -157,4 +157,12 @@ public interface NifaStatisticalService extends BaseService {
      * @param projectNo
      */
     void updateCreditTransfer(List<String> projectNo);
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    List<NifaBorrowInfoEntity> selectNifaBorrowInfoByHistoryData(String historyData);
 }

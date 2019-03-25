@@ -316,6 +316,7 @@ public class BankAccountManageController extends BaseController {
     @PostMapping("/start_account_check_action")
     public JSONObject bankAccountCheckAction(HttpServletRequest request, @RequestBody BankAccountManageCustomizeVO form) {
         Integer userId = Integer.valueOf(form.getUserId());
+        String ip = GetCilentIP.getIpAddr(request);
         JSONObject ret = new JSONObject();
         String startTime = form.getStartTime();
         String endTime = form.getEndTime();
@@ -324,7 +325,7 @@ public class BankAccountManageController extends BaseController {
             ret.put("status", FAIL);
             return ret;
         }
-        String result = this.bankAccountManageService.updateAccountCheck(userId, startTime, endTime);
+        String result = this.bankAccountManageService.updateAccountCheck(userId, startTime, endTime, ip);
 
         if ("success".equals(result)) {
             ret.put("statusDesc", "处理成功");

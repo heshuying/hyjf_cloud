@@ -98,7 +98,8 @@ public class NifaTenderInfoMessageConsumer implements RocketMQListener<MessageEx
             }
             // 增加防重校验（已报送过的不再处理和入库、未报送过的重新编辑写入一遍）
             NifaBorrowInfoVO nifaBorrowInfoVO = this.nifaTenderInfoMessageService.selectNifaBorrowInfoByBorrowNid(borrowNid, msgBody);
-            if (null != nifaBorrowInfoVO && "1".equals(nifaBorrowInfoVO.getReportStatus())) {
+            // 放款数据已存在mongo库不再生成数据、确认相关信息手动清理完成后再推送处理消息
+            if (null != nifaBorrowInfoVO ) {
                 // 已经上报成功
                 logger.info(logHeader + " 借款详情已经上报。" + msgBody);
                 return;
@@ -127,7 +128,8 @@ public class NifaTenderInfoMessageConsumer implements RocketMQListener<MessageEx
             // 取江西银行绑定的银行卡信息
             BankCardVO bankCard = this.nifaTenderInfoMessageService.selectBankCardByUserId(borrow.getUserId());
             if (null == bankCard || StringUtils.isBlank(bankCard.getBank())) {
-                throw new Exception(logHeader + "未获取到借款人的相关银行卡信息！！borrowNid:" + borrowNid);
+                bankCard = new BankCardVO();
+                bankCard.setBank("工商银行");
             }
 
             // 查询到符合条件的数据上报状态变成1、数据重新做成

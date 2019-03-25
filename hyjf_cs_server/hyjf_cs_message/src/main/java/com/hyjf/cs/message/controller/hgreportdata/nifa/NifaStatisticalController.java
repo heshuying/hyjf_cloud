@@ -11,6 +11,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.hgreportdata.nifa.*;
 import com.hyjf.cs.message.service.hgreportdata.nifa.NifaStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -187,7 +188,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaBorrowInfoVOList
      * @return
      */
-    @GetMapping("/selectNifaTenderInfo")
+    @PostMapping("/selectNifaTenderInfo")
     public NifaTenderInfoResponse selectNifaTenderInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         NifaTenderInfoResponse response = new NifaTenderInfoResponse();
         List<String> listQuery = new ArrayList<>();
@@ -207,7 +208,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateTenderInfo")
+    @PostMapping("/updateTenderInfo")
     public BooleanResponse updateTenderInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         List<String> listQuery = new ArrayList<>();
         for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
@@ -224,7 +225,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaBorrowInfoVOList
      * @return
      */
-    @GetMapping("/selectNifaBorrowerInfo")
+    @PostMapping("/selectNifaBorrowerInfo")
     public NifaBorrowerInfoResponse selectNifaBorrowerInfo(@RequestBody @Valid  List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         NifaBorrowerInfoResponse response = new NifaBorrowerInfoResponse();
         List<String> listQuery = new ArrayList<>();
@@ -245,7 +246,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateBorrowerInfo")
+    @PostMapping("/updateBorrowerInfo")
     public BooleanResponse updateBorrowerInfo(@RequestBody @Valid List<NifaBorrowInfoVO> nifaBorrowInfoVOList) {
         List<String> listQuery = new ArrayList<>();
         for (NifaBorrowInfoVO nifaBorrowInfoVO : nifaBorrowInfoVOList) {
@@ -290,7 +291,7 @@ public class NifaStatisticalController extends BaseController {
      * @param nifaCreditInfoEntities
      * @return
      */
-    @GetMapping("/selectNifaCreditTransfer")
+    @PostMapping("/selectNifaCreditTransfer")
     public NifaCreditTransferResponse selectNifaCreditTransfer(@RequestBody @Valid List<NifaCreditInfoVO> nifaCreditInfoEntities) {
         NifaCreditTransferResponse response = new NifaCreditTransferResponse();
         List<String> listQuery = new ArrayList<>();
@@ -310,7 +311,7 @@ public class NifaStatisticalController extends BaseController {
      *
      * @return
      */
-    @GetMapping("/updateCreditTransfer")
+    @PostMapping("/updateCreditTransfer")
     public BooleanResponse updateCreditTransfer(@RequestBody @Valid List<NifaCreditInfoVO> nifaCreditInfoEntities) {
         List<String> listQuery = new ArrayList<>();
         for (NifaCreditInfoVO nifaCreditInfoVO : nifaCreditInfoEntities) {
@@ -318,5 +319,22 @@ public class NifaStatisticalController extends BaseController {
         }
         nifaStatisticalService.updateCreditTransfer(listQuery);
         return new BooleanResponse(true);
+    }
+
+    /**
+     * 查询该天日期插入mongo的放还款标的
+     *
+     * @param historyData
+     * @return
+     */
+    @GetMapping("/selectNifaBorrowInfoByHistoryData/{historyData}")
+    public NifaBorrowInfoResponse selectNifaBorrowInfoByHistoryData(@PathVariable String historyData) {
+        NifaBorrowInfoResponse response = new NifaBorrowInfoResponse();
+        List<NifaBorrowInfoEntity> list = this.nifaStatisticalService.selectNifaBorrowInfoByHistoryData(historyData);
+        if(!CollectionUtils.isEmpty(list)) {
+            List<NifaBorrowInfoVO> listVO = CommonUtils.convertBeanList(list,NifaBorrowInfoVO.class);
+            response.setResultList(listVO);
+        }
+        return response;
     }
 }

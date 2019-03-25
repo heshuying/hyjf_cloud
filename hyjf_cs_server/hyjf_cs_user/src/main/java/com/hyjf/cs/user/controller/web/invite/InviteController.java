@@ -68,14 +68,16 @@ public class InviteController extends BaseUserController {
         String inviteLink = null;
         String inviteLinkWechat = null;
 
+        // 合规自查添加
+        // 20181205 产品需求, 屏蔽渠道,只保留用户ID
         UserUtmInfoCustomizeVO userUtmInfo = inviteService.getUserUtmInfo(userId);
-        if (userUtmInfo != null){
-            inviteLink = systemConfig.getWebQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-            inviteLinkWechat = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-        }else {
+//        if (userUtmInfo != null){
+//            inviteLink = systemConfig.getWebQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//            inviteLinkWechat = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//        }else {
             inviteLink = systemConfig.getWebQrcodeUrl() + "refferUserId=" + userId;
             inviteLinkWechat = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-        }
+//        }
         // 二维码的下载地址
         String downloadUrl = systemConfig.webHost + "/hyjf-web/user/invite/download/" + userId;
         logger.info("二维码下载地址：" + downloadUrl);
@@ -128,13 +130,15 @@ public class InviteController extends BaseUserController {
     public void download(@PathVariable  Integer userId, HttpServletRequest request, HttpServletResponse response){
         logger.info("开始生成二维码图片，userId：" + userId);
         try {
+            // 合规自查添加
+            // 20181205 产品需求, 屏蔽渠道,只保留用户ID
             String downloadUrl = null;
             UserUtmInfoCustomizeVO userUtmInfo = inviteService.getUserUtmInfo(userId);
-            if (userUtmInfo != null){
-                downloadUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-            }else {
+//            if (userUtmInfo != null){
+//                downloadUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+//            }else {
                 downloadUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-            }
+//            }
             QRCodeUtil.encode(downloadUrl, String.valueOf(userId),systemConfig.getPhysicalPath() + systemConfig.getFileUpload(), false);
         } catch (Exception e) {
             logger.error(e.getMessage());

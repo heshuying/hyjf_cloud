@@ -92,7 +92,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				}
 
 			} catch (Exception e) {
-				logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：" + e.getMessage()	+ "=============");
+				logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
 				return;
 			}
 			logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
@@ -116,7 +116,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				logger.info("-----------------开始处理法大大自动签章异步处理，订单号：" + ordid);
 				fddHandle.updateAutoSignData(bean);
 			}catch (Exception e1){
-				logger.info("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息："+ e1.getMessage()+"=============");
+				logger.info("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e1);
 				return;
 			}
 			logger.info("--------------------------------------法大大自动签署异步处理任务结束，订单号：" + ordid + "=============");
@@ -165,8 +165,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				logger.info("-----------------开始处理法大大下载脱敏，订单号：" + ordid);
 				fddHandle.downPDFAndDesensitization(savePath,agrementID,transType,ftpPath,downloadUrl,tenderCompany,creditCompany);
 			}catch (Exception e1){
-				logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息："+ e1.getMessage()+"=============");
-				e1.printStackTrace();
+				logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e1);
 				return;
 			}
 			logger.info("--------------------------------------法大大下载脱敏处理任务结束，订单号：" + ordid + "=============");

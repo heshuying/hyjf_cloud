@@ -68,6 +68,9 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         if (Validator.isNotNull(accountVO.getFrost())) {
             account.setBankFrostCash(accountVO.getFrost());
         }
+        if (Validator.isNotNull(accountVO.getUserId())){
+            account.setUserId(accountVO.getUserId());
+        }
         AccountExample example = new AccountExample();
         example.createCriteria().andUserIdEqualTo(accountVO.getUserId());
         // 更新账户表
@@ -90,6 +93,9 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         Integer userId = adminBankAccountCheckCustomizeVO.getUserId();
         String startTime = adminBankAccountCheckCustomizeVO.getStartDate();
         String endTime = adminBankAccountCheckCustomizeVO.getEndDate();
+        String ip = adminBankAccountCheckCustomizeVO.getIp();
+        String payment = adminBankAccountCheckCustomizeVO.getPayment();
+        String cardId = adminBankAccountCheckCustomizeVO.getCardId();
         try {
             AdminBankAccountCheckCustomizeVO customize = new AdminBankAccountCheckCustomizeVO();
             customize.setUserId(adminBankAccountCheckCustomizeVO.getUserId());
@@ -109,7 +115,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                 List<ResultBean> resultList = queryAllAccountDetails(userId, accountId, startTime, endTime);
                 if (resultList != null && resultList.size() > 0) {
                     // 遍历循环返回列表进行入账处理
-                    updateBankAccountCheck(resultList, userId, userName, accountId);
+                    updateBankAccountCheck(resultList, userId, userName, accountId, ip, payment, cardId);
                 } else {
                     msg = "该时间段没有需要对账的交易!";
                 }
@@ -252,7 +258,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      *
      * @param resultList
      */
-    public void updateBankAccountCheck(List<ResultBean> resultList, Integer userId, String userName, String accountId) {
+    public void updateBankAccountCheck(List<ResultBean> resultList, Integer userId, String userName, String accountId, String ip, String payment, String cardId) {
         // 开始对单个用户进行入账处理
         logger.info("==============cwyang Start bankAccountCheck!=======");
         if (resultList.size() > 0) {
@@ -282,7 +288,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                                 logger.info("该笔线下充值已对账,不予处理!bankseqNo is " + bankSeqNo);
                             } else {
                                 // 开始处理线下交易,将线下交易插入对应库表
-                                updateOfflineTranscation(bean, userId, userName, bankSeqNo);
+                                updateOfflineTranscation(bean, userId, userName, bankSeqNo, ip, payment, cardId);
                             }
                         }
                     } else {
@@ -323,7 +329,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @param bean
      * @param userName
      */
-    private void updateOfflineTranscation(ResultBean bean, int userId, String userName, String bankSeqNo) throws Exception {
+    private void updateOfflineTranscation(ResultBean bean, int userId, String userName, String bankSeqNo, String ip, String payment, String cardId) throws Exception {
         // 当前时间
         Integer nowTime = GetDate.getNowTime10();
         Account account = this.getAccount(userId);
@@ -443,7 +449,9 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         // 金额
         record.setMoney(synBalanceBean.getTxAmount());
         // 银行卡号
-        record.setCardid(account.getAccountId());
+        record.setCardid(cardId);
+        // 电子账号
+        record.setAccountId(account.getAccountId());
         // 手续费扣除方式
 //        record.setFeeFrom(null);
         // 费用
@@ -451,9 +459,9 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         // 垫付费用
 //        record.setDianfuFee(BigDecimal.ZERO);
         // 实际到账余额
-//        record.setBalance(synBalanceBean.getTxAmount());
+        record.setBalance(synBalanceBean.getTxAmount());
         // 所属银行
-//        record.setPayment(bankCard == null ? "" : bankCard.getBank());
+        record.setPayment(payment);
         // 网关类型：QP快捷充值 B2C个人网银充值 B2B企业网银充值
         record.setGateType("OFFLINE");
         // 类型.1网上充值.0线下充值
@@ -467,6 +475,8 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         record.setClient(0);
         // 资金托管平台 0:汇付,1:江西银行
         record.setIsBank(1);
+        // 操作机器ip地址
+        record.setAddIp(ip);
         record.setTxDate(Integer.parseInt(synBalanceBean.getInpDate()));
         record.setTxTime(Integer.parseInt(synBalanceBean.getInpTime()));
         record.setSeqNo(synBalanceBean.getTraceNo());

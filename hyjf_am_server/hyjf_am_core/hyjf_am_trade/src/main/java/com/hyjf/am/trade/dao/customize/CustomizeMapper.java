@@ -23,6 +23,9 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowCustomizeMapper borrowCustomizeMapper;
 
 	@Autowired
+	protected BatchBorrowRecoverCustomizeMapper batchBorrowRecoverCustomizeMapper;
+
+	@Autowired
 	protected BifaBorrowCustomizeMapper bifaBorrowCustomizeMapper;
 
 	@Autowired

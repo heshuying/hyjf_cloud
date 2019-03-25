@@ -122,10 +122,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         if (requestBean.getCurrPage() <= 0) {
             requestBean.setCurrPage(1);
         }
-
         if (requestBean.getPageSize() <= 0) {
             requestBean.setPageSize(10);
         }
+
     }
 
     /**

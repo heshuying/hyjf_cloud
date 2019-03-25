@@ -231,4 +231,6 @@ public interface SellDailyCustomizeMapper {
 
     List<SellDailyVO> countInvestGt3000MonthUserNum(@Param("startTime") Date startTime, @Param("endTime") Date endTime,
                                                     @Param("type") Integer type);
+
+    void update(SellDailyVO vo);
 }

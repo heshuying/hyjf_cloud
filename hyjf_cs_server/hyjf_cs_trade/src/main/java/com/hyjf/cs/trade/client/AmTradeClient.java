@@ -229,6 +229,13 @@ public interface AmTradeClient {
     HjhAccedeVO getHjhAccedeByAccedeOrderId(String contract_id);
 
     /**
+     * 根据加入计划订单，取得加入订单
+     * @author liubin
+     * @date 2018/7/04 19:26
+     */
+    HjhAccedeVO doGetHjhAccedeByAccedeOrderId(String contract_id);
+
+    /**
      * 更新加入计划状态
      * @author liubin
      * @date 2018/7/04 19:26
@@ -2215,7 +2222,7 @@ public interface AmTradeClient {
 
 	List<BorrowCreditVO> selectBorrowCreditList();
 
-	List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate);
+	List<CouponUserVO> selectCouponUser(int nowBeginDate, int nowEndDate,Integer type);
 
 	List<BatchCouponTimeoutCommonCustomizeVO> selectCouponQuota(int threeBeginDate, int threeEndDate);
 
@@ -2859,5 +2866,26 @@ public interface AmTradeClient {
     BorrowInfoVO searchRepayProject(Integer userId, String roleId, String borrowNid);
 
     boolean getFailCredit(String borrowNid);
+
+    /**
+     * 获取crm修复投资
+     *
+     * @return
+     */
+    List<BorrowTenderVO> selectCrmBorrowTenderList();
+
+    /**
+     * 获取crm修复智投投资
+     *
+     * @return
+     */
+    List<HjhAccedeVO> selectCrmHjhAccedeList();
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    List<ProtocolTemplateVO> getAllShowProtocolTemp();
 }
 

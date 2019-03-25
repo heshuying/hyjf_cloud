@@ -17,7 +17,6 @@ import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
-import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
@@ -829,13 +828,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 logger.info("用户选择了优惠券  "+JSONObject.toJSONString(couponUser));
             }else if(tender.getCouponGrantId()==null || tender.getCouponGrantId().intValue()==0){
                 // 获取用户最优优惠券
-                BestCouponListVO couponConfig = new BestCouponListVO();
-                MyCouponListRequest request = new MyCouponListRequest();
-                request.setBorrowNid(tender.getBorrowNid());
-                request.setUserId(String.valueOf(loginUser.getUserId()));
-                request.setPlatform(CustomConstants.CLIENT_PC);
-                request.setMoney(tender.getAccount()==null?"0":tender.getAccount());
-                couponConfig = amTradeClient.selectBestCoupon(request);
+                BestCouponListVO couponConfig = getBestCoupon(tender, loginUser);
                 logger.info("最优优惠券   " + JSONObject.toJSONString(couponConfig));
                 if (couponConfig != null) {
                     couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
@@ -860,7 +853,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 logger.info("优惠券出借校验完毕  结果：{}" , validateMap);
                 logger.info("用户优惠券信息为:{}" , JSONObject.toJSONString(couponUser));
+                if(couponUser == null){
+                    // 如果用户选择的优惠券不能用   就在获取一下最优优惠券
+                    BestCouponListVO couponConfig = getBestCoupon(tender, loginUser);
+                    logger.info("用户选择的不可用  重新选择最优优惠券   " + JSONObject.toJSONString(couponConfig));
+                    if (couponConfig != null) {
+                        couponUser = amTradeClient.getCouponUser(Integer.parseInt(couponConfig.getUserCouponId()), tender.getUserId());
+                        investInfo.setCouponConfig(couponConfig);
+                    }
+                }
             }
+
+
             if (couponUser != null) {
                 BestCouponListVO couponConfig = new BestCouponListVO();
                 couponConfig.setCouponType(couponUser.getCouponType());
@@ -957,6 +961,19 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         result.setData(investInfo);
         return result;
     }
+
+    // 获取用户最优优惠券
+    private BestCouponListVO getBestCoupon(TenderRequest tender, UserVO loginUser) {
+        BestCouponListVO couponConfig = new BestCouponListVO();
+        MyCouponListRequest request = new MyCouponListRequest();
+        request.setBorrowNid(tender.getBorrowNid());
+        request.setUserId(String.valueOf(loginUser.getUserId()));
+        request.setPlatform(CustomConstants.CLIENT_PC);
+        request.setMoney(tender.getAccount()==null?"0":tender.getAccount());
+        couponConfig = amTradeClient.selectBestCoupon(request);
+        return couponConfig;
+    }
+
     /**
      * 计算产品加息预期收益
      * @auth sunpeikai
@@ -2150,7 +2167,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
-                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
                     try {
                         sendBidCancelMessage(userId);

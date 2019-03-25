@@ -630,6 +630,11 @@ public interface AmUserClient {
 	 */
 	BankOpenAccountVO queryBankOpenAccountByUserId(int userId);
 
+	/**
+	 * 修复微服务上线三天的crm开户数据
+	 */
+	void getBankOpenAccountForCrmRepair();
+
 
 	/**
 	 * 根据sourceID 获取utm信息

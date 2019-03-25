@@ -310,13 +310,13 @@ public class AccessFilter extends ZuulFilter {
 			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
 		}
 
-		Integer userId = accessToken.getUserId();
-		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-		if (user == null) {
-			// 登陆过期
-			logger.warn("login is invalid, token is : {}...", token);
-			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
-		}
+//		Integer userId = accessToken.getUserId();
+//		WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+//		if (user == null) {
+//			// 登陆过期
+//			logger.warn("login is invalid, token is : {}...", token);
+//			return executeResultOfTokenInvalid(ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
+//		}
 
 		// 页面不活动30分钟过期
 //		AccessToken accessToken1 = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);

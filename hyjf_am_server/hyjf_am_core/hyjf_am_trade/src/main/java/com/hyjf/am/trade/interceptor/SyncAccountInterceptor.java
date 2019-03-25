@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.common.constants.MQConstant;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -55,7 +57,20 @@ public class SyncAccountInterceptor implements Interceptor {
             if (StringUtils.containsIgnoreCase(realSql, "update") && StringUtils.containsIgnoreCase(realSql, "ht_account") && !StringUtils.containsIgnoreCase(realSql, "ht_account_")) {
                 logger.info("=====" + INTERCEPTOR_NAME + "拦截到账户更新请求,准备发送账户信息到mq,进行crm账户余额同步处理=====");
                 logger.info("====="+INTERCEPTOR_NAME+" paramObj=[{}] =====", JSON.toJSON(paramObj));
-                jsonStr = JSON.toJSONString(boundSql.getParameterObject());
+                if (paramObj instanceof Map){
+                    Object record = ((Map) paramObj).get("record");
+                    if (record != null){
+                        Account account = (Account) record;
+                        if (account !=null && account.getUserId() != null){
+                            jsonStr = JSON.toJSONString(account);
+                        } else {
+                            logger.error("=====" + INTERCEPTOR_NAME + "存在使用原生方法更新account表,暂不处理(am-trade)======");
+                            return result;
+                        }
+                    }
+                } else {
+                    jsonStr = JSON.toJSONString(boundSql.getParameterObject());
+                }
                 // 延迟等级为9 (5分钟)
                 commonProducer.messageSendDelay(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC,UUID.randomUUID().toString(),jsonStr) , 9);
                 logger.info("=====" + INTERCEPTOR_NAME + "发送账户信息[{}]到mq [成功]=====", jsonStr);

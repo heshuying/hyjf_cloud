@@ -161,7 +161,6 @@
         </table>
 
         <table tableName="ht_msp_abnormalcredit" domainObjectName="MspAbnormalcredit">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_msp_abnormalcreditdetail" domainObjectName="MspAbnormalcreditdetail">

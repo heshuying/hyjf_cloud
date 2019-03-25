@@ -242,18 +242,23 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
         logger.info("页面开户异步处理start,UserId:{} 开户平台为：{} 银行返回响应代码为：{} status为{}", bean.getLogUserId(), bean.getLogClient(),retCode,bean.getStatus());
         // State为0时候为0：交易失败 1：交易成功 2：开户成功设置交易密码失败
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) || "0".equals(bean.getStatus())) {
-            // 开户失败   将开户记录状态改为4
-            // 查询失败原因
-            String retMsg = bean.getRetMsg();
-            BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
-            if (retMsgVo != null) {
-                retMsg = retMsgVo.getErrorMsg();
+        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
+            if("0".equals(bean.getStatus())){
+                // 开户失败   将开户记录状态改为4
+                // 查询失败原因
+                String retMsg = bean.getRetMsg();
+                BankReturnCodeConfigVO retMsgVo = amConfigClient.getBankReturnCodeConfig(retCode);
+                if (retMsgVo != null) {
+                    retMsg = retMsgVo.getErrorMsg();
+                }
+                this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4,retCode,retMsg);
+                logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
+                result.setStatus(false);
+                return result;
+            }else{
+                // 先调用一下银行按照手机号查询接口  给即信补录一下
+                getAccountBymobile(userId,bean.getRemark());
             }
-            this.amUserClient.updateUserAccountLogState(userId, bean.getLogOrderId(), 4,retCode,retMsg);
-            logger.info("开户失败，失败原因:银行返回响应代码:[" + retCode + "],订单号:[" + bean.getLogOrderId() + "].");
-            result.setStatus(false);
-            return result;
         }
         // 开户成功后,保存用户的开户信息
         Integer saveBankAccountFlag = this.amUserClient.saveUserAccount(bean);
@@ -326,6 +331,19 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         result.setMessage("开户成功");
         logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId(),bean.getLogClient());
         return result;
+    }
+
+    /**
+     * 按手机号查询电子账户号
+     */
+    private void getAccountBymobile(Integer userId,String mobile) {
+        BankCallBean callBean = new BankCallBean(userId,BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE_PLUS,0);
+        callBean.setChannel(BankCallConstant.CHANNEL_PC);
+        callBean.setMobile(mobile);
+        callBean.setLogRemark("根据手机号查询电子账户号");
+        callBean.setLogUserId(userId+"");
+        callBean = BankCallUtils.callApiBg(callBean);
+        logger.info("根据手机号查询电子帐户号 结果：{}  ",JSONObject.toJSONString(callBean));
     }
 
     /**

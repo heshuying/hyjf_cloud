@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface CouponUserService {
 
-    List<CouponUser> selectCouponUser(int nowBeginDate, int nowEndDate);
+    List<CouponUser> selectCouponUser(int nowBeginDate, int nowEndDate,Integer type);
 
     Integer countCouponValid(Integer userId);
 

@@ -1316,4 +1316,13 @@ public class AmUserClientImpl implements AmUserClient {
 	public AccountVO getAccount(Integer userId) {
 		return null;
 	}
+
+	/**
+	 * @Author wangjun
+	 */
+	@Override
+	public void getBankOpenAccountForCrmRepair() {
+		String url = "http://AM-USER/am-user/bankopen/getBankOpenAccountForCrmRepair";
+		restTemplate.getForEntity(url, String.class).getBody();
+	}
 }

@@ -748,6 +748,7 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
             ret.put("banks", bankcards);
             ret.put("logo", bankcards.get(0).getLogo());
             ret.put("cardNo", bankcards.get(0).getCardNo());
+            ret.put("cardNo_info", BankCardUtil.getFormatCardNo(bankcards.get(0).getCardNo()));
             ret.put("bank", bankcards.get(0).getBank());
         } else {
             ret.put("bankCnt", "0");
