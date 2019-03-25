@@ -656,6 +656,9 @@ ORDER BY
 		FROM
 			ht_hjh_accede
 			where plan_nid = #{planNid}
+			-- add by nxl 显示最后三天的服务记录
+		    AND create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
+		    AND create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
 	</select>
 
 	<select id="getPlanAccedeList" resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO"  parameterType="Map">
