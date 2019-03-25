@@ -6996,7 +6996,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
     @Override
     public IntegerResponse countRepayUserList(){
-        String url = "http://AM-TRADE/am-trade/screen_data/add_repay_userList/count_repay_userList";
+        String url = "http://AM-TRADE/am-trade/screen_data/count_repay_userList";
             return restTemplate.getForEntity(url, IntegerResponse.class).getBody();
     }
 
