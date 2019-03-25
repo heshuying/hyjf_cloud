@@ -163,17 +163,17 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                         inpDate, inpTime, relDate, traceNo);
                 if (bean == null) {
                     logger.info(this.getClass().getName(), "同步余额失败");
-                    return null;
+                    continue;
                 }
                 //返回失败
                 if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
                     logger.info(this.getClass().getName(), "-------------------调用查询接口失败，失败编码：" + bean.getRetCode() + "--------------------");
-                    return null;
+                    continue;
                 }
                 //解析返回数据(记录为空)
                 String content = bean.getSubPacks();
                 if (StringUtils.isEmpty(content)) {
-                    return recordList;
+                    continue;
                 }
                 list = JSONArray.parseArray(bean.getSubPacks(), ResultBean.class);
                 recordList.addAll(list);
