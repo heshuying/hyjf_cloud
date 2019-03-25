@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -56,8 +57,8 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenVO userCapitalDetailsVo = amTradeClient.getUserCapitalDetails();
        // UserCustomerTaskConfigResponse userCustomerTaskConfigResponse = amUserClient.getCustomerTaskConfig(request);
         ScreenConfigVO vo = userScreenConfigResponse.getResult();
-        bean.setNewPassengerGoal(vo.getNewPassengerGoal());
-        bean.setOldPassengerGoal(vo.getOldPassengerGoal());
+        bean.setNewPassengerGoal(vo.getNewPassengerGoal().divide(new BigDecimal(10000),2,BigDecimal.ROUND_HALF_UP));
+        bean.setOldPassengerGoal(vo.getOldPassengerGoal().divide(new BigDecimal(10000),2,BigDecimal.ROUND_HALF_UP));
         bean.setScalePerformanceNew(scalePerformanceVo.getScalePerformanceNew());
         bean.setScalePerformanceOld(scalePerformanceVo.getScalePerformanceOld());
         bean.setMonthScalePerformanceListNew(monthScalePerformanceListVo.getMonthScalePerformanceListNew());
