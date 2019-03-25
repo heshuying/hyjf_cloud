@@ -7,7 +7,6 @@ import com.hyjf.am.vo.api.OperMonthPerformanceDataVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
-import java.util.List;
 
 public interface UserLargeScreenTwoCustomizeMapper {
 
@@ -15,11 +14,11 @@ public interface UserLargeScreenTwoCustomizeMapper {
      * 得到运营部用户月初站岗资金
      * @return
      */
-    List<OperMonthPerformanceDataVO> getOperMonthStartBalance(@Param("time") Date tiem);
+    OperMonthPerformanceDataVO getOperMonthStartBalance(@Param("time") Date tiem);
 
     /**
      * 得到运营部用户月末站岗资金
      * @return
      */
-    List<OperMonthPerformanceDataVO> getOperMonthEndBalance(@Param("time") Date tiem);
+    OperMonthPerformanceDataVO getOperMonthNowBalance(@Param("time") Date tiem);
 }

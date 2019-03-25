@@ -4,6 +4,7 @@ import com.hyjf.am.market.service.UserLargeScreenTwoService;
 import com.hyjf.am.vo.api.OperMonthPerformanceDataVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.GetDate;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -15,9 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @RocketMQMessageListener(topic = MQConstant.SCREEN_DATA_TWO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SCREEN_DATA_TWO_GROUP)
@@ -32,15 +30,11 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
     public void onMessage(MessageExt messageExt) {
         if (MQConstant.SCREEN_DATA_TWO_SELECT_TAG.equals(messageExt.getTags())) {
             // 得到运营部用户月初站岗资金
-            List<OperMonthPerformanceDataVO> result = userLargeScreenTwoService.getOperMonthStartBalance();
-            BigDecimal start = new BigDecimal("0");
-            BigDecimal startBalance = start.add(result.get(0).getMonthStartBalance()).add(result.get(1).getMonthStartBalance());
+            OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthStartBalance();
+            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE_"+ GetDate.getMonth(), result.getMonthStartBalance());
             // 得到运营部用户当前站岗资金
-            result = userLargeScreenTwoService.getOperMonthEndBalance();
-            BigDecimal now = new BigDecimal("0");
-            BigDecimal nowBalance = now.add(result.get(0).getMonthEndBalance()).add(result.get(1).getMonthEndBalance());
-            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", startBalance);
-            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", nowBalance);
+            result = userLargeScreenTwoService.getOperMonthNowBalance();
+            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE_"+ GetDate.getMonth(), result.getMonthNowBalance());
         }
         return;
     }
