@@ -152,7 +152,7 @@ public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
 		HolidaysConfigNewExample.Criteria criteria = example.createCriteria();
 		criteria.andDayTimeGreaterThan(somedate);
 		criteria.andHolidayFlagEqualTo(0);
-		example.setOrderByClause("day_time desc");
+		example.setOrderByClause("day_time asc");
 		List<HolidaysConfigNew> list = holidaysConfigNewMapper.selectByExample(example);
 		if (CollectionUtils.isEmpty(list)) {
 			throw new RuntimeException("日历配置错误...");

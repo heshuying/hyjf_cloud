@@ -123,7 +123,7 @@ public class MerchantAccountController {
     }
 
     @PostMapping("/insertTransfer")
-    public BooleanResponse insertTransfer(MerchantTransferListRequest form) {
+    public BooleanResponse insertTransfer(@RequestBody MerchantTransferListRequest form) {
         BooleanResponse response = new BooleanResponse();
         boolean flag = merchantAccountService.insertTransfer(form);
         response.setResultBoolean(flag);

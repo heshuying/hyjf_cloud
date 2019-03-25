@@ -117,6 +117,8 @@ public interface RegisterService extends BaseUserService {
      */
     UserRegistResult wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
 
+    void checkReffer(String reffer);
+
     /**
      * 登录操作
      *
