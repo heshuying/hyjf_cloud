@@ -2887,5 +2887,12 @@ public interface AmTradeClient {
      * @return
      */
     List<ProtocolTemplateVO> getAllShowProtocolTemp();
+    /**
+     * 统计最后三天的服务记录 add by nxl
+     * app和危险的统计计划加入数量
+     *  @author nxl
+     * @date 2019/3/25 14:11
+     */
+    Integer countPlanAccedeRecord(HjhAccedeRequest request);
 }
 
