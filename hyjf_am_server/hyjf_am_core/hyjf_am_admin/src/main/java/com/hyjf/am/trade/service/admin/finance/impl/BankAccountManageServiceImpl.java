@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.trade.bean.ResultBean;
 import com.hyjf.am.trade.bean.SynBalanceBean;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -12,6 +13,7 @@ import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -140,55 +142,104 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      */
     public List<ResultBean> queryAllAccountDetails(Integer userId, String accountId, String startTime, String endTime) {
         // 获得接口返回的所有交易明细
-        // 分页数据
-        int pageNum = 1;
-        int pageSize = 10;
-
-        Date checkEndDate = getDateByString(endTime);
-        Date checkStartDate = getDateByString(startTime);
-
-        String startDate = getDateString(checkStartDate, 2);
-        String endDate = getDateString(checkEndDate, 2);
-
+        List<UnderLineRecharge> codeList=getUnderLineRechargeList();
         List<ResultBean> recordList = new ArrayList<ResultBean>();
-        List<ResultBean> list = new ArrayList<ResultBean>();
-        // 调用查询明细接口 查所有交易明细
-        String inpDate = "";
-        String inpTime = "";
-        String relDate = "";
-        String traceNo = "";
-        do {
-            BankCallBean bean = this.queryAccountDetails(userId, accountId, startDate, endDate, "1", "", String.valueOf(pageNum), String.valueOf(pageSize),
-                    inpDate, inpTime, relDate, traceNo);
-            if (bean == null) {
-                logger.info(this.getClass().getName(), "同步余额失败");
-                return null;
-            }
-            //返回失败
-            if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-                logger.info(this.getClass().getName(), "-------------------调用查询接口失败，失败编码：" + bean.getRetCode() + "--------------------");
-                return null;
-            }
-            //解析返回数据(记录为空)
-            String content = bean.getSubPacks();
-            if (StringUtils.isEmpty(content)) {
-                return recordList;
-            }
-            list = JSONArray.parseArray(bean.getSubPacks(), ResultBean.class);
-            recordList.addAll(list);
-            // 获得最后一条交易记录 并准备下一次查询用的参数
-            if (list != null && list.size() > 0) {
-                ResultBean lastResult = list.get(list.size() - 1);
-                inpDate = lastResult.getInpDate();
-                inpTime = lastResult.getInpTime();
-                relDate = lastResult.getRelDate();
-                traceNo = String.valueOf(lastResult.getTraceNo());
-            }
-            pageNum++;
-        } while (list != null &&list.size() == pageSize);
+        int pageSize = 10;
+        for (UnderLineRecharge code : codeList){
+            // 分页数据
+            int pageNum = 1;
+
+            Date checkEndDate = getDateByString(endTime);
+            Date checkStartDate = getDateByString(startTime);
+
+            String startDate = getDateString(checkStartDate, 2);
+            String endDate = getDateString(checkEndDate, 2);
+
+            List<ResultBean> list = new ArrayList<ResultBean>();
+            // 调用查询明细接口 查所有交易明细
+            String inpDate = "";
+            String inpTime = "";
+            String relDate = "";
+            String traceNo = "";
+            do {
+                BankCallBean bean = this.queryAccountDetailsNew(userId, accountId, startDate, endDate, code.getCode(), String.valueOf(pageNum),
+                        inpDate, inpTime, relDate, traceNo);
+                if (bean == null) {
+                    logger.info(this.getClass().getName(), "同步余额失败");
+                    continue;
+                }
+                //返回失败
+                if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+                    logger.info(this.getClass().getName(), "-------------------调用查询接口失败，失败编码：" + bean.getRetCode() + "--------------------");
+                    continue;
+                }
+                //解析返回数据(记录为空)
+                String content = bean.getSubPacks();
+                if (StringUtils.isEmpty(content)) {
+                    continue;
+                }
+                list = JSONArray.parseArray(bean.getSubPacks(), ResultBean.class);
+                recordList.addAll(list);
+                // 获得最后一条交易记录 并准备下一次查询用的参数
+                if (list != null && list.size() > 0) {
+                    ResultBean lastResult = list.get(list.size() - 1);
+                    inpDate = lastResult.getInpDate();
+                    inpTime = lastResult.getInpTime();
+                    relDate = lastResult.getRelDate();
+                    traceNo = String.valueOf(lastResult.getTraceNo());
+                }
+                pageNum++;
+            } while (list != null &&list.size() == pageSize);
+        }
         logger.info(this.getClass().getName(), "-------------------" + recordList.size() + "同步余额总条数--------------------");
-        logger.info(this.getClass().getName(), "-------------------" + pageNum + "同步余额请求次数--------------------");
         return recordList;
+    }
+
+    /**
+     * 从Redis获取线下充值类型List
+     * @return
+     * @Author pcc
+     */
+    private List<UnderLineRecharge> getUnderLineRechargeList() {
+        //从Redis获取线下充值类型List
+        String codeStringList = RedisUtils.get(RedisConstants.UNDER_LINE_RECHARGE_TYPE);
+        JSONArray redisCodeList = JSONArray.parseArray(codeStringList);
+
+        if (StringUtils.isBlank(codeStringList) || redisCodeList.size() <= 0) {
+            logger.info(this.getClass().getName(), "---------------------------线下充值类型Redis为空!-------------------------");
+            UnderLineRechargeRequest request = new UnderLineRechargeRequest();
+            List<UnderLineRecharge> codeList = selectUnderLineRechargeList(request);
+            return codeList;
+        }else{
+            List<UnderLineRecharge> codeList =new ArrayList<UnderLineRecharge>();
+            for(Object code : redisCodeList) {
+                UnderLineRecharge underLineRecharge=new UnderLineRecharge();
+                underLineRecharge.setCode(code.toString());
+                codeList.add(underLineRecharge);
+            }
+            return codeList;
+        }
+    }
+
+    /**
+     * 获取数据表中线下充值类型
+     * @return
+     * @Author : huanghui
+     */
+    public List<UnderLineRecharge> selectUnderLineRechargeList(UnderLineRechargeRequest request){
+        UnderLineRechargeExample example = new UnderLineRechargeExample();
+        UnderLineRechargeExample.Criteria criteria = example.createCriteria();
+
+        if (StringUtils.isNotEmpty(request.getCode()) && !"".equals(request.getCode())){
+            criteria.andCodeEqualTo(request.getCode());
+        }
+
+        // 启用状态的
+        criteria.andStatusEqualTo(0);
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
+        example.setOrderByClause("create_time DESC");
+        return underLineRechargeMapper.selectByExample(example);
     }
 
     /**
@@ -204,6 +255,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @param pageSize
      * @return
      */
+    @Deprecated
     public BankCallBean queryAccountDetails(Integer userId, String accountId, String startDate, String endDate, String type, String transType,
                                             String pageNum, String pageSize, String inpDate, String inpTime, String relDate, String traceNo) {
         // 参数不正确
@@ -249,6 +301,60 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogOrderId(GetOrderIdUtils.getUsrId(userId));
+        // 调用接口
+        return BankCallUtils.callApiBg(bean);
+    }
+
+    /**
+     * 调用近两日线下充值明细查询获得交易明细
+     *
+     * @param userId
+     * @param accountId
+     * @param startDate
+     * @param endDate
+     * @param transType
+     * @param pageNum
+     * @return
+     */
+    public BankCallBean queryAccountDetailsNew(Integer userId, String accountId, String startDate, String endDate, String transType, String pageNum, String inpDate, String inpTime, String relDate, String traceNo) {
+        // 参数不正确
+        if (StringUtils.isEmpty(accountId) || StringUtils.isEmpty(startDate) || StringUtils.isEmpty(endDate) || StringUtils.isEmpty(transType)) {
+            return null;
+        }
+        BankCallBean bean = new BankCallBean();
+        // 接口版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
+        // 消息类型
+        bean.setTxCode(BankCallConstant.TXCODE_OFFLINE_RECHARGE_DETAILS_QUERY);
+        bean.setTxDate(GetOrderIdUtils.getTxDate());
+        bean.setTxTime(GetOrderIdUtils.getTxTime());
+        bean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
+        bean.setChannel(BankCallConstant.CHANNEL_PC);
+        // 电子账号
+        bean.setAccountId(accountId);
+        // 起始日期
+        bean.setStartDate(startDate);
+        // 结束日期
+        bean.setEndDate(endDate);
+
+        // 交易类型
+        bean.setTranType(transType);
+        // 翻页标识  空：首次查询；1：翻页查询；
+        if (StringUtils.isNotEmpty(pageNum)&&!"1".equals(pageNum)) {
+            bean.setRtnInd("1");
+        } else {
+            bean.setRtnInd("");
+        }
+        bean.setInpDate(inpDate);
+        bean.setInpTime(inpTime);
+        bean.setRelDate(relDate);
+        bean.setTraceNo(traceNo);
+        // 操作者ID
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
+        // 订单时间
+        bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
+        bean.setLogRemark("admin线下充值明细查询");
+        bean.setLogUserId(String.valueOf(userId));
         // 调用接口
         return BankCallUtils.callApiBg(bean);
     }
