@@ -887,6 +887,9 @@
 		<if test="firstFlag != null ">
 			AND tmp.is_first = #{firstFlag,jdbcType=INTEGER}
 		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 
 		order by tmp.invest_time desc
 		<if test="limitStart != null and limitStart >= 0" >
@@ -897,6 +900,7 @@
 	<select id="selectAppChannelReconciliationRecordCount" parameterType="com.hyjf.am.resquest.admin.ChannelReconciliationRequest" resultType="int">
 		select count(1) from (
 		SELECT
+		a.borrow_nid,
 		CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time  <![CDATA[<]]>  a.invest_time  limit 1), 0)
 		+ ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
 		+ ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time  <![CDATA[<]]>  a.invest_time limit 1),0)
@@ -906,6 +910,7 @@
 		(
 		SELECT
 		ten.user_id,
+		ten.borrow_nid as borrow_nid,
 		ten.create_time AS invest_time
 		FROM
 		ht_app_utm_reg r
@@ -917,6 +922,7 @@
 		UNION ALL
 		SELECT
 		ten.user_id,
+		ten.plan_nid as borrow_nid,
 		ten.create_time AS invest_time
 		FROM
 		ht_app_utm_reg r
@@ -928,6 +934,7 @@
 		UNION ALL
 		SELECT
 		ten.user_id,
+		ten.bid_nid as borrow_nid,
 		ten.create_time as invest_time
 		FROM
 		ht_app_utm_reg r
@@ -940,6 +947,9 @@
 		) tmp where 1=1
 		<if test="firstFlag != null ">
 			AND tmp.is_first = #{firstFlag,jdbcType=INTEGER}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 
 	</select>
@@ -964,9 +974,6 @@
 			</if>
 			<if test="orderCode != null and orderCode != ''">
 				AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
-			</if>
-			<if test="borrowNid != null and borrowNid !=''">
-				AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 			</if>
 			<if test="utmPlat != null and utmPlat != ''">
 				AND r.source_id in
