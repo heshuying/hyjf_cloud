@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.service.front.trade.impl;
 
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.UnderLineRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.trade.SynBalanceService;
@@ -13,6 +15,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,9 @@ public class SynBalanceServiceImpl implements SynBalanceService {
     private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
     @Autowired
     private AccountMapper accountMapper;
+
+    @Autowired
+    private UnderLineRechargeMapper underLineRechargeMapper;
 
     @Override
     public boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest) {
@@ -152,6 +158,23 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             throw new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
         }
         return true;
+    }
+
+    @Override
+    public List<UnderLineRecharge> getUnderLineRechargeListByCode(UnderLineRechargeRequest request) {
+        UnderLineRechargeExample example = new UnderLineRechargeExample();
+        UnderLineRechargeExample.Criteria criteria = example.createCriteria();
+
+        if (StringUtils.isNotEmpty(request.getCode()) && !"".equals(request.getCode())){
+            criteria.andCodeEqualTo(request.getCode());
+        }
+
+        // 启用状态的
+        criteria.andStatusEqualTo(0);
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
+        example.setOrderByClause("create_time DESC");
+        return underLineRechargeMapper.selectByExample(example);
     }
 
     public Account getAccount(Integer userId) {

@@ -2046,9 +2046,12 @@ public interface AmTradeClient {
      * @param userId
      * @param startTime
      * @param endTime
+     * @param ip
+     * @param payment
+     * @param cardId
      * @return
      */
-    String updateAccountCheck(Integer userId, String startTime, String endTime);
+    String updateAccountCheck(Integer userId, String startTime, String endTime, String ip, String payment, String cardId);
 
     /**
      * 查询配置中心平台账户配置 余额监控
