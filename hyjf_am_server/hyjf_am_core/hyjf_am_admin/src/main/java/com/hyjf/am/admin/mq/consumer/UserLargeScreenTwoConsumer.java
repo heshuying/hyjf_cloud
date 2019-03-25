@@ -34,13 +34,13 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
             // 得到运营部用户月初站岗资金
             List<OperMonthPerformanceDataVO> result = userLargeScreenTwoService.getOperMonthStartBalance();
             BigDecimal start = new BigDecimal("0");
-            start.add(result.get(0).getMonthStartBalance()).add(result.get(1).getMonthStartBalance());
+            BigDecimal startBalance = start.add(result.get(0).getMonthStartBalance()).add(result.get(1).getMonthStartBalance());
             // 得到运营部用户当前站岗资金
             result = userLargeScreenTwoService.getOperMonthEndBalance();
             BigDecimal now = new BigDecimal("0");
-            now.add(result.get(0).getMonthEndBalance()).add(result.get(1).getMonthEndBalance());
-            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", start);
-            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", now);
+            BigDecimal nowBalance = now.add(result.get(0).getMonthEndBalance()).add(result.get(1).getMonthEndBalance());
+            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", startBalance);
+            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", nowBalance);
         }
         return;
     }

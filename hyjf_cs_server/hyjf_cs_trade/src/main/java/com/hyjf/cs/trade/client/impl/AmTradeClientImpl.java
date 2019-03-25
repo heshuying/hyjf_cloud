@@ -7122,9 +7122,9 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds) {
+    public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getopermonthperformancedata";
-        UserLargeScreenTwoResponse response = restTemplate.postForEntity(url, userIds, UserLargeScreenTwoResponse.class).getBody();
+        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
         if(response!=null){
             return response.getResult();
         }

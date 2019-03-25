@@ -257,7 +257,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     }
 
     @Override
-    public UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds) {
+    public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
         OperMonthPerformanceDataVO operMonthPerformanceDataVO = new OperMonthPerformanceDataVO();
         // 运营部-年化业绩、充值

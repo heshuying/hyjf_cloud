@@ -96,7 +96,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         // 运营部所有用户id
         //List<Integer> userIds = amUserClient.getOperUserIds();
         // 运营部月度业绩数据
-        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData(null);
+        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
     }
