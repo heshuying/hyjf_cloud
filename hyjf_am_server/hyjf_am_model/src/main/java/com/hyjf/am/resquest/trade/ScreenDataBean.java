@@ -289,6 +289,7 @@ public class ScreenDataBean implements Serializable {
                 ", tenderUserId=" + tenderUserId +
                 ", userName='" + userName + '\'' +
                 ", money=" + money +
+                ", operating=" + operating +
                 ", orderId='" + orderId + '\'' +
                 ", productType=" + productType +
                 '}';

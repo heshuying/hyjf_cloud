@@ -1,6 +1,7 @@
 package com.hyjf.batch.job.screendata;
 
 import com.hyjf.batch.job.BaseJob;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
  * @version ActivityEndJob, v0.1 2019/3/20 15:35
  * 大屏数据金额统计batch
  */
+@DisallowConcurrentExecution
 public class ScreenDataJob extends BaseJob implements Job {
     Logger logger = LoggerFactory.getLogger(getClass());
 

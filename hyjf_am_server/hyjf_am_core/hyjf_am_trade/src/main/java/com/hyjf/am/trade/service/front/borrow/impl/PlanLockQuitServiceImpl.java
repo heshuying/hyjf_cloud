@@ -475,7 +475,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         }
 
         try {
-            ScreenDataBean screenDataBean = new ScreenDataBean(hjhAccede.getAccedeOrderId(),userId,null,accountForst,3);
+            ScreenDataBean screenDataBean = new ScreenDataBean(hjhAccede.getAccedeOrderId(),userId,hjhAccede.getUserName(),accountForst,3);
             sendScreenDataMQ(screenDataBean);
         }catch (MQException e){
             logger.error("=================计划退出成功后,发送大屏数据统计MQ失败,出借订单号:" + hjhAccede.getAccedeOrderId());
