@@ -6,6 +6,7 @@ package com.hyjf.am.user.controller.front.user;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -52,6 +53,21 @@ public class UtmPlatChannelController extends BaseController {
         }
         return response;
     }
+
+    @RequestMapping("/selectUtmBySourceId/{sourceId}")
+    public UtmVOResponse selectUtmBySourceId(@PathVariable String sourceId) {
+        UtmVOResponse response = new UtmVOResponse();
+        try {
+            Integer soutceID = Integer.valueOf(sourceId);
+            UtmVO utm = utmPlatChannelService.selectUtmBySourceId(soutceID);
+            response.setResult(utm);
+            response.setRtn(UtmResponse.SUCCESS);
+        } catch (Exception e) {
+            response.setRtn(UtmResponse.FAIL);
+        }
+        return response;
+    }
+
 
     /**
      * 根据source_id查询UtmPlat
