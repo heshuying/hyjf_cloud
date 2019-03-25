@@ -57,8 +57,8 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenVO userCapitalDetailsVo = amTradeClient.getUserCapitalDetails();
        // UserCustomerTaskConfigResponse userCustomerTaskConfigResponse = amUserClient.getCustomerTaskConfig(request);
         ScreenConfigVO vo = userScreenConfigResponse.getResult();
-        bean.setNewPassengerGoal(vo.getNewPassengerGoal().divide(new BigDecimal(10000),2,BigDecimal.ROUND_HALF_UP));
-        bean.setOldPassengerGoal(vo.getOldPassengerGoal().divide(new BigDecimal(10000),2,BigDecimal.ROUND_HALF_UP));
+        bean.setNewPassengerGoal(vo.getNewPassengerGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
+        bean.setOldPassengerGoal(vo.getOldPassengerGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
         bean.setScalePerformanceNew(scalePerformanceVo.getScalePerformanceNew());
         bean.setScalePerformanceOld(scalePerformanceVo.getScalePerformanceOld());
         bean.setMonthScalePerformanceListNew(monthScalePerformanceListVo.getMonthScalePerformanceListNew());
