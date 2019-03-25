@@ -121,45 +121,28 @@ public class AemsSynBalanceServiceImpl extends BaseUserServiceImpl implements Ae
                     startDate, endDate, code.getCode(), String.valueOf(pageNum),inpDate,inpTime,relDate,traceNo);
 
             if(retBean == null){
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-                logger.info("-------------------同步余额失败--------------------");
-                resultBean.setStatusDesc("同步余额失败");
-                return resultBean;
+                logger.info("-------------------同步余额失败--------------------"+code.getCode());
+                continue;
             }
             //返回失败
             if(!BankCallConstant.RESPCODE_SUCCESS.equals(retBean.getRetCode())){
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
                 logger.info("-------------------调用查询接口失败，失败原因：" + getBankRetMsg(retBean.getRetCode())+"--------------------");
-                resultBean.setStatusDesc("调用查询接口失败，失败原因：" + getBankRetMsg(retBean.getRetCode()));
-
+                logger.info("-------------------同步余额失败--------------------"+code.getCode());
                 logger.info(this.getClass().getName(), "/synbalance");
-                return resultBean;
+                continue;
             }
 
             //解析返回数据(记录为空)
             String content = retBean.getSubPacks();
             if(StringUtils.isEmpty(content)){
-                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-                resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
-                resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
-                resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
-                resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
-                resultBean.setBankBalance(df.format(accountBalance));
-
                 logger.info(this.getClass().getName(), "/synbalance");
-                return resultBean;
+                continue;
             }
             //返回结果记录数
             //转换结果
             List<BankResultBean> list = new ArrayList<BankResultBean>();
             list = JSONArray.parseArray(retBean.getSubPacks(), BankResultBean.class);
             if(list==null|| list.size()==0){
-                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-                resultBean.setStatusDesc(BaseResultBean.STATUS_DESC_SUCCESS);
-                resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
-                resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
-                resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
-                resultBean.setBankBalance(df.format(accountBalance));
                 logger.info(this.getClass().getName(), "/synbalance");
                 return resultBean;
             }else{
