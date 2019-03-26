@@ -33,13 +33,32 @@ public class BorrowRepayLateServiceImpl extends BaseServiceImpl implements Borro
     SystemConfig systemConfig;
 
     /**
-     * 更新逾期标的信息
+     * 查询不分期逾期还款的列表
+     * @return
      */
     @Override
-    public void updBorrowRepayLate() {
+    public List<BorrowRepayLateCustomize> selectBorrowRepayLate() {
+        return borrowRepayLateMapper.selectBorrowRepayLate();
+    }
+
+    /**
+     * 查询分期逾期还款的列表
+     * @return
+     */
+    @Override
+    public List<BorrowRepayLateCustomize> selectBorrowRepayLateByStages() {
+        return borrowRepayLateMapper.selectBorrowRepayLateByStages();
+    }
+
+    /**
+     * 更新期逾期标的信息
+     * @param list
+     * @param listByStages
+     */
+    @Override
+    public void updBorrowRepayLate(List<BorrowRepayLateCustomize> list, List<BorrowRepayLateCustomize> listByStages) {
         logger.info("开始计算还款逾期利息");
-        //查询不分期还款逾期的标的信息
-        List<BorrowRepayLateCustomize> list = borrowRepayLateMapper.selectBorrowRepayLate();
+        // 处理不分期逾期数据
         if (!CollectionUtils.isEmpty(list)) {
             // 储存更新过的标的，用于后面更新borrow表跟borrow_repay表的相关状态
             Set<String> borrowSet = new HashSet<>();
@@ -62,8 +81,7 @@ public class BorrowRepayLateServiceImpl extends BaseServiceImpl implements Borro
             }
         }
 
-        //查询分期还款逾期的标的信息
-        List<BorrowRepayLateCustomize> listByStages = borrowRepayLateMapper.selectBorrowRepayLateByStages();
+        // 处理分期逾期数据
         if (!CollectionUtils.isEmpty(listByStages)) {
             // 储存更新过的标的，用于后面更新borrow表跟borrow_repay表的相关状态
             Set<String> borrowSet = new HashSet<>();

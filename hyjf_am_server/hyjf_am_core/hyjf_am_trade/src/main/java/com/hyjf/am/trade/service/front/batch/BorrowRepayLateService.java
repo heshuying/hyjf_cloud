@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.customize.BorrowRepayLateCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayLateSetCustomize;
 import com.hyjf.am.trade.service.BaseService;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,9 +16,23 @@ import java.util.Set;
  */
 public interface BorrowRepayLateService extends BaseService {
     /**
-     * 更新期逾期标的信息
+     * 查询不分期逾期还款的列表
+     * @return
      */
-    void updBorrowRepayLate();
+    List<BorrowRepayLateCustomize> selectBorrowRepayLate();
+
+    /**
+     * 查询分期逾期还款的列表
+     * @return
+     */
+    List<BorrowRepayLateCustomize> selectBorrowRepayLateByStages();
+
+    /**
+     * 更新期逾期标的信息
+     * @param list
+     * @param listByStages
+     */
+    void updBorrowRepayLate(List<BorrowRepayLateCustomize> list, List<BorrowRepayLateCustomize> listByStages);
 
     /**
      * 更新逾期信息
