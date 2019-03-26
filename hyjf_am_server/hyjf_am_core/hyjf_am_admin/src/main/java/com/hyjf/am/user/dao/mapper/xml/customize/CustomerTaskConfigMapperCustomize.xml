@@ -51,18 +51,12 @@
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.user.dao.model.customize.CustomerTaskConfigExampleCustomize" >
     select
-    <if test="distinct" >
-      distinct
-    </if>
     <include refid="Base_Column_List" />
     from ht_customer_task_config task
     LEFT JOIN hyjf_config.ht_admin admin
     ON task.update_user_id = admin.id
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
     </if>
     <if test="limitStart >= 0" >
       limit #{limitStart} , #{limitEnd}
