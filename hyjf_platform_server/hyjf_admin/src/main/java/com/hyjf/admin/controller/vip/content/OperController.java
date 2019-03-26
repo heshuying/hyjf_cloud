@@ -123,7 +123,7 @@ public class OperController extends BaseController {
 
     // 坐席月任务配置
 
-    @AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_VIEW)
+    //@AuthorityAnnotation(key = PERMISSIONST, value = ShiroConstants.PERMISSION_VIEW)
     @ApiOperation(value = "坐席月任务配置-列表查询",notes = "坐席月任务配置-列表查询")
     @PostMapping("/task/list")
     @ResponseBody
