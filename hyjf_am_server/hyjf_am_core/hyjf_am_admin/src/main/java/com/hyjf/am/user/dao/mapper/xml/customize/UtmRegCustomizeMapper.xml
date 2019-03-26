@@ -350,6 +350,12 @@
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -373,6 +379,12 @@
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
 		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -393,6 +405,12 @@
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 		) AS a
 		) mm
 		<if test="firstFlag != null ">
@@ -476,6 +494,12 @@
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -488,6 +512,12 @@
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
 		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 		UNION ALL
 		SELECT
 		t.user_id,
@@ -500,6 +530,12 @@
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		INNER JOIN ht_utm_plat upl on utm.source_id = upl.source_id and upl.source_type = 0
 		<include refid="Where_Concat_Query" />
+		<if test="orderCode != null and orderCode != ''">
+			AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
+		</if>
+		<if test="borrowNid != null and borrowNid !=''">
+			AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
+		</if>
 		) AS a
 		) mm
 		<if test="firstFlag != null ">
@@ -525,12 +561,7 @@
 			<if test="userName != null and userName !=''">
 				AND u.username LIKE #{userName,jdbcType=VARCHAR}
 			</if>
-			<if test="orderCode != null and orderCode != ''">
-				AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
-			</if>
-			<if test="borrowNid != null and borrowNid !=''">
-				AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
-			</if>
+
 			<if test="utmPlat != null and utmPlat != ''">
 				AND utm.source_id in
 				<foreach collection="utmPlat" open="(" close=")" separator="," item="utmName">
