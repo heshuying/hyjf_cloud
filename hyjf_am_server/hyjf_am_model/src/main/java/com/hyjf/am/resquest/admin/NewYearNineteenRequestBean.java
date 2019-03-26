@@ -1,5 +1,6 @@
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.NewYearActivityVO;
 import com.hyjf.am.vo.admin.NewYearActivityRewardVO;
 import io.swagger.annotations.ApiModel;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author xiehuili on 2019/3/25.
  */
 @ApiModel(value="春节活动",description="春节活动")
-public class NewYearNineteenRequestBean  implements Serializable {
+public class NewYearNineteenRequestBean extends BasePage implements Serializable {
 
     private Integer id;
     /**

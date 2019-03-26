@@ -1203,4 +1203,10 @@ public interface AmAdminClient {
      * @return
      */
     Integer countEveByDualDate(String dualDate);
+    /**
+     * 查询累计年华投资
+     * @param newYearNineteenRequestBean
+     * @return
+     */
+    NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean);
 }

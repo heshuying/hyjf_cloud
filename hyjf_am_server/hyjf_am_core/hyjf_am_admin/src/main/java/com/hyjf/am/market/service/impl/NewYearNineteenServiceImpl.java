@@ -19,13 +19,24 @@ public class NewYearNineteenServiceImpl implements NewYearNineteenService {
     @Autowired
     NewYearActivityCustomizeMapper newYearActivityCustomizeMapper;
 
+    /**
+     * 查询累计年化出借金额 条数
+     * @param map
+     * @return
+     */
     @Override
     public int selectInvestCount(Map<String, Object> map){
-        return 0;
+        return newYearActivityCustomizeMapper.getNewYearActivityCount(map);
     }
+
+    /**
+     * 查询累计年化出借金额
+     * @param map
+     * @return
+     */
     @Override
     public List<NewYearActivityVO> selectInvestList(Map<String, Object> map){
-        return null;
+        return newYearActivityCustomizeMapper.getNewYearActivityList(map);
     }
 
 

@@ -1,7 +1,7 @@
 package com.hyjf.am.market.service;
 
-import com.hyjf.am.vo.admin.NewYearActivityVO;
 import com.hyjf.am.vo.admin.NewYearActivityRewardVO;
+import com.hyjf.am.vo.admin.NewYearActivityVO;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,18 @@ import java.util.Map;
  */
 public interface NewYearNineteenService {
 
+    /**
+     * 查询累计年化出借金额 条数
+     * @param map
+     * @return
+     */
     int selectInvestCount(Map<String, Object> map);
+
+    /**
+     * 查询累计年化出借金额
+     * @param map
+     * @return
+     */
     List<NewYearActivityVO> selectInvestList(Map<String, Object> map);
 
 
