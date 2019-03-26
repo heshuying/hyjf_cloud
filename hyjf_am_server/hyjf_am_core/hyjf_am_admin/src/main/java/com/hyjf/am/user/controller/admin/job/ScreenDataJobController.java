@@ -30,7 +30,7 @@ public class ScreenDataJobController {
         Integer count = screenDataJobService.countRepayUser(startTime, endTime);
         if (count > 0) {
             Paginator paginator = new Paginator(currPage, count,pageSize);
-            List<RepaymentPlanVO> repayUser = screenDataJobService.findRepayUser(startTime, endTime,paginator.getOffset(),paginator.getLimit());
+            List<RepaymentPlanVO> repayUser = screenDataJobService.findRepayUser(startTime,endTime,paginator.getOffset(),paginator.getLimit());
             if (!CollectionUtils.isEmpty(repayUser)) {
                 response.setRtn(Response.SUCCESS);
                 response.setResultList(repayUser);
