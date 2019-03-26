@@ -11,7 +11,6 @@ import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfigExample;
-import com.hyjf.am.user.dao.model.customize.CustomerTaskConfigExampleCustomize;
 import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
@@ -102,32 +101,13 @@ public class OperServiceImpl implements OperService {
     @Override
     public List<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request) {
         logger.info("坐席月任务配置列表查询请求数据:{}", JSONObject.toJSONString(request));
-        CustomerTaskConfigExampleCustomize example = new CustomerTaskConfigExampleCustomize();
-        CustomerTaskConfigExampleCustomize.Criteria cra = example.createCriteria();
         // 当前页
         int currentPage = request.getCurrPage();
         // 当前页条数
         int pageSize = request.getPageSize();
-        example.setLimitStart(currentPage == 0 ? 0 : (currentPage - 1) * pageSize);
-        example.setLimitEnd(pageSize);
+        request.setLimitStart(currentPage == 0 ? 0 : (currentPage - 1) * pageSize);
 
-        // 任务时间,精确到月 yyyy-mm
-        if(StringUtils.isNotBlank(request.getTaskTime())){
-            cra.andTaskTimeEqualTo(request.getTaskTime());
-        }
-        // 坐席分组 1:新客组,2:老客组
-        if(null != request.getCustomerGroup()){
-            cra.andCustomerGroupEqualTo(request.getCustomerGroup());
-        }
-        // 坐席姓名 1:新客组,2:老客组
-        if(StringUtils.isNotBlank(request.getCustomerName())){
-            cra.andCustomerNameLike(request.getCustomerName());
-        }
-        // 是否有效 1:有效,2:无效
-        if(null != request.getStatus()){
-            cra.andTaskStatusEqualTo(request.getStatus());
-        }
-        return customerTaskConfigMapperCustomize.selectByExample(example);
+        return customerTaskConfigMapperCustomize.selectByExample(request);
     }
 
     /**
