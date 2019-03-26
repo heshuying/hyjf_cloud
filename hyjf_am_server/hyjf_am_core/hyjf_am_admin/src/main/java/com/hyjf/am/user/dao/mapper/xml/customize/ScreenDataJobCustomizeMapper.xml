@@ -276,7 +276,7 @@
 			pa.user_id
 		FROM
 		hyjf_trade.ht_borrow_recover r
-		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on pa.nid=pa.nid
+		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
 		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
 		LEFT JOIN  ht_user_portrait p ON pa.user_id=p.user_id
 		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
