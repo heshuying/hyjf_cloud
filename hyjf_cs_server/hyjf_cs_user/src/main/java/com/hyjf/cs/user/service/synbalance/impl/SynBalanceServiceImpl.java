@@ -356,7 +356,7 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         boolean reslut = RedisUtils.tranactionSet(RedisConstants.SYNBALANCE+user.getUserId(),30);
         // 如果没有设置成功，说明有请求来设置过
         //用户可用余额
-        accountUser = getAccount(user.getUserId());
+        //accountUser = getAccount(user.getUserId());
         if(!reslut){
             //成功???
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
