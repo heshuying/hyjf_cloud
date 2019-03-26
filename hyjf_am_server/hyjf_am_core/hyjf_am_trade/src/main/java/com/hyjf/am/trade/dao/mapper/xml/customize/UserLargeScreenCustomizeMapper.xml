@@ -14,7 +14,7 @@
     <!-- 本月运营部业绩完成分布 -->
     <select id="getAchievementDistributionList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
        select ROUND(IFNULL(SUM(money),0)/10000,0) as money , customer_group as customerGroup
-       from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY customer_group
+       from ht_user_operate_list where operating=1  and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY customer_group
     </select>
 
     <!-- 规模业绩 -->
