@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.calculate.DateUtils;
-import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.controller.api.websocket.WebSocketServer;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * 大屏数据统计
@@ -40,7 +40,8 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
     AmUserClient amUserClient;
     @Autowired
     AmTradeClient amTradeClient;
-
+    @Autowired
+    private CommonProducer commonProducer;
     @Override
     public void onMessage(MessageExt messageExt) {
         logger.info("ScreenDataMessageConsumer 收到消息，开始处理....msgId is :{} ,msgbody:{}", messageExt.getMsgId(),messageExt.getBody());
@@ -95,9 +96,9 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
             jsonObject.put("time",formatter.format(new Date()));
             jsonObject.put("money",data.getMoney());
             try {
-                WebSocketServer.sendInfo(jsonObject.toJSONString(),"user_picture_1");
-            } catch (IOException e) {
-                logger.info("推送数据接口出现异常"+e.getMessage());
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_SCREEN_PICTURE3_TOPIC, UUID.randomUUID().toString(), jsonObject));
+            } catch (MQException e) {
+                logger.error("推送数据接口出现异常...", e);
             }
         }
     }

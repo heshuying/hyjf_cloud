@@ -1,10 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.controller.api.websocket;
+package com.hyjf.admin.controller.websocket;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +39,15 @@ public class ApiSocketMessageController{
     //推送数据接口
     @ResponseBody
     @GetMapping("/socket/push/{cid}")
-    public ApiResult pushToWeb(@PathVariable String cid,String message) {
-        ApiResult result = new ApiResult();
+    public Object pushToWeb(@PathVariable String cid,String message) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("a",1);
-        result.setData(jsonObject.toJSONString());
         try {
             WebSocketServer.sendInfo(jsonObject.toJSONString(),cid);
         } catch (IOException e) {
             logger.info("推送数据接口出现异常"+e.getMessage());
-            return new ApiResult(e.getMessage());
         }
-        return result;
+        return jsonObject;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.controller.api.websocket;
+package com.hyjf.admin.controller.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

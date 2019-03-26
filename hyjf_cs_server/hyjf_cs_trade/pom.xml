@@ -131,12 +131,6 @@
 			<version>1.2.47</version>
 		</dependency>
 		<!-- //合规数据上报 CERT end-->
-		<!--WebSocket -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
-
 	</dependencies>
 
 	<build>
