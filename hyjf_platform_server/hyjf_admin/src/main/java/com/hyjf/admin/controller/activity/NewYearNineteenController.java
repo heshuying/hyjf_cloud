@@ -76,8 +76,8 @@ public class NewYearNineteenController extends BaseController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "累计年化出借金额", notes = "带条件导出EXCEL")
-    @RequestMapping(value = "/exportExcelAction")
+    @ApiOperation(value = "导出累计年化出借金额", notes = "带条件导出EXCEL")
+    @PostMapping(value = "/exportExcelAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody NewYearNineteenRequestBean newYearNineteenRequestBean) throws Exception {
 
