@@ -1,5 +1,6 @@
 package com.hyjf.am.user.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.user.dao.mapper.auto.CustomerTaskConfigMapper;
@@ -14,15 +15,18 @@ import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 
 @Service
 public class OperServiceImpl implements OperService {
-
+    private static final Logger logger = LoggerFactory.getLogger(OperServiceImpl.class);
     @Autowired
     private ScreenConfigMapper screenConfigMapper;
     @Autowired
@@ -97,6 +101,7 @@ public class OperServiceImpl implements OperService {
      */
     @Override
     public List<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request) {
+        logger.info("坐席月任务配置列表查询请求数据:{}", JSONObject.toJSONString(request));
         CustomerTaskConfigExample example = new CustomerTaskConfigExample();
         CustomerTaskConfigExample.Criteria cra = example.createCriteria();
         // 当前页
