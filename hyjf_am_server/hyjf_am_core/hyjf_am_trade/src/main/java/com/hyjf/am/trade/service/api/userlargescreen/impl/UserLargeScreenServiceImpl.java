@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -268,9 +269,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 运营部-待回款
         OperMonthPerformanceDataVO listFo =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFo();
         // 获得坐席月初站岗资金
-        BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", BigDecimal.class);
-        // 获得坐席月末站岗资金
-        BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", BigDecimal.class);
+        BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
+        // 获得坐席当前站岗资金
+        BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
