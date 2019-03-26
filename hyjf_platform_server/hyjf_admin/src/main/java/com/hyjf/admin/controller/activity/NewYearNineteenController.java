@@ -184,6 +184,7 @@ public class NewYearNineteenController extends BaseController {
      */
     @ApiOperation(value = "修改状态详情", notes = "修改状态详情")
     @RequestMapping(value = "/awardInfo/{id}", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult awardInfo(@PathVariable String id) {
         NewYearNineteenRequestBean request = new NewYearNineteenRequestBean();
         request.setId(Integer.parseInt(id));
@@ -205,6 +206,7 @@ public class NewYearNineteenController extends BaseController {
      */
     @ApiOperation(value = "修改发放状态", notes = "修改发放状态")
     @PostMapping("/updateStatus")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateStatus(@RequestBody NewYearNineteenRequestBean request) {
         BooleanResponse response = newYearNineteenService.updateStatus(request);
         if (!response.getResultBoolean()) {
