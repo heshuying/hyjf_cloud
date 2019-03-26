@@ -44,7 +44,7 @@
     </select>
     <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
 
-        select  user_name userName,current_owner currentOwner,operating operating,ROUND(IFNULL(SUM(money),0)/10000,0) money,ROUND(IFNULL(SUM(year_money),0)/10000,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
+        select  user_name userName,current_owner currentOwner,operating operating,ROUND(IFNULL(money,0)/10000,0) money,ROUND(IFNULL(year_money,0)/10000,0) yearMoney,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s')  createTime
         from  ht_user_operate_list where operating &lt;&gt; 3
         ORDER  BY create_time DESC
     </select>
