@@ -20,8 +20,8 @@ public class UserLargeScreenTwoServiceImpl implements UserLargeScreenTwoService 
      * @return
      */
     @Override
-    public List<OperMonthPerformanceDataVO> getOperMonthStartBalance() {
-        return userLargeScreenTwoCustomizeMapper.getOperMonthStartBalance(GetDate.getFirstDayOfMonthDate());
+    public OperMonthPerformanceDataVO getOperMonthStartBalance() {
+        return userLargeScreenTwoCustomizeMapper.getOperMonthStartBalance();
     }
 
     /**
@@ -29,7 +29,7 @@ public class UserLargeScreenTwoServiceImpl implements UserLargeScreenTwoService 
      * @return
      */
     @Override
-    public List<OperMonthPerformanceDataVO> getOperMonthEndBalance() {
-        return userLargeScreenTwoCustomizeMapper.getOperMonthEndBalance(GetDate.getNowTime());
+    public OperMonthPerformanceDataVO getOperMonthNowBalance() {
+        return userLargeScreenTwoCustomizeMapper.getOperMonthNowBalance();
     }
 }

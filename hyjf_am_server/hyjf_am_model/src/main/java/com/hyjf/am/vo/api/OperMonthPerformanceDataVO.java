@@ -47,7 +47,7 @@ public class OperMonthPerformanceDataVO implements Serializable {
     /**
      * 运营部月末站岗资金
      */
-    private BigDecimal monthEndBalance;
+    private BigDecimal monthNowBalance;
 
     public BigDecimal getInvest() {
         return invest;
@@ -121,11 +121,11 @@ public class OperMonthPerformanceDataVO implements Serializable {
         this.monthStartBalance = monthStartBalance;
     }
 
-    public BigDecimal getMonthEndBalance() {
-        return monthEndBalance;
+    public BigDecimal getMonthNowBalance() {
+        return monthNowBalance;
     }
 
-    public void setMonthEndBalance(BigDecimal monthEndBalance) {
-        this.monthEndBalance = monthEndBalance;
+    public void setMonthNowBalance(BigDecimal monthNowBalance) {
+        this.monthNowBalance = monthNowBalance;
     }
 }

@@ -46,7 +46,9 @@ public class BorrowRepayDataController extends BaseController {
             //查询出本月有回款计划的人（散标和计划）
             RepayResponse repayUser = borrowRepayDataService.findRepayUser(GetDate.getFirstDayOfMonth(), GetDate.getLastDayOfMonth(), 1, MAX_COUNT);
             Integer count = repayUser.getCount();
+            logger.info("【待回款数据统计】一共有：{}",count);
             Integer page = (count % MAX_COUNT) == 0 ? count / MAX_COUNT : count / MAX_COUNT + 1;
+            logger.info("【待回款数据统计】一共有：{}页",page);
             if (count > 0) {
                 for (int i = 1; i <= page; i++) {
                     if (i == 1) {

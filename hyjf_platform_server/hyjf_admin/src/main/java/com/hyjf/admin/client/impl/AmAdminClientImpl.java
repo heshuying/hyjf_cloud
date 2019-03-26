@@ -27,6 +27,7 @@ import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.*;
@@ -36,6 +37,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
@@ -2200,5 +2202,18 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultInt();
         }
         return 0;
+    }
+
+    @Override
+    public void addRepayUserList(List<RepaymentPlanVO> resultList) {
+        ScreenDataBean screenDataBean = new ScreenDataBean();
+        screenDataBean.setRepaymentPlanVOS(resultList);
+        restTemplate.postForObject("http://AM-ADMIN/am-trade/screen_data/add_repay_userList",
+                screenDataBean, IntegerResponse.class);
+    }
+    @Override
+    public IntegerResponse countRepayUserList(){
+        String url = "http://AM-ADMIN/am-trade/screen_data/count_repay_userList";
+        return restTemplate.getForEntity(url, IntegerResponse.class).getBody();
     }
 }

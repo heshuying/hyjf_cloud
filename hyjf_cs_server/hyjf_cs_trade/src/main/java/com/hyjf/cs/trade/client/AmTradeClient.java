@@ -2960,6 +2960,6 @@ public interface AmTradeClient {
      * 运营部月度业绩数据
      * @return
      */
-    UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds);
+    UserLargeScreenTwoVO getOperMonthPerformanceData();
 }
 

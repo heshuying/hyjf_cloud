@@ -9,8 +9,10 @@ import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.bean.UserLargeScreenResultBean;
 import com.hyjf.cs.trade.bean.UserLargeScreenTwoResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -75,11 +77,15 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
 
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), new JSONObject()));
-        } catch (MQException e) {
-            logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
+        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE_"+ GetDate.getMonth()) ||
+                !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE_"+ GetDate.getMonth())){
+
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
+                        MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), new JSONObject()));
+            } catch (MQException e) {
+                logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
+            }
         }
         UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
         // 日业绩(新客组、老客组)
@@ -97,7 +103,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         // 运营部所有用户id
         //List<Integer> userIds = amUserClient.getOperUserIds();
         // 运营部月度业绩数据
-        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData(null);
+        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
     }
