@@ -11,6 +11,7 @@ import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfigExample;
+import com.hyjf.am.user.dao.model.customize.CustomerTaskConfigExampleCustomize;
 import com.hyjf.am.user.service.admin.vip.content.OperService;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
@@ -20,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 
@@ -102,8 +102,8 @@ public class OperServiceImpl implements OperService {
     @Override
     public List<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request) {
         logger.info("坐席月任务配置列表查询请求数据:{}", JSONObject.toJSONString(request));
-        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
-        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        CustomerTaskConfigExampleCustomize example = new CustomerTaskConfigExampleCustomize();
+        CustomerTaskConfigExampleCustomize.Criteria cra = example.createCriteria();
         // 当前页
         int currentPage = request.getCurrPage();
         // 当前页条数
@@ -125,7 +125,7 @@ public class OperServiceImpl implements OperService {
         }
         // 是否有效 1:有效,2:无效
         if(null != request.getStatus()){
-            cra.andStatusEqualTo(request.getStatus());
+            cra.andTaskStatusEqualTo(request.getStatus());
         }
         return customerTaskConfigMapperCustomize.selectByExample(example);
     }
