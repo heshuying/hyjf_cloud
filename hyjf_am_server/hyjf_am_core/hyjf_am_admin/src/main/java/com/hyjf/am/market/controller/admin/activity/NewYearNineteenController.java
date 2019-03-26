@@ -7,9 +7,9 @@ import com.hyjf.am.response.admin.NewYearActivityResponse;
 import com.hyjf.am.response.admin.NewYearActivityRewardResponse;
 import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
 import com.hyjf.am.vo.admin.NewYearActivityRewardVO;
+import com.hyjf.am.vo.admin.NewYearActivityVO;
 import com.hyjf.common.paginator.Paginator;
 import org.apache.commons.lang3.StringUtils;
-import com.hyjf.am.vo.admin.NewYearActivityVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.validation.Valid;
 
 /**
  * @author xiehuili on 2019/3/25.
@@ -43,15 +42,15 @@ public class NewYearNineteenController {
     public NewYearActivityResponse init(@RequestBody NewYearNineteenRequestBean newYearNineteenRequestBean) {
         NewYearActivityResponse response = new NewYearActivityResponse();
         //请求参数处理
-        Map<String, Object> paraMap =beanToMap(newYearNineteenRequestBean);
+        Map<String, Object> paraMap = beanToMap(newYearNineteenRequestBean);
         Integer count = this.newYearNineteenService.selectInvestCount(paraMap);
         if (count != null && count > 0) {
             response.setTotal(count);
-            Paginator paginator = new Paginator(newYearNineteenRequestBean.getCurrPage(), count,newYearNineteenRequestBean.getPageSize() == 0?10:newYearNineteenRequestBean.getPageSize());
-            paraMap.put("limitStart",paginator.getOffset());
-            paraMap.put("limitEnd",paginator.getLimit());
+            Paginator paginator = new Paginator(newYearNineteenRequestBean.getCurrPage(), count, newYearNineteenRequestBean.getPageSize() == 0 ? 10 : newYearNineteenRequestBean.getPageSize());
+            paraMap.put("limitStart", paginator.getOffset());
+            paraMap.put("limitEnd", paginator.getLimit());
             List<NewYearActivityVO> recordList = this.newYearNineteenService.selectInvestList(paraMap);
-            if(!CollectionUtils.isEmpty(recordList)){
+            if (!CollectionUtils.isEmpty(recordList)) {
                 response.setResultList(recordList);
                 response.setRtn(Response.SUCCESS);
             }
@@ -71,15 +70,14 @@ public class NewYearNineteenController {
         NewYearActivityRewardResponse response = new NewYearActivityRewardResponse();
         Map<String, Object> paraMap = beanToMap(requestBean);
         int count = newYearNineteenService.selectAwardCount(paraMap);
-        Paginator paginator = new Paginator(requestBean.getCurrPage(), count, requestBean.getPageSize());
-        if (requestBean.getPageSize() == 0) {
-            paginator = new Paginator(requestBean.getCurrPage(), count);
+        if (count > 0) {
+            response.setTotal(count);
+            Paginator paginator = new Paginator(requestBean.getCurrPage(), count, requestBean.getPageSize());
+            List<NewYearActivityRewardVO> rewardList = newYearNineteenService.selectAwardList(paraMap, paginator.getOffset(), paginator.getLimit());
+            if (!CollectionUtils.isEmpty(rewardList)) {
+                response.setResultList(rewardList);
+            }
         }
-        List<NewYearActivityRewardVO> rewardList = newYearNineteenService.selectAwardList(paraMap, paginator.getOffset(), paginator.getLimit());
-        if (!CollectionUtils.isEmpty(rewardList)) {
-            response.setResultList(rewardList);
-        }
-        response.setTotal(count);
         return response;
     }
 

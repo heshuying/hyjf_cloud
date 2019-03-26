@@ -256,19 +256,19 @@ public class AmMarketClientImpl implements AmMarketClient {
 
     @Override
     public NewYearActivityRewardResponse selectAwardList(NewYearNineteenRequestBean requestBean) {
-    	NewYearActivityRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/newYearNineteen/getAwardList", requestBean, NewYearActivityRewardResponse.class);
+    	NewYearActivityRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/getAwardList", requestBean, NewYearActivityRewardResponse.class);
         return response;
     }
 
     @Override
     public NewYearActivityRewardResponse selectAwardInfo(NewYearNineteenRequestBean request) {
-    	NewYearActivityRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/newYearNineteen/getAwardInfo", request, NewYearActivityRewardResponse.class);
+    	NewYearActivityRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/getAwardInfo", request, NewYearActivityRewardResponse.class);
         return response;
     }
 
     @Override
     public BooleanResponse updateStatus(NewYearNineteenRequestBean request) {
-    	BooleanResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/newYearNineteen/getAwardInfo/updateStatus", request, BooleanResponse.class);
+    	BooleanResponse response = restTemplate.postForObject("http://AM-ADMIN/am-admin/newYearNineteen/updateStatus", request, BooleanResponse.class);
         return response;
     }
 

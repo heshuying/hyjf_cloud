@@ -25,13 +25,18 @@ public class NewYearActivityRewardVO implements Serializable{
 
     private Integer status;
 
-    private Date releaseTime;
+    private String releaseTime;
 
-    private Date getTime;
+    private String getTime;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
+
+    /**
+     * 奖励发放方式
+     */
+    private String distributionMethod;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -106,35 +111,43 @@ public class NewYearActivityRewardVO implements Serializable{
         this.status = status;
     }
 
-    public Date getReleaseTime() {
+    public String getReleaseTime() {
         return releaseTime;
     }
 
-    public void setReleaseTime(Date releaseTime) {
+    public void setReleaseTime(String releaseTime) {
         this.releaseTime = releaseTime;
     }
 
-    public Date getGetTime() {
+    public String getGetTime() {
         return getTime;
     }
 
-    public void setGetTime(Date getTime) {
+    public void setGetTime(String getTime) {
         this.getTime = getTime;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getDistributionMethod() {
+        return distributionMethod;
+    }
+
+    public void setDistributionMethod(String distributionMethod) {
+        this.distributionMethod = distributionMethod;
     }
 }

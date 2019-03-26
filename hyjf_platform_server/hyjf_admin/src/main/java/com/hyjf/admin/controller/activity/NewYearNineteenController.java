@@ -224,7 +224,7 @@ public class NewYearNineteenController extends BaseController {
     @ApiOperation(value = "奖励明细列表导出", notes = "奖励明细列表导出")
     @PostMapping("exportAwardAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportAwardExcel(HttpServletRequest request, HttpServletResponse response, NewYearNineteenRequestBean newYearNineteenRequestBean) throws Exception {
+    public void exportAwardExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody NewYearNineteenRequestBean newYearNineteenRequestBean) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -253,7 +253,11 @@ public class NewYearNineteenController extends BaseController {
         for (int i = 1; i < sheetCount; i++) {
             newYearNineteenRequestBean.setPageSize(defaultRowMaxCount);
             newYearNineteenRequestBean.setCurrPage(i + 1);
-            List<NewYearActivityRewardVO> resultList = rewardResponse.getResultList();
+            NewYearActivityRewardResponse rewardResponse2 = newYearNineteenService.selectAwardList(newYearNineteenRequestBean);
+            if(null == rewardResponse2){
+                rewardResponse2= new NewYearActivityRewardResponse();
+            }
+            List<NewYearActivityRewardVO> resultList = rewardResponse2.getResultList();
             if (!CollectionUtils.isEmpty(resultList)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
@@ -267,7 +271,7 @@ public class NewYearNineteenController extends BaseController {
     private Map<String, String> buildMap1() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("reward", "奖励名称");
-        map.put("发放方式", "发放方式");
+        map.put("distributionMethod", "发放方式");
         map.put("userName", "账户名");
         map.put("trueName", "姓名");
         map.put("recipientName", "收件人姓名");
