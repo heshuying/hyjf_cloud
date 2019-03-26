@@ -3025,9 +3025,11 @@
 			hbr.recover_interest recover_interest_wait,
 			hbr.recover_account_yes recover_account,
 			FROM_UNIXTIME(IFNULL(IF((hbr.recover_yestime='' OR hbr.recover_yestime=0),NULL,hbr.recover_yestime),hbr.recover_time), '%Y-%m-%d' ) recover_time,
-			IF(hbr.recover_status=0,'未还款','已还款') recover_status
+			<!-- 增加逾期中状态值 modify by hesy 2019-03-26-->
+			IF(hbr.recover_status=0,IF(hb.`status`=8,'逾期中','未还款'),'已还款') recover_status
 		FROM
 			ht_borrow_recover hbr
+		INNER JOIN ht_borrow hb ON hb.borrow_nid = hbr.borrow_nid
 		WHERE
 			hbr.nid=#{nid}
 	</select>

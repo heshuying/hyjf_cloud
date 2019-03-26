@@ -464,6 +464,8 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                         break;
                     case "7":
                         statusDescribe = "待授权";
+                    case "8":
+                        statusDescribe = "逾期中";
                         break;
                     default:
                         break;
@@ -1338,6 +1340,8 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                         case "14":
                             wechatHomeProjectListCustomize.setOnTime("已退出");
                             break;
+                        case "16":
+                            wechatHomeProjectListCustomize.setOnTime("逾期中");
                     }
 
                 } else {
@@ -1394,6 +1398,9 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                             break;
                         case "14":
                             customize.setOnTime("已退出");
+                            break;
+                        case "16":
+                            customize.setOnTime("逾期中");
                             break;
                     }
 

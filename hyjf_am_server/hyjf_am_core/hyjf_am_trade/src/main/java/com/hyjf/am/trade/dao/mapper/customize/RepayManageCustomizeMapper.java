@@ -46,4 +46,8 @@ public interface RepayManageCustomizeMapper {
 
     /** 用户还款计划列表*/
     List<RepayPlanListVO> selectRepayPlanList(Map<String,Object> paraMap);
+
+    /** 用户还款计划列表不分期*/
+    List<RepayPlanListVO> selectRepayNotPlanList(Map<String,Object> paraMap);
+
 }
