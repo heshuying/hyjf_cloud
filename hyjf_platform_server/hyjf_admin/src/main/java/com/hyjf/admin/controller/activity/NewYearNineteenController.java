@@ -2,7 +2,6 @@ package com.hyjf.admin.controller.activity;
 
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -56,7 +55,7 @@ public class NewYearNineteenController extends BaseController {
     @ApiOperation(value = "累计年化出借金额列表", notes = "累计年化出借金额列表")
     @PostMapping("/investInit")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<NewYearActivityVO>> init(@RequestBody NewYearNineteenRequestBean newYearNineteenRequestBean) {
+    public AdminResult init(@RequestBody NewYearNineteenRequestBean newYearNineteenRequestBean) {
         NewYearActivityResponse response = newYearNineteenService.selectInvestList(newYearNineteenRequestBean);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -64,8 +63,7 @@ public class NewYearNineteenController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        List<NewYearActivityVO> resultList = response.getResultList();
-        return new AdminResult<ListResult<NewYearActivityVO>>(ListResult.build(resultList, response.getTotal()));
+        return new AdminResult<NewYearActivityResponse>(response);
     }
 
 
@@ -73,15 +71,15 @@ public class NewYearNineteenController extends BaseController {
 
 
     /**
-     * @Description 数据导出--还款计划
-     * @Author pangchengchao
+     * @Description 累计年化出借金额
+     * @Author xiehuili
      * @Version v0.1
      * @Date
      */
     @ApiOperation(value = "累计年化出借金额", notes = "带条件导出EXCEL")
-    @RequestMapping(value = "/exportAction")
+    @RequestMapping(value = "/exportExcelAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportToExcel(HttpServletRequest request, HttpServletResponse response, NewYearNineteenRequestBean newYearNineteenRequestBean) throws Exception {
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody NewYearNineteenRequestBean newYearNineteenRequestBean) throws Exception {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -97,6 +95,9 @@ public class NewYearNineteenController extends BaseController {
         newYearNineteenRequestBean.setCurrPage(1);
         // 查询
         NewYearActivityResponse newYearActivityResponse = newYearNineteenService.selectInvestList(newYearNineteenRequestBean);
+        if(null == newYearActivityResponse){
+            newYearActivityResponse = new NewYearActivityResponse();
+        }
         Integer totalCount = newYearActivityResponse.getTotal();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -113,7 +114,11 @@ public class NewYearNineteenController extends BaseController {
 
             newYearNineteenRequestBean.setPageSize(defaultRowMaxCount);
             newYearNineteenRequestBean.setCurrPage(i+1);
-            List<NewYearActivityVO> resultList = newYearActivityResponse.getResultList();
+            NewYearActivityResponse newYearActivityResponse2 = newYearNineteenService.selectInvestList(newYearNineteenRequestBean);
+            if(null == newYearActivityResponse2){
+                newYearActivityResponse2 = new NewYearActivityResponse();
+            }
+            List<NewYearActivityVO> resultList = newYearActivityResponse2.getResultList();
             if (!CollectionUtils.isEmpty(resultList)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
