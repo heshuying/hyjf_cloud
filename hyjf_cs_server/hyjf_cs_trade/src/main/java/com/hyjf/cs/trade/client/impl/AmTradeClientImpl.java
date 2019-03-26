@@ -7095,7 +7095,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public UserLargeScreenTwoVO getDayScalePerformanceList() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayscaleperformancelist";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response!=null){
+        if(response.getResult() != null){
             return response.getResult();
         }
         return new UserLargeScreenTwoVO();
@@ -7105,7 +7105,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public UserLargeScreenTwoVO getDayReceivedPayments() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayreceivedpayments";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response!=null){
+        if(response.getResult() != null){
             return response.getResult();
         }
         return new UserLargeScreenTwoVO();
@@ -7115,7 +7115,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public UserLargeScreenTwoVO getMonthDataStatistics() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response!=null){
+        if(response.getResult() != null){
             return response.getResult();
         }
         return new UserLargeScreenTwoVO();
@@ -7125,7 +7125,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getopermonthperformancedata";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response!=null){
+        if(response.getResult() != null){
             return response.getResult();
         }
         return new UserLargeScreenTwoVO();
