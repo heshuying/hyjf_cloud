@@ -95,7 +95,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
@@ -7026,5 +7025,14 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    @Override
+    public void updateBorrowRepayLateInfo() {
+        String url = "http://AM-TRADE/am-trade/batch/repaylate";
+        restTemplate.getForEntity(url, String.class).getBody();
     }
 }

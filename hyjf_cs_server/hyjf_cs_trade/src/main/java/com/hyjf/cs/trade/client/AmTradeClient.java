@@ -2884,5 +2884,10 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhAccedeVO> selectCrmHjhAccedeList();
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    void updateBorrowRepayLateInfo();
 }
 

@@ -260,6 +260,19 @@ public class UnnormalRepayUtils {
 	}
 
 	/**
+	 * 计算逾期还款利息
+	 * @param termShouldPrincipalInterest
+	 * @param repayLateDays
+	 * @param repayLateRate
+	 * @return
+	 */
+	public static BigDecimal repayLateInterest(BigDecimal termShouldPrincipalInterest, int repayLateDays, BigDecimal repayLateRate){
+		// 计算逾期还款利息
+		BigDecimal repayLateInterest = termShouldPrincipalInterest.multiply(repayLateRate).multiply(new BigDecimal(repayLateDays)).setScale(2, BigDecimal.ROUND_DOWN);
+		return repayLateInterest;
+	}
+
+	/**
 	 * 逾期的延期利息
 	 * @param termShouldPrincipalInterest
 	 * @param termShouldPrincipal
