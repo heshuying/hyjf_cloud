@@ -6,8 +6,6 @@ package com.hyjf.am.trade.service.api.userlargescreen;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
 
-import java.util.List;
-
 /**
  * @author tanyy
  * @version UserLargeScreenService, v0.1 2019/3/18 14:28
@@ -64,8 +62,7 @@ public interface UserLargeScreenService {
 
     /**
      * 运营部月度业绩数据
-     * @param userIds
      * @return
      */
-    UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds);
+    UserLargeScreenTwoVO getOperMonthPerformanceData();
 }

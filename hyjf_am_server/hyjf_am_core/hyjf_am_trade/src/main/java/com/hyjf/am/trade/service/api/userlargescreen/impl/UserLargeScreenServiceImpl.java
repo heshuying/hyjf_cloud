@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.api.userlargescreen.impl;
 
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
-import com.hyjf.am.trade.dao.mapper.auto.RepaymentPlanMapper;
 import com.hyjf.am.trade.dao.mapper.auto.UserOperateListMapper;
 import com.hyjf.am.trade.dao.model.auto.AccountList;
 import com.hyjf.am.trade.dao.model.auto.AccountListExample;
@@ -15,14 +14,12 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +41,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
             vo = new UserLargeScreenVO();
         }
         if(vo.getAchievementDistribution().compareTo(BigDecimal.ZERO)>0) {
-            vo.setAchievementRate(vo.getTotalAmount().divide(vo.getAchievementDistribution()).setScale(2, BigDecimal.ROUND_HALF_UP));
+            vo.setAchievementRate(vo.getTotalAmount().divide(vo.getAchievementDistribution(),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
         }
         return vo;
     }
@@ -257,7 +254,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     }
 
     @Override
-    public UserLargeScreenTwoVO getOperMonthPerformanceData(List<Integer> userIds) {
+    public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
         OperMonthPerformanceDataVO operMonthPerformanceDataVO = new OperMonthPerformanceDataVO();
         // 运营部-年化业绩、充值
@@ -271,23 +268,17 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 运营部-待回款
         OperMonthPerformanceDataVO listFo =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFo();
         // 获得坐席月初站岗资金
-        BigDecimal start = BigDecimal.ZERO;
-        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE")){
-            start = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", BigDecimal.class);
-        }
+        BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE", BigDecimal.class);
         // 获得坐席月末站岗资金
-        BigDecimal now = BigDecimal.ZERO;
-        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE")){
-            now = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", BigDecimal.class);
-        }
+        BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE", BigDecimal.class);
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
         operMonthPerformanceDataVO.setYearAmount(listO.getYearAmount());
         // 站岗资金
-        operMonthPerformanceDataVO.setBalance(now);
+        operMonthPerformanceDataVO.setBalance(nowMonthBalance);
         // 增资
-        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(start).subtract(now);
+        BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(startMonthBalance).subtract(nowMonthBalance);
         if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
             additionalShare = new BigDecimal("0");
         }

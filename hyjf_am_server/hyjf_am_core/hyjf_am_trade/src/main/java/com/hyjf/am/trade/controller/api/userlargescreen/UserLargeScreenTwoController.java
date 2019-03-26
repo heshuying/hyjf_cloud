@@ -10,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,10 +49,10 @@ public class UserLargeScreenTwoController {
     }
 
     @ApiOperation(value = "运营部月度业绩数据",notes = " 运营部月度业绩数据")
-    @PostMapping(value = "/getopermonthperformancedata")
+    @GetMapping(value = "/getopermonthperformancedata")
     public UserLargeScreenTwoResponse getOperMonthPerformanceData() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
-        UserLargeScreenTwoVO vo = userLargeScreenService.getOperMonthPerformanceData(null);
+        UserLargeScreenTwoVO vo = userLargeScreenService.getOperMonthPerformanceData();
         response.setResult(vo);
         return response;
     }
