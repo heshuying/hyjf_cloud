@@ -1,5 +1,6 @@
 package com.hyjf.am.admin.mq.consumer;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.service.UserLargeScreenTwoService;
 import com.hyjf.am.vo.api.OperMonthPerformanceDataVO;
 import com.hyjf.common.cache.RedisUtils;
@@ -17,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RocketMQMessageListener(topic = MQConstant.SCREEN_DATA_TWO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SCREEN_DATA_TWO_GROUP)
 public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
@@ -29,14 +32,27 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
     @Override
     public void onMessage(MessageExt messageExt) {
         if (MQConstant.SCREEN_DATA_TWO_SELECT_TAG.equals(messageExt.getTags())) {
-            // 得到运营部用户月初站岗资金
-            OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthStartBalance();
-            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE_"+ GetDate.getMonth(), result.getMonthStartBalance());
-            // 得到运营部用户当前站岗资金
-            result = userLargeScreenTwoService.getOperMonthNowBalance();
-            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE_"+ GetDate.getMonth(), result.getMonthNowBalance());
+            JSONObject data = JSONObject.parseObject(messageExt.getBody(), JSONObject.class);
+            String flag = data.getString("flag");
+            logger.info("用户画像屏幕二运营部站岗资金获取请求参数:{}", flag);
+            if("start".equals(flag)){
+                // 得到运营部用户月初站岗资金
+                OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthStartBalance();
+                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), result.getMonthStartBalance());
+            }
+            if ("now".equals(flag)){
+                // 得到运营部用户当前站岗资金
+                OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthNowBalance();
+                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance());
+            }
+            if("all".equals(flag)){
+                // 得到运营部用户月初站岗资金
+                OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthStartBalance();
+                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), result.getMonthStartBalance());
+                result = userLargeScreenTwoService.getOperMonthNowBalance();
+                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance());
+            }
         }
-        return;
     }
 
     @Override
