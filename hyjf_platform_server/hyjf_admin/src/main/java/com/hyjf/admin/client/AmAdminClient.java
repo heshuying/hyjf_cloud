@@ -1267,4 +1267,16 @@ public interface AmAdminClient {
      * @return
      */
     RepayResponse findRepayUser(Integer startTime, Integer endTime, Integer currPage, Integer pageSize);
+
+    /**
+     *批量添加待回款用户信息
+     * @param resultList
+     */
+    void addRepayUserList(List<RepaymentPlanVO> resultList);
+
+    /**
+     * 查询本月待会款是否已经统计
+     * @return
+     */
+    IntegerResponse countRepayUserList();
 }

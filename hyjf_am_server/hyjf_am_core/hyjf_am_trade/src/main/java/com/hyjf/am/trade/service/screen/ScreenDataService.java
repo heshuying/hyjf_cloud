@@ -39,18 +39,6 @@ public interface ScreenDataService {
     BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
 
 
-    /**
-     * 批量插入本月待回款用户数据
-     * @param repaymentPlanVOS
-     * @return
-     */
-   Integer addRepayUserList(List<RepaymentPlanVO> repaymentPlanVOS);
-
-    /**
-     * 查询本月是否已生成数据
-     * @return
-     */
-    Integer countRepayUserList(Date startTime, Date endTime);
 
 
     /**

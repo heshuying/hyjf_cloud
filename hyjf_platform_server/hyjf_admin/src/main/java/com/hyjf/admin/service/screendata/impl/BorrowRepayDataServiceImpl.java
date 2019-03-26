@@ -19,8 +19,6 @@ import java.util.List;
 public class BorrowRepayDataServiceImpl implements BorrowRepayDataService {
     @Autowired
     AmAdminClient adminClient;
-    @Autowired
-    AmTradeClient amTradeClient;
     @Override
     public RepayResponse findRepayUser(Integer startTime, Integer endTime, Integer currPage, Integer pageSize) {
         return adminClient.findRepayUser(startTime,endTime,currPage,pageSize);
@@ -28,12 +26,12 @@ public class BorrowRepayDataServiceImpl implements BorrowRepayDataService {
 
     @Override
     public void addRepayUserList(List<RepaymentPlanVO> resultList) {
-        amTradeClient.addRepayUserList(resultList);
+        adminClient.addRepayUserList(resultList);
     }
 
     @Override
     public IntegerResponse countRepayUserList() {
-        return amTradeClient.countRepayUserList();
+        return adminClient.countRepayUserList();
     }
 
 }

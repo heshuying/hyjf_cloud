@@ -57,22 +57,6 @@ public class ScreenDataController extends BaseController {
         return response;
     }
 
-    @PostMapping(value = "/add_repay_userList")
-    private IntegerResponse addRepayUserList(@RequestBody ScreenDataBean screenDataBean) {
-        IntegerResponse response = new IntegerResponse();
-        Integer result = service.addRepayUserList(screenDataBean.getRepaymentPlanVOS());
-        response.setResultInt(result);
-        return response;
-    }
-
-    @GetMapping(value = "/count_repay_userList")
-    private IntegerResponse countRepayUserList() {
-        IntegerResponse response = new IntegerResponse();
-        Integer result = service.countRepayUserList(GetDate.getFirstDayOfMonthDate(),GetDate.getLastDayOfMonthDate());
-        response.setResultInt(result);
-        return response;
-    }
-
     @PostMapping(value = "/deal_repay_money")
     private IntegerResponse dealRepayMoney(@RequestBody ScreenDataBean screenDataBean) {
         IntegerResponse response = new IntegerResponse();

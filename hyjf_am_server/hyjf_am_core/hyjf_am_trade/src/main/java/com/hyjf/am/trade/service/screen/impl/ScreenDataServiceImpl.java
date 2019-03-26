@@ -83,19 +83,7 @@ public class ScreenDataServiceImpl implements ScreenDataService {
     }
 
 
-    @Override
-    public Integer addRepayUserList(List<RepaymentPlanVO> repaymentPlanVOS) {
-        return screenYearMoneyCustomizeMapper.addRepayUserList(repaymentPlanVOS);
-    }
 
-    @Override
-    public Integer countRepayUserList(Date startTime, Date endTime) {
-        RepaymentPlanExample repaymentPlanExample = new RepaymentPlanExample();
-        RepaymentPlanExample.Criteria criteria = repaymentPlanExample.createCriteria();
-        criteria.andRepaymentTimeGreaterThanOrEqualTo(startTime);
-        criteria.andRepaymentTimeLessThanOrEqualTo(endTime);
-        return repaymentPlanMapper.countByExample(repaymentPlanExample);
-    }
 
     @Override
     public Integer updateRepayMoney(ScreenDataBean screenDataBean, Integer startTime,Integer endTime) {
