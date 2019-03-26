@@ -154,10 +154,10 @@
 			AND l.remark = #{remarkSrch}
 		</if>
 		<if test="startDate != null and startDate != ''">
-			AND l.create_time <![CDATA[>=]]>  CONCAT(#{startDate},' 00:00:00')
+			AND l.create_time <![CDATA[>=]]>  str_to_date(CONCAT(#{startDate},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
 		</if>
 		<if test="endDate != null and endDate != ''">
-			AND l.create_time <![CDATA[<=]]> CONCAT(#{endDate},' 23:59:59')
+			AND l.create_time <![CDATA[<=]]> str_to_date(CONCAT(#{endDate},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 		</if>
 	</sql>
 
