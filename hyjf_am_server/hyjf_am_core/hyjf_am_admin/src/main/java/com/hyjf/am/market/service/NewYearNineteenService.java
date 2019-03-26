@@ -23,12 +23,17 @@ public interface NewYearNineteenService {
      * @param map
      * @return
      */
+
     List<NewYearActivityVO> selectInvestList(Map<String, Object> map);
 
 
-    int selectAwardCount(Map<String,Object> map);
+    int selectAwardCount(Map<String, Object> map);
 
 
-    List<NewYearActivityRewardVO> selectAwardList(Map<String,Object> map);
-    void updateAwardStatus(NewYearActivityRewardVO from);
+    List<NewYearActivityRewardVO> selectAwardList(Map<String, Object> map, int offset, int limit);
+
+    boolean updateAwardStatus(NewYearActivityRewardVO from);
+
+    NewYearActivityRewardVO selectAwardInfo(Integer id);
+
 }

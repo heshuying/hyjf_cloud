@@ -29,6 +29,7 @@ public class NewYearNineteenServiceImpl implements NewYearNineteenService {
         return newYearActivityCustomizeMapper.getNewYearActivityCount(map);
     }
 
+
     /**
      * 查询累计年化出借金额
      * @param map
@@ -41,19 +42,27 @@ public class NewYearNineteenServiceImpl implements NewYearNineteenService {
 
 
     @Override
-    public int selectAwardCount(Map<String,Object> map){
-        return 0;
+    public int selectAwardCount(Map<String, Object> map) {
+        return newYearActivityCustomizeMapper.getRewardListCount(map);
     }
 
 
     @Override
-    public List<NewYearActivityRewardVO> selectAwardList(Map<String,Object> map){
-        return null;
+    public List<NewYearActivityRewardVO> selectAwardList(Map<String, Object> map, int limitStart, int limitEnd) {
+        if (limitStart != -1) {
+            map.put("limitStart", limitStart);
+            map.put("limitEnd", limitEnd);
+        }
+        return newYearActivityCustomizeMapper.getRewardList(map);
     }
+
     @Override
-    public void updateAwardStatus(NewYearActivityRewardVO from){
+    public boolean updateAwardStatus(NewYearActivityRewardVO form) {
+        return newYearActivityCustomizeMapper.updateAwardStatus(form);
+    }
 
-
-
+    @Override
+    public NewYearActivityRewardVO selectAwardInfo(Integer id) {
+        return newYearActivityCustomizeMapper.getRewardInfo(id);
     }
 }

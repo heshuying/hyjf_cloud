@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.NewYearActivityCustomizeMapper">
 
+    <resultMap id="RewardResultMapVO" type="com.hyjf.am.vo.admin.NewYearActivityRewardVO" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="true_name" property="trueName" jdbcType="VARCHAR" />
+        <result column="recipient_name" property="recipientName" jdbcType="VARCHAR" />
+        <result column="recipient_address" property="recipientAddress" jdbcType="VARCHAR" />
+        <result column="recipient_mobile" property="recipientMobile" jdbcType="VARCHAR" />
+        <result column="reward" property="reward" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
+        <result column="get_time" property="getTime" jdbcType="TIMESTAMP" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
 
     <resultMap id="NewYearActivityResult"
                type="com.hyjf.am.vo.admin.NewYearActivityVO">
@@ -70,4 +86,87 @@
         </if>
 
     </select>
+
+    <select id="getRewardListCount" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+        SELECT
+        count(*)
+        FROM
+        ht_new_year_activity_reward ar
+        LEFT JOIN ht_new_year_activity ya ON ya.user_id = ar.user_id
+        LEFT JOIN hyjf_user.ht_user dus ON dus.user_id= ar.user_id
+        LEFT JOIN hyjf_user.ht_user_info din ON din.user_id = ar.user_id
+        <where>
+            ar.reward != ''
+            <if test="username != null">
+                and dus.username = #{username}
+            </if>
+            <if test="truename != null">
+                and din.truename = #{truename}
+            </if>
+            <if test="status != null">
+                and ar.`status` = #{status}
+            </if>
+
+        </where>
+
+    </select>
+
+    <select id="getRewardList" resultMap="RewardResultMapVO" parameterType="java.util.HashMap" >
+        SELECT
+        ar.id,
+        ar.user_id,
+        dus.username as user_name,
+        din.truename as true_name,
+        ar.recipient_name,
+        ar.recipient_address,
+        ar.recipient_mobile,
+        ar.reward,
+        ar.`status`,
+        ar.release_time,
+        ar.get_time
+        FROM
+        ht_new_year_activity_reward ar
+        LEFT JOIN ht_new_year_activity ya ON ya.user_id = ar.user_id
+        LEFT JOIN hyjf_user.ht_user dus ON dus.user_id= ar.user_id
+        LEFT JOIN hyjf_user.ht_user_info din ON din.user_id = ar.user_id
+        <where>
+            ar.reward != ''
+            <if test="username != null">
+                and dus.username = #{username}
+            </if>
+            <if test="truename != null">
+                and din.truename = #{truename}
+            </if>
+            <if test="status != null">
+                and ar.`status` = #{status}
+            </if>
+
+        </where>
+        <if test="sort != null and sort != '' ">
+            order by ar.get_time ${sort}
+        </if>
+        <if test="sortTwo != null and sortTwo != '' ">
+            order by ar.release_time ${sortTwo}
+        </if>
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+    <select id="getRewardInfo" resultMap="RewardResultMapVO" parameterType="java.lang.Integer" >
+        SELECT *
+        FROM
+        ht_new_year_activity_reward ar
+        WHERE ar.id = #{id}
+    </select>
+
+    <update id="updateAwardStatus" parameterType="com.hyjf.am.vo.admin.NewYearActivityRewardVO">
+        UPDATE ht_new_year_activity_reward
+        <set>
+            <if test="status != null">
+                status = #{status}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 </mapper>
