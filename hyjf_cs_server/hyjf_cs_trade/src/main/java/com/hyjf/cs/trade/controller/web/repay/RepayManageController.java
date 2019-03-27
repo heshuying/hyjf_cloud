@@ -104,6 +104,7 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "userId") Integer userId){
         WebResult<Map<String,Object>> result = new WebResult<>();
+        logger.info("用户还款页面统计数据repay_page_data开始，userId：" + userId);
         Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         if ("2".equals(userVO.getRoleId())) {
@@ -139,6 +140,7 @@ public class RepayManageController extends BaseTradeController {
         // 是否开启服务费授权 0未开启  1已开启
         resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         result.setData(resultMap);
+        logger.info("用户还款页面统计数据repay_page_data结束，返回数据：" + result);
         return result;
     }
 
