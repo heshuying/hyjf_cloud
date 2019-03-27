@@ -7102,7 +7102,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         // 查到数据为空,显示初始化
         List<EchartsResultVO> list = new ArrayList<>();
         EchartsResultVO vo = new EchartsResultVO();
-        vo.setCurrentOwner("今日暂无数据");
+        vo.setCurrentOwner("暂无数据");
         vo.setMoney("0");
         list.add(vo);
 
@@ -7132,7 +7132,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         // 查到数据为空,显示初始化
         List<EchartsResultVO> list = new ArrayList<>();
         EchartsResultVO vo = new EchartsResultVO();
-        vo.setCurrentOwner("今日暂无数据");
+        vo.setCurrentOwner("暂无数据");
         vo.setMoney2("0");
         vo.setMoney("0");
         list.add(vo);
@@ -7163,7 +7163,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         // 查到数据为空,显示初始化
         List<MonthDataStatisticsVO> list = new ArrayList<>();
         MonthDataStatisticsVO vo = new MonthDataStatisticsVO();
-        vo.setCurrentOwner("本月暂无数据");
+        vo.setCurrentOwner("暂无数据");
         list.add(vo);
 
         if (null == response.getResult()){
