@@ -61,6 +61,9 @@ public class ProtocolTemplateVO extends BaseVO implements Serializable{
     //修改人
     private String updateUserName;
 
+    @ApiModelProperty(value = "是否在帮助中心显示（0不显示，1显示）")
+    private Byte isShow;
+
     public String getUpdateUserName() {
         return updateUserName;
     }
@@ -181,5 +184,13 @@ public class ProtocolTemplateVO extends BaseVO implements Serializable{
 
     public void setProtocolType(String protocolType) {
         this.protocolType = protocolType;
+    }
+
+    public Byte getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(Byte isShow) {
+        this.isShow = isShow;
     }
 }

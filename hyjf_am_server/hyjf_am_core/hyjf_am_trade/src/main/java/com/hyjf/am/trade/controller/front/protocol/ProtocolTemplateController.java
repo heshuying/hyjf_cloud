@@ -11,11 +11,13 @@ import com.hyjf.am.response.trade.ProtocolTemplateResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
 import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.ProtocolTemplate;
 import com.hyjf.am.trade.service.front.config.ProtocolTemplateService;
 import com.hyjf.am.vo.admin.ProtocolLogVO;
 import com.hyjf.am.vo.admin.ProtocolTemplateCommonVO;
 import com.hyjf.am.vo.admin.ProtocolVersionVO;
 import com.hyjf.am.vo.trade.ProtocolTemplateVO;
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -286,4 +288,22 @@ public class ProtocolTemplateController extends BaseController {
         return mapResponse;
     }
 
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    @RequestMapping("/getAllShowProtocolTemp")
+    public ProtocolTemplateResponse getAllShowProtocolTemp(){
+        ProtocolTemplateResponse response = new ProtocolTemplateResponse();
+        response.setRtn(Response.FAIL);
+        List<ProtocolTemplate> protocolTemplateList = protocolTemplateService.selectAllShowProtocolTemplate();
+        if(CollectionUtils.isNotEmpty(protocolTemplateList)){
+            List<ProtocolTemplateVO> protocolTemplateVOList = CommonUtils.convertBeanList(protocolTemplateList, ProtocolTemplateVO.class);
+            response.setRtn(Response.SUCCESS);
+            response.setResultList(protocolTemplateVOList);
+        }
+        return response;
+    }
 }

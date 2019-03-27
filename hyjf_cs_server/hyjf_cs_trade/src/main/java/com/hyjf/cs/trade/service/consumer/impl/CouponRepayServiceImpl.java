@@ -353,8 +353,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         }
 
 
-        logger.info(CouponRepayServiceImpl.class.toString(), methodName,
-                "-----------还款结束---" + planNid + "---------" + currentRecover.getTransferId() + "---------------");
+        logger.info("【汇计划优惠券还款】还款结束。智投编号：{}，转账订单编号：{}", planNid, currentRecover.getTransferId());
         msg.put(USERID, ct.getUserId());
         msg.put(VAL_AMOUNT, StringUtils.isEmpty(recoverAccountStr) ? "0.00" : recoverAccountStr);
         msg.put(VAL_COUPON_TYPE,
@@ -737,8 +736,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         }
 
 
-        logger.info(CouponRepayServiceImpl.class.toString(), methodName,
-                "-----------还款结束---" + borrowNid + "---------" + currentRecover.getTransferId() + "---------------");
+        logger.info("【优惠券还款】还款结束。借款编号：{}，转账订单编号：{}", borrowNid, currentRecover.getTransferId());
         msg.put(USERID, ct.getUserId());
         msg.put(VAL_AMOUNT, StringUtils.isEmpty(recoverAccountStr) ? "0.00" : recoverAccountStr);
         msg.put(VAL_COUPON_TYPE,

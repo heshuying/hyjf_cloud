@@ -673,7 +673,10 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
 
         HjhAccedeRequest request = new HjhAccedeRequest();
         request.setPlanNid(planNid);
-        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+        // mod by nxl 修改统计数量
+        // 统计最后三天的服务记录
+//        int recordTotal = this.amTradeClient.countPlanAccedeRecordTotal(request);
+        int recordTotal = this.amTradeClient.countPlanAccedeRecord(request);
 
         // 加入总人次
         result.setUserCount(recordTotal);

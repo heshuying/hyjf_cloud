@@ -142,7 +142,7 @@
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = ct.assign_order_id
 	   <include refid="Where_Clause" />
-		ORDER BY ct.id DESC
+		ORDER BY bc.id DESC
 	   <if  test="limitStart != null and limitEnd != null">
 	      LIMIT #{limitStart} , #{limitEnd}
 	    </if>

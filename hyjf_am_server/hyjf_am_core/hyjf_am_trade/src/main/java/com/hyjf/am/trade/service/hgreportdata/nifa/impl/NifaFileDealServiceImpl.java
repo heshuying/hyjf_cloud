@@ -216,7 +216,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
     }
 
     /**
-     * 查询该天放款成功的数据
+     * 查询该天还款成功的数据
      *
      * @param historyData
      * @return
@@ -238,7 +238,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
     }
 
     /**
-     * 查询该天放款成功的数据
+     * 查询该天分期还款成功的数据
      *
      * @param historyData
      * @return
@@ -253,6 +253,28 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
         BorrowRepayPlanExample example = new BorrowRepayPlanExample();
         example.createCriteria().andRepayTypeEqualTo("wait_yes").andRepayYestimeGreaterThanOrEqualTo(startTime).andRepayYestimeLessThanOrEqualTo(endTime);
         List<BorrowRepayPlan> list = borrowRepayPlanMapper.selectByExample(example);
+        if (null != list && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 查询该天放款成功的数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<Borrow> selectBorrowByHistoryDate(String historyData) {
+        // 当天开始时间
+        Integer startTime = GetDate.dateString2Timestamp(historyData.concat(" 00:00:00"));
+        // 当天结束时间
+        Integer endTime = GetDate.dateString2Timestamp(historyData.concat(" 23:59:59"));
+
+        BorrowExample example = new BorrowExample();
+        example.createCriteria().andRecoverLastTimeIsNotNull().andRecoverLastTimeGreaterThanOrEqualTo(startTime).andRecoverLastTimeLessThanOrEqualTo(endTime);
+        List<Borrow> list = borrowMapper.selectByExample(example);
         if (null != list && list.size() > 0) {
             return list;
         }

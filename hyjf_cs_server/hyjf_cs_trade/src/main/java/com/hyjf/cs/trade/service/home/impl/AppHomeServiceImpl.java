@@ -292,6 +292,8 @@ public class AppHomeServiceImpl implements AppHomeService {
         String privacyPolicyUrl = systemConfig.getAppPrivacyPolicyUrl();
         info.put("serviceAgreementUrl",HOST + serviceAgreementUrl);//服务协议
         info.put("privacyPolicyUrl",HOST + privacyPolicyUrl);//隐私政策
+        //add by nxl app首页新加相关协议 20190315
+        info.put("agreementTempUrl",HOST + "/agreement/relatedagreementlist");
 
         // add by liushouyi 新增固定发标时间提醒 start
         info.put("staticIssueTime","散标更新时间  10:00  15:00");
@@ -302,6 +304,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(CustomConstants.APP_REQUEST,
                 ProjectConstant.REQUEST_HOME + HomePageDefine.REQUEST_MAPPING + HomePageDefine.PROJECT_LIST_ACTION);
+
         CommonUtils.convertNullToEmptyString(info);
         return info;
     }

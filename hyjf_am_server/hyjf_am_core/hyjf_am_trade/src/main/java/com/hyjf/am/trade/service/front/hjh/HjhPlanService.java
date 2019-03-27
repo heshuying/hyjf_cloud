@@ -165,4 +165,13 @@ public interface HjhPlanService {
      * @return
      */
     int updateHjhPlanForJoinSwitch(int status);
+
+    /**
+     * 统计最后三天的服务记录 add by nxl
+     * app和危险的统计计划加入数量
+     * @param planNid
+     * @return
+     */
+    Integer countPlanAccedeRecord(String planNid);
+
 }
