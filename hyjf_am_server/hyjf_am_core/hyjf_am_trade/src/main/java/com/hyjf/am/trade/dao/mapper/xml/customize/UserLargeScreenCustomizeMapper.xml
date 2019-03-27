@@ -37,9 +37,20 @@
     <!-- 坐席月回款情况 -->
     <select id="getMonthReceivedPayments" resultType="com.hyjf.am.vo.api.EchartsResultVO">
 
-      select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,ROUND(IFNULL(SUM(t2.money),0)/10000,0) as money2,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =1 and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY t1.current_owner
+     select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup,
+          (
+          SELECT ROUND(IFNULL(SUM(money),0)/10000,0) FROM ht_repayment_plan where t1.current_owner = customer_name
+          ) as money2
+      from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =1
+      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
       UNION ALL
-      select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,ROUND(IFNULL(SUM(t2.money),0)/10000,0) as money2,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY t1.current_owner
+
+      select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup,
+        (
+          SELECT ROUND(IFNULL(SUM(money),0)/10000,0) FROM ht_repayment_plan where t1.current_owner = customer_name
+        ) as money2
+      from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =2
+      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
 
     </select>
     <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
