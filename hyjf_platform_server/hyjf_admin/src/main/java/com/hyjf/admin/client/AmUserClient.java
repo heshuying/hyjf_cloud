@@ -333,13 +333,13 @@ public interface AmUserClient {
      */
     int updateUserCard(BankCardRequest request);
 
-    /**
-     * 保存用户绑定的银行卡
-     *
+    /***
+     * 开户掉单，保存用户绑定的银行卡
+     * @author Zha Daojian
+     * @date 2019/3/15 10:13
      * @param request
-     * @return
-     * @auth nxl
-     */
+     * @return com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO
+     **/
     int insertUserCard(BankCardRequest request);
 
     /**
@@ -1397,4 +1397,6 @@ public interface AmUserClient {
      * @return
      */
     int updateBatch(UserPortraitCustomizeRequest request);
+
+
 }

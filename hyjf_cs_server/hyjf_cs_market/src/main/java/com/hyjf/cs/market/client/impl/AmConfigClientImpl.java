@@ -305,10 +305,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public Date getFirstWorkdateAfterSomeDate(Date torrowDate) {
-		HolidaysConfigResponse response = restTemplate.postForObject(
-				"http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomeDate", torrowDate,
-				HolidaysConfigResponse.class);
+	public Date getFirstWorkdateAfterSomeDate(Date somedate) {
+		HolidaysConfigResponse response = restTemplate.getForEntity(
+				"http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomedate/" + somedate,
+				HolidaysConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getSomedate();
 		}
