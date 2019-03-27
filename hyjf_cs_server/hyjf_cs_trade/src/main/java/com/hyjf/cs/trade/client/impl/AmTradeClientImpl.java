@@ -7095,61 +7095,88 @@ public class AmTradeClientImpl implements AmTradeClient {
     public UserLargeScreenTwoVO getDayScalePerformanceList() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayscaleperformancelist";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response.getResult() != null){
-            return response.getResult();
-        }
         // 查到数据为空,显示初始化
-        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
-        List<EchartsResultVO> vo = new ArrayList<>();
-        vo.get(0).setMoney("0");
-        result.setDayScalePerformanceListNew(vo);
-        result.setDayScalePerformanceListOld(vo);
-        return result;
+        List<EchartsResultVO> list = new ArrayList<>();
+        EchartsResultVO vo = new EchartsResultVO();
+        vo.setMoney("0");
+        list.add(vo);
+
+        if (null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            result.setDayScalePerformanceListNew(list);
+            result.setDayScalePerformanceListOld(list);
+            return result;
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayScalePerformanceListNew())){
+            response.getResult().setDayScalePerformanceListNew(list);
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayScalePerformanceListOld())){
+            response.getResult().setDayScalePerformanceListOld(list);
+        }
+        return response.getResult();
     }
 
     @Override
     public UserLargeScreenTwoVO getDayReceivedPayments() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayreceivedpayments";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response.getResult() != null){
-            return response.getResult();
-        }
         // 查到数据为空,显示初始化
-        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
-        List<EchartsResultVO> vo = new ArrayList<>();
-        vo.get(0).setMoney("0");
-        vo.get(0).setMoney2("0");
-        result.setDayReceivedPaymentsNew(vo);
-        result.setDayReceivedPaymentsOld(vo);
-        return result;
+        List<EchartsResultVO> list = new ArrayList<>();
+        EchartsResultVO vo = new EchartsResultVO();
+        vo.setMoney("0");
+        vo.setMoney2("0");
+        list.add(vo);
+
+        if (null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            result.setDayReceivedPaymentsNew(list);
+            result.setDayReceivedPaymentsOld(list);
+            return result;
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsNew())){
+            response.getResult().setDayReceivedPaymentsNew(list);
+        }
+        if(!CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsOld())){
+            response.getResult().setDayReceivedPaymentsOld(list);
+        }
+        return response.getResult();
     }
 
     @Override
     public UserLargeScreenTwoVO getMonthDataStatistics() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response.getResult() != null){
-            return response.getResult();
-        }
         // 查到数据为空,显示初始化
-        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
-        List<MonthDataStatisticsVO> vo = new ArrayList<>();
-        result.setMonthDataStatisticsNew(vo);
-        result.setMonthDataStatisticsOld(vo);
-        return result;
+        List<MonthDataStatisticsVO> list = new ArrayList<>();
+        MonthDataStatisticsVO vo = new MonthDataStatisticsVO();
+        list.add(vo);
+
+        if (null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            result.setMonthDataStatisticsNew(list);
+            result.setMonthDataStatisticsOld(list);
+            return result;
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getMonthDataStatisticsNew())){
+            response.getResult().setMonthDataStatisticsNew(list);
+        }
+        if(CollectionUtils.isEmpty(response.getResult().getMonthDataStatisticsOld())){
+            response.getResult().setMonthDataStatisticsOld(list);
+        }
+        return response.getResult();
     }
 
     @Override
     public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getopermonthperformancedata";
         UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
-        if(response.getResult() != null){
-            return response.getResult();
-        }
         // 查到数据为空,显示初始化
-        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
-        OperMonthPerformanceDataVO vo = new OperMonthPerformanceDataVO();
-        result.setOperMonthPerformanceData(vo);
-        return result;
+        if(null == response.getResult()){
+            UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+            OperMonthPerformanceDataVO vo = new OperMonthPerformanceDataVO();
+            result.setOperMonthPerformanceData(vo);
+            return result;
+        }
+        return response.getResult();
     }
 }
