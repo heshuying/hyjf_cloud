@@ -388,8 +388,21 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
                         //判断是否是线下充值
                         boolean isType = getIsRechargeTransType(bean.getTranType());
                         if (isType) {
-                            customize = this.adminBankAccountCheckCustomizeMapper.queryAccountDeatilByBankSeqNo(bankSeqNo);
-                            if (customize != null) {
+                            // 校验交易明细是否已经插入当前笔充值
+                            AccountListExample accountListExample = new AccountListExample();
+                            //因为使用银行接口（近两日线下充值明细查询）与原来的接口（近两日存管子账户资金交易明细查询）同一笔线下充值数据所返回的交易时间不一致，所以现在取消放重校验里面的交易时间校验
+                            /*accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
+                            .andSeqNoEqualTo(synBalanceBean.getTraceNo() + "").andTypeEqualTo(CustomConstants.TYPE_IN)
+                            .andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());*/
+
+
+                            accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(bean.getInpDate()))
+                                    .andSeqNoEqualTo(bean.getTraceNo() + "").andTypeEqualTo(CustomConstants.TYPE_IN).andUserIdEqualTo(userId);
+
+                            List<AccountList> accountLists = accountListMapper.selectByExample(accountListExample);
+
+                            /*customize = this.adminBankAccountCheckCustomizeMapper.queryAccountDeatilByBankSeqNo(bankSeqNo);*/
+                            if (accountLists != null && accountLists.size() != 0) {
                                 // 该线下交易已对账,不再进行处理
                                 logger.info("该笔线下充值已对账,不予处理!bankseqNo is " + bankSeqNo);
                             } else {
