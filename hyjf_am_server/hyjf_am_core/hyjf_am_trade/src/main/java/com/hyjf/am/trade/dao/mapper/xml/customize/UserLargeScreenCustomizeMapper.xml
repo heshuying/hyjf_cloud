@@ -42,7 +42,7 @@
           SELECT ROUND(IFNULL(SUM(money),0)/10000,0) FROM ht_repayment_plan where t1.current_owner = customer_name
           ) as money2
       from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =1
-      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY currentOwner
       UNION ALL
 
       select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup,
@@ -50,7 +50,7 @@
           SELECT ROUND(IFNULL(SUM(money),0)/10000,0) FROM ht_repayment_plan where t1.current_owner = customer_name
         ) as money2
       from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =2
-      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY currentOwner
 
     </select>
     <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
