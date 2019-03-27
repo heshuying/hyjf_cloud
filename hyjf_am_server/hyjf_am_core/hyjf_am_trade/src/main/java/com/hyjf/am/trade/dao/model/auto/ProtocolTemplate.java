@@ -75,6 +75,13 @@ public class ProtocolTemplate implements Serializable {
     private String remarks;
 
     /**
+     * 是否在帮助中心显示（0不显示，1显示）
+     *
+     * @mbggenerated
+     */
+    private Byte isShow;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -182,6 +189,14 @@ public class ProtocolTemplate implements Serializable {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
+    }
+
+    public Byte getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(Byte isShow) {
+        this.isShow = isShow;
     }
 
     public Date getCreateTime() {

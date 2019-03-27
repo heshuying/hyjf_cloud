@@ -121,7 +121,8 @@ public class CornerController extends BaseController {
                 //当前版本号不等于最新版本号
                 map.put("newVersion",version.getVersion());
                 map.put("action",String.valueOf(version.getIsUpdate()));
-                map.put("url", systemConfig.getAppFrontHost()+version.getUrl());
+                // 安卓更新跳转中间jsp页面旧系统是安卓写死的地址、现在要求后台反馈jsp页面然后通过页面请求getNewVersionURL接口获取最新版本的下载地址
+                map.put("url", systemConfig.getAppFrontHost()+systemConfig.getAppUpdateAndroidJsp());
                 map.put("content", version.getContent());
             }
         } else {
@@ -129,7 +130,7 @@ public class CornerController extends BaseController {
                 //强制更新和最新版本中间版本
                 map.put("newVersion",version.getVersion());
                 map.put("action",String.valueOf(version.getIsUpdate()));
-                map.put("url", systemConfig.getAppFrontHost()+version.getUrl());
+                map.put("url", systemConfig.getAppFrontHost()+systemConfig.getAppUpdateAndroidJsp());
                 map.put("content", version.getContent());
             } else {
                 if(versionStr.equals(version.getVersion())){
@@ -141,7 +142,7 @@ public class CornerController extends BaseController {
                     //强制更新和最新版本中间版本
                     map.put("newVersion",version.getVersion());
                     map.put("action",String.valueOf(forceVersion.getIsUpdate()));
-                    map.put("url", systemConfig.getAppFrontHost()+version.getUrl());
+                    map.put("url", systemConfig.getAppFrontHost()+systemConfig.getAppUpdateAndroidJsp());
                     map.put("content", version.getContent());
                 }
             }

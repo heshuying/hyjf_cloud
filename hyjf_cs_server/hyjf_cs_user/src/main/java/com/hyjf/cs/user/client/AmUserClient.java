@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.trade.BatchUserPortraitQueryRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -633,4 +634,12 @@ public interface AmUserClient {
 	 * 修复微服务上线三天的crm开户数据
 	 */
 	void getBankOpenAccountForCrmRepair();
+
+
+	/**
+	 * 根据sourceID 获取utm信息
+	 * @param utmId
+	 * @return
+	 */
+    UtmVO selectUtmBySourceId(String utmId);
 }

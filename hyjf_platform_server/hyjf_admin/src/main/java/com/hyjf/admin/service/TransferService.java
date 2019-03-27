@@ -17,13 +17,6 @@ import com.hyjf.am.resquest.admin.TransferListRequest;
  */
 public interface TransferService extends BaseAdminService{
 
-    /**
-     * 根据筛选条件查询userTransfer列表
-     * @param form
-     * @return
-     */
-    UserTransferResponse getRecordList(TransferListRequest form);
-
     void checkTransfer(String outUserName);
 
     String searchBalance(String outUserName);

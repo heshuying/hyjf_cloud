@@ -6999,4 +6999,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 获取所有在帮助中心显示的模板列表
+     * add by nxl 20190313
+     * PC 1.1.2
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getAllShowProtocolTemp() {
+        String url = "http://AM-TRADE/am-trade/protocol/getAllShowProtocolTemp";
+        ProtocolTemplateResponse response = restTemplate.getForEntity(url, ProtocolTemplateResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 统计最后三天的服务记录 add by nxl
+     * app和危险的统计计划加入数量
+     *  @author nxl
+     * @date 2019/3/25 14:11
+     */
+    @Override
+    public Integer countPlanAccedeRecord(HjhAccedeRequest request) {
+        IntegerResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhPlan/countPlanAccedeRecord/" + request.getPlanNid() ,IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return null;
+    }
 }

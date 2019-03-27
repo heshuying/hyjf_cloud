@@ -90,7 +90,20 @@ public class AmConfigClientImpl implements AmConfigClient {
         return result;
     }
 
-
+    /**
+     * 通过网站设置获取公司信息
+     *
+     * @return
+     */
+    @Override
+    public SiteSettingsVO selectSiteSetting() {
+        String url = "http://AM-CONFIG/am-config/site_settings/select_site_setting";
+        SiteSettingsResponse response = restTemplate.getForEntity(url,SiteSettingsResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 	@Override
 	public String getBankRetMsg(String retCode) {
 		BankReturnCodeConfigVO vo = this.getBankReturnCodeConfig(retCode);

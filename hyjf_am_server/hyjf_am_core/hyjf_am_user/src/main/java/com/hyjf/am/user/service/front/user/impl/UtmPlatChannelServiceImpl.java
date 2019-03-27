@@ -68,4 +68,26 @@ public class UtmPlatChannelServiceImpl extends BaseServiceImpl implements UtmPla
         }
         return null;
     }
+
+    /**
+     * 根据source_id查询Utm
+     *
+     * @param soutceID
+     * @return
+     */
+    @Override
+    public UtmVO selectUtmBySourceId(Integer soutceID) {
+        UtmVO utmVO = new UtmVO();
+        UtmExample example = new UtmExample();
+        UtmExample.Criteria cra = example.createCriteria();
+        cra.andSourceIdEqualTo(soutceID);
+        List<Utm> list = this.utmMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            Utm utm = list.get(0);
+            BeanUtils.copyProperties(utm, utmVO);
+            utmVO.setId(utm.getUtmId());
+            return utmVO;
+        }
+        return null;
+    }
 }

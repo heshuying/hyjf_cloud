@@ -1,9 +1,11 @@
 package com.hyjf.am.trade.service.front.trade.impl;
 
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
 import com.hyjf.am.trade.dao.mapper.auto.AccountListMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.UnderLineRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.trade.SynBalanceService;
@@ -13,6 +15,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class SynBalanceServiceImpl implements SynBalanceService {
     @Autowired
     private AccountMapper accountMapper;
 
+    @Autowired
+    private UnderLineRechargeMapper underLineRechargeMapper;
+
     @Override
     public boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest) {
 
@@ -52,17 +58,27 @@ public class SynBalanceServiceImpl implements SynBalanceService {
         try {
             // 校验交易明细是否已经插入当前笔充值
             AccountListExample accountListExample = new AccountListExample();
-            accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
+            //因为使用银行接口（近两日线下充值明细查询）与原来的接口（近两日存管子账户资金交易明细查询）同一笔线下充值数据所返回的交易时间不一致，所以现在取消放重校验里面的交易时间校验
+            /*accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
                     .andSeqNoEqualTo(synBalanceBean.getTraceNo() + "").andTypeEqualTo(CustomConstants.TYPE_IN)
-                    .andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());
+                    .andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());*/
+
+
+            accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate()))
+                    .andSeqNoEqualTo(synBalanceBean.getTraceNo() + "").andTypeEqualTo(CustomConstants.TYPE_IN)
+                    .andUserIdEqualTo(account.getUserId());
             List<AccountList> accountLists = accountListMapper.selectByExample(accountListExample);
             if (accountLists != null && accountLists.size() != 0) {
                 return false;
             }
             // 校验充值信息是否已经插入当前笔充值
             AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
-            accountRechargeExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
-                    .andSeqNoEqualTo(synBalanceBean.getTraceNo()).andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());
+            //因为使用银行接口（近两日线下充值明细查询）与原来的接口（近两日存管子账户资金交易明细查询）同一笔线下充值数据所返回的交易时间不一致，所以现在取消放重校验里面的交易时间校验
+            /*accountRechargeExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
+                    .andSeqNoEqualTo(synBalanceBean.getTraceNo()).andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());*/
+
+            accountRechargeExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate()))
+                    .andSeqNoEqualTo(synBalanceBean.getTraceNo()).andUserIdEqualTo(account.getUserId());
             List<AccountRecharge> accountRecharges = accountRechargeMapper.selectByExample(accountRechargeExample);
             if (accountRecharges != null && accountRecharges.size() != 0) {
                 return false;
@@ -152,6 +168,23 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             throw new RuntimeException("同步线下充值,更新用户账户信息失败~~~~,用户ID:"+account.getUserId());
         }
         return true;
+    }
+
+    @Override
+    public List<UnderLineRecharge> getUnderLineRechargeListByCode(UnderLineRechargeRequest request) {
+        UnderLineRechargeExample example = new UnderLineRechargeExample();
+        UnderLineRechargeExample.Criteria criteria = example.createCriteria();
+
+        if (StringUtils.isNotEmpty(request.getCode()) && !"".equals(request.getCode())){
+            criteria.andCodeEqualTo(request.getCode());
+        }
+
+        // 启用状态的
+        criteria.andStatusEqualTo(0);
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
+        example.setOrderByClause("create_time DESC");
+        return underLineRechargeMapper.selectByExample(example);
     }
 
     public Account getAccount(Integer userId) {
