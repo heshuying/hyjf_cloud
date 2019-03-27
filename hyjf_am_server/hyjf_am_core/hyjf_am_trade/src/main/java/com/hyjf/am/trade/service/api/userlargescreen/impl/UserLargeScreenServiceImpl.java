@@ -290,7 +290,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         operMonthPerformanceDataVO.setRecharge(listT.getRecharge());
         // 总待回金额
         operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay());
-        // 已还金额
+        // 已回金额
         operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
 
         vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
