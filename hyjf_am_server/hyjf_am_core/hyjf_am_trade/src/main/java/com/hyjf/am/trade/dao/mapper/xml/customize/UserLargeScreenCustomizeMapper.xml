@@ -83,9 +83,9 @@
 
     <!-- 本月数据统计 坐席、提现 -->
     <select id="getMonthDataStatisticsT" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-        select IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list  where operating=4 and customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
+        select IFNULL(SUM(money),0) as withdraw, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list  where operating=4 and customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
         UNION ALL
-        select IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=4 and customer_group =2 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
+        select IFNULL(SUM(money),0) as withdraw, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=4 and customer_group =2 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
     </select>
 
     <!-- 本月数据统计 坐席、站岗资金 -->

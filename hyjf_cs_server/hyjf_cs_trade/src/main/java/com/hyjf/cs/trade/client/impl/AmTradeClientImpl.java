@@ -7098,7 +7098,13 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(response.getResult() != null){
             return response.getResult();
         }
-        return new UserLargeScreenTwoVO();
+        // 查到数据为空,显示初始化
+        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+        List<EchartsResultVO> vo = new ArrayList<>();
+        vo.get(0).setMoney("0");
+        result.setDayScalePerformanceListNew(vo);
+        result.setDayScalePerformanceListOld(vo);
+        return result;
     }
 
     @Override
@@ -7108,7 +7114,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(response.getResult() != null){
             return response.getResult();
         }
-        return new UserLargeScreenTwoVO();
+        // 查到数据为空,显示初始化
+        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+        List<EchartsResultVO> vo = new ArrayList<>();
+        vo.get(0).setMoney("0");
+        vo.get(0).setMoney2("0");
+        result.setDayReceivedPaymentsNew(vo);
+        result.setDayReceivedPaymentsOld(vo);
+        return result;
     }
 
     @Override
@@ -7118,7 +7131,12 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(response.getResult() != null){
             return response.getResult();
         }
-        return new UserLargeScreenTwoVO();
+        // 查到数据为空,显示初始化
+        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+        List<MonthDataStatisticsVO> vo = new ArrayList<>();
+        result.setMonthDataStatisticsNew(vo);
+        result.setMonthDataStatisticsOld(vo);
+        return result;
     }
 
     @Override
@@ -7128,6 +7146,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(response.getResult() != null){
             return response.getResult();
         }
-        return new UserLargeScreenTwoVO();
+        // 查到数据为空,显示初始化
+        UserLargeScreenTwoVO result = new UserLargeScreenTwoVO();
+        OperMonthPerformanceDataVO vo = new OperMonthPerformanceDataVO();
+        result.setOperMonthPerformanceData(vo);
+        return result;
     }
 }

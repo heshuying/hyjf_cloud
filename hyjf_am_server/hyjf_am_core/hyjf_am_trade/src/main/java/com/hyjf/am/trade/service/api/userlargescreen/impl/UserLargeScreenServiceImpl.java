@@ -153,9 +153,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<MonthDataStatisticsVO> listO =  userLargeScreenCustomizeMapper.getMonthDataStatisticsO();
         // 坐席、提现
         List<MonthDataStatisticsVO> listT =  userLargeScreenCustomizeMapper.getMonthDataStatisticsT();
-        // 坐席、回款
-        List<MonthDataStatisticsVO> listTh =  userLargeScreenCustomizeMapper.getMonthDataStatisticsTh();
         // 坐席、站岗资金
+        List<MonthDataStatisticsVO> listTh =  userLargeScreenCustomizeMapper.getMonthDataStatisticsTh();
+        // 坐席、回款
         List<MonthDataStatisticsVO> listFi =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFi();
 
         // 坐席、年化业绩、充值
@@ -290,7 +290,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         operMonthPerformanceDataVO.setRecharge(listT.getRecharge());
         // 总待回金额
         operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay());
-        // 已还金额
+        // 已回金额
         operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
 
         vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
