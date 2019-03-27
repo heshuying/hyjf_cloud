@@ -651,7 +651,6 @@
 			IF(br.repay_status = 0,'--',br.repay_account_yes) AS repay_account_yes,
 			IF(br.repay_status = 0,'--',IFNULL(
 				FROM_UNIXTIME(
-
 					IF (
 						br.repay_yestime = 0,
 						NULL,
@@ -665,7 +664,6 @@
 
 		IF (
 			br.repay_status = 0,
-
 		IF (
 			br.advance_status = 3,
 			'逾期中',
