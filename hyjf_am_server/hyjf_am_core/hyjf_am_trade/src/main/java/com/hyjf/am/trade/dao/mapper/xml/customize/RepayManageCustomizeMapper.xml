@@ -626,11 +626,11 @@
 			plan.repay_capital,
 			plan.repay_interest,
 			plan.repay_fee,
-			plan.repay_account_yes,
-			IFNULL(FROM_UNIXTIME(
+			IF(plan.repay_status = 0,'--',plan.repay_account_yes) AS repay_account_yes,
+			IF(plan.repay_status = 0,'--',IFNULL(FROM_UNIXTIME(
 				IF(plan.repay_yestime=0,null,plan.repay_yestime),
 				'%Y-%m-%d'
-			),'') AS repay_yestime,
+			),'')) AS repay_yestime,
 		  CONCAT(plan.repay_period,'/',b.borrow_period) AS period,
 		  <!-- 增加逾期中状态值，modify by hesy 2019-03-26-->
 			IF(plan.repay_status=0,IF(plan.advance_status=3,'逾期中','未还款'),'已还款') AS repay_status
@@ -648,8 +648,8 @@
 			br.repay_capital,
 			br.repay_interest,
 			br.repay_fee,
-			br.repay_account_yes,
-			IFNULL(
+			IF(br.repay_status = 0,'--',br.repay_account_yes) AS repay_account_yes,
+			IF(br.repay_status = 0,'--',IFNULL(
 				FROM_UNIXTIME(
 
 					IF (
@@ -660,7 +660,7 @@
 					'%Y-%m-%d'
 				),
 				''
-			) AS repay_yestime,
+			)) AS repay_yestime,
 			1 AS period,
 
 		IF (
