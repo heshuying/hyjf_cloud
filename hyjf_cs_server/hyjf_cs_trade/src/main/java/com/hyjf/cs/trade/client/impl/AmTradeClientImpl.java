@@ -7091,6 +7091,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         return new UserLargeScreenVO();
     }
 
+    /**
+     * 屏幕二日业绩(新客组、老客组)
+     * @return
+     */
     @Override
     public UserLargeScreenTwoVO getDayScalePerformanceList() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayscaleperformancelist";
@@ -7098,6 +7102,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         // 查到数据为空,显示初始化
         List<EchartsResultVO> list = new ArrayList<>();
         EchartsResultVO vo = new EchartsResultVO();
+        vo.setCurrentOwner("今日暂无数据");
         vo.setMoney("0");
         list.add(vo);
 
@@ -7116,6 +7121,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult();
     }
 
+    /**
+     * 屏幕二日回款(新客组、老客组)
+     * @return
+     */
     @Override
     public UserLargeScreenTwoVO getDayReceivedPayments() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getdayreceivedpayments";
@@ -7123,8 +7132,9 @@ public class AmTradeClientImpl implements AmTradeClient {
         // 查到数据为空,显示初始化
         List<EchartsResultVO> list = new ArrayList<>();
         EchartsResultVO vo = new EchartsResultVO();
-        vo.setMoney("0");
+        vo.setCurrentOwner("今日暂无数据");
         vo.setMoney2("0");
+        vo.setMoney("0");
         list.add(vo);
 
         if (null == response.getResult()){
@@ -7136,12 +7146,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsNew())){
             response.getResult().setDayReceivedPaymentsNew(list);
         }
-        if(!CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsOld())){
+        if(CollectionUtils.isEmpty(response.getResult().getDayReceivedPaymentsOld())){
             response.getResult().setDayReceivedPaymentsOld(list);
         }
         return response.getResult();
     }
 
+    /**
+     * 本月数据统计(新客组、老客组)
+     * @return
+     */
     @Override
     public UserLargeScreenTwoVO getMonthDataStatistics() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
@@ -7149,6 +7163,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         // 查到数据为空,显示初始化
         List<MonthDataStatisticsVO> list = new ArrayList<>();
         MonthDataStatisticsVO vo = new MonthDataStatisticsVO();
+        vo.setCurrentOwner("本月暂无数据");
         list.add(vo);
 
         if (null == response.getResult()){
@@ -7166,6 +7181,10 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult();
     }
 
+    /**
+     * 运营部月度业绩数据
+     * @return
+     */
     @Override
     public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getopermonthperformancedata";
