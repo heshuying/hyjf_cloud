@@ -245,14 +245,13 @@ public class AccessFilter extends ZuulFilter {
         if (GatewayConstant.APP_CHANNEL.equals(channel)) {
             result.put("status", "708");
             result.put("statusDesc", "need login");
-        } else if (GatewayConstant.WEB_CHANNEL.equals(channel)) {
-            result.put("status", "999");
-            result.put("statusDesc", "登录过期，请重新登录");
-        } else if (ctx.get(TOKEN_IS_NULL) != null) {
+        } else if (GatewayConstant.WECHAT_CHANNEL.equals(channel) && ctx.get(TOKEN_IS_NULL) != null) {
             result.put("status", "999");
             result.put("statusDesc", "请先登录！");
         } else {
             result.put("status", "999");
+            //create by walter.li 修复token登陆超时，页面显示用户名bug，默认不返回此字段，登陆超时则返回0。
+            result.put("islogined", "0");
             result.put("statusDesc", "登录过期，请重新登录");
         }
 
