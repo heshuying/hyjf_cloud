@@ -898,7 +898,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "保存企业开户信息", notes = "保存企业开户信息")
     public AdminResult<Response> saveCompanyInfo(@RequestBody CompanyInfoInstRequesetBean companyInfoInstRequesetBean) {
         UpdCompanyRequest updCompanyRequest = new UpdCompanyRequest();
-        BeanUtils.copyProperties(companyInfoInstRequesetBean,updCompanyRequest);
+        BeanUtils.copyProperties(companyInfoInstRequesetBean, updCompanyRequest);
         Response response = userCenterService.saveCompanyInfo(updCompanyRequest);
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return new AdminResult<Response>(response);
