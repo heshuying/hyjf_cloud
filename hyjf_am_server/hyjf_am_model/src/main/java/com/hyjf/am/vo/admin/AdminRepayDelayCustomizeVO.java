@@ -22,6 +22,25 @@ public class AdminRepayDelayCustomizeVO extends BaseVO implements Serializable {
     private String repayLastTime;
     private String borrowStyle;
     private String borrowStyleName;
+    private String repayAccountWait;
+    private String interestCapitalWait;
+
+    
+    public String getRepayAccountWait() {
+		return repayAccountWait;
+	}
+
+	public void setRepayAccountWait(String repayAccountWait) {
+		this.repayAccountWait = repayAccountWait;
+	}
+
+	public String getInterestCapitalWait() {
+		return interestCapitalWait;
+	}
+
+	public void setInterestCapitalWait(String interestCapitalWait) {
+		this.interestCapitalWait = interestCapitalWait;
+	}
 
     public String getBorrowNid() {
         return borrowNid;

@@ -40,8 +40,89 @@ public class AdminBorrowRepaymentPlanCustomize {
     private String instName; //机构名称
     private String repayAccountCapitalWait;// 未还本金
     private String repayAccountInterestWait;// 未还利息
+    private String userName;//还款人
+    private String submitter;// 发起人
+    private String autoRepay;// 还款方式
+    private String planNid;// 智投编号
+    private String repayAccountYes;//实际还款总额
+    private String extraYieldRepayStatus;// 期次状态
+    private String repayOrgName;//担保人
+    private String borrowFullTime; //满标书简
+    private String recoverLastTime; //最后一笔的放款完成时间
+    
+    public String getBorrowFullTime() {
+		return borrowFullTime;
+	}
 
-    public String getNid() {
+	public void setBorrowFullTime(String borrowFullTime) {
+		this.borrowFullTime = borrowFullTime;
+	}
+
+	public String getRecoverLastTime() {
+		return recoverLastTime;
+	}
+
+	public void setRecoverLastTime(String recoverLastTime) {
+		this.recoverLastTime = recoverLastTime;
+	}
+
+	public String getRepayOrgName() {
+		return repayOrgName;
+	}
+
+	public void setRepayOrgName(String repayOrgName) {
+		this.repayOrgName = repayOrgName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getSubmitter() {
+		return submitter;
+	}
+
+	public void setSubmitter(String submitter) {
+		this.submitter = submitter;
+	}
+
+	public String getAutoRepay() {
+		return autoRepay;
+	}
+
+	public void setAutoRepay(String autoRepay) {
+		this.autoRepay = autoRepay;
+	}
+
+	public String getPlanNid() {
+		return planNid;
+	}
+
+	public void setPlanNid(String planNid) {
+		this.planNid = planNid;
+	}
+
+	public String getRepayAccountYes() {
+		return repayAccountYes;
+	}
+
+	public void setRepayAccountYes(String repayAccountYes) {
+		this.repayAccountYes = repayAccountYes;
+	}
+
+	public String getExtraYieldRepayStatus() {
+		return extraYieldRepayStatus;
+	}
+
+	public void setExtraYieldRepayStatus(String extraYieldRepayStatus) {
+		this.extraYieldRepayStatus = extraYieldRepayStatus;
+	}
+
+	public String getNid() {
         return nid;
     }
 

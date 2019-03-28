@@ -154,7 +154,25 @@ public class BorrowRepaymentController extends BaseController {
         result.setData(bean);
         return result;
     }
-
+    /**
+     * 迁移到还款画面
+     *
+     *
+     *
+     * @param request
+     * @return 标签配置列表
+     */
+    @ApiOperation(value = "还款画面初始化(新增)", notes = "还款页面查询初始化(新增)")
+    @PostMapping(value = "/initRepayAction2")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @ApiImplicitParam(name = "borrowNid",value = "项目编号")
+    public AdminResult<RepayInfoBean> moveRepayAction2(HttpServletRequest request, @RequestBody Map map) {
+        String borrowNid = (String) map.get("borrowNid");
+        RepayInfoBean bean=borrowRepaymentService.getRepayInfo2(borrowNid);
+        AdminResult<RepayInfoBean> result=new AdminResult<RepayInfoBean> ();
+        result.setData(bean);
+        return result;
+    }
     /**
      * @Description 数据导出--还款计划
      * @Author pangchengchao
