@@ -200,7 +200,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     alcrt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayEnd(new Date()), GetDate.datetimeFormat_key));
                     List<AccountList> accountList = accountListMapper.selectByExample(alexample);
                     for(AccountList accountListSon : accountList){
-                        monthNowBalance.add(accountListSon.getBankBalance());
+                        monthNowBalance = monthNowBalance.add(accountListSon.getBankBalance());
                     }
                     // 年化业绩
                     if(!CollectionUtils.isEmpty(listFo)){
@@ -270,14 +270,14 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     alcrt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayEnd(new Date()), GetDate.datetimeFormat_key));
                     List<AccountList> accountList = accountListMapper.selectByExample(alexample);
                     for(AccountList accountListSon : accountList){
-                        monthNowBalance.add(accountListSon.getBankBalance());
+                        monthNowBalance = monthNowBalance.add(accountListSon.getBankBalance());
                     }
                     // 坐席下用户月初站岗资金
                     BigDecimal monthBeginBalance = new BigDecimal("0");
                     alcrt.andCreateTimeLessThanOrEqualTo(GetDate.stringToFormatDate(GetDate.getDayEnd(GetDate.getFirstDayOfMonthDate()), GetDate.datetimeFormat_key));
                     List<AccountList> accountListT = accountListMapper.selectByExample(alexample);
                     for(AccountList accountListTSon : accountListT){
-                        monthBeginBalance.add(accountListTSon.getBankBalance());
+                        monthBeginBalance = monthBeginBalance.add(accountListTSon.getBankBalance());
                     }
                     // 站岗资金
                     monthDataStatisticsVOO.setGuardFund(monthNowBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
