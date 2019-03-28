@@ -265,6 +265,7 @@
 		ELSE 0 END type,
 		CASE
 		WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '出借中'
+		WHEN cast(borrow.`status` AS CHAR)=8 THEN '逾期中'
 		ELSE
 		CASE
 		WHEN cast(hbc.credit_status AS CHAR)=0 THEN '转让中'
