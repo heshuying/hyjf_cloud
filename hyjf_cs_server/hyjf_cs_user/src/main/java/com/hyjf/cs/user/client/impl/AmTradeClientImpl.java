@@ -794,7 +794,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request) {
-        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/selectUnderLineListBySyn", request, UnderLineRechargeResponse.class).getBody();
+        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/synBalance/selectUnderLineListBySyn", request, UnderLineRechargeResponse.class).getBody();
 
         if (Response.isSuccess(response)){
             return response.getResultList();
