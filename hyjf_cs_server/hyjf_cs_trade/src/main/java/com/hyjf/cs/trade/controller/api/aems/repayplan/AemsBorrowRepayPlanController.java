@@ -263,7 +263,7 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
                             result.setRepayTime(GetDate.getDateTimeMyTime(borrowRepayPlan.getRepayTime()));
                             if (borrowRepayPlan.getRepayStatus() == 1) {
                                 // 已经还款
-                                result.setRepayYseTime(GetDate.getDateMyTimeInMillis(borrowRepayPlan.getRepayYestime()));
+                                result.setRepayYseTime(GetDate.getDateTimeMyTime(borrowRepayPlan.getRepayYestime()));
                             } else {
                                 result.setRepayYseTime("");
                             }
