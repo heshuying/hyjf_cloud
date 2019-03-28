@@ -505,7 +505,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		String token = Token.generate(String.valueOf(userId + username + Instant.now().getEpochSecond()));
 
 		// 1.设置页面30分钟超时 2.jwt无法删除已知非法token,redis可以做到
-		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, accessToken, 30*60);
+		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, accessToken, 1*60);
 		return token;
 	}
 
