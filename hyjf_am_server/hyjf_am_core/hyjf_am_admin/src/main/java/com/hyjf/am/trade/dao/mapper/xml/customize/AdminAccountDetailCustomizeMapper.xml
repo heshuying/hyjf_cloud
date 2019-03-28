@@ -68,7 +68,7 @@
                 (SELECT * FROM ht_account_list l
 				where 1=1
                 <include refid="where-all-page-condition"/>
-                ORDER BY id DESC
+                ORDER BY  l.create_time DESC,l.id DESC
                 <if test="limitStart != null and limitEnd !=null">
                     LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
                 </if>
@@ -101,9 +101,16 @@
             <otherwise>
 				SELECT COUNT(1)
 				FROM ht_account_list l
+				<if test="tradeTypeSearch != null and tradeTypeSearch != ''">
 				LEFT JOIN ht_account_trade t ON l.trade= t.`value`
+				</if>
+		 		<if test="userName != null and userName != ''">
+				LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
+		 		</if>
+				<if test="referrerName != null and referrerName != ''">
 				LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
 				LEFT JOIN ht_r_user hu2 on hu.spreads_user_id = hu2.user_id
+				</if>
 				WHERE 1=1
 				<include refid="where-all-page-condition"/>
             </otherwise>
