@@ -4,53 +4,92 @@
 
     <!-- 运营部总业绩（元） -->
     <select id="getTotalAmount" resultType="com.hyjf.am.vo.api.UserLargeScreenVO">
-      select
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and (customer_group =0 or customer_group =3) and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as totalAmount,
+        select
+        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and (customer_group =0 or customer_group =3) and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as totalAmount,
 
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1  and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as achievementDistribution
+        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1  and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as achievementDistribution
 
         from ht_user_operate_list LIMIT 0,1
     </select>
     <!-- 本月运营部业绩完成分布 -->
     <select id="getAchievementDistributionList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
        select ROUND(IFNULL(SUM(money),0)/10000,0) as money , customer_group as customerGroup
-       from ht_user_operate_list where operating=1  and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY customer_group
+       from ht_user_operate_list where operating=1  and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY customer_group
     </select>
 
     <!-- 规模业绩 -->
     <select id="getScalePerformance" resultType="com.hyjf.am.vo.api.UserLargeScreenVO">
            select
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as scalePerformanceNew,
+        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as scalePerformanceNew,
 
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')) as scalePerformanceOld
+        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as scalePerformanceOld
 
         from ht_user_operate_list LIMIT 0,1
     </select>
     <!-- 坐席月规模业绩 -->
     <select id="getMonthScalePerformanceList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
-      select ROUND(IFNULL(SUM(money),0)/10000,0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =1 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner -- 坐席月规模业绩（新客组）
+      select ROUND(IFNULL(SUM(money),0)/10000,0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY current_owner -- 坐席月规模业绩（新客组）
       UNION ALL
-      select ROUND(IFNULL(SUM(money),0)/10000,0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =2 and DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m') GROUP BY current_owner -- 坐席月规模业绩（老客组）
+      select ROUND(IFNULL(SUM(money),0)/10000,0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY current_owner -- 坐席月规模业绩（老客组）
 
     </select>
 
     <!-- 坐席月回款情况 -->
     <select id="getMonthReceivedPayments" resultType="com.hyjf.am.vo.api.EchartsResultVO">
 
-     select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup,
-          (
-          SELECT ROUND(IFNULL(SUM(money),0)/10000,0) FROM ht_repayment_plan where t1.current_owner = customer_name
-          ) as money2
-      from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =1
-      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
-      UNION ALL
 
-      select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup,
-        (
-          SELECT ROUND(IFNULL(SUM(money),0)/10000,0) FROM ht_repayment_plan where t1.current_owner = customer_name
-        ) as money2
-      from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =2
-      and DATE_FORMAT(t1.create_time,'%Y-%m') = DATE_FORMAT(NOW(),'%Y-%m')
+        SELECT  IFNULL(t3.money,0)as money,t3.currentOwner,t3.customerGroup,IFNULL(t2.money2,0) as money2 FROM(
+
+        (select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup
+        from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =1
+        and t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND t1.create_time &lt;  DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')
+        GROUP BY currentOwner) t3
+        LEFT JOIN
+        (SELECT ROUND(IFNULL(SUM(money),0)/10000,0) as money2,customer_name as currentOwner,customer_group as customerGroup FROM ht_repayment_plan where customer_name IS NOT null and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt;  DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY customer_name  ) t2
+
+        on t3.currentOwner = t2.currentOwner
+        )
+        UNION
+        SELECT  IFNULL(t3.money,0) as money,t2.currentOwner,t2.customerGroup,IFNULL(t2.money2,0)as money2 FROM(
+
+        (select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup
+        from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =1
+        and t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND t1.create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')
+        GROUP BY currentOwner) t3
+        RIGHT  JOIN
+        (SELECT ROUND(IFNULL(SUM(money),0)/10000,0) as money2,customer_name as currentOwner,customer_group as customerGroup FROM ht_repayment_plan where customer_name IS NOT null and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY customer_name  ) t2
+
+        on t3.currentOwner = t2.currentOwner
+        )
+
+
+
+        UNION ALL
+
+
+        SELECT  IFNULL(t3.money,0)as money,t3.currentOwner,t3.customerGroup,IFNULL(t2.money2,0) as money2 FROM(
+
+        (select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup
+        from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =2
+        and t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND t1.create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')
+        GROUP BY currentOwner) t3
+        LEFT JOIN
+        (SELECT ROUND(IFNULL(SUM(money),0)/10000,0) as money2,customer_name as currentOwner,customer_group as customerGroup FROM ht_repayment_plan where customer_name IS NOT null and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY customer_name  ) t2
+
+        on t3.currentOwner = t2.currentOwner
+        )
+        UNION
+        SELECT  IFNULL(t3.money,0) as money,t2.currentOwner,t2.customerGroup,IFNULL(t2.money2,0)as money2 FROM(
+
+        (select  ROUND(IFNULL(SUM(t1.money),0)/10000,0) as money,t1.current_owner as currentOwner ,t1.customer_group as customerGroup
+        from  ht_user_operate_list t1   where   t1.operating=3 and t1.customer_group =2
+        and t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND t1.create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')
+        GROUP BY currentOwner) t3
+        RIGHT  JOIN
+        (SELECT ROUND(IFNULL(SUM(money),0)/10000,0) as money2,customer_name as currentOwner,customer_group as customerGroup FROM ht_repayment_plan where customer_name IS NOT null and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY customer_name  ) t2
+
+        on t3.currentOwner = t2.currentOwner
+        )
 
     </select>
     <select id="getUserCapitalDetails" resultType="com.hyjf.am.vo.api.UserCapitalDetailsVO">
@@ -74,7 +113,7 @@
         select IFNULL(SUM(t1.money),0) as money,IFNULL(SUM(t2.money),0) as money2,t1.current_owner as currentOwner,t1.customer_group as customerGroup from ht_user_operate_list t1  LEFT JOIN  ht_repayment_plan t2 on  t1.current_owner = t2.customer_name where t1.operating=3 and t1.customer_group =2 and t1.create_time BETWEEN str_to_date(DATE_FORMAT(NOW(),'%Y-%m-%d'),'%Y-%m-%d %H:%i:%s') AND DATE_ADD(DATE_ADD(str_to_date(DATE_FORMAT(NOW(),'%Y-%m-%d'),'%Y-%m-%d %H:%i:%s'),INTERVAL 1 DAY),INTERVAL -1 SECOND) GROUP BY t1.current_owner
     </select>
 
-    <!-- 本月数据统计 坐席、年化业绩、充值 -->
+    <!-- 本月数据统计 坐席、充值 -->
     <select id="getMonthDataStatisticsO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
         select IFNULL(SUM(year_money),0) as yearMoney, IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
         UNION ALL
@@ -88,11 +127,11 @@
         select IFNULL(SUM(money),0) as withdraw, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=4 and customer_group =2 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
     </select>
 
-    <!-- 本月数据统计 坐席、站岗资金 -->
-    <select id="getMonthDataStatisticsTh" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-        select IFNULL(SUM(balance),0) as guardFund, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
+    <!-- 本月数据统计 坐席、年化业绩 -->
+    <select id="getMonthDataStatisticsFo" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+        select IFNULL(SUM(year_money),0) as yearMoney, current_owner as currentOwner, customer_group as customerGroup from ht_user_operate_list where operating=1 and customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
         UNION ALL
-        select IFNULL(SUM(balance),0) as guardFund, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =2 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
+        select IFNULL(SUM(year_money),0) as yearMoney, current_owner as currentOwner, customer_group as customerGroup from ht_user_operate_list where operating=1 and customer_group =2 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
     </select>
 
     <!-- 本月数据统计 坐席、回款 -->
