@@ -690,7 +690,9 @@ public class UserManagerController extends BaseController {
         }
         User user = userManagerService.selectUserByUserId(Integer.parseInt(userId));
         String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
-        logger.info("==============企业信息补录,获取的bankId值为: "+bankId+" ==============");
+        // add by nxl 后台优化 start
+        // 企业用户补录功能追加所属银行跟联行号 需求,根据也么输入保存银行卡信息
+        /*logger.info("==============企业信息补录,获取的bankId值为: "+bankId+" ==============");
         String bankName = null;
         String payAllianceCode = null;
         if (StringUtils.isNotBlank(bankId)) {
@@ -711,8 +713,9 @@ public class UserManagerController extends BaseController {
                     }
                 }
             }
-        }
-        response = userManagerService.saveCompanyInfo(updCompanyRequest, bankName, payAllianceCode, user, bankId);
+        }*/
+        // add by nxl 后台优化 end
+        response = userManagerService.saveCompanyInfo(updCompanyRequest, user, bankId);
         //
         if(response.getRtn()!=Response.SUCCESS){
             return response;
@@ -963,5 +966,43 @@ public class UserManagerController extends BaseController {
         bankAccountLog.setCreateTime(new Date());// 操作时间
         int updateUser =  userManagerService.updateUserBankInfo(bankCard,bankAccountLog);
         return new IntegerResponse(updateUser);
+    }
+
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     * add by nxl 20190328
+     * @param updCompanyRequest
+     * @return
+     */
+    @RequestMapping("/getBankInfoByAccount")
+    public BankCardResponse getBankInfoByAccount(@RequestBody UpdCompanyRequest updCompanyRequest){
+        BankCardResponse response = new BankCardResponse();
+        BankCardVO bankCardVO = new BankCardVO();
+        String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
+        logger.info("==============企业信息查询,获取的bankId值为: "+bankId+" ==============");
+        String bankName = null;
+        String payAllianceCode = null;
+        if (StringUtils.isNotBlank(bankId)) {
+            List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
+            if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
+                bankName = jxBankConfigList.get(0).getBankName();
+                bankCardVO.setBank(bankName);
+            }
+        }
+        BankCallBean callBean = userManagerService.payAllianceCodeQuery(updCompanyRequest.getAccount(), Integer.parseInt(updCompanyRequest.getUserId()));
+        if (null!=callBean&&BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())) {
+            payAllianceCode = callBean.getPayAllianceCode();
+            if (StringUtils.isBlank(payAllianceCode)) {
+                if (StringUtils.isNotBlank(bankId)) {
+                    List<JxBankConfig> jxBankConfigList = jxBankConfigService.getJxBankConfigByBankId(Integer.parseInt(bankId));
+                    if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
+                        payAllianceCode = jxBankConfigList.get(0).getPayAllianceCode();
+                    }
+                }
+            }
+            bankCardVO.setPayAllianceCode(payAllianceCode);
+        }
+        response.setResult(bankCardVO);
+        return response;
     }
 }

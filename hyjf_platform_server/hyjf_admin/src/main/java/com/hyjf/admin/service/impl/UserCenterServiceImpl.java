@@ -15,6 +15,7 @@ import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
@@ -697,5 +698,21 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
         UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = userCenterClient.getUserUtmInfo(userId);
         return userUtmInfoCustomizeVO;
+    }
+
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     * @param account
+     * @param userId
+     * @return
+     * @auther: nxl
+     */
+    @Override
+    public BankCardResponse getBankInfoByAccount(String account,String userId) {
+        UpdCompanyRequest updCompanyRequest = new  UpdCompanyRequest();
+        updCompanyRequest.setAccount(account);
+        updCompanyRequest.setUserId(userId);
+        BankCardResponse bankCardResponse = userCenterClient.getBankInfoByAccount(updCompanyRequest);
+        return bankCardResponse;
     }
 }

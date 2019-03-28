@@ -19,6 +19,7 @@ import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -866,6 +867,15 @@ public class UserCenterController extends BaseController {
                 return new AdminResult<>(FAIL, "请输入正确的电子账号!");
             }
             BeanUtils.copyProperties(infoVO,companyInfoCompanyInfoVO);
+            // 后台优化 add by nxl start
+            BankCardResponse bankCardResponse = userCenterService.getBankInfoByAccount(infoVO.getAccount(),userId);
+            if(null!=bankCardResponse){
+                BankCardVO bankCardVO =bankCardResponse.getResult();
+                companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
+                companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
+            }
+            //后台优化 add by nxl end
+
             searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
             UserVO userVO = userCenterService.selectUserByUserId(userId);
             Integer bankFlag = userVO.getBankOpenAccount();

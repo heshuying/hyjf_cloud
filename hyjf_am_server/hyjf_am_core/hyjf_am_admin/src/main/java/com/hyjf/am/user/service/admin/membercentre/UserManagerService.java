@@ -240,7 +240,7 @@ public interface UserManagerService extends BaseService {
      * @param updCompanyRequest
      * @return
      */
-    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,String bankName,String payAllianceCode,User user,String bankId);
+    Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user,String bankId);
 
 	Integer getUserIdByBind(int bindUniqueId, int bindPlatformId);
 

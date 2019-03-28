@@ -2829,4 +2829,21 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
+
+	/**
+	 * 企业信息补录时查询，根据对公账号查找银行信息
+	 *
+	 * @param updCompanyRequest
+	 * @auther: nxl
+	 * @return
+	 */
+	@Override
+	public BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest) {
+		BankCardResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankInfoByAccount", updCompanyRequest, BankCardResponse.class)
+				.getBody();
+		return response;
+	}
+
 }

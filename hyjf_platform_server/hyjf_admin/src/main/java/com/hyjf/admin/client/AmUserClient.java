@@ -1398,5 +1398,12 @@ public interface AmUserClient {
      */
     int updateBatch(UserPortraitCustomizeRequest request);
 
-
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     *
+     * @param updCompanyRequest
+     * @auther: nxl
+     * @return
+     */
+    BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest);
 }
