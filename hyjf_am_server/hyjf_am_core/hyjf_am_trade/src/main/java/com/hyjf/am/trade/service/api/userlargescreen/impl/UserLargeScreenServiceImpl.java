@@ -314,7 +314,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     public UserLargeScreenTwoVO getOperMonthPerformanceData() {
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
         OperMonthPerformanceDataVO operMonthPerformanceDataVO = new OperMonthPerformanceDataVO();
-        // 运营部-年化业绩、充值
+        // 运营部-充值
         OperMonthPerformanceDataVO listO =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataO();
         // 运营部-提现
         OperMonthPerformanceDataVO listT =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataT();
@@ -324,6 +324,8 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         OperMonthPerformanceDataVO listFi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFi();
         // 运营部-待回款
         OperMonthPerformanceDataVO listFo =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFo();
+        // 运营部-年化业绩
+        OperMonthPerformanceDataVO listSi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataSi();
         // 获得坐席月初站岗资金
         BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
         // 获得坐席当前站岗资金
@@ -331,7 +333,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 年化业绩
-        operMonthPerformanceDataVO.setYearAmount(listO.getYearAmount().setScale(0, BigDecimal.ROUND_HALF_UP));
+        operMonthPerformanceDataVO.setYearAmount(listSi.getYearAmount().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 站岗资金
         operMonthPerformanceDataVO.setBalance(nowMonthBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
         // 增资
@@ -343,7 +345,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 提现
         operMonthPerformanceDataVO.setWithdraw(listT.getWithdraw().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 充值
-        operMonthPerformanceDataVO.setRecharge(listT.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
+        operMonthPerformanceDataVO.setRecharge(listO.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 总待回金额
         operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 已回金额
