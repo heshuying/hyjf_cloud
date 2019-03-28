@@ -873,6 +873,12 @@
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
 		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -894,6 +900,12 @@
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
 		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
 		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -912,14 +924,17 @@
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
 		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		) AS a
 		) tmp where 1=1
 
 		<if test="firstFlag != null ">
 			AND tmp.is_first = #{firstFlag,jdbcType=INTEGER}
-		</if>
-		<if test="borrowNid != null and borrowNid !=''">
-			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</if>
 
 		order by tmp.invest_time desc
@@ -950,6 +965,12 @@
 		INNER JOIN hyjf_trade.ht_borrow b ON ten.borrow_nid = b.borrow_nid
 		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
 		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -962,6 +983,12 @@
 		INNER JOIN hyjf_trade.ht_debt_plan b ON ten.plan_nid = b.debt_plan_nid
 		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
 		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.accede_order_id =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.plan_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		UNION ALL
 		SELECT
 		ten.user_id,
@@ -974,14 +1001,18 @@
 		INNER JOIN hyjf_trade.ht_borrow_credit b ON ten.credit_nid = b.credit_nid
 		INNER JOIN ht_utm_plat upl on r.source_id = upl.source_id and upl.source_type = 1
 		<include refid="Where_APP_Concat_Query" />
+        <if test="orderCode != null and orderCode != ''">
+            AND ten.credit_tender_nid =  #{orderCode,jdbcType=VARCHAR}
+        </if>
+        <if test="borrowNid != null and borrowNid !=''">
+            AND ten.bid_nid = #{borrowNid,jdbcType=VARCHAR}
+        </if>
 		) AS a
 		) tmp where 1=1
 		<if test="firstFlag != null ">
 			AND tmp.is_first = #{firstFlag,jdbcType=INTEGER}
 		</if>
-		<if test="borrowNid != null and borrowNid !=''">
-			AND tmp.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
-		</if>
+
 
 	</select>
 
@@ -1003,9 +1034,7 @@
 			<if test="userName != null and userName !=''">
 				AND hu.username LIKE #{userName,jdbcType=VARCHAR}
 			</if>
-			<if test="orderCode != null and orderCode != ''">
-				AND ten.nid =  #{orderCode,jdbcType=VARCHAR}
-			</if>
+
 			<if test="utmPlat != null and utmPlat != ''">
 				AND r.source_id in
 				<foreach collection="utmPlat" open="(" close=")" separator="," item="utmName">
