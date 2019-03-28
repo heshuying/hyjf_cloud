@@ -261,6 +261,16 @@
 		<result column="instName" property="instName" jdbcType="VARCHAR" />
 		<result column="repayAccountCapitalWait" property="repayAccountCapitalWait" jdbcType="VARCHAR" />
 		<result column="repayAccountInterestWait" property="repayAccountInterestWait" jdbcType="VARCHAR" />
+		<result column="userName" property="userName" jdbcType="VARCHAR" />
+		<result column="submitter" property="submitter" jdbcType="VARCHAR" />
+		<result column="autoRepay" property="autoRepay" jdbcType="VARCHAR" />
+		<result column="planNid" property="planNid" jdbcType="VARCHAR" />
+		<result column="repayAccountYes" property="repayAccountYes" jdbcType="VARCHAR" />
+		<result column="extraYieldRepayStatus" property="extraYieldRepayStatus" jdbcType="VARCHAR" />
+		<result column="repay_org_name" property="repayOrgName" jdbcType="VARCHAR" />
+		<result column="verifyTime" property="verifyTime" jdbcType="VARCHAR" />
+		<result column="borrowFullTime" property="borrowFullTime" jdbcType="VARCHAR" />
+		<result column="recoverLastTime" property="recoverLastTime" jdbcType="VARCHAR" />
 	</resultMap>
 
 
@@ -320,6 +330,7 @@
 		INNER JOIN
 		ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
 		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+		Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
 		<include refid="Borrow_Repayment_Plan_Where_Clause" />
 	</select>
 
@@ -380,7 +391,21 @@
 		if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
 		'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
+		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
+		b.plan_nid as planNid,
+		rp.repay_account_yes as repayAccountYes,
+		if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
+		'待还款', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE ba.extra_yield_repay_status END ) as extraYieldRepayStatus,
+		ba.user_name as userName,
+		ba.submitter,
+		CASE rp.auto_repay when 0
+		then '手动还款'
+		else '自动还款' end as autoRepay,
+		b.verify_time,
+		binfo.repay_org_name,
+		b.verify_time as verifyTime,
+		b.borrow_full_time as borrowFullTime,
+		b.recover_last_time as recoverLastTime
 		from
 		ht_borrow_repay_plan AS rp
 		INNER JOIN ht_borrow AS b ON
@@ -391,6 +416,7 @@
 		LEFT JOIN ht_r_user u ON b.user_id =
 		u.user_id
 		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+		Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
 		<include refid="Borrow_Repayment_Plan_Where_Clause" />
 		ORDER BY
 		rp.repay_time ASC,b.id ASC
@@ -931,6 +957,8 @@
 		<result column="repay_last_time" property="repayLastTime" jdbcType="VARCHAR" />
 		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
 		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+		<result column="repay_account_wait" property="repayAccountWait" jdbcType="VARCHAR" />
+		<result column="interestCapitalWait" property="interestCapitalWait" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowInfo" resultMap="selectBorrowInfoResultMap" parameterType="Map">
 		SELECT
@@ -946,7 +974,9 @@
 			CASE WHEN borrow_style = 'endday' THEN CONCAT(b.borrow_period, '天') ELSE CONCAT(b.borrow_period, '个月') END borrow_period,
 			b.borrow_apr,
 			FORMAT(b.borrow_account_yes, 2) AS borrow_account_yes,
-            IF(b.repay_last_time IS NULL OR b.repay_last_time = '' OR b.repay_last_time='0' OR b.repay_last_time = 'null', '', FROM_UNIXTIME(b.repay_last_time, '%Y-%m-%d' )) AS repay_last_time
+            IF(b.repay_last_time IS NULL OR b.repay_last_time = '' OR b.repay_last_time='0' OR b.repay_last_time = 'null', '', FROM_UNIXTIME(b.repay_last_time, '%Y-%m-%d' )) AS repay_last_time,
+            b.repay_account_wait,
+            b.repay_account_interest_wait+repay_account_capital_wait as  interestCapitalWait
 		FROM
 		    ht_borrow b
 			INNER JOIN ht_borrow_info binfo ON b.borrow_nid = binfo.borrow_nid
