@@ -98,4 +98,6 @@ public interface AdminUserService  {
 	 * @return
 	 */
     Admin getAdminByName(String auditUser);
+
+	Integer selectAdminListCount(AdminCustomize adminCustomize);
 }

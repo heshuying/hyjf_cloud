@@ -16,6 +16,7 @@ import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.vo.admin.BankAccountManageCustomizeVO;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.validator.Validator;
@@ -108,8 +109,16 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
      * @return
      */
     @Override
-    public String updateAccountCheck(Integer userId, String startTime, String endTime) {
-        return this.amTradeClient.updateAccountCheck(userId, startTime, endTime);
+    public String updateAccountCheck(Integer userId, String startTime, String endTime, String ip) {
+        String payment = "";
+        String cardId = "";
+        // 获取开户银行卡信息
+        BankCardVO bankCardVO = this.amUserClient.getBankCardByUserId(userId);
+        if(null != bankCardVO) {
+            payment = bankCardVO.getBank() == null ? "":bankCardVO.getBank();
+            cardId = bankCardVO.getCardNo();
+        }
+        return this.amTradeClient.updateAccountCheck(userId, startTime, endTime, ip, payment, cardId);
     }
 
     /**

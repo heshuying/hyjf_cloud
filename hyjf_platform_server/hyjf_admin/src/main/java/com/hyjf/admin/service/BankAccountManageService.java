@@ -60,9 +60,10 @@ public interface BankAccountManageService extends BaseService {
      * @param userId
      * @param startTime
      * @param endTime
+     * @param ip
      * @return
      */
-    String updateAccountCheck(Integer userId, String startTime, String endTime);
+    String updateAccountCheck(Integer userId, String startTime, String endTime, String ip);
 
     /**
      * 银行账户管理页面数据条数

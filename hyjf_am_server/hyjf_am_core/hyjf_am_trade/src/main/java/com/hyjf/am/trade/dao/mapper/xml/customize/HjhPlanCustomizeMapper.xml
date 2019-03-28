@@ -656,6 +656,9 @@ ORDER BY
 		FROM
 			ht_hjh_accede
 			where plan_nid = #{planNid}
+			-- add by nxl 显示最后三天的服务记录
+		    AND create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
+		    AND create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
 	</select>
 
 	<select id="getPlanAccedeList" resultType="com.hyjf.am.vo.trade.hjh.HjhAccedeCustomizeVO"  parameterType="Map">
@@ -677,6 +680,9 @@ ORDER BY
 		LEFT JOIN ht_r_user hui ON hui.user_id = dpa.user_id
 		-- LEFT JOIN ht_param_name hpn ON dpa.client=hpn.name_cd AND hpn.name_class='CLIENT'
 		WHERE dpa.plan_nid=#{planNid}
+		-- add by nxl 显示最后三天的服务记录
+		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
+		AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -985,6 +991,9 @@ ORDER BY
 		FROM
 		ht_hjh_accede dpa
 		WHERE dpa.plan_nid=#{planNid}
+		-- add by nxl 显示最后三天的服务记录
+		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
+		AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
 		ORDER BY
 		dpa.create_time DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -1202,4 +1211,14 @@ ORDER BY
 		) AS a
 	</select>
 
+	<!-- 统计最后三天的服务记录 add by nxl-->
+	<select id="countPlanAccedeRecord" resultType="java.lang.Integer" parameterType="String">
+		SELECT count(dpa.accede_order_id)
+		FROM
+		ht_hjh_accede dpa
+		WHERE dpa.plan_nid=#{planNid}
+		-- add by nxl 显示最后三天的服务记录
+		AND dpa.create_time <![CDATA[<=]]> (SELECT MAX(dpaa.create_time) from ht_hjh_accede dpaa where dpaa.plan_nid=#{planNid})
+		AND dpa.create_time <![CDATA[>=]]> (SELECT DATE_SUB((SELECT MAX(da.create_time) from ht_hjh_accede da where da.plan_nid=#{planNid}),INTERVAL 3 DAY))
+	</select>
 </mapper>

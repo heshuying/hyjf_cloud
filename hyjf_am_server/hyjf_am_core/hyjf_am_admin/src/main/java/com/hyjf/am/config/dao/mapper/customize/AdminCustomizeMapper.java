@@ -15,7 +15,7 @@ public interface AdminCustomizeMapper {
 	 * @return
 	 */
 	List<AdminCustomize> selectAdminList(AdminCustomize adminCustomize);
-
+	Integer selectAdminListCount(AdminCustomize adminCustomize);
 	/**
 	 * 根据用户名获取用户
 	 * @param userName

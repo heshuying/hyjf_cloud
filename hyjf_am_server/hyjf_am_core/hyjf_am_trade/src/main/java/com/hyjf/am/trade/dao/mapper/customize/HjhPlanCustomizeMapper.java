@@ -169,4 +169,12 @@ public interface HjhPlanCustomizeMapper {
      */
     int updateOfHjhPlanJoin(Account investAccount);
 
+    /**
+     * 统计最后三天的服务记录
+     * app和危险的统计计划加入数量
+     * @param planNid
+     * @return
+     */
+    int countPlanAccedeRecord(String  planNid);
+
 }

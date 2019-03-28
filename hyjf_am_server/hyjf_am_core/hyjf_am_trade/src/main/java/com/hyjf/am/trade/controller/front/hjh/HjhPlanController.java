@@ -283,4 +283,16 @@ public class HjhPlanController extends BaseController {
         return response;
     }
 
+    /**
+     * 统计最后三天的服务记录 add by nxl
+     * app和微信端统计服务数量
+     */
+    @GetMapping("/countPlanAccedeRecord/{planNid}")
+    public IntegerResponse countPlanAccedeRecord(@PathVariable String planNid){
+        IntegerResponse response = new IntegerResponse();
+        Integer countPlanAccedeRecord = hjhPlanService.countPlanAccedeRecord(planNid);
+        response.setResultInt(countPlanAccedeRecord);
+        return response;
+    }
+
 }

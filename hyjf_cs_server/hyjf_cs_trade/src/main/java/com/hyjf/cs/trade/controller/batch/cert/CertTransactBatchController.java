@@ -50,7 +50,7 @@ public class CertTransactBatchController {
     public StringResponse certTransact() {
         logger.info(logHeader + "CertTransactBatchController execute start...");
         Integer page=1;
-        Integer size=1000;
+        Integer size=500;
         CertAccountListIdCustomizeVO customize=new CertAccountListIdCustomizeVO();
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
