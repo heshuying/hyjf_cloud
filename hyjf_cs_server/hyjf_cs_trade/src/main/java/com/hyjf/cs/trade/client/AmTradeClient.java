@@ -1486,6 +1486,8 @@ public interface AmTradeClient {
 
     List<RepayListCustomizeVO> repayList(RepayListRequest requestBean);
 
+    List<RepayPlanListVO> repayPlanList(String borrowNid);
+
     List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean);
@@ -2882,5 +2884,10 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhAccedeVO> selectCrmHjhAccedeList();
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    void updateBorrowRepayLateInfo();
 }
 

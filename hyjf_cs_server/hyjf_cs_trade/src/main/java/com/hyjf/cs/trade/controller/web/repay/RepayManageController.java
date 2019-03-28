@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -103,6 +104,7 @@ public class RepayManageController extends BaseTradeController {
     @PostMapping(value = "/repay_page_data", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> selectRepayPageData(@RequestHeader(value = "userId") Integer userId){
         WebResult<Map<String,Object>> result = new WebResult<>();
+        logger.info("用户还款页面统计数据repay_page_data开始，userId：" + userId);
         Map<String,Object> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         if ("2".equals(userVO.getRoleId())) {
@@ -138,6 +140,7 @@ public class RepayManageController extends BaseTradeController {
         // 是否开启服务费授权 0未开启  1已开启
         resultMap.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         result.setData(resultMap);
+        logger.info("用户还款页面统计数据repay_page_data结束，返回数据：" + result);
         return result;
     }
 
@@ -233,6 +236,34 @@ public class RepayManageController extends BaseTradeController {
             result.setStatusDesc(WebResult.ERROR_DESC);
         }
         result.setPage(page);
+        return result;
+    }
+
+    /**
+     * 用户还款计划列表
+     */
+    @ApiOperation(value = "用户还款计划列表", notes = "用户还款计划列表")
+    @PostMapping(value = "/repay_plan_list", produces = "application/json; charset=utf-8")
+    public WebResult<List<RepayPlanListVO>> selectRepayPlanList(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean){
+        WebResult<List<RepayPlanListVO>> result = new WebResult<>();
+        result.setData(Collections.emptyList());
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        logger.info("用户还款计划列表开始，userId:{}, requestBean:{}", userVO.getUserId(), requestBean);
+        // 请求参数校验
+        if(requestBean == null || StringUtils.isBlank(requestBean.getBorrowNid())){
+            logger.error("borrowNid为空");
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc("borrowNid为空");
+        }
+
+        try {
+            List<RepayPlanListVO> resultList = repayManageService.selectRepayPlanList(requestBean.getBorrowNid());
+            result.setData(resultList);
+        } catch (Exception e) {
+            logger.error("获取用户还款计划列表异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
+        }
         return result;
     }
 

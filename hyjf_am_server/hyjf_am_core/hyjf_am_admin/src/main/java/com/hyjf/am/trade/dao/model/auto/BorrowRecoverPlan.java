@@ -76,7 +76,7 @@ public class BorrowRecoverPlan implements Serializable {
     private String accedeOrderId;
 
     /**
-     * 还款状态(0:未还款,1:已还款,2逾期中)
+     * 还款状态(0:未还款(advance_status=3逾期中),1:已还款,2:还款失败)
      *
      * @mbggenerated
      */

@@ -266,6 +266,9 @@
             '12'
             WHEN htb.`status` = 4 THEN
             '13'
+            <!-- add by hesy 新增逾期状态8，返回前端值为16 -->
+            WHEN htb.`status` = 8 THEN
+            '16'
             ELSE
             ''
             END AS status,
@@ -427,7 +430,9 @@
         '13'
         WHEN hydb.`status` = 5 THEN
         '14'
-
+        <!-- add by hesy 2019-03-26 新增逾期状态8，返回前端值为16 -->
+        WHEN hydb.`status` = 8 THEN
+        '16'
         ELSE
         ''
         END AS `status`,
@@ -884,6 +889,8 @@
         WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
         WHEN hydb.`status` = 3 THEN '12'
         WHEN hydb.`status` = 4 THEN '13'
+        <!-- add by hesy 新增逾期状态8，返回前端值为16 -->
+        WHEN hydb.`status` = 8 THEN '16'
         ELSE
         ''
         END AS status,
@@ -1670,6 +1677,8 @@
              WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
              WHEN hydb.`status` = 3 THEN '12'
              WHEN hydb.`status` = 4 THEN '13'
+             <!-- add by hesy 新增逾期状态8，返回前端值为16 -->
+             WHEN hydb.`status` = 8 THEN '16'
              ELSE
              ''
              END AS tstatus,

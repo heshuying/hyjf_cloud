@@ -175,11 +175,15 @@
 			AND hydb.user_id = #{userId,jdbcType=VARCHAR}
 			<if test="status == null or status =='' ">
 				AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+				<!-- 增加逾期中状态 add by hesy 2019-03-26-->
+				OR (hydb.`status` = 8 AND hydb.repay_full_status = 0)
 				OR ( hydb.`status` = 5))
 			</if>
 			<if test="status != null and status !=''">
 				<if test="status == '0'.toString()">
-					AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					OR (hydb.`status` = 8 AND hydb.repay_full_status = 0)
+					)
 				</if>
 				<if test="status == '1'.toString()">
 					AND ( hydb.`status` = 5 )
@@ -600,5 +604,77 @@
 		ht_borrow hydb
 		where
 		 hydb.user_id = #{userId,jdbcType=VARCHAR}
+	</select>
+
+	<resultMap id="repayPlanListResultMap" type="com.hyjf.am.vo.trade.repay.RepayPlanListVO" >
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+		<result column="repay_capital" property="repayCapital" jdbcType="VARCHAR" />
+		<result column="repay_interest" property="repayInterest" jdbcType="VARCHAR" />
+		<result column="repay_fee" property="repayFee" jdbcType="VARCHAR" />
+		<result column="repay_account_yes" property="repayAccountYes" jdbcType="VARCHAR" />
+		<result column="repay_yestime" property="repayYestime" jdbcType="VARCHAR" />
+		<result column="period" property="period" jdbcType="VARCHAR" />
+		<result column="repay_status" property="repayStatus" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 还款期次列表（分期） -->
+	<select id="selectRepayPlanList" resultMap="repayPlanListResultMap" parameterType="Map">
+		SELECT
+			plan.borrow_nid,
+			FROM_UNIXTIME(plan.repay_time, '%Y-%m-%d') AS repay_time,
+			plan.repay_capital,
+			plan.repay_interest,
+			plan.repay_fee,
+			IF(plan.repay_status = 0,'--',plan.repay_account_yes) AS repay_account_yes,
+			IF(plan.repay_status = 0,'--',IFNULL(FROM_UNIXTIME(
+				IF(plan.repay_yestime=0,null,plan.repay_yestime),
+				'%Y-%m-%d'
+			),'')) AS repay_yestime,
+		  CONCAT(plan.repay_period,'/',b.borrow_period) AS period,
+		  <!-- 增加逾期中状态值，modify by hesy 2019-03-26-->
+			IF(plan.repay_status=0,IF(plan.advance_status=3,'逾期中','未还款'),'已还款') AS repay_status
+		FROM
+			ht_borrow_repay_plan plan
+		JOIN ht_borrow b ON plan.borrow_nid = b.borrow_nid
+		WHERE plan.borrow_nid = #{borrowNid}
+	</select>
+
+	<!-- 还款期次列表（不分期） -->
+	<select id="selectRepayNotPlanList" resultMap="repayPlanListResultMap" parameterType="Map">
+		SELECT
+			br.borrow_nid,
+			FROM_UNIXTIME(br.repay_time, '%Y-%m-%d') AS repay_time,
+			br.repay_capital,
+			br.repay_interest,
+			br.repay_fee,
+			IF(br.repay_status = 0,'--',br.repay_account_yes) AS repay_account_yes,
+			IF(br.repay_status = 0,'--',IFNULL(
+				FROM_UNIXTIME(
+					IF (
+						br.repay_yestime = 0,
+						NULL,
+						br.repay_yestime
+					),
+					'%Y-%m-%d'
+				),
+				''
+			)) AS repay_yestime,
+			1 AS period,
+
+		IF (
+			br.repay_status = 0,
+		IF (
+			br.advance_status = 3,
+			'逾期中',
+			'未还款'
+		),
+		 '已还款'
+		) AS repay_status
+		FROM
+			ht_borrow_repay br
+		JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
+		WHERE
+			br.borrow_nid = #{borrowNid}
 	</select>
 </mapper>

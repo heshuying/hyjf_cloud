@@ -2605,6 +2605,66 @@ public class BorrowApicronExample {
             addCriterion("is_late not between", value1, value2, "isLate");
             return (Criteria) this;
         }
+
+        public Criteria andLastPeriodIsNull() {
+            addCriterion("last_period is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodIsNotNull() {
+            addCriterion("last_period is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodEqualTo(Integer value) {
+            addCriterion("last_period =", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodNotEqualTo(Integer value) {
+            addCriterion("last_period <>", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodGreaterThan(Integer value) {
+            addCriterion("last_period >", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodGreaterThanOrEqualTo(Integer value) {
+            addCriterion("last_period >=", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodLessThan(Integer value) {
+            addCriterion("last_period <", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodLessThanOrEqualTo(Integer value) {
+            addCriterion("last_period <=", value, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodIn(List<Integer> values) {
+            addCriterion("last_period in", values, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodNotIn(List<Integer> values) {
+            addCriterion("last_period not in", values, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodBetween(Integer value1, Integer value2) {
+            addCriterion("last_period between", value1, value2, "lastPeriod");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPeriodNotBetween(Integer value1, Integer value2) {
+            addCriterion("last_period not between", value1, value2, "lastPeriod");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

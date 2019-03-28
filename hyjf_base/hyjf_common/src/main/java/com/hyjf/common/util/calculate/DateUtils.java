@@ -648,4 +648,33 @@ public class DateUtils {
 		}
 		return  isBefore;
 	}
+
+	/**
+	 * 计算两个日期之间相差的天数
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	public static int getTimeDistanceOfDay(Date beginDate , Date endDate) {
+		Calendar beginCalendar = Calendar.getInstance();
+		beginCalendar.setTime(beginDate);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.setTime(endDate);
+		long beginTime = beginCalendar.getTime().getTime();
+		long endTime = endCalendar.getTime().getTime();
+		// 先计算相差满一天的天数
+		int betweenDays = (int)((endTime - beginTime) / (1000 * 60 * 60 *24));
+		// 结束日期先减去差值满一天的天数
+		endCalendar.add(Calendar.DAY_OF_MONTH, -betweenDays);
+		// 结束日期再减去1天，用来比较与开始日期的所在日是否为一天
+		endCalendar.add(Calendar.DAY_OF_MONTH, -1);
+		// 比较两日期的所在日是否相等
+		if(beginCalendar.get(Calendar.DAY_OF_MONTH) == endCalendar.get(Calendar.DAY_OF_MONTH)) {
+			// 相等说明跨天了，有一天是未满24小时的情况，需要+1
+			return betweenDays + 1;
+		}else{
+			// 不相等说明未跨天
+			return betweenDays;
+		}
+	}
 }

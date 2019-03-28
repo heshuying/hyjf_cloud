@@ -14,6 +14,7 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -102,6 +103,30 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
+     * 还款计划列表
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public List<RepayPlanListVO> selectRepayPlanList(String borrowNid){
+        Map<String, Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", borrowNid);
+        Borrow borrow = getBorrowByNid(borrowNid);
+
+        List<RepayPlanListVO> resultList = null;
+        if("end".equals(borrow.getBorrowStyle()) || "endday".equals(borrow.getBorrowStyle())){
+            resultList = repayManageCustomizeMapper.selectRepayNotPlanList(paraMap);
+        }else{
+            resultList = repayManageCustomizeMapper.selectRepayPlanList(paraMap);
+        }
+
+        if(resultList == null){
+            return new ArrayList<>();
+        }
+        return resultList;
+    }
+
+    /**
      * 检索还款列表
      * @param requestBean
      * @return
@@ -171,7 +196,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 record.setRealAccountYes(realAccountTotal.add(accountFee).toString());
 
                 //当前还款期数页面展示
-                record.setCurrentPeriodView(record.getCurrentPeriod() + "/" + record.getBorrowPeriodInt() + "期");
+                if("end".equals(record.getBorrowStyle()) || "endday".equals(record.getBorrowStyle())){ //不分期
+                    record.setCurrentPeriodView("1期");
+                }else{ //分期
+                    record.setCurrentPeriodView(record.getCurrentPeriod() + "/" + record.getBorrowPeriodInt() + "期");
+                }
             }
         }
 
@@ -351,7 +380,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 }
 
                 //当前还款期数页面展示
-                info.setCurrentPeriodView(info.getCurrentPeriod() + "/" + info.getBorrowPeriodInt() + "期");
+                if("end".equals(info.getBorrowStyle()) || "endday".equals(info.getBorrowStyle())){ //不分期
+                    info.setCurrentPeriodView("1期");
+                }else{ //分期
+                    info.setCurrentPeriodView(info.getCurrentPeriod() + "/" + info.getBorrowPeriodInt() + "期");
+                }
             }
         }
 
@@ -482,7 +515,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
         for(RepayListCustomizeVO record : list){
             //当前还款期数页面展示
-            record.setCurrentPeriodView(record.getCurrentPeriod() + "/" + record.getBorrowPeriodInt() + "期");
+            if("end".equals(record.getBorrowStyle()) || "endday".equals(record.getBorrowStyle())){ //不分期
+                record.setCurrentPeriodView("1期");
+            }else{ //分期
+                record.setCurrentPeriodView(record.getCurrentPeriod() + "/" + record.getBorrowPeriodInt() + "期");
+            }
 
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
             for(BorrowTender tender : tenderList){

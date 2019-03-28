@@ -95,7 +95,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.util.ReflectUtils;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
 import com.hyjf.cs.trade.bean.MyCreditDetailBean;
 import com.hyjf.cs.trade.bean.RepayPlanInfoBean;
@@ -3385,6 +3384,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         RepayListResponse response = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/repay/repaylist",requestBean,
                 RepayListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 用户待还款/已还款列表
+     */
+    @Override
+    public List<RepayPlanListVO> repayPlanList(String borrowNid) {
+        RepayPlanListResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/repay/repay_plan_list/" + borrowNid,
+                RepayPlanListResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
         }
@@ -7012,5 +7025,14 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    @Override
+    public void updateBorrowRepayLateInfo() {
+        String url = "http://AM-TRADE/am-trade/batch/repaylate";
+        restTemplate.getForEntity(url, String.class).getBody();
     }
 }

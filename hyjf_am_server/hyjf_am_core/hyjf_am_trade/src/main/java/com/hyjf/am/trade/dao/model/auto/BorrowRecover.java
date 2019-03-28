@@ -78,7 +78,7 @@ public class BorrowRecover implements Serializable {
     private String accedeOrderId;
 
     /**
-     * 还款状态(0:未还款,1:已还款,2逾期中)
+     * 还款状态(只用于处理还款,展示请关联ht_borrow.status)(0:未还款,1:已还款,2:还款失败)
      *
      * @mbggenerated
      */

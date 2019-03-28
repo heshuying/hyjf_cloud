@@ -130,6 +130,9 @@
 		'13' WHEN
 		hydb.`status` = 5 THEN
 		'14'
+		<!-- add by hesy 2019-03-26 新增逾期状态8，返回前端值为16 -->
+		WHEN hydb.`status` = 8 THEN
+		'16'
 		ELSE
 		'' END AS `status`,
 		hydb.`status` AS statusOrginal,
