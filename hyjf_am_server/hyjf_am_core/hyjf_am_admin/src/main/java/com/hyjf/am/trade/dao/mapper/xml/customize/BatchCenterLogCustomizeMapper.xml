@@ -91,7 +91,7 @@
         log.suc_counts suc_counts,
         log.fail_amount fail_amount,
         log.fail_counts fail_counts,
-        IF(log.`status`=0,hba.`status`,log.`status`),
+        IF(log.`status`=0,hba.`status`,log.`status`) AS status,
         log.seq_no,
         log.bank_seq_no,
         DATE_FORMAT(
@@ -103,13 +103,11 @@
         '%Y-%m-%d %H:%i:%s'
         ) AS update_time,
         log.is_repay_org_flag is_repay_org_flag,
-        log. DATA,
-        b.increase_interest_flag,
-        hba.extra_yield_status,
-        hba.extra_yield_repay_status
+        log.`data`,
+        b.increase_interest_flag
         FROM
-        ht_borrow_apicron hba
-        JOIN ht_borrow_apicron_log log ON hba.bank_seq_no = log.bank_seq_no
+        ht_borrow_apicron_log log
+        LEFT JOIN ht_borrow_apicron hba ON hba.bank_seq_no = log.bank_seq_no
         LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_info bi ON hba.borrow_nid = bi.borrow_nid
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
