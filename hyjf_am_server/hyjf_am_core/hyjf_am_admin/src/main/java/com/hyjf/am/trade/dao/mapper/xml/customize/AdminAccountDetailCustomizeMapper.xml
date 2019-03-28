@@ -108,8 +108,12 @@
 				LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
 		 		</if>
 				<if test="referrerName != null and referrerName != ''">
-				LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
-				LEFT JOIN ht_r_user hu2 on hu.spreads_user_id = hu2.user_id
+					<choose>
+						<when test="userName == null or userName == ''">
+							LEFT JOIN ht_r_user hu ON l.user_id = hu.user_id
+						</when>
+					</choose>
+					LEFT JOIN ht_r_user hu2 on hu.spreads_user_id = hu2.user_id
 				</if>
 				WHERE 1=1
 				<include refid="where-all-page-condition"/>
