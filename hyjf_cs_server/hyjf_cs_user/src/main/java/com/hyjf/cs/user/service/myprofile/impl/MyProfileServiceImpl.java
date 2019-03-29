@@ -126,7 +126,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
             //汇付账户？
             userAccountInfo.setChinapnrUser(users.getOpenAccount().intValue() == 1);
         }
-
+        userAccountInfo.setChinapnrUser(false);
         if (users.getBankOpenAccount() != null) {
             //银行账户？
             userAccountInfo.setBankUser(users.getBankOpenAccount().intValue() == 1);
