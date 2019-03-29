@@ -48,14 +48,16 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 		defaultMQPushConsumer.setConsumeThreadMin(1);
 
 		defaultMQPushConsumer.setConsumeThreadMax(1);
-		//设置最大重试次数
-		defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+
+		//start update by jijun 20180329
+		//不设置最大重试次数
+		//defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+		//end update by jijun 20180329
 	}
 	//MessageListenerConcurrently 并行消费 效率高 消费不追求时间顺序
 	//MessageListenerOrderly 串行消费 效率不高    消费追求时间顺序
 	@Override
 	public void onMessage(MessageExt msg) {
-		logger.info("法大大 收到消息，开始处理....msg is :{}", msg);
 
 		if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
 			// 生成合同
@@ -166,7 +168,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				fddHandle.downPDFAndDesensitization(savePath,agrementID,transType,ftpPath,downloadUrl,tenderCompany,creditCompany);
 			}catch (Exception e1){
 				logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e1);
-				return;
+				throw new RuntimeException("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e1);
 			}
 			logger.info("--------------------------------------法大大下载脱敏处理任务结束，订单号：" + ordid + "=============");
 			return;

@@ -1715,7 +1715,7 @@ public class FddHandle {
 	 * @param download_url 协议下载地址
 	 * @param creditCompany
 	 */
-	public void downPDFAndDesensitization(String savePath, String tenderAgreementID, String transType, String ftpPath, String download_url, boolean tenderCompany, boolean creditCompany) {
+	public void downPDFAndDesensitization(String savePath, String tenderAgreementID, String transType, String ftpPath, String download_url, boolean tenderCompany, boolean creditCompany) throws Exception {
         logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------开始");
 		String fileName = null;
 		String fileType = null;
@@ -1844,6 +1844,7 @@ public class FddHandle {
 
 		} catch (Exception e) {
 			logger.error("-----------脱敏协议错误，错误信息"+tenderAgreementID,e);
+			throw new Exception("-----------脱敏协议错误，错误信息"+tenderAgreementID,e);
 		}
         logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------结束");
 	}
