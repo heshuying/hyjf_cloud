@@ -50,7 +50,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 		defaultMQPushConsumer.setConsumeThreadMax(1);
 
 		//start update by jijun 20180329
-		//不设置最大重试次数
+		//不设置最大重试次数,系统默认重复次数 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
 		//defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
 		//end update by jijun 20180329
 	}
@@ -58,7 +58,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 	//MessageListenerOrderly 串行消费 效率不高    消费追求时间顺序
 	@Override
 	public void onMessage(MessageExt msg) {
-
+		logger.info("法大大收到消息，开始处理...."+msg.getBody()+",重复消费次数："+msg.getReconsumeTimes());
 		if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
 			// 生成合同
 			logger.info("----------------------开始生成法大大合同------------------------");
