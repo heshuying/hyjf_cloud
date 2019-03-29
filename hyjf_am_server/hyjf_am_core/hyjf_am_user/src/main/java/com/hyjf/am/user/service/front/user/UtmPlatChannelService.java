@@ -31,4 +31,11 @@ public interface UtmPlatChannelService extends BaseService {
      */
     UtmPlatVO selectUtmPlatBySourceId(Integer sourceId);
 
+    /**
+     * add by cwyang 20190322
+     * 根据sourceID 获取渠道信息
+     * @param soutceID
+     * @return
+     */
+    UtmVO selectUtmBySourceId(Integer soutceID);
 }

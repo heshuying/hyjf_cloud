@@ -1603,7 +1603,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 OpenAccount.getAccount());
         if (userBankBalance.compareTo(accountBigDecimal) < 0) {
             // 你又没钱了
-            //throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
+            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
         }
         // redis剩余金额不足判断逻辑
         if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
