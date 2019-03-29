@@ -396,24 +396,42 @@ public class AccessFilter extends ZuulFilter {
      */
     private boolean isSecureVisit(Map<String, Object> map, String originalRequestPath) {
         boolean secureVisitFlag = false;
-        for (String key : map.keySet()) {
-            if (key.contains("?")) {
-                key = key.substring(0, key.indexOf("?") - 1);
-            }
-            if (key.contains("*")) {
-                key = key.substring(0, key.indexOf("*") - 1);
-            }
-            // 路径匹配
-            if (originalRequestPath.startsWith(key)) {
-                // 判断是否是安全访问
-                GatewayApiConfigVO vo = JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class);
-                logger.debug("vo: {}", vo);
-                if (vo.getSecureVisitFlag() != null && vo.getSecureVisitFlag().intValue() == 1) {
-                    secureVisitFlag = true;
+        if(null != map.get(originalRequestPath)){
+            secureVisitFlag = isSecureAllow(secureVisitFlag,map,originalRequestPath);
+        }else{
+            for (String key : map.keySet()) {
+                if (key.contains("?")) {
+                    key = key.substring(0, key.indexOf("?") - 1);
+                }
+                if (key.contains("*")) {
+                    key = key.substring(0, key.indexOf("*") - 1);
+                }
+                // 路径匹配
+                if (originalRequestPath.startsWith(key)) {
+                    secureVisitFlag = isSecureAllow(secureVisitFlag,map,key);
                 }
             }
         }
+
         logger.debug(originalRequestPath + " : secureVisitFlag: " + secureVisitFlag);
+        return secureVisitFlag;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description //判断请求是否需要登陆访问
+     * @Date 11:48 2019-03-29
+     * @Param [secureVisitFlag, map, key]
+     * @return boolean
+     **/
+
+    private boolean isSecureAllow(boolean secureVisitFlag,Map<String, Object> map, String key){
+        // 判断是否是安全访问
+        GatewayApiConfigVO vo = JSONObject.parseObject(map.get(key).toString(), GatewayApiConfigVO.class);
+        logger.debug("vo: {}", vo);
+        if (vo.getSecureVisitFlag() != null && vo.getSecureVisitFlag().intValue() == 1) {
+            secureVisitFlag = true;
+        }
         return secureVisitFlag;
     }
 
@@ -429,6 +447,16 @@ public class AccessFilter extends ZuulFilter {
         if (secureVisitFlag) {
             // 不对其进行路由
             this.redirectLoginPage(ctx, channel);
+        } else{
+            //create by walter.li 处理PC端请求，未登录或者登录超时时，返回字段标识
+            if (GatewayConstant.WEB_CHANNEL.equals(channel)) {
+                JSONObject result = new JSONObject();
+                result.put("status", "999");
+                result.put("islogined", "0");
+                ctx.setResponseBody(result.toJSONString());
+                ctx.getResponse().setContentType("application/json;charset=UTF-8");
+            }
+
         }
         return ctx;
     }
