@@ -188,7 +188,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     BigDecimal monthNowBalance = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 一次查询的条件数
-                        int queryNum = 1;
+                        int queryNum = 1000;
                         if(userIds.size() > queryNum){
                             int time = userIds.size()/queryNum;
                             if(userIds.size()%queryNum > 0){
@@ -285,7 +285,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     BigDecimal monthNowBalance = new BigDecimal("0");
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 一次查询的条件数
-                        int queryNum = 1;
+                        int queryNum = 1000;
                         if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
                             monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
                         }else {
@@ -380,14 +380,11 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
         // 获得坐席当前站岗资金
         BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
-        if (startMonthBalance == null || nowMonthBalance == null){
-            try {
-                Thread.sleep(2000);
-                startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
-                nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
-            } catch (InterruptedException e) {
-                logger.error("用户画像-屏幕二月初站岗资金查询异常,异常报文如下:{}", e);
-            }
+        if (startMonthBalance == null){
+            startMonthBalance = new BigDecimal("0");
+        }
+        if(nowMonthBalance == null){
+            nowMonthBalance = new BigDecimal("0");
         }
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest().setScale(0, BigDecimal.ROUND_HALF_UP));
