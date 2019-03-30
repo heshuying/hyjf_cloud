@@ -222,4 +222,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected EvaluationConfigLogMapper evaluationConfigLogMapper;
+
+	@Autowired
+	protected AdminBorrowRepayInfoCurrentCustomizeMapper adminBorrowRepayInfoCurrentCustomizeMapper;
 }
