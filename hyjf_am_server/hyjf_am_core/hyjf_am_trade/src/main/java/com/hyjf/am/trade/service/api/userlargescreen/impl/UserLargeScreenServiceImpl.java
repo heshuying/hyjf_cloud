@@ -115,12 +115,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<EchartsResultVO> dayScalePerformanceListNew = new ArrayList<>();
         List<EchartsResultVO> dayScalePerformanceListOld = new ArrayList<>();
         for(EchartsResultVO echartsResultVO : list){
-            BigDecimal money = new BigDecimal(echartsResultVO.getMoney());
             if("1".equals(echartsResultVO.getCustomerGroup())){
-                echartsResultVO.setMoney(money.setScale(0, BigDecimal.ROUND_HALF_UP).toString());
                 dayScalePerformanceListNew.add(echartsResultVO);
             }else {
-                echartsResultVO.setMoney(money.setScale(0, BigDecimal.ROUND_HALF_UP).toString());
                 dayScalePerformanceListOld.add(echartsResultVO);
             }
         }
@@ -141,15 +138,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
 
         List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getDayReceivedPayments();
         for(EchartsResultVO echartsResultVO : list){
-            BigDecimal money = new BigDecimal(echartsResultVO.getMoney());
-            BigDecimal money2 = new BigDecimal(echartsResultVO.getMoney());
             if("1".equals(echartsResultVO.getCustomerGroup())){
-                echartsResultVO.setMoney(money.setScale(0, BigDecimal.ROUND_HALF_UP).toString());
-                echartsResultVO.setMoney2(money2.setScale(0, BigDecimal.ROUND_HALF_UP).toString());
                 dayReceivedPaymentsNew.add(echartsResultVO);
             }else {
-                echartsResultVO.setMoney(money.setScale(0, BigDecimal.ROUND_HALF_UP).toString());
-                echartsResultVO.setMoney2(money2.setScale(0, BigDecimal.ROUND_HALF_UP).toString());
                 dayReceivedPaymentsOld.add(echartsResultVO);
             }
         }
@@ -170,14 +161,14 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
 
         // 坐席
         List<MonthDataStatisticsVO> listOn =  userLargeScreenCustomizeMapper.getMonthDataStatisticsBO();
+        // 坐席、年化业绩
+        List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
         // 坐席、充值
         List<MonthDataStatisticsVO> listO =  userLargeScreenCustomizeMapper.getMonthDataStatisticsO();
         // 坐席、提现
         List<MonthDataStatisticsVO> listT =  userLargeScreenCustomizeMapper.getMonthDataStatisticsT();
         // 坐席、回款
         List<MonthDataStatisticsVO> listFi =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFi();
-        // 坐席、年化业绩
-        List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
 
         if(!CollectionUtils.isEmpty(listOn)){
             for(MonthDataStatisticsVO monthDataStatisticsVOO : listOn){
@@ -213,7 +204,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listFoSon : listFo){
                             if ("1".equals(listFoSon.getCustomerGroup()) &&
                                     listFoSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney());
                             }
                         }
                     }
@@ -222,7 +213,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listOSon : listO){
                             if ("1".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge());
                             }
                         }
                     }
@@ -231,7 +222,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO monthDataStatisticsVOT : listT){
                             if ("1".equals(monthDataStatisticsVOT.getCustomerGroup()) &&
                                     monthDataStatisticsVOT.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setWithdraw(monthDataStatisticsVOT.getWithdraw().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setWithdraw(monthDataStatisticsVOT.getWithdraw());
                             }
                         }
                     }
@@ -246,7 +237,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listFoSon : listFo){
                             if (!"1".equals(listFoSon.getCustomerGroup()) &&
                                     listFoSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney());
                             }
                         }
                     }
@@ -255,7 +246,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listOSon : listO){
                             if ("1".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge());
                             }
                         }
                     }
@@ -264,7 +255,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listTSon : listT){
                             if (!"1".equals(listTSon.getCustomerGroup()) &&
                                     listTSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setWithdraw(listTSon.getWithdraw().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setWithdraw(listTSon.getWithdraw());
                             }
                         }
                     }
@@ -273,7 +264,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listFiSon : listFi){
                             if (!"1".equals(listFiSon.getCustomerGroup()) &&
                                     listFiSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setReceived(listFiSon.getReceived().setScale(0, BigDecimal.ROUND_HALF_UP));
+                                monthDataStatisticsVOO.setReceived(listFiSon.getReceived());
                             }
                         }
                     }
@@ -329,7 +320,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
                         }
                     }
-                    // 站岗资金
+                    // 当前站岗资金
                     monthDataStatisticsVOO.setGuardFund(monthNowBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
                     // 增资
                     BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthNowBalance);
@@ -387,9 +378,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
             nowMonthBalance = new BigDecimal("0");
         }
         // 规模业绩
-        operMonthPerformanceDataVO.setInvest(listTh.getInvest().setScale(0, BigDecimal.ROUND_HALF_UP));
+        operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
-        operMonthPerformanceDataVO.setYearAmount(listSi.getYearAmount().setScale(0, BigDecimal.ROUND_HALF_UP));
+        operMonthPerformanceDataVO.setYearAmount(listSi.getYearAmount());
         // 站岗资金
         operMonthPerformanceDataVO.setBalance(nowMonthBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
         // 增资
@@ -403,9 +394,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 充值
         operMonthPerformanceDataVO.setRecharge(listO.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 总待回金额
-        operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay().setScale(0, BigDecimal.ROUND_HALF_UP));
+        operMonthPerformanceDataVO.setAllWaitRepay(listFo.getAllWaitRepay());
         // 已回金额
-        operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay().setScale(0, BigDecimal.ROUND_HALF_UP));
+        operMonthPerformanceDataVO.setAllRepay(listFi.getAllRepay());
 
         vo.setOperMonthPerformanceData(operMonthPerformanceDataVO);
         return vo;
