@@ -69,7 +69,8 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthScalePerformanceListNew(monthScalePerformanceListVo.getMonthScalePerformanceListNew());
         bean.setMonthScalePerformanceListOld(monthScalePerformanceListVo.getMonthScalePerformanceListOld());
         bean.setTotalAmount(totalAmountVo.getTotalAmount());
-        bean.setAchievementRate(totalAmountVo.getTotalAmount().divide(bean.getAchievementDistribution(),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
+        logger.info("金额==="+totalAmountVo.getTotalAmount());
+        bean.setAchievementRate(totalAmountVo.getTotalAmount().divide(vo.getOperationalGoal(),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
        // bean.setAchievementDistribution(totalAmountVo.getAchievementDistribution());
         bean.setAchievementDistributionList(achievementDistributionListVo.getAchievementDistributionList());
         bean.setMonthReceivedPaymentsNew(monthReceivedPaymentsVo.getMonthReceivedPaymentsNew());
