@@ -77,15 +77,19 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
 
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
-        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHSTART_BALANCE_"+ GetDate.getMonth()) ||
-                !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTHNOW_BALANCE_"+ GetDate.getMonth())){
-
-            try {
-                commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                        MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), new JSONObject()));
-            } catch (MQException e) {
-                logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
-            }
+        JSONObject param = new JSONObject();
+        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key)) &&
+                !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+            param.put("flag", "all");
+            sendMQ(param);
+        }
+        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
+            param.put("flag", "start");
+            sendMQ(param);
+        }
+        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+            param.put("flag", "now");
+            sendMQ(param);
         }
         UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
         // 日业绩(新客组、老客组)
@@ -118,5 +122,18 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
         String dateString = formatter.format(currentTime);
         return dateString;
+    }
+
+    /**
+     * 屏幕二获得用户站岗资金
+     * @param param
+     */
+    private void sendMQ(JSONObject param){
+        try {
+            commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
+                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), param));
+        } catch (MQException e) {
+            logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
+        }
     }
 }

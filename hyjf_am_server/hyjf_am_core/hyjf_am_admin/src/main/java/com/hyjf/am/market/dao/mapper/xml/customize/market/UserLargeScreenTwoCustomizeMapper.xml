@@ -4,10 +4,10 @@
 
 	<select id="getOperMonthStartBalance" parameterType="java.util.Date" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
 		SELECT
-        IFNULL(SUM(res2.monthNowBalance),0) AS monthNowBalance
+        IFNULL(SUM(res2.monthStartBalance),0) AS monthStartBalance
         FROM (
         SELECT
-        IFNULL(SUM(l2.balance),0) AS monthNowBalance
+        IFNULL(SUM(l2.bank_balance),0) AS monthStartBalance
         FROM (SELECT l.user_id,max(l.id) AS max_id
         FROM hyjf_user.ht_user_info i
         inner JOIN hyjf_user.ht_utm_reg r  ON r.user_id = i.user_id
@@ -20,7 +20,7 @@
         ) res1
         INNER JOIN hyjf_trade.ht_account_list l2 ON res1.max_id = l2.id and res1.user_id=l2.user_id
         UNION ALL
-        SELECT  IFNULL(SUM(l2.balance),0) AS monthNowBalance
+        SELECT  IFNULL(SUM(l2.bank_balance),0) AS monthStartBalance
         FROM (SELECT l.user_id,max(l.id) AS max_id
         FROM hyjf_user.ht_user_info i
         inner JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
@@ -45,7 +45,7 @@
         IFNULL(SUM(res2.monthNowBalance),0) AS monthNowBalance
         FROM (
         SELECT
-        IFNULL(SUM(l2.balance),0) AS monthNowBalance
+        IFNULL(SUM(l2.bank_balance),0) AS monthNowBalance
         FROM (SELECT l.user_id,max(l.id) AS max_id
         FROM hyjf_user.ht_user_info i
         inner JOIN hyjf_user.ht_utm_reg r  ON r.user_id = i.user_id
@@ -58,7 +58,7 @@
         ) res1
         INNER JOIN hyjf_trade.ht_account_list l2 ON res1.max_id = l2.id and res1.user_id=l2.user_id
         UNION ALL
-        SELECT  IFNULL(SUM(l2.balance),0) AS monthNowBalance
+        SELECT  IFNULL(SUM(l2.bank_balance),0) AS monthNowBalance
         FROM (SELECT l.user_id,max(l.id) AS max_id
         FROM hyjf_user.ht_user_info i
         inner JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id

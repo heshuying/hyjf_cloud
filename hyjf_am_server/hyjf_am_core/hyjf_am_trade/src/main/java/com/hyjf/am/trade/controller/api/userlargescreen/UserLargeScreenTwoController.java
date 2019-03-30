@@ -21,7 +21,7 @@ public class UserLargeScreenTwoController {
     @Autowired
     private UserLargeScreenService userLargeScreenService;
 
-    @ApiOperation(value = "坐席日规模业绩(新老客户组所有数据)",notes = " 坐席日规模业绩(新老客户组所有数据)")
+    @ApiOperation(value = "屏幕二日业绩(新客组、老客组)",notes = "屏幕二日业绩(新客组、老客组)")
     @GetMapping(value = "/getdayscaleperformancelist")
     public UserLargeScreenTwoResponse getDayScalePerformanceList() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
@@ -30,7 +30,7 @@ public class UserLargeScreenTwoController {
         return response;
     }
 
-    @ApiOperation(value = "坐席日回款情况(新老客户组所有数据)",notes = " 坐席日回款情况(新老客户组所有数据)")
+    @ApiOperation(value = "屏幕二日回款(新客组、老客组)",notes = "屏幕二日回款(新客组、老客组)")
     @GetMapping(value = "/getdayreceivedpayments")
     public UserLargeScreenTwoResponse getDayReceivedPayments() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
@@ -39,7 +39,7 @@ public class UserLargeScreenTwoController {
         return response;
     }
 
-    @ApiOperation(value = "坐席日回款情况(新老客户组所有数据)",notes = " 坐席日回款情况(新老客户组所有数据)")
+    @ApiOperation(value = "本月数据统计(新客组、老客组)",notes = "本月数据统计(新客组、老客组)")
     @GetMapping(value = "/getmonthdatastatistics")
     public UserLargeScreenTwoResponse getMonthDataStatistics() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();

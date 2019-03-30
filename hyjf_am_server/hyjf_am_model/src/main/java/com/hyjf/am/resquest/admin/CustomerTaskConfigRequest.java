@@ -41,6 +41,12 @@ public class CustomerTaskConfigRequest extends BasePage implements Serializable 
      */
     private Integer flag;
 
+    /**
+     * 开始行
+     * @return
+     */
+    private int limitStart;
+
     public String getTaskTime() {
         return taskTime;
     }
@@ -79,5 +85,13 @@ public class CustomerTaskConfigRequest extends BasePage implements Serializable 
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
     }
 }

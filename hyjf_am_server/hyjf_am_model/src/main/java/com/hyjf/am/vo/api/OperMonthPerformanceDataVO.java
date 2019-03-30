@@ -43,11 +43,11 @@ public class OperMonthPerformanceDataVO implements Serializable {
     /**
      * 运营部月初站岗资金
      */
-    private BigDecimal monthStartBalance;
+    private BigDecimal monthStartBalance = BigDecimal.ZERO;
     /**
      * 运营部月末站岗资金
      */
-    private BigDecimal monthNowBalance;
+    private BigDecimal monthNowBalance = BigDecimal.ZERO;
 
     public BigDecimal getInvest() {
         return invest;
