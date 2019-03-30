@@ -267,8 +267,8 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 一次查询的条件数
                         int queryNum = 1000;
-                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate())){
-                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
+                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
+                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
                         }else {
                             if(userIds.size() > queryNum){
                                 int time = userIds.size()/queryNum;
@@ -288,7 +288,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             }else {
                                 monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(userIds));
                             }
-                            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(), monthBeginBalance);
+                            RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance);
                         }
 
                         if(userIds.size() > queryNum){
