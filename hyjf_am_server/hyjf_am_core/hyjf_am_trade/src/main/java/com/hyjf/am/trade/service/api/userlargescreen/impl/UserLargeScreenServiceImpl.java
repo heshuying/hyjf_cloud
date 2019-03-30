@@ -198,7 +198,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                                 List<Integer> queryList = new ArrayList();
                                 for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
                                     if(null != userIds.get(j)){
-                                        queryList.add(j, userIds.get(j));
+                                        queryList.add(userIds.get(j));
                                     }
                                 }
                                 monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
@@ -298,7 +298,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                                     List<Integer> queryList = new ArrayList();
                                     for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
                                         if(null != userIds.get(j)){
-                                            queryList.add(j, userIds.get(j));
+                                            queryList.add(userIds.get(j));
                                         }
                                     }
                                     monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(queryList));
@@ -319,7 +319,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                                 List<Integer> queryList = new ArrayList();
                                 for (int j=(i-1)*queryNum; j < i*queryNum ; j++){
                                     if(null != userIds.get(j)){
-                                        queryList.add(j, userIds.get(j));
+                                        queryList.add(userIds.get(j));
                                     }
                                 }
                                 monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
@@ -380,6 +380,14 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
         // 获得坐席当前站岗资金
         BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
+        if (startMonthBalance == null || nowMonthBalance == null){
+            try {
+                logger.info("延迟1000毫秒以后查询");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                logger.error("用户画像-屏幕二月初站岗资金查询异常,异常报文如下:{}", e);
+            }
+        }
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest().setScale(0, BigDecimal.ROUND_HALF_UP));
         // 年化业绩
