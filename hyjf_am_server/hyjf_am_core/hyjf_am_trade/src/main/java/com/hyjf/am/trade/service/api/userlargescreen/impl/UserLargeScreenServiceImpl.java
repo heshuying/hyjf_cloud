@@ -282,11 +282,11 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                                             queryList.add(j, userIds.get(j));
                                         }
                                     }
-                                    monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(queryList));
+                                    monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(queryList));
                                 }
 
                             }else {
-                                monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
+                                monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(userIds));
                             }
                             RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(), monthBeginBalance);
                         }
