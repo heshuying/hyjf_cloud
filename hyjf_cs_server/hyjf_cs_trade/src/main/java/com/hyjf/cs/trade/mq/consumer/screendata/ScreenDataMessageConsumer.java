@@ -80,6 +80,7 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
                 amTradeClient.insertScreenData(data);
             }
         }
+        logger.info("ScreenDataMessageConsumer 大屏数据统计结束");
     }
 
     /**

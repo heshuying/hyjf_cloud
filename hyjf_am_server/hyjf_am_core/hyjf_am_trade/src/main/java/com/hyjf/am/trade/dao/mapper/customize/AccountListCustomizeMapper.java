@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface AccountListCustomizeMapper {
 
+    List<Integer> getUserIdsByCurrentOwnerAndCustomerGroup(@Param("currentOwner") String currentOwner, @Param("customerGroup") int i);
+
     BigDecimal getUsersMonthBeginBalance(List<Integer> userIds);
 
     BigDecimal getUsersMonthNowBalance(List<Integer> userIds);
-
-    List<Integer> getUserIdsByCurrentOwnerAndCustomerGroup(@Param("currentOwner") String currentOwner, @Param("customerGroup") int i);
 }
