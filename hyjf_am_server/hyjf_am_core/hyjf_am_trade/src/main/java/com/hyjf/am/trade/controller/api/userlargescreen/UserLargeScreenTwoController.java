@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(value = "用户大屏二接口", tags = "用户大屏二接口")
+@Api(value = "运营大屏接口", tags = "运营大屏接口")
 @RestController
 @RequestMapping("/am-trade/user_large_screen_two")
 public class UserLargeScreenTwoController {
@@ -39,7 +39,7 @@ public class UserLargeScreenTwoController {
         return response;
     }
 
-    @ApiOperation(value = "本月数据统计(新客组、老客组)",notes = "本月数据统计(新客组、老客组)")
+    @ApiOperation(value = "屏幕二本月数据统计(新客组、老客组)",notes = "屏幕二本月数据统计(新客组、老客组)")
     @GetMapping(value = "/getmonthdatastatistics")
     public UserLargeScreenTwoResponse getMonthDataStatistics() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
@@ -48,7 +48,7 @@ public class UserLargeScreenTwoController {
         return response;
     }
 
-    @ApiOperation(value = "运营部月度业绩数据",notes = " 运营部月度业绩数据")
+    @ApiOperation(value = "屏幕二运营部月度业绩数据",notes = "屏幕二运营部月度业绩数据")
     @GetMapping(value = "/getopermonthperformancedata")
     public UserLargeScreenTwoResponse getOperMonthPerformanceData() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();

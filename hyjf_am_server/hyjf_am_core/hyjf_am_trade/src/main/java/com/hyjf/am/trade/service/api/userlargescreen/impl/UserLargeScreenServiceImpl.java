@@ -150,7 +150,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     }
 
     /**
-     * 本月数据统计(新客组、老客组)
+     * 屏幕二本月数据统计(新客组、老客组)
      * @return
      */
     @Override
@@ -348,7 +348,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
     }
 
     /**
-     * 运营部月度业绩数据
+     * 屏幕二运营部月度业绩数据
      * @return
      */
     @Override

@@ -77,6 +77,10 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         return bean;
     }
 
+    /**
+     * 运营大屏接口-屏幕二数据获取
+     * @return
+     */
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
         JSONObject param = new JSONObject();
@@ -93,19 +97,19 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         }
         UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
         // 日业绩(新客组、老客组)
-        UserLargeScreenTwoVO dayScalePerformanceListVo =  amTradeClient.getDayScalePerformanceList();
+        UserLargeScreenTwoVO dayScalePerformanceListVo = amTradeClient.getDayScalePerformanceList();
         bean.setDayScalePerformanceListNew(dayScalePerformanceListVo.getDayScalePerformanceListNew());
         bean.setDayScalePerformanceListOld(dayScalePerformanceListVo.getDayScalePerformanceListOld());
         // 日回款(新客组、老客组)
-        UserLargeScreenTwoVO dayReceivedPaymentsVo =  amTradeClient.getDayReceivedPayments();
+        UserLargeScreenTwoVO dayReceivedPaymentsVo = amTradeClient.getDayReceivedPayments();
         bean.setDayReceivedPaymentsNew(dayReceivedPaymentsVo.getDayReceivedPaymentsNew());
         bean.setDayReceivedPaymentsOld(dayReceivedPaymentsVo.getDayReceivedPaymentsOld());
         // 本月数据统计(新客组、老客组)
-        UserLargeScreenTwoVO monthDataStatisticsVo =  amTradeClient.getMonthDataStatistics();
+        UserLargeScreenTwoVO monthDataStatisticsVo = amTradeClient.getMonthDataStatistics();
         bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
         // 运营部月度业绩数据
-        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData();
+        UserLargeScreenTwoVO operMonthPerformanceDataVo = amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
     }
@@ -123,7 +127,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     }
 
     /**
-     * 屏幕二获得用户站岗资金
+     * 屏幕二运营部用户站岗资金获取MQ
      * @param param
      */
     private void sendMQ(JSONObject param){

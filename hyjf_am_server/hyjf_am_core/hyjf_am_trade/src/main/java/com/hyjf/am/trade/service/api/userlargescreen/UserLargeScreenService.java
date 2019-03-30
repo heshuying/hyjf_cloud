@@ -55,13 +55,13 @@ public interface UserLargeScreenService {
     UserLargeScreenTwoVO getDayReceivedPayments();
 
     /**
-     * 本月数据统计(新客组、老客组)
+     * 屏幕二本月数据统计(新客组、老客组)
      * @return
      */
     UserLargeScreenTwoVO getMonthDataStatistics();
 
     /**
-     * 运营部月度业绩数据
+     * 屏幕二运营部月度业绩数据
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();

@@ -14,5 +14,9 @@ public interface UserLargeScreenService {
 
     UserLargeScreenResultBean getOnePage();
 
+    /**
+     * 运营大屏接口-屏幕二数据获取
+     * @return
+     */
     UserLargeScreenTwoResultBean getTwoPage();
 }

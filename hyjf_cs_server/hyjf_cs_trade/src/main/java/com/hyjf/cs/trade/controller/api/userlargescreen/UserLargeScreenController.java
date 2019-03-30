@@ -32,7 +32,7 @@ public class UserLargeScreenController {
         return bean;
     }
 
-    @ApiOperation(value = " 屏幕二数据获取", notes = " 屏幕二数据获取")
+    @ApiOperation(value = "屏幕二数据获取", notes = "屏幕二数据获取")
     @GetMapping(value = "/two")
     public UserLargeScreenTwoResultBean getTwoPage() {
         UserLargeScreenTwoResultBean bean = userLargeScreenService.getTwoPage();
