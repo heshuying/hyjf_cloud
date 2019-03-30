@@ -39,9 +39,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         if(vo==null){
             vo = new UserLargeScreenVO();
         }
-        if(vo.getAchievementDistribution().compareTo(BigDecimal.ZERO)>0) {
+       /* if(vo.getAchievementDistribution().compareTo(BigDecimal.ZERO)>0) {
             vo.setAchievementRate(vo.getTotalAmount().divide(vo.getAchievementDistribution(),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
-        }
+        }*/
         return vo;
     }
     @Override
