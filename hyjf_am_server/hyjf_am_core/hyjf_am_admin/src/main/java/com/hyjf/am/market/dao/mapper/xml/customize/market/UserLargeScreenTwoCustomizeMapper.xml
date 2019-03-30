@@ -79,7 +79,7 @@
             SELECT
             IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
             FROM
-            ht_user_info i
+            hyjf_user.ht_user_info i
             LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
             LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
             LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
@@ -94,7 +94,7 @@
             SELECT
             IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
             FROM
-            ht_user_info i
+            hyjf_user.ht_user_info i
             LEFT JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
             LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
             LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
