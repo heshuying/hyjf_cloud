@@ -1375,6 +1375,13 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             } catch (MQException e) {
                 logger.error(e.getMessage());
             }
+            try {
+                // 投标成功后,发送大屏数据统计MQ
+                sendScreenDataMQ(request.getUser().getUsername(), userId, planOrderId, new BigDecimal(accountStr), 3,planPeriod,borrowStyle);
+            } catch (MQException e) {
+                logger.error(e.getMessage());
+            }
+
         }
         AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetails != null) {
@@ -1421,8 +1428,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 try {
                     logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
                     sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
-                    // 投标成功后,发送大屏数据统计MQ
-                    sendScreenDataMQ(request.getUser().getUsername(), userId, planOrderId, new BigDecimal(accountStr), 3,planPeriod,borrowStyle);
 
                 } catch (Exception e) {
                     logger.error("加入计划 纳觅返现mq出错",e);
