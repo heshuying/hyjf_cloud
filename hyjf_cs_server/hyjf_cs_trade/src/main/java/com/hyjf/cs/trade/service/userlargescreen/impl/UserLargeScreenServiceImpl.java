@@ -57,17 +57,20 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenVO achievementDistributionListVo =  amTradeClient.getAchievementDistributionList();
         UserLargeScreenVO monthReceivedPaymentsVo =  amTradeClient.getMonthReceivedPayments();
         UserLargeScreenVO userCapitalDetailsVo = amTradeClient.getUserCapitalDetails();
-       // UserCustomerTaskConfigResponse userCustomerTaskConfigResponse = amUserClient.getCustomerTaskConfig(request);
         ScreenConfigVO vo = userScreenConfigResponse.getResult();
+        if(vo==null){
+            return  bean;
+        }
         bean.setNewPassengerGoal(vo.getNewPassengerGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
         bean.setOldPassengerGoal(vo.getOldPassengerGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
+        bean.setAchievementDistribution(vo.getOperationalGoal());
         bean.setScalePerformanceNew(scalePerformanceVo.getScalePerformanceNew());
         bean.setScalePerformanceOld(scalePerformanceVo.getScalePerformanceOld());
         bean.setMonthScalePerformanceListNew(monthScalePerformanceListVo.getMonthScalePerformanceListNew());
         bean.setMonthScalePerformanceListOld(monthScalePerformanceListVo.getMonthScalePerformanceListOld());
         bean.setTotalAmount(totalAmountVo.getTotalAmount());
-        bean.setAchievementRate(totalAmountVo.getAchievementRate());
-        bean.setAchievementDistribution(totalAmountVo.getAchievementDistribution());
+        bean.setAchievementRate(totalAmountVo.getTotalAmount().divide(bean.getAchievementDistribution(),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
+       // bean.setAchievementDistribution(totalAmountVo.getAchievementDistribution());
         bean.setAchievementDistributionList(achievementDistributionListVo.getAchievementDistributionList());
         bean.setMonthReceivedPaymentsNew(monthReceivedPaymentsVo.getMonthReceivedPaymentsNew());
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
