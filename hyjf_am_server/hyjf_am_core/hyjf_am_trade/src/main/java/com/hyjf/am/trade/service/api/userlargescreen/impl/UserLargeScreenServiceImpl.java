@@ -244,7 +244,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 充值
                     if(!CollectionUtils.isEmpty(listO)){
                         for(MonthDataStatisticsVO listOSon : listO){
-                            if ("1".equals(listOSon.getCustomerGroup()) &&
+                            if (!"1".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setRecharge(listOSon.getRecharge());
                             }
