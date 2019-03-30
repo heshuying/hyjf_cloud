@@ -155,6 +155,13 @@
     </select>
 
     <!-- 本月数据统计 坐席、充值 -->
+    <select id="getMonthDataStatisticsBO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
+        select IFNULL(SUM(year_money),0) as yearMoney, IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
+        UNION ALL
+        select IFNULL(SUM(year_money),0) as yearMoney, IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where customer_group =2 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
+    </select>
+
+    <!-- 本月数据统计 坐席、充值 -->
     <select id="getMonthDataStatisticsO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
         select IFNULL(SUM(year_money),0) as yearMoney, IFNULL(SUM(money),0) as recharge, current_owner as currentOwner,customer_group as customerGroup from ht_user_operate_list where operating=2 and customer_group =1 and create_time BETWEEN DATE_FORMAT( CURDATE(), '%Y-%m-01 00:00:00') AND DATE_FORMAT( LAST_DAY(CURDATE()), '%Y-%m-%d 23:59:59') GROUP BY current_owner
         UNION ALL

@@ -168,6 +168,8 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<MonthDataStatisticsVO> monthDataStatisticsOld = new ArrayList<>();
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
 
+        // 坐席
+        List<MonthDataStatisticsVO> listOn =  userLargeScreenCustomizeMapper.getMonthDataStatisticsBO();
         // 坐席、充值
         List<MonthDataStatisticsVO> listO =  userLargeScreenCustomizeMapper.getMonthDataStatisticsO();
         // 坐席、提现
@@ -177,9 +179,8 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 坐席、年化业绩
         List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
 
-        // 坐席、年化业绩、充值
-        if(!CollectionUtils.isEmpty(listO)){
-            for(MonthDataStatisticsVO monthDataStatisticsVOO : listO){
+        if(!CollectionUtils.isEmpty(listOn)){
+            for(MonthDataStatisticsVO monthDataStatisticsVOO : listOn){
                 if("1".equals(monthDataStatisticsVOO.getCustomerGroup())){
                     // 查询每个坐席下的所有用户
                     List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 1);
@@ -216,6 +217,15 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             }
                         }
                     }
+                    // 充值
+                    if(!CollectionUtils.isEmpty(listO)){
+                        for(MonthDataStatisticsVO listOSon : listO){
+                            if ("1".equals(listOSon.getCustomerGroup()) &&
+                                    listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
+                            }
+                        }
+                    }
                     // 提现
                     if(!CollectionUtils.isEmpty(listT)){
                         for(MonthDataStatisticsVO monthDataStatisticsVOT : listT){
@@ -237,6 +247,15 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             if (!"1".equals(listFoSon.getCustomerGroup()) &&
                                     listFoSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney().setScale(0, BigDecimal.ROUND_HALF_UP));
+                            }
+                        }
+                    }
+                    // 充值
+                    if(!CollectionUtils.isEmpty(listO)){
+                        for(MonthDataStatisticsVO listOSon : listO){
+                            if ("1".equals(listOSon.getCustomerGroup()) &&
+                                    listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
+                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge().setScale(0, BigDecimal.ROUND_HALF_UP));
                             }
                         }
                     }

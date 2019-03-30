@@ -80,9 +80,9 @@
             IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
             FROM
             ht_user_info i
-            LEFT JOIN ht_utm_reg r ON r.user_id = i.user_id
-            LEFT JOIN ht_utm u1 ON u1.utm_id = r.utm_id
-            LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
+            LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
+            LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
+            LEFT JOIN hyjf_user.hyjf_trade.ht_account a ON a.user_id = i.user_id
             WHERE
             (
             u1.source_id <![CDATA[<>]]> 349
@@ -95,11 +95,11 @@
             IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
             FROM
             ht_user_info i
-            LEFT JOIN ht_spreads_user s ON i.user_id = s.user_id
-            LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
-            LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
-            LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
-            LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+            LEFT JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
+            LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+            LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
+            LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+            LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
             LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
             WHERE
             ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
