@@ -382,7 +382,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
         if (startMonthBalance == null || nowMonthBalance == null){
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
                 startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
                 nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
             } catch (InterruptedException e) {
