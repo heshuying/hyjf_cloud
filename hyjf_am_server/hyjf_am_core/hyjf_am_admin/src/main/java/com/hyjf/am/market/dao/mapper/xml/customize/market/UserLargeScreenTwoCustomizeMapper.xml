@@ -82,7 +82,7 @@
             ht_user_info i
             LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
             LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
-            LEFT JOIN hyjf_user.hyjf_trade.ht_account a ON a.user_id = i.user_id
+            LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
             WHERE
             (
             u1.source_id <![CDATA[<>]]> 349
