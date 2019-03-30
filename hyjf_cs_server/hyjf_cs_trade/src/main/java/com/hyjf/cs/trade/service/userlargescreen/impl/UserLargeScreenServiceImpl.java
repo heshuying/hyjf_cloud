@@ -80,16 +80,14 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
         JSONObject param = new JSONObject();
+        int sendFlag = 0;
         if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key)) &&
                 !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+            sendFlag = 1;
             param.put("flag", "all");
             sendMQ(param);
         }
-        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
-            param.put("flag", "start");
-            sendMQ(param);
-        }
-        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+        if(sendFlag != 1 && !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
             param.put("flag", "now");
             sendMQ(param);
         }
@@ -106,8 +104,6 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenTwoVO monthDataStatisticsVo =  amTradeClient.getMonthDataStatistics();
         bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
-        // 运营部所有用户id
-        //List<Integer> userIds = amUserClient.getOperUserIds();
         // 运营部月度业绩数据
         UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());

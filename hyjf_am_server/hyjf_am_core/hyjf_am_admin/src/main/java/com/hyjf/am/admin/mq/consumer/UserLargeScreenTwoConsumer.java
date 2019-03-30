@@ -35,11 +35,6 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
             JSONObject data = JSONObject.parseObject(messageExt.getBody(), JSONObject.class);
             String flag = data.getString("flag");
             logger.info("用户画像屏幕二运营部站岗资金获取请求参数:{}", flag);
-            if("start".equals(flag)){
-                // 得到运营部用户月初站岗资金
-                OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthStartBalance();
-                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), result.getMonthStartBalance());
-            }
             if ("now".equals(flag)){
                 // 得到运营部用户当前站岗资金
                 OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthNowBalance();
@@ -49,6 +44,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                 // 得到运营部用户月初站岗资金
                 OperMonthPerformanceDataVO result = userLargeScreenTwoService.getOperMonthStartBalance();
                 RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), result.getMonthStartBalance());
+                // 得到运营部用户当前站岗资金
                 result = userLargeScreenTwoService.getOperMonthNowBalance();
                 RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance());
             }
