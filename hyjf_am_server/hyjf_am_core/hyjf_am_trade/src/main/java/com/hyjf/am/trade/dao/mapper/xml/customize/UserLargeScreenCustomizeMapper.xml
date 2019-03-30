@@ -4,12 +4,7 @@
 
     <!-- 运营部总业绩（元） -->
     <select id="getTotalAmount" resultType="com.hyjf.am.vo.api.UserLargeScreenVO">
-        select
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1 and (customer_group =0 or customer_group =3) and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as totalAmount,
-
-        (select ROUND(IFNULL(SUM(money),0)/10000,0)  from ht_user_operate_list where operating=1  and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')) as achievementDistribution
-
-        from ht_user_operate_list LIMIT 0,1
+        select ROUND(IFNULL(SUM(money),0)/10000,0) as totalAmount  from ht_user_operate_list where operating=1  and create_time >= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time < DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00')
     </select>
     <!-- 本月运营部业绩完成分布 -->
     <select id="getAchievementDistributionList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
