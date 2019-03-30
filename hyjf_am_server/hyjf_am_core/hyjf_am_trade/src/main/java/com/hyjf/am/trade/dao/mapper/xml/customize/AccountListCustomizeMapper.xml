@@ -43,19 +43,13 @@
 
     <select id="getUsersMonthNowBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
         SELECT
-        IFNULL(SUM(a1.bank_balance),0) monthNowBalance
-        FROM(SELECT
-        MAX(id) max_id
+        IFNULL(SUM(bank_balance),0) monthNowBalance
         FROM
-        ht_account_list
-        GROUP BY
-        user_id
-        ) r1
-        LEFT JOIN ht_account_list a1 ON a1.id = r1.max_id
+        ht_account
         <where>
-            AND a1.create_time <![CDATA[<=]]> NOW()
+            AND create_time <![CDATA[<=]]> NOW()
             <if test="list != null" >
-                AND a1.user_id IN
+                AND user_id IN
                 <foreach collection="list" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
