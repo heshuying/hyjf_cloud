@@ -213,7 +213,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listOSon : listO){
                             if ("1".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge());
+                                monthDataStatisticsVOO.setRecharge(listOSon.getRecharge());
                             }
                         }
                     }
@@ -246,7 +246,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         for(MonthDataStatisticsVO listOSon : listO){
                             if ("1".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
-                                monthDataStatisticsVOO.setYearMoney(listOSon.getRecharge());
+                                monthDataStatisticsVOO.setRecharge(listOSon.getRecharge());
                             }
                         }
                     }
