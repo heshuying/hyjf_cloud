@@ -29,6 +29,7 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
     @Override
     public Integer getRepayInfoCurrentCount(BorrowRepayInfoCurrentRequest requestBean){
         Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", requestBean.getBorrowNid());
 
         return adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentCount(paraMap);
     }
@@ -41,6 +42,9 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
     @Override
     public List<BorrowRepayInfoCurrentCustomizeVO> getRepayInfoCurrentList(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit){
         Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", requestBean.getBorrowNid());
+        paraMap.put("limitStart", offset);
+        paraMap.put("limitEnd", limit);
 
         List<BorrowRepayInfoCurrentCustomizeVO> resultList = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentList(paraMap);
         if(resultList == null){
@@ -57,6 +61,7 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
     @Override
     public Map<String,Object> getRepayInfoCurrentSum(BorrowRepayInfoCurrentRequest requestBean){
         Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", requestBean.getBorrowNid());
 
         Map<String,Object> resultMap = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentSum(paraMap);
         if(resultMap == null){

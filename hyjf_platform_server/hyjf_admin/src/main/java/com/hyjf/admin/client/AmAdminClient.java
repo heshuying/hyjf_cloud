@@ -1207,4 +1207,6 @@ public interface AmAdminClient {
      * @return
      */
     Integer countEveByDualDate(String dualDate);
+
+    BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean);
 }

@@ -2115,4 +2115,14 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return -1;
     }
+
+    /**
+     * 获取当前债权还款明细数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getData", requestBean, BorrowRepayInfoCurrentResponse.class).getBody();
+    }
 }

@@ -7,6 +7,8 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRepayInfoCurrentService;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +25,7 @@ import java.util.Map;
  * @author hesy
  */
 @RestController
-@RequestMapping("/am-trade/repayinfo_current")
+@RequestMapping("/am-admin/repayinfo_current")
 public class BorrowRepayInfoCurrentController extends BaseController {
     @Autowired
     BorrowRepayInfoCurrentService borrowRepayInfoCurrentService;
@@ -44,6 +46,12 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         }
         if(requestBean.getPageSize() <= 0){
             requestBean.setPageSize(10);
+        }
+        //borrowNid为必须传的参数
+        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+            response.setRtn(Response.FAIL);
+            response.setMessage("请求参数错误，borrowNid为空");
+            return response;
         }
 
         // 查询列表总记录数

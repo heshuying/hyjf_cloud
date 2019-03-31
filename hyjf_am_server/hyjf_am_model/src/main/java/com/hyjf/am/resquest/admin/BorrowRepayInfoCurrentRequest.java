@@ -11,5 +11,13 @@ import java.io.Serializable;
  * @author hesy
  */
 public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializable{
+    private String borrowNid;
 
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
+    }
 }

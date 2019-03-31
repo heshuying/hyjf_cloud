@@ -353,5 +353,280 @@
     </select>
 
     <select id="getRepayInfoCurrentSum" resultType="map" parameterType="map">
+        SELECT
+            SUM(IFNULL(recoverCapital,0)) AS capitalSum,
+            SUM(IFNULL(recoverInterest,0)) AS interestSum,
+            SUM(IFNULL(recoverAccount,0)) AS accountSum,
+            SUM(IFNULL(recoverFee,0)) AS feeSum
+        FROM
+        (
+        <!-- 1、未分期原始出借订单查询-->
+        SELECT
+        br.borrow_nid AS borrowNid,
+        br.nid AS tenderOrdid,
+        '' AS assignOrdid,
+        br.repay_ordid AS repayOrdid,
+        hic.inst_name AS instName,
+        b.plan_nid AS planNid,
+        b.borrow_user_name AS borrowUserName,
+        t.user_name AS recoverUserName,
+        '1' AS period,
+        t.account,
+        br.recover_capital - br.recover_capital_yes - br.credit_amount AS amountHold,
+        br.recover_capital AS recoverCapital,
+        br.recover_interest AS recoverInterest,
+        br.recover_account AS recoverAccount,
+        br.recover_fee AS recoverFee,
+        br.recover_status AS recoverStatus,
+
+        IF (
+        bry.repay_status = 1
+        AND bry.repay_action_time > 0,
+        CASE bry.repay_money_source
+        WHEN 1 THEN
+        '借款人还款'
+        WHEN 2 THEN
+        '机构垫付'
+        WHEN 3 THEN
+        '保证金垫付'
+        ELSE
+        '借款人还款'
+        END,
+        ''
+        ) AS repayMoneySource,
+        br.recover_account_yes +
+        IF (
+        br.recover_status = 1,
+        br.recover_fee,
+        0
+        ) AS recoverAmountTotal,
+        FROM_UNIXTIME(br.recover_time, '%Y-%m-%d') AS recoverTime,
+
+        IF (
+        br.recover_yestime IS NULL
+        OR br.recover_yestime = '',
+        '',
+        FROM_UNIXTIME(
+        br.recover_yestime,
+        '%Y-%m-%d %H:%i:%s'
+        )
+        ) AS repayActionTime,
+        '1' AS recordType
+        FROM
+        ht_borrow_recover br
+        INNER JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_tender AS t ON br.tender_id = t.id
+        INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+        WHERE
+        (
+        b.borrow_style = 'end'
+        OR b.borrow_style = 'endday'
+        )
+        <if test="borrowNid != null and borrowNid != ''">
+            AND b.borrow_nid = #{borrowNid}
+        </if>
+
+        UNION ALL
+        <!-- 1、分期原始出借订单查询-->
+        SELECT
+        rp.borrow_nid,
+        rp.nid AS tenderOrdid,
+        '' AS assignOrdid,
+        rp.repay_order_id AS repayOrdid,
+        hic.inst_name AS instName,
+        b.plan_nid AS planNid,
+        b.borrow_user_name AS borrowUserName,
+        t.user_name AS recoverUserName,
+        rp.recover_period AS period,
+        t.account,
+        rp.recover_capital - rp.recover_capital_yes - rp.credit_amount AS amountHold,
+        rp.recover_capital AS recoverCapital,
+        rp.recover_interest AS recoverInterest,
+        rp.recover_account AS recoverAccount,
+        rp.recover_fee AS recoverFee,
+        rp.recover_status AS recoverStatus,
+
+        IF (
+        brp.repay_status = 1
+        AND brp.repay_action_time > 0,
+        CASE brp.repay_money_source
+        WHEN 1 THEN
+        '借款人还款'
+        WHEN 2 THEN
+        '机构垫付'
+        WHEN 3 THEN
+        '保证金垫付'
+        ELSE
+        '借款人还款'
+        END,
+        ''
+        ) AS repayMoneySource,
+        rp.recover_account_yes +
+        IF (
+        rp.recover_status = 1,
+        rp.recover_fee,
+        0
+        ) AS recoverAmountTotal,
+        FROM_UNIXTIME(rp.recover_time, '%Y-%m-%d') AS recoverTime,
+
+        IF (
+        rp.recover_yestime IS NULL
+        OR rp.recover_yestime = '',
+        '',
+        FROM_UNIXTIME(
+        rp.recover_yestime,
+        '%Y-%m-%d %H:%i:%s'
+        )
+        ) AS repayActionTime,
+        '2' AS recordType
+        FROM
+        ht_borrow_recover_plan rp
+        JOIN ht_borrow b ON rp.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_tender AS t ON rp.tender_id = t.id
+        INNER JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid
+        AND brp.repay_period = rp.recover_period
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+        WHERE 1=1
+        <if test="borrowNid != null and borrowNid != ''">
+            AND b.borrow_nid = #{borrowNid}
+        </if>
+        UNION
+        <!-- 1、债权转让承接订单查询-->
+        SELECT
+        b.borrow_nid AS borrowNid,
+        cr.credit_tender_nid AS tenderOrdid,
+        cr.assign_nid AS assignOrdid,
+        cr.credit_repay_order_id AS repayOrdid,
+        hic.inst_name AS instName,
+        b.plan_nid AS planNid,
+        b.borrow_user_name AS borrowUserName,
+        cr.user_name AS recoverUserName,
+        cr.assign_repay_period AS period,
+        t.account,
+        cr.assign_capital AS amountHold,
+        cr.assign_capital AS recoverCapital,
+        cr.assign_interest AS recoverInterest,
+        cr.assign_account AS recoverAccount,
+        cr.manage_fee AS recoverFee,
+        cr. STATUS AS recoverStatus,
+
+        IF (
+        cr.`status` = 1
+        AND cr.assign_repay_yes_time > 0,
+        CASE bry.repay_money_source
+        WHEN 1 THEN
+        '借款人还款'
+        WHEN 2 THEN
+        '机构垫付'
+        WHEN 3 THEN
+        '保证金垫付'
+        ELSE
+        '借款人还款'
+        END,
+        ''
+        ) AS repayMoneySource,
+        cr.assign_repay_account +
+        IF (
+        cr. STATUS = 1,
+        cr.manage_fee,
+        0
+        ) AS recoverAmountTotal,
+        FROM_UNIXTIME(
+        cr.assign_repay_next_time,
+        '%Y-%m-%d'
+        ) AS recoverTime,
+
+        IF (
+        cr.assign_repay_yes_time IS NULL
+        OR cr.assign_repay_yes_time = '',
+        '',
+        FROM_UNIXTIME(
+        cr.assign_repay_yes_time,
+        '%Y-%m-%d %H:%i:%s'
+        )
+        ) AS repayActionTime,
+        '3' AS recordType
+        FROM
+        ht_credit_repay cr
+        JOIN ht_borrow b ON cr.bid_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
+        INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+        WHERE 1=1
+        <if test="borrowNid != null and borrowNid != ''">
+            AND b.borrow_nid = #{borrowNid}
+        </if>
+        UNION
+        <!-- 4、计划底层标的债权转让承接订单查询-->
+        SELECT
+        b.borrow_nid AS borrowNid,
+        hcr.invest_order_id AS tenderOrdid,
+        hcr.assign_order_id AS assignOrdid,
+        hcr.credit_repay_order_id AS repayOrdid,
+        hic.inst_name AS instName,
+        b.plan_nid AS planNid,
+        b.borrow_user_name AS borrowUserName,
+        hcr.user_name AS recoverUserName,
+        hcr.assign_repay_period AS period,
+        t.account,
+        hcr.repay_capital AS amountHold,
+        hcr.repay_capital AS recoverCapital,
+        hcr.repay_interest AS recoverInterest,
+        hcr.repay_account AS recoverAccount,
+        hcr.manage_fee AS recoverFee,
+        hcr.repay_status AS recoverStatus,
+
+        IF (
+        hcr.repay_status = 1
+        AND hcr.assign_repay_yes_time > 0,
+        CASE bry.repay_money_source
+        WHEN 1 THEN
+        '借款人还款'
+        WHEN 2 THEN
+        '机构垫付'
+        WHEN 3 THEN
+        '保证金垫付'
+        ELSE
+        '借款人还款'
+        END,
+        ''
+        ) AS repayMoneySource,
+        hcr.repay_account_yes +
+        IF (
+        hcr.repay_status = 1,
+        hcr.manage_fee,
+        0
+        ) AS recoverAmountTotal,
+        FROM_UNIXTIME(
+        hcr.assign_repay_next_time,
+        '%Y-%m-%d'
+        ) AS recoverTime,
+
+        IF (
+        hcr.assign_repay_yes_time IS NULL
+        OR hcr.assign_repay_yes_time = '',
+        '',
+        FROM_UNIXTIME(
+        hcr.assign_repay_yes_time,
+        '%Y-%m-%d %H:%i:%s'
+        )
+        ) AS repayActionTime,
+        '4' AS recordType
+        FROM
+        ht_hjh_debt_credit_repay hcr
+        JOIN ht_borrow b ON hcr.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
+        INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
+        INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+        WHERE 1=1
+        <if test="borrowNid != null and borrowNid != ''">
+            AND b.borrow_nid = #{borrowNid}
+        </if>
+        ) t
     </select>
 </mapper>
