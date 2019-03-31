@@ -1423,4 +1423,12 @@ public interface AmUserClient {
      * @return
      */
     int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     * 查询用户销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

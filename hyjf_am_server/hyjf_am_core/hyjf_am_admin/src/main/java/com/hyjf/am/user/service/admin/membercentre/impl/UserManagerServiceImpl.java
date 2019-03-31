@@ -7,10 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.resquest.user.AdminUserRecommendRequest;
-import com.hyjf.am.resquest.user.UpdCompanyRequest;
-import com.hyjf.am.resquest.user.UserInfosUpdCustomizeRequest;
-import com.hyjf.am.resquest.user.UserManagerUpdateRequest;
+import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -21,6 +18,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -1679,5 +1677,64 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     @Override
     public int saveCancellationAccountRecordAction(BankCancellationAccount bankCancellationAccount) {
         return this.bankCancellationAccountMapper.insertSelective(bankCancellationAccount);
+    }
+
+    @Override
+    public int countBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+        BankCancellationAccountExample example = new BankCancellationAccountExample();
+        BankCancellationAccountExample.Criteria cra = example.createCriteria();
+        // 用户名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getUsername())){
+            cra.andUsernameEqualTo(bankCancellationAccountRequest.getUsername());
+        }
+        // 手机号
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getMobile())){
+            cra.andMobileEqualTo(bankCancellationAccountRequest.getMobile());
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getTruename())){
+            cra.andTruenameEqualTo(bankCancellationAccountRequest.getTruename());
+        }
+        // 销户开始时间
+        if(StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())){
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+        }
+        // 销户结束时间
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())){
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+        }
+        return this.bankCancellationAccountMapper.countByExample(example);
+    }
+
+
+    @Override
+    public List<BankCancellationAccount> getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest, int limitStart, int limitEnd) {
+        BankCancellationAccountExample example = new BankCancellationAccountExample();
+        BankCancellationAccountExample.Criteria cra = example.createCriteria();
+        // 用户名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getUsername())){
+            cra.andUsernameEqualTo(bankCancellationAccountRequest.getUsername());
+        }
+        // 手机号
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getMobile())){
+            cra.andMobileEqualTo(bankCancellationAccountRequest.getMobile());
+        }
+        // 姓名
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getTruename())){
+            cra.andTruenameEqualTo(bankCancellationAccountRequest.getTruename());
+        }
+        // 销户开始时间
+        if(StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())){
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+        }
+        // 销户结束时间
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())){
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+        }
+        if (limitEnd > 0){
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        return this.bankCancellationAccountMapper.selectByExample(example);
     }
 }

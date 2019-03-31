@@ -19,6 +19,7 @@ import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -1281,4 +1282,25 @@ public class UserCenterController extends BaseController {
         }
         return new AdminResult<>(SUCCESS, "用户销户成功!");
     }
+
+    /**
+     * 销户记录查询
+     * @param requestBean
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "销户记录列表 ", notes = "销户记录列表查询")
+    @PostMapping(value = "/bankCancellationAccountList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
+    public AdminResult<ListResult<BankCancellationAccountVO>> getBankCancellationAccountList(@RequestBody BankCancellationAccountRequestBean requestBean,HttpServletRequest request) {
+        BankCancellationAccountRequest  bankCancellationAccountRequest = new  BankCancellationAccountRequest();
+        BeanUtils.copyProperties(requestBean,bankCancellationAccountRequest);
+        BankCancellationAccountResponse response = this.userCenterService.getBankCancellationAccountList(bankCancellationAccountRequest);
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<ListResult<BankCancellationAccountVO>>(ListResult.build(response.getResultList(),response.getCount())) ;
+    }
+
 }

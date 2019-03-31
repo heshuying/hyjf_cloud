@@ -6,6 +6,7 @@ package com.hyjf.admin.service;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.response.CompanyInfoSearchResponseBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -287,4 +288,13 @@ public interface UserCenterService {
      * @param bankCancellationAccountRequest
      */
     int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     *
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

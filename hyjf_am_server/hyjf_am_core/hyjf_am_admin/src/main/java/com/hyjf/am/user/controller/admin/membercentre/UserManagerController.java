@@ -1036,4 +1036,35 @@ public class UserManagerController extends BaseController {
         int userCounts =  this.userManagerService.saveCancellationAccountRecordAction(bankCancellationAccount);
         return new IntegerResponse(userCounts);
     }
+
+    /**
+     *
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @RequestMapping("/getBankCancellationAccountList")
+    public BankCancellationAccountResponse getBankCancellationAccountList(@RequestBody BankCancellationAccountRequest bankCancellationAccountRequest){
+        logger.info("--getBankCancellationAccountList by param---  " + JSONObject.toJSON(bankCancellationAccountRequest));
+        BankCancellationAccountResponse response = new BankCancellationAccountResponse();
+        int usesrCount = userManagerService.countBankCancellationAccountList(bankCancellationAccountRequest);
+        Paginator paginator = new Paginator(bankCancellationAccountRequest.getCurrPage(), usesrCount,bankCancellationAccountRequest.getPageSize());
+        if (bankCancellationAccountRequest.getPageSize() == 0) {
+            paginator = new Paginator(bankCancellationAccountRequest.getCurrPage(), usesrCount);
+        }
+        int limitStart = paginator.getOffset();
+        int limitEnd =  paginator.getLimit();
+        response.setCount(usesrCount);
+        if(usesrCount>0){
+            List<BankCancellationAccount> userManagerCustomizeList = userManagerService.getBankCancellationAccountList(bankCancellationAccountRequest,limitStart,limitEnd);
+            if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
+                List<BankCancellationAccountVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, BankCancellationAccountVO.class);
+                response.setResultList(userVoList);
+                response.setRtn(Response.SUCCESS);
+                response.setMessage(Response.SUCCESS_MSG);
+            }
+        }
+        return response;
+    }
 }

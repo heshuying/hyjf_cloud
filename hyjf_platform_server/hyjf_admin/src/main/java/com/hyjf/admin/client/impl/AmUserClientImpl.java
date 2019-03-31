@@ -2877,4 +2877,18 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
+	/**
+	 * 查询销户记录列表
+	 *
+	 * @param bankCancellationAccountRequest
+	 * @return
+	 */
+	@Override
+	public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+		BankCancellationAccountResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/userManager/getBankCancellationAccountList", bankCancellationAccountRequest, BankCancellationAccountResponse.class)
+				.getBody();
+		return response;
+	}
 }

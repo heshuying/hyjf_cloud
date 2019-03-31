@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.resquest.user;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.util.Date;
 
 /**
@@ -11,9 +13,20 @@ import java.util.Date;
  * @author liuyang
  * @version BankCancellationAccountRequest, v0.1 2019/3/31 9:49
  */
-public class BankCancellationAccountRequest {
+public class BankCancellationAccountRequest extends BasePage {
 
     private Integer id;
+
+    /**
+     * 销户开始时间
+     */
+    public String cancellationTimeStart;
+
+    /**
+     * 销户结束时间
+     */
+    public String cancellationTimeEnd;
+
 
     /**
      * 用户ID
@@ -246,5 +259,21 @@ public class BankCancellationAccountRequest {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCancellationTimeStart() {
+        return cancellationTimeStart;
+    }
+
+    public void setCancellationTimeStart(String cancellationTimeStart) {
+        this.cancellationTimeStart = cancellationTimeStart;
+    }
+
+    public String getCancellationTimeEnd() {
+        return cancellationTimeEnd;
+    }
+
+    public void setCancellationTimeEnd(String cancellationTimeEnd) {
+        this.cancellationTimeEnd = cancellationTimeEnd;
     }
 }

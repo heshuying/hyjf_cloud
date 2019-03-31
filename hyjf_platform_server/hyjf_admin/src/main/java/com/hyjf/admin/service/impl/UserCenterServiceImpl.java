@@ -15,6 +15,7 @@ import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -749,5 +750,17 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     @Override
     public int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest) {
         return this.userCenterClient.saveCancellationAccountRecordAction(bankCancellationAccountRequest);
+    }
+
+    /**
+     * 查询销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @Override
+    public BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest) {
+        BankCancellationAccountResponse response = this.userCenterClient.getBankCancellationAccountList(bankCancellationAccountRequest);
+        return response;
     }
 }
