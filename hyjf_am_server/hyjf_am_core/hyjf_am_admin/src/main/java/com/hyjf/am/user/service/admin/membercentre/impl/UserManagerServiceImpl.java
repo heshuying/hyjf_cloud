@@ -1602,4 +1602,82 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         bankCard.setPayAllianceCode(updCompanyRequest.getPayAllianceCode());
         return bankCard;
     }
+
+
+    /**
+     * 用户销户
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    @Override
+    public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+        if (bankOpenAccount == 1) {
+            // 已开户
+            // 更新user表
+            User user = this.userMapper.selectByPrimaryKey(Integer.parseInt(userId));
+            // 手机号
+            user.setMobile("");
+            // 用户状态
+            user.setStatus(1);
+            // 用户状态:已销户
+            user.setBankOpenAccount(2);
+            this.userMapper.updateByPrimaryKey(user);
+            // 更新 user_info 表
+            UserInfo userInfo = this.userInfoMapper.selectByPrimaryKey(Integer.parseInt(userId));
+            // 姓名
+            userInfo.setTruename("");
+            // 身份证号
+            userInfo.setIdcard("");
+            this.userInfoMapper.updateByPrimaryKey(userInfo);
+            // 删除银行卡记录
+            BankCardExample bankCardExample = new BankCardExample();
+            BankCardExample.Criteria cra = bankCardExample.createCriteria();
+            cra.andUserIdEqualTo(Integer.parseInt(userId));
+            this.bankCardMapper.deleteByExample(bankCardExample);
+            // 删除电子账户表
+            BankOpenAccountExample bankOpenAccountExample = new BankOpenAccountExample();
+            BankOpenAccountExample.Criteria bankOpenAccountCra = bankOpenAccountExample.createCriteria();
+            bankOpenAccountCra.andUserIdEqualTo(Integer.parseInt(userId));
+            this.bankOpenAccountMapper.deleteByExample(bankOpenAccountExample);
+        } else {
+            // 未开户
+            // 删除 ht_users
+            this.userMapper.deleteByPrimaryKey(Integer.parseInt(userId));
+            // 删除 ht_users_info
+            this.userInfoMapper.deleteByPrimaryKey(Integer.parseInt(userId));
+            // 删除 ht_account TODO
+            // 删除 ht_spreads_users
+            SpreadsUserExample example = new SpreadsUserExample();
+            SpreadsUserExample.Criteria cra = example.createCriteria();
+            cra.andUserIdEqualTo(Integer.parseInt(userId));
+            this.spreadsUserMapper.deleteByExample(example);
+            // 删除 ht_utm_reg
+            UtmRegExample utmRegExample = new UtmRegExample();
+            UtmRegExample.Criteria utmcra = utmRegExample.createCriteria();
+            utmcra.andUserIdEqualTo(Integer.parseInt(userId));
+            utmRegMapper.deleteByExample(utmRegExample);
+            // 删除 ht_users_log
+            UserLogExample userLogExample = new UserLogExample();
+            UserLogExample.Criteria userlogcra = userLogExample.createCriteria();
+            userlogcra.andUserIdEqualTo(Integer.parseInt(userId));
+            userLogMapper.deleteByExample(userLogExample);
+            // 删除登陆记录
+            userLoginLogMapper.deleteByPrimaryKey(Integer.parseInt(userId));
+        }
+        return 1;
+    }
+
+    /**
+     *
+     * 用户销户成功后,插入销户记录
+     *
+     * @param bankCancellationAccount
+     * @return
+     */
+    @Override
+    public int saveCancellationAccountRecordAction(BankCancellationAccount bankCancellationAccount) {
+        return this.bankCancellationAccountMapper.insertSelective(bankCancellationAccount);
+    }
 }

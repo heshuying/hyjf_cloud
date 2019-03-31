@@ -1160,4 +1160,125 @@ public class UserCenterController extends BaseController {
         }
         return new AdminResult<>(SUCCESS,"同步用户角色成功!");
     }
+
+
+    /**
+     * 用户销户操作
+     *
+     * @param request
+     * @param userId
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/cancellationAccountAction")
+    @ApiOperation(value = "用户销户", notes = "用户销户")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_BANK_CANCELLATION_ACCOUNT)
+    public AdminResult cancellationAccountAction(HttpServletRequest request, @PathVariable String userId) {
+        if (StringUtils.isBlank(userId)) {
+            return new AdminResult<>(FAIL, "获取用户userId失败!");
+        }
+        // 根据用户ID查询用户信息
+        UserVO userVO = this.userCenterService.selectUserByUserId(userId);
+        if (userVO == null) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户信息失败");
+        }
+        // 根据用户ID查询用户详情信息
+        UserInfoVO userInfoVO = this.userCenterService.selectUserInfoByUserId(userId);
+        if (userInfoVO == null) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户详情信息失败");
+        }
+        // 获取操作人id
+        AdminSystemVO adminSystemVO = this.getUser(request);
+        String loginUserId = adminSystemVO.getId();
+        String loginUserName = adminSystemVO.getUsername();
+        // 判断用户是否开户
+        Integer bankOpenAccount = userVO.getBankOpenAccount();
+        // 用户销户VO
+        BankCancellationAccountRequest bankCancellationAccountVO = new BankCancellationAccountRequest();
+        // 用户已开户的情况
+        if (bankOpenAccount == 1) {
+            // 调用银行接口查询用户信息
+            BankCallBean bankCallBean = new BankCallBean(userId,BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE,0);
+            bankCallBean.setMobile(userVO.getMobile());
+            BankCallBean callBackBean ;
+            try {
+                callBackBean = BankCallUtils.callApiBg(bankCallBean);
+            } catch (Exception e) {
+                logger.error("请求银行接口出错!手机号:" + userVO.getMobile());
+                return new AdminResult<>(FAIL, "请求银行接口出错!");
+            }
+            if (Validator.isNull(callBackBean) || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())){
+                //获取银行账户信息失败
+                return new AdminResult<>(FAIL, "获取用户银行账户信息失败!");
+            }
+            // 账户状态
+            // 空-正常
+            // C-止付
+            // Z-注销
+            if (!"Z".equals(bankCallBean.getAcctState())){
+                return new AdminResult<>(FAIL, "用户银行状态未销户,请确认");
+            }
+            // 获取用户开户信息
+            BankOpenAccountVO bankOpenAccountVO = this.userCenterService.queryBankOpenAccountByUserId(Integer.parseInt(userId));
+            // 电子账户号
+            bankCancellationAccountVO.setBankAccount(bankOpenAccountVO != null ? bankOpenAccountVO.getAccount() : "");
+            // 是否开户
+            bankCancellationAccountVO.setBankOpenAccount(1);
+            // 用户姓名
+            bankCancellationAccountVO.setTruename(userInfoVO.getTruename());
+            // 用户身份证号
+            bankCancellationAccountVO.setIdcard(userInfoVO.getIdcard());
+            // 查询用户银行卡信息
+            BankCardVO bankCardVO = this.userCenterService.getBankCardByUserId(userId);
+            // 用户银行卡卡号
+            bankCancellationAccountVO.setCardNo(bankCardVO == null ? "" : bankCardVO.getCardNo());
+            // 注册手机号
+            bankCancellationAccountVO.setMobile(userVO.getMobile());
+            // 注册时间
+            bankCancellationAccountVO.setRegTime(userVO.getRegTime());
+            // 删除用户ID
+            bankCancellationAccountVO.setUserId(userVO.getUserId());
+            // 删除用户名
+            bankCancellationAccountVO.setUsername(userVO.getUsername());
+            // 操作人用户ID
+            bankCancellationAccountVO.setCreateUserId(Integer.parseInt(loginUserId));
+            // 操作人用户名
+            bankCancellationAccountVO.setCreateUserName(loginUserName);
+            // 用户销户操作
+            this.userCenterService.cancellationAccountAction(userId, bankOpenAccount);
+            // 保存用户销户记录表
+            this.userCenterService.saveCancellationAccountRecordAction(bankCancellationAccountVO);
+        } else if (bankOpenAccount == 0) {
+            // 用户未开户
+            // 电子账户号
+            bankCancellationAccountVO.setBankAccount("");
+            // 是否开户
+            bankCancellationAccountVO.setBankOpenAccount(0);
+            // 用户姓名
+            bankCancellationAccountVO.setTruename("");
+            // 用户身份证号
+            bankCancellationAccountVO.setIdcard("");
+            // 用户银行卡号
+            bankCancellationAccountVO.setCardNo("");
+            // 注册手机号
+            bankCancellationAccountVO.setMobile(userVO.getMobile());
+            // 注册时间
+            bankCancellationAccountVO.setRegTime(userVO.getRegTime());
+            // 删除用户ID
+            bankCancellationAccountVO.setUserId(userVO.getUserId());
+            // 删除用户名
+            bankCancellationAccountVO.setUsername(userVO.getUsername());
+            // 操作人用户ID
+            bankCancellationAccountVO.setCreateUserId(Integer.parseInt(loginUserId));
+            // 操作人用户名
+            bankCancellationAccountVO.setCreateUserName(loginUserName);
+            // 用户销户操作
+            this.userCenterService.cancellationAccountAction(userId, userVO.getBankOpenAccount());
+            // 未开户用户销户后,删除用户Account表
+            this.userCenterService.deleteUserAccountAction(userId);
+            // 保存用户销户记录表
+            this.userCenterService.saveCancellationAccountRecordAction(bankCancellationAccountVO);
+        }
+        return new AdminResult<>(SUCCESS, "用户销户成功!");
+    }
 }

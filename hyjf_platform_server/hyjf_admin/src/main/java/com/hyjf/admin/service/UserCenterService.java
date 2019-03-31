@@ -263,4 +263,28 @@ public interface UserCenterService {
      * @auther: nxl
      */
     BankCardResponse getBankInfoByAccount(String account,String userId);
+
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId,Integer bankOpenAccount);
+
+    /**
+     * 用户销户后,删除用户账户表
+     *
+     * @param userId
+     */
+    int deleteUserAccountAction(String userId);
+
+    /**
+     * 用户保存用户销户记录
+     *
+     * @param bankCancellationAccountRequest
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

@@ -715,4 +715,39 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         BankCardResponse bankCardResponse = userCenterClient.getBankInfoByAccount(updCompanyRequest);
         return bankCardResponse;
     }
+
+    /**
+     *  用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    @Override
+    public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+        return userCenterClient.cancellationAccountAction(userId, bankOpenAccount);
+    }
+
+    /**
+     *
+     * 用户销户成功后,删除用户账户表
+     *
+     * @param userId
+     */
+    @Override
+    public int deleteUserAccountAction(String userId) {
+        return this.amTradeClient.deleteUserAccountAction(userId);
+    }
+
+    /**
+     *
+     * 销户成功后,保存用户销户记录
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @Override
+    public int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest) {
+        return this.userCenterClient.saveCancellationAccountRecordAction(bankCancellationAccountRequest);
+    }
 }

@@ -6921,4 +6921,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult().intValue();
     }
 
+
+    /**
+     * 销户成功后,删除用户账户表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public int deleteUserAccountAction(String userId) {
+        IntegerResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/adminAccountDetail/deleteUserAccountAction/" + userId, IntegerResponse.class).getBody();
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }

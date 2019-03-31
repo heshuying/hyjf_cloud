@@ -336,4 +336,21 @@ public interface UserManagerService extends BaseService {
      * @return
      */
    int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog);
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId, Integer bankOpenAccount);
+
+    /**
+     * 用户销户成功后,插入销户记录表
+     *
+     * @param bankCancellationAccount
+     * @return
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccount bankCancellationAccount);
 }

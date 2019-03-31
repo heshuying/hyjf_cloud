@@ -1005,4 +1005,35 @@ public class UserManagerController extends BaseController {
         response.setResult(bankCardVO);
         return response;
     }
+
+
+    /**
+     * 用户销户
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    @RequestMapping("/cancellationAccountAction")
+    public IntegerResponse cancellationAccountAction(@PathVariable String userId, @PathVariable Integer bankOpenAccount) {
+        logger.info("用户销户操作:用户ID:[" + userId + "],开户状态:[" + bankOpenAccount + "].");
+        int userCounts = userManagerService.cancellationAccountAction(userId, bankOpenAccount);
+        return new IntegerResponse(userCounts);
+    }
+
+
+    /**
+     * 用户销户成功后,保存用户销户记录表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    @RequestMapping("/saveCancellationAccountRecordAction")
+    public IntegerResponse saveCancellationAccountRecordAction(@RequestBody BankCancellationAccountRequest bankCancellationAccountRequest) {
+        logger.info("用户销户操作:用户ID:[" + bankCancellationAccountRequest.getUserId() + "],用户名:[" + bankCancellationAccountRequest.getUsername() + "].");
+        BankCancellationAccount bankCancellationAccount = new BankCancellationAccount();
+        BeanUtils.copyProperties(bankCancellationAccountRequest,bankCancellationAccount);
+        int userCounts =  this.userManagerService.saveCancellationAccountRecordAction(bankCancellationAccount);
+        return new IntegerResponse(userCounts);
+    }
 }

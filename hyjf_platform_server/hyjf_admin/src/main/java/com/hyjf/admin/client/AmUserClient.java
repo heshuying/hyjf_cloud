@@ -1406,4 +1406,21 @@ public interface AmUserClient {
      * @return
      */
     BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest);
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId, Integer bankOpenAccount);
+
+    /**
+     * 用户销户成功后,保存销户记录表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

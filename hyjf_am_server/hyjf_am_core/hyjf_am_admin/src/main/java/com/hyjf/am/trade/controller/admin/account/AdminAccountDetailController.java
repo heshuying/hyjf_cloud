@@ -223,4 +223,16 @@ public class AdminAccountDetailController {
         return response;
     }
 
+    /**
+     * 未开户用户销户成功后,删除用户账户表
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/deleteUserAccountAction")
+    public IntegerResponse deleteUserAccountAction(@PathVariable String userId) {
+        logger.info("用户销户成功后,删除用户账户表:用户ID:[" + userId + "].");
+        int userCounts = accountDetailService.deleteUserAccountAction(userId);
+        return new IntegerResponse(userCounts);
+    }
 }

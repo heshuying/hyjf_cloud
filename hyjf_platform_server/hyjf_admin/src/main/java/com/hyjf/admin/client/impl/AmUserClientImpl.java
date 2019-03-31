@@ -2846,4 +2846,35 @@ public class AmUserClientImpl implements AmUserClient {
 		return response;
 	}
 
+	/**
+	 * 用户销户操作
+	 *
+	 * @param userId
+	 * @param bankOpenAccount
+	 * @return
+	 */
+	@Override
+	public int cancellationAccountAction(String userId, Integer bankOpenAccount) {
+		IntegerResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-user/userManager/cancellationAccountAction/" + userId + "/" + bankOpenAccount, IntegerResponse.class).getBody();
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 *
+	 * 用户销户成功后,保存销户记录表
+	 *
+	 * @param bankCancellationAccountRequest
+	 * @return
+	 */
+	@Override
+	public int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userManager/saveCancellationAccountRecordAction", bankCancellationAccountRequest, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
 }
