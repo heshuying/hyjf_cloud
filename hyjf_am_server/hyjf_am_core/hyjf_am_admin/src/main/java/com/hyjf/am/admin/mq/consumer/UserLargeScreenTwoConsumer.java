@@ -40,15 +40,15 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
             if ("now".equals(flag)){
                 // 得到运营部用户当前站岗资金
                 result = userLargeScreenTwoService.getOperMonthNowBalance();
-                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance());
+                RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance(), 24 * 60 * 60);
             }
             if("all".equals(flag)){
                 // 得到运营部用户当前站岗资金
                 result = userLargeScreenTwoService.getOperMonthNowBalance();
-                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance());
+                RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), result.getMonthNowBalance(), 24 * 60 * 60);
                 // 得到运营部用户月初站岗资金
                 result = userLargeScreenTwoService.getOperMonthStartBalance();
-                RedisUtils.setObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), result.getMonthStartBalance());
+                RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), result.getMonthStartBalance(), 31 * 24 * 60 * 60);
             }
         }
     }
