@@ -1014,7 +1014,7 @@ public class UserManagerController extends BaseController {
      * @param bankOpenAccount
      * @return
      */
-    @RequestMapping("/cancellationAccountAction")
+    @GetMapping("/cancellationAccountAction/{userId}/{bankOpenAccount}")
     public IntegerResponse cancellationAccountAction(@PathVariable String userId, @PathVariable Integer bankOpenAccount) {
         logger.info("用户销户操作:用户ID:[" + userId + "],开户状态:[" + bankOpenAccount + "].");
         int userCounts = userManagerService.cancellationAccountAction(userId, bankOpenAccount);
@@ -1028,7 +1028,7 @@ public class UserManagerController extends BaseController {
      * @param bankCancellationAccountRequest
      * @return
      */
-    @RequestMapping("/saveCancellationAccountRecordAction")
+    @PostMapping("/saveCancellationAccountRecordAction")
     public IntegerResponse saveCancellationAccountRecordAction(@RequestBody BankCancellationAccountRequest bankCancellationAccountRequest) {
         logger.info("用户销户操作:用户ID:[" + bankCancellationAccountRequest.getUserId() + "],用户名:[" + bankCancellationAccountRequest.getUsername() + "].");
         BankCancellationAccount bankCancellationAccount = new BankCancellationAccount();
@@ -1044,7 +1044,7 @@ public class UserManagerController extends BaseController {
      * @param bankCancellationAccountRequest
      * @return
      */
-    @RequestMapping("/getBankCancellationAccountList")
+    @PostMapping("/getBankCancellationAccountList")
     public BankCancellationAccountResponse getBankCancellationAccountList(@RequestBody BankCancellationAccountRequest bankCancellationAccountRequest){
         logger.info("--getBankCancellationAccountList by param---  " + JSONObject.toJSON(bankCancellationAccountRequest));
         BankCancellationAccountResponse response = new BankCancellationAccountResponse();

@@ -1171,7 +1171,7 @@ public class UserCenterController extends BaseController {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/cancellationAccountAction")
+    @GetMapping(value = "/cancellationAccountAction/{userId}")
     @ApiOperation(value = "用户销户", notes = "用户销户")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_BANK_CANCELLATION_ACCOUNT)
     public AdminResult cancellationAccountAction(HttpServletRequest request, @PathVariable String userId) {

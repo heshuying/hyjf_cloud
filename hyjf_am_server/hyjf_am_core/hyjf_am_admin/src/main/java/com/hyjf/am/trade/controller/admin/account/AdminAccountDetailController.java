@@ -229,7 +229,7 @@ public class AdminAccountDetailController {
      * @param userId
      * @return
      */
-    @RequestMapping("/deleteUserAccountAction")
+    @GetMapping("/deleteUserAccountAction/{userId}")
     public IntegerResponse deleteUserAccountAction(@PathVariable String userId) {
         logger.info("用户销户成功后,删除用户账户表:用户ID:[" + userId + "].");
         int userCounts = accountDetailService.deleteUserAccountAction(userId);
