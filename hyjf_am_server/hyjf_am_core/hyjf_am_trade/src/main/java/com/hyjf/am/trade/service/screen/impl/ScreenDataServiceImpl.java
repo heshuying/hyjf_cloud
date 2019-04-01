@@ -62,22 +62,24 @@ public class ScreenDataServiceImpl implements ScreenDataService {
         if (productType == 3) {
             productStyle = screenYearMoneyCustomizeMapper.queryPlanList(orderId, userId);
         } else {
-            productStyle=screenYearMoneyCustomizeMapper.queryTenderList(orderId, userId);
+            productStyle = screenYearMoneyCustomizeMapper.queryTenderList(orderId, userId);
         }
-        if (productStyle.contains("个月")) {
-            String number = StringUtils.substringBefore(productStyle, "个月");
-            if (StringUtils.isEmpty(number)) {
-                return null;
+        if (StringUtils.isNotBlank(productStyle)) {
+            if (productStyle.contains("个月")) {
+                String number = StringUtils.substringBefore(productStyle, "个月");
+                if (StringUtils.isEmpty(number)) {
+                    return null;
+                }
+                yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(12), 4, BigDecimal.ROUND_HALF_UP);
             }
-            yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(12), 4, BigDecimal.ROUND_HALF_UP);
-        }
-        //天=出借金额*天数/360 (产品要求按照360天计算)
-        else if (productStyle.contains("天")) {
-            String number = StringUtils.substringBefore(productStyle, "天");
-            if (StringUtils.isEmpty(number)) {
-                return null;
+            //天=出借金额*天数/360 (产品要求按照360天计算)
+            else if (productStyle.contains("天")) {
+                String number = StringUtils.substringBefore(productStyle, "天");
+                if (StringUtils.isEmpty(number)) {
+                    return null;
+                }
+                yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360), 4, BigDecimal.ROUND_HALF_UP);
             }
-            yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360), 4, BigDecimal.ROUND_HALF_UP);
         }
         return yearAmount;
     }
