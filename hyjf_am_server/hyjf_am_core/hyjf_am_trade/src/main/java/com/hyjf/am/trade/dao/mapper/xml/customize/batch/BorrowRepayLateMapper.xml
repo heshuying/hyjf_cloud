@@ -24,6 +24,7 @@
         b.borrow_style = 'end'
         OR b.borrow_style = 'endday'
         )
+        AND (br.recover_yestime = '' OR br.recover_yestime IS NULL)
         AND br.recover_status = 0
         AND ba.id IS NULL
 	</select>
@@ -44,6 +45,7 @@
         LEFT JOIN ht_borrow_apicron ba ON ba.borrow_nid = brp.borrow_nid AND ba.api_type = 1 AND brp.recover_period = ba.period_now
         WHERE
         brp.recover_time &lt; unix_timestamp(CURDATE())
+        AND (brp.recover_yestime = '' OR brp.recover_yestime IS NULL)
         AND brp.recover_status = 0
         AND ba.id IS NULL
     </select>
