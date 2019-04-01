@@ -40,13 +40,14 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     @Override
    public UserScreenConfigResponse getScreenConfig(UserLargeScreenRequest request){
         UserScreenConfigResponse response = new UserScreenConfigResponse();
-        ScreenConfigVO vo = new ScreenConfigVO();
+        ScreenConfigVO vo = null;
         ScreenConfigExample example = new ScreenConfigExample();
         ScreenConfigExample.Criteria criteria = example.createCriteria();
         criteria.andTaskTimeEqualTo(request.getTaskTime());
         criteria.andStatusEqualTo(1);
         List<ScreenConfig> list = screenConfigMapper.selectByExample(example);
         if(!CollectionUtils.isEmpty(list)){
+            vo = new ScreenConfigVO();
             BeanUtils.copyProperties(list.get(0),vo);
         }
         response.setResult(vo);
