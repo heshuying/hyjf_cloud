@@ -451,7 +451,6 @@ public class AccessFilter extends ZuulFilter {
             //create by walter.li 处理PC端请求，未登录或者登录超时时，返回字段标识
             if (GatewayConstant.WEB_CHANNEL.equals(channel)) {
                 JSONObject result = new JSONObject();
-                result.put("status", "999");
                 result.put("islogined", "0");
                 ctx.setResponseBody(result.toJSONString());
                 ctx.getResponse().setContentType("application/json;charset=UTF-8");
