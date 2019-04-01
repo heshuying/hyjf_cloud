@@ -421,7 +421,6 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	@Override
 	public List<ProtocolTemplateVO> selectAllShowProtocolTemplate() {
 		List<ProtocolTemplateVO> volist = amTradeClient.getAllShowProtocolTemp();
-		logger.info("===============获取所有在帮助中心显示的模板列表的数量为："+volist.size()+"===============");
 		return volist;
 	}
 }

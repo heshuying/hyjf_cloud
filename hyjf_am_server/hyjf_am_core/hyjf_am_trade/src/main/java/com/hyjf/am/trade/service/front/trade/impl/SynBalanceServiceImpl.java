@@ -58,17 +58,27 @@ public class SynBalanceServiceImpl implements SynBalanceService {
         try {
             // 校验交易明细是否已经插入当前笔充值
             AccountListExample accountListExample = new AccountListExample();
-            accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
+            //因为使用银行接口（近两日线下充值明细查询）与原来的接口（近两日存管子账户资金交易明细查询）同一笔线下充值数据所返回的交易时间不一致，所以现在取消放重校验里面的交易时间校验
+            /*accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
                     .andSeqNoEqualTo(synBalanceBean.getTraceNo() + "").andTypeEqualTo(CustomConstants.TYPE_IN)
-                    .andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());
+                    .andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());*/
+
+
+            accountListExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate()))
+                    .andSeqNoEqualTo(synBalanceBean.getTraceNo() + "").andTypeEqualTo(CustomConstants.TYPE_IN)
+                    .andUserIdEqualTo(account.getUserId());
             List<AccountList> accountLists = accountListMapper.selectByExample(accountListExample);
             if (accountLists != null && accountLists.size() != 0) {
                 return false;
             }
             // 校验充值信息是否已经插入当前笔充值
             AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
-            accountRechargeExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
-                    .andSeqNoEqualTo(synBalanceBean.getTraceNo()).andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());
+            //因为使用银行接口（近两日线下充值明细查询）与原来的接口（近两日存管子账户资金交易明细查询）同一笔线下充值数据所返回的交易时间不一致，所以现在取消放重校验里面的交易时间校验
+            /*accountRechargeExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate())).andTxTimeEqualTo(Integer.parseInt(synBalanceBean.getInpTime()))
+                    .andSeqNoEqualTo(synBalanceBean.getTraceNo()).andBankSeqNoEqualTo(synBalanceBean.getInpDate() + synBalanceBean.getInpTime() + synBalanceBean.getTraceNo());*/
+
+            accountRechargeExample.createCriteria().andTxDateEqualTo(Integer.parseInt(synBalanceBean.getInpDate()))
+                    .andSeqNoEqualTo(synBalanceBean.getTraceNo()).andUserIdEqualTo(account.getUserId());
             List<AccountRecharge> accountRecharges = accountRechargeMapper.selectByExample(accountRechargeExample);
             if (accountRecharges != null && accountRecharges.size() != 0) {
                 return false;
