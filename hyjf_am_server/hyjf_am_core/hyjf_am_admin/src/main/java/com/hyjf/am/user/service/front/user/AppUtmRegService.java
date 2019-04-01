@@ -31,7 +31,7 @@ public interface AppUtmRegService {
      * @param entity
      * @return void
      **/
-    void updateByPrimaryKeySelective(AppUtmReg entity);
+    int updateByPrimaryKeySelective(AppUtmReg entity);
 
     /**
      * 保存app推广用户信息
