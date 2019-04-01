@@ -62,6 +62,9 @@
 			<if test="tenderType != null and tenderType != ''">
 				AND ct.tender_type = #{tenderType}
 			</if>
+            <if test="sellOrderId != null and sellOrderId != ''">
+                AND ct.sell_order_id = #{sellOrderId}
+            </if>
 		</where>
 	</sql>
 	

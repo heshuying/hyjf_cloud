@@ -112,6 +112,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getTenderType())){
 			param.put("tenderType",request.getTenderType());
 		}
+		if (StringUtils.isNotEmpty(request.getSellOrderId())){
+			param.put("sellOrderId",request.getSellOrderId());
+		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		param.put("limitStart", limitStart);
@@ -159,7 +162,9 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 		if (StringUtils.isNotEmpty(request.getTenderType())){
 			param.put("tenderType",request.getTenderType());
 		}
-		
+		if (StringUtils.isNotEmpty(request.getSellOrderId())){
+			param.put("sellOrderId",request.getSellOrderId());
+		}
 		param.put("assignTimeStart", StringUtils.isNotBlank(request.getAssignTimeStart())?request.getAssignTimeStart():null);
 		param.put("assignTimeEnd", StringUtils.isNotBlank(request.getAssignTimeEnd())?request.getAssignTimeEnd():null);
 		List<HjhCreditTenderCustomizeVO> list = adminHjhCreditTenderCustomizeMapper.selectDebtCreditTenderList(param);
