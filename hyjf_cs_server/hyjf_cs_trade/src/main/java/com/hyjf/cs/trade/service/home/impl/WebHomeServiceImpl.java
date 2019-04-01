@@ -228,19 +228,20 @@ public class WebHomeServiceImpl implements WebHomeService {
         result.setNewProjectList(CollectionUtils.isEmpty(newProjectList) ? new ArrayList<>() : newProjectList);
 
         //首页散标推荐
-        request.setProjectType("HZT");
-        request.setBorrowClass("");
-        request.setLimitStart(0);
-        request.setLimitEnd(4);
-        List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);//加缓存
+        ProjectListRequest request2 = new ProjectListRequest();
+        request2.setProjectType("HZT");
+        request2.setBorrowClass("");
+        request2.setLimitStart(0);
+        request2.setLimitEnd(4);
+        List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request2);//加缓存
         result.setProjectList(CollectionUtils.isEmpty(projectList) ? new ArrayList<>() : projectList);
 
 
-        request = new ProjectListRequest();
-        request.setLimitStart(0);
-        request.setLimitEnd(4);
-        request.setIsHome("1");
-        List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request);//加缓存
+        ProjectListRequest request3 = new ProjectListRequest();
+        request3.setLimitStart(0);
+        request3.setLimitEnd(4);
+        request3.setIsHome("1");
+        List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request3);//加缓存
         result.setHjhPlanList(CollectionUtils.isEmpty(planList) ? new ArrayList<>() :planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);

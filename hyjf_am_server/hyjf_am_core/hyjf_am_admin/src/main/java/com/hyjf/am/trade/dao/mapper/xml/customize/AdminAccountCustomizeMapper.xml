@@ -489,12 +489,12 @@
 				#{openAccountPlat,jdbcType=VARCHAR}
 			</if>
 			<if test="openTimeStart != null and openTimeStart !='' ">
-				AND date_format( hboa.create_time, '%Y-%m-%d' ) <![CDATA[>=]]>
-				#{openTimeStart,jdbcType=VARCHAR}
+				AND  hboa.create_time <![CDATA[>=]]>
+				 timestamp(#{openTimeStart,jdbcType=VARCHAR})
 			</if>
 			<if test="openTimeEnd != null and openTimeEnd !='' ">
-				AND date_format( hboa.create_time, '%Y-%m-%d' ) <![CDATA[<=]]>
-				#{openTimeEnd,jdbcType=VARCHAR}
+				AND hboa.create_time <![CDATA[<=]]>
+				 timestamp(#{openTimeEnd,jdbcType=VARCHAR})
 			</if>
 		</where>
 	</sql>

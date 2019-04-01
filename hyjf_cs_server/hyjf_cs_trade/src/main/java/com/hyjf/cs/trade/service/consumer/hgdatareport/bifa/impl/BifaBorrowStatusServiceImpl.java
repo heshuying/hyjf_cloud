@@ -224,7 +224,7 @@ public class BifaBorrowStatusServiceImpl extends BaseHgDateReportServiceImpl imp
             bifaBorrowStatusEntity.setCreateTime(currDate);
             bifaBorrowStatusEntity.setUpdateTime(currDate);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(logHeader + "数据变换失败！", e);
             return false;
         }
         return true;

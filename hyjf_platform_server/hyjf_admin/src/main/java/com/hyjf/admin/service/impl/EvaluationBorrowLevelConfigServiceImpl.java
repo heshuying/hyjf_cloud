@@ -40,6 +40,7 @@ public class EvaluationBorrowLevelConfigServiceImpl extends BaseAdminServiceImpl
      * @param id
      * @return
      */
+    @Override
     public EvaluationBorrowLevelConfigVO getEvaluationBorrowLevelConfigById(Integer id) {
         EvaluationBorrowLevelConfigVO evaluationBorrowLevelConfigVO = amTradeClient.getEvaluationBorrowLevelConfigById(id);
         return evaluationBorrowLevelConfigVO;
@@ -51,6 +52,7 @@ public class EvaluationBorrowLevelConfigServiceImpl extends BaseAdminServiceImpl
      * @param requestBean
      * @return
      */
+    @Override
     public EvaluationBorrowLevelConfigResponse updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest requestBean){
         return  amTradeClient.updateBorrowLevelConfig(requestBean);
     }

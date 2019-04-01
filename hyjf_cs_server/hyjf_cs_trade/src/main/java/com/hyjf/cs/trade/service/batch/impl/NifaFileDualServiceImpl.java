@@ -8,14 +8,13 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.NifaContractTemplateResponse;
 import com.hyjf.am.response.admin.NifaReportLogResponse;
 import com.hyjf.am.response.hgreportdata.nifa.*;
-import com.hyjf.am.response.trade.BorrowApicronResponse;
-import com.hyjf.am.response.trade.BorrowRepayPlanResponse;
-import com.hyjf.am.response.trade.BorrowRepayResponse;
-import com.hyjf.am.response.trade.FddTempletResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.vo.admin.NifaContractTemplateVO;
 import com.hyjf.am.vo.admin.NifaReportLogVO;
 import com.hyjf.am.vo.hgreportdata.nifa.*;
+import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
@@ -888,6 +887,23 @@ public class NifaFileDualServiceImpl extends BaseTradeServiceImpl implements Nif
         String url = baseMessageUrl + "selectNifaBorrowInfoByHistoryData/" +historyData;
         NifaBorrowInfoResponse response = this.baseClient.getExe(url,NifaBorrowInfoResponse.class);
         List<NifaBorrowInfoVO> list = response.getResultList();
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
+        }
+        return list;
+    }
+
+    /**
+     * 查询该天放款数据
+     *
+     * @param historyData
+     * @return
+     */
+    @Override
+    public List<BorrowAndInfoVO> selectBorrowByHistoryDate(String historyData) {
+        String url = baseTradeUrl + "selectBorrowByHistoryDate/" + historyData;
+        BorrowResponse response = this.baseClient.getExe(url, BorrowResponse.class);
+        List<BorrowAndInfoVO> list = response.getResultList();
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }

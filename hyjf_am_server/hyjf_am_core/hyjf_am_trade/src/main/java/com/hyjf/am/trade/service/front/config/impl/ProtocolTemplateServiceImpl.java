@@ -19,6 +19,8 @@ import com.hyjf.common.enums.ProtocolEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,8 @@ import java.util.*;
 @Service
 public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 
-	
+	private static final Logger logger = LoggerFactory.getLogger(ProtocolTemplateServiceImpl.class);
+
 	@Autowired
 	protected  ProtocolTemplateMapper protocolTemplateMapper;
 
@@ -484,4 +487,23 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		return json;
 	}
 
+	/**
+	 * 获取所有在帮助中心显示的模板列表
+	 * add by nxl 20190313
+	 * PC 1.1.2
+	 * @return
+	 */
+	@Override
+	public List<ProtocolTemplate> selectAllShowProtocolTemplate(){
+		Byte byteShow = 1;
+		ProtocolTemplateExample exampleT=new ProtocolTemplateExample();
+		ProtocolTemplateExample.Criteria criteriaT = exampleT.createCriteria();
+		criteriaT.andIsShowEqualTo(byteShow);
+		//状态(0.协议不显示1.协议显示)
+        criteriaT.andStatusEqualTo(1);
+        exampleT.setOrderByClause(" update_time DESC ");
+		List<ProtocolTemplate>  protocolTemplateList =protocolTemplateMapper.selectByExample(exampleT);
+		logger.info("===============获取所有在帮助中心显示的模板列表的数量为："+protocolTemplateList.size()+"===============");
+		return protocolTemplateList;
+	}
 }
