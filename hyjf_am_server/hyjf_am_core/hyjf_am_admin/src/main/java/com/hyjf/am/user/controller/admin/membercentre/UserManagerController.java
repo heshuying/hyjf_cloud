@@ -24,6 +24,7 @@ import com.hyjf.am.user.service.admin.membercentre.UserManagerService;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -1060,6 +1061,10 @@ public class UserManagerController extends BaseController {
             List<BankCancellationAccount> userManagerCustomizeList = userManagerService.getBankCancellationAccountList(bankCancellationAccountRequest,limitStart,limitEnd);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<BankCancellationAccountVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, BankCancellationAccountVO.class);
+                Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
+                for (BankCancellationAccountVO accountVO : userVoList){
+                    accountVO.setBankOpenAccountStr(userStatus.getOrDefault(accountVO.getBankAccount(), null));
+                }
                 response.setResultList(userVoList);
                 response.setRtn(Response.SUCCESS);
                 response.setMessage(Response.SUCCESS_MSG);

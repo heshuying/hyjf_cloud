@@ -47,6 +47,15 @@ public class BankCancellationAccountVO extends BaseVO implements Serializable{
      */
     private Integer bankOpenAccount;
 
+
+
+    /**
+     * 是否银行开户,0未开户,1已开户
+     *
+     * @mbggenerated
+     */
+    private String bankOpenAccountStr;
+
     /**
      * 真实姓名
      *
@@ -250,5 +259,13 @@ public class BankCancellationAccountVO extends BaseVO implements Serializable{
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getBankOpenAccountStr() {
+        return bankOpenAccountStr;
+    }
+
+    public void setBankOpenAccountStr(String bankOpenAccountStr) {
+        this.bankOpenAccountStr = bankOpenAccountStr;
     }
 }
