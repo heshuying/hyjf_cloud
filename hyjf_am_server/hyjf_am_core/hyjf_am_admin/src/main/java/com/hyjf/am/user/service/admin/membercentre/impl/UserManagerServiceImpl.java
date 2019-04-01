@@ -1012,7 +1012,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 updCompanyRequest.setName(repNameStart);
             }
             if(updCompanyRequest.getName().contains(")")){
-                String repNameEnd = updCompanyRequest.getBankName().replace(")","）");
+                String repNameEnd = updCompanyRequest.getName().replace(")","）");
                 updCompanyRequest.setName(repNameEnd);
             }
         }
