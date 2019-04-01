@@ -70,13 +70,13 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				FddGenerateContractBean bean = JSONObject.parseObject(msg.getBody(),
 						FddGenerateContractBean.class);
 				if (bean==null) {
-					logger.info("传入参数不得为空！");
+					logger.error("传入参数不得为空！");
 					return;
 				}
 				orderId = bean.getOrdid();
 				transType = bean.getTransType();
 				if (Validator.isNull(orderId) && Validator.isNull(transType)) {
-					logger.info("传入参数不得为空！");
+					logger.error("传入参数不得为空！");
 					return;
 				}
 				if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 散标投资

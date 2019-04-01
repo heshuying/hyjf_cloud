@@ -781,28 +781,32 @@ public class FddHandle {
         // 承接订单号
         String assignOrderId = bean.getAssignOrderId();
         if (StringUtils.isBlank(assignOrderId)) {
-            logger.info("债转承接订单号为空");
+            logger.error("债转承接订单号为空");
             throw new RuntimeException("债转承接订单号为空");
         }
         logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId);
         // 承接人用户ID
         Integer tenderUserId = bean.getTenderUserId();
         if (tenderUserId == null || tenderUserId == 0) {
+        	logger.error("承接用户ID为空");
             throw new RuntimeException("承接用户ID为空");
         }
         // 标的编号
         String borrowNid = bean.getBorrowNid();
         if (StringUtils.isBlank(borrowNid)) {
+        	logger.error("借款编号为空");
             throw new RuntimeException("借款编号为空");
         }
         // 原始出借订单号
         String creditTenderNid = bean.getCreditTenderNid();
         if (StringUtils.isBlank(creditTenderNid)) {
+        	logger.error("原始出借订单号");
             throw new RuntimeException("原始出借订单号");
         }
         // 债转编号
         String creditNid = bean.getCreditNid();
         if (StringUtils.isBlank(creditNid)) {
+        	logger.error("债转编号为空");
             throw new RuntimeException("债转编号为空");
         }
 
@@ -853,7 +857,7 @@ public class FddHandle {
             BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 
 			if (borrow == null) {
-                //logger.info("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
+                logger.error("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
                 throw new RuntimeException("根据标的编号获取标的信息为空,标的编号:" + borrowNid + "].");
             }
 
@@ -869,6 +873,7 @@ public class FddHandle {
 			List<BorrowCreditVO> borrowCredit=this.amTradeClient.getBorrowCreditList(request1);
 
             if (borrowCredit == null || borrowCredit.size() != 1) {
+            	logger.error("根据债转编号查询债转信息失败,债转编号:[" + creditNid + "].");
                 throw new RuntimeException("根据债转编号查询债转信息失败,债转编号:[" + creditNid + "].");
             }
             // 出让人用户ID
@@ -877,31 +882,37 @@ public class FddHandle {
             // 获取承接人平台信息
             UserVO tenderUser = this.amUserClient.findUserById(tenderUserId);
             if (tenderUser == null) {
+            	logger.error("根据用户ID查询用户信息失败, 承接人用户ID:[" + tenderUserId + "]");
                 throw new RuntimeException("根据用户ID查询用户信息失败, 承接人用户ID:[" + tenderUserId + "]");
             }
             // 获取承接人身份信息
             UserInfoVO tenderUserInfo = this.amUserClient.findUsersInfoById(tenderUserId);
             if (tenderUserInfo == null) {
+            	logger.error("根据用户ID查询用户详情信息失败, 承接人用户ID:[" + tenderUserId + "]");
                 throw new RuntimeException("根据用户ID查询用户详情信息失败, 承接人用户ID:[" + tenderUserId + "]");
             }
             // 获取融资方平台信息
             UserVO borrowUsers =this.amUserClient.findUserById(borrowUserId);
             if (borrowUsers == null) {
+            	logger.error("根据借款人用户ID,查询借款人用户信息失败,借款人用户ID:[" + borrowUserId + "].");
                 throw new RuntimeException("根据借款人用户ID,查询借款人用户信息失败,借款人用户ID:[" + borrowUserId + "].");
             }
             // 获取借款人信息
             UserInfoVO borrowUsersInfo=this.amUserClient.findUsersInfoById(borrowUserId);
             if (borrowUsersInfo == null) {
+            	logger.error("根据借款人用户ID,查询借款人用户详情信息失败,借款人用户ID:[" + borrowUserId + "].");
                 throw new RuntimeException("根据借款人用户ID,查询借款人用户详情信息失败,借款人用户ID:[" + borrowUserId + "].");
             }
             // 获取出让人平台信息
             UserVO creditUser =this.amUserClient.findUserById(creditUserId);
             if (creditUser == null) {
+            	logger.error("根据出让人用户ID,查询出让人用户信息失败,出让人用户ID:[" + creditUserId + "].");
                 throw new RuntimeException("根据出让人用户ID,查询出让人用户信息失败,出让人用户ID:[" + creditUserId + "].");
             }
             // 获取债转人身份信息
             UserInfoVO creditUsersInfo = this.amUserClient.findUsersInfoById(creditUserId);
             if (creditUsersInfo == null) {
+            	logger.error("根据出让人用户ID,查询出让人用户信息详情失败,出让人用户ID:[" + creditUserId + "].");
                 throw new RuntimeException("根据出让人用户ID,查询出让人用户信息详情失败,出让人用户ID:[" + creditUserId + "].");
             }
 
