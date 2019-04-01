@@ -48,12 +48,12 @@
                 AND dc.plan_order_id = #{planOrderId}
             </if>
             <!-- 出让人出借订单号 -->
-            <if test="planOrderId != null and planOrderId != ''">
-                AND dc.credit_order_id = #{creditOrderId}
+            <if test="orderId != null and orderId != ''">
+                AND dc.invest_order_id = #{orderId}
             </if>
             <!-- 出让人承接订单号 -->
-            <if test="planOrderId != null and planOrderId != ''">
-                AND dc.assign_order_id = #{assignOrderId}
+            <if test="assignId != null and assignId != ''">
+                AND dc.sell_order_id = #{assignId}
             </if>
             <!-- 清算后计划编号 -->
             <if test="planNidNew != null and planNidNew != ''">
@@ -109,11 +109,9 @@
             <if test="repayNextTimeEnd != null and repayNextTimeEnd != ''">
                 AND dc.credit_repay_next_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
             </if>
-
             <if test="creditCapitalWait != null and creditCapitalWait != ''">
                 AND dc.credit_capital_wait = #{creditCapitalWait}
             </if>
-
             <!-- 债转结束时间 -->
             <if test="endTimeStart != null and endTimeStart != ''">
                 AND dc.end_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{endTimeStart},' 00:00:00'))
@@ -152,7 +150,7 @@
         dc.plan_nid_new,
         dc.plan_order_id,
         dc.invest_order_id as order_id,
-        if(dc.credit_times > 1,dc.sell_order_id,'')  as assign_id,
+        dc.sell_order_id as assign_id,
         dc.user_name,
         dc.credit_nid,
         dc.borrow_nid,
