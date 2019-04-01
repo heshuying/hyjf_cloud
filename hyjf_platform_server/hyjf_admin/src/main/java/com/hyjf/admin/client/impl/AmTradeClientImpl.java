@@ -3943,11 +3943,14 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public String updateAccountCheck(Integer userId, String startTime, String endTime) {
+    public String updateAccountCheck(Integer userId, String startTime, String endTime, String ip, String payment, String cardId) {
         AdminBankAccountCheckCustomizeVO adminBankAccountCheckCustomizeVO = new AdminBankAccountCheckCustomizeVO();
         adminBankAccountCheckCustomizeVO.setUserId(userId);
         adminBankAccountCheckCustomizeVO.setStartDate(startTime);
         adminBankAccountCheckCustomizeVO.setEndDate(endTime);
+        adminBankAccountCheckCustomizeVO.setIp(ip);
+        adminBankAccountCheckCustomizeVO.setPayment(payment);
+        adminBankAccountCheckCustomizeVO.setCardId(cardId);
         String url = "http://AM-ADMIN/am-trade/bank_account_manage/update_account_check/";
         StringResponse response = restTemplate.postForEntity(url, adminBankAccountCheckCustomizeVO, StringResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
@@ -6662,7 +6665,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean getFailCredit(String borrowNid) {
-        String url = "http://AM-ADMIN/am-trade/repay/getFailCredit/" + borrowNid;
+        //String url = "http://AM-ADMIN/am-trade/repay/getFailCredit/" + borrowNid;
+        String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/getFailCredit/" + borrowNid;
         return restTemplate.getForEntity(url, boolean.class).getBody();
     }
 
