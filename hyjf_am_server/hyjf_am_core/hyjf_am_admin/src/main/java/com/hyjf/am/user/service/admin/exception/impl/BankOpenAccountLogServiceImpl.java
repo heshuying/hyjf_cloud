@@ -281,6 +281,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 throw new RuntimeException("更新用户表失败！");
 
             }
+            logger.info("===========更新用户表---------------------usersFlag:"+usersFlag);
             UserInfo userInfo = userInfoService.findUsersInfo(userId);
             if (userInfo == null) {
                 logger.error("用户详情表数据错误，用户id：" + user.getUserId());
@@ -299,6 +300,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.error("更新用户详情表失败！");
                 throw new RuntimeException("更新用户详情表失败！");
             }
+            logger.info("===========更新用户详细信息表---------------------userInfoFlag:"+userInfoFlag);
             // 插入江西银行关联表
             BankOpenAccount openAccount = new BankOpenAccount();
             openAccount.setUserId(userId);
@@ -312,7 +314,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 logger.error("插入江西银行关联表失败！");
                 throw new RuntimeException("插入江西银行关联表失败！");
             }
-
+            logger.info("===========开户掉单处理成功之后,开始执行发送法大大CA认证MQ：openAccountFlag---------------------"+openAccountFlag);
             // add 合规数据上报 埋点 liubin 20181122 start
             // 推送数据到MQ 开户 出借人
             if (requestBean.getRoleId().equals("1")) {
