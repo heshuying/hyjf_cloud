@@ -57,7 +57,7 @@ public class BorrowRepayInfoCurrentController {
         //borrowNid为必须传的参数
         if(StringUtils.isBlank(requestBean.getBorrowNid())){
             response.setStatus(AdminResult.FAIL);
-            response.setStatus("请求参数错误，borrowNid为空");
+            response.setStatusDesc("请求参数错误，borrowNid为空");
             return response;
         }
 
