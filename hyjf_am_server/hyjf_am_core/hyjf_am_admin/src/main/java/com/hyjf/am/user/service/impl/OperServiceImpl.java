@@ -36,6 +36,24 @@ public class OperServiceImpl implements OperService {
     private CustomerTaskConfigMapperCustomize customerTaskConfigMapperCustomize;
 
     /**
+     * 大屏运营部数据配置列表数据总条数查询
+     * @param request
+     * @return
+     */
+    @Override
+    public int countOperList(ScreenConfigRequest request) {
+        ScreenConfigExample example = new ScreenConfigExample();
+
+        // 任务时间,精确到月 yyyy-mm
+        if(StringUtils.isNotBlank(request.getTaskTime())){
+            ScreenConfigExample.Criteria cra = example.createCriteria();
+            cra.andTaskTimeEqualTo(request.getTaskTime());
+        }
+
+        return screenConfigMapper.countByExample(example);
+    }
+
+    /**
      * 大屏运营部数据配置列表查询
      * @param request
      * @return
@@ -91,6 +109,34 @@ public class OperServiceImpl implements OperService {
         ScreenConfig screenConfig = new ScreenConfig();
         BeanUtils.copyProperties(screenConfigVO, screenConfig);
         return screenConfigMapper.updateByPrimaryKeySelective(screenConfig);
+    }
+
+    /**
+     * 坐席月任务配置列表数据总条数查询
+     * @param request
+     * @return
+     */
+    @Override
+    public int countTaskList(CustomerTaskConfigRequest request) {
+        CustomerTaskConfigExample example = new CustomerTaskConfigExample();
+        CustomerTaskConfigExample.Criteria cra = example.createCriteria();
+        // 任务时间,精确到月 yyyy-mm
+        if(StringUtils.isNotBlank(request.getTaskTime())){
+            cra.andTaskTimeEqualTo(request.getTaskTime());
+        }
+        // 坐席分组 1:新客组,2:老客组
+        if(null != request.getCustomerGroup()){
+            cra.andCustomerGroupEqualTo(request.getCustomerGroup());
+        }
+        // 坐席姓名 1:新客组,2:老客组
+        if(StringUtils.isNotBlank(request.getCustomerName())){
+            cra.andCustomerNameLike(request.getCustomerName());
+        }
+        // 是否有效 1:有效,2:无效
+        if(null != request.getStatus()){
+            cra.andStatusEqualTo(request.getStatus());
+        }
+        return customerTaskConfigMapper.countByExample(example);
     }
 
     /**
@@ -165,6 +211,4 @@ public class OperServiceImpl implements OperService {
         }
         return flag;
     }
-
-
 }

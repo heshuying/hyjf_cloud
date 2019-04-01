@@ -3,6 +3,8 @@ package com.hyjf.admin.service.impl.vip.content;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.vip.content.OperService;
 import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public class OperServiceImpl implements OperService {
      * @return
      */
     @Override
-    public List<ScreenConfigVO> operList(ScreenConfigRequest request) {
+    public ScreenConfigVOResponse operList(ScreenConfigRequest request) {
         return amAdminClient.getScreenConfigList(request);
     }
 
@@ -78,7 +79,7 @@ public class OperServiceImpl implements OperService {
      * @return
      */
     @Override
-    public List<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request) {
+    public CustomerTaskConfigVOResponse taskList(CustomerTaskConfigRequest request) {
         return amAdminClient.getCustomerTaskConfigList(request);
     }
 
@@ -140,8 +141,8 @@ public class OperServiceImpl implements OperService {
             }
             ScreenConfigRequest screenConfigRequest = new ScreenConfigRequest();
             screenConfigRequest.setTaskTime(request.getTaskTime());
-            List<ScreenConfigVO> result = this.operList(screenConfigRequest);
-            if (!CollectionUtils.isEmpty(result)){
+            ScreenConfigVOResponse response = this.operList(screenConfigRequest);
+            if (!CollectionUtils.isEmpty(response.getResultList())){
                 resultFlag = true;
             }
         }else {
@@ -151,10 +152,10 @@ public class OperServiceImpl implements OperService {
                 return resultMap;
             }
             resultMap.put("customerGroup", null);
-            List<CustomerTaskConfigVO> result = this.taskList(request);
-            if (!CollectionUtils.isEmpty(result)){
+            CustomerTaskConfigVOResponse response = this.taskList(request);
+            if (!CollectionUtils.isEmpty(response.getResultList())){
                 resultFlag = true;
-                resultMap.put("customerGroup", result.get(0).getCustomerGroup());
+                resultMap.put("customerGroup", response.getResultList().get(0).getCustomerGroup());
             }
         }
         resultMap.put("result", resultFlag);

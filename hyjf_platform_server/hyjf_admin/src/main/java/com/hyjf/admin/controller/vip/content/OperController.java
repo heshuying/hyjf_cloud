@@ -6,6 +6,8 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.vip.content.OperService;
 import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -14,11 +16,9 @@ import com.hyjf.am.vo.user.ScreenConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @Api(value = "会员中心-内容中心", tags = "会员中心-内容中心")
@@ -43,14 +43,11 @@ public class OperController extends BaseController {
     @ApiOperation(value = "大屏运营部数据配置-列表查询",notes = "大屏运营部数据配置-列表查询")
     @PostMapping("/oper/list")
     @ResponseBody
-    private AdminResult operist(@RequestBody ScreenConfigRequest request){
+    private AdminResult operList(@RequestBody ScreenConfigRequest request){
         AdminResult result = new AdminResult();
-        result.setTotalCount(0);
-        List<ScreenConfigVO> list = operService.operList(request);
-        if (!CollectionUtils.isEmpty(list)){
-            result.setTotalCount(list.size());
-        }
-        result.setData(list);
+        ScreenConfigVOResponse response = operService.operList(request);
+        result.setTotalCount(response.getTotalCount());
+        result.setData(response.getResultList());
         return result;
     }
 
@@ -129,12 +126,9 @@ public class OperController extends BaseController {
     @ResponseBody
     private AdminResult taskList(@RequestBody CustomerTaskConfigRequest request){
         AdminResult result = new AdminResult();
-        result.setTotalCount(0);
-        List<CustomerTaskConfigVO> list = operService.taskList(request);
-        if (!CollectionUtils.isEmpty(list)){
-            result.setTotalCount(list.size());
-        }
-        result.setData(list);
+        CustomerTaskConfigVOResponse response = operService.taskList(request);
+        result.setTotalCount(response.getTotalCount());
+        result.setData(response.getResultList());
         return result;
     }
 

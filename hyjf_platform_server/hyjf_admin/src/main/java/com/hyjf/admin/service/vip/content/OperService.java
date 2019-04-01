@@ -1,11 +1,12 @@
 package com.hyjf.admin.service.vip.content;
 
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.resquest.admin.CustomerTaskConfigRequest;
 import com.hyjf.am.resquest.admin.ScreenConfigRequest;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Map;
  */
 public interface OperService {
 
-    public List<ScreenConfigVO> operList(ScreenConfigRequest request);
+    ScreenConfigVOResponse operList(ScreenConfigRequest request);
 
     int operAdd(ScreenConfigVO screenConfigVO);
 
@@ -21,7 +22,7 @@ public interface OperService {
 
     int operUpdate(ScreenConfigVO screenConfigVO);
 
-    List<CustomerTaskConfigVO> taskList(CustomerTaskConfigRequest request);
+    CustomerTaskConfigVOResponse taskList(CustomerTaskConfigRequest request);
 
     int taskAdd(CustomerTaskConfigVO customerTaskConfigVO);
 

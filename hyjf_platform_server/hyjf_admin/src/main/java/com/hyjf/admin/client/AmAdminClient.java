@@ -3,14 +3,14 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
-import com.hyjf.am.response.trade.RepayResponse;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
@@ -18,11 +18,13 @@ import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.response.trade.RepayResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
@@ -1213,7 +1215,7 @@ public interface AmAdminClient {
      * @param request
      * @return
      */
-    List<ScreenConfigVO> getScreenConfigList(ScreenConfigRequest request);
+    ScreenConfigVOResponse getScreenConfigList(ScreenConfigRequest request);
 
     /**
      * 大屏运营部数据配置数据新增
@@ -1241,7 +1243,7 @@ public interface AmAdminClient {
      * @param request
      * @return
      */
-    List<CustomerTaskConfigVO> getCustomerTaskConfigList(CustomerTaskConfigRequest request);
+    CustomerTaskConfigVOResponse getCustomerTaskConfigList(CustomerTaskConfigRequest request);
 
     /**
      * 坐席月任务配置数据新增

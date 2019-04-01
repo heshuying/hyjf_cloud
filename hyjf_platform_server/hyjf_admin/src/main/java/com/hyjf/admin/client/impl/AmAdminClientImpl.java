@@ -2096,10 +2096,10 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public List<ScreenConfigVO> getScreenConfigList(ScreenConfigRequest request) {
+    public ScreenConfigVOResponse getScreenConfigList(ScreenConfigRequest request) {
         String url = "http://AM-ADMIN/am-user/vip/content/oper/list";
         ScreenConfigVOResponse response = restTemplate.postForEntity(url, request, ScreenConfigVOResponse.class).getBody();
-        return response.getResultList();
+        return response;
     }
 
     /**
@@ -2157,10 +2157,10 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public List<CustomerTaskConfigVO> getCustomerTaskConfigList(CustomerTaskConfigRequest request) {
+    public CustomerTaskConfigVOResponse getCustomerTaskConfigList(CustomerTaskConfigRequest request) {
         String url = "http://AM-ADMIN/am-user/vip/content/task/list";
         CustomerTaskConfigVOResponse response = restTemplate.postForEntity(url, request, CustomerTaskConfigVOResponse.class).getBody();
-        return response.getResultList();
+        return response;
     }
 
     /**
