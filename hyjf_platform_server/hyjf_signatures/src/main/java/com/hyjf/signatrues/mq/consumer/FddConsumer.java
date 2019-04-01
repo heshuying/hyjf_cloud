@@ -58,7 +58,7 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 	//MessageListenerOrderly 串行消费 效率不高    消费追求时间顺序
 	@Override
 	public void onMessage(MessageExt msg) {
-		logger.info("法大大收到消息，开始处理...."+msg.getBody()+",重复消费次数："+msg.getReconsumeTimes());
+		logger.info("----------------------法大大收到消息，开始处理...."+ msg.getKeys() +",重复消费次数："+msg.getReconsumeTimes());
 		if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
 			// 生成合同
 			logger.info("----------------------开始生成法大大合同------------------------");
@@ -94,8 +94,8 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				}
 
 			} catch (Exception e) {
-				logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
-				return;
+				logger.error("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
+				throw new RuntimeException("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
 			}
 			logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
 
@@ -117,9 +117,9 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 
 				logger.info("-----------------开始处理法大大自动签章异步处理，订单号：" + ordid);
 				fddHandle.updateAutoSignData(bean);
-			}catch (Exception e1){
-				logger.info("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e1);
-				return;
+			}catch (Exception e){
+				logger.error("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e);
+				throw new RuntimeException("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e);
 			}
 			logger.info("--------------------------------------法大大自动签署异步处理任务结束，订单号：" + ordid + "=============");
 
@@ -166,9 +166,9 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				boolean creditCompany = bean.isCreditCompany();
 				logger.info("-----------------开始处理法大大下载脱敏，订单号：" + ordid);
 				fddHandle.downPDFAndDesensitization(savePath,agrementID,transType,ftpPath,downloadUrl,tenderCompany,creditCompany);
-			}catch (Exception e1){
-				logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e1);
-				throw new RuntimeException("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e1);
+			}catch (Exception e){
+				logger.error("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e);
+				throw new RuntimeException("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e);
 			}
 			logger.info("--------------------------------------法大大下载脱敏处理任务结束，订单号：" + ordid + "=============");
 			return;
