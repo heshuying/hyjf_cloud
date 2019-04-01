@@ -36,9 +36,12 @@ public class OperController {
     @ResponseBody
     private ScreenConfigVOResponse operList(@RequestBody ScreenConfigRequest request){
         ScreenConfigVOResponse response = new ScreenConfigVOResponse();
-
+        // 大屏运营部数据配置列表数据总条数查询
+        int totalCount = operService.countOperList(request);
+        // 大屏运营部数据配置列表查询
         List<ScreenConfigVO> list = operService.operList(request);
         if (!CollectionUtils.isEmpty(list)){
+            response.setTotalCount(totalCount);
             response.setResultList(list);
         }
         return response;
@@ -113,9 +116,12 @@ public class OperController {
     @ResponseBody
     private CustomerTaskConfigVOResponse taskList(@RequestBody CustomerTaskConfigRequest request){
         CustomerTaskConfigVOResponse response = new CustomerTaskConfigVOResponse();
-
+        // 坐席月任务配置列表数据总条数查询
+        int totalCount = operService.countTaskList(request);
+        // 坐席月任务配置列表查询
         List<CustomerTaskConfigVO> list = operService.taskList(request);
         if (!CollectionUtils.isEmpty(list)){
+            response.setTotalCount(totalCount);
             response.setResultList(list);
         }
         return response;

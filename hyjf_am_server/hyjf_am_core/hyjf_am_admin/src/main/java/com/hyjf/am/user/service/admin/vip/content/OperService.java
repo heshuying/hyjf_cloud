@@ -14,6 +14,8 @@ import java.util.List;
  */
 public interface OperService {
 
+    int countOperList(ScreenConfigRequest request);
+
     List<ScreenConfigVO> operList(ScreenConfigRequest request);
 
     int operAdd(ScreenConfigVO screenConfigVO);
@@ -29,4 +31,6 @@ public interface OperService {
     CustomerTaskConfig taskInfo(Integer id);
 
     int taskUpdate(CustomerTaskConfigVO customerTaskConfigVO);
+
+    int countTaskList(CustomerTaskConfigRequest request);
 }
