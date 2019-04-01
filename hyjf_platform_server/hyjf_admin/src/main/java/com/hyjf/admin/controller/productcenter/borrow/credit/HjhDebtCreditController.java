@@ -231,6 +231,8 @@ public class HjhDebtCreditController extends BaseController{
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("planNid", "出让人智投编号");
         map.put("planOrderId", "出让人智投订单号");
+        map.put("orderId", "出让人出借订单号");
+        map.put("assignId", "出让人承接订单号");
         map.put("planNidNew", "清算后智投编号");
         map.put("userName", "出让人");
         map.put("creditNid", "债转编号");
@@ -239,7 +241,7 @@ public class HjhDebtCreditController extends BaseController{
         map.put("repayStyleName", "还款方式");
         map.put("creditCapital", "债权本金");
         map.put("liquidationFairValue", "债权价值");
-        map.put("actualApr", "预期承接出借利率");
+        map.put("actualApr", "预期承接收益率");
         map.put("assignCapital", "已转让本金");
         map.put("assignAdvanceInterest", "垫付利息");
         map.put("remainCredit", "剩余债权价值");

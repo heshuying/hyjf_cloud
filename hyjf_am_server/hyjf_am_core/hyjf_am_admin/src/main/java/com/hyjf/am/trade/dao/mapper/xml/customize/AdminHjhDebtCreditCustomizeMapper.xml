@@ -6,6 +6,8 @@
         <result column="id"							property="id" 						jdbcType="VARCHAR" />
         <result column="plan_nid" 					property="planNid" 					jdbcType="VARCHAR" />
         <result column="plan_order_id" 				property="planOrderId" 				jdbcType="VARCHAR" />
+        <result column="order_id" 				property="orderId" 				jdbcType="VARCHAR" />
+        <result column="assign_id" 				property="assignId" 				jdbcType="VARCHAR" />
         <result column="plan_nid_new" 				property="planNidNew" 			    jdbcType="VARCHAR" />
         <result column="user_name" 					property="userName" 				jdbcType="VARCHAR" />
         <result column="credit_nid" 				property="creditNid" 				jdbcType="VARCHAR" />
@@ -44,6 +46,14 @@
             <!-- 出让人计划订单号 -->
             <if test="planOrderId != null and planOrderId != ''">
                 AND dc.plan_order_id = #{planOrderId}
+            </if>
+            <!-- 出让人出借订单号 -->
+            <if test="planOrderId != null and planOrderId != ''">
+                AND dc.credit_order_id = #{creditOrderId}
+            </if>
+            <!-- 出让人承接订单号 -->
+            <if test="planOrderId != null and planOrderId != ''">
+                AND dc.assign_order_id = #{assignOrderId}
             </if>
             <!-- 清算后计划编号 -->
             <if test="planNidNew != null and planNidNew != ''">
@@ -141,6 +151,8 @@
         dc.plan_nid,
         dc.plan_nid_new,
         dc.plan_order_id,
+        dc.invest_order_id as order_id,
+        if(dc.credit_times > 1,dc.sell_order_id,'')  as assign_id,
         dc.user_name,
         dc.credit_nid,
         dc.borrow_nid,
