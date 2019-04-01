@@ -3363,7 +3363,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 逾期期数只累加逾期利息
                     repay.setLateInterest(repay.getLateInterest().add(repayPlanDetail.getLateInterest()));
                     repayAccountAll = repayPlanDetail.getRepayAccountAll();
-                    nowPeriod ++;// 逾期了 当前期+1
+                    if (nowPeriod < borrow.getBorrowPeriod()) {
+                        nowPeriod++;// 逾期了 当前期+1
+                    }
                     repay.setLateStatus("1");
                 } else if (repayPeriod == nowPeriod) {
                     Integer repayTimeStart = null;
@@ -3406,6 +3408,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             }
             repay.setRepayPlanList(borrowRepayPlanDeails);
         }
+        repay.setLastPeriod(nowPeriod);
         return repayAccountAll;
     }
 
@@ -3943,7 +3946,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         if (borrowApicronCount > 0) {
                             throw new Exception("还款失败！" + "重复还款，【" + errorCount + "】" + "项目编号：" + borrowNid);
                         }
-                        int nowTime = GetDate.getNowTime10();
                         nid = repay.getBorrowNid() + "_" + repay.getUserId() + "_1";
                         BorrowApicron borrowApicron = new BorrowApicron();
                         borrowApicron.setNid(nid);
@@ -3966,8 +3968,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowApicron.setSubmitter(userName);
                         borrowApicron.setIsLate(borrow.getStatus() == 8 ? 1 : 0);
                         borrowApicron.setLastPeriod(1);
-                        borrowApicron.setCreateTime(GetDate.getNowTime());
-                        borrowApicron.setUpdateTime(GetDate.getNowTime());
                         boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
                         if (increase) {
                             borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
@@ -4008,7 +4008,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 logger.debug("【还款】借款编号：{}，第{}期正在进行还款！", borrowNid, repayDetail.getRepayPeriod());
                 if (latePeriod == 0 && repayDetail.getRepayPeriod() == nowPeriod && !isAllRepay) {
                     Map mapResult = updaterepayData(userId, borrowNid, nowPeriod, repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
-                            borrowPeriod, projectType, repayFlag, isAllRepay);
+                            borrowPeriod, projectType, repayFlag, isAllRepay, latePeriod);
                     if (mapResult.get("result") != null) {
                         boolean result = (boolean) mapResult.get("result");
                         if (result) {
@@ -4028,7 +4028,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 } else if (latePeriod > 0 && !isAllRepay && repayDetail.getRepayPeriod() >= period && repayDetail.getRepayPeriod() <= latePeriod && repayDetail.getRepayStatus() == 0) {
                     // 逾期还款选择一期或多期的情况
                     Map mapResult = updaterepayData(userId, borrowNid, repayDetail.getRepayPeriod(), repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
-                            borrowPeriod, projectType, repayFlag, isAllRepay);
+                            borrowPeriod, projectType, repayFlag, isAllRepay, latePeriod);
                     logger.info("【还款】借款编号：{}，第{}期正在进行逾期还款！", borrowNid, repayDetail.getRepayPeriod());
                     if (mapResult.get("result") != null) {
                         boolean result = (boolean) mapResult.get("result");
@@ -4045,7 +4045,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 } else if (isAllRepay && repayDetail.getRepayPeriod() >= period && repayDetail.getRepayStatus() == 0) {
 
                     Map mapResult = updaterepayData(userId, borrowNid, repayDetail.getRepayPeriod(), repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
-                            borrowPeriod, projectType, repayFlag, isAllRepay);
+                            borrowPeriod, projectType, repayFlag, isAllRepay, latePeriod);
 
                     if (mapResult.get("result") != null) {
                         boolean result = (boolean) mapResult.get("result");
@@ -4182,7 +4182,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     private Map updaterepayData(int userId, String borrowNid, int period, RepayDetailBean repayDetail, int errorCount,
                                 String nid, Integer roleId, String userName, RepayBean repay, Integer repayUserId,
                                 Borrow borrow, Integer borrowPeriod, Integer projectType, Boolean repayFlag,
-                                boolean isAllRepay) throws Exception {
+                                boolean isAllRepay, int latePeriod) throws Exception {
 
         Map map = new HashMap();
         BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
@@ -4346,7 +4346,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     if (borrowApicronCount > 0) {
                         throw new Exception("重复还款");
                     }
-                    int nowTime = GetDate.getNowTime10();
                     String nid2 = repay.getBorrowNid() + "_" + repay.getUserId() + "_" + period;
                     BorrowApicron borrowApicron = new BorrowApicron();
                     borrowApicron.setNid(nid2);
@@ -4368,9 +4367,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     borrowApicron.setCreditRepayStatus(0);
                     borrowApicron.setSubmitter(userName);
                     borrowApicron.setIsLate(borrowRepayPlan.getAdvanceStatus() == 3 ? 1 : 0);
-                    borrowApicron.setLastPeriod(repay.getRepayPeriod());
-                    borrowApicron.setCreateTime(GetDate.getNowTime());
-                    borrowApicron.setUpdateTime(GetDate.getNowTime());
+                    borrowApicron.setLastPeriod(isAllRepay ? borrowPeriod : latePeriod > 0 ? latePeriod : repay.getLastPeriod() == null ? period : repay.getLastPeriod());
                     if(isAllRepay){
                         borrowApicron.setIsAllrepay(1);
                     }

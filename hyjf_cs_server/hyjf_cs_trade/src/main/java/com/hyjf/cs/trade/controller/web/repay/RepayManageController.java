@@ -551,7 +551,7 @@ public class RepayManageController extends BaseTradeController {
         }
         int latePeriod = 0;// 提交的逾期还款期数
         if(requestBean.getLatePeriod() != null){
-            if("-1".equals(requestBean.getLatePeriod())){// -1为全部还款
+            if(requestBean.getLatePeriod() == -1){// -1为全部还款
                 isAllRepay = true;
             }
             latePeriod = requestBean.getLatePeriod();// 用户选择的逾期期数
