@@ -1005,6 +1005,18 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         record.setUserId(user.getUserId());
         record.setUsername(user.getUsername());
         record.setBusiCode(updCompanyRequest.getIdNo());
+        //企业信息补录时，企业名称若含有英文括号，自动替换成中文括号再保存 start
+        if(null!=updCompanyRequest.getName()){
+            if(updCompanyRequest.getName().contains("(")){
+                String repNameStart = updCompanyRequest.getName().replace("(","（");
+                updCompanyRequest.setName(repNameStart);
+            }
+            if(updCompanyRequest.getName().contains(")")){
+                String repNameEnd = updCompanyRequest.getName().replace(")","）");
+                updCompanyRequest.setName(repNameEnd);
+            }
+        }
+        //企业信息补录时，企业名称若含有英文括号，自动替换成中文括号再保存 end
         record.setBusiName(updCompanyRequest.getName());
         record.setStatus(6);//成功
         record.setCreateTime(new Date());
