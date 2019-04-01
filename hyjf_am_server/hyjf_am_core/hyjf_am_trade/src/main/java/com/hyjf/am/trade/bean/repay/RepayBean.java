@@ -32,6 +32,9 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 	
 	/** 用户还款详情 */
 	private List<RepayDetailBean> repayPlanList = new ArrayList<RepayDetailBean>();
+
+	// 还款方式(1逾期还款0其他)
+	private String lateStatus;
 	
 	public RepayBean() {
 		super();
@@ -89,7 +92,12 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
 
+	public String getLateStatus() {
+		return lateStatus;
+	}
+
+	public void setLateStatus(String lateStatus) {
+		this.lateStatus = lateStatus;
+	}
 }

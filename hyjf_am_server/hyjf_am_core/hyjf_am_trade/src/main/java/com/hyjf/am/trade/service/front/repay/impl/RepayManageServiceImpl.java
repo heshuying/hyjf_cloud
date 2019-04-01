@@ -594,107 +594,146 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
-     * 查询用户的还款详情
+     *  查询用户还款详情
+     * @param isAllRepay            是否一次性还款
+     * @param latePeriod       用户选择的逾期数
+     * isAllRepay = 1  一次性还款
+     * 添加逾期可以一次性还款规则
+     * isAllRepay = 0 & latePeriod = 0 当前期还款(包含之前的逾期)
+     * 1、修改当前期判断规则：有逾期时，当前期需要根据日期判断，之前是根据repay表判断
+     * 2、添加逾期可以当前期还款规则
+     * isAllRepay = 0 & latePeriod != 0 逾期还款(第latePeriod期及之前期)
+     * 1、判断第latePeriod期是否逾期 非逾期且不是当前期 报错；非逾期是当前期走非逾期当前期还款规则
+     * 2、逾期情况，累加第latePeriod期和之前未还款逾期的金额
+     * @return
      */
     @Override
-    public ProjectBean searchRepayProjectDetail(ProjectBean form, boolean isAllRepay) throws Exception {
-
-        String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
-        String borrowNid = StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
-
-        Borrow borrow = this.getBorrowByNid(borrowNid);
-        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
-
-        if (borrow != null && borrowInfo != null) {
-            if (!checkBorrowUser(form.getRoleId(), userId, borrow, borrowInfo)) {
-                return null;
-            }
-            // userId 改成借款人的userid！！！
-            userId = borrow.getUserId().toString();
-            form.settType("0");// 设置为非汇添金专属项目
-            // 设置相应的项目名称
-            // 之前取borrow表的Name，现在取borrow表的projectName
-            // form.setBorrowName(borrow.getName());
-            form.setBorrowName(borrowInfo.getProjectName());
-
-            // 获取相应的项目还款方式
-            String borrowStyle = StringUtils.isNotEmpty(borrow.getBorrowStyle()) ? borrow.getBorrowStyle() : null;
-            form.setBorrowStyle(borrowStyle);
-
-
-            // 用户是否全部结清，是否正在还款，是否只能全部结清 默认都否
-            form.setAllRepay("0");
-            form.setRepayStatus("0");
-            form.setOnlyAllRepay("0");
-
-            BorrowApicronExample exampleBorrowApicron = new BorrowApicronExample();
-            BorrowApicronExample.Criteria crtBorrowApicron = exampleBorrowApicron.createCriteria();
-            crtBorrowApicron.andBorrowNidEqualTo(borrowNid);
-            crtBorrowApicron.andApiTypeEqualTo(1);
-            crtBorrowApicron.andStatusNotEqualTo(6);// 不是已经还款的，正在还款的
-            List<BorrowApicron> borrowApicrons = borrowApicronMapper.selectByExample(exampleBorrowApicron);
-            // 有正在还款，查看是否是一次结清，适用分期和一次性还款方式，   下面逻辑中的分期最后一期继续适用
-            if (borrowApicrons != null && borrowApicrons.size() > 0) {
-                BorrowApicron borrowApicron = borrowApicrons.get(0);
-                Integer allrepay = borrowApicron.getIsAllrepay();
-                if (allrepay != null && allrepay.intValue() == 1) {
-                    form.setAllRepay("1");
-                    isAllRepay = true;
-                }
-                // 能查到，无论如何都是有正在还款
-                form.setRepayStatus("1");
-            }
-
-
-            // 一次性还款
-            if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
-
-                RepayBean repay = this.calculateRepay(Integer.parseInt(userId), borrow);
-                setRecoverDetail(form, userId, borrow, repay);
-            } else {
-                RepayBean repayByTerm = new RepayBean();
-                BorrowRepay borrowRepay = this.searchRepay(Integer.parseInt(userId), borrow.getBorrowNid());
-                // 获取相应的还款信息
-                BeanUtils.copyProperties(borrowRepay, repayByTerm);
-                repayByTerm.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
-                // 计算当前还款期数
-                int period = borrow.getBorrowPeriod() - borrowRepay.getRepayPeriod() + 1;
-                BorrowRepayPlan borrowRepayPlan = null;
-                if (period == 1) {
-                    borrowRepayPlan = this.searchRepayPlan(Integer.parseInt(userId), borrowNid, period);
-                    Date repayTimeStart = borrowRepayPlan.getCreateTime();
-                } else {
-                    borrowRepayPlan = this.searchRepayPlan(Integer.parseInt(userId), borrowNid, period - 1);
-                    Integer repayTimeStart = borrowRepayPlan.getRepayTime();
-
-                    int curPlanStart = GetDate.getIntYYMMDD(repayTimeStart);
-                    int nowDate = GetDate.getIntYYMMDD(new Date());
-                    // 超前还款的情况，只能一次性还款
-                    if (nowDate <= curPlanStart) {
-                        form.setOnlyAllRepay("1");
-                        isAllRepay = true;
-                    }
-                }
-
-                // 计算分期的项目还款信息
-                if (isAllRepay) {
-                    // 全部结清的
-//        			RepayBean repayByTerm = this.searchRepayPlanTotal(Integer.parseInt(userId), borrow);
-                    // 分期 当前期 计算，如果当前期没有还款，则先算当前期，后算所有剩下的期数
-                    this.calculateRepayPlanAll(repayByTerm, borrow, period);
-                    setRecoverPlanAllDetail(form, isAllRepay, userId, borrow, repayByTerm);
-
-                } else {
-                    // 当期还款
-                    this.calculateRepayPlan(repayByTerm, borrow, period);
-                    setRecoverPlanDetail(form, isAllRepay, userId, borrow, repayByTerm);
-                }
-            }
-            return form;
-
-        } else {
+    public ProjectBean searchRepayProjectDetail(ProjectBean form, boolean isAllRepay, int latePeriod) throws Exception {
+        if (form == null || StringUtils.isBlank(form.getBorrowNid()) || StringUtils.isBlank(form.getUserId())) {
+            logger.error("【还款详情】借款编号或用户ID为空！");
             return null;
         }
+        List<Integer> lateArray = new ArrayList<>();
+        String borrowNid = form.getBorrowNid();
+        String userId = form.getUserId();
+        Borrow borrow = this.getBorrowByNid(borrowNid);
+        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+        if(borrow == null || borrowInfo == null){
+            logger.error("【还款详情】借款编号：{}，未查询到数据！", borrowNid);
+            return null;
+        }
+        if (!checkBorrowUser(form.getRoleId(), userId, borrow, borrowInfo)) {
+            logger.error("【还款详情】借款编号：{}，当前用户与标的不匹配，不能进行还款！用户ID：{}", borrowNid, userId);
+            return null;
+        }
+        // userId 改成借款人的userid！！！
+        userId = borrow.getUserId().toString();
+        form.settType("0");// 设置为非汇添金专属项目
+        // 设置相应的项目名称
+        form.setBorrowName(borrowInfo.getProjectName());
+        // 获取相应的项目还款方式
+        String borrowStyle = StringUtils.isNotBlank(borrow.getBorrowStyle()) ? borrow.getBorrowStyle() : null;
+        form.setBorrowStyle(borrowStyle);
+        form.setBorrowPeriod(borrow.getBorrowPeriod().toString());// 标的总还款期数
+        form.setAllRepay("0");// 是否一次性还款
+        form.setRepayStatus("0");// 是否正在还款
+        form.setOnlyAllRepay("0");// 是否只能一次性还款
+        //form.setLatePeriod(0);// 提交的逾期期数
+        int lastPeriod = 0;// 最后一期还款
+        StringBuilder allPeriodStr = new StringBuilder("第");// 当前还款期数
+        BorrowApicronExample exampleBorrowApicron = new BorrowApicronExample();
+        BorrowApicronExample.Criteria crtBorrowApicron = exampleBorrowApicron.createCriteria();
+        crtBorrowApicron.andBorrowNidEqualTo(borrowNid);
+        crtBorrowApicron.andApiTypeEqualTo(1);
+        crtBorrowApicron.andStatusNotEqualTo(6);// 不是已经还款的，正在还款的
+        exampleBorrowApicron.setOrderByClause("period_now");
+        List<BorrowApicron> borrowApicrons = borrowApicronMapper.selectByExample(exampleBorrowApicron);
+        // 有正在还款，查看是否是一次结清，适用分期和一次性还款方式，   下面逻辑中的分期最后一期继续适用
+        if (borrowApicrons != null && borrowApicrons.size() > 0) {
+            for (int i = 0; i < borrowApicrons.size(); i++) {
+                BorrowApicron borrowApicron = borrowApicrons.get(i);
+                if (i == borrowApicrons.size() - 1) {
+                    lastPeriod = borrowApicron.getPeriodNow();
+                }
+                boolean isLate = borrowApicron.getIsLate() != null && borrowApicron.getIsLate().intValue() == 1 ? true : false;
+                if(isLate){// 添加逾期期数
+                    latePeriod = borrowApicron.getPeriodNow();// 提交的逾期期数
+                } else {
+                    latePeriod = 0;// 有提交的未逾期还款，说明时当期还款或者一次性还款，返回0
+                }
+                if(!isAllRepay && borrowApicron.getIsAllrepay() != null && borrowApicron.getIsAllrepay().intValue() == 1){
+                    form.setAllRepay("1");// 属于一次性还款
+                    isAllRepay = true;
+                    latePeriod = -1;
+                }
+            }
+            // 能查到，无论如何都是正在还款
+            form.setRepayStatus("1");
+        }
+        if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) || CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+            // 不分期还款
+            RepayBean repay = this.calculateRepay(Integer.parseInt(userId), borrow);
+            setRecoverDetail(form, userId, borrow, repay);
+        } else {
+            RepayBean repayByTerm = new RepayBean();
+            BorrowRepay borrowRepay = this.searchRepay(Integer.parseInt(userId), borrow.getBorrowNid());
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repayByTerm);
+            repayByTerm.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
+            // 计算当前最早需要还款的还款期数
+            int period = borrow.getBorrowPeriod() - borrowRepay.getRepayPeriod() + 1;
+            if(latePeriod > 0 && period > latePeriod){
+                logger.error("【还款详情】传入的第{}期逾期还款已还款！最新还款期数：第{}期。", latePeriod, period);
+                throw new Exception("传入的还款数据有误！");
+            }
+            if (period > 1) {// 至少还了一期
+                // 有逾期的情况一定不会出现超前还款，所以直接判断前一期的还款时间
+                BorrowRepayPlan borrowRepayPlan = this.searchRepayPlan(Integer.parseInt(userId), borrowNid, period - 1);
+                Integer repayTimeStart = borrowRepayPlan.getRepayTime();
+                int curPlanStart = GetDate.getIntYYMMDD(repayTimeStart);
+                int nowDate = GetDate.getIntYYMMDD(new Date());
+                // 超前还款的情况，只能一次性还款
+                if (nowDate <= curPlanStart) {
+                    form.setOnlyAllRepay("1");
+                    isAllRepay = true;
+                }
+            }
+            allPeriodStr.append(period);
+            // 计算分期的项目还款信息
+            if (isAllRepay || latePeriod == -1) {
+                // 全部结清的
+                // 分期 当前期 计算，如果当前期没有还款，则先算当前期，后算所有剩下的期数
+                this.calculateRepayPlanAll(repayByTerm, borrow, period);
+                setRecoverPlanAllDetail(form, borrow, repayByTerm);
+                if (lastPeriod == 0) {
+                    lastPeriod = borrow.getBorrowPeriod();
+                }
+            } else if (latePeriod > 0) {
+                // 逾期部分还款
+                this.calculateRepayPlanPart(repayByTerm, borrow, latePeriod);
+                setRecoverPlanPartDetail(form, isAllRepay, userId, borrow, repayByTerm, latePeriod);
+                if (lastPeriod == 0) {
+                    lastPeriod = latePeriod;
+                }
+            } else {
+                // 当期还款
+                this.calculateRepayPlan(repayByTerm, borrow, period);
+                setRecoverPlanDetail(form, isAllRepay, userId, borrow, repayByTerm);
+                if (lastPeriod == 0) {
+                    lastPeriod = Integer.parseInt(form.getRepayPeriod());
+                }
+            }
+            if(period != lastPeriod){
+                allPeriodStr.append("至").append(lastPeriod);
+            }
+            allPeriodStr.append("期");
+            if(latePeriod == -1 || lastPeriod == borrow.getBorrowPeriod()) {
+                allPeriodStr.append("，全部结清");
+            }
+            form.setAllPeriodStr(allPeriodStr.toString());
+        }
+
+        return form;
     }
 
     private boolean checkBorrowUser(String roleId, String userId, Borrow borrow, BorrowInfo borrowInfo) {
@@ -718,10 +757,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      * @param userId
      * @param borrow
      * @return
-     * @throws ParseException
+     * @throws Exception
      */
     @Override
-    public RepayBean calculateRepay(int userId, Borrow borrow) throws ParseException {
+    public RepayBean calculateRepay(int userId, Borrow borrow) throws Exception {
 
         RepayBean repay = new RepayBean();
         // 获取还款总表数据
@@ -732,11 +771,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             BeanUtils.copyProperties(borrowRepay, repay);
             // 计划还款时间
             Integer repayTimeInt = borrowRepay.getRepayTime();
-            // 获取用户申请的延期天数
-            int delayDays = borrowRepay.getDelayDays().intValue();
             repay.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
             // 未分期默认传分期为0
-            this.calculateRecover(repay, borrow, repayTimeInt, delayDays);
+            this.calculateRecover(repay, borrow, repayTimeInt);
         }
         return repay;
     }
@@ -747,10 +784,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      * @param repay
      * @param borrow
      * @param repayTimeInt
-     * @param delayDays
      * @throws ParseException
      */
-    private void calculateRecover(RepayBean repay, Borrow borrow, Integer repayTimeInt, int delayDays) throws ParseException {
+    private void calculateRecover(RepayBean repay, Borrow borrow, Integer repayTimeInt) throws Exception {
         int time = GetDate.getNowTime10();
         // 用户计划还款时间
         String repayTime = GetDate.getDateTimeMyTimeInMillis(repayTimeInt);
@@ -758,25 +794,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String factRepayTime = GetDate.getDateTimeMyTimeInMillis(time);
         int distanceDays = GetDate.daysBetween(factRepayTime, repayTime);
         String borrowStyle = borrow.getBorrowStyle();
-        if (distanceDays < 0) {// 用户延期或者逾期了
-            int lateDays = delayDays + distanceDays;
-            if (lateDays >= 0) {// 用户延期还款
-                delayDays = -distanceDays;
-                this.calculateRecoverTotalDelay(repay, borrow, delayDays);
-            } else {// 用户逾期还款
-                lateDays = -lateDays;
-                if (StringUtils.isNotBlank(borrow.getPlanNid())) {//汇计划计算逾期免息金额
-                    Integer lateFreeDays = borrow.getLateFreeDays();
-                    if (lateFreeDays >= lateDays) {//在免息期以内,正常还款
-                        this.calculateRecoverTotal(repay, borrow, distanceDays);
-                    } else {//过了免息期,罚免息期外的利息
-                        lateDays = lateDays - lateFreeDays;
-                        this.calculateRecoverTotalLate(repay, borrow, delayDays, lateDays);
-                    }
-                } else {
-                    this.calculateRecoverTotalLate(repay, borrow, delayDays, lateDays);
-                }
-            }
+        if (distanceDays < 0) {// 用户逾期了
+            this.calculateRecoverTotalLate(repay, borrow, -distanceDays);
         } else {// 用户正常或者提前还款
             // 获取提前还款的阀值
             String repayAdvanceDay = this.getBorrowConfig("REPAY_ADVANCE_TIME");
@@ -823,7 +842,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
         BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
-        BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款利息
+        BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款实际减息
+        BigDecimal repayChargePenaltyInterest = BigDecimal.ZERO;// 提前还款罚息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
 //        int time = GetDate.getNowTime10(); // 现在时间
         String factRepayTime = GetDate.getDayStart(new Date());
@@ -846,6 +866,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
+            BigDecimal userChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款的罚息
             BigDecimal userManageFee = BigDecimal.ZERO;// 获取应还款管理费
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
@@ -883,14 +904,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     } else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
-
+                    userChargePenaltyInterest = acctualInterest;
                 }
 
-//                if(i == borrowRecovers.size() - 1){
-//                    userChargeInterest = totalChargeInterest;
-//                }else{
-//                    totalChargeInterest = totalChargeInterest.subtract(userChargeInterest);
-//                }
                 // 项目提前还款时，提前还款利息不得大于应还款利息，需求变更
                 if (userChargeInterest.compareTo(userInterest) > 0) {
                     userChargeInterest = userInterest;
@@ -907,6 +923,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本金
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
+                            BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 CreditRepay creditRepay = creditRepayList.get(j);
@@ -950,6 +967,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
+                                    assignChargePenaltyInterest = acctualInterest;
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -957,6 +975,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayBean.setManageFee(assignManageFee);
                                 creditRepayBean.setAdvanceStatus(1);
                                 creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
+                                creditRepayBean.setChargePenaltyInterest(assignChargePenaltyInterest);
                                 creditRepayBean.setChargeDays(interestDay);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
@@ -965,6 +984,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 userInterest = userInterest.subtract(assignInterest);
                                 userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
                                 userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
+                                userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款利息
                                 // 统计总额
                                 repayTotal = repayTotal.add(assignAccount).subtract(assignChargeInterest).add(assignManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -972,6 +992,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 repayInterest = repayInterest.add(assignInterest);
                                 repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
                                 repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                             }
                             repayRecoverBean.setCreditRepayList(creditRepayBeanList);
                         }
@@ -987,6 +1008,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
+                                userChargePenaltyInterest = acctualInterest;
                             }
                             // 统计总额
                             repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userManageFee);// 统计总和本息+管理费
@@ -995,6 +1017,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             repayInterest = repayInterest.add(userInterest);
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                             repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
+                            repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
                         }
                     } else {
                         // 计划类还款
@@ -1007,6 +1030,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本金
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
+                            BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                             //判断当前期是否全部承接
                             overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
@@ -1046,7 +1070,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
-
+                                    assignChargePenaltyInterest = acctualInterest;
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -1054,6 +1078,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayBean.setManageFee(assignManageFee);
                                 creditRepayBean.setAdvanceStatus(1);
                                 creditRepayBean.setRepayAdvanceInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
+                                creditRepayBean.setRepayAdvancePenaltyInterest(assignChargePenaltyInterest);
                                 creditRepayBean.setAdvanceDays(interestDay);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
@@ -1062,6 +1087,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 userInterest = userInterest.subtract(assignInterest);
                                 userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
                                 userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
+                                userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款罚息
                                 // 统计总额
                                 repayTotal = repayTotal.add(assignAccount).subtract(assignChargeInterest).add(assignManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -1069,6 +1095,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 repayInterest = repayInterest.add(assignInterest);
                                 repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
                                 repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                             }
                             repayRecoverBean.setHjhCreditRepayList(creditRepayBeanList);
                         }
@@ -1084,6 +1111,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
+                                userChargePenaltyInterest = acctualInterest;
                             }
                             // 统计总额
                             repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userManageFee);// 统计总和本息+管理费
@@ -1092,6 +1120,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             repayInterest = repayInterest.add(userInterest);
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                             repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
+                            repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款减少的利息
                         }
                     }
                 } else {
@@ -1102,6 +1131,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     repayInterest = repayInterest.add(userInterest);
                     repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                     repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
+                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
                 }
                 BeanUtils.copyProperties(borrowRecover, repayRecoverBean);
                 repayRecoverBean.setRecoverTotal(userAccount.subtract(userChargeInterest).add(userManageFee));
@@ -1110,6 +1140,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 repayRecoverBean.setRecoverInterest(userInterest);
                 repayRecoverBean.setRecoverFee(userManageFee);
                 repayRecoverBean.setChargeInterest(userChargeInterest.multiply(new BigDecimal(-1)));
+                repayRecoverBean.setChargePenaltyInterest(userChargePenaltyInterest);
                 repayRecoverBean.setAdvanceStatus(1);
                 repayRecoverBean.setChargeDays(interestDay);
                 repayRecoverList.add(repayRecoverBean);
@@ -1123,6 +1154,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         repay.setRepayFee(repayManageFee);
         repay.setChargeDays(interestDay);
         repay.setChargeInterest(repayChargeInterest.multiply(new BigDecimal(-1)));
+        repay.setChargePenaltyInterest(repayChargePenaltyInterest);
         repay.setAdvanceStatus(1);
 
     }
@@ -1233,7 +1265,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     /**
      * 统计单期还款用户逾期还款的总标
      */
-    private void calculateRecoverTotalLate(RepayBean repay, Borrow borrow, int delayDays, int lateDays) throws ParseException {
+    private void calculateRecoverTotalLate(RepayBean repay, Borrow borrow, int lateDays) throws Exception {
 
         // 项目编号
         String borrowNid = borrow.getBorrowNid();
@@ -1252,7 +1284,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
-        BigDecimal repayDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
         BigDecimal repayOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
         List<BorrowRecover> borrowRecovers = this.getBorrowRecover(borrowNid);
         if (borrowRecovers != null && borrowRecovers.size() > 0) {
@@ -1261,7 +1292,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-            BigDecimal userDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
             BigDecimal userOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
@@ -1270,20 +1300,18 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userAccount = borrowRecover.getRecoverAccount();// 获取未还款前用户能够获取的本息和
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
-                // 计算用户逾期利息
-                userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(userAccount, lateDays);
-                if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
+                userOverdueInterest = borrowRecover.getLateInterest();// batch计算的逾期利息
+                int userAdvanceStatus = borrowRecover.getAdvanceStatus();// batch计算的还款状态
+                int userLateDays = borrowRecover.getLateDays();// batch计算的逾期天数
+                if(userAdvanceStatus != 3 || userLateDays != lateDays){
+                    logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
+                            userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
+                    throw new Exception("计算的逾期信息有误！");
                 }
-                // 计算用户延期利息
-                userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, borrow.getBorrowApr(), delayDays);
                 // 获取应还款管理费
                 userManageFee = borrowRecover.getRecoverFee();
-
                 repayRecoverBean.setRecoverCapitalOld(userCapital);
                 repayRecoverBean.setCreditAmountOld(borrowRecover.getCreditAmount());
-
                 if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
                     if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
                         // 直投类项目还款
@@ -1294,7 +1322,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                            BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
                             BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 CreditRepay creditRepay = creditRepayList.get(j);
@@ -1302,13 +1329,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignAccount = creditRepay.getAssignAccount();// 承接本息
                                 assignCapital = creditRepay.getAssignCapital();// 承接本金
                                 assignInterest = creditRepay.getAssignInterest();
+                                assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
+                                int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
+                                int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
+                                if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                    logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
+                                            assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
+                                    throw new Exception("计算的逾期信息有误！");
+                                }
                                 //最后一笔兜底
                                 if (borrowRecover.getCreditStatus() == 2 && j == creditRepayList.size() - 1) {
                                     assignManageFee = userManageFee;
-                                    // 计算用户逾期利息
-                                    assignOverdueInterest = userOverdueInterest;
-                                    // 计算用户延期利息
-                                    assignDelayInterest = userDelayInterest;
                                 } else {
                                     // 按月计息，到期还本还息end
                                     if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
@@ -1318,50 +1349,34 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
                                         assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
                                     }
-                                    // 计算用户逾期利息
-                                    assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
-                                    if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                        //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
-                                    }
-                                    // 计算用户延期利息
-                                    assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
                                 }
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee));
+                                creditRepayBean.setAssignTotal(assignAccount.add(assignOverdueInterest).add(assignManageFee));
                                 creditRepayBean.setManageFee(assignManageFee);
-                                creditRepayBean.setAdvanceStatus(3);
-                                creditRepayBean.setDelayDays(delayDays);
-                                creditRepayBean.setDelayInterest(assignDelayInterest);
-                                creditRepayBean.setLateDays(lateDays);
-                                creditRepayBean.setLateInterest(assignOverdueInterest);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
                                 userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
                                 userCapital = userCapital.subtract(assignCapital);
                                 userInterest = userInterest.subtract(assignInterest);
                                 userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-                                userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
                                 userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
                                 // 统计总额
-                                repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
+                                repayTotal = repayTotal.add(assignAccount).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(assignAccount);// 统计总和本息
                                 repayCapital = repayCapital.add(assignCapital);
                                 repayInterest = repayInterest.add(assignInterest);
                                 repayManageFee = repayManageFee.add(assignManageFee);// 管理费
-                                repayDelayInterest = repayDelayInterest.add(assignDelayInterest);// 统计借款用户总延期利息
                                 repayOverdueInterest = repayOverdueInterest.add(assignOverdueInterest);// 统计借款用户总逾期利息
                             }
                             repayRecoverBean.setCreditRepayList(creditRepayBeanList);
                         }
                         if (borrowRecover.getCreditStatus() != 2) {
                             // 统计总额
-                            repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                            repayTotal = repayTotal.add(userAccount).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                             repayAccount = repayAccount.add(userAccount);// 统计总和本息
                             repayCapital = repayCapital.add(userCapital);
                             repayInterest = repayInterest.add(userInterest);
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                            repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
                             repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                         }
                     } else {
@@ -1373,7 +1388,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                            BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
                             BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
                             //判断当前期是否全部承接
                             boolean overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
@@ -1383,13 +1397,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignAccount = creditRepay.getRepayAccount();// 承接本息
                                 assignCapital = creditRepay.getRepayCapital();// 承接本金
                                 assignInterest = creditRepay.getRepayInterest();
+                                assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
+                                int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
+                                int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
+                                if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                    logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
+                                            assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
+                                    throw new Exception("计算的逾期信息有误！");
+                                }
                                 //最后一笔兜底
                                 if (!overFlag && j == creditRepayList.size() - 1) {
                                     assignManageFee = userManageFee;
-                                    // 计算用户逾期利息
-                                    assignOverdueInterest = userOverdueInterest;
-                                    // 计算用户延期利息
-                                    assignDelayInterest = userDelayInterest;
                                 } else {
                                     // 按月计息，到期还本还息end
                                     if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
@@ -1399,74 +1417,55 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
                                         assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
                                     }
-                                    // 计算用户逾期利息
-                                    assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
-                                    if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                        //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                        userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
-                                    }
-                                    // 计算用户延期利息
-                                    assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
                                 }
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee));
+                                creditRepayBean.setAssignTotal(assignAccount.add(assignOverdueInterest).add(assignManageFee));
                                 creditRepayBean.setManageFee(assignManageFee);
-                                creditRepayBean.setAdvanceStatus(3);
-                                creditRepayBean.setDelayDays(delayDays);
-                                creditRepayBean.setRepayDelayInterest(assignDelayInterest);
-                                creditRepayBean.setLateDays(lateDays);
-                                creditRepayBean.setRepayLateInterest(assignOverdueInterest);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
                                 userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
                                 userCapital = userCapital.subtract(assignCapital);
                                 userInterest = userInterest.subtract(assignInterest);
                                 userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-//                                userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
-//                                userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
+                                userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
                                 // 统计总额
-                                repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
+                                repayTotal = repayTotal.add(assignAccount).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(assignAccount);// 统计总和本息
                                 repayCapital = repayCapital.add(assignCapital);
                                 repayInterest = repayInterest.add(assignInterest);
                                 repayManageFee = repayManageFee.add(assignManageFee);// 管理费
-                                repayDelayInterest = repayDelayInterest.add(assignDelayInterest);// 统计借款用户总延期利息
                                 repayOverdueInterest = repayOverdueInterest.add(assignOverdueInterest);// 统计借款用户总逾期利息
                             }
                             repayRecoverBean.setHjhCreditRepayList(creditRepayBeanList);
                         }
                         if (borrowRecover.getCreditStatus() != 2) {
                             // 统计总额
-                            repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                            repayTotal = repayTotal.add(userAccount).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                             repayAccount = repayAccount.add(userAccount);// 统计总和本息
                             repayCapital = repayCapital.add(userCapital);
                             repayInterest = repayInterest.add(userInterest);
-                            repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                            repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
+                            repayManageFee = repayManageFee.add(userManageFee);// 统计管理费
                             repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                         }
                     }
                 } else {
                     // 统计总额
-                    repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                    repayTotal = repayTotal.add(userAccount).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                     repayAccount = repayAccount.add(userAccount);// 统计总和本息
                     repayCapital = repayCapital.add(userCapital);
                     repayInterest = repayInterest.add(userInterest);
                     repayManageFee = repayManageFee.add(userManageFee);// 管理费
-                    repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
                     repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                 }
                 // 延期还款利息
                 BeanUtils.copyProperties(borrowRecover, repayRecoverBean);
                 // 用户延期还款
-                repayRecoverBean.setRecoverTotal(userAccount.add(userDelayInterest).add(userOverdueInterest).add(userManageFee));
+                repayRecoverBean.setRecoverTotal(userAccount.add(userOverdueInterest).add(userManageFee));
                 repayRecoverBean.setRecoverAccount(userAccount);
                 repayRecoverBean.setRecoverCapital(userCapital);
                 repayRecoverBean.setRecoverInterest(userInterest);
                 repayRecoverBean.setRecoverFee(userManageFee);
-                repayRecoverBean.setDelayInterest(userDelayInterest);
                 repayRecoverBean.setLateInterest(userOverdueInterest);
-                repayRecoverBean.setDelayDays(delayDays);
                 repayRecoverBean.setLateDays(lateDays);
                 repayRecoverBean.setAdvanceStatus(3);
                 repayRecoverList.add(repayRecoverBean);
@@ -1478,11 +1477,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         repay.setRepayCapital(repayCapital);
         repay.setRepayInterest(repayInterest);
         repay.setRepayFee(repayManageFee);
-        repay.setDelayDays(delayDays);
-        repay.setDelayInterest(repayDelayInterest);
         repay.setLateDays(lateDays);
         repay.setLateInterest(repayOverdueInterest);
-        repay.setAdvanceStatus(3);
+        repay.setLateStatus("1");
     }
 
     /**
@@ -1555,6 +1552,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayBean.setManageFee(assignManageFee);
                                 creditRepayBean.setAdvanceStatus(0);
                                 creditRepayBean.setChargeInterest(BigDecimal.ZERO);
+                                creditRepayBean.setChargePenaltyInterest(BigDecimal.ZERO);
                                 creditRepayBean.setChargeDays(interestDay);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
@@ -1668,271 +1666,48 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
-     * 统计单期还款用户延期还款的总标
-     */
-    private void calculateRecoverTotalDelay(RepayBean repay, Borrow borrow, int delayDays) throws ParseException {
-
-        // 用户延期
-        String borrowNid = borrow.getBorrowNid();// 项目编号
-        String borrowStyle = borrow.getBorrowStyle(); // 还款方式
-        BigDecimal feeRate = Validator.isNull(borrow.getManageFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getManageFeeRate()); // 管理费率
-        // 差异费率
-        BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
-        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime(); // 初审时间
-        Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 项目总期数
-        BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
-        BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
-        BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
-        BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
-        BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
-        BigDecimal repayDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-        // 查询相应的不分期的还款信息
-        List<BorrowRecover> borrowRecovers = this.getBorrowRecover(borrowNid);
-        if (borrowRecovers != null && borrowRecovers.size() > 0) {
-            List<RepayRecoverBean> repayRecoverList = new ArrayList<RepayRecoverBean>();
-            BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
-            BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
-            BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
-            BigDecimal userDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-            BigDecimal userManageFee = BigDecimal.ZERO;// 获取应还款管理费
-            for (int i = 0; i < borrowRecovers.size(); i++) {
-                BorrowRecover borrowRecover = borrowRecovers.get(i);
-                RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 出借订单号
-                userAccount = borrowRecover.getRecoverAccount();
-                userCapital = borrowRecover.getRecoverCapital();
-                userInterest = borrowRecover.getRecoverInterest();
-                // 计算用户延期利息
-                userDelayInterest = UnnormalRepayUtils.delayRepayInterest(userCapital, borrow.getBorrowApr(), delayDays);
-                if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
-                    BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
-                    logger.info("一次性还款先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
-                    logger.info("一次性还款先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
-                }
-                // 用户管理费
-                userManageFee = borrowRecover.getRecoverFee();
-                repayRecoverBean.setRecoverCapitalOld(userCapital);
-                repayRecoverBean.setCreditAmountOld(borrowRecover.getCreditAmount());
-
-                // 如果已经发生债转此笔不考虑提前，延期，逾期还款
-                if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                    // 如果是直投还款
-                    if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
-                        List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, 1, 0);
-                        if (creditRepayList != null && creditRepayList.size() > 0) {
-                            List<RepayCreditRepayBean> creditRepayBeanList = new ArrayList<RepayCreditRepayBean>();
-                            BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
-                            BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
-                            BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
-                            BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                            BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-                            for (int j = 0; j < creditRepayList.size(); j++) {
-                                CreditRepay creditRepay = creditRepayList.get(j);
-                                RepayCreditRepayBean creditRepayBean = new RepayCreditRepayBean();
-                                assignCapital = creditRepay.getAssignCapital();// 承接本金
-                                assignInterest = creditRepay.getAssignInterest();
-                                // 计算用户实际获得的本息和
-                                assignAccount = creditRepay.getAssignAccount();
-                                //最后一笔兜底
-                                if (borrowRecover.getCreditStatus() == 2 && j == creditRepayList.size() - 1) {
-                                    assignManageFee = userManageFee;
-                                    assignDelayInterest = userDelayInterest;
-                                } else {
-                                    // 按月计息，到期还本还息end
-                                    if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
-                                        assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
-                                    }
-                                    // 按天计息到期还本还息
-                                    else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
-                                        assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
-                                    }
-                                    // 计算用户延期利息
-                                    assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
-                                    if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
-                                        BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
-                                        logger.info("直投债转一次性还款先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
-                                        logger.info("直投债转一次性还款先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
-                                    }
-                                }
-                                BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
-                                creditRepayBean.setManageFee(assignManageFee);
-                                creditRepayBean.setAdvanceStatus(2);
-                                creditRepayBean.setDelayDays(delayDays);
-                                creditRepayBean.setDelayInterest(assignDelayInterest);
-                                creditRepayBeanList.add(creditRepayBean);
-                                // 统计出让人还款金额
-                                userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
-                                userCapital = userCapital.subtract(assignCapital);
-                                userInterest = userInterest.subtract(assignInterest);
-                                userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-                                userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
-                                // 统计总额
-                                repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignManageFee);// 统计总和本息+管理费
-                                repayAccount = repayAccount.add(assignAccount);// 统计总和本息
-                                repayCapital = repayCapital.add(assignCapital);
-                                repayInterest = repayInterest.add(assignInterest);
-                                repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
-                                repayDelayInterest = repayDelayInterest.add(assignDelayInterest);
-                            }
-                            repayRecoverBean.setCreditRepayList(creditRepayBeanList);
-                        }
-                        if (borrowRecover.getCreditStatus() != 2) {
-                            // 统计总额
-                            repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userManageFee);// 统计总和本息+管理费
-                            repayAccount = repayAccount.add(userAccount);// 统计总和本息
-                            repayCapital = repayCapital.add(userCapital);
-                            repayInterest = repayInterest.add(userInterest);
-                            repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                            repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                        }
-                    } else {
-                        // 计划还款
-                        List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, tenderOrderId, 1, borrowRecover.getRecoverStatus());
-                        if (creditRepayList != null && creditRepayList.size() > 0) {
-                            List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
-                            BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
-                            BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
-                            BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
-                            BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                            BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-                            //判断当前期是否全部承接
-                            boolean overFlag = isOverUndertake(borrowRecover, null, null, false, 0);
-                            for (int j = 0; j < creditRepayList.size(); j++) {
-                                HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
-                                HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
-                                assignCapital = creditRepay.getRepayCapital();// 承接本金
-                                assignInterest = creditRepay.getRepayInterest();
-                                // 计算用户实际获得的本息和
-                                assignAccount = creditRepay.getRepayAccount();
-                                //最后一笔兜底
-                                if (!overFlag && j == creditRepayList.size() - 1) {
-                                    assignManageFee = userManageFee;
-                                    assignDelayInterest = userDelayInterest;
-                                } else {
-                                    // 按月计息，到期还本还息end
-                                    if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
-                                        assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
-                                    }
-                                    // 按天计息到期还本还息
-                                    else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
-                                        assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
-                                    }
-                                    // 计算用户延期利息
-                                    assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
-                                    if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
-                                        BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
-                                        logger.info("计划债转一次性还款先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
-                                        logger.info("计划债转一次性还款先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
-                                    }
-                                }
-                                BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
-                                creditRepayBean.setManageFee(assignManageFee);
-                                creditRepayBean.setAdvanceStatus(2);
-                                creditRepayBean.setDelayDays(delayDays);
-                                creditRepayBean.setRepayDelayInterest(assignDelayInterest);
-                                creditRepayBeanList.add(creditRepayBean);
-                                // 统计出让人还款金额
-                                userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
-                                userCapital = userCapital.subtract(assignCapital);
-                                userInterest = userInterest.subtract(assignInterest);
-                                userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-//                                userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
-                                // 统计总额
-                                repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignManageFee);// 统计总和本息+管理费
-                                repayAccount = repayAccount.add(assignAccount);// 统计总和本息
-                                repayCapital = repayCapital.add(assignCapital);
-                                repayInterest = repayInterest.add(assignInterest);
-                                repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
-                                repayDelayInterest = repayDelayInterest.add(assignDelayInterest);
-                            }
-                            repayRecoverBean.setHjhCreditRepayList(creditRepayBeanList);
-                        }
-                        if (borrowRecover.getCreditStatus() != 2) {
-                            // 统计总额
-                            repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userManageFee);// 统计总和本息+管理费
-                            repayAccount = repayAccount.add(userAccount);// 统计总和本息
-                            repayCapital = repayCapital.add(userCapital);
-                            repayInterest = repayInterest.add(userInterest);
-                            repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                            repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                        }
-                    }
-
-                } else {
-                    // 统计总额
-                    repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userManageFee);// 统计总和本息+管理费
-                    repayAccount = repayAccount.add(userAccount); // 统计本息总和
-                    repayCapital = repayCapital.add(userCapital);
-                    repayInterest = repayInterest.add(userInterest);
-                    repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                    repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                }
-                // 用户延期还款
-                BeanUtils.copyProperties(borrowRecover, repayRecoverBean);
-                repayRecoverBean.setRecoverTotal(userAccount.add(userDelayInterest).add(userManageFee));
-                repayRecoverBean.setRecoverAccount(userAccount);
-                repayRecoverBean.setRecoverCapital(userCapital);
-                repayRecoverBean.setRecoverInterest(userInterest);
-                repayRecoverBean.setRecoverFee(userManageFee);
-                repayRecoverBean.setAdvanceStatus(2);
-                repayRecoverBean.setDelayInterest(userDelayInterest); // 延期利息
-                repayRecoverBean.setDelayDays(delayDays);
-                repayRecoverList.add(repayRecoverBean);
-            }
-            repay.setRecoverList(repayRecoverList);
-        }
-        repay.setRepayAccountAll(repayTotal);
-        repay.setRepayAccount(repayAccount);
-        repay.setRepayCapital(repayCapital);
-        repay.setRepayInterest(repayInterest);
-        repay.setRepayFee(repayManageFee);
-        repay.setAdvanceStatus(2);
-        repay.setDelayDays(delayDays);
-        repay.setDelayInterest(repayDelayInterest);
-    }
-
-    /**
-     * 设置一次性还款方式数据
+     * 设置不分期还款方式数据
      */
     private void setRecoverDetail(ProjectBean form, String userId, Borrow borrow, RepayBean repay)
             throws ParseException {
-
-        String borrowNid = borrow.getBorrowNid();
-
         form.setRepayPeriod("0");
         form.setManageFee(repay.getRepayFee().toString());
         form.setRepayTotal(repay.getRepayAccountAll().toString()); // 计算的是还款总额
-        form.setRepayAccount(repay.getRepayAccount().add(repay.getChargeInterest()).add(repay.getDelayInterest()).add(repay.getLateInterest()).toString());
+        form.setRepayAccount(repay.getRepayAccount().add(repay.getChargeInterest()).add(repay.getLateInterest()).toString());
         form.setRepayCapital(repay.getRepayCapital().toString());
-        form.setRepayInterest(repay.getRepayInterest().add(repay.getChargeInterest()).add(repay.getDelayInterest()).add(repay.getLateInterest()).toString());
+        form.setRepayInterest(repay.getRepayInterest().add(repay.getChargeInterest()).add(repay.getLateInterest()).toString());
         form.setShouldInterest(repay.getRepayInterest().toString());
-
+        form.setLateStatus(repay.getLateStatus());
         form.setAdvanceStatus(String.valueOf(repay.getAdvanceStatus()));
         form.setChargeDays(repay.getChargeDays().toString());
-        form.setChargeInterest(repay.getChargeInterest().toString());
-        if ("0".equals(repay.getChargeInterest().toString())) {
-            form.setChargeInterest("0.00");
+        //form.setChargeInterest(repay.getChargeInterest().toString());
+        form.setChargeOriginalInterest(repay.getChargePenaltyInterest().subtract(repay.getChargeInterest()).toString());
+        form.setChargePenaltyInterest(repay.getChargePenaltyInterest().toString());
+        if ("0".equals(form.getChargeOriginalInterest())) {
+            form.setChargeOriginalInterest("0.00");
         }
-        form.setDelayDays(repay.getDelayDays().toString());
-        form.setDelayInterest(repay.getDelayInterest().toString());
+        if ("0".equals(form.getChargePenaltyInterest())) {
+            form.setChargePenaltyInterest("0.00");
+        }
         form.setLateDays(repay.getLateDays().toString());
         form.setLateInterest(repay.getLateInterest().toString());
         List<ProjectRepayBean> userRepayList = new ArrayList<ProjectRepayBean>();
         ProjectRepayBean userRepayBean = new ProjectRepayBean();
         // 此处是本息和
         userRepayBean.setRepayTotal(repay.getRepayAccountAll().toString());
-        userRepayBean.setRepayAccount(repay.getRepayAccount().add(repay.getChargeInterest()).add(repay.getDelayInterest()).add(repay.getLateInterest()).toString());
+        userRepayBean.setRepayAccount(repay.getRepayAccount().add(repay.getChargeInterest()).add(repay.getLateInterest()).toString());
         userRepayBean.setRepayCapital(repay.getRepayCapital().toString());
         userRepayBean.setRepayInterest(repay.getRepayInterest().toString());
         userRepayBean.setChargeDays(repay.getChargeDays().toString());
-        userRepayBean.setChargeInterest(repay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-        if ("0".equals(userRepayBean.getChargeInterest())) {
-            userRepayBean.setChargeInterest("0.00");
+        // 提前还款利息拆分 add by wgx 2019/03/22
+        userRepayBean.setChargeOriginalInterest(repay.getChargePenaltyInterest().subtract(repay.getChargeInterest()).toString());
+        userRepayBean.setChargePenaltyInterest(repay.getChargePenaltyInterest().toString());
+        if ("0".equals(userRepayBean.getChargeOriginalInterest())) {
+            userRepayBean.setChargeOriginalInterest("0.00");
         }
-        userRepayBean.setDelayDays(repay.getDelayDays().toString());
-        userRepayBean.setDelayInterest(repay.getDelayInterest().toString());
+        if ("0".equals(userRepayBean.getChargePenaltyInterest())) {
+            userRepayBean.setChargePenaltyInterest("0.00");
+        }
         userRepayBean.setManageFee(repay.getRepayFee().toString());
         userRepayBean.setLateDays(repay.getLateDays().toString());
         userRepayBean.setLateInterest(repay.getLateInterest().toString());
@@ -1957,12 +1732,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
                         userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                         userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
-                        userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                        if ("0".equals(userRepayDetail.getChargeInterest())) {
-                            userRepayDetail.setChargeInterest("0.00");
+                        // 提前还款利息拆分 add by wgx 2019/03/22
+                        userRepayDetail.setChargeOriginalInterest(userRecover.getChargePenaltyInterest().subtract(userRecover.getChargeInterest()).toString());
+                        userRepayDetail.setChargePenaltyInterest(userRecover.getChargePenaltyInterest().toString());
+                        if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                            userRepayDetail.setChargeOriginalInterest("0.00");
                         }
-                        userRepayDetail.setDelayDays(userRecover.getDelayDays().toString());
-                        userRepayDetail.setDelayInterest(creditRepay.getDelayInterest().toString());
+                        if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                            userRepayDetail.setChargePenaltyInterest("0.00");
+                        }
                         userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
                         userRepayDetail.setLateDays(userRecover.getLateDays().toString());
                         userRepayDetail.setLateInterest(creditRepay.getLateInterest().toString());
@@ -1994,12 +1772,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
                         userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                         userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
-                        userRepayDetail.setChargeInterest(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1")).toString());
-                        if ("0".equals(userRepayDetail.getChargeInterest())) {
-                            userRepayDetail.setChargeInterest("0.00");
+                        userRepayDetail.setChargeOriginalInterest(creditRepay.getRepayAdvancePenaltyInterest().subtract(creditRepay.getRepayAdvanceInterest()).toString());
+                        userRepayDetail.setChargePenaltyInterest(creditRepay.getRepayAdvancePenaltyInterest().toString());
+                        if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                            userRepayDetail.setChargeOriginalInterest("0.00");
                         }
-                        userRepayDetail.setDelayDays(userRecover.getDelayDays().toString());
-                        userRepayDetail.setDelayInterest(creditRepay.getRepayDelayInterest().toString());
+                        if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                            userRepayDetail.setChargePenaltyInterest("0.00");
+                        }
                         userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
                         userRepayDetail.setLateDays(userRecover.getLateDays().toString());
                         userRepayDetail.setLateInterest(creditRepay.getRepayLateInterest().toString());
@@ -2028,12 +1808,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userRepayDetail.setRepayCapital(userRecover.getRecoverCapital().toString());
                     userRepayDetail.setRepayInterest(userRecover.getRecoverInterest().toString());
                     userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
-                    userRepayDetail.setChargeInterest(userRecover.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                    if ("0".equals(userRepayDetail.getChargeInterest())) {
-                        userRepayDetail.setChargeInterest("0.00");
+                    // 提前还款利息拆分 add by wgx 2019/03/22
+                    userRepayDetail.setChargeOriginalInterest(userRecover.getChargePenaltyInterest().subtract(userRecover.getChargeInterest()).toString());
+                    userRepayDetail.setChargePenaltyInterest(userRecover.getChargePenaltyInterest().toString());
+                    if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                        userRepayDetail.setChargeOriginalInterest("0.00");
                     }
-                    userRepayDetail.setDelayDays(userRecover.getDelayDays().toString());
-                    userRepayDetail.setDelayInterest(userRecover.getDelayInterest().toString());
+                    if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                        userRepayDetail.setChargePenaltyInterest("0.00");
+                    }
                     userRepayDetail.setManageFee(userRecover.getRecoverFee().toString());
                     userRepayDetail.setLateDays(userRecover.getLateDays().toString());
                     userRepayDetail.setLateInterest(userRecover.getLateInterest().toString());
@@ -2062,14 +1845,12 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
-     * 计算用户分期还款本期应还金额
+     * 计算用户一次性还款应还金额
      */
     private BigDecimal calculateRepayPlanAll(RepayBean repay, Borrow borrow, int period) throws Exception {
-
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
-        List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlanAll(repay.getUserId(), borrow.getBorrowNid());
+        List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlanAll(repay.getUserId(), borrow.getBorrowNid());// 还款计划按照期数排序
         BigDecimal repayAccountAll = BigDecimal.ZERO;
-
         // 一下值先清0，因为是从数据库repay 表复制过来的
         repay.setBorrowPeriod(borrow.getBorrowPeriod().toString());
         repay.setRepayAccountAll(BigDecimal.ZERO);
@@ -2078,9 +1859,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         repay.setRepayInterest(BigDecimal.ZERO);
         repay.setRepayFee(BigDecimal.ZERO);
         repay.setChargeInterest(BigDecimal.ZERO);
-        repay.setAdvanceStatus(1);// 属于提前还款
-
+        repay.setChargePenaltyInterest(BigDecimal.ZERO);
+        repay.setLateInterest(BigDecimal.ZERO);
+        //repay.setAdvanceStatus(1);// 默认属于提前还款
         int totalPeriod = borrow.getBorrowPeriod() - period;
+        int nowPeriod = period;
         if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
             // 将calculateRecoverPlanAll的borrowRecoverList移到方法外查询 update by wgx 2019/02/15
             List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
@@ -2088,104 +1871,97 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             for (int i = 0; i < borrowRepayPlans.size(); i++) {
                 RepayDetailBean repayPlanDetail = new RepayDetailBean();
                 BorrowRepayPlan borrowRepayPlan = borrowRepayPlans.get(i);
-                // 当前期
-                if (period == borrowRepayPlan.getRepayPeriod()) {
-
-
-                    // 当前期已经还款
-                    if (borrowRepayPlan.getRepayStatus() == 1) {
-
-                        BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                        this.calculateRecoverPlan(repayPlanDetail, borrow);
-                        borrowRepayPlanDeails.add(repayPlanDetail);
-
-                    } else {
-                        // 查看当前还款时间 是否 在当前期里头,如果超前则不算当期还款
-
-                        Integer repayTimeStart = null;
-                        if (i == 0) {
-                            repayTimeStart = GetDate.getTime10(borrowRepayPlan.getCreateTime());
-                        } else {
-                            repayTimeStart = borrowRepayPlans.get(i - 1).getRepayTime();
-                        }
-
-                        int curPlanStart = GetDate.getIntYYMMDD(repayTimeStart);
-                        int nowDate = GetDate.getIntYYMMDD(new Date());
-
-                        // 超期还
-                        if (i != 0 && nowDate <= curPlanStart) {
-                            // 当前期也算的话，需要加上当前期
-                            totalPeriod = borrow.getBorrowPeriod() - period + 1;
-                            // 计算还款期的数据
-                            BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                            this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
-                            borrowRepayPlanDeails.add(repayPlanDetail);
-
-                            repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
-                            repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
-                            repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
-                            repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
-                            repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
-                            repay.setChargeDays(repayPlanDetail.getChargeDays());
-                            repay.setChargeInterest(repay.getChargeInterest().add(repayPlanDetail.getChargeInterest()));
-
-                            repayAccountAll = repayPlanDetail.getRepayAccountAll();
-
-                        } else {
-
-                            // 计算还款期的数据
-                            BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                            this.calculateRecoverPlan(repayPlanDetail, borrow, period, null);
-                            borrowRepayPlanDeails.add(repayPlanDetail);
-
-                            if (repayPlanDetail.getAdvanceStatus() == 2 || repayPlanDetail.getAdvanceStatus() == 3) {
-                                throw new Exception("当期延期或者逾期，不能全部结清");
-                            }
-
-                            repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
-                            repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
-                            repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
-                            repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
-                            repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
-                            repay.setChargeDays(repayPlanDetail.getChargeDays());
-                            repay.setChargeInterest(repay.getChargeInterest().add(repayPlanDetail.getChargeInterest()));
-
-                            repay.setDelayDays(repayPlanDetail.getDelayDays());
-                            repay.setDelayInterest(repayPlanDetail.getDelayInterest());
-                            repay.setLateDays(repayPlanDetail.getLateDays());
-                            repay.setLateInterest(repayPlanDetail.getLateInterest());
-
-                            repayAccountAll = repayPlanDetail.getRepayAccountAll();
-
-                        }
-
-                    }
-
-                } else if (borrowRepayPlan.getRepayPeriod() > period) {
-
+                int repayPeriod = borrowRepayPlan.getRepayPeriod();
+                int repayTimeInt = borrowRepayPlan.getRepayTime();
+                int repayStatus = borrowRepayPlan.getRepayStatus();
+                int nowDate = GetDate.getIntYYMMDD(new Date());
+                if(GetDate.getIntYYMMDD(repayTimeInt) < nowDate && repayPeriod >= nowPeriod && repayStatus != 1){// 已逾期期数
                     // 计算还款期的数据
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                    this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
+                    this.calculateRecoverPlan(repayPlanDetail, borrow, nowPeriod, null, borrowRecoverList);
                     borrowRepayPlanDeails.add(repayPlanDetail);
-
                     //  累加以下值
                     repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
                     repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
                     repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
                     repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
                     repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
+                    repay.setLateDays(repayPlanDetail.getLateDays());
+                    // 逾期期数只累加逾期利息
+                    repay.setLateInterest(repay.getLateInterest().add(repayPlanDetail.getLateInterest()));
+                    repayAccountAll = repayPlanDetail.getRepayAccountAll();
+                    nowPeriod ++;// 逾期了 当前期+1
+                    repay.setLateStatus("1");
+                } else if (repayPeriod == nowPeriod) {
+                    // 当前期已经还款
+                    if (repayStatus == 1) {
+                        BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                        this.calculateRecoverPlan(repayPlanDetail, borrow);
+                        borrowRepayPlanDeails.add(repayPlanDetail);
+                    } else {
+                        // 查看当前还款时间 是否 在当前期里头,如果超前则不算当期还款
+                        Integer repayTimeStart = null;
+                        if (i == 0) {
+                            repayTimeStart = GetDate.getTime10(borrowRepayPlan.getCreateTime());
+                        } else {
+                            repayTimeStart = borrowRepayPlans.get(i - 1).getRepayTime();
+                        }
+                        int curPlanStart = GetDate.getIntYYMMDD(repayTimeStart);
+                        // 超期还
+                        if (i != 0 && nowDate <= curPlanStart) {
+                            // 当前期也算的话，需要加上当前期
+                            totalPeriod = borrow.getBorrowPeriod() - nowPeriod + 1;
+                            // 计算还款期的数据
+                            BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                            this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
+                            borrowRepayPlanDeails.add(repayPlanDetail);
+                            repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
+                            repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
+                            repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
+                            repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
+                            repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
+                            repay.setAdvanceStatus(repayPlanDetail.getAdvanceStatus());
+                            repay.setChargeInterest(repay.getChargeInterest().add(repayPlanDetail.getChargeInterest()));
+                            repay.setChargePenaltyInterest(repay.getChargePenaltyInterest().add(repayPlanDetail.getChargePenaltyInterest()));
+                            repayAccountAll = repayPlanDetail.getRepayAccountAll();
+
+                        } else {
+                            // 计算还款期的数据
+                            BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                            this.calculateRecoverPlan(repayPlanDetail, borrow, nowPeriod, null, borrowRecoverList);
+                            borrowRepayPlanDeails.add(repayPlanDetail);
+                            if (repayPlanDetail.getAdvanceStatus() == 3) {
+                                throw new Exception("当期逾期，不能全部结清");
+                            }
+                            repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
+                            repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
+                            repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
+                            repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
+                            repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
+                            repay.setAdvanceStatus(repayPlanDetail.getAdvanceStatus());
+                            repay.setChargeDays(repayPlanDetail.getChargeDays());
+                            repay.setChargeInterest(repay.getChargeInterest().add(repayPlanDetail.getChargeInterest()));
+                            repay.setChargePenaltyInterest(repay.getChargePenaltyInterest().add(repayPlanDetail.getChargePenaltyInterest()));
+                            repayAccountAll = repayPlanDetail.getRepayAccountAll();
+                        }
+                    }
+                } else if (repayPeriod > nowPeriod) {// 当前期之后的数据
+                    // 计算还款期的数据
+                    BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                    this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
+                    borrowRepayPlanDeails.add(repayPlanDetail);
+                    //  累加以下值
+                    repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
+                    repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
+                    repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
+                    repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
+                    repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
+                    repay.setAdvanceStatus(repayPlanDetail.getAdvanceStatus());
                     repay.setChargeDays(repayPlanDetail.getChargeDays());
                     repay.setChargeInterest(repay.getChargeInterest().add(repayPlanDetail.getChargeInterest()));
-//                    repay.setDelayDays(repayPlanDetail.getDelayDays());
-//                    repay.setDelayInterest(repayPlanDetail.getDelayInterest());
-//                    repay.setLateDays(repayPlanDetail.getLateDays());
-//                    repay.setLateInterest(repayPlanDetail.getLateInterest());
-
+                    repay.setChargePenaltyInterest(repay.getChargePenaltyInterest().add(repayPlanDetail.getChargePenaltyInterest()));
                     repayAccountAll = repayPlanDetail.getRepayAccountAll();
-
-
-
-                } else {
+                } else {// 已还款信息
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
                     this.calculateRecoverPlan(repayPlanDetail, borrow);
                     borrowRepayPlanDeails.add(repayPlanDetail);
@@ -2199,7 +1975,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     /**
      * 统计分期还款用户正常还款的总标
      */
-    private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, Borrow borrow, int totalPeriod, List<BorrowRecover> borrowRecoverList) {
+    private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, Borrow borrow, int totalPeriod, List<BorrowRecover> borrowRecoverList) throws Exception {
 
         // 项目编号
         String borrowNid = borrow.getBorrowNid();
@@ -2220,69 +1996,63 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         // 将calculateRecoverPlanAll的borrowRecoverList移到方法外查询 update by wgx 2019/02/15
         // List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
         List<BorrowRecoverPlan> borrowRecoverPlans = this.getBorrowRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
-
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
-
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
         BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
         BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
         BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款利息
+        BigDecimal repayChargePenaltyInterest = BigDecimal.ZERO;// 提前还款罚息
 
         if (borrowRecoverList == null || borrowRecoverList.size() <= 0) {
-            logger.error(borrow.getBorrowNid() + " 没有recover 数据");
+            logger.error("【还款计算】借款编号：{}，没有放款数据！", borrow.getBorrowNid());
             return;
         }
         if (borrowRecoverPlans == null || borrowRecoverPlans.size() <= 0) {
-            logger.error(borrow.getBorrowNid() + "  还款期：" + borrowRepayPlan.getRepayPeriod() + " 没有recoverPlan 数据");
+            logger.error("【还款计算】借款编号：{}，没有第{}期放款分期数据！", borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
             return;
         }
-
+        // 用户计划还款时间
+        String repayTime = GetDate.getDateTimeMyTimeInMillis(borrowRepayPlan.getRepayTime());
+        // 用户实际还款时间
+        String nowTime = GetDate.getDateTimeMyTimeInMillis(GetDate.getNowTime10());
+        // 获取实际还款同计划还款时间的时间差
+        int distanceDays = GetDate.daysBetween(nowTime, repayTime);
         for (int i = 0; i < borrowRecoverList.size(); i++) {
-
             BorrowRecover borrowRecover = borrowRecoverList.get(i);
             String recoverNid = borrowRecover.getNid();// 出借订单号
             int recoverUserId = borrowRecover.getUserId();// 出借用户userId
-
             BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
             BigDecimal userChargeInterest = BigDecimal.ZERO;// 计算用户提前还款利息
-            //计算债权总的违约金
-
+            BigDecimal userChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
             for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                 BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
                 String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
                 int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
-
                 if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
-
                     RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                     userAccount = borrowRecoverPlan.getRecoverAccount();// 获取应还款本息
                     userCapital = borrowRecoverPlan.getRecoverCapital();
                     userInterest = borrowRecoverPlan.getRecoverInterest();
                     userManageFee = borrowRecoverPlan.getRecoverFee();// 获取应还款管理费
                     BigDecimal recoverUserCapital = borrowRecover.getRecoverCapital().subtract(borrowRecover.getRecoverCapitalYes()); // 原始出借本金
-
                     // 给页面展示，就不计算了
                     repayRecoverPlanBean.setRecoverAccountOld(userAccount);
                     repayRecoverPlanBean.setChargeInterestOld(borrowRecoverPlan.getChargeInterest());
-                    repayRecoverPlanBean.setDelayInterestOld(borrowRecoverPlan.getDelayInterest());
+                    repayRecoverPlanBean.setChargePenaltyInterestOld(borrowRecoverPlan.getChargePenaltyInterest());
                     repayRecoverPlanBean.setLateInterestOld(borrowRecoverPlan.getLateInterest());
                     repayRecoverPlanBean.setRecoverAccountYesOld(borrowRecoverPlan.getRecoverAccountYes());
-
                     repayRecoverPlanBean.setRecoverCapitalOld(borrowRecover.getRecoverCapital());
                     repayRecoverPlanBean.setCreditAmountOld(borrowRecover.getCreditAmount());
-
-
                     // ** 计算三天罚息
                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(recoverUserCapital, borrow.getBorrowApr(), 0);
                     if (isLastPeriod) {
                         acctualInterest = UnnormalRepayUtils.aheadLastRepayInterest(recoverUserCapital, borrow.getBorrowApr(), totalPeriod);
                     }
-
                     if (acctualInterest.compareTo(userInterest) >= 0) {
                         userChargeInterest = BigDecimal.ZERO;
                     } else {
@@ -2292,13 +2062,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     if (userChargeInterest.compareTo(userInterest) > 0) {
                         userChargeInterest = userInterest;
                     }
-
+                    userChargePenaltyInterest = acctualInterest;
                     // 如果发生债转
                     if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
                         if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
-
                             List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, recoverNid, repayPeriod, 0);
-
                             if (creditRepayList != null && creditRepayList.size() > 0) {
                                 List<RepayCreditRepayBean> creditRepayBeanList = new ArrayList<RepayCreditRepayBean>();
                                 BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -2312,34 +2080,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     String assignNid = creditRepay.getAssignNid();// 承接订单号
                                     CreditTender creditTender = this.getCreditTender(assignNid);// 查询相应的承接记录
                                     assignAccount = creditRepay.getAssignAccount();// 承接本息
-                                    assignCapital = creditRepay.getAssignCapital();// 用户实际还款本本金
-                                    assignInterest = creditRepay.getAssignInterest();
-                                    BigDecimal assignUserCapital = BigDecimal.ZERO;//剩余承接本金
+                                    assignCapital = creditRepay.getAssignCapital();// 用户应还本金
+                                    assignInterest = creditRepay.getAssignInterest();// 用户应还利息
+                                    BigDecimal assignUserCapital = BigDecimal.ZERO;// 剩余承接本金
                                     if (borrowRecoverPlan.getCreditStatus() == 2 && k == creditRepayList.size() - 1) {
                                         assignManageFee = userManageFee;
-
                                     } else {
-                                        // 等额本息month、等额本金principal
-                                        if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                            if (repayPeriod == borrowPeriod.intValue()) {
-                                                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                        borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                            } else {
-                                                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                        borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                            }
-                                        }
-                                        // 先息后本endmonth
-                                        else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                            if (repayPeriod == borrowPeriod.intValue()) {
-                                                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                        borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                            } else {
-                                                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                        borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                            }
-                                        }
-
+                                        assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrow.getAccount(), creditTender.getAssignCapital());
                                     }
                                     assignUserCapital = creditTender.getAssignCapital().subtract(creditTender.getAssignRepayCapital());
                                     BigDecimal acctualAsignInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignUserCapital, borrow.getBorrowApr(), 0);
@@ -2355,14 +2102,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     if (assignChargeInterest.compareTo(assignInterest) > 0) {
                                         assignChargeInterest = assignInterest;
                                     }
-
-
                                     BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                     creditRepayBean.setAssignTotal(assignAccount.subtract(assignChargeInterest).add(assignManageFee));
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
-                                    creditRepayBean.setChargeDays(3);// 默认是3天
+                                    creditRepayBean.setChargePenaltyInterest(acctualAsignInterest);// 提前还款罚息
+                                    creditRepayBean.setChargeDays(distanceDays);// 默认是3天
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
                                     userAccount = userAccount.subtract(assignAccount);
@@ -2370,7 +2116,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     recoverUserCapital = recoverUserCapital.subtract(assignUserCapital);
                                     userInterest = userInterest.subtract(assignInterest);
                                     userManageFee = userManageFee.subtract(assignManageFee);
-                                    userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
                                     // 统计总额
                                     repayTotal = repayTotal.add(assignAccount).add(assignManageFee).subtract(assignChargeInterest);// 统计总和本息+管理费
                                     repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -2399,6 +2144,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 repayInterest = repayInterest.add(userInterest);
                                 repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                 repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualUserInterest);
+
                             }
                         } else {//计划还款
                             boolean overFlag = false;
@@ -2429,26 +2176,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     if (!overFlag && k == creditRepayList.size() - 1) {
                                         assignManageFee = userManageFee;
                                     } else {
-                                        // 等额本息month、等额本金principal
-                                        if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                            if (repayPeriod == borrowPeriod.intValue()) {
-                                                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                        borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                            } else {
-                                                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                        borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                            }
-                                        }
-                                        // 先息后本endmonth
-                                        else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                            if (repayPeriod == borrowPeriod.intValue()) {
-                                                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                        borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                            } else {
-                                                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                        borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                            }
-                                        }
+                                        assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowRecover.getRecoverCapital(), creditTender.getAssignCapital());
                                     }
 
                                     // modify by cwyang 2018-5-23 计算金额取自剩余承接本金
@@ -2471,7 +2199,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setRepayAdvanceInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
-                                    creditRepayBean.setAdvanceDays(3);
+                                    creditRepayBean.setRepayAdvancePenaltyInterest(acctualAsignInterest);// 提前还款罚息
+                                    creditRepayBean.setAdvanceDays(distanceDays);
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
                                     userAccount = userAccount.subtract(assignAccount);
@@ -2479,7 +2208,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     recoverUserCapital = recoverUserCapital.subtract(assignUserCapital);
                                     userInterest = userInterest.subtract(assignInterest);
                                     userManageFee = userManageFee.subtract(assignManageFee);
-                                    userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
                                     // 统计总额
                                     repayTotal = repayTotal.add(assignAccount).subtract(assignChargeInterest).add(assignManageFee);// 统计总和本息+管理费
                                     repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -2487,6 +2215,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     repayInterest = repayInterest.add(assignInterest);
                                     repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                     repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualAsignInterest);// 统计提前还款罚息
                                 }
                                 repayRecoverPlanBean.setHjhCreditRepayList(creditRepayBeanList);
                             }
@@ -2501,33 +2230,38 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualUserInterest);
                                 }
-                                // 统计总额
+                                userChargePenaltyInterest = acctualUserInterest;// 提前还款罚息
+                                // 统计借款人还款总额
                                 repayTotal = repayTotal.add(userAccount).add(userManageFee).subtract(userChargeInterest);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                 repayCapital = repayCapital.add(userCapital);
                                 repayInterest = repayInterest.add(userInterest);
-                                repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
+                                repayManageFee = repayManageFee.add(userManageFee);// 统计管理费
                                 repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualUserInterest);
                             }
                         }
 
                     } else {
-                        // 统计总和
+                        // 无承接的原始出借人债权
                         repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userManageFee);// 统计总和本息+管理费
                         repayAccount = repayAccount.add(userAccount); // 统计本息总和
                         repayCapital = repayCapital.add(userCapital);
                         repayInterest = repayInterest.add(userInterest);
                         repayManageFee = repayManageFee.add(userManageFee);// 管理费
                         repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+                        repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);
                     }
                     BeanUtils.copyProperties(borrowRecoverPlan, repayRecoverPlanBean);
+                    // 承接后的原始出借人债权
                     repayRecoverPlanBean.setRecoverTotal(userAccount.subtract(userChargeInterest).add(userManageFee));
                     repayRecoverPlanBean.setRecoverAccount(userAccount);
                     repayRecoverPlanBean.setRecoverCapital(userCapital);
                     repayRecoverPlanBean.setRecoverInterest(userInterest);
                     repayRecoverPlanBean.setRecoverFee(userManageFee);
-                    repayRecoverPlanBean.setChargeDays(3);
-                    repayRecoverPlanBean.setChargeInterest(userChargeInterest.multiply(new BigDecimal(-1)));
+                    repayRecoverPlanBean.setChargeDays(distanceDays);
+                    repayRecoverPlanBean.setChargeInterest(userChargeInterest.multiply(new BigDecimal(-1)));// 原始出借人剩余债权提前还款实际减息
+                    repayRecoverPlanBean.setChargePenaltyInterest(userChargePenaltyInterest);// 原始出借人剩余债权提前还款罚息
                     repayRecoverPlanBean.setAdvanceStatus(1);
                     repayRecoverPlanList.add(repayRecoverPlanBean);
                 }
@@ -2535,14 +2269,16 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
         }
         borrowRepayPlan.setRecoverPlanList(repayRecoverPlanList);
+        // 借款人还款总额
         borrowRepayPlan.setRepayAccount(repayAccount);
         borrowRepayPlan.setRepayAccountAll(repayTotal);
         borrowRepayPlan.setRepayCapital(repayCapital);
         borrowRepayPlan.setRepayInterest(repayInterest);
         borrowRepayPlan.setRepayFee(repayManageFee);
         borrowRepayPlan.setAdvanceStatus(1);
-        borrowRepayPlan.setChargeDays(3);
+        borrowRepayPlan.setChargeDays(distanceDays);
         borrowRepayPlan.setChargeInterest(repayChargeInterest.multiply(new BigDecimal(-1)));
+        borrowRepayPlan.setChargePenaltyInterest(repayChargePenaltyInterest);
     }
 
     /**
@@ -2569,32 +2305,18 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     /***
      * 计算用户分期还款本期应还金额
      */
-    private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, Borrow borrow, int period, Integer repayTimeStart) throws ParseException {
+    private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, Borrow borrow, int period, Integer repayTimeStart, List<BorrowRecover> borrowRecoverList) throws Exception {
 
-        int delayDays = borrowRepayPlan.getDelayDays().intValue();
         Integer repayTimeInt = borrowRepayPlan.getRepayTime();
         int time = GetDate.getNowTime10();
         // 用户计划还款时间
         String repayTime = GetDate.getDateTimeMyTimeInMillis(repayTimeInt);
         // 用户实际还款时间
-        String RepayTime = GetDate.getDateTimeMyTimeInMillis(time);
+        String nowTime = GetDate.getDateTimeMyTimeInMillis(time);
         // 获取实际还款同计划还款时间的时间差
-        int distanceDays = GetDate.daysBetween(RepayTime, repayTime);
-        if (distanceDays < 0) {// 用户延期或者逾期了
-            int lateDays = delayDays + distanceDays;
-            if (lateDays >= 0) {// 用户延期还款
-                delayDays = -distanceDays;
-                this.calculateRecoverPlanDelay(borrowRepayPlan, borrow, delayDays);
-            } else {// 用户逾期还款
-                lateDays = -lateDays;
-                Integer lateFreeDays = borrow.getLateFreeDays();
-                if (lateFreeDays >= lateDays) {//在免息期以内,正常还款
-                    this.calculateRecoverPlan(borrowRepayPlan, borrow, delayDays);
-                } else {//过了免息期,罚免息期外的利息
-                    lateDays = lateDays - lateFreeDays;
-                    this.calculateRecoverPlanLate(borrowRepayPlan, borrow, delayDays, lateDays);
-                }
-            }
+        int distanceDays = GetDate.daysBetween(nowTime, repayTime);
+        if (distanceDays < 0) {// 用户逾期了
+            this.calculateRecoverPlanLate(borrowRepayPlan, borrow, -distanceDays, borrowRecoverList);
         } else {// 用户正常或者提前还款
             // 获取提前还款的阀值
             String repayAdvanceDay = this.getBorrowConfig("REPAY_ADVANCE_TIME");
@@ -2621,7 +2343,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     /**
      * 统计分期还款用户逾期还款的总标
      */
-    private void calculateRecoverPlanLate(RepayDetailBean borrowRepayPlan, Borrow borrow, int delayDays, int lateDays) throws ParseException {
+    private void calculateRecoverPlanLate(RepayDetailBean borrowRepayPlan, Borrow borrow, int lateDays, List<BorrowRecover> borrowRecoverList) throws Exception {
 
         // 项目编号
         String borrowNid = borrow.getBorrowNid();
@@ -2637,7 +2359,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
         // 还款期数
         int repayPeriod = borrowRepayPlan.getRepayPeriod();
-        List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
+        // 将calculateRecoverPlanAll的borrowRecoverList移到方法外查询 update by wgx 2019/03/21
+        //List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
         List<BorrowRecoverPlan> borrowRecoverPlans = getBorrowRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
         List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
         BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
@@ -2645,7 +2368,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
-        BigDecimal repayDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
         BigDecimal repayOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
@@ -2657,8 +2379,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
                     BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
                     BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                    BigDecimal userDelayInterest = BigDecimal.ZERO;// 计算用户延期还款利息
-                    BigDecimal userOverdueInterest = BigDecimal.ZERO;// 计算用户逾期还款利息
+                    BigDecimal userOverdueInterest = BigDecimal.ZERO;// 计算原始投资用户逾期还款利息
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
                         String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
@@ -2666,27 +2387,22 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userAccount = borrowRecoverPlan.getRecoverAccount();
                         userCapital = borrowRecoverPlan.getRecoverCapital();
                         userInterest = borrowRecoverPlan.getRecoverInterest();
-                        // 计算用户逾期利息
-                        userOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(userAccount, lateDays);
-                        if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                            //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                            userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
+                        userOverdueInterest = borrowRecoverPlan.getLateInterest();// batch计算的逾期利息
+                        int userAdvanceStatus = borrowRecoverPlan.getAdvanceStatus();// batch计算的还款状态
+                        int userLateDays = borrowRecoverPlan.getLateDays();// batch计算的逾期天数
+                        if(userAdvanceStatus != 3 || userLateDays != lateDays){
+                            logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
+                                    userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
+                            throw new Exception("计算的逾期信息有误！");
                         }
-                        if (lateDays > 0) {
-                            logger.info("出借订单号:{},逾期天数{}", recoverPlanNid, lateDays);
-                            logger.info("实际获得的本息和:{},逾期利息{}", userAccount, userOverdueInterest);
-                        }
-                        // 计算用户延期利息
-                        userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, borrow.getBorrowApr(), delayDays);
                         // 获取应还款管理费
                         userManageFee = borrowRecoverPlan.getRecoverFee();
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
-
                             // 给页面展示，就不计算了
                             repayRecoverPlanBean.setRecoverAccountOld(userAccount);
                             repayRecoverPlanBean.setChargeInterestOld(borrowRecoverPlan.getChargeInterest());
-                            repayRecoverPlanBean.setDelayInterestOld(borrowRecoverPlan.getDelayInterest());
+                            repayRecoverPlanBean.setChargePenaltyInterestOld(borrowRecoverPlan.getChargePenaltyInterest());
                             repayRecoverPlanBean.setLateInterestOld(borrowRecoverPlan.getLateInterest());
                             repayRecoverPlanBean.setRecoverAccountYesOld(borrowRecoverPlan.getRecoverAccountYes());
 
@@ -2705,8 +2421,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
                                         BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                                         BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                                        BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-                                        BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
+                                        BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 债转用户逾期利息
                                         for (int k = 0; k < creditRepayList.size(); k++) {
                                             creditRepay = creditRepayList.get(k);
                                             creditRepayBean = new RepayCreditRepayBean();
@@ -2715,81 +2430,49 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignAccount = creditRepay.getAssignAccount();// 承接本息
                                             assignCapital = creditRepay.getAssignCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getAssignInterest();
+                                            assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
+                                            int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
+                                            int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
+                                            if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                                logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
+                                                        assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
+                                                throw new Exception("计算的逾期信息有误！");
+                                            }
                                             // 计算用户实际获得的本息和
-                                            assignAccount = UnnormalRepayUtils.overdueRepayPrincipalInterest(assignAccount, assignCapital, borrow.getBorrowApr(), delayDays, lateDays);
+                                            assignAccount = assignAccount.add(assignOverdueInterest);
+
                                             //最后一笔兜底
                                             if (borrowRecoverPlan.getCreditStatus() == 2 && k == creditRepayList.size() - 1) {
                                                 assignManageFee = userManageFee;
-                                                // 计算用户逾期利息
-                                                assignOverdueInterest = userOverdueInterest;
-                                                // 计算用户延期利息
-                                                assignDelayInterest = userDelayInterest;
                                             } else {
-                                                // 等额本息month、等额本金principal
-                                                if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 先息后本endmonth
-                                                else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 计算用户逾期利息
-                                                assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(assignAccount, lateDays);
-                                                if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                                    userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(assignAccount, lateDays, borrow.getLateInterestRate());
-                                                }
-                                                // 计算用户延期利息
-                                                assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
+                                                assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrow.getAccount(), creditTender.getAssignCapital());
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                            creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee));
+                                            creditRepayBean.setAssignTotal(assignAccount.add(assignOverdueInterest).add(assignManageFee));
                                             creditRepayBean.setManageFee(assignManageFee);
-                                            creditRepayBean.setAdvanceStatus(3);
-                                            creditRepayBean.setDelayDays(delayDays);
-                                            creditRepayBean.setDelayInterest(assignDelayInterest);
-                                            creditRepayBean.setLateDays(lateDays);
-                                            creditRepayBean.setLateInterest(assignOverdueInterest);
                                             creditRepayBeanList.add(creditRepayBean);
                                             // 统计出让人还款金额
                                             userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
                                             userCapital = userCapital.subtract(assignCapital);
                                             userInterest = userInterest.subtract(assignInterest);
                                             userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-                                            userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
                                             userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
                                             // 统计总额
-                                            repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
+                                            repayTotal = repayTotal.add(assignAccount).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
                                             repayAccount = repayAccount.add(assignAccount);// 统计总和本息
                                             repayCapital = repayCapital.add(assignCapital);
                                             repayInterest = repayInterest.add(assignInterest);
                                             repayManageFee = repayManageFee.add(assignManageFee);// 管理费
-                                            repayDelayInterest = repayDelayInterest.add(assignDelayInterest);// 统计借款用户总延期利息
-                                            repayOverdueInterest = repayOverdueInterest.add(assignOverdueInterest);// 统计借款用户总逾期利息
                                         }
                                         repayRecoverPlanBean.setCreditRepayList(creditRepayBeanList);
                                     }
                                     if (borrowRecoverPlan.getCreditStatus() != 2) {
                                         // 统计总和
-                                        repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                                        repayTotal = repayTotal.add(userAccount).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                                         repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                         repayCapital = repayCapital.add(userCapital);
                                         repayInterest = repayInterest.add(userInterest);
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                                        repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                                        repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);
                                     }
                                 } else {
                                     // 计划类项目债转还款
@@ -2802,9 +2485,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
                                         BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                                         BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                                        BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
                                         BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
-                                        BigDecimal oldAssignAccount = BigDecimal.ZERO;// 原始承接本金
                                         BigDecimal sumCreditAccount = BigDecimal.ZERO;//总承接金额
                                         int hjhFlag = 0;
                                         for (HjhDebtCreditRepay hjhDebtCreditRepayBean : creditRepayList) {
@@ -2819,109 +2500,69 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             String assignNid = creditRepay.getAssignOrderId();// 承接订单号
                                             HjhDebtCreditTender creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
                                             assignAccount = creditRepay.getRepayAccount();// 承接本息
-                                            oldAssignAccount = assignAccount;
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getRepayInterest();
-                                            // 计算用户实际获得的本息和
-//                                            assignAccount = UnnormalRepayUtils.overdueRepayPrincipalInterest(assignAccount, assignCapital, borrow.getBorrowApr(), delayDays, lateDays);
+                                            assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
+                                            int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
+                                            int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
+                                            if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                                logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
+                                                        assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
+                                                throw new Exception("计算的逾期信息有误！");
+                                            }
                                             //最后一笔兜底
                                             if (!overFlag && k == creditRepayList.size() - 1) {
                                                 assignManageFee = userManageFee;
-                                                // 计算用户逾期利息
-                                                assignOverdueInterest = userOverdueInterest;
-                                                // 计算用户延期利息
-                                                assignDelayInterest = userDelayInterest;
                                             } else {
-                                                // 等额本息month、等额本金principal
-                                                if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 先息后本endmonth
-                                                else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 计算用户逾期利息
-                                                assignOverdueInterest = UnnormalRepayUtils.overdueRepayOverdueInterest(oldAssignAccount, lateDays);
-                                                if (StringUtils.isNotBlank(borrow.getPlanNid())) {//计划相关
-                                                    //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
-                                                    assignOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(oldAssignAccount, lateDays, borrow.getLateInterestRate());
-                                                }
-                                                // 计算用户延期利息
-                                                assignDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
+                                                assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowRecover.getRecoverCapital(), creditTender.getAssignCapital());
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                            creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee));
+                                            creditRepayBean.setAssignTotal(assignAccount.add(assignOverdueInterest).add(assignManageFee));
                                             creditRepayBean.setManageFee(assignManageFee);
-                                            creditRepayBean.setAdvanceStatus(3);
-                                            creditRepayBean.setDelayDays(delayDays);
-                                            creditRepayBean.setRepayDelayInterest(assignDelayInterest);
-                                            creditRepayBean.setLateDays(lateDays);
-                                            creditRepayBean.setRepayLateInterest(assignOverdueInterest);
                                             creditRepayBeanList.add(creditRepayBean);
                                             // 统计出让人还款金额
                                             userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
                                             userCapital = userCapital.subtract(assignCapital);
                                             userInterest = userInterest.subtract(assignInterest);
                                             userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-                                            userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
                                             userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
                                             // 统计总额
-                                            repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
+                                            repayTotal = repayTotal.add(assignAccount).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
                                             repayAccount = repayAccount.add(assignAccount);// 统计总和本息
                                             repayCapital = repayCapital.add(assignCapital);
                                             repayInterest = repayInterest.add(assignInterest);
                                             repayManageFee = repayManageFee.add(assignManageFee);// 管理费
-                                            repayDelayInterest = repayDelayInterest.add(assignDelayInterest);// 统计借款用户总延期利息
-                                            repayOverdueInterest = repayOverdueInterest.add(assignOverdueInterest);// 统计借款用户总逾期利息
                                         }
                                         repayRecoverPlanBean.setHjhCreditRepayList(creditRepayBeanList);
                                     }
                                     if (borrowRecoverPlan.getCreditStatus() != 2) {
                                         // 统计总和
-                                        repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                                        repayTotal = repayTotal.add(userAccount).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                                         repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                         repayCapital = repayCapital.add(userCapital);
                                         repayInterest = repayInterest.add(userInterest);
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                                        repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                                        repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);
                                     }
                                 }
                             } else {
                                 // 统计总和
-                                repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                                repayTotal = repayTotal.add(userAccount).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                 repayCapital = repayCapital.add(userCapital);
                                 repayInterest = repayInterest.add(userInterest);
                                 repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                                repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                                repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);
                             }
                             // 计算还款期的数据
                             BeanUtils.copyProperties(borrowRecoverPlan, repayRecoverPlanBean);
-                            repayRecoverPlanBean.setRecoverTotal(userAccount.add(userDelayInterest).add(userOverdueInterest).add(userManageFee));
+                            repayRecoverPlanBean.setRecoverTotal(userAccount.add(userOverdueInterest).add(userManageFee));
                             repayRecoverPlanBean.setRecoverAccount(userAccount);
                             repayRecoverPlanBean.setRecoverCapital(userCapital);
                             repayRecoverPlanBean.setRecoverInterest(userInterest);
                             repayRecoverPlanBean.setRecoverFee(userManageFee);
-                            repayRecoverPlanBean.setDelayInterest(userDelayInterest);
                             repayRecoverPlanBean.setLateInterest(userOverdueInterest);
-                            repayRecoverPlanBean.setDelayDays(delayDays);
                             repayRecoverPlanBean.setLateDays(lateDays);
-                            repayRecoverPlanBean.setAdvanceStatus(3);
                             repayRecoverPlanList.add(repayRecoverPlanBean);
+                            repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 累加借款用户总逾期利息
                         }
                     }
                 }
@@ -2933,297 +2574,33 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         borrowRepayPlan.setRepayCapital(repayCapital);
         borrowRepayPlan.setRepayInterest(repayInterest);
         borrowRepayPlan.setRepayFee(repayManageFee);
-        borrowRepayPlan.setDelayDays(delayDays);
-        borrowRepayPlan.setDelayInterest(repayDelayInterest);
         borrowRepayPlan.setLateDays(lateDays);
         borrowRepayPlan.setLateInterest(repayOverdueInterest);
         borrowRepayPlan.setAdvanceStatus(3);
     }
 
-    /**
-     * 统计分期还款用户延期还款的总标
-     */
-    private void calculateRecoverPlanDelay(RepayDetailBean borrowRepayPlan, Borrow borrow, int delayDays) throws ParseException {
-
-        // 项目编号
-        String borrowNid = borrow.getBorrowNid();
-        // 还款方式
-        String borrowStyle = borrow.getBorrowStyle();
-        // 管理费率
-        BigDecimal feeRate = Validator.isNull(borrow.getManageFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getManageFeeRate());
-        // 差异费率
-        BigDecimal differentialRate = Validator.isNull(borrow.getDifferentialRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getDifferentialRate());
-        // 初审时间
-        int borrowVerifyTime = Validator.isNull(borrow.getVerifyTime()) ? 0 : borrow.getVerifyTime();
-        // 项目总期数
-        Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
-        // 还款期数
-        int repayPeriod = borrowRepayPlan.getRepayPeriod();
-        List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
-        List<BorrowRecoverPlan> borrowRecoverPlans = getBorrowRecoverPlan(borrow.getBorrowNid(), borrowRepayPlan.getRepayPeriod());
-        List<RepayRecoverPlanBean> repayRecoverPlanList = new ArrayList<RepayRecoverPlanBean>();
-        BigDecimal repayTotal = BigDecimal.ZERO; // 用户实际还款本息+管理费
-        BigDecimal repayAccount = BigDecimal.ZERO; // 用户实际还款本息
-        BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
-        BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
-        BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
-        BigDecimal repayDelayInterest = new BigDecimal(0); // 统计借款用户总延期利息
-        if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
-            for (int i = 0; i < borrowRecoverList.size(); i++) {
-                BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 出借订单号
-                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
-                if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
-                    BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
-                    BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
-                    BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
-                    BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                    BigDecimal userDelayInterest = BigDecimal.ZERO;// 计算用户提前还款利息
-                    for (int j = 0; j < borrowRecoverPlans.size(); j++) {
-                        BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
-                        if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
-                            RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
-                            userAccount = borrowRecoverPlan.getRecoverAccount();
-                            userCapital = borrowRecoverPlan.getRecoverCapital();
-                            userInterest = borrowRecoverPlan.getRecoverInterest();
-                            // 计算用户延期利息
-                            userDelayInterest = UnnormalRepayUtils.delayRepayInterest(userCapital, borrow.getBorrowApr(), delayDays);
-                            if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
-                                BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
-                                logger.info("先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
-                                logger.info("先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
-                            }
-                            // 获取应还款管理费
-                            userManageFee = borrowRecoverPlan.getRecoverFee();
-
-                            // 给页面展示，就不计算了
-                            repayRecoverPlanBean.setRecoverAccountOld(userAccount);
-                            repayRecoverPlanBean.setChargeInterestOld(borrowRecoverPlan.getChargeInterest());
-                            repayRecoverPlanBean.setDelayInterestOld(borrowRecoverPlan.getDelayInterest());
-                            repayRecoverPlanBean.setLateInterestOld(borrowRecoverPlan.getLateInterest());
-                            repayRecoverPlanBean.setRecoverAccountYesOld(borrowRecoverPlan.getRecoverAccountYes());
-
-                            repayRecoverPlanBean.setRecoverCapitalOld(borrowRecover.getRecoverCapital());
-                            repayRecoverPlanBean.setCreditAmountOld(borrowRecover.getCreditAmount());
-
-                            if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                                if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
-                                    // 直投项目还款
-                                    List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, recoverNid, repayPeriod, 0);
-                                    if (creditRepayList != null && creditRepayList.size() > 0) {
-                                        List<RepayCreditRepayBean> creditRepayBeanList = new ArrayList<RepayCreditRepayBean>();
-                                        CreditRepay creditRepay = null;
-                                        RepayCreditRepayBean creditRepayBean = null;
-                                        BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
-                                        BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
-                                        BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
-                                        BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                                        BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-                                        for (int k = 0; k < creditRepayList.size(); k++) {
-                                            creditRepay = creditRepayList.get(k);
-                                            creditRepayBean = new RepayCreditRepayBean();
-                                            String assignNid = creditRepay.getAssignNid();// 承接订单号
-                                            CreditTender creditTender = this.getCreditTender(assignNid);// 查询相应的承接记录
-                                            assignAccount = creditRepay.getAssignAccount();// 承接本息
-                                            assignCapital = creditRepay.getAssignCapital();// 用户实际还款本本金
-                                            assignInterest = creditRepay.getAssignInterest();
-                                            //用户延期利息
-                                            if (borrowRecoverPlan.getCreditStatus() == 2 && k == creditRepayList.size() - 1) {
-                                                assignManageFee = userManageFee;
-                                                // 计算用户延期利息
-                                                assignDelayInterest = userDelayInterest;
-                                            } else {
-                                                // 等额本息month、等额本金principal
-                                                if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 先息后本endmonth
-                                                else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 计算用户延期利息
-                                                assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
-                                                if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
-                                                    BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
-                                                    logger.info("直投债转先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
-                                                    logger.info("直投债转先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
-                                                }
-                                            }
-                                            BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                            creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
-                                            creditRepayBean.setManageFee(assignManageFee);
-                                            creditRepayBean.setAdvanceStatus(2);
-                                            creditRepayBean.setDelayDays(delayDays);
-                                            creditRepayBean.setDelayInterest(assignDelayInterest);
-                                            creditRepayBeanList.add(creditRepayBean);
-                                            // 统计出让人还款金额
-                                            userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
-                                            userCapital = userCapital.subtract(assignCapital);
-                                            userInterest = userInterest.subtract(assignInterest);
-                                            userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-                                            userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
-                                            // 统计总额
-                                            repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignManageFee);// 统计总和本息+管理费
-                                            repayAccount = repayAccount.add(assignAccount);// 统计总和本息
-                                            repayCapital = repayCapital.add(assignCapital);
-                                            repayInterest = repayInterest.add(assignInterest);
-                                            repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
-                                            repayDelayInterest = repayDelayInterest.add(assignDelayInterest);
-                                        }
-                                        repayRecoverPlanBean.setCreditRepayList(creditRepayBeanList);
-                                    }
-                                    if (borrowRecoverPlan.getCreditStatus() != 2) {
-                                        // 统计总额
-                                        repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userManageFee);// 统计总和本息+管理费
-                                        repayAccount = repayAccount.add(userAccount);// 统计总和本息
-                                        repayCapital = repayCapital.add(userCapital);
-                                        repayInterest = repayInterest.add(userInterest);
-                                        repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                                        repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                                    }
-                                } else {
-                                    // 计划类债转还款
-                                    List<HjhDebtCreditRepay> creditRepayList = this.selectHjhDebtCreditRepay(borrowNid, recoverNid, repayPeriod, borrowRecoverPlan.getRecoverStatus());
-                                    if (creditRepayList != null && creditRepayList.size() > 0) {
-                                        List<HjhDebtCreditRepayBean> creditRepayBeanList = new ArrayList<HjhDebtCreditRepayBean>();
-                                        HjhDebtCreditRepay creditRepay = null;
-                                        HjhDebtCreditRepayBean creditRepayBean = null;
-                                        BigDecimal assignAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
-                                        BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
-                                        BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
-                                        BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
-                                        BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
-                                        BigDecimal sumCreditAccount = BigDecimal.ZERO;//总承接金额
-                                        int hjhFlag = 0;
-                                        for (HjhDebtCreditRepay hjhDebtCreditRepayBean : creditRepayList) {
-                                            hjhFlag++;
-                                            sumCreditAccount = sumCreditAccount.add(hjhDebtCreditRepayBean.getRepayAccount());
-                                        }
-                                        //判断当前期是否全部承接
-                                        boolean overFlag = isOverUndertake(borrowRecover, borrowRecoverPlan.getRecoverAccount(), sumCreditAccount, true, hjhFlag);
-                                        for (int k = 0; k < creditRepayList.size(); k++) {
-                                            creditRepay = creditRepayList.get(k);
-                                            creditRepayBean = new HjhDebtCreditRepayBean();
-                                            String assignNid = creditRepay.getAssignOrderId();// 承接订单号
-                                            HjhDebtCreditTender creditTender = this.getHjhDebtCreditTender(assignNid);// 查询相应的承接记录
-                                            assignAccount = creditRepay.getRepayAccount();// 承接本息
-                                            assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
-                                            assignInterest = creditRepay.getRepayInterest();
-                                            //用户延期利息
-                                            if (!overFlag && k == creditRepayList.size() - 1) {
-                                                assignManageFee = userManageFee;
-                                                // 计算用户延期利息
-                                                assignDelayInterest = userDelayInterest;
-                                            } else {
-                                                // 等额本息month、等额本金principal
-                                                if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 先息后本endmonth
-                                                else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 计算用户延期利息
-                                                assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
-                                                if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
-                                                    BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
-                                                    logger.info("计划债转先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
-                                                    logger.info("计划债转先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
-                                                }
-                                            }
-                                            BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                            creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
-                                            creditRepayBean.setManageFee(userManageFee);
-                                            creditRepayBean.setAdvanceStatus(2);
-                                            creditRepayBean.setDelayDays(delayDays);
-                                            creditRepayBean.setRepayDelayInterest(assignDelayInterest);
-                                            creditRepayBeanList.add(creditRepayBean);
-                                            // 统计出让人还款金额
-                                            userAccount = userAccount.subtract(assignAccount);// 获取应还款本息
-                                            userCapital = userCapital.subtract(assignCapital);
-                                            userInterest = userInterest.subtract(assignInterest);
-                                            userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
-//                                            userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
-                                            // 统计总额
-                                            repayTotal = repayTotal.add(assignAccount).add(assignDelayInterest).add(assignManageFee);// 统计总和本息+管理费
-                                            repayAccount = repayAccount.add(assignAccount);// 统计总和本息
-                                            repayCapital = repayCapital.add(assignCapital);
-                                            repayInterest = repayInterest.add(assignInterest);
-                                            repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
-                                            repayDelayInterest = repayDelayInterest.add(assignDelayInterest);
-                                        }
-                                        repayRecoverPlanBean.setHjhCreditRepayList(creditRepayBeanList);
-                                    }
-                                    if (borrowRecoverPlan.getCreditStatus() != 2) {
-                                        // 统计总额
-                                        repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userManageFee);// 统计总和本息+管理费
-                                        repayAccount = repayAccount.add(userAccount);// 统计总和本息
-                                        repayCapital = repayCapital.add(userCapital);
-                                        repayInterest = repayInterest.add(userInterest);
-                                        repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                                        repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                                    }
-                                }
-                            } else {
-                                // 统计总额
-                                repayTotal = repayTotal.add(userAccount).add(userDelayInterest).add(userManageFee);// 统计总和本息+管理费
-                                repayAccount = repayAccount.add(userAccount);// 统计总和本息
-                                repayCapital = repayCapital.add(userCapital);
-                                repayInterest = repayInterest.add(userInterest);
-                                repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
-                                repayDelayInterest = repayDelayInterest.add(userDelayInterest);
-                            }
-                            // 计算还款期的数据
-                            BeanUtils.copyProperties(borrowRecoverPlan, repayRecoverPlanBean);
-                            repayRecoverPlanBean.setRecoverTotal(userAccount.add(userDelayInterest).add(userManageFee));
-                            repayRecoverPlanBean.setRecoverAccount(userAccount);
-                            repayRecoverPlanBean.setRecoverCapital(userCapital);
-                            repayRecoverPlanBean.setRecoverInterest(userInterest);
-                            repayRecoverPlanBean.setRecoverFee(userManageFee);
-                            repayRecoverPlanBean.setDelayInterest(userDelayInterest);
-                            repayRecoverPlanBean.setDelayDays(delayDays);
-                            repayRecoverPlanBean.setAdvanceStatus(2);
-                            repayRecoverPlanList.add(repayRecoverPlanBean);
-                        }
-                    }
-                }
+    private BigDecimal getManageFee(String borrowStyle, BigDecimal feeRate, BigDecimal differentialRate, int borrowVerifyTime, Integer borrowPeriod, int repayPeriod, BigDecimal assignCapital, BigDecimal assignManageFee, BigDecimal account, BigDecimal assignCapital2) {
+        // 等额本息month、等额本金principal
+        if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
+            if (repayPeriod == borrowPeriod.intValue()) {
+                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
+                        account, borrowPeriod, borrowVerifyTime);
+            } else {
+                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
+                        account, borrowPeriod, borrowVerifyTime);
             }
-            borrowRepayPlan.setRecoverPlanList(repayRecoverPlanList);
         }
-        borrowRepayPlan.setRepayAccountAll(repayTotal);
-        borrowRepayPlan.setRepayAccount(repayAccount);
-        borrowRepayPlan.setRepayCapital(repayCapital);
-        borrowRepayPlan.setRepayInterest(repayInterest);
-        borrowRepayPlan.setRepayFee(repayManageFee);
-        borrowRepayPlan.setDelayInterest(repayDelayInterest);
-        borrowRepayPlan.setAdvanceStatus(2);
-        borrowRepayPlan.setDelayDays(delayDays);
+        // 先息后本endmonth
+        else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
+            if (repayPeriod == borrowPeriod.intValue()) {
+                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(assignCapital2, feeRate,
+                        borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
+            } else {
+                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(assignCapital2, feeRate,
+                        borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
+            }
+        }
+        return assignManageFee;
     }
 
     /**
@@ -3277,7 +2654,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             // 给页面展示，就不计算了
                             repayRecoverPlanBean.setRecoverAccountOld(userAccount);
                             repayRecoverPlanBean.setChargeInterestOld(borrowRecoverPlan.getChargeInterest());
-                            repayRecoverPlanBean.setDelayInterestOld(borrowRecoverPlan.getDelayInterest());
+                            repayRecoverPlanBean.setChargePenaltyInterestOld(borrowRecoverPlan.getChargePenaltyInterest());
                             repayRecoverPlanBean.setLateInterestOld(borrowRecoverPlan.getLateInterest());
                             repayRecoverPlanBean.setRecoverAccountYesOld(borrowRecoverPlan.getRecoverAccountYes());
 
@@ -3305,32 +2682,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             if (borrowRecoverPlan.getCreditStatus() == 2 && k == creditRepayList.size() - 1) {
                                                 assignManageFee = userManageFee;
                                             } else {
-                                                // 等额本息month、等额本金principal
-                                                if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 先息后本endmonth
-                                                else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                    }
-                                                }
+                                                assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrow.getAccount(), creditTender.getAssignCapital());
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                             creditRepayBean.setAssignTotal(assignAccount.add(assignManageFee));
                                             creditRepayBean.setManageFee(assignManageFee);
                                             creditRepayBean.setAdvanceStatus(0);
                                             creditRepayBean.setChargeInterest(BigDecimal.ZERO);
+                                            creditRepayBean.setChargePenaltyInterest(BigDecimal.ZERO);
                                             creditRepayBean.setChargeDays(interestDay);
                                             creditRepayBeanList.add(creditRepayBean);
                                             // 统计出让人还款金额
@@ -3383,26 +2742,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             if (!overFlag && k == creditRepayList.size() - 1) {
                                                 assignManageFee = userManageFee;
                                             } else {
-                                                // 等额本息month、等额本金principal
-                                                if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                    }
-                                                }
-                                                // 先息后本endmonth
-                                                else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                    if (repayPeriod == borrowPeriod.intValue()) {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                    } else {
-                                                        assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                    }
-                                                }
+                                                assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowRecover.getRecoverCapital(), creditTender.getAssignCapital());
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                             creditRepayBean.setAssignTotal(assignAccount.add(assignManageFee));
@@ -3493,7 +2833,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款利息
-        BigDecimal repayDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
+        BigDecimal repayChargePenaltyInterest = BigDecimal.ZERO;// 提前还款罚息
         BigDecimal repayOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
@@ -3506,7 +2846,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
                     BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
                     BigDecimal userChargeInterest = BigDecimal.ZERO;// 计算用户提前还款利息
-                    BigDecimal userDelayInterest = BigDecimal.ZERO;// 计算用户延期还款利息
+                    BigDecimal userChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                     BigDecimal userOverdueInterest = BigDecimal.ZERO;// 计算用户逾期还款利息
                     BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
@@ -3519,14 +2859,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userCapital = borrowRecoverPlan.getRecoverCapital();
                             userInterest = borrowRecoverPlan.getRecoverInterest();
                             userChargeInterest = borrowRecoverPlan.getChargeInterest();
+                            userChargePenaltyInterest = borrowRecoverPlan.getChargePenaltyInterest();
                             userManageFee = borrowRecoverPlan.getRecoverFee();// 获取应还款管理费
                             userOverdueInterest = borrowRecoverPlan.getLateInterest();
-                            userDelayInterest = borrowRecoverPlan.getDelayInterest();
 
                             // 给页面展示，就不计算了
                             repayRecoverPlanBean.setRecoverAccountOld(userAccount);
                             repayRecoverPlanBean.setChargeInterestOld(borrowRecoverPlan.getChargeInterest());
-                            repayRecoverPlanBean.setDelayInterestOld(borrowRecoverPlan.getDelayInterest());
+                            repayRecoverPlanBean.setChargePenaltyInterestOld(borrowRecoverPlan.getChargePenaltyInterest());
                             repayRecoverPlanBean.setLateInterestOld(borrowRecoverPlan.getLateInterest());
                             repayRecoverPlanBean.setRecoverAccountYesOld(borrowRecoverPlan.getRecoverAccountYes());
 
@@ -3543,7 +2883,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
                                         BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                                         BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
-                                        BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
+                                        BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                                         BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
                                         BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                                         for (int k = 0; k < creditRepayList.size(); k++) {
@@ -3555,38 +2895,19 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignCapital = creditRepay.getAssignCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getAssignInterest();
                                             assignChargeInterest = creditRepay.getChargeInterest();
+                                            assignChargePenaltyInterest = creditRepay.getChargePenaltyInterest();
                                             assignOverdueInterest = creditRepay.getLateInterest(); // 计算用户逾期利息
-                                            assignDelayInterest = creditRepay.getDelayInterest();// 计算用户延期利息
                                             if (borrowRecoverPlan.getCreditStatus() == 2 && k == creditRepayList.size() - 1) {
                                                 assignManageFee = userManageFee;
                                             } else {
                                                 if (creditRepay.getStatus() == 1) {
                                                     assignManageFee = creditRepay.getManageFee();
                                                 } else {
-                                                    // 等额本息month、等额本金principal
-                                                    if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                        if (repayPeriod == borrowPeriod.intValue()) {
-                                                            assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                    borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                        } else {
-                                                            assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                    borrow.getAccount(), borrowPeriod, borrowVerifyTime);
-                                                        }
-                                                    }
-                                                    // 先息后本endmonth
-                                                    else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                        if (repayPeriod == borrowPeriod.intValue()) {
-                                                            assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                    borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                        } else {
-                                                            assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                    borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                        }
-                                                    }
+                                                    assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrow.getAccount(), creditTender.getAssignCapital());
                                                 }
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                            creditRepayBean.setAssignTotal(assignAccount.add(assignChargeInterest).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee));
+                                            creditRepayBean.setAssignTotal(assignAccount.add(assignChargeInterest).add(assignOverdueInterest).add(assignManageFee));
                                             creditRepayBean.setManageFee(assignManageFee);
                                             creditRepayBeanList.add(creditRepayBean);
                                             // 统计出让人还款金额
@@ -3594,16 +2915,16 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             userCapital = userCapital.subtract(assignCapital);
                                             userInterest = userInterest.subtract(assignInterest);
                                             userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
-                                            userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
+                                            userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款罚息
                                             userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
                                             userManageFee = userManageFee.subtract(assignManageFee);
                                             // 统计总额
-                                            repayTotal = repayTotal.add(assignAccount).add(assignChargeInterest).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
+                                            repayTotal = repayTotal.add(assignAccount).add(assignChargeInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
                                             repayAccount = repayAccount.add(assignAccount);// 统计总和本息
                                             repayCapital = repayCapital.add(assignCapital);
                                             repayInterest = repayInterest.add(assignInterest);
                                             repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
-                                            repayDelayInterest = repayDelayInterest.add(assignDelayInterest);// 统计借款用户总延期利息
+                                            repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                                             repayOverdueInterest = repayOverdueInterest.add(assignOverdueInterest);// 统计借款用户总逾期利息
                                             repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                         }
@@ -3611,12 +2932,12 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     }
                                     if (borrowRecoverPlan.getCreditStatus() != 2) {
                                         // 统计总额
-                                        repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                                        repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                                         repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                         repayCapital = repayCapital.add(userCapital);
                                         repayInterest = repayInterest.add(userInterest);
                                         repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
-                                        repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
+                                        repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
                                         repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                     }
@@ -3629,7 +2950,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本本金
                                         BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                                         BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
-                                        BigDecimal assignDelayInterest = BigDecimal.ZERO;// 统计借款用户总延期利息
+                                        BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                                         BigDecimal assignOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
                                         BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                                         BigDecimal sumCreditAccount = BigDecimal.ZERO;//总承接金额
@@ -3649,55 +2970,33 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignCapital = creditRepay.getRepayCapital();// 用户实际还款本本金
                                             assignInterest = creditRepay.getRepayInterest();
                                             assignChargeInterest = creditRepay.getRepayAdvanceInterest();
+                                            assignChargePenaltyInterest = creditRepay.getRepayAdvancePenaltyInterest();
                                             assignOverdueInterest = creditRepay.getRepayLateInterest(); // 计算用户逾期利息
-                                            assignDelayInterest = creditRepay.getRepayDelayInterest();// 计算用户延期利息
                                             if (!overFlag && k == creditRepayList.size() - 1) {
                                                 assignManageFee = userManageFee;
                                             } else {
                                                 if (creditRepay.getRepayStatus() == 1) {
                                                     assignManageFee = creditRepay.getManageFee();
                                                 } else {
-                                                    // 等额本息month、等额本金principal
-                                                    if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
-                                                        if (repayPeriod == borrowPeriod.intValue()) {
-                                                            assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
-                                                                    borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                        } else {
-                                                            assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
-                                                                    borrowRecover.getRecoverCapital(), borrowPeriod, borrowVerifyTime);
-                                                        }
-                                                    }
-                                                    // 先息后本endmonth
-                                                    else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
-                                                        if (repayPeriod == borrowPeriod.intValue()) {
-                                                            assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                    borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
-                                                        } else {
-                                                            assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(creditTender.getAssignCapital(), feeRate,
-                                                                    borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
-                                                        }
-                                                    }
+                                                    assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, borrowVerifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowRecover.getRecoverCapital(), creditTender.getAssignCapital());
                                                 }
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
-                                            creditRepayBean.setAssignTotal(assignAccount.add(assignChargeInterest).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee));
+                                            creditRepayBean.setAssignTotal(assignAccount.add(assignChargeInterest).add(assignOverdueInterest).add(assignManageFee));
                                             creditRepayBean.setManageFee(assignManageFee);
                                             creditRepayBeanList.add(creditRepayBean);
                                             // 统计出让人还款金额
                                             userAccount = userAccount.subtract(assignAccount);
                                             userCapital = userCapital.subtract(assignCapital);
                                             userInterest = userInterest.subtract(assignInterest);
-//                                            userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
-//                                            userDelayInterest = userDelayInterest.subtract(assignDelayInterest);// 提前还款利息
-//                                            userOverdueInterest = userOverdueInterest.subtract(assignOverdueInterest);// 逾期利息
                                             userManageFee = userManageFee.subtract(assignManageFee);
                                             // 统计总额
-                                            repayTotal = repayTotal.add(assignAccount).add(assignChargeInterest).add(assignDelayInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
+                                            repayTotal = repayTotal.add(assignAccount).add(assignChargeInterest).add(assignOverdueInterest).add(assignManageFee);// 统计总和本息+管理费
                                             repayAccount = repayAccount.add(assignAccount);// 统计总和本息
                                             repayCapital = repayCapital.add(assignCapital);
                                             repayInterest = repayInterest.add(assignInterest);
                                             repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
-                                            repayDelayInterest = repayDelayInterest.add(assignDelayInterest);// 统计借款用户总延期利息
+                                            repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款减少的利息
                                             repayOverdueInterest = repayOverdueInterest.add(assignOverdueInterest);// 统计借款用户总逾期利息
                                             repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                         }
@@ -3705,24 +3004,24 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     }
                                     if (borrowRecoverPlan.getCreditStatus() != 2) {
                                         // 统计总额
-                                        repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                                        repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                                         repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                         repayCapital = repayCapital.add(userCapital);
                                         repayInterest = repayInterest.add(userInterest);
                                         repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
-                                        repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
+                                        repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款减少的利息
                                         repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                                         repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                                     }
                                 }
                             } else {
                                 // 统计总和
-                                repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userDelayInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
+                                repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userOverdueInterest).add(userManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(userAccount); // 统计本息总和
                                 repayCapital = repayCapital.add(userCapital);
                                 repayInterest = repayInterest.add(userInterest);
                                 repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
-                                repayDelayInterest = repayDelayInterest.add(userDelayInterest);// 统计借款用户总延期利息
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款减少的利息
                                 repayOverdueInterest = repayOverdueInterest.add(userOverdueInterest);// 统计借款用户总逾期利息
                                 repayManageFee = repayManageFee.add(userManageFee);// 管理费
                             }
@@ -3732,7 +3031,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             repayRecoverPlanBean.setRecoverCapital(userCapital);
                             repayRecoverPlanBean.setRecoverInterest(userInterest);
                             repayRecoverPlanBean.setChargeInterest(userChargeInterest);
-                            repayRecoverPlanBean.setDelayInterest(userDelayInterest);
+                            repayRecoverPlanBean.setChargePenaltyInterest(userChargePenaltyInterest);
                             repayRecoverPlanBean.setLateInterest(userOverdueInterest);
                             repayRecoverPlanBean.setRecoverFee(userManageFee);
                             repayRecoverPlanList.add(repayRecoverPlanBean);
@@ -3747,7 +3046,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         borrowRepayPlan.setRepayCapital(repayCapital);
         borrowRepayPlan.setRepayInterest(repayInterest);
         borrowRepayPlan.setChargeInterest(repayChargeInterest);
-        borrowRepayPlan.setDelayInterest(repayDelayInterest);
+        borrowRepayPlan.setChargePenaltyInterest(repayChargePenaltyInterest);
         borrowRepayPlan.setLateInterest(repayOverdueInterest);
         borrowRepayPlan.setRepayFee(repayManageFee);
     }
@@ -3775,13 +3074,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      * 分期还款 全部结清 计算各期数据
      *
      * @param form
-     * @param isAllRepay
-     * @param userId
      * @param borrow
      * @param repayByTerm
      * @throws ParseException
      */
-    private void setRecoverPlanAllDetail(ProjectBean form, boolean isAllRepay, String userId, Borrow borrow, RepayBean repayByTerm) throws ParseException {
+    private void setRecoverPlanAllDetail(ProjectBean form, Borrow borrow, RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
         // 还款总期数
@@ -3793,8 +3090,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (repayPeriod > periodTotal) {
             form.setRepayStatus("1");
         }
-        // 设置当前的还款期数
-        form.setRepayPeriod(String.valueOf(repayPeriod));
+        int nowPeriod = repayPeriod;
+        List<Integer> lateArray = new ArrayList<>();// 逾期期数列表
         // 获取统计的用户还款计划列表
         List<RepayDetailBean> userRepayPlans = repayByTerm.getRepayPlanList();
         if (userRepayPlans != null && userRepayPlans.size() > 0) {
@@ -3809,13 +3106,20 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 if (userRepayPlan.getRepayStatus() == 1) {
                     // 获取本期的用户已还款总额
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountYes().add(userRepayPlan.getRepayFee()).toString());
-                }
-                // 用户未还款本息
-                else {
+                } else {// 用户未还款本息
+                    if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
+                        lateArray.add(userRepayPlan.getRepayPeriod());
+                        form.setLateStatus("1");
+                        if (nowPeriod < periodTotal) {
+                            nowPeriod++;
+                        } else {
+                            form.setOnlyAllRepay("2");// 全部逾期
+                        }
+                    }
                     // 此处分期计算的是本息+管理费
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountAll().toString());
                 }
-                userRepayBean.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getDelayInterest()).add(userRepayPlan.getLateInterest())
+                userRepayBean.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getLateInterest())
                         .toString());// 设置本期的用户本息和
                 userRepayBean.setRepayCapital(userRepayPlan.getRepayCapital().toString());// 用户未还款本息
                 userRepayBean.setRepayInterest(userRepayPlan.getRepayInterest().toString()); // 设置本期的用户利息
@@ -3825,12 +3129,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userRepayBean.setStatus(userRepayPlan.getRepayStatus().toString());
                 userRepayBean.setRepayTime(GetDate.getDateMyTimeInMillis(userRepayPlan.getRepayTime()));
                 userRepayBean.setChargeDays(userRepayPlan.getChargeDays().toString());
-                userRepayBean.setChargeInterest(userRepayPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                if (userRepayPlan.getChargeInterest() == BigDecimal.ZERO) {
-                    userRepayBean.setChargeInterest("0.00");
+                // 提前还款利息拆分 add by wgx 2019/03/22
+                userRepayBean.setChargeOriginalInterest(userRepayPlan.getChargePenaltyInterest().subtract(userRepayPlan.getChargeInterest()).toString());
+                userRepayBean.setChargePenaltyInterest(userRepayPlan.getChargePenaltyInterest().toString());
+                if ("0".equals(userRepayBean.getChargeOriginalInterest())) {
+                    userRepayBean.setChargeOriginalInterest("0.00");
                 }
-                userRepayBean.setDelayDays(userRepayPlan.getDelayDays().toString());
-                userRepayBean.setDelayInterest(userRepayPlan.getDelayInterest().toString());
+                if ("0".equals(userRepayBean.getChargePenaltyInterest())) {
+                    userRepayBean.setChargePenaltyInterest("0.00");
+                }
                 userRepayBean.setManageFee(userRepayPlan.getRepayFee().toString());
                 userRepayBean.setLateDays(userRepayPlan.getLateDays().toString());
                 userRepayBean.setLateInterest(userRepayPlan.getLateInterest().toString());
@@ -3854,12 +3161,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
                             userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
-                            userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                            if (creditRepay.getChargeInterest() == BigDecimal.ZERO) {
-                                userRepayDetail.setChargeInterest("0.00");
+                            // 提前还款利息拆分 add by wgx 2019/03/22
+                            userRepayDetail.setChargeOriginalInterest(creditRepay.getChargePenaltyInterest().subtract(creditRepay.getChargeInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                                userRepayDetail.setChargeOriginalInterest("0.00");
                             }
-                            userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
-                            userRepayDetail.setDelayInterest(creditRepay.getDelayInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                                userRepayDetail.setChargePenaltyInterest("0.00");
+                            }
                             userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
                             userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
                             userRepayDetail.setLateInterest(creditRepay.getLateInterest().toString());
@@ -3893,12 +3203,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
                             userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
-                            userRepayDetail.setChargeInterest(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1")).toString());
-                            if (creditRepay.getRepayAdvanceInterest().compareTo(BigDecimal.ZERO) == 0) {
-                                userRepayDetail.setChargeInterest("0.00");
+                            // 提前还款利息拆分 add by wgx 2019/03/22
+                            userRepayDetail.setChargeOriginalInterest(creditRepay.getRepayAdvancePenaltyInterest().subtract(creditRepay.getRepayAdvanceInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(creditRepay.getRepayAdvancePenaltyInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                                userRepayDetail.setChargeOriginalInterest("0.00");
                             }
-                            userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
-                            userRepayDetail.setDelayInterest(creditRepay.getRepayDelayInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                                userRepayDetail.setChargePenaltyInterest("0.00");
+                            }
                             userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
                             userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
                             userRepayDetail.setLateInterest(creditRepay.getRepayLateInterest().toString());
@@ -3933,19 +3246,21 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayCapital(userRecoverPlan.getRecoverCapital().toString());
                         userRepayDetail.setRepayInterest(userRecoverPlan.getRecoverInterest().toString());
                         userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
+                        // 提前还款利息拆分 add by wgx 2019/03/22
                         if (recoverStatus == 1) {//已还款
-                            userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
+                            //userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
+                            userRepayDetail.setChargeOriginalInterest(userRecoverPlan.getChargePenaltyInterestOld().subtract(userRecoverPlan.getChargeInterestOld()).toString());
+                            userRepayDetail.setChargePenaltyInterest(userRecoverPlan.getChargePenaltyInterestOld().toString());
                         } else {
-                            userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
+                            //userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
+                            userRepayDetail.setChargeOriginalInterest(userRecoverPlan.getChargePenaltyInterest().subtract(userRecoverPlan.getChargeInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(userRecoverPlan.getChargePenaltyInterest().toString());
                         }
-                        if ("0".equals(userRepayDetail.getChargeInterest())) {
-                            userRepayDetail.setChargeInterest("0.00");
+                        if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                            userRepayDetail.setChargeOriginalInterest("0.00");
                         }
-                        userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
-                        if (recoverStatus == 1) {
-                            userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterestOld().toString());
-                        } else {
-                            userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterest().toString());
+                        if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                            userRepayDetail.setChargePenaltyInterest("0.00");
                         }
                         userRepayDetail.setManageFee(userRecoverPlan.getRecoverFee().toString());
                         userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
@@ -3979,20 +3294,31 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
             form.setManageFee(repayByTerm.getRepayFee().toString());
             form.setRepayTotal(repayByTerm.getRepayAccountAll().toString());// 此处计算的是还款总额包含管理费
-            form.setRepayAccount(repayByTerm.getRepayAccount().add(repayByTerm.getChargeInterest()).add(repayByTerm.getDelayInterest()).add(repayByTerm.getLateInterest())
+            form.setRepayAccount(repayByTerm.getRepayAccount().add(repayByTerm.getChargeInterest()).add(repayByTerm.getLateInterest())
                     .toString());
             form.setRepayCapital(repayByTerm.getRepayCapital().toString());
-            form.setRepayInterest(repayByTerm.getRepayInterest().add(repayByTerm.getChargeInterest()).add(repayByTerm.getDelayInterest()).add(repayByTerm.getLateInterest()).toString());
+            form.setRepayInterest(repayByTerm.getRepayInterest().add(repayByTerm.getChargeInterest()).add(repayByTerm.getLateInterest()).toString());
             form.setShouldInterest(repayByTerm.getRepayInterest().toString());
+            form.setLateStatus(repayByTerm.getLateStatus());
             form.setAdvanceStatus(repayByTerm.getAdvanceStatus().toString());
             form.setChargeDays(repayByTerm.getChargeDays().toString());
-            form.setChargeInterest(repayByTerm.getChargeInterest().toString());
-//            form.setDelayDays(repayByTerm.getDelayDays().toString());
-//            form.setDelayInterest(repayByTerm.getDelayInterest().toString());
-//            form.setLateDays(repayByTerm.getLateDays().toString());
-//            form.setLateInterest(repayByTerm.getLateInterest().toString());
-
+            form.setChargeOriginalInterest(repayByTerm.getChargePenaltyInterest().subtract(repayByTerm.getChargeInterest()).toString());
+            form.setChargePenaltyInterest(repayByTerm.getChargePenaltyInterest().toString());
+            form.setLateDays(repayByTerm.getLateDays().toString());
+            form.setLateInterest(repayByTerm.getLateInterest().toString());
         }
+        if("2".equals(form.getOnlyAllRepay())) {
+            form.setLatePeriod(nowPeriod);// 全部逾期时设为最后一期还款
+            form.setAllRepay("0");// 不属于一次性还款
+        }else if(nowPeriod == periodTotal){
+            form.setLatePeriod(0);// 只有最后一期未逾期设为当期还款
+            form.setAllRepay("0");// 不属于一次性还款
+        }else{
+            form.setLatePeriod(-1);
+            form.setAllRepay("1");// 属于一次性还款
+        }
+        form.setRepayPeriod(String.valueOf(nowPeriod));// 设置当期的还款期数
+        form.setLateArray(lateArray);// 设置未还款逾期列表
     }
 
     /***
@@ -4003,12 +3329,43 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
         BigDecimal repayAccountAll = new BigDecimal("0");
+        repay.setRepayAccountAll(BigDecimal.ZERO);
+        repay.setRepayAccount(BigDecimal.ZERO);
+        repay.setRepayCapital(BigDecimal.ZERO);
+        repay.setRepayInterest(BigDecimal.ZERO);
+        repay.setRepayFee(BigDecimal.ZERO);
+        repay.setChargeInterest(BigDecimal.ZERO);
+        repay.setChargePenaltyInterest(BigDecimal.ZERO);
+        repay.setLateInterest(BigDecimal.ZERO);
+        int nowPeriod = period;
         if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
+            // 将calculateRecoverPlan的borrowRecoverList移到方法外查询 update by wgx 2019/02/15
+            List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
             // 用户实际还款额
             for (int i = 0; i < borrowRepayPlans.size(); i++) {
                 RepayDetailBean repayPlanDetail = new RepayDetailBean();
                 BorrowRepayPlan borrowRepayPlan = borrowRepayPlans.get(i);
-                if (period == borrowRepayPlan.getRepayPeriod()) {
+                int repayPeriod = borrowRepayPlan.getRepayPeriod();
+                int repayTimeInt = borrowRepayPlan.getRepayTime();
+                int repayStatus = borrowRepayPlan.getRepayStatus();
+                int nowDate = GetDate.getIntYYMMDD(new Date());
+                if(GetDate.getIntYYMMDD(repayTimeInt) < nowDate && repayPeriod >= nowPeriod && repayStatus != 1){// 已逾期期数
+                    BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                    this.calculateRecoverPlan(repayPlanDetail, borrow, nowPeriod, null, borrowRecoverList);
+                    borrowRepayPlanDeails.add(repayPlanDetail);
+                    //  累加以下值
+                    repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
+                    repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
+                    repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
+                    repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
+                    repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
+                    repay.setLateDays(repayPlanDetail.getLateDays());
+                    // 逾期期数只累加逾期利息
+                    repay.setLateInterest(repay.getLateInterest().add(repayPlanDetail.getLateInterest()));
+                    repayAccountAll = repayPlanDetail.getRepayAccountAll();
+                    nowPeriod ++;// 逾期了 当前期+1
+                    repay.setLateStatus("1");
+                } else if (repayPeriod == nowPeriod) {
                     Integer repayTimeStart = null;
                     if (i == 0) {
                         repayTimeStart = GetDate.getTime10(borrowRepayPlan.getCreateTime());
@@ -4023,28 +3380,23 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     Date repayStartDate = DateUtils.addMonths(repayEndDate, -1);
 
                     int curPlanStart = GetDate.getIntYYMMDD(repayStartDate);
-                    int nowDate = GetDate.getIntYYMMDD(new Date());
                     if (nowDate < curPlanStart) {
                         logger.info("repayTimeEnd:" + repayTimeEnd + " repayEndDate:" + repayEndDate + " repayStartDate:" + repayStartDate);
                         logger.info("nowDate:" + nowDate + " curPlanStart:" + curPlanStart);
                         throw new Exception("不能超前还，只能全部结清");
                     }
-
                     // 计算还款期的数据
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
-                    this.calculateRecoverPlan(repayPlanDetail, borrow, period, repayTimeStart);
+                    this.calculateRecoverPlan(repayPlanDetail, borrow, period, repayTimeStart, borrowRecoverList);
                     borrowRepayPlanDeails.add(repayPlanDetail);
-                    repay.setRepayAccountAll(repayPlanDetail.getRepayAccountAll());
-                    repay.setRepayAccount(repayPlanDetail.getRepayAccount());
-                    repay.setRepayCapital(repayPlanDetail.getRepayCapital());
-                    repay.setRepayInterest(repayPlanDetail.getRepayInterest());
-                    repay.setRepayFee(repayPlanDetail.getRepayFee());
+                    repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
+                    repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
+                    repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
+                    repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
+                    repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
                     repay.setChargeDays(repayPlanDetail.getChargeDays());
                     repay.setChargeInterest(repayPlanDetail.getChargeInterest());
-                    repay.setDelayDays(repayPlanDetail.getDelayDays());
-                    repay.setDelayInterest(repayPlanDetail.getDelayInterest());
-                    repay.setLateDays(repayPlanDetail.getLateDays());
-                    repay.setLateInterest(repayPlanDetail.getLateInterest());
+                    repay.setChargePenaltyInterest(repayPlanDetail.getChargePenaltyInterest());
                     repayAccountAll = repayPlanDetail.getRepayAccountAll();
                 } else {
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
@@ -4098,8 +3450,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         } else {// 用户正在还款最后一期
             form.setRepayStatus("1");
         }
-        // 设置当前的还款期数
-        form.setRepayPeriod(String.valueOf(repayPeriod));
+        int nowPeriod = repayPeriod;
+        List<Integer> lateArray = new ArrayList<>();// 逾期期数列表
         // 获取统计的用户还款计划列表
         List<RepayDetailBean> userRepayPlans = repayByTerm.getRepayPlanList();
         if (userRepayPlans != null && userRepayPlans.size() > 0) {
@@ -4114,13 +3466,20 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 if (userRepayPlan.getRepayStatus() == 1) {
                     // 获取本期的用户已还款总额
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountYes().add(userRepayPlan.getRepayFee()).toString());
-                }
-                // 用户未还款本息
-                else {
+                } else {// 用户未还款本息
+                    if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
+                        lateArray.add(userRepayPlan.getRepayPeriod());
+                        form.setLateStatus("1");
+                        if (nowPeriod < periodTotal) {
+                            nowPeriod++;
+                        } else {
+                            form.setOnlyAllRepay("2");// 全部逾期
+                        }
+                    }
                     // 此处分期计算的是本息+管理费
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountAll().toString());
                 }
-                userRepayBean.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getDelayInterest()).add(userRepayPlan.getLateInterest())
+                userRepayBean.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getLateInterest())
                         .toString());// 设置本期的用户本息和
                 userRepayBean.setRepayCapital(userRepayPlan.getRepayCapital().toString());// 用户未还款本息
                 userRepayBean.setRepayInterest(userRepayPlan.getRepayInterest().toString()); // 设置本期的用户利息
@@ -4130,25 +3489,23 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userRepayBean.setStatus(userRepayPlan.getRepayStatus().toString());
                 userRepayBean.setRepayTime(GetDate.getDateMyTimeInMillis(userRepayPlan.getRepayTime()));
                 userRepayBean.setChargeDays(userRepayPlan.getChargeDays().toString());
-                userRepayBean.setChargeInterest(userRepayPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                userRepayBean.setDelayDays(userRepayPlan.getDelayDays().toString());
-                userRepayBean.setDelayInterest(userRepayPlan.getDelayInterest().toString());
+                userRepayBean.setChargeOriginalInterest(userRepayPlan.getChargePenaltyInterest().subtract(userRepayPlan.getChargeInterest()).toString());
+                userRepayBean.setChargePenaltyInterest(userRepayPlan.getChargePenaltyInterest().toString());
                 userRepayBean.setManageFee(userRepayPlan.getRepayFee().toString());
                 userRepayBean.setLateDays(userRepayPlan.getLateDays().toString());
                 userRepayBean.setLateInterest(userRepayPlan.getLateInterest().toString());
-                if (repayPeriod == userRepayPlan.getRepayPeriod()) {
+                if (nowPeriod == repayPeriod && nowPeriod == userRepayPlan.getRepayPeriod()) {//当期还款只有一期
                     form.setManageFee(userRepayPlan.getRepayFee().toString());
                     form.setRepayTotal(userRepayPlan.getRepayAccountAll().toString());// 此处计算的是还款总额包含管理费
-                    form.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getDelayInterest()).add(userRepayPlan.getLateInterest())
+                    form.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getLateInterest())
                             .toString());
                     form.setRepayCapital(userRepayPlan.getRepayCapital().toString());
-                    form.setRepayInterest(userRepayPlan.getRepayInterest().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getDelayInterest()).add(userRepayPlan.getLateInterest()).toString());
+                    form.setRepayInterest(userRepayPlan.getRepayInterest().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getLateInterest()).toString());
                     form.setShouldInterest(userRepayPlan.getRepayInterest().toString());
                     form.setAdvanceStatus(userRepayPlan.getAdvanceStatus().toString());
                     form.setChargeDays(userRepayPlan.getChargeDays().toString());
-                    form.setChargeInterest(userRepayPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                    form.setDelayDays(userRepayPlan.getDelayDays().toString());
-                    form.setDelayInterest(userRepayPlan.getDelayInterest().toString());
+                    form.setChargeOriginalInterest(userRepayPlan.getChargePenaltyInterest().subtract(userRepayPlan.getChargeInterest()).toString());
+                    form.setChargePenaltyInterest(userRepayPlan.getChargePenaltyInterest().toString());
                     form.setLateDays(userRepayPlan.getLateDays().toString());
                     form.setLateInterest(userRepayPlan.getLateInterest().toString());
                 }
@@ -4169,13 +3526,16 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
                             userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
-
-                            userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
-                            if (creditRepay.getChargeInterest().compareTo(BigDecimal.ZERO) == 0) {
-                                userRepayDetail.setChargeInterest("0.00");
+                            //userRepayDetail.setChargeInterest(creditRepay.getChargeInterest().multiply(new BigDecimal("-1")).toString());
+                            // 提前还款利息拆分 add by wgx 2019/03/22
+                            userRepayDetail.setChargeOriginalInterest(creditRepay.getChargePenaltyInterest().subtract(creditRepay.getChargeInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                                userRepayDetail.setChargeOriginalInterest("0.00");
                             }
-                            userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
-                            userRepayDetail.setDelayInterest(creditRepay.getDelayInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                                userRepayDetail.setChargePenaltyInterest("0.00");
+                            }
                             userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
                             userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
                             userRepayDetail.setLateInterest(creditRepay.getLateInterest().toString());
@@ -4209,12 +3569,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
                             userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
                             userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
-                            userRepayDetail.setChargeInterest(String.valueOf(creditRepay.getRepayAdvanceInterest().multiply(new BigDecimal("-1"))));
-                            if (creditRepay.getRepayAdvanceInterest() == BigDecimal.ZERO) {
-                                userRepayDetail.setChargeInterest("0.00");
+                            // 提前还款利息拆分 add by wgx 2019/03/22
+                            userRepayDetail.setChargeOriginalInterest(creditRepay.getRepayAdvancePenaltyInterest().subtract(creditRepay.getRepayAdvanceInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(creditRepay.getRepayAdvancePenaltyInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                                userRepayDetail.setChargeOriginalInterest("0.00");
                             }
-                            userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
-                            userRepayDetail.setDelayInterest(creditRepay.getRepayDelayInterest().toString());
+                            if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                                userRepayDetail.setChargePenaltyInterest("0.00");
+                            }
                             userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
                             userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
                             userRepayDetail.setLateInterest(creditRepay.getRepayLateInterest().toString());
@@ -4249,15 +3612,19 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayInterest(userRecoverPlan.getRecoverInterest().toString());
                         userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
                         if (recoverStatus == 1) {//已还款
-                            userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
+                            //userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
+                            userRepayDetail.setChargeOriginalInterest(userRecoverPlan.getChargePenaltyInterestOld().subtract(userRecoverPlan.getChargeInterestOld()).toString());
+                            userRepayDetail.setChargePenaltyInterest(userRecoverPlan.getChargePenaltyInterestOld().toString());
                         } else {
-                            userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
+                            //userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
+                            userRepayDetail.setChargeOriginalInterest(userRecoverPlan.getChargePenaltyInterest().subtract(userRecoverPlan.getChargeInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(userRecoverPlan.getChargePenaltyInterest().toString());
                         }
-                        userRepayDetail.setDelayDays(userRecoverPlan.getDelayDays().toString());
-                        if (recoverStatus == 1) {
-                            userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterestOld().toString());
-                        } else {
-                            userRepayDetail.setDelayInterest(userRecoverPlan.getDelayInterest().toString());
+                        if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
+                            userRepayDetail.setChargeOriginalInterest("0.00");
+                        }
+                        if ("0".equals(userRepayDetail.getChargePenaltyInterest())) {
+                            userRepayDetail.setChargePenaltyInterest("0.00");
                         }
                         userRepayDetail.setManageFee(userRecoverPlan.getRecoverFee().toString());
                         userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
@@ -4288,7 +3655,30 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 recoverList.add(userRepayBean);
             }
             form.setUserRepayList(recoverList);
+            if (nowPeriod != repayPeriod) {// 当期还款存在逾期期数
+                form.setManageFee(repayByTerm.getRepayFee().toString());
+                form.setRepayTotal(repayByTerm.getRepayAccountAll().toString());// 此处计算的是还款总额包含管理费
+                form.setRepayAccount(repayByTerm.getRepayAccount().add(repayByTerm.getChargeInterest()).add(repayByTerm.getLateInterest())
+                        .toString());
+                form.setRepayCapital(repayByTerm.getRepayCapital().toString());
+                form.setRepayInterest(repayByTerm.getRepayInterest().add(repayByTerm.getChargeInterest()).add(repayByTerm.getLateInterest()).toString());
+                form.setShouldInterest(repayByTerm.getRepayInterest().toString());
+                form.setLateStatus("1");
+                form.setAdvanceStatus(repayByTerm.getAdvanceStatus().toString());
+                form.setChargeDays(repayByTerm.getChargeDays().toString());
+                form.setChargeOriginalInterest(repayByTerm.getChargePenaltyInterest().subtract(repayByTerm.getChargeInterest()).toString());
+                form.setChargePenaltyInterest(repayByTerm.getChargePenaltyInterest().toString());
+                form.setLateDays(repayByTerm.getLateDays().toString());
+                form.setLateInterest(repayByTerm.getLateInterest().toString());
+            }
         }
+        if("2".equals(form.getOnlyAllRepay())) {
+            form.setLatePeriod(nowPeriod);// 全部逾期时设为最后一期还款
+        }else{
+            form.setLatePeriod(0);
+        }
+        form.setRepayPeriod(String.valueOf(nowPeriod));// 设置当期的还款期数
+        form.setLateArray(lateArray);// 设置未还款逾期列表
     }
 
     public BorrowRepay searchRepay(int userId, String borrowNid) {
@@ -4347,7 +3737,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      * @throws Exception
      */
     @Override
-    public boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay) throws Exception {
+    public boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay, int latePeriod) throws Exception {
 
         int time = GetDate.getNowTime10();
         String borrowNid = repay.getBorrowNid();
@@ -4418,21 +3808,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 HjhDebtCreditRepay oldCreditRepay = this.hjhDebtCreditRepayMapper.selectByPrimaryKey(hjhDebtCreditRepayBean.getId());
                                 oldCreditRepay.setAdvanceDays(hjhDebtCreditRepayBean.getAdvanceDays());
                                 oldCreditRepay.setRepayAdvanceInterest(hjhDebtCreditRepayBean.getRepayAdvanceInterest());
-                                oldCreditRepay.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
-                                oldCreditRepay.setRepayDelayInterest(hjhDebtCreditRepayBean.getRepayDelayInterest());
-                                oldCreditRepay.setLateDays(hjhDebtCreditRepayBean.getLateDays());
-                                oldCreditRepay.setRepayLateInterest(hjhDebtCreditRepayBean.getRepayLateInterest());
+                                oldCreditRepay.setRepayAdvancePenaltyInterest(hjhDebtCreditRepayBean.getRepayAdvancePenaltyInterest());
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
-                                oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
                                     manageFee = manageFee.add(hjhDebtCreditRepayBean.getManageFee());
                                     borrowRecoverOld.setChargeDays(hjhDebtCreditRepayBean.getAdvanceDays());
                                     borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(hjhDebtCreditRepayBean.getRepayAdvanceInterest()));
-                                    borrowRecoverOld.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
-                                    borrowRecoverOld.setDelayInterest(borrowRecoverOld.getDelayInterest().add(hjhDebtCreditRepayBean.getRepayDelayInterest()));
-                                    borrowRecoverOld.setLateDays(hjhDebtCreditRepayBean.getLateDays());
-                                    borrowRecoverOld.setLateInterest(borrowRecoverOld.getLateInterest().add(hjhDebtCreditRepayBean.getRepayLateInterest()));
+                                    borrowRecoverOld.setChargePenaltyInterest(borrowRecoverOld.getChargePenaltyInterest().add(hjhDebtCreditRepayBean.getRepayAdvancePenaltyInterest()));
                                     boolean recoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecoverOld) > 0 ? true : false;
                                     if (!recoverFlag) {
                                         errorCount = errorCount + 1;
@@ -4453,21 +3836,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 CreditRepay creditRepayOld = creditRepayMapper.selectByPrimaryKey(creditRepay.getId());
                                 creditRepayOld.setChargeDays(creditRepay.getChargeDays());
                                 creditRepayOld.setChargeInterest(creditRepay.getChargeInterest());
-                                creditRepayOld.setDelayDays(creditRepay.getDelayDays());
-                                creditRepayOld.setDelayInterest(creditRepay.getDelayInterest());
-                                creditRepayOld.setLateDays(creditRepay.getLateDays());
-                                creditRepayOld.setLateInterest(creditRepay.getLateInterest());
+                                creditRepayOld.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest());
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
-                                creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
                                     manageFee = manageFee.add(creditRepay.getManageFee());
                                     borrowRecoverOld.setChargeDays(creditRepay.getChargeDays());
                                     borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(creditRepay.getChargeInterest()));
-                                    borrowRecoverOld.setDelayDays(creditRepay.getDelayDays());
-                                    borrowRecoverOld.setDelayInterest(borrowRecoverOld.getDelayInterest().add(creditRepay.getDelayInterest()));
-                                    borrowRecoverOld.setLateDays(creditRepay.getLateDays());
-                                    borrowRecoverOld.setLateInterest(borrowRecoverOld.getLateInterest().add(creditRepay.getLateInterest()));
+                                    borrowRecoverOld.setChargePenaltyInterest(borrowRecoverOld.getChargePenaltyInterest().add(creditRepay.getChargePenaltyInterest()));
                                     boolean recoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecoverOld) > 0 ? true : false;
                                     if (!recoverFlag) {
                                         errorCount = errorCount + 1;
@@ -4538,13 +3914,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             }
                         }
                         manageFee = manageFee.add(repayRecover.getRecoverFee());
-                        borrowRecoverOld.setAdvanceStatus(repayRecover.getAdvanceStatus());
                         borrowRecoverOld.setChargeDays(repayRecover.getChargeDays());
-                        borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(repayRecover.getChargeInterest()));
-                        borrowRecoverOld.setDelayDays(repayRecover.getDelayDays());
-                        borrowRecoverOld.setDelayInterest(borrowRecoverOld.getDelayInterest().add(repayRecover.getDelayInterest()));
-                        borrowRecoverOld.setLateDays(repayRecover.getLateDays());
-                        borrowRecoverOld.setLateInterest(borrowRecoverOld.getLateInterest().add(repayRecover.getLateInterest()));
+                        BigDecimal chargeInterest = repayRecover.getChargeInterest() != null ? repayRecover.getChargeInterest() : BigDecimal.ZERO;
+                        BigDecimal chargePenaltyInterest = repayRecover.getChargePenaltyInterest() != null ? repayRecover.getChargePenaltyInterest() : BigDecimal.ZERO;
+                        borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(chargeInterest));
+                        borrowRecoverOld.setChargePenaltyInterest(borrowRecoverOld.getChargePenaltyInterest().add(chargePenaltyInterest));
                         borrowRecoverOld.setRecoverFee(manageFee);
                         boolean flag = borrowRecoverMapper.updateByPrimaryKey(borrowRecoverOld) > 0 ? true : false;
                         if (!flag) {
@@ -4589,6 +3963,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowApicron.setStatus(1);
                         borrowApicron.setFailTimes(0);
                         borrowApicron.setCreditRepayStatus(0);
+                        borrowApicron.setSubmitter(userName);
+                        borrowApicron.setIsLate(borrow.getStatus() == 8 ? 1 : 0);
+                        borrowApicron.setLastPeriod(1);
                         borrowApicron.setCreateTime(GetDate.getNowTime());
                         borrowApicron.setUpdateTime(GetDate.getNowTime());
                         boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
@@ -4625,11 +4002,34 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (repayPLanList != null && repayPLanList.size() > 0) {
             logger.info("isAllRepay: " + isAllRepay);
             logger.info("repayPlanList size: " + repayPLanList.size() + " json:" + JSON.toJSONString(repayPLanList));
+            int nowPeriod = period;
             for (int i = 0; i < repayPLanList.size(); i++) {
                 RepayDetailBean repayDetail = repayPLanList.get(i);
-                if (repayDetail.getRepayPeriod() == period && !isAllRepay) {
-                    Map mapResult = updaterepayData(userId, borrowNid, period, repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
+                logger.debug("【还款】借款编号：{}，第{}期正在进行还款！", borrowNid, repayDetail.getRepayPeriod());
+                if (latePeriod == 0 && repayDetail.getRepayPeriod() == nowPeriod && !isAllRepay) {
+                    Map mapResult = updaterepayData(userId, borrowNid, nowPeriod, repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
                             borrowPeriod, projectType, repayFlag, isAllRepay);
+                    if (mapResult.get("result") != null) {
+                        boolean result = (boolean) mapResult.get("result");
+                        if (result) {
+                            return true;
+                        }
+                    }
+                    if(repayDetail.getAdvanceStatus() == 3){
+                        logger.info("【还款】借款编号：{}，第{}期已逾期，正在进行当期还款！", borrowNid, nowPeriod);
+                        nowPeriod ++;// 逾期了，当前期+1
+                    }
+                    if (mapResult.get("repayFlag") != null) {
+                        repayFlag = (Boolean) mapResult.get("repayFlag");
+                        if (!repayFlag && nowPeriod != period) {// 当期带别期逾期还款出现失败
+                            throw new RuntimeException("标的当期还款出现异常，还款标的：" + borrowNid + ",还款期数：" + repayDetail.getRepayPeriod());
+                        }
+                    }
+                } else if (latePeriod > 0 && !isAllRepay && repayDetail.getRepayPeriod() >= period && repayDetail.getRepayPeriod() <= latePeriod && repayDetail.getRepayStatus() == 0) {
+                    // 逾期还款选择一期或多期的情况
+                    Map mapResult = updaterepayData(userId, borrowNid, repayDetail.getRepayPeriod(), repayDetail, errorCount, nid, roleId, userName, repay, repayUserId, borrow,
+                            borrowPeriod, projectType, repayFlag, isAllRepay);
+                    logger.info("【还款】借款编号：{}，第{}期正在进行逾期还款！", borrowNid, repayDetail.getRepayPeriod());
                     if (mapResult.get("result") != null) {
                         boolean result = (boolean) mapResult.get("result");
                         if (result) {
@@ -4638,6 +4038,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     }
                     if (mapResult.get("repayFlag") != null) {
                         repayFlag = (Boolean) mapResult.get("repayFlag");
+                        if (!repayFlag && latePeriod != period) {// 多期逾期还款出现失败
+                            throw new RuntimeException("标的逾期还款出现异常，还款标的：" + borrowNid + ",还款期数：" + repayDetail.getRepayPeriod());
+                        }
                     }
                 } else if (isAllRepay && repayDetail.getRepayPeriod() >= period && repayDetail.getRepayStatus() == 0) {
 
@@ -4724,10 +4127,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             boolean accountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
                             if (accountListFlag) {
                                 try {
-                                    deleteFreezeTempLog(bean.getOrderId());
+                                    deleteFreezeTempLogs(bean.getOrderId());
                                 } catch (Exception e) {
-                                    logger.info("=========还款冻结订单号: " + bean.getOrderId());
-                                    logger.info("还款冻结成功==============删除还款冻结临时日志失败============");
+                                    logger.error("【还款】删除还款冻结临时日志失败！订单号：{}", bean.getOrderId(), e);
                                 }
                                 return true;
                             } else {
@@ -4810,21 +4212,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 CreditRepay creditRepayOld = creditRepayMapper.selectByPrimaryKey(creditRepay.getId());
                                 creditRepayOld.setChargeDays(creditRepay.getChargeDays());
                                 creditRepayOld.setChargeInterest(creditRepay.getChargeInterest());
-                                creditRepayOld.setDelayDays(creditRepay.getDelayDays());
-                                creditRepayOld.setDelayInterest(creditRepay.getDelayInterest());
-                                creditRepayOld.setLateDays(creditRepay.getLateDays());
-                                creditRepayOld.setLateInterest(creditRepay.getLateInterest());
+                                creditRepayOld.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest());
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
-                                creditRepayOld.setAdvanceStatus(creditRepay.getAdvanceStatus());
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
                                     manageFee = manageFee.add(creditRepay.getManageFee());
                                     borrowRecoverPlanOld.setChargeDays(creditRepay.getChargeDays());
                                     borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(creditRepay.getChargeInterest()));
-                                    borrowRecoverPlanOld.setDelayDays(creditRepay.getDelayDays());
-                                    borrowRecoverPlanOld.setDelayInterest(borrowRecoverPlanOld.getDelayInterest().add(creditRepay.getDelayInterest()));
-                                    borrowRecoverPlanOld.setLateDays(creditRepay.getLateDays());
-                                    borrowRecoverPlanOld.setLateInterest(borrowRecoverPlanOld.getLateInterest().add(creditRepay.getLateInterest()));
+                                    borrowRecoverPlanOld.setChargePenaltyInterest(borrowRecoverPlanOld.getChargePenaltyInterest().add(creditRepay.getChargePenaltyInterest()));
                                     boolean recoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlanOld) > 0 ? true : false;
                                     if (!recoverPlanFlag) {
                                         errorCount = errorCount + 1;
@@ -4846,21 +4241,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 HjhDebtCreditRepay oldCreditRepay = this.hjhDebtCreditRepayMapper.selectByPrimaryKey(hjhDebtCreditRepayBean.getId());
                                 oldCreditRepay.setAdvanceDays(hjhDebtCreditRepayBean.getAdvanceDays());
                                 oldCreditRepay.setRepayAdvanceInterest(hjhDebtCreditRepayBean.getRepayAdvanceInterest());
-                                oldCreditRepay.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
-                                oldCreditRepay.setRepayDelayInterest(hjhDebtCreditRepayBean.getRepayDelayInterest());
-                                oldCreditRepay.setLateDays(hjhDebtCreditRepayBean.getLateDays());
-                                oldCreditRepay.setRepayLateInterest(hjhDebtCreditRepayBean.getRepayLateInterest());
+                                oldCreditRepay.setRepayAdvancePenaltyInterest(hjhDebtCreditRepayBean.getRepayAdvancePenaltyInterest());
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
-                                oldCreditRepay.setAdvanceStatus(hjhDebtCreditRepayBean.getAdvanceStatus());
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
                                     manageFee = manageFee.add(hjhDebtCreditRepayBean.getManageFee());
                                     borrowRecoverPlanOld.setChargeDays(hjhDebtCreditRepayBean.getAdvanceDays());
                                     borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(hjhDebtCreditRepayBean.getRepayAdvanceInterest()));
-                                    borrowRecoverPlanOld.setDelayDays(hjhDebtCreditRepayBean.getDelayDays());
-                                    borrowRecoverPlanOld.setDelayInterest(borrowRecoverPlanOld.getDelayInterest().add(hjhDebtCreditRepayBean.getRepayDelayInterest()));
-                                    borrowRecoverPlanOld.setLateDays(hjhDebtCreditRepayBean.getLateDays());
-                                    borrowRecoverPlanOld.setLateInterest(borrowRecoverPlanOld.getLateInterest().add(hjhDebtCreditRepayBean.getRepayLateInterest()));
+                                    borrowRecoverPlanOld.setChargePenaltyInterest(borrowRecoverPlanOld.getChargePenaltyInterest().add(hjhDebtCreditRepayBean.getRepayAdvancePenaltyInterest()));
                                     boolean recoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlanOld) > 0 ? true : false;
                                     if (!recoverPlanFlag) {
                                         errorCount = errorCount + 1;
@@ -4928,13 +4316,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             }
                         }
                         manageFee = manageFee.add(repayRecoverPlan.getRecoverFee());
-                        borrowRecoverPlanOld.setAdvanceStatus(repayRecoverPlan.getAdvanceStatus());
                         borrowRecoverPlanOld.setChargeDays(repayRecoverPlan.getChargeDays());
-                        borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(repayRecoverPlan.getChargeInterest()));
-                        borrowRecoverPlanOld.setDelayDays(repayRecoverPlan.getDelayDays());
-                        borrowRecoverPlanOld.setDelayInterest(borrowRecoverPlanOld.getDelayInterest().add(repayRecoverPlan.getDelayInterest()));
-                        borrowRecoverPlanOld.setLateDays(repayRecoverPlan.getLateDays());
-                        borrowRecoverPlanOld.setLateInterest(borrowRecoverPlanOld.getLateInterest().add(repayRecoverPlan.getLateInterest()));
+                        BigDecimal chargeInterest = repayRecoverPlan.getChargeInterest() != null ? repayRecoverPlan.getChargeInterest() : BigDecimal.ZERO;
+                        BigDecimal chargePenaltyInterest = repayRecoverPlan.getChargePenaltyInterest() != null ? repayRecoverPlan.getChargePenaltyInterest() : BigDecimal.ZERO;
+                        borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(chargeInterest));
+                        borrowRecoverPlanOld.setChargePenaltyInterest(borrowRecoverPlanOld.getChargePenaltyInterest().add(chargePenaltyInterest));
                         borrowRecoverPlanOld.setRecoverFee(manageFee);
                         boolean flag = borrowRecoverPlanMapper.updateByPrimaryKey(borrowRecoverPlanOld) > 0 ? true : false;
                         if (!flag) {
@@ -4980,6 +4366,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     borrowApicron.setStatus(1);
                     borrowApicron.setFailTimes(0);
                     borrowApicron.setCreditRepayStatus(0);
+                    borrowApicron.setSubmitter(userName);
+                    borrowApicron.setIsLate(borrowRepayPlan.getAdvanceStatus() == 3 ? 1 : 0);
+                    borrowApicron.setLastPeriod(repay.getRepayPeriod());
                     borrowApicron.setCreateTime(GetDate.getNowTime());
                     borrowApicron.setUpdateTime(GetDate.getNowTime());
                     if(isAllRepay){
@@ -4995,6 +4384,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     }
                     borrowApicron.setPlanNid(borrow.getPlanNid());// 汇计划项目编号
                     boolean apiCronFlag = borrowApicronMapper.insertSelective(borrowApicron) > 0 ? true : false;
+
                     if (apiCronFlag) {
                         repayFlag = true;
                         sendRepayMessage(borrowApicron);// 用户还款后直接发起还款消息
@@ -5030,8 +4420,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
                     "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
         } catch (MQException e) {
-            logger.error(e.getMessage());
-            logger.info("【还款】发起还款消息发生异常 ", e);
+            logger.error("【还款】发起还款消息发生异常 ", e);
         }
     }
 
@@ -5206,30 +4595,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
     }
 
-    /**
-     * 删除临时日志,内部使用,保证事物的传递性
-     *
-     * @param orderId
-     */
-    private void deleteFreezeTempLog(String orderId) {
-        BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
-        example.createCriteria().andOrderIdEqualTo(orderId);
-        List<BankRepayFreezeLog> log = this.bankRepayFreezeLogMapper.selectByExample(example);
-        if (log != null && log.size() > 0) {
-            for (int i = 0; i < log.size(); i++) {
-                BankRepayFreezeLog record = log.get(i);
-                record.setDelFlag(1);// 0 有效 1无效
-                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record);
-                if (flag > 0) {
-                    logger.info("=============还款冻结成功,删除还款冻结临时日志成功=========");
-                } else {
-                    logger.info("==============删除还款冻结临时日志失败============");
-                }
-            }
-        }
-
-    }
-
     @Override
     public RepayBean searchRepayTotalV2(int userId, Borrow borrow) throws Exception {
         RepayBean RepayBean = this.calculateRepay(userId, borrow);
@@ -5284,20 +4649,24 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String borrowNid = apicron.getBorrowNid();
         BorrowApicronExample example = new BorrowApicronExample();
         example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
-        apicron.setStatus(status);
-        apicron.setUpdateTime(GetDate.getNowTime());
-        borrowApicronMapper.updateByExampleSelective(apicron, example);
+        BorrowApicron newBorrowApicron = new BorrowApicron();
+        newBorrowApicron.setStatus(status);
+        borrowApicronMapper.updateByExampleSelective(newBorrowApicron, example);
 
         //更新borrow表状态
         Borrow borrow = this.getBorrowByNid(borrowNid);
         borrow.setRepayStatus(status);
         this.borrowMapper.updateByPrimaryKey(borrow);
-
+        try {
+            updateBorrowApicronLog(apicron, status);
+        } catch (Exception e) {
+            logger.error("同步还款任务日志表发生异常！", e);
+        }
         return true;
     }
 
     /**
-     * 获取垫付机构详情页面还款数据
+     * 获取垫付机构批量垫付页面还款数据
      * @param userId
      * @param startDate
      * @param endDate
@@ -5327,41 +4696,41 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayCapital = new BigDecimal(0);
         BigDecimal repayInterest = new BigDecimal(0);
         BigDecimal repayMangee = new BigDecimal(0);
-        BigDecimal chargeInterest = new BigDecimal(0);//提前减息
-        BigDecimal delayInterest = new BigDecimal(0);//延期利息
+        BigDecimal chargeOriginalInterest = new BigDecimal(0);//原始提前减息
+        BigDecimal chargePenaltyInterest = new BigDecimal(0);//提前罚息
         BigDecimal lateInterest = new BigDecimal(0);//逾期利息
         try {
             for (int i = 0; i < resultList.size(); i++) {
                 form.setBorrowNid(resultList.get(i).getBorrowNid());
-                ProjectBean repayProject =  this.searchRepayProjectDetail(form,false);
+                ProjectBean repayProject =  this.searchRepayProjectDetail(form,false, 0);
                 repayAccount = repayAccount.add(new BigDecimal(repayProject.getRepayAccount())).add(new BigDecimal(repayProject.getManageFee()));
                 repayCapital = repayCapital.add(new BigDecimal(repayProject.getRepayCapital()));
                 repayInterest = repayInterest.add(new BigDecimal(repayProject.getShouldInterest()));
                 repayMangee = repayMangee.add(new BigDecimal(repayProject.getManageFee()));
-                chargeInterest = chargeInterest.add(new BigDecimal(repayProject.getChargeInterest() == null ? "0" : repayProject.getChargeInterest()));
-                delayInterest = delayInterest.add(new BigDecimal(repayProject.getDelayInterest() == null ? "0" : repayProject.getDelayInterest()));
+                chargeOriginalInterest = chargeOriginalInterest.add(new BigDecimal(repayProject.getChargeOriginalInterest() == null ? "0" : repayProject.getChargeOriginalInterest()));
+                chargePenaltyInterest = chargePenaltyInterest.add(new BigDecimal(repayProject.getChargePenaltyInterest() == null ? "0" : repayProject.getChargePenaltyInterest()));
                 lateInterest = lateInterest.add(new BigDecimal(repayProject.getLateInterest() == null ? "0" : repayProject.getLateInterest()));
             }
             repayProjectInfo.setRepayAccount(repayAccount.toString());
             repayProjectInfo.setRepayCapital(repayCapital.toString());
             repayProjectInfo.setRepayInterest(repayInterest.toString());
             repayProjectInfo.setManageFee(repayMangee.toString());
-            repayProjectInfo.setChargeInterest(chargeInterest.toString());
-            repayProjectInfo.setDelayInterest(delayInterest.toString());
+            repayProjectInfo.setChargeOriginalInterest(chargeOriginalInterest.toString());
+            repayProjectInfo.setChargePenaltyInterest(chargePenaltyInterest.toString());
             repayProjectInfo.setLateInterest(lateInterest.toString());
             //返回应收笔数
             repayProjectInfo.setRepayNum(String.valueOf(resultList.size()));
             return repayProjectInfo;
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("【还款详情】查询还款详情页面时发生异常！",e);
         }
 
         return repayProjectInfo;
     }
 
     @Override
-    public void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay) {
+    public void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay, int latePeriod) {
         Borrow borrow = getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         BankRepayOrgFreezeLog log = new BankRepayOrgFreezeLog();
@@ -5394,6 +4763,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         log.setCurrentPeriod(repayPeriod);// 当前期数
         log.setAllRepayFlag(isAllRepay ? 1 : 0);// 是否全部还款 0 否 1 是
         log.setDelFlag(0);// 0 有效 1 无效
+        log.setLatePeriod(latePeriod);// 提交的逾期期数
         log.setCreateUserId(userId);
         log.setCreateUserName(userName);
         bankRepayOrgFreezeLogMapper.insertSelective(log);
@@ -5452,13 +4822,25 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (log != null && log.size() > 0) {
             for (int i = 0; i < log.size(); i++) {
                 BankRepayFreezeLog record = log.get(i);
-                record.setDelFlag(1);// 0 有效 1无效
+                BankRepayFreezeLog newRecord = new BankRepayFreezeLog();
+                newRecord.setId(record.getId());
+                newRecord.setDelFlag(1);// 0 有效 1无效
                 int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record);
-                if (flag > 0) {
-                    logger.info("=============还款冻结成功,删除还款冻结临时日志成功=========");
-                } else {
-                    logger.info("==============删除还款冻结临时日志失败============");
-                }
+                logger.info("【还款冻结处理】借款编号：{}，删除冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
+            }
+        }
+        BankRepayOrgFreezeLogExample orgExample = new BankRepayOrgFreezeLogExample();
+        BankRepayOrgFreezeLogExample.Criteria criteria = orgExample.createCriteria();
+        criteria.andOrderIdEqualTo(orderId);
+        List<BankRepayOrgFreezeLog> orgLog = this.bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
+        if (log != null && log.size() > 0) {
+            for (int i = 0; i < log.size(); i++) {
+                BankRepayOrgFreezeLog record = orgLog.get(i);
+                BankRepayOrgFreezeLog newRecord = new BankRepayOrgFreezeLog();
+                newRecord.setId(record.getId());
+                newRecord.setDelFlag(1);// 0 有效 1无效
+                int flag = this.bankRepayOrgFreezeLogMapper.updateByPrimaryKey(newRecord);
+                logger.info("【代偿冻结处理】借款编号：{}，删除担保机构冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }
     }
@@ -5483,7 +4865,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     @Override
-    public BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException {
+    public BigDecimal searchRepayTotal(int userId, Borrow borrow) throws Exception {
         RepayBean RepayBean = this.calculateRepay(userId, borrow);
         return RepayBean.getRepayAccountAll();
     }
@@ -5622,5 +5004,288 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public boolean getFailCredit(String borrowNid) {
         Integer failCreditCount = webUserRepayListCustomizeMapper.getFailCredit(borrowNid);
         return failCreditCount != null && failCreditCount > 0;
+    }
+
+    @Override
+    public RepayBean searchRepayPlanPart(int userId, Borrow borrow, int latePeriod) throws Exception {
+        RepayBean repayByTerm = new RepayBean();
+
+        BorrowRepay borrowRepay = this.searchRepay(userId, borrow.getBorrowNid());
+
+        if (borrowRepay != null) {
+            // 获取相应的还款信息
+            BeanUtils.copyProperties(borrowRepay, repayByTerm);
+            repayByTerm.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
+            this.calculateRepayPlanPart(repayByTerm, borrow, latePeriod);
+        }
+        return repayByTerm;
+    }
+
+    /***
+     * 计算用户分期还款部分期数应还金额(逾期使用)
+     */
+    private BigDecimal calculateRepayPlanPart(RepayBean repay, Borrow borrow, int latePeriod) throws Exception {
+
+        List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
+        List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
+        BigDecimal repayAccountAll = new BigDecimal("0");
+        repay.setRepayAccountAll(BigDecimal.ZERO);
+        repay.setRepayAccount(BigDecimal.ZERO);
+        repay.setRepayCapital(BigDecimal.ZERO);
+        repay.setRepayInterest(BigDecimal.ZERO);
+        repay.setRepayFee(BigDecimal.ZERO);
+        repay.setAdvanceStatus(3);
+        repay.setChargeInterest(BigDecimal.ZERO);
+        repay.setChargePenaltyInterest(BigDecimal.ZERO);
+        repay.setLateInterest(BigDecimal.ZERO);
+        if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
+            // 将calculateRecoverPlan的borrowRecoverList移到方法外查询 update by wgx 2019/02/15
+            List<BorrowRecover> borrowRecoverList = this.getBorrowRecover(borrow.getBorrowNid());
+            // 用户实际还款额
+            for (int i = 0; i < borrowRepayPlans.size(); i++) {
+                RepayDetailBean repayPlanDetail = new RepayDetailBean();
+                BorrowRepayPlan borrowRepayPlan = borrowRepayPlans.get(i);
+                int repayPeriod = borrowRepayPlan.getRepayPeriod();
+                int repayStatus = borrowRepayPlan.getRepayStatus();
+                if (repayPeriod <= latePeriod && repayStatus != 1) {// 未还款
+                    // 计算还款期的数据
+                    BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                    this.calculateRecoverPlan(repayPlanDetail, borrow, repayPeriod, null, borrowRecoverList);
+                    borrowRepayPlanDeails.add(repayPlanDetail);
+                    //  累加以下值
+                    repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
+                    repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
+                    repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
+                    repay.setRepayInterest(repay.getRepayInterest().add(repayPlanDetail.getRepayInterest()));
+                    repay.setRepayFee(repay.getRepayFee().add(repayPlanDetail.getRepayFee()));
+                    repay.setLateDays(repayPlanDetail.getLateDays());
+                    repay.setLateInterest(repay.getLateInterest().add(repayPlanDetail.getLateInterest()));
+                    repayAccountAll = repayPlanDetail.getRepayAccountAll();
+                } else {
+                    BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
+                    this.calculateRecoverPlan(repayPlanDetail, borrow);
+                    borrowRepayPlanDeails.add(repayPlanDetail);
+                }
+            }
+            repay.setRepayPlanList(borrowRepayPlanDeails);
+        }
+        return repayAccountAll;
+    }
+
+    /**
+     * 分期还款 计算各期数据(逾期使用)
+     *
+     * @param form
+     * @param isAllRepay
+     * @param userId
+     * @param borrow
+     * @param repayByTerm
+     * @throws ParseException
+     */
+    private void setRecoverPlanPartDetail(ProjectBean form, boolean isAllRepay, String userId, Borrow borrow, RepayBean repayByTerm, int latePeriod) throws Exception {
+
+        // 还款总期数
+        int periodTotal = borrow.getBorrowPeriod();
+        // 计算当前还款期数
+        int repayPeriod = periodTotal - repayByTerm.getRepayPeriod() + 1;
+        if(latePeriod >0){
+            repayPeriod = latePeriod;
+        }
+        // 如果用户最后一期不是已还款
+        if (repayPeriod <= periodTotal) {
+            ;
+        } else {// 用户最后一期已还款
+            form.setRepayStatus("1");
+        }
+        int nowPeriod = repayPeriod;
+        List<Integer> lateArray = new ArrayList<>();// 逾期期数列表
+        // 获取统计的用户还款计划列表
+        List<RepayDetailBean> userRepayPlans = repayByTerm.getRepayPlanList();
+        if (userRepayPlans != null && userRepayPlans.size() > 0) {
+            List<ProjectRepayBean> recoverList = new ArrayList<ProjectRepayBean>();
+            // 遍历计划还款信息，拼接数据
+            for (int i = 0; i < userRepayPlans.size(); i++) {
+                // 获取用户的还款信息
+                RepayDetailBean userRepayPlan = userRepayPlans.get(i);
+                // 声明需拼接数据的实体
+                ProjectRepayBean userRepayBean = new ProjectRepayBean();
+                // 如果本期已经还款完成
+                if (userRepayPlan.getRepayStatus() == 1) {
+                    // 获取本期的用户已还款总额
+                    userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountYes().add(userRepayPlan.getRepayFee()).toString());
+                } else {// 用户未还款本息
+                    if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
+                        lateArray.add(userRepayPlan.getRepayPeriod());
+                    } else if (latePeriod >= userRepayPlan.getRepayPeriod()) {// 未还款且未逾期不处理
+                        logger.error("【还款明细】传入的的逾期期数有误！第{}期未逾期，传入逾期期数：{}", userRepayPlan.getRepayPeriod(), latePeriod);
+                        throw new Exception("传入的的逾期期数有误！");
+                    }
+                    // 此处分期计算的是本息+管理费
+                    userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountAll().toString());
+                }
+                userRepayBean.setRepayAccount(userRepayPlan.getRepayAccount().add(userRepayPlan.getChargeInterest()).add(userRepayPlan.getLateInterest())
+                        .toString());// 设置本期的用户本息和
+                userRepayBean.setRepayCapital(userRepayPlan.getRepayCapital().toString());// 用户未还款本息
+                userRepayBean.setRepayInterest(userRepayPlan.getRepayInterest().toString()); // 设置本期的用户利息
+                userRepayBean.setUserId(userRepayPlan.getUserId().toString());
+                userRepayBean.setRepayPeriod(userRepayPlan.getRepayPeriod().toString());
+                userRepayBean.setAdvanceStatus(userRepayPlan.getAdvanceStatus().toString());
+                userRepayBean.setStatus(userRepayPlan.getRepayStatus().toString());
+                userRepayBean.setRepayTime(GetDate.getDateMyTimeInMillis(userRepayPlan.getRepayTime()));
+                userRepayBean.setChargeDays(userRepayPlan.getChargeDays().toString());
+                userRepayBean.setChargeOriginalInterest(userRepayPlan.getChargePenaltyInterest().subtract(userRepayPlan.getChargeInterest()).toString());
+                userRepayBean.setChargePenaltyInterest(userRepayPlan.getChargePenaltyInterest().toString());
+                userRepayBean.setManageFee(userRepayPlan.getRepayFee().toString());
+                userRepayBean.setLateDays(userRepayPlan.getLateDays().toString());
+                userRepayBean.setLateInterest(userRepayPlan.getLateInterest().toString());
+                List<RepayRecoverPlanBean> userRecoversDetails = userRepayPlan.getRecoverPlanList();
+                List<ProjectRepayDetailBean> userRepayDetails = new ArrayList<ProjectRepayDetailBean>();
+                for (int j = 0; j < userRecoversDetails.size(); j++) {
+                    RepayRecoverPlanBean userRecoverPlan = userRecoversDetails.get(j);
+                    BigDecimal recoverAccount = userRecoverPlan.getRecoverAccountOld();
+                    // 如果发生债转
+                    int hjhFlag = 0;//是否计划债转
+                    List<RepayCreditRepayBean> creditRepays = userRecoverPlan.getCreditRepayList();
+                    if (creditRepays != null && creditRepays.size() > 0) {
+                        // 循环遍历添加记录
+                        for (int k = 0; k < creditRepays.size(); k++) {
+                            RepayCreditRepayBean creditRepay = creditRepays.get(k);
+                            ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                            userRepayDetail.setRepayAccount(creditRepay.getAssignAccount().toString());
+                            userRepayDetail.setRepayCapital(creditRepay.getAssignCapital().toString());
+                            userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
+                            userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
+                            // 提前还款利息拆分 add by wgx 2019/03/22
+                            userRepayDetail.setChargeOriginalInterest(creditRepay.getChargePenaltyInterest().subtract(creditRepay.getChargeInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest().toString());
+                            userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
+                            userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
+                            userRepayDetail.setLateInterest(creditRepay.getLateInterest().toString());
+                            userRepayDetail.setAdvanceStatus(userRecoverPlan.getAdvanceStatus().toString());
+                            userRepayDetail.setRepayTime(GetDate.getDateMyTimeInMillis(userRecoverPlan.getRecoverTime()));
+                            BigDecimal total = BigDecimal.ZERO;
+                            if (creditRepay.getStatus() == 1) {
+                                total = creditRepay.getAssignRepayAccount().add(creditRepay.getManageFee());
+                            } else {
+                                total = creditRepay.getAssignTotal();
+                            }
+                            userRepayDetail.setRepayTotal(total.toString());
+                            userRepayDetail.setStatus(creditRepay.getStatus().toString());
+                            userRepayDetail.setUserId(creditRepay.getUserId().toString());
+                            // userName直接取表中数据 update by wgx 2019/02/15
+                            String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
+                            userRepayDetail.setUserName(userNameStr);
+                            userRepayDetails.add(userRepayDetail);
+                        }
+                    }
+                    //计划债转列表
+                    List<HjhDebtCreditRepayBean> hjhCreditRepayList = userRecoverPlan.getHjhCreditRepayList();
+                    BigDecimal sumAccount = BigDecimal.ZERO;
+                    if (hjhCreditRepayList != null && hjhCreditRepayList.size() > 0) {
+                        hjhFlag = 1;
+                        for (int k = 0; k < hjhCreditRepayList.size(); k++) {
+                            HjhDebtCreditRepayBean creditRepay = hjhCreditRepayList.get(k);
+                            ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                            sumAccount = sumAccount.add(creditRepay.getRepayAccount());
+                            userRepayDetail.setRepayAccount(creditRepay.getRepayAccount().toString());
+                            userRepayDetail.setRepayCapital(creditRepay.getRepayCapital().toString());
+                            userRepayDetail.setRepayInterest(creditRepay.getRepayInterest().toString());
+                            userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
+                            // 提前还款利息拆分 add by wgx 2019/03/22
+                            userRepayDetail.setChargeOriginalInterest(creditRepay.getRepayAdvancePenaltyInterest().subtract(creditRepay.getRepayAdvanceInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(creditRepay.getRepayAdvancePenaltyInterest().toString());
+                            userRepayDetail.setManageFee(creditRepay.getManageFee().toString());
+                            userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
+                            userRepayDetail.setLateInterest(creditRepay.getRepayLateInterest().toString());
+                            userRepayDetail.setAdvanceStatus(userRecoverPlan.getAdvanceStatus().toString());
+                            userRepayDetail.setRepayTime(GetDate.getDateMyTimeInMillis(userRecoverPlan.getRecoverTime()));
+                            BigDecimal total = new BigDecimal("0");
+                            if (creditRepay.getRepayStatus() == 1) {
+                                total = creditRepay.getReceiveAccountYes().add(creditRepay.getManageFee());
+                            } else {
+                                total = creditRepay.getAssignTotal();
+                            }
+                            userRepayDetail.setRepayTotal(total.toString());
+                            userRepayDetail.setStatus(creditRepay.getRepayStatus().toString());
+                            userRepayDetail.setUserId(creditRepay.getUserId().toString());
+                            // userName直接取表中数据 update by wgx 2019/02/15
+                            String userNameStr = creditRepay.getUserName().substring(0, 1).concat("**");
+                            userRepayDetail.setUserName(userNameStr);
+                            userRepayDetails.add(userRepayDetail);
+                        }
+                    }
+                    boolean overFlag = isOverUndertake(userRecoverPlan, recoverAccount, sumAccount, true, hjhFlag);
+                    Integer recoverStatus = userRecoverPlan.getRecoverStatus();
+                    if (hjhFlag == 0) {
+                        if (userRecoverPlan.getCreditStatus() == 2) {
+                            overFlag = false;
+                        }
+                    }
+                    if (overFlag) {
+                        ProjectRepayDetailBean userRepayDetail = new ProjectRepayDetailBean();
+                        userRepayDetail.setRepayAccount(userRecoverPlan.getRecoverAccount().toString());
+                        userRepayDetail.setRepayCapital(userRecoverPlan.getRecoverCapital().toString());
+                        userRepayDetail.setRepayInterest(userRecoverPlan.getRecoverInterest().toString());
+                        userRepayDetail.setChargeDays(userRecoverPlan.getChargeDays().toString());
+                        if (recoverStatus == 1) {//已还款
+                            //userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterestOld().multiply(new BigDecimal("-1")).toString());
+                            userRepayDetail.setChargeOriginalInterest(userRecoverPlan.getChargePenaltyInterestOld().subtract(userRecoverPlan.getChargeInterestOld()).toString());
+                            userRepayDetail.setChargePenaltyInterest(userRecoverPlan.getChargePenaltyInterestOld().toString());
+                        } else {
+                            //userRepayDetail.setChargeInterest(userRecoverPlan.getChargeInterest().multiply(new BigDecimal("-1")).toString());
+                            userRepayDetail.setChargeOriginalInterest(userRecoverPlan.getChargePenaltyInterest().subtract(userRecoverPlan.getChargeInterest()).toString());
+                            userRepayDetail.setChargePenaltyInterest(userRecoverPlan.getChargePenaltyInterest().toString());
+                        }
+                        userRepayDetail.setManageFee(userRecoverPlan.getRecoverFee().toString());
+                        userRepayDetail.setLateDays(userRecoverPlan.getLateDays().toString());
+                        if (recoverStatus == 1) {
+                            userRepayDetail.setLateInterest(userRecoverPlan.getLateInterestOld().toString());
+                        } else {
+                            userRepayDetail.setLateInterest(userRecoverPlan.getLateInterest().toString());
+                        }
+                        userRepayDetail.setAdvanceStatus(userRecoverPlan.getAdvanceStatus().toString());
+                        userRepayDetail.setRepayTime(GetDate.getDateMyTimeInMillis(userRecoverPlan.getRecoverTime()));
+                        BigDecimal total = new BigDecimal("0");
+                        if (recoverStatus == 1) {
+                            total = userRecoverPlan.getRecoverAccountYesOld().subtract(sumAccount).add(userRecoverPlan.getRecoverFee());
+                        } else {
+                            // recover中account未更新
+                            total = userRecoverPlan.getRecoverTotal();
+                        }
+                        userRepayDetail.setRepayTotal(total.toString());
+                        userRepayDetail.setStatus(recoverStatus.toString());
+                        userRepayDetail.setUserId(userRecoverPlan.getUserId().toString());
+                        // userName直接取表中数据 update by wgx 2019/02/15
+                        String userNameStr = userRecoverPlan.getUserName().substring(0, 1).concat("**");
+                        userRepayDetail.setUserName(userNameStr);
+                        userRepayDetails.add(userRepayDetail);
+                    }
+                }
+                userRepayBean.setUserRepayDetailList(userRepayDetails);
+                recoverList.add(userRepayBean);
+            }
+            form.setUserRepayList(recoverList);
+            form.setUserRepayList(recoverList);
+            form.setManageFee(repayByTerm.getRepayFee().toString());
+            form.setRepayTotal(repayByTerm.getRepayAccountAll().toString());// 此处计算的是还款总额包含管理费
+            form.setRepayAccount(repayByTerm.getRepayAccount().add(repayByTerm.getChargeInterest()).add(repayByTerm.getLateInterest())
+                    .toString());
+            form.setRepayCapital(repayByTerm.getRepayCapital().toString());
+            form.setRepayInterest(repayByTerm.getRepayInterest().add(repayByTerm.getChargeInterest()).add(repayByTerm.getLateInterest()).toString());
+            form.setShouldInterest(repayByTerm.getRepayInterest().toString());
+            form.setLateStatus("1");
+            form.setAdvanceStatus(repayByTerm.getAdvanceStatus().toString());
+            form.setChargeDays(repayByTerm.getChargeDays().toString());
+            form.setChargeOriginalInterest(repayByTerm.getChargePenaltyInterest().subtract(repayByTerm.getChargeInterest()).toString());
+            form.setChargePenaltyInterest(repayByTerm.getChargePenaltyInterest().toString());
+            form.setLateDays(repayByTerm.getLateDays().toString());
+            form.setLateInterest(repayByTerm.getLateInterest().toString());
+        }
+        if (latePeriod == periodTotal) {
+            form.setOnlyAllRepay("2");// 全部逾期
+        }
+        form.setLatePeriod(latePeriod);// 提交的逾期期数
+        form.setRepayPeriod(String.valueOf(nowPeriod));// 设置当期的还款期数
+        form.setLateArray(lateArray);// 设置未还款逾期列表
     }
 }

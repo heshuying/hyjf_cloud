@@ -24,13 +24,10 @@ import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,8 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 还款管理
@@ -242,8 +238,10 @@ public class RepayManageController extends BaseController {
         projectBean.setRoleId(requestBean.getRoleId());
         projectBean.setBorrowNid(requestBean.getBorrowNid());
         responseBean.setResultStr(JSON.toJSONString(projectBean));
+        boolean isAllRepay = requestBean.getAllRepay() == null ? false : requestBean.getAllRepay();
+        int latePeriod = requestBean.getLatePeriod() == null ? 0 : requestBean.getLatePeriod();
         try {
-            projectBean = repayManageService.searchRepayProjectDetail(projectBean, requestBean.getAllRepay());
+            projectBean = repayManageService.searchRepayProjectDetail(projectBean, isAllRepay, latePeriod);
             responseBean.setResultStr(JSON.toJSONString(projectBean));
             return responseBean;
         } catch (Exception e) {
@@ -270,8 +268,7 @@ public class RepayManageController extends BaseController {
         try {
             RepayBean repayBean = JSON.parseObject(requestBean.getRepayBeanData(), RepayBean.class);
             BankCallBean bankCallBean = JSON.parseObject(requestBean.getBankCallBeanData(), BankCallBean.class);
-
-            boolean result = repayManageService.updateRepayMoney(repayBean, bankCallBean, requestBean.isAllRepay());
+            boolean result = repayManageService.updateRepayMoney(repayBean, bankCallBean, requestBean.isAllRepay(), requestBean.getLatePeriod());
             return new BooleanResponse(result);
         } catch (Exception e) {
             logger.error("还款申请更新数据库失败", e);
@@ -336,11 +333,12 @@ public class RepayManageController extends BaseController {
         String roleId = paraMap.get("roleId");
         String borrowNid = paraMap.get("borrowNid");
         String userId = paraMap.get("userId");
-        boolean isAllRepay = Boolean.valueOf(paraMap.get("isAllRepay"));
+        boolean isAllRepay = paraMap.get("isAllRepay") == null ? false : Boolean.valueOf(paraMap.get("isAllRepay"));
+        int latePeriod = paraMap.get("latePeriod") == null ? 0 : Integer.valueOf(paraMap.get("latePeriod"));
         logger.info("获取计算完的还款Bean开始：{}", paraMap);
         try {
             Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
-            Account account = repayManageService.getAccount(Integer.parseInt(userId));
+            //Account account = repayManageService.getAccount(Integer.parseInt(userId));
             // 担保机构
             if(roleId.equals("3")){
                 // 一次性还款
@@ -349,9 +347,12 @@ public class RepayManageController extends BaseController {
                     repayByTerm.setRepayUserId(Integer.parseInt(userId));// 垫付机构id
                 } // 分期还款
                 else {
-                    if(isAllRepay) {
+                    if(isAllRepay || latePeriod == -1) {
                         repayByTerm = this.repayManageService.searchRepayPlanTotal(borrow.getUserId(), borrow);
-                    }else {
+                    } else if (latePeriod > 0) {
+                        // 逾期部分还款
+                        repayByTerm = this.repayManageService.searchRepayPlanPart(borrow.getUserId(), borrow, latePeriod);
+                    } else {
                         repayByTerm = this.repayManageService.searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                     }
                     repayByTerm.setRepayUserId(Integer.parseInt(userId));// 垫付机构id
@@ -360,11 +361,14 @@ public class RepayManageController extends BaseController {
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
                     // 一次性还款
                     repayByTerm = this.repayManageService.searchRepayTotalV2(Integer.parseInt(userId), borrow);
-                }else {
+                } else {
                     // 分期还款
-                    if(isAllRepay) {
+                    if(isAllRepay || latePeriod == -1) {
                         repayByTerm = this.repayManageService.searchRepayPlanTotal(Integer.parseInt(userId), borrow);
-                    }else {
+                    } else if (latePeriod > 0) {
+                        // 逾期部分还款
+                        repayByTerm = this.repayManageService.searchRepayPlanPart(Integer.parseInt(userId), borrow, latePeriod);
+                    } else {
                         repayByTerm = this.repayManageService.searchRepayByTermTotalV2(Integer.parseInt(userId), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                     }
                 }
@@ -415,19 +419,24 @@ public class RepayManageController extends BaseController {
         int allRepaySize = orgRepayList.size();//所有还款标的数目
         BigDecimal repayTotal = BigDecimal.ZERO;
         logger.info("【批量还款垫付】冻结订单号：{}，开始计算总垫付金额。总还款笔数：{}，垫付机构用户名：{}",orderId, allRepaySize, userName);
+        boolean hasNoMoney = false;// 是否有可用金额不足的情况
+        Set<MsgEnum> errorResultSet = new HashSet<>();
         for (RepayListCustomizeVO repayInfo:orgRepayList) {
+            if (hasNoMoney) {
+                break;
+            }
             String borrowNid = repayInfo.getBorrowNid();
             try {
                 Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
                 RepayBean repayBean = null;
-//                boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 600);
-//                if (!tranactionSetFlag) {//设置失败
-//                    logger.error("【批量还款垫付】借款编号：{}，正在处理项目债转！", borrowNid);
-//                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
-//                    String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
-//                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
-//                }
-                // 计算垫付机构还款
+                /*boolean tranactionSetFlag = RedisUtils.tranactionSet(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid(), 600);
+                if (!tranactionSetFlag) {//设置失败
+                    logger.error("【批量还款垫付】借款编号：{}，正在处理项目债转！", borrowNid);
+                    long retTime = RedisUtils.ttl(RedisConstants.HJH_DEBT_SWAPING + borrow.getBorrowNid());
+                    String dateStr = com.hyjf.common.util.calculate.DateUtils.nowDateAddSecond((int) retTime);
+                    throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
+                }*/
+                // 计算垫付机构还款 批次还款不考虑多期还款情况
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle())) {
                     repayBean = repayManageService.searchRepayTotalV2(borrow.getUserId(), borrow);
                 } else {// 分期还款
@@ -435,7 +444,14 @@ public class RepayManageController extends BaseController {
                     repayBean = repayManageService.searchRepayByTermTotalV2(borrow.getUserId(), borrow, borrow.getBorrowApr(), borrow.getBorrowStyle(), borrow.getBorrowPeriod());
                 }
                 repayBean.setRepayUserId(Integer.parseInt(userId));
-                checkForRepayRequestOrg(borrowNid, userId, userName, repayBean);
+                MsgEnum errorResult = checkForRepayRequestOrg(borrowNid, userId, userName, repayBean, repayTotal);
+                if (errorResult != null) {
+                    errorResultSet.add(errorResult);
+                    if(MsgEnum.ERR_AMT_NO_MONEY.equals(errorResult)){
+                        hasNoMoney = true;
+                    }
+                    throw new CheckException(errorResult);
+                }
                 //还款去重
                 boolean result = repayManageService.checkRepayInfo(null, borrowNid);
                 if (!result) {
@@ -443,7 +459,7 @@ public class RepayManageController extends BaseController {
                     continue;
                 }
                 //插入垫付机构冻结信息日志表 add by wgx 2018-09-11
-                repayManageService.insertRepayOrgFreezeLog(Integer.parseInt(userId), orderId, account, borrowNid, repayBean, userName, false);
+                repayManageService.insertRepayOrgFreezeLog(Integer.parseInt(userId), orderId, account, borrowNid, repayBean, userName, false, 0);// 批量垫付不会出现同一标的多期逾期还款出现
                 BigDecimal total = repayBean.getRepayAccountAll();
                 repayTotal = repayTotal.add(total);
             } catch (Exception e) {
@@ -451,6 +467,14 @@ public class RepayManageController extends BaseController {
             }
         }
         logger.info("【批量还款垫付】冻结订单号：{}，总垫付金额：{}",orderId, repayTotal);
+        if (BigDecimal.ZERO.compareTo(repayTotal) == 0 && hasNoMoney) {
+            responseBean.setRtn(Response.FAIL);
+            if (hasNoMoney) {
+                responseBean.setResult(MsgEnum.ERR_AMT_NO_MONEY);
+            } else if (errorResultSet.iterator().hasNext()) {// 不是余额不足,随便选一个异常抛出
+                responseBean.setResult(errorResultSet.iterator().next());
+            }
+        }
         responseBean.setResultDec(repayTotal);
         return responseBean;
     }
@@ -458,31 +482,34 @@ public class RepayManageController extends BaseController {
     /**
      * 垫付机构校验
      */
-    private void checkForRepayRequestOrg(String borrowNid, String userId, String userName, RepayBean repayBean) {
+    private MsgEnum checkForRepayRequestOrg(String borrowNid, String userId, String userName, RepayBean repayBean, BigDecimal repayTotal) {
         if (StringUtils.isBlank(borrowNid) || StringUtils.isBlank(userId)) {
             logger.error("【批量还款校验】还款请求参数不全！", borrowNid);
-            throw new CheckException(MsgEnum.ERR_PARAM_NUM);
+            return MsgEnum.ERR_PARAM_NUM;
         }
         // 平台密码校验、服务费授权校验、开户校验在处理批次还款前进行校验
         Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
         if (borrow == null) {
             logger.error("【批量还款校验】借款编号：{}，标的信息不存在！", borrowNid);
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
+            return MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST;
         }
         boolean hasFailCredit = repayManageService.getFailCredit(borrowNid);
         if(hasFailCredit){//还款提交失败，请联系汇盈金服业务部门核实处理。
             logger.error("【批量还款校验】借款编号：{}，有承接失败的债权！", borrowNid);
-            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT);
+            return MsgEnum.ERR_AMT_REPAY_FAIL_CREDIT;
         }
         Account account = repayManageService.getAccount(Integer.parseInt(userId));
-        if (repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == 0 || repayBean.getRepayAccountAll().compareTo(account.getBankBalance()) == -1) {
+        BigDecimal repayAccountAll = repayBean.getRepayAccountAll();
+        BigDecimal bankBalance = account.getBankBalance();
+        if (repayTotal.add(repayAccountAll).compareTo(bankBalance) <= 0) {
             // 垫付机构符合还款条件，可以还款
             // 垫付机构批量还款 ，不验证银行账户余额
         } else {
             // 用户平台账户余额不足
             logger.error("【批量还款校验】平台账户余额不足！担保机构用户名：{}", userName);
-            throw new CheckException(MsgEnum.ERR_AMT_NO_MONEY);
+            return MsgEnum.ERR_AMT_NO_MONEY;
         }
+        return null;
     }
 
     /**

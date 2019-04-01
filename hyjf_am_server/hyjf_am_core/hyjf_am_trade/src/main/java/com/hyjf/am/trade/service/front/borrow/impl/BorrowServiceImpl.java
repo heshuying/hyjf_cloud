@@ -1634,6 +1634,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
         BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款利息
+        BigDecimal repayChargePenaltyInterest = BigDecimal.ZERO;// 提前还款罚息
 
         if (borrowRecoverList == null || borrowRecoverList.size() <= 0) {
             _log.error(borrow.getBorrowNid()+" 没有recover 数据");
@@ -1653,8 +1654,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
-            BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
+            BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户还款管理费
             BigDecimal userChargeInterest = BigDecimal.ZERO;// 计算用户提前还款利息
+            BigDecimal userChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
             //计算债权总的违约金
 
             for (int j = 0; j < borrowRecoverPlans.size(); j++) {
@@ -1674,6 +1676,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     // 给页面展示，就不计算了
                     repayRecoverPlanBean.setRecoverAccountOld(userAccount);
                     repayRecoverPlanBean.setChargeInterestOld(borrowRecoverPlan.getChargeInterest());
+                    repayRecoverPlanBean.setChargePenaltyInterestOld(borrowRecoverPlan.getChargePenaltyInterest());
                     repayRecoverPlanBean.setDelayInterestOld(borrowRecoverPlan.getDelayInterest());
                     repayRecoverPlanBean.setLateInterestOld(borrowRecoverPlan.getLateInterest());
                     repayRecoverPlanBean.setRecoverAccountYesOld(borrowRecoverPlan.getRecoverAccountYes());
@@ -1711,6 +1714,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                                 BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                                 BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
+                                BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                                 for (int k = 0; k < creditRepayList.size(); k++) {
                                     CreditRepay creditRepay = creditRepayList.get(k);
                                     RepayCreditRepayBean creditRepayBean = new RepayCreditRepayBean();
@@ -1766,6 +1770,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
+                                    creditRepayBean.setChargePenaltyInterest(acctualAsignInterest);
                                     creditRepayBean.setChargeDays(3);// 默认是3天
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
@@ -1775,6 +1780,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     userInterest = userInterest.subtract(assignInterest);
                                     userManageFee = userManageFee.subtract(assignManageFee);
                                     userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
+                                    userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款罚息
                                     // 统计总额
                                     repayTotal = repayTotal.add(assignAccount).add(assignManageFee).subtract(assignChargeInterest);// 统计总和本息+管理费
                                     repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -1782,6 +1788,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     repayInterest = repayInterest.add(assignInterest);
                                     repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                     repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                                 }
                                 repayRecoverPlanBean.setCreditRepayList(creditRepayBeanList);
                             }
@@ -1801,8 +1808,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                 repayCapital = repayCapital.add(userCapital);
                                 repayInterest = repayInterest.add(userInterest);
-                                repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
+                                repayManageFee = repayManageFee.add(userManageFee);// 统计管理费
                                 repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualUserInterest);
                             }
                         }else{//计划还款
                             boolean overFlag = false;
@@ -1815,6 +1823,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                                 BigDecimal sumCreditAccount = BigDecimal.ZERO;//总承接金额
                                 BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
+                                BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
                                 int hjhFlag = 0;
                                 for (HjhDebtCreditRepay hjhDebtCreditRepayBean : creditRepayList) {
                                     hjhFlag++;
@@ -1875,6 +1884,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setRepayAdvanceInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
+                                    creditRepayBean.setRepayAdvancePenaltyInterest(acctualAsignInterest);
                                     creditRepayBean.setAdvanceDays(3);
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
@@ -1884,6 +1894,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     userInterest = userInterest.subtract(assignInterest);
                                     userManageFee = userManageFee.subtract(assignManageFee);
                                     userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
+                                    userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款罚息
                                     // 统计总额
                                     repayTotal = repayTotal.add(assignAccount).subtract(assignChargeInterest).add(assignManageFee);// 统计总和本息+管理费
                                     repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -1891,6 +1902,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     repayInterest = repayInterest.add(assignInterest);
                                     repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                     repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                                 }
                                 repayRecoverPlanBean.setHjhCreditRepayList(creditRepayBeanList);
                             }
@@ -1910,8 +1922,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 repayAccount = repayAccount.add(userAccount);// 统计总和本息
                                 repayCapital = repayCapital.add(userCapital);
                                 repayInterest = repayInterest.add(userInterest);
-                                repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
+                                repayManageFee = repayManageFee.add(userManageFee);// 统计管理费
                                 repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualUserInterest);
                             }
                         }
 
@@ -1923,6 +1936,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                         repayInterest = repayInterest.add(userInterest);
                         repayManageFee = repayManageFee.add(userManageFee);// 管理费
                         repayChargeInterest = repayChargeInterest.add(userChargeInterest);
+                        repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);
                     }
                     BeanUtils.copyProperties(borrowRecoverPlan, repayRecoverPlanBean);
                     repayRecoverPlanBean.setRecoverTotal(userAccount.subtract(userChargeInterest).add(userManageFee));
@@ -1932,6 +1946,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     repayRecoverPlanBean.setRecoverFee(userManageFee);
                     repayRecoverPlanBean.setChargeDays(3);
                     repayRecoverPlanBean.setChargeInterest(userChargeInterest.multiply(new BigDecimal(-1)));
+                    repayRecoverPlanBean.setChargePenaltyInterest(userChargePenaltyInterest);
                     repayRecoverPlanBean.setAdvanceStatus(1);
                     repayRecoverPlanList.add(repayRecoverPlanBean);
                 }
@@ -1947,6 +1962,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowRepayPlan.setAdvanceStatus(1);
         borrowRepayPlan.setChargeDays(3);
         borrowRepayPlan.setChargeInterest(repayChargeInterest.multiply(new BigDecimal(-1)));
+        borrowRepayPlan.setChargePenaltyInterest(repayChargePenaltyInterest);
     }
 
     /**
@@ -4348,6 +4364,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         BigDecimal repayCapital = BigDecimal.ZERO; // 用户实际还款本金
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayChargeInterest = BigDecimal.ZERO;// 提前还款利息
+        BigDecimal repayChargePenaltyInterest = BigDecimal.ZERO;// 提前还款罚息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
 //        int time = GetDate.getNowTime10(); // 现在时间
         String factRepayTime = GetDate.getDayStart(new Date());
@@ -4370,6 +4387,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userInterest = BigDecimal.ZERO; // 用户实际还款本本金
             BigDecimal userChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
+            BigDecimal userChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
             BigDecimal userManageFee = BigDecimal.ZERO;// 获取应还款管理费
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
@@ -4407,7 +4425,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     }else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
-
+                    userChargePenaltyInterest = acctualInterest;
                 }
 
 //                if(i == borrowRecovers.size() - 1){
@@ -4431,7 +4449,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                             BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本金
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
-                            BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
+                            BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
+                            BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户还款管理费
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 CreditRepay creditRepay = creditRepayList.get(j);
                                 RepayCreditRepayBean creditRepayBean = new RepayCreditRepayBean();
@@ -4474,6 +4493,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     }else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
+                                    assignChargePenaltyInterest = acctualInterest;
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -4481,6 +4501,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 creditRepayBean.setManageFee(assignManageFee);
                                 creditRepayBean.setAdvanceStatus(1);
                                 creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
+                                creditRepayBean.setChargePenaltyInterest(assignChargePenaltyInterest);
                                 creditRepayBean.setChargeDays(interestDay);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
@@ -4489,6 +4510,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 userInterest = userInterest.subtract(assignInterest);
                                 userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
                                 userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
+                                userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款罚息
                                 // 统计总额
                                 repayTotal = repayTotal.add(assignAccount).subtract(assignChargeInterest).add(assignManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -4496,6 +4518,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 repayInterest = repayInterest.add(assignInterest);
                                 repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
                                 repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                             }
                             repayRecoverBean.setCreditRepayList(creditRepayBeanList);
                         }
@@ -4511,6 +4534,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
+                                userChargePenaltyInterest = acctualInterest;
                             }
                             // 统计总额
                             repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userManageFee);// 统计总和本息+管理费
@@ -4519,6 +4543,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                             repayInterest = repayInterest.add(userInterest);
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                             repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
+                            repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
                         }
                     }else{
                         // 计划类还款
@@ -4531,7 +4556,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                             BigDecimal assignCapital = BigDecimal.ZERO; // 用户实际还款本金
                             BigDecimal assignInterest = BigDecimal.ZERO; // 用户实际还款利息
                             BigDecimal assignChargeInterest = BigDecimal.ZERO;// 计算用户提前还款减少的的利息
-                            BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户還款管理費
+                            BigDecimal assignChargePenaltyInterest = BigDecimal.ZERO;// 计算用户提前还款罚息
+                            BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户还款管理费
                             //判断当前期是否全部承接
                             overFlag = isOverUndertake(borrowRecover,null,null,false,0);
                             for (int j = 0; j < creditRepayList.size(); j++) {
@@ -4570,7 +4596,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     }else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
-
+                                    assignChargePenaltyInterest = acctualInterest;
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -4578,6 +4604,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 creditRepayBean.setManageFee(assignManageFee);
                                 creditRepayBean.setAdvanceStatus(1);
                                 creditRepayBean.setRepayAdvanceInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
+                                creditRepayBean.setRepayAdvancePenaltyInterest(assignChargePenaltyInterest);
                                 creditRepayBean.setAdvanceDays(interestDay);
                                 creditRepayBeanList.add(creditRepayBean);
                                 // 统计出让人还款金额
@@ -4586,6 +4613,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 userInterest = userInterest.subtract(assignInterest);
                                 userManageFee = userManageFee.subtract(assignManageFee);// 获取应还款管理费
                                 userChargeInterest = userChargeInterest.subtract(assignChargeInterest);// 提前还款利息
+                                userChargePenaltyInterest = userChargePenaltyInterest.subtract(assignChargePenaltyInterest);// 提前还款罚息
                                 // 统计总额
                                 repayTotal = repayTotal.add(assignAccount).subtract(assignChargeInterest).add(assignManageFee);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(assignAccount);// 统计总和本息
@@ -4593,6 +4621,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                 repayInterest = repayInterest.add(assignInterest);
                                 repayManageFee = repayManageFee.add(assignManageFee);// 統計管理費
                                 repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                repayChargePenaltyInterest = repayChargePenaltyInterest.add(assignChargePenaltyInterest);// 统计提前还款罚息
                             }
                             repayRecoverBean.setHjhCreditRepayList(creditRepayBeanList);
                         }
@@ -4616,6 +4645,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                             repayInterest = repayInterest.add(userInterest);
                             repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                             repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
+                            repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
                         }
                     }
                 } else {
@@ -4626,6 +4656,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     repayInterest = repayInterest.add(userInterest);
                     repayManageFee = repayManageFee.add(userManageFee);// 統計管理費
                     repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
+                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
                 }
                 BeanUtils.copyProperties(borrowRecover, repayRecoverBean);
                 repayRecoverBean.setRecoverTotal(userAccount.subtract(userChargeInterest).add(userManageFee));
@@ -4634,6 +4665,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 repayRecoverBean.setRecoverInterest(userInterest);
                 repayRecoverBean.setRecoverFee(userManageFee);
                 repayRecoverBean.setChargeInterest(userChargeInterest.multiply(new BigDecimal(-1)));
+                repayRecoverBean.setChargePenaltyInterest(userChargePenaltyInterest);
                 repayRecoverBean.setAdvanceStatus(1);
                 repayRecoverBean.setChargeDays(interestDay);
                 repayRecoverList.add(repayRecoverBean);
@@ -4647,6 +4679,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         repay.setRepayFee(repayManageFee);
         repay.setChargeDays(interestDay);
         repay.setChargeInterest(repayChargeInterest.multiply(new BigDecimal(-1)));
+        repay.setChargePenaltyInterest(repayChargePenaltyInterest);
         repay.setAdvanceStatus(1);
 
     }
