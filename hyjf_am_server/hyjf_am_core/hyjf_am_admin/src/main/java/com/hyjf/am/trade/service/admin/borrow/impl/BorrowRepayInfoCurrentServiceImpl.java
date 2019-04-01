@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.admin.BorrowRepayInfoCurrentRequest;
 import com.hyjf.am.trade.dao.mapper.customize.AdminBorrowRepayInfoCurrentCustomizeMapper;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRepayInfoCurrentService;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO;
+import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentExportCustomizeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,5 +69,39 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
             resultMap = new HashMap<>();
         }
         return resultMap;
+    }
+
+    /**
+     * 获取列表导出数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean){
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", requestBean.getBorrowNid());
+
+        List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentListExport(paraMap);
+        if(resultList == null){
+            resultList = new ArrayList<>();
+        }
+        return resultList;
+    }
+
+    /**
+     * 获取列表导出总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer getRepayInfoCurrentCountExport(BorrowRepayInfoCurrentRequest requestBean){
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", requestBean.getBorrowNid());
+
+        Integer count = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentCountExport(paraMap);
+        if(count == null){
+            count = 0;
+        }
+        return count;
     }
 }

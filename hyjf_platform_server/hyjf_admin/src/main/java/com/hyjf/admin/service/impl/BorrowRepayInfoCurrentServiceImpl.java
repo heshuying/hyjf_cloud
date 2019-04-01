@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.BorrowRepayInfoCurrentService;
+import com.hyjf.am.response.admin.BorrowRepayInfoCurrentExportResponse;
 import com.hyjf.am.response.admin.BorrowRepayInfoCurrentResponse;
 import com.hyjf.am.resquest.admin.BorrowRepayInfoCurrentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,29 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
         BorrowRepayInfoCurrentRequest requestBean = new BorrowRepayInfoCurrentRequest();
         requestBean.setBorrowNid(borrowNid);
         return amAdminClient.getRepayInfoCurrentData(requestBean);
+    }
+
+    /**
+     * 获取当前债权还款明细导出数据
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(String borrowNid) {
+        BorrowRepayInfoCurrentRequest requestBean = new BorrowRepayInfoCurrentRequest();
+        requestBean.setBorrowNid(borrowNid);
+        return amAdminClient.getRepayInfoCurrentExportData(requestBean);
+    }
+
+    /**
+     * 获取当前债权还款明细导出总记录数
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public Integer getRepayInfoCurrentExportCount(String borrowNid) {
+        BorrowRepayInfoCurrentRequest requestBean = new BorrowRepayInfoCurrentRequest();
+        requestBean.setBorrowNid(borrowNid);
+        return amAdminClient.getRepayInfoCurrentExportCount(requestBean);
     }
 }

@@ -2125,4 +2125,28 @@ public class AmAdminClientImpl implements AmAdminClient {
     public BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getData", requestBean, BorrowRepayInfoCurrentResponse.class).getBody();
     }
+
+    /**
+     * 获取当前债权还款明细导出数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getExportData", requestBean, BorrowRepayInfoCurrentExportResponse.class).getBody();
+    }
+
+    /**
+     * 获取当前债权还款明细导出总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer getRepayInfoCurrentExportCount(BorrowRepayInfoCurrentRequest requestBean) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getExportCount", requestBean, IntegerResponse.class).getBody();
+        if(response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }
