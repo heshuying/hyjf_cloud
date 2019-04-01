@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.productcenter.borrow.borrowrepaycurrent;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRepayInfoCurrentService;
 import com.hyjf.am.response.Response;
@@ -28,7 +30,7 @@ import java.util.Map;
 @Api(value = "产品中心-汇直投-当前债权还款明细",tags ="产品中心-汇直投-当前债权还款明细")
 @RestController
 @RequestMapping("/hyjf-admin/borrow/repayinfocurrent")
-public class BorrowRepayInfoCurrentController {
+public class BorrowRepayInfoCurrentController extends BaseController {
     /** 查看权限 */
     public static final String PERMISSIONS = "repayinfocurrent";
 
@@ -42,8 +44,9 @@ public class BorrowRepayInfoCurrentController {
      */
     @ApiOperation(value = "当前债权还款明细页面数据", notes = "当前债权还款明细页面数据")
     @PostMapping(value = "/searchAction")
-//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<Map<String,Object>> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean) {
+        logger.info("当前债权还款明细-start, requestBean:{}", JSON.toJSONString(requestBean));
         AdminResult<Map<String,Object>> response = new AdminResult<>();
         Map<String,Object> dataMap = new HashMap<>();
 
@@ -73,7 +76,7 @@ public class BorrowRepayInfoCurrentController {
         dataMap.put("sumInfo", amResponse.getSumInfo());
         response.setData(dataMap);
         response.setTotalCount(amResponse.getCount());
-
+        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 }

@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowRepayInfoCurrentResponse;
 import com.hyjf.am.resquest.admin.BorrowRepayInfoCurrentRequest;
@@ -37,7 +38,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     @RequestMapping(value = "/getData",method = RequestMethod.POST)
     public BorrowRepayInfoCurrentResponse getData(@RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean){
-        logger.info("当前债权还款明细-start, requestBean:{}", requestBean);
+        logger.info("当前债权还款明细-start, requestBean:{}", JSON.toJSONString(requestBean));
         BorrowRepayInfoCurrentResponse response = new BorrowRepayInfoCurrentResponse();
 
         //请求参数校验
@@ -74,7 +75,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         response.setSumInfo(sumInfo);
         response.setRtn(Response.SUCCESS);
 
-        logger.info("当前债权还款明细-end, respinse:{}" + response);
+        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 
