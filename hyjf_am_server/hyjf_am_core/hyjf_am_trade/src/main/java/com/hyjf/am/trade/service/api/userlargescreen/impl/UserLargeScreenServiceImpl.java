@@ -367,15 +367,15 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         OperMonthPerformanceDataVO listFo =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataFo();
         // 运营部-年化业绩
         OperMonthPerformanceDataVO listSi =  userLargeScreenCustomizeMapper.getOperMonthPerformanceDataSi();
-        // 获得坐席月初站岗资金
-        BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
         // 获得坐席当前站岗资金
         BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
-        if (startMonthBalance == null){
-            startMonthBalance = new BigDecimal("0");
-        }
         if(nowMonthBalance == null){
             nowMonthBalance = new BigDecimal("0");
+        }
+        // 获得坐席月初站岗资金
+        BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
+        if (startMonthBalance == null){
+            startMonthBalance = new BigDecimal("0");
         }
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
