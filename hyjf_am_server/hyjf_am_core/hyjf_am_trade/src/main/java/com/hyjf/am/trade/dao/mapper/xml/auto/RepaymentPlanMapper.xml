@@ -10,6 +10,7 @@
     <result column="customer_group" property="customerGroup" jdbcType="TINYINT" />
     <result column="money" property="money" jdbcType="DECIMAL" />
     <result column="repayment_time" property="repaymentTime" jdbcType="DATE" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_id, borrow_nid, accede_order_id, customer_name, customer_group, money, repayment_time, 
-    create_time, update_time
+    `status`, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.RepaymentPlanExample" >
     select
@@ -114,12 +115,12 @@
     </selectKey>
     insert into ht_repayment_plan (user_id, borrow_nid, accede_order_id, 
       customer_name, customer_group, money, 
-      repayment_time, create_time, update_time
-      )
+      repayment_time, `status`, create_time, 
+      update_time)
     values (#{userId,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, #{accedeOrderId,jdbcType=VARCHAR}, 
       #{customerName,jdbcType=VARCHAR}, #{customerGroup,jdbcType=TINYINT}, #{money,jdbcType=DECIMAL}, 
-      #{repaymentTime,jdbcType=DATE}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{repaymentTime,jdbcType=DATE}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.RepaymentPlan" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -147,6 +148,9 @@
       </if>
       <if test="repaymentTime != null" >
         repayment_time,
+      </if>
+      <if test="status != null" >
+        `status`,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -176,6 +180,9 @@
       </if>
       <if test="repaymentTime != null" >
         #{repaymentTime,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -218,6 +225,9 @@
       <if test="record.repaymentTime != null" >
         repayment_time = #{record.repaymentTime,jdbcType=DATE},
       </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=TINYINT},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -239,6 +249,7 @@
       customer_group = #{record.customerGroup,jdbcType=TINYINT},
       money = #{record.money,jdbcType=DECIMAL},
       repayment_time = #{record.repaymentTime,jdbcType=DATE},
+      `status` = #{record.status,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -269,6 +280,9 @@
       <if test="repaymentTime != null" >
         repayment_time = #{repaymentTime,jdbcType=DATE},
       </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -287,6 +301,7 @@
       customer_group = #{customerGroup,jdbcType=TINYINT},
       money = #{money,jdbcType=DECIMAL},
       repayment_time = #{repaymentTime,jdbcType=DATE},
+      `status` = #{status,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

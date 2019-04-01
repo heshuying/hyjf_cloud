@@ -64,6 +64,13 @@ public class UserOperateList implements Serializable {
     private Integer operating;
 
     /**
+     * 是否有效 1:有效,2:无效
+     *
+     * @mbggenerated
+     */
+    private Integer status;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -149,6 +156,14 @@ public class UserOperateList implements Serializable {
 
     public void setOperating(Integer operating) {
         this.operating = operating;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getCreateTime() {
