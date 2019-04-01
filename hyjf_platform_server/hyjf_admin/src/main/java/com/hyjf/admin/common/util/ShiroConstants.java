@@ -209,7 +209,7 @@ public class ShiroConstants {
 	public static final String PERMISSION_QUERY_INVEST_DEBT_VIEW = "QUERY_INVEST_DEBT";
 
 	/** 用户销户权限 */
-	public static final String PERMISSION_BANK_CANCELLATION_ACCOUNT ="BANK_CANCELLATION_ACCOUNT";
+	public static final String PERMISSION_BANK_CANCELLATION_ACCOUNT ="CANCELLATIONACCOUNT";
 
 
 
