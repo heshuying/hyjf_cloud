@@ -44,6 +44,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         ScreenConfigExample example = new ScreenConfigExample();
         ScreenConfigExample.Criteria criteria = example.createCriteria();
         criteria.andTaskTimeEqualTo(request.getTaskTime());
+        criteria.andStatusEqualTo(1);
         List<ScreenConfig> list = screenConfigMapper.selectByExample(example);
         if(!CollectionUtils.isEmpty(list)){
             BeanUtils.copyProperties(list.get(0),vo);

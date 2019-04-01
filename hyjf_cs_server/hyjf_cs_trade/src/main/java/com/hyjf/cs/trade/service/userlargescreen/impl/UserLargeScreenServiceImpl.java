@@ -57,17 +57,19 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenVO achievementDistributionListVo =  amTradeClient.getAchievementDistributionList();
         UserLargeScreenVO monthReceivedPaymentsVo =  amTradeClient.getMonthReceivedPayments();
         UserLargeScreenVO userCapitalDetailsVo = amTradeClient.getUserCapitalDetails();
-       // UserCustomerTaskConfigResponse userCustomerTaskConfigResponse = amUserClient.getCustomerTaskConfig(request);
         ScreenConfigVO vo = userScreenConfigResponse.getResult();
+        if(vo==null){
+            return  bean;
+        }
         bean.setNewPassengerGoal(vo.getNewPassengerGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
         bean.setOldPassengerGoal(vo.getOldPassengerGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
+        bean.setAchievementDistribution(vo.getOperationalGoal().divide(new BigDecimal(10000),0,BigDecimal.ROUND_HALF_UP));
         bean.setScalePerformanceNew(scalePerformanceVo.getScalePerformanceNew());
         bean.setScalePerformanceOld(scalePerformanceVo.getScalePerformanceOld());
         bean.setMonthScalePerformanceListNew(monthScalePerformanceListVo.getMonthScalePerformanceListNew());
         bean.setMonthScalePerformanceListOld(monthScalePerformanceListVo.getMonthScalePerformanceListOld());
         bean.setTotalAmount(totalAmountVo.getTotalAmount());
-        bean.setAchievementRate(totalAmountVo.getAchievementRate());
-        bean.setAchievementDistribution(totalAmountVo.getAchievementDistribution());
+        bean.setAchievementRate(totalAmountVo.getTotalAmount().divide(bean.getAchievementDistribution(),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
         bean.setAchievementDistributionList(achievementDistributionListVo.getAchievementDistributionList());
         bean.setMonthReceivedPaymentsNew(monthReceivedPaymentsVo.getMonthReceivedPaymentsNew());
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
@@ -75,39 +77,39 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         return bean;
     }
 
+    /**
+     * 运营大屏接口-屏幕二数据获取
+     * @return
+     */
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
         JSONObject param = new JSONObject();
+        int sendFlag = 0;
         if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key)) &&
                 !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+            sendFlag = 1;
             param.put("flag", "all");
             sendMQ(param);
         }
-        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
-            param.put("flag", "start");
-            sendMQ(param);
-        }
-        if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+        if(sendFlag != 1 && !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
             param.put("flag", "now");
             sendMQ(param);
         }
         UserLargeScreenTwoResultBean bean = new UserLargeScreenTwoResultBean();
         // 日业绩(新客组、老客组)
-        UserLargeScreenTwoVO dayScalePerformanceListVo =  amTradeClient.getDayScalePerformanceList();
+        UserLargeScreenTwoVO dayScalePerformanceListVo = amTradeClient.getDayScalePerformanceList();
         bean.setDayScalePerformanceListNew(dayScalePerformanceListVo.getDayScalePerformanceListNew());
         bean.setDayScalePerformanceListOld(dayScalePerformanceListVo.getDayScalePerformanceListOld());
         // 日回款(新客组、老客组)
-        UserLargeScreenTwoVO dayReceivedPaymentsVo =  amTradeClient.getDayReceivedPayments();
+        UserLargeScreenTwoVO dayReceivedPaymentsVo = amTradeClient.getDayReceivedPayments();
         bean.setDayReceivedPaymentsNew(dayReceivedPaymentsVo.getDayReceivedPaymentsNew());
         bean.setDayReceivedPaymentsOld(dayReceivedPaymentsVo.getDayReceivedPaymentsOld());
         // 本月数据统计(新客组、老客组)
-        UserLargeScreenTwoVO monthDataStatisticsVo =  amTradeClient.getMonthDataStatistics();
+        UserLargeScreenTwoVO monthDataStatisticsVo = amTradeClient.getMonthDataStatistics();
         bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
-        // 运营部所有用户id
-        //List<Integer> userIds = amUserClient.getOperUserIds();
         // 运营部月度业绩数据
-        UserLargeScreenTwoVO operMonthPerformanceDataVo =  amTradeClient.getOperMonthPerformanceData();
+        UserLargeScreenTwoVO operMonthPerformanceDataVo = amTradeClient.getOperMonthPerformanceData();
         bean.setOperMonthPerformanceData(operMonthPerformanceDataVo.getOperMonthPerformanceData());
         return bean;
     }
@@ -125,7 +127,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     }
 
     /**
-     * 屏幕二获得用户站岗资金
+     * 屏幕二运营部用户站岗资金获取MQ
      * @param param
      */
     private void sendMQ(JSONObject param){

@@ -29,6 +29,8 @@ public interface UserLargeScreenCustomizeMapper {
 
     List<EchartsResultVO> getDayReceivedPayments();
 
+    List<MonthDataStatisticsVO> getMonthDataStatisticsBO();
+
     List<MonthDataStatisticsVO> getMonthDataStatisticsO();
 
     List<MonthDataStatisticsVO> getMonthDataStatisticsT();

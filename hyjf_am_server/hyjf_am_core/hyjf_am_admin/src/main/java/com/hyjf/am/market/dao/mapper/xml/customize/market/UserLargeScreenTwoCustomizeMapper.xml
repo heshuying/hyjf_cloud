@@ -3,79 +3,114 @@
 <mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.UserLargeScreenTwoCustomizeMapper">
 
 	<select id="getOperMonthStartBalance" parameterType="java.util.Date" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
-		SELECT
-        IFNULL(SUM(res2.monthStartBalance),0) AS monthStartBalance
-        FROM (
-        SELECT
-        IFNULL(SUM(l2.bank_balance),0) AS monthStartBalance
-        FROM (SELECT l.user_id,max(l.id) AS max_id
-        FROM hyjf_user.ht_user_info i
-        inner JOIN hyjf_user.ht_utm_reg r  ON r.user_id = i.user_id
-        inner JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
-        inner JOIN hyjf_trade.ht_account_list l ON  i.user_id = l.user_id
-        WHERE (u1.source_id <![CDATA[<>]]> 349 or  u1.source_id  is  null)
-        and i.attribute=0
-        and l.create_time <![CDATA[<]]> DATE_ADD(curdate(),interval -day(curdate())+2 day)
-        GROUP BY l.user_id
-        ) res1
-        INNER JOIN hyjf_trade.ht_account_list l2 ON res1.max_id = l2.id and res1.user_id=l2.user_id
-        UNION ALL
-        SELECT  IFNULL(SUM(l2.bank_balance),0) AS monthStartBalance
-        FROM (SELECT l.user_id,max(l.id) AS max_id
-        FROM hyjf_user.ht_user_info i
-        inner JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
-        LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
-        LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
-        LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
-        LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
-        LEFT JOIN hyjf_trade.ht_account_list l ON  i.user_id = l.user_id
-        where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
-        and d3.`name`='惠众商务'
-        and (d1.`name`='电销部' or d1.`name`='网络运营部')
-        and i.attribute <![CDATA[<>]]> 0
-        and l.create_time <![CDATA[<]]> DATE_ADD(curdate(),interval -day(curdate())+2 day)
-        GROUP BY l.user_id
-        ) res1
-        INNER JOIN hyjf_trade.ht_account_list l2 ON res1.max_id = l2.id
-        ) AS res2
+            SELECT
+            IFNULL(
+            SUM(r2.monthStartBalance),
+            0
+            ) AS monthStartBalance
+            FROM
+            (
+            SELECT
+            IFNULL(SUM(l2.bank_balance), 0) AS monthStartBalance
+            FROM
+            (
+            SELECT
+            max(l.id) AS max_id
+            FROM
+            hyjf_user.ht_user_info i
+            LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
+            LEFT JOIN hyjf_user.ht_utm u ON u.utm_id = r.utm_id
+            LEFT JOIN hyjf_trade.ht_account_list l ON l.user_id = i.user_id
+            WHERE
+            (
+            u.source_id <![CDATA[<>]]> 349
+            OR u.source_id IS NULL
+            )
+            AND i.attribute = 0
+            AND i.role_id = 1
+            AND l.create_time <![CDATA[<]]> DATE_ADD(
+            curdate(),
+            INTERVAL - DAY (curdate()) + 2 DAY
+            )
+            GROUP BY
+            l.user_id
+            ) r1
+            LEFT JOIN hyjf_trade.ht_account_list l2 ON l2.id = r1.max_id
+            UNION ALL
+            SELECT
+            IFNULL(SUM(l2.bank_balance), 0) AS monthStartBalance
+            FROM
+            (
+            SELECT
+            max(l.id) AS max_id
+            FROM
+            hyjf_user.ht_user_info i
+            LEFT JOIN hyjf_user.ht_spreads_user s ON s.user_id = i.user_id
+            LEFT JOIN hyjf_user.ht_r_oa_users ou ON ou.hyd_id = s.spreads_user_id
+            LEFT JOIN hyjf_user.ht_r_oa_department d1 ON d1.id = ou.departmentid
+            LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+            LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+            LEFT JOIN hyjf_trade.ht_account_list l ON l.user_id = i.user_id
+            WHERE
+            ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+            AND d3.`name` = '惠众商务'
+            AND (
+            d1.`name` = '电销部'
+            OR d1.`name` = '网络运营部'
+            )
+            AND i.attribute <![CDATA[<>]]> 0
+            AND i.role_id = 1
+            AND l.create_time <![CDATA[<]]> DATE_ADD(
+            curdate(),
+            INTERVAL - DAY (curdate()) + 2 DAY
+            )
+            GROUP BY
+            l.user_id
+            ) r1
+            LEFT JOIN hyjf_trade.ht_account_list l2 ON l2.id = r1.max_id
+            ) AS r2
 	</select>
 
-	<select id="getOperMonthNowBalance" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
-        SELECT
-        IFNULL(SUM(res2.monthNowBalance),0) AS monthNowBalance
-        FROM (
-        SELECT
-        IFNULL(SUM(l2.bank_balance),0) AS monthNowBalance
-        FROM (SELECT l.user_id,max(l.id) AS max_id
-        FROM hyjf_user.ht_user_info i
-        inner JOIN hyjf_user.ht_utm_reg r  ON r.user_id = i.user_id
-        inner JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
-        inner JOIN hyjf_trade.ht_account_list l ON  i.user_id = l.user_id
-        WHERE (u1.source_id <![CDATA[<>]]> 349 or  u1.source_id  is  null)
-        and i.attribute=0
-        and l.create_time <![CDATA[<=]]> NOW()
-        GROUP BY l.user_id
-        ) res1
-        INNER JOIN hyjf_trade.ht_account_list l2 ON res1.max_id = l2.id and res1.user_id=l2.user_id
-        UNION ALL
-        SELECT  IFNULL(SUM(l2.bank_balance),0) AS monthNowBalance
-        FROM (SELECT l.user_id,max(l.id) AS max_id
-        FROM hyjf_user.ht_user_info i
-        inner JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
-        LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
-        LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
-        LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
-        LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
-        LEFT JOIN hyjf_trade.ht_account_list l ON  i.user_id = l.user_id
-        where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
-        and d3.`name`='惠众商务'
-        and (d1.`name`='电销部' or d1.`name`='网络运营部')
-        and i.attribute <![CDATA[<>]]> 0
-        and l.create_time <![CDATA[<=]]> NOW()
-        GROUP BY l.user_id
-        ) res1
-        INNER JOIN hyjf_trade.ht_account_list l2 ON res1.max_id = l2.id
-        ) AS res2
-	</select>
+    <select id="getOperMonthNowBalance" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
+            SELECT
+            IFNULL(SUM(r1.monthNowBalance), 0) AS monthNowBalance
+            FROM
+            (
+            SELECT
+            IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
+            FROM
+            hyjf_user.ht_user_info i
+            LEFT JOIN hyjf_user.ht_utm_reg r ON r.user_id = i.user_id
+            LEFT JOIN hyjf_user.ht_utm u1 ON u1.utm_id = r.utm_id
+            LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
+            WHERE
+            (
+            u1.source_id <![CDATA[<>]]> 349
+            OR u1.source_id IS NULL
+            )
+            AND i.attribute = 0
+            AND i.role_id = 1
+            UNION ALL
+            SELECT
+            IFNULL(SUM(a.bank_balance), 0) AS monthNowBalance
+            FROM
+            hyjf_user.ht_user_info i
+            LEFT JOIN hyjf_user.ht_spreads_user s ON i.user_id = s.user_id
+            LEFT JOIN hyjf_user.ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+            LEFT JOIN hyjf_user.ht_r_oa_department d1 ON ou.departmentid = d1.id
+            LEFT JOIN hyjf_user.ht_r_oa_department d2 ON d2.id = d1.parentid
+            LEFT JOIN hyjf_user.ht_r_oa_department d3 ON d3.id = d2.parentid
+            LEFT JOIN hyjf_trade.ht_account a ON a.user_id = i.user_id
+            WHERE
+            ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+            AND d3. NAME = '惠众商务'
+            AND (
+            d1. NAME = '电销部'
+            OR d1. NAME = '网络运营部'
+            )
+            AND i.attribute <![CDATA[<>]]> 0
+            AND i.role_id = 1
+            ) r1
+    </select>
 	
 </mapper>
