@@ -214,9 +214,10 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
         String borrowNid = borrowApicron.getBorrowNid();
         logger.info("【还款请求】借款编号：{}，开始处理还款请求异常。", borrowNid);
         try {
-            boolean apicronResultFlag = batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
+            // 因请求成功需要加日志，此处直接改为校验成功 update by wgx 2019/04/01
+            boolean apicronResultFlag = batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS);
             if (apicronResultFlag) {
-                logger.info("【还款请求】借款编号：{}，处理还款请求异常成功,还款请求结果为成功。", borrowNid);
+                logger.info("【还款请求】借款编号：{}，处理还款请求异常成功,还款请求结果为校验成功。", borrowNid);
                 return true;
             } else {
                 throw new Exception("更新还款任务状态(还款请求成功)失败！[借款编号：" + borrowNid + "]");
