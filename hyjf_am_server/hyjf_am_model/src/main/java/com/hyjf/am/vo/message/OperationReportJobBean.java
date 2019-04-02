@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.tyy
@@ -62,9 +63,9 @@ public class OperationReportJobBean implements Serializable {
     //渠道分析
     private List<OperationReportJobVO> listCompleteCount;
     //性别分布
-    private List<OperationReportJobVO> listSexDistribute;
+    private Map<String, Integer>  listSexDistribute;
     //年龄分布
-    private List<OperationReportJobVO> listAgeDistribute;
+    private Map<String, Integer> listAgeDistribute;
     //金额分布
     private List<OperationReportJobVO> listMoneyDistribute;
     //十大出借人出借金额
@@ -199,19 +200,19 @@ public class OperationReportJobBean implements Serializable {
         this.listCompleteCount = listCompleteCount;
     }
 
-    public List<OperationReportJobVO> getListSexDistribute() {
+    public Map<String, Integer> getListSexDistribute() {
         return listSexDistribute;
     }
 
-    public void setListSexDistribute(List<OperationReportJobVO> listSexDistribute) {
+    public void setListSexDistribute(Map<String, Integer> listSexDistribute) {
         this.listSexDistribute = listSexDistribute;
     }
 
-    public List<OperationReportJobVO> getListAgeDistribute() {
+    public Map<String, Integer> getListAgeDistribute() {
         return listAgeDistribute;
     }
 
-    public void setListAgeDistribute(List<OperationReportJobVO> listAgeDistribute) {
+    public void setListAgeDistribute(Map<String, Integer> listAgeDistribute) {
         this.listAgeDistribute = listAgeDistribute;
     }
 
