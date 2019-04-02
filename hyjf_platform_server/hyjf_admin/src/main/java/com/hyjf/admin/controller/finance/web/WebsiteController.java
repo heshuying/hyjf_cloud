@@ -199,7 +199,7 @@ public class WebsiteController extends BaseController {
         }
         map.put("username", "用户名");
         map.put("truename", "姓名");
-        map.put("trade", "收支类型");
+        map.put("type", "收支类型");
         map.put("amount", "交易金额");
         map.put("tradeType", "交易类型");
         map.put("remark", "说明");
@@ -215,7 +215,7 @@ public class WebsiteController extends BaseController {
                 if(trade.equals("1")) {
                 	return "收入";
                 }else {
-                	return trade;
+                	return "支出";
                 }
             }
         };
@@ -239,7 +239,7 @@ public class WebsiteController extends BaseController {
                 }
             }
         };
-        mapAdapter.put("trade", tradeAdapter);
+        mapAdapter.put("type", tradeAdapter);
         mapAdapter.put("amount", amountAdapter);
         mapAdapter.put("createTime", createTimeAdapter);
         return mapAdapter;
