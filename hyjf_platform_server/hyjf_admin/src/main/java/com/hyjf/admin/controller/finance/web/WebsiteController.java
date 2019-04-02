@@ -208,11 +208,11 @@ public class WebsiteController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter tradeAdapter = new IValueFormatter() {
+        IValueFormatter typeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String trade = (String) object;
-                if(trade.equals("1")) {
+            	Integer type = (Integer) object;
+                if(type==1) {
                 	return "收入";
                 }else {
                 	return "支出";
@@ -239,7 +239,7 @@ public class WebsiteController extends BaseController {
                 }
             }
         };
-        mapAdapter.put("type", tradeAdapter);
+        mapAdapter.put("type", typeAdapter);
         mapAdapter.put("amount", amountAdapter);
         mapAdapter.put("createTime", createTimeAdapter);
         return mapAdapter;
