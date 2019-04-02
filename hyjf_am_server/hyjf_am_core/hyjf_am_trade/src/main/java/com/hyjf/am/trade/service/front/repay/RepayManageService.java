@@ -49,11 +49,11 @@ public interface RepayManageService extends BaseService {
 
     Integer selectOrgRepayedCount(RepayListRequest requestBean);
 
-    ProjectBean searchRepayProjectDetail(ProjectBean form, boolean isAllRepay) throws Exception;
+    ProjectBean searchRepayProjectDetail(ProjectBean form, boolean isAllRepay, int latePeriod) throws Exception;
 
-    RepayBean calculateRepay(int userId, Borrow borrow) throws ParseException;
+    RepayBean calculateRepay(int userId, Borrow borrow) throws ParseException, Exception;
 
-    boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay) throws Exception;
+    boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay, int latePeriod) throws Exception;
 
     boolean updateBorrowCreditStautus(String borrowNid);
 
@@ -72,13 +72,13 @@ public interface RepayManageService extends BaseService {
     void insertRepayFreezeLog(Integer userId, String orderId, String account, String borrowNid,
                               BigDecimal repayTotal, String userName);
 
-    void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay);
+    void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay, int latePeriod);
 
     void deleteFreezeTempLogs(String orderId);
 
     Borrow searchRepayProject(int userId, String userName, String roleId, String borrowNid);
 
-    BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException;
+    BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException, Exception;
 
     BigDecimal searchRepayByTermTotal(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception;
 
@@ -110,4 +110,6 @@ public interface RepayManageService extends BaseService {
     String usernameEncryption(String name);
 
     boolean getFailCredit(String borrowNid);
+
+    RepayBean searchRepayPlanPart(int userId, Borrow borrow, int latePeriod) throws Exception;
 }

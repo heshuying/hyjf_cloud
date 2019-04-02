@@ -99,8 +99,10 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 校验用户/垫付机构的还款
         RepayBean repay = null;
         if (StringUtils.isNotEmpty(roleId) && "3".equals(roleId)) {// 垫付机构还款校验
-            Integer repayUserId = borrow.getUserId();
-            repay = this.validatorFieldCheckRepay_org(info, userId, password, borrow, repayUserId,0);
+            logger.error("【自动还款】垫付机构不能自动还款！");
+            return false;
+            //Integer repayUserId = borrow.getUserId();
+            //repay = this.validatorFieldCheckRepay_org(info, userId, password, borrow, repayUserId,0);
         } else { // 借款人还款校验
             repay = this.validatorFieldCheckRepay(info, userId, password, borrow);
             repay.setRepayUserId(borrow.getUserId());
@@ -125,7 +127,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                 //add by cwyang 2017-07-25 还款去重
                 boolean result = repayManageService.checkRepayInfo(userId,borrowNid);
                 if (!result) {
-                    logger.info("项目正在还款中...");
+                    logger.error("【自动还款】项目正在还款中...");
                     return false;
                 }
                 //插入冻结信息日志表 add by cwyang 2017-07-08
@@ -158,7 +160,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     if (!"".equals(respCode)) {
                         this.repayManageService.deleteFreezeTempLogs(orderId);
                     }
-                    logger.info("调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
+                    logger.error("【自动还款】调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
                     logger.info("还款失败，请稍后再试！");
                     return false;
                 }
@@ -187,7 +189,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                         logger.info("------------------cwyang 变更自动还款成功!----------------------");
                     }
                 }
-                boolean flag = this.repayManageService.updateRepayMoney(repay, callBackBean, false);
+                boolean flag = this.repayManageService.updateRepayMoney(repay, callBackBean, false, 0);
                 if (flag) {
                     String planNid = borrow.getPlanNid();
                     if(StringUtils.isNotBlank(planNid)){//计划编号
@@ -196,13 +198,12 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     }
                     return true;
                 } else {
-                    logger.info("还款失败，请稍后再试！");
+                    logger.error("【自动还款】还款更新失败，请稍后再试！");
                     return false;
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error("【自动还款】还款时发生系统异常！", e);
             }
-            logger.info("还款失败，请稍后再试！");
             return false;
 
         } else {
@@ -344,6 +345,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 检查用户是否存在
         if (user == null) {
             info.put(REPAY_ERROR,"未查询到相应的用户信息");
+            logger.error("【自动还款】未查询到相应的用户信息！用户ID：{}", userId);
             return null;
         }
         // 画面需要密码验证，定时任务不需要密码验证
@@ -358,6 +360,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 查询用户的账户余额信息
         if (account == null) {
             info.put(REPAY_ERROR,"未查询到账户余额信息");
+            logger.error("【自动还款】未查询到账户余额信息！用户ID：{}", userId);
             return null;
         }
         // 获取用户的余额
@@ -367,6 +370,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 判断用户当前还款的项目是否存在
         if (borrow == null) {
             info.put(REPAY_ERROR,"未查询到项目信息");
+            logger.error("【自动还款】未查询到项目信息！借款编号：{}", borrow.getBorrowNid());
             return null;
         }
         // 获取项目还款方式
@@ -376,6 +380,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
         // 判断项目的还款方式是否为空
         if (StringUtils.isEmpty(borrowStyle)) {
             info.put(REPAY_ERROR,"未查询到项目的还款方式");
+            logger.error("【自动还款】未查询到项目的还款方式！借款编号：{}", borrow.getBorrowNid());
         }
         String planNid = borrow.getPlanNid();
         if(StringUtils.isNotBlank(planNid)){//计划还款
@@ -386,6 +391,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                 repayByTerm = new RepayBean();
                 repayByTerm.setFlag(1);//校验失败
                 repayByTerm.setMessage("系统繁忙,请5分钟后重试.......");
+                logger.error("【自动还款】项目正在进行债转，请5分钟后再试！借款编号：{}", borrow.getBorrowNid());
                 return repayByTerm;
             }
         }
@@ -402,9 +408,11 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     return repayByTerm;
                 } else {
                     info.put(REPAY_ERROR,"您的银行账户余额不足，请充值");
+                    logger.error("【自动还款】银行账户余额不足！借款编号：{}", borrow.getBorrowNid());
                 }
             } else {
                 info.put(REPAY_ERROR,"您的余额不足，请充值");
+                logger.error("【自动还款】平台账户余额不足！借款编号：{}", borrow.getBorrowNid());
             }
         } // 分期还款
         else {
@@ -418,9 +426,11 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                     return repayByTerm;
                 } else {
                     info.put(REPAY_ERROR,"您的银行账户余额不足，请充值");
+                    logger.error("【自动还款】银行账户余额不足！借款编号：{}", borrow.getBorrowNid());
                 }
             } else {
                 info.put(REPAY_ERROR,"您的余额不足，请充值");
+                logger.error("【自动还款】平台账户余额不足！借款编号：{}", borrow.getBorrowNid());
             }
         }
 

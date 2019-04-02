@@ -20,10 +20,10 @@
 				</foreach>
 			</if>
 			<if test="startTime != null and startTime != ''">
-				AND DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) >= #{startTime}
+				AND t.create_time >=  timestamp(#{startTime})
 			</if>
 			<if test="endTime != null and endTime != ''">
-				AND DATE_FORMAT(t.create_time, '%Y-%m-%d %H:%i:%s' ) <![CDATA[<=]]> #{endTime}
+				AND t.create_time <![CDATA[<=]]>  timestamp(#{endTime})
 			</if>
 		</where>
 	</sql>

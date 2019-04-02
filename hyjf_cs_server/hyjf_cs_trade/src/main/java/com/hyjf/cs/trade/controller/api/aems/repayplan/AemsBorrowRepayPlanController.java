@@ -260,10 +260,10 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
                             // 期数
                             result.setRepayPeriod(String.valueOf(borrowRepayPlan.getRepayPeriod()));
                             // 应还时间
-                            result.setRepayTime(GetDate.getDateMyTimeInMillis(borrowRepayPlan.getRepayTime()));
+                            result.setRepayTime(GetDate.getDateTimeMyTime(borrowRepayPlan.getRepayTime()));
                             if (borrowRepayPlan.getRepayStatus() == 1) {
                                 // 已经还款
-                                result.setRepayYseTime(GetDate.getDateMyTimeInMillis(borrowRepayPlan.getRepayYestime()));
+                                result.setRepayYseTime(GetDate.getDateTimeMyTime(borrowRepayPlan.getRepayYestime()));
                             } else {
                                 result.setRepayYseTime("");
                             }

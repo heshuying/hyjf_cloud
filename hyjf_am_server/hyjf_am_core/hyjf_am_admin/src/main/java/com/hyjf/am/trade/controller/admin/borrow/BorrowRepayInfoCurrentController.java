@@ -1,11 +1,15 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BorrowRepayInfoCurrentExportResponse;
 import com.hyjf.am.response.admin.BorrowRepayInfoCurrentResponse;
 import com.hyjf.am.resquest.admin.BorrowRepayInfoCurrentRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRepayInfoCurrentService;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO;
+import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentExportCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +41,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     @RequestMapping(value = "/getData",method = RequestMethod.POST)
     public BorrowRepayInfoCurrentResponse getData(@RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean){
-        logger.info("当前债权还款明细-start, requestBean:{}", requestBean);
+        logger.info("当前债权还款明细-start, requestBean:{}", JSON.toJSONString(requestBean));
         BorrowRepayInfoCurrentResponse response = new BorrowRepayInfoCurrentResponse();
 
         //请求参数校验
@@ -74,7 +78,67 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         response.setSumInfo(sumInfo);
         response.setRtn(Response.SUCCESS);
 
-        logger.info("当前债权还款明细-end, respinse:{}" + response);
+        logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
+        return response;
+    }
+
+    /**
+     * 当前债权还款明细页面Excel导出数据获取
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/getExportData",method = RequestMethod.POST)
+    public BorrowRepayInfoCurrentExportResponse getExportData(@RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean){
+        logger.info("当前债权还款明细导出数据接口-start, requestBean:{}", JSON.toJSONString(requestBean));
+        BorrowRepayInfoCurrentExportResponse response = new BorrowRepayInfoCurrentExportResponse();
+
+        //请求参数校验
+        if(requestBean.getCurrPage() <= 0){
+            requestBean.setCurrPage(1);
+        }
+        if(requestBean.getPageSize() <= 0){
+            requestBean.setPageSize(10);
+        }
+        //borrowNid为必须传的参数
+        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+            response.setRtn(Response.FAIL);
+            response.setMessage("请求参数错误，borrowNid为空");
+            return response;
+        }
+
+        // 查询列表数据
+        List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentListExport(requestBean);
+
+        response.setResultList(resultList);
+        response.setRtn(Response.SUCCESS);
+
+        return response;
+    }
+
+    /**
+     * 当前债权还款明细页面Excel导出总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/getExportCount",method = RequestMethod.POST)
+    public IntegerResponse getExportCount(@RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean){
+        logger.info("当前债权还款明细导出数据接口-start, requestBean:{}", JSON.toJSONString(requestBean));
+        IntegerResponse response = new IntegerResponse();
+
+        //borrowNid为必须传的参数
+        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+            response.setRtn(Response.FAIL);
+            response.setMessage("请求参数错误，borrowNid为空");
+            return response;
+        }
+
+        // 查询列表数据
+        Integer count = borrowRepayInfoCurrentService.getRepayInfoCurrentCountExport(requestBean);
+
+        response.setResultInt(count);
+        response.setRtn(Response.SUCCESS);
+
+        logger.info("当前债权还款明细导出数据接口-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 

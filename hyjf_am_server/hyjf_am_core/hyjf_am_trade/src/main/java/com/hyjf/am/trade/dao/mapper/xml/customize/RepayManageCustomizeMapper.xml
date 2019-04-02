@@ -388,11 +388,15 @@
 			AND hbi.repay_org_user_id = #{userId,jdbcType=VARCHAR}
 			<if test="status == null or status =='' ">
 				AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+				<!-- 增加逾期中状态 add by hesy 2019-03-26-->
+				OR (hydb.`status` = 8 AND hydb.repay_full_status = 0)
 				OR ( hydb.`status` = 5))
 			</if>
 			<if test="status != null and status !=''">
 				<if test="status == '0'.toString()">
-					AND ( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					AND (( hydb.`status` = 4 AND hydb.repay_full_status = 0 )
+					<!-- 增加逾期中状态 add by hesy 2019-03-26-->
+					OR (hydb.`status` = 8 AND hydb.repay_full_status = 0))
 				</if>
 				<if test="status == '1'.toString()">
 					AND ( hydb.`status` = 5 )

@@ -32,9 +32,8 @@ import java.util.Map;
 
 
 /**
- * @Auther:yangchangwei
- * @Date:2018/7/12
- * @Description:
+ * 批次还款记录
+ * @author hesy
  */
 @Api(value = "产品中心-批次中心-批次还款记录",tags ="产品中心-批次中心-批次还款记录")
 @RestController
@@ -43,7 +42,7 @@ public class BatchBorrowRepayLogController extends BaseController{
 
     private static final String NAME_CLASS = "REPAY_STATUS";
 
-    private static final String PERMISSIONS = "batchborrowrepay";
+    private static final String PERMISSIONS = "batchborrowrepaylog";
 
     @Autowired
     private BatchBorrowRecoverLogService batchBorrowRecoverService;

@@ -2,6 +2,7 @@ package com.hyjf.am.trade.service.admin.borrow;
 
 import com.hyjf.am.resquest.admin.BorrowRepayInfoCurrentRequest;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO;
+import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentExportCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +18,8 @@ public interface BorrowRepayInfoCurrentService {
     List<BorrowRepayInfoCurrentCustomizeVO> getRepayInfoCurrentList(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit);
 
     Map<String,Object> getRepayInfoCurrentSum(BorrowRepayInfoCurrentRequest requestBean);
+
+    List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean);
+
+    Integer getRepayInfoCurrentCountExport(BorrowRepayInfoCurrentRequest requestBean);
 }
