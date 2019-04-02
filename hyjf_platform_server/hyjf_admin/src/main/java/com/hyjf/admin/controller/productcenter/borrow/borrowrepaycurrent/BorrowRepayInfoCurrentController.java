@@ -123,6 +123,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         // 查询
 
         Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean.getBorrowNid());
+        requestBean.setCount(totalCount);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -134,7 +135,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                 requestBean.setPageSize(defaultRowMaxCount);
                 requestBean.setCurrPage(i);
                 // 查询
-                BorrowRepayInfoCurrentExportResponse amResponse = borrowRepayInfoCurrentService.getRepayInfoCurrentExportData(requestBean.getBorrowNid());
+                BorrowRepayInfoCurrentExportResponse amResponse = borrowRepayInfoCurrentService.getRepayInfoCurrentExportData(requestBean);
                 if (amResponse != null && Response.SUCCESS.equals(amResponse.getRtn())) {
                     sheetNameTmp = sheetName + "_第" + (i) + "页";
                     helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  amResponse.getResultList());

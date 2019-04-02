@@ -30,13 +30,9 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
 
     /**
      * 获取当前债权还款明细导出数据
-     * @param borrowNid
-     * @return
      */
     @Override
-    public BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(String borrowNid) {
-        BorrowRepayInfoCurrentRequest requestBean = new BorrowRepayInfoCurrentRequest();
-        requestBean.setBorrowNid(borrowNid);
+    public BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean) {
         return amAdminClient.getRepayInfoCurrentExportData(requestBean);
     }
 

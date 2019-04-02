@@ -19,7 +19,7 @@ public interface BorrowRepayInfoCurrentService {
 
     Map<String,Object> getRepayInfoCurrentSum(BorrowRepayInfoCurrentRequest requestBean);
 
-    List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean);
+    List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit);
 
     Integer getRepayInfoCurrentCountExport(BorrowRepayInfoCurrentRequest requestBean);
 }

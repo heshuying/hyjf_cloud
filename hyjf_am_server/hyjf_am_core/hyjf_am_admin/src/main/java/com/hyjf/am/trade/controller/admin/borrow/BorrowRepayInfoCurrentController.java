@@ -105,9 +105,15 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             response.setMessage("请求参数错误，borrowNid为空");
             return response;
         }
+        if(requestBean.getCount() == null || requestBean.getCount() ==0){
+            response.setResultList(new ArrayList<>());
+            return response;
+        }
+
+        Paginator paginator = new Paginator(requestBean.getCurrPage(), requestBean.getCount(),requestBean.getPageSize());
 
         // 查询列表数据
-        List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentListExport(requestBean);
+        List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentListExport(requestBean,paginator.getOffset(), paginator.getLimit());
 
         response.setResultList(resultList);
         response.setRtn(Response.SUCCESS);

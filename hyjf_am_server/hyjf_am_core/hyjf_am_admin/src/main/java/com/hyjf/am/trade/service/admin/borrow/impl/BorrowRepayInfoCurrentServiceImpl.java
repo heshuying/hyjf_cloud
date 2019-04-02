@@ -77,9 +77,11 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
      * @return
      */
     @Override
-    public List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean){
+    public List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit){
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("borrowNid", requestBean.getBorrowNid());
+        paraMap.put("limitStart", offset);
+        paraMap.put("limitEnd", limit);
 
         List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentListExport(paraMap);
         if(resultList == null){
