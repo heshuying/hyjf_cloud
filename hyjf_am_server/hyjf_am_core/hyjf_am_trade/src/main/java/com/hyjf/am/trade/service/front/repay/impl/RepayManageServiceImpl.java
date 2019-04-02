@@ -2439,7 +2439,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                                 throw new Exception("计算的逾期信息有误！");
                                             }
                                             // 计算用户实际获得的本息和
-                                            assignAccount = assignAccount.add(assignOverdueInterest);
+                                            //assignAccount = assignAccount.add(assignOverdueInterest);
 
                                             //最后一笔兜底
                                             if (borrowRecoverPlan.getCreditStatus() == 2 && k == creditRepayList.size() - 1) {
