@@ -20,9 +20,37 @@ public class AdminRepayDelayCustomize {
     private String borrowStyleName;
     private String repayAccountWait;
     private String interestCapitalWait;
-
+    private String repayOrgName;
+    private String recoverLastTime;
+    private String repayAccountAll;
     
-    public String getRepayAccountWait() {
+    
+    
+    public String getRepayAccountAll() {
+		return repayAccountAll;
+	}
+
+	public void setRepayAccountAll(String repayAccountAll) {
+		this.repayAccountAll = repayAccountAll;
+	}
+
+	public String getRepayOrgName() {
+		return repayOrgName;
+	}
+
+	public void setRepayOrgName(String repayOrgName) {
+		this.repayOrgName = repayOrgName;
+	}
+
+	public String getRecoverLastTime() {
+		return recoverLastTime;
+	}
+
+	public void setRecoverLastTime(String recoverLastTime) {
+		this.recoverLastTime = recoverLastTime;
+	}
+
+	public String getRepayAccountWait() {
 		return repayAccountWait;
 	}
 

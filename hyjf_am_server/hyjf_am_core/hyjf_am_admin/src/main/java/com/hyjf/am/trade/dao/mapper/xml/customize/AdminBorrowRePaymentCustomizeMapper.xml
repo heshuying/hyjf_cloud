@@ -149,7 +149,7 @@
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
 		b.repay_account_all-b.repay_account_yes AS repayAccountWait,
-		if(b.status=4,0,if(b.status=5 ,1,'')) AS status,
+		b.status AS status,
 		br.repay_status as repayStatus,
 		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 		b.repay_last_time, '%Y-%m-%d' )) AS repayLastTime,
@@ -959,6 +959,9 @@
 		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
 		<result column="repay_account_wait" property="repayAccountWait" jdbcType="VARCHAR" />
 		<result column="interestCapitalWait" property="interestCapitalWait" jdbcType="VARCHAR" />
+		<result column="repay_org_name" property="repayOrgName" jdbcType="VARCHAR" />
+		<result column="recoverLastTime" property="recoverLastTime" jdbcType="VARCHAR" />
+		<result column="repayAccountAll" property="repayAccountAll" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowInfo" resultMap="selectBorrowInfoResultMap" parameterType="Map">
 		SELECT
@@ -976,7 +979,10 @@
 			FORMAT(b.borrow_account_yes, 2) AS borrow_account_yes,
             IF(b.repay_last_time IS NULL OR b.repay_last_time = '' OR b.repay_last_time='0' OR b.repay_last_time = 'null', '', FROM_UNIXTIME(b.repay_last_time, '%Y-%m-%d' )) AS repay_last_time,
             b.repay_account_wait,
-            b.repay_account_interest_wait+repay_account_capital_wait as  interestCapitalWait
+            b.repay_account_interest_wait+repay_account_capital_wait as  interestCapitalWait,
+            binfo.repay_org_name,
+            b.recover_last_time as recoverLastTime,
+            b.repay_account_all repayAccountAll
 		FROM
 		    ht_borrow b
 			INNER JOIN ht_borrow_info binfo ON b.borrow_nid = binfo.borrow_nid
