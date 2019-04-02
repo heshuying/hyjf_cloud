@@ -689,7 +689,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 		logExample.createCriteria().andBankSeqNoEqualTo(apicron.getBankSeqNo());
 		List<BorrowApicronLog> borrowApicronLogList = borrowApicronLogMapper.selectByExample(logExample);
 		if(borrowApicronLogList == null || borrowApicronLogList.size() == 0){
-			logger.error("未查询到对应的还款日志！借款编号：{},银行流水号", apicron.getBorrowNid(), apicron.getBankSeqNo());
+			logger.error("未查询到对应的还款日志！借款编号：{},银行流水号：{}", apicron.getBorrowNid(), apicron.getBankSeqNo());
 			return false;
 		}
 		for(BorrowApicronLog borrowApicronLog: borrowApicronLogList){

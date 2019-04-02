@@ -4656,8 +4656,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
         //更新borrow表状态
         Borrow borrow = this.getBorrowByNid(borrowNid);
-        borrow.setRepayStatus(status);
-        this.borrowMapper.updateByPrimaryKey(borrow);
+        Borrow newBorrow = new Borrow();
+        newBorrow.setId(borrow.getId());
+        newBorrow.setRepayStatus(status);
+        this.borrowMapper.updateByPrimaryKey(newBorrow);
         try {
             updateBorrowApicronLog(apicron, status);
         } catch (Exception e) {
