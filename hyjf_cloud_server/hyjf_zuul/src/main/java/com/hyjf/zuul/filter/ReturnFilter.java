@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.util.StreamUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ReturnFilter extends ZuulFilter {
                 token = request.getHeader(GatewayConstant.TOKEN);
                 if (StringUtils.isNotBlank(body)) {
                     if (StringUtils.isBlank(token)) {
+                        logger.warn("originalRequestPath: {}...", originalRequestPath);
                         logger.warn("user is not exist, token is : {}...", token);
                         body = setResult(body);
                     }else{
@@ -58,7 +60,7 @@ public class ReturnFilter extends ZuulFilter {
 
             }
 
-        }catch (Exception e){
+        }catch (IOException e){
             logger.error("业务端返回为boolean或者其他无法识别类型，不进行处理");
         }
 
@@ -66,10 +68,15 @@ public class ReturnFilter extends ZuulFilter {
     }
 
     private String setResult(String body){
-        JSONObject  jasonObject = JSONObject.parseObject(body);
-        Map result = (Map)jasonObject;
-        result.put("islogined", "0");
-        body = result.toString();
+        try{
+            JSONObject  jasonObject = JSONObject.parseObject(body);
+            Map result = (Map)jasonObject;
+            result.put("islogined", "0");
+            body = result.toString();
+        }catch (Exception e){
+            logger.error("业务端返回为boolean或者其他无法识别类型，不进行处理");
+        }
+
         return body;
     }
 
