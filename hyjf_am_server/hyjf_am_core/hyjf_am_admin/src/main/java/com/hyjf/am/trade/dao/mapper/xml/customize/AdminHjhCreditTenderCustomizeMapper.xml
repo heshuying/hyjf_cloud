@@ -63,7 +63,7 @@
 				AND ct.tender_type = #{tenderType}
 			</if>
             <if test="sellOrderId != null and sellOrderId != ''">
-                AND ct.sell_order_id = #{sellOrderId}
+                AND bc.plan_order_id = #{sellOrderId}
             </if>
 		</where>
 	</sql>
@@ -140,7 +140,7 @@
 			CASE WHEN ct.tender_type = 1 THEN  '是' ELSE '否' END  AS  tender_type,
 			ct.assign_service_fee AS assign_service_fee,
 			CASE WHEN ct.assign_service_apr <![CDATA[<>]]> 0 then  ct.assign_service_apr ELSE '0.00' END AS assign_service_apr,
-			ct.sell_order_id
+            bc.plan_order_id AS sell_order_id
 		FROM
 			ht_hjh_debt_credit_tender ct
 		INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
