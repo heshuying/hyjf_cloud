@@ -135,7 +135,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         userOperationReport.setCreateUserId(1);
 
         //性别分布
-        Map<String, Integer> mapexDistribute = bean.getListSexDistribute();
+        Map<String, Integer> mapexDistribute = this.getSexDistribute(bean);
         if (!CollectionUtils.isEmpty(mapexDistribute)) {
             manTenderNum = mapexDistribute.get("manTenderNum");
             womanTenderNum = mapexDistribute.get("womanTenderNum");
@@ -150,7 +150,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 
 
         //年龄分布
-        Map<String, Integer> mapAgeDistribute = bean.getListAgeDistribute();
+        Map<String, Integer> mapAgeDistribute = this.getAgeDistribute(bean);
         if (!CollectionUtils.isEmpty(mapAgeDistribute)) {
 
             ageFirstStageTenderNum = mapAgeDistribute.get("18-29");
@@ -359,7 +359,59 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 //        tenthOperationReportMapper.insert(tenthOperationReport);
         operationTenthReportMongDao.insert(operationTenthReport);
     }
+    /**
+     * 用户分析 - 性别分布
+     *
+     * @return
+     */
+    public Map<String, Integer> getSexDistribute(OperationReportJobBean bean) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        List<OperationReportJobVO> listSexDistribute = bean.getListSexDistribute();
+        if (!CollectionUtils.isEmpty(listSexDistribute)) {
+            for (OperationReportJobVO opear : listSexDistribute) {
+                if ("男".equals(opear.getTitle())) {
+                    map.put("manTenderNum", opear.getDealSum());
+                } else if ("女".equals(opear.getTitle())) {
+                    map.put("womanTenderNum", opear.getDealSum());
+                }
+            }
 
+            //null值转换
+            this.nullConvertValue(Integer.class, map, "manTenderNum", "womanTenderNum");
+        }
+        return map;
+    }
+
+
+    /**
+     * 用户分析 - 年龄分布
+     *
+     * @param bean 今年间隔月份
+     * @return
+     */
+    public Map<String, Integer> getAgeDistribute(OperationReportJobBean bean) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        List<OperationReportJobVO> listAgeDistribute = bean.getListAgeDistribute();
+        if (!CollectionUtils.isEmpty(listAgeDistribute)) {
+            for (OperationReportJobVO opear : listAgeDistribute) {
+                if ("18-29岁".equals(opear.getTitle())) {
+                    map.put("18-29", opear.getDealSum());
+                } else if ("30-39岁".equals(opear.getTitle())) {
+                    map.put("30-39", opear.getDealSum());
+                } else if ("40-49岁".equals(opear.getTitle())) {
+                    map.put("40-49", opear.getDealSum());
+                } else if ("50-59岁".equals(opear.getTitle())) {
+                    map.put("50-59", opear.getDealSum());
+                } else if ("60岁以上".equals(opear.getTitle())) {
+                    map.put("60-", opear.getDealSum());
+                }
+            }
+
+            //null值转换
+            this.nullConvertValue(Integer.class, map, "18-29", "30-39", "40-49", "50-59", "60-");
+        }
+        return map;
+    }
 
     /**
      * 业绩总览

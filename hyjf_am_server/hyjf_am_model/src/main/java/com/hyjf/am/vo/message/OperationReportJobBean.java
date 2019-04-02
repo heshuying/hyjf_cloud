@@ -63,9 +63,9 @@ public class OperationReportJobBean implements Serializable {
     //渠道分析
     private List<OperationReportJobVO> listCompleteCount;
     //性别分布
-    private Map<String, Integer>  listSexDistribute;
+    private List<OperationReportJobVO>  listSexDistribute;
     //年龄分布
-    private Map<String, Integer> listAgeDistribute;
+    private List<OperationReportJobVO> listAgeDistribute;
     //金额分布
     private List<OperationReportJobVO> listMoneyDistribute;
     //十大出借人出借金额
@@ -200,19 +200,19 @@ public class OperationReportJobBean implements Serializable {
         this.listCompleteCount = listCompleteCount;
     }
 
-    public Map<String, Integer> getListSexDistribute() {
+    public List<OperationReportJobVO> getListSexDistribute() {
         return listSexDistribute;
     }
 
-    public void setListSexDistribute(Map<String, Integer> listSexDistribute) {
+    public void setListSexDistribute(List<OperationReportJobVO> listSexDistribute) {
         this.listSexDistribute = listSexDistribute;
     }
 
-    public Map<String, Integer> getListAgeDistribute() {
+    public List<OperationReportJobVO> getListAgeDistribute() {
         return listAgeDistribute;
     }
 
-    public void setListAgeDistribute(Map<String, Integer> listAgeDistribute) {
+    public void setListAgeDistribute(List<OperationReportJobVO> listAgeDistribute) {
         this.listAgeDistribute = listAgeDistribute;
     }
 

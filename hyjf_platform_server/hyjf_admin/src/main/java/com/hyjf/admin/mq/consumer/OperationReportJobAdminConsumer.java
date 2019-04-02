@@ -51,10 +51,6 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         bean.setCityGroup(cityGroup);
         List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));
         bean.setSexGroup(sexGroup);
-        Map<String, Integer> listSexDistributeMap = new HashMap<String, Integer>();
-        Map<String, Integer> listAgeDistributeMap = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listSexDistribute = new ArrayList<>();
-        List<OperationReportJobVO> listAgeDistribute = new ArrayList<>();
         // 月交易金额
         bean.setAccountMonth(amAdminClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
         logger.info("月交易金额 ：" + bean.getAccountMonth() + ",查询区间：" + getFirstDay(cal) + "~" + getLastDay(cal));
@@ -84,9 +80,9 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
             //渠道分析
             bean.setListCompleteCount(amAdminClient.getCompleteCount(12));
             //性别分布
-            listSexDistribute = amAdminClient.getSexDistribute(12);
+            bean.setListSexDistribute(amAdminClient.getSexDistribute(12));
             //年龄分布
-            listAgeDistribute =  amAdminClient.getAgeDistribute(12);
+            bean.setListAgeDistribute(amAdminClient.getAgeDistribute(12));
             //金额分布
             bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(12));
             //计算 十大投资人投资金额
@@ -104,9 +100,9 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
             //渠道分析
             bean.setListCompleteCount(amAdminClient.getCompleteCount(6));
             //性别分布
-            listSexDistribute = amAdminClient.getSexDistribute(6);
+            bean.setListSexDistribute(amAdminClient.getSexDistribute(6));
             //年龄分布
-            listAgeDistribute =  amAdminClient.getAgeDistribute(6);
+            bean.setListAgeDistribute(amAdminClient.getAgeDistribute(6));
             //金额分布
             bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(6));
             //计算 十大投资人投资金额
@@ -127,9 +123,9 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
             //渠道分析
             bean.setListCompleteCount(amAdminClient.getCompleteCount(3));
             //性别分布
-            listSexDistribute = amAdminClient.getSexDistribute(3);
+            bean.setListSexDistribute(amAdminClient.getSexDistribute(3));
             //年龄分布
-            listAgeDistribute =  amAdminClient.getAgeDistribute(3);
+            bean.setListAgeDistribute(amAdminClient.getAgeDistribute(3));
             //金额分布
             bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(3));
             //计算 十大投资人投资金额
@@ -149,9 +145,9 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
             //渠道分析
             bean.setListCompleteCount(amAdminClient.getCompleteCount(1));
             //性别分布
-            listSexDistribute = amAdminClient.getSexDistribute(1);
+            bean.setListSexDistribute(amAdminClient.getSexDistribute(1));
             //年龄分布
-            listAgeDistribute =  amAdminClient.getAgeDistribute(1);
+            bean.setListAgeDistribute(amAdminClient.getAgeDistribute(1));
             //金额分布
             bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(1));
             //计算 十大投资人投资金额
@@ -161,32 +157,6 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
             //超活跃，投资笔数最多
             bean.setListtOneInvestMost(amAdminClient.getOneInvestMost(1));
         }
-        if (!CollectionUtils.isEmpty(listSexDistribute)) {
-            for (OperationReportJobVO opear : listSexDistribute) {
-                if ("男".equals(opear.getTitle())) {
-                    listSexDistributeMap.put("manTenderNum", opear.getDealSum()==null?0:opear.getDealSum());
-                } else if ("女".equals(opear.getTitle())) {
-                    listSexDistributeMap.put("womanTenderNum", opear.getDealSum()==null?0:opear.getDealSum());
-                }
-            }
-        }
-        if (!CollectionUtils.isEmpty(listAgeDistribute)) {
-            for (OperationReportJobVO opear : listAgeDistribute) {
-                if ("18-29岁".equals(opear.getTitle())) {
-                    listAgeDistributeMap.put("18-29", opear.getDealSum()==null?0:opear.getDealSum());
-                } else if ("30-39岁".equals(opear.getTitle())) {
-                    listAgeDistributeMap.put("30-39", opear.getDealSum()==null?0:opear.getDealSum());
-                } else if ("40-49岁".equals(opear.getTitle())) {
-                    listAgeDistributeMap.put("40-49", opear.getDealSum()==null?0:opear.getDealSum());
-                } else if ("50-59岁".equals(opear.getTitle())) {
-                    listAgeDistributeMap.put("50-59", opear.getDealSum()==null?0:opear.getDealSum());
-                } else if ("60岁以上".equals(opear.getTitle())) {
-                    listAgeDistributeMap.put("60-", opear.getDealSum()==null?0:opear.getDealSum());
-                }
-            }
-        }
-        bean.setListSexDistribute(listSexDistributeMap);
-        bean.setListAgeDistribute(listAgeDistributeMap);
         try {
             //成功
             bean.setStatus("success");
