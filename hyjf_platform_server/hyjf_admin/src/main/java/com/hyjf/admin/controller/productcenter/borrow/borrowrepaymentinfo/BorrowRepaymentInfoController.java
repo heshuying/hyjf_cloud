@@ -426,14 +426,62 @@ public class BorrowRepaymentInfoController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
+//    private Map<String, String> buildMap(String isOrganizationView) {
+//        Map<String, String> map = Maps.newLinkedHashMap();
+//        map.put("borrowNid","项目编号");
+//        map.put("instName","资产来源");
+//        map.put("planNid","智投编号");
+//        map.put("userId","借款人ID");
+//        map.put("borrowUserName","借款人用户名");
+//        map.put("borrowName","借款标题");
+//        map.put("projectTypeName","项目类型");
+//        map.put("borrowPeriod","项目期限");
+//        map.put("borrowApr","出借利率");
+//        map.put("borrowAccount","借款金额");
+//        map.put("borrowAccountYes","借到金额");
+//        map.put("repayType","还款方式");
+//        map.put("recoverUserName","出借人用户名");
+//        map.put("recoverUserId","出借人ID");
+//        map.put("recoverUserAttribute","出借人用户属性（当前）");
+//        if (StringUtils.isNotBlank(isOrganizationView)) {
+//            map.put("recoverRegionName", "出借人所属一级分部（当前）");
+//            map.put("recoverBranchName", "出借人所属二级分部（当前）");
+//            map.put("recoverDepartmentName", "出借人所属团队（当前）");
+//        }
+//        map.put("referrerName","推荐人用户名（当前）");
+//        map.put("referrerTrueName","推荐人姓名（当前）");
+//        if (StringUtils.isNotBlank(isOrganizationView)) {
+//            map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+//            map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+//            map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+//        }
+//        map.put("recoverTotal","出借金额");
+//        map.put("recoverCapital","应回本金");
+//        map.put("recoverInterest","应回利息");
+//        map.put("recoverAccount","应回本息");
+//        map.put("recoverFee","还款服务费");
+//        map.put("recoverCapitalYes","已回本金");
+//        map.put("recoverInterestYes","已回利息");
+//        map.put("recoverAccountYes","已回本息");
+//        map.put("recoverCapitalWait","剩余待回本金");
+//        map.put("recoverInterestWait","剩余待回利息");
+//        map.put("recoverAccountWait","剩余待回本息");
+//        map.put("status","回款状态");
+//        map.put("recoverLastTime","到期日");
+//        map.put("repayActionTime","实际回款时间");
+//        map.put("freezeOrderId","还款冻结订单号");
+//        return map;
+//    }
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","项目编号");
+        map.put("nid","出借订单号");
+        map.put("repayOrdid","还款订单号");
+        map.put("borrowNid","借款编号");
         map.put("instName","资产来源");
         map.put("planNid","智投编号");
         map.put("userId","借款人ID");
-        map.put("borrowUserName","借款人用户名");
-        map.put("borrowName","借款标题");
+        map.put("borrowUserName","借款人");
+        map.put("borrowName","借款名称");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","项目期限");
         map.put("borrowApr","出借利率");
@@ -456,20 +504,35 @@ public class BorrowRepaymentInfoController extends BaseController {
             map.put("referrerDepartmentName", "推荐人所属团队（当前）");
         }
         map.put("recoverTotal","出借金额");
-        map.put("recoverCapital","应回本金");
-        map.put("recoverInterest","应回利息");
-        map.put("recoverAccount","应回本息");
-        map.put("recoverFee","还款服务费");
-        map.put("recoverCapitalYes","已回本金");
-        map.put("recoverInterestYes","已回利息");
-        map.put("recoverAccountYes","已回本息");
-        map.put("recoverCapitalWait","剩余待回本金");
-        map.put("recoverInterestWait","剩余待回利息");
-        map.put("recoverAccountWait","剩余待回本息");
-        map.put("status","回款状态");
-        map.put("recoverLastTime","到期日");
-        map.put("repayActionTime","实际回款时间");
-        map.put("freezeOrderId","还款冻结订单号");
+       // map.put("recoverTotal","持有金额");
+        map.put("repayAccountCapital","应回本金");
+        map.put("repayAccountInterest","应回利息");
+        map.put("repayAccountAll","应回本息");
+        map.put("borrowManager","还款服务费");
+        // map.put("recoverTotal","还款期次");
+        map.put("recoverCapital","当期应回本金");
+        map.put("recoverInterest","当期应回利息");
+        map.put("recoverAccount","当期应回本息");
+        map.put("recoverFee","当期还款服务费");
+        map.put("chargeDays","当期提前天数");
+        map.put("jianxi","当期提前还款减息");
+        map.put("chargeInterest","提前还款违约金");
+        map.put("lateDays","逾期天数");
+        map.put("lateInterest","逾期违约金");
+        map.put("recoverCapitalYes","当期已回本金");
+        map.put("recoverInterestYes","当期已回利息");
+        map.put("recoverAccountYes","当期已回本息");
+        map.put("recoverCapitalWait","当期剩余待回本金");
+        map.put("recoverInterestWait","当期剩余待回利息");
+        map.put("recoverAccountWait","当期剩余待回本息");
+        map.put("repayMoneySource","还款来源");
+        map.put("repayUsername","当期还款人");
+        map.put("status","还款状态");
+        map.put("autoRepay","平台还款方式");
+        map.put("submitter","发起人");
+        map.put("recoverLastTime","应还日期");
+        map.put("repayActionTime","实还时间");
+     //   map.put("freezeOrderId","还款冻结订单号");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {

@@ -88,14 +88,14 @@ public class BorrowRepayLateServiceImpl extends BaseServiceImpl implements Borro
             Set<BorrowRepayLateSetCustomize> borrowRepayLateSetCustomizeSet = new HashSet<>();
             for (BorrowRepayLateCustomize borrowRepayLateCustomize : listByStages) {
                 try {
-                    logger.info("分期标的{}开始计算还款逾期利息", borrowRepayLateCustomize.getBorrowNid());
+                    logger.info("分期标的{},第{}期开始计算还款逾期利息", borrowRepayLateCustomize.getBorrowNid(), borrowRepayLateCustomize.getRecoverPeriod());
                     ((BorrowRepayLateService) AopContext.currentProxy()).updateBorrowRepayLate(borrowRepayLateCustomize, true);
                     // 添加set数据
                     borrowSet.add(borrowRepayLateCustomize.getBorrowNid());
                     BorrowRepayLateSetCustomize borrowRepayLateSetCustomize = new BorrowRepayLateSetCustomize(borrowRepayLateCustomize.getBorrowNid(), borrowRepayLateCustomize.getRecoverPeriod());
                     borrowRepayLateSetCustomizeSet.add(borrowRepayLateSetCustomize);
                 } catch (Exception e) {
-                    logger.error("分期标的{}计算还款逾期利息发生异常", borrowRepayLateCustomize.getBorrowNid(), e);
+                    logger.error("分期标的{},第{}期计算还款逾期利息发生异常", borrowRepayLateCustomize.getBorrowNid(), borrowRepayLateCustomize.getRecoverPeriod(), e);
                     continue;
                 }
             }
