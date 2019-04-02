@@ -4834,8 +4834,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BankRepayOrgFreezeLogExample.Criteria criteria = orgExample.createCriteria();
         criteria.andOrderIdEqualTo(orderId);
         List<BankRepayOrgFreezeLog> orgLog = this.bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
-        if (log != null && log.size() > 0) {
-            for (int i = 0; i < log.size(); i++) {
+        if (orgLog != null && orgLog.size() > 0) {
+            for (int i = 0; i < orgLog.size(); i++) {
                 BankRepayOrgFreezeLog record = orgLog.get(i);
                 BankRepayOrgFreezeLog newRecord = new BankRepayOrgFreezeLog();
                 newRecord.setId(record.getId());
