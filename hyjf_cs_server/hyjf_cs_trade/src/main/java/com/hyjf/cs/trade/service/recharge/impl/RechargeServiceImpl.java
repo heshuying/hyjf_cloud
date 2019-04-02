@@ -1,6 +1,8 @@
 package com.hyjf.cs.trade.service.recharge.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -222,6 +224,13 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								this.sendSensorsDataMQ(sensorsDataBean);
 							} catch (Exception e) {
 								logger.error(e.getMessage());
+							}
+							try{
+								// 充值成功后,发送大屏数据统计MQ
+								ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),txAmount,2);
+								this.sendScreenDataMQ(screenDataBean);
+							}catch (Exception e){
+								logger.error("充值成功后,发送大屏数据统计MQ失败",e.getMessage());
 							}
 							// 神策数据统计 add by liuyang 20180725 end
 							return jsonMessage("充值成功!", "0");
@@ -594,6 +603,13 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
 		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
-
+	/**
+	 * 充值成功后,发送大屏数据统计MQ
+	 *
+	 * @param screenDataBean
+	 */
+	private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(),screenDataBean), 2);
+	}
 
 }

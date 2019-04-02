@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AccountListCustomizeMapper" >
+
+    <select id="getUserIdsByCurrentOwnerAndCustomerGroup" resultType="java.lang.Integer">
+        SELECT DISTINCT
+        user_id
+        FROM
+        ht_user_operate_list
+        <where>
+            <if test="currentOwner != null" >
+                AND current_owner = #{currentOwner}
+            </if>
+            <if test="customerGroup != null" >
+                AND customer_group = #{customerGroup}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUsersMonthBeginBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
+        SELECT
+        IFNULL(SUM(a1.bank_balance),0) monthBeginBalance
+        FROM
+        (
+        SELECT
+        MAX(id) max_id
+        FROM
+        ht_account_list
+        GROUP BY
+        user_id
+        ) r1
+        LEFT JOIN ht_account_list a1 ON a1.id = r1.max_id
+        <where>
+            AND a1.create_time <![CDATA[<=]]> DATE_FORMAT(NOW(),'%Y-%m-01 23:59:59')
+            <if test="list != null" >
+                AND a1.user_id IN
+                <foreach collection="list" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getUsersMonthNowBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
+        SELECT
+        IFNULL(SUM(bank_balance),0) monthNowBalance
+        FROM
+        ht_account
+        <where>
+            AND create_time <![CDATA[<=]]> NOW()
+            <if test="list != null" >
+                AND user_id IN
+                <foreach collection="list" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>
