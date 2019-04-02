@@ -42,7 +42,8 @@
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
         unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
-        AND a.order_status >= 3
+
+        and a.order_status  in (3,5,7)
         # 加入时间
         UNION ALL
         # 债转
@@ -203,7 +204,7 @@
         INTERVAL #{endMonth} MONTH
         )
         )
-        AND a.order_status >= 3
+        and a.order_status  in (3,5,7)
         GROUP BY
         date_format(
         from_unixtime(a.count_interest_time),
@@ -561,7 +562,7 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ) )
-        AND a.order_status >= 3
+        and a.order_status  in (3,5,7)
         GROUP BY
         client
         UNION ALL
@@ -733,8 +734,8 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ))
-				AND a.order_status >= 3
 
+        and a.order_status  in (3,5,7)
         UNION
          # 债转
         SELECT
@@ -853,8 +854,7 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ))
-
-        AND a.order_status >= 3
+        and a.order_status  in (3,5,7)
         UNION
          # 债转
         SELECT
@@ -985,7 +985,7 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ))
-
+        and a.order_status  in (3,5,7)
         UNION ALL
         # 债转
         SELECT
@@ -1108,7 +1108,8 @@
         INTERVAL #{intervalMonth} MONTH
         )
         )
-        AND a.order_status >= 3
+
+        and a.order_status  in (3,5,7)
         UNION ALL
         # 债转
         SELECT
