@@ -212,7 +212,7 @@ public class WebsiteController extends BaseController {
             @Override
             public String format(Object object) {
                 String trade = (String) object;
-                return "1".equals(trade) ?"收入":"支出";
+                return "1".equals(trade) ?"支出":"收入";
             }
         };
         IValueFormatter amountAdapter = new IValueFormatter() {

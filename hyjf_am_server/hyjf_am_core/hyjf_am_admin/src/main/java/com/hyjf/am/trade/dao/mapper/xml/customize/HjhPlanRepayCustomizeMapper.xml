@@ -160,7 +160,7 @@
         hhr.update_user,
         hhr.update_time,
         hha.invite_user_name AS recommend_name,
-        --         pna.`name` AS recommend_attr,
+        hhr.user_attribute AS recommend_attr,
         hha.invite_user_name,
         --         pna_tender.`name` AS invite_user_attributename,
         hha.invite_user_regionname,
