@@ -55,7 +55,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     @ApiOperation(value = "当前债权还款明细页面数据", notes = "当前债权还款明细页面数据")
     @PostMapping(value = "/searchAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<Map<String,Object>> searchAction(HttpServletRequest request, @RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean) {
         logger.info("当前债权还款明细-start, requestBean:{}", JSON.toJSONString(requestBean));
         AdminResult<Map<String,Object>> response = new AdminResult<>();
@@ -98,7 +98,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     @ApiOperation(value = "当前债权还款明细导出数据", notes = "当前债权还款明细导出数据")
     @PostMapping(value = "/exportAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response,  @RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean) throws UnsupportedEncodingException {
         logger.info("当前债权还款明细导出-start, requestBean:{}", JSON.toJSONString(requestBean));
         Map<String,Object> dataMap = new HashMap<>();
