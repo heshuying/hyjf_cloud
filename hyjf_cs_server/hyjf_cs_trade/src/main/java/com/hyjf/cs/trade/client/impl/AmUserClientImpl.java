@@ -2,15 +2,19 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.bifa.BifaIndexUserInfoBeanResponse;
 import com.hyjf.am.response.trade.BankCardResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
@@ -1135,5 +1139,33 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	@Override
+	public ScreenDataResponse findUserGroup(ScreenDataBean screenDataBean) {
+		return restTemplate.postForObject("http://AM-USER/am-user/user/getGroup",
+				screenDataBean, ScreenDataResponse.class);
+
+	}
+
+	@Override
+	public UserScreenConfigResponse getScreenConfig(UserLargeScreenRequest request) {
+		return restTemplate.postForObject("http://AM-USER//am-user/user_large_screen/screenconfig",
+				request, UserScreenConfigResponse.class);
+
+	}
+
+	@Override
+	public UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request) {
+		return restTemplate.postForObject("http://AM-USER//am-user/user_large_screen/customertaskconfig",
+				request, UserCustomerTaskConfigResponse.class);
+
+	}
+
+	@Override
+	public List<Integer> getOperUserIds() {
+		String url = "http://AM-USER/am-user/user_large_screen/getoperuserids";
+		StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+		return response.getResultList();
 	}
 }
