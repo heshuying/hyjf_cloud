@@ -59,13 +59,7 @@ public class ReturnFilter extends ZuulFilter {
             }
 
         }catch (Exception e){
-            ctx.setResponseStatusCode(200);
-            JSONObject result = new JSONObject();
-            result.put("status", "999");
-            result.put("islogined", "0");
-            result.put("statusDesc", "系统异常");
-            ctx.setResponseBody(result.toJSONString());
-            ctx.getResponse().setContentType("application/json;charset=UTF-8");
+            logger.error("业务端返回为boolean或者其他无法识别类型，不进行处理");
         }
 
         return null;
