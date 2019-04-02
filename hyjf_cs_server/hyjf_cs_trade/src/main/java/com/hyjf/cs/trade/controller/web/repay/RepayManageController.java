@@ -1147,7 +1147,7 @@ public class RepayManageController extends BaseTradeController {
                         throw new CheckException(MsgEnum.ERR_AMT_REPAY_AUTO_CREDIT, dateStr);
                     }
                     // 担保机构的还款
-                    RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay,latePeriod);
+                    RepayBean repay = repayManageService.getRepayBean(userId, "3", borrowNid, isAllRepay, latePeriod);
                     if (repay != null) {
                         BigDecimal repayTotal = repay.getRepayAccountAll();
                         if (repayTotal.compareTo(orgFreezeLog.getAmountFreeze()) != 0) {

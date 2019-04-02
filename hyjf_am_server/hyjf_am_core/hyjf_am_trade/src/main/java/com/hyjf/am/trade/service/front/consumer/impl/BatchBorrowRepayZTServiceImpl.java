@@ -644,7 +644,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
 		String borrowNid = apicron.getBorrowNid();
 		BorrowApicron newApicron = new BorrowApicron();
-		if (CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS == status || CustomConstants.BANK_BATCH_STATUS_DOING == status) {
+		if (CustomConstants.BANK_BATCH_STATUS_SENDED == status || CustomConstants.BANK_BATCH_STATUS_SEND_FAIL == status) {
 			BeanUtils.copyProperties(apicron, newApicron);
 			newApicron.setUpdateTime(new Date());
 		} else if (CustomConstants.BANK_BATCH_STATUS_FAIL == status) {
