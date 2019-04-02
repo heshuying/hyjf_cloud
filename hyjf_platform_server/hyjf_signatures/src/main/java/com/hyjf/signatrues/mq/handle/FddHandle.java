@@ -114,7 +114,8 @@ public class FddHandle {
 		}
 		// 借款详情
 		BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
-		BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
+		//update by jijun 20190402
+		//BorrowInfoVO borrowInfo = this.amTradeClient.getBorrowInfoByNid(borrowNid);
 		if (borrow == null) {
 			logger.error("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
 			throw new RuntimeException("根据标的编号检索借款详情失败,借款编号:[" + borrowNid + "].");
@@ -162,8 +163,12 @@ public class FddHandle {
 				borrowerCustomerID = certificateAuthorityVO.getCustomerId();
 			}
 		} else {
-			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrowInfo.getCompanyOrPersonal());
-			if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 1) {
+			//update by jijun 20190402
+//			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrowInfo.getCompanyOrPersonal());
+			logger.info("------------合同编号：" + tenderNid + ",开始获取客户编号，borrowInfo.getCompanyOrPersonal() = " + borrow.getCompanyOrPersonal());
+			//update by jijun 20190402
+			//if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 1) {
+			if (StringUtils.isNotEmpty(borrow.getCompanyOrPersonal()) && "1".equals(borrow.getCompanyOrPersonal())) {
 				// 借款主体为企业借款
 				BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 				if (borrowUsers == null) {
@@ -180,7 +185,9 @@ public class FddHandle {
 					throw new RuntimeException("企业借款获取CA认证客户编号失败,企业名称:[" + borrowUsers.getUsername() + "],社会统一信用代码:["
 							+ borrowUsers.getSocialCreditCode() + "].");
 				}
-			} else if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 2) {
+				//update by jijun 20190402
+//			} else if (borrowInfo.getCompanyOrPersonal() != null && borrowInfo.getCompanyOrPersonal() == 2) {
+			} else if (StringUtils.isNotEmpty(borrow.getCompanyOrPersonal()) && "2".equals(borrow.getCompanyOrPersonal())) {
 				// 借款主体为个人借款
 				BorrowManinfoVO borrowManinfo = this.amTradeClient.getBorrowManinfo(borrowNid);
 				if (borrowManinfo == null) {
@@ -277,7 +284,9 @@ public class FddHandle {
 
 		//中北互金修改借款人用途取值 add by yangchangwei 20181227
 		String financePurpose;//借款用途
-		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrowInfo.getFinancePurpose());
+		//update by jijun 20190402
+//		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrowInfo.getFinancePurpose());
+		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrow.getFinancePurpose());
 		JSONObject paramter = new JSONObject();
 
 		paramter.put("nid", borrowTender.getNid());//借款编号
