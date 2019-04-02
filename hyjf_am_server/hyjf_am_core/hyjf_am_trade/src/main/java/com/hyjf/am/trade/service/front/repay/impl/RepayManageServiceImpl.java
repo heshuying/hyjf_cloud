@@ -5113,6 +5113,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 } else {// 用户未还款本息
                     if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
                         lateArray.add(userRepayPlan.getRepayPeriod());
+                        if(userRepayPlan.getRepayPeriod() == periodTotal){
+                            form.setOnlyAllRepay("2");// 全部逾期
+                        }
                     } else if (latePeriod >= userRepayPlan.getRepayPeriod()) {// 未还款且未逾期不处理
                         logger.error("【还款明细】传入的的逾期期数有误！第{}期未逾期，传入逾期期数：{}", userRepayPlan.getRepayPeriod(), latePeriod);
                         throw new Exception("传入的的逾期期数有误！");
