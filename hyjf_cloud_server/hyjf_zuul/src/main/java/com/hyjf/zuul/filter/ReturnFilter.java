@@ -30,13 +30,14 @@ public class ReturnFilter extends ZuulFilter {
     @Override
     public Object run() {
 
+        RequestContext ctx = RequestContext.getCurrentContext();
+
         try{
-            RequestContext ctx = RequestContext.getCurrentContext();
+
             InputStream stream = ctx.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
             String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
             HttpServletRequest request = ctx.getRequest();
-
             if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)){
                 String token = "";
                 token = request.getHeader(GatewayConstant.TOKEN);
@@ -52,16 +53,20 @@ public class ReturnFilter extends ZuulFilter {
                             body = setResult(body);
                         }
                     }
+                    ctx.setResponseBody(body);// 输出最终结果
                 }
-                ctx.setResponseBody(body);
 
-//            ctx.setSendZuulResponse(true);
-                ctx.setResponseStatusCode(200);
-                ctx.setResponseBody(body);// 输出最终结果
+
             }
 
         }catch (Exception e){
-
+            ctx.setResponseStatusCode(200);
+            JSONObject result = new JSONObject();
+            result.put("status", "999");
+            result.put("islogined", "0");
+            result.put("statusDesc", "系统异常");
+            ctx.setResponseBody(result.toJSONString());
+            ctx.getResponse().setContentType("application/json;charset=UTF-8");
         }
 
         return null;
