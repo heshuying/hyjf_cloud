@@ -213,56 +213,56 @@
         # 债转
         SELECT
         date_format(
-        from_unixtime(ct.create_time),
+        ct.create_time,
         '%Y%m'
         ) AS 'month',
         sum(assign_capital) AS account # 承接本金
         FROM
         ht_credit_tender ct
         WHERE
-        ct.create_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
-        ) # 承接时间
-        AND ct.create_time <![CDATA[ >= ]]> unix_timestamp(
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(ct.create_time),
+        ct.create_time,
         '%Y%m'
         )
         UNION ALL
         # 汇添金
         SELECT
         date_format(
-        from_unixtime(pa.create_time),
+        pa.create_time,
         '%Y%m'
         ) AS 'month',
         sum(pa.repay_capital) AS account # 应还本金
         FROM
         ht_debt_plan_accede pa
         WHERE
-        pa.create_time <![CDATA[ < ]]> unix_timestamp(
+        pa.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
-        ) # 加入时间
-        AND pa.create_time <![CDATA[ >= ]]> unix_timestamp(
+         # 加入时间
+        AND pa.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(pa.create_time),
+        pa.create_time,
         '%Y%m'
         )
         UNION ALL
