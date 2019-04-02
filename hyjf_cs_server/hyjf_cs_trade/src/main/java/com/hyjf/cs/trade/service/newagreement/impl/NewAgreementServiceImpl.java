@@ -411,4 +411,16 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 		}
 		return jsonObject;
 	}
+
+	/**
+	 * 获取所有在帮助中心显示的模板列表
+	 * add by nxl 20190313
+	 * PC 1.1.2
+	 * @return
+	 */
+	@Override
+	public List<ProtocolTemplateVO> selectAllShowProtocolTemplate() {
+		List<ProtocolTemplateVO> volist = amTradeClient.getAllShowProtocolTemp();
+		return volist;
+	}
 }

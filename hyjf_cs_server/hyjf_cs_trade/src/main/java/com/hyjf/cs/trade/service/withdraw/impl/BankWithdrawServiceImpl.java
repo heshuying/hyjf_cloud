@@ -520,7 +520,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setOrgTxDate(String.valueOf(accountwithdraw.getTxDate()));//原交易日期
         //时间补满6位
         bean.setOrgTxTime(String.format("%06d", accountwithdraw.getTxTime()));//原交易时间
-        bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+
+        //bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+        //原交易流水号保留六位
+        bean.setOrgSeqNo(String.format("%06d",accountwithdraw.getSeqNo()));//原交易流水号
+
         bean.setLogRemark("单笔资金类业务交易查询（提现Batch）");
         try {
             BankCallBean result = BankCallUtils.callApiBg(bean);

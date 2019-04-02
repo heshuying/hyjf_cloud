@@ -2025,9 +2025,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 当前期
 			params.put("periodNow", String.valueOf(periodNow));
 			//核对参数
-			try {
-				logger.info("【直投还款/借款人】借款编号:{}，发送优惠券还款队列。", borrowNid);
-				commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
+			try {// 修改为延时队列 update by wgx 2019/03/13
+				logger.info("【直投还款/借款人】借款编号:{}，发送优惠券还款延时队列。", borrowNid);
+				commonProducer.messageSendDelay(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params), 1);
 			} catch (MQException e) {
 				logger.error("【直投还款/借款人】发送优惠券还款队列时发生系统异常！", e);
 			}

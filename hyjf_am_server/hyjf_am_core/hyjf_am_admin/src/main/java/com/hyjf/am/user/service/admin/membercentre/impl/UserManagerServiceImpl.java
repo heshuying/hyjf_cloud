@@ -60,8 +60,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserInfoByUserInfoSelective(UserInfo userInfo) {
         int userFlag = this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
         if (userFlag > 0) {
-            System.out.println("=============用户详细信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
+            logger.error("=============用户详细信息保存异常!=============");
             throw new RuntimeException("用户详细信息保存异常!");
         }
         return userFlag;
@@ -76,8 +77,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserSelective(User user) {
         int userFlag = this.userMapper.updateByPrimaryKeySelective(user);
         if (userFlag > 0) {
-            System.out.println("=============用户表信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
+            logger.error("=============用户表信息保存异常!!=============");
             throw new RuntimeException("用户表信息保存异常!");
         }
         return userFlag;
@@ -1451,6 +1453,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
 
                 // 根据主键查询用户信息
                 User user = userMapper.selectByPrimaryKey(Integer.parseInt(request.getUserId()));
+                String oldMobile = user.getMobile(); //保存修改前手机号
                 // 更新相应的用户的信息
                 //用户状态
                 if (StringUtils.isNotBlank(request.getStatus())) {
@@ -1507,8 +1510,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 changeLog.setBorrowerType(userInfoType.getBorrowerType());
                 userChangeLogMapper.insertSelective(changeLog);
 
+                logger.info("旧手机号："+oldMobile+"，新手机号："+request.getMobile());
                 //手机号
-                if (StringUtils.isNotBlank(request.getMobile())) {
+                if (StringUtils.isNotBlank(request.getMobile()) && !oldMobile.equals(request.getMobile())) {
                     // 推送数据到MQ 用户信息修改（修改手机号）
                     JSONObject params = new JSONObject();
                     params.put("userId", request.getUserId());

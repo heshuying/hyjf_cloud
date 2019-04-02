@@ -339,6 +339,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					}
 				}
 			}
+
+			// 汇付开户标识 大版本前端发版的时候是否可以删除
 			if (user.getOpenAccount() != null && user.getOpenAccount() == 1) {
 				// 汇付开户
 				result.setHuifuOpenAccount(CustomConstants.FLAG_OPENACCOUNT_YES);
@@ -424,7 +426,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			AccountVO account = amTradeClient.getAccount(userId);
-			BigDecimal balance = BigDecimal.ZERO;
 			BigDecimal planInterestWait = BigDecimal.ZERO;
 			BigDecimal planCapitalWait = BigDecimal.ZERO;
 			if (account != null) {
@@ -433,22 +434,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				} else {
 
 					if (request.getParameter("version").startsWith("1.1.0")) {
-						// add by cwyang 增加汇付余额
-
-						result.setHuifuBalance(account.getBalance() + "");
 						result.setBalance(account.getBankBalance() + "");
 
-						BigDecimal indexbigD = new BigDecimal(0);
-						// add by cwyang
-						// 如果汇付余额为0,则将返回信息置空,用来区分前台页面是显示汇付余额还是江西银行余额
-						if (account.getBalance() == null || indexbigD.compareTo(account.getBalance()) == 0) {
-							result.setHuifuBalance("");
-						}
 					} else {
-						result.setHuifuBalance(account.getBalance() + "");
-						if (account.getBalance() != null) {
-							result.setHuifuBalance(DF_FOR_VIEW.format(account.getBalance()));
-						}
 						result.setBalance(account.getBankBalance() + "");
 						if (account.getBankBalance() != null) {
 							result.setBalance(DF_FOR_VIEW.format(account.getBankBalance()));
@@ -463,21 +451,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 							result.setAwaitTotal(
 									DF_FOR_VIEW.format(account.getBankAwait().add(account.getPlanAccountWait())));
 						}
-						BigDecimal indexbigD = new BigDecimal(0);
-						// add by cwyang
-						// 如果汇付余额为0,则将返回信息置空,用来区分前台页面是显示汇付余额还是江西银行余额
-						if (account.getBalance() == null || indexbigD.compareTo(account.getBalance()) == 0) {
-							result.setHuifuBalance("");
-						}
 					}
-					balance = account.getBankBalance();
-					/*if (balance == null) {
-						balance = BigDecimal.ZERO;
-					}*/
 				}
-				/*if (account.getFrost() != null) {
-					frost = account.getFrost();
-				}*/
 				if (account.getPlanCapitalWait() != null) {
 					planCapitalWait = account.getPlanCapitalWait();
 				}
@@ -488,6 +463,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			} else {
 				result.setBalance("0.00");
 			}
+			// add by pcc
+			// 前端汇付账户不显示  大版本更新app发版时候是否删除参数
+			result.setHuifuBalance("");
 			WebPandectRecoverMoneyCustomizeVO pr = amTradeClient.queryRecoverMoney(userId);
 			WebPandectRecoverMoneyCustomizeVO prRtb = amTradeClient.queryRecoverMoneyForRtb(userId);
 			BigDecimal RecoverInterest = BigDecimal.ZERO;
@@ -673,11 +651,13 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 		}
 		{
+		    // 汇付数据  大版本更新时app强更是否删除
 			AccountChinapnrVO accountChinapnrVO = amUserClient.getAccountChinapnr(userId);
 			// 江西银行绑卡接口修改
 			Integer urlType = amConfigClient.getBankInterfaceFlagByType("BIND_CARD");
 			// 江西银行绑卡接口修改
 			if (accountChinapnrVO != null) {
+				// 汇付数据  大版本更新时app强更是否删除
 				result.setChinapnrUsrcustid(accountChinapnrVO.getChinapnrUsrid() + "");
 				// 汇付天下账户描述
 				result.setHuifuDesc(
@@ -718,13 +698,15 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 		{
 			//通过用户ID 获取用户关联渠道 add by huanghui
+			// 合规自查添加
+			// 20181205 产品需求, 屏蔽渠道,只保留用户ID
 			String linkUrl = null;
 			UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
-			if (userUtmInfoCustomizeVO != null){
-				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
-			}else {
+//			if (userUtmInfoCustomizeVO != null){
+//				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
+//			}else {
 				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
-			}
+//			}
 			// 二维码
 			result.setQrCodeUrl(linkUrl);
 		}
