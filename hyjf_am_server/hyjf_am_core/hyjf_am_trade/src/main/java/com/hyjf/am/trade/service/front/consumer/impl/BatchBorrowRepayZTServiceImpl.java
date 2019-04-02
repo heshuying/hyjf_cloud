@@ -644,13 +644,19 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
 		String borrowNid = apicron.getBorrowNid();
 		BorrowApicron newApicron = new BorrowApicron();
+		if (CustomConstants.BANK_BATCH_STATUS_VERIFY_SUCCESS == status || CustomConstants.BANK_BATCH_STATUS_DOING == status) {
+			BeanUtils.copyProperties(apicron, newApicron);
+			newApicron.setUpdateTime(new Date());
+		} else if (CustomConstants.BANK_BATCH_STATUS_FAIL == status) {
+			newApicron.setFailTimes(apicron.getFailTimes());
+			newApicron.setData(apicron.getData());
+		}
 		newApicron.setId(apicron.getId());
 		newApicron.setStatus(status);
 		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(newApicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("批次还款任务表(ht_borrow_apicron)更新失败！[借款编号：" + borrowNid + "]");
 		}
-		
 		Borrow borrow = this.getBorrowByNid(borrowNid);
 		Borrow newBorrow = new Borrow();
 		newBorrow.setId(borrow.getId());
@@ -660,19 +666,19 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]");
 		}
 		// 还款失败更新还款任务日志表
-		if(CustomConstants.BANK_BATCH_STATUS_SENDED == status || CustomConstants.BANK_BATCH_STATUS_SEND_FAIL == status){
-			logger.info("【直投还款】借款编号：{}，插入还款任务日志表数据。", borrowNid);
-			BorrowApicronLog log = new BorrowApicronLog();
-			BeanUtils.copyProperties(apicron,log);
-			log.setId(null);
-			log.setUpdateTime(null);
-			borrowApicronLogMapper.insert(log);
-		} else {
-			try {
+		try {
+			if(CustomConstants.BANK_BATCH_STATUS_SENDED == status || CustomConstants.BANK_BATCH_STATUS_SEND_FAIL == status){
+				logger.info("【直投还款】借款编号：{}，插入还款任务日志表数据。", borrowNid);
+				BorrowApicronLog log = new BorrowApicronLog();
+				BeanUtils.copyProperties(apicron,log);
+				log.setId(null);
+				log.setUpdateTime(null);
+				borrowApicronLogMapper.insert(log);
+			} else {
 				this.updateBorrowApicronLog(apicron, status);
-			} catch (Exception e) {
-				logger.error("同步还款任务日志表发生异常！", e);
 			}
+		} catch (Exception e) {
+			logger.error("同步还款任务日志表发生异常！", e);
 		}
 		return borrowFlag;
 	}

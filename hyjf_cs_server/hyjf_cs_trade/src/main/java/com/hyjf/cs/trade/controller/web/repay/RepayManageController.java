@@ -861,7 +861,7 @@ public class RepayManageController extends BaseTradeController {
         String bankSeqNo = txDate + txTime + seqNo;
         BorrowApicronVO apicron = this.repayManageService.selectBorrowApicron(bankSeqNo);
         if (Validator.isNull(apicron)) {
-            logger.error("【还款合法性检查异步通知】未查询到放款请求记录！银行唯一订单号：{}", bankSeqNo);
+            logger.error("【还款合法性检查异步通知】未查询到还款请求记录！银行唯一订单号：{}", bankSeqNo);
             // 更新相应的还款请求校验失败
             return JSONObject.toJSONString(result, true);
         }
@@ -917,7 +917,7 @@ public class RepayManageController extends BaseTradeController {
         String bankSeqNo = txDate + txTime + seqNo;
         BorrowApicronVO apicron = this.repayManageService.selectBorrowApicron(bankSeqNo);
         if (Validator.isNull(apicron)) {
-            logger.error("【还款业务处理结果异步通知】未查询到放款请求记录！银行唯一订单号：{}", bankSeqNo);
+            logger.error("【还款业务处理结果异步通知】未查询到还款请求记录！银行唯一订单号：{}", bankSeqNo);
             return JSONObject.toJSONString(result, true);
         }
         // 当前批次还款状态

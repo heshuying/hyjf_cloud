@@ -62,9 +62,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	public boolean updateBorrowApicron(BorrowApicron apicron, int status) throws Exception {
 
 		String borrowNid = apicron.getBorrowNid();
-		BorrowApicron newApicron = new BorrowApicron();
+        BorrowApicron newApicron = new BorrowApicron();
+		if (CustomConstants.BANK_BATCH_STATUS_SENDED == status || CustomConstants.BANK_BATCH_STATUS_SEND_FAIL == status) {
+			BeanUtils.copyProperties(apicron, newApicron);
+			newApicron.setUpdateTime(new Date());
+		} else if (CustomConstants.BANK_BATCH_STATUS_FAIL == status) {
+			newApicron.setFailTimes(apicron.getFailTimes());
+			newApicron.setData(apicron.getData());
+		}
 		newApicron.setId(apicron.getId());
-		newApicron.setStatus(status);
+        newApicron.setStatus(status);
 		boolean apicronFlag = this.borrowApicronMapper.updateByPrimaryKeySelective(newApicron) > 0 ? true : false;
 		if (!apicronFlag) {
 			throw new Exception("批次还款任务表(ht_borrow_apicron)更新失败！[借款编号：" + borrowNid + "]");
@@ -77,19 +84,19 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		if (!borrowFlag) {
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]");
 		}
-		if (CustomConstants.BANK_BATCH_STATUS_SENDED == status || CustomConstants.BANK_BATCH_STATUS_SEND_FAIL == status) {
-			logger.info("【智投还款】借款编号：{}，插入还款任务日志表数据。", borrowNid);
-			BorrowApicronLog log = new BorrowApicronLog();
-			BeanUtils.copyProperties(apicron, log);
-			log.setId(null);
-			log.setUpdateTime(null);
-			borrowApicronLogMapper.insert(log);
-		} else {
-			try {
+		try {
+			if (CustomConstants.BANK_BATCH_STATUS_SENDED == status || CustomConstants.BANK_BATCH_STATUS_SEND_FAIL == status) {
+				logger.info("【智投还款】借款编号：{}，插入还款任务日志表数据。", borrowNid);
+				BorrowApicronLog log = new BorrowApicronLog();
+				BeanUtils.copyProperties(apicron, log);
+				log.setId(null);
+				log.setUpdateTime(null);
+				borrowApicronLogMapper.insert(log);
+			} else {
 				this.updateBorrowApicronLog(apicron, status);
-			} catch (Exception e) {
-				logger.error("同步还款任务日志表发生异常！", e);
 			}
+		} catch (Exception e) {
+			logger.error("同步还款任务日志表发生异常！", e);
 		}
 		return borrowFlag;
 	}
