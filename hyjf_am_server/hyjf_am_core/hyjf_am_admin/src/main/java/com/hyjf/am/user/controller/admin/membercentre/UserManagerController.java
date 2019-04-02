@@ -165,7 +165,7 @@ public class UserManagerController extends BaseController {
      * @param userId
      * @return
      */
-    @RequestMapping("/selectCorpOpenAccountRecordByUserId/{userId}")
+    @GetMapping("/selectCorpOpenAccountRecordByUserId/{userId}")
     public CorpOpenAccountRecordResponse selectCorpOpenAccountRecordByUserId(@PathVariable int userId) {
         logger.info("---selectCorpOpenAccountRecordByUserId---  " + userId);
         CorpOpenAccountRecordResponse response = new CorpOpenAccountRecordResponse();
