@@ -3,12 +3,7 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.UserOperateListMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AccountListCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountListExample;
-import com.hyjf.am.trade.dao.model.auto.UserOperateList;
-import com.hyjf.am.trade.dao.model.auto.UserOperateListExample;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
@@ -154,13 +149,13 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
      * @return
      */
     @Override
-    public UserLargeScreenTwoVO getMonthDataStatistics() {
+    public UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds) {
         List<MonthDataStatisticsVO> monthDataStatisticsNew = new ArrayList<>();
         List<MonthDataStatisticsVO> monthDataStatisticsOld = new ArrayList<>();
         UserLargeScreenTwoVO vo = new UserLargeScreenTwoVO();
 
         // 坐席
-        List<MonthDataStatisticsVO> listOn =  userLargeScreenCustomizeMapper.getMonthDataStatisticsBO();
+        // List<MonthDataStatisticsVO> listOn =  userLargeScreenCustomizeMapper.getMonthDataStatisticsBO();
         // 坐席、年化业绩
         List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
         // 坐席、充值
@@ -170,11 +165,12 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 坐席、回款
         List<MonthDataStatisticsVO> listFi =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFi();
 
-        if(!CollectionUtils.isEmpty(listOn)){
-            for(MonthDataStatisticsVO monthDataStatisticsVOO : listOn){
+        if(!CollectionUtils.isEmpty(currentOwnersAndUserIds)){
+            for(MonthDataStatisticsVO monthDataStatisticsVOO : currentOwnersAndUserIds){
                 if("1".equals(monthDataStatisticsVOO.getCustomerGroup())){
                     // 查询每个坐席下的所有用户
-                    List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 1);
+                    // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 1);
+                    List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
                     // 坐席下用户们当前总站岗资金
                     BigDecimal monthNowBalance = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(userIds)){
@@ -269,7 +265,8 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         }
                     }
                     // 查询每个坐席下的所有用户
-                    List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 2);
+                    // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 2);
+                    List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
                     // 坐席下用户月初站岗资金
                     BigDecimal monthBeginBalance = new BigDecimal("0");
                     // 坐席下用户当前站岗资金

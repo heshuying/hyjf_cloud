@@ -104,8 +104,10 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         UserLargeScreenTwoVO dayReceivedPaymentsVo = amTradeClient.getDayReceivedPayments();
         bean.setDayReceivedPaymentsNew(dayReceivedPaymentsVo.getDayReceivedPaymentsNew());
         bean.setDayReceivedPaymentsOld(dayReceivedPaymentsVo.getDayReceivedPaymentsOld());
+        // 所有坐席和坐席下用户查询
+        UserLargeScreenTwoVO result = amUserClient.getCurrentOwnersAndUserIds();
         // 本月数据统计(新客组、老客组)
-        UserLargeScreenTwoVO monthDataStatisticsVo = amTradeClient.getMonthDataStatistics();
+        UserLargeScreenTwoVO monthDataStatisticsVo = amTradeClient.getMonthDataStatistics(result.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsNew(monthDataStatisticsVo.getMonthDataStatisticsNew());
         bean.setMonthDataStatisticsOld(monthDataStatisticsVo.getMonthDataStatisticsOld());
         // 运营部月度业绩数据
