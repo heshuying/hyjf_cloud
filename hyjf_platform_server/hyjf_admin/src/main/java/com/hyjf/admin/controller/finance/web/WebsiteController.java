@@ -215,7 +215,7 @@ public class WebsiteController extends BaseController {
                 if(trade.equals("1")) {
                 	return "收入";
                 }else {
-                	return "支出";
+                	return trade;
                 }
             }
         };
