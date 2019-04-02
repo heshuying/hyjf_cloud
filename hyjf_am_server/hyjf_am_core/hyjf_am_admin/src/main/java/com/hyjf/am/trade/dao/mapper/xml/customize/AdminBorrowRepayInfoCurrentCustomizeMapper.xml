@@ -769,6 +769,9 @@
                 b.borrow_style = 'end'
                 OR b.borrow_style = 'endday'
             )
+        <if test="borrowNid != null and borrowNid != ''">
+            AND b.borrow_nid = #{borrowNid}
+        </if>
     </select>
 
     <select id="getRepayInfoCurrentCountExport" resultType="int" parameterType="map">
@@ -803,5 +806,8 @@
                 b.borrow_style = 'end'
                 OR b.borrow_style = 'endday'
             )
+        <if test="borrowNid != null and borrowNid != ''">
+            AND b.borrow_nid = #{borrowNid}
+        </if>
     </select>
 </mapper>
