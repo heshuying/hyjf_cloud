@@ -274,7 +274,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 一次查询的条件数
                         // 月初
-                        int queryNum = 1000;
+                        /*int queryNum = 1000;
                         if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
                             monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
                         }else {
@@ -316,7 +316,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
 
                         }else {
                             monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
-                        }
+                        }*/
                     }
                     // 当前站岗资金
                     monthDataStatisticsVOO.setGuardFund(monthNowBalance.setScale(0, BigDecimal.ROUND_HALF_UP));
