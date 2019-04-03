@@ -696,6 +696,12 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
 			BorrowApicronLog newBorrowApicronLog = new BorrowApicronLog();
 			newBorrowApicronLog.setId(borrowApicronLog.getId());
 			newBorrowApicronLog.setStatus(status);
+			if (CustomConstants.BANK_BATCH_STATUS_SUCCESS == status || CustomConstants.BANK_BATCH_STATUS_PART_FAIL == status) {
+				newBorrowApicronLog.setSucAmount(apicron.getSucAmount());
+				newBorrowApicronLog.setSucCounts(apicron.getSucCounts());
+				newBorrowApicronLog.setFailAmount(apicron.getFailAmount());
+				newBorrowApicronLog.setFailCounts(apicron.getFailCounts());
+			}
 			borrowApicronLogMapper.updateByPrimaryKeySelective(newBorrowApicronLog);
 		}
 		return true;
