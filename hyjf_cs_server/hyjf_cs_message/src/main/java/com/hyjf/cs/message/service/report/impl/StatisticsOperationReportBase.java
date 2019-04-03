@@ -236,7 +236,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         tenthOperationReport.setCreateUserId(1);
 
         //计算 十大出借人出借金额
-        List<OperationReportJobVO> listTenMostMoney = this.getTenMostMoney(bean);
+        List<OperationReportJobVO> listTenMostMoney = bean.getListTenMostMoney();
         if (!CollectionUtils.isEmpty(listTenMostMoney)) {
 
             for (int i = 0; i < listTenMostMoney.size(); i++) {
@@ -321,7 +321,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //大赢家，收益最高
-        List<OperationReportJobVO> listOneInterestsMost =  this.getOneInterestsMost(bean);
+        List<OperationReportJobVO> listOneInterestsMost =  bean.getListOneInterestsMost();
         if (!CollectionUtils.isEmpty(listOneInterestsMost)) {
             OperationReportJobVO interestsMostDto = listOneInterestsMost.get(0);
             userId = interestsMostDto.getUserId();
@@ -337,7 +337,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //超活跃，出借笔数最多
-        List<OperationReportJobVO> listtOneInvestMost =this.getOneInvestMost(bean);
+        List<OperationReportJobVO> listtOneInvestMost =bean.getListtOneInvestMost();
         if (!CollectionUtils.isEmpty(listtOneInvestMost)) {
             OperationReportJobVO investMostDto = listtOneInvestMost.get(0);
             userId = investMostDto.getUserId();

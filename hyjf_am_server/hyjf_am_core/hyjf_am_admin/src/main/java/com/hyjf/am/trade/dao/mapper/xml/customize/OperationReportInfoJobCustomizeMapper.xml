@@ -1177,7 +1177,8 @@
     <select id="getOneInvestMost" resultMap="performanceMap">
         SELECT
         tmp.user_id as userId,
-        account as dealSum
+        account as dealSum,
+        aa.username as userName
         FROM
         (
         SELECT
@@ -1276,6 +1277,7 @@
         account DESC
         LIMIT 11
         ) tmp
+         INNER JOIN hyjf_user.ht_user aa ON tmp.user_id = aa.user_id;
     </select>
 
     <!-- 	大赢家，收益最高 -->
@@ -1283,7 +1285,8 @@
 
       SELECT
         sum(t.interest) as sumAccount,
-        t.user_id as userId
+        t.user_id as userId,
+        s.username as userName
         FROM
         (
         SELECT
@@ -1352,9 +1355,9 @@
         GROUP BY
         user_id
         ) t
-
+        LEFT JOIN hyjf_user.ht_user s ON t.user_id = s.user_id
         GROUP BY
-        t.user_id
+        s.username
         ORDER BY
         sum(t.interest) DESC
         LIMIT 11
