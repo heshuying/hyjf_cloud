@@ -104,10 +104,14 @@
             </if>
             <!-- 下期还款时间 -->
             <if test="repayNextTimeStart != null and repayNextTimeStart != ''">
-                AND dc.credit_repay_next_time <![CDATA[>=]]>unix_timestamp(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                and CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN dc.credit_repay_end_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                ELSE dc.credit_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeStart},' 00:00:00'))
+                END
             </if>
             <if test="repayNextTimeEnd != null and repayNextTimeEnd != ''">
-                AND dc.credit_repay_next_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                and CASE WHEN b.borrow_style = 'endday' OR b.borrow_style = 'end' THEN  dc.credit_repay_end_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                ELSE dc.credit_repay_next_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{repayNextTimeEnd},' 23:59:59'))
+                END
             </if>
             <if test="creditCapitalWait != null and creditCapitalWait != ''">
                 AND dc.credit_capital_wait = #{creditCapitalWait}
