@@ -16,6 +16,7 @@ import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.report.*;
 import com.hyjf.cs.message.mongo.ic.userbehaviourn.UserOperationReportMongDao;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -308,19 +309,24 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 
             //10大出借人金额之占比(%)
             logger.info("計算10大出借人金额之占比(%)...");
-            BigDecimal tenTenderProportion = tenderAmountSum.divide(sumTenderAmount, 4, BigDecimal.ROUND_HALF_UP).multiply(bigHundred);
-            tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大出借人金额之和(元)
-            tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大出借人金额之占比(%)
-            tenthOperationReport.setOtherTenderAmount(sumTenderAmount.subtract(tenderAmountSum));//其他出借人金额之和(元)
-            tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他出借人金额之和占比（%）
+            try{
+                BigDecimal tenTenderProportion = tenderAmountSum.divide(sumTenderAmount, 4, BigDecimal.ROUND_HALF_UP).multiply(bigHundred);
+                tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大出借人金额之和(元)
+                tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大出借人金额之占比(%)
+                tenthOperationReport.setOtherTenderAmount(sumTenderAmount.subtract(tenderAmountSum));//其他出借人金额之和(元)
+                tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他出借人金额之和占比（%）
 
-            //查找 最多金用户的年龄和地区
-            OperationReportJobVO operationReportJobVO = this.getUserAgeAndArea(userId);
+                //查找 最多金用户的年龄和地区
+                logger.info("查找 最多金用户的年龄和地区...");
+                OperationReportJobVO operationReportJobVO = this.getUserAgeAndArea(userId);
 
-            if (operationReportJobVO != null) {
-                logger.info("operationReportJobVO is: {}...", JSONObject.toJSONString(operationReportJobVO));
-                tenthOperationReport.setMostTenderUserAge(operationReportJobVO.getDealSum());//最多金用户年龄（岁）
-                tenthOperationReport.setMostTenderUserArea(operationReportJobVO.getTitle());//最多金用户地区
+                if (operationReportJobVO != null) {
+                    logger.info("operationReportJobVO is: {}...", JSONObject.toJSONString(operationReportJobVO));
+                    tenthOperationReport.setMostTenderUserAge(operationReportJobVO.getDealSum());//最多金用户年龄（岁）
+                    tenthOperationReport.setMostTenderUserArea(operationReportJobVO.getTitle());//最多金用户地区
+                }
+            }catch (Exception e){
+                logger.error("Exception, ignore....", e);
             }
             tenthOperationReport.setMostTenderUsername(tenderUsername);//最多金用户名
             tenthOperationReport.setMostTenderAmount(tenderAmountMoney);//最多金出借金额（元）
@@ -688,12 +694,18 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public OperationReportJobVO getUserAgeAndArea(Integer userId) {
+        logger.info("userId: {}", userId);
         IdCardCustomize idcard = new IdCardCustomize();
         OperationReportJobVO vo =  amUserClient.getUserAgeAndArea(userId);
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(vo.getTitle())) {
+        if(vo == null){
+            logger.warn("OperationReportJobVO is null....");
+        }
+        logger.info("vo: {}", JSONObject.toJSONString(vo));
+        if(StringUtils.isNotEmpty(vo.getTitle())) {
             idcard.setBm(vo.getTitle().substring(0, 6));
             vo.setTitle(amConfigClient.getIdCardCustomize(idcard).getArea());
         }
+        logger.info("vo: {}", JSONObject.toJSONString(vo));
         return vo;
     }
 
