@@ -1119,15 +1119,15 @@
         FROM
         ht_credit_tender ct
         WHERE
-        ct.create_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添金
         SELECT
@@ -1136,15 +1136,15 @@
         FROM
         ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添利
         SELECT
