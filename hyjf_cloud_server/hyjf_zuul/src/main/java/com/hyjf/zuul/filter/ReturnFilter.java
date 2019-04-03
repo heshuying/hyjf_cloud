@@ -60,6 +60,7 @@ public class ReturnFilter extends ZuulFilter {
 
             }else{
                 logger.error("请求不属于WEB端，不进行处理");
+                ctx.setResponseBody(body);// 输出最终结果
             }
 
         }catch (IOException e){
