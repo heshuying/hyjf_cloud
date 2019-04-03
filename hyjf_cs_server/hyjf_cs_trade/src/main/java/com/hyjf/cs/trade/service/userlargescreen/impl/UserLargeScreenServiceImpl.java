@@ -76,6 +76,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthReceivedPaymentsNew(monthReceivedPaymentsVo.getMonthReceivedPaymentsNew());
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
         bean.setUserCapitalDetailList(userCapitalDetailsVo.getUserCapitalDetailList());
+        bean.setCustomerTaskConfigVOList(taskConfigResponse.getResultList());
         return bean;
     }
 
