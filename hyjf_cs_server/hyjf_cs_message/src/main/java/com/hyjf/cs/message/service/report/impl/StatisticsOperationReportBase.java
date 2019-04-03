@@ -236,7 +236,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         tenthOperationReport.setCreateUserId(1);
 
         //计算 十大出借人出借金额
-        List<OperationReportJobVO> listTenMostMoney = this.getTenMostMoney(bean);
+        List<OperationReportJobVO> listTenMostMoney = bean.getListTenMostMoney();
         if (!CollectionUtils.isEmpty(listTenMostMoney)) {
 
             for (int i = 0; i < listTenMostMoney.size(); i++) {
