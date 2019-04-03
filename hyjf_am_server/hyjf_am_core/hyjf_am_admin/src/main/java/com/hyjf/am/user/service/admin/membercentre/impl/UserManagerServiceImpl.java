@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1708,12 +1709,13 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             cra.andTruenameEqualTo(bankCancellationAccountRequest.getTruename());
         }
         // 销户开始时间
-        if(StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())){
-            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())) {
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeStart() + " 00:00:00"));
         }
         // 销户结束时间
-        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())){
-            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())) {
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeEnd() + " 23:59:59"));
         }
         return this.bankCancellationAccountMapper.countByExample(example);
     }
@@ -1736,17 +1738,19 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             cra.andTruenameEqualTo(bankCancellationAccountRequest.getTruename());
         }
         // 销户开始时间
-        if(StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())){
-            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeStart())) {
+            cra.andCreateTimeGreaterThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeStart() + " 00:00:00"));
         }
         // 销户结束时间
-        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())){
-            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate2(bankCancellationAccountRequest.getCancellationTimeStart()));
+
+        if (StringUtils.isNotBlank(bankCancellationAccountRequest.getCancellationTimeEnd())) {
+            cra.andCreateTimeLessThanOrEqualTo(GetDate.stringToDate(bankCancellationAccountRequest.getCancellationTimeEnd() + " 23:59:59"));
         }
         if (limitEnd > 0){
             example.setLimitStart(limitStart);
             example.setLimitEnd(limitEnd);
         }
+        example.setOrderByClause("create_time desc");
         return this.bankCancellationAccountMapper.selectByExample(example);
     }
 }

@@ -24,7 +24,7 @@ public class BankCancellationAccountRequestBean extends BasePage{
 
     // 用户名
     @ApiModelProperty(value = "用户名")
-    public String userName;
+    public String username;
 
     // 真是姓名
     @ApiModelProperty(value = "真是姓名")
@@ -35,7 +35,7 @@ public class BankCancellationAccountRequestBean extends BasePage{
 
     // 身份证号
     @ApiModelProperty(value = "身份证号")
-    private String idCard;
+    private String idcard;
 
     public String getCancellationTimeStart() {
         return cancellationTimeStart;
@@ -53,13 +53,6 @@ public class BankCancellationAccountRequestBean extends BasePage{
         this.cancellationTimeEnd = cancellationTimeEnd;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getTruename() {
         return truename;
@@ -77,11 +70,20 @@ public class BankCancellationAccountRequestBean extends BasePage{
         this.mobile = mobile;
     }
 
-    public String getIdCard() {
-        return idCard;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getIdcard() {
+        return idcard;
+    }
+
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
     }
 }

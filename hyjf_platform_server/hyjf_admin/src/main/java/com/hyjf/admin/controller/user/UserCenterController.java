@@ -19,7 +19,6 @@ import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.user.BankCancellationAccountResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -1198,27 +1197,27 @@ public class UserCenterController extends BaseController {
         BankCancellationAccountRequest bankCancellationAccountVO = new BankCancellationAccountRequest();
         // 用户已开户的情况
         if (bankOpenAccount == 1) {
-            // 调用银行接口查询用户信息
-            BankCallBean bankCallBean = new BankCallBean(userId,BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE,0);
-            bankCallBean.setMobile(userVO.getMobile());
-            BankCallBean callBackBean ;
-            try {
-                callBackBean = BankCallUtils.callApiBg(bankCallBean);
-            } catch (Exception e) {
-                logger.error("请求银行接口出错!手机号:" + userVO.getMobile());
-                return new AdminResult<>(FAIL, "请求银行接口出错!");
-            }
-            if (Validator.isNull(callBackBean) || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())){
-                //获取银行账户信息失败
-                return new AdminResult<>(FAIL, "获取用户银行账户信息失败!");
-            }
-            // 账户状态
-            // 空-正常
-            // C-止付
-            // Z-注销
-            if (!"Z".equals(bankCallBean.getAcctState())){
-                return new AdminResult<>(FAIL, "用户银行状态未销户,请确认");
-            }
+//            // 调用银行接口查询用户信息
+//            BankCallBean bankCallBean = new BankCallBean(userId,BankCallConstant.TXCODE_ACCOUNT_QUERY_BY_MOBILE,0);
+//            bankCallBean.setMobile(userVO.getMobile());
+//            BankCallBean callBackBean ;
+//            try {
+//                callBackBean = BankCallUtils.callApiBg(bankCallBean);
+//            } catch (Exception e) {
+//                logger.error("请求银行接口出错!手机号:" + userVO.getMobile());
+//                return new AdminResult<>(FAIL, "请求银行接口出错!");
+//            }
+//            if (Validator.isNull(callBackBean) || !BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())){
+//                //获取银行账户信息失败
+//                return new AdminResult<>(FAIL, "获取用户银行账户信息失败!");
+//            }
+//            // 账户状态
+//            // 空-正常
+//            // C-止付
+//            // Z-注销
+//            if (!"Z".equals(bankCallBean.getAcctState())){
+//                return new AdminResult<>(FAIL, "用户银行状态未销户,请确认");
+//            }
             // 获取用户开户信息
             BankOpenAccountVO bankOpenAccountVO = this.userCenterService.queryBankOpenAccountByUserId(Integer.parseInt(userId));
             // 电子账户号
