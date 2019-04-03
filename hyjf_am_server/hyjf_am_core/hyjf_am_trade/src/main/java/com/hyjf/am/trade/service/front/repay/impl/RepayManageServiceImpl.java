@@ -710,7 +710,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 }
             } else if (latePeriod > 0) {
                 // 逾期部分还款
-                this.calculateRepayPlanPart(repayByTerm, borrow, latePeriod);
+                this.calculateRepayPlanPart(repayByTerm, borrow, period, latePeriod);
                 setRecoverPlanPartDetail(form, isAllRepay, userId, borrow, repayByTerm, latePeriod);
                 if (lastPeriod == 0) {
                     lastPeriod = latePeriod;
@@ -3417,7 +3417,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             }
             repay.setRepayPlanList(borrowRepayPlanDeails);
         }
-        repay.setLastPeriod(nowPeriod);
+        if(nowPeriod > period) {
+            repay.setLastPeriod(nowPeriod);
+        }
         return repayAccountAll;
     }
 
@@ -3976,7 +3978,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowApicron.setCreditRepayStatus(0);
                         borrowApicron.setSubmitter(userName);
                         borrowApicron.setIsLate(borrow.getStatus() == 8 ? 1 : 0);
-                        borrowApicron.setLastPeriod(1);
+                        borrowApicron.setLastPeriod(0);
                         boolean increase = Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield());
                         if (increase) {
                             borrowApicron.setExtraYieldStatus(0);// 融通宝加息相关的放款状态
@@ -4376,7 +4378,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     borrowApicron.setCreditRepayStatus(0);
                     borrowApicron.setSubmitter(userName);
                     borrowApicron.setIsLate(borrowRepayPlan.getAdvanceStatus() == 3 ? 1 : 0);
-                    borrowApicron.setLastPeriod(isAllRepay ? borrowPeriod : latePeriod > 0 ? latePeriod : repay.getLastPeriod() == null ? period : repay.getLastPeriod());
+                    borrowApicron.setLastPeriod(repay.getLastPeriod() == null ? 0 : repay.getLastPeriod());
                     if(isAllRepay){
                         borrowApicron.setIsAllrepay(1);
                     }
@@ -5028,7 +5030,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             // 获取相应的还款信息
             BeanUtils.copyProperties(borrowRepay, repayByTerm);
             repayByTerm.setBorrowPeriod(String.valueOf(borrow.getBorrowPeriod()));
-            this.calculateRepayPlanPart(repayByTerm, borrow, latePeriod);
+            // 计算当前还款期数
+            int period = borrow.getBorrowPeriod() - borrowRepay.getRepayPeriod() + 1;
+            this.calculateRepayPlanPart(repayByTerm, borrow, period, latePeriod);
         }
         return repayByTerm;
     }
@@ -5036,7 +5040,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     /***
      * 计算用户分期还款部分期数应还金额(逾期使用)
      */
-    private BigDecimal calculateRepayPlanPart(RepayBean repay, Borrow borrow, int latePeriod) throws Exception {
+    private BigDecimal calculateRepayPlanPart(RepayBean repay, Borrow borrow, int period, int latePeriod) throws Exception {
 
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
         List<BorrowRepayPlan> borrowRepayPlans = searchRepayPlan(repay.getUserId(), borrow.getBorrowNid());
@@ -5080,6 +5084,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 }
             }
             repay.setRepayPlanList(borrowRepayPlanDeails);
+        }
+        if(latePeriod > period) {
+            repay.setLastPeriod(latePeriod);
         }
         return repayAccountAll;
     }

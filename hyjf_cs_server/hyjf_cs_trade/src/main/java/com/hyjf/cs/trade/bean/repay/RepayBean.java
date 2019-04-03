@@ -33,7 +33,7 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 	/** 用户还款详情 */
 	private List<RepayDetailBean> repayPlanList = new ArrayList<RepayDetailBean>();
 
-	// 多期还款提交的最后一期(带逾期当期还款的当期和多期逾期还款的最后一期,其余默认为当期
+	// 多期还款提交的最后一期(带逾期当期还款的当期和多期逾期还款的最后一期,其余默认为0
 	private Integer lastPeriod;
 
 	public RepayBean() {

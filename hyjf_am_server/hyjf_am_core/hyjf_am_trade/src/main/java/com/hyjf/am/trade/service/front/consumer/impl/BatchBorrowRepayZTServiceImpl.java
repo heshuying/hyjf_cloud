@@ -672,6 +672,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				BorrowApicronLog log = new BorrowApicronLog();
 				BeanUtils.copyProperties(apicron,log);
 				log.setId(null);
+				log.setStatus(status);
 				log.setUpdateTime(null);
 				borrowApicronLogMapper.insert(log);
 			} else {
@@ -824,7 +825,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					BorrowRecover borrowRecover = borrowRecoverList.get(i);
 					String tenderOrderId = borrowRecover.getNid();// 出借订单号
 					String repayOrderId = borrowRecover.getRepayOrdid();// 还款订单号
-					if(1 == apicron.getIsAllrepay()){//一次性结清
+					if (1 == apicron.getIsAllrepay() || apicron.getLastPeriod() > 1) {//一次性结清/可能是多期还款
 						repayOrderId = getAllRepayOrdid(borrowNid,periodNow,borrowRecover.getNid());
 					}
 					BigDecimal creditAmount = borrowRecover.getCreditAmount();// 债转金额
@@ -1667,19 +1668,27 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			failCount = this.borrowRecoverPlanMapper.countByExample(recoverPlanExample);
 			// 如果还款全部完成
 			if (failCount == 0) {
+				// 首先更新还款状态
+				newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+				BorrowExample borrowExample = new BorrowExample();
+				borrowExample.createCriteria().andIdEqualTo(borrowId);
+				boolean borrowFlag = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample) > 0 ? true : false;
+				if (!borrowFlag) {
+					throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新还款状态失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
+				}
 				boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;
 				Integer lastPeriod = apicron.getLastPeriod() == null ? 0 :apicron.getLastPeriod();// 同时提交还款的最后一期
 				boolean isLate = apicron.getIsLate() == null ? false: apicron.getIsLate() == 1;// 是否逾期
 				isAllRepay = isAllRepay || lastPeriod == borrowPeriod;// 多期还款的最后一期是标的的最后一期，是一次性还款
-                // 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/19
-                boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay);
-				if (isLastUpdate || (!isAllRepay && periodNext == 0)) {
+				// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/19
+				boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay && lastPeriod > 0);
+				if ((isAllRepay && isLastUpdate) || (!isAllRepay && periodNext == 0)) {
 					repayType = TYPE_WAIT_YES;
 					repayStatus = 1;
 					repayYesTime = nowTime;
 					status = 5;
 				}
-				// 非一次性还款和一次性还款最后一期才更新
+				// 非一次性还款和一次性还款其他期都更新完毕才更新
 				if(!isAllRepay || isLastUpdate){
 					if (isLate && status != 5) {// 如果是逾期标的,且仍有逾期未还款完毕
 						BorrowRecoverPlanExample LateRecoverPlanExample = new BorrowRecoverPlanExample();
@@ -1694,28 +1703,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					}
 					// 更新Borrow
 					newBorrow.setRepayFullStatus(repayStatus);
-					newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 					newBorrow.setStatus(status);
-					BorrowExample borrowExample = new BorrowExample();
-					borrowExample.createCriteria().andIdEqualTo(borrowId);
-					boolean borrowFlag = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample) > 0 ? true : false;
-					if (!borrowFlag) {
+					BorrowExample borrowExample2 = new BorrowExample();
+					borrowExample2.createCriteria().andIdEqualTo(borrowId);
+					boolean borrowFlag2 = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample2) > 0 ? true : false;
+					if (!borrowFlag2) {
 						throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
 					}
-				}
-				boolean isLastUpdate2 = isLastAllRepay(borrowNid, periodNow, isAllRepay);
-				if(isLastUpdate2 && !isLastUpdate){
-					logger.error("【直投还款】借款编号：{}，一次性还款重新更新标的表(ht_borrow)状态为成功！", apicron.getBorrowNid());
-					repayType = TYPE_WAIT_YES;
-					repayStatus = 1;
-					repayYesTime = nowTime;
-					status = 5;
-					newBorrow.setRepayFullStatus(repayStatus);
-					newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-					newBorrow.setStatus(status);
-					BorrowExample borrowExample = new BorrowExample();
-					borrowExample.createCriteria().andIdEqualTo(borrowId);
-					borrowMapper.updateByExampleSelective(newBorrow, borrowExample);
 				}
 				// 更新还款总表状态
 				BorrowRepay newBorrowRepay = new BorrowRepay();
@@ -1729,7 +1723,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				repayPlanCriteria.andBorrowNidEqualTo(borrowNid);
 				repayPlanCriteria.andRepayPeriodEqualTo(lastPeriod > periodNow ? lastPeriod + 1 : periodNow + 1);
 				List<BorrowRepayPlan> replayPlan = borrowRepayPlanMapper.selectByExample(example);
-				if (!isLastUpdate2 && replayPlan.size() > 0) {
+				if ((!isLastUpdate || (!isAllRepay && isLastUpdate)) && replayPlan.size() > 0) {
 					BorrowRepayPlan borrowRepayPlanNext = replayPlan.get(0);
 					if (borrowRepayPlanNext != null) {
 						// 取得下期还款时间
@@ -1857,7 +1851,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				repayAccountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作员
 				repayAccountList.setRemark(borrowNid);
 				repayAccountList.setIp(""); // 操作IP
-				if(!isAllRepay){//非一次性还款时插入资金明细
+				if(!isAllRepay || lastPeriod ==0){//非一次性/多期还款时插入资金明细
 					boolean repayAccountListFlag = this.accountListMapper.insertSelective(repayAccountList) > 0 ? true : false;
 					if (!repayAccountListFlag) {
 						throw new Exception("收支明细表(ht_account_list)写入失败，[借款人用户ID：" + repayUserId + "]，[借款编号:" + borrowNid + "]");
@@ -1876,9 +1870,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				} catch (Exception e) {
 					logger.error("同步还款任务日志表发生异常！", e);
 				}
-				if(isLastUpdate2){//一次性还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
-                    BigDecimal sum = getRepayPlanAccountSum(borrowNid);
-                    logger.info("【直投还款】借款编号：{}，一次性还款插入交易明细。总还款金额：{}", borrowNid, sum);
+				if(isLastUpdate){//一次性/多期还款判断是否整个标的还款，还款后新增交易明细 add by cwyang 2018-5-21
+					BigDecimal sum = getRepayPlanAccountSum(borrowNid, isAllRepay, lastPeriod);
+					logger.info("【直投还款】借款编号：{}，{}还款插入交易明细。总还款金额：{}", isAllRepay ? "一次性" : "多期", borrowNid, sum);
                     AccountList repayAllAccountList = new AccountList();
                     repayAllAccountList.setBankAwait(repayUserAccount.getBankAwait());
                     repayAllAccountList.setBankAwaitCapital(repayUserAccount.getBankAwaitCapital());
@@ -2943,9 +2937,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		}
 	}
 
-	private BigDecimal getRepayPlanAccountSum(String borrowNid) {
+	private BigDecimal getRepayPlanAccountSum(String borrowNid, boolean isAllRepay, int lastPeriod) {
 		BorrowApicronExample apicronExample = new BorrowApicronExample();
-		apicronExample.createCriteria().andBorrowNidEqualTo(borrowNid).andIsAllrepayEqualTo(1);
+		BorrowApicronExample.Criteria criteria = apicronExample.createCriteria();
+		criteria.andBorrowNidEqualTo(borrowNid).andIsAllrepayEqualTo(1);
+		if (isAllRepay) {
+			criteria.andIsAllrepayEqualTo(1);
+		} else {
+			logger.info("【直投还款】借款编号：{}，查看多期还款还款任务。还款最后一期：{}", borrowNid, lastPeriod);
+			criteria.andLastPeriodEqualTo(lastPeriod);
+		}
 		List<BorrowApicron> apicrons = this.borrowApicronMapper.selectByExample(apicronExample);
 		List periodList = new ArrayList();
 		for (BorrowApicron apicron: apicrons) {
