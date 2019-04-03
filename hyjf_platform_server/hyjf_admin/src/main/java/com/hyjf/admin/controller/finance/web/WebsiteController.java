@@ -211,12 +211,8 @@ public class WebsiteController extends BaseController {
         IValueFormatter typeAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-            	Integer type = (Integer) object;
-                if(type==1) {
-                	return "收入";
-                }else {
-                	return "支出";
-                }
+                Integer type = (Integer) object;
+                return type==1 ?"收入":"支出";
             }
         };
         IValueFormatter amountAdapter = new IValueFormatter() {
