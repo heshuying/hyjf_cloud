@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.ScreenDataJobCustomizeMapper">
+	<resultMap id="repayListResultMap" type="com.hyjf.am.vo.trade.RepaymentPlanVO" >
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="customer_name" property="customerName" jdbcType="VARCHAR" />
+		<result column="customer_group" property="customerGroup" jdbcType="INTEGER" />
+		<result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="repayment_time" property="repaymentTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+
+	<!--统计无主单用户查询散标待回款-->
+	<select id="findRepayUser"  resultMap="repayListResultMap">
+		select * from (
+		SELECT
+				r.nid as borrow_nid,
+				null as accede_order_id,
+				r.user_id,
+				from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,
+				(recover_account_wait-credit_amount) as money,
+				c.customer_name,
+				c.customer_group
+		FROM
+				   hyjf_trade.ht_borrow_recover r
+		LEFT JOIN  ht_user_portrait p1 ON r.user_id=p1.user_id
+		LEFT JOIN  ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
+		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
+		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN  ht_utm_plat p ON  u1.utm_source=p.source_name
+		WHERE
+			 (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+		and i.attribute=0
+		and	r.recover_account_wait > 0
+		AND r.debt_status = 0
+		AND r.credit_status IN (0, 1)
+		AND r.recover_status = 0
+		AND r.recover_period=1
+		AND r.accede_order_id IS NULL
+		AND r.recover_time <![CDATA[>=]]> #{startTime}
+		AND r.recover_time <![CDATA[<=]]> #{endTime}
+		union all
+
+		SELECT
+			r.nid as borrow_nid,
+			null as accede_order_id,
+			r.user_id,
+			from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,
+			(recover_account_wait-credit_amount) as money,
+			c.customer_name,
+			c.customer_group
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON r.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON r.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and	r.recover_account_wait > 0
+		AND r.debt_status = 0
+		AND r.credit_status IN (0, 1)
+		AND r.recover_status = 0
+		AND r.recover_period=1
+		AND r.accede_order_id IS NULL
+		AND recover_time <![CDATA[>=]]> #{startTime}
+		AND recover_time <![CDATA[<=]]> #{endTime}
+
+		union all
+
+		SELECT
+		r.nid as borrow_nid,
+		null as accede_order_id,
+		pa.user_id,
+		from_unixtime(pa.recover_time,'%Y-%m-%d') as repayment_time,
+		(pa.recover_account_wait-pa.credit_amount) as money,
+		c.customer_name,
+		c.customer_group
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
+		LEFT JOIN ht_user_portrait p1 ON pa.user_id = p1.user_id
+		LEFT JOIN ht_customer_task_config c ON p1.current_owner = c.customer_name
+		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
+		LEFT JOIN ht_utm_reg r1 ON r1.user_id = i.user_id
+		LEFT JOIN ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN ht_utm_plat p ON u1.utm_source = p.source_name
+		WHERE
+		 (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+		AND i.attribute = 0
+		AND pa.recover_account_wait > 0   -- 未收总额
+		AND pa.debt_status = 0    -- 债权是否结束状态(0:否,1:是)
+		AND pa.credit_status IN (0, 1)  -- 债转状态 0初始 1承接停止 2完全承接
+		AND pa.recover_status = 0   -- 还款状态(0:未还款,1:已还款,2:还款失败,3:逾期中)
+		AND pa.accede_order_id IS NULL
+		AND r.recover_period<![CDATA[>]]> 1   -- 还款期数
+		AND pa.recover_time <![CDATA[>=]]> #{startTime}
+		AND pa.recover_time <![CDATA[<=]]> #{endTime}
+
+		union all
+
+		SELECT
+			pa.nid as borrow_nid,
+			null as accede_order_id,
+			pa.user_id,
+			from_unixtime(pa.recover_time,'%Y-%m-%d') as repayment_time,
+			(pa.recover_account_wait-pa.credit_amount) as money,
+			c.customer_name,
+			c.customer_group
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
+		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON pa.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON pa.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and	pa.recover_account_wait > 0
+		AND pa.debt_status = 0
+		AND pa.credit_status IN (0, 1)
+		AND pa.recover_status = 0
+		AND pa.recover_period>1
+		AND pa.accede_order_id IS NULL
+		AND pa.recover_time <![CDATA[>=]]> #{startTime}
+		AND pa.recover_time <![CDATA[<=]]> #{endTime}
+
+		union all
+
+		select
+		null as borrow_nid,
+		a.accede_order_id ,
+		a.user_id ,
+		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
+		a.wait_total as money ,
+		c.customer_name,
+		c.customer_group
+		from hyjf_trade.ht_hjh_accede  a
+		LEFT JOIN  ht_user_portrait p1 ON a.user_id=p1.user_id
+		LEFT JOIN ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
+		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
+		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN  ht_utm_plat p ON  u1.utm_source=p.source_name
+		WHERE
+		 (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+		and i.attribute=0
+		and a.acctual_payment_time = 0
+		and a.end_date != ''
+		and a.end_date <![CDATA[>=]]> #{startTime}
+		and a.end_date <![CDATA[<=]]> #{endTime}
+			union all
+		select
+		null as borrow_nid,
+		a.accede_order_id ,
+		a.user_id ,
+		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
+		a.wait_total as money ,
+		c.customer_name,
+		c.customer_group
+		from hyjf_trade.ht_hjh_accede  a
+		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON a.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON a.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and a.acctual_payment_time = 0
+		and a.end_date != ''
+		and a.end_date <![CDATA[>=]]> #{startTime}
+		and a.end_date <![CDATA[<=]]> #{endTime}
+		) z
+		limit #{limitStart},#{limitEnd};
+	</select>
+
+	<!--统计无主单用户查询散标待回款-->
+	<select id="countRepayUser"  resultType="java.lang.Integer">
+		select count(user_id) as total from (
+		SELECT
+				r.user_id
+		FROM
+				   hyjf_trade.ht_borrow_recover r
+		LEFT JOIN  ht_user_portrait p1 ON r.user_id=p1.user_id
+		LEFT JOIN  ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
+		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
+		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN  ht_utm_plat p ON  u1.utm_source=p.source_name
+		WHERE
+			 (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+		and i.attribute=0
+		and	r.recover_account_wait > 0
+		AND r.debt_status = 0
+		AND r.credit_status IN (0, 1)
+		AND r.recover_status = 0
+		AND r.recover_period=1
+		AND r.accede_order_id IS NULL
+		AND r.recover_time <![CDATA[>=]]> #{startTime}
+		AND r.recover_time <![CDATA[<=]]> #{endTime}
+		union all
+
+		SELECT
+			r.user_id
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON r.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON r.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and	r.recover_account_wait > 0
+		AND r.debt_status = 0
+		AND r.credit_status IN (0, 1)
+		AND r.recover_status = 0
+		AND r.recover_period=1
+		AND r.accede_order_id IS NULL
+		AND recover_time <![CDATA[>=]]> #{startTime}
+		AND recover_time <![CDATA[<=]]> #{endTime}
+
+		union all
+
+		SELECT
+		pa.user_id
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
+		LEFT JOIN ht_user_portrait p1 ON pa.user_id = p1.user_id
+		LEFT JOIN ht_customer_task_config c ON p1.current_owner = c.customer_name
+		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
+		LEFT JOIN ht_utm_reg r1 ON r1.user_id = i.user_id
+		LEFT JOIN ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN ht_utm_plat p ON u1.utm_source = p.source_name
+		WHERE
+		 (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+		AND i.attribute = 0
+		AND pa.recover_account_wait > 0
+		AND pa.debt_status = 0
+		AND pa.credit_status IN (0, 1)
+		AND pa.recover_status = 0
+		AND pa.accede_order_id IS NULL
+		AND r.recover_period<![CDATA[>]]> 1
+		AND pa.recover_time <![CDATA[>=]]> #{startTime}
+		AND pa.recover_time <![CDATA[<=]]> #{endTime}
+
+		union all
+
+		SELECT
+			pa.user_id
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
+		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON pa.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON pa.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and	pa.recover_account_wait > 0
+		AND pa.debt_status = 0
+		AND pa.credit_status IN (0, 1)
+		AND pa.recover_status = 0
+		AND pa.recover_period>1
+		AND pa.accede_order_id IS NULL
+		AND pa.recover_time <![CDATA[>=]]> #{startTime}
+		AND pa.recover_time <![CDATA[<=]]> #{endTime}
+
+		union all
+
+		select
+		a.user_id
+		from hyjf_trade.ht_hjh_accede  a
+		LEFT JOIN  ht_user_portrait p1 ON a.user_id=p1.user_id
+		LEFT JOIN ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
+		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
+		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN  ht_utm_plat p ON  u1.utm_source=p.source_name
+		WHERE
+		 (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null)
+		and i.attribute=0
+		and a.acctual_payment_time = 0
+		and a.end_date != ''
+		and a.end_date <![CDATA[>=]]> #{startTime}
+		and a.end_date <![CDATA[<=]]> #{endTime}
+			union all
+		select
+			a.user_id
+		from hyjf_trade.ht_hjh_accede  a
+		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON a.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON a.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and a.acctual_payment_time = 0
+		and a.end_date != ''
+		and a.end_date <![CDATA[>=]]> #{startTime}
+		and a.end_date <![CDATA[<=]]> #{endTime}
+		) z
+	</select>
+	<!--统计有主单用户查询散标待回款-->
+<!--
+	<select id="findRepayUserYouSan"  resultMap="repayListResultMap">
+		SELECT
+			r.borrow_nid,
+			r.user_id,
+			from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,
+			(recover_account_wait-credit_amount) as money,
+			c.customer_name,
+			c.customer_group
+		FROM
+		hyjf_trade.ht_borrow_recover r
+		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
+		LEFT JOIN  ht_user_portrait p ON r.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON r.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部' or d1.`name`='网络运营部')
+		and	r.recover_account_wait > 0
+		AND r.debt_status = 0
+		AND r.credit_status IN (0, 1)
+		AND r.recover_status = 0
+		AND r.accede_order_id IS NULL
+		AND recover_time <![CDATA[>=]]> #{startTime}
+		AND recover_time <![CDATA[<=]]> #{endTime}
+	</select>
+
+	&lt;!&ndash;统计无主单用户查询计划待回款&ndash;&gt;
+	<select id="findRepayUserWuPlan"  resultMap="repayListResultMap">
+		select
+		a.user_id ,
+		a.accede_order_id ,
+		a.wait_total as money ,
+		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
+		c.customer_name,
+		c.customer_group
+		from hyjf_trade.ht_hjh_accede  a
+		LEFT JOIN  ht_user_portrait p1 ON a.user_id=p1.user_id
+		LEFT JOIN ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
+		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
+		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
+		LEFT JOIN  ht_utm_plat p ON  u1.utm_source=p.source_name
+		WHERE
+		p.source_id<![CDATA[<>]]>349
+		and i.attribute=0
+		and a.acctual_payment_time = 0
+		and a.end_date != ''
+		and a.end_date <![CDATA[>=]]> #{startTime}
+		and a.end_date <![CDATA[<=]]> #{endTime};
+	</select>
+
+	&lt;!&ndash;统计有主单用户查询计划待回款&ndash;&gt;
+	<select id="findRepayUserYouPlan"  resultMap="repayListResultMap">
+		select
+		a.user_id ,
+		a.accede_order_id ,
+		a.wait_total as money ,
+		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
+		c.customer_name,
+		c.customer_group
+		from hyjf_trade.ht_hjh_accede  a
+		LEFT JOIN  ht_user_portrait p ON a.user_id=p.user_id
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN `ht_spreads_user` s ON a.user_id = s.user_id
+		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
+		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
+		LEFT JOIN ht_r_oa_department d2 ON d2.id = d1.parentid
+		LEFT JOIN ht_r_oa_department d3 ON d3.id = d2.parentid
+		where  ou.user_status IN ( 'E', 'Q1', 'Q11', 'Q2', 'Q21' )
+		and i.attribute<![CDATA[<>]]>0
+		and d3.`name`='惠众商务'
+		and (d1.`name`='电销部部' or d1.`name`='网络运营部')
+		and a.acctual_payment_time = 0
+		and a.end_date != ''
+		and a.end_date <![CDATA[>=]]> #{startTime}
+		and a.end_date <![CDATA[<=]]> #{endTime};
+	</select>
+-->
+</mapper>

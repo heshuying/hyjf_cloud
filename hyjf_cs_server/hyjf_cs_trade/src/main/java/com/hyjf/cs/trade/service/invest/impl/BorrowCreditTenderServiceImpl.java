@@ -3,9 +3,11 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.config.DebtConfigResponse;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -932,6 +934,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     } catch (MQException e) {
                         logger.error(e.getMessage());
                     }
+
                     // 4.添加网站收支明细  // 发送mq更新添加网站收支明细
                     // 服务费大于0时,插入网站收支明细
                     if (creditTender.getCreditFee().compareTo(BigDecimal.ZERO) > 0) {
@@ -973,6 +976,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         logger.error(e.getMessage());
                     }
                     // 神策数据统计 add by liuyang 20180726 end
+                    try {
+                        // 承接成功后,发送大屏数据统计MQ
+                        ScreenDataBean screenDataBean = new ScreenDataBean(tenderOrderId,sellerUserId,sellerAccount.getUserName(),creditTenderLog.getAssignCapital(),3);
+                        screenDataBean.setTenderUserId(assignAccount.getUserId());
+                        this.sendScreenDataMQ(screenDataBean);
+                    } catch (Exception e) {
+                        logger.error("承接成功后,发送大屏数据统计MQ失败",e.getMessage());
+                    }
                     return true;
                 }
             }else{
@@ -1554,5 +1565,14 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
+    }
+
+    /**
+     * 承接成功后,发送大屏数据统计MQ
+     *
+     * @param screenDataBean
+     */
+    private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
 }

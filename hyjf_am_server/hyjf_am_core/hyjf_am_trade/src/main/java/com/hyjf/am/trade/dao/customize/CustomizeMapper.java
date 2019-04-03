@@ -90,7 +90,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected ManualReverseCustomizeMapper manualReverseCustomizeMapper;
-	
+
 	@Autowired
 	protected WDZJCustomizeMapper wdzjCustomizeMapper;
 
@@ -174,7 +174,7 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected AleveCustomizeMapper aleveCustomizeMapper;
-	
+
 	@Autowired
 	protected AdminHjhCommissionMapper adminHjhCommissionMapper;
 
@@ -271,4 +271,6 @@ public class CustomizeMapper extends AutoMapper {
 
 	@Autowired
 	protected BorrowUserStatisticsMapper borrowUserStatisticsMapper;
+	@Autowired
+	protected UserLargeScreenCustomizeMapper userLargeScreenCustomizeMapper;
 }
