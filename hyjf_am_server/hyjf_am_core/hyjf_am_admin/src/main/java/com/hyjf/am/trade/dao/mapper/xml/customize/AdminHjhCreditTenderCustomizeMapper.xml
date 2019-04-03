@@ -167,8 +167,8 @@
 		  sum(ct.assign_pay) AS  sumAssignPay,
 		  sum(ct.assign_service_fee) AS sumAssignServiceFee
 	    from ht_hjh_debt_credit_tender ct
-		<if test="repayStyle != null and repayStyle != ''">
 			INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid AND bc.credit_nid = ct.credit_nid
+		<if test="repayStyle != null and repayStyle != ''">
 			INNER JOIN ht_borrow b ON ct.borrow_nid = b.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		</if>
