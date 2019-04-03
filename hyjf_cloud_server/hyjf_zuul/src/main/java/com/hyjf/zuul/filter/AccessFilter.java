@@ -104,6 +104,7 @@ public class AccessFilter extends ZuulFilter {
                 this.appSetUserIdProcess(ctx, sign, secureVisitFlag);
 
             } else {
+                logger.info("原始请求地址originalRequestPath is {}:, appKeyIgnoreUrls is :{},该请求不需要验证sign", originalRequestPath,appKeyIgnoreUrls);
                 // app打开初始化操作
                 this.initServer(request, ctx);
             }
