@@ -549,7 +549,7 @@
 			ht_borrow b
 		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
 		WHERE
-			b.`status` = 4
+			b.`status` = 4 OR b.`status` = 8
 		AND hbi.repay_org_user_id = #{userId}
 	</select>
 
