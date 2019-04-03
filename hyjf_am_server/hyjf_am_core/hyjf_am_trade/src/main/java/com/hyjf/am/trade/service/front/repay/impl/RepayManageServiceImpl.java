@@ -1041,13 +1041,18 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignAccount = creditRepay.getRepayAccount();
                                 assignCapital = creditRepay.getRepayCapital();// 承接本金
                                 assignInterest = creditRepay.getRepayInterest();
-                                // 按月计息，到期还本还息end
-                                if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
-                                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
-                                }
-                                // 按天计息到期还本还息
-                                else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
-                                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
+                                //最后一笔兜底
+                                if (!overFlag && j == creditRepayList.size() - 1) {
+                                    assignManageFee = userManageFee;
+                                } else {
+                                    // 按月计息，到期还本还息end
+                                    if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+                                        assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
+                                    }
+                                    // 按天计息到期还本还息
+                                    else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                        assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, borrowVerifyTime);
+                                    }
                                 }
                                 // 如果项目类型为融通宝，调用新的提前还款利息计算公司
                                 if (borrow.getProjectType() == 13 || CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
@@ -5095,9 +5100,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         int periodTotal = borrow.getBorrowPeriod();
         // 计算当前还款期数
         int repayPeriod = periodTotal - repayByTerm.getRepayPeriod() + 1;
-        if(latePeriod >0){
-            repayPeriod = latePeriod;
-        }
         // 如果用户最后一期不是已还款
         if (repayPeriod <= periodTotal) {
             ;
@@ -5123,6 +5125,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 } else {// 用户未还款本息
                     if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
                         lateArray.add(userRepayPlan.getRepayPeriod());
+                        if (nowPeriod < periodTotal) {
+                            nowPeriod++;
+                        }
                         if(userRepayPlan.getRepayPeriod() == periodTotal){
                             form.setOnlyAllRepay("2");// 全部逾期
                         }
