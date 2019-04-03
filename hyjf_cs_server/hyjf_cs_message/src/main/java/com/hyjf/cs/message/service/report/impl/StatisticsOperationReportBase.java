@@ -9,8 +9,8 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.ic.report.OperationColumnReport;
-import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationReport;
 import com.hyjf.cs.message.bean.ic.report.OperationTenthReport;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationReport;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.report.*;
@@ -359,7 +359,59 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 //        tenthOperationReportMapper.insert(tenthOperationReport);
         operationTenthReportMongDao.insert(operationTenthReport);
     }
+    /**
+     * 用户分析 - 性别分布
+     *
+     * @return
+     */
+    public Map<String, Integer> getSexDistribute(OperationReportJobBean bean) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        List<OperationReportJobVO> listSexDistribute = bean.getListSexDistribute();
+        if (!CollectionUtils.isEmpty(listSexDistribute)) {
+            for (OperationReportJobVO opear : listSexDistribute) {
+                if ("男".equals(opear.getTitle())) {
+                    map.put("manTenderNum", opear.getDealSum());
+                } else if ("女".equals(opear.getTitle())) {
+                    map.put("womanTenderNum", opear.getDealSum());
+                }
+            }
 
+            //null值转换
+            this.nullConvertValue(Integer.class, map, "manTenderNum", "womanTenderNum");
+        }
+        return map;
+    }
+
+
+    /**
+     * 用户分析 - 年龄分布
+     *
+     * @param bean 今年间隔月份
+     * @return
+     */
+    public Map<String, Integer> getAgeDistribute(OperationReportJobBean bean) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        List<OperationReportJobVO> listAgeDistribute = bean.getListAgeDistribute();
+        if (!CollectionUtils.isEmpty(listAgeDistribute)) {
+            for (OperationReportJobVO opear : listAgeDistribute) {
+                if ("18-29岁".equals(opear.getTitle())) {
+                    map.put("18-29", opear.getDealSum());
+                } else if ("30-39岁".equals(opear.getTitle())) {
+                    map.put("30-39", opear.getDealSum());
+                } else if ("40-49岁".equals(opear.getTitle())) {
+                    map.put("40-49", opear.getDealSum());
+                } else if ("50-59岁".equals(opear.getTitle())) {
+                    map.put("50-59", opear.getDealSum());
+                } else if ("60岁以上".equals(opear.getTitle())) {
+                    map.put("60-", opear.getDealSum());
+                }
+            }
+
+            //null值转换
+            this.nullConvertValue(Integer.class, map, "18-29", "30-39", "40-49", "50-59", "60-");
+        }
+        return map;
+    }
 
     /**
      * 业绩总览
@@ -529,63 +581,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         return map;
     }
 
-    /**
-     * 用户分析 - 性别分布
-     *
-     * @return
-     */
-    public Map<String, Integer> getSexDistribute(OperationReportJobBean bean) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listSexDistribute = bean.getListSexDistribute();
-        //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
-        listSexDistribute =  amUserClient.getSexCount(listSexDistribute);
-        if (!CollectionUtils.isEmpty(listSexDistribute)) {
-            for (OperationReportJobVO opear : listSexDistribute) {
-                if ("男".equals(opear.getTitle())) {
-                    map.put("manTenderNum", opear.getDealSum());
-                } else if ("女".equals(opear.getTitle())) {
-                    map.put("womanTenderNum", opear.getDealSum());
-                }
-            }
 
-            //null值转换
-            this.nullConvertValue(Integer.class, map, "manTenderNum", "womanTenderNum");
-        }
-        return map;
-    }
-
-
-    /**
-     * 用户分析 - 年龄分布
-     *
-     * @param bean 今年间隔月份
-     * @return
-     */
-    public Map<String, Integer> getAgeDistribute(OperationReportJobBean bean) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listAgeDistribute = bean.getListAgeDistribute();
-        //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
-        listAgeDistribute =  amUserClient.getAgeCount(listAgeDistribute);
-        if (!CollectionUtils.isEmpty(listAgeDistribute)) {
-            for (OperationReportJobVO opear : listAgeDistribute) {
-                if ("18-29岁".equals(opear.getTitle())) {
-                    map.put("18-29", opear.getDealSum());
-                } else if ("30-39岁".equals(opear.getTitle())) {
-                    map.put("30-39", opear.getDealSum());
-                } else if ("40-49岁".equals(opear.getTitle())) {
-                    map.put("40-49", opear.getDealSum());
-                } else if ("50-59岁".equals(opear.getTitle())) {
-                    map.put("50-59", opear.getDealSum());
-                } else if ("60岁以上".equals(opear.getTitle())) {
-                    map.put("60-", opear.getDealSum());
-                }
-            }
-
-            //null值转换
-            this.nullConvertValue(Integer.class, map, "18-29", "30-39", "40-49", "50-59", "60-");
-        }
-        return map;
-    }
 
     /**
      * 用户分析 - 金额分布
