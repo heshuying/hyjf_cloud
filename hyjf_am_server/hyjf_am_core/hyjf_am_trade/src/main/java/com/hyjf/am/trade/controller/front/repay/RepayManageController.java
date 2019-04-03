@@ -24,6 +24,8 @@ import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.am.vo.trade.repay.RepayWaitOrgVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.CommonUtils;
@@ -467,10 +469,11 @@ public class RepayManageController extends BaseController {
             }
         }
         logger.info("【批量还款垫付】冻结订单号：{}，总垫付金额：{}",orderId, repayTotal);
-        if (BigDecimal.ZERO.compareTo(repayTotal) == 0 && hasNoMoney) {
+        if (BigDecimal.ZERO.compareTo(repayTotal) == 0) {
             responseBean.setRtn(Response.FAIL);
             if (hasNoMoney) {
                 responseBean.setResult(MsgEnum.ERR_AMT_NO_MONEY.getMsg());
+                RedisUtils.del(RedisConstants.CONCURRENCE_BATCH_ORGREPAY_USERID + userId);
             } else if (errorResultSet.iterator().hasNext()) {// 不是余额不足,随便选一个异常抛出
                 responseBean.setResult(errorResultSet.iterator().next().getMsg());
             }
