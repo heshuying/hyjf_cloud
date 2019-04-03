@@ -14,6 +14,7 @@ import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfigExample;
 import com.hyjf.am.user.service.front.userlargescreen.UserLargeScreenService;
+import com.hyjf.am.vo.api.MonthDataStatisticsVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.springframework.beans.BeanUtils;
@@ -69,10 +70,19 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         return response;
     }
 
+    /**
+     * 所有坐席和坐席下用户查询
+     * @return
+     */
     @Override
-    public List<Integer> getOperUserIds() {
-        return userLargeScreenTwoCustomizeMapper.getOperUserIds();
+    public List<MonthDataStatisticsVO> getCurrentOwnersAndUserIds() {
+        List<MonthDataStatisticsVO> list = userLargeScreenTwoCustomizeMapper.getCurrentOwners();
+        for (MonthDataStatisticsVO param : list) {
+            List<Integer> userIds = userLargeScreenTwoCustomizeMapper.getCurrentOwnerUserIds(param.getCurrentOwner());
+            if (!CollectionUtils.isEmpty(userIds)){
+                param.setUserIds(userIds);
+            }
+        }
+        return list;
     }
-
-
 }

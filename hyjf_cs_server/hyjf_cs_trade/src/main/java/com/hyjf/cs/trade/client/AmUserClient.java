@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
@@ -509,8 +510,8 @@ public interface AmUserClient {
 	UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request);
 
 	/**
-	 * 运营部所有用户id
+	 * 所有坐席和坐席下用户查询
 	 * @return
 	 */
-    List<Integer> getOperUserIds();
+	UserLargeScreenTwoVO getCurrentOwnersAndUserIds();
 }
