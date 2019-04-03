@@ -4652,6 +4652,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
         BorrowApicron newBorrowApicron = new BorrowApicron();
         newBorrowApicron.setStatus(status);
+        if(CustomConstants.BANK_BATCH_STATUS_VERIFY_FAIL == status || CustomConstants.BANK_BATCH_STATUS_FAIL == status) {
+            newBorrowApicron.setFailTimes(apicron.getFailTimes());
+            newBorrowApicron.setData(apicron.getData());
+        }
         borrowApicronMapper.updateByExampleSelective(newBorrowApicron, example);
 
         //更新borrow表状态
