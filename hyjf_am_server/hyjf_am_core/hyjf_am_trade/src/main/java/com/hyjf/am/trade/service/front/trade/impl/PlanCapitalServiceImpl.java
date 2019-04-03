@@ -78,9 +78,18 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
 	@Override
 	public List<HjhPlanCapitalPredictionVO> getPlanCapitalPredictionForProformaList(Date fromDate, Date toDate) {
 		List<HjhPlanCapitalPredictionVO> list = new ArrayList<HjhPlanCapitalPredictionVO>();
-		logger.info("获取该期间的预计当日新增复投额,fromDate:【" + fromDate + "】"+" *********** toDate:"+"【" + toDate + "】");
+		logger.info("获取该期间的预计当日新增复投额开始,fromDate:【" + fromDate + "】"+" *********** toDate:"+"【" + toDate + "】");
+		// 检索还款日为T+1日   且与    “计划”关联的“标的还款明细” ht_borrow_recover / ht_borrow / ht_borrow_recover_plan
 
+		// 根据投资人的用户名检索相应的 “计划订单” ht_hjh_accede
 
+		// 再根据“计划订单”对应的‘计划编号’进行区分，将标的‘当前持有人的还款额’进行（累加）
+
+		// 1.计划订单开始发起退出的时间小于T，大于T+3日的订单
+
+		// 2.还款金额+计划订单 <10 元的不计算在当日的新增复投额之内
+
+		logger.info("获取该期间的预计当日新增复投额结束,fromDate:【" + fromDate + "】"+" =========== toDate:"+"【" + toDate + "】");
 
 		return list;
 	}
