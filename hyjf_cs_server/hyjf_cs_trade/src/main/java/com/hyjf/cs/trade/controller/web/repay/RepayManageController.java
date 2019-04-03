@@ -520,6 +520,7 @@ public class RepayManageController extends BaseTradeController {
     @ApiOperation(value = "还款申请", notes = "还款申请")
     @PostMapping(value = "/repay_request", produces = "application/json; charset=utf-8")
     public WebResult repayRequest(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayRequest requestBean, HttpServletRequest request){
+        logger.info("【还款申请】传入参数：{}", JSONObject.toJSONString(requestBean));
         WebResult webResult = new WebResult();
         Map<String,String> resultMap = new HashMap<>();
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
