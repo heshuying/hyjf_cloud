@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.trade;
 
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
 import java.util.Date;
@@ -23,4 +24,11 @@ public interface PlanCapitalService extends BaseService {
 	 */
 	List<HjhPlanCapitalVO> getPlanCapitalForProformaList(Date fromDate, Date toDate);
 
+	/**
+	 * 获取该期间的预计当日新增复投额
+	 * @param fromDate
+	 * @param toDate
+	 * @return
+	 */
+	List<HjhPlanCapitalPredictionVO> getPlanCapitalPredictionForProformaList(Date fromDate, Date toDate);
 }

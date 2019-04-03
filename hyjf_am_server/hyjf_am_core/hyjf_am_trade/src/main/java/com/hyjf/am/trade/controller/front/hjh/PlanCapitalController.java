@@ -3,8 +3,10 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.hyjf.am.response.admin.HjhPlanCapitalPredictionResponse;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.trade.service.front.trade.PlanCapitalService;
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
@@ -59,4 +61,22 @@ public class PlanCapitalController {
         }
         return response;
     }
+
+    /**
+     * 获取该期间的预计当日新增复投额
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
+    @GetMapping("/getPlanCapitalPredictionForProformaList/{fromDate}/{toDate}")
+    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionForProformaList(@PathVariable(value = "fromDate") String fromDate,
+                                                                                    @PathVariable(value = "toDate") String toDate){
+        HjhPlanCapitalPredictionResponse response = new HjhPlanCapitalPredictionResponse();
+        List<HjhPlanCapitalPredictionVO> list = this.planCapitalService.getPlanCapitalPredictionForProformaList(GetDate.stringToDate2(fromDate), GetDate.stringToDate2(toDate));
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
 }
