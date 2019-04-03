@@ -128,7 +128,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
      */
     @RequestMapping(value = "/getExportCount",method = RequestMethod.POST)
     public IntegerResponse getExportCount(@RequestBody @Valid BorrowRepayInfoCurrentRequest requestBean){
-        logger.info("当前债权还款明细导出数据接口-start, requestBean:{}", JSON.toJSONString(requestBean));
+        logger.info("当前债权还款明细导出总记录数接口-start, requestBean:{}", JSON.toJSONString(requestBean));
         IntegerResponse response = new IntegerResponse();
 
         //borrowNid为必须传的参数
@@ -144,7 +144,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         response.setResultInt(count);
         response.setRtn(Response.SUCCESS);
 
-        logger.info("当前债权还款明细导出数据接口-end, response:{}", JSON.toJSONString(response));
+        logger.info("当前债权还款明细导出总记录数接口-end, response:{}", JSON.toJSONString(response));
         return response;
     }
 
