@@ -121,8 +121,9 @@
         FROM
         ht_hjh_accede a
         WHERE
-        a.acctual_payment_time <![CDATA[ < ]]>
+        a.acctual_payment_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
         # 加入时间
         UNION ALL
         # 汇添金
