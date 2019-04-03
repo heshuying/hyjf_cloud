@@ -39,11 +39,13 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     private static final String SHRJ_DIVISION_NAME = "上海嵘具";
     private static final String YYZX_DIVISION_NAME = "运营中心";
     private static final String HZSW_DIVISION_NAME = "惠众";
+    private static final String QIANLE_DIVISION_NAME = "渠道";
 
     private static final int DRAW_ORDER_LEVEL1 = 1;
     private static final int DRAW_ORDER_LEVEL2 = 2;
     private static final int DRAW_ORDER_LEVEL3 = 3;
     private static final int DRAW_ORDER_LEVEL4 = 4;
+    private static final int DRAW_ORDER_LEVEL5 = 5;
 
     /** 查询所有分部 */
     private static final Integer QUERY_ALL_DIVISION_TYPE = 1;
@@ -95,8 +97,10 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
 
         list.add(this.constructionSellDaily(YYZX_DIVISION_NAME, "网络运营部", DRAW_ORDER_LEVEL2, 0));
         list.add(this.constructionSellDaily(YYZX_DIVISION_NAME, "无主单", DRAW_ORDER_LEVEL2, 0));
+        list.add(this.constructionSellDaily(QIANLE_DIVISION_NAME, "千乐", DRAW_ORDER_LEVEL5, 0));
         list.add(this.constructionSellDaily("其中：", "APP推广", DRAW_ORDER_LEVEL2, 0));
         list.add(this.constructionSellDaily(HZSW_DIVISION_NAME, "其它", DRAW_ORDER_LEVEL2, 0));
+
 
         List<String> twoDivisionList3 = amUserClient.selectTwoDivisionByPrimaryDivision(QGR_DIVISION_NAME);
         for (String twoDivision : twoDivisionList3) {

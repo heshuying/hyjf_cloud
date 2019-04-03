@@ -284,6 +284,139 @@
         AND br.repay_status IN (0,1)
     </sql>
 
+    <sql id="countTotalInvestSqlQL">
+        SELECT bt.account AS account
+        FROM ht_borrow_tender bt
+        LEFT JOIN hyjf_user.ht_user_info ui ON bt.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE
+        br.accede_order_id is null
+        AND p.source_id = #{sourceId}
+        AND bt.create_time <![CDATA[>=]]> #{startTime}
+        AND bt.create_time <![CDATA[<=]]> #{endTime}
+        UNION
+        SELECT a.accede_account AS account
+        FROM ht_hjh_accede a
+        LEFT JOIN hyjf_user.ht_user_info ui ON a.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE
+        p.source_id = #{sourceId}
+        AND a.create_time <![CDATA[>=]]> #{startTime}
+        AND a.create_time <![CDATA[<=]]> #{endTime}
+    </sql>
+
+    <sql id="countTotalRepaySqlQL">
+        #汇直投已还#
+        SELECT
+        br.recover_account_yes AS repay_amount
+        FROM
+        hyjf_trade.ht_borrow_recover br
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id = 1
+        AND p.source_id = #{sourceId}
+        AND br.accede_order_id IS NULL
+        AND br.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.recover_yestime <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.recover_status = 1
+
+        UNION ALL
+        #汇计划已还#
+        SELECT
+        br.repay_total AS repay_amount
+        FROM
+        hyjf_trade.ht_hjh_repay br
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id = 1
+        AND p.source_id = #{sourceId}
+        AND br.repay_actual_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.repay_actual_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.repay_status = 2
+    </sql>
+
+    <sql id="countTotalWithdrawSqlQL">
+        SELECT w.total AS withdraw_amount,
+        FROM hyjf_trade.ht_account_withdraw w
+        LEFT JOIN hyjf_user.ht_user_info ui ON w.user_id=ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id=uu.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE  ui.role_id=1
+        AND uu.user_type = 0
+        AND w.status=2
+        AND p.source_id = #{sourceId}
+        AND w.create_time <![CDATA[>=]]> #{startTime}
+        AND w.create_time <![CDATA[<=]]> #{endTime}
+    </sql>
+
+    <sql id="countTotalRechargeSqlQL">
+        SELECT r.money AS recharge_amount,
+        FROM hyjf_trade.ht_account_recharge r
+        LEFT JOIN hyjf_user.ht_user_info ui ON r.user_id=ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id=ui.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg ur on uu.user_id=ur.user_id
+        LEFT JOIN hyjf_user.ht_utm m on ur.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id=1
+        AND uu.user_type = 0
+        AND r.status=2
+        AND p.source_id = #{sourceId}
+        AND r.create_time <![CDATA[>=]]> #{startTime}
+        AND r.create_time <![CDATA[<=]]> #{endTime}
+    </sql>
+
+    <sql id="countTotalNoneRepaySqlQL">
+        #汇直投待还#
+      SELECT
+        br.recover_account AS none_repay,
+        FROM
+        hyjf_trade.ht_borrow_recover br
+        LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg ur on uu.user_id=ur.user_id
+        LEFT JOIN hyjf_user.ht_utm m on ur.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id = 1
+        AND p.source_id = #{sourceId}
+        AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.recover_status = 0
+        AND br.accede_order_id IS NULL
+
+        UNION ALL
+        #汇计划待还#
+        SELECT
+        br.repay_wait AS none_repay,
+        FROM
+        hyjf_trade.ht_hjh_repay br
+        LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg ur on uu.user_id=ur.user_id
+        LEFT JOIN hyjf_user.ht_utm m on ur.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id = 1
+        AND p.source_id = #{sourceId}
+        AND br.repay_should_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.repay_should_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.repay_status IN (0,1)
+    </sql>
+
     <!-- 查询运营中心合计 -->
     <select id="selectOCSum" parameterType="java.lang.String" resultMap="sumResultMap">
         SELECT
@@ -323,9 +456,20 @@
         <include refid="countTotalNoneRepaySql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐当日待还 -->
+    <select id="countNoneRepayTodayQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalNoneRepaySqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询本月份规模业绩 -->
@@ -338,12 +482,23 @@
         <include refid="countTotalInvestSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐本月份规模业绩 -->
+    <select id="countTotalInvestOnMonthQl" resultMap="sumResultMap">
+        select ROUND(SUM(account)/10000) AS invest_total_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalInvestSqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询上月份规模业绩 -->
@@ -356,12 +511,23 @@
         <include refid="countTotalInvestSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐上月份规模业绩 -->
+    <select id="countTotalInvestOnPreviousMonthQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalInvestSqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询昨日规模业绩 -->
@@ -374,12 +540,23 @@
         <include refid="countTotalInvestSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐昨日规模业绩 -->
+    <select id="countTotalTenderYesterdayQl" resultMap="sumResultMap">
+       SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
+       '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalInvestSqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询本月累计已还款 -->
@@ -392,9 +569,20 @@
         <include refid="countTotalRepaySql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐本月累计已还款 -->
+    <select id="countTotalRepayOnMonthQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRepaySqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询昨日已还款 -->
@@ -407,11 +595,21 @@
         <include refid="countTotalRepaySql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
 
+    <!-- 查询千乐昨日已还款 -->
+    <select id="countTotalRepayYesterdayQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_yesterday,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRepaySqlQL"/>
+        ) AS t
+    </select>
 
     <!-- 查询本月累计提现 -->
     <select id="countTotalWithdrawOnMonth" resultMap="sumResultMap">
@@ -423,9 +621,20 @@
         <include refid="countTotalWithdrawSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐本月累计提现 -->
+    <select id="countTotalWithdrawOnMonthQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalWithdrawSqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询昨日提现 -->
@@ -438,9 +647,20 @@
         <include refid="countTotalWithdrawSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐昨日提现 -->
+    <select id="countTotalWithdrawYesterdayQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_yesterday,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalWithdrawSqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询本月累计充值 -->
@@ -453,9 +673,20 @@
         <include refid="countTotalRechargeSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐本月累计充值 -->
+    <select id="countTotalRechargeOnMonthQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRechargeSqlQL"/>
+        ) AS t
     </select>
 
     <!-- 查询昨日充值 -->
@@ -468,11 +699,21 @@
         <include refid="countTotalRechargeSql"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
 
+    <!-- 查询千乐昨日充值 -->
+    <select id="countTotalRechargeYesterdayQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_yesterday,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRechargeSqlQL"/>
+        ) AS t
+    </select>
 
     <!-- 查询本月累计年化业绩 -->
     <select id="countTotalAnnualInvestOnMonth" resultMap="sumResultMap">
@@ -492,12 +733,29 @@
         ) AS m
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐本月累计年化业绩 -->
+    <select id="countTotalAnnualInvestOnMonthQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        SELECT  m.account*(CASE m.borrow_period
+        WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
+        WHEN '4个月' THEN 0.35 WHEN '5个月' THEN 0.4 WHEN '6个月' THEN 0.55 WHEN '7个月' THEN 0.9 WHEN '8个月' THEN 1
+        WHEN '9个月' THEN 1 WHEN '10个月' THEN 1 WHEN '11个月' THEN 1.1 WHEN '12个月' THEN 1.1 WHEN '24个月' THEN 2.2 ELSE 0 END ) AS amount
+        FROM (
+        <include refid="countTotalInvestSqlQL"/>
+        ) AS m
+        ) AS t
     </select>
 
 
@@ -519,7 +777,7 @@
         ) AS m
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
@@ -527,7 +785,22 @@
         GROUP BY t.primary_division, t.two_division
     </select>
 
-
+    <!-- 查询千乐上月累计年化业绩 -->
+    <select id="countTotalAnnualInvestOnPreviousMonthQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        SELECT  m.account*(CASE m.borrow_period
+        WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
+        WHEN '4个月' THEN 0.35 WHEN '5个月' THEN 0.4 WHEN '6个月' THEN 0.55 WHEN '7个月' THEN 0.9 WHEN '8个月' THEN 1
+        WHEN '9个月' THEN 1 WHEN '10个月' THEN 1 WHEN '11个月' THEN 1.1 WHEN '12个月' THEN 1.1 WHEN '24个月' THEN 2.2 ELSE 0 END ) AS amount
+        FROM (
+        <include refid="countTotalInvestSqlQL"/>
+        ) AS m
+        ) AS t
+    </select>
 
     <!-- 查询昨日年化业绩 -->
     <select id="countTotalAnnualInvestYesterday" resultMap="sumResultMap">
@@ -547,7 +820,7 @@
         ) AS m
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
@@ -555,7 +828,22 @@
         GROUP BY t.primary_division, t.two_division
     </select>
 
-
+    <!-- 查询千乐昨日年化业绩 -->
+    <select id="countTotalAnnualInvestYesterdayQl" resultMap="sumResultMap">
+        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        SELECT  m.account*(CASE m.borrow_period
+        WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
+        WHEN '4个月' THEN 0.35 WHEN '5个月' THEN 0.4 WHEN '6个月' THEN 0.55 WHEN '7个月' THEN 0.9 WHEN '8个月' THEN 1
+        WHEN '9个月' THEN 1 WHEN '10个月' THEN 1 WHEN '11个月' THEN 1.1 WHEN '12个月' THEN 1.1 WHEN '24个月' THEN 2.2 ELSE 0 END ) AS amount
+        FROM (
+        <include refid="countTotalInvestSqlQL"/>
+        ) AS m
+        ) AS t
+    </select>
 
     <!-- 计算第四、六、十列速率,第十六列净资金流 -->
     <update id="calculateRate">
@@ -611,6 +899,25 @@
           GROUP BY u.user_id
     </sql>
 
+    <sql id="countRegisterTotalYesterdayQL">
+        SELECT
+        u.user_id, SUM(r.money) AS total_recharge_amount,
+        CASE u.reg_esb  WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END AS client
+        FROM hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
+        LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id=1
+        AND p.source_id = #{sourceId}
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
+        GROUP BY u.user_id
+    </sql>
+
     <!-- 昨日注册用户人数 -->
     <select id="countRegisterTotalYesterday" resultMap="sumResultMap">
         SELECT count(1) AS register_total_yesterday,
@@ -621,12 +928,23 @@
         <include refid="countRegisterTotalYesterday"/>
         ) AS t
         <if test="type==2">
-            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询千乐昨日注册人数 -->
+    <select id="countRegisterTotalYesterdayQl" resultMap="sumResultMap">
+       SELECT count(1) AS register_total_yesterday,
+       '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countRegisterTotalYesterdayQL"/>
+        ) AS t
     </select>
 
     <!-- 昨日注册用户充值≥3000人数 -->
@@ -640,12 +958,24 @@
         ) AS t
         WHERE t.total_recharge_amount >=3000
         <if test="type==2">
-            AND t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            AND t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             AND t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 昨日注册用户充值>= 3000人数 -->
+    <select id="countRechargeGt3000UserNumQl" resultMap="sumResultMap">
+        SELECT count(1) AS recharge_gt3000_user_num,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countRegisterTotalYesterdayQL"/>
+        ) AS t
+        WHERE t.total_recharge_amount >=3000
     </select>
 
     <sql id="countInvestGt3000User">
@@ -681,6 +1011,32 @@
           GROUP BY u.user_id) y ON z.user_id=y.user_id
     </sql>
 
+    <sql id="countInvestGt3000UserQL">
+        SELECT z.* ,y.total_invest_amount FROM (SELECT
+        u.user_id,  ROUND(SUM(r.money)/10000) AS total_recharge_amount,
+        CASE u.reg_esb  WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END AS client
+        FROM hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
+        LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
+        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id=1
+        AND p.source_id = #{sourceId}
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
+        GROUP BY u.user_id) z
+        LEFT JOIN (SELECT u.user_id, SUM(t.account) AS total_invest_amount FROM hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
+        LEFT JOIN hyjf_trade.ht_borrow_tender t ON u.user_id=t.user_id
+        WHERE ui.role_id=1
+        AND u.reg_time <![CDATA[>=]]> #{startTime}
+        AND u.reg_time <![CDATA[<=]]> #{endTime}
+        GROUP BY u.user_id) y ON z.user_id=y.user_id
+    </sql>
+
     <!-- 昨日注册用户出借≥3000人数 -->
     <select id="countInvestGt3000UserNum" resultMap="sumResultMap">
         SELECT count(1) AS invest_gt3000_user_num,
@@ -692,12 +1048,24 @@
         ) AS t
         WHERE t.total_invest_amount >=3000
         <if test="type==2">
-            AND t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            AND t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             AND t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 千乐昨日注册用户出借>= 3000 人数 -->
+    <select id="countInvestGt3000UserNumQl" resultMap="sumResultMap">
+        SELECT count(1) AS invest_gt3000_user_num,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countInvestGt3000UserQL"/>
+        ) AS t
+        WHERE t.total_invest_amount >=3000
     </select>
 
     <!-- 本月累计出借3000以上新客户数 -->
@@ -711,12 +1079,24 @@
         ) AS t
         WHERE t.total_invest_amount >=3000
         <if test="type==2">
-            AND t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+            AND t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
         </if>
         <if test="type==3">
             AND t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 千乐本月累计出借3000以上新客户数 -->
+    <select id="countInvestGt3000MonthUserNumQl" resultMap="sumResultMap">
+        SELECT count(1) AS invest_gt3000_month_user_num,
+        '渠道' AS primary_division,
+        '千乐' AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countInvestGt3000UserQL"/>
+        ) AS t
+        WHERE t.total_invest_amount >=3000
     </select>
 
     <insert id="batchInsert" parameterType="java.util.List">

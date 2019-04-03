@@ -209,10 +209,187 @@ public interface SellDailyService {
     SellDailyVO setValue(BigDecimal tmp, int column, SellDailyVO sellDaily, SellDailyVO reduceSellDaily);
 
     /**
+     * 无主单扣除千乐和vip客户组
+     * @param tmp
+     * @param column
+     * @param sellDaily
+     * @param reduceSellDaily
+     * @param qianleSellDaily
+     * @param vipTmp
+     * @return
+     */
+    SellDailyVO setValue(BigDecimal tmp, int column, SellDailyVO sellDaily, SellDailyVO reduceSellDaily, SellDailyVO qianleSellDaily, BigDecimal vipTmp);
+
+    /**
      *
      * @param list
      */
     void batchUpdate(List<SellDailyVO> list);
 
     void update(SellDailyVO vo);
+
+    /**
+     * 查询千乐本月投资总额
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalInvestOnMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐本月累计还款
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalRepayOnMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐上月累计投资
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalInvestOnPreviousMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐本月提现
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalWithdrawOnMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐本月充值
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalRechargeOnMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐本月累计年化投资
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalAnnualInvestOnMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐上月累计年化投资
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalAnnualInvestOnPreviousMonthQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐昨日投资
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalTenderYesterdayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐昨日还款
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalRepayYesterdayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐昨日年化投资
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalAnnualInvestYesterdayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐昨日提现
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalWithdrawYesterdayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐昨日充值
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countTotalRechargeYesterdayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐当日待还
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countNoneRepayTodayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐昨日注册人数
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countRegisterTotalYesterdayQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐充值大于3000的人数
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countRechargeGt3000UserNumQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐投资大于3000的人数
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countInvestGt3000UserNumQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 查询千乐本月累计出借3000以上新客户数
+     * @param startTime
+     * @param endTime
+     * @param sourceid
+     * @return
+     */
+    SellDailyVO countInvestGt3000MonthUserNumQl(Date startTime, Date endTime, String sourceid);
+
+    /**
+     * 惠众扣除千乐加上vip
+     * @param hzTotalTmp
+     * @param column
+     * @param hzRecord
+     * @param shOCSellDaily
+     * @param qianleSellDaily
+     * @param vipTmp
+     * @return
+     */
+    SellDailyVO setValueHz(BigDecimal hzTotalTmp, int column, SellDailyVO hzRecord, SellDailyVO shOCSellDaily, SellDailyVO qianleSellDaily, BigDecimal vipTmp);
 }
