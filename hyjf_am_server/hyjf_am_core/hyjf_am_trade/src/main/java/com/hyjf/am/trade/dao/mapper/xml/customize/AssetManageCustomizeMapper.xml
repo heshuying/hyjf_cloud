@@ -321,6 +321,8 @@
 		borrow.`status` = 2
 		OR borrow.`status` = 3
 		OR borrow.`status` = 4
+		<!-- 增加逾期中状态值 add by hesy 2019-04-03-->
+		OR borrow.`status` = 8
 		)
 		AND ten.user_id= #{userId}
 		AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
@@ -377,7 +379,9 @@
 		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = borrow.borrow_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		WHERE ten.user_id= #{userId}
-		AND borrow.`status` = 4
+		AND (borrow.`status` = 4
+		<!-- 增加逾期中状态值 add by hesy 2019-04-03-->
+		OR borrow.`status` = 8)
 		AND ten.assign_interest>0
 		AND borrow.plan_nid IS NULL
 
@@ -500,6 +504,8 @@
 		borrow.`status` = 2
 		OR borrow.`status` = 3
 		OR borrow.`status` = 4
+		<!-- 增加逾期中状态值 add by hesy 2019-04-03-->
+		OR borrow.`status` = 8
 		OR(
 		borrow.`status` = 5
 		AND hiil.repay_status = 0
