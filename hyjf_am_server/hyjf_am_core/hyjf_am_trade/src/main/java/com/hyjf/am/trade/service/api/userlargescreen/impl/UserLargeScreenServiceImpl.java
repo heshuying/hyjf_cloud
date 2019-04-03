@@ -170,10 +170,10 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                 if("1".equals(monthDataStatisticsVOO.getCustomerGroup())){
                     // 查询每个坐席下的所有用户
                     // List<Integer> userIds = accountListCustomizeMapper.getUserIdsByCurrentOwnerAndCustomerGroup(monthDataStatisticsVOO.getCurrentOwner(), 1);
-                    List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
+                   // List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
                     // 坐席下用户们当前总站岗资金
                     BigDecimal monthNowBalance = new BigDecimal(0);
-                    if (!CollectionUtils.isEmpty(userIds)){
+                    /*if (!CollectionUtils.isEmpty(userIds)){
                         // 一次查询的条件数
                         int queryNum = 1000;
                         if(userIds.size() > queryNum){
@@ -194,7 +194,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         }else {
                             monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(userIds));
                         }
-                    }
+                    }*/
                     // 年化业绩
                     if(!CollectionUtils.isEmpty(listFo)){
                         for(MonthDataStatisticsVO listFoSon : listFo){
