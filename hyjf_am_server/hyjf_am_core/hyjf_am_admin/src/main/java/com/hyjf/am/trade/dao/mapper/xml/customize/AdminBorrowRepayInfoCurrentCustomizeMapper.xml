@@ -251,10 +251,16 @@
             hcr.manage_fee,
             0
         ) AS recoverAmountTotal,
-         FROM_UNIXTIME(
+        IF (
+            hcr.assign_repay_next_time IS NULL
+            OR hcr.assign_repay_next_time = '',
+            '',
+            FROM_UNIXTIME(
             hcr.assign_repay_next_time,
-            '%Y-%m-%d'
-        ) AS recoverTime,
+            '%Y-%m-%d %H:%i:%s'
+            )
+        )
+        AS recoverTime,
 
         IF (
             hcr.assign_repay_yes_time IS NULL

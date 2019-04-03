@@ -76,7 +76,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         }
 
         //请求原子层获取当前债权还款信息数据
-        BorrowRepayInfoCurrentResponse amResponse = borrowRepayInfoCurrentService.getRepayInfoCurrentData(requestBean.getBorrowNid());
+        BorrowRepayInfoCurrentResponse amResponse = borrowRepayInfoCurrentService.getRepayInfoCurrentData(requestBean);
         if(amResponse == null || !Response.SUCCESS.equals(amResponse.getRtn())){
             response.setStatus(AdminResult.FAIL);
             response.setStatusDesc(amResponse.getMessage());

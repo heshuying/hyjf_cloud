@@ -8,7 +8,7 @@ import com.hyjf.am.resquest.admin.BorrowRepayInfoCurrentRequest;
  * @author hesy
  */
 public interface BorrowRepayInfoCurrentService {
-    BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(String borrowNid);
+    BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean);
 
     BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean);
 
