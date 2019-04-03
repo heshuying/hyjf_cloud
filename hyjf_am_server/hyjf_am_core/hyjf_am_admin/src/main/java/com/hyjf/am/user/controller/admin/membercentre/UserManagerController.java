@@ -1061,9 +1061,9 @@ public class UserManagerController extends BaseController {
             List<BankCancellationAccount> userManagerCustomizeList = userManagerService.getBankCancellationAccountList(bankCancellationAccountRequest,limitStart,limitEnd);
             if (!CollectionUtils.isEmpty(userManagerCustomizeList)) {
                 List<BankCancellationAccountVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, BankCancellationAccountVO.class);
-                Map<String, String> userStatus = CacheUtil.getParamNameMap("USER_STATUS");
+                Map<String, String> userStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
                 for (BankCancellationAccountVO accountVO : userVoList){
-                    accountVO.setBankOpenAccountStr(userStatus.getOrDefault(accountVO.getBankAccount(), null));
+                    accountVO.setBankOpenAccountStr(userStatus.getOrDefault(accountVO.getBankOpenAccount(), null));
                 }
                 response.setResultList(userVoList);
                 response.setRtn(Response.SUCCESS);
