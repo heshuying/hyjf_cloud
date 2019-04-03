@@ -424,7 +424,7 @@
 		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = 1
 		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
 		AND htb.borrow_style in ('endday','end') AND htba.id is null AND htb.user_id = #{userId}
-		AND (htb.`status` = 4 AND htb.repay_full_status = 0 )
+		AND ((htb.`status` = 4 AND htb.repay_full_status = 0) OR (htb.`status` = 8 AND htb.repay_full_status = 0) )
 	</select>
 	<select id="getWaitRepayPlanManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 		SELECT IFNULL(SUM(htbr.repay_fee),0)
@@ -436,7 +436,7 @@
 		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = htbr.repay_period
 		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
 		AND htba.id is null AND htb.user_id = #{userId}
-		AND (htb.`status` = 4 AND htb.repay_full_status = 0 )
+		AND ((htb.`status` = 4 AND htb.repay_full_status = 0) OR (htb.`status` = 8 AND htb.repay_full_status = 0))
 	</select>
 	<select id="getOrgWaitRepayManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 		SELECT IFNULL(SUM(htbr.repay_fee),0)
@@ -449,7 +449,7 @@
 		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = 1
 		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
 		AND htb.borrow_style in ('endday','end') AND htba.id is null AND htbi.repay_org_user_id = #{userId}
-		AND (htb.`status` = 4 AND htb.repay_full_status = 0)
+		AND ((htb.`status` = 4 AND htb.repay_full_status = 0) OR (htb.`status` = 8 AND htb.repay_full_status = 0))
 	</select>
 	<select id="getOrgWaitRepayPlanManageFee" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
 		SELECT IFNULL(SUM(htbr.repay_fee),0)
@@ -462,7 +462,7 @@
 		AND htba.api_type = 1 AND htba.`status` = 6 AND htba.period_now = htbr.repay_period
 		WHERE (htbpt.borrow_project_type = 'HZT' OR htbpt.borrow_project_type = 'HXF')
 		AND htba.id is null AND htbi.repay_org_user_id = #{userId}
-		AND (htb.`status` = 4 AND htb.repay_full_status = 0)
+		AND ((htb.`status` = 4 AND htb.repay_full_status = 0) OR (htb.`status` = 8 AND htb.repay_full_status = 0))
 	</select>
     <select id="getFailCredit" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT count(*) FROM
