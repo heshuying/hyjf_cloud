@@ -4273,8 +4273,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         BigDecimalResponse response =restTemplate.postForEntity(url,requestBean,BigDecimalResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultDec();
-        } else if (response.getResult() != null) {
-            throw new CheckException((MsgEnum) response.getResult());
+        } else if (response.getResult() != null && StringUtils.isNotBlank(response.getResult().toString())) {
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_BATCH, response.getResult().toString());
         }
         return BigDecimal.ZERO;
     }

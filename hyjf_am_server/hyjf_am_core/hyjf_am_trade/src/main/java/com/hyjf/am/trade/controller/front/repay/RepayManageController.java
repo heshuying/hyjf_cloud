@@ -470,9 +470,9 @@ public class RepayManageController extends BaseController {
         if (BigDecimal.ZERO.compareTo(repayTotal) == 0 && hasNoMoney) {
             responseBean.setRtn(Response.FAIL);
             if (hasNoMoney) {
-                responseBean.setResult(MsgEnum.ERR_AMT_NO_MONEY);
+                responseBean.setResult(MsgEnum.ERR_AMT_NO_MONEY.getMsg());
             } else if (errorResultSet.iterator().hasNext()) {// 不是余额不足,随便选一个异常抛出
-                responseBean.setResult(errorResultSet.iterator().next());
+                responseBean.setResult(errorResultSet.iterator().next().getMsg());
             }
         }
         responseBean.setResultDec(repayTotal);
