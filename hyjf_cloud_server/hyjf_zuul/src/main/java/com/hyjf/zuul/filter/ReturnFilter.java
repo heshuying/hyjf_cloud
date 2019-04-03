@@ -58,6 +58,8 @@ public class ReturnFilter extends ZuulFilter {
                 }
 
 
+            }else{
+                logger.error("请求不属于WEB端，不进行处理");
             }
 
         }catch (IOException e){
