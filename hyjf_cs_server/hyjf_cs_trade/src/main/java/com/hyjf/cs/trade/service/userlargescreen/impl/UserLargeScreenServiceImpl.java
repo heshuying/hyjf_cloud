@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.userlargescreen.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
@@ -51,6 +52,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         String dateString = getNowDateOfDay();
         request.setTaskTime(dateString);
         UserScreenConfigResponse userScreenConfigResponse = amUserClient.getScreenConfig(request);
+        UserCustomerTaskConfigResponse taskConfigResponse = amUserClient.getCustomerTaskConfig(request);
         UserLargeScreenVO scalePerformanceVo =  amTradeClient.getScalePerformance();
         UserLargeScreenVO monthScalePerformanceListVo =  amTradeClient.getMonthScalePerformanceList();
         UserLargeScreenVO totalAmountVo =  amTradeClient.getTotalAmount();
@@ -74,6 +76,7 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
         bean.setMonthReceivedPaymentsNew(monthReceivedPaymentsVo.getMonthReceivedPaymentsNew());
         bean.setMonthReceivedPaymentsOld(monthReceivedPaymentsVo.getMonthReceivedPaymentsOld());
         bean.setUserCapitalDetailList(userCapitalDetailsVo.getUserCapitalDetailList());
+        bean.setCustomerTaskConfigVOList(taskConfigResponse.getResultList());
         return bean;
     }
 

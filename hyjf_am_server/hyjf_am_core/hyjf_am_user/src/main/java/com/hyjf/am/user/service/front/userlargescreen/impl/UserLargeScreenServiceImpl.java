@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,15 +59,19 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     @Override
     public UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request){
         UserCustomerTaskConfigResponse response = new UserCustomerTaskConfigResponse();
-        CustomerTaskConfigVO vo = new CustomerTaskConfigVO();
         CustomerTaskConfigExample example = new CustomerTaskConfigExample();
         CustomerTaskConfigExample.Criteria criteria = example.createCriteria();
         criteria.andTaskTimeEqualTo(request.getTaskTime());
+        criteria.andStatusEqualTo(1);
         List<CustomerTaskConfig> list = customerTaskConfigMapper.selectByExample(example);
-        if(!CollectionUtils.isEmpty(list)){
-            BeanUtils.copyProperties(list.get(0),vo);
+        List<CustomerTaskConfigVO> vos = new ArrayList<>();
+        for(CustomerTaskConfig customerTaskConfig:list){
+            CustomerTaskConfigVO vo = new CustomerTaskConfigVO();
+            BeanUtils.copyProperties(customerTaskConfig,vo);
+            vos.add(vo);
+
         }
-        response.setResult(vo);
+        response.setResultList(vos);
         return response;
     }
 
