@@ -2,6 +2,7 @@ package com.hyjf.cs.message.service.report.impl;/*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.message.OperationReportJobBean;
@@ -224,6 +225,8 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @param sumTenderAmount   累计成交金额
      */
     public void saveTenthOperationReport(String operationReportId, Integer type,OperationReportJobBean bean, BigDecimal sumTenderAmount) {
+        logger.info("saveTenthOperationReport, operationReportId is: {}, type is: {}, sumTenderAmount is : {}", operationReportId, type, sumTenderAmount);
+
         BigDecimal tenderAmountSum = BigDecimal.ZERO;//十大出借人出借总和
         String tenderUsername = null;//出借者用户名
         BigDecimal tenderAmountMoney = BigDecimal.ZERO;//出借金额
@@ -241,6 +244,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 
             for (int i = 0; i < listTenMostMoney.size(); i++) {
                 OperationReportJobVO dto = listTenMostMoney.get(i);
+                logger.info("i: {}, dto is: {}", i, JSONObject.toJSONString(dto));
                 switch (i) {
                     case 0:
                         tenderUsername = dto.getUserName();
@@ -303,6 +307,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             }
 
             //10大出借人金额之占比(%)
+            logger.info("計算10大出借人金额之占比(%)...");
             BigDecimal tenTenderProportion = tenderAmountSum.divide(sumTenderAmount, 4, BigDecimal.ROUND_HALF_UP).multiply(bigHundred);
             tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大出借人金额之和(元)
             tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大出借人金额之占比(%)
@@ -310,17 +315,19 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他出借人金额之和占比（%）
 
             //查找 最多金用户的年龄和地区
-            OperationReportJobVO UserAgeAndAreaDto = this.getUserAgeAndArea(userId);
-            if (UserAgeAndAreaDto != null) {
+            OperationReportJobVO operationReportJobVO = this.getUserAgeAndArea(userId);
 
-                tenthOperationReport.setMostTenderUserAge(UserAgeAndAreaDto.getDealSum());//最多金用户年龄（岁）
-                tenthOperationReport.setMostTenderUserArea(UserAgeAndAreaDto.getTitle());//最多金用户地区
+            if (operationReportJobVO != null) {
+                logger.info("operationReportJobVO is: {}...", JSONObject.toJSONString(operationReportJobVO));
+                tenthOperationReport.setMostTenderUserAge(operationReportJobVO.getDealSum());//最多金用户年龄（岁）
+                tenthOperationReport.setMostTenderUserArea(operationReportJobVO.getTitle());//最多金用户地区
             }
             tenthOperationReport.setMostTenderUsername(tenderUsername);//最多金用户名
             tenthOperationReport.setMostTenderAmount(tenderAmountMoney);//最多金出借金额（元）
         }
 
         //大赢家，收益最高
+        logger.info("大赢家，收益最高...");
         List<OperationReportJobVO> listOneInterestsMost =  bean.getListOneInterestsMost();
         if (!CollectionUtils.isEmpty(listOneInterestsMost)) {
             OperationReportJobVO interestsMostDto = listOneInterestsMost.get(0);
@@ -337,6 +344,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //超活跃，出借笔数最多
+        logger.info("超活跃，出借笔数最多...");
         List<OperationReportJobVO> listtOneInvestMost =bean.getListtOneInvestMost();
         if (!CollectionUtils.isEmpty(listtOneInvestMost)) {
             OperationReportJobVO investMostDto = listtOneInvestMost.get(0);
@@ -357,6 +365,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         operationTenthReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        tenthOperationReportMapper.insert(tenthOperationReport);
+        logger.info("保存， operationTenthReport is: {}", JSONObject.toJSONString(operationTenthReport));
         operationTenthReportMongDao.insert(operationTenthReport);
     }
     /**
