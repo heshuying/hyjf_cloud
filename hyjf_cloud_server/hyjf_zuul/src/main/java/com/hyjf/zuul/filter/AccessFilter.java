@@ -79,7 +79,7 @@ public class AccessFilter extends ZuulFilter {
             // app 共同参数
             String version = request.getParameter(GatewayConstant.VERSION);
             String sign = request.getParameter(GatewayConstant.SIGN);
-
+            logger.info("原始请求地址originalRequestPath is {}:, remoteHost is :{}，version is {}", originalRequestPath, remoteHost,version);
             Assert.hasText(appKeyIgnoreUrls, "appKeyIgnoreUrls must not be null....");
             logger.debug("appKeyIgnoreUrls: {}", appKeyIgnoreUrls);
             if (!appKeyIgnoreUrls.contains(originalRequestPath)) {
