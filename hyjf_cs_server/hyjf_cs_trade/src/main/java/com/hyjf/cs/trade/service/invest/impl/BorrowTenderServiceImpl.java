@@ -3,8 +3,10 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -2167,7 +2169,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     if (!flag) {
                         throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
-                    sendBidCancelMessage(userId);
                 } catch (Exception ee) {
                     try {
                         sendBidCancelMessage(userId);
@@ -2563,6 +2564,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             try {
                 // 投标成功后,参与纳觅返现
                 sendReturnCashActivity(Integer.parseInt(bean.getLogUserId()),bean.getLogOrderId(),accountDecimal,borrow.getProjectType());
+                // 投标成功后,发送大屏数据统计MQ
+                sendScreenDataMQ(user.getUsername(), Integer.parseInt(bean.getLogUserId()), bean.getLogOrderId(), accountDecimal, borrow.getProjectType());
                 // 投标成功后,发送神策数据统计MQ
                 SensorsDataBean sensorsDataBean = new SensorsDataBean();
                 sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
@@ -2572,6 +2575,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } catch (Exception e) {
                 logger.error(e.getMessage());
             }
+
             // add by liuyang 神策数据统计 20180823 end
         }else{
             logger.error("出借失败  对象:{}",JSONObject.toJSONString(tenderBg));
@@ -2713,5 +2717,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         params.put("productType", productType);
         commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
+    }
+
+    /**
+     * 散标投资成功后,发送大屏数据统计MQ
+     *
+     */
+    private void sendScreenDataMQ(String username,Integer userId,String orderId,BigDecimal investMoney,Integer projectType) throws MQException {
+        ScreenDataBean screenDataBean = new ScreenDataBean();
+        screenDataBean.setUserId(userId);
+        screenDataBean.setMoney(investMoney);
+        screenDataBean.setUserName(username);
+        screenDataBean.setOperating(1);
+        screenDataBean.setOrderId(orderId);
+        screenDataBean.setProductType(projectType);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
 }

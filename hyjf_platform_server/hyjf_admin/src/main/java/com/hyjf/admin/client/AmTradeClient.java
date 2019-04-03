@@ -134,25 +134,11 @@ public interface AmTradeClient {
     List<AdminCouponRepayMonitorCustomizeVO> selectInterestSum(CouponRepayRequest form);
 
     /**
-     * 根据筛选条件查询userTransfer列表
-     * @param form
-     * @return
-     */
-    UserTransferResponse getRecordList(TransferListRequest form);
-
-    /**
      * 查询汇计划-转让列表
      * @param request
      * @return
      */
     HjhDebtCreditReponse queryHjhDebtCreditList(HjhDebtCreditListRequest request);
-
-    /**
-     * 查询批次中心-批次放款列表
-     * @param request
-     * @return
-     */
-    BatchBorrowRecoverReponse getBatchBorrowRecoverList(BatchBorrowRecoverRequest request);
 
     /**
      * 查询CouponRepayMonitorVO
@@ -463,14 +449,6 @@ public interface AmTradeClient {
     Integer insertFreezeHistory(FreezeHistoryVO freezeHistoryVO);
 
     /**
-     * 查询批次中心的批次列表的求和
-     * @param request
-     * @return
-     */
-    BatchBorrowRecoverReponse getBatchBorrowCenterListSum(BatchBorrowRecoverRequest request);
-
-
-    /**
      * 根据筛选条件查询汇付对账count
      * @auth sunpeikai
      * @param request 筛选条件
@@ -534,13 +512,6 @@ public interface AmTradeClient {
 
     int updateCreditEndForInitial(BankCreditEndVO requestBean);
 
-    /**
-     * 根据ID获取放款任务表
-     * @param id
-     * @return
-     */
-    BorrowApicronResponse getBorrowApicronByID(String id);
-
 
     /**
      * 分页查询平台设置账户列表
@@ -594,8 +565,6 @@ public interface AmTradeClient {
 
     HjhDebtCreditVO doSelectHjhDebtCreditByCreditNid(String creditNid);
 
-    int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
-
     int requestDebtEnd(HjhDebtCreditVO credit, String sellerUsrcustid, String sellerAuthCode);
 
     BorrowTenderVO getBorrowTenderByNid(String nid);
@@ -624,6 +593,8 @@ public interface AmTradeClient {
      * @return
      */
     HjhAccedeResponse doSelectHjhAccedeByParam(TenderExceptionSolveRequest tenderExceptionSolveRequest);
+
+    int updateHjhDebtCreditForEnd(HjhDebtCreditVO hjhDebtCreditVO);
 
     /**
      * 查询计划加入明细临时表
@@ -2075,9 +2046,12 @@ public interface AmTradeClient {
      * @param userId
      * @param startTime
      * @param endTime
+     * @param ip
+     * @param payment
+     * @param cardId
      * @return
      */
-    String updateAccountCheck(Integer userId, String startTime, String endTime);
+    String updateAccountCheck(Integer userId, String startTime, String endTime, String ip, String payment, String cardId);
 
     /**
      * 查询配置中心平台账户配置 余额监控
@@ -3391,5 +3365,7 @@ public interface AmTradeClient {
      * @param request
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
+
+
 }
 

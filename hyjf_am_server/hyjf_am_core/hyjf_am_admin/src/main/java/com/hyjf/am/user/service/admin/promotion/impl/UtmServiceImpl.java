@@ -280,6 +280,11 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
 
     @Override
     public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
+        if (request.getInvestStartTime() != null) {
+            Date investStartTime = request.getInvestStartTime();
+            investStartTime = GetDate.getSomeDayStart(investStartTime);
+            request.setInvestStartTime(investStartTime);
+        }
         if (request.getInvestEndTime() != null) {
             Date investEndTime = request.getInvestEndTime();
             investEndTime = GetDate.getSomeDayEnd(investEndTime);

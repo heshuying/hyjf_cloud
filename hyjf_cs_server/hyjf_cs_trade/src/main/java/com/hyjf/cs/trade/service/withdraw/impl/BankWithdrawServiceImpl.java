@@ -3,10 +3,7 @@ package com.hyjf.cs.trade.service.withdraw.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
-import com.hyjf.am.resquest.trade.AfterCashParamRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -280,7 +277,13 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                             }catch (Exception e){
                                 logger.error(e.getMessage());
                             }
-
+                            try{
+                                // 提现成功后,发送大屏数据统计MQ
+                                ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),transAmt,4);
+                                this.sendScreenDataMQ(screenDataBean);
+                            }catch (Exception e){
+                                logger.error("提现成功后,发送大屏数据统计MQ失败",e.getMessage());
+                            }
                             return jsonMessage("提现成功!", "0");
                         } catch (Exception e) {
                             // 回滚事务
@@ -517,7 +520,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         bean.setOrgTxDate(String.valueOf(accountwithdraw.getTxDate()));//原交易日期
         //时间补满6位
         bean.setOrgTxTime(String.format("%06d", accountwithdraw.getTxTime()));//原交易时间
-        bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+
+        //bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+        //原交易流水号保留六位
+        bean.setOrgSeqNo(String.format("%06d",accountwithdraw.getSeqNo()));//原交易流水号
+
         bean.setLogRemark("单笔资金类业务交易查询（提现Batch）");
         try {
             BankCallBean result = BankCallUtils.callApiBg(bean);
@@ -1761,5 +1768,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
-
+    /**
+     * 提现成功后,发送大屏数据统计MQ
+     *
+     * @param screenDataBean
+     */
+    private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
+    }
 }

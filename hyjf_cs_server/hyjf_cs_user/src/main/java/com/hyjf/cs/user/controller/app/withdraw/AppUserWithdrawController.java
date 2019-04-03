@@ -88,7 +88,7 @@ public class AppUserWithdrawController extends BaseUserController {
 
                         BankConfigVO bankConfig = userWithdrawService.getBankInfo(bank.getBank());
                         // 应前台要求，logo路径给绝对路径
-                        bankCardBean.setLogo(systemConfig.getServerHost() + bankConfig.getAppLogo());
+                        bankCardBean.setLogo(systemConfig.getAppFrontHost() + bankConfig.getAppLogo());
                         bankCardBean.setBankCode(bankConfig.getCode());
                         // 银行名称 汉字
                         bankCardBean.setBank(bankConfig.getName());
@@ -129,7 +129,7 @@ public class AppUserWithdrawController extends BaseUserController {
 
                         if(jxBankConfigVO != null){
                             if (StringUtils.isNotEmpty(jxBankConfigVO.getBankIcon())) {
-                                bankCardBean.setLogo(systemConfig.getAppFrontHost() + jxBankConfigVO.getBankLogo());
+                                bankCardBean.setLogo(systemConfig.getAppFrontHost() + jxBankConfigVO.getBankIcon());
                             } else {
                                 bankCardBean.setLogo(systemConfig.getAppFrontHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
                             }
@@ -152,7 +152,7 @@ public class AppUserWithdrawController extends BaseUserController {
                             // 每月限额 单位: 万元
                             monthLimitAmount = jxBankConfigVO.getMonthCardQuota().divide(new BigDecimal(AMOUNT_UNIT));
                         }else{
-                            bankCardBean.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
+                            bankCardBean.setLogo(systemConfig.getAppFrontHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
                             bankCardBean.setIsDefault("0");
 
                         }

@@ -2,10 +2,7 @@ package com.hyjf.cs.trade.service.aems.withdraw.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.AfterCashParamRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -291,7 +288,10 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 		bean.setOrgTxDate(String.valueOf(accountwithdraw.getTxDate()));//原交易日期
 		//时间补满6位
 		bean.setOrgTxTime(String.format("%06d", accountwithdraw.getTxTime()));//原交易时间
-		bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+
+//		bean.setOrgSeqNo(String.valueOf(accountwithdraw.getSeqNo()));//原交易流水号
+		bean.setOrgSeqNo(String.format("%06d", accountwithdraw.getSeqNo()));//原交易流水号
+
 		bean.setLogRemark("单笔资金类业务交易查询（提现Batch）");
 		try {
 			BankCallBean result = BankCallUtils.callApiBg(bean);
@@ -939,6 +939,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 				resultBean.setAmt(String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
 				resultBean.setArrivalAmount(String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
 				resultBean.setFee(accountWithdrawVO.getFee());// 提现手续费
+				params.put("amt",String.valueOf(accountWithdrawVO.getTotal()));
 				message="提现成功";
 			} else {
 				logger.info("银行处理中,请稍后查询交易明细");
@@ -1081,4 +1082,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
 		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
 	}
+
+
+
 }

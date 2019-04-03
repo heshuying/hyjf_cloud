@@ -161,7 +161,6 @@
         </table>
 
         <table tableName="ht_msp_abnormalcredit" domainObjectName="MspAbnormalcredit">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
         <table tableName="ht_msp_abnormalcreditdetail" domainObjectName="MspAbnormalcreditdetail">
@@ -2006,6 +2005,33 @@
             <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!--大屏运营部配置-->
+        <table tableName="ht_screen_config" domainObjectName="ScreenConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!--坐席月任务配置-->
+        <table tableName="ht_customer_task_config" domainObjectName="CustomerTaskConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="customer_group" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_user_operate_list" domainObjectName="UserOperateList">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="customer_group" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="operating" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_repayment_plan" domainObjectName="RepaymentPlan">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="customer_group" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 

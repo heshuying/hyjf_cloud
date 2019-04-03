@@ -251,6 +251,10 @@ public class BankCallMethodConstant implements Serializable {
 	/**
 	 * 出借人债权明细查询
 	 */
+	public static final String TXCODE_OFFLINE_RECHARGE_DETAILS_QUERY= "offlineRechargeDetailsQuery";
+	/**
+	 * 出借人债权明细查询
+	 */
 	public static final String TXCODE_CREDIT_DETAILS_QUERY = "creditDetailsQuery";
 	/**
 	 * 绑卡关系查询

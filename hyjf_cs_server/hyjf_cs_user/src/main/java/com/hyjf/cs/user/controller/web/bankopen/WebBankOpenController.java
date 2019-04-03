@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.controller.web.bankopen;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -160,10 +159,15 @@ public class WebBankOpenController extends BaseUserController {
     @ResponseBody
     public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String mobile,@RequestParam("roleId")String roleId,@RequestParam("openclient")String openclient) {
         logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
+        // 查询用
+        bean.setRemark(bean.getMobile());
         bean.setMobile(mobile);
         bean.setLogClient(Integer.parseInt(openclient));
         bean.setIdentity(roleId);
+
         BankCallResult result = bankOpenService.openAccountBgReturn(bean);
+
+        //BankCallResult result = new BankCallResult();
         return result;
     }
 
