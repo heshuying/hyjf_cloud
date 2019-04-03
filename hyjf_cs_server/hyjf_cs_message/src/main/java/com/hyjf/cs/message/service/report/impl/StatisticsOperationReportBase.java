@@ -703,7 +703,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         logger.info("vo: {}", JSONObject.toJSONString(vo));
         if(StringUtils.isNotEmpty(vo.getTitle())) {
             idcard.setBm(vo.getTitle().substring(0, 6));
-            vo.setTitle(amConfigClient.getIdCardCustomize(idcard).getArea());
+            IdCardCustomize customize = amConfigClient.getIdCardCustomize(idcard);
+            if(customize != null && customize.getArea() != null){
+                vo.setTitle(customize.getArea());
+            }
         }
         logger.info("vo: {}", JSONObject.toJSONString(vo));
         return vo;
