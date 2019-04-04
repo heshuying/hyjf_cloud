@@ -231,8 +231,10 @@ public class HjhDebtCreditController extends BaseController{
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("planNid", "出让人智投编号");
         map.put("planOrderId", "出让人智投订单号");
-        map.put("orderId", "出让人出借订单号");
-        map.put("assignId", "出让人承接订单号");
+        // 需求改为只展示一个字段：出借订单号
+//        map.put("orderId", "出让人出借订单号");
+//        map.put("assignId", "出让人承接订单号");
+        map.put("assignId", "出借订单号");
         map.put("planNidNew", "清算后智投编号");
         map.put("userName", "出让人");
         map.put("creditNid", "债转编号");
