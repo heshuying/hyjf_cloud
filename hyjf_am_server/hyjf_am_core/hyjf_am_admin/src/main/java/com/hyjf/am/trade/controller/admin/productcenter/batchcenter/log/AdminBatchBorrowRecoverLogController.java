@@ -53,7 +53,7 @@ public class AdminBatchBorrowRecoverLogController extends BaseController {
     @PostMapping("/getList")
     public BatchBorrowRecoverLogReponse getList(@RequestBody BatchBorrowRecoverRequest request){
 
-        logger.info("放款列表查询请求参数，BatchBorrowRecoverRequest:{}", JSON.toJSONString(request));
+        logger.info("还款请求记录列表查询请求参数，{}", JSON.toJSONString(request));
         BatchBorrowRecoverLogReponse reponse = new BatchBorrowRecoverLogReponse();
         Integer total = getListTotal(request);
         Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());

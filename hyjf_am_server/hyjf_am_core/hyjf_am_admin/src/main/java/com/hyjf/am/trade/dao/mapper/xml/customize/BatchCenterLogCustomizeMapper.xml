@@ -64,10 +64,9 @@
         SELECT
         count(1)
         FROM
-        ht_borrow_apicron hba
-        JOIN ht_borrow_apicron_log log ON hba.bank_seq_no = log.bank_seq_no
-        LEFT JOIN ht_borrow b ON hba.borrow_nid = b.borrow_nid
-        LEFT JOIN ht_borrow_info bi ON hba.borrow_nid = bi.borrow_nid
+        ht_borrow_apicron_log log
+        LEFT JOIN ht_borrow b ON log.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info bi ON log.borrow_nid = bi.borrow_nid
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
         <include refid="Where_Clause"/>
     </select>
