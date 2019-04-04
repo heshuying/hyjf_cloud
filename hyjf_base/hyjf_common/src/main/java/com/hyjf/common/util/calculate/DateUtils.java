@@ -466,7 +466,7 @@ public class DateUtils {
 		calendar.add(Calendar.SECOND, loginLockTime);
 		int time = calendar.get(Calendar.HOUR_OF_DAY); // 获取当前小时
 		int min = calendar.get(Calendar.MINUTE); // 获取当前分钟
-		return time + ":" + min;
+		return time + (min < 10 ? ":0" + min : ":" + min);
 	}
 	/**
 	 * 获取当前月的结束日期
