@@ -177,13 +177,13 @@ public class UserCenterController extends BaseController {
             BeanUtils.copyProperties(companyInfo, companyInfoCompanyInfoVO);
         }
         userDetailInfoResponseBean.setEnterpriseInformation(companyInfoCompanyInfoVO);
-        //第三方平台绑定信息
-        BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(userId);
-        BindUserCustomizeVO bindUserCustomizeVO = new BindUserCustomizeVO();
-        if(null!=bindUserVo){
-            BeanUtils.copyProperties(bindUserVo,bindUserCustomizeVO);
-        }
-        userDetailInfoResponseBean.setBindUserVo(bindUserCustomizeVO);
+//        //第三方平台绑定信息
+//        BindUserVo bindUserVo = userCenterService.selectBindeUserByUserI(userId);
+//        BindUserCustomizeVO bindUserCustomizeVO = new BindUserCustomizeVO();
+//        if(null!=bindUserVo){
+//            BeanUtils.copyProperties(bindUserVo,bindUserCustomizeVO);
+//        }
+//        userDetailInfoResponseBean.setBindUserVo(bindUserCustomizeVO);
         //电子签章
         CertificateAuthorityVO certificateAuthorityVO = userCenterService.selectCertificateAuthorityByUserId(userId);
         CertificateAuthorityCustomizeVO certificateAuthorityCustomizeVO = new CertificateAuthorityCustomizeVO();
