@@ -27,7 +27,7 @@
                     br.recover_interest AS recoverInterest,
                     br.recover_account AS recoverAccount,
                     br.recover_fee AS recoverFee,
-                    br.recover_status AS recoverStatus,
+                    IF(b.`status` != 8, br.recover_status, 8) AS recoverStatus,
 
                 IF (
                     bry.repay_status = 1
@@ -96,7 +96,7 @@
                 rp.recover_interest AS recoverInterest,
                 rp.recover_account AS recoverAccount,
                 rp.recover_fee AS recoverFee,
-                rp.recover_status AS recoverStatus,
+                IF(rp.recover_status=0,IF(brp.advance_status=3,8,0),1) AS recoverStatus,
 
             IF (
                 brp.repay_status = 1
@@ -161,7 +161,12 @@
                 cr.assign_interest AS recoverInterest,
                 cr.assign_account AS recoverAccount,
                 cr.manage_fee AS recoverFee,
-                cr. STATUS AS recoverStatus,
+                IF (
+                cr.`status` = 0,
+
+                IF (bry.advance_status = 3, 8, 0),
+                1
+                ) AS recoverStatus,
 
             IF (
                 cr.`status` = 1
@@ -205,6 +210,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON cr.credit_tender_nid = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = cr.assign_repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <if test="borrowNid != null and borrowNid != ''">
@@ -228,7 +234,13 @@
                 hcr.repay_interest AS recoverInterest,
                 hcr.repay_account AS recoverAccount,
                 hcr.manage_fee AS recoverFee,
-                hcr.repay_status AS recoverStatus,
+                IF (
+                hcr.repay_status = 0,
+
+                IF (bry.advance_status = 3, 8, 0),
+                1
+                )
+                AS recoverStatus,
 
             IF (
                 hcr.repay_status = 1
@@ -278,6 +290,7 @@
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON hcr.invest_order_id = t.nid
         INNER JOIN ht_borrow_repay AS bry ON b.borrow_nid = bry.borrow_nid
+        LEFT JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid AND brp.repay_period = hcr.assign_repay_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <if test="borrowNid != null and borrowNid != ''">

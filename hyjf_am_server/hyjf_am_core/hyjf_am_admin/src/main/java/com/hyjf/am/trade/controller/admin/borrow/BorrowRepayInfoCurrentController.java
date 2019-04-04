@@ -11,7 +11,6 @@ import com.hyjf.am.trade.service.admin.borrow.BorrowRepayInfoCurrentService;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentExportCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
