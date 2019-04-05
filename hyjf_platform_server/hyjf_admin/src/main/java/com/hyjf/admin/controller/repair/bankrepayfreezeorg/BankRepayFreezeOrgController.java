@@ -255,7 +255,6 @@ public class BankRepayFreezeOrgController extends BaseController {
                 callApiBg.setSeqNo(orderId.substring(14));
                 boolean updateResult = this.bankRepayFreezeOrgService.updateForRepayRequest(repay, callApiBg, isAllRepay, latePeriod);
                 if (updateResult) {
-                    bankRepayFreezeOrgService.deleteFreezeLogById(form.getId());
                     // 如果有正在出让的债权,先去把出让状态停止
                     this.bankRepayFreezeOrgService.updateBorrowCreditStautus(borrowNid);
 
