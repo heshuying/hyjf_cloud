@@ -1308,7 +1308,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userOverdueInterest = borrowRecover.getLateInterest();// batch计算的逾期利息
                 int userAdvanceStatus = borrowRecover.getAdvanceStatus();// batch计算的还款状态
                 int userLateDays = borrowRecover.getLateDays();// batch计算的逾期天数
-                if(userAdvanceStatus != 3 || userLateDays != lateDays){
+                if (userAdvanceStatus != 30 && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
                     logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                             userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
                     throw new Exception("计算的逾期信息有误！");
@@ -1337,7 +1337,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
                                 int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                 int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                     logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                             assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                     throw new Exception("计算的逾期信息有误！");
@@ -1405,7 +1405,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
                                 int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                 int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                     logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                             assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                     throw new Exception("计算的逾期信息有误！");
@@ -2395,7 +2395,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userOverdueInterest = borrowRecoverPlan.getLateInterest();// batch计算的逾期利息
                         int userAdvanceStatus = borrowRecoverPlan.getAdvanceStatus();// batch计算的还款状态
                         int userLateDays = borrowRecoverPlan.getLateDays();// batch计算的逾期天数
-                        if(userAdvanceStatus != 3 || userLateDays != lateDays){
+                        if (userAdvanceStatus != 30 && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
                             logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                     userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
                             throw new Exception("计算的逾期信息有误！");
@@ -2438,7 +2438,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
                                             int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                             int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                            if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                            if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                                 logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                                         assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                                 throw new Exception("计算的逾期信息有误！");
@@ -2512,7 +2512,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
                                             int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                             int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                            if(assignAdvanceStatus != 3 || assignLateDays != lateDays){
+                                            if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                                 logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                                         assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                                 throw new Exception("计算的逾期信息有误！");
@@ -3116,7 +3116,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 获取本期的用户已还款总额
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountYes().add(userRepayPlan.getRepayFee()).toString());
                 } else {// 用户未还款本息
-                    if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
+                    if(userRepayPlan.getAdvanceStatus() == 3 || userRepayPlan.getAdvanceStatus() == 30){// 逾期未还款/还款中
                         lateArray.add(userRepayPlan.getRepayPeriod());
                         form.setLateStatus("1");
                         if (nowPeriod < periodTotal) {
@@ -3481,7 +3481,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 获取本期的用户已还款总额
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountYes().add(userRepayPlan.getRepayFee()).toString());
                 } else {// 用户未还款本息
-                    if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
+                    if(userRepayPlan.getAdvanceStatus() == 3 || userRepayPlan.getAdvanceStatus() == 30){// 逾期未还款/还款中
                         lateArray.add(userRepayPlan.getRepayPeriod());
                         form.setLateStatus("1");
                         if (nowPeriod < periodTotal) {
@@ -3753,7 +3753,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     @Override
     public boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay, int latePeriod) throws Exception {
 
-        int time = GetDate.getNowTime10();
         String borrowNid = repay.getBorrowNid();
         String periodTotal = repay.getBorrowPeriod();
         int remainRepayPeriod = repay.getRepayPeriod();
@@ -3783,19 +3782,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         // 不分期还款
         List<RepayRecoverBean> recoverList = repay.getRecoverList();
         if (recoverList != null && recoverList.size() > 0) {
-            BankRepayFreezeLogExample freezeLogexample = new BankRepayFreezeLogExample();
-            freezeLogexample.createCriteria().andOrderIdEqualTo(bean.getOrderId());
-            List<BankRepayFreezeLog> log = this.bankRepayFreezeLogMapper.selectByExample(freezeLogexample);
-            if (log != null && log.size() > 0) {
-                for (int i = 0; i < log.size(); i++) {
-                    BankRepayFreezeLog record = log.get(i);
-                    record.setDelFlag(1);// 0 有效 1无效
-                    boolean repayFreezeLogFlag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record) > 0 ? true : false;
-                    if (!repayFreezeLogFlag) {
-                        throw new Exception("还款失败！" + "更新还款冻结日志失败" + "冻结订单号：" + bean.getOrderId());
-                    }
-                }
-            }
             // 获取用户本次应还的金额
             BorrowRepay borrowRepay = this.searchRepay(userId, borrowNid);
             BorrowApicronExample example = new BorrowApicronExample();
@@ -4073,93 +4059,112 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 }
             }
         }
-        if (repayFlag) {
-            if (countRepayAccountListByNid(nid) == 0) {
-                // 获取用户的账户信息
-                Account repayAccount = this.getAccount(repayUserId);
-                if (StringUtils.isNotBlank(repayAccount.getAccountId())) {
-                    BigDecimal borrowBalance = repayAccount.getBankBalance();
-                    String repayAccountId = repayAccount.getAccountId();
-                    if (borrowBalance.compareTo(repayTotal) >= 0) {
-                        // ** 用户符合还款条件，可以还款 *//*
-                        BigDecimal bankBalance = repayTotal;// 可用金额
-                        BigDecimal bankFrost = repayTotal;// 冻结金额
-                        BigDecimal bankBalanceCash = repayTotal;// 江西银行账户余额
-                        BigDecimal bankFrostCash = repayTotal;// 江西银行账户冻结金额
-                        repayAccount.setBankBalance(bankBalance);
-                        repayAccount.setBankFrost(bankFrost);
-                        repayAccount.setBankFrostCash(bankBalanceCash);
-                        repayAccount.setBankBalanceCash(bankFrostCash);
-                        boolean accountFlag = this.adminAccountCustomizeMapper.updateOfRepayBorrowFreeze(repayAccount) > 0 ? true : false;
-                        if (accountFlag) {
-                            repayAccount = this.getAccount(repayUserId);
-                            // 插入huiyingdai_account_list表
-                            AccountList accountList = new AccountList();
-                            accountList.setNid(borrowNid + "_" + repay.getUserId() + "_" + period); // 生成规则BorrowNid_userid_期数
-                            accountList.setUserId(repayUserId);// 借款人/垫付机构 id
-                            accountList.setAmount(repayTotal);// 操作金额
-                            /** 银行存管相关字段设置 */
-                            accountList.setAccountId(repayAccountId);
-                            accountList.setBankAwait(repayAccount.getBankAwait());
-                            accountList.setBankAwaitCapital(repayAccount.getBankAwaitCapital());
-                            accountList.setBankAwaitInterest(repayAccount.getBankAwaitInterest());
-                            accountList.setBankBalance(repayAccount.getBankBalance());
-                            accountList.setBankFrost(repayAccount.getBankFrost());
-                            accountList.setBankInterestSum(repayAccount.getBankInterestSum());
-                            accountList.setBankInvestSum(repayAccount.getBankInvestSum());
-                            accountList.setBankTotal(repayAccount.getBankTotal());
-                            accountList.setBankWaitCapital(repayAccount.getBankWaitCapital());
-                            accountList.setBankWaitInterest(repayAccount.getBankWaitInterest());
-                            accountList.setBankWaitRepay(repayAccount.getBankWaitRepay());
-                            accountList.setPlanBalance(repayAccount.getPlanBalance());//汇计划账户可用余额
-                            accountList.setPlanFrost(repayAccount.getPlanFrost());
-                            accountList.setCheckStatus(0);
-                            accountList.setTradeStatus(1);// 交易状态 0:失败 1:成功
-                            accountList.setIsBank(1);
-                            accountList.setTxDate(Integer.parseInt(bean.getTxDate()));
-                            accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
-                            accountList.setSeqNo(bean.getSeqNo());
-                            accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
-                            // 非银行相关
-                            accountList.setType(3);// 收支类型1收入2支出3冻结
-                            accountList.setTrade("repay_freeze");// 交易类型
-                            accountList.setTradeCode("balance");// 操作识别码
-                            accountList.setTotal(repayAccount.getTotal());// 资金总额
-                            accountList.setBalance(repayAccount.getBalance());
-                            accountList.setFrost(repayAccount.getFrost());// 冻结金额
-                            accountList.setAwait(repayAccount.getAwait());// 待收金额
-                            accountList.setRepay(repayAccount.getRepay());// 待还金额
-                            accountList.setCreateTime(GetDate.getDate());// 创建时间
-                            accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY);// 操作员
-                            accountList.setRemark(borrowNid);
-                            accountList.setIp(repay.getIp());// 操作IP
-//                            accountList.setBaseUpdate(0);
-                            accountList.setWeb(0);
-                            boolean accountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
-                            if (accountListFlag) {
-                                try {
-                                    deleteFreezeTempLogs(bean.getOrderId());
-                                } catch (Exception e) {
-                                    logger.error("【还款】删除还款冻结临时日志失败！订单号：{}", bean.getOrderId(), e);
-                                }
-                                return true;
-                            } else {
-                                throw new RuntimeException("还款失败！" + "插入借款人交易明细表AccountList失败！");
-                            }
-                        } else {
-                            throw new RuntimeException("还款失败！" + "更新借款人账户余额表Account失败！");
-                        }
-                    } else {
-                        throw new RuntimeException("用户汇付账户余额不足!");
-                    }
-                } else {
-                    throw new RuntimeException("用户开户信息不存在!");
-                }
-            } else {
-                throw new RuntimeException("此笔还款的交易明细已存在,请勿重复还款");
-            }
-        } else {
+        if (!repayFlag) {
             throw new RuntimeException("还款失败！" + "失败数量【" + errorCount + "】");
+        }
+        if (countRepayAccountListByNid(nid) > 0) {
+            throw new RuntimeException("此笔还款的交易明细已存在,请勿重复还款");
+        }
+        // 获取用户的账户信息
+        Account repayAccount = this.getAccount(repayUserId);
+        if (StringUtils.isBlank(repayAccount.getAccountId())) {
+            throw new RuntimeException("用户开户信息不存在!");
+        }
+        BigDecimal borrowBalance = repayAccount.getBankBalance();
+        String repayAccountId = repayAccount.getAccountId();
+        if (borrowBalance.compareTo(repayTotal) < 0) {
+            throw new RuntimeException("用户汇付账户余额不足!");
+        }
+        // ** 用户符合还款条件，可以还款 *//*
+        BigDecimal bankBalance = repayTotal;// 可用金额
+        BigDecimal bankFrost = repayTotal;// 冻结金额
+        BigDecimal bankBalanceCash = repayTotal;// 江西银行账户余额
+        BigDecimal bankFrostCash = repayTotal;// 江西银行账户冻结金额
+        repayAccount.setBankBalance(bankBalance);
+        repayAccount.setBankFrost(bankFrost);
+        repayAccount.setBankFrostCash(bankBalanceCash);
+        repayAccount.setBankBalanceCash(bankFrostCash);
+        boolean accountFlag = this.adminAccountCustomizeMapper.updateOfRepayBorrowFreeze(repayAccount) > 0 ? true : false;
+        if (!accountFlag) {
+            throw new RuntimeException("还款失败！" + "更新借款人账户余额表Account失败！");
+        }
+        repayAccount = this.getAccount(repayUserId);
+        // 插入huiyingdai_account_list表
+        AccountList accountList = new AccountList();
+        accountList.setNid(borrowNid + "_" + repay.getUserId() + "_" + period); // 生成规则BorrowNid_userid_期数
+        accountList.setUserId(repayUserId);// 借款人/垫付机构 id
+        accountList.setAmount(repayTotal);// 操作金额
+        /** 银行存管相关字段设置 */
+        accountList.setAccountId(repayAccountId);
+        accountList.setBankAwait(repayAccount.getBankAwait());
+        accountList.setBankAwaitCapital(repayAccount.getBankAwaitCapital());
+        accountList.setBankAwaitInterest(repayAccount.getBankAwaitInterest());
+        accountList.setBankBalance(repayAccount.getBankBalance());
+        accountList.setBankFrost(repayAccount.getBankFrost());
+        accountList.setBankInterestSum(repayAccount.getBankInterestSum());
+        accountList.setBankInvestSum(repayAccount.getBankInvestSum());
+        accountList.setBankTotal(repayAccount.getBankTotal());
+        accountList.setBankWaitCapital(repayAccount.getBankWaitCapital());
+        accountList.setBankWaitInterest(repayAccount.getBankWaitInterest());
+        accountList.setBankWaitRepay(repayAccount.getBankWaitRepay());
+        accountList.setPlanBalance(repayAccount.getPlanBalance());//汇计划账户可用余额
+        accountList.setPlanFrost(repayAccount.getPlanFrost());
+        accountList.setCheckStatus(0);
+        accountList.setTradeStatus(1);// 交易状态 0:失败 1:成功
+        accountList.setIsBank(1);
+        accountList.setTxDate(Integer.parseInt(bean.getTxDate()));
+        accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
+        accountList.setSeqNo(bean.getSeqNo());
+        accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
+        // 非银行相关
+        accountList.setType(3);// 收支类型1收入2支出3冻结
+        accountList.setTrade("repay_freeze");// 交易类型
+        accountList.setTradeCode("balance");// 操作识别码
+        accountList.setTotal(repayAccount.getTotal());// 资金总额
+        accountList.setBalance(repayAccount.getBalance());
+        accountList.setFrost(repayAccount.getFrost());// 冻结金额
+        accountList.setAwait(repayAccount.getAwait());// 待收金额
+        accountList.setRepay(repayAccount.getRepay());// 待还金额
+        accountList.setCreateTime(GetDate.getDate());// 创建时间
+        accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY);// 操作员
+        accountList.setRemark(borrowNid);
+        accountList.setIp(repay.getIp());// 操作IP
+        accountList.setWeb(0);
+        boolean accountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
+        if (!accountListFlag) {
+            throw new RuntimeException("还款失败！" + "插入借款人交易明细表AccountList失败！");
+        }
+        updateOverdueStatus(borrow, latePeriod);
+        try {
+            deleteFreezeTempLogs(bean.getOrderId(), borrowNid);
+        } catch (Exception e) {
+            logger.error("【还款】删除还款冻结临时日志失败！订单号：{}", bean.getOrderId(), e);
+        }
+        return true;
+    }
+
+    private void updateOverdueStatus(Borrow borrow, int latePeriod) throws Exception {
+        if (borrow.getStatus() != 8) {// 标的当前不是逾期状态
+            return;
+        }
+        if (latePeriod > 0) {// 查看逾期还款是否已经提交全部逾期期数
+            BorrowRecoverPlanExample LateRecoverPlanExample = new BorrowRecoverPlanExample();
+            LateRecoverPlanExample.createCriteria().andBorrowNidEqualTo(borrow.getBorrowNid())
+                    .andRecoverPeriodGreaterThan(latePeriod).andAdvanceStatusEqualTo(3);
+            // 原始投资的逾期笔数
+            Integer lateCount = this.borrowRecoverPlanMapper.countByExample(LateRecoverPlanExample);
+            if (lateCount != null && lateCount > 0) {
+                logger.info("【还款】借款编号：{}，仍有逾期未提交！", borrow.getBorrowNid());
+                return;
+            }
+        }
+        // 逾期全部提交
+        Borrow newBorrow = new Borrow();
+        newBorrow.setId(borrow.getId());
+        newBorrow.setStatus(4);// 逾期中修改为还款中
+        boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBorrow) > 0 ? true : false;
+        if (!borrowFlag) {
+            throw new Exception("全部逾期还款提交成功后，标的表(ht_borrow)更新失败！[借款编号：" + borrow.getBorrowNid() + "]");
         }
     }
 
@@ -4225,6 +4230,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayOld.setChargeInterest(creditRepay.getChargeInterest());
                                 creditRepayOld.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest());
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
+                                if(creditRepay.getAdvanceStatus() == 3){
+                                    creditRepayOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                                }
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
                                     manageFee = manageFee.add(creditRepay.getManageFee());
@@ -4254,6 +4262,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 oldCreditRepay.setRepayAdvanceInterest(hjhDebtCreditRepayBean.getRepayAdvanceInterest());
                                 oldCreditRepay.setRepayAdvancePenaltyInterest(hjhDebtCreditRepayBean.getRepayAdvancePenaltyInterest());
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
+                                if(hjhDebtCreditRepayBean.getAdvanceStatus() == 3){
+                                    oldCreditRepay.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                                }
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
                                     manageFee = manageFee.add(hjhDebtCreditRepayBean.getManageFee());
@@ -4333,6 +4344,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowRecoverPlanOld.setChargeInterest(borrowRecoverPlanOld.getChargeInterest().add(chargeInterest));
                         borrowRecoverPlanOld.setChargePenaltyInterest(borrowRecoverPlanOld.getChargePenaltyInterest().add(chargePenaltyInterest));
                         borrowRecoverPlanOld.setRecoverFee(manageFee);
+                        if(repayRecoverPlan.getAdvanceStatus() == 3){
+                            borrowRecoverPlanOld.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
+                        }
                         boolean flag = borrowRecoverPlanMapper.updateByPrimaryKey(borrowRecoverPlanOld) > 0 ? true : false;
                         if (!flag) {
                             errorCount = errorCount + 1;
@@ -4349,6 +4363,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 } else {
                     borrowRepayPlan.setRepayMoneySource(1);
                     borrowRepayPlan.setRepayUsername(userName);
+                }
+                if(borrowRepayPlan.getAdvanceStatus() == 3){
+                    borrowRepayPlan.setAdvanceStatus(30);// 逾期标的，置成逾期还款中30
                 }
                 boolean borrowRepayPlanFlag = borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
                 if (borrowRepayPlanFlag) {
@@ -4377,7 +4394,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     borrowApicron.setFailTimes(0);
                     borrowApicron.setCreditRepayStatus(0);
                     borrowApicron.setSubmitter(userName);
-                    borrowApicron.setIsLate(borrowRepayPlan.getAdvanceStatus() == 3 ? 1 : 0);
+                    borrowApicron.setIsLate(borrowRepayPlan.getAdvanceStatus() == 30 ? 1 : 0);
                     borrowApicron.setLastPeriod(repay.getLastPeriod() == null ? 0 : repay.getLastPeriod());
                     if(isAllRepay){
                         borrowApicron.setIsAllrepay(1);
@@ -4829,7 +4846,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     @Override
-    public void deleteFreezeTempLogs(String orderId) {
+    public void deleteFreezeTempLogs(String orderId, String borrowNid) {
         BankRepayFreezeLogExample example = new BankRepayFreezeLogExample();
         example.createCriteria().andOrderIdEqualTo(orderId);
         List<BankRepayFreezeLog> log = this.bankRepayFreezeLogMapper.selectByExample(example);
@@ -4846,6 +4863,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BankRepayOrgFreezeLogExample orgExample = new BankRepayOrgFreezeLogExample();
         BankRepayOrgFreezeLogExample.Criteria criteria = orgExample.createCriteria();
         criteria.andOrderIdEqualTo(orderId);
+        if(StringUtils.isNotBlank(borrowNid)){
+            criteria.andBorrowNidEqualTo(borrowNid);// 批量垫付需要根据标的号逐个删除
+        }
         List<BankRepayOrgFreezeLog> orgLog = this.bankRepayOrgFreezeLogMapper.selectByExample(orgExample);
         if (orgLog != null && orgLog.size() > 0) {
             for (int i = 0; i < orgLog.size(); i++) {
@@ -5130,7 +5150,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     // 获取本期的用户已还款总额
                     userRepayBean.setRepayTotal(userRepayPlan.getRepayAccountYes().add(userRepayPlan.getRepayFee()).toString());
                 } else {// 用户未还款本息
-                    if(userRepayPlan.getAdvanceStatus() == 3){// 逾期未还款
+                    if(userRepayPlan.getAdvanceStatus() == 3 || userRepayPlan.getAdvanceStatus() == 30){// 逾期未还款/还款中
                         lateArray.add(userRepayPlan.getRepayPeriod());
                         if (nowPeriod < periodTotal) {
                             nowPeriod++;

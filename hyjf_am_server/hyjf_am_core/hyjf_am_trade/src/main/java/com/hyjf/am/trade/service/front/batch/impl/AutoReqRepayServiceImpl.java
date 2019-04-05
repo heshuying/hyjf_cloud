@@ -158,7 +158,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
                 // 申请冻结资金失败
                 if (!BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
                     if (!"".equals(respCode)) {
-                        this.repayManageService.deleteFreezeTempLogs(orderId);
+                        this.repayManageService.deleteFreezeTempLogs(orderId, null);
                     }
                     logger.error("【自动还款】调用还款申请冻结资金接口失败:" + callBackBean.getRetMsg() + "订单号:" + callBackBean.getOrderId());
                     logger.info("还款失败，请稍后再试！");

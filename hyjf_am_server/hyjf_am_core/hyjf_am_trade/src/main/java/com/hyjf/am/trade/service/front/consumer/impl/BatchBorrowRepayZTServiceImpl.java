@@ -1209,6 +1209,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		creditRepay.setAssignRepayYesTime(nowTime);
 		creditRepay.setManageFee(manageFee);
 		creditRepay.setStatus(1);
+		if(creditRepay.getAdvanceStatus() == 30){
+			creditRepay.setAdvanceStatus(3);// 逾期标的，已还款后重置
+		}
 		boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
 		if (!creditRepayFlag) {
 			throw new Exception("债转还款表(ht_credit_repay)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
@@ -1668,7 +1671,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			failCount = this.borrowRecoverPlanMapper.countByExample(recoverPlanExample);
 			// 如果还款全部完成
 			if (failCount == 0) {
-				// 首先更新还款状态
+				// 首先更新还款状态，此状态只是中间状态，只是为了锁住当前标的记录
 				newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 				BorrowExample borrowExample = new BorrowExample();
 				borrowExample.createCriteria().andIdEqualTo(borrowId);
@@ -1678,7 +1681,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				}
 				boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;
 				Integer lastPeriod = apicron.getLastPeriod() == null ? 0 :apicron.getLastPeriod();// 同时提交还款的最后一期
-				boolean isLate = apicron.getIsLate() == null ? false: apicron.getIsLate() == 1;// 是否逾期
 				isAllRepay = isAllRepay || lastPeriod == borrowPeriod;// 多期还款的最后一期是标的的最后一期，是一次性还款
 				// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/19
 				boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay && lastPeriod > 0);
@@ -1690,17 +1692,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				}
 				// 非一次性还款和一次性还款其他期都更新完毕才更新
 				if(!isAllRepay || isLastUpdate){
-					if (isLate && status != 5) {// 如果是逾期标的,且仍有逾期未还款完毕
-						BorrowRecoverPlanExample LateRecoverPlanExample = new BorrowRecoverPlanExample();
-						LateRecoverPlanExample.createCriteria().andBorrowNidEqualTo(borrowNid)
-								.andRecoverStatusNotEqualTo(1).andAdvanceStatusEqualTo(3);
-						// 原始投资的逾期笔数
-						Integer lateCount = this.borrowRecoverPlanMapper.countByExample(LateRecoverPlanExample);
-						if (lateCount != null && lateCount > 0) {
-							logger.info("【直投还款】借款编号：{}，仍有逾期未还！", borrowNid);
-							status = 8;
-						}
-					}
 					// 更新Borrow
 					newBorrow.setRepayFullStatus(repayStatus);
 					newBorrow.setStatus(status);
@@ -1747,14 +1738,17 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				// 更新相应的还款计划表
 				BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
 				BorrowRepayPlan newBorrowRepayPlan = new BorrowRepayPlan();
-				newBorrowRepayPlan.setId(borrowRepayPlan.getId());
 				if (Validator.isNull(borrowRepayPlan)) {
 					throw new Exception("未查询到相应的分期还款记录！[借款编号：" + borrowNid + "]，[还款期数：" + periodNow + "]");
 				}
+				newBorrowRepayPlan.setId(borrowRepayPlan.getId());
 				newBorrowRepayPlan.setRepayType(TYPE_WAIT_YES);
 				newBorrowRepayPlan.setRepayActionTime(String.valueOf(nowTime));
 				newBorrowRepayPlan.setRepayStatus(1);
 				newBorrowRepayPlan.setRepayYestime(nowTime);
+				if(borrowRepayPlan.getAdvanceStatus() == 30){
+					newBorrowRepayPlan.setAdvanceStatus(3);// 逾期标的，已还款后重置
+				}
 				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(newBorrowRepayPlan) > 0 ? true : false;
 				if (!borrowRepayPlanFlag) {
 					throw new Exception("还款记录分期表(ht_borrow_repay_plan)更新失败！[借款编号：" + borrowNid + "]，[还款期数：" + periodNow + "]");
@@ -2564,6 +2558,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			borrowRecoverPlan.setRepayLateInterest(borrowRecoverPlan.getRepayLateInterest().add(lateInterest));
 			borrowRecoverPlan.setRecoverFeeYes(borrowRecoverPlan.getRecoverFeeYes().add(manageFee));
 			borrowRecoverPlan.setRecoverType(TYPE_YES);
+			if(borrowRecoverPlan.getAdvanceStatus() == 30){
+				borrowRecoverPlan.setAdvanceStatus(3);// 逾期标的，已还款后重置
+			}
 			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
 			if (!borrowRecoverPlanFlag) {
 				throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");
@@ -2858,6 +2855,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			borrowRecoverPlan.setRecoverStatus(1);
 			borrowRecoverPlan.setRecoverYestime(String.valueOf(nowTime));
 			borrowRecoverPlan.setRecoverType(TYPE_YES);
+			if(borrowRecoverPlan.getAdvanceStatus() == 30){
+				borrowRecoverPlan.setAdvanceStatus(3);// 逾期标的，已还款后重置
+			}
 			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
 			if (!borrowRecoverPlanFlag) {
 				throw new Exception("放款记录分期表(ht_borrow_recover_plan)更新失败！[借款编号：" + borrowNid + "]，[出借订单号：" + tenderOrderId + "]");

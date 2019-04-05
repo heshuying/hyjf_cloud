@@ -1164,7 +1164,6 @@ public class RepayManageController extends BaseTradeController {
                         //还款后变更数据
                         boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay,latePeriod);
                         if (updateResult) {
-                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);
                             RedisUtils.del(RedisConstants.HJH_DEBT_SWAPING + borrowNid);
