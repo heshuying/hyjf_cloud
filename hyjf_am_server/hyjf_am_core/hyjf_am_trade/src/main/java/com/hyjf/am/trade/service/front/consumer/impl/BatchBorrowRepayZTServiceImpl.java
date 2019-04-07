@@ -1671,7 +1671,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			failCount = this.borrowRecoverPlanMapper.countByExample(recoverPlanExample);
 			// 如果还款全部完成
 			if (failCount == 0) {
-				// 首先更新还款状态，此状态只是中间状态，只是为了锁住当前标的记录
+				// 首先更新还款状态，主要为了锁住当前标的记录
 				newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 				BorrowExample borrowExample = new BorrowExample();
 				borrowExample.createCriteria().andIdEqualTo(borrowId);
@@ -1690,11 +1690,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					repayYesTime = nowTime;
 					status = 5;
 				}
-				// 非一次性还款和一次性还款其他期都更新完毕才更新
+				// 非一次性还款或一次性还款其他期都更新完毕才更新
 				if(!isAllRepay || isLastUpdate){
 					// 更新Borrow
 					newBorrow.setRepayFullStatus(repayStatus);
-					newBorrow.setStatus(status);
+					if (lastPeriod == 0 || isAllRepay) {// 逾期还款且未全部还完不更新标的状态
+						newBorrow.setStatus(status);
+					}
 					BorrowExample borrowExample2 = new BorrowExample();
 					borrowExample2.createCriteria().andIdEqualTo(borrowId);
 					boolean borrowFlag2 = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample2) > 0 ? true : false;

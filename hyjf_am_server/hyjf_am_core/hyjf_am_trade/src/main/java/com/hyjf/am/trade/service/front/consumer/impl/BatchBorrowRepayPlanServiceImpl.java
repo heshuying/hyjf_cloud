@@ -2633,7 +2633,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			logger.info("【智投还款】借款编号：{}，原始投资失败笔数为：{}", borrowNid, failCount);
 			// 如果还款全部完成
 			if (failCount == 0) {
-				// 首先更新还款状态，此状态只是中间状态，只是为了锁住当前标的记录
+				// // 首先更新还款状态，主要为了锁住当前标的记录
 				newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
 				BorrowExample borrowExample = new BorrowExample();
 				borrowExample.createCriteria().andIdEqualTo(borrowId);
@@ -2656,7 +2656,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				if(!isAllRepay || isLastUpdate){
 					// 更新Borrow
 					newBorrow.setRepayFullStatus(repayStatus);
-					newBorrow.setStatus(status);
+					if (lastPeriod == 0 || isAllRepay) {// 逾期还款且未全部还完不更新标的状态
+						newBorrow.setStatus(status);
+					}
 					BorrowExample borrowExample2 = new BorrowExample();
 					borrowExample2.createCriteria().andIdEqualTo(borrowId);
 					boolean borrowFlag2 = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample2) > 0 ? true : false;
