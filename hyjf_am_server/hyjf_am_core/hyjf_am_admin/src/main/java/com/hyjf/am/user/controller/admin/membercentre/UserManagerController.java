@@ -1063,7 +1063,7 @@ public class UserManagerController extends BaseController {
                 List<BankCancellationAccountVO> userVoList = CommonUtils.convertBeanList(userManagerCustomizeList, BankCancellationAccountVO.class);
                 Map<String, String> userStatus = CacheUtil.getParamNameMap("ACCOUNT_STATUS");
                 for (BankCancellationAccountVO accountVO : userVoList){
-                    accountVO.setBankOpenAccountStr(userStatus.getOrDefault(accountVO.getBankOpenAccount(), null));
+                    accountVO.setBankOpenAccountStr(userStatus.getOrDefault(String.valueOf(accountVO.getBankOpenAccount()), null));
                 }
                 response.setResultList(userVoList);
                 response.setRtn(Response.SUCCESS);
