@@ -24,29 +24,17 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
 
     /**
      * 列表总记录数
-     * @param requestBean
-     * @return
      */
     @Override
-    public Integer getRepayInfoCurrentCount(BorrowRepayInfoCurrentRequest requestBean){
-        Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
-
+    public Integer getRepayInfoCurrentCount(Map<String,Object> paraMap){
         return adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentCount(paraMap);
     }
 
     /**
      * 获取列表数据
-     * @param requestBean
-     * @return
      */
     @Override
-    public List<BorrowRepayInfoCurrentCustomizeVO> getRepayInfoCurrentList(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit){
-        Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
-        paraMap.put("limitStart", offset);
-        paraMap.put("limitEnd", limit);
-
+    public List<BorrowRepayInfoCurrentCustomizeVO> getRepayInfoCurrentList(Map<String,Object> paraMap){
         List<BorrowRepayInfoCurrentCustomizeVO> resultList = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentList(paraMap);
         if(resultList == null){
             resultList = new ArrayList<>();
@@ -56,14 +44,9 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
 
     /**
      * 统计列表总计数据
-     * @param requestBean
-     * @return
      */
     @Override
-    public Map<String,Object> getRepayInfoCurrentSum(BorrowRepayInfoCurrentRequest requestBean){
-        Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
-
+    public Map<String,Object> getRepayInfoCurrentSum(Map<String,Object> paraMap){
         Map<String,Object> resultMap = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentSum(paraMap);
         if(resultMap == null){
             resultMap = new HashMap<>();
@@ -73,16 +56,9 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
 
     /**
      * 获取列表导出数据
-     * @param requestBean
-     * @return
      */
     @Override
-    public List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit){
-        Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
-        paraMap.put("limitStart", offset);
-        paraMap.put("limitEnd", limit);
-
+    public List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(Map<String,Object> paraMap){
         List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentListExport(paraMap);
         if(resultList == null){
             resultList = new ArrayList<>();
@@ -92,14 +68,9 @@ public class BorrowRepayInfoCurrentServiceImpl implements BorrowRepayInfoCurrent
 
     /**
      * 获取列表导出总记录数
-     * @param requestBean
-     * @return
      */
     @Override
-    public Integer getRepayInfoCurrentCountExport(BorrowRepayInfoCurrentRequest requestBean){
-        Map<String,Object> paraMap = new HashMap<>();
-        paraMap.put("borrowNid", requestBean.getBorrowNid());
-
+    public Integer getRepayInfoCurrentCountExport(Map<String,Object> paraMap){
         Integer count = adminBorrowRepayInfoCurrentCustomizeMapper.getRepayInfoCurrentCountExport(paraMap);
         if(count == null){
             count = 0;

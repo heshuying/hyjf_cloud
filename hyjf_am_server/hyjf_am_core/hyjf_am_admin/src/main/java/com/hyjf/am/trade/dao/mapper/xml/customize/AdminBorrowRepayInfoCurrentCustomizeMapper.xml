@@ -77,6 +77,33 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND br.nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND 1 = 2
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND br.recover_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND b.`status` = 8
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND br.recover_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND br.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND br.recover_yestime <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
 
         UNION ALL
         <!-- 2、分期原始出借订单查询-->
@@ -143,6 +170,33 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND rp.nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND 1 = 2
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND rp.recover_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND rp.recover_status = 0 AND rp.advance_status = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND rp.recover_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND rp.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND rp.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND rp.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND rp.recover_yestime <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
         UNION
             <!-- 3、债权转让承接订单查询-->
             SELECT
@@ -164,7 +218,7 @@
                 IF (
                 cr.`status` = 0,
 
-                IF (bry.advance_status = 3, 8, 0),
+                IF (cr.advance_status = 3, 8, 0),
                 1
                 ) AS recoverStatus,
 
@@ -216,6 +270,33 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND cr.credit_tender_nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND cr.assign_nid = #{assignOrderId}
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND cr.assign_repay_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND cr.`status` = 0 AND cr.`status` = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND cr.`status` = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND cr.assign_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND cr.assign_repay_next_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND cr.assign_repay_yes_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND cr.assign_repay_yes_time <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
         UNION
             <!-- 4、计划底层标的债权转让承接订单查询-->
             SELECT
@@ -237,7 +318,7 @@
                 IF (
                 hcr.repay_status = 0,
 
-                IF (bry.advance_status = 3, 8, 0),
+                IF (hcr.advance_status = 3, 8, 0),
                 1
                 )
                 AS recoverStatus,
@@ -265,11 +346,11 @@
         ) AS recoverAmountTotal,
         IF (
             hcr.assign_repay_next_time IS NULL
-            OR hcr.assign_repay_next_time = '',
+            OR hcr.assign_repay_time = '',
             '',
             FROM_UNIXTIME(
-            hcr.assign_repay_next_time,
-            '%Y-%m-%d %H:%i:%s'
+            hcr.assign_repay_time,
+            '%Y-%m-%d'
             )
         )
         AS recoverTime,
@@ -295,6 +376,33 @@
         WHERE 1=1
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND hcr.invest_order_id = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND hcr.assign_order_id = #{assignOrderId}
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND hcr.assign_repay_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND hcr.repay_status = 0 AND hcr.repay_status = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND hcr.repay_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND hcr.assign_repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND hcr.assign_repay_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND hcr.assign_repay_yes_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND hcr.assign_repay_yes_time <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
         </if>
             ) t
         ORDER BY t.borrowNid
@@ -325,6 +433,33 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND br.nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND 1 = 2
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND br.recover_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND b.`status` = 8
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND br.recover_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND br.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND br.recover_yestime <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
         UNION ALL
             SELECT
                 rp.borrow_nid
@@ -340,6 +475,33 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND rp.nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND 1 = 2
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND rp.recover_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND rp.recover_status = 0 AND rp.advance_status = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND rp.recover_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND rp.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND rp.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND rp.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND rp.recover_yestime <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
         UNION ALL
             SELECT
                 b.borrow_nid AS borrowNid
@@ -354,6 +516,33 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND cr.credit_tender_nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND cr.assign_nid = #{assignOrderId}
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND cr.assign_repay_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND cr.`status` = 0 AND cr.`status` = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND cr.`status` = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND cr.assign_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND cr.assign_repay_next_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND cr.assign_repay_yes_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND cr.assign_repay_yes_time <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
         UNION ALL
             SELECT
                 b.borrow_nid AS borrowNid
@@ -367,6 +556,33 @@
         WHERE 1=1
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND hcr.invest_order_id = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND hcr.assign_order_id = #{assignOrderId}
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND hcr.assign_repay_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND hcr.repay_status = 0 AND hcr.repay_status = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND hcr.repay_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND hcr.assign_repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND hcr.assign_repay_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND hcr.assign_repay_yes_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND hcr.assign_repay_yes_time <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
         </if>
             ) t
     </select>
@@ -446,9 +662,36 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND br.nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND 1 = 2
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND br.recover_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND b.`status` = 8
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND br.recover_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND br.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND br.recover_yestime <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
 
         UNION ALL
-        <!-- 1、分期原始出借订单查询-->
+        <!-- 2、分期原始出借订单查询-->
         SELECT
         rp.borrow_nid,
         rp.nid AS tenderOrdid,
@@ -512,8 +755,35 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND rp.nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND 1 = 2
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND rp.recover_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND rp.recover_status = 0 AND rp.advance_status = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND rp.recover_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND rp.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND rp.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND rp.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND rp.recover_yestime <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
+        </if>
         UNION
-        <!-- 1、债权转让承接订单查询-->
+        <!-- 3、债权转让承接订单查询-->
         SELECT
         b.borrow_nid AS borrowNid,
         cr.credit_tender_nid AS tenderOrdid,
@@ -578,6 +848,33 @@
         WHERE 1=1
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND cr.credit_tender_nid = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND cr.assign_nid = #{assignOrderId}
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND cr.assign_repay_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND cr.`status` = 0 AND cr.`status` = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND cr.`status` = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND cr.assign_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND cr.assign_repay_next_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND cr.assign_repay_yes_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND cr.assign_repay_yes_time <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
         </if>
         UNION
         <!-- 4、计划底层标的债权转让承接订单查询-->
@@ -645,6 +942,33 @@
         WHERE 1=1
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
+        </if>
+        <if test="tenderOrderId != null and tenderOrderId != ''">
+            AND hcr.invest_order_id = #{tenderOrderId}
+        </if>
+        <if test="assignOrderId != null and assignOrderId != ''">
+            AND hcr.assign_order_id = #{assignOrderId}
+        </if>
+        <if test="repayPeriod != null and repayPeriod != ''">
+            AND hcr.assign_repay_period = #{repayPeriod}
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
+            AND hcr.repay_status = 0 AND hcr.repay_status = 3
+        </if>
+        <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
+            AND hcr.repay_status = #{repayStatus}
+        </if>
+        <if test="repayTimeStart != null and repayTimeStart != ''">
+            AND hcr.assign_repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
+        </if>
+        <if test="repayTimeEnd != null and repayTimeEnd != ''">
+            AND hcr.assign_repay_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{repayTimeEnd})+86399
+        </if>
+        <if test="repayedTimeStart != null and repayedTimeStart != ''">
+            AND hcr.assign_repay_yes_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayedTimeStart})
+        </if>
+        <if test="repayedTimeEnd != null and repayedTimeEnd != ''">
+            AND hcr.assign_repay_yes_time <![CDATA[<=]]>UNIX_TIMESTAMP(#{repayedTimeEnd})+86399
         </if>
         ) t
     </select>

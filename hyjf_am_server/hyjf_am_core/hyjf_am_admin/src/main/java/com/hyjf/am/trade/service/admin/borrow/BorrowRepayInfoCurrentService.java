@@ -13,13 +13,13 @@ import java.util.Map;
  */
 public interface BorrowRepayInfoCurrentService {
 
-    Integer getRepayInfoCurrentCount(BorrowRepayInfoCurrentRequest requestBean);
+    Integer getRepayInfoCurrentCount(Map<String,Object> paraMap);
 
-    List<BorrowRepayInfoCurrentCustomizeVO> getRepayInfoCurrentList(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit);
+    List<BorrowRepayInfoCurrentCustomizeVO> getRepayInfoCurrentList(Map<String,Object> paraMap);
 
-    Map<String,Object> getRepayInfoCurrentSum(BorrowRepayInfoCurrentRequest requestBean);
+    Map<String,Object> getRepayInfoCurrentSum(Map<String,Object> paraMap);
 
-    List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(BorrowRepayInfoCurrentRequest requestBean, Integer offset, Integer limit);
+    List<BorrowRepayInfoCurrentExportCustomizeVO> getRepayInfoCurrentListExport(Map<String,Object> paraMap);
 
-    Integer getRepayInfoCurrentCountExport(BorrowRepayInfoCurrentRequest requestBean);
+    Integer getRepayInfoCurrentCountExport(Map<String,Object> paraMap);
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,29 +57,69 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             response.setMessage("请求参数错误，borrowNid为空");
             return response;
         }
+        Map<String,Object> paraMap = getQueryParamMap(requestBean);
 
         // 查询列表总记录数
-        Integer count = borrowRepayInfoCurrentService.getRepayInfoCurrentCount(requestBean);
+        Integer count = borrowRepayInfoCurrentService.getRepayInfoCurrentCount(paraMap);
         Paginator paginator = new Paginator(requestBean.getCurrPage(), count,requestBean.getPageSize());
 
         // 查询列表数据
         List<BorrowRepayInfoCurrentCustomizeVO> resultList;
         if(count > 0){
-            resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentList(requestBean, paginator.getOffset(), paginator.getLimit());
+            paraMap.put("limitStart", paginator.getOffset());
+            paraMap.put("limitEnd", paginator.getLimit());
+            resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentList(paraMap);
         }else{
             resultList = new ArrayList<>();
         }
 
         // 查询列表统计数据
-        Map<String,Object> sumInfo = borrowRepayInfoCurrentService.getRepayInfoCurrentSum(requestBean);
+        Map<String,Object> sumInfo = borrowRepayInfoCurrentService.getRepayInfoCurrentSum(paraMap);
 
         response.setResultList(resultList);
         response.setCount(count);
+
         response.setSumInfo(sumInfo);
         response.setRtn(Response.SUCCESS);
 
         logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
+    }
+
+    /**
+     * 请求参数处理
+     * @param requestBean
+     * @return
+     */
+    private Map<String,Object> getQueryParamMap(BorrowRepayInfoCurrentRequest requestBean){
+        Map<String,Object> paraMap = new HashMap<>();
+        paraMap.put("borrowNid", requestBean.getBorrowNid());
+        if(StringUtils.isNotBlank(requestBean.getAssignOrderId())){
+            paraMap.put("assignOrderId",requestBean.getAssignOrderId());
+        }
+        if(StringUtils.isNotBlank(requestBean.getTenderOrderId())){
+            paraMap.put("tenderOrderId",requestBean.getTenderOrderId());
+        }
+        if(StringUtils.isNotBlank(requestBean.getRepayPeriod())){
+            paraMap.put("repayPeriod",requestBean.getRepayPeriod());
+        }
+        if(StringUtils.isNotBlank(requestBean.getRepayStatus())){
+            paraMap.put("repayStatus",requestBean.getRepayStatus());
+        }
+        if(StringUtils.isNotBlank(requestBean.getRepayTimeStart())){
+            paraMap.put("repayTimeStart",requestBean.getRepayTimeStart());
+        }
+        if(StringUtils.isNotBlank(requestBean.getRepayTimeEnd())){
+            paraMap.put("repayTimeEnd",requestBean.getRepayTimeEnd());
+        }
+        if(StringUtils.isNotBlank(requestBean.getRepayedTimeStart())){
+            paraMap.put("repayedTimeStart",requestBean.getRepayedTimeStart());
+        }
+        if(StringUtils.isNotBlank(requestBean.getRepayedTimeEnd())){
+            paraMap.put("repayedTimeEnd",requestBean.getRepayedTimeEnd());
+        }
+
+        return paraMap;
     }
 
     /**
@@ -108,11 +149,12 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             response.setResultList(new ArrayList<>());
             return response;
         }
-
+        Map<String,Object> paraMap = getQueryParamMap(requestBean);
         Paginator paginator = new Paginator(requestBean.getCurrPage(), requestBean.getCount(),requestBean.getPageSize());
-
+        paraMap.put("limitStart", paginator.getOffset());
+        paraMap.put("limitEnd", paginator.getLimit());
         // 查询列表数据
-        List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentListExport(requestBean,paginator.getOffset(), paginator.getLimit());
+        List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentListExport(paraMap);
 
         response.setResultList(resultList);
         response.setRtn(Response.SUCCESS);
@@ -136,9 +178,10 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             response.setMessage("请求参数错误，borrowNid为空");
             return response;
         }
+        Map<String,Object> paraMap = getQueryParamMap(requestBean);
 
         // 查询列表数据
-        Integer count = borrowRepayInfoCurrentService.getRepayInfoCurrentCountExport(requestBean);
+        Integer count = borrowRepayInfoCurrentService.getRepayInfoCurrentCountExport(paraMap);
 
         response.setResultInt(count);
         response.setRtn(Response.SUCCESS);
