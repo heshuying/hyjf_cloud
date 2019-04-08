@@ -34,6 +34,9 @@
 				<if test="statusSrch ==1">
 					AND b.status= 5
 				</if>
+				<if test="statusSrch ==2">
+					AND b.status= 8
+				</if>
 			</if>
 			<!-- 最后还款日 -->
 			<if test="repayLastTimeStartSrch != null and repayLastTimeStartSrch != ''">
