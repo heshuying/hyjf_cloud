@@ -867,6 +867,18 @@ public class UserCenterController extends BaseController {
                 return new AdminResult<>(FAIL, "请输入正确的电子账号!");
             }
             BeanUtils.copyProperties(infoVO,companyInfoCompanyInfoVO);
+            //企业信息补录时，企业名称若含有英文括号，自动替换成中文括号再保存 add by nxl start
+            if(null!=companyInfoCompanyInfoVO.getName()){
+                if(companyInfoCompanyInfoVO.getName().contains("(")){
+                    String repNameStart = companyInfoCompanyInfoVO.getName().replace("(","（");
+                    companyInfoCompanyInfoVO.setName(repNameStart);
+                }
+                if(companyInfoCompanyInfoVO.getName().contains(")")){
+                    String repNameEnd = companyInfoCompanyInfoVO.getName().replace(")","）");
+                    companyInfoCompanyInfoVO.setName(repNameEnd);
+                }
+            }
+            //企业信息补录时，企业名称若含有英文括号，自动替换成中文括号再保存 add by nxl end
             // 后台优化 add by nxl start
             BankCardResponse bankCardResponse = userCenterService.getBankInfoByAccount(infoVO.getAccount(),userId);
             if(null!=bankCardResponse){
@@ -874,6 +886,7 @@ public class UserCenterController extends BaseController {
                 companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
                 companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
             }
+
             //后台优化 add by nxl end
 
             searchCompanyInfoResponseBean.setCompany(companyInfoCompanyInfoVO);
