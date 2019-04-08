@@ -115,6 +115,8 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
      */
     @Override
     public Integer saveCreditTenderAssignLog(CreditTenderLog bean) {
+        // 为了创造一个异常 给测试
+        bean = null ;
         return creditTenderLogMapper.insertSelective(bean);
     }
 
