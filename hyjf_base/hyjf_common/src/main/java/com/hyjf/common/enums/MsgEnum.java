@@ -148,6 +148,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_AMT_REPAY_BATCH("EAM000500","{0}"),// 批次还款错误信息提示
 	ERR_AMT_REPAY_AUTO_CREDIT("EAM000501","系统正在处理项目债转，请{0}后发起还款！"),
 	ERR_AMT_REPAY_FAIL_CREDIT("EAM000502","还款提交失败，请联系汇盈金服业务部门核实处理！"),
+	ERR_AMT_REPAY_FAIL_QUERY("EAM000503","还款查询失败，请联系汇盈金服业务部门核实处理！"),
 
 	//授权相关错误信息ERR_AUTHORIZE_
 	ERR_AUTHORIZE_REPEAT("EAU000001","用户已授权,无需重复授权"),

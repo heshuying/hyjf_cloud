@@ -479,12 +479,6 @@ public class RepayManageController extends BaseTradeController {
         }
         try {
             detaiResult = repayManageService.getRepayDetailData(detailRequestBean);
-            if(detaiResult == null){
-                result.setStatus("404");
-                result.setStatusDesc("未找到数据");
-                result.setData(Collections.emptyMap());
-                return result;
-            }
         } catch (Exception e) {
             logger.error("【还款详情页面】获取页面数据发生异常！", e);
             result.setStatus(WebResult.ERROR);
@@ -492,7 +486,10 @@ public class RepayManageController extends BaseTradeController {
             result.setData(Collections.emptyMap());
             return result;
         }
-        if(detaiResult!= null && "1".equals(detaiResult.getString("onlyAllRepay"))) {
+        if(detaiResult == null) {// 未查询到数据抛出异常
+            throw new CheckException(MsgEnum.ERR_AMT_REPAY_FAIL_QUERY);
+        }
+        if("1".equals(detaiResult.getString("onlyAllRepay"))) {
             isAllRepay = true;
         }
         resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
