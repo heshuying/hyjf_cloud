@@ -6921,4 +6921,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult().intValue();
     }
 
+
+
+
 }

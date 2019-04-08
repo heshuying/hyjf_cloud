@@ -131,7 +131,6 @@
 			<version>1.2.47</version>
 		</dependency>
 		<!-- //合规数据上报 CERT end-->
-
 	</dependencies>
 
 	<build>

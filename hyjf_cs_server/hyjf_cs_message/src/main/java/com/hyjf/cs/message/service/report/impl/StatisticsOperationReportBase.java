@@ -2,6 +2,7 @@ package com.hyjf.cs.message.service.report.impl;/*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.message.OperationReportJobBean;
@@ -9,12 +10,13 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.ic.report.OperationColumnReport;
-import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationReport;
 import com.hyjf.cs.message.bean.ic.report.OperationTenthReport;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationReport;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.ic.report.*;
 import com.hyjf.cs.message.mongo.ic.userbehaviourn.UserOperationReportMongDao;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -224,6 +226,8 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @param sumTenderAmount   累计成交金额
      */
     public void saveTenthOperationReport(String operationReportId, Integer type,OperationReportJobBean bean, BigDecimal sumTenderAmount) {
+        logger.info("saveTenthOperationReport, operationReportId is: {}, type is: {}, sumTenderAmount is : {}", operationReportId, type, sumTenderAmount);
+
         BigDecimal tenderAmountSum = BigDecimal.ZERO;//十大出借人出借总和
         String tenderUsername = null;//出借者用户名
         BigDecimal tenderAmountMoney = BigDecimal.ZERO;//出借金额
@@ -236,11 +240,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         tenthOperationReport.setCreateUserId(1);
 
         //计算 十大出借人出借金额
-        List<OperationReportJobVO> listTenMostMoney = this.getTenMostMoney(bean);
+        List<OperationReportJobVO> listTenMostMoney = bean.getListTenMostMoney();
         if (!CollectionUtils.isEmpty(listTenMostMoney)) {
 
             for (int i = 0; i < listTenMostMoney.size(); i++) {
                 OperationReportJobVO dto = listTenMostMoney.get(i);
+                logger.info("i: {}, dto is: {}", i, JSONObject.toJSONString(dto));
                 switch (i) {
                     case 0:
                         tenderUsername = dto.getUserName();
@@ -303,25 +308,33 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             }
 
             //10大出借人金额之占比(%)
-            BigDecimal tenTenderProportion = tenderAmountSum.divide(sumTenderAmount, 4, BigDecimal.ROUND_HALF_UP).multiply(bigHundred);
-            tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大出借人金额之和(元)
-            tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大出借人金额之占比(%)
-            tenthOperationReport.setOtherTenderAmount(sumTenderAmount.subtract(tenderAmountSum));//其他出借人金额之和(元)
-            tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他出借人金额之和占比（%）
+            logger.info("計算10大出借人金额之占比(%)...");
+            try{
+                BigDecimal tenTenderProportion = tenderAmountSum.divide(sumTenderAmount, 4, BigDecimal.ROUND_HALF_UP).multiply(bigHundred);
+                tenthOperationReport.setTenTenderAmount(tenderAmountSum);//10大出借人金额之和(元)
+                tenthOperationReport.setTenTenderProportion(tenTenderProportion.setScale(2, BigDecimal.ROUND_DOWN));//10大出借人金额之占比(%)
+                tenthOperationReport.setOtherTenderAmount(sumTenderAmount.subtract(tenderAmountSum));//其他出借人金额之和(元)
+                tenthOperationReport.setOtherTenderProportion(bigHundred.subtract(tenTenderProportion).setScale(2, BigDecimal.ROUND_DOWN));//其他出借人金额之和占比（%）
 
-            //查找 最多金用户的年龄和地区
-            OperationReportJobVO UserAgeAndAreaDto = this.getUserAgeAndArea(userId);
-            if (UserAgeAndAreaDto != null) {
+                //查找 最多金用户的年龄和地区
+                logger.info("查找 最多金用户的年龄和地区...");
+                OperationReportJobVO operationReportJobVO = this.getUserAgeAndArea(userId);
 
-                tenthOperationReport.setMostTenderUserAge(UserAgeAndAreaDto.getDealSum());//最多金用户年龄（岁）
-                tenthOperationReport.setMostTenderUserArea(UserAgeAndAreaDto.getTitle());//最多金用户地区
+                if (operationReportJobVO != null) {
+                    logger.info("operationReportJobVO is: {}...", JSONObject.toJSONString(operationReportJobVO));
+                    tenthOperationReport.setMostTenderUserAge(operationReportJobVO.getDealSum());//最多金用户年龄（岁）
+                    tenthOperationReport.setMostTenderUserArea(operationReportJobVO.getTitle());//最多金用户地区
+                }
+            }catch (Exception e){
+                logger.error("Exception, ignore....", e);
             }
             tenthOperationReport.setMostTenderUsername(tenderUsername);//最多金用户名
             tenthOperationReport.setMostTenderAmount(tenderAmountMoney);//最多金出借金额（元）
         }
 
         //大赢家，收益最高
-        List<OperationReportJobVO> listOneInterestsMost =  this.getOneInterestsMost(bean);
+        logger.info("大赢家，收益最高...");
+        List<OperationReportJobVO> listOneInterestsMost =  bean.getListOneInterestsMost();
         if (!CollectionUtils.isEmpty(listOneInterestsMost)) {
             OperationReportJobVO interestsMostDto = listOneInterestsMost.get(0);
             userId = interestsMostDto.getUserId();
@@ -337,7 +350,8 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //超活跃，出借笔数最多
-        List<OperationReportJobVO> listtOneInvestMost =this.getOneInvestMost(bean);
+        logger.info("超活跃，出借笔数最多...");
+        List<OperationReportJobVO> listtOneInvestMost =bean.getListtOneInvestMost();
         if (!CollectionUtils.isEmpty(listtOneInvestMost)) {
             OperationReportJobVO investMostDto = listtOneInvestMost.get(0);
             userId = investMostDto.getUserId();
@@ -357,9 +371,62 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         operationTenthReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        tenthOperationReportMapper.insert(tenthOperationReport);
+        logger.info("保存， operationTenthReport is: {}", JSONObject.toJSONString(operationTenthReport));
         operationTenthReportMongDao.insert(operationTenthReport);
     }
+    /**
+     * 用户分析 - 性别分布
+     *
+     * @return
+     */
+    public Map<String, Integer> getSexDistribute(OperationReportJobBean bean) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        List<OperationReportJobVO> listSexDistribute = bean.getListSexDistribute();
+        if (!CollectionUtils.isEmpty(listSexDistribute)) {
+            for (OperationReportJobVO opear : listSexDistribute) {
+                if ("男".equals(opear.getTitle())) {
+                    map.put("manTenderNum", opear.getDealSum());
+                } else if ("女".equals(opear.getTitle())) {
+                    map.put("womanTenderNum", opear.getDealSum());
+                }
+            }
 
+            //null值转换
+            this.nullConvertValue(Integer.class, map, "manTenderNum", "womanTenderNum");
+        }
+        return map;
+    }
+
+
+    /**
+     * 用户分析 - 年龄分布
+     *
+     * @param bean 今年间隔月份
+     * @return
+     */
+    public Map<String, Integer> getAgeDistribute(OperationReportJobBean bean) {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        List<OperationReportJobVO> listAgeDistribute = bean.getListAgeDistribute();
+        if (!CollectionUtils.isEmpty(listAgeDistribute)) {
+            for (OperationReportJobVO opear : listAgeDistribute) {
+                if ("18-29岁".equals(opear.getTitle())) {
+                    map.put("18-29", opear.getDealSum());
+                } else if ("30-39岁".equals(opear.getTitle())) {
+                    map.put("30-39", opear.getDealSum());
+                } else if ("40-49岁".equals(opear.getTitle())) {
+                    map.put("40-49", opear.getDealSum());
+                } else if ("50-59岁".equals(opear.getTitle())) {
+                    map.put("50-59", opear.getDealSum());
+                } else if ("60岁以上".equals(opear.getTitle())) {
+                    map.put("60-", opear.getDealSum());
+                }
+            }
+
+            //null值转换
+            this.nullConvertValue(Integer.class, map, "18-29", "30-39", "40-49", "50-59", "60-");
+        }
+        return map;
+    }
 
     /**
      * 业绩总览
@@ -529,63 +596,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         return map;
     }
 
-    /**
-     * 用户分析 - 性别分布
-     *
-     * @return
-     */
-    public Map<String, Integer> getSexDistribute(OperationReportJobBean bean) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listSexDistribute = bean.getListSexDistribute();
-        //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
-        listSexDistribute =  amUserClient.getSexCount(listSexDistribute);
-        if (!CollectionUtils.isEmpty(listSexDistribute)) {
-            for (OperationReportJobVO opear : listSexDistribute) {
-                if ("男".equals(opear.getTitle())) {
-                    map.put("manTenderNum", opear.getDealSum());
-                } else if ("女".equals(opear.getTitle())) {
-                    map.put("womanTenderNum", opear.getDealSum());
-                }
-            }
 
-            //null值转换
-            this.nullConvertValue(Integer.class, map, "manTenderNum", "womanTenderNum");
-        }
-        return map;
-    }
-
-
-    /**
-     * 用户分析 - 年龄分布
-     *
-     * @param bean 今年间隔月份
-     * @return
-     */
-    public Map<String, Integer> getAgeDistribute(OperationReportJobBean bean) {
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listAgeDistribute = bean.getListAgeDistribute();
-        //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
-        listAgeDistribute =  amUserClient.getAgeCount(listAgeDistribute);
-        if (!CollectionUtils.isEmpty(listAgeDistribute)) {
-            for (OperationReportJobVO opear : listAgeDistribute) {
-                if ("18-29岁".equals(opear.getTitle())) {
-                    map.put("18-29", opear.getDealSum());
-                } else if ("30-39岁".equals(opear.getTitle())) {
-                    map.put("30-39", opear.getDealSum());
-                } else if ("40-49岁".equals(opear.getTitle())) {
-                    map.put("40-49", opear.getDealSum());
-                } else if ("50-59岁".equals(opear.getTitle())) {
-                    map.put("50-59", opear.getDealSum());
-                } else if ("60岁以上".equals(opear.getTitle())) {
-                    map.put("60-", opear.getDealSum());
-                }
-            }
-
-            //null值转换
-            this.nullConvertValue(Integer.class, map, "18-29", "30-39", "40-49", "50-59", "60-");
-        }
-        return map;
-    }
 
     /**
      * 用户分析 - 金额分布
@@ -683,12 +694,21 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * @return
      */
     public OperationReportJobVO getUserAgeAndArea(Integer userId) {
+        logger.info("userId: {}", userId);
         IdCardCustomize idcard = new IdCardCustomize();
         OperationReportJobVO vo =  amUserClient.getUserAgeAndArea(userId);
-        if(org.apache.commons.lang.StringUtils.isNotEmpty(vo.getTitle())) {
-            idcard.setBm(vo.getTitle().substring(0, 6));
-            vo.setTitle(amConfigClient.getIdCardCustomize(idcard).getArea());
+        if(vo == null){
+            logger.warn("OperationReportJobVO is null....");
         }
+        logger.info("vo: {}", JSONObject.toJSONString(vo));
+        if(StringUtils.isNotEmpty(vo.getTitle())) {
+            idcard.setBm(vo.getTitle().substring(0, 6));
+            IdCardCustomize customize = amConfigClient.getIdCardCustomize(idcard);
+            if(customize != null && customize.getArea() != null){
+                vo.setTitle(customize.getArea());
+            }
+        }
+        logger.info("vo: {}", JSONObject.toJSONString(vo));
         return vo;
     }
 

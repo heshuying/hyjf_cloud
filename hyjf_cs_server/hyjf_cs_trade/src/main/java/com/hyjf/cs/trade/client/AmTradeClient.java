@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -25,9 +26,7 @@ import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
-import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
+import com.hyjf.am.vo.api.*;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
@@ -2894,5 +2893,87 @@ public interface AmTradeClient {
      * @date 2019/3/25 14:11
      */
     Integer countPlanAccedeRecord(HjhAccedeRequest request);
+
+    /**
+     * 插入大屏数据
+     * @param screenDataBean
+     * @return
+     */
+    IntegerResponse insertScreenData(ScreenDataBean screenDataBean);
+
+    /**
+     * 查询用户站岗金额
+     * @param userId
+     * @return
+     */
+    BigDecimal findUserFreeMoney(Integer userId);
+
+    /**
+     * 查询年化金额
+     *
+     * @param userId
+     * @return
+     */
+    BigDecimal findYearMoney(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
+
+    /**
+     * 处理待回款金额
+     * @param screenDataBean
+     */
+    IntegerResponse dealRepayMoney(ScreenDataBean screenDataBean);
+
+    /**
+     * 规模业绩
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getScalePerformance();
+
+    /**
+     * 坐席月规模业绩
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getMonthScalePerformanceList();
+    /**
+     * 运营部总业绩（元）和 本月业绩完成率
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getTotalAmount();
+    /**
+     * 本月运营部业绩完成分布 - 饼图返回
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO getAchievementDistributionList();
+
+    /**
+     * 坐席月回款情况
+     * @return UserLargeScreenVO
+     **/
+    UserLargeScreenVO  getMonthReceivedPayments();
+
+    UserLargeScreenVO getUserCapitalDetails();
+
+    /**
+     * 屏幕二日业绩(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayScalePerformanceList();
+
+    /**
+     * 屏幕二日回款(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getDayReceivedPayments();
+
+    /**
+     * 本月数据统计(新客组、老客组)
+     * @return
+     */
+    UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds);
+
+    /**
+     * 运营部月度业绩数据
+     * @return
+     */
+    UserLargeScreenTwoVO getOperMonthPerformanceData();
 }
 
