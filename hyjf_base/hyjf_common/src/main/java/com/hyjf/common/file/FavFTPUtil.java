@@ -251,6 +251,7 @@ public class FavFTPUtil {
         OutputStream is = null;
         try {
             int reply;
+            ftp.enterLocalPassiveMode();
             ftp.connect(para.hostName, para.port);
             // 如果采用默认端口，可以使用ftp.connect(host)的方式直接连接FTP服务器
             ftp.login(para.userName, para.passWord);// 登录
