@@ -7188,9 +7188,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public UserLargeScreenTwoVO getMonthDataStatistics() {
+    public UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds) {
         String url = "http://AM-TRADE/am-trade/user_large_screen_two/getmonthdatastatistics";
-        UserLargeScreenTwoResponse response = restTemplate.getForEntity(url, UserLargeScreenTwoResponse.class).getBody();
+        UserLargeScreenTwoResponse response = restTemplate.postForEntity(url, currentOwnersAndUserIds, UserLargeScreenTwoResponse.class).getBody();
         // 查到数据为空,显示初始化
         List<MonthDataStatisticsVO> list = new ArrayList<>();
         MonthDataStatisticsVO vo = new MonthDataStatisticsVO();

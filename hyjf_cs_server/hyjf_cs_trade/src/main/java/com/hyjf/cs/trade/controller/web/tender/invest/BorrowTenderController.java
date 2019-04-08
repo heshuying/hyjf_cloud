@@ -32,7 +32,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -123,7 +122,13 @@ public class BorrowTenderController extends BaseTradeController {
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(@RequestBody BankCallBean bean ,Integer platform, @RequestParam("couponGrantId") String couponGrantId) {
         logger.info("{}端散标出借异步处理start,userId:{},优惠券:{}",BankCallUtils.getClientName(platform+""), bean.getLogUserId(),couponGrantId);
-        BankCallResult result ;
+        BankCallResult result = new BankCallResult();
+        String isRealTender = RedisUtils.get(RedisConstants.BORROW_TENDER_ORDER_CHECK+bean.getLogOrderId());
+        if(isRealTender!=null && isRealTender.length()>3){
+            logger.info("已经处理过了，不需要重新处理，订单号:{}  标的编号:{}  userId:{}",bean.getLogOrderId(),bean.getProductId(),bean.getLogUserId());
+            result.setStatus(true);
+            return result;
+        }
         try{
             if (platform != null && platform.intValue() >= 0) {
                 bean.setLogClient(platform);

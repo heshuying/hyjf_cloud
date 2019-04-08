@@ -14,6 +14,7 @@ import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.am.user.dao.model.auto.ScreenConfig;
 import com.hyjf.am.user.dao.model.auto.ScreenConfigExample;
 import com.hyjf.am.user.service.front.userlargescreen.UserLargeScreenService;
+import com.hyjf.am.vo.api.MonthDataStatisticsVO;
 import com.hyjf.am.vo.user.CustomerTaskConfigVO;
 import com.hyjf.am.vo.user.ScreenConfigVO;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,22 +59,35 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     @Override
     public UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request){
         UserCustomerTaskConfigResponse response = new UserCustomerTaskConfigResponse();
-        CustomerTaskConfigVO vo = new CustomerTaskConfigVO();
         CustomerTaskConfigExample example = new CustomerTaskConfigExample();
         CustomerTaskConfigExample.Criteria criteria = example.createCriteria();
         criteria.andTaskTimeEqualTo(request.getTaskTime());
+        criteria.andStatusEqualTo(1);
         List<CustomerTaskConfig> list = customerTaskConfigMapper.selectByExample(example);
-        if(!CollectionUtils.isEmpty(list)){
-            BeanUtils.copyProperties(list.get(0),vo);
+        List<CustomerTaskConfigVO> vos = new ArrayList<>();
+        for(CustomerTaskConfig customerTaskConfig:list){
+            CustomerTaskConfigVO vo = new CustomerTaskConfigVO();
+            BeanUtils.copyProperties(customerTaskConfig,vo);
+            vos.add(vo);
+
         }
-        response.setResult(vo);
+        response.setResultList(vos);
         return response;
     }
 
+    /**
+     * 所有坐席和坐席下用户查询
+     * @return
+     */
     @Override
-    public List<Integer> getOperUserIds() {
-        return userLargeScreenTwoCustomizeMapper.getOperUserIds();
+    public List<MonthDataStatisticsVO> getCurrentOwnersAndUserIds() {
+        List<MonthDataStatisticsVO> list = userLargeScreenTwoCustomizeMapper.getCurrentOwners();
+        for (MonthDataStatisticsVO param : list) {
+            List<Integer> userIds = userLargeScreenTwoCustomizeMapper.getCurrentOwnerUserIds(param.getCurrentOwner());
+            if (!CollectionUtils.isEmpty(userIds)){
+                param.setUserIds(userIds);
+            }
+        }
+        return list;
     }
-
-
 }

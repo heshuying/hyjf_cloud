@@ -3,11 +3,13 @@
  */
 package com.hyjf.am.user.controller.front.userlargescreen;
 
-import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.api.UserLargeScreenTwoResponse;
 import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
 import com.hyjf.am.response.user.UserScreenConfigResponse;
 import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.user.service.front.userlargescreen.UserLargeScreenService;
+import com.hyjf.am.vo.api.MonthDataStatisticsVO;
+import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +43,14 @@ public class UserLargeScreenController {
         return response;
     }
 
-    @ApiOperation(value = " 运营部所有用户id",notes = " 运营部所有用户id")
-    @GetMapping(value = "/getoperuserids")
-    public StringResponse getOperUserIds() {
-        StringResponse response = new StringResponse();
-        List<Integer> userIds = userLargeScreenService.getOperUserIds();
-        response.setResultList(userIds);
+    @ApiOperation(value = " 所有坐席和坐席下用户查询",notes = " 所有坐席和坐席下用户查询")
+    @GetMapping(value = "/get_currentowners_and_userids")
+    public UserLargeScreenTwoResponse getCurrentOwnersAndUserIds() {
+        UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
+        List<MonthDataStatisticsVO> list = userLargeScreenService.getCurrentOwnersAndUserIds();
+        UserLargeScreenTwoVO userLargeScreenTwoVO = new UserLargeScreenTwoVO();
+        userLargeScreenTwoVO.setMonthDataStatisticsNew(list);
+        response.setResult(userLargeScreenTwoVO);
         return response;
     }
 }

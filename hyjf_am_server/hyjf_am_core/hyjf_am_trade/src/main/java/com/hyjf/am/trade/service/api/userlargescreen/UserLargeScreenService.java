@@ -3,8 +3,11 @@
  */
 package com.hyjf.am.trade.service.api.userlargescreen;
 
+import com.hyjf.am.vo.api.MonthDataStatisticsVO;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.api.UserLargeScreenVO;
+
+import java.util.List;
 
 /**
  * @author tanyy
@@ -58,7 +61,7 @@ public interface UserLargeScreenService {
      * 屏幕二本月数据统计(新客组、老客组)
      * @return
      */
-    UserLargeScreenTwoVO getMonthDataStatistics();
+    UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds);
 
     /**
      * 屏幕二运营部月度业绩数据

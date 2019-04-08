@@ -168,20 +168,9 @@
                     WHERE
                         t1.operating = 3
                     AND t1.customer_group = 1
-                    AND t1.create_time BETWEEN str_to_date(
-                        DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                        '%Y-%m-%d %H:%i:%s'
-                    )
-                    AND DATE_ADD(
-                        DATE_ADD(
-                            str_to_date(
-                                DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                '%Y-%m-%d %H:%i:%s'
-                            ),
-                            INTERVAL 1 DAY
-                        ),
-                        INTERVAL - 1 SECOND
-                    )
+
+                    AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+
                     GROUP BY
                         currentOwner
                 ) t3
@@ -195,20 +184,8 @@
                     WHERE
                         customer_name IS NOT NULL
                     AND customer_group = 1
-                    AND create_time BETWEEN str_to_date(
-                        DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                        '%Y-%m-%d %H:%i:%s'
-                    )
-                    AND DATE_ADD(
-                        DATE_ADD(
-                            str_to_date(
-                                DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                '%Y-%m-%d %H:%i:%s'
-                            ),
-                            INTERVAL 1 DAY
-                        ),
-                        INTERVAL - 1 SECOND
-                    )
+                    AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+
                     GROUP BY
                         customer_name
                 ) t2 ON t3.currentOwner = t2.currentOwner
@@ -231,20 +208,9 @@
                         WHERE
                             t1.operating = 3
                         AND t1.customer_group = 1
-                        AND t1.create_time BETWEEN str_to_date(
-                            DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                            '%Y-%m-%d %H:%i:%s'
-                        )
-                        AND DATE_ADD(
-                            DATE_ADD(
-                                str_to_date(
-                                    DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                    '%Y-%m-%d %H:%i:%s'
-                                ),
-                                INTERVAL 1 DAY
-                            ),
-                            INTERVAL - 1 SECOND
-                        )
+                        AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+
+
                         GROUP BY
                             currentOwner
                     ) t3
@@ -258,20 +224,9 @@
                         WHERE
                             customer_name IS NOT NULL
                         AND customer_group = 1
-                        AND create_time BETWEEN str_to_date(
-                            DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                            '%Y-%m-%d %H:%i:%s'
-                        )
-                        AND DATE_ADD(
-                            DATE_ADD(
-                                str_to_date(
-                                    DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                    '%Y-%m-%d %H:%i:%s'
-                                ),
-                                INTERVAL 1 DAY
-                            ),
-                            INTERVAL - 1 SECOND
-                        )
+
+                        AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+
                         GROUP BY
                             customer_name
                     ) t2 ON t3.currentOwner = t2.currentOwner
@@ -294,20 +249,7 @@
                             WHERE
                                 t1.operating = 3
                             AND t1.customer_group = 2
-                            AND t1.create_time BETWEEN str_to_date(
-                                DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                '%Y-%m-%d %H:%i:%s'
-                            )
-                            AND DATE_ADD(
-                                DATE_ADD(
-                                    str_to_date(
-                                        DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                        '%Y-%m-%d %H:%i:%s'
-                                    ),
-                                    INTERVAL 1 DAY
-                                ),
-                                INTERVAL - 1 SECOND
-                            )
+                            AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
                             GROUP BY
                                 currentOwner
                         ) t3
@@ -321,20 +263,8 @@
                             WHERE
                                 customer_name IS NOT NULL
                             AND customer_group = 2
-                            AND create_time BETWEEN str_to_date(
-                                DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                '%Y-%m-%d %H:%i:%s'
-                            )
-                            AND DATE_ADD(
-                                DATE_ADD(
-                                    str_to_date(
-                                        DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                        '%Y-%m-%d %H:%i:%s'
-                                    ),
-                                    INTERVAL 1 DAY
-                                ),
-                                INTERVAL - 1 SECOND
-                            )
+                            AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
+
                             GROUP BY
                                 customer_name
                         ) t2 ON t3.currentOwner = t2.currentOwner
@@ -357,20 +287,7 @@
                                 WHERE
                                     t1.operating = 3
                                 AND t1.customer_group = 2
-                                AND t1.create_time BETWEEN str_to_date(
-                                    DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                    '%Y-%m-%d %H:%i:%s'
-                                )
-                                AND DATE_ADD(
-                                    DATE_ADD(
-                                        str_to_date(
-                                            DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                            '%Y-%m-%d %H:%i:%s'
-                                        ),
-                                        INTERVAL 1 DAY
-                                    ),
-                                    INTERVAL - 1 SECOND
-                                )
+                                AND t1.create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND t1.create_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
                                 GROUP BY
                                     currentOwner
                             ) t3
@@ -384,20 +301,7 @@
                                 WHERE
                                     customer_name IS NOT NULL
                                 AND customer_group = 2
-                                AND create_time BETWEEN str_to_date(
-                                    DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                    '%Y-%m-%d %H:%i:%s'
-                                )
-                                AND DATE_ADD(
-                                    DATE_ADD(
-                                        str_to_date(
-                                            DATE_FORMAT(NOW(), '%Y-%m-%d'),
-                                            '%Y-%m-%d %H:%i:%s'
-                                        ),
-                                        INTERVAL 1 DAY
-                                    ),
-                                    INTERVAL - 1 SECOND
-                                )
+                               AND repayment_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-%d 00:00:00') AND repayment_time &lt; DATE_FORMAT(NOW(),'%Y-%m-%d 23:59:59')
                                 GROUP BY
                                     customer_name
                             ) t2 ON t3.currentOwner = t2.currentOwner

@@ -2,6 +2,7 @@ package com.hyjf.am.vo.api;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class MonthDataStatisticsVO implements Serializable {
 
@@ -23,6 +24,16 @@ public class MonthDataStatisticsVO implements Serializable {
     private BigDecimal additionalShare = BigDecimal.ZERO;
     // 提现率
     private BigDecimal extractionRate = BigDecimal.ZERO;
+    // 坐席下的用户
+    private List<Integer> userIds;
+
+    public List<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<Integer> userIds) {
+        this.userIds = userIds;
+    }
 
     public String getCurrentOwner() {
         return currentOwner;
