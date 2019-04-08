@@ -2216,9 +2216,13 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 债转已还款利息
 		creditTender.setRepayInterestYes(creditTender.getRepayInterestYes().add(repayInterest));
 		// 债转最近还款时间
-		creditTender.setAssignRepayLastTime(!isMonth || isAllRepay ? nowTime : 0);
+		creditTender.setAssignRepayLastTime(!isMonth ? nowTime : 0);
 		// 债转下次还款时间
-		creditTender.setAssignRepayNextTime(!isMonth || isAllRepay ? 0 : creditRepayNextTime);
+		if (lastPeriod == 0 || periodNow == lastPeriod) {// 多期还款只有最后一期才更新
+			if (!isAllRepay || periodNow == borrowPeriod) {// 一次性还款只有最后一期更新
+				creditTender.setAssignRepayNextTime(!isMonth ? 0 : creditRepayNextTime);
+			}
+		}
 		// 债转还款状态
 		boolean isLastUpdate = false;
 		if (isMonth) {
@@ -2347,7 +2351,11 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         // 更新债转已还款利息
         borrowCredit.setRepayInterest(borrowCredit.getRepayInterest().add(repayInterest));
         // 债转下次还款时间
-        borrowCredit.setCreditRepayNextTime(isMonth ? creditRepayNextTime : 0);
+		if (lastPeriod == 0 || periodNow == lastPeriod) {// 多期还款只有最后一期才更新
+			if (!isAllRepay || periodNow == borrowPeriod) {// 一次性还款只有最后一期更新
+				borrowCredit.setCreditRepayNextTime(isMonth ? creditRepayNextTime : 0);
+			}
+		}
         if (borrowCredit.getCreditStatus() == 0) {
             borrowCredit.setCreditStatus(1);
         }

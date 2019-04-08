@@ -1162,6 +1162,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			throw new Exception("标的表(ht_borrow)更新失败！[借款编号：" + borrowNid + "]，[承接订单号：" + assignNid + "]");
 		}
 		boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;// 是否是一次性还款
+		Integer lastPeriod = apicron.getLastPeriod() == null ? 0 : apicron.getLastPeriod();// 同时提交还款的最后一期
+		isAllRepay = isAllRepay || lastPeriod == borrowPeriod;// 多期还款的最后一期是标的的最后一期，是一次性还款
 		// 更新相应的债转出借表
 		// 债转已还款总额
 		creditTender.setAssignRepayAccount(creditTender.getAssignRepayAccount().add(repayAccount));
@@ -1170,9 +1172,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 债转已还款利息
 		creditTender.setAssignRepayInterest(creditTender.getAssignRepayInterest().add(repayInterest));
 		// 债转最近还款时间
-		creditTender.setAssignRepayLastTime(!isMonth || isAllRepay ? nowTime : 0);
+		creditTender.setAssignRepayLastTime(!isMonth ? nowTime : 0);
 		// 债转下次还款时间
-		creditTender.setAssignRepayNextTime(!isMonth || isAllRepay ? 0 : creditRepayNextTime);
+		if (lastPeriod == 0 || periodNow == lastPeriod) {// 多期还款只有最后一期才更新
+			if (!isAllRepay || periodNow == borrowPeriod) {// 一次性还款只有最后一期更新
+				creditTender.setAssignRepayNextTime(!isMonth ? 0 : creditRepayNextTime);
+			}
+		}
 		// 债转还款状态
 		boolean isLastUpdate = false;
 		if (isMonth) {
@@ -1257,7 +1263,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 更新债转已还款利息
 		borrowCredit.setCreditRepayInterest(borrowCredit.getCreditRepayInterest().add(repayInterest));
 		// 债转下次还款时间
-		borrowCredit.setCreditRepayNextTime(isMonth && !isAllRepay ? creditRepayNextTime : 0);
+		if (lastPeriod == 0 || periodNow == lastPeriod) {// 多期还款只有最后一期才更新
+			if (!isAllRepay || periodNow == borrowPeriod) {// 一次性还款只有最后一期更新
+				borrowCredit.setCreditRepayNextTime(isMonth ? creditRepayNextTime : 0);
+			}
+		}
 		if (borrowCredit.getCreditStatus() == 0) {
 			borrowCredit.setCreditStatus(1);
 		}
