@@ -38,30 +38,20 @@ public class ReturnFilter extends ZuulFilter {
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
             String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
             HttpServletRequest request = ctx.getRequest();
-            if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)){
-                String token = "";
-                token = request.getHeader(GatewayConstant.TOKEN);
-                if (StringUtils.isNotBlank(body)) {
-                    if (StringUtils.isBlank(token)) {
-                        logger.warn("originalRequestPath: {}...", originalRequestPath);
+            String token = "";
+            token = request.getHeader(GatewayConstant.TOKEN);
+            if (StringUtils.isNotBlank(body)) {
+                if (StringUtils.isBlank(token)) {
+                    logger.warn("originalRequestPath: {}...", originalRequestPath);
+                    logger.warn("user is not exist, token is : {}...", token);
+                    body = setResult(body);
+                }else{
+                    AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
+
+                    if (accessToken == null) {
                         logger.warn("user is not exist, token is : {}...", token);
                         body = setResult(body);
-                    }else{
-                        AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
-
-                        if (accessToken == null) {
-                            logger.warn("user is not exist, token is : {}...", token);
-                            body = setResult(body);
-                        }
                     }
-                    ctx.setResponseBody(body);// 输出最终结果
-                }
-
-
-            }else{
-                logger.error("请求不属于WEB端，不进行处理");
-                if(StringUtils.isBlank(body)){
-                    body = ctx.getResponseBody();
                 }
                 ctx.setResponseBody(body);// 输出最终结果
             }
@@ -88,7 +78,13 @@ public class ReturnFilter extends ZuulFilter {
 
     @Override
     public boolean shouldFilter() {
-        return true;
+        RequestContext ctx = RequestContext.getCurrentContext();
+        String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
+        if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
