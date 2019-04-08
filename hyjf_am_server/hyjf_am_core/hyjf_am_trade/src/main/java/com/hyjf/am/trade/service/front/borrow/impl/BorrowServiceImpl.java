@@ -223,8 +223,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             temp.setTenderFrom(tenderRequest.getTenderFrom());
         }
         logger.info("开始插入temp表   {}",JSONObject.toJSONString(temp));
-        // 为了创造一个异常 给测试
-        temp = null;
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
             logger.error("插入borrowTenderTmp表失败，出借订单号：" + tenderRequest.getOrderId());
