@@ -276,12 +276,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
         try {
-            Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-            map.putAll(resultEval);
-            map.put("investLevel",borrow.getInvestLevel());
-            result.setData(map);
-            return result;
+            if(insertResult){
+                Map<String, Object> map = BankCallUtils.callApiMap(callBean);
+                WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+                map.putAll(resultEval);
+                map.put("investLevel",borrow.getInvestLevel());
+                result.setData(map);
+                return result;
+            }else{
+                logger.error("保存投资tmp表失败，信息:{}",JSONObject.toJSONString(request));
+                throw new CheckException(MsgEnum.STATUS_CE999999);
+            }
         } catch (Exception e) {
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
