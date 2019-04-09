@@ -255,8 +255,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String pageSuccessName = "success";
         String pageFailedName = "failed";
         if ((ClientConstants.WEB_CLIENT+"").equals(request.getPlatform())) {
-            pageSuccessName = "fal";
-            pageFailedName = "suc";
+            pageSuccessName = "suc";
+            pageFailedName = "fal";
         }
         //错误页
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
