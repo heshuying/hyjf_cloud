@@ -500,6 +500,9 @@
             OR (
             hydb.`status` = 5
             )
+            OR (
+            hydb.`status` = 5
+            )
 
             )
         </if>

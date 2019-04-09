@@ -3086,7 +3086,7 @@
 			hbr.recover_interest recover_interest_wait,
 			hbr.recover_account_yes recover_account,
 			FROM_UNIXTIME(IFNULL(IF((hbr.recover_yestime='' OR hbr.recover_yestime=0),NULL,hbr.recover_yestime),hbr.recover_time), '%Y-%m-%d' ) recover_time,
-			IF(hbr.recover_status=0,'未还款','已还款') recover_status
+			IF(hbr.recover_status=0,IF(hbr.advance_status=3,'逾期中','未还款'),'已还款') recover_status
 		FROM
 			ht_borrow_recover_plan hbr
 		WHERE
@@ -3183,7 +3183,7 @@
 
 			IF (
 				hbrp.recover_status = 0,
-				'未还款',
+				IF(hbrp.advance_status=3,'逾期中','未还款'),
 				'已还款'
 			) recover_status
 		FROM
@@ -3322,7 +3322,7 @@
 
 		IF (
 			hbrp.recover_status = 0,
-			'未还款',
+			IF(hbrp.advance_status=3,'逾期中','未还款'),
 			'已还款'
 		) recover_status
 		FROM
@@ -3398,7 +3398,7 @@
 			hcr.assign_interest recover_interest_wait,
 			hcr.assign_repay_account recover_account,
 			FROM_UNIXTIME(IF(hcr.assign_repay_yes_time=0,hcr.assign_repay_next_time,hcr.assign_repay_yes_time), '%Y-%m-%d' ) recover_time,
-			IF(hcr.status=0,'未还款','已还款') recover_status
+			IF(hcr.status=0,IF(hcr.advance_status=3,'逾期中','未还款'),'已还款') recover_status
 		FROM
 			ht_credit_repay hcr
 		WHERE
@@ -3433,9 +3433,11 @@
 			IF(hcr.recover_capital>0,hcr.recover_account-hcr.recover_capital,hcr.recover_interest) recover_interest_wait,
 			hcr.recover_account_yes recover_account,
 			FROM_UNIXTIME(IFNULL(hcr.recover_yestime,hcr.recover_time), '%Y-%m-%d' ) recover_time,
-			IF(hcr.recover_status=0,'未回款','已回款') recover_status
+			IF(hcr.recover_status=0,IF(b.`status`=8,'逾期中','未还款'),'已回款') recover_status
 		FROM
 			ht_coupon_recover hcr
+		INNER JOIN ht_borrow_tender_cpn hbtc ON hcr.tender_id=hbtc.nid
+		INNER JOIN ht_borrow b ON b.borrow_nid = hbtc.borrow_nid
 		WHERE hcr.tender_id=#{nid}
 	</select>
 
@@ -3466,9 +3468,10 @@
 			hiil.loan_interest recover_interest_wait,
 			hiil.repay_interest_yes recover_account,
 			FROM_UNIXTIME(IFNULL(hiil.repay_action_time,hiil.repay_time), '%Y-%m-%d' ) recover_time,
-			IF(hiil.repay_status=0,'未还款','已还款') recover_status
+			IF(hiil.repay_status=0,IF(b.`status`=8,'逾期中','未还款'),'已还款') recover_status
 		FROM
 			ht_increase_interest_loan hiil
+		INNER JOIN ht_borrow b ON b.borrow_nid = hiil.borrow_nid
 		WHERE hiil.invest_order_id=#{nid}
 	</select>
 
@@ -3497,9 +3500,10 @@
 			hiil.loan_interest recover_interest_wait,
 			hiil.repay_interest_yes recover_account,
 			FROM_UNIXTIME(IFNULL(hiil.repay_action_time,hiil.repay_time), '%Y-%m-%d' ) recover_time,
-			IF(hiil.repay_status=0,'未还款','已还款') recover_status
+			IF(hiil.repay_status=0,IF(b.`status`=8,'逾期中','未还款'),'已还款') recover_status
 		FROM
 			ht_increase_interest_loan_detail hiil
+		INNER JOIN ht_borrow b ON b.borrow_nid = hiil.borrow_nid
 		WHERE hiil.invest_order_id=#{nid}
 	</select>
 
