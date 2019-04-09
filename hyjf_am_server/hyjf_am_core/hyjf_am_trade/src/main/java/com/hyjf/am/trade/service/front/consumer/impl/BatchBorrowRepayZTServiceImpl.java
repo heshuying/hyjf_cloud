@@ -1940,6 +1940,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRepay.setRepayPeriod(isMonth ? periodNext : 1);
 				borrowRepay.setRepayActionTime(nowTime);// 实际还款时间
 				borrowRepay.setRepayYestime(repayYesTime);// 还款成功最后时间
+                if(borrowRepay.getAdvanceStatus() == 30){
+                    borrowRepay.setAdvanceStatus(3);// 不分期逾期标的，已还款后重置
+                }
 				// 更新BorrowRepay
 				boolean repayFlag = this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
 				if (!repayFlag) {
@@ -2454,7 +2457,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 分期时
 		if (borrowRecoverPlan != null) {
 			newBorrowRecover.setRecoverPeriod(periodNext); // 还款期数
-		}
+		} else if(borrowRecover.getAdvanceStatus() == 30){
+            newBorrowRecover.setAdvanceStatus(3);// 不分期逾期标的，已还款后重置
+        }
 		newBorrowRecover.setRepayBatchNo(repayBatchNo);
 		newBorrowRecover.setWeb(2); // 写入网站收支
 		// 先更新还款状态 update by wgx 2019/03/11
@@ -2816,7 +2821,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 分期时
 		if (borrowRecoverPlan != null) {
 			newBorrowRecover.setRecoverPeriod(periodNext);
-		}
+		} else if (borrowRecover.getAdvanceStatus() == 30) {
+            newBorrowRecover.setAdvanceStatus(3);// 不分期逾期标的，已还款后重置
+        }
 		newBorrowRecover.setRepayBatchNo(repayBatchNo);
 		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(newBorrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
