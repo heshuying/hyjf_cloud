@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -557,5 +558,23 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     public List<AppProjectListCustomizeVO> getHomeRepayProjecList(Map map) {
 
         return appProjectListCustomizeMapper.selectHomeRepayProjectList(map);
+    }
+
+    /**
+     * 平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+     * 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+     * 格式化利率
+     * add by nxl
+     * @param borrowApr
+     * @return
+     */
+    @Override
+    public String formatBorrowApr(String borrowApr){
+        String subBorr = borrowApr.substring(borrowApr.length()-1,borrowApr.length());
+        if(subBorr.equals("0")){
+            BigDecimal big = new BigDecimal(borrowApr).setScale(1);
+            borrowApr = big.toString();
+        }
+        return borrowApr;
     }
 }

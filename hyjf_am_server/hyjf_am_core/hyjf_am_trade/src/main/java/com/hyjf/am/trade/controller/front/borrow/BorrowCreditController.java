@@ -14,6 +14,7 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowCreditCustomize;
 import com.hyjf.am.trade.service.front.borrow.BorrowCreditService;
+import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.vo.admin.BorrowCreditInfoSumVO;
 import com.hyjf.am.vo.admin.BorrowCreditInfoVO;
 import com.hyjf.am.vo.admin.BorrowCreditSumVO;
@@ -39,6 +40,8 @@ public class BorrowCreditController extends BaseController {
 
     @Autowired
     BorrowCreditService borrowCreditService;
+    @Autowired
+    private ProjectListService projectListService;
 
     /**
      * 查询债转状态为0的数据
@@ -72,6 +75,15 @@ public class BorrowCreditController extends BaseController {
     public BorrowCreditDetailResponse updateCreditCredit(@PathVariable @Valid String creditNid) {
         BorrowCreditDetailResponse response = new BorrowCreditDetailResponse();
         BorrowCreditDetailVO detailVO = borrowCreditService.getBorrowCreditDetail(creditNid);
+        if(null!=detailVO){
+            //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+            // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
+            // mod by nxl 20190409 start
+            //历史年回报率
+            String fromatBorr= projectListService.formatBorrowApr(detailVO.getBorrowApr());
+            detailVO.setBorrowApr(fromatBorr);
+            // mod by nxl 20190409 end
+        }
         response.setResult(detailVO);
         return response;
     }
