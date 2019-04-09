@@ -26,6 +26,8 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     private String endTime;
 
+    private String endTimeStamp;
+
     private String couponSystem;
 
     private String projectType;
@@ -238,5 +240,13 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setTenderQuotaType(Integer tenderQuotaType) {
         this.tenderQuotaType = tenderQuotaType;
+    }
+
+    public String getEndTimeStamp() {
+        return endTimeStamp;
+    }
+
+    public void setEndTimeStamp(String endTimeStamp) {
+        this.endTimeStamp = endTimeStamp;
     }
 }

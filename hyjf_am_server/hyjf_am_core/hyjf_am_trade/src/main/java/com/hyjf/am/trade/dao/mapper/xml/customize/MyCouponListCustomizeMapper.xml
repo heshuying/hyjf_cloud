@@ -10,6 +10,7 @@
 	   <result column="coupon_quota" property="couponQuota" />
 	   <result column="add_time" property="addTime" />
 	   <result column="end_time" property="endTime" />
+	   <result column="end_time_stamp" property="endTimeStamp" />
 	   <result column="coupon_system" property="couponSystem" />
 	   <result column="project_type" property="projectType" />
 	   <result column="tender_quota" property="tenderQuota" />
@@ -53,10 +54,11 @@
 			cc.coupon_quota
 		END AS coupon_quota,
 		DATE_FORMAT(cu.create_time, '%Y.%m.%d') AS add_time,
-		 FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
-		 cc.coupon_system coupon_system,
-		 cc.project_type project_type,
-		 CASE
+		FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
+		cu.end_time AS end_time_stamp,
+		cc.coupon_system coupon_system,
+		cc.project_type project_type,
+		CASE
 		WHEN cc.tender_quota_type = 0 THEN
 			'不限'
 		WHEN cc.tender_quota_type = 1 THEN

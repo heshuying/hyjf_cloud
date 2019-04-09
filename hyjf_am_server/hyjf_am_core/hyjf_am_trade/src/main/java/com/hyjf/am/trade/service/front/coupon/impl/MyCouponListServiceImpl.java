@@ -17,6 +17,8 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDateUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -518,14 +520,14 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if ("2".equals(bestCoupon.getCouponType())) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用");
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用",platform);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             }
             if (moneyFlg != null && moneyFlg == 0) {
                 if ("1".equals(bestCoupon.getCouponType())) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目优惠券不能使用");
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目优惠券不能使用",platform);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -540,13 +542,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                            bestCoupon.getTenderQuota());
+                            bestCoupon.getTenderQuota(),platform);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             } else if (tenderQuotaType == 2) {
                 if (bestCoupon.getTenderQuotaAmount() != null && (new Double(bestCoupon.getTenderQuotaAmount()) > new Double(money))) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota());
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota(),platform);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -573,7 +575,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             // 验证使用平台
             boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
             if(!ifcouponSystem){
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"");
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"",platform);
                 availableCouponList.add(couponBean);
             }
         }
@@ -660,20 +662,20 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
+                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform);
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
                     }
                 } else if (2 == tenderQuotaType) {
                     if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
                         if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
-                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota());
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform);
                             notAvailableCouponList.add(couponBeanVo);
                             continue;
                         }
                     }
                 }
-                couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "");
+                couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "",platform);
                 availableCouponList.add(couponBeanVo);
             }
         }
@@ -841,7 +843,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
      * @param remarks 备注
      * @return CouponBeanVo
      */
-    private CouponBeanVo createCouponBean(MyCouponListCustomizeVO userCouponConfigCustomize,CouponBeanVo couponBean, String remarks) {
+    private CouponBeanVo createCouponBean(MyCouponListCustomizeVO userCouponConfigCustomize,CouponBeanVo couponBean, String remarks,String platform) {
         if(null == couponBean){
             couponBean=new CouponBeanVo();
         }
@@ -861,17 +863,32 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         couponBean.setCouponQuota(userCouponConfigCustomize.getCouponQuota() + dealCouponQuota(userCouponConfigCustomize.getCouponType()));
         couponBean.setCouponQuotaStr(userCouponConfigCustomize.getCouponQuota());
         couponBean.setCouponType(userCouponConfigCustomize.getCouponTypeName());
-        //处理优惠券类型
-        String projectString = this.dealProjectType(userCouponConfigCustomize.getProjectType());;
 
-        couponBean.setProjectType(projectString);
         couponBean.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
         couponBean.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
-        //处理优惠券使用平台
-        String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());;
-        couponBean.setOperationPlatform(clientString);
+        if(platform.equals(CacheUtil.getParamName("CLIENT","0"))){
+            //处理优惠券适用项目
+            String projectString = this.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
+            couponBean.setProjectType(projectString);
+            //处理优惠券使用平台
+            String clientString = dealOperationNew(userCouponConfigCustomize.getCouponSystem());
+            couponBean.setOperationPlatform(clientString);
+            long day=DateUtils.differentDaysByString(userCouponConfigCustomize.getEndTimeStamp(), GetDateUtils.getNowTime()+"");
+            if(day>3){
+                couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+            }else{
+                couponBean.setTime("还有"+(day==0?1:day)+"天过期");
+            }
 
-        couponBean.setTime(userCouponConfigCustomize.getAddTime() + "-" + userCouponConfigCustomize.getEndTime());
+        }else{
+            //处理优惠券适用项目
+            String projectString = this.dealProjectType(userCouponConfigCustomize.getProjectType());;
+            couponBean.setProjectType(projectString);
+            //处理优惠券使用平台
+            String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());;
+            couponBean.setOperationPlatform(clientString);
+            couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+        }
         couponBean.setInvestQuota(userCouponConfigCustomize.getTenderQuota());
         couponBean.setTenderQuota(userCouponConfigCustomize.getTenderQuota());
         couponBean.setCouponUserCode(userCouponConfigCustomize.getCouponUserCode());
@@ -929,6 +946,43 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
     }
 
     /**
+     * 处理选中的操作平台
+     *
+     * @param operationPlatform
+     * @return
+     */
+    public String dealOperationNew(String operationPlatform) {
+        String clientString = "";
+        // 操作平台
+        //操作平台
+        Map<String, String> map = CacheUtil.getParamNameMap("CLIENT");
+        // 被选中操作平台
+        String clientSed[] = StringUtils.split(operationPlatform, ",");
+        for (int i = 0; i < clientSed.length; i++) {
+            if ("-1".equals(clientSed[i])) {
+                clientString = clientString + "";
+                break;
+            } else {
+                for (String key : map.keySet()) {
+                    if (clientSed[i].equals(key)) {
+                        if (i != 0 && clientString.length() != 0) {
+                            clientString = clientString + "、";
+                        }
+                        clientString = clientString + map.get(key);
+                    }
+                }
+            }
+        }
+        if("Android、iOS".equals(clientString)){
+            clientString ="限APP可用";
+        }
+        if("微官网、Android、iOS".equals(clientString)){
+            clientString ="限移动端可用";
+        }
+        return clientString;
+    }
+
+    /**
      * 根据项目类型转换中文项目类型
      *
      * @param projectType 项目类型
@@ -981,6 +1035,57 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         // mod by nxl 智投服务：修改汇计划->智投 end
 
         return projectString.substring(1, projectString.length() - 1);
+    }
+
+    /**
+     * 根据项目类型转换中文项目类型
+     *
+     * @param projectType 项目类型
+     * @return
+     */
+    public String dealProjectTypeNew(String projectType) {
+        String projectString = "";
+        //勾选汇直投，尊享汇，融通宝
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "散标/";
+        }
+        //勾选汇直投  未勾选尊享汇，融通宝
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") == -1) {
+            projectString = projectString + "散标/";
+        }
+        //勾选汇直投，融通宝  未勾选尊享汇
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "散标/";
+        }
+        //勾选汇直投，选尊享汇 未勾选融通宝
+        if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
+            projectString = projectString + "散标/";
+        }
+        //勾选尊享汇，融通宝  未勾选直投
+        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "散标/";
+        }
+        //勾选尊享汇  未勾选直投，融通宝
+        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
+            projectString = projectString + "散标/";
+        }
+        //勾选尊享汇  未勾选直投，融通宝
+        if (projectType.indexOf("1") == -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
+            projectString = projectString + "散标/";
+        }
+        if (projectType.indexOf("3") != -1) {
+            projectString = projectString + "新手/";
+        }
+        if (projectType.indexOf("6")!=-1) {
+            projectString = projectString + "智投/";
+        }
+        if("散标/新手/智投/".equals(projectString)){
+            projectString="项目类型不限";
+        }else{
+            projectString=projectString.substring(1, projectString.length() - 1);
+        }
+
+        return projectString;
     }
 
     /**
