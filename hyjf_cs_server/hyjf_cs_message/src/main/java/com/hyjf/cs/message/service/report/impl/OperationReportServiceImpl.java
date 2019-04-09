@@ -637,6 +637,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			List<OperationTenthReport> tenthOperationReportList = getTenthOperationReport(id, query2);
 			if (tenthOperationReportList != null && tenthOperationReportList.size() > 0) {
 				OperationTenthReport tenthOperationReport = tenthOperationReportList.get(0);
+				// 因合规需要  屏蔽投资人年龄
+				tenthOperationReport.setActiveTenderUserAge(0);
+				tenthOperationReport.setBigMinnerUserAge(0);
+				tenthOperationReport.setMostTenderUserAge(0);
+
+
 				TenthOperationReportVO tenthOperationReportVO = new TenthOperationReportVO();
 				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getFirstTenderUsername())) {
 					String userName1 = tenthOperationReport.getFirstTenderUsername().substring(0, 1);
