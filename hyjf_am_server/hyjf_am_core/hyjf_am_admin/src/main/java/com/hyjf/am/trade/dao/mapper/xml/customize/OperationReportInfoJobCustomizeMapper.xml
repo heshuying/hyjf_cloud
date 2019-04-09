@@ -42,7 +42,8 @@
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
         unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
-        AND a.order_status >= 3
+
+        and a.order_status  in (3,5,7)
         # 加入时间
         UNION ALL
         # 债转
@@ -120,8 +121,9 @@
         FROM
         ht_hjh_accede a
         WHERE
-        a.acctual_payment_time <![CDATA[ < ]]>
+        a.acctual_payment_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
+        )
         # 加入时间
         UNION ALL
         # 汇添金
@@ -203,7 +205,7 @@
         INTERVAL #{endMonth} MONTH
         )
         )
-        AND a.order_status >= 3
+        and a.order_status  in (3,5,7)
         GROUP BY
         date_format(
         from_unixtime(a.count_interest_time),
@@ -213,56 +215,56 @@
         # 债转
         SELECT
         date_format(
-        from_unixtime(ct.create_time),
+        ct.create_time,
         '%Y%m'
         ) AS 'month',
         sum(assign_capital) AS account # 承接本金
         FROM
         ht_credit_tender ct
         WHERE
-        ct.create_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
-        ) # 承接时间
-        AND ct.create_time <![CDATA[ >= ]]> unix_timestamp(
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(ct.create_time),
+        ct.create_time,
         '%Y%m'
         )
         UNION ALL
         # 汇添金
         SELECT
         date_format(
-        from_unixtime(pa.create_time),
+        pa.create_time,
         '%Y%m'
         ) AS 'month',
         sum(pa.repay_capital) AS account # 应还本金
         FROM
         ht_debt_plan_accede pa
         WHERE
-        pa.create_time <![CDATA[ < ]]> unix_timestamp(
+        pa.create_time <![CDATA[ < ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{startMonth} MONTH
         )
-        ) # 加入时间
-        AND pa.create_time <![CDATA[ >= ]]> unix_timestamp(
+         # 加入时间
+        AND pa.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{endMonth} MONTH
         )
-        )
+
         GROUP BY
         date_format(
-        from_unixtime(pa.create_time),
+        pa.create_time,
         '%Y%m'
         )
         UNION ALL
@@ -561,7 +563,7 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ) )
-        AND a.order_status >= 3
+        and a.order_status  in (3,5,7)
         GROUP BY
         client
         UNION ALL
@@ -690,10 +692,18 @@
     <!-- 	用户分析 - 性别分布 -->
     <select id="getSexDistribute" resultMap="performanceMap">
         SELECT
-        t.user_id as userId
+        CASE ui.sex
+        WHEN 1 THEN
+        "男"
+        WHEN 2 THEN
+        "女"
+        ELSE
+        "未知"
+        END AS title,
+        count(*) as dealSum
         FROM
         (
-        # 直投
+          # 直投
         SELECT
         br.user_id
         FROM
@@ -718,16 +728,17 @@
         ht_hjh_accede a
         WHERE
         a.count_interest_time <![CDATA[ < ]]>
-        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01'))
-        # 加入时间
+        unix_timestamp( DATE_FORMAT(CURDATE(), '%Y-%m-01') )
+         # 加入时间
         AND a.count_interest_time <![CDATA[ >= ]]>
         unix_timestamp( DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ))
-        AND a.order_status >= 3
+
+        and a.order_status  in (3,5,7)
         UNION
-        # 债转
+         # 债转
         SELECT
         user_id
         FROM
@@ -735,7 +746,7 @@
         WHERE
         ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        # 承接时间
+         # 承接时间
         AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
@@ -759,7 +770,7 @@
         )
 
         UNION
-        # 汇添利
+         # 汇添利
         SELECT
         user_id
         FROM
@@ -776,11 +787,42 @@
         )
         )
         ) t
+        LEFT JOIN hyjf_user.ht_user u ON t.user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+        GROUP BY
+        CASE ui.sex
+        WHEN 1 THEN
+        "男"
+        WHEN 2 THEN
+        "女"
+        ELSE
+        "未知"
+        END
 
     </select>
 
     <!-- 	用户分析 - 年龄分布 -->
     <select id="getAgeDistribute" resultMap="performanceMap">
+       SELECT
+        CASE
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
+        '60岁以上'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
+        '50-59岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
+        '40-49岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
+        '30-39岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
+        '18-29岁'
+        END AS title,
+        count(*) as dealSum
+        FROM
+        (
         # 直投
         SELECT
         br.user_id as userId
@@ -800,7 +842,7 @@
         AND br.accede_order_id IS NULL # 刨除汇计划
         UNION
         # 汇计划
-        SELECT
+         SELECT
         a.user_id as userId
         FROM
         ht_hjh_accede a
@@ -813,9 +855,9 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ))
-
+        and a.order_status  in (3,5,7)
         UNION
-        # 债转
+         # 债转
         SELECT
         user_id as userId
         FROM
@@ -845,7 +887,6 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-
         UNION
         # 汇添利
         SELECT
@@ -863,6 +904,26 @@
         INTERVAL #{intervalMonth} MONTH
         )
         )
+        ) t
+        LEFT JOIN hyjf_user.ht_user u ON t.userId = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+        GROUP BY
+        CASE
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 60 THEN
+        '60岁以上'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 50
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 59 THEN
+        '50-59岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 40
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 49 THEN
+        '40-49岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 30
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 39 THEN
+        '30-39岁'
+        WHEN TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ >= ]]> 18
+        AND TIMESTAMPDIFF(YEAR, ui.birthday, now()) <![CDATA[ <= ]]> 29 THEN
+        '18-29岁'
+        END;
     </select>
 
     <!-- 	用户分析 - 金额分布 -->
@@ -925,7 +986,7 @@
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         ))
-
+        and a.order_status  in (3,5,7)
         UNION ALL
         # 债转
         SELECT
@@ -1048,7 +1109,8 @@
         INTERVAL #{intervalMonth} MONTH
         )
         )
-        AND a.order_status >= 3
+
+        and a.order_status  in (3,5,7)
         UNION ALL
         # 债转
         SELECT
@@ -1057,15 +1119,15 @@
         FROM
         ht_credit_tender ct
         WHERE
-        ct.create_time <![CDATA[ < ]]> unix_timestamp(
+        ct.create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 承接时间
-        AND ct.create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添金
         SELECT
@@ -1074,15 +1136,15 @@
         FROM
         ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]> unix_timestamp(
+        create_time <![CDATA[ < ]]>
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        ) # 加入时间
-        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
+         # 加入时间
+        AND create_time <![CDATA[ >= ]]>
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-        )
+
         UNION ALL
         # 汇添利
         SELECT
@@ -1115,7 +1177,8 @@
     <select id="getOneInvestMost" resultMap="performanceMap">
         SELECT
         tmp.user_id as userId,
-        account as dealSum
+        account as dealSum,
+        aa.username as userName
         FROM
         (
         SELECT
@@ -1214,6 +1277,7 @@
         account DESC
         LIMIT 11
         ) tmp
+         INNER JOIN hyjf_user.ht_user aa ON tmp.user_id = aa.user_id;
     </select>
 
     <!-- 	大赢家，收益最高 -->
@@ -1221,7 +1285,8 @@
 
       SELECT
         sum(t.interest) as sumAccount,
-        t.user_id as userId
+        t.user_id as userId,
+        s.username as userName
         FROM
         (
         SELECT
@@ -1290,9 +1355,9 @@
         GROUP BY
         user_id
         ) t
-
+        LEFT JOIN hyjf_user.ht_user s ON t.user_id = s.user_id
         GROUP BY
-        t.user_id
+        s.username
         ORDER BY
         sum(t.interest) DESC
         LIMIT 11

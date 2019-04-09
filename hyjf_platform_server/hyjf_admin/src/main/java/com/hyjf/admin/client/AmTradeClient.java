@@ -3365,5 +3365,7 @@ public interface AmTradeClient {
      * @param request
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
+
+
 }
 
