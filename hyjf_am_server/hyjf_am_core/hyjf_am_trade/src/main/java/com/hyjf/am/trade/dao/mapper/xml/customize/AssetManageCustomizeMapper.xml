@@ -575,6 +575,7 @@
 					borrow.`status` = 2
 					OR borrow.`status` = 3
 					OR borrow.`status` = 4
+					OR borrow.`status` = 8
 				)
 			AND ten.user_id= #{userId}
 			AND ten.account>IFNULL(hbc.credit_capital_assigned,0)
@@ -588,7 +589,7 @@
 			INNER JOIN ht_borrow_info hbi ON borrow.borrow_nid = hbi.borrow_nid
 			INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
 			WHERE ten.user_id= #{userId}
-			AND borrow.`status` = 4
+			AND (borrow.`status` = 4 OR borrow.`status` = 8)
 			AND ten.assign_interest>0
 			AND borrow.plan_nid IS NULL
 			UNION ALL
@@ -623,6 +624,7 @@
 					borrow.`status` = 2
 					OR borrow.`status` = 3
 					OR borrow.`status` = 4
+					OR borrow.`status` = 8
 				)
 			AND hiii.user_id=#{userId}
 			AND borrow.plan_nid IS NULL
