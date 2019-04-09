@@ -114,6 +114,8 @@ public class AccessFilter extends ZuulFilter {
             this.setUserIdByToken(request, ctx, secureVisitFlag, GatewayConstant.WEB_CHANNEL);
         } else if (originalRequestPath.contains(GatewayConstant.API_CHANNEL)) {
             //do nothing api使用签名，没有用户认证
+        }else if(originalRequestPath.contains(GatewayConstant.WBS_CHANNEL)){
+            //do nothing wbs暂不处理
         } else {
             logger.error("error channel...");
             // 不对其进行路由
