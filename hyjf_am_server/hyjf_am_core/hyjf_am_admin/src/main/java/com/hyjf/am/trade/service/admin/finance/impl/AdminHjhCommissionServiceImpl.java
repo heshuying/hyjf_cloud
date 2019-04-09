@@ -21,7 +21,6 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
@@ -284,7 +283,8 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
 		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
 		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
-		accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
+		//accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
+        accountWebList.setCreateTime(GetDate.getTime10(accountList.getCreateTime()));
 		//网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
 		/*原ret += insertAccountWebList(accountWebList);*/
 		try {
