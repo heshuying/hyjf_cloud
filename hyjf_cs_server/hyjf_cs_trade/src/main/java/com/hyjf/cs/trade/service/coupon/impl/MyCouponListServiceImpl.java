@@ -101,13 +101,16 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     }
                 }
             }
-            if("Android、iOS".equals(clientString)){
-                clientString ="限APP可用";
+            if(clientString.length()==0){
+                coupon.setCouponSystem("");
+            }else if("Android、iOS".equals(clientString)){
+                coupon.setCouponSystem("限APP可用");
+            }else if("微官网、Android、iOS".equals(clientString)){
+                coupon.setCouponSystem("限移动端可用");
+            }else{
+                coupon.setCouponSystem("限"+clientString.replace("Android、iOS", "APP")+"可用");
             }
-            if("微官网、Android、iOS".equals(clientString)){
-                clientString ="限移动端可用";
-            }
-            coupon.setCouponSystem("限"+clientString.replace("Android、iOS", "APP")+"可用");
+
 
             String projectType=coupon.getProjectType();
             String projectString = "";
