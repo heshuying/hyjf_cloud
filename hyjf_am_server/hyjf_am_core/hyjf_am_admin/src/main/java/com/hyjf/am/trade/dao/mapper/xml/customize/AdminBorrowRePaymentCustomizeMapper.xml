@@ -408,7 +408,7 @@
 				AS yuqilixi,
 				'' AS yinghuanzonge,
 				'' AS shihuanzonge,
-				rp.repay_status AS
+				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
 				if(rp.repay_action_time='' OR rp.repay_action_time='0' OR rp.repay_action_time='null',
 				'',FROM_UNIXTIME(rp.repay_action_time,'%Y-%m-%d %H:%i:%s' )) AS repayActionTime,
@@ -489,7 +489,7 @@
 				AS yuqilixi,
 				'' AS yinghuanzonge,
 				'' AS shihuanzonge,
-				rp.repay_status AS
+				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
 				if(rp.repay_action_time='' OR rp.repay_action_time='0' OR rp.repay_action_time='null',
 				'',FROM_UNIXTIME(rp.repay_action_time,'%Y-%m-%d %H:%i:%s' )) AS repayActionTime,
