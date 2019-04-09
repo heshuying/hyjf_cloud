@@ -182,31 +182,31 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                 break;
             case 1:
                 if(userCouponConfigCustomize.getTenderQuotaMin()>=10000&&userCouponConfigCustomize.getTenderQuotaMin()%10000==0){
-                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin()/10000+"万元~";
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin().intValue()/10000+"万元~";
                 }else{
-                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin()+"元~";
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin().intValue()+"元~";
                 }
 
                 if(userCouponConfigCustomize.getTenderQuotaMax()>=10000&&userCouponConfigCustomize.getTenderQuotaMax()%10000==0){
-                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax()/10000+"万元可用";
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax().intValue()/10000+"万元可用";
                 }else{
-                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax()+"元可用";
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax().intValue()+"元可用";
                 }
                 break;
             case 2:
                 Double tenderQuotaAmountUp=new Double(userCouponConfigCustomize.getTenderQuotaAmount());
                 if(tenderQuotaAmountUp>=10000&&tenderQuotaAmountUp%10000==0){
-                    tenderQuota=tenderQuotaAmountUp/10000+"万元及以上可用";
+                    tenderQuota=tenderQuotaAmountUp.intValue()/10000+"万元及以上可用";
                 }else{
-                    tenderQuota=tenderQuotaAmountUp+"元及以上可用";
+                    tenderQuota=tenderQuotaAmountUp.intValue()+"元及以上可用";
                 }
                 break;
             case 3:
                 Double tenderQuotaAmountDown=new Double(userCouponConfigCustomize.getTenderQuotaAmount());
                 if(tenderQuotaAmountDown>=10000&&tenderQuotaAmountDown%10000==0){
-                    tenderQuota=tenderQuotaAmountDown/10000+"万元及以下可用";
+                    tenderQuota=tenderQuotaAmountDown.intValue()/10000+"万元及以下可用";
                 }else{
-                    tenderQuota=tenderQuotaAmountDown+"元及以下可用";
+                    tenderQuota=tenderQuotaAmountDown.intValue()+"元及以下可用";
                 }
                 break;
         }
