@@ -84,7 +84,7 @@
             AND cr.assign_repay_period = #{repayPeriod}
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
-            AND cr.`status` = 0 AND cr.`status` = 3
+            AND cr.`status` = 0 AND cr.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
             AND cr.`status` = #{repayStatus}
@@ -117,7 +117,7 @@
             AND hcr.assign_repay_period = #{repayPeriod}
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
-            AND hcr.repay_status = 0 AND hcr.repay_status = 3
+            AND hcr.repay_status = 0 AND hcr.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
             AND hcr.repay_status = #{repayStatus}
