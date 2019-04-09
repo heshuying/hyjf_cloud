@@ -295,7 +295,16 @@
 			<!-- 还款状态0还款中,1已还款 -->
 			<!-- 还款状态 -->
 			<if test="statusSrch != null and statusSrch != ''">
-				AND rp.repay_status = #{statusSrch}
+			<if test="statusSrch ==0">
+					AND rp.repay_status = #{statusSrch}
+				</if>
+				<if test="statusSrch ==1">
+					AND rp.repay_status = #{statusSrch}
+				</if>
+				<if test="statusSrch ==2">
+					AND rp.repay_status = 0
+					and  rp.advance_status=3
+				</if>
 			</if>
 			<!-- 最后还款日 -->
 			<if test="repayLastTimeStartSrch != null and repayLastTimeStartSrch != ''">
@@ -326,106 +335,202 @@
 
 	<select id="countBorrowRepaymentPlan" resultType="java.lang.Integer"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
-		SELECT
-		COUNT(1)
-		from
-		ht_borrow_repay_plan AS rp
-		INNER JOIN
-		ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
-		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
-		Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
-		<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			select sum(tmpcount) from  (
+				SELECT
+				COUNT(1) as tmpcount
+				from
+				ht_borrow_repay_plan AS rp
+				INNER JOIN
+				ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
+				INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+				UNION ALL
+				SELECT
+				COUNT(1) as tmpcount
+				from
+				ht_borrow_repay AS rp
+				INNER JOIN
+				ht_borrow AS b ON rp.borrow_nid=b.borrow_nid and b.borrow_style in ('end','endday')
+				INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			) t
+		
 	</select>
 
 
 	<!-- #提前天数,少还利息,延期天数,延期利息,逾期天数,逾期利息,应还总额,实还总额,还没加 -->
 	<select id="selectBorrowRepaymentPlanList" resultMap="searchBorrowRepaymentPlanListResultMap"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
-		select
-		rp.nid AS nid,
-		b.borrow_nid AS borrowNid,
-		u.user_id AS userId,
-		u.username AS borrowUserName,
-		binfo.name AS borrowName,
-		hic.inst_name AS instName,
-		b.project_Type AS
-		projectType,
-		CASE
-		WHEN b.project_Type = 0 THEN '汇保贷'
-		WHEN b.project_Type
-		= 1 THEN '汇典贷'
-		WHEN
-		b.project_Type = 2 THEN '汇小贷'
-		WHEN b.project_Type = 3
-		THEN '汇车贷'
-		WHEN
-		b.project_Type = 4 THEN '新手标'
-		END AS projectTypeName,
-		b.borrow_Period AS borrowPeriod,
-		b.borrow_Apr AS borrowApr,
-		b.account AS
-		borrowAccount,
-		b.borrow_account_yes AS borrowAccountYes,
-		bs.name AS
-		repayType,
-		rp.repay_period AS repayPeriod,
-		rp.repay_capital AS
-		repayCapital,
-		rp.repay_interest AS repayInterest,
-		rp.repay_account AS
-		repayAccount,
-		rp.repay_fee AS repayFee,
-		'' AS tiqiantianshu,
-		'' AS
-		shaohuanlixi,
-		'' AS yanqitianshu,
-		'' AS yanqilixi,
-		'' AS yuqitianshu,
-		''
-		AS yuqilixi,
-		'' AS yinghuanzonge,
-		'' AS shihuanzonge,
-		rp.repay_status AS
-		status,
-		if(rp.repay_action_time='' OR rp.repay_action_time='0' OR rp.repay_action_time='null',
-		'',FROM_UNIXTIME(rp.repay_action_time,'%Y-%m-%d %H:%i:%s' )) AS repayActionTime,
-		if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
-		'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
-		if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
-		'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
-		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
-		b.plan_nid as planNid,
-		rp.repay_account_yes as repayAccountYes,
-		if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
-		'待还款', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE ba.extra_yield_repay_status END ) as extraYieldRepayStatus,
-		ba.user_name as userName,
-		ba.submitter,
-		CASE rp.auto_repay when 0
-		then '手动还款'
-		else '自动还款' end as autoRepay,
-		b.verify_time,
-		binfo.repay_org_name,
-		b.verify_time as verifyTime,
-		b.borrow_full_time as borrowFullTime,
-		b.recover_last_time as recoverLastTime
-		from
-		ht_borrow_repay_plan AS rp
-		INNER JOIN ht_borrow AS b ON
-		rp.borrow_nid=b.borrow_nid
-		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on
-		b.borrow_style=bs.nid
-		LEFT JOIN ht_r_user u ON b.user_id =
-		u.user_id
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
-		<include refid="Borrow_Repayment_Plan_Where_Clause" />
-		ORDER BY
-		rp.repay_time ASC,b.id ASC
-		<if test="limitStart >= 0">
-			LIMIT #{limitStart} , #{limitEnd}
-		</if>
+			 select * from(
+			 	select
+				rp.nid AS nid,
+				b.borrow_nid AS borrowNid,
+				u.user_id AS userId,
+				u.username AS borrowUserName,
+				binfo.name AS borrowName,
+				hic.inst_name AS instName,
+				b.project_Type AS
+				projectType,
+				CASE
+				WHEN b.project_Type = 0 THEN '汇保贷'
+				WHEN b.project_Type
+				= 1 THEN '汇典贷'
+				WHEN
+				b.project_Type = 2 THEN '汇小贷'
+				WHEN b.project_Type = 3
+				THEN '汇车贷'
+				WHEN
+				b.project_Type = 4 THEN '新手标'
+				END AS projectTypeName,
+				b.borrow_Period AS borrowPeriod,
+				b.borrow_Apr AS borrowApr,
+				b.account AS
+				borrowAccount,
+				b.borrow_account_yes AS borrowAccountYes,
+				bs.name AS
+				repayType,
+				rp.repay_period AS repayPeriod,
+				rp.repay_capital AS
+				repayCapital,
+				rp.repay_interest AS repayInterest,
+				rp.repay_account AS
+				repayAccount,
+				rp.repay_fee AS repayFee,
+				'' AS tiqiantianshu,
+				'' AS
+				shaohuanlixi,
+				'' AS yanqitianshu,
+				'' AS yanqilixi,
+				'' AS yuqitianshu,
+				''
+				AS yuqilixi,
+				'' AS yinghuanzonge,
+				'' AS shihuanzonge,
+				rp.repay_status AS
+				status,
+				if(rp.repay_action_time='' OR rp.repay_action_time='0' OR rp.repay_action_time='null',
+				'',FROM_UNIXTIME(rp.repay_action_time,'%Y-%m-%d %H:%i:%s' )) AS repayActionTime,
+				if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
+				'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
+				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
+				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
+				b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
+				b.plan_nid as planNid,
+				rp.repay_account_yes as repayAccountYes,
+				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
+				'待还款', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE ba.extra_yield_repay_status END ) as extraYieldRepayStatus,
+				ba.user_name as userName,
+				ba.submitter,
+				CASE rp.auto_repay when 0
+				then '手动还款'
+				else '自动还款' end as autoRepay,
+				b.verify_time,
+				binfo.repay_org_name,
+				b.verify_time as verifyTime,
+				b.borrow_full_time as borrowFullTime,
+				b.recover_last_time as recoverLastTime
+				from
+				ht_borrow_repay AS rp
+				INNER JOIN ht_borrow AS b ON
+				rp.borrow_nid=b.borrow_nid and b.borrow_style in ('end','endday')
+				INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+				LEFT JOIN ht_borrow_style AS bs on
+				b.borrow_style=bs.nid
+				LEFT JOIN ht_r_user u ON b.user_id =
+				u.user_id
+				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+			 	<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			 	UNION ALL
+			 	select
+				rp.nid AS nid,
+				b.borrow_nid AS borrowNid,
+				u.user_id AS userId,
+				u.username AS borrowUserName,
+				binfo.name AS borrowName,
+				hic.inst_name AS instName,
+				b.project_Type AS
+				projectType,
+				CASE
+				WHEN b.project_Type = 0 THEN '汇保贷'
+				WHEN b.project_Type
+				= 1 THEN '汇典贷'
+				WHEN
+				b.project_Type = 2 THEN '汇小贷'
+				WHEN b.project_Type = 3
+				THEN '汇车贷'
+				WHEN
+				b.project_Type = 4 THEN '新手标'
+				END AS projectTypeName,
+				b.borrow_Period AS borrowPeriod,
+				b.borrow_Apr AS borrowApr,
+				b.account AS
+				borrowAccount,
+				b.borrow_account_yes AS borrowAccountYes,
+				bs.name AS
+				repayType,
+				rp.repay_period AS repayPeriod,
+				rp.repay_capital AS
+				repayCapital,
+				rp.repay_interest AS repayInterest,
+				rp.repay_account AS
+				repayAccount,
+				rp.repay_fee AS repayFee,
+				'' AS tiqiantianshu,
+				'' AS
+				shaohuanlixi,
+				'' AS yanqitianshu,
+				'' AS yanqilixi,
+				'' AS yuqitianshu,
+				''
+				AS yuqilixi,
+				'' AS yinghuanzonge,
+				'' AS shihuanzonge,
+				rp.repay_status AS
+				status,
+				if(rp.repay_action_time='' OR rp.repay_action_time='0' OR rp.repay_action_time='null',
+				'',FROM_UNIXTIME(rp.repay_action_time,'%Y-%m-%d %H:%i:%s' )) AS repayActionTime,
+				if(rp.repay_time='' OR rp.repay_time='0' OR rp.repay_time='null',
+				'',FROM_UNIXTIME(rp.repay_time, '%Y-%m-%d' )) AS repayLastTime,
+				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
+				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
+				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
+				b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
+				b.plan_nid as planNid,
+				rp.repay_account_yes as repayAccountYes,
+				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
+				'待还款', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE ba.extra_yield_repay_status END ) as extraYieldRepayStatus,
+				ba.user_name as userName,
+				ba.submitter,
+				CASE rp.auto_repay when 0
+				then '手动还款'
+				else '自动还款' end as autoRepay,
+				b.verify_time,
+				binfo.repay_org_name,
+				b.verify_time as verifyTime,
+				b.borrow_full_time as borrowFullTime,
+				b.recover_last_time as recoverLastTime
+				from
+				ht_borrow_repay_plan AS rp
+				INNER JOIN ht_borrow AS b ON
+				rp.borrow_nid=b.borrow_nid
+				INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
+				LEFT JOIN ht_borrow_style AS bs on
+				b.borrow_style=bs.nid
+				LEFT JOIN ht_r_user u ON b.user_id =
+				u.user_id
+				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			 ) tt
+			ORDER BY
+			tt.repayLastTime ASC
+			<if test="limitStart >= 0">
+				LIMIT #{limitStart} , #{limitEnd}
+			</if>
 	</select>
 
 
