@@ -227,13 +227,8 @@
 			WHERE
 				hcr.del_flag = 0
 			AND cc.coupon_type = 2
-			AND	FROM_UNIXTIME(
-					hcr.recover_yestime,
-					'%Y-%m-%d'
-				) = FROM_UNIXTIME(
-					unix_timestamp(now()),
-					'%Y-%m-%d'
-				)
+			AND	hcr.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE))
+			AND		hcr.recover_yestime <![CDATA[<]]> UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) + INTERVAL 1 DAY)
 			AND hcr.recover_status = 1	
 	</select>
 	
