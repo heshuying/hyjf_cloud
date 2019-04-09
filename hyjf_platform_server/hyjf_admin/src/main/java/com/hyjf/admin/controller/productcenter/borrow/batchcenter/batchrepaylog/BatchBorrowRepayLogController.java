@@ -42,7 +42,7 @@ public class BatchBorrowRepayLogController extends BaseController{
 
     private static final String NAME_CLASS = "REPAY_STATUS";
 
-    private static final String PERMISSIONS = "batchborrowrepaylog";
+    private static final String PERMISSIONS = "batchborrowrepay";
 
     @Autowired
     private BatchBorrowRecoverLogService batchBorrowRecoverService;

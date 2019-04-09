@@ -1291,6 +1291,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
         BigDecimal repayOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
         List<BorrowRecover> borrowRecovers = this.getBorrowRecover(borrowNid);
+        int repayMoneySource = repay.getRepayMoneySource() == null ? 0 : repay.getRepayMoneySource();// 还款来源，提交还款会更新，用于判断是否已提交还款
         if (borrowRecovers != null && borrowRecovers.size() > 0) {
             List<RepayRecoverBean> repayRecoverList = new ArrayList<RepayRecoverBean>();
             BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
@@ -1308,10 +1309,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userOverdueInterest = borrowRecover.getLateInterest();// batch计算的逾期利息
                 int userAdvanceStatus = borrowRecover.getAdvanceStatus();// batch计算的还款状态
                 int userLateDays = borrowRecover.getLateDays();// batch计算的逾期天数
-                // 不分期逾期标的在今天之前已经提交还款的不校验
-                // 不分期逾期标的今天之前已经提交过还款：标的状态还款中4，0<计算的逾期天数<=实际的逾期天数-1
-                boolean hasSubmit = borrow.getStatus() != 8 && lateDays > 1 && userLateDays > 0;
-                if (!hasSubmit && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
+                // 已经提交还款的不校验
+                if (repayMoneySource == 0 && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
                     logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                             userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
                     throw new Exception("计算的逾期信息有误！");
@@ -1340,7 +1339,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
                                 int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                 int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                if (!hasSubmit && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
+                                if (repayMoneySource == 0 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                     logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                             assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                     throw new Exception("计算的逾期信息有误！");
@@ -1408,7 +1407,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
                                 int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                 int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                if (!hasSubmit && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
+                                if (repayMoneySource == 0 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                     logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                             assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                     throw new Exception("计算的逾期信息有误！");
@@ -2377,6 +2376,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         BigDecimal repayInterest = BigDecimal.ZERO;// 用户实际还款利息
         BigDecimal repayManageFee = BigDecimal.ZERO;// 提前还款管理费
         BigDecimal repayOverdueInterest = BigDecimal.ZERO;// 统计借款用户总逾期利息
+        int repayMoneySource = borrowRepayPlan.getRepayMoneySource() == null ? 0 : borrowRepayPlan.getRepayMoneySource();// 还款来源，提交还款会更新，用于判断是否已提交还款
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
@@ -2398,7 +2398,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userOverdueInterest = borrowRecoverPlan.getLateInterest();// batch计算的逾期利息
                         int userAdvanceStatus = borrowRecoverPlan.getAdvanceStatus();// batch计算的还款状态
                         int userLateDays = borrowRecoverPlan.getLateDays();// batch计算的逾期天数
-                        if (userAdvanceStatus != 30 && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
+                        if (repayMoneySource == 0 && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
                             logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                     userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
                             throw new Exception("计算的逾期信息有误！");
@@ -2441,7 +2441,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
                                             int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                             int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                            if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
+                                            if (repayMoneySource == 0 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                                 logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                                         assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                                 throw new Exception("计算的逾期信息有误！");
@@ -2515,7 +2515,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                             assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
                                             int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                             int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                            if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
+                                            if (repayMoneySource == 0 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                                 logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                                         assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                                 throw new Exception("计算的逾期信息有误！");
@@ -3813,6 +3813,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 oldCreditRepay.setRepayAdvanceInterest(hjhDebtCreditRepayBean.getRepayAdvanceInterest());
                                 oldCreditRepay.setRepayAdvancePenaltyInterest(hjhDebtCreditRepayBean.getRepayAdvancePenaltyInterest());
                                 oldCreditRepay.setManageFee(hjhDebtCreditRepayBean.getManageFee());
+                                if(hjhDebtCreditRepayBean.getAdvanceStatus() == 3){
+                                    oldCreditRepay.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                                }
                                 int hjhCreditRepayFlag = this.hjhDebtCreditRepayMapper.updateByPrimaryKey(oldCreditRepay);
                                 if (hjhCreditRepayFlag > 0) {
                                     manageFee = manageFee.add(hjhDebtCreditRepayBean.getManageFee());
@@ -3841,6 +3844,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 creditRepayOld.setChargeInterest(creditRepay.getChargeInterest());
                                 creditRepayOld.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest());
                                 creditRepayOld.setManageFee(creditRepay.getManageFee());
+                                if(creditRepay.getAdvanceStatus() == 3){
+                                    creditRepayOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                                }
                                 boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepayOld) > 0 ? true : false;
                                 if (creditRepayFlag) {
                                     manageFee = manageFee.add(creditRepay.getManageFee());
@@ -3923,6 +3929,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         borrowRecoverOld.setChargeInterest(borrowRecoverOld.getChargeInterest().add(chargeInterest));
                         borrowRecoverOld.setChargePenaltyInterest(borrowRecoverOld.getChargePenaltyInterest().add(chargePenaltyInterest));
                         borrowRecoverOld.setRecoverFee(manageFee);
+                        if(repayRecover.getAdvanceStatus() == 3){
+                            borrowRecoverOld.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
+                        }
                         boolean flag = borrowRecoverMapper.updateByPrimaryKey(borrowRecoverOld) > 0 ? true : false;
                         if (!flag) {
                             errorCount = errorCount + 1;
@@ -3938,6 +3947,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     } else {
                         borrowRepay.setRepayMoneySource(1);
                         borrowRepay.setRepayUsername(userName);
+                    }
+                    if(borrowRepay.getAdvanceStatus() == 3){
+                        borrowRepay.setAdvanceStatus(30);// 不分期逾期标的，置成逾期还款中30
                     }
                     boolean borrowRepayFlag = borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
                     if (borrowRepayFlag) {
