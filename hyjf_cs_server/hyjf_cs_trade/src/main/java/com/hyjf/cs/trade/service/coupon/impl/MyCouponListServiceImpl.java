@@ -101,6 +101,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     }
                 }
             }
+            logger.info("clientString:"+clientString);
             if(clientString.length()==0){
                 coupon.setCouponSystem("");
             }else if("Android、iOS".equals(clientString)){
