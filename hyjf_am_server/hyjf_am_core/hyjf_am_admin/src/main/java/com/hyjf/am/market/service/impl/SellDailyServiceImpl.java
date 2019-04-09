@@ -26,57 +26,6 @@ public class SellDailyServiceImpl implements SellDailyService {
     }
 
     @Override
-    public SellDailyVO constructionSellDaily(String primaryDivision, String twoDivision) {
-        return constructionSellDaily(primaryDivision, twoDivision, 0, 0);
-    }
-
-    /**
-     * SellDaily 是mybatis自动生成工具生成，无法添加符合的构造函数， 此方法可以替换
-     *
-     * @param primaryDivision
-     *            一级部门
-     * @param twoDivision
-     *            二级部门
-     * @param drawOrder
-     *            绘制顺序
-     * @param storeNum
-     *            门店数量
-     * @return
-     */
-    private SellDailyVO constructionSellDaily(String primaryDivision, String twoDivision, int drawOrder, int storeNum) {
-        SellDailyVO record = new SellDailyVO();
-        record.setDateStr(GetDate.getFormatDateStr());
-        record.setPrimaryDivision(primaryDivision);
-        record.setTwoDivision(twoDivision);
-        record.setDrawOrder(drawOrder);
-        record.setStoreNum(storeNum);
-        record.setInvestTotalMonth(BigDecimal.ZERO);
-        record.setInvestTotalPreviousMonth(BigDecimal.ZERO);
-        record.setRepaymentTotalMonth(BigDecimal.ZERO);
-        record.setRepaymentTotalYesterday(BigDecimal.ZERO);
-        record.setNonRepaymentToday(BigDecimal.ZERO);
-        record.setInvestAnnualTotalMonth(BigDecimal.ZERO);
-        record.setInvestAnnualTotalPreviousMonth(BigDecimal.ZERO);
-        record.setInvestTotalPreviousMonth(BigDecimal.ZERO);
-        record.setInvestAnnualTotalYesterday(BigDecimal.ZERO);
-        record.setInvestTotalYesterday(BigDecimal.ZERO);
-        record.setNonRepaymentToday(BigDecimal.ZERO);
-        record.setRechargeTotalMonth(BigDecimal.ZERO);
-        record.setRechargeTotalYesterday(BigDecimal.ZERO);
-        record.setNetCapitalInflowYesterday(BigDecimal.ZERO);
-        record.setWithdrawTotalMonth(BigDecimal.ZERO);
-        record.setWithdrawTotalYesterday(BigDecimal.ZERO);
-        record.setInvestAnnularRatioGrowth("");
-        record.setInvestRatioGrowth("");
-        record.setWithdrawRate("");
-        record.setRegisterTotalYesterday(0);
-        record.setInvestGt3000MonthUserNum(0);
-        record.setInvestGt3000UserNum(0);
-        record.setRechargeGt3000UserNum(0);
-        return record;
-    }
-
-    @Override
     public List<SellDailyVO> countTotalRepayOnMonth(Date startTime, Date endTime, Integer type) {
         return sellDailyCustomizeMapper.countTotalRepayOnMonth(startTime, endTime, type);
     }
@@ -157,7 +106,163 @@ public class SellDailyServiceImpl implements SellDailyService {
     }
 
     @Override
-    public BigDecimal addValue(BigDecimal tmp, String column, SellDailyVO entity) {
+    public SellDailyVO countTotalInvestOnMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalInvestOnMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalRepayOnMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalRepayOnMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalInvestOnPreviousMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalInvestOnPreviousMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalWithdrawOnMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalWithdrawOnMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalRechargeOnMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalRechargeOnMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalAnnualInvestOnMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalAnnualInvestOnMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalAnnualInvestOnPreviousMonthQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalAnnualInvestOnPreviousMonthQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalTenderYesterdayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalTenderYesterdayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalRepayYesterdayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalRepayYesterdayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalAnnualInvestYesterdayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalAnnualInvestYesterdayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalWithdrawYesterdayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalWithdrawYesterdayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countTotalRechargeYesterdayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countTotalRechargeYesterdayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countNoneRepayTodayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countNoneRepayTodayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countRegisterTotalYesterdayQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countRegisterTotalYesterdayQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countRechargeGt3000UserNumQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countRechargeGt3000UserNumQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countInvestGt3000UserNumQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countInvestGt3000UserNumQl(startTime, endTime, sourceId);
+    }
+
+    @Override
+    public SellDailyVO countInvestGt3000MonthUserNumQl(Date startTime, Date endTime, String sourceId) {
+        return sellDailyCustomizeMapper.countInvestGt3000MonthUserNumQl(startTime, endTime, sourceId);
+    }
+
+
+    @Override
+    public void batchUpdate(List<SellDailyVO> list) {
+        sellDailyCustomizeMapper.batchUpdate(list);
+    }
+
+    @Override
+    public void update(SellDailyVO vo) {
+        sellDailyCustomizeMapper.update(vo);
+    }
+
+    @Override
+    public SellDailyVO setValueHz(BigDecimal hzTotalTmp, int column, SellDailyVO hzRecord, SellDailyVO shOCSellDaily, SellDailyVO qianleSellDaily, BigDecimal vipTmp) {
+        switch (column) {
+            case 1:
+                hzRecord.setInvestTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getInvestTotalMonth()).subtract(qianleSellDaily.getInvestTotalMonth()).add(vipTmp));
+                break;
+            case 2:
+                hzRecord.setRepaymentTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getRepaymentTotalMonth()).subtract(qianleSellDaily.getRepaymentTotalMonth()).add(vipTmp));
+                break;
+            case 3:
+                hzRecord.setInvestTotalPreviousMonth(hzTotalTmp.subtract(shOCSellDaily.getInvestTotalPreviousMonth()).subtract(qianleSellDaily.getInvestTotalPreviousMonth()).add(vipTmp));
+                break;
+            case 5:
+                hzRecord.setWithdrawTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getWithdrawTotalMonth()).subtract(qianleSellDaily.getWithdrawTotalMonth()).add(vipTmp));
+                break;
+            case 7:
+                hzRecord.setRechargeTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getRechargeTotalMonth()).subtract(qianleSellDaily.getRechargeTotalMonth()).add(vipTmp));
+                break;
+            case 8:
+                hzRecord.setInvestAnnualTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getInvestAnnualTotalMonth()).subtract(qianleSellDaily.getInvestAnnualTotalMonth()).add(vipTmp));
+                break;
+            case 9:
+                hzRecord.setInvestAnnualTotalPreviousMonth(
+                        hzTotalTmp.subtract(shOCSellDaily.getInvestAnnualTotalPreviousMonth()).subtract(qianleSellDaily.getInvestTotalPreviousMonth()).add(vipTmp));
+                break;
+            case 11:
+                hzRecord.setInvestTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getInvestTotalYesterday()).subtract(qianleSellDaily.getInvestTotalYesterday()).add(vipTmp));
+                break;
+            case 12:
+                hzRecord.setRepaymentTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getRepaymentTotalYesterday()).subtract(qianleSellDaily.getRepaymentTotalYesterday()).add(vipTmp));
+                break;
+            case 13:
+                hzRecord.setInvestAnnualTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getInvestAnnualTotalYesterday()).subtract(qianleSellDaily.getInvestAnnualTotalYesterday()).add(vipTmp));
+                break;
+            case 14:
+                hzRecord.setWithdrawTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getWithdrawTotalYesterday()).subtract(qianleSellDaily.getWithdrawTotalYesterday()).add(vipTmp));
+                break;
+            case 15:
+                hzRecord.setRechargeTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getRechargeTotalYesterday()).subtract(qianleSellDaily.getRechargeTotalYesterday()).add(vipTmp));
+                break;
+            case 17:
+                hzRecord.setNonRepaymentToday(hzTotalTmp.subtract(shOCSellDaily.getNonRepaymentToday()).subtract(qianleSellDaily.getNonRepaymentToday()).add(vipTmp));
+                break;
+            case 18:
+                hzRecord.setRegisterTotalYesterday(hzTotalTmp.intValue() - shOCSellDaily.getRegisterTotalYesterday() - qianleSellDaily.getRegisterTotalYesterday() + vipTmp.intValue());
+                break;
+            case 19:
+                hzRecord.setRechargeGt3000UserNum(hzTotalTmp.intValue() - shOCSellDaily.getRechargeGt3000UserNum() - qianleSellDaily.getRechargeGt3000UserNum() + vipTmp.intValue());
+                break;
+            case 20:
+                hzRecord.setInvestGt3000UserNum(hzTotalTmp.intValue() - shOCSellDaily.getInvestGt3000UserNum() - qianleSellDaily.getInvestGt3000UserNum() + vipTmp.intValue());
+                break;
+            case 21:
+                hzRecord.setInvestGt3000MonthUserNum(hzTotalTmp.intValue() - shOCSellDaily.getInvestGt3000MonthUserNum() - qianleSellDaily.getInvestGt3000MonthUserNum() + vipTmp.intValue());
+                break;
+        }
+
+        return hzRecord;
+    }
+
+    @Override
+    public BigDecimal addValue(BigDecimal tmp, Integer column, SellDailyVO entity) {
         BigDecimal result = BigDecimal.ZERO;
         switch (Integer.valueOf(column)) {
             case 1:
@@ -214,16 +319,6 @@ public class SellDailyServiceImpl implements SellDailyService {
         }
 
         return result;
-    }
-
-    @Override
-    public SellDailyVO constructionSellDaily(SellDailyVO ocSellDaily, String primaryDivision, String twoDivision, int drawOrder, int storeNum) {
-        ocSellDaily.setDateStr(GetDate.getFormatDateStr());
-        ocSellDaily.setPrimaryDivision(primaryDivision);
-        ocSellDaily.setTwoDivision(twoDivision);
-        ocSellDaily.setDrawOrder(drawOrder);
-        ocSellDaily.setStoreNum(storeNum);
-        return ocSellDaily;
     }
 
     @Override
@@ -346,158 +441,4 @@ public class SellDailyServiceImpl implements SellDailyService {
         return sellDaily;
     }
 
-    @Override
-    public void batchUpdate(List<SellDailyVO> list) {
-        sellDailyCustomizeMapper.batchUpdate(list);
-    }
-
-    @Override
-    public void update(SellDailyVO vo) {
-        sellDailyCustomizeMapper.update(vo);
-    }
-
-    @Override
-    public SellDailyVO countTotalInvestOnMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalInvestOnMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalRepayOnMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalRepayOnMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalInvestOnPreviousMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalInvestOnPreviousMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalWithdrawOnMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalWithdrawOnMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalRechargeOnMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalRechargeOnMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalAnnualInvestOnMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalAnnualInvestOnMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalAnnualInvestOnPreviousMonthQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalAnnualInvestOnPreviousMonthQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalTenderYesterdayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalTenderYesterdayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalRepayYesterdayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalRepayYesterdayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalAnnualInvestYesterdayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalAnnualInvestYesterdayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalWithdrawYesterdayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalWithdrawYesterdayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countTotalRechargeYesterdayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countTotalRechargeYesterdayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countNoneRepayTodayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countNoneRepayTodayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countRegisterTotalYesterdayQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countRegisterTotalYesterdayQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countRechargeGt3000UserNumQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countRechargeGt3000UserNumQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countInvestGt3000UserNumQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countInvestGt3000UserNumQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO countInvestGt3000MonthUserNumQl(Date startTime, Date endTime, String sourceId) {
-        return sellDailyCustomizeMapper.countInvestGt3000MonthUserNumQl(startTime, endTime, sourceId);
-    }
-
-    @Override
-    public SellDailyVO setValueHz(BigDecimal hzTotalTmp, int column, SellDailyVO hzRecord, SellDailyVO shOCSellDaily, SellDailyVO qianleSellDaily, BigDecimal vipTmp) {
-        switch (column) {
-            case 1:
-                hzRecord.setInvestTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getInvestTotalMonth()).subtract(qianleSellDaily.getInvestTotalMonth()).add(vipTmp));
-                break;
-            case 2:
-                hzRecord.setRepaymentTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getRepaymentTotalMonth()).subtract(qianleSellDaily.getRepaymentTotalMonth()).add(vipTmp));
-                break;
-            case 3:
-                hzRecord.setInvestTotalPreviousMonth(hzTotalTmp.subtract(shOCSellDaily.getInvestTotalPreviousMonth()).subtract(qianleSellDaily.getInvestTotalPreviousMonth()).add(vipTmp));
-                break;
-            case 5:
-                hzRecord.setWithdrawTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getWithdrawTotalMonth()).subtract(qianleSellDaily.getWithdrawTotalMonth()).add(vipTmp));
-                break;
-            case 7:
-                hzRecord.setRechargeTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getRechargeTotalMonth()).subtract(qianleSellDaily.getRechargeTotalMonth()).add(vipTmp));
-                break;
-            case 8:
-                hzRecord.setInvestAnnualTotalMonth(hzTotalTmp.subtract(shOCSellDaily.getInvestAnnualTotalMonth()).subtract(qianleSellDaily.getInvestAnnualTotalMonth()).add(vipTmp));
-                break;
-            case 9:
-                hzRecord.setInvestAnnualTotalPreviousMonth(
-                        hzTotalTmp.subtract(shOCSellDaily.getInvestAnnualTotalPreviousMonth()).subtract(qianleSellDaily.getInvestTotalPreviousMonth()).add(vipTmp));
-                break;
-            case 11:
-                hzRecord.setInvestTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getInvestTotalYesterday()).subtract(qianleSellDaily.getInvestTotalYesterday()).add(vipTmp));
-                break;
-            case 12:
-                hzRecord.setRepaymentTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getRepaymentTotalYesterday()).subtract(qianleSellDaily.getRepaymentTotalYesterday()).add(vipTmp));
-                break;
-            case 13:
-                hzRecord.setInvestAnnualTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getInvestAnnualTotalYesterday()).subtract(qianleSellDaily.getInvestAnnualTotalYesterday()).add(vipTmp));
-                break;
-            case 14:
-                hzRecord.setWithdrawTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getWithdrawTotalYesterday()).subtract(qianleSellDaily.getWithdrawTotalYesterday()).add(vipTmp));
-                break;
-            case 15:
-                hzRecord.setRechargeTotalYesterday(hzTotalTmp.subtract(shOCSellDaily.getRechargeTotalYesterday()).subtract(qianleSellDaily.getRechargeTotalYesterday()).add(vipTmp));
-                break;
-            case 17:
-                hzRecord.setNonRepaymentToday(hzTotalTmp.subtract(shOCSellDaily.getNonRepaymentToday()).subtract(qianleSellDaily.getNonRepaymentToday()).add(vipTmp));
-                break;
-            case 18:
-                hzRecord.setRegisterTotalYesterday(hzTotalTmp.intValue() - shOCSellDaily.getRegisterTotalYesterday() - qianleSellDaily.getRegisterTotalYesterday() + vipTmp.intValue());
-                break;
-            case 19:
-                hzRecord.setRechargeGt3000UserNum(hzTotalTmp.intValue() - shOCSellDaily.getRechargeGt3000UserNum() - qianleSellDaily.getRechargeGt3000UserNum() + vipTmp.intValue());
-                break;
-            case 20:
-                hzRecord.setInvestGt3000UserNum(hzTotalTmp.intValue() - shOCSellDaily.getInvestGt3000UserNum() - qianleSellDaily.getInvestGt3000UserNum() + vipTmp.intValue());
-                break;
-            case 21:
-                hzRecord.setInvestGt3000MonthUserNum(hzTotalTmp.intValue() - shOCSellDaily.getInvestGt3000MonthUserNum() - qianleSellDaily.getInvestGt3000MonthUserNum() + vipTmp.intValue());
-                break;
-        }
-
-        return hzRecord;
-    }
 }

@@ -417,6 +417,27 @@
         AND br.repay_status IN (0,1)
     </sql>
 
+
+    <sql id="countTotalCreditSql">
+        #债转数据#
+        SELECT
+        br.recover_account AS none_repay,
+        FROM
+        hyjf_trade.ht_borrow_credit br
+        LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id = uu.user_id
+        LEFT JOIN hyjf_user.ht_utm_reg ur on uu.user_id=ur.user_id
+        LEFT JOIN hyjf_user.ht_utm m on ur.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        WHERE ui.role_id = 1
+        AND p.source_id = #{sourceId}
+        AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.recover_status = 0
+        AND br.accede_order_id IS NULL
+    </sql>
+
     <!-- 查询运营中心合计 -->
     <select id="selectOCSum" parameterType="java.lang.String" resultMap="sumResultMap">
         SELECT
@@ -1097,6 +1118,20 @@
         <include refid="countInvestGt3000UserQL"/>
         ) AS t
         WHERE t.total_invest_amount >=3000
+    </select>
+
+
+
+
+    <!-- 查询债转数据 -->
+    <select id="countTotalCredit" resultMap="sumResultMap">
+        SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalCreditSql"/>
+        ) AS t
     </select>
 
     <insert id="batchInsert" parameterType="java.util.List">

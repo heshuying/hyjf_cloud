@@ -15,7 +15,6 @@ import com.hyjf.cs.market.service.DailyGeneratorDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -33,6 +32,8 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     @Autowired
     private CommonProducer commonProducer;
 
+    private StoreNumInner storeNumInner;
+
     private static final String NMZX_DIVISION_NAME = "纳觅咨询";
     private static final String QGR_DIVISION_NAME = "裕峰瑞";
     private static final String DTHJ_DIVISION_NAME = "大唐汇金";
@@ -41,21 +42,18 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     private static final String HZSW_DIVISION_NAME = "惠众";
     private static final String QIANLE_DIVISION_NAME = "渠道";
 
+    /** 第一部分： 纳觅咨询  */
     private static final int DRAW_ORDER_LEVEL1 = 1;
+    /** 第二部分： 运营中心， 渠道（千乐）， 惠众 */
     private static final int DRAW_ORDER_LEVEL2 = 2;
+    /** 第三部分： 裕峰瑞 */
     private static final int DRAW_ORDER_LEVEL3 = 3;
+    /** 第四部分： 大唐汇金 */
     private static final int DRAW_ORDER_LEVEL4 = 4;
-    private static final int DRAW_ORDER_LEVEL5 = 5;
 
-    /** 查询所有分部 */
-    private static final Integer QUERY_ALL_DIVISION_TYPE = 1;
-    /** 上海运营中心-网络运营部 id:327 */
-    private static final Integer QUERY_OC_THREE_DIVISION_TYPE = 2;
-    /** 查询APP推广 */
-    private static final Integer QUERY_APP_TYPE = 3;
-    /** 不需要显示的网点 */
-    private static final List NMZX_IGNORE_TWODIVISION_LIST = Arrays.asList("胶州分部");
-    private static final List DTHJ_IGNORE_TWODIVISION_LIST = Arrays.asList("樟树分部", "东莞分部", "西安分部");
+    /** 不需要显示的二级部门 */
+    private static final List NMZX_IGNORE_TWO_DIVISION_LIST = Arrays.asList("胶州分部");
+    private static final List DTHJ_IGNORE_TWO_DIVISION_LIST = Arrays.asList("樟树分部", "东莞分部", "西安分部");
 
 
     @Override
@@ -88,88 +86,42 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         List<SellDailyVO> list = new ArrayList<>();
         List<String> twoDivisionList1 = amUserClient.selectTwoDivisionByPrimaryDivision(NMZX_DIVISION_NAME);
         for (String twoDivision : twoDivisionList1) {
-            if (NMZX_IGNORE_TWODIVISION_LIST.contains(twoDivision)) {
+            if (NMZX_IGNORE_TWO_DIVISION_LIST.contains(twoDivision)) {
                 continue;
             }
-            list.add(this.constructionSellDaily(NMZX_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL1,
-                    getStoreNum(NMZX_DIVISION_NAME, twoDivision)));
+            list.add(new SellDailyVO(NMZX_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL1,
+                    storeNumInner.getStoreNum(NMZX_DIVISION_NAME, twoDivision)));
         }
 
-        list.add(this.constructionSellDaily(YYZX_DIVISION_NAME, "网络运营部", DRAW_ORDER_LEVEL2, 0));
-        list.add(this.constructionSellDaily(YYZX_DIVISION_NAME, "无主单", DRAW_ORDER_LEVEL2, 0));
-        list.add(this.constructionSellDaily(QIANLE_DIVISION_NAME, "千乐", DRAW_ORDER_LEVEL5, 0));
-        list.add(this.constructionSellDaily("其中：", "APP推广", DRAW_ORDER_LEVEL2, 0));
-        list.add(this.constructionSellDaily(HZSW_DIVISION_NAME, "其它", DRAW_ORDER_LEVEL2, 0));
+        list.add(new SellDailyVO(YYZX_DIVISION_NAME, "网络运营部", DRAW_ORDER_LEVEL2, 0));
+        list.add(new SellDailyVO(YYZX_DIVISION_NAME, "无主单", DRAW_ORDER_LEVEL2, 0));
+        list.add(new SellDailyVO(QIANLE_DIVISION_NAME, "千乐", DRAW_ORDER_LEVEL2, 0));
+        list.add(new SellDailyVO("其中：", "APP推广", DRAW_ORDER_LEVEL2, 0));
+        list.add(new SellDailyVO(HZSW_DIVISION_NAME, "其它", DRAW_ORDER_LEVEL2, 0));
 
 
         List<String> twoDivisionList3 = amUserClient.selectTwoDivisionByPrimaryDivision(QGR_DIVISION_NAME);
         for (String twoDivision : twoDivisionList3) {
-            list.add(this.constructionSellDaily(QGR_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL3,
-                    getStoreNum(QGR_DIVISION_NAME, twoDivision)));
+            list.add(new SellDailyVO(QGR_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL3,
+                    storeNumInner.getStoreNum(QGR_DIVISION_NAME, twoDivision)));
         }
 
         List<String> twoDivisionList4 = amUserClient.selectTwoDivisionByPrimaryDivision(DTHJ_DIVISION_NAME);
         List<String> twoDivisionList5 = amUserClient.selectTwoDivisionByPrimaryDivision(SHRJ_DIVISION_NAME);
         for (String twoDivision : twoDivisionList4) {
-            if (DTHJ_IGNORE_TWODIVISION_LIST.contains(twoDivision)) {
+            if (DTHJ_IGNORE_TWO_DIVISION_LIST.contains(twoDivision)) {
                 continue;
             }
-            list.add(this.constructionSellDaily(DTHJ_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL4,
-                    getStoreNum(DTHJ_DIVISION_NAME, twoDivision)));
+            list.add(new SellDailyVO(DTHJ_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL4,
+                    storeNumInner.getStoreNum(DTHJ_DIVISION_NAME, twoDivision)));
         }
         for (String twoDivision : twoDivisionList5) {
-            list.add(this.constructionSellDaily(SHRJ_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL4,
-                    getStoreNum(SHRJ_DIVISION_NAME, twoDivision)));
+            list.add(new SellDailyVO(SHRJ_DIVISION_NAME, twoDivision, DRAW_ORDER_LEVEL4,
+                    storeNumInner.getStoreNum(SHRJ_DIVISION_NAME, twoDivision)));
         }
 
         amMarketClient.batchInsertSellDaily(list);
 
-    }
-
-    /**
-     * SellDaily 是mybatis自动生成工具生成，无法添加符合的构造函数， 此方法可以替换
-     *
-     * @param primaryDivision
-     *            一级部门
-     * @param twoDivision
-     *            二级部门
-     * @param drawOrder
-     *            绘制顺序
-     * @param storeNum
-     *            门店数量
-     * @return
-     */
-    private SellDailyVO constructionSellDaily(String primaryDivision, String twoDivision, int drawOrder, Integer storeNum) {
-        SellDailyVO record = new SellDailyVO();
-        record.setDateStr(GetDate.getFormatDateStr());
-        record.setPrimaryDivision(primaryDivision);
-        record.setTwoDivision(twoDivision);
-        record.setDrawOrder(drawOrder);
-        record.setStoreNum(storeNum);
-        record.setInvestTotalMonth(BigDecimal.ZERO);
-        record.setInvestTotalPreviousMonth(BigDecimal.ZERO);
-        record.setRepaymentTotalMonth(BigDecimal.ZERO);
-        record.setRepaymentTotalYesterday(BigDecimal.ZERO);
-        record.setNonRepaymentToday(BigDecimal.ZERO);
-        record.setInvestAnnualTotalMonth(BigDecimal.ZERO);
-        record.setInvestAnnualTotalPreviousMonth(BigDecimal.ZERO);
-        record.setInvestTotalPreviousMonth(BigDecimal.ZERO);
-        record.setInvestAnnualTotalYesterday(BigDecimal.ZERO);
-        record.setInvestTotalYesterday(BigDecimal.ZERO);
-        record.setNonRepaymentToday(BigDecimal.ZERO);
-        record.setRechargeTotalMonth(BigDecimal.ZERO);
-        record.setRechargeTotalYesterday(BigDecimal.ZERO);
-        record.setNetCapitalInflowYesterday(BigDecimal.ZERO);
-        record.setWithdrawTotalMonth(BigDecimal.ZERO);
-        record.setWithdrawTotalYesterday(BigDecimal.ZERO);
-        record.setInvestAnnularRatioGrowth("");
-        record.setInvestRatioGrowth("");
-        record.setWithdrawRate("");
-        record.setRegisterTotalYesterday(0);
-        record.setInvestGt3000MonthUserNum(0);
-        record.setInvestGt3000UserNum(0);
-        record.setRechargeGt3000UserNum(0);
-        return record;
     }
 
     /**
@@ -269,6 +221,55 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     }
 
     /**
+     * 部门数量写死，使用内部类，第一，类的职责划分，第二，未来可以使用其他方法替换，比如配置文件
+     */
+    private static final class StoreNumInner{
+        /**
+         * 初始化部门 日期 一级部门 二级部门 绘制顺序 门店数量
+         */
+        private static final List<String> NM_NUM_0 = Arrays.asList("威海中信分部", "东营一分部", "青岛开发区分部", "济南分部", "青岛市南分部", "天津分部",
+                "乳山分部", "郑州一分部", "荣成分部", "上海一分部", "青岛清江路社区", "上海运营中心", "邹平分部", "吉林分部", "漯河分部", "上海二分部", "成都分公司", "深圳分部",
+                "郑州二分部", "青岛红岛社区", "阜阳分部", "成都分部", "青岛崂山社区");
+        private static final List<String> NM_NUM_1 = Arrays.asList("莱州分部", "即墨二分部", "常州分部", "威海经区分部", "北京分部", "烟台开发区分部",
+                "黄岛分部", "招远分部", "青岛市北分部", "即墨一分部");
+        private static final List<String> NM_NUM_2 = Arrays.asList("文登分部", "烟台一分部", "淄博分部", "青岛城阳分部", "上海三分部");
+        private static final List<String> NM_NUM_3 = Arrays.asList("牡丹江分部", "潍坊分部");
+        private static final List<String> QRF_NUM_0 = Arrays.asList("苏州分部", "合肥分部", "威海文登分部", "威海中信分部", "青岛红岛社区", "石家庄分部",
+                "通辽分部");
+        private static final List<String> QRF_NUM_1 = Arrays.asList("青岛开发区分部", "即墨二分部");
+        private static final List<String> QRF_NUM_2 = Arrays.asList("青岛市南分部");
+
+        private Integer getStoreNum(String primaryDivision, String twoDivision) {
+            Integer num = 0;
+            if (NMZX_DIVISION_NAME.equals(primaryDivision)) {
+                if (NM_NUM_0.contains(twoDivision)) {
+                    num = 0;
+                } else if (NM_NUM_1.contains(twoDivision)) {
+                    num = 1;
+                } else if (NM_NUM_2.contains(twoDivision)) {
+                    num = 2;
+                } else if (NM_NUM_3.contains(twoDivision)) {
+                    num = 3;
+                }
+            }
+            if (QGR_DIVISION_NAME.equals(primaryDivision)) {
+                if (QRF_NUM_0.contains(twoDivision)) {
+                    num = 0;
+                } else if (QRF_NUM_1.contains(twoDivision)) {
+                    num = 1;
+                } else if (QRF_NUM_2.contains(twoDivision)) {
+                    num = 2;
+                }
+            }
+            if (DTHJ_DIVISION_NAME.equals(primaryDivision) || SHRJ_DIVISION_NAME.equals(primaryDivision)) {
+                num = 0;
+            }
+            return num;
+        }
+    }
+
+
+    /**
      * 获取指定时间上月
      *
      * @param date
@@ -279,52 +280,6 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         calendar.setTime(date);
         calendar.add(Calendar.MONTH, -1);
         return calendar.getTime();
-    }
-
-
-    /**
-     * 初始化部门 日期 一级部门 二级部门 绘制顺序 门店数量
-     */
-
-    private static final List<String> NM_NUM_0 = Arrays.asList("威海中信分部", "东营一分部", "青岛开发区分部", "济南分部", "青岛市南分部", "天津分部",
-            "乳山分部", "郑州一分部", "荣成分部", "上海一分部", "青岛清江路社区", "上海运营中心", "邹平分部", "吉林分部", "漯河分部", "上海二分部", "成都分公司", "深圳分部",
-            "郑州二分部", "青岛红岛社区", "阜阳分部", "成都分部", "青岛崂山社区");
-    private static final List<String> NM_NUM_1 = Arrays.asList("莱州分部", "即墨二分部", "常州分部", "威海经区分部", "北京分部", "烟台开发区分部",
-            "黄岛分部", "招远分部", "青岛市北分部", "即墨一分部");
-    private static final List<String> NM_NUM_2 = Arrays.asList("文登分部", "烟台一分部", "淄博分部", "青岛城阳分部", "上海三分部");
-    private static final List<String> NM_NUM_3 = Arrays.asList("牡丹江分部", "潍坊分部");
-    private static final List<String> QRF_NUM_0 = Arrays.asList("苏州分部", "合肥分部", "威海文登分部", "威海中信分部", "青岛红岛社区", "石家庄分部",
-            "通辽分部");
-    private static final List<String> QRF_NUM_1 = Arrays.asList("青岛开发区分部", "即墨二分部");
-    private static final List<String> QRF_NUM_2 = Arrays.asList("青岛市南分部");
-
-    private Integer getStoreNum(String primaryDivision, String twoDivision) {
-        Integer num = 0;
-        if (NMZX_DIVISION_NAME.equals(primaryDivision)) {
-            if (NM_NUM_0.contains(twoDivision)) {
-                num = 0;
-            } else if (NM_NUM_1.contains(twoDivision)) {
-                num = 1;
-            } else if (NM_NUM_2.contains(twoDivision)) {
-                num = 2;
-            } else if (NM_NUM_3.contains(twoDivision)) {
-                num = 3;
-            }
-        }
-        if (QGR_DIVISION_NAME.equals(primaryDivision)) {
-            if (QRF_NUM_0.contains(twoDivision)) {
-                num = 0;
-            } else if (QRF_NUM_1.contains(twoDivision)) {
-                num = 1;
-            } else if (QRF_NUM_2.contains(twoDivision)) {
-                num = 2;
-            }
-        }
-        if (DTHJ_DIVISION_NAME.equals(primaryDivision) || SHRJ_DIVISION_NAME.equals(primaryDivision)) {
-            num = 0;
-        }
-
-        return num;
     }
 
     /**

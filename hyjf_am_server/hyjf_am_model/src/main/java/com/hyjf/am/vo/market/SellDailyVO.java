@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.market;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
 
 import java.math.BigDecimal;
 
@@ -16,6 +17,56 @@ public class SellDailyVO extends BaseVO {
      *
      */
     private static final long serialVersionUID = 1L;
+
+    public SellDailyVO(){
+
+    }
+
+    public SellDailyVO(String primaryDivision, String twoDivision){
+        this(primaryDivision, twoDivision, 0, 0);
+    }
+
+    /**
+     * 基本构造方法
+     * @param primaryDivision
+     *            一级部门
+     * @param twoDivision
+     *            二级部门
+     * @param drawOrder
+     *            绘制顺序
+     * @param storeNum
+     *            门店数量
+     */
+    public SellDailyVO(String primaryDivision, String twoDivision, int drawOrder, Integer storeNum){
+        this.dateStr = GetDate.getFormatDateStr();
+        this.primaryDivision = primaryDivision;
+        this.twoDivision = twoDivision;
+        this.drawOrder = drawOrder;
+        this.storeNum = storeNum;
+        this.setInvestTotalMonth(BigDecimal.ZERO);
+        this.setInvestTotalPreviousMonth(BigDecimal.ZERO);
+        this.setRepaymentTotalMonth(BigDecimal.ZERO);
+        this.setRepaymentTotalYesterday(BigDecimal.ZERO);
+        this.setNonRepaymentToday(BigDecimal.ZERO);
+        this.setInvestAnnualTotalMonth(BigDecimal.ZERO);
+        this.setInvestAnnualTotalPreviousMonth(BigDecimal.ZERO);
+        this.setInvestTotalPreviousMonth(BigDecimal.ZERO);
+        this.setInvestAnnualTotalYesterday(BigDecimal.ZERO);
+        this.setInvestTotalYesterday(BigDecimal.ZERO);
+        this.setNonRepaymentToday(BigDecimal.ZERO);
+        this.setRechargeTotalMonth(BigDecimal.ZERO);
+        this.setRechargeTotalYesterday(BigDecimal.ZERO);
+        this.setNetCapitalInflowYesterday(BigDecimal.ZERO);
+        this.setWithdrawTotalMonth(BigDecimal.ZERO);
+        this.setWithdrawTotalYesterday(BigDecimal.ZERO);
+        this.setInvestAnnularRatioGrowth("");
+        this.setInvestRatioGrowth("");
+        this.setWithdrawRate("");
+        this.setRegisterTotalYesterday(0);
+        this.setInvestGt3000MonthUserNum(0);
+        this.setInvestGt3000UserNum(0);
+        this.setRechargeGt3000UserNum(0);
+    }
 
     private String id;
 
