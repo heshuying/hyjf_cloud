@@ -1308,7 +1308,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userOverdueInterest = borrowRecover.getLateInterest();// batch计算的逾期利息
                 int userAdvanceStatus = borrowRecover.getAdvanceStatus();// batch计算的还款状态
                 int userLateDays = borrowRecover.getLateDays();// batch计算的逾期天数
-                if (userAdvanceStatus != 30 && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
+                // 不分期逾期标的在今天之前已经提交还款的不校验
+                // 不分期逾期标的今天之前已经提交过还款：标的状态还款中4，0<计算的逾期天数<=实际的逾期天数-1
+                boolean hasSubmit = borrow.getStatus() != 8 && lateDays > 1 && userLateDays > 0;
+                if (!hasSubmit && (userAdvanceStatus != 3 || userLateDays != lateDays)) {
                     logger.error("【还款明细】计算的逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                             userAdvanceStatus == 3 ? "已逾期" : "未逾期", userLateDays, lateDays);
                     throw new Exception("计算的逾期信息有误！");
@@ -1337,7 +1340,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignOverdueInterest = creditRepay.getLateInterest();// batch计算的逾期利息
                                 int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                 int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
+                                if (!hasSubmit && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                     logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                             assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                     throw new Exception("计算的逾期信息有误！");
@@ -1405,7 +1408,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 assignOverdueInterest = creditRepay.getRepayLateInterest();// batch计算的逾期利息
                                 int assignAdvanceStatus = creditRepay.getAdvanceStatus();// batch计算的还款状态
                                 int assignLateDays = creditRepay.getLateDays();// batch计算的逾期天数
-                                if (assignAdvanceStatus != 30 && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
+                                if (!hasSubmit && (assignAdvanceStatus != 3 || assignLateDays != lateDays)) {
                                     logger.error("【还款明细】计算的债转逾期信息有误！计算逾期状态：{}，计算逾期天数：{}，实际逾期天数：{}",
                                             assignAdvanceStatus == 3 ? "已逾期" : "未逾期", assignLateDays, lateDays);
                                     throw new Exception("计算的逾期信息有误！");
