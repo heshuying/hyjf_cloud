@@ -1,4 +1,4 @@
-package com.hyjf.wbs.config.ds;
+package com.hyjf.wbs.configs.ds;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 

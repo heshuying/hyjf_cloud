@@ -6,10 +6,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableFeignClients
 @SpringBootApplication
-public class HyjfWbsApplication {
+public class WbsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HyjfWbsApplication.class, args);
+		SpringApplication.run(WbsApplication.class, args);
 	}
 
 }

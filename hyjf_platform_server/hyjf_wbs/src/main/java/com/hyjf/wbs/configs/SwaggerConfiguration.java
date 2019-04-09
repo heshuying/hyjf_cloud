@@ -1,4 +1,4 @@
-package com.hyjf.wbs.config;
+package com.hyjf.wbs.configs;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ public class SwaggerConfiguration {
 	@Bean
 	public Docket buildDocket() {
 		return new Docket(DocumentationType.SWAGGER_2).apiInfo(buildApiInf()).select()
-				.apis(RequestHandlerSelectors.basePackage("com.hyjf.wbs.controller"))
+				.apis(RequestHandlerSelectors.basePackage("com.hyjf.wbs"))
 				.paths(PathSelectors.any()).build();
 	}
 

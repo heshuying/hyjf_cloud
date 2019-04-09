@@ -1,7 +1,7 @@
-package com.hyjf.wbs.config.ds;
+package com.hyjf.wbs.configs.ds;
 
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.wbs.config.ds.DynamicDataSourceContextHolder.DbType;
+import com.hyjf.wbs.configs.ds.DynamicDataSourceContextHolder.DbType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;

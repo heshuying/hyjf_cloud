@@ -1,4 +1,4 @@
-package com.hyjf.wbs.config.ds;
+package com.hyjf.wbs.configs.ds;
 
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 

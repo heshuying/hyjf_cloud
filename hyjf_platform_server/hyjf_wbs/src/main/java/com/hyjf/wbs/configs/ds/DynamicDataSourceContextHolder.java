@@ -1,4 +1,4 @@
-package com.hyjf.wbs.config.ds;
+package com.hyjf.wbs.configs.ds;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

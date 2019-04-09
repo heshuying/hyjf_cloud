@@ -1,4 +1,4 @@
-package com.hyjf.wbs.config.ds;
+package com.hyjf.wbs.configs.ds;
 
 import com.hyjf.common.constants.CommonConstant;
 import org.aspectj.lang.JoinPoint;
