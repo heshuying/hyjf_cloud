@@ -58,6 +58,8 @@ public class MyCouponListCustomizeVO extends BaseVO {
     //优惠券使用标识 0：未使用，1：已使用，2：审核不通过，3：待审核，4：已失效
     private Integer usedFlag;
 
+    private String time;
+
     public Integer getId() {
         return id;
     }
@@ -248,5 +250,13 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setEndTimeStamp(String endTimeStamp) {
         this.endTimeStamp = endTimeStamp;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
