@@ -609,7 +609,6 @@
 		ht_borrow hydb
 		where
 		 hydb.user_id = #{userId,jdbcType=VARCHAR} AND (hydb.`status` = 4 OR hydb.`status` = 8  OR hydb.`status` = 5 )
-		 AND
 	</select>
 
 	<resultMap id="repayPlanListResultMap" type="com.hyjf.am.vo.trade.repay.RepayPlanListVO" >
