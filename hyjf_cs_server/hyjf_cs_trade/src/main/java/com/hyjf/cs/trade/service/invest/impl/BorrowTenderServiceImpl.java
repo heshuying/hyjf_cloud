@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
@@ -253,9 +252,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/fal?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/suc?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
@@ -277,12 +276,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
         try {
-            Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-            map.putAll(resultEval);
-            map.put("investLevel",borrow.getInvestLevel());
-            result.setData(map);
-            return result;
+            if(insertResult){
+                Map<String, Object> map = BankCallUtils.callApiMap(callBean);
+                WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+                map.putAll(resultEval);
+                map.put("investLevel",borrow.getInvestLevel());
+                result.setData(map);
+                return result;
+            }else{
+                logger.error("保存投资tmp表失败，信息:{}",JSONObject.toJSONString(request));
+                throw new CheckException(MsgEnum.STATUS_CE999999);
+            }
         } catch (Exception e) {
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
@@ -2531,6 +2535,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
         logger.info("操作原子层主表结束 结果 {} ",insertFlag);
         if (insertFlag) {
+            // 投资成功后往redis里面放一个值
+            RedisUtils.set(RedisConstants.BORROW_TENDER_ORDER_CHECK+bean.getLogOrderId(),bean.getLogOrderId(),12 * 60 * 60);
+
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             // 网站累计出借追加
             // 出借、收益统计表

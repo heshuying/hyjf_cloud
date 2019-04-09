@@ -457,14 +457,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	}
 
 	/**
-	 * 批次还款请求
+	 * 批次还款（借款人）
 	 *
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Map requestRepay(BorrowApicron apicron, JSONArray subPacksJson) {
 		Map map = new HashMap<>();
-		boolean delFalg = false;
 		int userId = apicron.getUserId();// 还款用户userId
 		String borrowNid = apicron.getBorrowNid();// 借款编号
 		// 还款子参数
@@ -474,14 +473,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		String retNotifyURL = systemConfig.getRepayResultUrl();
 		
 		String channel = BankCallConstant.CHANNEL_PC;
-		for (int i = 0; i < 3; i++) {
-			try {
-				String logOrderId = GetOrderIdUtils.getOrderId2(apicron.getUserId());
-				String orderDate = GetOrderIdUtils.getOrderDate();
-				String batchNo = GetOrderIdUtils.getBatchNo();// 获取还款批次号
-				String txDate = GetOrderIdUtils.getTxDate();
-				String txTime = GetOrderIdUtils.getTxTime();
-				String seqNo = GetOrderIdUtils.getSeqNo(6);
+        // 只请求一次银行接口，失败任务表更新状态为还款请求失败(7)，由batch进行异常处理 update by wgx 2019/03/15
+        try {
+            String logOrderId = GetOrderIdUtils.getOrderId2(apicron.getUserId());
+            String orderDate = GetOrderIdUtils.getOrderDate();
+            String batchNo = GetOrderIdUtils.getBatchNo();// 获取还款批次号
+            String txDate = GetOrderIdUtils.getTxDate();
+            String txTime = GetOrderIdUtils.getTxTime();
+            String seqNo = GetOrderIdUtils.getSeqNo(6);
+            try {
 				apicron.setBatchNo(batchNo);
 				apicron.setTxDate(Integer.parseInt(txDate));
 				apicron.setTxTime(Integer.parseInt(txTime));
@@ -490,57 +490,62 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				// 更新任务API状态为进行中
 				boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
 				if (!apicronFlag) {
-					throw new Exception("批次还款任务表(ht_borrow_apicron)更新任务状态(还款请求中)失败！[用户ID：" + userId + "]，[借款编号：" + borrowNid + "]");
-				}
-				// 调用还款接口
-				BankCallBean repayBean = new BankCallBean();
-				repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-				repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_REPAY);// 消息类型(批量还款)
-				repayBean.setTxDate(txDate);
-				repayBean.setTxTime(txTime);
-				repayBean.setSeqNo(seqNo);
-				repayBean.setChannel(channel);
-				repayBean.setBatchNo(apicron.getBatchNo());
-				repayBean.setTxAmount(String.valueOf(apicron.getTxAmount()));
-				repayBean.setTxCounts(String.valueOf(apicron.getTxCounts()));
-				repayBean.setNotifyURL(notifyUrl);
-				repayBean.setRetNotifyURL(retNotifyURL);
-				repayBean.setSubPacks(subPacks);
-				repayBean.setLogUserId(String.valueOf(userId));
-				repayBean.setLogOrderId(logOrderId);
-				repayBean.setLogOrderDate(orderDate);
-				repayBean.setLogRemark("批次还款请求");
-				repayBean.setLogClient(0);
-				BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
-				if (Validator.isNotNull(repayResult)) {
-					String received = StringUtils.isNotBlank(repayResult.getReceived()) ? repayResult.getReceived() : "";
-					if (BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
-						try {
-							// 更新任务API状态
-							boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
-							if (apicronResultFlag) {
-								map.put("result", repayResult);
-								map.put("delFlag", delFalg);
-								return map;
-							}
-						} catch (Exception e) {
-							logger.error("【直投批次还款】还款请求成功后,更新任务状态(还款请求成功)发生异常!", e);
-						}
-						map.put("result", repayResult);
-						map.put("delFlag", true);
-						return map;
-					} else {
-						continue;
-					}
-				} else {
-					continue;
+					throw new Exception("更新请求银行信息失败！[用户ID：" + userId + "]，[借款编号：" + borrowNid + "]");
 				}
 			} catch (Exception e) {
 				logger.error("【直投批次还款】还款请求时发生系统异常！", e);
+				map.put("result", null);// 请求失败
+				map.put("delFlag", false);// 未请求银行&更新任务表失败，删除防重redis
+				return map;
 			}
-		}
-		map.put("result", null);
-		map.put("delFlag", delFalg);
+            // 调用还款接口
+            BankCallBean repayBean = new BankCallBean();
+            repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+            repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_REPAY);// 消息类型(批量还款)
+            repayBean.setTxDate(txDate);
+            repayBean.setTxTime(txTime);
+            repayBean.setSeqNo(seqNo);
+            repayBean.setChannel(channel);
+            repayBean.setBatchNo(apicron.getBatchNo());
+            repayBean.setTxAmount(String.valueOf(apicron.getTxAmount()));
+            repayBean.setTxCounts(String.valueOf(apicron.getTxCounts()));
+            repayBean.setNotifyURL(notifyUrl);
+            repayBean.setRetNotifyURL(retNotifyURL);
+            repayBean.setSubPacks(subPacks);
+            repayBean.setLogUserId(String.valueOf(userId));
+            repayBean.setLogOrderId(logOrderId);
+            repayBean.setLogOrderDate(orderDate);
+            repayBean.setLogRemark("批次还款请求");
+            repayBean.setLogClient(0);
+            BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
+            if (Validator.isNotNull(repayResult)) {
+                String received = StringUtils.isNotBlank(repayResult.getReceived()) ? repayResult.getReceived() : "";
+                if (BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
+                    try {
+                        // 更新任务API状态
+                        boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
+                        if (apicronResultFlag) {
+                            map.put("result", repayResult);
+                            map.put("delFlag", false);// 请求银行返回成功&更新任务表成功，删除防重redis
+                            return map;
+                        }
+                    } catch (Exception e) {
+                        logger.error("【直投批次还款】还款请求成功后,更新任务状态(还款请求成功)发生异常!", e);
+                    }
+                    map.put("result", repayResult);
+                    map.put("delFlag", true);// 请求银行返回成功&更新任务表失败，不删除防重redis
+                    return map;
+                }
+				map.put("result", null);// 请求失败
+				map.put("delFlag", false);// 请求银行返回失败，删除防重redis
+                return map;
+            }
+        } catch (Exception e) {
+            logger.error("【直投批次还款】还款请求银行时发生系统异常！", e);
+        }
+		// update by wgx 2019/03/18
+		map.put("result", null);// 请求失败
+		map.put("delFlag", true);// 请求银行返回空｜请求银行返回异常，不删除防重redis
 		return map;
 	}
 
@@ -3155,7 +3160,6 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
      */
     private Map requestOrgRepay(BorrowApicron apicron, JSONArray subPacksJson) {
         Map map = new HashMap<>();
-        boolean delFalg = false;
         int userId = apicron.getUserId();// 还款用户userId
         String borrowNid = apicron.getBorrowNid();// 借款编号
         // 还款子参数
@@ -3164,73 +3168,78 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         String notifyUrl = systemConfig.getRepayVerifyUrl();
         String retNotifyURL = systemConfig.getRepayResultUrl();
         String channel = BankCallConstant.CHANNEL_PC;
-        for (int i = 0; i < 3; i++) {
-            try {
-                String logOrderId = GetOrderIdUtils.getOrderId2(apicron.getUserId());
-                String orderDate = GetOrderIdUtils.getOrderDate();
-                String batchNo = GetOrderIdUtils.getBatchNo();// 获取还款批次号
-                String txDate = GetOrderIdUtils.getTxDate();
-                String txTime = GetOrderIdUtils.getTxTime();
-                String seqNo = GetOrderIdUtils.getSeqNo(6);
-                apicron.setBatchNo(batchNo);
-                apicron.setTxDate(Integer.parseInt(txDate));
-                apicron.setTxTime(Integer.parseInt(txTime));
-                apicron.setSeqNo(Integer.parseInt(seqNo));
-                apicron.setBankSeqNo(txDate + txTime + seqNo);
-                // 更新任务API状态为进行中
-                boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
-                if (!apicronFlag) {
-                    throw new Exception("【直投批次代偿】更新还款任务为进行中失败！[借款人用户ID：" + userId + "]，[借款编号：" + borrowNid + "]");
-                }
-                // 调用还款接口
-                BankCallBean repayBean = new BankCallBean();
-                repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
-                repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_SUBST_REPAY);// 消息类型(批次代偿)
-                repayBean.setTxDate(txDate);
-                repayBean.setTxTime(txTime);
-                repayBean.setSeqNo(seqNo);
-                repayBean.setChannel(channel);
-                repayBean.setBatchNo(apicron.getBatchNo());// 批次号
-                repayBean.setTxAmount(String.valueOf(apicron.getTxAmount()));// 交易金额
-                repayBean.setTxCounts(String.valueOf(apicron.getTxCounts()));// 交易笔数
-                repayBean.setNotifyURL(notifyUrl);// 后台通知连接
-                repayBean.setRetNotifyURL(retNotifyURL);// 业务结果通知
-                repayBean.setSubPacks(subPacks);// 请求数组
-                repayBean.setLogUserId(String.valueOf(userId));
-                repayBean.setLogOrderId(logOrderId);
-                repayBean.setLogOrderDate(orderDate);
-                repayBean.setLogRemark("批次代偿还款请求");
-                repayBean.setLogClient(0);
-                BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
-                if (Validator.isNotNull(repayResult)) {
-                    String received = StringUtils.isNotBlank(repayResult.getReceived()) ? repayResult.getReceived() : "";
-                    if (BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
-                        try {
-                            // 更新任务API状态
-                            boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
-                            if (apicronResultFlag) {
-                                map.put("result", repayResult);
-                                map.put("delFlag", delFalg);
-                                return map;
-                            }
-                        } catch (Exception e) {
-							logger.error("【直投批次代偿】还款请求成功后,更新任务状态(还款请求成功)异常！还款用户ID：{}，", userId, e);
+        // 只请求一次银行接口，失败任务表更新状态为还款请求失败(7)，由batch进行异常处理 update by wgx 2019/03/15
+        try {
+            String logOrderId = GetOrderIdUtils.getOrderId2(apicron.getUserId());
+            String orderDate = GetOrderIdUtils.getOrderDate();
+            String batchNo = GetOrderIdUtils.getBatchNo();// 获取还款批次号
+            String txDate = GetOrderIdUtils.getTxDate();
+            String txTime = GetOrderIdUtils.getTxTime();
+            String seqNo = GetOrderIdUtils.getSeqNo(6);
+			try {
+				apicron.setBatchNo(batchNo);
+				apicron.setTxDate(Integer.parseInt(txDate));
+				apicron.setTxTime(Integer.parseInt(txTime));
+				apicron.setSeqNo(Integer.parseInt(seqNo));
+				apicron.setBankSeqNo(txDate + txTime + seqNo);
+				// 更新任务API状态为进行中
+				boolean apicronFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDING);
+				if (!apicronFlag) {
+					throw new Exception("更新请求银行信息失败！[借款人用户ID：" + userId + "]，[借款编号：" + borrowNid + "]");
+				}
+			}catch (Exception e) {
+				logger.error("【直投批次代偿】还款请求时发生系统异常！", e);
+				map.put("result", null);// 请求失败
+				map.put("delFlag", false);// 未请求银行&更新任务表失败，删除防重redis
+				return map;
+			}
+            // 调用还款接口
+            BankCallBean repayBean = new BankCallBean();
+            repayBean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
+            repayBean.setTxCode(BankCallConstant.TXCODE_BATCH_SUBST_REPAY);// 消息类型(批次代偿)
+            repayBean.setTxDate(txDate);
+            repayBean.setTxTime(txTime);
+            repayBean.setSeqNo(seqNo);
+            repayBean.setChannel(channel);
+            repayBean.setBatchNo(apicron.getBatchNo());// 批次号
+            repayBean.setTxAmount(String.valueOf(apicron.getTxAmount()));// 交易金额
+            repayBean.setTxCounts(String.valueOf(apicron.getTxCounts()));// 交易笔数
+            repayBean.setNotifyURL(notifyUrl);// 后台通知连接
+            repayBean.setRetNotifyURL(retNotifyURL);// 业务结果通知
+            repayBean.setSubPacks(subPacks);// 请求数组
+            repayBean.setLogUserId(String.valueOf(userId));
+            repayBean.setLogOrderId(logOrderId);
+            repayBean.setLogOrderDate(orderDate);
+            repayBean.setLogRemark("批次代偿还款请求");
+            repayBean.setLogClient(0);
+            BankCallBean repayResult = BankCallUtils.callApiBg(repayBean);
+            if (Validator.isNotNull(repayResult)) {
+                String received = StringUtils.isNotBlank(repayResult.getReceived()) ? repayResult.getReceived() : "";
+                if (BankCallConstant.RECEIVED_SUCCESS.equals(received)) {
+                    try {
+                        // 更新任务API状态
+                        boolean apicronResultFlag = this.updateBorrowApicron(apicron, CustomConstants.BANK_BATCH_STATUS_SENDED);
+                        if (apicronResultFlag) {
+                            map.put("result", repayResult);
+                            map.put("delFlag", false);// 请求银行返回成功&更新任务表成功，删除防重redis
+                            return map;
                         }
-                        map.put("result", repayResult);
-                        map.put("delFlag", true);
-                        return map;
-                    } else {
-                        continue;
+                    } catch (Exception e) {
+                        logger.error("【直投批次代偿】还款请求成功后,更新任务状态(还款请求成功)异常！还款用户ID：{}，", userId, e);
                     }
-                } else {
-                    continue;
+                    map.put("result", repayResult);
+                    map.put("delFlag", true);// 请求银行返回成功&更新任务表失败，不删除防重redis
+                    return map;
                 }
-            } catch (Exception e) {
-                logger.error(e.getMessage());
+				map.put("result", null);// 请求失败
+				map.put("delFlag", false);// 请求银行返回失败，删除防重redis
             }
+        } catch (Exception e) {
+			logger.error("【直投批次代偿】还款请求银行时发生系统异常！", e);
         }
-        map.put("result", null);
-        map.put("delFlag", delFalg);
+		// update by wgx 2019/03/18
+		map.put("result", null);// 请求失败
+		map.put("delFlag", true);// 请求银行返回空｜请求银行返回异常，不删除防重redis
         return map;
     }
 }

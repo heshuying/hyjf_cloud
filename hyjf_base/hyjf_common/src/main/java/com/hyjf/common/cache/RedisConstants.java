@@ -552,4 +552,11 @@ public class RedisConstants {
      * 后台处理Aleve和eve文件增加redis锁控制、防止重复发送mq消息
      */
     public static final String DUAL_HISTORY_ALEVE = "DUAL_HISTORY_ALEVE:";
+
+
+    /**
+     * 投资异步执行三次问题  加一个锁校验一下
+     * 投资成功后  12小时以内不处理
+     */
+    public static final String BORROW_TENDER_ORDER_CHECK = "BORROW_TENDER_ORDER_CHECK:";
 }
