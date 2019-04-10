@@ -308,45 +308,6 @@
                         )
     </select>
 
-    <!-- 本月数据统计 坐席 -->
-    <select id="getMonthDataStatisticsBO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-        SELECT
-            current_owner AS currentOwner,
-            customer_group AS customerGroup
-        FROM
-            ht_user_operate_list
-        WHERE
-            customer_group = 1
-        AND create_time BETWEEN DATE_FORMAT(
-            CURDATE(),
-            '%Y-%m-01 00:00:00'
-        )
-        AND DATE_FORMAT(
-            LAST_DAY(CURDATE()),
-            '%Y-%m-%d 23:59:59'
-        )
-        GROUP BY
-            current_owner
-        UNION ALL
-            SELECT
-                current_owner AS currentOwner,
-                customer_group AS customerGroup
-            FROM
-                ht_user_operate_list
-            WHERE
-                customer_group = 2
-            AND create_time BETWEEN DATE_FORMAT(
-                CURDATE(),
-                '%Y-%m-01 00:00:00'
-            )
-            AND DATE_FORMAT(
-                LAST_DAY(CURDATE()),
-                '%Y-%m-%d 23:59:59'
-            )
-            GROUP BY
-                current_owner
-    </select>
-
     <!-- 本月数据统计 坐席、充值 -->
     <select id="getMonthDataStatisticsO" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
         SELECT

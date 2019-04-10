@@ -2,21 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.AccountListCustomizeMapper" >
 
-    <select id="getUserIdsByCurrentOwnerAndCustomerGroup" resultType="java.lang.Integer">
-        SELECT DISTINCT
-        user_id
-        FROM
-        ht_user_operate_list
-        <where>
-            <if test="currentOwner != null" >
-                AND current_owner = #{currentOwner}
-            </if>
-            <if test="customerGroup != null" >
-                AND customer_group = #{customerGroup}
-            </if>
-        </where>
-    </select>
-
     <select id="getUsersMonthBeginBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
         SELECT
         IFNULL(SUM(a1.bank_balance),0) monthBeginBalance
