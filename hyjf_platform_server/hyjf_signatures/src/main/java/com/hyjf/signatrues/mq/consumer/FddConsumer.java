@@ -48,15 +48,17 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 		defaultMQPushConsumer.setConsumeThreadMin(1);
 
 		defaultMQPushConsumer.setConsumeThreadMax(1);
-		//设置最大重试次数
-		defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+
+		//start update by jijun 20180329
+		//不设置最大重试次数,系统默认重复次数 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h
+		//defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+		//end update by jijun 20180329
 	}
 	//MessageListenerConcurrently 并行消费 效率高 消费不追求时间顺序
 	//MessageListenerOrderly 串行消费 效率不高    消费追求时间顺序
 	@Override
 	public void onMessage(MessageExt msg) {
-		logger.info("法大大 收到消息，开始处理....msg is :{}", msg);
-
+		logger.info("----------------------法大大收到消息，开始处理...."+ msg.getKeys() +",重复消费次数："+msg.getReconsumeTimes());
 		if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
 			// 生成合同
 			logger.info("----------------------开始生成法大大合同------------------------");
@@ -68,13 +70,13 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				FddGenerateContractBean bean = JSONObject.parseObject(msg.getBody(),
 						FddGenerateContractBean.class);
 				if (bean==null) {
-					logger.info("传入参数不得为空！");
+					logger.error("传入参数不得为空！");
 					return;
 				}
 				orderId = bean.getOrdid();
 				transType = bean.getTransType();
 				if (Validator.isNull(orderId) && Validator.isNull(transType)) {
-					logger.info("传入参数不得为空！");
+					logger.error("传入参数不得为空！");
 					return;
 				}
 				if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 散标投资
@@ -92,8 +94,8 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				}
 
 			} catch (Exception e) {
-				logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
-				return;
+				logger.error("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
+				throw new RuntimeException("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：", e);
 			}
 			logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
 
@@ -115,9 +117,9 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 
 				logger.info("-----------------开始处理法大大自动签章异步处理，订单号：" + ordid);
 				fddHandle.updateAutoSignData(bean);
-			}catch (Exception e1){
-				logger.info("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e1);
-				return;
+			}catch (Exception e){
+				logger.error("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e);
+				throw new RuntimeException("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息：", e);
 			}
 			logger.info("--------------------------------------法大大自动签署异步处理任务结束，订单号：" + ordid + "=============");
 
@@ -164,9 +166,9 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 				boolean creditCompany = bean.isCreditCompany();
 				logger.info("-----------------开始处理法大大下载脱敏，订单号：" + ordid);
 				fddHandle.downPDFAndDesensitization(savePath,agrementID,transType,ftpPath,downloadUrl,tenderCompany,creditCompany);
-			}catch (Exception e1){
-				logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e1);
-				return;
+			}catch (Exception e){
+				logger.error("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e);
+				throw new RuntimeException("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息：", e);
 			}
 			logger.info("--------------------------------------法大大下载脱敏处理任务结束，订单号：" + ordid + "=============");
 			return;
