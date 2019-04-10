@@ -379,6 +379,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
         }
+        // 调用共通接口验证当前支出金额与银行剩余可用金额关系 by liushouyi
+        if (!this.capitalExpendituresCheck(request.getUserId(),accountBigDecimal)) {
+            // 账户余额不同步
+            throw new CheckException(MsgEnum.ERR_AMT_BANK_BANLANCE_ERR);
+        }
         // redis剩余金额不足
         // 出借金额不能大于项目剩余
         if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
