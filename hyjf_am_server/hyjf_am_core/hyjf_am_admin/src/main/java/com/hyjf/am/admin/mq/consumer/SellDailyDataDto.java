@@ -27,6 +27,16 @@ public class SellDailyDataDto {
 	 */
 	private SellDailyVO qlSellDaily;
 
+	private SellDailyVO creditSellDaily;
+
+    public SellDailyVO getCreditSellDaily() {
+        return creditSellDaily;
+    }
+
+    public void setCreditSellDaily(SellDailyVO creditSellDaily) {
+        this.creditSellDaily = creditSellDaily;
+    }
+
     public List<SellDailyVO> getList() {
         return list;
     }

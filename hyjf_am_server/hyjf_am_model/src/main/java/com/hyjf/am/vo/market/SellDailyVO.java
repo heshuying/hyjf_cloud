@@ -125,6 +125,11 @@ public class SellDailyVO extends BaseVO {
 
     private int investGt3000MonthUserNum;
 
+    /**
+     * 承接债转金额
+     */
+    private BigDecimal creditAmount;
+
     private int createTime;
 
     private int updateTime;
@@ -359,5 +364,13 @@ public class SellDailyVO extends BaseVO {
 
     public void setUpdateTime(int updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getCreditAmount() {
+        return creditAmount;
+    }
+
+    public void setCreditAmount(BigDecimal creditAmount) {
+        this.creditAmount = creditAmount;
     }
 }

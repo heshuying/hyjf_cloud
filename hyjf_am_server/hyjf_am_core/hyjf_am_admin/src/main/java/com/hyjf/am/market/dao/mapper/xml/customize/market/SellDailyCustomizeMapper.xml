@@ -30,6 +30,7 @@
         <result column="recharge_gt3000_user_num" property="rechargeGt3000UserNum" jdbcType="INTEGER"/>
         <result column="invest_gt3000_user_num" property="investGt3000UserNum" jdbcType="INTEGER"/>
         <result column="invest_gt3000_month_user_num" property="investGt3000MonthUserNum" jdbcType="INTEGER"/>
+        <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Sum_Column_List">
@@ -419,23 +420,26 @@
 
 
     <sql id="countTotalCreditSql">
-        #债转数据#
+        #转让数据#
         SELECT
-        br.recover_account AS none_repay,
+        bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount
         FROM
-        hyjf_trade.ht_borrow_credit br
-        LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
-        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
-        LEFT JOIN hyjf_user.ht_user uu ON ui.user_id = uu.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg ur on uu.user_id=ur.user_id
-        LEFT JOIN hyjf_user.ht_utm m on ur.utm_id=m.utm_id
-        LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
+        hyjf_trade.ht_borrow_credit bc
+        LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_user_id = uu.user_id
+        LEFT JOIN hyjf_crm.oa_users ou ON ou.hyd_id = su.spreads_user_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_crm.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_crm.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_crm.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_crm.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
-        AND p.source_id = #{sourceId}
-        AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
-        AND br.recover_status = 0
-        AND br.accede_order_id IS NULL
+        AND bc.create_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND bc.create_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
     </sql>
 
     <!-- 查询运营中心合计 -->
@@ -1120,12 +1124,9 @@
         WHERE t.total_invest_amount >=3000
     </select>
 
-
-
-
-    <!-- 查询债转数据 -->
+    <!-- 查询转让数据 -->
     <select id="countTotalCredit" resultMap="sumResultMap">
-        SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
+        SELECT ROUND(SUM(credit_amount)/10000) AS credit_amount,
         primary_division AS primary_division,
         two_division AS two_division,
         DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str

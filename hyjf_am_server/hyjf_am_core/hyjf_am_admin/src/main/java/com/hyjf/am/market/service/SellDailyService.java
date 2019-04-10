@@ -344,6 +344,14 @@ public interface SellDailyService {
     SellDailyVO countInvestGt3000MonthUserNumQl(Date startTime, Date endTime, String sourceId);
 
     /**
+     * 债转数据
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    SellDailyVO countTotalCredit(Date startTime, Date endTime);
+
+    /**
      * 批量更新
      * @param list
      */
@@ -356,51 +364,12 @@ public interface SellDailyService {
     void update(SellDailyVO vo);
 
     /**
-     * 惠众扣除千乐加上vip
-     * @param hzTotalTmp
-     * @param column
-     * @param hzRecord
-     * @param shOCSellDaily
-     * @param qianleSellDaily
-     * @param vipTmp
-     * @return
-     */
-    SellDailyVO setValueHz(BigDecimal hzTotalTmp, int column, SellDailyVO hzRecord, SellDailyVO shOCSellDaily, SellDailyVO qianleSellDaily, BigDecimal vipTmp);
-
-    /**
-     * drawOrder=2特殊分部的数值累加
      *
-     * @param tmp
-     * @param column
-     * @param entity
+     * @param source    参考值
+     * @param target    目标值
+     * @param column    列
+     * @param operateType  操作类型  1-累加  -1-扣减
      * @return
      */
-    BigDecimal addValue(BigDecimal tmp, Integer column, SellDailyVO entity);
-
-    /**
-     * 特殊部门赋值
-     *
-     * @param tmp
-     *            临时值
-     * @param column
-     *            第几列
-     * @param sellDaily
-     * @param sellDaily
-     *            扣减值
-     * @return
-     */
-    SellDailyVO setValue(BigDecimal tmp, int column, SellDailyVO sellDaily, SellDailyVO reduceSellDaily);
-
-    /**
-     * 无主单扣除千乐和vip客户组
-     * @param tmp
-     * @param column
-     * @param sellDaily
-     * @param reduceSellDaily
-     * @param qianleSellDaily
-     * @param vipTmp
-     * @return
-     */
-    SellDailyVO setValue(BigDecimal tmp, int column, SellDailyVO sellDaily, SellDailyVO reduceSellDaily, SellDailyVO qianleSellDaily, BigDecimal vipTmp);
-
+    SellDailyVO addValue(SellDailyVO source, SellDailyVO target, int column, int operateType);
 }

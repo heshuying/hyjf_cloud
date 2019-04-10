@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.admin.mq.consumer;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -35,8 +34,11 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 	private static final Logger logger = LoggerFactory.getLogger(SellDailyConsumer.class);
 	private static final String YYZX_DIVISION_NAME = "运营中心";
 	private static final String HZSW_DIVISION_NAME = "惠众";
+	private static final int ADD = 1;
+	private static final int SUBTRACT = -1;
 
 	private static final List<String> NONE_REFFER_PRIMARY_DIVISION = Arrays.asList("杭州分公司", "特殊一级分部（勿动）");
+	private static final List<String> HZ_PRIMARY_DIVISION = Arrays.asList("惠众商务", "VIP用户组");
 	private static int MAX_RECONSUME_TIME = 3;
 	@Autowired
 	private SellDailyService sellDailyService;
@@ -73,53 +75,42 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			SellDailyVO shOCSellDaily = dto.getShOCSellDaily();
 			SellDailyVO appSellDaily = dto.getAppSellDaily();
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
+			SellDailyVO creditSellDaily = dto.getCreditSellDaily();
 
 			// 2. 处理drawOrder=2特殊分部的数据
-			// 运营中心无主单 - 月累计投资
-			BigDecimal noneRefferTotalTmp = BigDecimal.ZERO;
-			BigDecimal hzTotalTmp = BigDecimal.ZERO;
-			BigDecimal vipTmp = BigDecimal.ZERO;
-			for (SellDailyVO entity : list) {
-				if (StringUtils.isEmpty(entity.getPrimaryDivision())
-						|| NONE_REFFER_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
-					noneRefferTotalTmp = sellDailyService.addValue(noneRefferTotalTmp, column, entity);
 
-					// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
-                    if(column == 17){
-
-                    }
-                    if(column == 12){
-
-                    }
-				}
-
-				if ("惠众商务".equals(entity.getPrimaryDivision())) {
-					hzTotalTmp = sellDailyService.addValue(hzTotalTmp, column, entity);
-				}
-
-				if ("VIP用户组".equals(entity.getPrimaryDivision())) {
-					vipTmp = sellDailyService.addValue(vipTmp, column, entity);
-				}
-			}
-
-			// 2.1 网络运营部特指：上海运营中心-网络运营部, 青岛运营中心-网络运营部 单独查询
+			// 2.1 运营中心 - 网络运营部 	计算：上海运营中心-网络运营部 + 青岛运营中心-网络运营部 + 电销部
 			if (shOCSellDaily != null) {
 				list.add(shOCSellDaily);
 			}
-			// 2.2 无主单包含： 部门空 + 杭州分部 + 特殊一级分部（勿动) - 千乐
+
+			// 2.2 运营中心 - 无主单   计算： 一级部门空 + 杭州分部 + 特殊一级分部（勿动) - 千乐 - vip用户组
 			SellDailyVO noneRefferRecord = new SellDailyVO(YYZX_DIVISION_NAME, "无主单");
-			if (noneRefferRecord != null) {
-				noneRefferRecord = sellDailyService.setValue(noneRefferTotalTmp, column,
-						noneRefferRecord, new SellDailyVO("", ""), qlSellDaily, vipTmp);
+			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
+			if(column == 17 || column == 12){
+				noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+			}
+
+			SellDailyVO hzRecord = new SellDailyVO(HZSW_DIVISION_NAME, "其它");
+			for (SellDailyVO entity : list) {
+				if (StringUtils.isEmpty(entity.getPrimaryDivision())
+						|| NONE_REFFER_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
+					noneRefferRecord = sellDailyService.addValue(entity, noneRefferRecord, column, ADD);
+				}
+
+				if (HZ_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
+					hzRecord = sellDailyService.addValue(entity, hzRecord, column, ADD);
+				}
 			}
 			list.add(noneRefferRecord);
+
 
 			// 2.3千乐
 			if (qlSellDaily != null) {
 				list.add(qlSellDaily);
 			}
 
-			// 2.3 app推广计算app渠道投资， 只显示 本月累计规模业绩 上月对应累计规模业绩 环比增速 本月累计年化业绩
+			// 2.4 app推广计算app渠道投资， 只显示 本月累计规模业绩 上月对应累计规模业绩 环比增速 本月累计年化业绩
 			// 上月累计年化业绩 环比增速
 			// 昨日规模业绩
 			// 昨日年化业绩 昨日注册数 其中充值≥3000人数 其中投资≥3000人数 本月累计投资3000以上新客户数
@@ -127,12 +118,9 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				list.add(appSellDaily);
 			}
 
-			// 2.4 惠众-其它 排除 上海运营中心-网络运营部
-			SellDailyVO hzRecord = new SellDailyVO(HZSW_DIVISION_NAME, "其它");
-			if (shOCSellDaily != null) {
-				hzRecord = sellDailyService.setValueHz(hzTotalTmp, column, hzRecord, shOCSellDaily,
-						qlSellDaily, vipTmp);
-			}
+			// 2.5 惠众-其它 排除 网络运营部,千乐，加上vip用户组
+			hzRecord = sellDailyService.addValue(shOCSellDaily, hzRecord, column, SUBTRACT);
+			hzRecord = sellDailyService.addValue(qlSellDaily, hzRecord, column, SUBTRACT);
 			list.add(hzRecord);
 
 			// 3. 批量更新
