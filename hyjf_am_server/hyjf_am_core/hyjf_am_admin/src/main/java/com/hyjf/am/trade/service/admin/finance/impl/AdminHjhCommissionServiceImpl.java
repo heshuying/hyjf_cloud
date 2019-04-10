@@ -255,7 +255,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		accountList.setFrost(account.getFrost());
 		accountList.setAwait(account.getAwait());
 		accountList.setRepay(account.getRepay());
-		accountList.setRemark(commission.getBorrowNid());
+		accountList.setRemark(tenderCommission.getBorrowNid());
 		accountList.setCreateTime(new Date());
 		accountList.setOperator(operator);
 		// 前面 chinapnrBean 传的是null
