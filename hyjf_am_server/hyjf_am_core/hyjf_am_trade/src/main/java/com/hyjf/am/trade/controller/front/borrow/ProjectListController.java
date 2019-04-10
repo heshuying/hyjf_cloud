@@ -28,6 +28,7 @@ import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -71,10 +72,10 @@ public class ProjectListController extends BaseController {
                 // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
                 // mod by nxl 20190409 start
                 //历史年回报率
-                String fromatBorr= projectListService.formatBorrowApr(webProjectListCustomize.getBorrowApr());
+                String fromatBorr= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowApr());
                 webProjectListCustomize.setBorrowApr(fromatBorr);
                 //加息利率
-                String fromatExtraYield= projectListService.formatBorrowApr(webProjectListCustomize.getBorrowExtraYield());
+                String fromatExtraYield= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowExtraYield());
                 webProjectListCustomize.setBorrowExtraYield(fromatExtraYield);
                 // mod by nxl 20190409 end
             }
@@ -119,10 +120,10 @@ public class ProjectListController extends BaseController {
             // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
             // mod by nxl 20190409 start
             //历史年回报率
-            String fromatBorr= projectListService.formatBorrowApr(vo.getBorrowApr());
+            String fromatBorr= FormatRateUtil.formatBorrowApr(vo.getBorrowApr());
             vo.setBorrowApr(fromatBorr);
             //加息利率
-            String fromatExtraYield= projectListService.formatBorrowApr(vo.getBorrowExtraYield());
+            String fromatExtraYield= FormatRateUtil.formatBorrowApr(vo.getBorrowExtraYield());
             vo.setBorrowExtraYield(fromatExtraYield);
             // mod by nxl 20190409 end
 
@@ -190,7 +191,7 @@ public class ProjectListController extends BaseController {
                 // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
                 // mod by nxl 20190409 start
                 //历史年回报率
-                String fromatBorr= projectListService.formatBorrowApr(creditListVO.getBidApr());
+                String fromatBorr= FormatRateUtil.formatBorrowApr(creditListVO.getBidApr());
                 creditListVO.setBidApr(fromatBorr);
                 // mod by nxl 20190409 end
             }
@@ -241,7 +242,7 @@ public class ProjectListController extends BaseController {
                 //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
                 // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
                 // mod by nxl 20190409
-                String fromatBorr= projectListService.formatBorrowApr(hjhPlanCustomize.getPlanApr());
+                String fromatBorr= FormatRateUtil.formatBorrowApr(hjhPlanCustomize.getPlanApr());
                 hjhPlanCustomize.setPlanApr(fromatBorr);
             }
             res.setResultList(CommonUtils.convertBeanList(list,HjhPlanCustomizeVO.class));
@@ -264,7 +265,7 @@ public class ProjectListController extends BaseController {
             //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
             // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
             // mod by nxl 20190409
-            String fromatBorr= projectListService.formatBorrowApr(detailCustomizeVO.getPlanApr());
+            String fromatBorr= FormatRateUtil.formatBorrowApr(detailCustomizeVO.getPlanApr());
             detailCustomizeVO.setPlanApr(fromatBorr);
             res.setResult(detailCustomizeVO);
         }
