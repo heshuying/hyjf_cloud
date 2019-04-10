@@ -776,6 +776,9 @@ public class HjhCommissionController extends BaseController{
 				try {
 					tenderCommission.setLoginUserName(loginUserName);
 					tenderCommission.setAccount(bankOpenAccountInfo.getAccount());
+					logger.info("订单号:" + bean.getLogOrderId());
+					tenderCommission.setLogOrderId(StringUtils.isEmpty(bean.getLogOrderId()) ? "" : bean.getLogOrderId());
+					tenderCommission.setBorrowNid(StringUtils.isEmpty(form.getPlanNid()) ? "" : form.getPlanNid());
 					if(userInfoCustomize != null){
 						tenderCommission.setUserName(StringUtils.isEmpty(userInfoCustomize.getUserName()) ? "" : userInfoCustomize.getUserName());
 						tenderCommission.setRegionName(StringUtils.isEmpty(userInfoCustomize.getRegionName()) ? "" : userInfoCustomize.getRegionName());
@@ -789,8 +792,6 @@ public class HjhCommissionController extends BaseController{
 						} else {
 							tenderCommission.setAttribute(99);
 						}
-						tenderCommission.setLogOrderId(StringUtils.isEmpty(bean.getLogOrderId()) ? "" : bean.getLogOrderId());
-						tenderCommission.setBorrowNid(StringUtils.isEmpty(form.getPlanNid()) ? "" : form.getPlanNid());
 					}
 					// 发提成处理
 					cnt = this.hjhCommissionService.updateTenderCommissionRecord(tenderCommission, resultBean, null);
