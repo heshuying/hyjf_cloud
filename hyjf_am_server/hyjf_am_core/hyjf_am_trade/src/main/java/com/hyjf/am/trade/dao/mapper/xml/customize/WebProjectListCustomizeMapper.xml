@@ -501,7 +501,7 @@
             hydb.`status` = 5
             )
             OR (
-            hydb.`status` = 5
+            hydb.`status` = 8
             )
 
             )
