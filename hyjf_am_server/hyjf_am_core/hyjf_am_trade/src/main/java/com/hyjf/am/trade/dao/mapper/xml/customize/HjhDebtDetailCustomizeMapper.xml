@@ -127,6 +127,21 @@
 		LIMIT 1;
   </select>
 
+  <select id="selectDebtDetailCurRepayPeriodByDate" resultMap="BaseResultMap" parameterType="String" >
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        ht_hjh_debt_detail
+        WHERE
+        order_id = #{orderId}
+        AND repay_time >= UNIX_TIMESTAMP(#{dualDate})
+        AND status = 1
+        AND repay_status = 0
+        ORDER BY
+        repay_period ASC
+        LIMIT 1;
+    </select>
+
 	<!-- 查询当前时间所在的计息期间-->
 	<select id="selectDebtDetailCurPeriod" resultMap="BaseResultMap" parameterType="String" >
 		select
@@ -141,7 +156,21 @@
 		repay_period ASC
 		LIMIT 1;
 	</select>
-  
+
+    <!-- 查询当前时间所在的计息期间-->
+    <select id="selectDebtDetailCurPeriodByDate" resultMap="BaseResultMap" parameterType="String" >
+        select
+        <include refid="Base_Column_List" />
+        FROM
+        ht_hjh_debt_detail
+        WHERE
+        order_id = #{orderId}
+        AND repay_time >= UNIX_TIMESTAMP(#{dualDate})
+        AND status = 1
+        ORDER BY
+        repay_period ASC
+        LIMIT 1;
+    </select>
   <select id="selectDebtDetailLastRepay" resultMap="BaseResultMap" parameterType="String"  >
 	    select 
 	    <include refid="Base_Column_List" />
