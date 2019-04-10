@@ -310,6 +310,30 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
+     * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+     *
+     * @param user
+     */
+    @Override
+    public void updateUnlockUser(User user) {
+        String key = RedisConstants.PASSWORD_ERR_COUNT_ALL+String.valueOf(user.getUserId());
+        if(RedisUtils.exists(key)){
+            RedisUtils.del(key);
+        }
+        LockedUserInfo lockedUser = new LockedUserInfo();
+        lockedUser.setUnlocked(1);
+        lockedUser.setUnlockTime(new Date());
+        lockedUser.setOperator(user.getUserId());
+        // 是否是前端锁定用户1：前端 0：后台
+        lockedUser.setFront(1);
+        LockedUserInfoExample example = new LockedUserInfoExample();
+        example.or().andUsernameEqualTo(user.getUsername()).andUseridEqualTo(user.getUserId());
+        int result = lockedUserInfoMapper.updateByExampleSelective(lockedUser, example);
+        String logInfo = "前端解除前台锁定用户【{}】成功！更新记录个数【{}】" ;
+        logger.info(logInfo, user.getUsername(), result);
+    }
+
+    /**
      * 注册查询推荐人信息
      *
      * @param mobile

@@ -329,6 +329,8 @@ public class WebPassWordController extends BaseUserController{
         int cnt = passWordService.updatePassword(user, password1);
         CheckUtil.check(cnt>0,MsgEnum.ERR_PASSWORD_MODIFY);
         RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
+        // pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+        passWordService.unlockUser(user.getUserId());
         return result;
     }
 
