@@ -704,9 +704,18 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         if(StringUtils.isNotEmpty(vo.getTitle())) {
             idcard.setBm(vo.getTitle().substring(0, 6));
             IdCardCustomize idCardCustomize = amConfigClient.getIdCardCustomize(idcard);
-            if(idCardCustomize!=null&&idCardCustomize.getArea()!=null) {
+            //判断6位身份证能不能找到地区
+            if(idCardCustomize==null){
+                //找不到地区通过前4位找后2位补0
+                idcard.setBm(vo.getTitle().substring(0, 4)+"00");
+                IdCardCustomize idCardCustomize1 = amConfigClient.getIdCardCustomize(idcard);
+                if(idCardCustomize1!=null){
+                    vo.setTitle(idCardCustomize.getArea());
+                }
+            }else{
                 vo.setTitle(idCardCustomize.getArea());
             }
+
         }
         logger.info("vo: {}", JSONObject.toJSONString(vo));
         return vo;

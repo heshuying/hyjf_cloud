@@ -23,9 +23,9 @@
     </select>
     <!-- 坐席月规模业绩 -->
     <select id="getMonthScalePerformanceList" resultType="com.hyjf.am.vo.api.EchartsResultVO">
-      select ROUND(IFNULL(SUM(money),0)/10000,0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY current_owner -- 坐席月规模业绩（新客组）
+      select IFNULL(SUM(money),0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =1 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY current_owner -- 坐席月规模业绩（新客组）
       UNION ALL
-      select ROUND(IFNULL(SUM(money),0)/10000,0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY current_owner -- 坐席月规模业绩（老客组）
+      select IFNULL(SUM(money),0)  as money,current_owner as currentOwner,customer_group as customerGroup  from ht_user_operate_list where operating=1 and customer_group =2 and create_time &gt;= DATE_FORMAT(NOW(),'%Y-%m-01 00:00:00') AND create_time &lt; DATE_FORMAT(DATE_ADD(NOW(),INTERVAL 1 MONTH),'%Y-%m-01 00:00:00') GROUP BY current_owner -- 坐席月规模业绩（老客组）
 
     </select>
 
