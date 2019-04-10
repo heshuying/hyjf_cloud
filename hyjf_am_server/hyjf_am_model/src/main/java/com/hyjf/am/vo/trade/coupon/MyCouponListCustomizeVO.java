@@ -59,6 +59,8 @@ public class MyCouponListCustomizeVO extends BaseVO {
     private Integer usedFlag;
 
     private String time;
+    //0新手   1散标  2计划与前端约定去使用跳转地址标识
+    private Integer hrefType;
 
     public Integer getId() {
         return id;
@@ -258,5 +260,13 @@ public class MyCouponListCustomizeVO extends BaseVO {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Integer getHrefType() {
+        return hrefType;
+    }
+
+    public void setHrefType(Integer hrefType) {
+        this.hrefType = hrefType;
     }
 }

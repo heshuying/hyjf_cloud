@@ -151,13 +151,6 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                 if (projectType.indexOf("3")!=-1) {
                     projectString = projectString + "新手/";
                 }
-                  /*if (projectType.indexOf("5")!=-1) {
-                      projectString = projectString + "汇添金,";
-                  }*/
-                // mod by nxl 智投服务：修改汇计划->智投服务 start
-                    /*if (projectType.indexOf("6")!=-1) {
-                        projectString = projectString + "汇计划,";
-                    }*/
                 if (projectType.indexOf("6")!=-1) {
                     projectString = projectString + "智投/";
                 }
@@ -165,6 +158,13 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                 projectString = StringUtils.removeEnd(projectString, "/")+" 可用";
             }
             coupon.setProjectType(projectString);
+            if(projectString.indexOf("智投")!=-1){
+                coupon.setHrefType(2);
+            }else if(projectString.indexOf("散标")!=-1){
+                coupon.setHrefType(1);
+            }else{
+                coupon.setHrefType(0);
+            }
 
             coupon.setTenderQuota(dealTenderQuota(coupon));
 
