@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.config.DebtConfigResponse;
@@ -1176,6 +1175,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 检查是否能债转  ？？？原来的逻辑不用了1726行CreditServiceImpl
         // 插入债转日志表
         Integer saveCount = amTradeClient.saveCreditTenderAssignLog(creditTenderLog);
+        if(saveCount-0==0){
+            // 如果是0的话  保存日志表失败
+            logger.error("保存债转日志失败，对象：{}",JSONObject.toJSONString(creditTenderLog));
+            throw new CheckException(MsgEnum.ERROR_CREDIT_DATA_ERROR);
+        }
     }
 
     /**

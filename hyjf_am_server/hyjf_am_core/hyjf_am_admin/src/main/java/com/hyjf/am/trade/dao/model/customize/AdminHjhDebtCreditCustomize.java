@@ -30,6 +30,16 @@ public class AdminHjhDebtCreditCustomize {
     private String planOrderId;
 
     /**
+     * 出让人出借订单号
+     */
+    private String orderId;
+
+    /**
+     * 出让人承接订单号
+     */
+    private String assignId;
+
+    /**
      * 出让人用户名
      */
     private String userName;
@@ -414,5 +424,21 @@ public class AdminHjhDebtCreditCustomize {
 
     public void setRemainCredit(String remainCredit) {
         this.remainCredit = remainCredit;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getAssignId() {
+        return assignId;
+    }
+
+    public void setAssignId(String assignId) {
+        this.assignId = assignId;
     }
 }

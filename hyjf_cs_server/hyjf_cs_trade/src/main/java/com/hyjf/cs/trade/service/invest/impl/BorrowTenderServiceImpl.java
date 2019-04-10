@@ -251,10 +251,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         callBean.setLogUserName(request.getUser().getUsername());
         callBean.setLogClient(Integer.parseInt(request.getPlatform()));
 
+        // 解决PC端投资结果页开小差问题
+        String pageSuccessName = "success";
+        String pageFailedName = "failed";
+        if ((ClientConstants.WEB_CLIENT+"").equals(request.getPlatform())) {
+            pageSuccessName = "suc";
+            pageFailedName = "fal";
+
+        }
         //错误页
-        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
+        String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageFailedName+"?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
-        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
+        String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/"+pageSuccessName+"?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
@@ -276,12 +284,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         boolean insertResult = amTradeClient.updateBeforeChinaPnR(request);
         logger.info("插入记录表结果：insertResult：{} ",insertResult);
         try {
-            Map<String, Object> map = BankCallUtils.callApiMap(callBean);
-            WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
-            map.putAll(resultEval);
-            map.put("investLevel",borrow.getInvestLevel());
-            result.setData(map);
-            return result;
+            if(insertResult){
+                Map<String, Object> map = BankCallUtils.callApiMap(callBean);
+                WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
+                map.putAll(resultEval);
+                map.put("investLevel",borrow.getInvestLevel());
+                result.setData(map);
+                return result;
+            }else{
+                logger.error("保存投资tmp表失败，信息:{}",JSONObject.toJSONString(request));
+                throw new CheckException(MsgEnum.STATUS_CE999999);
+            }
         } catch (Exception e) {
             throw new CheckException(MsgEnum.STATUS_CE999999);
         }
