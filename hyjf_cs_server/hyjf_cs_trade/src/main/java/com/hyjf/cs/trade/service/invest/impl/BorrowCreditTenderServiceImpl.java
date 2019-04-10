@@ -319,7 +319,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    public JSONObject getInterestInfo(int userId, String creditNid, String assignCapital) {
+    public JSONObject getInterestInfo(Integer userId, String creditNid, String assignCapital) {
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
         JSONObject ret = new JSONObject();
         if (Validator.isNotNull(creditAssign)) {
