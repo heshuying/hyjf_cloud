@@ -64,7 +64,8 @@ public class TenderCommissionVO extends BaseVO implements Serializable {
     private Integer attribute;
     // 此attribute 取自 userinfo 的 username ,使用的是  Commission表的 userid取值
     private Integer is51;
-   
+
+    private String logOrderId;
     public Integer getId() {
         return id;
     }
@@ -328,4 +329,12 @@ public class TenderCommissionVO extends BaseVO implements Serializable {
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
+
+    public String getLogOrderId() {
+        return logOrderId;
+    }
+
+    public void setLogOrderId(String logOrderId) {
+        this.logOrderId = logOrderId;
+    }
 }

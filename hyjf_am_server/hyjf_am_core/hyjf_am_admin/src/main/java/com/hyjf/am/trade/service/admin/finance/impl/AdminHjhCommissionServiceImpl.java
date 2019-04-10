@@ -139,7 +139,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		BigDecimal money = BigDecimal.ZERO;
 		// 组合层已经校验过非空
 		TenderCommissionVO commission = request.getTenderCommission();
-		TenderCommission tenderCommission = new TenderCommission();
+		TenderCommission tenderCommission =tenderCommissionMapper.selectByPrimaryKey(commission.getId());
 		
 		/*1.修改提成表*/
 		// 增加时间
@@ -151,11 +151,12 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		// 操作者用户名
 		String operator = commission.getLoginUserName();
 		// 更新发放状态
-		commission.setStatus(1);// 已发放
-		commission.setUpdateTime(new Date());
-		commission.setSendTime(time);
+		tenderCommission.setStatus(1);// 已发放
+		tenderCommission.setUpdateTime(new Date());
+		tenderCommission.setSendTime(time);
 		// 把 TenderCommissionVO 赋值给 TenderCommission
-		BeanUtils.copyProperties(commission, tenderCommission);
+		// BeanUtils.copyProperties(commission, tenderCommission);
+		tenderCommission.setRemark(commission.getBorrowNid());
 		ret += this.tenderCommissionMapper.updateByPrimaryKeySelective(tenderCommission);
 
 		/*2.修改提成日志表*/
@@ -222,7 +223,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 /*		BankOpenAccountVO bankOpenAccountInfo = null;
 		bankOpenAccountInfo = getBankOpenAccount(userId);*/
 		AccountList accountList = new AccountList();
-		accountList.setNid(commission.getOrdid());
+		accountList.setNid(commission.getLogOrderId());
 		accountList.setSeqNo(request.getSeqNo());
 		accountList.setTxDate(Integer.parseInt(request.getTxDate()));
         accountList.setTxTime(Integer.parseInt(request.getTxTime()));
@@ -254,7 +255,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		accountList.setFrost(account.getFrost());
 		accountList.setAwait(account.getAwait());
 		accountList.setRepay(account.getRepay());
-		accountList.setRemark(commission.getBorrowNid());
+		accountList.setRemark(tenderCommission.getBorrowNid());
 		accountList.setCreateTime(new Date());
 		accountList.setOperator(operator);
 		// 前面 chinapnrBean 传的是null
@@ -282,7 +283,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
 		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
-		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
+		accountWebList.setRemark(tenderCommission.getBorrowNid()); // 出借推广提成
 		//accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
         accountWebList.setCreateTime(GetDate.getTime10(accountList.getCreateTime()));
 		//网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
