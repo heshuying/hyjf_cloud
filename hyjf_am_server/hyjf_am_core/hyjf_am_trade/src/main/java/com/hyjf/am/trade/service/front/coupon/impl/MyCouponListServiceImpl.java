@@ -866,7 +866,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
         couponBean.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
         couponBean.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
-        if(platform.equals(CacheUtil.getParamName("CLIENT","0"))){
+        if(platform.equals("0")){
             //处理优惠券适用项目
             String projectString = this.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
             couponBean.setProjectType(projectString);
