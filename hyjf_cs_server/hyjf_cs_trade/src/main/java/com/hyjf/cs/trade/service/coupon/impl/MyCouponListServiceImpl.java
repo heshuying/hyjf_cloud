@@ -4,6 +4,8 @@ import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.GetDateUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -85,13 +87,13 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
             String clientSed[] = StringUtils.split(coupon.getCouponSystem(), ",");
             for(int i=0 ; i< clientSed.length;i++){
                 if("-1".equals(clientSed[i])){
-                    clientString=clientString+"不限";
+                    clientString=clientString+"";
                     break;
                 }else{
                     for (Map.Entry paramName : clients.entrySet()) {
                         if(clientSed[i].equals(paramName.getKey())){
                             if(i!=0&&clientString.length()!=0){
-                                clientString=clientString+"/";
+                                clientString=clientString+"、";
                             }
                             clientString=clientString+paramName.getValue();
 
@@ -99,63 +101,120 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     }
                 }
             }
-            coupon.setCouponSystem(clientString.replace("Android/iOS", "APP"));
-
+            if(clientString.length()==0){
+                coupon.setCouponSystem("");
+            }else if("微官网、Android、iOS".equals(clientString)){
+                coupon.setCouponSystem("限移动端可用");
+            }else if("微官网、iOS、Android".equals(clientString)){
+                coupon.setCouponSystem("限移动端可用");
+            }else{
+                coupon.setCouponSystem("限"+clientString.replace("Android、iOS", "APP").
+                        replace("iOS、Android", "APP")+"可用");
+            }
 
 
             String projectType=coupon.getProjectType();
             String projectString = "";
             if (projectType.indexOf("-1") != -1) {
-                projectString = "不限";
+                projectString = "项目类型不限";
             } else {
+                projectString = "限";
                 //勾选汇直投，尊享汇，融通宝
                 if (projectType.indexOf("1")!=-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")!=-1) {
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
                 //勾选汇直投  未勾选尊享汇，融通宝
                 if (projectType.indexOf("1")!=-1&&projectType.indexOf("4")==-1&&projectType.indexOf("7")==-1) {
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
                 //勾选汇直投，融通宝  未勾选尊享汇
                 if(projectType.indexOf("1")!=-1&&projectType.indexOf("4")==-1&&projectType.indexOf("7")!=-1){
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
                 //勾选汇直投，选尊享汇 未勾选融通宝
                 if(projectType.indexOf("1")!=-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")==-1){
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
                 //勾选尊享汇，融通宝  未勾选直投
                 if(projectType.indexOf("1")==-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")!=-1){
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
                 //勾选尊享汇  未勾选直投，融通宝
                 if(projectType.indexOf("1")==-1&&projectType.indexOf("4")!=-1&&projectType.indexOf("7")==-1){
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
                 //勾选尊享汇  未勾选直投，融通宝
                 if(projectType.indexOf("1")==-1&&projectType.indexOf("4")==-1&&projectType.indexOf("7")!=-1){
-                    projectString = projectString + "散标,";
+                    projectString = projectString + "散标/";
                 }
 
                 if (projectType.indexOf("3")!=-1) {
-                    projectString = projectString + "新手,";
+                    projectString = projectString + "新手/";
                 }
-                  /*if (projectType.indexOf("5")!=-1) {
-                      projectString = projectString + "汇添金,";
-                  }*/
-                // mod by nxl 智投服务：修改汇计划->智投服务 start
-                    /*if (projectType.indexOf("6")!=-1) {
-                        projectString = projectString + "汇计划,";
-                    }*/
                 if (projectType.indexOf("6")!=-1) {
-                    projectString = projectString + "智投,";
+                    projectString = projectString + "智投/";
                 }
                 // mod by nxl 智投服务：修改汇计划->智投服务 end
-                projectString = StringUtils.removeEnd(projectString, ",");
+                projectString = StringUtils.removeEnd(projectString, "/")+" 可用";
             }
             coupon.setProjectType(projectString);
+            if(projectString.indexOf("智投")!=-1){
+                coupon.setHrefType(2);
+            }else if(projectString.indexOf("散标")!=-1){
+                coupon.setHrefType(1);
+            }else{
+                coupon.setHrefType(0);
+            }
+
+            coupon.setTenderQuota(dealTenderQuota(coupon));
+
+            long day=DateUtils.differentDaysByString(coupon.getEndTimeStamp(), GetDateUtils.getNowTime()+"");
+            if(day>3){
+                coupon.setTime(coupon.getAddTime() + "～" + coupon.getEndTime());
+            }else{
+                coupon.setTime("还有"+(day==0?1:day)+"天过期");
+            }
 
         }
+    }
+
+    private String dealTenderQuota(MyCouponListCustomizeVO userCouponConfigCustomize) {
+        String tenderQuota="";
+        switch (userCouponConfigCustomize.getTenderQuotaType()){
+            case 0:
+                tenderQuota="不限";
+                break;
+            case 1:
+                if(userCouponConfigCustomize.getTenderQuotaMin()>=10000&&userCouponConfigCustomize.getTenderQuotaMin()%10000==0){
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin().intValue()/10000+"万元~";
+                }else{
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin().intValue()+"元~";
+                }
+
+                if(userCouponConfigCustomize.getTenderQuotaMax()>=10000&&userCouponConfigCustomize.getTenderQuotaMax()%10000==0){
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax().intValue()/10000+"万元可用";
+                }else{
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax().intValue()+"元可用";
+                }
+                break;
+            case 2:
+                Double tenderQuotaAmountUp=new Double(userCouponConfigCustomize.getTenderQuotaAmount());
+                if(tenderQuotaAmountUp>=10000&&tenderQuotaAmountUp%10000==0){
+                    tenderQuota=tenderQuotaAmountUp.intValue()/10000+"万元及以上可用";
+                }else{
+                    tenderQuota=tenderQuotaAmountUp.intValue()+"元及以上可用";
+                }
+                break;
+            case 3:
+                Double tenderQuotaAmountDown=new Double(userCouponConfigCustomize.getTenderQuotaAmount());
+                if(tenderQuotaAmountDown>=10000&&tenderQuotaAmountDown%10000==0){
+                    tenderQuota=tenderQuotaAmountDown.intValue()/10000+"万元及以下可用";
+                }else{
+                    tenderQuota=tenderQuotaAmountDown.intValue()+"元及以下可用";
+                }
+                break;
+        }
+        return tenderQuota;
     }
 
     /**

@@ -53,6 +53,7 @@ public class MyCouponListController {
             List<MyCouponListCustomizeVO> listUsed = myCouponListService.selectMyCouponListUsed(String.valueOf(userVO.getUserId()));
             List<MyCouponListCustomizeVO> listInValid = myCouponListService.selectMyCouponListInValid(String.valueOf(userVO.getUserId()));
 
+            listUnUsed.sort((s1, s2) -> s1.getEndTimeStamp().compareTo(s2.getEndTimeStamp()));
             Map<String,Object> resultMap = new HashMap<>();
             resultMap.put("wsyList", listUnUsed);
             resultMap.put("ysyList", listUsed);
@@ -63,7 +64,6 @@ public class MyCouponListController {
             result.setStatusDesc(WebResult.ERROR_DESC);
             logger.error("查询优惠券列表异常", e);
         }
-
         return result;
     }
 
@@ -106,6 +106,7 @@ public class MyCouponListController {
         ret.put("status","000");
         ret.put("statusDesc","成功");
         ret.put("data",json);
+        logger.info("ret is :{}", JSONObject.toJSON(ret));
         return ret;
     }
 }

@@ -344,4 +344,10 @@ public interface UserService extends BaseService {
 	 * @param user
 	 */
 	void updateUser(int userId, String ip, User user);
+
+	/**
+	 * pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+	 * @param user
+	 */
+    void updateUnlockUser(User user);
 }

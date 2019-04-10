@@ -866,7 +866,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
         couponBean.setInvestTime(userCouponConfigCustomize.getProjectExpirationType());
         couponBean.setProjectExpiration(userCouponConfigCustomize.getProjectExpirationType());
-        if(platform.equals(CacheUtil.getParamName("CLIENT","0"))){
+        if(platform.equals("0")){
             //处理优惠券适用项目
             String projectString = this.dealProjectTypeNew(userCouponConfigCustomize.getProjectType());
             couponBean.setProjectType(projectString);
@@ -879,20 +879,61 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }else{
                 couponBean.setTime("还有"+(day==0?1:day)+"天过期");
             }
-
+            couponBean.setInvestQuota(dealTenderQuota(userCouponConfigCustomize));
+            couponBean.setTenderQuota(dealTenderQuota(userCouponConfigCustomize));
         }else{
             //处理优惠券适用项目
-            String projectString = this.dealProjectType(userCouponConfigCustomize.getProjectType());;
+            String projectString = this.dealProjectType(userCouponConfigCustomize.getProjectType());
             couponBean.setProjectType(projectString);
             //处理优惠券使用平台
-            String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());;
+            String clientString = dealOperation(userCouponConfigCustomize.getCouponSystem());
             couponBean.setOperationPlatform(clientString);
             couponBean.setTime(userCouponConfigCustomize.getAddTime() + "～" + userCouponConfigCustomize.getEndTime());
+            couponBean.setInvestQuota(userCouponConfigCustomize.getTenderQuota());
+            couponBean.setTenderQuota(userCouponConfigCustomize.getTenderQuota());
         }
-        couponBean.setInvestQuota(userCouponConfigCustomize.getTenderQuota());
-        couponBean.setTenderQuota(userCouponConfigCustomize.getTenderQuota());
+
         couponBean.setCouponUserCode(userCouponConfigCustomize.getCouponUserCode());
         return couponBean;
+    }
+
+    private String dealTenderQuota(MyCouponListCustomizeVO userCouponConfigCustomize) {
+        String tenderQuota="";
+        switch (userCouponConfigCustomize.getTenderQuotaType()){
+            case 0:
+                tenderQuota="不限";
+                break;
+            case 1:
+                if(userCouponConfigCustomize.getTenderQuotaMin()>=10000&&userCouponConfigCustomize.getTenderQuotaMin()%10000==0){
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin().intValue()/10000+"万元~";
+                }else{
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMin().intValue()+"元~";
+                }
+
+                if(userCouponConfigCustomize.getTenderQuotaMax()>=10000&&userCouponConfigCustomize.getTenderQuotaMax()%10000==0){
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax().intValue()/10000+"万元可用";
+                }else{
+                    tenderQuota=tenderQuota+userCouponConfigCustomize.getTenderQuotaMax().intValue()+"元可用";
+                }
+                break;
+            case 2:
+                Double tenderQuotaAmountUp=new Double(userCouponConfigCustomize.getTenderQuotaAmount());
+                if(tenderQuotaAmountUp>=10000&&tenderQuotaAmountUp%10000==0){
+                    tenderQuota=tenderQuotaAmountUp.intValue()/10000+"万元及以上可用";
+                }else{
+                    tenderQuota=tenderQuotaAmountUp.intValue()+"元及以上可用";
+                }
+                break;
+            case 3:
+                Double tenderQuotaAmountDown=new Double(userCouponConfigCustomize.getTenderQuotaAmount());
+                if(tenderQuotaAmountDown>=10000&&tenderQuotaAmountDown%10000==0){
+                    tenderQuota=tenderQuotaAmountDown.intValue()/10000+"万元及以下可用";
+                }else{
+                    tenderQuota=tenderQuotaAmountDown.intValue()+"元及以下可用";
+                }
+                break;
+        }
+        return tenderQuota;
     }
 
     /**
