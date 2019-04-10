@@ -97,7 +97,7 @@
 			AND order_id=t.order_id
 		)
   </select>
-  
+
   <select id="selectLastDebtDetailRepayed" resultMap="BaseResultMap" parameterType="String" >
 	    select 
 	    <include refid="Base_Column_List" />
@@ -195,5 +195,21 @@
 		WHERE
 			accede_order_id = #{accedeOrderId};
 	</update>
-	
+
+	<!-- 检索还款日为T日（预估日）  当前有效的债权 -->
+	<select id="selectDebtDetailToDate" resultMap="BaseResultMap" parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		FROM
+		ht_hjh_debt_detail
+		WHERE
+		repay_time
+		BETWEEN UNIX_TIMESTAMP(CONCAT(#{expectTime},'00:00:00'))
+		END UNIX_TIMESTAMP(CONCAT(#{expectTime},'23:59:59'))
+		AND (repay_capital_wait + repay_interest_wait) <![CDATA[<]]> 10
+		AND repay_status = 0
+		AND del_flag = 0
+		AND status = 1;
+	</select>
+
 </mapper>

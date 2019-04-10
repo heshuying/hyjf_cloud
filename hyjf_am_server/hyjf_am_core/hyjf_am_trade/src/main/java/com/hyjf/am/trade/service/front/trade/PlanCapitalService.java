@@ -26,9 +26,8 @@ public interface PlanCapitalService extends BaseService {
 
 	/**
 	 * 获取该期间的预计当日新增复投额
-	 * @param fromDate
-	 * @param toDate
+	 * @param date
 	 * @return
 	 */
-	List<HjhPlanCapitalPredictionVO> getPlanCapitalPredictionForProformaList(Date fromDate, Date toDate);
+	List<HjhPlanCapitalPredictionVO> getPlanCapitalPredictionForProformaList(Date date);
 }

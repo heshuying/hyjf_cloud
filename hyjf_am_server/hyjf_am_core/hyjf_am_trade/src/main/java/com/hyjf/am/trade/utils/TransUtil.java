@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -409,5 +412,45 @@ public class TransUtil {
 
     }
 
+    /**
+     * 循环拼接日期到List并+N天
+     *
+     * @param dBegin   开始日期
+     * @param dEnd 结束日期
+     * @return
+     */
+    public static List<Date> findDates(Date dBegin, Date dEnd, int n) throws ParseException {
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
+
+        //设置结束时间
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(dEnd);
+
+        //装返回的日期集合容器
+        List<Date> Datelist = new ArrayList<Date>();
+
+        // 每次循环给calBegin日期加一天，直到calBegin.getTime()时间等于dEnd
+        while (dEnd.after(calBegin.getTime()))  {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            calBegin.add(Calendar.DAY_OF_MONTH, n);
+            Datelist.add(calBegin.getTime());
+        }
+        return Datelist;
+    }
+
+    /**
+     * 日期+N天
+     *
+     * @param d  日期
+     * @return
+     */
+    public static Date datesAdd(Date d, int n)  {
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(d);
+        calBegin.add(Calendar.DAY_OF_MONTH, n);
+        return calBegin.getTime();
+    }
 
 }

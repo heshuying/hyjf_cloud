@@ -5,7 +5,9 @@ package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtDetail;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,4 +75,11 @@ public interface HjhDebtDetailCustomizeMapper {
      * @return
      */
     int updateCalculateHjhAccede(HjhAccede hjhAccede);
+
+    /**
+     * 检索还款日为T日（预估日）  当前有效的债权
+     * @param expectTime
+     * @return
+     */
+    List<HjhDebtDetail> selectDebtDetailToDate(@Param("expectTime") String expectTime);
 }
