@@ -747,13 +747,17 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             AccountVO bankAccountManageCustomize = amTradeClient.getAccount(userId);
             if(bankAccountManageCustomize != null) {
                 // 调用江西银行接口查询账面余额
-                BigDecimal userBankCurrBal = this.getBankCurrBal(userId, bankAccountManageCustomize.getAccountId());
+                // BigDecimal userBankCurrBal = this.getBankCurrBal(userId, bankAccountManageCustomize.getAccountId());
+                // 20190410 需求更改為獲取銀行可用餘額
+                BigDecimal userBankAvailBal = this.getBankBalancePay(userId, bankAccountManageCustomize.getAccountId());
                 // 校验用户操作金额+普通账户金额+智投服务可用金额 + 智投服务冻结金额 是否大于 银行账户账面金额  （更改前）
                 // 校验用户操作金额+普通冻结金额+智投服务可用金额 + 智投服务冻结金额 <=       账面余额   可以操作 （更改后）
                 // accountMoney 用户操作金额，planBalance 智投服务可用金额， planFrost 智投服务冻结金额， bankFrost （普通冻结金额）银行冻结金额
-                balance = balance.add(accountMoney).add(bankAccountManageCustomize.getBankFrost()).add(bankAccountManageCustomize.getPlanBalance()).add(bankAccountManageCustomize.getPlanFrost());
+                // balance = balance.add(accountMoney).add(bankAccountManageCustomize.getBankFrost()).add(bankAccountManageCustomize.getPlanBalance()).add(bankAccountManageCustomize.getPlanFrost());
+                // 20190410l 更改邏輯為 用戶操作金額 + 智投服務可用金額 <= 銀行可用餘額
+                balance = balance.add(accountMoney).add(bankAccountManageCustomize.getPlanBalance());
                 //判断是否可操作（返回Boolean类型）
-                if(balance.compareTo(userBankCurrBal) != 1){
+                if(balance.compareTo(userBankAvailBal) != 1){
                     return true;
                 }
             }
