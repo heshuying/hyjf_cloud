@@ -789,6 +789,7 @@ public class HjhCommissionController extends BaseController{
 						} else {
 							tenderCommission.setAttribute(99);
 						}
+						tenderCommission.setLogOrderId(StringUtils.isEmpty(resultBean.getLogOrderId()) ? "" : resultBean.getLogOrderId());
 					}
 					// 发提成处理
 					cnt = this.hjhCommissionService.updateTenderCommissionRecord(tenderCommission, resultBean, null);

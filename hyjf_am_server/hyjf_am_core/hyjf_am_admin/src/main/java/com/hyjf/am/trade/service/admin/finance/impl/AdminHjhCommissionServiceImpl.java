@@ -222,7 +222,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 /*		BankOpenAccountVO bankOpenAccountInfo = null;
 		bankOpenAccountInfo = getBankOpenAccount(userId);*/
 		AccountList accountList = new AccountList();
-		accountList.setNid(commission.getOrdid());
+		accountList.setNid(commission.getLogOrderId());
 		accountList.setSeqNo(request.getSeqNo());
 		accountList.setTxDate(Integer.parseInt(request.getTxDate()));
         accountList.setTxTime(Integer.parseInt(request.getTxTime()));
