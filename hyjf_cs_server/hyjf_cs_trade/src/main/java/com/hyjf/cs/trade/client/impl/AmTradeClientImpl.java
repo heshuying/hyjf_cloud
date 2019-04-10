@@ -6999,6 +6999,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 查询用户账户信息金额信息
+     *
+     * @return
+     */
+    @Override
+    public BankAccountManageCustomizeVO queryAccountUserMoney(Integer userId) {
+        BankAccountManageCustomizeResponse response = restTemplate.getForEntity(
+                "http://AM-TRADE/am-trade/borrow/query_account_userMoney/" + userId ,
+                BankAccountManageCustomizeResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313
      * PC 1.1.2
