@@ -149,9 +149,9 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
      * @return
      */
     @Override
-    public List<HjhPlanCapitalVO> getPlanCapitalForCreditList(Date dualDate) {
+    public List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date dualDate) {
         try {
-            List<HjhPlanCapitalVO> list = new ArrayList<HjhPlanCapitalVO>();
+            List<HjhPlanCapitalPredictionVO> list = new ArrayList<HjhPlanCapitalPredictionVO>();
             logger.info(LOG_MAIN_INFO + "获取该期间的预计当日新增复投额开始,dualDate:【" + dualDate + "】");
             // 预计当日新增债转额公式：
             // 1、筛选（预计开始退出时间=T日）的订单；      ht_hjh_accede.end_date
@@ -174,6 +174,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 logger.info(LOG_MAIN_INFO + "预计新增债转额开始:计划加入订单号:[" + accedeOrderId + "].");
                 // 根据加入订单号,日期进行清算
                 BigDecimal totalFairValue = this.getLiquidation(dualDate, accedeOrderId, nowTime, hjhAccede.getCreditCompleteFlag());
+                logger.info(LOG_MAIN_INFO + "智投订单：{}提前清算后的债权价值为：{}", accedeOrderId, totalFairValue);
                 // 投资相同智投编号的计划订单债权价值放到一起
                 if (StringUtils.isBlank(tmpPlanNid) || tmpPlanNid.equals(hjhAccede.getPlanNid())) {
                     // 当前处理数据于前一条数据planNid相同时累加债权价值
@@ -182,22 +183,22 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                     tmpPlanNid = hjhAccede.getPlanNid();
                 } else {
                     // 上一条数据与本条数据不是同一个planNid时将上一条智投编号累加的金额计入list
-                    HjhPlanCapitalVO hjhPlanCapitalVO = new HjhPlanCapitalVO();
-                    hjhPlanCapitalVO.setDate(dualDate);
-                    hjhPlanCapitalVO.setPlanNid(tmpPlanNid);
-                    hjhPlanCapitalVO.setCreditAccount(tmpCreditAccount);
-                    list.add(hjhPlanCapitalVO);
+                    HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
+                    vo.setDate(dualDate);
+                    vo.setPlanNid(tmpPlanNid);
+                    vo.setCreditAccount(tmpCreditAccount);
+                    list.add(vo);
                     // 中间值计入返回结果后初始化中间值
                     tmpCreditAccount = totalFairValue;
                     tmpPlanNid = hjhAccede.getPlanNid();
                 }
                 if (i == hjhAccedeList.size() - 1) {
                     // 最后一条记录处理完后计入list
-                    HjhPlanCapitalVO hjhPlanCapitalVO = new HjhPlanCapitalVO();
-                    hjhPlanCapitalVO.setDate(dualDate);
-                    hjhPlanCapitalVO.setPlanNid(tmpPlanNid);
-                    hjhPlanCapitalVO.setCreditAccount(tmpCreditAccount);
-                    list.add(hjhPlanCapitalVO);
+                    HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
+                    vo.setDate(dualDate);
+                    vo.setPlanNid(tmpPlanNid);
+                    vo.setCreditAccount(tmpCreditAccount);
+                    list.add(vo);
                 }
                 logger.info(LOG_MAIN_INFO + "预计新增债转额:计划加入订单号:[" + accedeOrderId + "].");
             }

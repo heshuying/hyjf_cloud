@@ -37,5 +37,5 @@ public interface PlanCapitalService extends BaseService {
 	 * @param dualDate
 	 * @return
 	 */
-	List<HjhPlanCapitalVO> getPlanCapitalForCreditList(Date dualDate);
+	List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date dualDate);
 }
