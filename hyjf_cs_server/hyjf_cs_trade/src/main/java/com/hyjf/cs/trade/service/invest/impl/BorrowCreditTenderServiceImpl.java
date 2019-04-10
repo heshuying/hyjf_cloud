@@ -322,6 +322,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     public JSONObject getInterestInfo(Integer userId, String creditNid, String assignCapital) {
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,userId);
         JSONObject ret = new JSONObject();
+
         if (Validator.isNotNull(creditAssign)) {
             creditAssign.setMoney(DF_FOR_VIEW.format(new BigDecimal(assignCapital).setScale(2, BigDecimal.ROUND_DOWN)));
             ret.put("creditAssign", creditAssign);
