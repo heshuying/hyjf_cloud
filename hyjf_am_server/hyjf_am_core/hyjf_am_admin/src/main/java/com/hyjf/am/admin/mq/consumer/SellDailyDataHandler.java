@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,7 @@ import com.hyjf.common.util.GetDate;
  */
 @Component
 public class SellDailyDataHandler {
+	private Logger logger = LoggerFactory.getLogger(SellDailyDataHandler.class);
 	private static final String YYZX_DIVISION_NAME = "运营中心";
 	private static final String QIANLE_DIVISION_NAME = "渠道";
 	/**
@@ -44,7 +47,7 @@ public class SellDailyDataHandler {
 	private SellDailyService sellDailyService;
 
 	public SellDailyDataDto doHandler(int column, Date startTime, Date endTime) {
-
+		logger.info("SellDailyDataHandler.doHandler start, sourceId is: {}", sourceId);
 		// 按照一级分部，二级分部分组查询统计数据
 		List<SellDailyVO> list = null;
 		// 上海运营中心-网络运营部要单独查询 (id:327)

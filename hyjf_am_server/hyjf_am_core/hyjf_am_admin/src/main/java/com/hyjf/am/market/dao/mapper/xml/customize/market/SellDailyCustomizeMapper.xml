@@ -78,7 +78,7 @@
         CASE ui.attribute WHEN 0 THEN   d3. NAME WHEN 1 THEN   d3. NAME WHEN 2 THEN   dd3. NAME WHEN 3 THEN   dd3. NAME END AS three_division,
         CASE bt.client WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END client
         FROM  hyjf_trade.ht_borrow_tender bt
-        LEFT JOIN (SELECT borrow_nid,borrow_style,borrow_period FROM hyjf_trade.ht_borrow) AS b ON bt.borrow_nid = b.borrow_nid
+        LEFT JOIN hyjf_trade.ht_borrow b ON bt.borrow_nid = b.borrow_nid
         LEFT JOIN hyjf_user.ht_user_info ui ON bt.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_spreads_user su ON bt.user_id = su.user_id
         LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_user_id
@@ -286,21 +286,24 @@
     </sql>
 
     <sql id="countTotalInvestSqlQL">
-        SELECT bt.account AS account
-        FROM ht_borrow_tender bt
+        SELECT bt.account AS account,
+        CASE b.borrow_style WHEN "endday" THEN CONCAT(b.borrow_period, "天") ELSE CONCAT(b.borrow_period, "个月") END AS borrow_period
+        FROM hyjf_trade.ht_borrow_tender bt
+        LEFT JOIN hyjf_trade.ht_borrow b ON b.borrow_nid = bt.borrow_nid
         LEFT JOIN hyjf_user.ht_user_info ui ON bt.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
         LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
         LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
-        WHERE
-        br.accede_order_id is null
+        WHERE bt.accede_order_id is null
         AND p.source_id = #{sourceId}
         AND bt.create_time <![CDATA[>=]]> #{startTime}
         AND bt.create_time <![CDATA[<=]]> #{endTime}
         UNION
-        SELECT a.accede_account AS account
-        FROM ht_hjh_accede a
+        SELECT a.accede_account AS account,
+        CASE b.is_month WHEN 0 THEN   CONCAT(b.lock_period, "天") ELSE   CONCAT(b.lock_period, "个月") END AS borrow_period
+        FROM hyjf_trade.ht_hjh_accede a
+        LEFT JOIN hyjf_trade.ht_hjh_plan AS b ON a.plan_nid=b.plan_nid
         LEFT JOIN hyjf_user.ht_user_info ui ON a.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = ui.user_id
         LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
@@ -349,7 +352,7 @@
     </sql>
 
     <sql id="countTotalWithdrawSqlQL">
-        SELECT w.total AS withdraw_amount,
+        SELECT w.total AS withdraw_amount
         FROM hyjf_trade.ht_account_withdraw w
         LEFT JOIN hyjf_user.ht_user_info ui ON w.user_id=ui.user_id
         LEFT JOIN hyjf_user.ht_user uu ON ui.user_id=uu.user_id
@@ -365,7 +368,7 @@
     </sql>
 
     <sql id="countTotalRechargeSqlQL">
-        SELECT r.money AS recharge_amount,
+        SELECT r.money AS recharge_amount
         FROM hyjf_trade.ht_account_recharge r
         LEFT JOIN hyjf_user.ht_user_info ui ON r.user_id=ui.user_id
         LEFT JOIN hyjf_user.ht_user uu ON uu.user_id=ui.user_id
@@ -383,7 +386,7 @@
     <sql id="countTotalNoneRepaySqlQL">
         #汇直投待还#
       SELECT
-        br.recover_account AS none_repay,
+        br.recover_account AS none_repay
         FROM
         hyjf_trade.ht_borrow_recover br
         LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
@@ -402,7 +405,7 @@
         UNION ALL
         #汇计划待还#
         SELECT
-        br.repay_wait AS none_repay,
+        br.repay_wait AS none_repay
         FROM
         hyjf_trade.ht_hjh_repay br
         LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
@@ -422,7 +425,10 @@
     <sql id="countTotalCreditSql">
         #转让数据#
         SELECT
-        bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount
+            bc.credit_capital_assigned + bc.credit_interest_assigned  AS credit_amount,
+            CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+            CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+            CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
         FROM
         hyjf_trade.ht_borrow_credit bc
         LEFT JOIN hyjf_user.ht_user u ON bc.credit_user_id = u.user_id
@@ -933,8 +939,8 @@
         LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
         LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
         LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_reg re on u.user_id=re.user_id
+        LEFT JOIN hyjf_user.ht_utm m on re.utm_id=m.utm_id
         LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
         WHERE ui.role_id=1
         AND p.source_id = #{sourceId}
@@ -1045,8 +1051,8 @@
         LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
         LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
         LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on uu.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm m on r.utm_id=m.utm_id
+        LEFT JOIN hyjf_user.ht_utm_reg re on u.user_id=re.user_id
+        LEFT JOIN hyjf_user.ht_utm m on re.utm_id=m.utm_id
         LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
         WHERE ui.role_id=1
         AND p.source_id = #{sourceId}

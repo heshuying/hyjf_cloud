@@ -32,7 +32,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     @Autowired
     private CommonProducer commonProducer;
 
-    private StoreNumInner storeNumInner;
+    private StoreNumInner storeNumInner = new StoreNumInner();
 
     private static final String NMZX_DIVISION_NAME = "纳觅咨询";
     private static final String QGR_DIVISION_NAME = "裕峰瑞";

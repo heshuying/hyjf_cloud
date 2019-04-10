@@ -355,7 +355,8 @@ public interface SellDailyCustomizeMapper {
      * @return
      */
     SellDailyVO countNoneRepayTodayQl(@Param("startTime") Date startTime,
-                                      @Param("endTime") Date endTime, String sourceId);
+                                      @Param("endTime") Date endTime,
+                                      @Param("sourceId") String sourceId);
 
     /**
      * 查询千乐昨日注册人数
