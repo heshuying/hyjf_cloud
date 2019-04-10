@@ -120,6 +120,13 @@
 		<result column="lateInterest" property="lateInterest" jdbcType="VARCHAR" />
 		<result column="borrowFullTime" property="borrowFullTime" jdbcType="VARCHAR" />
 		<result column="recoverLastTime" property="recoverLastTime" jdbcType="VARCHAR" />
+		<result column="repayAccountInterestAll" property="repayAccountInterestAll" jdbcType="VARCHAR" />
+		<result column="repayAccountCapitalYesAll" property="repayAccountCapitalYesAll" jdbcType="VARCHAR" />
+		<result column="repayAccountInterestYesAll" property="repayAccountInterestYesAll" jdbcType="VARCHAR" />
+		<result column="repayFeeYesAll" property="repayFeeYesAll" jdbcType="VARCHAR" />
+		<result column="repayAccountCapitalWaitAll" property="repayAccountCapitalWaitAll" jdbcType="VARCHAR" />
+		<result column="repayAccountInterestWaitAll" property="repayAccountInterestWaitAll" jdbcType="VARCHAR" />
+		<result column="repayFeeWaitAll" property="repayFeeWaitAll" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
@@ -214,8 +221,14 @@
 		SELECT
 		SUM(b.borrow_account_yes) AS borrowAccountYes,
 		SUM(b.repay_account_all) AS repayAccountAll,
-		SUM(br.repay_fee) AS
-		repayFee
+		SUM(br.repay_fee) AS repayFee,
+		SUM(b.repay_account_interest) as repayAccountInterestAll,
+		SUM(b.repay_account_capital_yes) as repayAccountCapitalYesAll,
+		SUM(b.repay_account_interest_yes) as repayAccountInterestYesAll,
+		SUM(b.repay_fee_normal)as repayFeeYesAll,
+		SUM(b.repay_account_capital-b.repay_account_capital_yes)as repayAccountCapitalWaitAll,
+		SUM(b.repay_account_interest-b.repay_account_interest_yes)as repayAccountInterestWaitAll,
+		SUM(br.repay_fee-b.repay_fee_normal)as repayFeeWaitAll
 		FROM ht_borrow AS b
 		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
 		LEFT JOIN ht_r_user u ON b.user_id = u.user_id
