@@ -19,6 +19,7 @@ import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.user.BankCardResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.user.*;
@@ -1293,6 +1294,29 @@ public class UserCenterController extends BaseController {
             this.userCenterService.saveCancellationAccountRecordAction(bankCancellationAccountVO);
         }
         return new AdminResult<>(SUCCESS, "用户销户成功!");
+    }
+
+    /**
+     * 根据所属银行名查找银联号
+     * @param userInfosUpdCustomizeRequestBean
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/selectBankConfigByName")
+    @ApiOperation(value = "根据所属银行名查找银联号", notes = "根据所属银行名查找银联号")
+    public AdminResult<Response> selectBankConfigByName(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        AdminResult<Response> result = new AdminResult<Response>();
+        Response response = new Response();
+        JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
+        if(banksConfig==null) {
+            return new AdminResult<>(FAIL, "未查询到银联号");
+        }
+        response.setResult(banksConfig.getPayAllianceCode());
+        result.setStatus(SUCCESS);
+        result.setStatusDesc("未查询到分行联行号已填充总行联行号");
+        result.setData(response);
+        logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
+        return result;
     }
 
 }
