@@ -1298,16 +1298,16 @@ public class UserCenterController extends BaseController {
 
     /**
      * 根据所属银行名查找银联号
-     * @param userInfosUpdCustomizeRequestBean
+     * @param bankName
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "/selectBankConfigByName")
+    @GetMapping(value = "/selectBankConfigByName/{bankName}")
     @ApiOperation(value = "根据所属银行名查找银联号", notes = "根据所属银行名查找银联号")
-    public AdminResult<Response> selectBankConfigByName(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+    public AdminResult<Response> selectBankConfigByName(HttpServletRequest request, @PathVariable String bankName) {
         AdminResult<Response> result = new AdminResult<Response>();
         Response response = new Response();
-        JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
+        JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(bankName);
         if(banksConfig==null) {
             return new AdminResult<>(FAIL, "未查询到银联号");
         }
