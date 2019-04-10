@@ -63,7 +63,7 @@ public class MyCouponListController {
             result.setStatusDesc(WebResult.ERROR_DESC);
             logger.error("查询优惠券列表异常", e);
         }
-
+        logger.info("获取我的优惠券列表数据开始，result:{}", JSONObject.toJSON(result));
         return result;
     }
 
