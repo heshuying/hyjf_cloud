@@ -139,7 +139,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		BigDecimal money = BigDecimal.ZERO;
 		// 组合层已经校验过非空
 		TenderCommissionVO commission = request.getTenderCommission();
-		TenderCommission tenderCommission = new TenderCommission();
+		TenderCommission tenderCommission =tenderCommissionMapper.selectByPrimaryKey(commission.getId());
 		
 		/*1.修改提成表*/
 		// 增加时间
@@ -151,11 +151,11 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		// 操作者用户名
 		String operator = commission.getLoginUserName();
 		// 更新发放状态
-		commission.setStatus(1);// 已发放
-		commission.setUpdateTime(new Date());
-		commission.setSendTime(time);
+		tenderCommission.setStatus(1);// 已发放
+		tenderCommission.setUpdateTime(new Date());
+		tenderCommission.setSendTime(time);
 		// 把 TenderCommissionVO 赋值给 TenderCommission
-		BeanUtils.copyProperties(commission, tenderCommission);
+		// BeanUtils.copyProperties(commission, tenderCommission);
 		ret += this.tenderCommissionMapper.updateByPrimaryKeySelective(tenderCommission);
 
 		/*2.修改提成日志表*/
