@@ -106,6 +106,7 @@ public class MyCouponListController {
         ret.put("status","000");
         ret.put("statusDesc","成功");
         ret.put("data",json);
+        logger.info("ret is :{}", JSONObject.toJSON(ret));
         return ret;
     }
 }
