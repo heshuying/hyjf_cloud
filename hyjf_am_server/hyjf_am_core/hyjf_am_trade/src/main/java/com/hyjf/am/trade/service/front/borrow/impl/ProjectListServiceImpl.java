@@ -570,7 +570,10 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
      */
     @Override
     public String formatBorrowApr(String borrowApr){
-        String subBorr = borrowApr.substring(borrowApr.length()-1,borrowApr.length());
+        //拆分小数,取小数的后两位
+        String spitArr = borrowApr.split("\\.")[1];
+        //判断最后一个是否为0
+        String subBorr = spitArr.substring(spitArr.length()-1,spitArr.length());
         if(subBorr.equals("0")){
             BigDecimal big = new BigDecimal(borrowApr).setScale(1);
             borrowApr = big.toString();
