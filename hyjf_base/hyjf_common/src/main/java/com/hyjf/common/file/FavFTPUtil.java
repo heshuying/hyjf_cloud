@@ -1,6 +1,7 @@
 package com.hyjf.common.file;
 
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -245,7 +246,7 @@ public class FavFTPUtil {
      * @return
      */
     public static File downloadDirectory(SFTPParameter para) {
-        logger.info("----------------------------开始下载FTP协议");
+        logger.info("----------------------------开始下载FTP协议："+JSONObject.toJSONString(para));
         File localFile = null;
         FTPClient ftp = new FTPClient();
         OutputStream is = null;
