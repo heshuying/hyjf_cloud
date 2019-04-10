@@ -95,7 +95,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
 
     @ApiOperation(value = "前端Web页面出借可债转输入出借金额后获取收益", notes = "前端Web页面出借可债转输入出借金额后获取收益")
     @PostMapping(value = "/webCreditTenderInterest", produces = "application/json; charset=utf-8")
-    public WebResult<Map<String,Object>> getInterestInfo(@RequestHeader(value = "userId") int userId,
+    public WebResult<Map<String,Object>> getInterestInfo(@RequestHeader(value = "userId", required = false) int userId,
                                                          @RequestBody @Valid TenderRequest tender) {
         logger.info("前端Web页面出借可债转输入出借金额后获取收益，creditNid:{},assignCapital:{}",tender.getCreditNid(),tender.getAssignCapital());
         JSONObject json = borrowTenderService.getInterestInfo(userId,tender.getCreditNid(),tender.getAssignCapital());
