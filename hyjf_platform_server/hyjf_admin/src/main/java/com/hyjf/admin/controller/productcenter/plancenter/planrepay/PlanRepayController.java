@@ -16,6 +16,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -242,8 +243,9 @@ public class PlanRepayController extends BaseController {
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         int minId = 0;
+        Map<String, String> attr=CacheUtil.getParamNameMap("USER_PROPERTY");
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
-        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter(attr);
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
 
@@ -252,7 +254,6 @@ public class PlanRepayController extends BaseController {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, returnList);
         }
         for (int i = 1; i < sheetCount; i++) {
-
             repayRequest.setPageSize(defaultRowMaxCount);
             repayRequest.setCurrPage(i + 1);
             HjhRepayResponse hjhRepayList2 = this.planRepayService.selectHjhRepayList(repayRequest);
@@ -299,7 +300,7 @@ public class PlanRepayController extends BaseController {
 
         return map;
     }
-    private Map<String, IValueFormatter> buildValueAdapter() {
+    private Map<String, IValueFormatter> buildValueAdapter(Map<String, String> attr) {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         IValueFormatter lockPeriodAdapter = new IValueFormatter() {
             @Override
@@ -388,12 +389,21 @@ public class PlanRepayController extends BaseController {
                 }
             }
         };
-
+        IValueFormatter recommendAttrAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+            	String value = (String) object;
+            	if(value!=null) {
+            		return attr.get(value);
+            	}
+                return "";
+            }
+        };
         mapAdapter.put("lockPeriod", lockPeriodAdapter);
         mapAdapter.put("expectApr", expectAprAdapter);
         mapAdapter.put("borrowStyle", borrowStyleAdapter);
         mapAdapter.put("orderStatus", orderStatusAdapter);
-//        mapAdapter.put("joinTime", joinTimeAdapter);
+        mapAdapter.put("recommendAttr", recommendAttrAdapter);
         mapAdapter.put("orderLockTime", orderLockTimeAdapter);
         return mapAdapter;
     }

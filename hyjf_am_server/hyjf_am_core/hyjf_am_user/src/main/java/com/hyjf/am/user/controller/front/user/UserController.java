@@ -7,7 +7,9 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
@@ -1092,14 +1094,26 @@ public class UserController extends BaseController {
         response.setResult(webViewUserVO);
         return response;
     }
-/*
-    @GetMapping("/getWebViewUserByUserId/{userId}")
-    public WebViewUserResponse getWebViewUserByUserId(@PathVariable Integer userId){
-        WebViewUserResponse response = new WebViewUserResponse();
-        WebViewUserVO webViewUserVO = userService.getWebViewUserByUserId(userId);
-        response.setResult(webViewUserVO);
+
+    /**
+     * 查询用户的归属  0:其他,1:新客组,2:老客组,3:惠众,4：不属于运营部
+     * @param screenDataBean
+     * @return
+     */
+    @PostMapping("/getGroup")
+    public ScreenDataResponse getUserGroup(@RequestBody ScreenDataBean screenDataBean){
+        ScreenDataResponse response = new ScreenDataResponse();
+        Integer userId = screenDataBean.getUserId();
+        HashMap<String, String> userGroup = userService.findUserGroup(userId);
+        if (userGroup != null) {
+            response.setGroup(Integer.valueOf(userGroup.get("customerGroup")));
+            response.setCurrentOwner(userGroup.get("name"));
+        } else {
+            response.setGroup(-1);
+        }
         return response;
     }
-*/
+
+
 
 }

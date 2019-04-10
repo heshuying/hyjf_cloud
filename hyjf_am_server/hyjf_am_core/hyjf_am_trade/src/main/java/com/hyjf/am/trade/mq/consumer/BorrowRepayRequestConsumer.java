@@ -98,7 +98,6 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
     	    }
             boolean result = this.outRepeatQueue(redisKey, borrowApicron);//modify by cwyang 数据库事务后变更,不设时间,待所有流程结束后再去除防重标示
             if (result) {
-                logger.error("【还款请求】借款编号：{}，还款请求中...", borrowNid);
                 // 还款请求重复,需要判断是否为银行请求成功,平台处理失败的情况,分情况处理
                 boolean flag = checkLoanRequestException(borrowApicron, redisKey);
                 if (flag) {//存在请求异常情况,进行后续处理
@@ -109,7 +108,9 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
                     } else {
                         logger.error("【还款请求】借款编号：{}，还款请求异常修复失败,请人为处理！", borrowNid);
                     }
+                    return;
                 }
+                logger.error("【还款请求】借款编号：{}，还款请求中...", borrowNid);
                 return;
             }
             boolean delFlag = false;
@@ -126,7 +127,7 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
                 }
                 boolean requestLoanFlag = (boolean) map.get("result");
                 delFlag = (boolean) map.get("delFlag");
-                if (!requestLoanFlag) {
+                if (!requestLoanFlag) {// 1、未请求银行&更新任务表失败；2、请求银行返回失败；3、请求银行返回空；4、请求银行返回异常
                     try {
                         // 更新任务API状态
                         batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_SEND_FAIL);
@@ -135,8 +136,10 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
                         throw new Exception("批次还款任务表(ht_borrow_apicron)更新还款状态(请求失败)失败，[借款编号:" + borrowNid + "]");
                     }
                 }
-                if (!delFlag) {
+                if (!delFlag) {// 1、未请求银行&更新任务表失败；2、请求银行返回成功&更新任务表成功；3、请求银行返回失败；
                     delRedisKey(borrowApicron);
+                } else {
+                    ;// 1、请求银行返回成功&更新任务表失败；2、请求银行返回空；3、请求银行返回异常 由batch处理，确定银行处理结果后再删除，否则人工处理
                 }
             } catch (Exception e) {
                 logger.error("【还款请求】还款请求时系统异常！", e);
@@ -229,6 +232,7 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
 
     /**
      * 校验是否存在银行请求成功,平台处理失败的情况
+     * 批次号为空或银行不存在当前批次则删除当前期数标的的防重校验，可以重新发起还款请求
      *
      * @param borrowApicron
      */
