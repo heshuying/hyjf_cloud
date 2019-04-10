@@ -282,7 +282,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
 		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
-		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
+		accountWebList.setRemark(commission.getBorrowNid()); // 出借推广提成
 		//accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
         accountWebList.setCreateTime(GetDate.getTime10(accountList.getCreateTime()));
 		//网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
