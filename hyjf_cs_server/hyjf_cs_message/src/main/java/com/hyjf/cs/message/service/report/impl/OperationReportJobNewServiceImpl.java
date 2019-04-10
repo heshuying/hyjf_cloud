@@ -523,7 +523,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
 
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 2, bean);
-
+        logger.info("listTenMostMoney==="+bean.getListTenMostMoney());
         //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 2, bean, quarterDealMoney);
     }

@@ -6665,7 +6665,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean getFailCredit(String borrowNid) {
-        String url = "http://AM-ADMIN/am-trade/repay/getFailCredit/" + borrowNid;
+        //String url = "http://AM-ADMIN/am-trade/repay/getFailCredit/" + borrowNid;
+        String url = "http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/getFailCredit/" + borrowNid;
         return restTemplate.getForEntity(url, boolean.class).getBody();
     }
 
@@ -6919,5 +6920,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResult().intValue();
     }
+
+
+
 
 }
