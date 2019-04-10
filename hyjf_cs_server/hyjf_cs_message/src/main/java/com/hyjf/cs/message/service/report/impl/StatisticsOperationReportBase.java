@@ -143,11 +143,11 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             womanTenderNum = mapexDistribute.get("womanTenderNum");
 
             //校验 百分比是否等于100%
-            bigflag = checkPercent(manTenderNum + womanTenderNum, manTenderNum, womanTenderNum);
+          //  bigflag = checkPercent(manTenderNum + womanTenderNum, manTenderNum, womanTenderNum);
             userOperationReport.setManTenderNum(manTenderNum);//男性出借人数
-            userOperationReport.setManTenderNumProportion(assignCompute(manTenderNum, manTenderNum + womanTenderNum, bigflag));//男性出借人数占比(%)
+           // userOperationReport.setManTenderNumProportion(assignCompute(manTenderNum, manTenderNum + womanTenderNum, bigflag));//男性出借人数占比(%)
             userOperationReport.setWomanTenderNum(womanTenderNum);//女性出借人数
-            userOperationReport.setWomanTenderNumProportion(assignCompute(womanTenderNum, manTenderNum + womanTenderNum, bigflag));//女性出借人数占比(%)
+         //   userOperationReport.setWomanTenderNumProportion(assignCompute(womanTenderNum, manTenderNum + womanTenderNum, bigflag));//女性出借人数占比(%)
         }
 
 
@@ -710,7 +710,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
                 idcard.setBm(vo.getTitle().substring(0, 4)+"00");
                 IdCardCustomize idCardCustomize1 = amConfigClient.getIdCardCustomize(idcard);
                 if(idCardCustomize1!=null){
-                    vo.setTitle(idCardCustomize.getArea());
+                    vo.setTitle(idCardCustomize1.getArea());
                 }
             }else{
                 vo.setTitle(idCardCustomize.getArea());
