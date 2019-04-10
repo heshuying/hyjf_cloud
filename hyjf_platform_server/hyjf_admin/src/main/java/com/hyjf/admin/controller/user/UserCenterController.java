@@ -1313,7 +1313,6 @@ public class UserCenterController extends BaseController {
         }
         response.setResult(banksConfig.getPayAllianceCode());
         result.setStatus(SUCCESS);
-        result.setStatusDesc("未查询到分行联行号已填充总行联行号");
         result.setData(response);
         logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
         return result;
