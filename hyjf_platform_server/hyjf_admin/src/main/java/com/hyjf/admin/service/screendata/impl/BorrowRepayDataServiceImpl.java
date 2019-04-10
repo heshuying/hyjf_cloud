@@ -5,6 +5,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.screendata.BorrowRepayDataService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.RepayResponse;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class BorrowRepayDataServiceImpl implements BorrowRepayDataService {
     @Override
     public IntegerResponse countRepayUserList() {
         return adminClient.countRepayUserList();
+    }
+
+    @Override
+    public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
+        return null;
     }
 
 }
