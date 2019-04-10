@@ -464,6 +464,126 @@
 		AND htba.id is null AND htbi.repay_org_user_id = #{userId}
 		AND ((htb.`status` = 4 AND htb.repay_full_status = 0) OR (htb.`status` = 8 AND htb.repay_full_status = 0))
 	</select>
+	<select id="getWaitRepayLateInterest" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(SUM(br.late_interest), 0) lateInterestTotal
+		FROM
+			ht_borrow htb
+		INNER JOIN ht_borrow_recover br ON br.borrow_nid = htb.borrow_nid
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1
+		AND htba.`status` = 6
+		AND htba.period_now = 1
+		WHERE
+			(
+				htbpt.borrow_project_type = 'HZT'
+				OR htbpt.borrow_project_type = 'HXF'
+			)
+		AND htb.borrow_style IN ('endday', 'end')
+		AND htba.id IS NULL
+		AND htb.user_id = #{userId}
+		AND (
+			(
+				htb.`status` = 4
+				AND htb.repay_full_status = 0
+			)
+			OR (
+				htb.`status` = 8
+				AND htb.repay_full_status = 0
+			)
+		)
+	</select>
+	<select id="getWaitRepayPlanLateInterest" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(SUM(brp.late_interest), 0) lateInterestTotal
+		FROM
+			ht_borrow htb
+		INNER JOIN ht_borrow_recover_plan brp ON brp.borrow_nid = htb.borrow_nid
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1
+		AND htba.`status` = 6
+		AND htba.period_now = brp.recover_period
+		WHERE
+			(
+				htbpt.borrow_project_type = 'HZT'
+				OR htbpt.borrow_project_type = 'HXF'
+			)
+		AND htba.id IS NULL
+		AND htb.user_id = #{userId}
+		AND (
+			(
+				htb.`status` = 4
+				AND htb.repay_full_status = 0
+			)
+			OR (
+				htb.`status` = 8
+				AND htb.repay_full_status = 0
+			)
+		)
+	</select>
+	<select id="getOrgWaitRepayLateInterest" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(SUM(br.late_interest), 0) lateInterestTotal
+		FROM
+			ht_borrow_recover br
+		JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
+		INNER JOIN ht_borrow_info htbi ON b.borrow_nid = htbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = b.project_type
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = b.borrow_nid
+		AND htba.api_type = 1
+		AND htba.`status` = 6
+		AND htba.period_now = 1
+		WHERE
+			(
+				htbpt.borrow_project_type = 'HZT'
+				OR htbpt.borrow_project_type = 'HXF'
+			)
+		AND b.borrow_style IN ('endday', 'end')
+		AND htba.id IS NULL
+		AND htbi.repay_org_user_id =  #{userId}
+		AND (
+			(
+				b.`status` = 4
+				AND b.repay_full_status = 0
+			)
+			OR (
+				b.`status` = 8
+				AND b.repay_full_status = 0
+			)
+		)
+	</select>
+	<select id="getOrgWaitRepayPlanLateInterest" parameterType="java.lang.Integer" resultType="java.math.BigDecimal">
+		SELECT
+			IFNULL(SUM(brp.late_interest), 0) AS lateInterestTotal
+		FROM
+			ht_borrow htb
+		INNER JOIN ht_borrow_recover_plan brp ON htb.borrow_nid = brp.borrow_nid
+		INNER JOIN ht_borrow_info htbi ON htb.borrow_nid = htbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+		LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+		AND htba.api_type = 1
+		AND htba.`status` = 6
+		AND htba.period_now = brp.recover_period
+		WHERE
+			(
+				htbpt.borrow_project_type = 'HZT'
+				OR htbpt.borrow_project_type = 'HXF'
+			)
+		AND htba.id IS NULL
+		AND htbi.repay_org_user_id = #{userId}
+		AND (
+			(
+				htb.`status` = 4
+				AND htb.repay_full_status = 0
+			)
+			OR (
+				htb.`status` = 8
+				AND htb.repay_full_status = 0
+			)
+		)
+	</select>
     <select id="getFailCredit" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT count(*) FROM
 		ht_hjh_plan_borrow_tmp tmp

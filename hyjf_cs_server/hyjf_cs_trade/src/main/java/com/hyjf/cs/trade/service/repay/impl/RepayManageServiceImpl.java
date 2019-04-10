@@ -89,6 +89,17 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
+     * 普通用户逾期利息总待还
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getUserLateInterestWaitTotal(Integer userId) {
+        return amTradeClient.getUserLateInterestWaitTotal(userId);
+    }
+
+    /**
      * 借款人总借款金额
      *
      * @param userId
@@ -108,6 +119,17 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
         return amTradeClient.getOrgRepayFeeWaitTotal(userId);
+    }
+
+    /**
+     * 担保机构逾期利息总待还
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal getOrgLateInterestWaitTotal(Integer userId) {
+        return amTradeClient.getOrgLateInterestWaitTotal(userId);
     }
 
     /**

@@ -41,6 +41,8 @@ public interface RepayManageService extends BaseTradeService {
      */
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal getUserLateInterestWaitTotal(Integer userId);
+
     BigDecimal getUserBorrowAccountTotal(Integer userId);
 
     /**
@@ -49,6 +51,9 @@ public interface RepayManageService extends BaseTradeService {
      * @return
      */
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgLateInterestWaitTotal(Integer userId);
+
     /**
      * 担保机构待还
      * @param userId

@@ -27,9 +27,13 @@ import java.util.Map;
 public interface RepayManageService extends BaseService {
     BigDecimal selectUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal selectUserLateInterestWaitTotal(Integer userId);
+
     BigDecimal selectUserBorrowAccountTotal(Integer userId);
 
     BigDecimal selectOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal selectOrgLateInterestWaitTotal(Integer userId);
 
     Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId);
 

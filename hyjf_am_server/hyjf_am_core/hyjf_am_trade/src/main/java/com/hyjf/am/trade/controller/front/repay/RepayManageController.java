@@ -68,6 +68,20 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 普通借款人逾期利息总待还
+     * @return
+     */
+    @RequestMapping(value = "/lateinterest_total_user/{userId}")
+    public BigDecimalResponse userLateInterestWaitTotal(@PathVariable Integer userId) {
+        logger.info("普通借款人逾期利息总待还lateinterest_total_user，userId：" + userId);
+        BigDecimalResponse response = new BigDecimalResponse();
+        BigDecimal waitTotal = repayManageService.selectUserLateInterestWaitTotal(userId);
+        response.setResultDec(waitTotal);
+        logger.info("response: {}", JSON.toJSONString(response));
+        return response;
+    }
+
+    /**
      * 普通借款人总借款金额
      * @return
      */
@@ -89,6 +103,21 @@ public class RepayManageController extends BaseController {
     public BigDecimalResponse orgRepayFeeWaitTotal(@PathVariable Integer userId) {
         BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal waitTotal = repayManageService.selectOrgRepayFeeWaitTotal(userId);
+        if(null==waitTotal){
+            response.setResultDec(new BigDecimal(0));
+        }
+        response.setResultDec(waitTotal);
+        return response;
+    }
+
+    /**
+     * 担保机构逾期利息总待还
+     * @return
+     */
+    @RequestMapping(value = "/lateinterest_total_org/{userId}")
+    public BigDecimalResponse orgLateInterestWaitTotal(@PathVariable Integer userId) {
+        BigDecimalResponse response = new BigDecimalResponse();
+        BigDecimal waitTotal = repayManageService.selectOrgLateInterestWaitTotal(userId);
         if(null==waitTotal){
             response.setResultDec(new BigDecimal(0));
         }
