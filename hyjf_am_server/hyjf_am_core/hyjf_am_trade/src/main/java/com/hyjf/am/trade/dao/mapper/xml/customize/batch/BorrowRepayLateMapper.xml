@@ -54,10 +54,4 @@
         AND brp.recover_status = 0
         AND ba.id IS NULL
     </select>
-
-    <select id="selectTest" resultType="com.hyjf.am.trade.dao.model.auto.AleveErrorLog">
-        select * from ht_aleve_error_log
-        where id = #{id}
-        and del_flag = #{delFlag}
-    </select>
 </mapper>
