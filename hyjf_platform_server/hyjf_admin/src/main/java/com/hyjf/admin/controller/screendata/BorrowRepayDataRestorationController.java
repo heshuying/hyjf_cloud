@@ -55,11 +55,26 @@ public class BorrowRepayDataRestorationController extends BaseController {
             for(ScreenDataBean screenDataBean:rechargeList){
                 try{
                     this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "充值数据已修复");
                 }catch (MQException e){
                     logger.error("用户画像投屏数据充值数据修复异常",e);
                 }
             }
         }
+
+        logger.info("用户画像投屏数据提现数据修复开始");
+        List<ScreenDataBean> withdrawList = borrowRepayDataService.getWithdrawList(startIndex,endIndex);
+        if(!CollectionUtils.isEmpty(withdrawList)){
+            for(ScreenDataBean screenDataBean:withdrawList){
+                try{
+                    this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "提现数据已修复");
+                }catch (MQException e){
+                    logger.error("用户画像投屏数据提现数据修复异常",e);
+                }
+            }
+        }
+
         Integer index = startIndex + endIndex;
         RedisUtils.set("SCREEN_DATA_RESTORATION_INDEX",index.toString(),600);
     }
@@ -70,7 +85,7 @@ public class BorrowRepayDataRestorationController extends BaseController {
      * @param screenDataBean
      */
     private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
-        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(),screenDataBean), 2);
+//        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(),screenDataBean), 2);
     }
 
 

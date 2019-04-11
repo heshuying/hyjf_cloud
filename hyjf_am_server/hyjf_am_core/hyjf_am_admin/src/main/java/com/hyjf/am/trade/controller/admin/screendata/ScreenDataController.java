@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.screendata;
 
+import com.hyjf.am.response.trade.ScreenDataResponse;
 import com.hyjf.am.trade.service.BorrowRepayScreenDataService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
@@ -7,6 +8,8 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -32,6 +35,22 @@ public class ScreenDataController extends BaseController {
         IntegerResponse response = new IntegerResponse();
         Integer result = screenDataService.countRepayUserList(GetDate.getFirstDayOfMonthDate(),GetDate.getLastDayOfMonthDate());
         response.setResultInt(result);
+        return response;
+    }
+
+    @GetMapping(value = "/getrechargelist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getRechargeList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getRechargeList(startIndex,endIndex);
+        response.setResultList(list);
+        return response;
+    }
+
+    @GetMapping(value = "/getwithdrawlist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getWithdrawList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getWithdrawList(startIndex,endIndex);
+        response.setResultList(list);
         return response;
     }
 

@@ -37,7 +37,12 @@ public class BorrowRepayDataServiceImpl implements BorrowRepayDataService {
 
     @Override
     public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
-        return null;
+        return adminClient.getRechargeList(startIndex, endIndex);
+    }
+
+    @Override
+    public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {
+        return adminClient.getWithdrawList(startIndex, endIndex);
     }
 
 }

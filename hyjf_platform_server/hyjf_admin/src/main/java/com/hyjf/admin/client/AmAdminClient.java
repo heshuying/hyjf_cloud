@@ -29,6 +29,7 @@ import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -1281,4 +1282,22 @@ public interface AmAdminClient {
      * @return
      */
     IntegerResponse countRepayUserList();
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的充值数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex);
+
+    /**
+     * @Author walter.limeng
+     * @Description //投屏数据修复，获取2019年3月1号，2号，3号的提现数据
+     * @Date 15:24 2019-04-10
+     * @Param [startIndex 开始标识, endIndex 结束表示]
+     * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
+     **/
+    List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex);
 }
