@@ -1403,9 +1403,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         }
         try {
             // 发送短信
-            this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest);
+            this.sendSms(assignUserId, borrowNid, repayCapital, repayInterest, borrowRecover.getAdvanceStatus());
             // 推送消息
-            this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest);
+            this.sendMessage(assignUserId, borrowNid, repayAccount, repayInterest, borrowRecover.getAdvanceStatus());
         } catch (Exception e) {
             logger.error("【直投还款/承接人】发送短信和推送消息时发生系统异常！", e);
         }
@@ -2591,10 +2591,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
             }
         }
         try {
-            // 发送短信
-            this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest);
-            // 推送消息
-            this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest);
+			if(borrowRecover.getAdvanceStatus()-1==0){
+				// 提前还款
+
+			}else{
+				// 发送短信
+				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,borrowRecover.getAdvanceStatus());
+				// 推送消息
+				this.sendMessage(tenderUserId, borrowNid, repayAccount, repayInterest,borrowRecover.getAdvanceStatus());
+			}
         } catch (Exception e) {
             logger.error("【直投还款/出借人】发送短信和推送消息时发生系统异常！", e);
         }
@@ -2821,16 +2826,30 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 发送短信(还款成功)
 	 *
 	 * @param userId
+	 * @param advanceStatus
 	 */
-	private void sendSms(int userId, String borrowNid, BigDecimal repayCapital, BigDecimal repayInterest) {
+	private void sendSms(int userId, String borrowNid, BigDecimal repayCapital, BigDecimal repayInterest, Integer advanceStatus) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayCapital)) {
- 			Map<String, String> msg = new HashMap<>();
-			msg.put("userId", String.valueOf(userId));
-			msg.put("val_borrownid", borrowNid);
-			msg.put("val_capital", repayCapital.toString());
-			msg.put("val_interest", repayInterest.toString());
-			SmsMessage smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
-					CustomConstants.CHANNEL_TYPE_NORMAL);
+			SmsMessage smsMessage = null ;
+			if(advanceStatus-1==0){
+				logger.info("提前还款，标的号:{}  userID:{}",borrowNid,String.valueOf(userId));
+				// 提前还款
+				Map<String, String> msg = new HashMap<>();
+				msg.put("userId", String.valueOf(userId));
+				msg.put("val_borrownid", borrowNid);
+				msg.put("val_capital", repayCapital.toString());
+				msg.put("val_interest", repayInterest.toString());
+				new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN,
+						CustomConstants.CHANNEL_TYPE_NORMAL);
+			}else {
+				Map<String, String> msg = new HashMap<>();
+				msg.put("userId", String.valueOf(userId));
+				msg.put("val_borrownid", borrowNid);
+				msg.put("val_capital", repayCapital.toString());
+				msg.put("val_interest", repayInterest.toString());
+				 new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
+						CustomConstants.CHANNEL_TYPE_NORMAL);
+			}
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 			} catch (MQException e2) {
@@ -2844,16 +2863,24 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 
 	 * @author Administrator
 	 */
-	private void sendMessage(int userId, String borrowNid, BigDecimal repayAccount, BigDecimal repayInterest) {
+	private void sendMessage(int userId, String borrowNid, BigDecimal repayAccount, BigDecimal repayInterest, Integer advanceStatus) {
 		if (Validator.isNotNull(userId) && Validator.isNotNull(repayAccount)) {
-			Map<String, String> msg = new HashMap<>();
-			msg.put("userId", String.valueOf(userId));
-			msg.put("val_borrownid", borrowNid);
-			msg.put("val_amount", repayAccount.toString());
-			msg.put("val_interest", repayInterest.toString());
+			AppMsMessage smsMessage = null ;
+			if(advanceStatus-1==0){
+				// 提前还款
+				logger.info("提前还款不进行消息推送,borrowNid:{}",borrowNid);
+				return;
+			}else {
+				Map<String, String> msg = new HashMap<>();
+				msg.put("userId", String.valueOf(userId));
+				msg.put("val_borrownid", borrowNid);
+				msg.put("val_amount", repayAccount.toString());
+				msg.put("val_interest", repayInterest.toString());
 
-			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get("userId")), msg, null,
-					MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
+				smsMessage = new AppMsMessage(Integer.valueOf(msg.get("userId")), msg, null,
+						MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
+			}
+
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
 						smsMessage));
