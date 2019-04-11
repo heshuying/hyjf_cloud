@@ -87,7 +87,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                     continue;
                 }
                 // 退出时间（时间戳）
-                int quiteTime = accede.get(0).getQuitTime();
+                int quiteTime = (int) GetDate.getMillis10(accede.get(0).getEndDate());
                 // 開始時間戳（預估日期+3天）
                 // int dualDateAddThreeStrStart = GetDate.getDayStart10(dualDateAddThreeStr);
                 // 結束時間戳（預估日期+3天）
