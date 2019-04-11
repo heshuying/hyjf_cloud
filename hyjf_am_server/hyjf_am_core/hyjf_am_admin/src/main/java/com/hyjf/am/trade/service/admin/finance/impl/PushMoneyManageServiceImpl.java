@@ -278,7 +278,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
             accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
             accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
             accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
-            accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
+            //accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
+            accountWebList.setCreateTime(GetDate.getTime10(accountList.getCreateTime()));
             try {
                 logger.debug("发送收支明细:[{}]",JSON.toJSONString(accountWebList));
                 boolean success = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
