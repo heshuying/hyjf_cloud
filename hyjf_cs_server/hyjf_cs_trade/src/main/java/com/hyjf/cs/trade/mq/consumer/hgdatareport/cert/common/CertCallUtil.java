@@ -90,6 +90,10 @@ public class CertCallUtil implements Serializable {
         if(CertCallConstant.CERT_INF_TYPE_TRANSACT.equals(infType)){
             return CertCallConstant.CERT_CALL_TRANSACT_URL;
         }
+        //产品信息
+        if(CertCallConstant.CERT_INF_TYPE_LENDPRODUCT.equals(infType)){
+            return CertCallConstant.CERT_CALL_LENDPRODUCT_URL;
+        }
         return null;
     }
 
