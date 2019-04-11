@@ -50,8 +50,8 @@ public class SellDailyDataHandler {
 		logger.info("SellDailyDataHandler.doHandler start, sourceId is: {}", sourceId);
 		// 按照一级分部，二级分部分组查询统计数据
 		List<SellDailyVO> list = null;
-		// 上海运营中心-网络运营部要单独查询 (id:327)
-		SellDailyVO shOCSellDaily = null;
+		// 运营部
+		SellDailyVO operationSellDaily = null;
 		// app推广单独查询
 		SellDailyVO appSellDaily = null;
 		// 千乐数据
@@ -60,15 +60,15 @@ public class SellDailyDataHandler {
 		SellDailyVO creditSellDaily = null;
 
 		// 辅助参数
-		List<SellDailyVO> ocSellDailyList = null;
+		List<SellDailyVO> operSellDailyList = null;
 		List<SellDailyVO> appSellDailyList = null;
 		switch (column) {
 		case 1:
 			list = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
 					: appSellDailyList.get(0);
@@ -77,9 +77,9 @@ public class SellDailyDataHandler {
 			break;
 		case 2:
 			list = sellDailyService.countTotalRepayOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalRepayOnMonth(startTime, endTime, QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operSellDailyList = sellDailyService.countTotalRepayOnMonth(startTime, endTime, QUERY_OC_THREE_DIVISION_TYPE);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalRepayOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -88,10 +88,10 @@ public class SellDailyDataHandler {
 			break;
 		case 3:
 			list = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
 					: appSellDailyList.get(0);
@@ -101,30 +101,30 @@ public class SellDailyDataHandler {
 			break;
 		case 5:
 			list = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalWithdrawOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 7:
 			list = sellDailyService.countTotalRechargeOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalRechargeOnMonth(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalRechargeOnMonth(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalRechargeOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 8:
 			list = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
 					: appSellDailyList.get(0);
@@ -134,10 +134,10 @@ public class SellDailyDataHandler {
 			break;
 		case 9:
 			list = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
 					QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
@@ -148,10 +148,10 @@ public class SellDailyDataHandler {
 			break;
 		case 11:
 			list = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
 					: appSellDailyList.get(0);
@@ -161,20 +161,20 @@ public class SellDailyDataHandler {
 			break;
 		case 12:
 			list = sellDailyService.countTotalRepayYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalRepayYesterday(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalRepayYesterday(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalRepayYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 13:
 			list = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
 					: appSellDailyList.get(0);
@@ -184,29 +184,29 @@ public class SellDailyDataHandler {
 			break;
 		case 14:
 			list = sellDailyService.countTotalWithdrawYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalWithdrawYesterday(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalWithdrawYesterday(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalWithdrawYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 15:
 			list = sellDailyService.countTotalRechargeYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countTotalRechargeYesterday(startTime, endTime,
+			operSellDailyList = sellDailyService.countTotalRechargeYesterday(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalRechargeYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 17:
 			list = sellDailyService.countNoneRepayToday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countNoneRepayToday(startTime, endTime, QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operSellDailyList = sellDailyService.countNoneRepayToday(startTime, endTime, QUERY_OC_THREE_DIVISION_TYPE);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countNoneRepayTodayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -215,40 +215,40 @@ public class SellDailyDataHandler {
 			break;
 		case 18:
 			list = sellDailyService.countRegisterTotalYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countRegisterTotalYesterday(startTime, endTime,
+			operSellDailyList = sellDailyService.countRegisterTotalYesterday(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countRegisterTotalYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 19:
 			list = sellDailyService.countRechargeGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countRechargeGt3000UserNum(startTime, endTime,
+			operSellDailyList = sellDailyService.countRechargeGt3000UserNum(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countRechargeGt3000UserNumQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 20:
 			list = sellDailyService.countInvestGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countInvestGt3000UserNum(startTime, endTime,
+			operSellDailyList = sellDailyService.countInvestGt3000UserNum(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countInvestGt3000UserNumQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
 		case 21:
 			list = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-			ocSellDailyList = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime,
+			operSellDailyList = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime,
 					QUERY_OC_THREE_DIVISION_TYPE);
-			shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? new SellDailyVO(null, null)
-					: mergeSellDaily(ocSellDailyList);
+			operationSellDaily = CollectionUtils.isEmpty(operSellDailyList) ? new SellDailyVO(null, null)
+					: mergeSellDaily(operSellDailyList);
 
 			qlSellDaily = sellDailyService.countInvestGt3000MonthUserNumQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -259,8 +259,8 @@ public class SellDailyDataHandler {
 		dto.setList(list);
 		dto.setCreditSellDaily(creditSellDaily);
 
-		if (shOCSellDaily != null) {
-			dto.setShOCSellDaily(setValue(shOCSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
+		if (operationSellDaily != null) {
+			dto.setOperationSellDaily(setValue(operationSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
 		}
 
 		if (appSellDaily != null) {

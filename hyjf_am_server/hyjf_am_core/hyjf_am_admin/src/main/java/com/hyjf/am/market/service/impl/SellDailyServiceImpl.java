@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper;
 import com.hyjf.am.market.service.SellDailyService;
 import com.hyjf.am.vo.market.SellDailyVO;
+import org.springframework.util.Assert;
 
 /**
  * @author fuqiang
@@ -212,7 +213,9 @@ public class SellDailyServiceImpl implements SellDailyService {
 
     @Override
 	public SellDailyVO addValue(SellDailyVO source, SellDailyVO target, int column, int operateType) {
-        logger.debug("source is: {}, target is: {}, column is: {}, operateType is: {}", source, target, column, operateType);
+        Assert.notNull(source, "source must not be null...");
+        Assert.notNull(target, "target must not be null...");
+        logger.debug("source is: {}, target is: {}, column is: {}, operateType is: {}", source.print(), target.print(), column, operateType);
 
 		switch (column) {
 		case 1:

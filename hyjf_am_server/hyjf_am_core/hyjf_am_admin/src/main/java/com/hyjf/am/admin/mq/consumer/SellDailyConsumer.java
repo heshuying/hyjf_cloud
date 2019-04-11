@@ -63,7 +63,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			// 1. 查询基础数据
 			SellDailyDataDto dto = sellDailyDataHandler.doHandler(column, startTime, endTime);
 			if (dto == null) {
-				logger.error("查询错误, dto不能空...");
+				logger.error("查询错误, dto不能空, column is: {}...", column);
 				return;
 			}
 
@@ -72,7 +72,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				logger.error("查询错误， 基础数据list不能空...");
 				return;
 			}
-			SellDailyVO shOCSellDaily = dto.getShOCSellDaily();
+			SellDailyVO operationSellDaily = dto.getOperationSellDaily();
 			SellDailyVO appSellDaily = dto.getAppSellDaily();
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
 			SellDailyVO creditSellDaily = dto.getCreditSellDaily();
@@ -80,15 +80,18 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			// 2. 处理drawOrder=2特殊分部的数据
 
 			// 2.1 运营中心 - 网络运营部 	计算：上海运营中心-网络运营部 + 青岛运营中心-网络运营部 + 电销部
-			if (shOCSellDaily != null) {
-				list.add(shOCSellDaily);
+			if (operationSellDaily != null) {
+				list.add(operationSellDaily);
 			}
 
 			// 2.2 运营中心 - 无主单   计算： 一级部门空 + 杭州分部 + 特殊一级分部（勿动) - 千乐 - vip用户组
 			SellDailyVO noneRefferRecord = new SellDailyVO(YYZX_DIVISION_NAME, "无主单");
 			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
-			if(column == 17 || column == 12){
-				noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+			if (column == 17 || column == 12) {
+				if (creditSellDaily != null) {
+					logger.info("12,17列扣减债转, vo is : {}", creditSellDaily.print());
+					noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+				}
 			}
 
 			SellDailyVO hzRecord = new SellDailyVO(HZSW_DIVISION_NAME, "其它");
@@ -119,7 +122,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			}
 
 			// 2.5 惠众-其它 排除 网络运营部,千乐，加上vip用户组
-			hzRecord = sellDailyService.addValue(shOCSellDaily, hzRecord, column, SUBTRACT);
+			hzRecord = sellDailyService.addValue(operationSellDaily, hzRecord, column, SUBTRACT);
 			hzRecord = sellDailyService.addValue(qlSellDaily, hzRecord, column, SUBTRACT);
 			list.add(hzRecord);
 
@@ -130,18 +133,13 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			DynamicDataSourceContextHolder.useMasterConfigDataSource();
 			// sellDailyService.batchUpdate(list);
 			for (SellDailyVO vo : list) {
-				logger.debug("vo: {}", JSONObject.toJSONString(vo));
+				logger.debug("vo: {}", vo.print());
 				sellDailyService.update(vo);
 			}
 
 			long timeEnd = System.currentTimeMillis();
 			logger.info("批量更新结束， column: " + column + ", 耗时: " + (timeEnd - timeTmp) + "ms");
-
-			// 如果没有return success ，consumer会重新消费该消息，直到return success
-			return;
-
 		}
-		return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
 	}
 
 	@Override
