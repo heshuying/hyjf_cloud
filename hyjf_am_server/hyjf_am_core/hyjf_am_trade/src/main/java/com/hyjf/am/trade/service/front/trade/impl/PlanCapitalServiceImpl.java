@@ -283,25 +283,25 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
 //                    isRepayFlag = 1;
 //                    continue;
 //                }
-
-                // 如果还款日为T日期,不进行清算
-                if (isMonth) {
-                    // 如果是分期标的,查询还款计划
-                    List<BorrowRepayPlan> borrowRepayPlanList = this.selectBorrowRepayPlanList(borrowNid, dualDate);
-                    if (borrowRepayPlanList != null && borrowRepayPlanList.size() > 0) {
-                        logger.info(LOG_MAIN_INFO + "分期标的.应还日期在当天的债权,暂时不进行清算,标的编号:[" + borrowNid + "]");
-                        isRepayFlag = 1;
-                        continue;
-                    }
-                } else {
-                    // 不分期标的
-                    List<BorrowRepay> borrowRepayList = this.selectBorrowRepayList(borrowNid, dualDate);
-                    if (borrowRepayList != null && borrowRepayList.size() > 0) {
-                        logger.info(LOG_MAIN_INFO + "不分期标的,应还日期在当天的债权,暂时不进行清算,标的编号:[" + borrowNid + "].");
-                        isRepayFlag = 1;
-                        continue;
-                    }
-                }
+//
+//                // 如果还款日为T日期,不进行清算
+//                if (isMonth) {
+//                    // 如果是分期标的,查询还款计划
+//                    List<BorrowRepayPlan> borrowRepayPlanList = this.selectBorrowRepayPlanList(borrowNid, dualDate);
+//                    if (borrowRepayPlanList != null && borrowRepayPlanList.size() > 0) {
+//                        logger.info(LOG_MAIN_INFO + "分期标的.应还日期在当天的债权,暂时不进行清算,标的编号:[" + borrowNid + "]");
+//                        isRepayFlag = 1;
+//                        continue;
+//                    }
+//                } else {
+//                    // 不分期标的
+//                    List<BorrowRepay> borrowRepayList = this.selectBorrowRepayList(borrowNid, dualDate);
+//                    if (borrowRepayList != null && borrowRepayList.size() > 0) {
+//                        logger.info(LOG_MAIN_INFO + "不分期标的,应还日期在当天的债权,暂时不进行清算,标的编号:[" + borrowNid + "].");
+//                        isRepayFlag = 1;
+//                        continue;
+//                    }
+//                }
 
                 // 查询债权是否已被清算 债转状态为 0 ,1
                 HjhDebtCredit hjhDebtCreditYes = this.selectHjhDebtCreditYes(hjhDebtDetail.getBorrowNid(), hjhDebtDetail.getOrderId());
