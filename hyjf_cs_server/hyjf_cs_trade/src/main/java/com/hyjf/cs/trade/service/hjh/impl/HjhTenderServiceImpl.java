@@ -1151,7 +1151,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 优惠券类别
             result.put("couponType", couponUser.getCouponType());
             // 优惠券额度
-            result.put("couponQuota", couponUser.getCouponQuota());
+            result.put("couponQuota", couponUser.getFormatCouponQuota());
             // 优惠券ID
             result.put("couponGrantId", couponUser.getId());
             result.put("projectType",couponUser.getProjectType());

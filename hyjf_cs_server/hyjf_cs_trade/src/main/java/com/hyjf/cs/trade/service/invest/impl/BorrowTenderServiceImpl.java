@@ -728,9 +728,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）全部统一为：
                 // 小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
                 // add by nxl 加息券统一为小数点后一位
-                String fromatCoupon = FormatRateUtil.formatBorrowApr(couponUser.getCouponQuota().toString());
-                data.put("couponQuota", fromatCoupon+ "%");
-//                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
+//                String fromatCoupon = FormatRateUtil.formatBorrowApr(couponUser.getCouponQuota().toString());
+//                data.put("couponQuota", fromatCoupon+ "%");
+                data.put("couponQuota", couponUser.getFormatCouponQuota()+ "%");
             }
             data.put("couponInterest", df.format(couponInterest));
 

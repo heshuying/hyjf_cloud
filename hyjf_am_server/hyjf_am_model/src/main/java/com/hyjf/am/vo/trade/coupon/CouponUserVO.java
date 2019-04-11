@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.trade.coupon;
 
 import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.FormatRateUtil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -142,7 +143,11 @@ public class CouponUserVO extends BaseVO implements Serializable {
     public void setCouponQuota(BigDecimal couponQuota) {
         this.couponQuota = couponQuota;
     }
-
+    //格式化利率dzs
+    public String getFormatCouponQuota() {
+        return  FormatRateUtil.formatBorrowApr(couponQuota.toString());
+    }
+    
     public Integer getCouponQuantity() {
         return couponQuantity;
     }
