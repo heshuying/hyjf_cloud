@@ -17,7 +17,7 @@ public class SellDailyDataDto {
 	/**
 	 * 运营部
 	 */
-	private SellDailyVO shOCSellDaily;
+	private SellDailyVO operationSellDaily;
 	/**
 	 * app数据
 	 */
@@ -45,12 +45,12 @@ public class SellDailyDataDto {
         this.list = list;
     }
 
-    public SellDailyVO getShOCSellDaily() {
-        return shOCSellDaily;
+    public SellDailyVO getOperationSellDaily() {
+        return operationSellDaily;
     }
 
-    public void setShOCSellDaily(SellDailyVO shOCSellDaily) {
-        this.shOCSellDaily = shOCSellDaily;
+    public void setOperationSellDaily(SellDailyVO operationSellDaily) {
+        this.operationSellDaily = operationSellDaily;
     }
 
     public SellDailyVO getAppSellDaily() {
