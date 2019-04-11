@@ -2433,7 +2433,7 @@ public class FddHandle {
 				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
 				try(FileInputStream ins = new FileInputStream(parentDir)){
-					logger.info("--------开始上传文件，准备链接ftp服务器，host:：" + ftpIP + ",port:" + port);
+					logger.info("--------开始上传文件，准备链接ftp服务器，host:" + ftpIP + ",port:" + port);
 
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, ins);
