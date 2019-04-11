@@ -85,7 +85,7 @@
         FROM ht_sell_daily
         WHERE date_str = #{dateStr}
         AND draw_order = #{drawOrder}
-        AND primary_division !='其中：'
+        AND primary_division not in ('其中：', '渠道')
     </select>
 
     <!-- 查询总合计 -->
