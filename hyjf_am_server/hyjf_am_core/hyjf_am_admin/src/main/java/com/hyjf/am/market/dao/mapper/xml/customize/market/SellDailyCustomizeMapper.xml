@@ -31,7 +31,6 @@
         <result column="invest_gt3000_user_num" property="investGt3000UserNum" jdbcType="INTEGER"/>
         <result column="invest_gt3000_month_user_num" property="investGt3000MonthUserNum" jdbcType="INTEGER"/>
         <result column="credit_amount" property="creditAmount" jdbcType="DECIMAL"/>
-        <result column="client" property="client" jdbcType="DECIMAL"/>
     </resultMap>
 
     <sql id="Sum_Column_List">
@@ -509,13 +508,15 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str,
-        t.client AS client
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSql"/>
         ) AS t
         <if test="type==2">
             WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
@@ -536,13 +537,15 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str,
-        t.client AS client
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSql"/>
         ) AS t
         <if test="type==2">
             WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
@@ -563,13 +566,15 @@
         SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str,
-        t.client AS client
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         <include refid="countTotalInvestSql"/>
         ) AS t
         <if test="type==2">
             WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
@@ -746,8 +751,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str,
-        t.client AS client
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -761,6 +765,9 @@
         ) AS t
         <if test="type==2">
             WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
@@ -788,8 +795,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str,
-        t.client AS client
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -803,6 +809,9 @@
         ) AS t
         <if test="type==2">
             WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>
@@ -829,8 +838,7 @@
         SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
         primary_division AS primary_division,
         two_division AS two_division,
-        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str,
-        t.client AS client
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
         FROM (
         SELECT  m.account*(CASE m.borrow_period
         WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
@@ -844,6 +852,9 @@
         ) AS t
         <if test="type==2">
             WHERE t.three_division in ('网络运营部','电销部') and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
         </if>
         GROUP BY t.primary_division, t.two_division
     </select>

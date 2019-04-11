@@ -77,14 +77,14 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				return;
 			}
 			SellDailyVO operationSellDaily = dto.getOperationSellDaily();
-			//SellDailyVO appSellDaily = dto.getAppSellDaily();
+			List<SellDailyVO> appSellDailyList = dto.getAppSellDailyList();
 			SellDailyVO qlSellDaily = dto.getQlSellDaily();
 			SellDailyVO creditSellDaily = dto.getCreditSellDaily();
 
 			// 2. 处理drawOrder=2特殊分部的数据
 			SellDailyVO noneRefferRecord = new SellDailyVO(YYZX_PRIMARY_DIVISION_NAME, YYZX_TWO_DIVISION_NAME);
-			SellDailyVO appRecord = new SellDailyVO(APP_PRIMARY_DIVISION_NAME, APP_TWO_DIVISION_NAME);
 			SellDailyVO hzRecord = new SellDailyVO(HZSW_PRIMARY_DIVISION_NAME, HZSW_TWO_DIVISION_NAME);
+			SellDailyVO appRecord = new SellDailyVO(APP_PRIMARY_DIVISION_NAME, APP_TWO_DIVISION_NAME);
 
 			// 2.1 运营中心 - 网络运营部 	计算：上海运营中心-网络运营部 + 青岛运营中心-网络运营部 + 电销部
 			if (operationSellDaily != null) {
@@ -92,20 +92,12 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			}
 
 			// 2.2 运营中心 - 无主单   计算： 一级部门空 + 杭州分部 + 特殊一级分部（勿动) - 千乐 - vip用户组
-
 			for (SellDailyVO entity : list) {
-				//计算无主单
 				if (StringUtils.isEmpty(entity.getPrimaryDivision())
 						|| NONE_REFFER_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
 					noneRefferRecord = sellDailyService.addValue(entity, noneRefferRecord, column, ADD);
-
-					//计算app推广
-					if("app".equals(entity.getClient())){
-						appRecord = sellDailyService.addValue(entity, appRecord, column, ADD);
-					}
 				}
 
-				// 计算惠众-其他
 				if (HZ_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
 					hzRecord = sellDailyService.addValue(entity, hzRecord, column, ADD);
 				}
@@ -128,6 +120,15 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			// 2.4 app推广计算app渠道投资， 只显示 本月累计规模业绩-1 上月对应累计规模业绩-3 (环比增速) 本月累计年化业绩-8
 			// 	上月累计年化业绩-9 (环比增速) 昨日规模业绩-11  昨日年化业绩-13
 			if (Arrays.asList(1, 3, 8, 9, 11, 13).contains(column)) {
+				if(!CollectionUtils.isEmpty(appSellDailyList)){
+					for(SellDailyVO entity : appSellDailyList){
+						//只需要计算无主单范围内的
+						if (StringUtils.isEmpty(entity.getPrimaryDivision())
+								|| NONE_REFFER_PRIMARY_DIVISION.contains(entity.getPrimaryDivision())) {
+							appRecord = sellDailyService.addValue(entity, appRecord, column, ADD);
+						}
+					}
+				}
 				list.add(appRecord);
 			}
 

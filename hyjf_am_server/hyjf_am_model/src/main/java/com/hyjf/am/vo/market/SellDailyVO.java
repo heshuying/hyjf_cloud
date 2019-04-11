@@ -48,16 +48,10 @@ public class SellDailyVO extends BaseVO {
 	private int rechargeGt3000UserNum;
 	private int investGt3000UserNum;
 	private int investGt3000MonthUserNum;
-
-
 	/**
-	 * 辅助属性
+	 * 承接债转金额  辅助字段，计算U,F列使用
 	 */
-	/** 承接债转金额 -计算U,F列使用 */
 	private BigDecimal creditAmount;
-	/** 客户端 -计算app推广使用 */
-	private String client;
-
 	private int createTime;
 	private int updateTime;
 
@@ -395,13 +389,5 @@ public class SellDailyVO extends BaseVO {
 
 	public void setCreditAmount(BigDecimal creditAmount) {
 		this.creditAmount = creditAmount;
-	}
-
-	public String getClient() {
-		return client;
-	}
-
-	public void setClient(String client) {
-		this.client = client;
 	}
 }
