@@ -3,6 +3,7 @@ package com.hyjf.cs.message.controller.app.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
 import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
@@ -19,10 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -92,6 +90,11 @@ public class OperationalDataController {
 			detail.put("XAxis", xlist.toString());
 			detail.put("YAxis", ycountlist);
 			info.put("MonthlyTransactionNumList", detail);
+
+			//安全运营天数
+			Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
+			info.put("survivalYears",totalDays/365);
+			info.put("survivalDays",totalDays%365);
 
 			result.put("info", info);
 			
