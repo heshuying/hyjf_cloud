@@ -725,7 +725,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else {
                 data.put("income", df.format(earnings.add(couponInterest)));
-                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
+                //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）全部统一为：
+                // 小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+                // add by nxl 加息券统一为小数点后一位
+                String fromatCoupon = FormatRateUtil.formatBorrowApr(couponUser.getCouponQuota().toString());
+                data.put("couponQuota", fromatCoupon+ "%");
+//                data.put("couponQuota", couponUser.getCouponQuota()+ "%");
             }
             data.put("couponInterest", df.format(couponInterest));
 
@@ -902,6 +907,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 设置产品加息 显示收益率
         if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
             investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield()));
+            //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
+            // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+            // add by nxl 加息利率
+            String borrowExtraYield = FormatRateUtil.formatBorrowApr(investInfo.getBorrowExtraYield());
+            investInfo.setBorrowExtraYield(borrowExtraYield);
         }
 
         // 如果出借金额不为空

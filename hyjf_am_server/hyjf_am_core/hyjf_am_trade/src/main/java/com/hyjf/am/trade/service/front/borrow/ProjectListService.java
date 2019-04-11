@@ -266,14 +266,4 @@ public interface ProjectListService {
      */
     List<AppProjectListCustomizeVO> getHomeRepayProjecList(Map map);
 
-    /**
-     * 平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
-     * 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
-     * 格式化利率
-     * add by nxl
-     * @param borrowApr
-     * @return
-     */
-    String formatBorrowApr(String borrowApr);
-
 }

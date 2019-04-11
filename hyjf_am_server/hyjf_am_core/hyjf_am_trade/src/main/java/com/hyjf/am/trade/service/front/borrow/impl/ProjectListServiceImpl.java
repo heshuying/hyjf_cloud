@@ -560,24 +560,4 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         return appProjectListCustomizeMapper.selectHomeRepayProjectList(map);
     }
 
-    /**
-     * 平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）
-     * 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
-     * 格式化利率
-     * add by nxl
-     * @param borrowApr
-     * @return
-     */
-    @Override
-    public String formatBorrowApr(String borrowApr){
-        //拆分小数,取小数的后两位
-        String spitArr = borrowApr.split("\\.")[1];
-        //判断最后一个是否为0
-        String subBorr = spitArr.substring(spitArr.length()-1,spitArr.length());
-        if(subBorr.equals("0")){
-            BigDecimal big = new BigDecimal(borrowApr).setScale(1);
-            borrowApr = big.toString();
-        }
-        return borrowApr;
-    }
 }

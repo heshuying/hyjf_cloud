@@ -21,6 +21,7 @@ import com.hyjf.am.vo.admin.BorrowCreditSumVO;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditDetailVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class BorrowCreditController extends BaseController {
             // 全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）
             // mod by nxl 20190409 start
             //历史年回报率
-            String fromatBorr= projectListService.formatBorrowApr(detailVO.getBorrowApr());
+            String fromatBorr= FormatRateUtil.formatBorrowApr(detailVO.getBorrowApr());
             detailVO.setBorrowApr(fromatBorr);
             // mod by nxl 20190409 end
         }

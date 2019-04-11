@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -520,6 +521,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if ("2".equals(bestCoupon.getCouponType())) {
+                    //平台所有利率（参考年回报率，历史年回报率，折让率，加息利率）全部统一为：小数点后一位（除非后台配置为小数点后两位且不为0时，则展示小数点后两位）；
+                    // 加息券利率统一为小数点后一位
+                    String fromatCoupon = FormatRateUtil.formatBorrowApr(bestCoupon.getCouponQuota());
+                    bestCoupon.setCouponQuota(fromatCoupon);
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用",platform);
                     notAvailableCouponList.add(couponBean);
                     continue;
