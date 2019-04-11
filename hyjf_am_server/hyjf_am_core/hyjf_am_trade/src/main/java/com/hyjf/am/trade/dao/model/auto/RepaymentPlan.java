@@ -77,6 +77,8 @@ public class RepaymentPlan implements Serializable {
      */
     private Date updateTime;
 
+    private BigDecimal oldMoney;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -165,5 +167,13 @@ public class RepaymentPlan implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public BigDecimal getOldMoney() {
+        return oldMoney;
+    }
+
+    public void setOldMoney(BigDecimal oldMoney) {
+        this.oldMoney = oldMoney;
     }
 }
