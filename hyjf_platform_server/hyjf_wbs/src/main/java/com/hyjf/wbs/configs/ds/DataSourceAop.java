@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataSourceAop  implements Ordered{
 	
-    private static final String PACKAGE_REFIX = "com.hyjf.am.";
+    private static final String PACKAGE_REFIX = "com.hyjf.wbs.";
 
     @Pointcut("execution(* com.hyjf..*Service.*(..))")
     public void serviceAspect() {
