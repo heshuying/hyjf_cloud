@@ -48,10 +48,16 @@ public class SellDailyVO extends BaseVO {
 	private int rechargeGt3000UserNum;
 	private int investGt3000UserNum;
 	private int investGt3000MonthUserNum;
+
+
 	/**
-	 * 承接债转金额
+	 * 辅助属性
 	 */
+	/** 承接债转金额 -计算U,F列使用 */
 	private BigDecimal creditAmount;
+	/** 客户端 -计算app推广使用 */
+	private String client;
+
 	private int createTime;
 	private int updateTime;
 
@@ -104,6 +110,46 @@ public class SellDailyVO extends BaseVO {
 		this.setInvestGt3000MonthUserNum(0);
 		this.setInvestGt3000UserNum(0);
 		this.setRechargeGt3000UserNum(0);
+	}
+
+	/**
+	 * 打印非0对象，减少打印压力
+	 *
+	 * @return
+	 */
+	public String print() {
+		StringBuffer sb = new StringBuffer();
+		if (dateStr != null) {
+			sb.append("dateStr:").append(dateStr).append(",");
+		}
+		if (primaryDivision != null) {
+			sb.append("primaryDivision:").append(primaryDivision).append(",");
+		}
+		if (twoDivision != null) {
+			sb.append("twoDivision:").append(twoDivision).append(",");
+		}
+
+		Class clazz = this.getClass();
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+			try {
+				if (field.getGenericType() == BigDecimal.class) {
+					BigDecimal value = (BigDecimal) field.get(this);
+					if (value != null && value.compareTo(BigDecimal.ZERO) > 0) {
+						sb.append(field.getName()).append(":").append(value).append(",");
+					}
+				}
+				if (field.getGenericType() == int.class) {
+					Integer value = (Integer) field.get(this);
+					if (value != null && value.intValue() > 0) {
+						sb.append(field.getName()).append(":").append(value).append(",");
+					}
+				}
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		return sb.toString();
 	}
 
 	public static void main(String[] args) {
@@ -351,43 +397,11 @@ public class SellDailyVO extends BaseVO {
 		this.creditAmount = creditAmount;
 	}
 
-	/**
-	 * 打印非0对象，减少打印压力
-	 *
-	 * @return
-	 */
-	public String print() {
-		StringBuffer sb = new StringBuffer();
-		if (dateStr != null) {
-			sb.append("dateStr:").append(dateStr).append(",");
-		}
-		if (primaryDivision != null) {
-			sb.append("primaryDivision:").append(primaryDivision).append(",");
-		}
-		if (twoDivision != null) {
-			sb.append("twoDivision:").append(twoDivision).append(",");
-		}
+	public String getClient() {
+		return client;
+	}
 
-		Class clazz = this.getClass();
-		Field[] fields = clazz.getDeclaredFields();
-		for (Field field : fields) {
-			try {
-				if (field.getGenericType() == BigDecimal.class) {
-					BigDecimal value = (BigDecimal) field.get(this);
-					if (value != null && value.compareTo(BigDecimal.ZERO) > 0) {
-						sb.append(field.getName()).append(":").append(value).append(",");
-					}
-				}
-				if (field.getGenericType() == int.class) {
-					Integer value = (Integer) field.get(this);
-					if (value != null && value.intValue() > 0) {
-						sb.append(field.getName()).append(":").append(value).append(",");
-					}
-				}
-			} catch (Exception e) {
-				continue;
-			}
-		}
-		return sb.toString();
+	public void setClient(String client) {
+		this.client = client;
 	}
 }
