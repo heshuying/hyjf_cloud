@@ -160,7 +160,8 @@
 		FROM
 		ht_hjh_accede
 		WHERE
-		plan_order_id = #{planOrderId}
+		accede_order_id = #{planOrderId}
+		and order_status = 3
 		and user_id = #{userId}
 	</select>
 </mapper>

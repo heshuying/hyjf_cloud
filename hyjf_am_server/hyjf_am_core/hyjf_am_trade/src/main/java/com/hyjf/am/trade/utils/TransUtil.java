@@ -4,7 +4,6 @@ import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
 import com.hyjf.am.trade.dao.model.auto.AleveLog;
 import com.hyjf.am.trade.dao.model.auto.EveLog;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -436,6 +435,45 @@ public class TransUtil {
             // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
             calBegin.add(Calendar.DAY_OF_MONTH, n);
             Datelist.add(calBegin.getTime());
+        }
+        return Datelist;
+    }
+
+    /**
+     * 循环拼接日期到List
+     *
+     * @param dBegin   开始日期
+     * @param dEnd 结束日期
+     * @return
+     */
+    public static List<Date> findDates(Date dBegin, Date dEnd) throws ParseException {
+        boolean flag = true;
+
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
+
+        //设置结束时间
+        Calendar calEnd = Calendar.getInstance();
+        calEnd.setTime(dEnd);
+
+        //装返回的日期集合容器
+        List<Date> Datelist = new ArrayList<Date>();
+
+        if(calBegin.getTime().equals(calEnd.getTime())){
+            Datelist.add(calBegin.getTime());
+        }else{
+            // 每次循环给calBegin日期加一天，直到calBegin.getTime()时间等于dEnd
+            while (dEnd.after(calBegin.getTime()))  {
+                // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+                if(flag){
+                    Datelist.add(calBegin.getTime());
+                    flag = false;
+                }else{
+                    calBegin.add(Calendar.DAY_OF_MONTH, 1);
+                    Datelist.add(calBegin.getTime());
+                }
+            }
         }
         return Datelist;
     }

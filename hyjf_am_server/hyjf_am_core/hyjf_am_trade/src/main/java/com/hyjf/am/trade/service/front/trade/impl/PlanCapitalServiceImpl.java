@@ -83,7 +83,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 // 查询汇计划加入明细表
                 List<HjhAccedeCustomize> accede = batchHjhAccedeCustomizeMapper.selectHjhAccedeList(paramMap);
                 if (accede.size() != 1) {
-                    logger.info("查询汇计划加入明细表时数据错误“accede.size() != 1”:" + "planOrderId:【" + detal.getPlanOrderId() + "】" + "userId:【" + detal.getUserId() + "】");
+                    logger.info("查询汇计划加入明细表时数据状态为锁定中或未查到数据！“accede.size() != 1”:" + "planOrderId:【" + detal.getPlanOrderId() + "】" + "userId:【" + detal.getUserId() + "】");
                     continue;
                 }
                 // 退出时间（时间戳）

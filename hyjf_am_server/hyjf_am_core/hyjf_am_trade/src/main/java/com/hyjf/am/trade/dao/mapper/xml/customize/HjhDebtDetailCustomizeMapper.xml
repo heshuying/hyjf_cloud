@@ -233,9 +233,9 @@
 		ht_hjh_debt_detail
 		WHERE
 		repay_time
-		BETWEEN UNIX_TIMESTAMP(CONCAT(#{expectTime},'00:00:00'))
-		END UNIX_TIMESTAMP(CONCAT(#{expectTime},'23:59:59'))
-		AND (repay_capital_wait + repay_interest_wait) <![CDATA[<]]> 10
+		BETWEEN UNIX_TIMESTAMP(CONCAT(#{expectTime},' 00:00:00'))
+		AND UNIX_TIMESTAMP(CONCAT(#{expectTime},' 23:59:59'))
+		AND (repay_capital_wait + repay_interest_wait) <![CDATA[>]]> 10
 		AND repay_status = 0
 		AND del_flag = 0
 		AND status = 1;
