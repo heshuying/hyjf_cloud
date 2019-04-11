@@ -34,7 +34,12 @@
         brp.id as `id`,
         brp.borrow_nid AS borrowNid,
         brp.recover_account AS recoverAccount,
-        brp.credit_amount + brp.credit_interest_amount AS creditAmount,
+        CASE
+        WHEN (brp.accede_order_id is null or brp.accede_order_id = '')
+            THEN brp.credit_amount + brp.credit_interest
+        ELSE
+            brp.credit_amount + brp.credit_interest_amount
+        END AS creditAmount,
         brp.nid AS tenderNid,
         brp.accede_order_id AS accedeOrderId,
         brp.credit_status AS creditStatus,
@@ -48,5 +53,11 @@
         AND (brp.recover_yestime = '' OR brp.recover_yestime IS NULL)
         AND brp.recover_status = 0
         AND ba.id IS NULL
+    </select>
+
+    <select id="selectTest" resultType="com.hyjf.am.trade.dao.model.auto.AleveErrorLog">
+        select * from ht_aleve_error_log
+        where id = #{id}
+        and del_flag = #{delFlag}
     </select>
 </mapper>
