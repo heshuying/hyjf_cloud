@@ -495,4 +495,32 @@ public class CommonUtils {
 		}
 		return bolStr;
 	}
+
+	/**
+	 * 数字格式化为以万和亿为单位i
+	 * @param num
+	 * @return
+	 */
+	public static String formatNum(BigDecimal num) {
+		StringBuffer sb = new StringBuffer();
+		BigDecimal b1 = new BigDecimal("10000");
+		BigDecimal b2 = new BigDecimal("100000000");
+
+		String unit = "";
+
+
+		// 以万为单位处理
+		if (num.compareTo(b1) == -1) {
+			unit = "";
+		} else if ((num.compareTo(b1) == 0 || num.compareTo(b1) == 1)
+				&& num.compareTo(b2) == -1) {
+			num = num.divide(b1);
+			unit = "万";
+		} else if (num.compareTo(b2) == 0 || num.compareTo(b2) == 1) {
+			num = num.divide(b2);
+			unit = "亿";
+		}
+
+		return num.setScale(2, BigDecimal.ROUND_DOWN).toString() + unit;
+	}
 }

@@ -3,6 +3,7 @@ package com.hyjf.cs.message.controller.wechat.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
@@ -58,10 +59,10 @@ public class OperationalDataWechatController {
 			}
 			JSONObject info = new JSONObject();
 
-			info.put("CumulativeTransactionNum", platDataStatisticsService.selectTotalTradeSum());
+			info.put("CumulativeTransactionNum", CommonUtils.formatNum(new BigDecimal(platDataStatisticsService.selectTotalTradeSum())) + "笔");
 
-			info.put("CumulativeTransactionTotal", platDataStatisticsService.selectTotalInvest());
-			info.put("CumulativeUserIncome", platDataStatisticsService.selectTotalInterest());
+			info.put("CumulativeTransactionTotal", CommonUtils.formatNum(platDataStatisticsService.selectTotalInvest()) + "元");
+			info.put("CumulativeUserIncome", CommonUtils.formatNum(platDataStatisticsService.selectTotalInterest()) + "元");
 
 			//加上统计月份
 			int staticMonth=oe.getStatisticsMonth();
@@ -124,11 +125,11 @@ public class OperationalDataWechatController {
 			OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
 			JSONObject detail = new JSONObject();
 			if(oe != null){
-				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
-				detail.put("LoanNum", oe.getLoanNum());
+				detail.put("CumulativeTransactionTotal",  CommonUtils.formatNum(oe.getWillPayMoney()) + "元");
+				detail.put("LoanNum", CommonUtils.formatNum(new BigDecimal(oe.getLoanNum())) + "笔");
 				
-				detail.put("investorTotal", oe.getTenderCount());
-				detail.put("perInvestTotal", oe.getPerInvest());
+				detail.put("investorTotal", CommonUtils.formatNum(new BigDecimal(oe.getTenderCount())) + "人");
+				detail.put("perInvestTotal", CommonUtils.formatNum(new BigDecimal(oe.getPerInvest())) + "元");
 				float time = oe.getFullBillTimeCurrentMonth();
 				
 				detail.put("fullScaleHour", oe.getHour(time));
@@ -143,9 +144,9 @@ public class OperationalDataWechatController {
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
 			//借款人相关数据统计：
-			detail.put("TotalBorrower", oe.getBorrowUserCountTotal());
-			detail.put("NowBorrower", oe.getBorrowUserCountCurrent());
-			detail.put("CurrentInvestor", oe.getTenderUserCountCurrent());
+			detail.put("TotalBorrower", CommonUtils.formatNum(BigDecimal.valueOf(oe.getBorrowUserCountTotal())) + "人");
+			detail.put("NowBorrower", CommonUtils.formatNum(BigDecimal.valueOf(oe.getBorrowUserCountCurrent())) + "人");
+			detail.put("CurrentInvestor", CommonUtils.formatNum(BigDecimal.valueOf(oe.getTenderUserCountCurrent())) + "人");
 			detail.put("MaxBorrowerRate", oe.getBorrowUserMoneyTopOne());
 			detail.put("Top10BorrowerRate", oe.getBorrowUserMoneyTopTen());
 
