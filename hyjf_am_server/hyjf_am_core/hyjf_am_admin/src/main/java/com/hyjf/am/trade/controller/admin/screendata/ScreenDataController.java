@@ -54,4 +54,20 @@ public class ScreenDataController extends BaseController {
         return response;
     }
 
+    @GetMapping(value = "/getborrowrecoverlist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getBorrowRecoverList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getBorrowRecoverList(startIndex,endIndex);
+        response.setResultList(list);
+        return response;
+    }
+
+    @GetMapping(value = "/getborrowtenderlist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getBorrowTenderList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getBorrowTenderList(startIndex,endIndex);
+        response.setResultList(list);
+        return response;
+    }
+
 }

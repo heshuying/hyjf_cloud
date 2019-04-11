@@ -2234,4 +2234,22 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    @Override
+    public List<ScreenDataBean> getBorrowRecoverList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowrecoverlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowtenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

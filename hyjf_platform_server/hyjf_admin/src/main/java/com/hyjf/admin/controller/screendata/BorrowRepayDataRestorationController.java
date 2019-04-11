@@ -61,6 +61,7 @@ public class BorrowRepayDataRestorationController extends BaseController {
                 }
             }
         }
+        logger.info("用户画像投屏数据充值数据修复结束");
 
         logger.info("用户画像投屏数据提现数据修复开始");
         List<ScreenDataBean> withdrawList = borrowRepayDataService.getWithdrawList(startIndex,endIndex);
@@ -74,6 +75,35 @@ public class BorrowRepayDataRestorationController extends BaseController {
                 }
             }
         }
+        logger.info("用户画像投屏数据提现数据修复结束");
+
+        logger.info("用户画像投屏数据还款成功数据修复开始");
+        List<ScreenDataBean> borrowRecoverList = borrowRepayDataService.getBorrowRecoverList(startIndex,endIndex);
+        if(!CollectionUtils.isEmpty(borrowRecoverList)){
+            for(ScreenDataBean screenDataBean:borrowRecoverList){
+                try{
+                    this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "还款成功数据已修复");
+                }catch (MQException e){
+                    logger.error("用户画像投屏数据还款成功数据修复异常",e);
+                }
+            }
+        }
+        logger.info("用户画像投屏数据还款成功数据修复结束");
+
+        logger.info("用户画像投屏数据散标投资数据修复开始");
+        List<ScreenDataBean> borrowTenderList = borrowRepayDataService.getBorrowTenderList(startIndex,endIndex);
+        if(!CollectionUtils.isEmpty(borrowTenderList)){
+            for(ScreenDataBean screenDataBean:borrowTenderList){
+                try{
+                    this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "散标投资数据已修复");
+                }catch (MQException e){
+                    logger.error("用户画像投屏数据散标投资数据修复异常",e);
+                }
+            }
+        }
+        logger.info("用户画像投屏数据散标投资数据修复结束");
 
         Integer index = startIndex + endIndex;
         RedisUtils.set("SCREEN_DATA_RESTORATION_INDEX",index.toString(),600);
@@ -85,7 +115,7 @@ public class BorrowRepayDataRestorationController extends BaseController {
      * @param screenDataBean
      */
     private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
-//        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(),screenDataBean), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(),screenDataBean), 2);
     }
 
 
