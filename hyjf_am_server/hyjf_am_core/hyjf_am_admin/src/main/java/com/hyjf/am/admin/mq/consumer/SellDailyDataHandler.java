@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.service.SellDailyService;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.common.util.GetDate;
@@ -71,7 +72,7 @@ public class SellDailyDataHandler {
 					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
-					: appSellDailyList.get(0);
+					: mergeSellDaily(appSellDailyList);
 			qlSellDaily = sellDailyService.countTotalInvestOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
@@ -94,7 +95,7 @@ public class SellDailyDataHandler {
 					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
-					: appSellDailyList.get(0);
+					: mergeSellDaily(appSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalInvestOnPreviousMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -127,7 +128,7 @@ public class SellDailyDataHandler {
 					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
-					: appSellDailyList.get(0);
+					: mergeSellDaily(appSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalAnnualInvestOnMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -141,7 +142,7 @@ public class SellDailyDataHandler {
 			appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
 					QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
-					: appSellDailyList.get(0);
+					: mergeSellDaily(appSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalAnnualInvestOnPreviousMonthQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -154,7 +155,7 @@ public class SellDailyDataHandler {
 					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
-					: appSellDailyList.get(0);
+					: mergeSellDaily(appSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalTenderYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -177,7 +178,7 @@ public class SellDailyDataHandler {
 					: mergeSellDaily(operSellDailyList);
 			appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime, QUERY_APP_TYPE);
 			appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? new SellDailyVO(null, null)
-					: appSellDailyList.get(0);
+					: mergeSellDaily(appSellDailyList);
 
 			qlSellDaily = sellDailyService.countTotalAnnualInvestYesterdayQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
@@ -253,6 +254,12 @@ public class SellDailyDataHandler {
 			qlSellDaily = sellDailyService.countInvestGt3000MonthUserNumQl(startTime, endTime, sourceId);
 			qlSellDaily = qlSellDaily == null ? new SellDailyVO(null, null) : qlSellDaily;
 			break;
+		}
+
+		if (logger.isDebugEnabled()) {
+			if (!CollectionUtils.isEmpty(list)) {
+				logger.debug("column is: {}, list: {}", column, JSONObject.toJSONString(list));
+			}
 		}
 
 		SellDailyDataDto dto = new SellDailyDataDto();
