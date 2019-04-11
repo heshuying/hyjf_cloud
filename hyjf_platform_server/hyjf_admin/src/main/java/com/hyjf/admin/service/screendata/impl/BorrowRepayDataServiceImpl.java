@@ -39,6 +39,18 @@ public class BorrowRepayDataServiceImpl implements BorrowRepayDataService {
     public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
         return adminClient.getRechargeList(startIndex, endIndex);
     }
+    @Override
+    public List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex) {
+        return adminClient.getPlanTenderList(startIndex, endIndex);
+    }
+    @Override
+    public List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex) {
+        return adminClient.getPlanRepayList(startIndex, endIndex);
+    }
+    @Override
+    public List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex) {
+        return adminClient.getCreditTenderList(startIndex, endIndex);
+    }
 
     @Override
     public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {

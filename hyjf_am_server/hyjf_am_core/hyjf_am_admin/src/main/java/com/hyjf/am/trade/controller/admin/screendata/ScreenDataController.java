@@ -45,7 +45,27 @@ public class ScreenDataController extends BaseController {
         response.setResultList(list);
         return response;
     }
-
+    @GetMapping(value = "/getplantenderlist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getPlanTenderList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getPlanTenderList(startIndex,endIndex);
+        response.setResultList(list);
+        return response;
+    }
+    @GetMapping(value = "/getplanrepaylist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getPlanRepayList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getPlanRepayList(startIndex,endIndex);
+        response.setResultList(list);
+        return response;
+    }
+    @GetMapping(value = "/getcredittenderlist/{startIndex}/{endIndex}")
+    private ScreenDataResponse getCreditTenderList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
+        ScreenDataResponse response = new ScreenDataResponse();
+        List<ScreenDataBean> list = screenDataService.getCreditTenderList(startIndex,endIndex);
+        response.setResultList(list);
+        return response;
+    }
     @GetMapping(value = "/getwithdrawlist/{startIndex}/{endIndex}")
     private ScreenDataResponse getWithdrawList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();

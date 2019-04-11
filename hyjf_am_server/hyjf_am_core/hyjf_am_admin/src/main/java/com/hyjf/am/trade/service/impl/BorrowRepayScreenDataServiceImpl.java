@@ -47,7 +47,28 @@ public class BorrowRepayScreenDataServiceImpl implements BorrowRepayScreenDataSe
         paramMap.put("endIndex",endIndex);
         return screenYearMoneyCustomizeMapper.getRechargeList(paramMap);
     }
+    @Override
+    public List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getPlanRepayList(paramMap);
+    }
 
+    @Override
+    public List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getPlanTenderList(paramMap);
+    }
+    @Override
+    public List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getCreditTenderList(paramMap);
+    }
     @Override
     public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {
         Map<String,Object> paramMap = new HashMap<>();

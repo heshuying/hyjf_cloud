@@ -2227,6 +2227,31 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     @Override
+    public List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getplantenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getplanrepaylist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getcredittenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
     public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {
         ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getwithdrawlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
         if(null != response){

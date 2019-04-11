@@ -49,6 +49,43 @@ public class BorrowRepayDataRestorationController extends BaseController {
         }
         logger.info("datarestoration startIndex:{}",startIndex);
 
+        logger.info("用户画像投屏数据承接数据修复开始");
+        List<ScreenDataBean> creditTenderList = borrowRepayDataService.getCreditTenderList(startIndex,endIndex);
+        if(!CollectionUtils.isEmpty(creditTenderList)){
+            for(ScreenDataBean screenDataBean:creditTenderList){
+                try{
+                    this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "承接已修复");
+                }catch (MQException e){
+                    logger.error("用户画像投屏数据承接数据修复开始修复异常",e);
+                }
+            }
+        }
+        logger.info("用户画像投屏数据计划退出回款数据修复开始");
+        List<ScreenDataBean> planRepayList = borrowRepayDataService.getPlanRepayList(startIndex,endIndex);
+        if(!CollectionUtils.isEmpty(planRepayList)){
+            for(ScreenDataBean screenDataBean:planRepayList){
+                try{
+                    this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "计划退出回款已修复");
+                }catch (MQException e){
+                    logger.error("用户画像投屏数据计划退出回款数据修复开始修复异常",e);
+                }
+            }
+        }
+        logger.info("用户画像投屏数据计划投资数据修复开始");
+        List<ScreenDataBean> planTenderList = borrowRepayDataService.getPlanTenderList(startIndex,endIndex);
+        if(!CollectionUtils.isEmpty(planTenderList)){
+            for(ScreenDataBean screenDataBean:planTenderList){
+                try{
+                    this.sendScreenDataMQ(screenDataBean);
+                    logger.debug("用户：{"+screenDataBean.getUserId()+"}" + "计划投资数据已修复");
+                }catch (MQException e){
+                    logger.error("用户画像投屏数据计划投资数据修复开始修复异常",e);
+                }
+            }
+        }
+
         logger.info("用户画像投屏数据充值数据修复开始");
         List<ScreenDataBean> rechargeList = borrowRepayDataService.getRechargeList(startIndex,endIndex);
         if(!CollectionUtils.isEmpty(rechargeList)){
