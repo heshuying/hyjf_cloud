@@ -1674,9 +1674,13 @@ public interface AmTradeClient {
 
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal getUserLateInterestWaitTotal(Integer userId);
+
     BigDecimal getUserBorrowAccountTotal(Integer userId);
 
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
+
+    BigDecimal getOrgLateInterestWaitTotal(Integer userId);
 
     RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId);
 

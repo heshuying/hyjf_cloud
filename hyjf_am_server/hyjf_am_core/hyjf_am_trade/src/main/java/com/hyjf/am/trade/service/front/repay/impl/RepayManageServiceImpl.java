@@ -68,6 +68,18 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
+     * 普通借款人逾期利息总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectUserLateInterestWaitTotal(Integer userId){
+        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getWaitRepayManageFee(userId);
+        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getWaitRepayPlanManageFee(userId);
+        return waitManageFee.add(waitPlanManageFee);
+    }
+
+    /**
      * 普通借款人总借款金额
      * @param userId
      * @return
@@ -87,6 +99,18 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectOrgRepayFeeWaitTotal(Integer userId){
+        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayManageFee(userId);
+        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayPlanManageFee(userId);
+        return waitManageFee.add(waitPlanManageFee);
+    }
+
+    /**
+     * 担保机构逾期利息总待还
+     * @param userId
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgLateInterestWaitTotal(Integer userId){
         BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayManageFee(userId);
         BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayPlanManageFee(userId);
         return waitManageFee.add(waitPlanManageFee);
@@ -4871,7 +4895,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 BankRepayFreezeLog newRecord = new BankRepayFreezeLog();
                 newRecord.setId(record.getId());
                 newRecord.setDelFlag(1);// 0 有效 1无效
-                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record);
+                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(newRecord);
                 logger.info("【还款冻结处理】借款编号：{}，删除冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }

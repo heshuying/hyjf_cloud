@@ -588,5 +588,76 @@ public class BorrowRepaymentCustomizeVO extends BaseVO implements Serializable {
 		public void setRecoverLastTime(String recoverLastTime) {
 			this.recoverLastTime = recoverLastTime;
 		}
+	    private String repayAccountInterestAll;
+	    private String repayAccountCapitalYesAll;
+	    private String repayAccountInterestYesAll;
+	    private String repayFeeYesAll;
+	    private String repayAccountCapitalWaitAll;
+	    private String repayAccountInterestWaitAll;
+	    private String repayFeeWaitAll;
 
+		public String getRepayAccountInterestAll() {
+			return repayAccountInterestAll;
+		}
+
+		public void setRepayAccountInterestAll(String repayAccountInterestAll) {
+			this.repayAccountInterestAll = repayAccountInterestAll;
+		}
+
+		public String getRepayAccountCapitalYesAll() {
+			return repayAccountCapitalYesAll;
+		}
+
+		public void setRepayAccountCapitalYesAll(String repayAccountCapitalYesAll) {
+			this.repayAccountCapitalYesAll = repayAccountCapitalYesAll;
+		}
+
+		public String getRepayAccountInterestYesAll() {
+			return repayAccountInterestYesAll;
+		}
+
+		public void setRepayAccountInterestYesAll(String repayAccountInterestYesAll) {
+			this.repayAccountInterestYesAll = repayAccountInterestYesAll;
+		}
+
+		public String getRepayFeeYesAll() {
+			return repayFeeYesAll;
+		}
+
+		public void setRepayFeeYesAll(String repayFeeYesAll) {
+			this.repayFeeYesAll = repayFeeYesAll;
+		}
+
+		public String getRepayAccountCapitalWaitAll() {
+			return repayAccountCapitalWaitAll;
+		}
+
+		public void setRepayAccountCapitalWaitAll(String repayAccountCapitalWaitAll) {
+			this.repayAccountCapitalWaitAll = repayAccountCapitalWaitAll;
+		}
+
+		public String getRepayAccountInterestWaitAll() {
+			return repayAccountInterestWaitAll;
+		}
+
+		public void setRepayAccountInterestWaitAll(String repayAccountInterestWaitAll) {
+			this.repayAccountInterestWaitAll = repayAccountInterestWaitAll;
+		}
+
+		public String getRepayFeeWaitAll() {
+			return repayFeeWaitAll;
+		}
+
+		public void setRepayFeeWaitAll(String repayFeeWaitAll) {
+			this.repayFeeWaitAll = repayFeeWaitAll;
+		}
+
+		public static long getSerialversionuid() {
+			return serialVersionUID;
+		}
+
+		public void setRepayFeeWait(String repayFeeWait) {
+			this.repayFeeWait = repayFeeWait;
+		}
+	    
 }
