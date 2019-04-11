@@ -21,7 +21,7 @@ public class SellDailyDataDto {
 	/**
 	 * app数据
 	 */
-	private SellDailyVO appSellDaily;
+	private List<SellDailyVO> appSellDailyList;
 	/**
 	 * 千乐渠道
 	 */
@@ -53,12 +53,12 @@ public class SellDailyDataDto {
         this.operationSellDaily = operationSellDaily;
     }
 
-    public SellDailyVO getAppSellDaily() {
-        return appSellDaily;
+    public List<SellDailyVO> getAppSellDailyList() {
+        return appSellDailyList;
     }
 
-    public void setAppSellDaily(SellDailyVO appSellDaily) {
-        this.appSellDaily = appSellDaily;
+    public void setAppSellDailyList(List<SellDailyVO> appSellDailyList) {
+        this.appSellDailyList = appSellDailyList;
     }
 
     public SellDailyVO getQlSellDaily() {
