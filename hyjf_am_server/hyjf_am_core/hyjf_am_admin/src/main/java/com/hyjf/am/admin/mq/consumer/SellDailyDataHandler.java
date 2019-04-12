@@ -259,7 +259,7 @@ public class SellDailyDataHandler {
 		}
 
 		if (qlSellDaily != null) {
-			dto.setQlSellDaily(setValue(qlSellDaily, QIANLE_DIVISION_NAME, "千乐", 5, 0));
+			dto.setQlSellDaily(setValue(qlSellDaily, QIANLE_DIVISION_NAME, "千乐", 2, 0));
 		}
 		return dto;
 	}
