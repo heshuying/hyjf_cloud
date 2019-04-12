@@ -215,13 +215,29 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 request.setBorrowClass(borrowClass);
                 request.setPublishInstCode(CustomConstants.HYJF_INST_CODE);
 
-                // 统计相应的汇直投的数据记录数
+                // 统计定时发标+出借中总记录数
+                request.setStatus("21");
                 int projectToal = amTradeClient.countProjectList(request);
 
-                Map<String, Object> params = new HashMap<String, Object>();
-                if (projectToal > 0) {
+                int defaultCount = request.getPageSize() * 2;
+                if(projectToal >= defaultCount){
+                    // 只查询定时发标和出借中标的
+                    page.setTotal(projectToal);
+                    // 查询相应的汇直投列表数据
+                    int limit = page.getLimit();
+                    int offSet = page.getOffset();
 
-                    //add by cwyang 项目列表显示2页
+                    if (offSet == 0 || offSet > 0) {
+                        request.setLimitStart(offSet);
+                    }
+                    if (limit > 0) {
+                        request.setLimitEnd(limit);
+                    }
+
+                    List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
+                    resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
+                }else{
+                    //查询所有标的
                     int pageNum = 2;
                     if(projectToal > request.getPageSize() * pageNum){
                         projectToal = request.getPageSize() * pageNum;
@@ -238,14 +254,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     if (limit > 0) {
                         request.setLimitEnd(limit);
                     }
+
+                    request.setStatus(null);
                     List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
                     resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
-                    //int nowTime = GetDate.getNowTime10();
-                    // result.setNowTime(nowTime);
-                } else {
-                    resultBean.setList(new ArrayList<WebProjectListCsVO>());
-                    page.setTotal(0);
                 }
+
             } else {
                 resultBean.setList(new ArrayList<WebProjectListCsVO>());
                 page.setTotal(0);
