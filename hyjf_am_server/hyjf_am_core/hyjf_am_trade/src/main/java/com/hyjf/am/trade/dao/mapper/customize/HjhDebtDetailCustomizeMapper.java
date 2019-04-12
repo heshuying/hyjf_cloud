@@ -46,7 +46,7 @@ public interface HjhDebtDetailCustomizeMapper {
      * @param orderId
      * @return
      */
-    HjhDebtDetail selectDebtDetailCurRepayPeriodByDate(String orderId, String dualDate);
+    HjhDebtDetail selectDebtDetailCurRepayPeriodByDate(@Param("orderId") String orderId, @Param("dualDate") String dualDate);
 
     /**
      * 根据出借订单号和还款期数 查询债权详情
@@ -75,7 +75,7 @@ public interface HjhDebtDetailCustomizeMapper {
      * @param orderId
      * @return
      */
-    HjhDebtDetail selectDebtDetailCurPeriodByDate(String orderId,String dualDate);
+    HjhDebtDetail selectDebtDetailCurPeriodByDate(@Param("orderId") String orderId,@Param("dualDate") String dualDate);
 
     /**
      * 更新计划加入订单的清算进度,清算服务费,清算时公允价值,计划订单的当前公允价值
