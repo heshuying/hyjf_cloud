@@ -59,6 +59,8 @@ public class CommissionComboRequest extends BasePage implements Serializable{
     private String mobile;
     
     private Integer attribute;
+
+    private String logOrderId;
    
 	public TenderCommissionVO getTenderCommission() {
 		return tenderCommission;
@@ -167,5 +169,13 @@ public class CommissionComboRequest extends BasePage implements Serializable{
 	}
 	public void setAttribute(Integer attribute) {
 		this.attribute = attribute;
+	}
+
+	public String getLogOrderId() {
+		return logOrderId;
+	}
+
+	public void setLogOrderId(String logOrderId) {
+		this.logOrderId = logOrderId;
 	}
 }

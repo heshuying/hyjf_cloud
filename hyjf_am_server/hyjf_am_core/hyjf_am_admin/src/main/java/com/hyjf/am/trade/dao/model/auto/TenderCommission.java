@@ -146,6 +146,8 @@ public class TenderCommission implements Serializable {
      */
     private Date updateTime;
 
+    private String logOrderId;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -330,5 +332,13 @@ public class TenderCommission implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getLogOrderId() {
+        return logOrderId;
+    }
+
+    public void setLogOrderId(String logOrderId) {
+        this.logOrderId = logOrderId;
     }
 }
