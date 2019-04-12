@@ -74,7 +74,7 @@
     <select id="queryBatchCenterList" resultMap="batchCenterMap"
             parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
         SELECT
-        log.id,
+        api.id,
         log.borrow_nid borrow_nid,
         hic.inst_name,
         log.batch_no batch_no,
@@ -106,6 +106,7 @@
         b.increase_interest_flag
         FROM
         ht_borrow_apicron_log log
+        INNER JOIN ht_borrow_apicron api ON api.nid = log.nid AND api.api_type=1
         LEFT JOIN ht_borrow b ON log.borrow_nid = b.borrow_nid
         LEFT JOIN ht_borrow_info bi ON log.borrow_nid = bi.borrow_nid
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = bi.inst_code
