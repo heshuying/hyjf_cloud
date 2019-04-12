@@ -4174,11 +4174,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             throw new RuntimeException("还款失败！" + "插入借款人交易明细表AccountList失败！");
         }
         updateOverdueStatus(borrow, latePeriod);
-        try {
-            deleteFreezeTempLogs(bean.getOrderId(), borrowNid);
-        } catch (Exception e) {
-            logger.error("【还款】删除还款冻结临时日志失败！订单号：{}", bean.getOrderId(), e);
-        }
+        deleteFreezeTempLogs(bean.getOrderId(), borrowNid);
         return true;
     }
 
@@ -4726,7 +4722,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         Borrow newBorrow = new Borrow();
         newBorrow.setId(borrow.getId());
         newBorrow.setRepayStatus(status);
-        this.borrowMapper.updateByPrimaryKey(newBorrow);
+        this.borrowMapper.updateByPrimaryKeySelective(newBorrow);
         try {
             updateBorrowApicronLog(apicron, status);
         } catch (Exception e) {
