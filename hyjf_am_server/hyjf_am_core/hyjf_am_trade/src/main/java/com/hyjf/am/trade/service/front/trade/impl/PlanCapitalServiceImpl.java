@@ -112,12 +112,14 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             // 累加预计当日新增复投额
                             reinvestAccount = reinvestAccount.add(voStr.getReinvestAccount()).add(account);
                             voStr.setReinvestAccount(reinvestAccount);
+                            logger.info("累加相同计划金额，未收本金 +  未收利息 + 预计当日新增复投额：" + "planOrderId:【" + detal.getPlanOrderId() + "】" + "==userId:【" + detal.getUserId() + "】" + "==planNid:【" + voStr.getPlanNid() + "】" + "==reinvestAccount:【" + reinvestAccount + "】" + "==account:【" + account + "】");
                             // 不新增新list數據
                             flagAddVo = false;
                         }
                     }
                     // 如果list中不存在則新增計劃
                     if (flagAddVo) {
+                        logger.info("新计划插入，未收本金 +  未收利息：" + "planOrderId:【" + detal.getPlanOrderId() + "】" + "==userId:【" + detal.getUserId() + "】" + "==planNid:【" + detal.getPlanNid() + "】" + "==account:【" + account + "】");
                         // 新增对应PlanNid的计划行
                         HjhPlanCapitalPredictionVO hjhPlanCapitalPrediction = new HjhPlanCapitalPredictionVO();
                         hjhPlanCapitalPrediction.setDate(date);
