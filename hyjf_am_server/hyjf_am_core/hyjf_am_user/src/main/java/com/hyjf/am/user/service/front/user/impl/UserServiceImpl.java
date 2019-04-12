@@ -1683,6 +1683,20 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
     @Override
     public HashMap<String, String> findUserGroup(Integer userId) {
-        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId);
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String taskTime = formatter.format(currentTime);
+        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
+    }
+    /**
+     * 获取现在时间
+     *
+     * @return 返回时间类型 yyyyMM
+     */
+    private  String getNowDateOfDay() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String dateString = formatter.format(currentTime);
+        return dateString;
     }
 }

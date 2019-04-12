@@ -46,7 +46,7 @@ public interface ScreenDataService {
      * @param screenDataBean
      * @return
      */
-    Integer updateRepayMoney(ScreenDataBean screenDataBean, Integer startTime, Integer endTime);
+    Integer updateRepayMoney(ScreenDataBean screenDataBean, Date startTime, Date endTime);
 
     /**
      * 查询用户这笔订单是否是本月应还的

@@ -228,6 +228,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 							try{
 								// 充值成功后,发送大屏数据统计MQ
 								ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),txAmount,2);
+								logger.info("充值成功后发送大屏数据"+JSONObject.toJSONString(screenDataBean));
 								this.sendScreenDataMQ(screenDataBean);
 							}catch (Exception e){
 								logger.error("充值成功后,发送大屏数据统计MQ失败",e.getMessage());

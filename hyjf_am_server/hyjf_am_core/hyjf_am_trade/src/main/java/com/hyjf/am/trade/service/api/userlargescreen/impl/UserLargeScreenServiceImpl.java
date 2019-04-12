@@ -77,11 +77,13 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getMonthReceivedPayments();
         List<EchartsResultVO> monthReceivedPaymentsNew = new ArrayList<>();
         List<EchartsResultVO> monthReceivedPaymentsOld = new ArrayList<>();
-        for(EchartsResultVO echartsResultVO:list){
-            if("1".equals(echartsResultVO.getCustomerGroup())){
-                monthReceivedPaymentsNew.add(echartsResultVO);
-            }else {
-                monthReceivedPaymentsOld.add(echartsResultVO);
+        if(!CollectionUtils.isEmpty(list)) {
+            for (EchartsResultVO echartsResultVO : list) {
+                if ("1".equals(echartsResultVO.getCustomerGroup())) {
+                    monthReceivedPaymentsNew.add(echartsResultVO);
+                } else {
+                    monthReceivedPaymentsOld.add(echartsResultVO);
+                }
             }
         }
         vo.setMonthReceivedPaymentsNew(monthReceivedPaymentsNew);
@@ -291,7 +293,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     BigDecimal extractionRate = new BigDecimal("0");
                     if(monthDataStatisticsVOO.getWithdraw().compareTo(BigDecimal.ZERO) > 0 &&
                             monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
-                        extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).setScale(2, BigDecimal.ROUND_HALF_UP);
+                        extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
                     monthDataStatisticsVOO.setExtractionRate(extractionRate);
 
