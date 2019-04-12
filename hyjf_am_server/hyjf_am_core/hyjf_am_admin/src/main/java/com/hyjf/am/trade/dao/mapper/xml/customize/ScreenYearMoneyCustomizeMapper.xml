@@ -4,10 +4,10 @@
 
 	<insert id="addRepayUserList">
 		insert into ht_repayment_plan
-		(`user_id`, `borrow_nid`, `accede_order_id`, `customer_name`, `customer_group`, `money`, `repayment_time`)
+		(`user_id`, `borrow_nid`, `accede_order_id`, `customer_name`, `customer_group`, `money`, `money`,`repayment_time`)
 		values
 		<foreach collection="repaymentPlanVOS" item="item" index="index" separator=",">
-			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.repaymentTime})
+			(#{item.userId},#{item.borrowNid},#{item.accedeOrderId},#{item.customerName},#{item.customerGroup},#{item.money},#{item.money},#{item.repaymentTime})
 		</foreach>
 	</insert>
 
