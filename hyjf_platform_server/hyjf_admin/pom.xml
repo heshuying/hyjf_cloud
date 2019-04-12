@@ -155,6 +155,11 @@
             <artifactId>hyjf_am_model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--WebSocket -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
     </dependencies>
 
 

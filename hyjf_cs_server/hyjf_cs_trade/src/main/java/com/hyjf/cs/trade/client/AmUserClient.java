@@ -1,17 +1,23 @@
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.trade.ScreenDataResponse;
+import com.hyjf.am.response.user.UserCustomerTaskConfigResponse;
+import com.hyjf.am.response.user.UserScreenConfigResponse;
+import com.hyjf.am.resquest.admin.UserLargeScreenRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.trade.bifa.BifaIndexUserInfoBeanVO;
 import com.hyjf.am.vo.user.*;
 
@@ -483,4 +489,29 @@ public interface AmUserClient {
 	 * @return
 	 */
     BifaIndexUserInfoBeanVO getBifaIndexUserInfo(Integer userId);
+
+
+	/**
+	 * 查询用户归属那个运营部
+	 * @param screenDataBean
+	 * @return
+	 */
+	ScreenDataResponse findUserGroup(ScreenDataBean screenDataBean);
+
+	/**
+	 * 大屏幕运营部配置获取
+	 * @return
+	 */
+	UserScreenConfigResponse getScreenConfig(UserLargeScreenRequest request);
+	/**
+	 * 坐席月任务配置
+	 * @return
+	 */
+	UserCustomerTaskConfigResponse getCustomerTaskConfig(UserLargeScreenRequest request);
+
+	/**
+	 * 所有坐席和坐席下用户查询
+	 * @return
+	 */
+	UserLargeScreenTwoVO getCurrentOwnersAndUserIds();
 }
