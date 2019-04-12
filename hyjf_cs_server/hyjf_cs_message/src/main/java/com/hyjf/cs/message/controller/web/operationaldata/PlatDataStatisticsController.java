@@ -3,7 +3,6 @@ package com.hyjf.cs.message.controller.web.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
@@ -55,28 +54,28 @@ public class PlatDataStatisticsController {
     public WebResult<Object> getPlatformRealTimeData() {
         WebResult result = new WebResult();
         JSONObject jsonObject = new JSONObject();
-//        DecimalFormat df = new DecimalFormat("#,##0");
+        DecimalFormat df = new DecimalFormat("#,##0");
         OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
         _log.info("获取到的OperationReport=" + JSONObject.toJSONString(oe));
         // 累计出借
-        jsonObject.put("investTotal", CommonUtils.formatNum(platDataStatisticsService.selectTotalInvest()) + "元");
+        jsonObject.put("investTotal", df.format(platDataStatisticsService.selectTotalInvest().setScale(0, BigDecimal.ROUND_DOWN)));
         // 累计收益
         jsonObject.put("interestTotal",
-                CommonUtils.formatNum(platDataStatisticsService.selectTotalInterest()) + "元");
+                df.format(platDataStatisticsService.selectTotalInterest().setScale(0, BigDecimal.ROUND_DOWN)));
         // 累计交易笔数
-        jsonObject.put("tenderCounts", CommonUtils.formatNum(new BigDecimal(platDataStatisticsService.selectTotalTradeSum())) + "笔");
+        jsonObject.put("tenderCounts", platDataStatisticsService.selectTotalTradeSum());
         // 累计人均出借金额
-        jsonObject.put("perCapitaInvestment", CommonUtils.formatNum(new BigDecimal(oe.getPerInvest())) + "元");
+        jsonObject.put("perCapitaInvestment", df.format(oe.getPerInvest()));
         // 借贷余额（原借款人待还）
         if (oe.getWillPayMoney() != null) {
-            jsonObject.put("totalRepayAwait", CommonUtils.formatNum(oe.getWillPayMoney()) + "元");
+            jsonObject.put("totalRepayAwait", df.format(oe.getWillPayMoney()));
         } else {
-            jsonObject.put("totalRepayAwait", "0元");
+            jsonObject.put("totalRepayAwait", df.format(0));
         }
         // 借贷笔数
-        jsonObject.put("totalRepayCounts", CommonUtils.formatNum(new BigDecimal(oe.getLoanNum())) + "笔");
+        jsonObject.put("totalRepayCounts", oe.getLoanNum());
         // 出借人总数
-        jsonObject.put("registerCounts", CommonUtils.formatNum(new BigDecimal(oe.getTenderCount())) + "人");
+        jsonObject.put("registerCounts", oe.getTenderCount());
 
         OperationGroupReport oegroup = platDataStatisticsService.findOneOperationMongoGroupEntity();
         Map<Integer, Integer> ageMap = oegroup.getInvestorAgeMap();
@@ -232,9 +231,9 @@ public class PlatDataStatisticsController {
 
         //借款人相关数据统计：
 
-        jsonObject.put("borrowuserCountTotal", CommonUtils.formatNum(BigDecimal.valueOf(oe.getBorrowUserCountTotal())) + "人");
-        jsonObject.put("borrowuserCountCurrent", CommonUtils.formatNum(BigDecimal.valueOf(oe.getBorrowUserCountCurrent())) + "人");
-        jsonObject.put("tenderuserCountCurrent", CommonUtils.formatNum(BigDecimal.valueOf(oe.getTenderUserCountCurrent())) + "人");
+        jsonObject.put("borrowuserCountTotal", oe.getBorrowUserCountTotal());
+        jsonObject.put("borrowuserCountCurrent", oe.getBorrowUserCountCurrent());
+        jsonObject.put("tenderuserCountCurrent", oe.getTenderUserCountCurrent());
         jsonObject.put("borrowuserMoneyTopone", oe.getBorrowUserMoneyTopOne() == null ? 0.00 : oe.getBorrowUserMoneyTopOne().setScale(2, BigDecimal.ROUND_DOWN));
         jsonObject.put("borrowuserMoneyTopten", oe.getBorrowUserMoneyTopTen() == null ? 0.00 : oe.getBorrowUserMoneyTopTen().setScale(2, BigDecimal.ROUND_DOWN));
 

@@ -6,10 +6,7 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -501,7 +498,8 @@ public class CommonUtils {
 	 * @param num
 	 * @return
 	 */
-	public static String formatNum(BigDecimal num) {
+	public static Map<String,String> formatNum(BigDecimal num) {
+		Map<String,String> resultMap = new HashMap<>();
 		StringBuffer sb = new StringBuffer();
 		BigDecimal b1 = new BigDecimal("10000");
 		BigDecimal b2 = new BigDecimal("100000000");
@@ -521,6 +519,8 @@ public class CommonUtils {
 			unit = "亿";
 		}
 
-		return num.setScale(2, BigDecimal.ROUND_DOWN).toString() + unit;
+		resultMap.put("data", num.setScale(2, BigDecimal.ROUND_DOWN).toString());
+		resultMap.put("unit", unit);
+		return resultMap;
 	}
 }
