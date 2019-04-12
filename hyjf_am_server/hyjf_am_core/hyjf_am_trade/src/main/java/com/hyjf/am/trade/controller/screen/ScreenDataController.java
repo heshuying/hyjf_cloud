@@ -64,11 +64,13 @@ public class ScreenDataController extends BaseController {
         Integer endTime = GetDate.getLastDayOfMonth();
         if (screenDataBean.getTenderUserId()!=null&&screenDataBean.getTenderUserId()!=0) {
             RepaymentPlan repayUser = service.findRepayUser(screenDataBean, startTime, endTime);
+            //承接要生成一条
             if (repayUser !=null) {
                 repayUser.setUserId(screenDataBean.getTenderUserId());
                 service.insertRepayUser(repayUser);
             }
         }
+
         Integer result = service.updateRepayMoney(screenDataBean,startTime,endTime);
         response.setResultInt(result);
         return response;
