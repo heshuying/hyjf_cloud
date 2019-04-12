@@ -84,7 +84,7 @@ public class PlanCapitalController {
         List<HjhPlanCapitalPredictionVO> listAll = new ArrayList<HjhPlanCapitalPredictionVO>();
         try {
             // 拆解時間段list
-            List<Date> dates = TransUtil.findDates(GetDate.stringToDate2(fromDate),GetDate.stringToDate2(toDate),0);
+            List<Date> dates = TransUtil.findDates(GetDate.stringToDate2(fromDate),GetDate.stringToDate2(toDate));
             for(Date date:dates){
                 // 根據日期獲取預計日期的新增復投額
                 List<HjhPlanCapitalPredictionVO> list = this.planCapitalService.getPlanCapitalPredictionForProformaList(date);
