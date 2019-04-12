@@ -4895,7 +4895,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 BankRepayFreezeLog newRecord = new BankRepayFreezeLog();
                 newRecord.setId(record.getId());
                 newRecord.setDelFlag(1);// 0 有效 1无效
-                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(newRecord);
+                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKeySelective(newRecord);
                 logger.info("【还款冻结处理】借款编号：{}，删除冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }
@@ -4912,7 +4912,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 BankRepayOrgFreezeLog newRecord = new BankRepayOrgFreezeLog();
                 newRecord.setId(record.getId());
                 newRecord.setDelFlag(1);// 0 有效 1无效
-                int flag = this.bankRepayOrgFreezeLogMapper.updateByPrimaryKey(newRecord);
+                int flag = this.bankRepayOrgFreezeLogMapper.updateByPrimaryKeySelective(newRecord);
                 logger.info("【代偿冻结处理】借款编号：{}，删除担保机构冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }
