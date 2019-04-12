@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author fq
+ * @author yinhui
  * @version ChannelReconciliationServiceImpl, v0.1 2018/9/21 9:57
  */
 @Service

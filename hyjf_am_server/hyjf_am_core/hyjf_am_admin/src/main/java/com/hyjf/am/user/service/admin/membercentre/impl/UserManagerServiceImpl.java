@@ -59,8 +59,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserInfoByUserInfoSelective(UserInfo userInfo) {
         int userFlag = this.userInfoMapper.updateByPrimaryKeySelective(userInfo);
         if (userFlag > 0) {
-            System.out.println("=============用户详细信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
+            logger.error("=============用户详细信息保存异常!=============");
             throw new RuntimeException("用户详细信息保存异常!");
         }
         return userFlag;
@@ -75,8 +76,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserSelective(User user) {
         int userFlag = this.userMapper.updateByPrimaryKeySelective(user);
         if (userFlag > 0) {
-            System.out.println("=============用户表信息保存成功!=============");
+            logger.info("=============用户表信息保存成功!=============");
         } else {
+            logger.error("=============用户表信息保存异常!!=============");
             throw new RuntimeException("用户表信息保存异常!");
         }
         return userFlag;

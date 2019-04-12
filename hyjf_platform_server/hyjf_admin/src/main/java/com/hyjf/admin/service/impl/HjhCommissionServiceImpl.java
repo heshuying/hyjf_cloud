@@ -157,6 +157,7 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 			request.setTxTime(resultBean.getTxTime());
 			request.setLogIp(resultBean.getLogIp());
 			request.setAccountId(resultBean.getAccountId());
+			request.setLogOrderId(resultBean.getLogOrderId());
 		}
 		if(chinapnrBean !=null){
 			request.setTransAmt(chinapnrBean.getTransAmt());

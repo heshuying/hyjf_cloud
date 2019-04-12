@@ -3371,5 +3371,7 @@ public interface AmTradeClient {
      * @return
      */
     int deleteUserAccountAction(String userId);
+
+
 }
 
