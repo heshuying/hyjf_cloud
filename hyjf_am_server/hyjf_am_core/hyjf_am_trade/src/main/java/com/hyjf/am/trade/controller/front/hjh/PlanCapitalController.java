@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,26 +72,26 @@ public class PlanCapitalController {
 
     /**
      * 获取该期间的预计当日新增复投额
-     * @param fromDate
-     * @param toDate
+     * @param date
+     * @param dateCount
      * @return
      */
-    @GetMapping("/getPlanCapitalPredictionForProformaList/{fromDate}/{toDate}")
-    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionForProformaList(@PathVariable(value = "fromDate") String fromDate,
-                                                                                    @PathVariable(value = "toDate") String toDate){
+    @GetMapping("/getPlanCapitalPredictionForProformaList/{date}/{dateCount}")
+    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionForProformaList(@PathVariable(value = "date") String date,
+                                                                                    @PathVariable(value = "dateCount") int dateCount){
         HjhPlanCapitalPredictionResponse response = new HjhPlanCapitalPredictionResponse();
         List<HjhPlanCapitalPredictionVO> listAll = new ArrayList<HjhPlanCapitalPredictionVO>();
-        try {
+        // try {
             // 拆解時間段list
-            List<Date> dates = TransUtil.findDates(GetDate.stringToDate2(fromDate),GetDate.stringToDate2(toDate));
-            for(Date date:dates){
+            List<Date> dates = TransUtil.findDates(GetDate.stringToDate2(date),dateCount);
+            for(Date dateOne :dates){
                 // 根據日期獲取預計日期的新增復投額
-                List<HjhPlanCapitalPredictionVO> list = this.planCapitalService.getPlanCapitalPredictionForProformaList(date);
+                List<HjhPlanCapitalPredictionVO> list = this.planCapitalService.getPlanCapitalPredictionForProformaList(dateOne);
                 listAll.addAll(list);
             }
-        } catch (ParseException e) {
-            logger.info("获取该期间的预计当日新增复投额CONTROLLER，拆解時間LIST時發生錯誤："+e.toString());
-        }
+        // } catch (ParseException e) {
+         //   logger.info("获取该期间的预计当日新增复投额CONTROLLER，拆解時間LIST時發生錯誤："+e.toString());
+        // }
         // 返回預估時間段內的所有計劃預估值（預計當日新增復投額）
         if (!CollectionUtils.isEmpty(listAll)) {
             response.setResultList(listAll);

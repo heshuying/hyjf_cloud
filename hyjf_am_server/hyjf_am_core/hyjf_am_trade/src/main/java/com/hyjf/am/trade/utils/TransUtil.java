@@ -479,6 +479,36 @@ public class TransUtil {
     }
 
     /**
+     * 循环拼接日期到List 循环到N天
+     *
+     * @param dBegin   开始日期
+     * @return
+     */
+    public static List<Date> findDates(Date dBegin,int n) {
+        boolean flag = true;
+        // 初始化循环锁止状态
+        int t = 0;
+        //设置开始时间
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(dBegin);
+        // 装返回的日期集合容器
+        List<Date> Datelist = new ArrayList<Date>();
+        // 循环到指定设置天数
+        while (t<=n)  {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            if(flag){
+                Datelist.add(calBegin.getTime());
+                flag = false;
+            }else{
+                calBegin.add(Calendar.DAY_OF_MONTH, 1);
+                Datelist.add(calBegin.getTime());
+            }
+            t++;
+        }
+        return Datelist;
+    }
+
+    /**
      * 日期+N天
      *
      * @param d  日期
