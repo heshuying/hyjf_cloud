@@ -9,6 +9,8 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +26,8 @@ import java.util.List;
  */
 @Service
 public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserLargeScreenService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserLargeScreenServiceImpl.class);
 
     @Autowired
     private AccountListCustomizeMapper accountListCustomizeMapper;
@@ -276,6 +280,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             }
                             RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
                         }
+                        logger.info("老客组{}月坐席下用户的月初站岗资金:{}", monthDataStatisticsVOO.getCurrentOwner(), monthBeginBalance);
 
                         // 计算月坐席下用户的当前站岗资金
                         for (List<Integer> usersIdList : usersIdLists) {
@@ -287,6 +292,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 增资
                     BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthNowBalance);
                     if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
+                        logger.info("老客组{}月坐席下用户的增资是:{},小于等于0,默认为0", monthDataStatisticsVOO.getCurrentOwner(), additionalShare);
                         additionalShare = new BigDecimal("0");
                     }
                     monthDataStatisticsVOO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
@@ -296,6 +302,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
                         extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
+                    logger.info("老客组{}月坐席下用户的回款是:{}", monthDataStatisticsVOO.getCurrentOwner(), monthDataStatisticsVOO.getReceived());
                     monthDataStatisticsVOO.setExtractionRate(extractionRate);
 
                     // 老客组数据
