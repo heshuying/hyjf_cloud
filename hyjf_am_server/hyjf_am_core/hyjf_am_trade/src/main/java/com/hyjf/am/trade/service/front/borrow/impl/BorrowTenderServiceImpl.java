@@ -296,4 +296,17 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         return borrowTenderCustomizeMapper.getCreditTenderByClient(source,dayStart,dayEnd);
     }
 
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public List<BorrowTender> getBorrowTenderByAccede(String accedeOrderId) {
+        BorrowTenderExample example = new BorrowTenderExample();
+        example.createCriteria().andAccedeOrderIdEqualTo(accedeOrderId);
+        List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
+        return tenderList;
+    }
+
 }

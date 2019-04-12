@@ -521,4 +521,21 @@ public class BorrowTenderController extends BaseController {
 
         return response;
     }
+
+    /**
+     * 根据计划订单号查找投资详情
+     *
+     * @param accedeOrderId
+     * @return
+     */
+    @RequestMapping("/getBorrowTenderByAccede/{accedeOrderId}")
+    public BorrowTenderResponse getBorrowTenderByAccede(@PathVariable String accedeOrderId){
+        BorrowTenderResponse response = new BorrowTenderResponse();
+        List<BorrowTender> borrowTenderList = this.borrowTenderService.getBorrowTenderByAccede(accedeOrderId);
+        if (CollectionUtils.isNotEmpty(borrowTenderList)){
+            List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
+            response.setResultList(borrowTenderVOList);
+        }
+        return response;
+    }
 }

@@ -151,4 +151,10 @@ public interface BorrowTenderService {
     List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(String source,String dayStart, String dayEnd);
 
     List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(String source,String dayStart, String dayEnd);
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    List<BorrowTender> getBorrowTenderByAccede(String accedeOrderId);
 }

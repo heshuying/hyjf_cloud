@@ -31,6 +31,8 @@ public class CertCallConstant implements Serializable {
 
     // 产品信息
     public static final String CERT_CALL_LENDPRODUCT_URL = "/p2p/lendProduct";
+    //产品配置信息
+    public static final String CERT_CALL_LENDPRODUCTCONFIG_URL = "/p2p/lendProductConfig";
 
     // 接口地址相关 end
     
@@ -61,9 +63,6 @@ public class CertCallConstant implements Serializable {
     public static final String CERT_INF_TYPE_UNDER_TAKE  = "85";
     /**交易流水 4*/
     public static final String CERT_INF_TYPE_TRANSACT  = "4";
-
-    /**产品信息 86*/
-    public static final String CERT_INF_TYPE_LENDPRODUCT  = "86";//todo 数字要修改,暂定86
 
     // 请求类型  end
 

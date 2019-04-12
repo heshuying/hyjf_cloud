@@ -64,11 +64,11 @@ public class CertCallUtil implements Serializable {
         }
         // 产品信息
         if(CertCallConstant.CERT_INF_TYPE_FINANCE.equals(infType)){
-            return CertCallConstant.CERT_CALL_FINANCE_URL;
+            return CertCallConstant.CERT_CALL_LENDPRODUCT_URL;
         }
         // 产品散标配置
         if(CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG.equals(infType)){
-            return CertCallConstant.CERT_CALL_FINANCE_SCATTER_CONFIG_URL;
+            return CertCallConstant.CERT_CALL_LENDPRODUCTCONFIG_URL;
         }
         // 债权信息
         if(CertCallConstant.CERT_INF_TYPE_CREDITOR.equals(infType)){
@@ -89,10 +89,6 @@ public class CertCallUtil implements Serializable {
         // 交易流水
         if(CertCallConstant.CERT_INF_TYPE_TRANSACT.equals(infType)){
             return CertCallConstant.CERT_CALL_TRANSACT_URL;
-        }
-        //产品信息
-        if(CertCallConstant.CERT_INF_TYPE_LENDPRODUCT.equals(infType)){
-            return CertCallConstant.CERT_CALL_LENDPRODUCT_URL;
         }
         return null;
     }
