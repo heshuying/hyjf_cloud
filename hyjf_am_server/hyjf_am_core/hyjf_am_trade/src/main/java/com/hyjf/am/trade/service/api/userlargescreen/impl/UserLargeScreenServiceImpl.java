@@ -77,11 +77,13 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         List<EchartsResultVO> list =  userLargeScreenCustomizeMapper.getMonthReceivedPayments();
         List<EchartsResultVO> monthReceivedPaymentsNew = new ArrayList<>();
         List<EchartsResultVO> monthReceivedPaymentsOld = new ArrayList<>();
-        for(EchartsResultVO echartsResultVO:list){
-            if("1".equals(echartsResultVO.getCustomerGroup())){
-                monthReceivedPaymentsNew.add(echartsResultVO);
-            }else {
-                monthReceivedPaymentsOld.add(echartsResultVO);
+        if(!CollectionUtils.isEmpty(list)) {
+            for (EchartsResultVO echartsResultVO : list) {
+                if ("1".equals(echartsResultVO.getCustomerGroup())) {
+                    monthReceivedPaymentsNew.add(echartsResultVO);
+                } else {
+                    monthReceivedPaymentsOld.add(echartsResultVO);
+                }
             }
         }
         vo.setMonthReceivedPaymentsNew(monthReceivedPaymentsNew);

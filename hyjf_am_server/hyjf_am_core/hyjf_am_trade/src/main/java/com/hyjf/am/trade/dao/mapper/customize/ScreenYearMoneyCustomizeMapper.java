@@ -47,7 +47,7 @@ public interface ScreenYearMoneyCustomizeMapper {
      * @param screenDataBean
      * @return
      */
-    Integer updateRepayMoney(@Param("screenDataBean")ScreenDataBean screenDataBean,@Param("startTime") Integer startTime,@Param("endTime")Integer endTime);
+    Integer updateRepayMoney(@Param("screenDataBean")ScreenDataBean screenDataBean,@Param("startTime") Date startTime,@Param("endTime")Date endTime);
 
     /**
      *查询用户这笔订单是否是本月应还的
