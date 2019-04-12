@@ -556,7 +556,7 @@
     <!-- 运营部-待回款 -->
     <select id="getOperMonthPerformanceDataFo" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
         SELECT
-            ROUND(IFNULL(SUM(money), 0), 0) AS allWaitRepay
+            ROUND(IFNULL(SUM(old_money), 0), 0) AS allWaitRepay
         FROM
             ht_repayment_plan
         WHERE
