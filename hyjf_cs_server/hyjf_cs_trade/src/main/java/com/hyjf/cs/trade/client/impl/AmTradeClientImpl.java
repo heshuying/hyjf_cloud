@@ -7229,4 +7229,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResult();
     }
+
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    @Override
+    public List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByAccede/"+accedeOrderId;
+        BorrowTenderResponse response = restTemplate.getForEntity(url,BorrowTenderResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
 }

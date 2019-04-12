@@ -2975,5 +2975,11 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+    /**
+     * 根据计划订单号查找投资详情
+     * @param accedeOrderId
+     * @return
+     */
+    List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId);
 }
 

@@ -531,9 +531,11 @@ public class BorrowTenderController extends BaseController {
     @RequestMapping("/getBorrowTenderByAccede/{accedeOrderId}")
     public BorrowTenderResponse getBorrowTenderByAccede(@PathVariable String accedeOrderId){
         BorrowTenderResponse response = new BorrowTenderResponse();
+        response.setRtn(Response.FAIL);
         List<BorrowTender> borrowTenderList = this.borrowTenderService.getBorrowTenderByAccede(accedeOrderId);
         if (CollectionUtils.isNotEmpty(borrowTenderList)){
             List<BorrowTenderVO> borrowTenderVOList = CommonUtils.convertBeanList(borrowTenderList,BorrowTenderVO.class);
+            response.setRtn(Response.SUCCESS);
             response.setResultList(borrowTenderVOList);
         }
         return response;

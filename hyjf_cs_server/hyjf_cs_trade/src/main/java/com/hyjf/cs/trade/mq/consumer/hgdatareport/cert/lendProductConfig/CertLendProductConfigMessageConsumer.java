@@ -9,7 +9,6 @@ import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct.CertLendProductService;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProductConfig.CertLendProductConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -92,7 +91,7 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductConfigService.getPlanProdouct(orderId);
+            JSONArray listRepay = certLendProductConfigService.ProductConfigInfo(orderId,flag);
             logger.info("数据：" + listRepay.toString());
             if (null == listRepay || listRepay.size() <= 0) {
                 logger.error(logHeader + "组装参数为空！！！参数为：" + orderId);

@@ -29,7 +29,7 @@ import java.util.Map;
 public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl implements CertLendProductService {
 
     Logger logger = LoggerFactory.getLogger(CertLendProductServiceImpl.class);
-    private String thisMessName = "产品信息信息推送";
+    private String thisMessName = "产品信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
@@ -73,7 +73,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
             HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
             logger.info(logHeader+"根据计划编号:" + planNid+"获取的计划产品信息为："+JSONArray.toJSONString(hjhPlanVO));
             if (null == hjhPlanVO) {
-                throw new Exception("承接(散标)记录推送,标的转让信息为空！！债转编号:" + planNid);
+                throw new Exception("产品信息推送,获取计划信息为空！！计划编码:" + planNid);
             }
             if(null!=hjhPlanVO){
                 //接口版本号
@@ -97,7 +97,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                 //产品期限（服务期限）(天)
                 int termDays = hjhPlanVO.getLockPeriod();
                 if (hjhPlanVO.getIsMonth() == 1) {
-                    //月标
+                    //月标（转换为天数）
                     termDays = hjhPlanVO.getLockPeriod() * 30;
                 }
                 param.put("term", termDays);
