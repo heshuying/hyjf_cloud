@@ -4,21 +4,22 @@
 
     <select id="getUsersMonthBeginBalance" parameterType="java.util.List" resultType="java.math.BigDecimal">
         SELECT
-        IFNULL(SUM(a1.bank_balance),0) monthBeginBalance
+        IFNULL(SUM(bank_balance), 0) monthBeginBalance
         FROM
         (
         SELECT
-        MAX(id) max_id
+        MAX(id) AS max_id
         FROM
         ht_account_list
+        WHERE
+        create_time <![CDATA[<=]]> DATE_FORMAT(NOW(), '%Y-%m-01 23:59:59')
         GROUP BY
         user_id
-        ) r1
-        LEFT JOIN ht_account_list a1 ON a1.id = r1.max_id
+        ) AS r1
+        LEFT JOIN ht_account_list ON id = max_id
         <where>
-            AND a1.create_time <![CDATA[<=]]> DATE_FORMAT(NOW(),'%Y-%m-01 23:59:59')
             <if test="list != null" >
-                AND a1.user_id IN
+                AND user_id IN
                 <foreach collection="list" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>

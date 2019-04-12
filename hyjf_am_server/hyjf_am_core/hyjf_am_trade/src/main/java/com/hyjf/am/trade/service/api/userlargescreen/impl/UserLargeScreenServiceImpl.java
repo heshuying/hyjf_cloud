@@ -179,6 +179,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         int listNum = userIds.size()%num == 0 ? userIds.size()/num : userIds.size()/num+1;
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<Integer>> usersIdLists = averageAssign(userIds, listNum);
+                        // 计算月坐席下用户的当前站岗资金
                         for (List<Integer> usersIdList : usersIdLists) {
                             monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(usersIdList));
                         }
