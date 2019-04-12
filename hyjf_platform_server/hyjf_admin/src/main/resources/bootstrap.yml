@@ -9,7 +9,7 @@ spring:
       failFast: true
 
   profiles:
-    active: beta
+    active: dev
 
 eureka:
   client:
