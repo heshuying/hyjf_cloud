@@ -217,12 +217,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
                 // 统计定时发标+出借中总记录数
                 request.setStatus("21");
-                int projectToal = amTradeClient.countProjectList(request);
-
+                int projectTotal = amTradeClient.countProjectList(request);
                 int defaultCount = request.getPageSize() * 2;
-                if(projectToal >= defaultCount){
+                logger.info("defaultCount:" + defaultCount + " projectTotal:" + projectTotal);
+                if(projectTotal >= defaultCount){
                     // 只查询定时发标和出借中标的
-                    page.setTotal(projectToal);
+                    page.setTotal(projectTotal);
                     // 查询相应的汇直投列表数据
                     int limit = page.getLimit();
                     int offSet = page.getOffset();
@@ -239,11 +239,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 }else{
                     //查询所有标的
                     int pageNum = 2;
-                    if(projectToal > request.getPageSize() * pageNum){
-                        projectToal = request.getPageSize() * pageNum;
-                    }
+                    projectTotal = request.getPageSize() * pageNum;
 
-                    page.setTotal(projectToal);
+                    page.setTotal(projectTotal);
                     // 查询相应的汇直投列表数据
                     int limit = page.getLimit();
                     int offSet = page.getOffset();
