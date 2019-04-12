@@ -477,4 +477,124 @@ public class AppLoginController extends BaseUserController {
         return sign;
     }
 
+    /**
+     * 短信验证码登录  PC1.1.3 需求新增
+     * @param version
+     * @param key
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @ApiOperation(value = "短信验证码登录", notes = "登录")
+    @PostMapping(value = "/mobileCodeLogin")
+    public JSONObject mobileCodeLogin(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
+        JSONObject ret = new JSONObject();
+        ret.put("request", "/appUser/mobileCodeLogin");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // 用户名
+        String username = request.getParameter("username");
+        // 密码
+        String password = request.getParameter("password");
+        // 神策预置属性
+        String presetProps = request.getParameter("presetProps");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        loginService.checkForApp(version,platform,netStatus);
+        // 检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 取得加密用的Key
+        if (Validator.isNull(key)) {
+            ret.put("status", "709");
+            ret.put("statusDesc", "请求参数非法");
+            return ret;
+        }
+        // 业务逻辑
+        // try {
+        // 解密
+        //logger.info("APP登录 ---> 解密前 key：{}，username：{}，password：{}", key, username, password);
+        username = DES.decodeValue(key, username);
+        password = DES.decodeValue(key, password);
+        //logger.info("APP登录 ---> 解密后 username：{}，password：{}", username, password);
+        if (Validator.isNull(username)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "用户名不能为空");
+            return ret;
+        }
+        if (Validator.isNull(password)) {
+            ret.put("status", "1");
+            ret.put("statusDesc", "密码不能为空");
+            return ret;
+        }
+        //判断用户输入的密码错误次数---开始
+        UserVO userVO = loginService.getUser(username);
+        Map<String, String> errorInfo=loginService.insertErrorPassword(username,password,BankCallConstant.CHANNEL_APP,userVO);
+        if (!errorInfo.isEmpty()){
+            ret.put("status", "1");
+            ret.put("statusDesc", errorInfo.get("info"));
+            return ret;
+        }
+        //判断用户输入的密码错误次数---结束
+        // 执行登录(登录时间，登录ip)
+        WebViewUserVO webViewUserVO = loginService.login(username, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
+        if (webViewUserVO != null) {
+            logger.info("app端登录成功 userId is :{}", webViewUserVO.getUserId());
+            //登录成功发送mq
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(Integer.valueOf(platform));
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(webViewUserVO.getUsername());
+            userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }
+            logger.info("appAfterLogin:"+sign);
+            // ios审核时跳转最优服务器的场景sign值重新获取
+            sign = this.appAfterLogin(sign, webViewUserVO, username,version);
+
+            if (StringUtils.isNotEmpty(presetProps)){
+                SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                // 将json串转换成Bean
+                try {
+                    Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                    });
+                    sensorsDataBean.setPresetProps(sensorsDataMap);
+                    sensorsDataBean.setUserId(webViewUserVO.getUserId());
+                    sensorsDataBean.setEventCode("login");
+                    // 发送神策数据统计MQ
+                    this.loginService.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                }
+            }
+            ret.put("status", "0");
+            ret.put("statusDesc", "登录成功");
+            ret.put("token", webViewUserVO.getToken());
+            ret.put("sign", sign);
+
+        } else {
+            logger.error("app端登录失败...");
+            ret.put("status", "1");
+            ret.put("statusDesc", "app端登录失败");
+        }
+//        }catch (Exception e){
+//            logger.error("app端登录失败...");
+//            ret.put("status", "1");
+//            ret.put("statusDesc", e.getMessage());
+//        }
+        return ret;
+    }
+
 }
