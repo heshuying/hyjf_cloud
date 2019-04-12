@@ -29,6 +29,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -236,7 +237,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
             borrowProjectInfoBean.setBorrowProgress(borrow.getBorrowSchedule());
             borrowProjectInfoBean.setOnTime(borrow.getOnTime());
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
-            borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
+            borrowProjectInfoBean.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr()));
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             if (StringUtils.isNotBlank(borrow.getIncreaseInterestFlag()) && borrow.getIncreaseInterestFlag().equals("1")){
@@ -629,7 +630,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                 WechatPlanBorrowResultBean.BorrowList borrow = null;
                 for (DebtPlanBorrowCustomizeVO entity : consumeList) {
                     borrow = new WechatPlanBorrowResultBean.BorrowList();
-                    borrow.setBorrowApr(entity.getBorrowApr());
+                    borrow.setBorrowApr(FormatRateUtil.formatBorrowApr(entity.getBorrowApr()));
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
                     borrow.setTrueName(entity.getTrueName());
@@ -1124,7 +1125,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
             projectInfo.setStatus("0");
         }
 
-        projectInfo.setPlanApr(customize.getPlanApr());
+        projectInfo.setPlanApr(FormatRateUtil.formatBorrowApr(customize.getPlanApr()));
         projectInfo.setPlanPeriod(customize.getPlanPeriod());
         projectInfo.setPlanPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(customize.getBorrowStyle()));
 
@@ -1377,7 +1378,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                 customize.setBorrowNid(project.getBorrowNid());
                 customize.setBorrowName(project.getBorrowName());
                 customize.setBorrowType(project.getBorrowType());
-                customize.setBorrowApr(project.getBorrowApr());
+                customize.setBorrowApr(FormatRateUtil.formatBorrowApr(project.getBorrowApr()));
                 customize.setBorrowPeriod(project.getBorrowPeriodInt() + "");
                 customize.setBorrowPeriodType(project.getBorrowPeriodType());
                 customize.setBorrowExtraYield(project.getBorrowExtraYield());

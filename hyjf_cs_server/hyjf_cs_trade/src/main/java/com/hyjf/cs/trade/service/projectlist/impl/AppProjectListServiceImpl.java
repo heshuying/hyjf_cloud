@@ -107,11 +107,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 初始化分页参数，并组合到请求参数
         // 所有产品列表只查2页之内的数据(app默认写死每页20条)
         int pageSizeCheck = 20;
-        Page page = Page.initPage(1, pageSizeCheck);
         JSONObject info = new JSONObject();
         AppProjectListRequest req = new AppProjectListRequest();
-        req.setLimitStart(page.getOffset());
-        req.setLimitEnd(page.getLimit());
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
         ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
 
@@ -132,24 +129,39 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
         // 合规审批需求  add by huanghui 20181123 end
 
-        // ①查询count
+        // 查询定时发标+出借中的标的数量
+        params.setStatus("21");
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
-            logger.error("app端查询散标出借列表原子层count异常");
-            throw new RuntimeException("app端查询散标出借列表原子层count异常");
-        }
-        if (count > pageSizeCheck){
-            count = pageSizeCheck;
+            count = 0;
         }
 
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         info.put(ProjectConstant.APP_PROJECT_TOTAL, 0);
-        if (count > 0) {
+        if(count > pageSizeCheck){ //定时发标+出借中的标的数量大于20，全部查询出来返回
             info.put(ProjectConstant.APP_PROJECT_TOTAL,count);
             List<AppProjectListCsVO> result = new ArrayList<>();
+            // 只查询定时发标+出借中的标的
+            req.setStatus("21");
+            List<AppProjectListCustomizeVO> list = amTradeClient.searchAppProjectList(req);
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+
+            result = convertToAppProjectType(list);
+            CommonUtils.convertNullToEmptyString(result);
+            info.put(ProjectConstant.APP_PROJECT_LIST,result);
+        }else{ //定时发标+出借中的标的数量小于20，补全20条返回
+            info.put(ProjectConstant.APP_PROJECT_TOTAL,count);
+            List<AppProjectListCsVO> result = new ArrayList<>();
+            Page page = Page.initPage(1, pageSizeCheck);
+            // 状态不做设定
+            req.setStatus(null);
+            req.setLimitStart(page.getOffset());
+            req.setLimitEnd(page.getLimit());
             List<AppProjectListCustomizeVO> list = amTradeClient.searchAppProjectList(req);
             if (CollectionUtils.isEmpty(list)) {
                 logger.error("app端查询散标出借列表原子层List异常");
@@ -159,7 +171,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
             }
+
         }
+
         info.put(CustomConstants.APP_STATUS,CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC,CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(ProjectConstant.APP_PAGE,request.getPage());
