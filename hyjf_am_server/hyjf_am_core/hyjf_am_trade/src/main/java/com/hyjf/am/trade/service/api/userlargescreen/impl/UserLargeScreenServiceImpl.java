@@ -280,7 +280,6 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             }
                             RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
                         }
-                        logger.info("老客组{}月坐席下用户的月初站岗资金:{}", monthDataStatisticsVOO.getCurrentOwner(), monthBeginBalance);
 
                         // 计算月坐席下用户的当前站岗资金
                         for (List<Integer> usersIdList : usersIdLists) {
@@ -302,8 +301,8 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                             monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
                         extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
-                    logger.info("老客组{}月坐席下用户的回款是:{}", monthDataStatisticsVOO.getCurrentOwner(), monthDataStatisticsVOO.getReceived());
                     monthDataStatisticsVOO.setExtractionRate(extractionRate);
+                    logger.info("老客组{}月坐席下用户的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{},回款:{}", monthDataStatisticsVOO.getCurrentOwner(), monthDataStatisticsVOO.getRecharge(), monthDataStatisticsVOO.getWithdraw(), monthBeginBalance, monthNowBalance, monthDataStatisticsVOO.getReceived());
 
                     // 老客组数据
                     monthDataStatisticsOld.add(monthDataStatisticsVOO);
@@ -346,6 +345,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         if (startMonthBalance == null){
             startMonthBalance = new BigDecimal("0");
         }
+        logger.info("运营部的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{}", listO.getRecharge(), listT.getWithdraw(), startMonthBalance, nowMonthBalance);
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
