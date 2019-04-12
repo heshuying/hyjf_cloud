@@ -30,6 +30,7 @@
                 OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 OR ( htb.`status` = 3 )
                 OR ( htb.`status` = 4 )
+                OR ( htb.`status` = 8 )
                 )
             </if>
 

@@ -69,11 +69,11 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             requestBean.setPageSize(10);
         }
         //borrowNid为必须传的参数
-        if(StringUtils.isBlank(requestBean.getBorrowNid())){
-            response.setStatus(AdminResult.FAIL);
-            response.setStatusDesc("请求参数错误，borrowNid为空");
-            return response;
-        }
+//        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+//            response.setStatus(AdminResult.FAIL);
+//            response.setStatusDesc("请求参数错误，borrowNid为空");
+//            return response;
+//        }
 
         //请求原子层获取当前债权还款信息数据
         BorrowRepayInfoCurrentResponse amResponse = borrowRepayInfoCurrentService.getRepayInfoCurrentData(requestBean);
@@ -104,9 +104,9 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         Map<String,Object> dataMap = new HashMap<>();
 
         //borrowNid为必须传的参数
-        if(StringUtils.isBlank(requestBean.getBorrowNid())){
-            return;
-        }
+//        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+//            return;
+//        }
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
