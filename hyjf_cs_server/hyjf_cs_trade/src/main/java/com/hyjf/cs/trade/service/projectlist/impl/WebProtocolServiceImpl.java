@@ -1160,11 +1160,12 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         /*******************************下载法大大合同************************************/
         //下载法大大协议--居间
         if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
-
             tenderAgreement = tenderAgreementsNid.get(0);
             if(tenderAgreement!=null){
                 files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+                logger.info("----------------------------获取法大大居间协议:"+JSONObject.toJSONString(files));
                 if(files!=null && files.size()>0){
+                    logger.info("----------------------------压缩法大大居间协议:"+JSONObject.toJSONString(files));
                     ZIPGenerator.generateZip(response, files, nid);
                 }
                 return;

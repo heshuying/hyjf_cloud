@@ -1773,6 +1773,7 @@ public class FddHandle {
 			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_PLAN;
 			fileType = "6.png";
 		}
+		PDDocument pdDocument = null;
 		try {
 			String downFileName =fileName+".pdf";
 			FileUtil.downLoadFromUrl(download_url,downFileName,savePath);
@@ -1784,7 +1785,7 @@ public class FddHandle {
 			this.uplodTmImage(filePath,ftpPath,0);
 			//开始脱敏文件
 			//获取文件页数
-            PDDocument pdDocument = PDFToImage.pdfInfo(filePath);
+            pdDocument = PDFToImage.pdfInfo(filePath);
 			int pages = pdDocument.getNumberOfPages();
 
 			//是否企业用户
@@ -1886,8 +1887,16 @@ public class FddHandle {
 		} catch (Exception e) {
 			logger.error("-----------脱敏协议错误，错误信息"+tenderAgreementID,e);
 			throw new Exception("-----------脱敏协议错误，错误信息"+tenderAgreementID,e);
+		}finally {
+			if (pdDocument != null) {
+				try {
+					pdDocument.close();
+				} catch (IOException e) {
+					logger.error("-----------关闭PDFDocument文件流失败！！！",e);
+				}
+			}
+			logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------结束");
 		}
-        logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------结束");
     }
 
 	/**
