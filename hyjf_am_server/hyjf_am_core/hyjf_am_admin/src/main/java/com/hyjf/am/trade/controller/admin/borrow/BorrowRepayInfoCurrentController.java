@@ -52,11 +52,11 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             requestBean.setPageSize(10);
         }
         //borrowNid为必须传的参数
-        if(StringUtils.isBlank(requestBean.getBorrowNid())){
-            response.setRtn(Response.FAIL);
-            response.setMessage("请求参数错误，borrowNid为空");
-            return response;
-        }
+//        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+//            response.setRtn(Response.FAIL);
+//            response.setMessage("请求参数错误，borrowNid为空");
+//            return response;
+//        }
         Map<String,Object> paraMap = getQueryParamMap(requestBean);
 
         // 查询列表总记录数
@@ -140,11 +140,11 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             requestBean.setPageSize(10);
         }
         //borrowNid为必须传的参数
-        if(StringUtils.isBlank(requestBean.getBorrowNid())){
-            response.setRtn(Response.FAIL);
-            response.setMessage("请求参数错误，borrowNid为空");
-            return response;
-        }
+//        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+//            response.setRtn(Response.FAIL);
+//            response.setMessage("请求参数错误，borrowNid为空");
+//            return response;
+//        }
         if(requestBean.getCount() == null || requestBean.getCount() ==0){
             response.setResultList(new ArrayList<>());
             return response;
@@ -173,11 +173,11 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         IntegerResponse response = new IntegerResponse();
 
         //borrowNid为必须传的参数
-        if(StringUtils.isBlank(requestBean.getBorrowNid())){
-            response.setRtn(Response.FAIL);
-            response.setMessage("请求参数错误，borrowNid为空");
-            return response;
-        }
+//        if(StringUtils.isBlank(requestBean.getBorrowNid())){
+//            response.setRtn(Response.FAIL);
+//            response.setMessage("请求参数错误，borrowNid为空");
+//            return response;
+//        }
         Map<String,Object> paraMap = getQueryParamMap(requestBean);
 
         // 查询列表数据
