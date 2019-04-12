@@ -85,7 +85,7 @@ public class WebProtocolController extends BaseController {
      * @param response
      */
     @ApiOperation(value = "账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载", httpMethod = "GET", notes = "账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载")
-    @GetMapping(value = "/intermediaryAgreementPDF")
+    @RequestMapping(value = "/intermediaryAgreementPDF")
     public void intermediaryAgreementPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.intermediaryAgreementPDF(form,request,response);
     }
