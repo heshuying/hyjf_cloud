@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -475,7 +476,13 @@ public class ProjectListController extends BaseController {
     public WechatProjectListResponse searchHomeProejctList(@RequestBody @Valid Map<String,Object> map){
         WechatProjectListResponse response = new WechatProjectListResponse();
         List<WechatHomeProjectListVO> list = projectListService.searchWechatProjectList(map);
-        response.setResultList(list);
+        List<WechatHomeProjectListVO> list2=new ArrayList<WechatHomeProjectListVO>();
+        for (WechatHomeProjectListVO wechatHomeProjectListVO : list) {
+        	wechatHomeProjectListVO.setBorrowApr( FormatRateUtil.formatBorrowApr(wechatHomeProjectListVO.getBorrowApr()));
+        	list2.add(wechatHomeProjectListVO);
+		}
+        
+        response.setResultList(list2);
         return response;
     }
 
