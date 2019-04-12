@@ -4895,7 +4895,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 BankRepayFreezeLog newRecord = new BankRepayFreezeLog();
                 newRecord.setId(record.getId());
                 newRecord.setDelFlag(1);// 0 有效 1无效
-                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(record);
+                int flag = this.bankRepayFreezeLogMapper.updateByPrimaryKey(newRecord);
                 logger.info("【还款冻结处理】借款编号：{}，删除冻结临时日志{}。", record.getBorrowNid(), flag > 0 ? "成功" : "失败");
             }
         }

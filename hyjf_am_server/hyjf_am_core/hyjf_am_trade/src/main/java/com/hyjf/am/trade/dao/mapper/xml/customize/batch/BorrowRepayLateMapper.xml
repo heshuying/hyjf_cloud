@@ -34,7 +34,12 @@
         brp.id as `id`,
         brp.borrow_nid AS borrowNid,
         brp.recover_account AS recoverAccount,
-        brp.credit_amount + brp.credit_interest_amount AS creditAmount,
+        CASE
+        WHEN (brp.accede_order_id is null or brp.accede_order_id = '')
+            THEN brp.credit_amount + brp.credit_interest
+        ELSE
+            brp.credit_amount + brp.credit_interest_amount
+        END AS creditAmount,
         brp.nid AS tenderNid,
         brp.accede_order_id AS accedeOrderId,
         brp.credit_status AS creditStatus,
