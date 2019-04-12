@@ -17,6 +17,7 @@
         WHERE (p.source_id <![CDATA[<>]]> 349 or  p.source_id  is  null) and i.attribute=0
         and i.role_id=1
         and u.user_id=#{userId,jdbcType=INTEGER}
+        AND c.task_time=#{taskTime}
         union all
         SELECT
            u.username,
@@ -38,6 +39,7 @@
                and i.attribute<![CDATA[<>]]>0
                and i.role_id=1
                and u.user_id=#{userId,jdbcType=INTEGER}
+               AND c.task_time=#{taskTime}
     </select>
 </mapper>
 

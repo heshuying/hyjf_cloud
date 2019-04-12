@@ -88,7 +88,7 @@ public class ScreenDataServiceImpl implements ScreenDataService {
 
 
     @Override
-    public Integer updateRepayMoney(ScreenDataBean screenDataBean, Integer startTime,Integer endTime) {
+    public Integer updateRepayMoney(ScreenDataBean screenDataBean, Date startTime,Date endTime) {
         return screenYearMoneyCustomizeMapper.updateRepayMoney(screenDataBean,startTime,endTime);
     }
 
