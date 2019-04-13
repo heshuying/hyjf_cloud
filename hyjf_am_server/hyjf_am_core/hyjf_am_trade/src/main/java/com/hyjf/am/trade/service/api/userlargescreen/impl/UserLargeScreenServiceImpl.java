@@ -181,7 +181,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 得到每个坐席下的所有用户
                     List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
                     // 计算月坐席下用户的当前站岗资金
-                    BigDecimal monthNowBalance = new BigDecimal(0);
+                    BigDecimal monthNowBalance = BigDecimal.ZERO;
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 每个集合数据量
                         int num = 3;
@@ -266,9 +266,9 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 得到每个坐席下的所有用户
                     List<Integer> userIds = monthDataStatisticsVOO.getUserIds();
                     // 坐席下用户月初站岗资金
-                    BigDecimal monthBeginBalance = new BigDecimal("0");
+                    BigDecimal monthBeginBalance = BigDecimal.ZERO;
                     // 坐席下用户当前站岗资金
-                    BigDecimal monthNowBalance = new BigDecimal("0");
+                    BigDecimal monthNowBalance = BigDecimal.ZERO;
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 每个集合数据量
                         int num = 3;
@@ -278,7 +278,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         List<List<Integer>> usersIdLists = averageAssign(userIds, listNum);
 
                         if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
-                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
+                            monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
                         }else {
                             // 计算月坐席下用户的月初站岗资金
                             for (List<Integer> usersIdList : usersIdLists) {
@@ -298,11 +298,11 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthNowBalance);
                     if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
                         logger.info("老客组{}月坐席下用户的增资是:{},小于等于0,默认为0", monthDataStatisticsVOO.getCurrentOwner(), additionalShare);
-                        additionalShare = new BigDecimal("0");
+                        additionalShare = BigDecimal.ZERO;
                     }
                     monthDataStatisticsVOO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
                     // 提现率
-                    BigDecimal extractionRate = new BigDecimal("0");
+                    BigDecimal extractionRate = BigDecimal.ZERO;
                     if(monthDataStatisticsVOO.getWithdraw().compareTo(BigDecimal.ZERO) > 0 &&
                             monthDataStatisticsVOO.getReceived().add(monthBeginBalance).compareTo(BigDecimal.ZERO) > 0 ){
                         extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -344,12 +344,12 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 获得坐席当前站岗资金
         BigDecimal nowMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate(), BigDecimal.class);
         if(nowMonthBalance == null){
-            nowMonthBalance = new BigDecimal("0");
+            nowMonthBalance = BigDecimal.ZERO;
         }
         // 获得坐席月初站岗资金
         BigDecimal startMonthBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
         if (startMonthBalance == null){
-            startMonthBalance = new BigDecimal("0");
+            startMonthBalance = BigDecimal.ZERO;
         }
         logger.info("运营部的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{}", listO.getRecharge(), listT.getWithdraw(), startMonthBalance, nowMonthBalance);
         // 规模业绩
@@ -361,7 +361,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         // 增资
         BigDecimal additionalShare = listO.getRecharge().subtract(listT.getWithdraw()).add(startMonthBalance).subtract(nowMonthBalance);
         if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
-            additionalShare = new BigDecimal("0");
+            additionalShare = BigDecimal.ZERO;
         }
         operMonthPerformanceDataVO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
         // 提现
