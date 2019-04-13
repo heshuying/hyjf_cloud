@@ -9,6 +9,14 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.api.*;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +32,8 @@ import java.util.List;
  */
 @Service
 public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserLargeScreenService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserLargeScreenServiceImpl.class);
 
     @Autowired
     private AccountListCustomizeMapper accountListCustomizeMapper;
@@ -179,6 +189,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         int listNum = userIds.size()%num == 0 ? userIds.size()/num : userIds.size()/num+1;
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<Integer>> usersIdLists = averageAssign(userIds, listNum);
+                        // 计算月坐席下用户的当前站岗资金
                         for (List<Integer> usersIdList : usersIdLists) {
                             monthNowBalance = monthNowBalance.add(accountListCustomizeMapper.getUsersMonthNowBalance(usersIdList));
                         }
@@ -266,14 +277,14 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<Integer>> usersIdLists = averageAssign(userIds, listNum);
 
-                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
+                        if(RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key))){
                             monthBeginBalance = RedisUtils.getObj("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), BigDecimal.class);
                         }else {
                             // 计算月坐席下用户的月初站岗资金
                             for (List<Integer> usersIdList : usersIdLists) {
                                 monthBeginBalance = monthBeginBalance.add(accountListCustomizeMapper.getUsersMonthBeginBalance(usersIdList));
                             }
-                            RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
+                            RedisUtils.setObjEx("USER_LARGE_SCREEN_TWO_MONTH:MONTH_BEGIN_BALANCE_"+getPingYin(monthDataStatisticsVOO.getCurrentOwner())+"_"+ GetDate.formatDate(new Date(), GetDate.yyyyMM_key), monthBeginBalance, 31 * 24 * 60 * 60);
                         }
 
                         // 计算月坐席下用户的当前站岗资金
@@ -286,6 +297,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 增资
                     BigDecimal additionalShare = monthDataStatisticsVOO.getRecharge().subtract(monthDataStatisticsVOO.getWithdraw()).add(monthBeginBalance).subtract(monthNowBalance);
                     if(additionalShare.compareTo(BigDecimal.ZERO) <= 0){
+                        logger.info("老客组{}月坐席下用户的增资是:{},小于等于0,默认为0", monthDataStatisticsVOO.getCurrentOwner(), additionalShare);
                         additionalShare = new BigDecimal("0");
                     }
                     monthDataStatisticsVOO.setAdditionalShare(additionalShare.setScale(0, BigDecimal.ROUND_HALF_UP));
@@ -296,6 +308,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                         extractionRate = monthDataStatisticsVOO.getWithdraw().min(monthDataStatisticsVOO.getReceived().add(monthBeginBalance)).divide(monthDataStatisticsVOO.getReceived().add(monthBeginBalance), 2, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
                     }
                     monthDataStatisticsVOO.setExtractionRate(extractionRate);
+                    logger.info("老客组{}月坐席下用户的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{},回款:{}", monthDataStatisticsVOO.getCurrentOwner(), monthDataStatisticsVOO.getRecharge(), monthDataStatisticsVOO.getWithdraw(), monthBeginBalance, monthNowBalance, monthDataStatisticsVOO.getReceived());
 
                     // 老客组数据
                     monthDataStatisticsOld.add(monthDataStatisticsVOO);
@@ -338,6 +351,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
         if (startMonthBalance == null){
             startMonthBalance = new BigDecimal("0");
         }
+        logger.info("运营部的充值:{},提现:{},月初站岗资金:{},当前站岗资金:{}", listO.getRecharge(), listT.getWithdraw(), startMonthBalance, nowMonthBalance);
         // 规模业绩
         operMonthPerformanceDataVO.setInvest(listTh.getInvest());
         // 年化业绩
@@ -388,5 +402,37 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
             result.add(value);
         }
         return result;
+    }
+
+    /**
+     * 得到中文全拼
+     * @param src
+     * @return
+     */
+    public static String getPingYin(String src) {
+        char[] t1 = null;
+        t1 = src.toCharArray();
+        String[] t2 = new String[t1.length];
+        HanyuPinyinOutputFormat t3 = new HanyuPinyinOutputFormat();
+        t3.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        t3.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        t3.setVCharType(HanyuPinyinVCharType.WITH_V);
+        String t4 = "";
+        int t0 = t1.length;
+        try {
+            for (int i = 0; i < t0; i++) {
+                // 判断是否为汉字字符
+                if (java.lang.Character.toString(t1[i]).matches("[\\u4E00-\\u9FA5]+")) {
+                    t2 = PinyinHelper.toHanyuPinyinStringArray(t1[i], t3);
+                    t4 += t2[0];
+                } else {
+                    t4 += java.lang.Character.toString(t1[i]);
+                }
+            }
+            return t4;
+        } catch (BadHanyuPinyinOutputFormatCombination e1) {
+            e1.printStackTrace();
+        }
+        return t4;
     }
 }
