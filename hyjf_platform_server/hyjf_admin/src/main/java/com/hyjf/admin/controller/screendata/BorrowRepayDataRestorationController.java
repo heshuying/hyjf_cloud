@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.screendata;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
