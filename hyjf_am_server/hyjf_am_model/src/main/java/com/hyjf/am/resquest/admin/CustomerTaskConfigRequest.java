@@ -94,4 +94,8 @@ public class CustomerTaskConfigRequest extends BasePage implements Serializable 
     public void setLimitStart(int limitStart) {
         this.limitStart = limitStart;
     }
+
+    public CustomerTaskConfigRequest(String customerName) {
+        this.customerName = customerName;
+    }
 }

@@ -174,7 +174,8 @@ public class OperServiceImpl implements OperService {
         CustomerTaskConfigExample.Criteria cra = example.createCriteria();
         cra.andCustomerNameEqualTo(customerTaskConfigVO.getCustomerName());
         int updateFlag = customerTaskConfigMapper.updateByExampleSelective(updateParam, example);
-        if (addFlag == 1 && updateFlag ==1){
+        logger.info("坐席月任务配置数据新增功能,添加:{},修改:{}", addFlag, updateFlag);
+        if (addFlag == 1 && updateFlag >= 1){
             flag = 1;
         }
         return flag;
