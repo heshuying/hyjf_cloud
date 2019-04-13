@@ -552,4 +552,13 @@ public class RedisConstants {
      * 后台处理Aleve和eve文件增加redis锁控制、防止重复发送mq消息
      */
     public static final String DUAL_HISTORY_ALEVE = "DUAL_HISTORY_ALEVE:";
+
+
+    /**
+     * app端短信验证码登录   自动登录的key
+     */
+    public static final String APP_SMS_LOGIN_KEY = "APP_SMS_LOGIN_KEY:";
+
+
+
 }
