@@ -42,6 +42,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getRechargeList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getRechargeList(startIndex,endIndex);
+        logger.info("用户画像投屏数据充值数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
@@ -49,6 +50,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getPlanTenderList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getPlanTenderList(startIndex,endIndex);
+        logger.info("用户画像投屏数据计划加入数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
@@ -56,6 +58,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getPlanRepayList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getPlanRepayList(startIndex,endIndex);
+        logger.info("用户画像投屏数据计划退出数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
@@ -63,6 +66,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getCreditTenderList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getCreditTenderList(startIndex,endIndex);
+        logger.info("用户画像投屏数据债转承接数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
@@ -70,6 +74,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getWithdrawList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getWithdrawList(startIndex,endIndex);
+        logger.info("用户画像投屏数据提现数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
@@ -78,6 +83,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getBorrowRecoverList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getBorrowRecoverList(startIndex,endIndex);
+        logger.info("用户画像投屏数据散标回款数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
@@ -86,6 +92,7 @@ public class ScreenDataController extends BaseController {
     private ScreenDataResponse getBorrowTenderList(@PathVariable Integer startIndex, @PathVariable Integer endIndex ) {
         ScreenDataResponse response = new ScreenDataResponse();
         List<ScreenDataBean> list = screenDataService.getBorrowTenderList(startIndex,endIndex);
+        logger.info("用户画像投屏数据散标投资数据修复数量：{}",list ==null?"0":list.size() );
         response.setResultList(list);
         return response;
     }
