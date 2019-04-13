@@ -76,7 +76,6 @@ public class BorrowRepayDataRestorationController extends BaseController {
         }
         logger.info("用户画像投屏数据计划投资数据修复开始");
         List<ScreenDataBean> planTenderList = borrowRepayDataService.getPlanTenderList(startIndex,endIndex);
-        logger.info("用户画像投屏数据计划投资数据打印:"+ JSONObject.toJSONString(planTenderList));
         if(!CollectionUtils.isEmpty(planTenderList)){
             for(ScreenDataBean screenDataBean:planTenderList){
                 try{
