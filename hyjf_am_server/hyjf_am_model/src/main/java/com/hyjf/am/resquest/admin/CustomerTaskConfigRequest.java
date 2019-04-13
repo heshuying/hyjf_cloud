@@ -98,4 +98,7 @@ public class CustomerTaskConfigRequest extends BasePage implements Serializable 
     public CustomerTaskConfigRequest(String customerName) {
         this.customerName = customerName;
     }
+
+    public CustomerTaskConfigRequest() {
+    }
 }
