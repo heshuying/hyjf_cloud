@@ -97,6 +97,7 @@ public class ScreenDataMessageConsumer implements RocketMQListener<MessageExt>, 
             jsonObject.put("time",formatter.format(new Date()));
             jsonObject.put("money",data.getMoney());
             try {
+                logger.info("推送大屏三的数据为:"+JSONObject.toJSONString(jsonObject));
                 commonProducer.messageSend(new MessageContent(MQConstant.USER_SCREEN_PICTURE3_TOPIC, UUID.randomUUID().toString(), jsonObject));
             } catch (MQException e) {
                 logger.error("推送数据接口出现异常...", e);
