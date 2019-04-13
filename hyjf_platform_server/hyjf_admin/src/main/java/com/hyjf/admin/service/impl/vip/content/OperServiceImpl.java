@@ -155,7 +155,9 @@ public class OperServiceImpl implements OperService {
             CustomerTaskConfigVOResponse response = this.taskList(request);
             if (!CollectionUtils.isEmpty(response.getResultList())){
                 resultFlag = true;
-                CustomerTaskConfigVOResponse responseT = this.taskList(new CustomerTaskConfigRequest(request.getCustomerName()));
+            }
+            CustomerTaskConfigVOResponse responseT = this.taskList(new CustomerTaskConfigRequest(request.getCustomerName()));
+            if(!CollectionUtils.isEmpty(responseT.getResultList())){
                 resultMap.put("customerGroup", responseT.getResultList().get(0).getCustomerGroup());
             }
         }

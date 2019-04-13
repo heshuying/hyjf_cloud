@@ -128,7 +128,7 @@ public class OperServiceImpl implements OperService {
         if(null != request.getCustomerGroup()){
             cra.andCustomerGroupEqualTo(request.getCustomerGroup());
         }
-        // 坐席姓名 1:新客组,2:老客组
+        // 坐席姓名
         if(StringUtils.isNotBlank(request.getCustomerName())){
             cra.andCustomerNameLike(request.getCustomerName());
         }
