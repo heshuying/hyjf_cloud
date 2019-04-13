@@ -184,7 +184,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     BigDecimal monthNowBalance = BigDecimal.ZERO;
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 每个集合数据量
-                        int num = 3;
+                        int num = 1000;
                         // 计算分多少个集合
                         int listNum = userIds.size()%num == 0 ? userIds.size()/num : userIds.size()/num+1;
                         // 储存userId的大list切分成多个小list,防止sql过长
@@ -271,7 +271,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     BigDecimal monthNowBalance = BigDecimal.ZERO;
                     if (!CollectionUtils.isEmpty(userIds)){
                         // 每个集合数据量
-                        int num = 3;
+                        int num = 1000;
                         // 计算分多少个集合
                         int listNum = userIds.size()%num == 0 ? userIds.size()/num : userIds.size()/num+1;
                         // 储存userId的大list切分成多个小list,防止sql过长
