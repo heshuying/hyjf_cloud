@@ -7245,4 +7245,17 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 获取线上所有智投信息
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> selectAllPlan(){
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectAllPlan";
+        HjhPlanVoResponse response = restTemplate.postForEntity(url,null,HjhPlanVoResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
 }

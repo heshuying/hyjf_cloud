@@ -16,4 +16,9 @@ public interface CertLendProductService extends BaseHgCertReportService {
      * @return
      */
     JSONArray getPlanProdouct(String planNid);
+    /**
+     * 获取所有智投信息，组装上报数据
+     * @return
+     */
+    JSONArray getAllPlan();
 }

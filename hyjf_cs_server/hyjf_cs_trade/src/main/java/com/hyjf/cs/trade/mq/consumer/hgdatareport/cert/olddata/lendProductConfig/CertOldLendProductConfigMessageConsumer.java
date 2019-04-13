@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.lendProduct;
+package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.olddata.lendProductConfig;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -9,7 +9,7 @@ import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct.CertLendProductService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProductConfig.CertLendProductConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -24,21 +24,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Description 合规数据上报 CERT 产品信息上报
+ * @Description 合规数据上报 CERT 产品配置信息历史数据上报
  * @Author nxl
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_LENDPRODUCT_TAG, consumerGroup = MQConstant.CERT_LENDPRODUCT_GROUP)
-public class CertLendProductMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_OLD_LENDPRODUCTCONFIG_TAG, consumerGroup = MQConstant.CERT_OLD_LENDPRODUCTCONFIG_GROUP)
+public class CertOldLendProductConfigMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    Logger logger = LoggerFactory.getLogger(CertLendProductMessageConsumer.class);
+    Logger logger = LoggerFactory.getLogger(CertOldLendProductConfigMessageConsumer.class);
 
-    private String thisMessName = "产品信息推送";
+    private String thisMessName = "产品配置信息历史数据推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
-    private CertLendProductService certLendProductService;
+    private CertLendProductConfigService certLendProductConfigService;
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
@@ -70,14 +70,17 @@ public class CertLendProductMessageConsumer implements RocketMQListener<MessageE
             return;
         }
 
-        String planNid = jsonObject.getString("planNid");
+        //加入订单号或承接承接订单号
+        String orderId = jsonObject.getString("orderId");
+        // 1：代表初始债权，2：代表承接
+        String flag = jsonObject.getString("flag");
         String tradeDate = jsonObject.getString("tradeDate");
-        if (StringUtils.isBlank(planNid)) {
+        if (StringUtils.isBlank(orderId)||StringUtils.isEmpty(flag)) {
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
-        boolean canRun = certLendProductService.checkCanRun();
+        boolean canRun = certLendProductConfigService.checkCanRun();
         if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
@@ -88,20 +91,20 @@ public class CertLendProductMessageConsumer implements RocketMQListener<MessageE
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductService.getPlanProdouct(planNid);
+            JSONArray listRepay = certLendProductConfigService.ProductConfigInfo(orderId,flag);
             logger.info("数据：" + listRepay.toString());
             if (null == listRepay || listRepay.size() <= 0) {
-                logger.error(logHeader + "组装参数为空！！！参数为：" + planNid);
+                logger.error(logHeader + "组装参数为空！！！参数为：" + orderId);
                 return;
             }
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE, planNid, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, orderId, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
-                certLendProductService.insertAndSendPost(entity);
+                certLendProductConfigService.insertAndSendPost(entity);
             } catch (Exception e) {
                 throw e;
             }

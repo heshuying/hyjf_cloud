@@ -10,15 +10,14 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct.CertLendProductService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -68,8 +67,41 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
     @Override
     public JSONArray getPlanProdouct(String planNid){
         JSONArray json = new JSONArray();
+        Map<String, Object> param =getParam(planNid);
+        if(!param.isEmpty()&&param.size()>0){
+            json.add(param);
+        }
+        return json;
+    }
+
+    //
+
+    /**
+     * 获取所有智投信息，组装上报数据
+     * @return
+     */
+    @Override
+    public JSONArray getAllPlan(){
+        JSONArray json = new JSONArray();
+        try{
+            List<HjhPlanVO> hjhPlanVOList = amTradeClient.selectAllPlan();
+            if (!CollectionUtils.isNotEmpty(hjhPlanVOList)) {
+                throw new Exception("获取线上智投信息失败！" );
+            }
+            for(HjhPlanVO hjhPlanVO:hjhPlanVOList){
+                Map<String,Object> mapParam =getParam(hjhPlanVO.getPlanNid());
+                json.add(mapParam);
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage());
+        }
+        return json;
+    }
+
+
+    public Map<String,Object> getParam(String planNid){
+        Map<String, Object> param = new HashMap<String, Object>();
         try {
-            Map<String, Object> param = new LinkedHashMap<String, Object>();
             HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
             logger.info(logHeader+"根据计划编号:" + planNid+"获取的计划产品信息为："+JSONArray.toJSONString(hjhPlanVO));
             if (null == hjhPlanVO) {
@@ -101,11 +133,10 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                     termDays = hjhPlanVO.getLockPeriod() * 30;
                 }
                 param.put("term", termDays);
-                json.add(param);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return json;
+        return param;
     }
 }

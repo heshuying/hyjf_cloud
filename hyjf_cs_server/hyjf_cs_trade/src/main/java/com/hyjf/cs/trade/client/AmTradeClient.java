@@ -2981,5 +2981,10 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowTenderVO> getBorrowTenderByAccede(String accedeOrderId);
+    /**
+     * 获取线上所有智投信息
+     * @return
+     */
+    List<HjhPlanVO> selectAllPlan();
 }
 

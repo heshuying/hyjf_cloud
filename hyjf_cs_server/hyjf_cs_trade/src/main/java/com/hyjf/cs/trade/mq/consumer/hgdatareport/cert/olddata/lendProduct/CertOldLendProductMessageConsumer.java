@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.lendProduct;
+package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.olddata.lendProduct;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -24,17 +24,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Description 合规数据上报 CERT 产品信息上报
+ * @Description 合规数据上报 CERT 产品信息历史数据上报
  * @Author nxl
  * @Date 2018/11/28 10:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_LENDPRODUCT_TAG, consumerGroup = MQConstant.CERT_LENDPRODUCT_GROUP)
-public class CertLendProductMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_OLD_LENDPRODUCT_TAG, consumerGroup = MQConstant.CERT_OLD_LENDPRODUCT_GROUP)
+public class CertOldLendProductMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
-    Logger logger = LoggerFactory.getLogger(CertLendProductMessageConsumer.class);
+    Logger logger = LoggerFactory.getLogger(CertOldLendProductMessageConsumer.class);
 
-    private String thisMessName = "产品信息推送";
+    private String thisMessName = "产品信息历史数据推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
@@ -88,14 +88,15 @@ public class CertLendProductMessageConsumer implements RocketMQListener<MessageE
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductService.getPlanProdouct(planNid);
+            // 智投历史数据上报，查询所有智投信息，组装上报数据
+            JSONArray listRepay = certLendProductService.getAllPlan();
             logger.info("数据：" + listRepay.toString());
             if (null == listRepay || listRepay.size() <= 0) {
-                logger.error(logHeader + "组装参数为空！！！参数为：" + planNid);
+                logger.error(logHeader + "组装参数为空！！！");
                 return;
             }
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE, planNid, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {
