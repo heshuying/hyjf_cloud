@@ -10,10 +10,11 @@ import java.util.List;
  */
 public class WorkFlowVO extends BaseVO implements Serializable{
     private static final long serialVersionUID = 1L;
+    private int id;
     /**
      * 业务id
      */
-    private String businessId;
+    private Integer businessId;
     /**
      * 业务名称
      */
@@ -61,11 +62,19 @@ public class WorkFlowVO extends BaseVO implements Serializable{
      */
     public List<WorkFlowNodeVO> flowNodes;
 
-    public String getBusinessId() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(String businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 

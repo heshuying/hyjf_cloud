@@ -2,7 +2,9 @@ package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
 import com.hyjf.am.config.service.WorkFlowConfigService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +42,25 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
             adminRequest.setLimitEnd(limitEnd);
         }
         return workFlowConfigMapper.selectWorkFlowConfigList(adminRequest);
+    }
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public int insertWorkFlowConfig(WorkFlowVO workFlowVO){
+        //流程节点
+        List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
+        //保存业务流程表
+        int workFlowCount = workFlowConfigMapper.insertWorkFlow(workFlowVO);
+        if(workFlowCount > 0){
+            //保存业务流程节点表
+            int workFlowNodeCount = workFlowConfigMapper.insertWorkFlowNode(flowNodes);
+            if(workFlowNodeCount>0){
+                return 1;
+            }
+        }
+        return 0;
     }
 }

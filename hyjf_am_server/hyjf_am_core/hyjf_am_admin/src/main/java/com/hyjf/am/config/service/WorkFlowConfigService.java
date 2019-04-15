@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 
@@ -23,4 +24,10 @@ public interface WorkFlowConfigService {
      * @return
      */
     List<WorkFlowVO> selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest, int limitStart, int limitEnd);
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    int insertWorkFlowConfig(WorkFlowVO workFlowVO);
 }

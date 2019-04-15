@@ -7,11 +7,11 @@
             1=1
             <!-- 业务id -->
             <if test="businessId != null and businessId != ''">
-                AND w.workname_id = #{businessId}
+                AND w.workname_id LIKE CONCAT( #{businessId}, '%')
             </if>
             <!-- 业务名称 -->
             <if test="businessName != null and businessName != ''">
-                AND n.work_name = #{businessName}
+                AND n.work_name LIKE CONCAT( #{businessName}, '%')
             </if>
             <!-- 是否需要审核 -->
             <if test="auditFlag != null ">
@@ -65,6 +65,23 @@
             LIMIT #{limitStart} , #{limitEnd}
         </if>
     </select>
+
+    <insert id="insertWorkFlow"  parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
+        insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
+        VALUES (#{businessId,jdbcType=VARCHAR}, #{auditFlag,jdbcType=INTEGER},1,#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertWorkFlowNode" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO" >
+        insert into ht_workflow_node (workflow_id,flow_order,admin_id)
+        VALUES
+        <foreach collection="flowNodes" item="pojo" index="index" separator=",">
+            (
+            #{pojo.businessId},
+            #{pojo.flowNodeNum},
+            #{pojo.auditUser}
+            )
+        </foreach>
+    </insert>
 
 </mapper>
 

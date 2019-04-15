@@ -1287,5 +1287,11 @@ public interface AmAdminClient {
      * @return
      */
     WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest);
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO);
 
 }

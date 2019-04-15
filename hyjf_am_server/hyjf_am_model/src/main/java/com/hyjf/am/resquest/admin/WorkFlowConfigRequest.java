@@ -14,7 +14,7 @@ public class WorkFlowConfigRequest extends BasePage implements Serializable {
     /**
      * 业务id
      */
-    private String businessId;
+    private Integer businessId;
     /**
      * 业务名称
      */
@@ -47,11 +47,11 @@ public class WorkFlowConfigRequest extends BasePage implements Serializable {
     private int limitEnd = -1;
 
 
-    public String getBusinessId() {
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(String businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 

@@ -2226,4 +2226,13 @@ public class AmAdminClientImpl implements AmAdminClient {
     public WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest){
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/init",adminRequest, WorkFlowConfigResponse.class).getBody();
     }
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/insert",workFlowVO, BooleanResponse.class).getBody();
+    }
 }
