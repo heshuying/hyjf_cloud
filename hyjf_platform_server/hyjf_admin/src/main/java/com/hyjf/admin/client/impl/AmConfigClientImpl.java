@@ -2457,4 +2457,60 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
 
     }
+
+    @Override
+    public Integer insertBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/insert";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+
+    }
+
+    @Override
+    public BusinessNameMgResponse findBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/find";
+        BusinessNameMgResponse response = restTemplate
+                .postForEntity(url, request, BusinessNameMgResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public WorkNameVO findBusinessNameById(int id) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/info/"+id;
+        BusinessNameMgResponse response = restTemplate
+                .getForObject(url, BusinessNameMgResponse.class);
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer updateBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/update";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer updateStatusBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/updateStatus";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }
