@@ -1162,6 +1162,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
             tenderAgreement = tenderAgreementsNid.get(0);
             if(tenderAgreement!=null){
+                logger.info("----------------------------下载法大大脱敏pdf文件:"+JSONObject.toJSONString(tenderAgreement));
                 files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
                 logger.info("----------------------------获取法大大居间协议:"+JSONObject.toJSONString(files));
                 if(files!=null && files.size()>0){
