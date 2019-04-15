@@ -7,6 +7,8 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +35,8 @@ public class HjhAutoCalculateFairValueController extends BaseController {
     @RequestMapping("/hjhCalculateFairValue")
     public void hjhAutoCalculateFairValue() {
         logger.info("汇计划自动计算计划订单的公允价值开始");
+        // 清算,计算公允价值与自动投资设置5分钟并发锁,
+        RedisUtils.set(RedisConstants.HJH_TENDER_LOCK, "hjh_tender_lock", 5 * 60);
         try {
             // 检索退出中的加入订单,发送计算公允价值MQ
             List<HjhAccede> hjhQuitAccedeList = this.hjhAutoCreditService.selectHjhQuitAccedeList();

@@ -25,6 +25,10 @@ public class BankCardUtil {
         if(Validator.isNotNull(cardNo)&&cardNo.length()>10){
             str = "****  ****  **** " + cardNo.substring(cardNo.length() - 4, cardNo.length());
         }
+        // add by nxl 银行卡号是短号的情况下,对银行进行脱敏显示
+        if(Validator.isNotNull(cardNo)&&cardNo.length()<10){
+            str = "*****" + cardNo.substring(cardNo.length() - 4, cardNo.length());
+        }
         return str;
     }
 

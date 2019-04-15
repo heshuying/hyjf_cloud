@@ -46,7 +46,11 @@ public class CompanyInfoCompanyInfoVO extends BaseVO implements Serializable {
 
 	@ApiModelProperty(value = "电子账号")
 	private String accountId;//电子账号
-	
+
+	@ApiModelProperty(value = "所属银行")
+	private String bankName;//所属银行
+	@ApiModelProperty(value = "银联号")
+	private String payAllianceCode;//银联号
 	
 	
 	public String getCardType() {
@@ -136,7 +140,20 @@ public class CompanyInfoCompanyInfoVO extends BaseVO implements Serializable {
 	public void setTaxId(String taxId) {
 		this.taxId = taxId;
 	}
-	
-	
 
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getPayAllianceCode() {
+		return payAllianceCode;
+	}
+
+	public void setPayAllianceCode(String payAllianceCode) {
+		this.payAllianceCode = payAllianceCode;
+	}
 }
