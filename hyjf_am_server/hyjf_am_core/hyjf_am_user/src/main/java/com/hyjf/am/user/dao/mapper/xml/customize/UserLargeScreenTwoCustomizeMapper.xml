@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.UserLargeScreenTwoCustomizeMapper" >
   
   <select id="getCurrentOwners" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-      SELECT customer_name AS currentOwner, customer_group AS customerGroup FROM ht_customer_task_config
+      SELECT customer_name AS currentOwner, customer_group AS customerGroup FROM ht_customer_task_config WHERE task_time = DATE_FORMAT(NOW(), '%Y-%m')
   </select>
 
   <select id="getCurrentOwnerUserIds" resultType="java.lang.Integer">
