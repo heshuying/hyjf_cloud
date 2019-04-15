@@ -90,14 +90,14 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 int quiteTime = (int) GetDate.getMillis10(accede.get(0).getEndDate());
                 // 開始時間戳（預估日期+3天）
                 // int dualDateAddThreeStrStart = GetDate.getDayStart10(dualDateAddThreeStr);
-                // 結束時間戳（預估日期+3天）
+                // 結束時間戳（預估日期+3天）/*TransUtil.datesAddStr(dualDateAddThreeStr,-1)*/
                 int dualDateAddThreeStrend = GetDate.getDayEnd10(dualDateAddThreeStr);
-                // 開始時間戳（預估日期）
+                // 開始時間戳（預估日期）/*TransUtil.datesAddStr(dualDateStr,-1)*/
                 int dualDateStrStart = GetDate.getDayStart10(dualDateStr);
                 // 結束時間戳（預估日期）
                 // int dualDateStrend = GetDate.getDayEnd10(dualDateStr);
-                // 1.计划订单“开始发起退出的时间”小于T，大于T+3日的订单。
-                if (!(quiteTime < dualDateStrStart && quiteTime > dualDateAddThreeStrend)) {
+                // 1.计划订单“开始发起退出的时间”小于T，大于T+3日的订单。改成： 计划订单“开始发起退出的时间”大于等于T且小于等于T+3日的订单
+                if (quiteTime >= dualDateStrStart && quiteTime <= dualDateAddThreeStrend) {
                     continue;
                 } else {
                     boolean flagAddVo = true;

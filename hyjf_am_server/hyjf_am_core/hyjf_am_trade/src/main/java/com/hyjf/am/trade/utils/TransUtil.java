@@ -416,7 +416,7 @@ public class TransUtil {
      *
      * @param dBegin   开始日期
      * @param dEnd 结束日期
-     * @return
+     * @return List<Date>
      */
     public static List<Date> findDates(Date dBegin, Date dEnd, int n) throws ParseException {
         //设置开始时间
@@ -444,7 +444,7 @@ public class TransUtil {
      *
      * @param dBegin   开始日期
      * @param dEnd 结束日期
-     * @return
+     * @return List<Date>
      */
     public static List<Date> findDates(Date dBegin, Date dEnd) throws ParseException {
         boolean flag = true;
@@ -482,7 +482,7 @@ public class TransUtil {
      * 循环拼接日期到List 循环到N天
      *
      * @param dBegin   开始日期
-     * @return
+     * @return List<Date>
      */
     public static List<Date> findDates(Date dBegin,int n) {
         boolean flag = true;
@@ -512,7 +512,7 @@ public class TransUtil {
      * 日期+N天
      *
      * @param d  日期
-     * @return
+     * @return Date
      */
     public static Date datesAdd(Date d, int n)  {
         Calendar calBegin = Calendar.getInstance();
@@ -521,4 +521,16 @@ public class TransUtil {
         return calBegin.getTime();
     }
 
+    /**
+     * 日期+N天
+     *
+     * @param d  日期
+     * @return String
+     */
+    public static String datesAddStr(String d, int n)  {
+        Calendar calBegin = Calendar.getInstance();
+        calBegin.setTime(GetDate.stringToDate2(d));
+        calBegin.add(Calendar.DAY_OF_MONTH, n);
+        return GetDate.dateToString2(calBegin.getTime());
+    }
 }
