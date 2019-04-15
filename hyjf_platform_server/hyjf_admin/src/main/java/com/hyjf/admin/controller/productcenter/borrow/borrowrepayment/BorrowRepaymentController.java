@@ -261,8 +261,8 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayFee","还款服务费");
         map.put("tiqiantianshu","提前天数");
         map.put("shaohuanlixi","少还利息");
-        map.put("yanqitianshu","延期天数");
-        map.put("yanqilixi","延期利息");
+//        map.put("yanqitianshu","延期天数");
+//        map.put("yanqilixi","延期利息");
         map.put("yuqitianshu","逾期天数");
         map.put("yuqilixi","逾期利息");
         map.put("yinghuanzonge","应还总额");
@@ -314,7 +314,7 @@ public class BorrowRepaymentController extends BaseController {
         mapAdapter.put("repayAccount", valueFormatAdapter);
         mapAdapter.put("repayFee", valueFormatAdapter);
         mapAdapter.put("shaohuanlixi", valueFormatAdapter);
-        mapAdapter.put("yanqilixi", valueFormatAdapter);
+        //mapAdapter.put("yanqilixi", valueFormatAdapter);
         mapAdapter.put("yuqilixi", valueFormatAdapter);
         mapAdapter.put("yinghuanzonge", valueFormatAdapter);
         mapAdapter.put("shihuanzonge", valueFormatAdapter);
