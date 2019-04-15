@@ -68,6 +68,7 @@
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 		where bt.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
 		      AND bt.create_time <![CDATA[<]]> STR_TO_DATE('2019-04-03 18:00:00', '%Y-%m-%d %H:%i:%s')
+		      and bt.accede_order_id is null
 			  limit #{startIndex},#{endIndex}
 	</select>
 
