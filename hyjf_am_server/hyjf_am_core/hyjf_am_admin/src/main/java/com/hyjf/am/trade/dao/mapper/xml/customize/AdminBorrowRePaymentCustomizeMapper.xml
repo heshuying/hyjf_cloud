@@ -157,10 +157,10 @@
 		b.repay_account_interest_yes AS repayAccountInterestYes,
 		b.repay_account_yes AS repayAccountYes,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
+		b.repay_account_interest_wait AS repayAccountInterestWait,
 		b.repay_account_all-b.repay_account_yes AS repayAccountWait,
 		b.status AS status,
-		br.repay_status as repayStatus,
+		if(br.repay_status=0 and br.advance_status=3 ,'2',br.repay_status) as  repayStatus,
 		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 		b.repay_last_time, '%Y-%m-%d' )) AS repayLastTime,
 		if(br.repay_time='' OR br.repay_time='0' OR br.repay_time='null','',FROM_UNIXTIME(
@@ -227,7 +227,7 @@
 		SUM(b.repay_account_interest_yes) as repayAccountInterestYesAll,
 		SUM(b.repay_fee_normal)as repayFeeYesAll,
 		SUM(b.repay_account_capital-b.repay_account_capital_yes)as repayAccountCapitalWaitAll,
-		SUM(b.repay_account_interest-b.repay_account_interest_yes)as repayAccountInterestWaitAll,
+		SUM(b.repay_account_interest_wait)as repayAccountInterestWaitAll,
 		SUM(br.repay_fee-b.repay_fee_normal)as repayFeeWaitAll
 		FROM ht_borrow AS b
 		INNER JOIN ht_borrow_repay AS br on b.borrow_nid=br.borrow_nid
@@ -430,7 +430,7 @@
 				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
 				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-				b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
+				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
 				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
@@ -511,7 +511,7 @@
 				if(rp.repay_action_time is null OR rp.repay_action_time='' OR rp.repay_action_time='0',
 				'', CASE rp.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END ) as repayMoneySource,
 				b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-				b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait,
+				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
 				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
@@ -955,7 +955,7 @@
 		''
 		) AS repayMoneySource,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
+		b.repay_account_interest_wait AS repayAccountInterestWait
         FROM
         ht_borrow AS b
         INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid
@@ -1033,7 +1033,7 @@
 		END
 		) AS repayMoneySource,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
-		b.repay_account_interest-b.repay_account_interest_yes AS repayAccountInterestWait
+		b.repay_account_interest_wait AS repayAccountInterestWait
         FROM
         ht_borrow_repay_plan AS rp
         INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
