@@ -85,7 +85,6 @@ public class ScreenDataServiceImpl implements ScreenDataService {
                 yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360), 4, BigDecimal.ROUND_HALF_UP);
             }
         }
-        logger.info("用户userId="+userId+"订单号为orderId"+orderId+"获取到的年化收益为"+yearAmount);
         return yearAmount;
     }
 
