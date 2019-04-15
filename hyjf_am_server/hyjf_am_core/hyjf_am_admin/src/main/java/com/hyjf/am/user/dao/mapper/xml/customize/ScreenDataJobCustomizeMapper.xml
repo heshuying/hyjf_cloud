@@ -13,7 +13,7 @@
 
 
 	<!--统计无主单用户查询散标待回款-->
-	<select id="findRepayUser"  resultMap="repayListResultMap">
+	<select id="findRepayUser"  resultMap="repayListResultMap" parameterType="Map">
 		select * from (
 		SELECT
 				r.nid as borrow_nid,
@@ -26,7 +26,7 @@
 		FROM
 				   hyjf_trade.ht_borrow_recover r
 		LEFT JOIN  ht_user_portrait p1 ON r.user_id=p1.user_id
-		LEFT JOIN  ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN  ht_customer_task_config c on p1.current_owner=c.customer_name AND c.task_time=#{taskTime}
 		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
 		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
 		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
@@ -56,7 +56,7 @@
 		hyjf_trade.ht_borrow_recover r
 		LEFT JOIN `ht_user_info` i ON r.user_id = i.user_id
 		LEFT JOIN  ht_user_portrait p ON r.user_id=p.user_id
-		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name AND c.task_time=#{taskTime}
 		LEFT JOIN `ht_spreads_user` s ON r.user_id = s.user_id
 		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
 		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
@@ -89,7 +89,7 @@
 		hyjf_trade.ht_borrow_recover r
 		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
 		LEFT JOIN ht_user_portrait p1 ON pa.user_id = p1.user_id
-		LEFT JOIN ht_customer_task_config c ON p1.current_owner = c.customer_name
+		LEFT JOIN ht_customer_task_config c ON p1.current_owner = c.customer_name AND c.task_time=#{taskTime}
 		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
 		LEFT JOIN ht_utm_reg r1 ON r1.user_id = i.user_id
 		LEFT JOIN ht_utm u1 ON u1.utm_id = r1.utm_id
@@ -121,7 +121,7 @@
 		LEFT JOIN	hyjf_trade.ht_borrow_recover_plan pa on r.nid=pa.nid
 		LEFT JOIN `ht_user_info` i ON pa.user_id = i.user_id
 		LEFT JOIN  ht_user_portrait p ON pa.user_id=p.user_id
-		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name AND c.task_time=#{taskTime}
 		LEFT JOIN `ht_spreads_user` s ON pa.user_id = s.user_id
 		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
 		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
@@ -152,7 +152,7 @@
 		c.customer_group
 		from hyjf_trade.ht_hjh_accede  a
 		LEFT JOIN  ht_user_portrait p1 ON a.user_id=p1.user_id
-		LEFT JOIN ht_customer_task_config c on p1.current_owner=c.customer_name
+		LEFT JOIN ht_customer_task_config c on p1.current_owner=c.customer_name AND c.task_time=#{taskTime}
 		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
 		LEFT JOIN  ht_utm_reg r1  ON r1.user_id = i.user_id
 		LEFT JOIN  ht_utm u1 ON u1.utm_id = r1.utm_id
@@ -176,7 +176,7 @@
 		from hyjf_trade.ht_hjh_accede  a
 		LEFT JOIN `ht_user_info` i ON a.user_id = i.user_id
 		LEFT JOIN  ht_user_portrait p ON a.user_id=p.user_id
-		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name
+		LEFT JOIN ht_customer_task_config c on p.current_owner=c.customer_name AND c.task_time=#{taskTime}
 		LEFT JOIN `ht_spreads_user` s ON a.user_id = s.user_id
 		LEFT JOIN ht_r_oa_users ou ON s.spreads_user_id = ou.hyd_id
 		LEFT JOIN ht_r_oa_department d1 ON ou.departmentid = d1.id
