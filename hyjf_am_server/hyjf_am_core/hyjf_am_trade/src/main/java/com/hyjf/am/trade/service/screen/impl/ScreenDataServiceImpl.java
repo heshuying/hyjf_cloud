@@ -12,6 +12,8 @@ import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +28,7 @@ import java.util.List;
  */
 @Service
 public class ScreenDataServiceImpl implements ScreenDataService {
+    protected Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     UserOperateListMapper userOperateListMapper;
     @Autowired
@@ -64,6 +67,7 @@ public class ScreenDataServiceImpl implements ScreenDataService {
         } else {
             productStyle = screenYearMoneyCustomizeMapper.queryTenderList(orderId, userId);
         }
+        logger.info("获取到的orderId="+orderId+"获取到的userId="+userId+"获取到的investMoney="+investMoney+"获取到的productStyle="+productStyle);
         if (StringUtils.isNotBlank(productStyle)) {
             if (productStyle.contains("个月")) {
                 String number = StringUtils.substringBefore(productStyle, "个月");
@@ -81,6 +85,7 @@ public class ScreenDataServiceImpl implements ScreenDataService {
                 yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360), 4, BigDecimal.ROUND_HALF_UP);
             }
         }
+        logger.info("用户userId="+userId+"订单号为orderId"+orderId+"获取到的年化收益为"+yearAmount);
         return yearAmount;
     }
 
