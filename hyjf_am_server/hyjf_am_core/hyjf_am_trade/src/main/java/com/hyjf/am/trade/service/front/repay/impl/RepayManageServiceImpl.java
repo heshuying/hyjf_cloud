@@ -1764,8 +1764,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         userRepayDetail.setRepayInterest(creditRepay.getAssignInterest().toString());
                         userRepayDetail.setChargeDays(userRecover.getChargeDays().toString());
                         // 提前还款利息拆分 add by wgx 2019/03/22
-                        userRepayDetail.setChargeOriginalInterest(userRecover.getChargePenaltyInterest().subtract(userRecover.getChargeInterest()).toString());
-                        userRepayDetail.setChargePenaltyInterest(userRecover.getChargePenaltyInterest().toString());
+                        userRepayDetail.setChargeOriginalInterest(creditRepay.getChargePenaltyInterest().subtract(creditRepay.getChargeInterest()).toString());
+                        userRepayDetail.setChargePenaltyInterest(creditRepay.getChargePenaltyInterest().toString());
                         if ("0".equals(userRepayDetail.getChargeOriginalInterest())) {
                             userRepayDetail.setChargeOriginalInterest("0.00");
                         }
