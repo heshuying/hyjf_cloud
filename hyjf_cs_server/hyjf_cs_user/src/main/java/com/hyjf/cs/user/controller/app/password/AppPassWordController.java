@@ -404,6 +404,8 @@ public class AppPassWordController extends BaseUserController {
                     RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
                     // pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
                     passWordService.unlockUser(user.getUserId());
+                    // pc1.1.3 新增 如果重置密码成功 就重新自动登陆  短信登录
+                    RedisUtils.del(RedisConstants.APP_SMS_LOGIN_KEY+user.getUserId());
                     ret.put("status", "0");
                     ret.put("statusDesc", "找回密码成功");
                 } else {

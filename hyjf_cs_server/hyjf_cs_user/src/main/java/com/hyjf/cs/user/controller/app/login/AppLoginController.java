@@ -523,9 +523,15 @@ public class AppLoginController extends BaseUserController {
         if (webViewUserVO != null) {
             logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
             sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
-            String codeLoginKey =  SecretUtil.createSign();
+            // 一个用户用同一个值   如果已经存在  就用以前的
+            String codeLoginKey = "";
+            if(RedisUtils.exists(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId())){
+                codeLoginKey = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId());
+            }else{
+                codeLoginKey =  SecretUtil.createSign();
+            }
             // 设置十三天内有效
-            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+codeLoginKey,userVO.getUserId()+"",60*60*24*13);
+            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId(),codeLoginKey,60*60*24*13);
             ret.put("status", "0");
             ret.put("statusDesc", "登录成功");
             ret.put("token", webViewUserVO.getToken());
@@ -649,7 +655,7 @@ public class AppLoginController extends BaseUserController {
         if (userVO.getStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
-        String redisUserId = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+codeLoginKey);
+        String redisUserId = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId());
         if(redisUserId==null || !(userVO.getUserId()+"").equals(redisUserId)){
             // 自动登录失败
             ret.put("status", "1");
@@ -663,7 +669,7 @@ public class AppLoginController extends BaseUserController {
             logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
             sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
             // 设置七天内有效
-            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+codeLoginKey,userVO.getUserId()+"",60*60*24*7);
+            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId(),codeLoginKey,60*60*24*13);
             ret.put("status", "0");
             ret.put("statusDesc", "登录成功");
             ret.put("token", webViewUserVO.getToken());
