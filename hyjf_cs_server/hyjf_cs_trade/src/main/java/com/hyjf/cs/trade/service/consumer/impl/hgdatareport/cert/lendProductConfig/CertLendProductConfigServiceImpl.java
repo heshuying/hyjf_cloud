@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +43,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
 
     /**
      * 组装产品配置上报信息
+     *
      * @param orderId（加入订单号或承接订单号）
      * @param flag（1代表加入智投，2代表承接智投）
      * @return
@@ -51,7 +52,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
     public JSONArray ProductConfigInfo(String orderId, String flag) {
         JSONArray json = new JSONArray();
         try {
-            Map<String, Object> param = new LinkedHashMap<String, Object>();
+            Map<String, Object> param = new HashMap<String, Object>();
             //产品信息编号
             String sourceFinancingcode = "";
             //债权编号
@@ -65,7 +66,6 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 if (null == hjhAccedeVO) {
                     throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + orderId);
                 }
-                sourceFinancingcode = hjhAccedeVO.getPlanNid();
                 //finClaimID
                 List<BorrowTenderVO> borrowTenderList = amTradeClient.getBorrowTenderByAccede(hjhAccedeVO.getAccedeOrderId());
                 logger.info(logHeader + "智投加入订单号:" + hjhAccedeVO.getAccedeOrderId() + "智投的加入记录为：" + JSONArray.toJSONString(hjhAccedeVO));
@@ -73,10 +73,13 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 if (!CollectionUtils.isNotEmpty(borrowTenderList)) {
                     throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！智投计入订单号:" + hjhAccedeVO.getAccedeOrderId());
                 }
-                BorrowTenderVO borrowTenderVO = borrowTenderList.get(0);
-                ////债权编号
-                finClaimID = borrowTenderVO.getNid();
                 userId = hjhAccedeVO.getUserId();
+                sourceFinancingcode = hjhAccedeVO.getPlanNid();
+                String idCardHash = getIdCard(userId);
+                for (BorrowTenderVO borrowTenderVO : borrowTenderList) {
+                    finClaimID = borrowTenderVO.getNid();
+                    json = putParam(sourceFinancingcode, finClaimID, idCardHash, json);
+                }
             } else {
                 //计划承接
                 List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(orderId);
@@ -91,29 +94,45 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 //承接用户id
                 userId = hjhDebtCreditTenderVO.getUserId();
             }
-            //获取用户信息
+            String idCardHash = getIdCard(userId);
+            json = putParam(sourceFinancingcode, finClaimID, idCardHash, json);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return json;
+    }
+
+    public JSONArray putParam(String sourceFinancingcode, String finClaimID, String userIdcardHash, JSONArray json) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        //接口版本号
+        param.put("version", CertCallConstant.CERT_CALL_VERSION);
+        //平台编号
+        param.put("sourceCode", systemConfig.getCertSourceCode());
+        //产品信息编号
+        param.put("sourceFinancingcode", sourceFinancingcode);
+        //债权编号
+        param.put("finClaimID", finClaimID);
+        //产品配置编号
+        param.put("configID", finClaimID);
+        //智投出借人哈希
+        param.put("userIdcardHash", userIdcardHash);
+        json.add(param);
+        return json;
+    }
+
+    public String getIdCard(Integer userId) {
+        //获取用户信息
+        String userIdcardHash = "";
+        try {
             UserInfoVO userVO = amUserClient.findUserInfoById(userId);
             logger.info(logHeader + "根据用户id:" + userId + " 查询的信息为：" + JSONArray.toJSONString(userVO));
             if (null == userVO) {
                 throw new Exception("产品配置信息推送,获取出借人信息为空！！用户id为:" + userId);
             }
-            String userIdcardHash = tool.idCardHash(userVO.getIdcard());
-            //接口版本号
-            param.put("version", CertCallConstant.CERT_CALL_VERSION);
-            //平台编号
-            param.put("sourceCode", systemConfig.getCertSourceCode());
-            //产品信息编号
-            param.put("sourceFinancingcode", sourceFinancingcode);
-            //债权编号
-            param.put("finClaimID", finClaimID);
-            //产品配置编号
-            param.put("configID", finClaimID);
-            //智投出借人哈希
-            param.put("userIdcardHash", userIdcardHash);
-            json.add(param);
+            userIdcardHash = tool.idCardHash(userVO.getIdcard());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return json;
+        return userIdcardHash;
     }
 }
