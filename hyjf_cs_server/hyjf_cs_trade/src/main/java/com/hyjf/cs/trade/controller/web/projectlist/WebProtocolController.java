@@ -72,7 +72,7 @@ public class WebProtocolController extends BaseController {
      * @date 2018/11/15 17:09
      */
     @ApiOperation(value = "资产管理-智投-智投详情:智投服务协议" , notes = "资产管理-智投-智投详情:智投服务协议")
-    @GetMapping(value = "newHjhInvestPDF")
+    @GetMapping(value = "/newHjhInvestPDF")
     public void newHjhInvestPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.newHjhInvestPDF(form,request,response);
     }
@@ -85,7 +85,7 @@ public class WebProtocolController extends BaseController {
      * @param response
      */
     @ApiOperation(value = "账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载", httpMethod = "GET", notes = "账户中心-资产管理-当前持有-- 出借协议(实际为散标居间协议)下载")
-    @GetMapping(value = "intermediaryAgreementPDF")
+    @GetMapping(value = "/intermediaryAgreementPDF")
     public void intermediaryAgreementPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.intermediaryAgreementPDF(form,request,response);
     }
