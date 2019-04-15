@@ -63,7 +63,7 @@
 
 	<select id="getBorrowTenderList" resultType="com.hyjf.am.resquest.trade.ScreenDataBean">
 		SELECT bt.user_name as userName,bt.user_id as userId, bt.nid as orderId,bt.account as money,
-			   b.project_type AS projectType,'1' as operating,bt.create_time as createTime
+			   b.project_type AS productType,'1' as operating,bt.create_time as createTime
 		FROM ht_borrow_tender bt
 		INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
 		where bt.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
