@@ -524,15 +524,15 @@ public class AppLoginController extends BaseUserController {
             logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
             sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
             String codeLoginKey =  SecretUtil.createSign();
-            // 设置七天内有效
-            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+codeLoginKey,userVO.getUserId()+"",60*60*24*7);
+            // 设置十三天内有效
+            RedisUtils.set(RedisConstants.APP_SMS_LOGIN_KEY+codeLoginKey,userVO.getUserId()+"",60*60*24*13);
             ret.put("status", "0");
             ret.put("statusDesc", "登录成功");
             ret.put("token", webViewUserVO.getToken());
             ret.put("sign", sign);
             ret.put("codeLoginKey", codeLoginKey);
 
-            // pc1.1.3 新增 如果重置密码成功 就解锁帐号锁定
+            // pc1.1.3 新增 如果短信登录成功 就解锁帐号锁定
             passWordService.unlockUser(userVO.getUserId());
 
         } else {

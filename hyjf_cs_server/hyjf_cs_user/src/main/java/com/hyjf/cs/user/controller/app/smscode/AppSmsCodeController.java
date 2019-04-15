@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.app.smscode;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CustomConstants;
@@ -199,6 +200,18 @@ public class AppSmsCodeController extends BaseUserController {
             }
             ret = smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, userId, GetCilentIP.getIpAddr(request));
             if(ret.get("status")!=null){
+                return ret;
+            }
+
+            // PC1.1.3 新增 短信验证码登录
+            if(verificationType.equals(CommonConstant.PARAM_TPL_DUANXINDENGLU)){
+
+                UserVO userVO = smsCodeService.getUsersByMobile(mobile);
+                CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+                smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
+                ret.put("status", "0");
+                ret.put("statusDesc", "发送验证码成功");
+
                 return ret;
             }
             if(!verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
