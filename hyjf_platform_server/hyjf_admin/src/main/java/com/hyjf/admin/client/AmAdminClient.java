@@ -1281,4 +1281,11 @@ public interface AmAdminClient {
      * @return
      */
     IntegerResponse countRepayUserList();
+    /**
+     * 查询工作流配置
+     * @param adminRequest
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest);
+
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper">
+
+    <sql id="Where_Clause">
+        <where>
+            1=1
+            <!-- 业务id -->
+            <if test="businessId != null and businessId != ''">
+                AND w.workname_id = #{businessId}
+            </if>
+            <!-- 业务名称 -->
+            <if test="businessName != null and businessName != ''">
+                AND n.work_name = #{businessName}
+            </if>
+            <!-- 是否需要审核 -->
+            <if test="auditFlag != null ">
+                AND w.check_status = #{auditFlag}
+            </if>
+            <!-- 流程状态 -->
+            <if test="processStatus != null ">
+                AND w.flow_status = #{processStatus}
+            </if>
+            <!-- 创建开始时间 -->
+            <if test="createStartTime != null and createStartTime != ''">
+                AND w.create_time <![CDATA[>=]]> str_to_date(CONCAT(#{createStartTime},' 00:00:00'),'%Y-%m-%d %H:%i:%s')
+            </if>
+            <!-- 创建结束时间 -->
+            <if test="createEndTime != null and createEndTime != ''">
+                AND w.create_time <![CDATA[<=]]>str_to_date(CONCAT(#{createEndTime},' 23:59:59'),'%Y-%m-%d %H:%i:%s')
+            </if>
+
+        </where>
+    </sql>
+
+    <!-- 根据条件 查询意见反馈信息  -->
+    <select id="countWorkFlowConfigList" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.admin.WorkFlowConfigRequest">
+       select count(w.id)
+        from ht_workflow w
+        inner join ht_workname n on w.workname_id=n.id
+        left join ht_admin a on a.id =w.update_user
+        <include refid="Where_Clause" />
+    </select>
+
+    <!-- 根据条件 查询意见反馈信息  -->
+    <select id="selectWorkFlowConfigList" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="com.hyjf.am.resquest.admin.WorkFlowConfigRequest">
+        select w.workname_id businessId,n.work_name businessName,
+        case
+        when w.check_status=1 then '是'
+        else '否' end auditFlagString,
+        (select count(n.id) from ht_workflow_node n where n.workflow_id=w.id) flowNode,
+        w.mail_notifier mailWarningUser,
+        date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,
+        a.truename updateUser,
+        case
+        when w.flow_status=1 then '正常'
+        else '异常' end processStatusString,
+        date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime
+        from ht_workflow w
+        inner join ht_workname n on w.workname_id=n.id
+        left join ht_admin a on a.id =w.update_user
+        <include refid="Where_Clause" />
+        order by w.update_time desc
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+    </select>
+
+</mapper>
+

@@ -2216,4 +2216,14 @@ public class AmAdminClientImpl implements AmAdminClient {
         String url = "http://AM-ADMIN/am-trade/screen_data/count_repay_userList";
         return restTemplate.getForEntity(url, IntegerResponse.class).getBody();
     }
+
+    /**
+     * 查询工作流配置
+     * @param adminRequest
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/init",adminRequest, WorkFlowConfigResponse.class).getBody();
+    }
 }
