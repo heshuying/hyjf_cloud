@@ -74,9 +74,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectUserLateInterestWaitTotal(Integer userId){
-        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getWaitRepayManageFee(userId);
-        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getWaitRepayPlanManageFee(userId);
-        return waitManageFee.add(waitPlanManageFee);
+        BigDecimal lateInterest = webUserRepayListCustomizeMapper.getWaitRepayLateInterest(userId);
+        BigDecimal latePlanInterest = webUserRepayListCustomizeMapper.getWaitRepayPlanLateInterest(userId);
+        return lateInterest.add(latePlanInterest);
     }
 
     /**
@@ -111,9 +111,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public BigDecimal selectOrgLateInterestWaitTotal(Integer userId){
-        BigDecimal waitManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayManageFee(userId);
-        BigDecimal waitPlanManageFee = webUserRepayListCustomizeMapper.getOrgWaitRepayPlanManageFee(userId);
-        return waitManageFee.add(waitPlanManageFee);
+        BigDecimal lateInterest = webUserRepayListCustomizeMapper.getOrgWaitRepayLateInterest(userId);
+        BigDecimal latePlanInterest = webUserRepayListCustomizeMapper.getOrgWaitRepayPlanLateInterest(userId);
+        return lateInterest.add(latePlanInterest);
     }
 
     /**
