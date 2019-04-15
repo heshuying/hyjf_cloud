@@ -510,7 +510,7 @@ public class AppLoginController extends BaseUserController {
             ret.put("statusDesc", "验证码不能为空");
             return ret;
         }
-        UserVO userVO = loginService.getUser(username);
+        UserVO userVO = loginService.getUsersByMobile(username);
         Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,BankCallConstant.CHANNEL_APP,userVO);
         if (!errorInfo.isEmpty()){
             ret.put("status", "1");
