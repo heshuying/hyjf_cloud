@@ -20,7 +20,7 @@
 				null as accede_order_id,
 				r.user_id,
 				from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,
-				(recover_account_wait-credit_amount) as money,
+				(recover_capital_wait-credit_amount) as money,
 				c.customer_name,
 				c.customer_group
 		FROM
@@ -49,7 +49,7 @@
 			null as accede_order_id,
 			r.user_id,
 			from_unixtime(r.recover_time,'%Y-%m-%d') as repayment_time,
-			(recover_account_wait-credit_amount) as money,
+			(recover_capital_wait-credit_amount) as money,
 			c.customer_name,
 			c.customer_group
 		FROM
@@ -82,7 +82,7 @@
 		null as accede_order_id,
 		pa.user_id,
 		from_unixtime(pa.recover_time,'%Y-%m-%d') as repayment_time,
-		(pa.recover_account_wait-pa.credit_amount) as money,
+		(pa.recover_capital_wait-pa.credit_amount) as money,
 		c.customer_name,
 		c.customer_group
 		FROM
@@ -113,7 +113,7 @@
 			null as accede_order_id,
 			pa.user_id,
 			from_unixtime(pa.recover_time,'%Y-%m-%d') as repayment_time,
-			(pa.recover_account_wait-pa.credit_amount) as money,
+			(pa.recover_capital_wait-pa.credit_amount) as money,
 			c.customer_name,
 			c.customer_group
 		FROM
@@ -147,7 +147,7 @@
 		a.accede_order_id ,
 		a.user_id ,
 		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
-		a.wait_total as money ,
+		a.wait_captical as money ,
 		c.customer_name,
 		c.customer_group
 		from hyjf_trade.ht_hjh_accede  a
