@@ -610,7 +610,7 @@ public class AppLoginController extends BaseUserController {
     @PostMapping(value = "/autoLoginByCode")
     public JSONObject autoLoginByCode(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/mobileCodeLogin");
+        ret.put("request", "/appUser/autoLoginByCode");
         // 网络状态
         String netStatus = request.getParameter("netStatus");
         // 平台
@@ -628,7 +628,7 @@ public class AppLoginController extends BaseUserController {
         String sign = request.getParameter("sign");
         loginService.checkForApp(version,platform,netStatus);
         // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || !Validator.isMobile(username) || Validator.isNull(codeLoginKey)) {
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(codeLoginKey) ||Validator.isNull(username)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
@@ -645,15 +645,13 @@ public class AppLoginController extends BaseUserController {
         // 解密
         logger.info("APP登录 ---> 解密前 key：{}，username：{}，codeLoginKey：{}", key, username, codeLoginKey);
         username = DES.decodeValue(key, username);
-        codeLoginKey = DES.decodeValue(key, codeLoginKey);
         logger.info("APP登录 ---> 解密后 username：{}，smsCode：{}", username, codeLoginKey);
-        if (Validator.isNull(username)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "用户名不能为空");
+        if(!Validator.isMobile(username)){
+            ret.put("status", "709");
+            ret.put("statusDesc", "手机号格式错误");
             return ret;
         }
-
-        UserVO userVO = loginService.getUser(username);
+        UserVO userVO = loginService.getUsersByMobile(username);
         CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
         // 是否禁用
         if (userVO.getStatus() == 1) {
