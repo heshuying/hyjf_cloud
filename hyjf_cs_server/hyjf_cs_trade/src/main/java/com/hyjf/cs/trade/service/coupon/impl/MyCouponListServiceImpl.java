@@ -169,10 +169,10 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
             coupon.setTenderQuota(dealTenderQuota(coupon));
 
             long day=DateUtils.differentDaysByString(coupon.getEndTimeStamp(), GetDateUtils.getNowTime()+"");
-            if(day>3){
-                coupon.setTime(coupon.getAddTime() + "～" + coupon.getEndTime());
-            }else{
+            if(coupon.getUsedFlag() == 0 && day >= 0 && day <=3){
                 coupon.setTime("还有"+(day==0?1:day)+"天过期");
+            }else{
+                coupon.setTime(coupon.getAddTime() + "～" + coupon.getEndTime());
             }
 
         }
