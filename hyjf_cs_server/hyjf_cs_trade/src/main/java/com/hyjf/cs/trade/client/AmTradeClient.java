@@ -2894,5 +2894,20 @@ public interface AmTradeClient {
      * @date 2019/3/25 14:11
      */
     Integer countPlanAccedeRecord(HjhAccedeRequest request);
+
+    /**
+     * 统计预计新增复投额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getCapitalPredictionInfo(String date);
+
+    /**
+     * 统计预计新增债转额
+     *  @author wenxin
+     * @date 2019/4/15 14:23
+     */
+    List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
+
 }
 

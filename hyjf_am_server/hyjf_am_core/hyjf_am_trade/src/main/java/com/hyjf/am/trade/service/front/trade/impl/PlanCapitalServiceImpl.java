@@ -124,10 +124,6 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         hjhPlanCapitalPrediction.setDate(date);
                         // 智投编号
                         hjhPlanCapitalPrediction.setPlanNid(detal.getPlanNid());
-                        // 智投名称
-                        // hjhPlanCapitalPrediction.setPlanName("");
-                        // 锁定期
-                        // hjhPlanCapitalPrediction.setLockPeriod(0);
                         // 预计当日新增复投额
                         hjhPlanCapitalPrediction.setReinvestAccount(account);
                         hjhPlanCapitalPrediction.setCreateTime(new Date());

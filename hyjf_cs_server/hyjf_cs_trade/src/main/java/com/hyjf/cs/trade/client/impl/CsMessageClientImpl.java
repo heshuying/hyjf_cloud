@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
@@ -19,6 +20,7 @@ import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.bifa.*;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.trade.client.CsMessageClient;
@@ -427,5 +429,19 @@ public class CsMessageClientImpl implements CsMessageClient {
         restTemplate.postForEntity(url,bifaOperationDataEntity,null).getBody();
     }
 
+    /**
+     * 统计预计新增债转额
+     * @param listHjhPlanCapitalPrediction
+     * @return boolean
+     */
+    @Override
+    public boolean insertPlanCapitalForCreditInfo(List<HjhPlanCapitalPredictionVO> listHjhPlanCapitalPrediction){
+        String url = "http://CS-MESSAGE/cs-message/hjhPlanCapitalPrediction/insertPlanCaptialPrediction";
+        BooleanResponse response = restTemplate.postForEntity(url, listHjhPlanCapitalPrediction, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
 
 }
