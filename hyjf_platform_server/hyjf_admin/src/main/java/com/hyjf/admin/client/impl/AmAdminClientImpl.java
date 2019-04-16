@@ -2235,4 +2235,40 @@ public class AmAdminClientImpl implements AmAdminClient {
     public BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO){
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/insert",workFlowVO, BooleanResponse.class).getBody();
     }
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigInfo(int id){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/info/"+id, WorkFlowConfigResponse.class).getBody();
+    }
+    /**
+     * 校验业务id是否存在
+     * @param businessId
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist/"+businessId, WorkFlowConfigResponse.class).getBody();
+    }
+    /**
+     * 修改工作流配置业务流程
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/update",workFlowVO, BooleanResponse.class).getBody();
+    }
+    /**
+     * 删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @Override
+    public BooleanResponse deleteWorkFlowConfigById(int id){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/delete/"+id, BooleanResponse.class).getBody();
+    }
 }

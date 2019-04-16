@@ -1294,4 +1294,29 @@ public interface AmAdminClient {
      */
     BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO);
 
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigInfo(int id);
+    /**
+     * 校验业务id是否存在
+     * @param businessId
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId);
+    /**
+     * 修改工作流配置业务流程
+     * @param workFlowVO
+     * @return
+     */
+    BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO);
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    BooleanResponse deleteWorkFlowConfigById(int id);
+
 }

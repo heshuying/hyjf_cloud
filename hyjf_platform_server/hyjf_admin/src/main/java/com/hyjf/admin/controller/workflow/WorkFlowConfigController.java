@@ -82,6 +82,98 @@ public class WorkFlowConfigController  extends BaseController {
         return new AdminResult<BooleanResponse>(response) ;
     }
 
+    @ApiOperation(value = "业务流程详情页面", notes = "业务流程详情页面")
+    @PostMapping("/info")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    public AdminResult selectWorkFlowConfigInfo( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
+        logger.info("业务流程详情页面，业务流程id为：" + workFlowVO.getId());
+        if(null == workFlowVO.getId()){
+            return new AdminResult<>(FAIL, "业务流程id不能为空");
+        }
+        //查询业务流程详情页面
+        WorkFlowConfigResponse response =workFlowConfigService.selectWorkFlowConfigInfo(workFlowVO.getId());
+        logger.debug("查询业务流程详情页面，response：" + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<WorkFlowConfigResponse>(response) ;
+    }
+
+    @ApiOperation(value = "修改业务流程", notes = "修改业务流程")
+    @PostMapping("/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    public AdminResult updateWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
+        logger.info("工作流修改业务流程配置..." + JSONObject.toJSON(workFlowVO));
+//        workFlowVO.setUpdateUser(this.getUser(request).getId());
+        workFlowVO.setUpdateUser("3");
+        //校验请求参数
+        if(null == workFlowVO.getId()){
+            logger.debug("工作流修改业务流程配置参数校验不合法，错误消息为:业务流程的id不能为空" );
+            return new AdminResult<>(FAIL, "业务流程的id不能为空");
+        }
+        String errorMsg = validation(workFlowVO);
+        if(!StringUtils.isBlank(errorMsg)){
+            logger.debug("工作流修改业务流程配置参数校验不合法，错误消息为" + errorMsg);
+            return new AdminResult<>(FAIL, errorMsg);
+        }
+
+        //修改业务流程
+        BooleanResponse response =workFlowConfigService.updateWorkFlowConfig(workFlowVO);
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<BooleanResponse>(response) ;
+    }
+
+    @ApiOperation(value = "删除业务流程", notes = "删除业务流程")
+    @PostMapping("/delete")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
+    public AdminResult deleteWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
+        logger.info("工作流删除业务流程配置..." + workFlowVO.getId());
+        //校验请求参数
+        if(null == workFlowVO.getId()){
+            logger.debug("工作流删除业务流程配置参数校验不合法，错误消息为:业务流程的id不能为空" );
+            return new AdminResult<>(FAIL, "业务流程的id不能为空");
+        }
+
+        //修改业务流程
+        BooleanResponse response =workFlowConfigService.deleteWorkFlowConfigById(workFlowVO.getId());
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<BooleanResponse>(response) ;
+    }
+
+    @ApiOperation(value = "校验业务流程是否存在", notes = "校验业务流程是否存在")
+    @PostMapping("/exist")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult selectByBussinessId(HttpServletRequest request, @RequestBody WorkFlowConfigRequest adminRequest) {
+        logger.info("校验业务流程是否存在，业务id:" + adminRequest.getBusinessId());
+        if(null ==  adminRequest.getBusinessId()){
+            return new AdminResult<>(FAIL, "业务id不能是空");
+        }
+        WorkFlowConfigResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<WorkFlowConfigResponse>(response) ;
+    }
+
     /**
      * 校验请求参数
      * @param workFlowVO

@@ -11,10 +11,7 @@ import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,16 +57,16 @@ public class WorkFlowConfigController extends BaseConfigController {
         logger.info("添加业务流程..." + JSONObject.toJSON(workFlowVO));
         BooleanResponse response = new BooleanResponse();
 
-        //校验业务id对应的业务流程是否存在
-        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
-        adminRequest.setBusinessId(workFlowVO.getBusinessId());
-        int count = workFlowConfigService.countWorkFlowConfigList(adminRequest);
-        if(count > 0){
-            response.setRtn(Response.FAIL);
-            response.setMessage("该业务id对应的业务流程已经存在，请修改");
-            logger.debug("该业务id对应的业务流程已经存在，请修改" );
-            return response;
-        }
+//        //校验业务id对应的业务流程是否存在
+//        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
+//        adminRequest.setBusinessId(workFlowVO.getBusinessId());
+//        int count = workFlowConfigService.countWorkFlowConfigList(adminRequest);
+//        if(count > 0){
+//            response.setRtn(Response.FAIL);
+//            response.setMessage("该业务id对应的业务流程已经存在，请修改");
+//            logger.debug("该业务id对应的业务流程已经存在，请修改" );
+//            return response;
+//        }
 
         //添加业务流程
         int flag = workFlowConfigService.insertWorkFlowConfig(workFlowVO);
@@ -83,4 +80,103 @@ public class WorkFlowConfigController extends BaseConfigController {
         response.setMessage(Response.SUCCESS_MSG);
         return response;
     }
+
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    @GetMapping("/info/{id}")
+    public WorkFlowConfigResponse selectWorkFlowConfigInfo( @PathVariable Integer id) {
+        logger.info("查询业务流程详情页面,id:" + id);
+        WorkFlowConfigResponse response = new WorkFlowConfigResponse();
+        WorkFlowVO workFlowVOS =workFlowConfigService.selectWorkFlowConfigInfo(id);
+        if(null != workFlowVOS){
+            response.setResult(workFlowVOS);
+            logger.debug("查询业务流程详情页面,数据为："+JSONObject.toJSONString(workFlowVOS));
+            return response;
+        }
+        return response;
+    }
+
+    /**
+     * 修改业务流程
+     * @param workFlowVO
+     * @return
+     */
+    @PostMapping("/update")
+    public BooleanResponse updateWorkFlowConfig( @RequestBody WorkFlowVO workFlowVO) {
+        logger.info("修改业务流程,请求参数workFlowVO：" + JSONObject.toJSON(workFlowVO));
+        BooleanResponse response = new BooleanResponse();
+
+        //修改业务流程
+        int flag = workFlowConfigService.updateWorkFlowConfig(workFlowVO);
+        if(flag ==0){
+            response.setRtn(Response.FAIL);
+            response.setMessage("修改业务流程失败");
+            logger.debug("修改业务流程失败" );
+            return response;
+        }
+        response.setRtn(Response.SUCCESS);
+        response.setMessage(Response.SUCCESS_MSG);
+        return response;
+    }
+
+    /**
+     * 删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete/{id}")
+    public BooleanResponse deleteWorkFlowConfigById(@PathVariable int id){
+        logger.info("删除业务流程,请求参数id：" + id);
+        BooleanResponse response = new BooleanResponse();
+
+        //删除业务流程
+        Integer flag = workFlowConfigService.deleteWorkFlowConfigById(id);
+        if(null == flag){
+            response.setRtn(Response.FAIL);
+            response.setMessage("业务流程的id等于："+id+"的流程不存在");
+            logger.debug("业务流程的id等于："+id+"的流程不存在");
+            return response;
+        }
+        if(flag ==2){
+            response.setRtn(Response.FAIL);
+            response.setMessage("不需要审核的时候，才能删除业务流程");
+            logger.debug("不需要审核的时候，才能删除业务流程" );
+            return response;
+        }
+        if(flag ==0){
+            response.setRtn(Response.FAIL);
+            response.setMessage("修改业务流程失败");
+            logger.debug("修改业务流程失败" );
+            return response;
+        }
+        response.setRtn(Response.SUCCESS);
+        response.setMessage(Response.SUCCESS_MSG);
+        return response;
+    }
+
+    /**
+     * 校验业务id是否存在
+     * @param businessId
+     * @return
+     */
+    @GetMapping("/exist/{businessId}")
+    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId( @PathVariable Integer businessId) {
+        logger.info("校验业务id是否存在,businessId:" + businessId);
+        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
+        adminRequest.setBusinessId(businessId);
+        WorkFlowConfigResponse response = new WorkFlowConfigResponse();
+        List<WorkFlowVO> workFlowVOS =workFlowConfigService.selectWorkFlowConfigList(adminRequest, -1, -1);
+        if(!CollectionUtils.isEmpty(workFlowVOS)){
+            response.setResultList(workFlowVOS);
+            logger.debug("校验业务id存在,数据为："+JSONObject.toJSONString(workFlowVOS));
+            return response;
+        }
+        return response;
+    }
+
+
+
 }

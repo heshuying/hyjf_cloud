@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class WorkFlowVO extends BaseVO implements Serializable{
     private static final long serialVersionUID = 1L;
-    private int id;
+    private Integer id;
     /**
      * 业务id
      */
@@ -40,9 +40,21 @@ public class WorkFlowVO extends BaseVO implements Serializable{
      */
     private String createTime;
     /**
+     * 创建操作人
+     */
+    private String createUser;
+    /**
      * 更新操作人
      */
     private String updateUser;
+    /**
+     * 创建操作人
+     */
+    private String createUserName;
+    /**
+     * 更新操作人
+     */
+    private String updateUserName;
     /**
      * 流程状态（1.正常，2.异常）
      */
@@ -62,11 +74,11 @@ public class WorkFlowVO extends BaseVO implements Serializable{
      */
     public List<WorkFlowNodeVO> flowNodes;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -84,6 +96,14 @@ public class WorkFlowVO extends BaseVO implements Serializable{
 
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
+    }
+
+    public Integer getAuditFlag() {
+        return auditFlag;
+    }
+
+    public void setAuditFlag(Integer auditFlag) {
+        this.auditFlag = auditFlag;
     }
 
     public String getAuditFlagString() {
@@ -118,12 +138,44 @@ public class WorkFlowVO extends BaseVO implements Serializable{
         this.createTime = createTime;
     }
 
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
     public String getUpdateUser() {
         return updateUser;
     }
 
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public String getCreateUserName() {
+        return createUserName;
+    }
+
+    public void setCreateUserName(String createUserName) {
+        this.createUserName = createUserName;
+    }
+
+    public String getUpdateUserName() {
+        return updateUserName;
+    }
+
+    public void setUpdateUserName(String updateUserName) {
+        this.updateUserName = updateUserName;
+    }
+
+    public String getProcessStatus() {
+        return processStatus;
+    }
+
+    public void setProcessStatus(String processStatus) {
+        this.processStatus = processStatus;
     }
 
     public String getProcessStatusString() {
@@ -140,22 +192,6 @@ public class WorkFlowVO extends BaseVO implements Serializable{
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getAuditFlag() {
-        return auditFlag;
-    }
-
-    public void setAuditFlag(Integer auditFlag) {
-        this.auditFlag = auditFlag;
-    }
-
-    public String getProcessStatus() {
-        return processStatus;
-    }
-
-    public void setProcessStatus(String processStatus) {
-        this.processStatus = processStatus;
     }
 
     public List<WorkFlowNodeVO> getFlowNodes() {

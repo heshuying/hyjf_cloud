@@ -36,4 +36,40 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     public BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO){
         return adminClient.insertWorkFlowConfig(workFlowVO);
     }
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigInfo(int id){
+        return adminClient.selectWorkFlowConfigInfo(id);
+    }
+    /**
+     * 校验业务id是否存在
+     * @param businessId
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId){
+        return adminClient.selectWorkFlowConfigByBussinessId(businessId);
+    }
+    /**
+     * 修改工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO){
+        return adminClient.updateWorkFlowConfig(workFlowVO);
+    }
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @Override
+    public BooleanResponse deleteWorkFlowConfigById(int id){
+        return adminClient.deleteWorkFlowConfigById(id);
+    }
 }
