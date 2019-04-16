@@ -709,6 +709,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						newBorrowApicron.setId(apicron.getId());
 						newBorrowApicron.setStatus(CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
 						this.borrowApicronMapper.updateByPrimaryKeySelective(newBorrowApicron);
+                        try {
+                            this.updateBorrowApicronLog(apicron, CustomConstants.BANK_BATCH_STATUS_PART_FAIL);
+                        } catch (Exception e1) {
+                            logger.error("同步还款任务日志表发生异常！", e1);
+                        }
 					} catch (Exception e2) {
 						logger.error("【直投还款】借款编号：{}，批次还款任务“还款处理中”状态修改失败！", borrowNid, e);
 					}
