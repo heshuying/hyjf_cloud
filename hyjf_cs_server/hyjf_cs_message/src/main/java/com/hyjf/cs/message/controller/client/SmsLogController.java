@@ -65,10 +65,9 @@ public class SmsLogController extends BaseController {
         if (!CollectionUtils.isEmpty(list)) {
             List<SmsLogVO> voList = CommonUtils.convertBeanList(list, SmsLogVO.class);
             response.setResultList(voList);
-			response.setLogCount(list.size());
         }
-//		int count = smsLogService.queryLogCount(request);
-//        response.setLogCount(count);
+		int count = smsLogService.queryLogCount(request);
+        response.setLogCount(count);
         return response;
 	}
 

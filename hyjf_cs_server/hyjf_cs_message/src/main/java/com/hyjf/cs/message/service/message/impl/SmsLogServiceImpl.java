@@ -103,10 +103,8 @@ public class SmsLogServiceImpl implements SmsLogService {
 	public Integer queryLogCount(SmsLogRequest request) {
 		String mobile = request.getMobile();
 		String type = request.getType();
-//		String postTimeBegin = request.getPosttime()==null?"":GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getPosttime());
-//		String postTimeEnd = request.getPost_time_end()==null?"":GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getPost_time_end());
-		Integer postTimeBegin = request.getPosttime();
-		Integer postTimeEnd = request.getPost_time_end();
+		String postTimeBegin = request.getPostTimeBegin();
+		String postTimeEnd = request.getPostTimeEnd();
 		Integer status = request.getStatus();
 		Query query = new Query();
 		Criteria criteria = new Criteria();
@@ -116,11 +114,14 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(type)) {
 			criteria.and("type").is(type);
 		}
-		if (null != postTimeBegin && null != postTimeEnd) {
-//			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
-//			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
-			logger.info("上月开始时间postTimeBegin："+postTimeBegin+"-----上月结束时间postTimeEnd："+postTimeEnd);
-			criteria.and("posttime").gte(postTimeBegin).lte(postTimeEnd);
+		if (StringUtils.isNotEmpty(postTimeBegin) && StringUtils.isNotEmpty(postTimeEnd) ) {
+			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
+			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
+			criteria.and("posttime").gte(begin).lte(end);
+		}
+		if (null !=  request.getPosttime() && null != request.getPost_time_end()) {
+			logger.info("上月开始时间postTimeBegin："+request.getPosttime()+"-----上月结束时间postTimeEnd："+request.getPost_time_end());
+			criteria.and("posttime").gte(request.getPosttime()).lte(request.getPost_time_end());
 		}
 		if (status != null && status != 2) {
 			criteria.and("status").is(status);
