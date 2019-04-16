@@ -142,12 +142,12 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
     /**
      * 获取该期间的预计当日新增债转额
      *
-     * @param date 发起预算的日期
+     * @param date     发起预算的日期
      * @param dualDate 预算T日
      * @return
      */
     @Override
-    public List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date date ,Date dualDate) {
+    public List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date date, Date dualDate) {
         try {
             List<HjhPlanCapitalPredictionVO> list = new ArrayList<HjhPlanCapitalPredictionVO>();
             logger.info(LOG_MAIN_INFO + "获取该期间的预计当日新增复投额开始,dualDate:【" + dualDate + "】");
@@ -171,7 +171,7 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                 String accedeOrderId = hjhAccede.getAccedeOrderId();
                 logger.info(LOG_MAIN_INFO + "预计新增债转额开始:计划加入订单号:[" + accedeOrderId + "].");
                 // 根据加入订单号,日期进行清算
-                this.getLiquidation(date, dualDate, accedeOrderId, nowTime, hjhAccede.getCreditCompleteFlag(),list);
+                this.getLiquidation(date, dualDate, accedeOrderId, nowTime, hjhAccede.getCreditCompleteFlag(), list);
                 logger.info(LOG_MAIN_INFO + "预计新增债转额:计划加入订单号:[" + accedeOrderId + "].");
             }
             logger.info(LOG_MAIN_INFO + "获取该期间的预计当日新增复投额结束,dualDate:【" + dualDate + "】");
@@ -259,8 +259,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                     continue;
                 }
                 // 还款日在T-3日的累加还款本息
-                if(GetDate.daysBetween(date,dualDate) > 3) {
-                    String dualDateT3 = GetDate.date2Str(GetDate.countDate(dualDate,5,-3), new SimpleDateFormat("yyyy-MM-dd"));
+                if (GetDate.daysBetween(date, dualDate) > 3) {
+                    String dualDateT3 = GetDate.date2Str(GetDate.countDate(dualDate, 5, -3), new SimpleDateFormat("yyyy-MM-dd"));
                     HjhDebtDetail assignT3 = this.hjhDebtDetailCustomizeMapper.selectHjhDebtCreditAssignT3(hjhDebtDetail.getOrderId(), dualDateT3);
                     HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                     vo.setDate(dualDate);
@@ -268,6 +268,45 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                     vo.setCreditAccount(assignT3.getRepayCapitalWait().add(assignT3.getRepayInterestWait()));
                     list.add(vo);
                 }
+
+                // 新的债权信息
+                HjhDebtCredit hjhDebtCredit = new HjhDebtCredit();
+                // 出让人用户ID
+                hjhDebtCredit.setUserId(hjhDebtDetail.getUserId());
+                // 出让人用户名
+                hjhDebtCredit.setUserName(hjhDebtDetail.getUserName());
+                // 出让人加入计划编号
+                hjhDebtCredit.setPlanNid(hjhDebtDetail.getPlanNid());
+                // 出让人的计划加入订单号
+                hjhDebtCredit.setPlanOrderId(hjhDebtDetail.getPlanOrderId());
+                // 项目编号
+                hjhDebtCredit.setBorrowNid(hjhDebtDetail.getBorrowNid());
+                // 项目名称
+                hjhDebtCredit.setBorrowName(hjhDebtDetail.getBorrowName());
+                // 原标项目利率
+                hjhDebtCredit.setBorrowApr(hjhDebtDetail.getBorrowApr());
+                // 项目类型
+                hjhDebtCredit.setProjectType(borrowInfo.getProjectType());
+                // 原标还款方式
+                hjhDebtCredit.setBorrowStyle(borrow.getBorrowStyle());
+                // 原标项目期限
+                hjhDebtCredit.setBorrowPeriod(borrow.getBorrowPeriod());
+                // 原标机构编号
+                hjhDebtCredit.setInstCode(borrowInfo.getInstCode());
+                // 原标资产编号
+                hjhDebtCredit.setAssetType(borrowInfo.getAssetType());
+//                // 生成债转编号
+//                String creditNid = GetOrderIdUtils.getOrderId0(hjhDebtDetail.getUserId());
+                // 债转编号
+//                hjhDebtCredit.setCreditNid(creditNid);
+                // 债转状态
+                hjhDebtCredit.setCreditStatus(0);
+                // 还款状态
+                hjhDebtCredit.setRepayStatus(0);
+                // 是否清算
+                hjhDebtCredit.setIsLiquidates(0);
+                // 是否原始债权 0非原始 1原始
+                hjhDebtCredit.setSourceType(hjhDebtDetail.getSourceType());
 
                 // 不分期项目
                 if (CustomConstants.BORROW_STYLE_ENDDAY.equals(hjhDebtDetail.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(hjhDebtDetail.getBorrowStyle())) {
@@ -282,6 +321,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         BigDecimal capital = hjhDebtDetailCur.getRepayCapitalWait();
                         // 待收利息
                         BigDecimal interest = hjhDebtDetailCur.getRepayInterestWait();
+                        // 待收总额
+                        BigDecimal total = capital.add(interest);
                         // 应还时间
                         Integer repayTime = hjhDebtDetailCur.getRepayTime();
                         // 放款时间
@@ -322,6 +363,28 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         logger.info(LOG_MAIN_INFO + "当前期计息天数:[" + duringDays + "].");
                         creditValue = (interest.multiply(new BigDecimal(holdDays)).divide(new BigDecimal(duringDays), 8, BigDecimal.ROUND_DOWN).setScale(2, BigDecimal.ROUND_DOWN));
                         logger.info(LOG_MAIN_INFO + "垫付利息:[" + creditValue + "].");
+                        // 承接所在期数
+                        hjhDebtCredit.setAssignPeriod(1);
+                        // 清算期数
+                        hjhDebtCredit.setLiquidatesPeriod(1);
+                        // 债转期数
+                        hjhDebtCredit.setCreditPeriod(1);
+                        // 已还期数
+                        hjhDebtCredit.setRepayPeriod(0);
+                        // 债转总额
+                        hjhDebtCredit.setCreditAccount(total);
+                        // 债转总本金
+                        hjhDebtCredit.setCreditCapital(capital);
+                        // 清算总本金
+                        hjhDebtCredit.setLiquidatesCapital(capital);
+                        // 债转总利息
+                        hjhDebtCredit.setCreditInterest(interest);
+                        // 待承接总金额
+                        hjhDebtCredit.setCreditAccountWait(total);
+                        // 待承接本金
+                        hjhDebtCredit.setCreditCapitalWait(capital);
+                        // 待承接利息
+                        hjhDebtCredit.setCreditInterestWait(interest);
                         if (remainDays == 0) {
                             // 债权的实际年化收益率
                             actualApr = hjhDebtDetail.getBorrowApr();
@@ -330,25 +393,60 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             actualApr = (hjhDebtDetail.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtDetail.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
                                     .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
                         }
+                        hjhDebtCredit.setActualApr(actualApr);
+                        // 垫付总利息
+                        hjhDebtCredit.setCreditInterestAdvance(creditValue);
+                        // 待承接垫付总利息
+                        hjhDebtCredit.setCreditInterestAdvanceWait(creditValue);
                         // 债权价值
                         BigDecimal fairValue = capital.add(creditValue);
                         // 加入订单的债权价值
                         totalFairValue = totalFairValue.add(fairValue);
-                        HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
-                        vo.setDate(dualDate);
-                        vo.setCreditAccount(totalFairValue);
-                        // TODO 根据收益率配置匹配计划编号
-
-                        list.add(vo);
                         //  剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
                         logger.info(LOG_MAIN_INFO + "剩余未还债权本金:[" + capital + "].");
                         logger.info(LOG_MAIN_INFO + "预计年化收益率:[" + actualApr + "].");
                         logger.info(LOG_MAIN_INFO + "计划订单的债权价值 = 剩余未还债权本金 + 垫付利息,[" + totalFairValue + "].");
+                        hjhDebtCredit.setLiquidationFairValue(capital.add(creditValue));
+                        // 已还总额
+                        hjhDebtCredit.setRepayAccount(BigDecimal.ZERO);
+                        // 已还本金
+                        hjhDebtCredit.setRepayCapital(BigDecimal.ZERO);
+                        // 已还利息
+                        hjhDebtCredit.setRepayInterest(BigDecimal.ZERO);
+                        // 待还总额
+                        hjhDebtCredit.setRepayAccountWait(total);
+                        // 待还本金
+                        hjhDebtCredit.setRepayCapitalWait(capital);
+                        // 待还利息
+                        hjhDebtCredit.setRepayInterestWait(interest);
+                        // 债权持有时间
+                        hjhDebtCredit.setHoldDays(holdDays);
+                        // 还款剩余时间
+                        hjhDebtCredit.setRemainDays(remainDays);
+                        // 当前期计息天数
+                        hjhDebtCredit.setDuringDays(duringDays);
+                        // 债转剩余天数
+                        hjhDebtCredit.setCreditTerm(remainDays);
+                        // 设置还款时间
+                        hjhDebtCredit.setCreditRepayEndTime(hjhDebtDetail.getRepayTime());
+                        // 上次债转时间
+                        hjhDebtCredit.setCreditRepayLastTime(0);
+                        HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
+                        vo.setDate(dualDate);
+                        vo.setCreditAccount(totalFairValue);
+                        // 根据收益率配置匹配计划编号
+                        vo.setPlanNid(getPlanNid(hjhDebtCredit));
+                        list.add(vo);
                     } else {
+                        // 应还日期 < 当前日期 未还款的债权 延期或逾期 (不分期项目延期或逾期)
+                        // 是否是逾期债权
+                        hjhDebtCredit.setIsLateCredit(1);
                         // 剩余未还本金
                         BigDecimal capital = hjhDebtDetail.getRepayCapitalWait();
                         // 待收利息
                         BigDecimal interest = hjhDebtDetail.getRepayInterestWait();
+                        // 待收总额
+                        BigDecimal total = capital.add(interest);
                         // 应还时间
                         Integer repayTime = hjhDebtDetail.getRepayTime();
                         // 放款时间
@@ -388,6 +486,28 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         logger.info(LOG_MAIN_INFO + "当前期计息天数:[" + duringDays + "].");
                         creditValue = (interest.multiply(new BigDecimal(holdDays)).divide(new BigDecimal(duringDays), 8, BigDecimal.ROUND_DOWN).setScale(2, BigDecimal.ROUND_DOWN));
                         logger.info(LOG_MAIN_INFO + "垫付利息:[" + creditValue + "].");
+                        // 承接所在期数
+                        hjhDebtCredit.setAssignPeriod(1);
+                        // 清算期数
+                        hjhDebtCredit.setLiquidatesPeriod(1);
+                        // 债转期数
+                        hjhDebtCredit.setCreditPeriod(1);
+                        // 已还期数
+                        hjhDebtCredit.setRepayPeriod(0);
+                        // 债转总额
+                        hjhDebtCredit.setCreditAccount(total);
+                        // 债转总本金
+                        hjhDebtCredit.setCreditCapital(capital);
+                        // 清算总本金
+                        hjhDebtCredit.setLiquidatesCapital(capital);
+                        // 债转总利息
+                        hjhDebtCredit.setCreditInterest(interest);
+                        // 待承接总金额
+                        hjhDebtCredit.setCreditAccountWait(total);
+                        // 待承接本金
+                        hjhDebtCredit.setCreditCapitalWait(capital);
+                        // 待承接利息
+                        hjhDebtCredit.setCreditInterestWait(interest);
                         if (remainDays == 0) {
                             // 债权的实际年化收益率
                             actualApr = hjhDebtDetail.getBorrowApr();
@@ -396,20 +516,50 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             actualApr = (hjhDebtDetail.getRepayInterestWait().subtract(creditValue)).divide(hjhDebtDetail.getRepayCapitalWait().add(creditValue), 8, BigDecimal.ROUND_DOWN).divide(new BigDecimal(remainDays), 8, BigDecimal.ROUND_DOWN)
                                     .multiply(new BigDecimal(360)).multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_DOWN);
                         }
+                        hjhDebtCredit.setActualApr(actualApr);
+                        // 垫付总利息
+                        hjhDebtCredit.setCreditInterestAdvance(creditValue);
+                        // 待承接垫付总利息
+                        hjhDebtCredit.setCreditInterestAdvanceWait(creditValue);
                         // 债权价值
                         BigDecimal fairValue = capital.add(creditValue);
                         // 加入订单的债权价值
                         totalFairValue = totalFairValue.add(fairValue);
-                        HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
-                        vo.setDate(dualDate);
-                        vo.setCreditAccount(totalFairValue);
-                        // TODO 根据收益率配置匹配计划编号
-
-                        list.add(vo);
                         //  剩余未还本金 + 当前期未还款期次的待收收益/当前期计息天数*当前期持有天数
                         logger.info(LOG_MAIN_INFO + "剩余未还债权本金:[" + capital + "].");
                         logger.info(LOG_MAIN_INFO + "预计年华收益率:[" + actualApr + "].");
                         logger.info(LOG_MAIN_INFO + "计划订单的债权价值 = 剩余未还债权本金 + 垫付利息,[" + totalFairValue + "].");
+                        hjhDebtCredit.setLiquidationFairValue(fairValue);
+                        // 已还总额
+                        hjhDebtCredit.setRepayAccount(BigDecimal.ZERO);
+                        // 已还本金
+                        hjhDebtCredit.setRepayCapital(BigDecimal.ZERO);
+                        // 已还利息
+                        hjhDebtCredit.setRepayInterest(BigDecimal.ZERO);
+                        // 待还总额
+                        hjhDebtCredit.setRepayAccountWait(total);
+                        // 待还本金
+                        hjhDebtCredit.setRepayCapitalWait(capital);
+                        // 待还利息
+                        hjhDebtCredit.setRepayInterestWait(interest);
+                        // 债权持有时间
+                        hjhDebtCredit.setHoldDays(holdDays);
+                        // 还款剩余时间
+                        hjhDebtCredit.setRemainDays(remainDays);
+                        // 当前期计息天数
+                        hjhDebtCredit.setDuringDays(duringDays);
+
+                        hjhDebtCredit.setCreditTerm(remainDays);
+                        // 设置还款时间
+                        hjhDebtCredit.setCreditRepayEndTime(hjhDebtDetail.getRepayTime());
+                        // 上次债转时间
+                        hjhDebtCredit.setCreditRepayLastTime(0);
+                        HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
+                        vo.setDate(dualDate);
+                        vo.setCreditAccount(totalFairValue);
+                        // 根据收益率配置匹配计划编号
+                        vo.setPlanNid(getPlanNid(hjhDebtCredit));
+                        list.add(vo);
                     }
                 } else {
                     // 分期项目
@@ -422,6 +572,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         // 放款时间
                         Integer loanTime = hjhDebtDetailCur.getLoanTime();
                         actualApr = hjhDebtDetailCur.getBorrowApr();
+                        // 说明之前的分期还款正常完成
+                        hjhDebtCredit.setActualApr(hjhDebtDetailCur.getBorrowApr());
                         // 剩余天数 清算日到本期应还日
                         try {
                             remainDays = GetDate.daysBetween(GetDate.timestamptoStrYYYYMMDD(liquidationShouldTime), GetDate.timestamptoStrYYYYMMDD(hjhDebtDetailCur.getRepayTime()));
@@ -480,6 +632,13 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                         if (remainDays < 0) {
                             remainDays = 0;
                         }
+                        // 设置分期相关信息
+                        // 承接所在期数
+                        hjhDebtCredit.setAssignPeriod(hjhDebtDetailCur.getRepayPeriod());
+                        // 清算所在期数
+                        hjhDebtCredit.setLiquidatesPeriod(hjhDebtDetailCur.getRepayPeriod());
+                        // 下期还款时间
+                        hjhDebtCredit.setCreditRepayNextTime(hjhDebtDetailCur.getRepayTime());
                         // 计算待垫付的利息
                         logger.info(LOG_MAIN_INFO + "分期项目,当前期利息:[" + hjhDebtDetailCur.getRepayInterestWait() + "].");
                         creditValue = ((hjhDebtDetailCur.getRepayInterestWait().multiply(new BigDecimal(holdDays))).divide(new BigDecimal(duringDays), 2, BigDecimal.ROUND_DOWN));
@@ -490,22 +649,40 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                 logger.info(LOG_MAIN_INFO + "之前期逾期利息:[" + overdueDetail.getRepayInterestWait() + "].");
                                 creditValue = creditValue.add(overdueDetail.getRepayInterestWait());
                             }
+                            hjhDebtCredit.setIsLateCredit(1);
                         }
 
                         logger.info(LOG_MAIN_INFO + "分期项目,当前期持有天数:[" + holdDays + "].");
                         logger.info(LOG_MAIN_INFO + "分期项目,当前期计息天数:[" + duringDays + "].");
+                        // 垫付利息
+                        hjhDebtCredit.setCreditInterestAdvance(creditValue);
+                        // 待垫付利息
+                        hjhDebtCredit.setCreditInterestAdvanceWait(creditValue);
                         BigDecimal capital = hjhDebtDetailCur.getRepayCapitalWait();
                         BigDecimal interest = hjhDebtDetailCur.getRepayInterestWait();
+                        BigDecimal total = capital.add(interest);
                         // 计算真实的债权总额、本金、利息
+                        // 未还款期数
+                        Integer unRepayPeriod = 0;
                         // 如果当前期不是最后一期 则需要查询当前期到最后一期的债权信息
                         List<HjhDebtDetail> hjhDebtDetailsNoRepay = this.hjhDebtDetailCustomizeMapper.selectDebtDetailNoRepay(hjhDebtDetailCur.getOrderId());
                         capital = new BigDecimal(0);
                         interest = new BigDecimal(0);
+                        total = new BigDecimal(0);
                         if (hjhDebtDetailsNoRepay != null && hjhDebtDetailsNoRepay.size() > 0) {
                             for (HjhDebtDetail debtDetailNoRepay : hjhDebtDetailsNoRepay) {
                                 capital = capital.add(debtDetailNoRepay.getRepayCapitalWait());
                                 interest = interest.add(debtDetailNoRepay.getRepayInterestWait());
+                                total = capital.add(interest);
+                                if (debtDetailNoRepay.getRepayPeriod().equals(debtDetailNoRepay.getBorrowPeriod())) {
+                                    // 最后还款日
+                                    hjhDebtCredit.setCreditRepayEndTime(debtDetailNoRepay.getRepayTime());
+                                }
+                                unRepayPeriod++;
                             }
+                        } else {
+                            // 最后还款日
+                            hjhDebtCredit.setCreditRepayEndTime(hjhDebtDetailCur.getRepayTime());
                         }
                         // 查询当前时间落在哪一期
                         // 应还日期 >= 当前日期 的债权
@@ -565,15 +742,55 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                 }
                             }
                         }
+
+                        // 债转期数 = 项目期限 - 已还期数 + 1
+                        hjhDebtCredit.setCreditPeriod(unRepayPeriod);
+                        // 还款期数
+                        hjhDebtCredit.setRepayPeriod(hjhDebtDetailCur.getBorrowPeriod() - unRepayPeriod);
+                        // 债转总额
+                        hjhDebtCredit.setCreditAccount(total);
+                        // 债转总本金
+                        hjhDebtCredit.setCreditCapital(capital);
+                        // 清算总本金
+                        hjhDebtCredit.setLiquidatesCapital(capital);
+                        // 债转总利息
+                        hjhDebtCredit.setCreditInterest(interest);
+                        // 待承接总金额
+                        hjhDebtCredit.setCreditAccountWait(total);
+                        // 待承接本金
+                        hjhDebtCredit.setCreditCapitalWait(capital);
+                        // 待承接利息
+                        hjhDebtCredit.setCreditInterestWait(interest);
+                        // 已还总额
+                        hjhDebtCredit.setRepayAccount(BigDecimal.ZERO);
+                        // 已还本金
+                        hjhDebtCredit.setRepayCapital(BigDecimal.ZERO);
+                        // 已还利息
+                        hjhDebtCredit.setRepayInterest(BigDecimal.ZERO);
+                        // 待还总额
+                        hjhDebtCredit.setRepayAccountWait(total);
+                        // 待还本金
+                        hjhDebtCredit.setRepayCapitalWait(capital);
+                        // 待还利息
+                        hjhDebtCredit.setRepayInterestWait(interest);
                         // 债权价值
                         BigDecimal fairValue = capital.add(creditValue).subtract(advanceCreditValue);
                         // 加入订单的债权价值
                         totalFairValue = totalFairValue.add(fairValue);
+                        // 计算此时的公允价值
+                        hjhDebtCredit.setLiquidationFairValue(fairValue);
+                        // 债权持有时间
+                        hjhDebtCredit.setHoldDays(holdDays);
+                        // 当前期计息天数
+                        hjhDebtCredit.setDuringDays(duringDays);
+                        // 债权剩余期限
+                        hjhDebtCredit.setRemainDays(remainDays);
+                        hjhDebtCredit.setCreditTerm(remainDays);
                         HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                         vo.setDate(dualDate);
                         vo.setCreditAccount(totalFairValue);
-                        // TODO 根据收益率配置匹配计划编号
-
+                        // 根据收益率配置匹配计划编号
+                        vo.setPlanNid(getPlanNid(hjhDebtCredit));
                         list.add(vo);
                         logger.info(LOG_MAIN_INFO + "预计年华收益率:[" + actualApr + "].");
                     } else {
@@ -587,6 +804,8 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             // 放款时间
                             Integer loanTime = lastTermDebtDetail.getLoanTime();
                             actualApr = lastTermDebtDetail.getBorrowApr();
+                            // 说明之前的分期还款正常完成
+                            hjhDebtCredit.setActualApr(lastTermDebtDetail.getBorrowApr());
                             // 如果是第一期尚未还款
                             if (lastTermDebtDetail.getRepayPeriod() == 1) {
                                 // 如果第一期尚未还款
@@ -636,6 +855,13 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                             if (remainDays <= 0) {
                                 remainDays = 0;
                             }
+                            // 设置分期相关信息
+                            // 承接所在期数
+                            hjhDebtCredit.setAssignPeriod(lastTermDebtDetail.getRepayPeriod());
+                            // 清算所在期数
+                            hjhDebtCredit.setLiquidatesPeriod(lastTermDebtDetail.getRepayPeriod());
+                            // 下期还款时间
+                            hjhDebtCredit.setCreditRepayNextTime(lastTermDebtDetail.getRepayTime());
                             // 计算待垫付的利息
                             creditValue = ((lastTermDebtDetail.getRepayInterestWait().multiply(new BigDecimal(holdDays))).divide(new BigDecimal(duringDays), 2, BigDecimal.ROUND_DOWN));
                             // 检索是否有之前期有逾期
@@ -644,19 +870,37 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                 for (HjhDebtDetail overdueDetail : overdueDetailList) {
                                     creditValue = creditValue.add(overdueDetail.getRepayInterestWait());
                                 }
+                                hjhDebtCredit.setIsLateCredit(1);
                             }
+                            // 垫付利息
+                            hjhDebtCredit.setCreditInterestAdvance(creditValue);
+                            // 待垫付利息
+                            hjhDebtCredit.setCreditInterestAdvanceWait(creditValue);
                             BigDecimal capital = lastTermDebtDetail.getRepayCapitalWait();
                             BigDecimal interest = lastTermDebtDetail.getRepayInterestWait();
+                            BigDecimal total = capital.add(interest);
 
+                            // 未还款期数
+                            Integer unRepayPeriod = 0;
                             // 如果当前期不是最后一期 则需要查询当前期到最后一期的债权信息
                             List<HjhDebtDetail> hjhDebtDetailsNoRepay = this.hjhDebtDetailCustomizeMapper.selectDebtDetailNoRepay(lastTermDebtDetail.getOrderId());
                             capital = new BigDecimal(0);
                             interest = new BigDecimal(0);
+                            total = new BigDecimal(0);
                             if (hjhDebtDetailsNoRepay != null && hjhDebtDetailsNoRepay.size() > 0) {
                                 for (HjhDebtDetail debtDetailNoRepay : hjhDebtDetailsNoRepay) {
                                     capital = capital.add(debtDetailNoRepay.getRepayCapitalWait());
                                     interest = interest.add(debtDetailNoRepay.getRepayInterestWait());
+                                    total = capital.add(interest);
+                                    if (debtDetailNoRepay.getRepayPeriod().equals(debtDetailNoRepay.getBorrowPeriod())) {
+                                        // 最后还款日
+//                                        hjhDebtCredit.setCreditRepayEndTime(debtDetailNoRepay.getRepayTime());
+                                    }
+                                    unRepayPeriod++;
                                 }
+                            } else {
+                                // 最后还款日
+//                                hjhDebtCredit.setCreditRepayEndTime(lastTermDebtDetail.getRepayTime());
                             }
 
                             // 查询当前时间落在哪一期
@@ -717,15 +961,55 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
                                     }
                                 }
                             }
+                            // 债转期数 = 项目期限 - 已还期数 + 1
+                            hjhDebtCredit.setCreditPeriod(unRepayPeriod);
+                            // 还款期数
+                            hjhDebtCredit.setRepayPeriod(lastTermDebtDetail.getBorrowPeriod() - unRepayPeriod);
+                            // 债转总额
+                            hjhDebtCredit.setCreditAccount(total);
+                            // 债转总本金
+                            hjhDebtCredit.setCreditCapital(capital);
+                            // 清算总本金
+                            hjhDebtCredit.setLiquidatesCapital(capital);
+                            // 债转总利息
+                            hjhDebtCredit.setCreditInterest(interest);
+                            // 待承接总金额
+                            hjhDebtCredit.setCreditAccountWait(total);
+                            // 待承接本金
+                            hjhDebtCredit.setCreditCapitalWait(capital);
+                            // 待承接利息
+                            hjhDebtCredit.setCreditInterestWait(interest);
+                            // 已还总额
+                            hjhDebtCredit.setRepayAccount(BigDecimal.ZERO);
+                            // 已还本金
+                            hjhDebtCredit.setRepayCapital(BigDecimal.ZERO);
+                            // 已还利息
+                            hjhDebtCredit.setRepayInterest(BigDecimal.ZERO);
+                            // 待还总额
+                            hjhDebtCredit.setRepayAccountWait(total);
+                            // 待还本金
+                            hjhDebtCredit.setRepayCapitalWait(capital);
+                            // 待还利息
+                            hjhDebtCredit.setRepayInterestWait(interest);
                             // 债权价值
                             BigDecimal fairValue = capital.add(creditValue).subtract(advanceCreditValue);
                             // 加入订单的债权价值
                             totalFairValue = totalFairValue.add(fairValue);
+                            // 计算此时的公允价值
+                            hjhDebtCredit.setLiquidationFairValue(fairValue);
+                            // 债权持有时间
+                            hjhDebtCredit.setHoldDays(holdDays);
+                            // 当前期计息天数
+                            hjhDebtCredit.setDuringDays(duringDays);
+                            // 债权剩余期限
+                            hjhDebtCredit.setRemainDays(remainDays);
+                            hjhDebtCredit.setCreditTerm(remainDays);
+                            hjhDebtCredit.setIsLateCredit(1);
                             HjhPlanCapitalPredictionVO vo = new HjhPlanCapitalPredictionVO();
                             vo.setDate(dualDate);
                             vo.setCreditAccount(totalFairValue);
-                            // TODO 根据收益率配置匹配计划编号
-
+                            // 根据收益率配置匹配计划编号
+                            vo.setPlanNid(getPlanNid(hjhDebtCredit));
                             list.add(vo);
                             logger.info(LOG_MAIN_INFO + "预计年华收益率:[" + actualApr + "].");
                         }
@@ -734,6 +1018,28 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
             }
         }
         return true;
+    }
+
+    /**
+     * 根据预计债转信息判断新生成债转流向
+     *
+     * @param hjhDebtCredit
+     * @return
+     */
+    private String getPlanNid(HjhDebtCredit hjhDebtCredit) {
+        HjhLabel label = getLabelIdCommon(hjhDebtCredit);
+        if (null != label) {
+            HjhAllocationEngineExample example = new HjhAllocationEngineExample();
+            HjhAllocationEngineExample.Criteria cra = example.createCriteria();
+            cra.andDelFlagEqualTo(0);
+            cra.andLabelIdEqualTo(label.getId());
+            cra.andConfigStatusEqualTo(1);
+            cra.andLabelStatusEqualTo(1);
+            List<HjhAllocationEngine> list = this.hjhAllocationEngineMapper.selectByExample(example);
+            return CollectionUtils.isEmpty(list) ? "清算后无匹配计划" : list.get(0).getPlanNid();
+        } else {
+            return "清算后无匹配标签";
+        }
     }
 
     /**
