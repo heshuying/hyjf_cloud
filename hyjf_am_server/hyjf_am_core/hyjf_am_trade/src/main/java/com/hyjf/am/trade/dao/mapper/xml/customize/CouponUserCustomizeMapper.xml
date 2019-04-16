@@ -214,6 +214,7 @@
 		FROM
 			ht_coupon_user cu
 		JOIN (SELECT coupon_code FROM ht_coupon_config where del_flag = 0) cc ON cu.coupon_code = cc.coupon_code
+		LEFT JOIN ht_r_user u ON cu.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
 
