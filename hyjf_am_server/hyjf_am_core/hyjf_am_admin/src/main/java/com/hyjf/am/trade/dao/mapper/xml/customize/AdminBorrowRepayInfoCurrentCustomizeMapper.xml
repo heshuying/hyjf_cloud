@@ -283,7 +283,7 @@
                 b.plan_nid AS planNid,
                 b.borrow_user_name AS borrowUserName,
                 cr.user_name AS recoverUserName,
-                concat_ws('/',cr.assign_repay_period,b.borrow_period) AS period,
+                concat_ws('/',cr.recover_period,b.borrow_period) AS period,
                 cr.assign_repay_period AS recoverPeriod,
                 t.account,
                 cr.assign_capital AS amountHold,
@@ -355,7 +355,7 @@
                 b.plan_nid AS planNid,
                 b.borrow_user_name AS borrowUserName,
                 hcr.user_name AS recoverUserName,
-                concat_ws('/',hcr.assign_repay_period,b.borrow_period) AS period,
+                concat_ws('/',hcr.repay_period,b.borrow_period) AS period,
                 hcr.assign_repay_period AS recoverPeriod,
                 t.account,
                 hcr.repay_capital AS amountHold,
@@ -424,7 +424,7 @@
         WHERE 1=1
         <include refid="where-type-4"/>
             ) t
-        ORDER BY t.borrowNid,t.recoverUserName,t.recoverPeriod
+        ORDER BY t.borrowNid,t.recoverUserName,t.recoverPeriod ASC
         <if test="limitStart >= 0" >
             LIMIT #{limitStart} , #{limitEnd}
         </if>
