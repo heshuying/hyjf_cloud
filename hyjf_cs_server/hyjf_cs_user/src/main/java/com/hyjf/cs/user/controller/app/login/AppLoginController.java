@@ -481,7 +481,7 @@ public class AppLoginController extends BaseUserController {
         String sign = request.getParameter("sign");
         loginService.checkForApp(version,platform,netStatus);
         // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || !Validator.isMobile(username)) {
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(username) ) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
@@ -503,6 +503,11 @@ public class AppLoginController extends BaseUserController {
         if (Validator.isNull(username)) {
             ret.put("status", "1");
             ret.put("statusDesc", "用户名不能为空");
+            return ret;
+        }
+        if(!Validator.isMobile(username)){
+            ret.put("status", "1");
+            ret.put("statusDesc", "手机号格式错误");
             return ret;
         }
         if (Validator.isNull(smsCode)) {
