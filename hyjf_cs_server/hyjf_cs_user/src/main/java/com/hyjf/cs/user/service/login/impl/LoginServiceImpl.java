@@ -725,7 +725,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 //			if (userUtmInfoCustomizeVO != null){
 //				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
 //			}else {
-				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId+"&action=scan";
 //			}
 			// 二维码
 			result.setQrCodeUrl(linkUrl);
