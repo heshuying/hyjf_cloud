@@ -515,7 +515,7 @@ public class AppLoginController extends BaseUserController {
             return ret;
         }
         UserVO userVO = loginService.getUsersByMobile(username);
-        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,BankCallConstant.CHANNEL_APP,userVO);
+        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,platform,userVO);
         if (!errorInfo.isEmpty()){
             ret.put("status", "1");
             ret.put("statusDesc", errorInfo.get("statusDesc"));
@@ -523,7 +523,7 @@ public class AppLoginController extends BaseUserController {
         }
 
         // 执行登录(登录时间，登录ip)
-        WebViewUserVO webViewUserVO = loginService.loginByCode(username, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
+        WebViewUserVO webViewUserVO = loginService.loginByCode(username, GetCilentIP.getIpAddr(request), platform,userVO);
         if (webViewUserVO != null) {
             logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
             sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
