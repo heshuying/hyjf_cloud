@@ -30,4 +30,17 @@ public interface WorkFlowConfigService {
      * @return
      */
     int insertWorkFlowConfig(WorkFlowVO workFlowVO);
+
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    WorkFlowVO selectWorkFlowConfigInfo(int id);
+    /**
+     * 修改工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    int updateWorkFlowConfig(WorkFlowVO workFlowVO);
 }

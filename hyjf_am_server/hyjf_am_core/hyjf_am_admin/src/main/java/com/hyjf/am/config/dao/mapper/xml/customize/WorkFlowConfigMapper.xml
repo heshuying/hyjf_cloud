@@ -44,7 +44,7 @@
 
     <!-- 根据条件 查询意见反馈信息  -->
     <select id="selectWorkFlowConfigList" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="com.hyjf.am.resquest.admin.WorkFlowConfigRequest">
-        select w.workname_id businessId,n.work_name businessName,
+        select w.id,w.workname_id businessId,n.work_name businessName,
         case
         when w.check_status=1 then '是'
         else '否' end auditFlagString,
@@ -82,6 +82,31 @@
             )
         </foreach>
     </insert>
+
+    <select id="selectWorkFlowConfigInfo" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="java.lang.Integer">
+        select w.id,w.workname_id businessId,n.work_name businessName,w.mail_notifier mailWarningUser,
+        date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,w.create_user createUser,w.update_user updateUser,
+        (select a.truename from ht_admin a where a.id = w.create_user) createUserName,
+        date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime,
+        (select a.truename from ht_admin a where a.id = w.update_user) updateUserName,
+        w.flow_status processStatus,w.check_status auditFlag,
+        case
+        when w.flow_status=1 then '正常'
+        else '异常' end processStatusString,
+        case
+        when w.check_status=1 then '是'
+        else '否' end auditFlagString
+        from ht_workflow w
+        inner join ht_workname n on w.workname_id=n.id
+        where w.id=#{id}
+    </select>
+
+    <select id="selectWorkFlowConfigNode" resultType="com.hyjf.am.vo.admin.WorkFlowNodeVO" parameterType="java.lang.Integer">
+       select n.workflow_id businessId,n.flow_order flowNodeNum ,a.truename auditUserName,n.admin_id auditUser
+       from ht_workflow_node n
+      left join ht_admin a on a.id =n.admin_id
+      where n.workflow_id=#{businessId}
+    </select>
 
 </mapper>
 

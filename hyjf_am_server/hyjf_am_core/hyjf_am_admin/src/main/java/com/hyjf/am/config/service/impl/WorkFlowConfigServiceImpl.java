@@ -1,6 +1,9 @@
 package com.hyjf.am.config.service.impl;
 
+import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
+import com.hyjf.am.config.dao.model.auto.WorkFlow;
+import com.hyjf.am.config.dao.model.auto.WorkFlowExample;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
@@ -8,6 +11,7 @@ import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -61,6 +65,39 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
                 return 1;
             }
         }
+        return 0;
+    }
+
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    @Override
+    public WorkFlowVO selectWorkFlowConfigInfo(int id){
+        //查询业务流程
+        WorkFlowVO workFlowVO = workFlowConfigMapper.selectWorkFlowConfigInfo(id);
+        if(null == workFlowVO){
+            return null;
+        }
+        if(null != workFlowVO&&null == workFlowVO.getBusinessId()){
+            return null;
+        }
+        //根据业务流程中的业务id查询业务流程节点
+        List<WorkFlowNodeVO> flowNodes =  workFlowConfigMapper.selectWorkFlowConfigNode(workFlowVO.getBusinessId());
+        if(!CollectionUtils.isEmpty(flowNodes)){
+            workFlowVO.setFlowNodes(flowNodes);
+            workFlowVO.setFlowNode(flowNodes.size());
+        }
+        return workFlowVO;
+    }
+    /**
+     * 修改工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public int updateWorkFlowConfig(WorkFlowVO workFlowVO){
         return 0;
     }
 }

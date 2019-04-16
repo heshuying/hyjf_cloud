@@ -21,6 +21,10 @@ public class WorkFlowNodeVO  extends BaseVO implements Serializable {
      * 审核人
      */
     private Integer auditUser;
+    /**
+     * 审核人真实姓名
+     */
+    private String auditUserName;
 
     public String getBusinessId() {
         return businessId;
@@ -44,5 +48,13 @@ public class WorkFlowNodeVO  extends BaseVO implements Serializable {
 
     public void setAuditUser(Integer auditUser) {
         this.auditUser = auditUser;
+    }
+
+    public String getAuditUserName() {
+        return auditUserName;
+    }
+
+    public void setAuditUserName(String auditUserName) {
+        this.auditUserName = auditUserName;
     }
 }

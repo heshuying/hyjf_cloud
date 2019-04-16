@@ -37,4 +37,17 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     int insertWorkFlowNode(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    WorkFlowVO selectWorkFlowConfigInfo(@Param("id")int id);
+
+    /**
+     * 根据业务流程中的业务id查询业务流程节点
+     * @param businessId
+     * @return
+     */
+    List<WorkFlowNodeVO> selectWorkFlowConfigNode(@Param("businessId")int businessId);
 }
