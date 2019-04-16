@@ -9,11 +9,11 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper;
 import com.hyjf.am.market.service.SellDailyService;
 import com.hyjf.am.vo.market.SellDailyVO;
-import org.springframework.util.Assert;
 
 /**
  * @author fuqiang
@@ -225,6 +225,11 @@ public class SellDailyServiceImpl implements SellDailyService {
 		case 2:
 			target.setRepaymentTotalMonth(
 					this.operating(source.getRepaymentTotalMonth(), target.getRepaymentTotalMonth(), operateType));
+
+			if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+				target.setRepaymentTotalMonth(
+						this.operating(source.getCreditAmount(), target.getRepaymentTotalMonth(), operateType));
+			}
 			break;
 		case 3:
 			target.setInvestTotalPreviousMonth(this.operating(source.getInvestTotalPreviousMonth(),
@@ -269,6 +274,11 @@ public class SellDailyServiceImpl implements SellDailyService {
 		case 17:
 			target.setNonRepaymentToday(
 					this.operating(source.getNonRepaymentToday(), target.getNonRepaymentToday(), operateType));
+
+            if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+                target.setNonRepaymentToday(
+                        this.operating(source.getCreditAmount(), target.getNonRepaymentToday(), operateType));
+            }
 			break;
 		case 18:
 			target.setRegisterTotalYesterday(this.operating(source.getRegisterTotalYesterday(),

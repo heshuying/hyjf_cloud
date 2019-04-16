@@ -105,7 +105,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			// U-当日待还（17列） F-本月累计已还款（2列） 扣减债转
 			if (column == 17 || column == 2) {
 				if (creditSellDaily != null) {
-					logger.info("2,17列扣减债转, vo is : {}", creditSellDaily.print());
+					logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
 					noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
 				}
 			}
