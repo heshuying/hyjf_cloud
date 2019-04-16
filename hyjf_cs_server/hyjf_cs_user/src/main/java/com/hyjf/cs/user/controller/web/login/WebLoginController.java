@@ -237,7 +237,7 @@ public class WebLoginController extends BaseUserController {
             return result;
         }
         UserVO userVO = loginService.getUsersByMobile(loginUserName);
-        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,BankCallConstant.CHANNEL_APP,userVO);
+        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,"0",userVO);
         if (!errorInfo.isEmpty()){
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.FAIL);
@@ -246,7 +246,7 @@ public class WebLoginController extends BaseUserController {
         }
 
         // 执行登录(登录时间，登录ip)
-        WebViewUserVO webViewUserVO = loginService.loginByCode(loginUserName, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC,userVO);
+        WebViewUserVO webViewUserVO = loginService.loginByCode(loginUserName, GetCilentIP.getIpAddr(request), "0",userVO);
 
         if (webViewUserVO != null) {
             logger.info("web端登录成功 userId is :{}", webViewUserVO.getUserId());
