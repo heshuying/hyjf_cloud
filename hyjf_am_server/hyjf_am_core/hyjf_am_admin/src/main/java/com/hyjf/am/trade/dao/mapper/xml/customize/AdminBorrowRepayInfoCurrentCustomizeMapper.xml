@@ -151,6 +151,7 @@
                     b.borrow_user_name AS borrowUserName,
                     t.user_name AS recoverUserName,
                     '1' AS period,
+                    1 AS recoverPeriod,
                     t.account,
                     br.recover_capital - br.credit_amount AS amountHold,
                     br.recover_capital AS recoverCapital,
@@ -204,6 +205,7 @@
                 b.borrow_style = 'end'
                 OR b.borrow_style = 'endday'
             )
+        AND br.credit_status != 2
         <include refid="where-type-1"/>
 
         UNION ALL
@@ -218,6 +220,7 @@
                 b.borrow_user_name AS borrowUserName,
                 t.user_name AS recoverUserName,
                 concat_ws('/',rp.recover_period,b.borrow_period) AS period,
+                rp.recover_period AS recoverPeriod,
                 t.account,
                 rp.recover_capital  - rp.credit_amount AS amountHold,
                 rp.recover_capital AS recoverCapital,
@@ -267,7 +270,7 @@
         INNER JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid
         AND brp.repay_period = rp.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-        WHERE 1=1
+        WHERE rp.credit_status != 2
         <include refid="where-type-2"/>
         UNION
             <!-- 3、债权转让承接订单查询-->
@@ -281,6 +284,7 @@
                 b.borrow_user_name AS borrowUserName,
                 cr.user_name AS recoverUserName,
                 concat_ws('/',cr.assign_repay_period,b.borrow_period) AS period,
+                cr.assign_repay_period AS recoverPeriod,
                 t.account,
                 cr.assign_capital AS amountHold,
                 cr.assign_capital AS recoverCapital,
@@ -352,6 +356,7 @@
                 b.borrow_user_name AS borrowUserName,
                 hcr.user_name AS recoverUserName,
                 concat_ws('/',hcr.assign_repay_period,b.borrow_period) AS period,
+                hcr.assign_repay_period AS recoverPeriod,
                 t.account,
                 hcr.repay_capital AS amountHold,
                 hcr.repay_capital AS recoverCapital,
@@ -419,7 +424,7 @@
         WHERE 1=1
         <include refid="where-type-4"/>
             ) t
-        ORDER BY t.borrowNid
+        ORDER BY t.borrowNid,t.recoverUserName,t.recoverPeriod
         <if test="limitStart >= 0" >
             LIMIT #{limitStart} , #{limitEnd}
         </if>
