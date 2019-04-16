@@ -983,6 +983,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         this.sendScreenDataMQ(screenDataBean);
                         //承接人相当于投资需要生产投资记录
                         ScreenDataBean screenDataBeanTender = new ScreenDataBean(creditTenderLog.getCreditTenderNid(),userId,userInfoCustomize.getUserName(),creditTenderLog.getAssignCapital(),1);
+                        screenDataBeanTender.setProductType(0);
                         this.sendScreenDataMQ(screenDataBeanTender);
                     } catch (Exception e) {
                         logger.error("承接成功后,发送大屏数据统计MQ失败",e.getMessage());
