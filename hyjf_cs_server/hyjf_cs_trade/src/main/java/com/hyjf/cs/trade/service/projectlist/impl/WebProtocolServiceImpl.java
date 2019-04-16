@@ -725,6 +725,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             }
         }
         if(files!=null && files.size()>0){
+            logger.info("下载协议Download................"+JSONObject.toJSONString(files));
             ZIPGenerator.generateZip(response, files, tenderCreditAssignedBean.getBidNid());
         }else{
             logger.info("下载失败！");
