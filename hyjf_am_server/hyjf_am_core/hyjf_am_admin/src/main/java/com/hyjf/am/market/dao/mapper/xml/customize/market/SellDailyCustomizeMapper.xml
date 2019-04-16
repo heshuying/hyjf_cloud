@@ -444,8 +444,8 @@
         LEFT JOIN hyjf_crm.oa_department dd2 ON dd3.parentid = dd2.id
         LEFT JOIN hyjf_crm.oa_department dd1 ON dd2.parentid = dd1.id
         WHERE ui.role_id = 1
-        AND bc.create_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
-        AND bc.create_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND bc.create_time <![CDATA[>=]]> #{startTime}
+        AND bc.create_time <![CDATA[<=]]> #{endTime}
     </sql>
 
     <!-- 查询运营中心合计 -->
