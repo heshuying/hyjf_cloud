@@ -184,7 +184,7 @@
 		br.recover_capital-br.recover_capital_yes AS recoverCapitalWait,
 		br.recover_interest-br.recover_interest_yes AS recoverInterestWait,
 		br.recover_Account-br.recover_Account_yes AS recoverAccountWait,
-		br.recover_status AS status,
+		if(br.recover_status=0 and br.advance_status=3 ,'2',br.recover_status) AS status,
 		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 		b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
 		if(br.recover_yestime is null or br.recover_yestime='',

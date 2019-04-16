@@ -27,10 +27,18 @@ public class AdminRepayDelayCustomizeVO extends BaseVO implements Serializable {
     private String repayOrgName;
     private String recoverLastTime;
     private String repayAccountAll;
+    private String principalInterest;
     
     
-    
-    public String getRepayAccountAll() {
+    public String getPrincipalInterest() {
+		return principalInterest;
+	}
+
+	public void setPrincipalInterest(String principalInterest) {
+		this.principalInterest = principalInterest;
+	}
+
+	public String getRepayAccountAll() {
 		return repayAccountAll;
 	}
 
