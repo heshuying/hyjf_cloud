@@ -9,6 +9,7 @@ import com.hyjf.admin.service.workflow.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
@@ -17,10 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -61,8 +59,8 @@ public class WorkFlowConfigController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流添加业务流程配置..." + JSONObject.toJSON(workFlowVO));
-        workFlowVO.setUpdateUser(this.getUser(request).getId());
-//        workFlowVO.setUpdateUser("3");
+//        workFlowVO.setUpdateUser(this.getUser(request).getId());
+        workFlowVO.setUpdateUser("3");
         //校验请求参数
         String errorMsg = validation(workFlowVO);
         if(!StringUtils.isBlank(errorMsg)){
@@ -172,6 +170,21 @@ public class WorkFlowConfigController  extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<WorkFlowConfigResponse>(response) ;
+    }
+
+    @ApiOperation(value = "查询邮件预警人", notes = "查询邮件预警人")
+    @GetMapping("/selectUser")
+    public AdminResult selectUser( @RequestParam(value = "userName")String userName) {
+        logger.info("查询邮件预警人，userName:" + userName);
+        WorkFlowUserResponse response = workFlowConfigService.selectUser(userName);
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<WorkFlowUserResponse>(response) ;
     }
 
     /**

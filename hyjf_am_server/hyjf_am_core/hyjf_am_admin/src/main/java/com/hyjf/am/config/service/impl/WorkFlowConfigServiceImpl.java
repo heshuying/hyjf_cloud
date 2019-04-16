@@ -9,7 +9,10 @@ import com.hyjf.am.config.dao.model.auto.WorkFlowNodeExample;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +25,7 @@ import java.util.List;
 @Service
 public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
 
+    public final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private WorkFlowConfigMapper workFlowConfigMapper;
     @Autowired
@@ -62,15 +66,10 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
         //保存业务流程表
-        int workFlowCount = workFlowConfigMapper.insertWorkFlow(workFlowVO);
-        if(workFlowCount > 0){
-            //保存业务流程节点表
-            int workFlowNodeCount = workFlowConfigMapper.insertWorkFlowNode(flowNodes);
-            if(workFlowNodeCount>0){
-                return 1;
-            }
-        }
-        return 0;
+        workFlowConfigMapper.insertWorkFlow(workFlowVO);
+        logger.debug("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId());
+        //保存业务流程节点表
+        return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
     }
 
     /**
@@ -85,11 +84,8 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         if(null == workFlowVO){
             return null;
         }
-        if(null != workFlowVO&&null == workFlowVO.getBusinessId()){
-            return null;
-        }
         //根据业务流程中的业务id查询业务流程节点
-        List<WorkFlowNodeVO> flowNodes =  workFlowConfigMapper.selectWorkFlowConfigNode(workFlowVO.getBusinessId());
+        List<WorkFlowNodeVO> flowNodes =  workFlowConfigMapper.selectWorkFlowConfigNode(id);
         if(!CollectionUtils.isEmpty(flowNodes)){
             workFlowVO.setFlowNodes(flowNodes);
             workFlowVO.setFlowNode(flowNodes.size());
@@ -106,18 +102,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
         //修改业务了流程
-        int workFlowCount = workFlowConfigMapper.updateWorkFlow(workFlowVO);
+        workFlowConfigMapper.updateWorkFlow(workFlowVO);
         //删除业务流程节点
-        int deleteWorkFlowNodeCount = workFlowConfigMapper.deleteWorkFlowNode(flowNodes);
-        //添加业务流程节点
-        if(workFlowCount >0 && deleteWorkFlowNodeCount>0){
-            //添加业务流程节点表
-            int workFlowNodeCount = workFlowConfigMapper.insertWorkFlowNode(flowNodes);
-            if(workFlowNodeCount>0){
-                return 1;
-            }
-        }
-        return 0;
+        deleteWorkFolwNode(workFlowVO.getId());
+        //添加业务流程节点表
+        return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
     }
     /**
      *  删除工作流配置业务流程
@@ -138,13 +127,18 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //删除业务流程
         workFlowMapper.deleteByPrimaryKey(id);
         //删除业务流程节点
-        int count=deleteWorkFolwNode(workFlow.getId());
-        if(count>0){
-            return 1;
-        }
-        return 0;
+        deleteWorkFolwNode(workFlow.getId());
+        return 1;
     }
-
+    /**
+     *  查询邮件预警通知人
+     * @param userName
+     * @return
+     */
+    @Override
+    public List<WorkFlowUserVO> selectUser(String userName){
+        return workFlowConfigMapper.selectUser(userName);
+    }
     public int deleteWorkFolwNode(int workflowId){
         WorkFlowNodeExample example = new WorkFlowNodeExample();
         example.createCriteria().andWorkflowIdEqualTo(workflowId);

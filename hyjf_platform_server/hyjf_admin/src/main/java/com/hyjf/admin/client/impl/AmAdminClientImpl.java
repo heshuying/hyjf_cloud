@@ -2271,4 +2271,13 @@ public class AmAdminClientImpl implements AmAdminClient {
     public BooleanResponse deleteWorkFlowConfigById(int id){
         return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/delete/"+id, BooleanResponse.class).getBody();
     }
+    /**
+     *  查询邮件预警通知人
+     * @param userName
+     * @return
+     */
+    @Override
+    public WorkFlowUserResponse selectUser(String userName){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/selectUser/"+userName, WorkFlowUserResponse.class).getBody();
+    }
 }

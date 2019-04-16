@@ -1,7 +1,9 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 
 import java.util.List;
@@ -49,4 +51,10 @@ public interface WorkFlowConfigService {
      * @return
      */
     Integer deleteWorkFlowConfigById(int id);
+    /**
+     *  查询邮件预警通知人
+     * @param userName
+     * @return
+     */
+    List<WorkFlowUserVO> selectUser(String userName);
 }

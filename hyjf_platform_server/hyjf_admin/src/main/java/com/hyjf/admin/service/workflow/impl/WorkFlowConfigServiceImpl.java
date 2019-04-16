@@ -4,6 +4,7 @@ import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.workflow.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +72,14 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     @Override
     public BooleanResponse deleteWorkFlowConfigById(int id){
         return adminClient.deleteWorkFlowConfigById(id);
+    }
+    /**
+     *  查询邮件预警通知人
+     * @param userName
+     * @return
+     */
+    @Override
+    public WorkFlowUserResponse selectUser(String userName){
+        return adminClient.selectUser(userName);
     }
 }

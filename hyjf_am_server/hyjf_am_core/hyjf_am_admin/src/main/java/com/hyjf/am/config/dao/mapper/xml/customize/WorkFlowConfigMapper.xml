@@ -66,7 +66,10 @@
         </if>
     </select>
 
-    <insert id="insertWorkFlow"  parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
+    <insert id="insertWorkFlow"  parameterType="com.hyjf.am.vo.admin.WorkFlowVO" useGeneratedKeys="true" keyProperty="id">
+        <!--<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >-->
+            <!--SELECT LAST_INSERT_ID()-->
+        <!--</selectKey>-->
         insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
         VALUES (#{businessId,jdbcType=VARCHAR}, #{auditFlag,jdbcType=INTEGER},1,#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
     </insert>
@@ -82,7 +85,7 @@
         VALUES
         <foreach collection="flowNodes" item="pojo" index="index" separator=",">
             (
-            #{pojo.businessId},
+            #{workFlowId},
             #{pojo.flowNodeNum},
             #{pojo.auditUser}
             )
@@ -114,5 +117,13 @@
       where n.workflow_id=#{businessId}
     </select>
 
+    <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
+        select id,truename,email from ht_admin
+        <where>
+            <if test="truename != null and truename !=''">
+                truename like CONCAT(#{truename},'%')
+            </if>
+        </where>
+    </select>
 </mapper>
 

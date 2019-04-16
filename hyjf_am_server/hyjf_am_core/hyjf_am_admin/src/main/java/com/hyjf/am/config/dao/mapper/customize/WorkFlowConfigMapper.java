@@ -2,6 +2,7 @@ package com.hyjf.am.config.dao.mapper.customize;
 
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,13 +43,7 @@ public interface WorkFlowConfigMapper {
      * @param flowNodes
      * @return
      */
-    int insertWorkFlowNode(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
-    /**
-     * 删除业务流程节点表
-     * @param flowNodes
-     * @return
-     */
-    int deleteWorkFlowNode(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
+    int insertWorkFlowNode(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes,@Param("workFlowId")Integer workFlowId);
     /**
      * 查询业务流程详情页面
      * @param id
@@ -62,4 +57,10 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     List<WorkFlowNodeVO> selectWorkFlowConfigNode(@Param("businessId")int businessId);
+    /**
+     *  查询邮件预警通知人
+     * @param truename
+     * @return
+     */
+    List<WorkFlowUserVO> selectUser(@Param("truename")String truename);
 }
