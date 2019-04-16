@@ -9,9 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.resquest.app.AppBaseRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
+import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
+import com.hyjf.cs.common.bean.result.WebResult;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +44,46 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/hyjf-app/find")
 public class AppFindController extends BaseMarketController {
-	private static final Logger	logger	= LoggerFactory.getLogger(AppFindController.class);
+
+	private static final Logger logger = LoggerFactory.getLogger(AppFindController.class);
+
+	@Value("${hyjf.app.host}")
+	public String appHost;
+
 	@Autowired
 	private AppFindService	appFindService;
+
+	private final static String DATE_FORMAT = "yyyy-MM-dd";
+	/** REQUEST_MAPPING */
+	public static final String REQUEST_MAPPING = "/find/contentArticle";
+	/** 获取文章详情  */
+	public static final String GET_CONTENT_ARTICLE_ID_ACTION = "/{type}/{contentArticleId}";
+
+	@ResponseBody
+	@GetMapping(value = "")
+	@ApiOperation(value = "app发现页公司动态", notes = "app发现页公司动态")
+	public JSONObject find() {
+		JSONObject ret = new JSONObject();
+		List<ContentArticleVO> newsList = appFindService.searchHomeNoticeList("20", 0, 3);
+		JSONArray jsonArray = new JSONArray();
+		for (ContentArticleVO article : newsList) {
+			JSONObject detailsJson = new JSONObject();
+			detailsJson.put("id", article.getId());
+			detailsJson.put("img", article.getImgurl());
+			detailsJson.put("title", article.getTitle());
+			detailsJson.put("date", DateFormatUtils.format(article.getCreateTime(), DATE_FORMAT));
+			detailsJson.put("shareTitle", article.getTitle());
+			detailsJson.put("shareContent", article.getSummary());
+			detailsJson.put("sharePicUrl", "https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+			detailsJson.put("shareUrl", appHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
+					.replace("{contentArticleId}", article.getId() + "").replace("{type}", "20") + "?ignoreSign=true");
+			jsonArray.add(detailsJson);
+		}
+		ret.put("status", "000");
+		ret.put("statusDesc", "成功");
+		ret.put("newsList", jsonArray);
+		return ret;
+	}
 
 	@ApiOperation(value = "知识列表", notes = "知识列表")
 	@PostMapping(value = "/contentArticle/getContentArticleListByType")
@@ -194,5 +238,31 @@ public class AppFindController extends BaseMarketController {
 		}
 		logger.info("app端-app发现页 根据文章编号查询对应文章 end");
 		return ret;
+	}
+
+	@ApiOperation(value = "app发现页面顶部广告位", notes = "app发现页面顶部广告位")
+	@GetMapping("/getFindModules")
+	public WebResult getFindModules(@ModelAttribute AppBaseRequest appBaseRequest){
+		WebResult webResult = new WebResult();
+		AdsRequest request = new AdsRequest();
+		request.setPlatformType(appBaseRequest.getPlatform());
+		request.setHost(appHost);
+		request.setLimitEnd(1);
+		List<AppFindAdCustomizeVO> adVOList = appFindService.getFindModules(request);
+		webResult.setData(adVOList);
+		return webResult;
+	}
+
+	@ApiOperation(value = "app发现页面banner", notes = "app发现页面banner")
+	@GetMapping("/getFindBanner")
+	public WebResult getFindBanner(@ModelAttribute AppBaseRequest appBaseRequest){
+		WebResult webResult = new WebResult();
+		AdsRequest request = new AdsRequest();
+		request.setPlatformType(appBaseRequest.getPlatform());
+		request.setHost(appHost);
+		request.setLimitEnd(1);
+		AppFindAdCustomizeVO adVO = appFindService.getFindBanner(request);
+		webResult.setData(adVO);
+		return webResult;
 	}
 }

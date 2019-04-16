@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.app.AppFindAdCustomizeMapper">
+	<select id="selectAppFindAdList" resultType="com.hyjf.am.market.dao.model.customize.app.AppFindAdCustomize">
+		SELECT
+		ad.id,
+		CONCAT(#{host},ad.image) AS moduleUrl,
+		ad.url AS moduleH5Url,
+		ad.`name` AS moduleTitle
+		FROM
+		ht_ads ad
+		LEFT JOIN ht_ads_type adt ON ad.type_id = adt.type_id
+		WHERE
+		ad.`status` = 1
+		<if test="code != null and code != ''">
+			and adt.`code` = #{code}
+		</if>
+		<if test="platformType != null and platformType!= ''">
+			and ad.platform_type = #{platformType}
+		</if>
+		AND unix_timestamp(ad.start_time) <![CDATA[<=]]> unix_timestamp(NOW())
+		AND unix_timestamp(ad.end_time) <![CDATA[>=]]> unix_timestamp(NOW())
+		ORDER BY
+		ad.`order` ASC,ad.`create_time` desc
+		<if test="limitStart != null and limitStart >= 0">
+			limit #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+</mapper>

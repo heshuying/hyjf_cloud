@@ -201,6 +201,16 @@ public class AppConfigController {
                         returnNewList.add(type);
                     }else if(AdsTypeEnum.android_module4.toString().equals(type.getCode())){
                         returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_find_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_find_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_find_module3.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_find_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.android_find_banner.toString().equals(type.getCode())){
+                        returnNewList.add(type);
                     }
                 }
             }else if(platformType.intValue()==2){
@@ -222,6 +232,16 @@ public class AppConfigController {
                     }else if(AdsTypeEnum.ios_module3.toString().equals(type.getCode())){
                         returnNewList.add(type);
                     }else if(AdsTypeEnum.ios_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_find_module1.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_find_module2.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_find_module3.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_find_module4.toString().equals(type.getCode())){
+                        returnNewList.add(type);
+                    }else if(AdsTypeEnum.ios_find_banner.toString().equals(type.getCode())){
                         returnNewList.add(type);
                     }
                 }

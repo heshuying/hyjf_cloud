@@ -1,7 +1,9 @@
 package com.hyjf.cs.market.client;
 
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
+import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
@@ -98,4 +100,18 @@ public interface AmMarketClient {
      * @return
      */
     List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads);
+
+    /**
+     * 获取app发现页顶部广告位
+     * @return
+     * @author wgx
+     */
+    List<AppFindAdCustomizeVO> getFindModules(AdsRequest request);
+
+    /**
+     * 获取app发现页广告banner
+     * @return
+     * @author wgx
+     */
+    AppFindAdCustomizeVO getFindBanner(AdsRequest request);
 }

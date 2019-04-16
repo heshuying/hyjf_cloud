@@ -1,12 +1,15 @@
 package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.app.AppFindAdResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.market.SellDailyDistributionResponse;
 import com.hyjf.am.response.market.SellDailyResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
+import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
@@ -131,6 +134,28 @@ public class AmMarketClientImpl implements AmMarketClient {
                 AppAdsCustomizeResponse.class);
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<AppFindAdCustomizeVO> getFindModules(AdsRequest requestBean) {
+        AppFindAdResponse appFindAdResponse = restTemplate.postForEntity(
+                "http://AM-MARKET/am-market/find/getFindModules", requestBean,
+                AppFindAdResponse.class).getBody();
+        if (appFindAdResponse != null) {
+            return appFindAdResponse.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public AppFindAdCustomizeVO getFindBanner(AdsRequest requestBean) {
+        AppFindAdResponse appFindAdResponse = restTemplate.postForEntity(
+                "http://AM-MARKET/am-market/find/getFindBanner", requestBean,
+                AppFindAdResponse.class).getBody();
+        if (appFindAdResponse != null) {
+            return appFindAdResponse.getResult();
         }
         return null;
     }
