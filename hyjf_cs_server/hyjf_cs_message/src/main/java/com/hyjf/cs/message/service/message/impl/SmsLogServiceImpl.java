@@ -11,6 +11,8 @@ import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -26,6 +28,7 @@ import java.util.List;
 @Service
 public class SmsLogServiceImpl implements SmsLogService {
 
+	private static Logger logger = LoggerFactory.getLogger(SmsLogServiceImpl.class);
 	@Autowired
 	private SmsLogDao smsLogDao;
 	@Autowired
@@ -100,8 +103,10 @@ public class SmsLogServiceImpl implements SmsLogService {
 	public Integer queryLogCount(SmsLogRequest request) {
 		String mobile = request.getMobile();
 		String type = request.getType();
-		String postTimeBegin = request.getPostTimeBegin();
-		String postTimeEnd = request.getPostTimeEnd();
+//		String postTimeBegin = request.getPosttime()==null?"":GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getPosttime());
+//		String postTimeEnd = request.getPost_time_end()==null?"":GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getPost_time_end());
+		Integer postTimeBegin = request.getPosttime();
+		Integer postTimeEnd = request.getPost_time_end();
 		Integer status = request.getStatus();
 		Query query = new Query();
 		Criteria criteria = new Criteria();
@@ -111,10 +116,11 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(type)) {
 			criteria.and("type").is(type);
 		}
-		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
-			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
-			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
-			criteria.and("posttime").gte(begin).lte(end);
+		if (null != postTimeBegin && null != postTimeEnd) {
+//			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
+//			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
+			logger.info("上月开始时间postTimeBegin："+postTimeBegin+"-----上月结束时间postTimeEnd："+postTimeEnd);
+			criteria.and("posttime").gte(postTimeBegin).lte(postTimeEnd);
 		}
 		if (status != null && status != 2) {
 			criteria.and("status").is(status);
