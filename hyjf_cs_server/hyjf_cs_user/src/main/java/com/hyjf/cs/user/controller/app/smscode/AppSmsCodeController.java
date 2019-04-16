@@ -219,8 +219,8 @@ public class AppSmsCodeController extends BaseUserController {
                 //UserVO userVO = smsCodeService.getUsersById(userId);
                 // 发送短信
                 smsCodeService.sendSmsCode(verificationType, mobile, platform, GetCilentIP.getIpAddr(request));
-                    ret.put("status", "0");
-                    ret.put("statusDesc", "发送验证码成功");
+                ret.put("status", "0");
+                ret.put("statusDesc", "发送验证码成功");
             }else{
                 // 判断是否开户  假如未开户  发送平台的验证码  假如已开户  发送江西银行的验证码
                 BankOpenAccountVO bankAccount = amUserClient.selectById(userId);
