@@ -123,6 +123,41 @@ public class WorkFlowConfigController extends BaseConfigController {
     }
 
     /**
+     * 删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @PostMapping("/delete/{id}")
+    public BooleanResponse deleteWorkFlowConfigById(@PathVariable int id){
+        logger.info("删除业务流程,请求参数id：" + id);
+        BooleanResponse response = new BooleanResponse();
+
+        //删除业务流程
+        Integer flag = workFlowConfigService.deleteWorkFlowConfigById(id);
+        if(null == flag){
+            response.setRtn(Response.FAIL);
+            response.setMessage("业务流程的id等于："+id+"的流程不存在");
+            logger.debug("业务流程的id等于："+id+"的流程不存在");
+            return response;
+        }
+        if(flag ==2){
+            response.setRtn(Response.FAIL);
+            response.setMessage("不需要审核的时候，才能删除业务流程");
+            logger.debug("不需要审核的时候，才能删除业务流程" );
+            return response;
+        }
+        if(flag ==0){
+            response.setRtn(Response.FAIL);
+            response.setMessage("修改业务流程失败");
+            logger.debug("修改业务流程失败" );
+            return response;
+        }
+        response.setRtn(Response.SUCCESS);
+        response.setMessage(Response.SUCCESS_MSG);
+        return response;
+    }
+
+    /**
      * 校验业务id是否存在
      * @param businessId
      * @return

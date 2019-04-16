@@ -43,4 +43,10 @@ public interface WorkFlowConfigService {
      * @return
      */
     int updateWorkFlowConfig(WorkFlowVO workFlowVO);
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    Integer deleteWorkFlowConfigById(int id);
 }

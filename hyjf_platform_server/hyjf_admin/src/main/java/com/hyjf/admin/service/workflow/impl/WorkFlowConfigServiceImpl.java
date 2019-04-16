@@ -63,4 +63,13 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     public BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO){
         return adminClient.updateWorkFlowConfig(workFlowVO);
     }
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @Override
+    public BooleanResponse deleteWorkFlowConfigById(int id){
+        return adminClient.deleteWorkFlowConfigById(id);
+    }
 }

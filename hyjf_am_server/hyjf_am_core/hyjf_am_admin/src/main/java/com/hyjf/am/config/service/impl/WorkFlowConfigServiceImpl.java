@@ -1,11 +1,12 @@
 package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
+import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
 import com.hyjf.am.config.dao.model.auto.WorkFlow;
-import com.hyjf.am.config.dao.model.auto.WorkFlowExample;
+import com.hyjf.am.config.dao.model.auto.WorkFlowNode;
+import com.hyjf.am.config.dao.model.auto.WorkFlowNodeExample;
 import com.hyjf.am.config.service.WorkFlowConfigService;
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
@@ -23,6 +24,10 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
 
     @Autowired
     private WorkFlowConfigMapper workFlowConfigMapper;
+    @Autowired
+    private WorkFlowMapper workFlowMapper;
+    @Autowired
+    private WorkFlowNodeMapper workFlowNodeMapper;
 
     /**
      * 查询工作流配置条数
@@ -113,5 +118,36 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
             }
         }
         return 0;
+    }
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @Override
+    public Integer deleteWorkFlowConfigById(int id){
+        //查询业务流程
+        WorkFlow workFlow = workFlowMapper.selectByPrimaryKey(id);
+        if(null == workFlow){
+            return null;
+        }
+        if(1 == workFlow.getCheckStatus()){
+            //当业务流程需要审核时，不能进行删除
+            return 2;
+        }
+        //删除业务流程
+        workFlowMapper.deleteByPrimaryKey(id);
+        //删除业务流程节点
+        int count=deleteWorkFolwNode(workFlow.getId());
+        if(count>0){
+            return 1;
+        }
+        return 0;
+    }
+
+    public int deleteWorkFolwNode(int workflowId){
+        WorkFlowNodeExample example = new WorkFlowNodeExample();
+        example.createCriteria().andWorkflowIdEqualTo(workflowId);
+        return workFlowNodeMapper.deleteByExample(example);
     }
 }

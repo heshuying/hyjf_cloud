@@ -2254,12 +2254,21 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist/"+businessId, WorkFlowConfigResponse.class).getBody();
     }
     /**
-     * 修改工作流配置
+     * 修改工作流配置业务流程
      * @param workFlowVO
      * @return
      */
     @Override
     public BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO){
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/update",workFlowVO, BooleanResponse.class).getBody();
+    }
+    /**
+     * 删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @Override
+    public BooleanResponse deleteWorkFlowConfigById(int id){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/delete/"+id, BooleanResponse.class).getBody();
     }
 }

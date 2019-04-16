@@ -132,6 +132,29 @@ public class WorkFlowConfigController  extends BaseController {
         return new AdminResult<BooleanResponse>(response) ;
     }
 
+    @ApiOperation(value = "删除业务流程", notes = "删除业务流程")
+    @PostMapping("/delete")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
+    public AdminResult deleteWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
+        logger.info("工作流删除业务流程配置..." + workFlowVO.getId());
+        //校验请求参数
+        if(null == workFlowVO.getId()){
+            logger.debug("工作流删除业务流程配置参数校验不合法，错误消息为:业务流程的id不能为空" );
+            return new AdminResult<>(FAIL, "业务流程的id不能为空");
+        }
+
+        //修改业务流程
+        BooleanResponse response =workFlowConfigService.deleteWorkFlowConfigById(workFlowVO.getId());
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<BooleanResponse>(response) ;
+    }
+
     @ApiOperation(value = "校验业务流程是否存在", notes = "校验业务流程是否存在")
     @PostMapping("/exist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)

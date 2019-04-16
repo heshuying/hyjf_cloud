@@ -1307,10 +1307,16 @@ public interface AmAdminClient {
      */
     WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId);
     /**
-     * 修改工作流配置
+     * 修改工作流配置业务流程
      * @param workFlowVO
      * @return
      */
     BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO);
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    BooleanResponse deleteWorkFlowConfigById(int id);
 
 }
