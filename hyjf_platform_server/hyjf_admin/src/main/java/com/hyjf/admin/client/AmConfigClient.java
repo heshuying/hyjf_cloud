@@ -1563,4 +1563,39 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
+
+	/**
+	 * 添加业务名称管理
+	 * @param request
+	 * @return
+	 */
+	Integer insertBusinessName(BusinessNameMgRequest request);
+
+	/**
+	 * 检索业务名称管理
+	 * @param request
+	 * @return
+	 */
+	BusinessNameMgResponse findBusinessName(BusinessNameMgRequest request);
+
+	/**
+	 * 通过ID 业务名称管理
+	 * @param id
+	 * @return
+	 */
+	WorkNameVO findBusinessNameById(int id);
+
+	/**
+	 * 修改业务名称管理
+	 * @param request
+	 * @return
+	 */
+	Integer updateBusinessName(BusinessNameMgRequest request);
+
+	/**
+	 * 修改业务名称管理状态
+	 * @param request
+	 * @return
+	 */
+	Integer updateStatusBusinessName(BusinessNameMgRequest request);
 }
