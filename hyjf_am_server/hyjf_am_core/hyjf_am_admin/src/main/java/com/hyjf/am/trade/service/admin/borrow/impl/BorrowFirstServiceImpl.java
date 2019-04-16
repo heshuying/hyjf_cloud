@@ -19,6 +19,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +32,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangjun
@@ -207,6 +209,14 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 if (updateCount > 0) {
                     // 更新redis的定时发标时间
                     changeOntimeOfRedis(borrow);
+                    // add by liuyang 20190415 wbs标的信息推送 start
+                    try {
+                        sendWbsBorrowInfo(borrow.getBorrowNid(),"2",0);
+                    } catch (Exception e) {
+                        logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
+                    }
+                    // add by liuyang 20190415 wbs标的信息推送 end
+
                     return new Response();
                 } else {
                     return new Response(Response.FAIL, "标的信息更新失败");
@@ -214,6 +224,24 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             }
         }
         return new Response(Response.FAIL,"未查询到标的信息");
+    }
+
+    /**
+     * wbs标的信息推送MQ
+     *
+     * @param borrowNid
+     * @param productStatus
+     * @param productType
+     */
+    private void sendWbsBorrowInfo(String borrowNid, String productStatus, Integer productType) throws MQException {
+        JSONObject params = new JSONObject();
+        // 产品编号
+        params.put("productNo", borrowNid);
+        // 产品状态
+        params.put("productStatus", productStatus);
+        // 产品类型 0 散标类, 1 计划类
+        params.put("productType", productType);
+        commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
     }
 
     /**

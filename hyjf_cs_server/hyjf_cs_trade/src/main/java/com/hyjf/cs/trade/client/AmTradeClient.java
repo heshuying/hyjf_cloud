@@ -2975,5 +2975,12 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+
+    /**
+     * WBS系统获取智投列表
+     *
+     * @return
+     */
+    List<HjhPlanVO> selectWbsSendHjhPlanList();
 }
 

@@ -196,5 +196,21 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
         } catch (Exception e){
             logger.error("发送合规数据上报MQ失败,放款标的:" + borrowApicron.getBorrowNid());
         }
+
+        // add by liuyang WBS系统散标信息推送 20190416 start
+        try {
+            // 放款成功后,发送标的募集结束信息
+            params = new JSONObject();
+            // 产品编号
+            params.put("productNo", borrowApicron.getBorrowNid());
+            // 产品状态 :5:还款中
+            params.put("productStatus", "5");
+            // 产品类型 0 散标类, 1 计划类
+            params.put("productType", 0);
+            commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+        } catch (Exception e) {
+            logger.error("WBS系统发送散标数据MQ失败,放款标的:" + borrowApicron.getBorrowNid());
+        }
+        // add by liuyang WBS系统散标信息推送 20190416 end
     }
 }
