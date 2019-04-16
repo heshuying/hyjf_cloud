@@ -498,7 +498,6 @@ public class AppLoginController extends BaseUserController {
         // 解密
         logger.info("APP登录 ---> 解密前 key：{}，username：{}，smsCode：{}", key, username, smsCode);
         username = DES.decodeValue(key, username);
-        smsCode = DES.decodeValue(key, smsCode);
         logger.info("APP登录 ---> 解密后 username：{}，smsCode：{}", username, smsCode);
         if (Validator.isNull(username)) {
             ret.put("status", "1");
