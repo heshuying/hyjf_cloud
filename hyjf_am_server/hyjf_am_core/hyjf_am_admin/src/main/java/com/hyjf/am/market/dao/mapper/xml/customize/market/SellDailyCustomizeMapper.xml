@@ -937,8 +937,6 @@
         FROM hyjf_user.ht_user u
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
         LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
-        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
         LEFT JOIN hyjf_user.ht_utm_reg re on u.user_id=re.user_id
         LEFT JOIN hyjf_user.ht_utm m on re.utm_id=m.utm_id
         LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
@@ -1049,8 +1047,6 @@
         FROM hyjf_user.ht_user u
         LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
         LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
-        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
-        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_user_id=uui.user_id
         LEFT JOIN hyjf_user.ht_utm_reg re on u.user_id=re.user_id
         LEFT JOIN hyjf_user.ht_utm m on re.utm_id=m.utm_id
         LEFT JOIN hyjf_user.ht_utm_plat p on m.utm_source=p.source_name
