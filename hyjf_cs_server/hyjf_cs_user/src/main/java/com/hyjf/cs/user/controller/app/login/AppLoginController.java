@@ -658,7 +658,7 @@ public class AppLoginController extends BaseUserController {
             throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
         String redisUserId = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId());
-        if(redisUserId==null || !(userVO.getUserId()+"").equals(redisUserId)){
+        if(redisUserId==null || !codeLoginKey.equals(redisUserId)){
             // 自动登录失败
             ret.put("status", "1");
             ret.put("statusDesc", "自动登录失败");
