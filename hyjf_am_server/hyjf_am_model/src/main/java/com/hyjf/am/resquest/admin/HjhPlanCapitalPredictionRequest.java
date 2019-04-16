@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -80,6 +82,11 @@ public class HjhPlanCapitalPredictionRequest implements Serializable {
      * 预计当日所需资产量:预计当日新增债转额（元）-预计当日新增债转额（元）（若为负数显示为0）
      */
     private BigDecimal assetAccount;
+
+    /**
+     * 预估数据日期
+     */
+    private Date dualBaseDate;
 
     /**
      * 创建人id
@@ -276,5 +283,13 @@ public class HjhPlanCapitalPredictionRequest implements Serializable {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public Date getDualBaseDate() {
+        return dualBaseDate;
+    }
+
+    public void setDualBaseDate(Date dualBaseDate) {
+        this.dualBaseDate = dualBaseDate;
     }
 }

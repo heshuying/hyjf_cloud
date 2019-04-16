@@ -15,13 +15,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
+ * 资金计划-预计新增复投和债转相关金额字段
  * @author wenxin
  * @version HjhPlanCapitalPredictionDao, v0.1 2019/4/2 15:51
  */
+@Repository
 public class HjhPlanCapitalPredictionDao extends BaseMongoDao<HjhPlanCapitalPrediction>  {
 
     protected static Logger logger = LoggerFactory.getLogger(DateUtils.class);

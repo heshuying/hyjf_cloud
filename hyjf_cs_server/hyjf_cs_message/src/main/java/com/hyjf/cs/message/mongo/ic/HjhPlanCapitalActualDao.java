@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import java.util.List;
 
 /**
+ * 资金计划-当日实际金额相关
  * @author PC-LIUSHOUYI
  * @version HjhPlanCapitalActualDao, v0.1 2019/4/2 14:26
  */
