@@ -10,6 +10,7 @@ import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.bifa.*;
 
 import java.util.List;
@@ -233,4 +234,11 @@ public interface CsMessageClient {
      * @param bifaOperationDataEntity
      */
     void insertOperationReportData(BifaOperationDataEntityVO bifaOperationDataEntity);
+
+    /**
+     * 资金计划3.3.0插入mongo
+     *  @author wenxin
+     * @date 2019/4/16 15:18
+     */
+    boolean insertPlanCapitalForCreditInfo(List<HjhPlanCapitalPredictionVO> listHjhPlanCapitalPrediction);
 }

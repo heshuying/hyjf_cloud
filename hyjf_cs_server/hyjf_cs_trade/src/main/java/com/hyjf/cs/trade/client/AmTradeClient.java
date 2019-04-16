@@ -2908,5 +2908,6 @@ public interface AmTradeClient {
      * @date 2019/4/15 14:23
      */
     List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
+
 }
 

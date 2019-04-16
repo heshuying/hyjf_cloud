@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.service.batch.AutoHjhPlanCapitalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,9 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
 
     @Autowired
     private AmTradeClient amTradeClient;
+
+    @Autowired
+    private CsMessageClient csMessageClient;
 
     @Override
     public void autoCapitalPrediction() {
@@ -99,6 +103,11 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             listReturnStr.add(oneVo);
         }
         // 调用cs_massage 存储mongodb
-
+        boolean flag = csMessageClient.insertPlanCapitalForCreditInfo(listReturnStr);
+        if(flag){
+            logger.info("资金计划batch计算结束，插入mongodb成功！结束时间："+ GetDate.dateToString(GetDate.getDate()));
+        }else{
+            logger.info("资金计划batch计算结束，插入mongodb失败！结束时间："+ GetDate.dateToString(GetDate.getDate()));
+        }
     }
 }
