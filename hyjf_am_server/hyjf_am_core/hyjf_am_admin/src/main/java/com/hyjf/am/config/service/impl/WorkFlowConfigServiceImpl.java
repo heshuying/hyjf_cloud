@@ -98,6 +98,20 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
      */
     @Override
     public int updateWorkFlowConfig(WorkFlowVO workFlowVO){
+        //流程节点
+        List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
+        //修改业务了流程
+        int workFlowCount = workFlowConfigMapper.updateWorkFlow(workFlowVO);
+        //删除业务流程节点
+        int deleteWorkFlowNodeCount = workFlowConfigMapper.deleteWorkFlowNode(flowNodes);
+        //添加业务流程节点
+        if(workFlowCount >0 && deleteWorkFlowNodeCount>0){
+            //添加业务流程节点表
+            int workFlowNodeCount = workFlowConfigMapper.insertWorkFlowNode(flowNodes);
+            if(workFlowNodeCount>0){
+                return 1;
+            }
+        }
         return 0;
     }
 }

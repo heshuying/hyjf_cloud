@@ -71,6 +71,12 @@
         VALUES (#{businessId,jdbcType=VARCHAR}, #{auditFlag,jdbcType=INTEGER},1,#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
     </insert>
 
+    <update id="updateWorkFlow" parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
+        UPDATE ht_workflow w
+        SET w.workname_id = #{businessId},w.flow_status=#{auditFlag},w.check_status=#{processStatus},w.mail_notifier=#{mailWarningUser},w.update_user=#{updateUser}
+        WHERE  w.id = #{id}
+    </update>
+
     <insert id="insertWorkFlowNode" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO" >
         insert into ht_workflow_node (workflow_id,flow_order,admin_id)
         VALUES

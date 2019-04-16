@@ -30,6 +30,12 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     int insertWorkFlow(WorkFlowVO workFlowVO);
+    /**
+     * 修改业务流程表
+     * @param workFlowVO
+     * @return
+     */
+    int updateWorkFlow(WorkFlowVO workFlowVO);
 
     /**
      * 保存业务流程节点表
@@ -37,6 +43,12 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     int insertWorkFlowNode(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
+    /**
+     * 删除业务流程节点表
+     * @param flowNodes
+     * @return
+     */
+    int deleteWorkFlowNode(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
     /**
      * 查询业务流程详情页面
      * @param id
