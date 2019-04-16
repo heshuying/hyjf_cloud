@@ -85,7 +85,7 @@ public class InviteController extends BaseUserController {
         resultMap.putAll(pageData);
         resultMap.put("downloadUrl", downloadUrl);
         resultMap.put("inviteLink", inviteLink);
-        resultMap.put("inviteLink2", inviteLink+"&action=scan");
+        resultMap.put("inviteLink2", inviteLinkWechat+"&action=scan");
         resultMap.put("inviteLinkWechat", inviteLinkWechat);
         result.setData(resultMap);
         return result;
