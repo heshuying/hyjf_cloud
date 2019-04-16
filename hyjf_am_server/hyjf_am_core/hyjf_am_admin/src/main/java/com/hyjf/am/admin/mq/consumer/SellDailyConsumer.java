@@ -106,7 +106,9 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 			if (column == 17 || column == 2) {
 				if (creditSellDaily != null) {
 					logger.info("{}列扣减债转, vo is : {}", column, creditSellDaily.print());
+					logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
 					noneRefferRecord = sellDailyService.addValue(creditSellDaily, noneRefferRecord, column, SUBTRACT);
+                    logger.info("{}列扣减债转, vo2 is : {}", column, noneRefferRecord.print());
 				}
 			}
 			list.add(noneRefferRecord);

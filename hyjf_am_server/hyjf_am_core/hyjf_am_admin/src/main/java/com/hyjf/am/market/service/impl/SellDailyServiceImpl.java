@@ -223,13 +223,14 @@ public class SellDailyServiceImpl implements SellDailyService {
 					this.operating(source.getInvestTotalMonth(), target.getInvestTotalMonth(), operateType));
 			break;
 		case 2:
-			target.setRepaymentTotalMonth(
-					this.operating(source.getRepaymentTotalMonth(), target.getRepaymentTotalMonth(), operateType));
-
+		    BigDecimal tempSource = null;
 			if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-				target.setRepaymentTotalMonth(
-						this.operating(source.getCreditAmount(), target.getRepaymentTotalMonth(), operateType));
-			}
+                tempSource = source.getCreditAmount();
+			} else {
+                tempSource = source.getRepaymentTotalMonth();
+            }
+            target.setRepaymentTotalMonth(
+                    this.operating(tempSource, target.getRepaymentTotalMonth(), operateType));
 			break;
 		case 3:
 			target.setInvestTotalPreviousMonth(this.operating(source.getInvestTotalPreviousMonth(),
@@ -272,13 +273,14 @@ public class SellDailyServiceImpl implements SellDailyService {
 					target.getRechargeTotalYesterday(), operateType));
 			break;
 		case 17:
-			target.setNonRepaymentToday(
-					this.operating(source.getNonRepaymentToday(), target.getNonRepaymentToday(), operateType));
-
+            BigDecimal tempSource17 = null;
             if (source.getCreditAmount() != null && source.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
-                target.setNonRepaymentToday(
-                        this.operating(source.getCreditAmount(), target.getNonRepaymentToday(), operateType));
+                tempSource17 = source.getCreditAmount();
+            } else {
+                tempSource17 = source.getNonRepaymentToday();
             }
+			target.setNonRepaymentToday(
+					this.operating(tempSource17, target.getNonRepaymentToday(), operateType));
 			break;
 		case 18:
 			target.setRegisterTotalYesterday(this.operating(source.getRegisterTotalYesterday(),
