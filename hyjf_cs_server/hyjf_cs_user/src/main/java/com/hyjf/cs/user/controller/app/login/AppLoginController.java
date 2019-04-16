@@ -518,7 +518,7 @@ public class AppLoginController extends BaseUserController {
         Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,BankCallConstant.CHANNEL_APP,userVO);
         if (!errorInfo.isEmpty()){
             ret.put("status", "1");
-            ret.put("statusDesc", errorInfo.get("info"));
+            ret.put("statusDesc", errorInfo.get("statusDesc"));
             return ret;
         }
 
