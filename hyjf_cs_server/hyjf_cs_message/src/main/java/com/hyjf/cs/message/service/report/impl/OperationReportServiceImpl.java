@@ -622,7 +622,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (userOperationReportList != null && userOperationReportList.size() > 0) {
 				response.put("userOperationReport", userOperationReportList.get(0));
 			}
-			query2.with(new Sort(Sort.Direction.ASC, "activtyTime"));
+			query2.with(new Sort(Sort.Direction.ASC, "activtyStartTime"));
 			List<OperationActivityReport> operationReportActiveList = getOperationReportActive(id, query2);
 			if(operationReportActiveList!=null){
 				response.put("operationReportActiveList", operationReportActiveList);
