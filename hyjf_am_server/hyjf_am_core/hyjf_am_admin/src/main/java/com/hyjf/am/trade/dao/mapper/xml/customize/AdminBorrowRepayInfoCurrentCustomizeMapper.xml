@@ -81,7 +81,7 @@
             AND cr.assign_nid = #{assignOrderId}
         </if>
         <if test="repayPeriod != null and repayPeriod != ''">
-            AND cr.assign_repay_period = #{repayPeriod}
+            AND cr.recover_period = #{repayPeriod}
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND cr.`status` = 0 AND cr.advance_status = 3
@@ -114,7 +114,7 @@
             AND hcr.assign_order_id = #{assignOrderId}
         </if>
         <if test="repayPeriod != null and repayPeriod != ''">
-            AND hcr.assign_repay_period = #{repayPeriod}
+            AND hcr.repay_period = #{repayPeriod}
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
             AND hcr.repay_status = 0 AND hcr.advance_status = 3
@@ -284,7 +284,7 @@
                 b.borrow_user_name AS borrowUserName,
                 cr.user_name AS recoverUserName,
                 concat_ws('/',cr.recover_period,b.borrow_period) AS period,
-                cr.assign_repay_period AS recoverPeriod,
+                cr.recover_period AS recoverPeriod,
                 t.account,
                 cr.assign_capital AS amountHold,
                 cr.assign_capital AS recoverCapital,
@@ -356,7 +356,7 @@
                 b.borrow_user_name AS borrowUserName,
                 hcr.user_name AS recoverUserName,
                 concat_ws('/',hcr.repay_period,b.borrow_period) AS period,
-                hcr.assign_repay_period AS recoverPeriod,
+                hcr.repay_period AS recoverPeriod,
                 t.account,
                 hcr.repay_capital AS amountHold,
                 hcr.repay_capital AS recoverCapital,
