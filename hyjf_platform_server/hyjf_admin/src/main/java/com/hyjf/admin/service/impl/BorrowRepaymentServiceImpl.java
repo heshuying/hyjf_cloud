@@ -258,10 +258,10 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
 //        bean.setBalance(balance);
         
         // 单期标
-        if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
-            BorrowRepayBeanVO borrowRepay = this.amTradeClient.getBorrowRepayInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
-            bean.setRepayInfo(borrowRepay);
-        } else {// 多期标
+//        if (CustomConstants.BORROW_STYLE_ENDDAY.equals(repayDelay.getBorrowStyle()) || CustomConstants.BORROW_STYLE_END.equals(repayDelay.getBorrowStyle())) {
+//            BorrowRepayBeanVO borrowRepay = this.amTradeClient.getBorrowRepayInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
+//            bean.setRepayInfo(borrowRepay);
+//        } else {// 多期标
 //            BorrowRepayPlanBeanVO borrowRepayPlan = this.amTradeClient.getBorrowRepayPlanInfo(borrowNid, repayDelay.getBorrowApr(), repayDelay.getBorrowStyle());
 //            bean.setRepayInfo(borrowRepayPlan);
 //            
@@ -269,7 +269,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
             request.setBorrowNid(borrowNid);
 			List<BorrowRepaymentPlanCustomizeVO> re = amTradeClient.selectBorrowRepaymentPlanList(request);
 			bean.setList(re);
-        }
+        //}
         return bean;
     }
 }
