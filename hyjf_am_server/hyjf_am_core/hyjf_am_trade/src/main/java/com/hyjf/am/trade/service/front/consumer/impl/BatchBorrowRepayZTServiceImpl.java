@@ -2956,15 +2956,18 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		}
 	}
 
-	private BigDecimal getRepayPlanAccountSum(String borrowNid, boolean isAllRepay, int lastPeriod) {
+	private BigDecimal getRepayPlanAccountSum(String borrowNid, boolean isAllRepay, int lastPeriod) throws Exception {
 		BorrowApicronExample apicronExample = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = apicronExample.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid).andIsAllrepayEqualTo(1);
-		if (isAllRepay) {
+        if (lastPeriod > 0) {
+            logger.info("【直投还款】借款编号：{}，查看多期还款还款任务。还款最后一期：{}", borrowNid, lastPeriod);
+            criteria.andLastPeriodEqualTo(lastPeriod);
+        } else if (isAllRepay) {
 			criteria.andIsAllrepayEqualTo(1);
 		} else {
-			logger.info("【直投还款】借款编号：{}，查看多期还款还款任务。还款最后一期：{}", borrowNid, lastPeriod);
-			criteria.andLastPeriodEqualTo(lastPeriod);
+			logger.error("【直投还款】借款编号：{}，既不是一次性还款，也不是多期还款！", borrowNid);
+			throw new Exception("查询还款任务表失败，[借款编号:" + borrowNid + "]");
 		}
 		List<BorrowApicron> apicrons = this.borrowApicronMapper.selectByExample(apicronExample);
 		List periodList = new ArrayList();
