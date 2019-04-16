@@ -146,7 +146,7 @@
 		null as borrow_nid,
 		a.accede_order_id ,
 		a.user_id ,
-		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
+		a.end_date as  repayment_time ,
 		a.wait_captical as money ,
 		c.customer_name,
 		c.customer_group
@@ -169,7 +169,7 @@
 		null as borrow_nid,
 		a.accede_order_id ,
 		a.user_id ,
-		from_unixtime(a.end_date,'%Y-%m-%d') as  repayment_time ,
+		a.end_date as  repayment_time ,
 		a.wait_total as money ,
 		c.customer_name,
 		c.customer_group
