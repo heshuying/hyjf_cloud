@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -2456,5 +2455,23 @@ public class AmConfigClientImpl implements AmConfigClient {
         String url = "http://AM-ADMIN/am-config/adminSystem/findConfigApplicant";
         return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
 
+    }
+
+    /**
+     * 根据手机号查询用户
+     *
+     * @param adminSystemRequest
+     * @return
+     */
+    @Override
+    public AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest) {
+        AdminSystemResponse adminSystemResponse = restTemplate
+                .postForEntity("http://AM-ADMIN/am-config/adminSystem/getUserInfoByMobile", adminSystemRequest,
+                        AdminSystemResponse.class)
+                .getBody();
+        if (adminSystemResponse != null) {
+            return adminSystemResponse;
+        }
+        return null;
     }
 }

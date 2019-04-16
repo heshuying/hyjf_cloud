@@ -7,25 +7,19 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.admin.utils.PictureInitUtil;
-import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.calculate.DateUtils;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,4 +231,61 @@ public class LoginController extends BaseController {
 		return new AdminResult<>();
 		
     }
+
+
+	@ApiOperation(value = "admin短信登录", notes = "admin短信登录")
+	@PostMapping(value = "/mobileCodeLogin")
+	@ResponseBody
+	public AdminResult<Map<String,Object>> mobileCodeLogin(HttpServletRequest request, @ApiParam(required = true, value = "{\"username\": \"\",\"smsCode\":\"\"}") @RequestBody Map<String, String> map) {
+		String username=map.get("username");
+		logger.info("登陆开始用户:"+username);
+		String smsCode=map.get("smsCode");
+
+		if (Validator.isNull(smsCode) || Validator.isNull(username)) {
+			return new AdminResult<>(FAIL, "请求参数非法");
+		}
+
+		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
+		adminSystemRequest.setMobile(username);
+		AdminSystemResponse prs = loginService.getUserInfoByMobile(adminSystemRequest);
+		if(!Response.isSuccess(prs)) {
+			return new AdminResult<>(FAIL, prs.getMessage());
+		}
+		//检查验证码对不对
+		int cnt = loginService.updateCheckMobileCode(username, smsCode, CommonConstant.PARAM_TPL_DUANXINDENGLU, 0+"", CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
+		if (cnt == 0) {
+			return new AdminResult<>(FAIL, "验证码无效");
+		}
+		String uuid=UUID.randomUUID().toString();
+		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
+		// 1. 登录成功将登陆密码错误次数的key删除
+		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + username);
+		this.setUser(request, prs.getResult());
+		Map<String,Object> result =new HashMap<String, Object>();;
+		result.put("uuid", uuid);
+		result.put("user", prs.getResult());
+		result.put("webUrl", WEBURL);
+		result.put("fileUrl", FILEDOMAINURL);
+		return new AdminResult<Map<String,Object>>(result);
+	}
+
+
+	/**
+	 * 发送短信验证码
+	 * @return
+	 */
+	@ResponseBody
+	@ApiOperation(value = "发送短信",notes = "发送短信")
+	@PostMapping(value = "/sendLoginCode/{mobile}")
+	public AdminResult sendVerificationCodeAction(@PathVariable("mobile") String mobile, HttpServletRequest request) {
+
+		String ip = GetCilentIP.getIpAddr(request);
+		String mess = loginService.adminSendSmsCodeCheckParam(CommonConstant.PARAM_TPL_DUANXINDENGLU,mobile,"",ip);
+		if(mess!=null){
+			return new AdminResult<>(FAIL, mess);
+		}
+
+		loginService.sendSmsCode(CommonConstant.PARAM_TPL_DUANXINDENGLU,mobile,ip);
+		return new AdminResult<Map<String,Object>>();
+	}
 }
