@@ -1,15 +1,18 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.trade.dao.mapper.auto.RepaymentPlanMapper;
 import com.hyjf.am.trade.dao.mapper.customize.ScreenYearMoneyCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.RepaymentPlanExample;
 import com.hyjf.am.trade.service.BorrowRepayScreenDataService;
 import com.hyjf.am.vo.trade.RepaymentPlanVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lisheng
@@ -18,9 +21,9 @@ import java.util.List;
 @Service
 public class BorrowRepayScreenDataServiceImpl implements BorrowRepayScreenDataService {
 
-    @Autowired
+    @Resource
     ScreenYearMoneyCustomizeMapper screenYearMoneyCustomizeMapper;
-    @Autowired
+    @Resource
     RepaymentPlanMapper repaymentPlanMapper;
 
     @Override
@@ -35,6 +38,59 @@ public class BorrowRepayScreenDataServiceImpl implements BorrowRepayScreenDataSe
         criteria.andRepaymentTimeGreaterThanOrEqualTo(startTime);
         criteria.andRepaymentTimeLessThanOrEqualTo(endTime);
         return repaymentPlanMapper.countByExample(repaymentPlanExample);
+    }
+
+    @Override
+    public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getRechargeList(paramMap);
+    }
+    @Override
+    public List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getPlanRepayList(paramMap);
+    }
+
+    @Override
+    public List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getPlanTenderList(paramMap);
+    }
+    @Override
+    public List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getCreditTenderList(paramMap);
+    }
+    @Override
+    public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getWithdrawList(paramMap);
+    }
+
+    @Override
+    public List<ScreenDataBean> getBorrowRecoverList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getBorrowRecoverList(paramMap);
+    }
+
+    @Override
+    public List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex) {
+        Map<String,Object> paramMap = new HashMap<>();
+        paramMap.put("startIndex",startIndex);
+        paramMap.put("endIndex",endIndex);
+        return screenYearMoneyCustomizeMapper.getBorrowTenderList(paramMap);
     }
 
 }
