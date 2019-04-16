@@ -134,13 +134,29 @@
         ht_hjh_debt_detail
         WHERE
         order_id = #{orderId}
-        AND repay_time >= UNIX_TIMESTAMP(#{dualDate})
+        AND repay_time >= UNIX_TIMESTAMP(#{dualDate}) + 24 * 60 * 60
         AND status = 1
         AND repay_status = 0
         ORDER BY
         repay_period ASC
         LIMIT 1;
     </select>
+
+	<select id="selectHjhDebtCreditAssignT3" resultMap="BaseResultMap" parameterType="String" >
+		select
+		<include refid="Base_Column_List" />
+		FROM
+		ht_hjh_debt_detail
+		WHERE
+		order_id = #{orderId}
+		AND repay_time <![CDATA[<]]> UNIX_TIMESTAMP(#{dualDateT3})
+		AND repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(now())
+		AND status = 1
+		AND repay_status = 0
+		ORDER BY
+		repay_period ASC
+		LIMIT 1;
+	</select>
 
 	<!-- 查询当前时间所在的计息期间-->
 	<select id="selectDebtDetailCurPeriod" resultMap="BaseResultMap" parameterType="String" >
@@ -165,7 +181,7 @@
         ht_hjh_debt_detail
         WHERE
         order_id = #{orderId}
-        AND repay_time >= UNIX_TIMESTAMP(#{dualDate})
+        AND repay_time >= UNIX_TIMESTAMP(#{dualDate}) + 24 * 60 * 60
         AND status = 1
         ORDER BY
         repay_period ASC

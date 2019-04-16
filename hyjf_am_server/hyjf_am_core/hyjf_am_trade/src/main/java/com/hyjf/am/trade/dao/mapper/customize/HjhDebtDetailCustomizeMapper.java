@@ -49,6 +49,15 @@ public interface HjhDebtDetailCustomizeMapper {
     HjhDebtDetail selectDebtDetailCurRepayPeriodByDate(@Param("orderId") String orderId, @Param("dualDate") String dualDate);
 
     /**
+     * 查询小于T-3日还款的债权详情
+     *
+     * @param orderId
+     * @param dualDateT3
+     * @return
+     */
+    HjhDebtDetail selectHjhDebtCreditAssignT3(@Param("orderId") String orderId, @Param("dualDateT3") String dualDateT3);
+
+    /**
      * 根据出借订单号和还款期数 查询债权详情
      * @param orderId
      * @param repayPeriod

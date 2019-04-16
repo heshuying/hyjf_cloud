@@ -60,6 +60,11 @@ public class HjhPlanCapitalPrediction  implements Serializable {
     private BigDecimal assetAccount;
 
     /**
+     * 预估数据日期
+     */
+    private Date dualBaseDate;
+
+    /**
      * 创建人id
      */
     private Integer createUser;

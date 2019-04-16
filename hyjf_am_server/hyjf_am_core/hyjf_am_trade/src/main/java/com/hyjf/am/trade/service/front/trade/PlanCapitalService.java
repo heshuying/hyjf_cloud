@@ -34,8 +34,9 @@ public interface PlanCapitalService extends BaseService {
 	/**
 	 * 获取该期间的预计当日新增债转额
 	 *
+	 * @param date
 	 * @param dualDate
 	 * @return
 	 */
-	List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date dualDate);
+	List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date date, Date dualDate);
 }

@@ -59,6 +59,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
     private BigDecimal assetAccount;
 
     /**
+     * 预估数据日期
+     */
+    private Date dualBaseDate;
+
+    /**
      * 创建人id
      */
     private Integer createUser;
@@ -195,4 +200,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
         this.delFlg = delFlg;
     }
 
+    public Date getDualBaseDate() {
+        return dualBaseDate;
+    }
+
+    public void setDualBaseDate(Date dualBaseDate) {
+        this.dualBaseDate = dualBaseDate;
+    }
 }
