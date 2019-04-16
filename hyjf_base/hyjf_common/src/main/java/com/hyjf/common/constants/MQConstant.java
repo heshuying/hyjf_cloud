@@ -733,4 +733,10 @@ public interface MQConstant {
 	// 合规互金上报用MQ延迟发送等级（30s）
 	int HG_REPORT_DELAY_LEVEL = 4;
 
+
+	// add by liuyang 20190415 wbs系统 标的信息推送MQ start
+	String WBS_BORROW_INFO_TOPIC = "WBS_BORROW_INFO_TOPIC";
+	String WBS_BORROW_INFO_TAG = "WBS_BORROW_INFO_TAG";
+	// add by liuyang 20190415 wbs系统 标的信息推送MQ end
+
 }
