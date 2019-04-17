@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class WorkFlowConfigRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 1L;
     /**
-     * 业务id
+     * 业务名称id
      */
     private Integer businessId;
     /**

@@ -52,7 +52,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
      * @return
      */
     @Override
-    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId){
+    public BooleanResponse selectWorkFlowConfigByBussinessId(int businessId){
         return adminClient.selectWorkFlowConfigByBussinessId(businessId);
     }
     /**

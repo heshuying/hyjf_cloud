@@ -37,7 +37,7 @@ public interface WorkFlowConfigService {
      * @param businessId
      * @return
      */
-    WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId);
+    BooleanResponse selectWorkFlowConfigByBussinessId(int businessId);
     /**
      * 修改工作流配置
      * @param workFlowVO

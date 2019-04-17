@@ -7,7 +7,7 @@
             1=1
             <!-- 业务id -->
             <if test="businessId != null and businessId != ''">
-                AND w.workname_id LIKE CONCAT( #{businessId}, '%')
+                AND w.workname_id =#{businessId}
             </if>
             <!-- 业务名称 -->
             <if test="businessName != null and businessName != ''">

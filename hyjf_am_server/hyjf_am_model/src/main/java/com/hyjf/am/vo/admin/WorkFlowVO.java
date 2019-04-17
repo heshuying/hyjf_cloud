@@ -12,7 +12,7 @@ public class WorkFlowVO extends BaseVO implements Serializable{
     private static final long serialVersionUID = 1L;
     private Integer id;
     /**
-     * 业务id
+     * 业务名称id
      */
     private Integer businessId;
     /**

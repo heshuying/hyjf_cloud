@@ -157,11 +157,11 @@ public class WorkFlowConfigController  extends BaseController {
     @PostMapping("/exist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult selectByBussinessId(HttpServletRequest request, @RequestBody WorkFlowConfigRequest adminRequest) {
-        logger.info("校验业务流程是否存在，业务id:" + adminRequest.getBusinessId());
+        logger.info("校验业务流程是否存在，业务名称的id:" + adminRequest.getBusinessId());
         if(null ==  adminRequest.getBusinessId()){
-            return new AdminResult<>(FAIL, "业务id不能是空");
+            return new AdminResult<>(FAIL, "业务名称的id不能是空");
         }
-        WorkFlowConfigResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
+        BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
         logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -169,7 +169,7 @@ public class WorkFlowConfigController  extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<WorkFlowConfigResponse>(response) ;
+        return new AdminResult<BooleanResponse>(response) ;
     }
 
     @ApiOperation(value = "查询邮件预警人", notes = "查询邮件预警人")
