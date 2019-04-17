@@ -928,7 +928,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     } else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
-                    userChargePenaltyInterest = acctualInterest;
+                    userChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr());
                 }
 
                 // 项目提前还款时，提前还款利息不得大于应还款利息，需求变更
@@ -984,14 +984,14 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     // 实际持有天数
                                     int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
 
-                                    // 用户提前还款减少的利息
+                                    // 用户提前还款应还的利息  实际用款天数+3   这个不变
                                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr(), acctualDays);
                                     if (acctualInterest.compareTo(assignInterest) >= 0) {
                                         assignChargeInterest = BigDecimal.ZERO;
                                     } else {
-                                        assignChargeInterest = assignInterest.subtract(acctualInterest);
+                                        assignChargeInterest = assignInterest.subtract(acctualInterest);// 用户提前还款实际减息 应还利息-实际应还利息
                                     }
-                                    assignChargePenaltyInterest = acctualInterest;
+                                    assignChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr());// 用户提前还款罚息
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -1099,7 +1099,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
-                                    assignChargePenaltyInterest = acctualInterest;
+                                    assignChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr());
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
