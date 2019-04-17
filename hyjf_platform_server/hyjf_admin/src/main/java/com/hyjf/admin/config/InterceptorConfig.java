@@ -26,7 +26,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 				"/hyjf-admin/login/login",
 				"/hyjf-admin/login/getPicture",
 				"/hyjf-admin/login/mobileCodeLogin",
-				"/hyjf-admin/login/sendLoginCode/*"
+				"/hyjf-admin/login/sendLoginCode/**"
 		).excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
 	}
 }

@@ -236,8 +236,8 @@ public class LoginController extends BaseController {
 	@ApiOperation(value = "admin短信登录", notes = "admin短信登录")
 	@PostMapping(value = "/mobileCodeLogin")
 	@ResponseBody
-	public AdminResult<Map<String,Object>> mobileCodeLogin(HttpServletRequest request, @ApiParam(required = true, value = "{\"username\": \"\",\"smsCode\":\"\"}") @RequestBody Map<String, String> map) {
-		String username=map.get("username");
+	public AdminResult<Map<String,Object>> mobileCodeLogin(HttpServletRequest request, @ApiParam(required = true, value = "{\"mobile\": \"\",\"smsCode\":\"\"}") @RequestBody Map<String, String> map) {
+		String username=map.get("mobile");
 		logger.info("登陆开始用户:"+username);
 		String smsCode=map.get("smsCode");
 
