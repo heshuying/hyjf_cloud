@@ -981,7 +981,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), totalDays);
                                     } else {
                                         // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
-                                        BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), totalDays - interestDay);
+                                        BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), totalDays - interestDay);
                                         if (acctualInterest.compareTo(assignInterest) >= 0) {
                                             assignChargeInterest = BigDecimal.ZERO;
                                         } else {
