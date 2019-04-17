@@ -991,10 +991,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     int carryDays = borrow.getBorrowPeriod() - Math.min(totalDays,interestDay);
                                     // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
                                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), carryDays);
-                                    if (acctualInterest.compareTo(userInterest) >= 0) {
-                                        userChargeInterest = BigDecimal.ZERO;
+                                    if (acctualInterest.compareTo(assignInterest) >= 0) {
+                                        assignChargeInterest = BigDecimal.ZERO;
                                     } else {
-                                        userChargeInterest = userInterest.subtract(acctualInterest);
+                                        assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
                                 } else {
                                     // 实际持有天数
@@ -1108,10 +1108,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     int carryDays = borrow.getBorrowPeriod() - Math.min(totalDays,interestDay);
                                     // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
                                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), carryDays);
-                                    if (acctualInterest.compareTo(userInterest) >= 0) {
-                                        userChargeInterest = BigDecimal.ZERO;
+                                    if (acctualInterest.compareTo(assignInterest) >= 0) {
+                                        assignChargeInterest = BigDecimal.ZERO;
                                     } else {
-                                        userChargeInterest = userInterest.subtract(acctualInterest);
+                                        assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
                                 } else {
                                     // 实际持有天数
