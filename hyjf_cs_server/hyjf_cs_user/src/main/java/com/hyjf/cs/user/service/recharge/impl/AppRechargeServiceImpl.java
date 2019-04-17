@@ -9,6 +9,8 @@ import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.recharge.AppRechargeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author fq
  * @version AppRechargeServiceImpl, v0.1 2018/7/30 9:45
@@ -36,5 +38,23 @@ public class AppRechargeServiceImpl extends BaseUserServiceImpl implements AppRe
     @Override
     public JxBankConfigVO getJxBankConfigByBankId(Integer bankId) {
         return amConfigClient.getJxBankConfigById(bankId);
+    }
+
+    /**
+     * 获取充值规则
+     * @return
+     */
+    @Override
+    public List getRechargeRule() {
+        return amConfigClient.getRechargeRule();
+    }
+
+    /**
+     * 获取充值限额说明
+     * @return
+     */
+    @Override
+    public List<JxBankConfigVO> getRechargeLimit() {
+        return amConfigClient.getRechargeLimit();
     }
 }

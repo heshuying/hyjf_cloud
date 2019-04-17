@@ -1,6 +1,10 @@
 package com.hyjf.cs.user.client.impl;
 
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminBankSettingResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -15,6 +19,7 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiasq
@@ -268,6 +274,28 @@ public class AmConfigClientImpl implements AmConfigClient {
     public List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request) {
         MessagePushTemplateResponse response = restTemplate.postForObject(
                 "http://AM-CONFIG/am-config/messagePushTemplate/searchList",request ,MessagePushTemplateResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List getRechargeRule() {
+        Response response = restTemplate.postForObject(
+                "http://AM-CONFIG/am-config/recharge/getRechargeRule", null, Response.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    @Cached(name="appRechargeLimitCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<JxBankConfigVO> getRechargeLimit() {
+        AdminBankSettingResponse response = restTemplate.postForObject(
+                "http://AM-CONFIG/am-config/recharge/getRechargeLimit", null, AdminBankSettingResponse.class);
         if (response != null) {
             return response.getResultList();
         }

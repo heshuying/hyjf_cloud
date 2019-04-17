@@ -14,6 +14,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.AppRechargeRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -342,5 +344,47 @@ public class AppRechargeController extends BaseUserController {
             resultVo.setRcvAccountName(record.getBusiName());
         }
 
+    }
+
+    /**
+     * app获取充值规则
+     * @param
+     * @return
+     * @author wgx
+     */
+    @ApiOperation(value = "获取充值规则接口", notes = "获取充值规则接口")
+    @PostMapping(value = "/getRechargeRule")
+    public WebResult getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
+        WebResult webResult = new WebResult();
+        List rechargeRuleList = appRechargeService.getRechargeRule();
+        if (rechargeRuleList == null || rechargeRuleList.size() == 0) {
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setStatusDesc("未获取到充值规则");
+            webResult.setData(Collections.emptyMap());
+        } else {
+            webResult.setData(rechargeRuleList);
+        }
+        return webResult;
+    }
+
+    /**
+     * app获取充值限额说明
+     * @param
+     * @return
+     * @author wgx
+     */
+    @ApiOperation(value = "获取充值限额说明接口", notes = "获取充值限额说明接口")
+    @PostMapping(value = "/getRechargeLimit")
+    public WebResult getRechargeLimit(@RequestHeader(value = "userId") Integer userId) {
+        WebResult webResult = new WebResult();
+        List<JxBankConfigVO> rechargeLimitList = appRechargeService.getRechargeLimit();
+        if (rechargeLimitList == null || rechargeLimitList.size() == 0) {
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setStatusDesc("未获取到充值限额说明");
+            webResult.setData(Collections.emptyMap());
+        } else {
+            webResult.setData(rechargeLimitList);
+        }
+        return webResult;
     }
 }

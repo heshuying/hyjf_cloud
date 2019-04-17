@@ -150,4 +150,16 @@ public interface AmConfigClient {
      * @return
      */
     List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request);
+
+    /**
+     * app获取充值规则
+     * @return
+     */
+    List getRechargeRule();
+
+    /**
+     * app获取充值限额说明
+     * @return
+     */
+    List getRechargeLimit();
 }

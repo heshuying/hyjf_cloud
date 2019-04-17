@@ -4,10 +4,7 @@
 package com.hyjf.cs.market.controller.app.find;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.app.AppBaseRequest;
@@ -249,7 +246,13 @@ public class AppFindController extends BaseMarketController {
 		request.setHost(appHost);
 		request.setLimitEnd(1);
 		List<AppFindAdCustomizeVO> adVOList = appFindService.getFindModules(request);
-		webResult.setData(adVOList);
+        if (adVOList == null || adVOList.size() == 0) {
+            webResult.setStatus(WebResult.ERROR);
+			webResult.setStatusDesc("无数据");
+            webResult.setData(Collections.emptyMap());
+        } else {
+            webResult.setData(adVOList);
+        }
 		return webResult;
 	}
 
@@ -262,7 +265,13 @@ public class AppFindController extends BaseMarketController {
 		request.setHost(appHost);
 		request.setLimitEnd(1);
 		AppFindAdCustomizeVO adVO = appFindService.getFindBanner(request);
-		webResult.setData(adVO);
+        if (adVO == null) {
+            webResult.setStatus(WebResult.ERROR);
+            webResult.setStatusDesc("无数据");
+            webResult.setData(Collections.emptyMap());
+        } else {
+            webResult.setData(adVO);
+        }
 		return webResult;
 	}
 }

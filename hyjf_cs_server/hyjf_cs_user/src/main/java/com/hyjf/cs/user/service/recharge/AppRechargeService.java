@@ -7,6 +7,9 @@ import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.service.BaseUserService;
 
+import javax.jws.WebResult;
+import java.util.List;
+
 /**
  * @author fq
  * @version AppRechargeService, v0.1 2018/7/30 9:45
@@ -28,4 +31,18 @@ public interface AppRechargeService extends BaseUserService {
      * @return
      */
     JxBankConfigVO getJxBankConfigByBankId(Integer bankId);
+
+    /**
+     * 获取充值规则
+     * @return
+     * @author wgx
+     */
+    List getRechargeRule();
+
+    /**
+     * 获取充值限额说明
+     * @return
+     * @author wgx
+     */
+    List<JxBankConfigVO> getRechargeLimit();
 }
