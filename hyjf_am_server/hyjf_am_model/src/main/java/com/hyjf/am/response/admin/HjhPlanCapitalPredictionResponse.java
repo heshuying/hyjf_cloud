@@ -7,11 +7,16 @@ import java.math.BigDecimal;
 
 /**
  * 汇计划-计划资金
- * @Author : huanghui
+ * @Author : wenxin
  */
 public class HjhPlanCapitalPredictionResponse extends Response<HjhPlanCapitalPredictionVO> {
 
     private int count;
+
+    /**
+     * 天/月标
+     */
+    private Integer isMonth;
 
     /**
      * 预计当日新增债转额
@@ -81,5 +86,13 @@ public class HjhPlanCapitalPredictionResponse extends Response<HjhPlanCapitalPre
 
     public void setSumHjhPlanCapitalPredictionVO(HjhPlanCapitalPredictionVO sumHjhPlanCapitalPredictionVO) {
         this.sumHjhPlanCapitalPredictionVO = sumHjhPlanCapitalPredictionVO;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
     }
 }

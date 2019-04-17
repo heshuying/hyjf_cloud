@@ -466,4 +466,21 @@ public class CsMessageClientImpl implements CsMessageClient {
                 .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDay", request, HjhInfoAccountBalanceResponse.class).getBody();
         return response;
     }
+
+    /**
+     * 获取汇计划--计划资金列表(从MongoDB读取数据)
+     *
+     * @param hjhPlanCapitalPredictionRequest
+     * @return
+     * @Author : wenxin
+     */
+    @Override
+    public HjhPlanCapitalPredictionResponse getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest) {
+        HjhPlanCapitalPredictionResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjhPlanCapitalPrediction/getPlanCapitalPredictionList",
+                hjhPlanCapitalPredictionRequest, HjhPlanCapitalPredictionResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }

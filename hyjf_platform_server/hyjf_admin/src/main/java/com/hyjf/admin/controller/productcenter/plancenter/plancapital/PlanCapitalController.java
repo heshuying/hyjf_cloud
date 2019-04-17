@@ -1,6 +1,7 @@
 package com.hyjf.admin.controller.productcenter.plancenter.plancapital;
 
 import com.google.common.collect.Maps;
+import com.hyjf.admin.beans.request.HjhPlanCapitalPredictionRequestBean;
 import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -11,8 +12,11 @@ import com.hyjf.admin.service.PlanCapitalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.HjhPlanCapitalPredictionResponse;
 import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalPredictionRequest;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
+import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -212,4 +216,167 @@ public class PlanCapitalController extends BaseController {
         return mapAdapter;
     }
 
+    /**
+     * 产品中心 --> 汇计划 --> 资金计划3.3.0
+     * @Author : wenxin
+     * 计划资金 列表（预计）
+     * @param requestBean
+     * @return
+     */
+    @ApiOperation(value = "资金计划3.3.0（预计）列表", notes = "资金计划3.3.0（预计）列表")
+    @PostMapping(value = "/initPlanCapitalPrediction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<HjhPlanCapitalPredictionVO>> initPlanCapitalPrediction(@RequestBody HjhPlanCapitalPredictionRequestBean requestBean){
+        HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest = new HjhPlanCapitalPredictionRequest();
+        BeanUtils.copyProperties(requestBean, hjhPlanCapitalPredictionRequest);
+        //初始化时时间不能为空
+        if (StringUtils.isNotBlank(requestBean.getDateFromSrch()) && StringUtils.isNotBlank(requestBean.getDateToSrch())){
+            try{
+                Date timeStart = dateFormat.parse(requestBean.getDateFromSrch());
+                Date timeEnd = dateFormat.parse(requestBean.getDateToSrch());
+
+                if (timeStart.getTime() > timeEnd.getTime()){
+                    return new AdminResult<>(FAIL, "结束时间应大于等于开始时间!");
+                }
+            }catch (ParseException e){
+                return new AdminResult<>(FAIL, e.getMessage());
+            }
+        }
+        // 初始化返回list
+        List<HjhPlanCapitalPredictionVO> returnList = new ArrayList<>();
+        // 获取结果集
+        HjhPlanCapitalPredictionResponse hjhPlanCapitalPredictionResponse = planCapitalService.getPlanCapitalPredictionList(hjhPlanCapitalPredictionRequest);
+        if (hjhPlanCapitalPredictionResponse == null){
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(hjhPlanCapitalPredictionResponse)){
+            return new AdminResult<>(FAIL, hjhPlanCapitalPredictionResponse.getMessage());
+        }
+        if (CollectionUtils.isNotEmpty(hjhPlanCapitalPredictionResponse.getResultList())){
+            returnList = CommonUtils.convertBeanList(hjhPlanCapitalPredictionResponse.getResultList(), HjhPlanCapitalPredictionVO.class);
+            return new AdminResult<ListResult<HjhPlanCapitalPredictionVO>>(ListResult.build2(returnList, hjhPlanCapitalPredictionResponse.getCount(), hjhPlanCapitalPredictionResponse.getSumHjhPlanCapitalPredictionVO()));
+        }else {
+            return new AdminResult<ListResult<HjhPlanCapitalPredictionVO>>(ListResult.build(returnList, 0));
+        }
+    }
+
+    /**
+     * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷： 1.无法指定相应的列的顺序， 2.无法配置，excel文件名，excel sheet名称
+     * 3.目前只能导出一个sheet 4.列的宽度的自适应，中文存在一定问题
+     * 5.根据导出的业务需求最好可以在导出的时候输入起止页码，因为在大数据量的情况下容易造成卡顿
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @ApiOperation(value = "资金计划列表", notes = "资金计划列表导出")
+    @PostMapping(value = "/exportExcelPlanCapitalPrediction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhPlanCapitalPredictionRequestBean requestBean) throws Exception {
+        HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest = new HjhPlanCapitalPredictionRequest();
+        BeanUtils.copyProperties(requestBean, hjhPlanCapitalPredictionRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "预计资金计划";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        hjhPlanCapitalPredictionRequest.setPageSize(defaultRowMaxCount);
+        hjhPlanCapitalPredictionRequest.setCurrPage(1);
+        // 需要输出的结果列表
+        List<HjhPlanCapitalPredictionVO> resultList = null;
+        HjhPlanCapitalPredictionResponse hjhPlanCapitalPredictionResponse = planCapitalService.getPlanCapitalPredictionList(hjhPlanCapitalPredictionRequest);
+        if (hjhPlanCapitalPredictionResponse.getCount() > 0){
+            resultList = CommonUtils.convertBeanList(hjhPlanCapitalPredictionResponse.getResultList(), HjhPlanCapitalPredictionVO.class);
+        }
+        Integer totalCount = hjhPlanCapitalPredictionResponse.getCount();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMapPrediction();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterPrediction();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            hjhPlanCapitalPredictionRequest.setPageSize(defaultRowMaxCount);
+            hjhPlanCapitalPredictionRequest.setCurrPage(i + 1);
+            HjhPlanCapitalPredictionResponse hjhPlanCapitalPredictionResponse2 = planCapitalService.getPlanCapitalPredictionList(hjhPlanCapitalPredictionRequest);
+            if (hjhPlanCapitalPredictionResponse2 != null && hjhPlanCapitalPredictionResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  hjhPlanCapitalPredictionResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMapPrediction() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("date", "日期");
+        map.put("planNid", "智投编号");
+        map.put("planName", "智投名称");
+        map.put("lockPeriod", "锁定期");
+        map.put("creditAccount", "预计当日新增债转额（元）");
+        map.put("reinvestAccount", "预计当日新增复投额（元）");
+        map.put("capitalAccount", "预计当日所需资金量（元）");
+        map.put("assetAccount", "预计当日所需资产量（元）");
+        return map;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterPrediction() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter dateAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Date value = (Date) object;
+                return GetDate.dateToString2(value);
+            }
+        };
+
+        IValueFormatter reinvestAccountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal value = (BigDecimal) object;
+                return CustomConstants.DF_FOR_VIEW.format(value);
+            }
+        };
+
+        IValueFormatter creditAccountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal value = (BigDecimal) object;
+                return CustomConstants.DF_FOR_VIEW.format(value);
+            }
+        };
+
+        IValueFormatter capitalAccountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal value = (BigDecimal) object;
+                return CustomConstants.DF_FOR_VIEW.format(value);
+            }
+        };
+
+        IValueFormatter assetAccountAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal value = (BigDecimal) object;
+                return CustomConstants.DF_FOR_VIEW.format(value);
+            }
+        };
+
+        mapAdapter.put("date", dateAdapter);
+        mapAdapter.put("reinvestAccount", reinvestAccountAdapter);
+        mapAdapter.put("creditAccount", creditAccountAdapter);
+        mapAdapter.put("capitalAccount", capitalAccountAdapter);
+        mapAdapter.put("assetAccount", assetAccountAdapter);
+        return mapAdapter;
+    }
 }

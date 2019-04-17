@@ -302,4 +302,12 @@ public interface CsMessageClient {
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonth(HjhAccountBalanceRequest request);
 
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceDay(HjhAccountBalanceRequest request);
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（预计）
+     * @param hjhPlanCapitalPredictionRequest
+     * @return
+     * @Author : wenxin
+     */
+    HjhPlanCapitalPredictionResponse getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest);
 }
