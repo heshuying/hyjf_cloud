@@ -132,7 +132,7 @@
 		hydb.plan_nid,
 		CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN 1
-		ELSE hydb.borrow_period - hydbr.repay_period + 1
+		ELSE IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
 		END AS current_period
 		FROM
 		ht_borrow hydb
@@ -144,14 +144,14 @@
 		AND hba.`status` <![CDATA[<>]]> 6
 		AND CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		END
 		LEFT JOIN ht_borrow_apicron hbap ON hbap.borrow_nid = hydb.borrow_nid
 		AND hbap.api_type = 0
 		AND hbap.`status` = 6
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
 		AND plan.repay_period = (
-		hydb.borrow_period - hydbr.repay_period + 1
+		IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
 		)
 		<include refid="Where_Clause_Repay_List" />
 		ORDER BY
