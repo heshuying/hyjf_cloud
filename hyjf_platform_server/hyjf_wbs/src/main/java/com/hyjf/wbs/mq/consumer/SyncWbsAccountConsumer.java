@@ -3,7 +3,7 @@ package com.hyjf.wbs.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.wbs.dto.CustomerSyncQO;
+import com.hyjf.wbs.qvo.CustomerSyncQO;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.service.customerinfo.AccountService;
 import com.hyjf.wbs.user.dao.model.auto.UtmReg;
