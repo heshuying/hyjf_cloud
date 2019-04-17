@@ -4,6 +4,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 
 /**
@@ -55,5 +56,5 @@ public interface WorkFlowConfigService {
      * @param userName
      * @return
      */
-    WorkFlowUserResponse selectUser(String userName);
+    WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
 }

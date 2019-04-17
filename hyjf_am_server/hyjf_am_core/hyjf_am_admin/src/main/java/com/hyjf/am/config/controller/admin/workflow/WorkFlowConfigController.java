@@ -155,15 +155,15 @@ public class WorkFlowConfigController extends BaseConfigController {
 
     /**
      * 查询邮件预警通知人
-     * @param userName
+     * @param workFlowUserVO
      * @return
      */
-    @GetMapping("/selectUser/{userName}")
-    public WorkFlowUserResponse selectUser(@PathVariable String userName){
-        logger.info("查询邮件预警通知人,请求参数truename：" + userName);
+    @PostMapping("/selectUser")
+    public WorkFlowUserResponse selectUser(@RequestBody WorkFlowUserVO workFlowUserVO){
+        logger.info("查询邮件预警通知人,请求参数truename：" + workFlowUserVO.getTruename());
         WorkFlowUserResponse response = new WorkFlowUserResponse();
 
-        List<WorkFlowUserVO> workFlowUserVOS = workFlowConfigService.selectUser(userName);
+        List<WorkFlowUserVO> workFlowUserVOS = workFlowConfigService.selectUser(workFlowUserVO.getTruename());
         if(!CollectionUtils.isEmpty(workFlowUserVOS)){
             response.setResultList(workFlowUserVOS);
         }

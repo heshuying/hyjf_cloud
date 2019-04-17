@@ -1320,9 +1320,9 @@ public interface AmAdminClient {
     BooleanResponse deleteWorkFlowConfigById(int id);
     /**
      *  查询邮件预警通知人
-     * @param userName
+     * @param workFlowUserVO
      * @return
      */
-    WorkFlowUserResponse selectUser(String userName);
+    WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
 
 }

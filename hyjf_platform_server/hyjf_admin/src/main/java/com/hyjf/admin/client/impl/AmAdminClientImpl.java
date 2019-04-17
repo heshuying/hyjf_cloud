@@ -2273,11 +2273,11 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
     /**
      *  查询邮件预警通知人
-     * @param userName
+     * @param workFlowUserVO
      * @return
      */
     @Override
-    public WorkFlowUserResponse selectUser(String userName){
-        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/selectUser/"+userName, WorkFlowUserResponse.class).getBody();
+    public WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/selectUser",workFlowUserVO, WorkFlowUserResponse.class).getBody();
     }
 }

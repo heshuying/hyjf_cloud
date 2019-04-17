@@ -6,6 +6,7 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,11 +76,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     }
     /**
      *  查询邮件预警通知人
-     * @param userName
+     * @param workFlowUserVO
      * @return
      */
     @Override
-    public WorkFlowUserResponse selectUser(String userName){
-        return adminClient.selectUser(userName);
+    public WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO){
+        return adminClient.selectUser(workFlowUserVO);
     }
 }
