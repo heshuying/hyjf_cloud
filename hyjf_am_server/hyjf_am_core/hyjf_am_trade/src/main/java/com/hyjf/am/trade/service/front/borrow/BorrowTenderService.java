@@ -151,4 +151,8 @@ public interface BorrowTenderService {
     List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(String source,String dayStart, String dayEnd);
 
     List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(String source,String dayStart, String dayEnd);
+
+    BigDecimal getInvestAmountByPeriod();
+
+    BigDecimal getAnnualInvestAmount(Integer userId);
 }
