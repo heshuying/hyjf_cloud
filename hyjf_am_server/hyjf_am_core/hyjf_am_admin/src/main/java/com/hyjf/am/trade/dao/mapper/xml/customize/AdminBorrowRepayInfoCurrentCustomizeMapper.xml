@@ -5,6 +5,7 @@
                type="com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO">
     </resultMap>
     <sql id="where-type-1">
+        AND br.credit_status != 2
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
@@ -38,6 +39,7 @@
     </sql>
 
     <sql id="where-type-2">
+        AND rp.credit_status != 2
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
@@ -205,7 +207,6 @@
                 b.borrow_style = 'end'
                 OR b.borrow_style = 'endday'
             )
-        AND br.credit_status != 2
         <include refid="where-type-1"/>
 
         UNION ALL
@@ -271,7 +272,7 @@
         INNER JOIN ht_borrow_repay_plan AS brp ON b.borrow_nid = brp.borrow_nid
         AND brp.repay_period = rp.recover_period
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-        WHERE rp.credit_status != 2
+        WHERE 1=1
         <include refid="where-type-2"/>
         UNION
             <!-- 3、债权转让承接订单查询-->
