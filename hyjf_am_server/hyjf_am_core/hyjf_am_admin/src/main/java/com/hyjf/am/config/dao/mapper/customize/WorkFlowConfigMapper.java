@@ -62,4 +62,10 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     List<WorkFlowNodeVO> selectWorkFlowConfigNode(@Param("businessId")int businessId);
+
+    /**
+     * 查询所有业务流程
+     * @return
+     */
+    List<WorkFlowVO> findWorkFlowAll();
 }

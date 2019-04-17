@@ -16,9 +16,7 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -2513,4 +2511,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return 0;
     }
+
+    @Override
+    public List<AdminVO> getAdminUser(AdminUserWorkFlowRequest request) {
+        String url = "http://AM-ADMIN/am-config/admin/getAdminUser";
+        AdminResponse response = restTemplate
+                .postForEntity(url, request, AdminResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getAdminVOList();
+        }
+        return null;
+    }
+
 }

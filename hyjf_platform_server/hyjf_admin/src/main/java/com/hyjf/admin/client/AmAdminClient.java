@@ -1319,4 +1319,7 @@ public interface AmAdminClient {
      */
     BooleanResponse deleteWorkFlowConfigById(int id);
 
+    List<WorkFlowVO> updateStatusBusinessName();
+
+    boolean updateFlowStatus(Integer businessId);
 }

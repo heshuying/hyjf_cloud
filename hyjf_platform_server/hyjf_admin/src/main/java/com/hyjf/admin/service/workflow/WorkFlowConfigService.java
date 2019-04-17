@@ -49,4 +49,6 @@ public interface WorkFlowConfigService {
      * @return
      */
     BooleanResponse deleteWorkFlowConfigById(int id);
+
+    void disableAdminUser(Integer[] adminUserId);
 }
