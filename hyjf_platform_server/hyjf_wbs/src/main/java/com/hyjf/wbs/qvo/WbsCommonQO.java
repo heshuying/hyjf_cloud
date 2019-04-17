@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.wbs.dto;
+package com.hyjf.wbs.qvo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

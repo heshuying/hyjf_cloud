@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.wbs.dto.trade.constomerinfo.AccountDto;
+import com.hyjf.wbs.qvo.trade.constomerinfo.AccountDto;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.service.customerinfo.AccountService;
 import org.apache.commons.lang3.StringUtils;

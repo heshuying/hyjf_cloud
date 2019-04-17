@@ -1,6 +1,6 @@
 package com.hyjf.wbs.user.service;
 
-import com.hyjf.wbs.dto.CustomerSyncQO;
+import com.hyjf.wbs.qvo.CustomerSyncQO;
 
 /**
  * 客户信息回调

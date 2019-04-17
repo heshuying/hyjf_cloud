@@ -1,9 +1,8 @@
-package com.hyjf.wbs.dto.trade.constomerinfo;
+package com.hyjf.wbs.qvo.trade.constomerinfo;
 
-import com.hyjf.wbs.dto.BaseDto;
+import com.hyjf.wbs.qvo.BaseDto;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
