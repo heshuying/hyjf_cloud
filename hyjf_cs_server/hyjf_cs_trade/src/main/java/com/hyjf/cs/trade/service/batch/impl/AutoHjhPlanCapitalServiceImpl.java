@@ -88,6 +88,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             HjhPlanVO hjhPlan = amTradeClient.getHjhPlan(m.getKey());
             oneVo.setLockPeriod(hjhPlan.getLockPeriod());
             oneVo.setPlanName(hjhPlan.getPlanName());
+            oneVo.setIsMonth(hjhPlan.getIsMonth());
             for (HjhPlanCapitalPredictionVO mapList : m.getValue()) {
                 // 判断预计当日新增债转额，预计当日新增复投额，预计当日所需资金量，预计当日所需资产量 不为空则放入相同planid的list
                 if (mapList.getCreditAccount() != null && !BigDecimal.ZERO.equals(mapList.getCreditAccount())) {
