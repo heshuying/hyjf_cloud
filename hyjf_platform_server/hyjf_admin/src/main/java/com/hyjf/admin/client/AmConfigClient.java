@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -1563,4 +1562,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
+
+	/**
+	 * 根据手机号查询用户
+	 * @param adminSystemRequest
+	 * @return
+	 */
+    AdminSystemResponse getUserInfoByMobile(AdminSystemRequest adminSystemRequest);
 }

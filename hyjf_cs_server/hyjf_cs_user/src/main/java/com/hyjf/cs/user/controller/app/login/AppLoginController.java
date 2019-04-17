@@ -498,7 +498,6 @@ public class AppLoginController extends BaseUserController {
         // 解密
         logger.info("APP登录 ---> 解密前 key：{}，username：{}，smsCode：{}", key, username, smsCode);
         username = DES.decodeValue(key, username);
-        smsCode = DES.decodeValue(key, smsCode);
         logger.info("APP登录 ---> 解密后 username：{}，smsCode：{}", username, smsCode);
         if (Validator.isNull(username)) {
             ret.put("status", "1");
@@ -516,15 +515,15 @@ public class AppLoginController extends BaseUserController {
             return ret;
         }
         UserVO userVO = loginService.getUsersByMobile(username);
-        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,BankCallConstant.CHANNEL_APP,userVO);
+        Map<String, String> errorInfo=loginService.checkMobileCodeLogin(smsCode,platform,userVO);
         if (!errorInfo.isEmpty()){
             ret.put("status", "1");
-            ret.put("statusDesc", errorInfo.get("info"));
+            ret.put("statusDesc", errorInfo.get("statusDesc"));
             return ret;
         }
 
         // 执行登录(登录时间，登录ip)
-        WebViewUserVO webViewUserVO = loginService.loginByCode(username, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP,userVO);
+        WebViewUserVO webViewUserVO = loginService.loginByCode(username, GetCilentIP.getIpAddr(request), platform,userVO);
         if (webViewUserVO != null) {
             logger.info("app端短信登录成功 userId is :{}", webViewUserVO.getUserId());
             sign = doLoginAfter(version, request, platform, username, presetProps, sign, webViewUserVO);
@@ -611,7 +610,7 @@ public class AppLoginController extends BaseUserController {
     @PostMapping(value = "/autoLoginByCode")
     public JSONObject autoLoginByCode(@RequestHeader(value = "version") String version,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response){
         JSONObject ret = new JSONObject();
-        ret.put("request", "/appUser/mobileCodeLogin");
+        ret.put("request", "/appUser/autoLoginByCode");
         // 网络状态
         String netStatus = request.getParameter("netStatus");
         // 平台
@@ -629,7 +628,7 @@ public class AppLoginController extends BaseUserController {
         String sign = request.getParameter("sign");
         loginService.checkForApp(version,platform,netStatus);
         // 检查参数正确性
-        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || !Validator.isMobile(username) || Validator.isNull(codeLoginKey)) {
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(sign) || Validator.isNull(codeLoginKey) ||Validator.isNull(username)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
@@ -646,22 +645,21 @@ public class AppLoginController extends BaseUserController {
         // 解密
         logger.info("APP登录 ---> 解密前 key：{}，username：{}，codeLoginKey：{}", key, username, codeLoginKey);
         username = DES.decodeValue(key, username);
-        codeLoginKey = DES.decodeValue(key, codeLoginKey);
         logger.info("APP登录 ---> 解密后 username：{}，smsCode：{}", username, codeLoginKey);
-        if (Validator.isNull(username)) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "用户名不能为空");
+        if(!Validator.isMobile(username)){
+            ret.put("status", "709");
+            ret.put("statusDesc", "手机号格式错误");
             return ret;
         }
-
-        UserVO userVO = loginService.getUser(username);
+        UserVO userVO = loginService.getUsersByMobile(username);
         CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
         // 是否禁用
         if (userVO.getStatus() == 1) {
             throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
         String redisUserId = RedisUtils.get(RedisConstants.APP_SMS_LOGIN_KEY+userVO.getUserId());
-        if(redisUserId==null || !(userVO.getUserId()+"").equals(redisUserId)){
+        logger.info("redis:{}    ",redisUserId);
+        if(redisUserId==null || !codeLoginKey.equals(redisUserId)){
             // 自动登录失败
             ret.put("status", "1");
             ret.put("statusDesc", "自动登录失败");

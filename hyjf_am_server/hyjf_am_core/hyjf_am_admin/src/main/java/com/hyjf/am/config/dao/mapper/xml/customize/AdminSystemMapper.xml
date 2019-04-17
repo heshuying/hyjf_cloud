@@ -169,4 +169,23 @@
 		WHERE
 			username = #{username} 
 	</select>
+
+	<select id="getUserInfoByMobile" resultMap="UserInfoResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+		SELECT DISTINCT
+		a.id,
+		a.username,
+		a.truename,
+		anr.role_id,
+		a.state
+		FROM
+		ht_admin a
+		LEFT JOIN ht_admin_and_role anr ON a.id = anr.user_id
+		WHERE
+		a.mobile = #{mobile, jdbcType=VARCHAR}
+
+		<if test="state != 'NOT CHECK'">
+			AND a.state = '0'
+		</if>
+		AND a.del_flag = '0'
+	</select>
 </mapper>
