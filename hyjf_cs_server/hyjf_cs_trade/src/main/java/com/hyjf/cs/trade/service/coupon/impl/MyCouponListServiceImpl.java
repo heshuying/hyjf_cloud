@@ -158,7 +158,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                 projectString = StringUtils.removeEnd(projectString, "/")+" 可用";
             }
             coupon.setProjectType(projectString);
-            if(projectString.indexOf("智投")!=-1){
+            if(projectString.indexOf("智投")!=-1 || projectString.indexOf("不限") != -1){
                 coupon.setHrefType(2);
             }else if(projectString.indexOf("散标")!=-1){
                 coupon.setHrefType(1);
