@@ -419,7 +419,7 @@
 				rp.late_days AS yuqitianshu,
 				rp.late_interest
 				AS yuqilixi,
-				rp.repay_account AS yinghuanzonge,
+				rp.repay_account_yes AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
 				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
@@ -433,8 +433,8 @@
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
-				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
-				'待还款', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE ba.extra_yield_repay_status END ) as extraYieldRepayStatus,
+				if((ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0')  and rp.advance_status='3',
+				'逾期中', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
@@ -500,7 +500,7 @@
 				rp.late_days AS yuqitianshu,
 				rp.late_interest
 				AS yuqilixi,
-				rp.repay_account AS yinghuanzonge,
+				rp.repay_account_yes AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
 				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
@@ -514,8 +514,8 @@
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
-				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0',
-				'待还款', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE ba.extra_yield_repay_status END ) as extraYieldRepayStatus,
+				if((ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0')  and rp.advance_status='3',
+				'逾期中', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
