@@ -283,7 +283,16 @@
                 b.plan_nid AS planNid,
                 b.borrow_user_name AS borrowUserName,
                 cr.user_name AS recoverUserName,
-                concat_ws('/',cr.recover_period,b.borrow_period) AS period,
+                IF (
+                b.borrow_style = 'end'
+                OR b.borrow_style = 'endday',
+                1,
+                concat_ws(
+                '/',
+                cr.recover_period,
+                b.borrow_period
+                )
+                ) AS period,
                 cr.recover_period AS recoverPeriod,
                 t.account,
                 cr.assign_capital AS amountHold,
@@ -355,7 +364,16 @@
                 b.plan_nid AS planNid,
                 b.borrow_user_name AS borrowUserName,
                 hcr.user_name AS recoverUserName,
-                concat_ws('/',hcr.repay_period,b.borrow_period) AS period,
+                IF (
+                b.borrow_style = 'end'
+                OR b.borrow_style = 'endday',
+                1,
+                concat_ws(
+                '/',
+                hcr.repay_period,
+                b.borrow_period
+                )
+                ) AS period,
                 hcr.repay_period AS recoverPeriod,
                 t.account,
                 hcr.repay_capital AS amountHold,
