@@ -17,6 +17,7 @@
         left join ht_r_user t2 on t1.user_id = t2.user_id
 		where t1.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
         AND t1.create_time <![CDATA[<]]>    STR_TO_DATE('2019-04-03 18:00:00', '%Y-%m-%d %H:%i:%s')
+        AND t1.`status`=2
         limit #{startIndex},#{endIndex}
 	</select>
 
@@ -50,6 +51,7 @@
 		left join ht_r_user t2 on t1.user_id = t2.user_id
 		where t1.create_time <![CDATA[>=]]> STR_TO_DATE('2019-04-01 00:00:00', '%Y-%m-%d %H:%i:%s')
 		      AND t1.create_time <![CDATA[<]]> STR_TO_DATE('2019-04-03 18:00:00', '%Y-%m-%d %H:%i:%s')
+		      AND t1.`status`=2
 			  limit #{startIndex},#{endIndex}
 	</select>
 
