@@ -63,4 +63,11 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     List<WorkFlowUserVO> selectUser(@Param("truename")String truename);
+
+    /**
+     * 判断业务流程是否异常
+     * @param flowNodes
+     * @return
+     */
+    List<WorkFlowUserVO> selectWorkFlowUser(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
 }

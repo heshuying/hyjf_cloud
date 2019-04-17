@@ -119,11 +119,18 @@
 
     <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
         select id,truename,email from ht_admin
-        <where>
-            <if test="truename != null and truename !=''">
-                truename like CONCAT(#{truename},'%')
-            </if>
-        </where>
+        where del_flag = 0
+        <if test="truename != null and truename !=''">
+            and truename like CONCAT(#{truename},'%')
+        </if>
+    </select>
+
+    <select id="selectWorkFlowUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">
+        select id,truename,email from ht_admin
+        WHERE del_flag = 0 and id  in
+        <foreach collection="flowNodes" item="pojo" index="index" separator=",">
+            #{pojo.auditUser}
+        </foreach>
     </select>
 </mapper>
 

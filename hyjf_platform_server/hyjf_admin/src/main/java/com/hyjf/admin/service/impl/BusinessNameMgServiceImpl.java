@@ -8,8 +8,6 @@ import com.hyjf.am.vo.config.WorkNameVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * @Author: yinhui
  * @Date: 2019/4/15 9:55
@@ -82,5 +80,15 @@ public class BusinessNameMgServiceImpl implements BusinessNameMgService {
 
         }
         return true;
+    }
+
+    /**
+     * 查询业务名称
+     * @param request
+     * @return
+     */
+    @Override
+    public BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request){
+        return amConfigClient.searchBusinessNameList(request) ;
     }
 }

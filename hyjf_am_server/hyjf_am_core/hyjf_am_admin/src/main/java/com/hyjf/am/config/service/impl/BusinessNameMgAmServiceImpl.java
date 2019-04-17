@@ -5,10 +5,16 @@ import com.hyjf.am.config.dao.model.auto.WorkName;
 import com.hyjf.am.config.dao.model.auto.WorkNameExample;
 import com.hyjf.am.config.service.BusinessNameMgAmService;
 import com.hyjf.am.resquest.config.BusinessNameMgRequest;
+import com.hyjf.am.vo.callcenter.CallcenterAccountHuifuVO;
+import com.hyjf.am.vo.config.WorkNameVO;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,5 +93,24 @@ public class BusinessNameMgAmServiceImpl implements BusinessNameMgAmService {
         workName.setStatus(request.getStatus());
         workName.setUpdateUser(request.getUsername());
         return workNameMapper.updateByPrimaryKeySelective(workName);
+    }
+    /**
+     * 查询业务名称
+     */
+    @Override
+    public List<WorkNameVO> searchBusinessName(String businessName){
+        List<WorkNameVO> workNameVOS = new ArrayList<WorkNameVO>();
+        WorkNameExample example = new WorkNameExample();
+        WorkNameExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);//1可用，2禁用
+        if(StringUtils.isNotEmpty(businessName)){
+            criteria.andWorkNameEqualTo(businessName);
+        }
+        List<WorkName> workNames = workNameMapper.selectByExample(example);
+        if(!CollectionUtils.isEmpty(workNames)){
+            workNameVOS = CommonUtils.convertBeanList(workNames,WorkNameVO.class);
+            return workNameVOS;
+        }
+        return null;
     }
 }

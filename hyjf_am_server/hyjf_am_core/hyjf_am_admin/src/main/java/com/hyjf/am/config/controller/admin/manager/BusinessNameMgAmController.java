@@ -8,13 +8,12 @@ import com.hyjf.am.response.config.BusinessNameMgResponse;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.config.BusinessNameMgRequest;
 import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.WorkNameVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -102,5 +101,22 @@ public class BusinessNameMgAmController extends BaseController {
         }
         logger.info("updateStatusBusinessNameMg run... is :{}", request.toString());
         return new IntegerResponse(bsService.updateStatusBs(request));
+    }
+
+    /**
+     * 查询业务名称
+     */
+    @PostMapping("/searchbusinessname")
+    public BusinessNameMgResponse searchBusinessName(@PathVariable BusinessNameMgRequest request){
+        String businessName =request.getBsname();
+        logger.info("查询业务名称,businessName:"+businessName);
+        BusinessNameMgResponse response = new BusinessNameMgResponse();
+        List<WorkNameVO> workNameVOs = bsService.searchBusinessName(businessName);
+        logger.info("查询业务名称,workNameVOs:"+businessName);
+        if(!CollectionUtils.isEmpty(workNameVOs)){
+            response.setResultList(workNameVOs);
+            response.setCount(workNameVOs.size());
+        }
+        return response;
     }
 }

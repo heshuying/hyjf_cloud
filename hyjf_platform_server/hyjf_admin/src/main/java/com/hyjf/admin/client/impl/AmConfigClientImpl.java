@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -2512,5 +2511,14 @@ public class AmConfigClientImpl implements AmConfigClient {
             return response.getResultInt();
         }
         return 0;
+    }
+    /**
+     * 查询业务名称
+     * @param request
+     * @return
+     */
+    @Override
+    public BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request){
+        return  restTemplate.postForEntity("http://AM-ADMIN/am-config/businessNameMg/searchbusinessname",request, BusinessNameMgResponse.class).getBody();
     }
 }
