@@ -104,11 +104,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         if(!CollectionUtils.isEmpty(flowNodes)){
             //判断业务流程是否异常
             List<WorkFlowUserVO> workFlowUserVO = workFlowConfigMapper.selectWorkFlowUser(flowNodes);
-            //若流程节点中的用户不存在，为异常
-            if(!CollectionUtils.isEmpty(workFlowUserVO)&&workFlowUserVO.size() != flowNodes.size()){
-                workFlowVO.setAuditFlag(2);
-            }else{
+            if(!CollectionUtils.isEmpty(workFlowUserVO)&&workFlowUserVO.size() == flowNodes.size()){
                 workFlowVO.setAuditFlag(1);
+            }else{
+                //若流程节点中的用户不存在，为异常
+                workFlowVO.setAuditFlag(2);
             }
         }
         //修改业务了流程
