@@ -925,6 +925,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     } else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
+                    logger.info("原始投资利息：{},{},{}",acctualInterest,userInterest,userChargeInterest);
+                    logger.info(UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), interestDay).toString());
+
                 } else {
                     // 实际持有天数
                     int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
@@ -996,6 +999,9 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
+                                    logger.info("债转利息：{},{},{}",acctualInterest,assignInterest,assignChargeInterest);
+                                    logger.info(UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), interestDay).toString());
+
                                 } else {
                                     // 实际持有天数
                                     int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
@@ -1058,6 +1064,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             repayManageFee = repayManageFee.add(userManageFee);// 统计管理费
                             repayChargeInterest = repayChargeInterest.add(userChargeInterest);// 统计提前还款减少的利息
                             repayChargePenaltyInterest = repayChargePenaltyInterest.add(userChargePenaltyInterest);// 统计提前还款罚息
+                            logger.info("非完全承接利息：{},{},{},{}",repayChargeInterest,repayInterest,userInterest,userChargeInterest);
                         }
                     } else {
                         // 计划类还款
