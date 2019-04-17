@@ -4,16 +4,16 @@
 package com.hyjf.wbs.configs;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author cui
  * @version WbsConfig, v0.1 2019/4/16 15:41
  */
-@Component
+@Configuration
 public class WbsConfig {
 
-    @Value("${wbs.appKey}")
+    @Value("${wbs.appkey}")
     private String appKey;
 
     @Value("${wbs.secret}")
@@ -21,6 +21,9 @@ public class WbsConfig {
 
     @Value("${wbs.url.sync_customer}")
     private String syncCustomerUrl;
+
+    @Value("${third.property.ids}")
+    private String thridPropertyIds;
 
     public String getAppKey() {
         return appKey;
@@ -44,5 +47,13 @@ public class WbsConfig {
 
     public void setSyncCustomerUrl(String syncCustomerUrl) {
         this.syncCustomerUrl = syncCustomerUrl;
+    }
+
+    public String getThridPropertyIds() {
+        return thridPropertyIds;
+    }
+
+    public void setThridPropertyIds(String thridPropertyIds) {
+        this.thridPropertyIds = thridPropertyIds;
     }
 }

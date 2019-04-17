@@ -5,8 +5,10 @@ package com.hyjf.cs.user.controller.web.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.base.Strings;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
@@ -124,6 +126,24 @@ public class WebRegistController extends BaseUserController {
                 }
             }
             // add by liuyang 神策数据统计追加 20181029 end
+
+            // add by cuigq wbs客户信息回调 20190417 start
+            if(!(Strings.isNullOrEmpty(registerRequest.getUtmId()) || Strings.isNullOrEmpty(registerRequest.getThirdpartyId()))){
+
+                WbsRegisterMqVO wbsRegisterMqVO=new WbsRegisterMqVO();
+                wbsRegisterMqVO.setUtmId(registerRequest.getUtmId());
+                wbsRegisterMqVO.setThirdpartyId(registerRequest.getThirdpartyId());
+                wbsRegisterMqVO.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
+
+                try {
+                    registService.sendWbsMQ(wbsRegisterMqVO);
+                } catch (MQException e) {
+                    logger.info("用户【{}】注册后，发达MQ到Wbs失败！",webViewUserVO.getUsername());
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            // add by cuigq wbs客户信息回调 20190417 end
+
             logger.info("Web端用户注册成功, userId is :{}", webViewUserVO.getUserId());
             result.setData(webViewUserVO);
         } else {

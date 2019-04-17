@@ -13,6 +13,7 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
@@ -842,5 +843,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         return "";
     }
 
-
+    @Override
+    public void sendWbsMQ(WbsRegisterMqVO wbsRegisterMqVO) throws MQException {
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,MQConstant.WBS_BORROW_INFO_TAG,UUID.randomUUID().toString(), wbsRegisterMqVO),1);
+    }
 }

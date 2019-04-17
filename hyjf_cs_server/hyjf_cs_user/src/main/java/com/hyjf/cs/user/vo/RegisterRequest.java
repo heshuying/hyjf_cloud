@@ -28,6 +28,10 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "注册渠道web")
     private String utmId;
 
+    // wbs add by cuigq
+    @ApiModelProperty(value = "财富端客户ID")
+    private String thirdpartyId;
+
     @ApiModelProperty(value = "神策预置属性")
     private String presetProps;
 
@@ -98,5 +102,13 @@ public class RegisterRequest extends AppBaseRequest {
 
     public void setUserType(Integer userType) {
         this.userType = userType;
+    }
+
+    public String getThirdpartyId() {
+        return thirdpartyId;
+    }
+
+    public void setThirdpartyId(String thirdpartyId) {
+        this.thirdpartyId = thirdpartyId;
     }
 }
