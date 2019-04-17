@@ -913,14 +913,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         // 用户提前还款减少的利息
                         userChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), totalDays);
                     } else {
-                        // 用户提前还款减少的利息
-                        userChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), interestDay);
+                        // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                        BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), totalDays - interestDay);
+                        if (acctualInterest.compareTo(userInterest) >= 0) {
+                            userChargeInterest = BigDecimal.ZERO;
+                        } else {
+                            userChargeInterest = userInterest.subtract(acctualInterest);
+                        }
                     }
                 } else {
-
                     // 实际持有天数
                     int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
-
                     // 用户提前还款减少的利息
                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr(), acctualDays);
                     if (acctualInterest.compareTo(userInterest) >= 0) {
@@ -977,8 +980,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         // 用户提前还款减少的利息
                                         assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), totalDays);
                                     } else {
-                                        // 用户提前还款减少的利息
-                                        assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), interestDay);
+                                        // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                                        BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), totalDays - interestDay);
+                                        if (acctualInterest.compareTo(assignInterest) >= 0) {
+                                            assignChargeInterest = BigDecimal.ZERO;
+                                        } else {
+                                            assignChargeInterest = assignInterest.subtract(acctualInterest);
+                                        }
                                     }
                                 } else {
                                     // 实际持有天数
@@ -1085,8 +1093,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         // 用户提前还款减少的利息
                                         assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), totalDays);
                                     } else {
-                                        // 用户提前还款减少的利息
-                                        assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), interestDay);
+                                        // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                                        BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), totalDays - interestDay);
+                                        if (acctualInterest.compareTo(assignInterest) >= 0) {
+                                            assignChargeInterest = BigDecimal.ZERO;
+                                        } else {
+                                            assignChargeInterest = assignInterest.subtract(acctualInterest);
+                                        }
                                     }
                                 } else {
                                     // 实际持有天数
