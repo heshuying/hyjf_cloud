@@ -7,7 +7,7 @@
             1=1
             <!-- 业务id -->
             <if test="businessId != null and businessId != ''">
-                AND w.workname_id LIKE CONCAT( #{businessId}, '%')
+                AND w.workname_id =#{businessId}
             </if>
             <!-- 业务名称 -->
             <if test="businessName != null and businessName != ''">
@@ -66,7 +66,10 @@
         </if>
     </select>
 
-    <insert id="insertWorkFlow"  parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
+    <insert id="insertWorkFlow"  parameterType="com.hyjf.am.vo.admin.WorkFlowVO" useGeneratedKeys="true" keyProperty="id">
+        <!--<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >-->
+            <!--SELECT LAST_INSERT_ID()-->
+        <!--</selectKey>-->
         insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
         VALUES (#{businessId,jdbcType=VARCHAR}, #{auditFlag,jdbcType=INTEGER},1,#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
     </insert>
@@ -82,7 +85,7 @@
         VALUES
         <foreach collection="flowNodes" item="pojo" index="index" separator=",">
             (
-            #{pojo.businessId},
+            #{workFlowId},
             #{pojo.flowNodeNum},
             #{pojo.auditUser}
             )
@@ -114,6 +117,21 @@
       where n.workflow_id=#{businessId}
     </select>
 
+    <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
+        select id,truename,email from ht_admin
+        where del_flag = 0
+        <if test="truename != null and truename !=''">
+            and truename like CONCAT(#{truename},'%')
+        </if>
+    </select>
+
+    <select id="selectWorkFlowUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">
+        select id,truename,email from ht_admin
+        WHERE del_flag = 0 and id  in
+        <foreach collection="flowNodes" item="pojo" index="index" separator=",">
+            #{pojo.auditUser}
+        </foreach>
+    </select>
     <select id="findWorkFlowAll" resultType="com.hyjf.am.vo.admin.WorkFlowVO">
         SELECT
         w.id,

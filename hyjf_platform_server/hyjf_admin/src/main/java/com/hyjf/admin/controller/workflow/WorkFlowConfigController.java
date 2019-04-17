@@ -9,8 +9,10 @@ import com.hyjf.admin.service.workflow.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -62,7 +64,7 @@ public class WorkFlowConfigController  extends BaseController {
     public AdminResult insertWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流添加业务流程配置..." + JSONObject.toJSON(workFlowVO));
         workFlowVO.setUpdateUser(this.getUser(request).getId());
-//        workFlowVO.setUpdateUser("3");
+//         workFlowVO.setUpdateUser("3");
         //校验请求参数
         String errorMsg = validation(workFlowVO);
         if(!StringUtils.isBlank(errorMsg)){
@@ -107,8 +109,8 @@ public class WorkFlowConfigController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult updateWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流修改业务流程配置..." + JSONObject.toJSON(workFlowVO));
-//        workFlowVO.setUpdateUser(this.getUser(request).getId());
-        workFlowVO.setUpdateUser("3");
+        workFlowVO.setUpdateUser(this.getUser(request).getId());
+//        workFlowVO.setUpdateUser("3");
         //校验请求参数
         if(null == workFlowVO.getId()){
             logger.debug("工作流修改业务流程配置参数校验不合法，错误消息为:业务流程的id不能为空" );
@@ -159,11 +161,11 @@ public class WorkFlowConfigController  extends BaseController {
     @PostMapping("/exist")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult selectByBussinessId(HttpServletRequest request, @RequestBody WorkFlowConfigRequest adminRequest) {
-        logger.info("校验业务流程是否存在，业务id:" + adminRequest.getBusinessId());
+        logger.info("校验业务流程是否存在，业务名称的id:" + adminRequest.getBusinessId());
         if(null ==  adminRequest.getBusinessId()){
-            return new AdminResult<>(FAIL, "业务id不能是空");
+            return new AdminResult<>(FAIL, "业务名称的id不能是空");
         }
-        WorkFlowConfigResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
+        BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
         logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -171,7 +173,22 @@ public class WorkFlowConfigController  extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<WorkFlowConfigResponse>(response) ;
+        return new AdminResult<BooleanResponse>(response) ;
+    }
+
+    @ApiOperation(value = "查询邮件预警人", notes = "查询邮件预警人")
+    @PostMapping("/selectUser")
+    public AdminResult selectUser( @RequestBody WorkFlowUserVO workFlowUserVO) {
+        logger.info("查询邮件预警人，userName:" + workFlowUserVO.getTruename());
+        WorkFlowUserResponse response = workFlowConfigService.selectUser(workFlowUserVO);
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<WorkFlowUserResponse>(response) ;
     }
 
     /**

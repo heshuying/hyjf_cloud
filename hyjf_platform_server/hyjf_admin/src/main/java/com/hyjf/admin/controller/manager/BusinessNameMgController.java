@@ -13,6 +13,8 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.WorkNameVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * 业务名称管理
@@ -35,6 +36,8 @@ public class BusinessNameMgController  extends BaseController {
 
     //权限名称
     private static final String PERMISSIONS = "businessname";
+
+    private Logger logger = LoggerFactory.getLogger(BusinessNameMgController.class);
 
     @Autowired
     private BusinessNameMgService businessNameMgService;
@@ -125,5 +128,21 @@ public class BusinessNameMgController  extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult();
+    }
+
+    @ApiOperation(value = "查询业务名称", notes = "查询业务名称")
+    @PostMapping("/searchbusinessname")
+    public AdminResult searchBusinessNameList(@RequestBody BusinessNameMgRequest request) {
+        logger.info("查询可用的业务名称，业务名称："+request.getBsname());
+        BusinessNameMgResponse response = businessNameMgService.searchBusinessName(request);
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+
+        }
+        return new AdminResult<BusinessNameMgResponse>(response) ;
+
     }
 }

@@ -4,8 +4,6 @@ import com.hyjf.am.response.config.BusinessNameMgResponse;
 import com.hyjf.am.resquest.config.BusinessNameMgRequest;
 import com.hyjf.am.vo.config.WorkNameVO;
 
-import java.util.List;
-
 /**
  * @Author: yinhui
  * @Date: 2019/4/15 9:54
@@ -24,4 +22,11 @@ public interface BusinessNameMgService {
     boolean updateStatusBusinessName(BusinessNameMgRequest request);
 
     boolean searchBusinessNameUq(BusinessNameMgRequest request,String fun);
+
+    /**
+     * 查询业务名称
+     * @param businessName
+     * @return
+     */
+    BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request);
 }

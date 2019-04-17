@@ -2,7 +2,9 @@ package com.hyjf.admin.service.workflow;
 
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 
 /**
@@ -36,7 +38,7 @@ public interface WorkFlowConfigService {
      * @param businessId
      * @return
      */
-    WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId);
+    BooleanResponse selectWorkFlowConfigByBussinessId(int businessId);
     /**
      * 修改工作流配置
      * @param workFlowVO
@@ -49,6 +51,12 @@ public interface WorkFlowConfigService {
      * @return
      */
     BooleanResponse deleteWorkFlowConfigById(int id);
+    /**
+     *  查询邮件预警通知人
+     * @param userName
+     * @return
+     */
+    WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
 
     void disableAdminUser(Integer[] adminUserId);
 }

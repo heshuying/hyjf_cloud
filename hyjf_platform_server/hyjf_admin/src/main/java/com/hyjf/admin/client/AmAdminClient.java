@@ -1305,7 +1305,7 @@ public interface AmAdminClient {
      * @param businessId
      * @return
      */
-    WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId);
+    BooleanResponse selectWorkFlowConfigByBussinessId(int businessId);
     /**
      * 修改工作流配置业务流程
      * @param workFlowVO
@@ -1318,6 +1318,12 @@ public interface AmAdminClient {
      * @return
      */
     BooleanResponse deleteWorkFlowConfigById(int id);
+    /**
+     *  查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
 
     List<WorkFlowVO> updateStatusBusinessName();
 

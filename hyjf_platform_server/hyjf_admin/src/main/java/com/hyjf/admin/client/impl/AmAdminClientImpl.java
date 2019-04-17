@@ -2247,8 +2247,8 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId){
-        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist/"+businessId, WorkFlowConfigResponse.class).getBody();
+    public BooleanResponse selectWorkFlowConfigByBussinessId(int businessId){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist/"+businessId, BooleanResponse.class).getBody();
     }
     /**
      * 修改工作流配置业务流程
@@ -2267,6 +2267,15 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public BooleanResponse deleteWorkFlowConfigById(int id){
         return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/delete/"+id, BooleanResponse.class).getBody();
+    }
+    /**
+     *  查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    @Override
+    public WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/selectUser",workFlowUserVO, WorkFlowUserResponse.class).getBody();
     }
 
     @Override

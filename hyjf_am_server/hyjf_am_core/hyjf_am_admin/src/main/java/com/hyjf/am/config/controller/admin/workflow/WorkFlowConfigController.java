@@ -7,7 +7,9 @@ import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -72,7 +74,7 @@ public class WorkFlowConfigController extends BaseConfigController {
 
         //添加业务流程
         int flag = workFlowConfigService.insertWorkFlowConfig(workFlowVO);
-        if(flag ==0){
+        if(flag <=0){
             response.setRtn(Response.FAIL);
             response.setMessage("添加业务流程失败");
             logger.debug("添加业务流程失败" );
@@ -113,7 +115,7 @@ public class WorkFlowConfigController extends BaseConfigController {
 
         //修改业务流程
         int flag = workFlowConfigService.updateWorkFlowConfig(workFlowVO);
-        if(flag ==0){
+        if(flag <=0){
             response.setRtn(Response.FAIL);
             response.setMessage("修改业务流程失败");
             logger.debug("修改业务流程失败" );
@@ -129,7 +131,7 @@ public class WorkFlowConfigController extends BaseConfigController {
      * @param id
      * @return
      */
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public BooleanResponse deleteWorkFlowConfigById(@PathVariable int id){
         logger.info("删除业务流程,请求参数id：" + id);
         BooleanResponse response = new BooleanResponse();
@@ -148,34 +150,47 @@ public class WorkFlowConfigController extends BaseConfigController {
             logger.debug("不需要审核的时候，才能删除业务流程" );
             return response;
         }
-        if(flag ==0){
-            response.setRtn(Response.FAIL);
-            response.setMessage("修改业务流程失败");
-            logger.debug("修改业务流程失败" );
-            return response;
-        }
         response.setRtn(Response.SUCCESS);
         response.setMessage(Response.SUCCESS_MSG);
         return response;
     }
 
     /**
+     * 查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    @PostMapping("/selectUser")
+    public WorkFlowUserResponse selectUser(@RequestBody WorkFlowUserVO workFlowUserVO){
+        logger.info("查询邮件预警通知人,请求参数truename：" + workFlowUserVO.getTruename());
+        WorkFlowUserResponse response = new WorkFlowUserResponse();
+
+        List<WorkFlowUserVO> workFlowUserVOS = workFlowConfigService.selectUser(workFlowUserVO.getTruename());
+        if(!CollectionUtils.isEmpty(workFlowUserVOS)){
+            response.setResultList(workFlowUserVOS);
+        }
+        return response;
+    }
+    /**
      * 校验业务id是否存在
      * @param businessId
      * @return
      */
     @GetMapping("/exist/{businessId}")
-    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId( @PathVariable Integer businessId) {
-        logger.info("校验业务id是否存在,businessId:" + businessId);
+    public BooleanResponse selectWorkFlowConfigByBussinessId( @PathVariable Integer businessId) {
+        logger.info("校验业务名称是否存在,业务名称的id:" + businessId);
         WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
         adminRequest.setBusinessId(businessId);
-        WorkFlowConfigResponse response = new WorkFlowConfigResponse();
+        BooleanResponse response = new BooleanResponse();
         List<WorkFlowVO> workFlowVOS =workFlowConfigService.selectWorkFlowConfigList(adminRequest, -1, -1);
         if(!CollectionUtils.isEmpty(workFlowVOS)){
-            response.setResultList(workFlowVOS);
+            //已经存在
+            response.setResult(true);
             logger.debug("校验业务id存在,数据为："+JSONObject.toJSONString(workFlowVOS));
             return response;
         }
+        //不存在
+        response.setResult(false);
         return response;
     }
 

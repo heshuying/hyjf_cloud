@@ -8,8 +8,10 @@ import com.hyjf.admin.service.workflow.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.resquest.admin.AdminUserWorkFlowRequest;
+import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.AdminVO;
+import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -73,7 +75,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
      * @return
      */
     @Override
-    public WorkFlowConfigResponse selectWorkFlowConfigByBussinessId(int businessId){
+    public BooleanResponse selectWorkFlowConfigByBussinessId(int businessId){
         return adminClient.selectWorkFlowConfigByBussinessId(businessId);
     }
     /**
@@ -93,6 +95,15 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     @Override
     public BooleanResponse deleteWorkFlowConfigById(int id){
         return adminClient.deleteWorkFlowConfigById(id);
+    }
+    /**
+     *  查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    @Override
+    public WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO){
+        return adminClient.selectUser(workFlowUserVO);
     }
 
     /**

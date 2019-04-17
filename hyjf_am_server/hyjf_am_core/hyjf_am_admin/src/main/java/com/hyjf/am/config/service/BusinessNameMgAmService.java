@@ -1,7 +1,11 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.WorkName;
+import com.hyjf.am.response.config.BusinessNameMgResponse;
 import com.hyjf.am.resquest.config.BusinessNameMgRequest;
+import com.hyjf.am.vo.config.WorkNameVO;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -23,4 +27,8 @@ public interface BusinessNameMgAmService {
     int updateBs(BusinessNameMgRequest request);
 
     int updateStatusBs(BusinessNameMgRequest request);
+    /**
+     * 查询业务名称
+     */
+    List<WorkNameVO> searchBusinessName(String businessName);
 }

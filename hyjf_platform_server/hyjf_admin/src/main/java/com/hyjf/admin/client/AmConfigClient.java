@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -1596,6 +1595,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	Integer updateStatusBusinessName(BusinessNameMgRequest request);
+	/**
+	 * 查询业务名称
+	 * @param businessName
+	 * @return
+	 */
+	BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request);
 
 	List<AdminVO> getAdminUser(AdminUserWorkFlowRequest request);
 }
