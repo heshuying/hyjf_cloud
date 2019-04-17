@@ -126,7 +126,8 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                     //原散标编号
                     param.put("sourceProductCode", borrowNid);
                     //原产品信息编号
-                    param.put("sourceFinancingCode", sourceFinancingCode);
+                    // 应急中心二期，删除sourceFinancingcode原产品信息编号
+//                    param.put("sourceFinancingCode", sourceFinancingCode);
                     //投资人用户标示 Hash
                     param.put("userIdcardHash", userIdcardHash);
                     //投资 金额 (元)
