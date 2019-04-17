@@ -2156,6 +2156,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     repayInterest = repayInterest.add(assignInterest);
                                     repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                     repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualAsignInterest);// 统计提前还款罚息
                                 }
                                 repayRecoverPlanBean.setCreditRepayList(creditRepayBeanList);
                             }
@@ -2170,6 +2171,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualUserInterest);
                                 }
+                                userChargePenaltyInterest = acctualUserInterest;// 提前还款罚息
                                 // 统计总额
                                 repayTotal = repayTotal.add(userAccount).add(userManageFee).subtract(userChargeInterest);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(userAccount);// 统计总和本息
