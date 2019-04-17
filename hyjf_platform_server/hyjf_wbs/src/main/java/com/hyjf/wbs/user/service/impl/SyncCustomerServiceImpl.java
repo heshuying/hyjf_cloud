@@ -13,8 +13,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.configs.WbsConfig;
-import com.hyjf.wbs.dto.CustomerSyncQO;
-import com.hyjf.wbs.dto.WbsCommonQO;
+import com.hyjf.wbs.qvo.CustomerSyncQO;
+import com.hyjf.wbs.qvo.WbsCommonQO;
 import com.hyjf.wbs.sign.WbsSignUtil;
 import com.hyjf.wbs.user.service.SyncCustomerService;
 

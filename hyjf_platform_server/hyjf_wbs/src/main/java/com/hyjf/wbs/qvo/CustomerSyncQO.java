@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.wbs.dto;
+package com.hyjf.wbs.qvo;
 
 /**
  * 客户同步回调请求具体参数
