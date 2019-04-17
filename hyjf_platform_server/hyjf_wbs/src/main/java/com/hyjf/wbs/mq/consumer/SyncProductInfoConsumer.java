@@ -3,7 +3,8 @@ package com.hyjf.wbs.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.wbs.dto.ProductInfoQO;
+import com.hyjf.wbs.mq.MqConstants;
+import com.hyjf.wbs.qvo.ProductInfoQO;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -32,7 +33,7 @@ import java.io.IOException;
  */
 
 @Service
-@RocketMQMessageListener(topic = MQConstant.WBS_BORROW_INFO_TOPIC, selectorExpression = MQConstant.WBS_BORROW_INFO_TAG, consumerGroup = "WBS_SYNC_Product_Info_GROUP")
+@RocketMQMessageListener(topic = MQConstant.WBS_BORROW_INFO_TOPIC, selectorExpression = MQConstant.WBS_BORROW_INFO_TAG, consumerGroup = MqConstants.WBS_SYNC_Product_Info_GROUP)
 public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncWbsAccountConsumer.class);

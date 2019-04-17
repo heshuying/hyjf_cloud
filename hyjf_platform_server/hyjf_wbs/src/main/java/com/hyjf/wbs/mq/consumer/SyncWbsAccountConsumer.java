@@ -3,6 +3,7 @@ package com.hyjf.wbs.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.CustomerSyncQO;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.service.customerinfo.AccountService;
@@ -39,7 +40,7 @@ import java.util.List;
  */
 
 @Service
-@RocketMQMessageListener(topic = MQConstant.SYNC_ACCOUNT_TOPIC, selectorExpression = "*", consumerGroup = "WBS_SYNC_ACCOUNT_GROUP")
+@RocketMQMessageListener(topic = MQConstant.SYNC_ACCOUNT_TOPIC, selectorExpression = "*", consumerGroup = MqConstants.WBS_SYNC_ACCOUNT_GROUP)
 public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncWbsAccountConsumer.class);

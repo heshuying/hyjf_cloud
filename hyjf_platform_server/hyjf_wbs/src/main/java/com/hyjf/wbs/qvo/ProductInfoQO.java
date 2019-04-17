@@ -1,4 +1,4 @@
-package com.hyjf.wbs.dto;
+package com.hyjf.wbs.qvo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
