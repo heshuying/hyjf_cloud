@@ -92,18 +92,19 @@ public class HjhDebtCreditController extends BaseController{
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取还款状态列表失败！");
         }
-        HjhDebtCreditListRequest request = new HjhDebtCreditListRequest();
-        JSONObject creditDetail = queryHjhDebtCreditDetail(request);
-        if(creditDetail != null){
-            List<HjhDebtCreditVo> hjhDebtCreditVoList = (List<HjhDebtCreditVo>) creditDetail.get(LIST);
-            if(hjhDebtCreditVoList != null && hjhDebtCreditVoList.size() > 0){
-                jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
-                jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
-                jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
-                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
-                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
-            }
-        }
+        //modify by cwyang 2019-3-29 初始化接口只查询检索条件，列表数据又其他接口提供。
+//        HjhDebtCreditListRequest request = new HjhDebtCreditListRequest();
+//        JSONObject creditDetail = queryHjhDebtCreditDetail(request);
+//        if(creditDetail != null){
+//            List<HjhDebtCreditVo> hjhDebtCreditVoList = (List<HjhDebtCreditVo>) creditDetail.get(LIST);
+//            if(hjhDebtCreditVoList != null && hjhDebtCreditVoList.size() > 0){
+//                jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
+//                jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
+//                jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
+//                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+//                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
+//            }
+//        }
         return jsonObject;
     }
 
