@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.util.Date;
  * @author wenxin
  * @version HjhPlanCapitalPredictionRequest, v0.1 2019/4/2 15:37
  */
-public class HjhPlanCapitalPredictionRequest implements Serializable {
+public class HjhPlanCapitalPredictionRequest extends BasePage implements Serializable {
 
     /**
      * 时间查询条件开始
@@ -57,6 +58,11 @@ public class HjhPlanCapitalPredictionRequest implements Serializable {
      * 智投名称
      */
     private String planName;
+
+    /**
+     * 天/月标
+     */
+    private Integer isMonth;
 
     /**
      * 锁定期
@@ -291,5 +297,13 @@ public class HjhPlanCapitalPredictionRequest implements Serializable {
 
     public void setDualBaseDate(Date dualBaseDate) {
         this.dualBaseDate = dualBaseDate;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
     }
 }

@@ -34,6 +34,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
     private String planName;
 
     /**
+     * 天/月标
+     */
+    private Integer isMonth;
+
+    /**
      * 锁定期
      */
     private Integer lockPeriod;
@@ -206,5 +211,13 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
 
     public void setDualBaseDate(Date dualBaseDate) {
         this.dualBaseDate = dualBaseDate;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
     }
 }
