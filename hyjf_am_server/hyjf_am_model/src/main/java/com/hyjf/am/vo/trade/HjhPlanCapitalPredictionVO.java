@@ -24,6 +24,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
     private Date date;
 
     /**
+     * 字符串类型的日期
+     */
+    private String stringDate;
+
+    /**
      * 智投编号
      */
     private String planNid;
@@ -42,6 +47,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
      * 锁定期
      */
     private Integer lockPeriod;
+
+    /**
+     * 拼接单位后的锁定期
+     */
+    private String lockPeriodView;
 
     /**
      * 预计当日新增债转额
@@ -67,6 +77,11 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
      * 预估数据日期
      */
     private Date dualBaseDate;
+
+    /**
+     * 预估数据日期字符串
+     */
+    private String dualBaseDateStr;
 
     /**
      * 创建人id
@@ -219,5 +234,29 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
 
     public void setIsMonth(Integer isMonth) {
         this.isMonth = isMonth;
+    }
+
+    public String getLockPeriodView() {
+        return lockPeriodView;
+    }
+
+    public void setLockPeriodView(String lockPeriodView) {
+        this.lockPeriodView = lockPeriodView;
+    }
+
+    public String getStringDate() {
+        return stringDate;
+    }
+
+    public void setStringDate(String stringDate) {
+        this.stringDate = stringDate;
+    }
+
+    public String getDualBaseDateStr() {
+        return dualBaseDateStr;
+    }
+
+    public void setDualBaseDateStr(String dualBaseDateStr) {
+        this.dualBaseDateStr = dualBaseDateStr;
     }
 }
