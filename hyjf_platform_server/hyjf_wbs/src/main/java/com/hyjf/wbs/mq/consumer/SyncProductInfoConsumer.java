@@ -3,12 +3,7 @@ package com.hyjf.wbs.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.wbs.dto.CustomerSyncQO;
-import com.hyjf.wbs.trade.dao.model.auto.Account;
-import com.hyjf.wbs.trade.service.customerinfo.AccountService;
-import com.hyjf.wbs.user.dao.model.auto.UtmReg;
-import com.hyjf.wbs.user.service.constomerinfo.UtmRegService;
-import org.apache.commons.lang3.StringUtils;
+import com.hyjf.wbs.dto.ProductInfoQO;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -25,42 +20,37 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Auther: wxd
- * @Date: 2019-04-10 16:17
- * @Description:用户信息变更实时推送wbs财富端
+ * @Date: 2019-04-16 14:05
+ * @Description:标的信息实时推送wbs财富端
  */
 
 @Service
-@RocketMQMessageListener(topic = MQConstant.SYNC_ACCOUNT_TOPIC, selectorExpression = "*", consumerGroup = "WBS_SYNC_ACCOUNT_GROUP")
-public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+@RocketMQMessageListener(topic = MQConstant.WBS_BORROW_INFO_TOPIC, selectorExpression = MQConstant.WBS_BORROW_INFO_TAG, consumerGroup = "WBS_SYNC_Product_Info_GROUP")
+public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncWbsAccountConsumer.class);
 
-    public static final String CONSUMER_NAME = "<<账户额度同步到WBS财富管理系统>>: ";
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private UtmRegService utmRegService;
+    public static final String CONSUMER_NAME = "<<产品信息及状态同步到WBS财富管理系统>>: ";
 
-//    @Autowired
-//    private UserDepartmentInfoService userDepartmentInfoService;
+    @Value("${hyjf.web.pc.sanbiao.host}")
+    private String PC_SANBIAO_URL;
 
-//    @Value("${hyjf.req.pri.key}")
-//    private String hyjfReqPrimaryKeyPath;
-//
-//    @Value("${hyjf.req.password}")
-//    private String hyjfReqPasswordPath;
-//
-//    @Value("${crm.updateCustomer.url}")
-//    private String crmUpdateCustomerUrl;
+    @Value("${hyjf.web.pc.zhitou.host}")
+    private String PC_ZHITOU_URL;
+
+    @Value("${hyjf.web.h5.sanbiao.host}")
+    private String H5_SANBIAO_URL;
+
+    @Value("${hyjf.web.h5.zhitou.host}")
+    private String H5_ZHITOU_URL;
+
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -74,32 +64,40 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 logger.error("=====" + CONSUMER_NAME + "消息实体转换异常=====");
                 return;
             }
-            String userId = jsonObj.getString("userId");
-            if (StringUtils.isBlank(userId)) {
-                logger.error("=====" + CONSUMER_NAME + "userId 为空=====");
-                return;
+
+
+            // 产品编号
+            String productNo = jsonObj.getString("productNo");
+            // 产品状态
+            String productStatus = jsonObj.getString("productStatus");
+            // 产品类型 0 散标类, 1 计划类
+            String productType = jsonObj.getString("productType");
+            ProductInfoQO productInfoDto = new ProductInfoQO();
+
+
+
+            productInfoDto.setProductNo(productNo);
+            productInfoDto.setProductStatus(Integer.valueOf(productStatus));
+
+            String productName = "";
+            String linkUrl = "";
+            String H5linkUrl = "";
+            if (productType.equals("0")) {
+                productName="散标";
+                linkUrl = PC_SANBIAO_URL + productNo;
+                H5linkUrl = H5_SANBIAO_URL + productNo;
+            } else if (productType.equals("1")) {
+                productName="智投";
+                linkUrl = PC_ZHITOU_URL + productNo;
+                H5linkUrl = H5_ZHITOU_URL + productNo;
             }
-
-            //根据渠道注册表查询用户是否是属于财富端对应的渠道
-            List<Integer> utmId = new ArrayList<Integer>();
-            utmId.add(11200045);//纳觅渠道编号
-//            utmId.add(11200045);//裕峰瑞渠道编号
+            productInfoDto.setProductName(productName);
+            productInfoDto.setLinkUrl(linkUrl);
+            productInfoDto.setH5linkUrl(H5linkUrl);
 
 
-            UtmReg utmReg = utmRegService.selectUtmInfo(Integer.valueOf(userId), utmId);
-            //符合资产端客户信息，推送账户变更信息
-            if (utmReg != null) {
-                CustomerSyncQO customerSyncQO = new CustomerSyncQO();
+            //TODO: 推送客户信息
 
-
-                Account account = accountService.getAccount(Integer.valueOf(userId));
-                if (account == null) {
-                    logger.error("=====" + CONSUMER_NAME + " 没有查询到目标账户, userId = [{}]=====", userId);
-                    return;
-                }
-
-                //TODO: 推送客户信息
-            }
 //
 //            String reqData = buildData(account).toJSONString();
 //            logger.info("=====" + CONSUMER_NAME + " 请求crm[url = {}]更新数据用户数据[reqData = {}]=====", crmUpdateCustomerUrl, reqData);
