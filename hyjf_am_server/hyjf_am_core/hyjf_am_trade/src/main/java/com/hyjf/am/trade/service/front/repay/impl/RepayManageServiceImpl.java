@@ -1977,6 +1977,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         }
                     }
                 } else if (repayPeriod > nowPeriod) {// 当前期之后的数据
+                    // 当前期也算的话，需要加上当前期
+                    totalPeriod = borrow.getBorrowPeriod() - nowPeriod + 1;
                     // 计算还款期的数据
                     BeanUtils.copyProperties(borrowRepayPlan, repayPlanDetail);
                     this.calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod, borrowRecoverList);
