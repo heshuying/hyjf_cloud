@@ -269,7 +269,7 @@ public class PlanCapitalController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "资金计划列表", notes = "资金计划列表导出")
+    @ApiOperation(value = "预计资金计划列表", notes = "预计资金计划列表导出")
     @PostMapping(value = "/exportExcelPlanCapitalPrediction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody HjhPlanCapitalPredictionRequestBean requestBean) throws Exception {
