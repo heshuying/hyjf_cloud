@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -43,14 +42,15 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         List<HjhPlanCapitalPredictionVO> listAll = new ArrayList<HjhPlanCapitalPredictionVO>();
         // 获取当日执行最后时间（任务执行时）当天23点59分59秒
         LocalDateTime today_end = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-        // 当前时间today_end转换为时间戳
-        long toEndDay = Timestamp.valueOf(today_end).getTime();
-        // 初始化当前执行时间的时间戳,初始化执行次数
-        long newDate = 0,maxCount = 10;
         // 初始化当前时间
         Date beginDate = GetDate.getDate();
         // 初始化当天运行时间
         Date initDate = GetDate.getDate();
+        // 当前时间today_end转换为时间戳
+        // long toEndDay = Timestamp.valueOf(today_end).getTime();
+        long toEndDay = GetDate.getDayEnd10(initDate);
+        // 初始化当前执行时间的时间戳,初始化执行次数
+        long newDate = 0,maxCount = 10;
         // 判断小于十天且执行时间小于当天23点59分59秒
         for (int i = 1; i <= maxCount; i++) {
             // 循环加一天
