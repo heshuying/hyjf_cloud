@@ -294,7 +294,7 @@
                 )
                 ) AS period,
                 cr.recover_period AS recoverPeriod,
-                t.account,
+                cr.assign_capital AS account,
                 cr.assign_capital AS amountHold,
                 cr.assign_capital AS recoverCapital,
                 cr.assign_interest AS recoverInterest,
@@ -375,7 +375,7 @@
                 )
                 ) AS period,
                 hcr.repay_period AS recoverPeriod,
-                t.account,
+                hcr.repay_capital AS account,
                 hcr.repay_capital AS amountHold,
                 hcr.repay_capital AS recoverCapital,
                 hcr.repay_interest AS recoverInterest,
