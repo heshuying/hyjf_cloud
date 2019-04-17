@@ -48,4 +48,6 @@ public interface PlatDataStatisticsService extends BaseService {
      * @return
      */
     List<OperationReport> findOperationReportEntityList();
+
+    String selectMinEventTime();
 }

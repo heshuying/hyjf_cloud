@@ -93,5 +93,10 @@ public class EventServiceImpl implements EventService {
 		return eventMapper.countByExample(example);
 	}
 
+	@Override
+	public String selectMinEventTime() {
+		return contentEventsCustomizeMapper.selectMinEventTime();
+	}
+
 
 }

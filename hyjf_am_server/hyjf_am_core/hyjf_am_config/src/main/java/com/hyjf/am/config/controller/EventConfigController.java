@@ -5,6 +5,7 @@ package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.service.EventService;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
@@ -68,6 +69,19 @@ public class EventConfigController extends BaseConfigController {
         // 查询符合条件的条数
         int count = eventService.selectCount(request);
         response.setCount(count);
+        return response;
+    }
+
+    /**
+     * 根据条件查询公司管理-公司纪事时间
+     *
+     * @return
+     */
+    @RequestMapping("/selectMinEventTime")
+    public StringResponse selectMinEventTime() {
+        StringResponse response = new StringResponse();
+        String minEventTime= eventService.selectMinEventTime();
+        response.setResultStr(minEventTime);
         return response;
     }
 

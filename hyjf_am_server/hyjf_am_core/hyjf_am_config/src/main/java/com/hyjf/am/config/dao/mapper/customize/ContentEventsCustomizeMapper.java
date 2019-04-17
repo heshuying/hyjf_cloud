@@ -15,4 +15,5 @@ public interface ContentEventsCustomizeMapper {
 	List<Event> selectContentEvents(ContentEventsCustomize contentEventsCustomize);
 
 
+    String selectMinEventTime();
 }

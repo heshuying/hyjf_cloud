@@ -63,7 +63,8 @@ public class CertCallConstant implements Serializable {
     public static final String CERT_INF_TYPE_UNDER_TAKE  = "85";
     /**交易流水 4*/
     public static final String CERT_INF_TYPE_TRANSACT  = "4";
-
+    /**投资明细 4*/
+    public static final String CERT_INF_TYPE_INVEST_DETAIL  = "88";
     // 请求类型  end
 
 

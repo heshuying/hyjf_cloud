@@ -88,6 +88,8 @@ public class CertTransactBatchController {
                 commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), params),
                         MQConstant.HG_REPORT_DELAY_LEVEL);
 
+                commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_INVEST_DETAIL_TAG, UUID.randomUUID().toString(), params),
+                        MQConstant.HG_REPORT_DELAY_LEVEL);
 
             }catch (Exception e){}
             RedisUtils.set(RedisConstants.CERT_TRANSACT_OTHER_MAXID, maxId);

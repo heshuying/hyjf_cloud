@@ -83,7 +83,12 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
     @Override
     public List<CouponRealTender> getCouponRealTenderListByCertRequest(CertRequest certRequest) {
         CouponRealTenderExample couponRealTenderExample=new CouponRealTenderExample();
-        couponRealTenderExample.createCriteria().andCouponTenderIdEqualTo(certRequest.getCouponTenderId());
+        if(certRequest.getCouponTenderId()!=null){
+            couponRealTenderExample.createCriteria().andCouponTenderIdEqualTo(certRequest.getCouponTenderId());
+        }
+        if(certRequest.getRealTenderId()!=null){
+            couponRealTenderExample.createCriteria().andRealTenderIdEqualTo(certRequest.getRealTenderId());
+        }
         List<CouponRealTender> couponRealTenders=couponRealTenderMapper.selectByExample(couponRealTenderExample);
         return couponRealTenders;
     }
