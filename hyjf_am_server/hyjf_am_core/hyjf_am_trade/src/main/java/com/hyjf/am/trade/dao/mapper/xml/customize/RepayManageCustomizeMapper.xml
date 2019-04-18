@@ -425,6 +425,7 @@
 	<select id="searchOrgRepayedList" resultMap="repayListResultMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
+		hydb.account AS borrow_account,
 		hbi.`name` AS borrow_name,
 		hydbpt.borrow_name AS project_type,
 		hydb.borrow_style,
