@@ -5,7 +5,7 @@ import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
 import com.hyjf.am.config.dao.model.auto.WorkFlow;
-import com.hyjf.am.config.dao.model.auto.WorkFlowNode;
+import com.hyjf.am.config.dao.model.auto.WorkFlowExample;
 import com.hyjf.am.config.dao.model.auto.WorkFlowNodeExample;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
@@ -209,4 +209,16 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         }
         return false;
     }
+
+    @Override
+    public List<WorkFlowVO> findWorkFlowAll(){
+        return workFlowConfigMapper.findWorkFlowAll();
+    }
+
+    @Override
+    public int updateFlowStatus(WorkFlow workFlow){
+
+        return workFlowMapper.updateByPrimaryKeySelective(workFlow);
+    }
+
 }

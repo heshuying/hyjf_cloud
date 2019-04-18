@@ -146,4 +146,17 @@
 			username = #{username}
 	</select>
 
+	<select id="selectByUserId" resultType="com.hyjf.am.config.dao.model.auto.Admin">
+		SELECT
+		id,username,truename
+		FROM
+		ht_admin a
+		WHERE
+		id in
+		<foreach collection="array" item="userId" index="index"
+				 open="(" close=")" separator=",">
+			#{userId}
+		</foreach>
+	</select>
+
 </mapper>

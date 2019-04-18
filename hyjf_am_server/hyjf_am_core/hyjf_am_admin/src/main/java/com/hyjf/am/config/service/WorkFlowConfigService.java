@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.WorkFlow;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
@@ -51,6 +52,10 @@ public interface WorkFlowConfigService {
      * @return
      */
     Integer deleteWorkFlowConfigById(int id);
+
+    List<WorkFlowVO> findWorkFlowAll();
+
+    int updateFlowStatus(WorkFlow workFlow);
     /**
      *  查询邮件预警通知人
      * @param userName

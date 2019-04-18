@@ -2,6 +2,7 @@ package com.hyjf.am.config.controller.admin.workflow;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.dao.model.auto.WorkFlow;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
@@ -11,6 +12,7 @@ import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -201,6 +203,36 @@ public class WorkFlowConfigController extends BaseConfigController {
         return response;
     }
 
+    /**
+     * 获取所有工作业务流
+     * @return
+     */
+    @GetMapping("/findWorkFlowAll")
+    public WorkFlowConfigResponse findWorkFlowAll() {
+        WorkFlowConfigResponse response = new WorkFlowConfigResponse();
+        List<WorkFlowVO> workFlow =workFlowConfigService.findWorkFlowAll();
+        if(!CollectionUtils.isEmpty(workFlow)){
+            response.setResultList(workFlow);
+            return response;
+        }
+        return response;
+    }
 
+    /**
+     * 修改工作流程表的flowStatus
+     * @return
+     */
+    @GetMapping("/updateFlowStatus/{businessId}")
+    public BooleanResponse updateFlowStatus(@PathVariable Integer businessId) {
+        BooleanResponse response = new BooleanResponse();
+        WorkFlow workFlow = new WorkFlow();
+        workFlow.setId(businessId);
+        workFlow.setFlowStatus(2);
+        boolean flag = workFlowConfigService.updateFlowStatus(workFlow) > 0 ?true:false;
+        response.setResultBoolean(flag);
+        response.setRtn(Response.SUCCESS);
+        response.setMessage(Response.SUCCESS_MSG);
+        return response;
+    }
 
 }

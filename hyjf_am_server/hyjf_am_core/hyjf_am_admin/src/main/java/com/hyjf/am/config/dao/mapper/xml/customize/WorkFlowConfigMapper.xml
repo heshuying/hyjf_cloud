@@ -146,5 +146,20 @@
         </foreach>
         GROUP BY r.role_id
     </select>
+    <select id="findWorkFlowAll" resultType="com.hyjf.am.vo.admin.WorkFlowVO">
+        SELECT
+        w.id,
+        w.workname_id as  businessId,
+        n.work_name as businessName,
+        w.mail_notifier as mailWarningUser
+        FROM
+        ht_workflow w
+        INNER JOIN ht_workname n ON w.workname_id = n.id
+        WHERE
+        w.flow_status = 1
+        AND w.check_status = 1;
+    </select>
+
+
 </mapper>
 

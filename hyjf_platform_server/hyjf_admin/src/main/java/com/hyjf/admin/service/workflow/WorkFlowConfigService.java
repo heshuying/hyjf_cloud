@@ -57,4 +57,6 @@ public interface WorkFlowConfigService {
      * @return
      */
     WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
+
+    void disableAdminUser(Integer[] adminUserId);
 }

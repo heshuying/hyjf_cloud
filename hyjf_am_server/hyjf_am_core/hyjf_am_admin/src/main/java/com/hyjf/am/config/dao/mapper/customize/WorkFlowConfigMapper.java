@@ -76,4 +76,10 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     List<WorkFlowUserVO> selectWorkFlowUserRole(@Param("flowNodes")List<WorkFlowNodeVO> flowNodes);
+
+    /**
+     * 查询所有业务流程
+     * @return
+     */
+    List<WorkFlowVO> findWorkFlowAll();
 }

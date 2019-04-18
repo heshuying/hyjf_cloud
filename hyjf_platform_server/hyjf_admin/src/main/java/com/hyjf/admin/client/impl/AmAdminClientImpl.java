@@ -19,10 +19,7 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
-import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
@@ -2279,5 +2276,27 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO){
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/selectUser",workFlowUserVO, WorkFlowUserResponse.class).getBody();
+    }
+
+    @Override
+    public List<WorkFlowVO> updateStatusBusinessName() {
+        String url = "http://AM-ADMIN/am-admin/workflow/bussinessflow/findWorkFlowAll";
+        WorkFlowConfigResponse response = restTemplate
+                .getForEntity(url, WorkFlowConfigResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateFlowStatus(Integer businessId) {
+        String url = "http://AM-ADMIN/am-admin/workflow/bussinessflow/updateFlowStatus/"+businessId;
+        BooleanResponse response = restTemplate
+                .getForEntity(url, BooleanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 }

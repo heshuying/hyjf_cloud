@@ -1325,4 +1325,7 @@ public interface AmAdminClient {
      */
     WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
 
+    List<WorkFlowVO> updateStatusBusinessName();
+
+    boolean updateFlowStatus(Integer businessId);
 }
