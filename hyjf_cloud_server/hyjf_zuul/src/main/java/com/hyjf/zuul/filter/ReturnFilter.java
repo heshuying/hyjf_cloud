@@ -49,7 +49,7 @@ public class ReturnFilter extends ZuulFilter {
                     AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
 
                     if (accessToken == null) {
-                        logger.warn("user is not exist, token is : {}...", token);
+                        logger.warn("user is not exist, token is : {}...，Redis上未查询到该用户登陆信息", token);
                         body = setResult(body);
                     }
                 }
