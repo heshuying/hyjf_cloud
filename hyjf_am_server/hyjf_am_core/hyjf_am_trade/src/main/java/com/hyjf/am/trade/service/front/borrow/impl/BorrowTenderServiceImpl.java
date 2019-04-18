@@ -312,6 +312,9 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         map.put("startTime", startTime);
         map.put("endTime", endTime);
         BigDecimal investSum = borrowInvestCustomizeMapper.getAnnualInvestAmount(map);
+        if (investSum == null) {
+            investSum = BigDecimal.ZERO;
+        }
         BigDecimal planSum = borrowInvestCustomizeMapper.getPlanAnnualAmount(map);
         return investSum.add(planSum);
     }

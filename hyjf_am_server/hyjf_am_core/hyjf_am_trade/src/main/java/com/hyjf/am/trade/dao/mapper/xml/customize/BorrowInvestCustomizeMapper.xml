@@ -460,7 +460,7 @@
 		FROM
 		(
 		SELECT
-		br.account AS acount
+		br.account AS account
 		FROM
 		ht_borrow_tender br
 		WHERE
@@ -530,9 +530,10 @@
 		    ht_hjh_plan hhp
 		    LEFT JOIN ht_hjh_accede hha ON hhp.plan_nid = hha.plan_nid
 		    WHERE
-		    hha.user_id = #{userId,jdbcType=INTEGER}),0)
+		    hha.user_id = #{userId,jdbcType=INTEGER}
 		    AND hha.create_time <![CDATA[>=]]> #{startTime}
 		    AND hha.create_time <![CDATA[<=]]> #{endTime}
+		    ),0)
 	</select>
 
 </mapper>
