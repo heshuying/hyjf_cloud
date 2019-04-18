@@ -116,7 +116,7 @@ public class BusinessNameMgController  extends BaseController {
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @PostMapping("/updatestate")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY , ShiroConstants.PERMISSION_MODIFYRE})
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY })
     public AdminResult updatestate(@RequestBody BusinessNameMgRequest request, HttpServletRequest httpServletRequest) {
         if(request.getId() == null || request.getStatus() == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
