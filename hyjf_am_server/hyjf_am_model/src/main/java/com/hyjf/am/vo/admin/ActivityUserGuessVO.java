@@ -28,6 +28,8 @@ public class ActivityUserGuessVO extends BaseVO {
 
     private String reward;
 
+    private String style;
+
     public Integer getId() {
         return id;
     }
@@ -74,5 +76,13 @@ public class ActivityUserGuessVO extends BaseVO {
 
     public void setReward(String reward) {
         this.reward = reward;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

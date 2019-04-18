@@ -8,8 +8,7 @@
     <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
     <result column="grade" property="grade" jdbcType="VARCHAR" />
     <result column="reward" property="reward" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="style" property="style" jdbcType="VARCHAR" />
   </resultMap>
 
   <select id="selectGuessUserList" resultMap="BaseResultMap">
@@ -26,7 +25,8 @@
       WHEN ug.grade = 1 THEN '2%代金券'
       WHEN ug.grade = 2 THEN '1.5%代金券'
       WHEN ug.grade = 3 THEN '1%代金券'
-      ELSE '0.5%代金券' END AS reward
+      ELSE '0.5%代金券' END AS reward,
+      '手动发放' AS style
       FROM ht_activity_user_guess ug
       LEFT JOIN hyjf_user.ht_user u ON ug.user_id = u.user_id
       LEFT JOIN hyjf_user.ht_user_info ui ON ug.user_id = ui.user_id

@@ -53,6 +53,7 @@ public class MayDayController extends BaseController {
 
     @ApiOperation(value = "活动竞猜列表", notes = "活动竞猜列表")
     @RequestMapping("/list")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult getRecordList(@RequestBody ActivityUserGuessRequest request) {
         ActivityUserGuessResponse response = activityUserGuessService.getGuessList(request);
         if (response == null) {
@@ -118,22 +119,24 @@ public class MayDayController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String,IValueFormatter> buildValueAdapter() {
-        return null;
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter borrowPeriodAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return (String) object;
+            }
+        };
+        return mapAdapter;
     }
 
     private Map<String, String> buildMap1() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("reward", "奖励名称");
-        map.put("distributionMethod", "发放方式");
-        map.put("userName", "账户名");
+        map.put("userName", "用户名");
         map.put("trueName", "姓名");
-        map.put("recipientName", "收件人姓名");
-        map.put("recipientMobile", "收件人手机号");
-        map.put("recipientAddress", "收件地址");
-        map.put("status", "发放状态");
-        map.put("getTime", "获得时间");
-        map.put("releaseTime", "发放时间");
+        map.put("grade", "竞猜名次");
+        map.put("reward", "奖励名称");
+        map.put("style", "发放方式");
         return map;
     }
 }
