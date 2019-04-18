@@ -54,4 +54,36 @@
         AND brp.recover_status = 0
         AND ba.id IS NULL
     </select>
+
+    <update id="updateBorrowRepay" parameterType="com.hyjf.am.trade.dao.model.customize.BorrowRepayLateCustomize">
+        UPDATE ht_borrow_repay bry
+        INNER JOIN(
+            SELECT SUM(late_interest) as late_interest, late_days
+            FROM ht_borrow_recover
+            WHERE borrow_nid = #{borrowNid}
+        ) br
+        SET
+            bry.late_interest_wait = br.late_interest,
+            bry.late_days = br.late_days,
+            bry.advance_status = 3
+        WHERE
+            bry.borrow_nid = #{borrowNid};
+    </update>
+
+    <update id="updateBorrowRepayPlan" parameterType="com.hyjf.am.trade.dao.model.customize.BorrowRepayLateSetCustomize">
+        UPDATE ht_borrow_repay_plan bry
+        INNER JOIN(
+            SELECT SUM(late_interest) as late_interest, late_days
+            FROM ht_borrow_recover_plan
+            WHERE borrow_nid = #{borrowNid} AND
+                  recover_period = #{recoverPeriod}
+        ) br
+        SET
+            bry.late_interest_wait = br.late_interest,
+            bry.late_days = br.late_days,
+            bry.advance_status = 3
+        WHERE
+            bry.borrow_nid = #{borrowNid} AND
+            bry.repay_period = #{recoverPeriod};
+    </update>
 </mapper>

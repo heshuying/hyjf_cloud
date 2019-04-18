@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.dao.mapper.customize.batch;
 
 import com.hyjf.am.trade.dao.model.customize.BorrowRepayLateCustomize;
+import com.hyjf.am.trade.dao.model.customize.BorrowRepayLateSetCustomize;
 
 import java.util.List;
 
@@ -23,4 +24,18 @@ public interface BorrowRepayLateMapper {
      * @return
      */
     List<BorrowRepayLateCustomize> selectBorrowRepayLateByStages();
+
+    /**
+     * 更新borrow_repay待还逾期利息与逾期天数
+     * @param borrowNid
+     * @return
+     */
+    int updateBorrowRepay(String borrowNid);
+
+    /**
+     * 更新borrow_repay_plan待还逾期利息与逾期天数
+     * @param borrowRepayLateSetCustomize
+     * @return
+     */
+    int updateBorrowRepayPlan(BorrowRepayLateSetCustomize borrowRepayLateSetCustomize);
 }

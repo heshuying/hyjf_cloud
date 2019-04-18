@@ -273,6 +273,13 @@ public class BorrowRepayPlan implements Serializable {
      */
     private BigDecimal chargePenaltyInterest;
 
+    /**
+     * 逾期待还利息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal lateInterestWait;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -585,5 +592,13 @@ public class BorrowRepayPlan implements Serializable {
 
     public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
         this.chargePenaltyInterest = chargePenaltyInterest;
+    }
+
+    public BigDecimal getLateInterestWait() {
+        return lateInterestWait;
+    }
+
+    public void setLateInterestWait(BigDecimal lateInterestWait) {
+        this.lateInterestWait = lateInterestWait;
     }
 }
