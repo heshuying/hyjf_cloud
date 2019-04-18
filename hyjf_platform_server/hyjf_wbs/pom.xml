@@ -74,6 +74,11 @@
 			<artifactId>hyjf_pay_lib</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.hyjf</groupId>
+			<artifactId>hyjf_cs_common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.jcraft</groupId>

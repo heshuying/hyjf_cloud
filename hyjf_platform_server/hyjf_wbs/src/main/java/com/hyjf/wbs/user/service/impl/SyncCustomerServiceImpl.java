@@ -36,9 +36,9 @@ public class SyncCustomerServiceImpl implements SyncCustomerService {
 	public void sync(CustomerSyncQO customerSyncQO) {
 
 		WbsCommonQO wbsCommonQO = new WbsCommonQO();
-//		wbsCommonQO.setApp_key(wbsConfig.getAppKey());
+		wbsCommonQO.setApp_key(wbsConfig.getAppKey());
 		wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
-//		wbsCommonQO.setSign(WbsSignUtil.encrypt(customerSyncQO, wbsConfig.getAppSecret()));
+		wbsCommonQO.setSign(WbsSignUtil.encrypt(customerSyncQO, wbsConfig.getAppSecret()));
 		wbsCommonQO.setData(JSONObject.toJSONString(customerSyncQO));
 
 		String jsonRequest = JSONObject.toJSONString(wbsCommonQO);
