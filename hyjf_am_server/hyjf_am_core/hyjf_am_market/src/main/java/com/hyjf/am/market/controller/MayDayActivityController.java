@@ -43,7 +43,6 @@ public class MayDayActivityController {
             }
             response.setCount(recordCount);
             response.setRtn(Response.SUCCESS);
-            return response;
         }
         return response;
     }
