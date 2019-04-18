@@ -15,6 +15,10 @@ public class HjhDebtCreditListRequest extends BasePage{
     private String planNid;
     @ApiModelProperty(value = "出让人智投订单号")
     private String planOrderId;
+    @ApiModelProperty(value = "出让人出借订单号")
+    private String orderId;
+    @ApiModelProperty(value = "出让人承接订单号")
+    private String assignId;
     @ApiModelProperty(value = "清算后智投编号")
     private String planNidNew;
     @ApiModelProperty(value = "出让人")
@@ -194,11 +198,29 @@ public class HjhDebtCreditListRequest extends BasePage{
         this.repayNextTimeEnd = repayNextTimeEnd;
     }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getAssignId() {
+        return assignId;
+    }
+
+    public void setAssignId(String assignId) {
+        this.assignId = assignId;
+    }
+
     @Override
     public String toString() {
         return "HjhDebtCreditListRequest{" +
                 "planNid='" + planNid + '\'' +
                 ", planOrderId='" + planOrderId + '\'' +
+                ", orderId='" + orderId + '\'' +
+                ", assignId='" + assignId + '\'' +
                 ", planNidNew='" + planNidNew + '\'' +
                 ", userName='" + userName + '\'' +
                 ", creditNid='" + creditNid + '\'' +

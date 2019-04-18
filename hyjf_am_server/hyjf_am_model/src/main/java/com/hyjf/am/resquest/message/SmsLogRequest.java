@@ -33,6 +33,15 @@ public class SmsLogRequest extends BasePage implements Serializable {
 	 * 提交时间区间查询结束时间
 	 */
 	private String postTimeEnd;
+	/**
+	 * 上月开始时间
+	 */
+	private Integer posttime;
+
+	/**
+	 * 上月结束时间
+	 */
+	private Integer post_time_end;
 
 	/**
 	 * 短信类型
@@ -77,5 +86,21 @@ public class SmsLogRequest extends BasePage implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Integer getPosttime() {
+		return posttime;
+	}
+
+	public void setPosttime(Integer posttime) {
+		this.posttime = posttime;
+	}
+
+	public Integer getPost_time_end() {
+		return post_time_end;
+	}
+
+	public void setPost_time_end(Integer post_time_end) {
+		this.post_time_end = post_time_end;
 	}
 }

@@ -11,6 +11,8 @@ import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.service.message.SmsLogService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -26,6 +28,7 @@ import java.util.List;
 @Service
 public class SmsLogServiceImpl implements SmsLogService {
 
+	private static Logger logger = LoggerFactory.getLogger(SmsLogServiceImpl.class);
 	@Autowired
 	private SmsLogDao smsLogDao;
 	@Autowired
@@ -111,10 +114,14 @@ public class SmsLogServiceImpl implements SmsLogService {
 		if (StringUtils.isNotBlank(type)) {
 			criteria.and("type").is(type);
 		}
-		if (StringUtils.isNotBlank(postTimeBegin) && StringUtils.isNotBlank(postTimeEnd)) {
+		if (StringUtils.isNotEmpty(postTimeBegin) && StringUtils.isNotEmpty(postTimeEnd) ) {
 			Integer begin = GetDate.dateString2Timestamp(postTimeBegin + " 00:00:00");
 			Integer end = GetDate.dateString2Timestamp(postTimeEnd + " 23:59:59");
 			criteria.and("posttime").gte(begin).lte(end);
+		}
+		if (null !=  request.getPosttime() && null != request.getPost_time_end()) {
+			logger.info("上月开始时间postTimeBegin："+request.getPosttime()+"-----上月结束时间postTimeEnd："+request.getPost_time_end());
+			criteria.and("posttime").gte(request.getPosttime()).lte(request.getPost_time_end());
 		}
 		if (status != null && status != 2) {
 			criteria.and("status").is(status);

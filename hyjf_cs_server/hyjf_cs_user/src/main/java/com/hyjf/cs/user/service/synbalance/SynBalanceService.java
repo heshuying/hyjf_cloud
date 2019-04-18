@@ -41,15 +41,7 @@ public interface SynBalanceService extends BaseUserService {
      * @Date
      */
     AccountVO getAccount(Integer userId);
-    /**
-     * @Description
-     * @Author pangchengchao
-     * @Version v0.1
-     * @Date
-     */
-    BankCallBean queryAccountDetails(Integer userId, String accountId, String startDate, String endDate, String type,
-                                     String transType, String pageNum, String pageSize, String inpDate, String inpTime,
-                                     String relDate, String traceNo);
+
     /**
      * @Description 获取银行错误返回码
      * @Author pangchengchao

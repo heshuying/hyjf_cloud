@@ -3,7 +3,6 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.AppPushManageRequestBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.*;
@@ -12,6 +11,8 @@ import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
+import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
+import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.*;
@@ -19,12 +20,14 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
+import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.*;
@@ -34,6 +37,7 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
+import com.hyjf.am.vo.trade.RepaymentPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -2082,6 +2086,194 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultInt();
         }
         return -1;
+    }
+
+    /**
+     * 大屏运营部数据配置列表查询
+     * @param request
+     * @return
+     */
+    @Override
+    public ScreenConfigVOResponse getScreenConfigList(ScreenConfigRequest request) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/list";
+        ScreenConfigVOResponse response = restTemplate.postForEntity(url, request, ScreenConfigVOResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 大屏运营部数据配置数据新增
+     * @param screenConfigVO
+     * @return
+     */
+    @Override
+    public int addScreenConfig(ScreenConfigVO screenConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/add";
+        IntegerResponse response = restTemplate.postForEntity(url, screenConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 大屏运营部数据配置数据详情
+     * @param screenConfigVO
+     * @return
+     */
+    @Override
+    public ScreenConfigVO screenConfigInfo(ScreenConfigVO screenConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/info";
+        ScreenConfigVOResponse response = restTemplate.postForEntity(url, screenConfigVO, ScreenConfigVOResponse.class).getBody();
+        return response.getResult();
+    }
+
+    /**
+     * 大屏运营部数据配置数据编辑/启用/禁用
+     * @param screenConfigVO
+     * @return
+     */
+    @Override
+    public int updateScreenConfig(ScreenConfigVO screenConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/oper/update";
+        IntegerResponse response = restTemplate.postForEntity(url, screenConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public RepayResponse findRepayUser(Integer startTime, Integer endTime,Integer currPage, Integer pageSize) {
+        String url = "http://AM-ADMIN/am-admin/screen/data/find_repay_user/"+startTime+"/"+endTime+"/"+currPage+"/"+pageSize;
+        RepayResponse response = restTemplate.getForEntity(url, RepayResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 坐席月任务配置列表查询
+     * @param request
+     * @return
+     */
+    @Override
+    public CustomerTaskConfigVOResponse getCustomerTaskConfigList(CustomerTaskConfigRequest request) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/list";
+        CustomerTaskConfigVOResponse response = restTemplate.postForEntity(url, request, CustomerTaskConfigVOResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 坐席月任务配置数据新增
+     * @return
+     */
+    @Override
+    public int addCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/add";
+        IntegerResponse response = restTemplate.postForEntity(url, customerTaskConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 坐席月任务配置数据详情
+     * @param customerTaskConfigVO
+     * @return
+     */
+    @Override
+    public CustomerTaskConfigVO customerTaskConfigInfo(CustomerTaskConfigVO customerTaskConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/info";
+        CustomerTaskConfigVOResponse response = restTemplate.postForEntity(url, customerTaskConfigVO, CustomerTaskConfigVOResponse.class).getBody();
+        return response.getResult();
+    }
+
+    /**
+     * 坐席月任务配置数据编辑/启用/禁用
+     * @param customerTaskConfigVO
+     * @return
+     */
+    @Override
+    public int updateCustomerTaskConfig(CustomerTaskConfigVO customerTaskConfigVO) {
+        String url = "http://AM-ADMIN/am-user/vip/content/task/update";
+        IntegerResponse response = restTemplate.postForEntity(url, customerTaskConfigVO, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public void addRepayUserList(List<RepaymentPlanVO> resultList) {
+        ScreenDataBean screenDataBean = new ScreenDataBean();
+        screenDataBean.setRepaymentPlanVOS(resultList);
+        restTemplate.postForObject("http://AM-ADMIN/am-trade/screen_data/add_repay_userList",
+                screenDataBean, IntegerResponse.class);
+    }
+    @Override
+    public IntegerResponse countRepayUserList(){
+        String url = "http://AM-ADMIN/am-trade/screen_data/count_repay_userList";
+        return restTemplate.getForEntity(url, IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getrechargelist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getplantenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getplanrepaylist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getcredittenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getwithdrawlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getBorrowRecoverList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowrecoverlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowtenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
     }
     /**
      * 查询累计年华投资

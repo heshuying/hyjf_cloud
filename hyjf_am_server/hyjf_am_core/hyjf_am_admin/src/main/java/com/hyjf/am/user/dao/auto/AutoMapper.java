@@ -203,5 +203,8 @@ public class AutoMapper {
     @Autowired
     protected WhereaboutsPagePictureMapper whereaboutsPagePictureMapper;
 
+    @Autowired
+    protected  BankCancellationAccountMapper bankCancellationAccountMapper;
+
 }
 

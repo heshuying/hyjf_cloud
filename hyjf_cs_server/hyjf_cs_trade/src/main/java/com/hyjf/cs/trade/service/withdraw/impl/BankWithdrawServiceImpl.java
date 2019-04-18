@@ -3,10 +3,7 @@ package com.hyjf.cs.trade.service.withdraw.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
-import com.hyjf.am.resquest.trade.AfterCashParamRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -280,7 +277,13 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                             }catch (Exception e){
                                 logger.error(e.getMessage());
                             }
-
+                            try{
+                                // 提现成功后,发送大屏数据统计MQ
+                                ScreenDataBean screenDataBean = new ScreenDataBean(users.getUserId(),users.getUsername(),total,4);
+                                this.sendScreenDataMQ(screenDataBean);
+                            }catch (Exception e){
+                                logger.error("提现成功后,发送大屏数据统计MQ失败",e.getMessage());
+                            }
                             return jsonMessage("提现成功!", "0");
                         } catch (Exception e) {
                             // 回滚事务
@@ -1765,5 +1768,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
-
+    /**
+     * 提现成功后,发送大屏数据统计MQ
+     *
+     * @param screenDataBean
+     */
+    private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
+    }
 }

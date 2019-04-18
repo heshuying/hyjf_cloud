@@ -5,6 +5,7 @@ package com.hyjf.cs.user.service.aems.register.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
@@ -130,6 +131,12 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
+
+        //modify by cwyang 2019-03-22 渠道注册统计错误修复
+        UtmVO utm = this.amUserClient.selectUtmBySourceId(registerRequest.getUtmId());
+        CheckUtil.check(null != utm, MsgEnum.STATUS_ZC000020);
+        registerUserRequest.setUtmId(String.valueOf(utm.getId()));
+
         String password = StringRandomUtil.getStringRandom(6);
         // 密码
         registerUserRequest.setPassword(password);

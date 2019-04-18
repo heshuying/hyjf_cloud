@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
+import com.hyjf.am.user.dao.mapper.customize.ScreenDataCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.bifa.BifaIndexUserInfoBean;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
@@ -55,7 +56,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     QianleUserCustomizeMapper qianleUserCustomizeMapper;
     @Autowired
     protected LockedUserInfoMapper lockedUserInfoMapper;
-
+    @Autowired
+    ScreenDataCustomizeMapper screenDataCustomizeMapper;
     @Autowired
     private CommonProducer smsProducer;
 
@@ -1676,7 +1678,25 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                 result.setUsersContact(userContactVO);
             }
         }
-
         return result;
+    }
+
+    @Override
+    public HashMap<String, String> findUserGroup(Integer userId) {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String taskTime = formatter.format(currentTime);
+        return screenDataCustomizeMapper.findUserGroupNotQianLe(userId,taskTime);
+    }
+    /**
+     * 获取现在时间
+     *
+     * @return 返回时间类型 yyyyMM
+     */
+    private  String getNowDateOfDay() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+        String dateString = formatter.format(currentTime);
+        return dateString;
     }
 }

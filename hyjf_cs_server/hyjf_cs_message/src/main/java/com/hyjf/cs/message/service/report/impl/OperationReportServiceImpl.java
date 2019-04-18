@@ -622,7 +622,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (userOperationReportList != null && userOperationReportList.size() > 0) {
 				response.put("userOperationReport", userOperationReportList.get(0));
 			}
-			query2.with(new Sort(Sort.Direction.ASC, "activtyTime"));
+			query2.with(new Sort(Sort.Direction.ASC, "activtyStartTime"));
 			List<OperationActivityReport> operationReportActiveList = getOperationReportActive(id, query2);
 			if(operationReportActiveList!=null){
 				response.put("operationReportActiveList", operationReportActiveList);
@@ -637,6 +637,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			List<OperationTenthReport> tenthOperationReportList = getTenthOperationReport(id, query2);
 			if (tenthOperationReportList != null && tenthOperationReportList.size() > 0) {
 				OperationTenthReport tenthOperationReport = tenthOperationReportList.get(0);
+				// 因合规需要  屏蔽投资人年龄
+				tenthOperationReport.setActiveTenderUserAge(0);
+				tenthOperationReport.setBigMinnerUserAge(0);
+				tenthOperationReport.setMostTenderUserAge(0);
+
+
 				TenthOperationReportVO tenthOperationReportVO = new TenthOperationReportVO();
 				if (org.apache.commons.lang3.StringUtils.isNotEmpty(tenthOperationReport.getFirstTenderUsername())) {
 					String userName1 = tenthOperationReport.getFirstTenderUsername().substring(0, 1);

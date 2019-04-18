@@ -58,7 +58,15 @@ public class AdminUserServiceImpl implements AdminUserService {
 	public List<AdminCustomize> getRecordList(AdminCustomize adminCustomize) {
 		return adminCustomizeMapper.selectAdminList(adminCustomize);
 	}
-
+	/**
+	 * 获取账户列表
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer selectAdminListCount(AdminCustomize adminCustomize) {
+		return adminCustomizeMapper.selectAdminListCount(adminCustomize);
+	}
 	/**
 	 * 获取单个账户
 	 *
