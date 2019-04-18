@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.app.AppRechargeVo;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -347,44 +348,22 @@ public class AppRechargeController extends BaseUserController {
     }
 
     /**
-     * app获取充值规则
+     * app获取充值说明
      * @param
      * @return
      * @author wgx
      */
-    @ApiOperation(value = "获取充值规则接口", notes = "获取充值规则接口")
-    @PostMapping(value = "/getRechargeRule")
+    @ApiOperation(value = "获取充值说明", notes = "获取充值说明")
+    @PostMapping(value = "/getRechargeDetail")
     public WebResult getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
         WebResult webResult = new WebResult();
         List rechargeRuleList = appRechargeService.getRechargeRule();
-        if (rechargeRuleList == null || rechargeRuleList.size() == 0) {
-            webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc("未获取到充值规则");
-            webResult.setData(Collections.emptyMap());
-        } else {
-            webResult.setData(rechargeRuleList);
-        }
+        List<JxBankConfigVO> rechargeLimitList = appRechargeService.getRechargeLimit();
+        AppRechargeVo appRechargeVo = new AppRechargeVo();
+        appRechargeVo.setRechargeRule(rechargeRuleList);
+        appRechargeVo.setRechargeLimit(rechargeLimitList);
+        webResult.setData(appRechargeVo);
         return webResult;
     }
 
-    /**
-     * app获取充值限额说明
-     * @param
-     * @return
-     * @author wgx
-     */
-    @ApiOperation(value = "获取充值限额说明接口", notes = "获取充值限额说明接口")
-    @PostMapping(value = "/getRechargeLimit")
-    public WebResult getRechargeLimit(@RequestHeader(value = "userId") Integer userId) {
-        WebResult webResult = new WebResult();
-        List<JxBankConfigVO> rechargeLimitList = appRechargeService.getRechargeLimit();
-        if (rechargeLimitList == null || rechargeLimitList.size() == 0) {
-            webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc("未获取到充值限额说明");
-            webResult.setData(Collections.emptyMap());
-        } else {
-            webResult.setData(rechargeLimitList);
-        }
-        return webResult;
-    }
 }

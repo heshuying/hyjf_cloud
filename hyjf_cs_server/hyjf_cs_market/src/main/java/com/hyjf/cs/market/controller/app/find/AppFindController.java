@@ -10,6 +10,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.app.AppBaseRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
+import com.hyjf.am.vo.app.AppFindNewsVO;
+import com.hyjf.am.vo.app.AppFindVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -237,41 +239,39 @@ public class AppFindController extends BaseMarketController {
 		return ret;
 	}
 
-	@ApiOperation(value = "app发现页面顶部广告位", notes = "app发现页面顶部广告位")
-	@GetMapping("/getFindModules")
-	public WebResult getFindModules(@ModelAttribute AppBaseRequest appBaseRequest){
+	@ApiOperation(value = "app发现页面", notes = "app发现页面")
+	@GetMapping("/init")
+	public WebResult initFind(@ModelAttribute AppBaseRequest appBaseRequest){
 		WebResult webResult = new WebResult();
 		AdsRequest request = new AdsRequest();
 		request.setPlatformType(appBaseRequest.getPlatform());
 		request.setHost(appHost);
 		request.setLimitEnd(1);
 		List<AppFindAdCustomizeVO> adVOList = appFindService.getFindModules(request);
-        if (adVOList == null || adVOList.size() == 0) {
-            webResult.setStatus(WebResult.ERROR);
-			webResult.setStatusDesc("无数据");
-            webResult.setData(Collections.emptyMap());
-        } else {
-            webResult.setData(adVOList);
-        }
-		return webResult;
-	}
-
-	@ApiOperation(value = "app发现页面banner", notes = "app发现页面banner")
-	@GetMapping("/getFindBanner")
-	public WebResult getFindBanner(@ModelAttribute AppBaseRequest appBaseRequest){
-		WebResult webResult = new WebResult();
-		AdsRequest request = new AdsRequest();
-		request.setPlatformType(appBaseRequest.getPlatform());
-		request.setHost(appHost);
-		request.setLimitEnd(1);
 		AppFindAdCustomizeVO adVO = appFindService.getFindBanner(request);
-        if (adVO == null) {
-            webResult.setStatus(WebResult.ERROR);
-            webResult.setStatusDesc("无数据");
-            webResult.setData(Collections.emptyMap());
-        } else {
-            webResult.setData(adVO);
-        }
+		List<ContentArticleVO> articleList = appFindService.searchHomeNoticeList("20", 0, 3);
+		List<AppFindNewsVO> newList = new ArrayList<>();
+		for (ContentArticleVO article : articleList) {
+			AppFindNewsVO newsVO = new AppFindNewsVO();
+			newsVO.setId(article.getId());
+			newsVO.setImg(article.getImgurl());
+			newsVO.setTitle(article.getTitle());
+			newsVO.setDate(DateFormatUtils.format(article.getCreateTime(), DATE_FORMAT));
+			newsVO.setShareTitle(article.getTitle());
+			newsVO.setShareContent(article.getSummary());
+			newsVO.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+			newsVO.setShareUrl(appHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
+					.replace("{contentArticleId}", article.getId() + "").replace("{type}", "20") + "?ignoreSign=true");
+			newList.add(newsVO);
+		}
+		List reportList = appFindService.getReportList(1);
+		AppFindVO appFindVO = new AppFindVO();
+		appFindVO.setModules(adVOList);
+		appFindVO.setBanner(adVO);
+		appFindVO.setNewsList(newList);
+		appFindVO.setReportList(reportList);
+		appFindVO.setContact("联系我们 400-900-7878");
+		webResult.setData(appFindVO);
 		return webResult;
 	}
 }

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -153,7 +154,7 @@ public class AmMarketClientImpl implements AmMarketClient {
         if (appFindAdResponse != null) {
             return appFindAdResponse.getResultList();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -166,6 +167,6 @@ public class AmMarketClientImpl implements AmMarketClient {
         if (appFindAdResponse != null) {
             return appFindAdResponse.getResult();
         }
-        return null;
+        return new AppFindAdCustomizeVO();
     }
 }

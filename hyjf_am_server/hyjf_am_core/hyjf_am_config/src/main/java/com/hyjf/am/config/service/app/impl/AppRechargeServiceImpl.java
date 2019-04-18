@@ -23,12 +23,4 @@ public class AppRechargeServiceImpl implements AppRechargeService {
         return RedisUtils.getObj(RedisConstants.APP_RECHARGE + "rule", List.class);
     }
 
-    /**
-     * 获取限额说明
-     * @return
-     */
-    @Override
-    public List getRechargeLimit() {
-        return null;
-    }
 }

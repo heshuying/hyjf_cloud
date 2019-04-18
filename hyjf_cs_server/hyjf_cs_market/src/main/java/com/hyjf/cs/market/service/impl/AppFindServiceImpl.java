@@ -13,6 +13,7 @@ import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmTradeClient;
+import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.service.AppFindService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
 
     @Autowired
     private AmMarketClient amMarketClient;
+
+    @Autowired
+    private CsMessageClient csMessageClient;
 
     /**
      * 查询文章条数
@@ -100,5 +104,14 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
     @Override
     public AppFindAdCustomizeVO getFindBanner(AdsRequest request){
         return amMarketClient.getFindBanner(request);
+    }
+
+    /**
+     * app发现页运营报告信息
+     * @param isRelease
+     * @return
+     */
+    public List getReportList(Integer isRelease){
+        return csMessageClient.getReportList(isRelease);
     }
 }

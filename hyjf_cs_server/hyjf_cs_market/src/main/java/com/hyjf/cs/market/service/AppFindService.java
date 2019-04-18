@@ -83,4 +83,12 @@ public interface AppFindService extends BaseMarketService {
      * @return
      */
     AppFindAdCustomizeVO getFindBanner(AdsRequest request);
+
+    /**
+     * 获取app发现页运营报告列表
+     * @param isRelease
+     * @return
+     */
+    public List getReportList(Integer isRelease);
+
 }
