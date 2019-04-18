@@ -8,9 +8,11 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.workflow.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.resquest.config.AdminRoleRequest;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
@@ -179,7 +181,7 @@ public class WorkFlowConfigController  extends BaseController {
     @ApiOperation(value = "查询邮件预警人", notes = "查询邮件预警人")
     @PostMapping("/selectUser")
     public AdminResult selectUser( @RequestBody WorkFlowUserVO workFlowUserVO) {
-        logger.info("查询邮件预警人，userName:" + workFlowUserVO.getTruename());
+        logger.info("查询邮件预警人，userName:" + workFlowUserVO.getUsername());
         WorkFlowUserResponse response = workFlowConfigService.selectUser(workFlowUserVO);
         logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
         if(response==null) {
@@ -189,6 +191,21 @@ public class WorkFlowConfigController  extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<WorkFlowUserResponse>(response) ;
+    }
+
+    @ApiOperation(value = "查询所有角色", notes = "查询所有角色")
+    @PostMapping("/role")
+    public AdminResult selectWorkFlowRoleList(@RequestBody AdminRoleRequest form) {
+        logger.info("工作流查询所有角色..." );
+        AdminRoleResponse response = workFlowConfigService.selectWorkFlowRoleList();
+        logger.debug("工作流查询所有角色..." + JSONObject.toJSON(response));
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<AdminRoleResponse>(response) ;
     }
 
     /**

@@ -2299,6 +2299,15 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return false;
     }
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    @Override
+    public AdminRoleResponse selectWorkFlowRoleList(){
+        return restTemplate
+                .getForEntity( "http://AM-ADMIN/am-admin/workflow/bussinessflow/selectWorkFlowRoleList", AdminRoleResponse.class).getBody();
+    }
 
     @Override
     public List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll() {

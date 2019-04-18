@@ -6,17 +6,19 @@ import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.workflow.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
-import com.hyjf.am.resquest.admin.AdminUserWorkFlowRequest;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
+import com.hyjf.am.response.config.AdminUserResponse;
+import com.hyjf.am.resquest.admin.AdminUserWorkFlowRequest;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.vo.admin.AdminVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -225,5 +227,14 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         }
 
         return listMail.toArray(new String[listMail.size()]);
+    }
+
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    @Override
+    public AdminRoleResponse selectWorkFlowRoleList(){
+        return adminClient.selectWorkFlowRoleList();
     }
 }

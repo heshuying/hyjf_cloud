@@ -59,10 +59,10 @@ public interface WorkFlowConfigMapper {
     List<WorkFlowNodeVO> selectWorkFlowConfigNode(@Param("businessId")int businessId);
     /**
      *  查询邮件预警通知人
-     * @param truename
+     * @param username
      * @return
      */
-    List<WorkFlowUserVO> selectUser(@Param("truename")String truename);
+    List<WorkFlowUserVO> selectUser(@Param("username")String username,@Param("roleIds")List roleIds);
 
     /**
      * 查询业务流程节点对应的所有用户
