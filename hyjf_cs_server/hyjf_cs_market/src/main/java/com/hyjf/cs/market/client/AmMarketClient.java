@@ -98,4 +98,28 @@ public interface AmMarketClient {
      * @return
      */
     List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads);
+
+    /**
+     * 保存用户竞猜信息
+     * @param userId
+     * @param grade
+     * @return
+     */
+    boolean insertActivityUserGuess(int userId, int grade);
+
+    /**
+     * 判断是否重复竞猜
+     * @param userId
+     * @return
+     */
+    boolean existsActivityUserGuess(int userId);
+
+    /**
+     * 保存用户领取记录
+     * @param userId
+     * @param rewardName 奖励名称
+     * @param rewardType 奖励类型
+     * @return
+     */
+    boolean insertActivityUserReward(int userId, String rewardName, String rewardType);
 }

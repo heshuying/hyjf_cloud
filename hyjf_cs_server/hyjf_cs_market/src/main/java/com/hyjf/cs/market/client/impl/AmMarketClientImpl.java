@@ -1,5 +1,12 @@
 package com.hyjf.cs.market.client.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
@@ -11,12 +18,6 @@ import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.cs.market.client.AmMarketClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -133,5 +134,33 @@ public class AmMarketClientImpl implements AmMarketClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    @Override
+    public boolean insertActivityUserGuess(int userId, int grade) {
+        BooleanResponse response = restTemplate.getForObject(
+                "http://AM-MARKET/am-market/activity/guess/insert/" + userId + "/" + grade,
+                BooleanResponse.class);
+		if (response != null && response.getResultBoolean() != null) {
+			return response.getResultBoolean();
+		}
+		return false;
+    }
+
+    @Override
+    public boolean existsActivityUserGuess(int userId) {
+        BooleanResponse response = restTemplate.getForObject(
+                "http://AM-MARKET/am-market/activity/guess/isExists/" + userId,
+                BooleanResponse.class);
+        if (response != null && response.getResultBoolean() != null) {
+            return response.getResultBoolean().booleanValue();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean insertActivityUserReward(int userId, String rewardName, String rewardType) {
+        // 取消领取按钮，实现细节不用写了
+        return false;
     }
 }

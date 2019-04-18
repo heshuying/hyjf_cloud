@@ -11,6 +11,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.VipAuthVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -56,7 +57,6 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
 
     @Override
     public synchronized JSONObject insertUserCoupon(UserCouponBean paramBean) throws Exception{
-        String methodName = "insertUserCoupon";
         JSONObject retResult = new JSONObject();
         try {
             List<String> couponCodeList = new ArrayList<String>();
@@ -164,40 +164,54 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
 
             }
 
-            //}
             retResult.put("couponCode", couponCodeList);
             retResult.put("retCouponUserCodes", retCouponUserCodes);
             retResult.put("status", 0);
             retResult.put("couponCount", couponCount);
             logger.info("发放优惠券：" + couponCount + " 张");
             if (couponCount > 0) {
-                logger.info("--------------发放优惠券push消息推送开始-----------------");
-                String couponCode = couponCodeList.get(0);
-                Integer couponType = null;
-                CouponConfigVO couponConfigVO = couponConfigClient.selectCouponConfig(couponCode);
-                if(null != couponConfigVO){
-                    couponType = couponConfigVO.getCouponType();
-                }
-                Map<String, String> param = new HashMap<String, String>();
-                param.put("val_number", String.valueOf(couponCount));
-                param.put("val_coupon_type",
-                        couponType == CouponUtil.NUM_TWO ? "加息券"
-                                : couponType == CouponUtil.NUM_THREE ? "代金券" : "体验金");
-                logger.info("用户id：" + userId + " 优惠券类型：" + param.get("val_coupon_type"));
-                AppMsMessage appMsMessage =
-                        new AppMsMessage(Integer.parseInt(userId), param, null, MessageConstant.APP_MS_SEND_FOR_USER,
-                                CustomConstants.JYTZ_COUPON_SUCCESS);
-                MessageContent messageContent = new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                        UUID.randomUUID().toString(), appMsMessage);
-                commonProducer.messageSend(messageContent);
-                logger.info("--------------发放优惠券push消息推送结束------------------");
+                afterSendCoupon(couponCodeList, couponCount, Integer.parseInt(userId));
             }
         } catch (Exception e) {
-            logger.error(methodName, e);
+            logger.error("优惠券发放错误...", e);
             throw e;
 
         }
         return retResult;
+    }
+
+
+    /**
+     * 优惠券发放成功后通知用户
+     * @param couponCodeList
+     * @param couponCount
+     * @param userId
+     */
+    private void afterSendCoupon(List<String> couponCodeList, int couponCount, int userId){
+        logger.info("--------------发放优惠券push消息推送开始-----------------");
+        String couponCode = couponCodeList.get(0);
+        Integer couponType = null;
+        CouponConfigVO couponConfigVO = couponConfigClient.selectCouponConfig(couponCode);
+        if(null != couponConfigVO){
+            couponType = couponConfigVO.getCouponType();
+        }
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("val_number", String.valueOf(couponCount));
+        param.put("val_coupon_type",
+                couponType == CouponUtil.NUM_TWO ? "加息券"
+                        : couponType == CouponUtil.NUM_THREE ? "代金券" : "体验金");
+        logger.info("用户id：" + userId + " 优惠券类型：" + param.get("val_coupon_type"));
+        AppMsMessage appMsMessage =
+                new AppMsMessage(userId, param, null, MessageConstant.APP_MS_SEND_FOR_USER,
+                        CustomConstants.JYTZ_COUPON_SUCCESS);
+        MessageContent messageContent = new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                UUID.randomUUID().toString(), appMsMessage);
+        try {
+            commonProducer.messageSend(messageContent);
+        } catch (MQException e) {
+            logger.error("优惠券发放成功后通知用户异常...", e);
+        }
+        logger.info("--------------发放优惠券push消息推送结束------------------");
     }
 
     /**

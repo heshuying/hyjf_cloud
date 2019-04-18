@@ -1,0 +1,60 @@
+package com.hyjf.am.market.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hyjf.am.market.service.ActivityUserGuessService;
+import com.hyjf.am.response.BooleanResponse;
+
+/**
+ * @author xiasq
+ * @version ActivityUserGuessController, v0.1 2019-04-17 17:15
+ */
+@RestController
+@RequestMapping("/am-market/activity/guess")
+public class ActivityUserGuessController {
+	private Logger logger = LoggerFactory.getLogger(ActivityUserGuessController.class);
+
+	@Autowired
+	private ActivityUserGuessService activityUserGuessService;
+
+	/**
+	 * 保存竞猜结果
+	 * @param userId
+	 * @param guess
+	 * @return
+	 */
+	@RequestMapping("/insert/{userId}/{guess}")
+	public BooleanResponse insert(@PathVariable int userId,
+                                  @PathVariable int guess) {
+		logger.info("insert ActivityUserGuess, userId is: {}, guess is: {}", userId, guess);
+
+		if (activityUserGuessService.selectByUserId(userId) != null) {
+			logger.error("用户：{}已经参与竞猜，不重复...", userId);
+			return new BooleanResponse(Boolean.FALSE);
+		}
+        int guessId = activityUserGuessService.insertActivityUserGuess(userId, guess);
+		logger.info("用户: {}竞猜成功， id: {}", userId, guessId);
+		return new BooleanResponse(Boolean.TRUE);
+	}
+
+	/**
+	 * 判断用户是否重复竞猜
+	 * @param userId
+	 * @return
+	 */
+	@RequestMapping("/isExists/{userId}")
+	public BooleanResponse insert(@PathVariable int userId) {
+		logger.info("isExists ActivityUserGuess, userId is: {}", userId);
+
+		if (activityUserGuessService.selectByUserId(userId) != null) {
+			logger.error("用户：{}已经参与竞猜...", userId);
+			return new BooleanResponse(Boolean.TRUE);
+		}
+		return new BooleanResponse(Boolean.FALSE);
+	}
+}

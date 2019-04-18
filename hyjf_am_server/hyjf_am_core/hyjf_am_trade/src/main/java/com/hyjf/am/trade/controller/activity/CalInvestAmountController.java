@@ -24,7 +24,7 @@ public class CalInvestAmountController extends BaseController {
     @Autowired
     private BorrowTenderService borrowTenderService;
 
-    @RequestMapping("/invest_amount")
+    @RequestMapping("/investAmount")
     public BigDecimalResponse sumInvestAmount() {
         BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal investAmount = borrowTenderService.getInvestAmountByPeriod();
@@ -37,7 +37,7 @@ public class CalInvestAmountController extends BaseController {
     }
 
 
-    @RequestMapping("/annual_invest_amount")
+    @RequestMapping("/annualInvestAmount")
     public BigDecimalResponse sumAnnualInvestAmount(@PathVariable Integer userId) {
         BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal annualInvestAmount = borrowTenderService.getAnnualInvestAmount(userId);
