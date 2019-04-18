@@ -71,12 +71,12 @@
             <!--SELECT LAST_INSERT_ID()-->
         <!--</selectKey>-->
         insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
-        VALUES (#{businessId,jdbcType=VARCHAR}, #{auditFlag,jdbcType=INTEGER},1,#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
+        VALUES (#{businessId,jdbcType=VARCHAR},1, #{auditFlag,jdbcType=INTEGER},#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
     </insert>
 
     <update id="updateWorkFlow" parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
         UPDATE ht_workflow w
-        SET w.workname_id = #{businessId},w.flow_status=#{auditFlag},w.check_status=#{processStatus},w.mail_notifier=#{mailWarningUser},w.update_user=#{updateUser}
+        SET w.workname_id = #{businessId},w.flow_status=1,w.check_status=#{auditFlag},w.mail_notifier=#{mailWarningUser},w.update_user=#{updateUser}
         WHERE  w.id = #{id}
     </update>
 
@@ -122,7 +122,7 @@
 
     <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
         select a.id,a.truename,a.username,ar.role_name roleName,a.mobile,a.email,dep.name AS departmentname,
-        DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s')addTime,CONCAT(a.id,',',a.username,',',a.email)mailWarningUser
+        DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s')addTime,CONCAT(a.username,',',a.email)mailWarningUser
         from ht_admin a
         left join ht_admin_and_role r on a.id=r.user_id
         left join ht_admin_role ar on r.role_id=ar.id

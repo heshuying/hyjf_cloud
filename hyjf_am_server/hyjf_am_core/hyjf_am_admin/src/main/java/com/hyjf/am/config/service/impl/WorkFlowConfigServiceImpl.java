@@ -76,8 +76,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //保存业务流程表
         workFlowConfigMapper.insertWorkFlow(workFlowVO);
         logger.debug("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId()+"工作流节点，请求参数："+ JSONObject.toJSONString(flowNodes));
-        //保存业务流程节点表
-        return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+        //审核状态  添加业务流程节点表
+        if(workFlowVO.getAuditFlag().intValue()==1){
+            return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+        }
+        return 1;
     }
 
     /**
@@ -109,7 +112,8 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     public int updateWorkFlowConfig(WorkFlowVO workFlowVO){
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
-        if(!CollectionUtils.isEmpty(flowNodes)){
+        //审核状态，判断节点用户是否异常
+        if(workFlowVO.getAuditFlag()==1&&!CollectionUtils.isEmpty(flowNodes)){
             //判断流程节点是异常 true正常
             boolean flag= workFlowStatus(flowNodes);
             if(flag){
@@ -123,11 +127,13 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         workFlowConfigMapper.updateWorkFlow(workFlowVO);
         //删除业务流程节点
         deleteWorkFolwNode(workFlowVO.getId());
-        //添加业务流程节点表
-         int count = workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
-         if(count <=0){
-             return 0;
-         }
+        //审核状态  添加业务流程节点表
+        if(workFlowVO.getAuditFlag().intValue()==1){
+            int count = workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+            if(count <=0){
+                return 0;
+            }
+        }
          return 1;
     }
     /**
