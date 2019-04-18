@@ -13,9 +13,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.am.vo.coupon.UserCouponBean;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.common.util.CouponUtil;
 import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmTradeClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
+import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.Activity51Service;
 
 /**
@@ -44,6 +50,8 @@ public class Activity51ServiceImpl implements Activity51Service {
 	private AmTradeClient amTradeClient;
 	@Autowired
 	private AmMarketClient amMarketClient;
+	@Autowired
+	private CommonProducer producer;
 
 	@PostConstruct
 	public void init() {
@@ -85,7 +93,18 @@ public class Activity51ServiceImpl implements Activity51Service {
 			return false;
 		}
 
-		// 此处发放优惠券逻辑取消
+		// 发券
+		try {
+			UserCouponBean couponBean = new UserCouponBean();
+			couponBean.setUserId(userId);
+			couponBean.setSendFlg(CouponUtil.NUM_12);
+			couponBean.setActivityId(0);
+			couponBean.setCouponCode("");
+			producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC, userId + "," + "", couponBean));
+		} catch (MQException e) {
+			logger.error("活动发券失败...", e);
+			return false;
+		}
 
 		RedisUtils.setObjEx(RECEIVE_COUPON_KEY + userId, String.valueOf(userId), 3600 * 24 * 15);
 		return true;
