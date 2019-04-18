@@ -216,12 +216,7 @@ public class BorrowRepayLateServiceImpl extends BaseServiceImpl implements Borro
 
             // 更新borrow_repay_plan表
             for (BorrowRepayLateSetCustomize borrowRepayLateSetCustomize : borrowRepayLateSetCustomizeSet) {
-                // 更新borrow_repay表的advance_status为3：逾期
-                BorrowRepayPlan borrowRepayPlan = new BorrowRepayPlan();
-                borrowRepayPlan.setAdvanceStatus(3);
-                BorrowRepayPlanExample borrowRepayPlanExample = new BorrowRepayPlanExample();
-                borrowRepayPlanExample.createCriteria().andBorrowNidEqualTo(borrowRepayLateSetCustomize.getBorrowNid()).andRepayPeriodEqualTo(borrowRepayLateSetCustomize.getRecoverPeriod());
-                borrowRepayPlanMapper.updateByExampleSelective(borrowRepayPlan, borrowRepayPlanExample);
+                borrowRepayLateMapper.updateBorrowRepayPlan(borrowRepayLateSetCustomize);
             }
         } else {
             for (String borrowNid : borrowNidSet) {
@@ -232,12 +227,8 @@ public class BorrowRepayLateServiceImpl extends BaseServiceImpl implements Borro
                 borrowExample.createCriteria().andBorrowNidEqualTo(borrowNid);
                 borrowMapper.updateByExampleSelective(borrow, borrowExample);
 
-                // 更新borrow_repay表的advance_status为 3:逾期
-                BorrowRepay borrowRepay = new BorrowRepay();
-                borrowRepay.setAdvanceStatus(3);
-                BorrowRepayExample borrowRepayExample = new BorrowRepayExample();
-                borrowRepayExample.createCriteria().andBorrowNidEqualTo(borrowNid);
-                borrowRepayMapper.updateByExampleSelective(borrowRepay, borrowRepayExample);
+                // 更新borrow_repay表
+                borrowRepayLateMapper.updateBorrowRepay(borrowNid);
             }
         }
     }
