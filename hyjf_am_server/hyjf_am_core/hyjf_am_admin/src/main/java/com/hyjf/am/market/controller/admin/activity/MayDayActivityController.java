@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.market.controller;
+package com.hyjf.am.market.controller.admin.activity;
 
 import com.hyjf.am.market.service.ActivityUserGuessService;
 import com.hyjf.am.response.Response;

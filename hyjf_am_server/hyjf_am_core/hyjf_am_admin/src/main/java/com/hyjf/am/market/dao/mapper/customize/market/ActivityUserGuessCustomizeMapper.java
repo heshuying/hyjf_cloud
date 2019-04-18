@@ -6,7 +6,9 @@ package com.hyjf.am.market.dao.mapper.customize.market;
 import com.hyjf.am.vo.admin.ActivityUserGuessVO;
 
 import java.util.List;
-import java.util.Map; /**
+import java.util.Map;
+
+/**
  * @author yaoyong
  * @version ActivityUserGuessCustomizeMapper, v0.1 2019/4/18 16:17
  */

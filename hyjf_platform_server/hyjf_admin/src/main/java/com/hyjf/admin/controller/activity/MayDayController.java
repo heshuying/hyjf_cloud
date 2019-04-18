@@ -52,7 +52,7 @@ public class MayDayController extends BaseController {
     private ActivityUserGuessService activityUserGuessService;
 
     @ApiOperation(value = "活动竞猜列表", notes = "活动竞猜列表")
-    @RequestMapping("/list")
+    @PostMapping("/list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult getRecordList(@RequestBody ActivityUserGuessRequest request) {
         ActivityUserGuessResponse response = activityUserGuessService.getGuessList(request);
