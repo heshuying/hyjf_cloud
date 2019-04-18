@@ -1,4 +1,4 @@
-package com.hyjf.wbs.trade.service.customerinfo;
+package com.hyjf.wbs.trade.service;
 
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.service.BaseService;

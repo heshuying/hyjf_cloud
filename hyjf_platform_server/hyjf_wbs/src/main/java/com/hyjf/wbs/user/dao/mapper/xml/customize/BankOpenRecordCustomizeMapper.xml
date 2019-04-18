@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.user.dao.mapper.customize.BankOpenRecordCustomizeMapper">
+
+    <resultMap id="BankAccountListPOMap" type="com.hyjf.wbs.user.dao.model.customize.BankOpenAccountRecordCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="username" property="userName" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="customer_account" property="customerAccount" jdbcType="VARCHAR"/>
+        <result column="account_status_name" property="accountStatusName" jdbcType="VARCHAR"/>
+        <result column="open_account_plat" property="openAccountPlat" jdbcType="INTEGER"/>
+        <result column="open_time" property="openTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- *****************************************查找江西银行开户记录***************************************** -->
+    <select id="selectBankAccountList" resultMap="BankAccountListPOMap" parameterType="Map">
+        SELECT
+        hydu.user_id,
+        hydu.username,
+        hydu.mobile,
+        hydui.truename AS real_name,
+        hydui.idcard AS id_card,
+        hydu.open_account AS account_status_name,
+        hbc.card_no AS account,
+        hboa.account AS customer_account,
+        hydu.bank_account_esb AS open_account_plat,
+        date_format(hboa.create_time,'%Y-%m-%d %H:%i:%s') AS open_time
+        FROM
+        ht_user hydu
+        LEFT JOIN ht_user_info hydui ON hydu.user_id =
+        hydui.user_id
+        INNER JOIN ht_bank_open_account hboa ON hboa.user_id =
+        hydu.user_id
+        LEFT JOIN ht_bank_card hbc ON hbc.user_id = hydu.user_id
+        <include refid="Bank_Where_Clause"/>
+        ORDER BY hboa.create_time DESC
+        <if test="limitStart != null and limitEnd !=null">
+            LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+        </if>
+    </select>
+    <sql id="Bank_Where_Clause">
+        <where>
+            hydu.bank_open_account = 1
+            <if test="userName != null and userName !='' ">
+                AND hydu.username LIKE CONCAT(#{userName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="mobile != null and mobile !='' ">
+                AND hydu.mobile LIKE CONCAT(#{mobile,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="customerAccount != null and customerAccount !='' ">
+                AND hboa.account = #{customerAccount,jdbcType=VARCHAR}
+            </if>
+            <if test="idCard != null and idCard !='' ">
+                AND hydui.idcard LIKE CONCAT(#{idCard,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="realName != null and realName !='' ">
+                AND hydui.truename LIKE CONCAT(#{realName,jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="openAccountPlat != null and openAccountPlat !='' ">
+                AND hydu.bank_account_esb =
+                #{openAccountPlat,jdbcType=VARCHAR}
+            </if>
+            <if test="openTimeStart != null and openTimeStart !='' ">
+                AND hboa.create_time <![CDATA[>=]]>  concat(#{openTimeStart,jdbcType=VARCHAR},' 00:00:00')
+            </if>
+            <if test="openTimeEnd != null and openTimeEnd !='' ">
+                AND hboa.create_time <![CDATA[<=]]>  concat(#{openTimeEnd,jdbcType=VARCHAR},' 23:59:59')
+            </if>
+        </where>
+    </sql>
+
+</mapper>

@@ -6,17 +6,13 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.CustomerSyncQO;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
-import com.hyjf.wbs.trade.service.customerinfo.AccountService;
+import com.hyjf.wbs.trade.service.AccountService;
 import com.hyjf.wbs.user.dao.model.auto.UtmReg;
-import com.hyjf.wbs.user.service.constomerinfo.UtmRegService;
+import com.hyjf.wbs.user.dao.model.customize.BankOpenAccountRecordCustomize;
+import com.hyjf.wbs.user.service.BankOpenRecordService;
+import com.hyjf.wbs.user.service.SyncCustomerService;
+import com.hyjf.wbs.user.service.UtmRegService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -29,9 +25,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: wxd
@@ -45,23 +42,15 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 
     private static final Logger logger = LoggerFactory.getLogger(SyncWbsAccountConsumer.class);
 
-    public static final String CONSUMER_NAME = "<<账户额度同步到WBS财富管理系统>>: ";
+    public static final String CONSUMER_NAME = "<<客户信息同步到WBS财富管理系统>>: ";
     @Autowired
     private AccountService accountService;
     @Autowired
     private UtmRegService utmRegService;
-
-//    @Autowired
-//    private UserDepartmentInfoService userDepartmentInfoService;
-
-//    @Value("${hyjf.req.pri.key}")
-//    private String hyjfReqPrimaryKeyPath;
-//
-//    @Value("${hyjf.req.password}")
-//    private String hyjfReqPasswordPath;
-//
-//    @Value("${crm.updateCustomer.url}")
-//    private String crmUpdateCustomerUrl;
+    @Autowired
+    private BankOpenRecordService bankOpenRecordService;
+    @Autowired
+    private SyncCustomerService syncCustomerService;
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -98,19 +87,26 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                     logger.error("=====" + CONSUMER_NAME + " 没有查询到目标账户, userId = [{}]=====", userId);
                     return;
                 }
+                Map<String, Object> mapParam = new HashMap<String, Object>();
+                mapParam.put("userId", Integer.valueOf(userId));
+                BankOpenAccountRecordCustomize bankOpenAccountRecordCustomize = bankOpenRecordService.selectBankAccountList(mapParam);
+                if (bankOpenAccountRecordCustomize == null) {
+                    logger.error("=====" + CONSUMER_NAME + "userId==" + userId + "未查到开户记录");
+                } else {
+                    customerSyncQO.setPlatformAccountOpeningTime(bankOpenAccountRecordCustomize.getOpenTime());
+                }
+                customerSyncQO.setAssetCustomerId(userId);
+                customerSyncQO.setEntId(utmReg.getUtmId());//TODO:需要吧渠道编号修改为对应的财富端id
+                customerSyncQO.setUserName(account.getUserName());
+                customerSyncQO.setPrecipitatedCapital(account.getBalance().doubleValue());
+                customerSyncQO.setFundsToBeCollected(account.getAwait().doubleValue());
 
+                syncCustomerService.sync(customerSyncQO);
                 //TODO: 推送客户信息
             }
-//
-//            String reqData = buildData(account).toJSONString();
-//            logger.info("=====" + CONSUMER_NAME + " 请求crm[url = {}]更新数据用户数据[reqData = {}]=====", crmUpdateCustomerUrl, reqData);
-//            CloseableHttpResponse response = postJson(crmUpdateCustomerUrl, reqData);
-//            if (null == response || response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-//                // 请求没有返回200 则稍后重新消费
-//                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
-//            }
+
         } catch (Exception e1) {
-            logger.error("=====" + CONSUMER_NAME + "同步账户额度到wbs异常=====");
+            logger.error("=====" + CONSUMER_NAME + "异常=====");
             logger.error(e1.getMessage());
             return;
         }
@@ -133,122 +129,4 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
         logger.info("====" + CONSUMER_NAME + "监听初始化完成, 启动完毕=====");
     }
 
-//    /**
-//     * 组装请求参数
-//     *
-//     * @author zhangyk
-//     * @date 2018/8/3 14:32
-//     */
-//    private JSONObject buildData(Account account) {
-//        JSONObject ret = new JSONObject();
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("customerId", account.getUserId());
-//        map.put("availableBalance", account.getBankBalance());
-//        if (account.getBankAwait() == null) {
-//            account.setBankAwait(new BigDecimal("0.00"));
-//        }
-//        if (account.getPlanAccountWait() == null) {
-//            account.setPlanAccountWait(new BigDecimal("0.00"));
-//        }
-//        map.put("pendingAmount", account.getBankAwait().add(account.getPlanAccountWait()));
-//
-//        String sign = this.encryptByRSA(map, "10000001");
-//        ret.put("instCode", "10000001");
-//        ret.put("object", map);
-//        ret.put("sign", sign);
-//        return ret;
-//    }
-//
-//
-//    /**
-//     * 请求数据加签
-//     *
-//     * @param mapText
-//     */
-//    private String encryptByRSA(Map<String, Object> mapText, String instCode) {
-//        try {
-//            String signText = getSignText(mapText);
-//            logger.info("待加签数据【" + signText + "】");
-//
-//            RSAKeyUtil rsaKey = new RSAKeyUtil(new File(hyjfReqPrimaryKeyPath + instCode + ".p12"), hyjfReqPasswordPath);
-//            RSAHelper signer = new RSAHelper(rsaKey.getPrivateKey());
-//            String sign = signer.sign(signText);
-//            return sign;
-//        } catch (Exception e) {
-//            logger.error("加签失败！" + e.getMessage(), e);
-//        }
-//        throw new IllegalArgumentException("加签失败！");
-//
-//    }
-//
-//    private String getSignText(Map<String, Object> generalSignInfo) throws Exception {
-//        TreeMap<String, Object> treeMap = new TreeMap<>(generalSignInfo);
-//
-//        StringBuffer buff = new StringBuffer();
-//        Iterator<Map.Entry<String, Object>> iter = treeMap.entrySet().iterator();
-//        Map.Entry<String, Object> entry;
-//        while (iter.hasNext()) {
-//            entry = iter.next();
-//            if (entry.getValue() == null) {
-//                entry.setValue("");
-//                buff.append("");
-//            } else {
-//                buff.append(String.valueOf(entry.getValue()));
-//            }
-//        }
-//        String requestMerged = buff.toString();
-//        return requestMerged.replaceAll("[\\t\\n\\r]", "");
-//    }
-
-    /**
-     * 处理post请求.
-     *
-     * @param url 参数
-     * @return json
-     */
-    public CloseableHttpResponse postJson(String url, String jsonStr) {
-        // 实例化httpClient
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        // 实例化post方法
-        HttpPost httpPost = new HttpPost(url);
-        // 结果
-        CloseableHttpResponse response = null;
-        try {
-            // 提交的参数
-            StringEntity uefEntity = new StringEntity(jsonStr, "utf-8");
-            uefEntity.setContentEncoding("UTF-8");
-            uefEntity.setContentType("application/json");
-            // 将参数给post方法
-            httpPost.setEntity(uefEntity);
-            // 执行post方法
-            response = httpclient.execute(httpPost);
-
-            // 执行post方法
-            response = httpclient.execute(httpPost);
-            if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                String content = EntityUtils.toString(response.getEntity());
-                logger.info("======" + CONSUMER_NAME + " 投递返回结果 [{}]=====", content);
-            } else {
-                logger.info("=====" + CONSUMER_NAME + " 投递结果httpStatus异常=====");
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        } finally {
-            if (response != null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
-            }
-            if (httpclient != null) {
-                try {
-                    httpclient.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
-            }
-        }
-        return response;
-    }
 }

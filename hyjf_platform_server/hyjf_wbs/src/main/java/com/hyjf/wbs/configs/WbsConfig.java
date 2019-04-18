@@ -22,8 +22,19 @@ public class WbsConfig {
     @Value("${wbs.url.sync_customer}")
     private String syncCustomerUrl;
 
+    @Value("${wbs.url.sync_product_info}")
+    private String syncProductInfoUrl;
+
     @Value("${third.property.ids}")
     private String thridPropertyIds;
+
+    public String getSyncProductInfoUrl() {
+        return syncProductInfoUrl;
+    }
+
+    public void setSyncProductInfoUrl(String syncProductInfoUrl) {
+        this.syncProductInfoUrl = syncProductInfoUrl;
+    }
 
     public String getAppKey() {
         return appKey;

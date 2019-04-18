@@ -5,13 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.ProductInfoQO;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -108,7 +101,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
 //                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
 //            }
         } catch (Exception e1) {
-            logger.error("=====" + CONSUMER_NAME + "同步账户额度到wbs异常=====");
+            logger.error("=====" + CONSUMER_NAME + "异常=====");
             logger.error(e1.getMessage());
             return;
         }
@@ -129,124 +122,5 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
         defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
         defaultMQPushConsumer.setConsumeTimeout(30);
         logger.info("====" + CONSUMER_NAME + "监听初始化完成, 启动完毕=====");
-    }
-
-//    /**
-//     * 组装请求参数
-//     *
-//     * @author zhangyk
-//     * @date 2018/8/3 14:32
-//     */
-//    private JSONObject buildData(Account account) {
-//        JSONObject ret = new JSONObject();
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("customerId", account.getUserId());
-//        map.put("availableBalance", account.getBankBalance());
-//        if (account.getBankAwait() == null) {
-//            account.setBankAwait(new BigDecimal("0.00"));
-//        }
-//        if (account.getPlanAccountWait() == null) {
-//            account.setPlanAccountWait(new BigDecimal("0.00"));
-//        }
-//        map.put("pendingAmount", account.getBankAwait().add(account.getPlanAccountWait()));
-//
-//        String sign = this.encryptByRSA(map, "10000001");
-//        ret.put("instCode", "10000001");
-//        ret.put("object", map);
-//        ret.put("sign", sign);
-//        return ret;
-//    }
-//
-//
-//    /**
-//     * 请求数据加签
-//     *
-//     * @param mapText
-//     */
-//    private String encryptByRSA(Map<String, Object> mapText, String instCode) {
-//        try {
-//            String signText = getSignText(mapText);
-//            logger.info("待加签数据【" + signText + "】");
-//
-//            RSAKeyUtil rsaKey = new RSAKeyUtil(new File(hyjfReqPrimaryKeyPath + instCode + ".p12"), hyjfReqPasswordPath);
-//            RSAHelper signer = new RSAHelper(rsaKey.getPrivateKey());
-//            String sign = signer.sign(signText);
-//            return sign;
-//        } catch (Exception e) {
-//            logger.error("加签失败！" + e.getMessage(), e);
-//        }
-//        throw new IllegalArgumentException("加签失败！");
-//
-//    }
-//
-//    private String getSignText(Map<String, Object> generalSignInfo) throws Exception {
-//        TreeMap<String, Object> treeMap = new TreeMap<>(generalSignInfo);
-//
-//        StringBuffer buff = new StringBuffer();
-//        Iterator<Map.Entry<String, Object>> iter = treeMap.entrySet().iterator();
-//        Map.Entry<String, Object> entry;
-//        while (iter.hasNext()) {
-//            entry = iter.next();
-//            if (entry.getValue() == null) {
-//                entry.setValue("");
-//                buff.append("");
-//            } else {
-//                buff.append(String.valueOf(entry.getValue()));
-//            }
-//        }
-//        String requestMerged = buff.toString();
-//        return requestMerged.replaceAll("[\\t\\n\\r]", "");
-//    }
-
-    /**
-     * 处理post请求.
-     *
-     * @param url 参数
-     * @return json
-     */
-    public CloseableHttpResponse postJson(String url, String jsonStr) {
-        // 实例化httpClient
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        // 实例化post方法
-        HttpPost httpPost = new HttpPost(url);
-        // 结果
-        CloseableHttpResponse response = null;
-        try {
-            // 提交的参数
-            StringEntity uefEntity = new StringEntity(jsonStr, "utf-8");
-            uefEntity.setContentEncoding("UTF-8");
-            uefEntity.setContentType("application/json");
-            // 将参数给post方法
-            httpPost.setEntity(uefEntity);
-            // 执行post方法
-            response = httpclient.execute(httpPost);
-
-            // 执行post方法
-            response = httpclient.execute(httpPost);
-            if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                String content = EntityUtils.toString(response.getEntity());
-                logger.info("======" + CONSUMER_NAME + " 投递返回结果 [{}]=====", content);
-            } else {
-                logger.info("=====" + CONSUMER_NAME + " 投递结果httpStatus异常=====");
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        } finally {
-            if (response != null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
-            }
-            if (httpclient != null) {
-                try {
-                    httpclient.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                }
-            }
-        }
-        return response;
     }
 }

@@ -14,5 +14,6 @@ public interface WbsConstants {
 
     String INTERFACE_NAME_SYNC_CUSTOMER="csc.customer.batchsync";
 
+    String INTERFACE_NAME_SYNC_PRODUCT_INFO="pdc.product.batchsync";
 
 }
