@@ -41,6 +41,7 @@ public class ReturnFilter extends ZuulFilter {
             String token = "";
             token = request.getHeader(GatewayConstant.TOKEN);
             logger.info("token is :{}",token);
+            logger.info("body is :{}",body);
             if (StringUtils.isNotBlank(body)) {
                 if (StringUtils.isBlank(token)) {
                     logger.warn("originalRequestPath: {}...", originalRequestPath);
