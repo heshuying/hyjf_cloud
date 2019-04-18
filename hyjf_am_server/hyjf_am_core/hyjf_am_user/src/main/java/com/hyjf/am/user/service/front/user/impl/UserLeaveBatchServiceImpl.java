@@ -56,6 +56,7 @@ public class UserLeaveBatchServiceImpl extends BaseServiceImpl implements UserLe
      * @return
      * @throws Exception
      */
+    @Override
     public void updateUserLeaveInfo(User employee) throws RuntimeException {
         // 当前用户的userId
         int userId = employee.getUserId();
