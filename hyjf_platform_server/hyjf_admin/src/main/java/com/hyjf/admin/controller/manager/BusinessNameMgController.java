@@ -93,7 +93,7 @@ public class BusinessNameMgController  extends BaseController {
 
     @ApiOperation(value = "修改", notes = "修改")
     @PostMapping("/update")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY , ShiroConstants.PERMISSION_MODIFYRE})
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY})
     public AdminResult update(@RequestBody BusinessNameMgRequest request, HttpServletRequest httpServletRequest) {
 
         if(request.getId() == null){
