@@ -121,9 +121,12 @@
     </select>
 
     <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
-        select a.id,a.truename,a.username,ar.role_name roleName,a.mobile,a.email,CONCAT(a.id,',',a.username,',',a.email)mailWarningUser from ht_admin a
+        select a.id,a.truename,a.username,ar.role_name roleName,a.mobile,a.email,dep.name AS departmentname,
+        DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s')addTime,CONCAT(a.id,',',a.username,',',a.email)mailWarningUser
+        from ht_admin a
         left join ht_admin_and_role r on a.id=r.user_id
         left join ht_admin_role ar on r.role_id=ar.id
+        left join hyjf_user.ht_r_oa_department dep ON a.department_id = dep.id
         where a.del_flag = 0 and a.state=0
         <if test="username != null and username !=''">
             and a.username like CONCAT(#{username},'%')
