@@ -3,13 +3,14 @@
  */
 package com.hyjf.am.market.controller;
 
-import com.hyjf.am.market.dao.model.auto.ActivityUserGuess;
 import com.hyjf.am.market.service.ActivityUserGuessService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ActivityUserGuessResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
 import com.hyjf.am.vo.admin.ActivityUserGuessVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,8 +38,11 @@ public class MayDayActivityController {
         }
         if (recordCount > 0) {
             List<ActivityUserGuessVO> userGuessVOList = activityUserGuessService.getGuessList(request, paginator.getOffset(), paginator.getLimit());
-            response.setResultList(userGuessVOList);
+            if (!CollectionUtils.isEmpty(userGuessVOList)) {
+                response.setResultList(userGuessVOList);
+            }
             response.setCount(recordCount);
+            response.setRtn(Response.SUCCESS);
             return response;
         }
         return response;
