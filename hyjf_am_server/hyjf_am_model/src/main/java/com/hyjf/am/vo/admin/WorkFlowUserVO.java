@@ -58,6 +58,17 @@ public class WorkFlowUserVO  extends BaseVO implements Serializable {
      */
     private String workname;
 
+    /**
+     * 部门名称
+     * @return
+     */
+    private String departmentname;
+
+    /**
+     * 添加时间
+     * @return
+     */
+    private String addTime;
     public Integer getId() {
         return id;
     }
@@ -144,5 +155,21 @@ public class WorkFlowUserVO  extends BaseVO implements Serializable {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getDepartmentname() {
+        return departmentname;
+    }
+
+    public void setDepartmentname(String departmentname) {
+        this.departmentname = departmentname;
+    }
+
+    public String getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(String addTime) {
+        this.addTime = addTime;
     }
 }
