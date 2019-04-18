@@ -40,6 +40,7 @@ public class ReturnFilter extends ZuulFilter {
             HttpServletRequest request = ctx.getRequest();
             String token = "";
             token = request.getHeader(GatewayConstant.TOKEN);
+            logger.info("token is :{}",token);
             if (StringUtils.isNotBlank(body)) {
                 if (StringUtils.isBlank(token)) {
                     logger.warn("originalRequestPath: {}...", originalRequestPath);
