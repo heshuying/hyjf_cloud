@@ -1,31 +1,31 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
-import com.hyjf.am.config.dao.model.auto.WorkflowNode;
-import com.hyjf.am.config.dao.model.auto.WorkflowNodeExample;
+import com.hyjf.am.config.dao.model.auto.WorkFlowNode;
+import com.hyjf.am.config.dao.model.auto.WorkFlowNodeExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface WorkflowNodeMapper {
-    int countByExample(WorkflowNodeExample example);
+public interface WorkFlowNodeMapper {
+    int countByExample(WorkFlowNodeExample example);
 
-    int deleteByExample(WorkflowNodeExample example);
+    int deleteByExample(WorkFlowNodeExample example);
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(WorkflowNode record);
+    int insert(WorkFlowNode record);
 
-    int insertSelective(WorkflowNode record);
+    int insertSelective(WorkFlowNode record);
 
-    List<WorkflowNode> selectByExample(WorkflowNodeExample example);
+    List<WorkFlowNode> selectByExample(WorkFlowNodeExample example);
 
-    WorkflowNode selectByPrimaryKey(Integer id);
+    WorkFlowNode selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") WorkflowNode record, @Param("example") WorkflowNodeExample example);
+    int updateByExampleSelective(@Param("record") WorkFlowNode record, @Param("example") WorkFlowNodeExample example);
 
-    int updateByExample(@Param("record") WorkflowNode record, @Param("example") WorkflowNodeExample example);
+    int updateByExample(@Param("record") WorkFlowNode record, @Param("example") WorkFlowNodeExample example);
 
-    int updateByPrimaryKeySelective(WorkflowNode record);
+    int updateByPrimaryKeySelective(WorkFlowNode record);
 
-    int updateByPrimaryKey(WorkflowNode record);
+    int updateByPrimaryKey(WorkFlowNode record);
 }
