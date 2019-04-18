@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class WorkflowNodeExample {
+public class WorkFlowNodeExample {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class WorkflowNodeExample {
 
     protected int limitEnd = -1;
 
-    public WorkflowNodeExample() {
+    public WorkFlowNodeExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

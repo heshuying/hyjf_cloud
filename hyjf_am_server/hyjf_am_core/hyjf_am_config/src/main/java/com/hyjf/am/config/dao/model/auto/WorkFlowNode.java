@@ -3,7 +3,7 @@ package com.hyjf.am.config.dao.model.auto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class WorkflowNode implements Serializable {
+public class WorkFlowNode implements Serializable {
     /**
      * id
      *
