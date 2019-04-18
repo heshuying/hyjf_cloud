@@ -1,19 +1,17 @@
 package com.hyjf.cs.market.service.impl;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
-
+import org.apache.axis.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.vo.coupon.UserCouponBean;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -36,10 +34,8 @@ public class Activity51ServiceImpl implements Activity51Service {
 	 */
 	private final BigDecimal USER_ANNUAL_INVEST_STANDARD = new BigDecimal(10000);
 	/**
-	 * 活动时间初始化
+	 * 活动时间
 	 */
-	private final LocalDate ACTIVITY_START_DATE = LocalDate.of(2019, 5, 1);
-	private final LocalDate ACTIVITY_END_DATE = LocalDate.of(2019, 5, 15);
 	private Date activityStartDate = null;
 	private Date activityEndDate = null;
 	/**
@@ -52,20 +48,20 @@ public class Activity51ServiceImpl implements Activity51Service {
 	private AmMarketClient amMarketClient;
 	@Autowired
 	private CommonProducer producer;
-
-	@PostConstruct
-	public void init() {
-		final ZoneId zone = ZoneId.systemDefault();
-		final Instant startInstant = ACTIVITY_START_DATE.atStartOfDay().atZone(zone).toInstant();
-		final Instant endInstant = ACTIVITY_END_DATE.atStartOfDay().atZone(zone).toInstant();
-		activityStartDate = Date.from(startInstant);
-		activityEndDate = Date.from(endInstant);
-	}
+	@Value("${activity.qingma.couponCodes}")
+	private String couponCodes;
+	@Value("${activity.qingma.activityId}")
+	private Integer activityId;
 
 	@Override
 	public boolean isActivityTime() {
-		LocalDate today = LocalDate.now();
-		if (today.isAfter(ACTIVITY_START_DATE.minusDays(1)) && today.isBefore(ACTIVITY_END_DATE.minusDays(-1))){
+		if (activityStartDate == null || activityEndDate == null) {
+			logger.warn("活动时间初始化初始化...");
+			init();
+		}
+
+		Date today = new Date();
+		if (today.compareTo(activityStartDate) == 1 && today.compareTo(activityEndDate) == -1) {
 			return true;
 		}
 		return false;
@@ -74,7 +70,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 	@Override
 	public BigDecimal getSumAmount() {
 		if (activityStartDate == null || activityEndDate == null) {
-			logger.warn("活动时间初始化失败,重新初始化...");
+			logger.warn("活动时间初始化初始化...");
 			init();
 		}
 		return amTradeClient.getSumAmount(activityStartDate, activityEndDate);
@@ -87,8 +83,20 @@ public class Activity51ServiceImpl implements Activity51Service {
 
 	@Override
 	public boolean sendCoupon(int userId, int grade) {
+		activityId = activityId == null ? 0 : activityId;
+		if(StringUtils.isEmpty(couponCodes)){
+			logger.error("未配置优惠券编号...");
+			return false;
+		}
+		String[] couponCodeArray = couponCodes.split(",");
+		if (couponCodeArray.length < 4) {
+			logger.error("优惠券编号配置错误...");
+			return false;
+		}
+		String couponCode = couponCodeArray[grade - 1];
+
 		// 保存领取记录
-		boolean insertFlag = amMarketClient.insertActivityUserReward(userId, getRewardByGrade(grade), "加息券");
+		boolean insertFlag = amMarketClient.insertActivityUserReward(userId, activityId, getRewardByGrade(grade), "加息券");
 		if (!insertFlag) {
 			return false;
 		}
@@ -98,8 +106,8 @@ public class Activity51ServiceImpl implements Activity51Service {
 			UserCouponBean couponBean = new UserCouponBean();
 			couponBean.setUserId(userId);
 			couponBean.setSendFlg(CouponUtil.NUM_12);
-			couponBean.setActivityId(0);
-			couponBean.setCouponCode("");
+			couponBean.setActivityId(activityId);
+			couponBean.setCouponCode(couponCode);
 			producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC, userId + "," + "", couponBean));
 		} catch (MQException e) {
 			logger.error("活动发券失败...", e);
@@ -122,7 +130,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 	 */
 	private boolean isUserTenderEnough(int userId) {
 		if (activityStartDate == null || activityEndDate == null) {
-			logger.warn("活动时间初始化失败,重新初始化...");
+			logger.warn("活动时间初始化初始化...");
 			init();
 		}
 		BigDecimal tenderAmount = amTradeClient.getUserTender(userId, activityStartDate, activityEndDate);
@@ -161,5 +169,17 @@ public class Activity51ServiceImpl implements Activity51Service {
 		default:
 			throw new RuntimeException("错误的档位");
 		}
+	}
+
+	/**
+	 * 活动时间初始化
+	 */
+	private void init() {
+		ActivityListVO vo = amMarketClient.selectActivityList(activityId);
+		if (vo == null) {
+			logger.error("活动未配置, activityId is: {}", activityId);
+		}
+		activityStartDate = new Date(vo.getTimeStart() * 1000L);
+		activityEndDate = new Date(vo.getTimeEnd() * 1000L);
 	}
 }

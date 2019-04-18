@@ -297,7 +297,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public BigDecimal getSumAmount(Date startDate, Date endDate) {
-		String url = "http://AM-TRADE//am-trade/investAmount/sum?startDate=" + startDate + "&endDate=" + endDate;
+		String url = "http://AM-TRADE//am-trade/investAmount/sum/" + startDate + "/" + endDate;
 		BigDecimalResponse response = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultDec();
@@ -307,8 +307,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public BigDecimal getUserTender(int userId, Date startDate, Date endDate) {
-		String url = "http://AM-TRADE//am-trade/investAmount/annual/" + userId + "?startDate=" + startDate + "&endDate="
-				+ endDate;
+		String url = "http://AM-TRADE//am-trade/investAmount/annual/" + userId + "/" + startDate + "/" + endDate;
 		BigDecimalResponse response = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultDec();
