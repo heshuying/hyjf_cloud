@@ -2964,7 +2964,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	private BigDecimal getRepayPlanAccountSum(String borrowNid, boolean isAllRepay, int lastPeriod) throws Exception {
 		BorrowApicronExample apicronExample = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = apicronExample.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid).andIsAllrepayEqualTo(1);
+		criteria.andBorrowNidEqualTo(borrowNid);
         if (lastPeriod > 0) {
             logger.info("【直投还款】借款编号：{}，查看多期还款还款任务。还款最后一期：{}", borrowNid, lastPeriod);
             criteria.andLastPeriodEqualTo(lastPeriod);
