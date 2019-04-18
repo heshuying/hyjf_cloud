@@ -803,6 +803,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     @Override
+    @Deprecated
     public ProjectBeanVO searchRepayProjectDetail(ProjectBeanVO form) throws Exception {
         boolean isAllRepay = form.isBlAllRepay();
         String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
@@ -921,6 +922,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param repayByTerm
      * @throws ParseException
      */
+    @Deprecated
     private void setRecoverPlanDetail(ProjectBeanVO form, boolean isAllRepay, String userId,BorrowCustomizeVO borrow,RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
@@ -1153,6 +1155,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @return
      * @throws Exception
      */
+    @Deprecated
     private BigDecimal calculateRepayPlan(RepayBean repay, BorrowCustomizeVO borrow, int period) throws Exception {
 
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
@@ -1221,6 +1224,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param repayByTerm
      * @throws ParseException
      */
+    @Deprecated
     private void setRecoverPlanAllDetail(ProjectBeanVO form, boolean isAllRepay, String userId,BorrowCustomizeVO borrow,RepayBean repayByTerm) throws ParseException {
 
         String borrowNid = borrow.getBorrowNid();
@@ -1475,6 +1479,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @return
      * @throws Exception
      */
+    @Deprecated
     private BigDecimal calculateRepayPlanAll(RepayBean repay, BorrowCustomizeVO borrow, int period) throws Exception {
 
         List<RepayDetailBean> borrowRepayPlanDeails = new ArrayList<RepayDetailBean>();
@@ -1604,6 +1609,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param borrow
      * @param totalPeriod
      */
+    @Deprecated
     private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow,int totalPeriod) {
 
         // 项目编号
@@ -1997,6 +2003,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param repayTimeStart
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow, int period, String repayTimeStart) throws ParseException {
 
         int delayDays = borrowRepayPlan.getDelayDays().intValue();
@@ -2054,6 +2061,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param lateDays
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverPlanLate(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow, int delayDays, int lateDays) throws ParseException {
 
         // 项目编号
@@ -2376,6 +2384,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param interestDay
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow, int interestDay) throws ParseException {
 
         // 项目编号
@@ -2620,6 +2629,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param delayDays
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverPlanDelay(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow, int delayDays) throws ParseException {
 
         // 项目编号
@@ -2909,6 +2919,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param borrow
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow) throws ParseException {
 
         // 项目编号
@@ -3212,6 +3223,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param borrow
      * @throws ParseException
      */
+    @Deprecated
     private void setRecoverDetail(ProjectBeanVO form, String userId, BorrowCustomizeVO borrow,RepayBean repay)
             throws ParseException {
 
@@ -3394,6 +3406,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @return
      * @throws ParseException
      */
+    @Deprecated
     public RepayBean calculateRepay(int userId, BorrowCustomizeVO borrow) throws ParseException {
        RepayBean repay = new RepayBean();
         // 获取还款总表数据
@@ -3436,6 +3449,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param delayDays
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecover(RepayBean repay, BorrowCustomizeVO borrow, String repayTimeStr, int delayDays) throws ParseException {
         int time = GetDate.getNowTime10();
         // 用户计划还款时间
@@ -3501,6 +3515,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param delayDays
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverTotalDelay(RepayBean repay, BorrowCustomizeVO borrow, int delayDays) throws ParseException {
         // 用户延期
         String borrowNid = borrow.getBorrowNid();// 项目编号
@@ -3902,6 +3917,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param interestDay
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverTotal(RepayBean repay, BorrowCustomizeVO borrow, int interestDay) throws ParseException {
 
         // 正常还款
@@ -4090,6 +4106,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param lateDays
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverTotalLate(RepayBean repay, BorrowCustomizeVO borrow, int delayDays, int lateDays) throws ParseException {
 
         // 项目编号
@@ -4350,6 +4367,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param interestDay
      * @throws ParseException
      */
+    @Deprecated
     private void calculateRecoverTotalAdvance(RepayBean repay, BorrowCustomizeVO borrow, int interestDay) throws ParseException {
 
         // 用户提前还款

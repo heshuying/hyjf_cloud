@@ -39,10 +39,10 @@
 		SELECT
 		hbap.suc_amount,
 		hbap.batch_service_fee,
-		DATE_FORMAT(
-		hbap.update_time,
-		'%Y-%m-%d'
-		) AS suc_time,
+        FROM_UNIXTIME(
+        hydb.reverify_time,
+        '%Y-%m-%d'
+        ) AS suc_time,
 		hydb.borrow_nid,
 		hbi.`name` AS borrow_name,
 		hydbpt.borrow_name AS project_type_name,
@@ -62,7 +62,7 @@
 		hydb.borrow_period AS borrow_period_int,
 		hbi.company_or_personal AS com_or_per,
 		FROM_UNIXTIME(
-		hydb.verify_time,
+		hydb.reverify_time,
 		'%Y-%m-%d'
 		) AS loan_time,
 		hydb.account AS borrow_account,
@@ -132,7 +132,7 @@
 		hydb.plan_nid,
 		CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN 1
-		ELSE hydb.borrow_period - hydbr.repay_period + 1
+		ELSE IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
 		END AS current_period
 		FROM
 		ht_borrow hydb
@@ -144,14 +144,14 @@
 		AND hba.`status` <![CDATA[<>]]> 6
 		AND CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		END
 		LEFT JOIN ht_borrow_apicron hbap ON hbap.borrow_nid = hydb.borrow_nid
 		AND hbap.api_type = 0
 		AND hbap.`status` = 6
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
 		AND plan.repay_period = (
-		hydb.borrow_period - hydbr.repay_period + 1
+		IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
 		)
 		<include refid="Where_Clause_Repay_List" />
 		ORDER BY
@@ -327,7 +327,7 @@
 		END AS repayYesTime,
 		CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN 1
-		ELSE hydb.borrow_period - hydbr.repay_period + 1
+		ELSE (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		END AS current_period
 		FROM
 		ht_borrow hydb
@@ -340,12 +340,10 @@
 		AND hba.`status` <![CDATA[<>]]> 6
 		AND CASE WHEN hydb.borrow_style in ('endday','end')
 		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		END
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
-		AND plan.repay_period = (
-		hydb.borrow_period - hydbr.repay_period + 1
-		)
+		AND plan.repay_period = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
 		<if test="repayStatus != null and repayStatus != ''">
             LEFT JOIN
             (select orgLog.del_flag,orgLog.borrow_nid from ht_bank_repay_org_freeze_log orgLog inner join ht_borrow hb ON orgLog.borrow_nid = hb.borrow_nid
@@ -427,25 +425,24 @@
 	<select id="searchOrgRepayedList" resultMap="repayListResultMap" parameterType="Map">
 		SELECT
 		hydb.borrow_nid,
+		hydb.account AS borrow_account,
 		hbi.`name` AS borrow_name,
 		hydbpt.borrow_name AS project_type,
 		hydb.borrow_style,
 		hydb.borrow_apr AS borrow_interest,
-		FROM_UNIXTIME(
-		hydbr.repay_time,
-		'%Y-%m-%d'
-		) AS repay_time,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_time,'%Y-%m-%d')
+        ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repay_time,
 		CASE WHEN hba.is_repay_org_flag = 1 THEN '机构垫付' ELSE '借款人还款' END AS repay_money_source,
-		FROM_UNIXTIME(
-		hydbr.repay_action_time,
-		'%Y-%m-%d'
-		) AS action_time,
-		hydbr.repay_capital_yes AS capital_yes,
-		hydbr.repay_account_yes AS account_yes,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_action_time,'%Y-%m-%d')
+        ELSE FROM_UNIXTIME(hbrp.repay_action_time,'%Y-%m-%d') END AS action_time,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN hydbr.repay_capital_yes
+        ELSE hbrp.repay_capital_yes END AS capital_yes,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN hydbr.repay_account_yes
+        ELSE hbrp.repay_account_yes END AS account_yes,
 		hba.period_now AS repay_period,
 		hba.batch_amount AS repay_total,
-		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_time,'%Y-%m-%d')
-		ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repayYesTime,
+		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_action_time,'%Y-%m-%d')
+		ELSE FROM_UNIXTIME(hbrp.repay_action_time,'%Y-%m-%d') END AS repayYesTime,
         hydb.borrow_period AS borrow_period_int,
 		hba.period_now AS current_period
 		FROM

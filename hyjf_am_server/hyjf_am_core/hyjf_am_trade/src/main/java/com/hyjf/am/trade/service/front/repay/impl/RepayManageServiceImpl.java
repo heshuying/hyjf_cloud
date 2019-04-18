@@ -907,7 +907,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 repayRecoverBean.setRecoverCapitalOld(userCapital);
                 repayRecoverBean.setCreditAmountOld(borrowRecover.getCreditAmount());
                 // 如果项目类型为融通宝，调用新的提前还款利息计算公司
-                if (borrow.getProjectType() == 13 || CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                if (borrow.getProjectType() == 13) {
                     // 提前还款不应该大于本次计息时间
                     if (totalDays < interestDay) {
                         // 用户提前还款减少的利息
@@ -916,11 +916,18 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                         // 用户提前还款减少的利息
                         userChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), interestDay);
                     }
+                } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                    int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
+                    // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                    BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), carryDays);
+                    if (acctualInterest.compareTo(userInterest) >= 0) {
+                        userChargeInterest = BigDecimal.ZERO;
+                    } else {
+                        userChargeInterest = userInterest.subtract(acctualInterest);
+                    }
                 } else {
-
                     // 实际持有天数
                     int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
-
                     // 用户提前还款减少的利息
                     BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr(), acctualDays);
                     if (acctualInterest.compareTo(userInterest) >= 0) {
@@ -928,7 +935,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     } else {
                         userChargeInterest = userInterest.subtract(acctualInterest);
                     }
-                    userChargePenaltyInterest = acctualInterest;
+                    userChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr());
                 }
 
                 // 项目提前还款时，提前还款利息不得大于应还款利息，需求变更
@@ -971,7 +978,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
                                 }
                                 // 如果项目类型为融通宝，调用新的提前还款利息计算公司
-                                if (borrow.getProjectType() == 13 || CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                if (borrow.getProjectType() == 13) {
                                     // 提前还款不应该大于本次计息时间
                                     if (totalDays < interestDay) {
                                         // 用户提前还款减少的利息
@@ -980,18 +987,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         // 用户提前还款减少的利息
                                         assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), interestDay);
                                     }
-                                } else {
-                                    // 实际持有天数
-                                    int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
-
-                                    // 用户提前还款减少的利息
-                                    BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr(), acctualDays);
+                                } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                    int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
+                                    // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                                    BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), carryDays);
                                     if (acctualInterest.compareTo(assignInterest) >= 0) {
                                         assignChargeInterest = BigDecimal.ZERO;
                                     } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
-                                    assignChargePenaltyInterest = acctualInterest;
+                                } else {
+                                    // 实际持有天数
+                                    int acctualDays = GetDate.daysBetween(createTime, factRepayTime);
+
+                                    // 用户提前还款应还的利息  实际用款天数+3   这个不变
+                                    BigDecimal acctualInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr(), acctualDays);
+                                    if (acctualInterest.compareTo(assignInterest) >= 0) {
+                                        assignChargeInterest = BigDecimal.ZERO;
+                                    } else {
+                                        assignChargeInterest = assignInterest.subtract(acctualInterest);// 用户提前还款实际减息 应还利息-实际应还利息
+                                    }
+                                    assignChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr());// 用户提前还款罚息
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -1033,6 +1049,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
                                 userChargePenaltyInterest = acctualInterest;
+                            } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
+                                // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                                BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), carryDays);
+                                if (acctualInterest.compareTo(userInterest) >= 0) {
+                                    userChargeInterest = BigDecimal.ZERO;
+                                } else {
+                                    userChargeInterest = userInterest.subtract(acctualInterest);
+                                }
                             }
                             // 统计总额
                             repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userManageFee);// 统计总和本息+管理费
@@ -1079,7 +1104,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     }
                                 }
                                 // 如果项目类型为融通宝，调用新的提前还款利息计算公司
-                                if (borrow.getProjectType() == 13 || CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                if (borrow.getProjectType() == 13) {
                                     // 提前还款不应该大于本次计息时间
                                     if (totalDays < interestDay) {
                                         // 用户提前还款减少的利息
@@ -1087,6 +1112,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     } else {
                                         // 用户提前还款减少的利息
                                         assignChargeInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), interestDay);
+                                    }
+                                } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                    int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
+                                    // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                                    BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(assignCapital, borrow.getBorrowApr(), carryDays);
+                                    if (acctualInterest.compareTo(assignInterest) >= 0) {
+                                        assignChargeInterest = BigDecimal.ZERO;
+                                    } else {
+                                        assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
                                 } else {
                                     // 实际持有天数
@@ -1099,7 +1133,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     } else {
                                         assignChargeInterest = assignInterest.subtract(acctualInterest);
                                     }
-                                    assignChargePenaltyInterest = acctualInterest;
+                                    assignChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(assignCapital, borrow.getBorrowApr());
                                 }
 
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
@@ -1141,6 +1175,15 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
                                 userChargePenaltyInterest = acctualInterest;
+                            } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                                int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
+                                // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
+                                BigDecimal acctualInterest = UnnormalRepayUtils.aheadRTBRepayChargeInterest(userCapital, borrow.getBorrowApr(), carryDays);
+                                if (acctualInterest.compareTo(userInterest) >= 0) {
+                                    userChargeInterest = BigDecimal.ZERO;
+                                } else {
+                                    userChargeInterest = userInterest.subtract(acctualInterest);
+                                }
                             }
                             // 统计总额
                             repayTotal = repayTotal.add(userAccount).subtract(userChargeInterest).add(userManageFee);// 统计总和本息+管理费
@@ -2156,6 +2199,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     repayInterest = repayInterest.add(assignInterest);
                                     repayManageFee = repayManageFee.add(assignManageFee);// 管理费
                                     repayChargeInterest = repayChargeInterest.add(assignChargeInterest);// 统计提前还款减少的利息
+                                    repayChargePenaltyInterest = repayChargePenaltyInterest.add(acctualAsignInterest);// 统计提前还款罚息
                                 }
                                 repayRecoverPlanBean.setCreditRepayList(creditRepayBeanList);
                             }
@@ -2170,6 +2214,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualUserInterest);
                                 }
+                                userChargePenaltyInterest = acctualUserInterest;// 提前还款罚息
                                 // 统计总额
                                 repayTotal = repayTotal.add(userAccount).add(userManageFee).subtract(userChargeInterest);// 统计总和本息+管理费
                                 repayAccount = repayAccount.add(userAccount);// 统计总和本息
