@@ -40,7 +40,7 @@
 		hbap.suc_amount,
 		hbap.batch_service_fee,
 		DATE_FORMAT(
-		hbap.reverify_time,
+        hydb.reverify_time,
 		'%Y-%m-%d'
 		) AS suc_time,
 		hydb.borrow_nid,
