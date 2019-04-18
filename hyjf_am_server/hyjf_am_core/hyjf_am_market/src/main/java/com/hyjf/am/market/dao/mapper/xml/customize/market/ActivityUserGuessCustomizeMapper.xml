@@ -53,6 +53,9 @@
     <if test="grade != null and grade != ''">
       AND ug.grade = #{grade}
     </if>
+    <if test="limitStart >= 0" >
+      LIMIT #{limitStart} , #{limitEnd}
+    </if>
   </sql>
 
 </mapper>
