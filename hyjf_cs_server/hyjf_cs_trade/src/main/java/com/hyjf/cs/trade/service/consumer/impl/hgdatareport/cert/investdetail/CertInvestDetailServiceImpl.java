@@ -392,12 +392,10 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		list.add(param);
 	}
 
-
+	//已改
 	private void tenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		Map<String, Object> param = new HashMap<String, Object>();
-
-
         CertRequest certRequest=new CertRequest();
         certRequest.setRealTenderId(accountList.getNid());
         List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
@@ -428,7 +426,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		list.add(param);
 	}
 
-
+	//已改
     private void hjhTenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
         UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
         BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());

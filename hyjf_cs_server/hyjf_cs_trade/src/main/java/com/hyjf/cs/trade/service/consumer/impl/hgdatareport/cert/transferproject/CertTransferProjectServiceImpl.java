@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
@@ -51,6 +52,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 			List<BorrowCreditVO> creditList=amTradeClient.getBorrowCreditListByCreditNid(creditNid);
 			if(creditList!=null&&creditList.size()>0){
 				BorrowCreditVO credit=creditList.get(0);
+				BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(credit.getBidNid());
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(credit.getCreditUserId());
 				try {
 					for (int i = 0; i < 1; i++) {
@@ -71,19 +73,15 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
 						//原散标编号
 						param.put("sourceProductCode",credit.getBidNid());// 选填
-						//原产品信息编号
-						param.put("sourceFinancingCode", "-1");// 选填
+						//计划转让利率
+						param.put("transferInterestRate",credit.getBidNid());// 选填
 						//计划转让本金(元)
 						param.put("transferAmount", credit.getCreditCapital().toString());
-						//计划转让利息
-						param.put("transferInterest", credit.getCreditInterest().toString());
 						//浮动金额   0-(credit_capital*credit_discount/100)
 						param.put("floatMoney", 
 								BigDecimal.ZERO.subtract(credit.getCreditCapital().multiply(credit.getCreditDiscount().divide(new BigDecimal(100)))).toString());
 						//转让项目发布的日期
 						param.put("transferDate", GetDate.formatDate(credit.getCreateTime()));
-						//转让债权信息的链接URL
-						param.put("sourceProductUrl", systemConfig.getWebHost() + "/bank/user/credit/webcredittender.do?creditNid="+credit.getCreditNid());
 						list.add(param);
 					}
 				} catch (Exception e) {
@@ -97,6 +95,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 			List<HjhDebtCreditVO> hjhDebtCreditList=amTradeClient.getHjhDebtCreditListByCreditNid(creditNid);
 			if(hjhDebtCreditList!=null&&hjhDebtCreditList.size()>0){
 				HjhDebtCreditVO hjhDebtCredit=hjhDebtCreditList.get(0);
+				BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCredit.getBorrowNid());
 				UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(hjhDebtCredit.getUserId());
 				try {
 					for (int i = 0; i < 1; i++) {
@@ -117,18 +116,14 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
 						//原散标编号
 						param.put("sourceProductCode",hjhDebtCredit.getBorrowNid());// 选填
-						//原产品信息编号
-						param.put("sourceFinancingCode", "-1");// 选填
+						//计划转让利率
+						param.put("transferInterestRate",hjhDebtCredit.getBorrowNid());// 选填
 						//计划转让本金(元)
 						param.put("transferAmount", hjhDebtCredit.getCreditCapital().toString());
-						//计划转让利息
-						param.put("transferInterest", hjhDebtCredit.getCreditInterest().toString());
 						//浮动金额
 						param.put("floatMoney", "0");
 						//转让项目发布的日期
 						param.put("transferDate", GetDate.formatDate(hjhDebtCredit.getCreateTime()));
-						//转让债权信息的链接URL
-						param.put("sourceProductUrl", "-1");
 						list.add(param);
 					}
 				} catch (Exception e) {
