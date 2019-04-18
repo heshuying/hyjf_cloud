@@ -3,20 +3,39 @@
  */
 package com.hyjf.admin.controller.activity;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ActivityUserGuessService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ActivityUserGuessResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
 import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -26,6 +45,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/hyjf-admin/manager/activity/mayday")
 public class MayDayController extends BaseController {
+
+    public static final String PERMISSIONS = "activitylist";
 
     @Autowired
     private ActivityUserGuessService activityUserGuessService;
@@ -41,5 +62,78 @@ public class MayDayController extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         return new AdminResult<>(response);
+    }
+
+    /**
+     * 竞猜列表导出
+     *
+     * @param request
+     * @param response
+     * @param 
+     */
+    @ApiOperation(value = "竞猜列表导出", notes = "竞猜列表导出")
+    @PostMapping("exportList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportAwardExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody ActivityUserGuessRequest activityUserGuessRequest) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "奖励明细导出";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //请求第一页5000条
+        activityUserGuessRequest.setPageSize(defaultRowMaxCount);
+        activityUserGuessRequest.setCurrPage(1);
+
+        ActivityUserGuessResponse rewardResponse = activityUserGuessService.getGuessList(activityUserGuessRequest);
+        Integer totalCount = rewardResponse.getCount();
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap1();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        } else {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, rewardResponse.getResultList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            activityUserGuessRequest.setPageSize(defaultRowMaxCount);
+            activityUserGuessRequest.setCurrPage(i + 1);
+            ActivityUserGuessResponse rewardResponse2 = activityUserGuessService.getGuessList(activityUserGuessRequest);
+            if(null == rewardResponse2){
+                rewardResponse2= new ActivityUserGuessResponse();
+            }
+            List<ActivityUserGuessVO> resultList = rewardResponse2.getResultList();
+            if (!CollectionUtils.isEmpty(resultList)) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String,IValueFormatter> buildValueAdapter() {
+        return null;
+    }
+
+    private Map<String, String> buildMap1() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("reward", "奖励名称");
+        map.put("distributionMethod", "发放方式");
+        map.put("userName", "账户名");
+        map.put("trueName", "姓名");
+        map.put("recipientName", "收件人姓名");
+        map.put("recipientMobile", "收件人手机号");
+        map.put("recipientAddress", "收件地址");
+        map.put("status", "发放状态");
+        map.put("getTime", "获得时间");
+        map.put("releaseTime", "发放时间");
+        return map;
     }
 }
