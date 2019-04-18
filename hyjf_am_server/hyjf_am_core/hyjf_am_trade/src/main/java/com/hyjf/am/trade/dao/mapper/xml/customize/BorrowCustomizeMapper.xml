@@ -185,6 +185,9 @@ WHERE
 		) OR (
 		hydb.`status` = 5
 		)
+		OR (
+		hydb.`status` = 8
+		)
 		) and
 		hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
 
