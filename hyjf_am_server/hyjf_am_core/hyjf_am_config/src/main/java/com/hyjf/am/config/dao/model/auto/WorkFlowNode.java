@@ -12,6 +12,13 @@ public class WorkFlowNode implements Serializable {
     private Integer id;
 
     /**
+     * 流程节点角色，1=部门，2=个人
+     *
+     * @mbggenerated
+     */
+    private Integer role;
+
+    /**
      * 业务流程表ID
      *
      * @mbggenerated
@@ -54,6 +61,14 @@ public class WorkFlowNode implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getRole() {
+        return role;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
     public Integer getWorkflowId() {
