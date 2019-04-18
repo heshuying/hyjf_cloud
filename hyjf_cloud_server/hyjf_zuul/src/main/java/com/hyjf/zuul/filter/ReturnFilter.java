@@ -82,7 +82,15 @@ public class ReturnFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
         if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
-            return true;
+            HttpServletRequest request = ctx.getRequest();
+            String token = request.getHeader(GatewayConstant.TOKEN);
+            AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
+            if(StringUtils.isNotBlank(token) && null != accessToken){
+                return false;
+            }else{
+                return true;
+            }
+
         }else{
             return false;
         }
