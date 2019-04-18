@@ -30,17 +30,22 @@
       FROM ht_activity_user_guess ug
       LEFT JOIN hyjf_user.ht_user u ON ug.user_id = u.user_id
       LEFT JOIN hyjf_user.ht_user_info ui ON ug.user_id = ui.user_id
-      WHERE 1 = 1
-      <include refid="where_condition"/>
+      <where>
+       <include refid="where_condition"/>
+      </where>
+      <if test="limitStart >= 0" >
+        LIMIT #{limitStart} , #{limitEnd}
+      </if>
   </select>
 
   <select id="countGuessList" resultType="java.lang.Integer">
-    SELECT COUNT (1)
+    SELECT COUNT(1)
       FROM ht_activity_user_guess ug
       LEFT JOIN hyjf_user.ht_user u ON ug.user_id = u.user_id
       LEFT JOIN hyjf_user.ht_user_info ui ON ug.user_id = ui.user_id
-      WHERE 1 = 1
-      <include refid="where_condition"/>
+      <where>
+       <include refid="where_condition"/>
+      </where>
   </select>
 
   <sql id="where_condition">
@@ -53,9 +58,7 @@
     <if test="grade != null and grade != ''">
       AND ug.grade = #{grade}
     </if>
-    <if test="limitStart >= 0" >
-      LIMIT #{limitStart} , #{limitEnd}
-    </if>
+
   </sql>
 
 </mapper>
