@@ -117,11 +117,11 @@ public class AppActivity51Controller {
      * @return
      */
     @ApiOperation(value = "用户竞猜", notes = "不支持重复竞猜")
-    @ApiParam(required = true, name = "rank", value = "用户竞猜区间， 从第一档（1-99）开始，依次传递1,2,3,4")
     @RequestMapping(value = "/guess", method = RequestMethod.GET)
     public BaseResult guess(@RequestHeader int userId,
-                           @RequestParam int grade){
-        logger.info("用户竞猜, userId is: {}, rank is: {}", userId, grade);
+                            @ApiParam(required = true, name = "grade", value = "用户竞猜区间， 从第一档（1-99）开始，依次传递1,2,3,4")
+                            @RequestParam int grade){
+        logger.info("用户竞猜, userId is: {}, grade is: {}", userId, grade);
         if(!activity51Service.isActivityTime()){
             return buildResult("1", "活动未开始");
         }
