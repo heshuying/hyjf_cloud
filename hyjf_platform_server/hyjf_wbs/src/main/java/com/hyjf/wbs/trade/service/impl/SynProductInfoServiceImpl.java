@@ -11,6 +11,7 @@ import com.hyjf.wbs.trade.service.SynProductInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import java.util.Map;
  * @Date: 2019-04-18 10:17
  * @Description:
  */
+@Service
 public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynProductInfoService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.ProductInfoQO;
+import com.hyjf.wbs.trade.service.SynProductInfoService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -14,6 +15,7 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,8 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
 
     @Value("${hyjf.web.h5.zhitou.host}")
     private String H5_ZHITOU_URL;
-
+    @Autowired
+    private SynProductInfoService synProductInfoService;
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -66,31 +69,30 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             String productStatus = jsonObj.getString("productStatus");
             // 产品类型 0 散标类, 1 计划类
             String productType = jsonObj.getString("productType");
-            ProductInfoQO productInfoDto = new ProductInfoQO();
+            ProductInfoQO productInfoQO = new ProductInfoQO();
 
 
-
-            productInfoDto.setProductNo(productNo);
-            productInfoDto.setProductStatus(Integer.valueOf(productStatus));
+            productInfoQO.setProductNo(productNo);
+            productInfoQO.setProductStatus(Integer.valueOf(productStatus));
 
             String productName = "";
             String linkUrl = "";
             String H5linkUrl = "";
             if (productType.equals("0")) {
-                productName="散标";
+                productName = "散标";
                 linkUrl = PC_SANBIAO_URL + productNo;
                 H5linkUrl = H5_SANBIAO_URL + productNo;
             } else if (productType.equals("1")) {
-                productName="智投";
+                productName = "智投";
                 linkUrl = PC_ZHITOU_URL + productNo;
                 H5linkUrl = H5_ZHITOU_URL + productNo;
             }
-            productInfoDto.setProductName(productName);
-            productInfoDto.setLinkUrl(linkUrl);
-            productInfoDto.setH5linkUrl(H5linkUrl);
+            productInfoQO.setProductName(productName);
+            productInfoQO.setLinkUrl(linkUrl);
+            productInfoQO.setH5linkUrl(H5linkUrl);
 
+            synProductInfoService.sync(productInfoQO);
 
-            //TODO: 推送客户信息
 
 //
 //            String reqData = buildData(account).toJSONString();

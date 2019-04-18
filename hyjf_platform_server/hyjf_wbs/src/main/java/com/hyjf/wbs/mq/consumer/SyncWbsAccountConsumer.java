@@ -102,7 +102,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 customerSyncQO.setFundsToBeCollected(account.getAwait().doubleValue());
 
                 syncCustomerService.sync(customerSyncQO);
-                //TODO: 推送客户信息
+
             }
 
         } catch (Exception e1) {
