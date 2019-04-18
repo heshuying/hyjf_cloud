@@ -10,6 +10,7 @@ package com.hyjf.wbs.mq.consumer;
 
 import java.text.SimpleDateFormat;
 
+import com.hyjf.am.vo.user.BankCardVO;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -51,7 +52,7 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 	private final int ACCOUNT_OPENED = 1;
 
-    private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public void onMessage(MessageExt messageExt) {
@@ -66,10 +67,10 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		String thirdpartyId = wbsRegisterMqVO.getThirdpartyId();
 		String utmId = wbsRegisterMqVO.getUtmId();
 
-        CustomerSyncQO customerSyncQO=new CustomerSyncQO();
-        customerSyncQO.setAssetCustomerId(userId);
-        customerSyncQO.setEntId(Integer.parseInt(utmId));
-        customerSyncQO.setCustomerId(thirdpartyId);
+		CustomerSyncQO customerSyncQO = new CustomerSyncQO();
+		customerSyncQO.setAssetCustomerId(userId);
+		customerSyncQO.setEntId(Integer.parseInt(utmId));
+		customerSyncQO.setCustomerId(thirdpartyId);
 
 		if (Strings.isNullOrEmpty(userId) || Strings.isNullOrEmpty(thirdpartyId) || Strings.isNullOrEmpty(utmId)) {
 			logger.info("WBS用户注册MQ收到消息格式不正确【{}】", msgBody);
@@ -78,14 +79,17 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 			UserVO userVO = amUserClient.findUserById(userIdd);
 			if (userVO != null) {
 				if (userVO.getOpenAccount() != null && userVO.getOpenAccount().intValue() == ACCOUNT_OPENED) {
+					// 余额信息
 					AccountVO accountVO = amTradeClient.getAccount(userIdd);
+					// 开户行信息
+					BankCardVO bankCardVO = amUserClient.selectBankCardByUserId(userIdd);
 
-					buildData(userVO,accountVO,customerSyncQO);
+					buildData(userVO, accountVO, bankCardVO, customerSyncQO);
 
-				}else{
+				} else {
 
-				    buildData(userVO,customerSyncQO);
-                }
+					buildData(userVO, customerSyncQO);
+				}
 			}
 
 			syncCustomerService.sync(customerSyncQO);
@@ -93,26 +97,37 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		}
 	}
 
-    private void buildData(UserVO userVO, CustomerSyncQO customerSyncQO) {
+	private void buildData(UserVO userVO, CustomerSyncQO customerSyncQO) {
 
-	    customerSyncQO.setUserName(userVO.getUsername());
+		customerSyncQO.setUserName(userVO.getUsername());
 
-	    customerSyncQO.setPlatformRegistrationTime(sdf.format(userVO.getRegTime()));
+		customerSyncQO.setPlatformRegistrationTime(sdf.format(userVO.getRegTime()));
 
-    }
+	}
 
-    private void buildData(UserVO userVO, AccountVO accountVO, CustomerSyncQO customerSyncQO) {
+	private void buildData(UserVO userVO, AccountVO accountVO, BankCardVO bankCardVO, CustomerSyncQO customerSyncQO) {
 
-	    buildData(userVO,customerSyncQO);
+		buildData(userVO, customerSyncQO);
 
-	    customerSyncQO.setPlatformAccountOpeningTime(sdf.format(accountVO.getCreateTime()));
+		// 开户行信息
+		customerSyncQO.setBankOfDeposit(bankCardVO.getBank());
 
-	    //TODO 银行信息
-//	    customerSyncQO.setBankOfDeposit(accountVO.getBan);
+		customerSyncQO.setPlatformAccountOpeningTime(sdf.format(bankCardVO.getCreateTime()));
 
-    }
+		customerSyncQO.setBankReservedPhoneNumber(bankCardVO.getMobile());
 
-    @Override
+		customerSyncQO.setBankCardNumber(bankCardVO.getCardNo());
+
+		// 余额待收信息
+		customerSyncQO
+				.setPrecipitatedCapital(accountVO.getBalance() == null ? 0 : accountVO.getBalance().doubleValue());
+
+		customerSyncQO
+				.setFundsToBeCollected(accountVO.getBankAwait() == null ? 0 : accountVO.getBankAwait().doubleValue());
+
+	}
+
+	@Override
 	public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
