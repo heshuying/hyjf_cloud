@@ -1341,4 +1341,6 @@ public interface AmAdminClient {
      * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
      **/
     List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
+
+    ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request);
 }

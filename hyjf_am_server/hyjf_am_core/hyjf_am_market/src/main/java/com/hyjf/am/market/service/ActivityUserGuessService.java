@@ -1,6 +1,10 @@
 package com.hyjf.am.market.service;
 
 import com.hyjf.am.market.dao.model.auto.ActivityUserGuess;
+import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
+import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+
+import java.util.List;
 
 /**
  * @author xiasq
@@ -22,4 +26,20 @@ public interface ActivityUserGuessService {
      * @return
      */
     ActivityUserGuess selectByUserId(int userId);
+
+    /**
+     * 查询竞猜列表数据条数
+     * @param request
+     * @return
+     */
+    int getGuessListCount(ActivityUserGuessRequest request);
+
+    /**
+     * 查询竞猜列表
+     * @param request
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<ActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int offset, int limit);
 }

@@ -2277,4 +2277,13 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    @Override
+    public ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request) {
+        ActivityUserGuessResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/mayDay/guessUserList", request, ActivityUserGuessResponse.class);
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
 }

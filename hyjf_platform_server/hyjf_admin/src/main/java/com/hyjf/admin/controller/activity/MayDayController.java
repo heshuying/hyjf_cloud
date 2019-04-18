@@ -1,0 +1,45 @@
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.admin.controller.activity;
+
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.service.ActivityUserGuessService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.ActivityUserGuessResponse;
+import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
+import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @author yaoyong
+ * @version MayDayController, v0.1 2019/4/18 14:10
+ */
+@Api(tags = "活动中心-五一活动")
+@RestController
+@RequestMapping("/hyjf-admin/manager/activity/mayday")
+public class MayDayController extends BaseController {
+
+    @Autowired
+    private ActivityUserGuessService activityUserGuessService;
+
+    @ApiOperation(value = "活动竞猜列表", notes = "活动竞猜列表")
+    @RequestMapping("/list")
+    public AdminResult getRecordList(@RequestBody ActivityUserGuessRequest request) {
+        ActivityUserGuessResponse response = activityUserGuessService.getGuessList(request);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>(response);
+    }
+}
