@@ -161,6 +161,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     }
 
     @Override
+    public List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll(){
+        return workFlowConfigMapper.findWorkFlowNodeUserEmailAll();
+    }
+
+    @Override
     public int updateFlowStatus(WorkFlow workFlow){
 
         return workFlowMapper.updateByPrimaryKeySelective(workFlow);

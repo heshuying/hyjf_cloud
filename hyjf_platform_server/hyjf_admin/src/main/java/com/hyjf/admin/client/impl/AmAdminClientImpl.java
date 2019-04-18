@@ -2299,4 +2299,15 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return false;
     }
+
+    @Override
+    public List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll() {
+        String url = "http://AM-ADMIN/am-admin/workflow/bussinessflow/findWorkFlowNodeUserEmailAll";
+        WorkFlowUserResponse response = restTemplate
+                .getForEntity(url, WorkFlowUserResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

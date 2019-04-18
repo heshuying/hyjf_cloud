@@ -53,7 +53,17 @@ public interface WorkFlowConfigService {
      */
     Integer deleteWorkFlowConfigById(int id);
 
+    /**
+     * 查询所有业务流程
+     * @return
+     */
     List<WorkFlowVO> findWorkFlowAll();
+
+    /**
+     * 查询所有业务流程节点的用户
+     * @return
+     */
+    List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll();
 
     int updateFlowStatus(WorkFlow workFlow);
     /**

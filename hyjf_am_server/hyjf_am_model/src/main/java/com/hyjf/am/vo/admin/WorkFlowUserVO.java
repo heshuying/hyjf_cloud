@@ -16,15 +16,26 @@ public class WorkFlowUserVO  extends BaseVO implements Serializable {
      * 真实姓名
      */
     private String truename;
-    /**
-     * 邮箱
-     */
-    private String email;
 
     /**
      * 邮件预警人
      */
     private String mailWarningUser;
+
+    /**
+     * 用户ID
+     */
+    private Integer userid;
+
+    /**
+     * 业务流程表ID
+     */
+    private Integer workflowid;
+
+    /**
+     * 业务名称
+     */
+    private String workname;
 
     public Integer getId() {
         return id;
@@ -42,19 +53,35 @@ public class WorkFlowUserVO  extends BaseVO implements Serializable {
         this.truename = truename;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getMailWarningUser() {
         return mailWarningUser;
     }
 
     public void setMailWarningUser(String mailWarningUser) {
         this.mailWarningUser = mailWarningUser;
+    }
+
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
+
+    public Integer getWorkflowid() {
+        return workflowid;
+    }
+
+    public void setWorkflowid(Integer workflowid) {
+        this.workflowid = workflowid;
+    }
+
+    public String getWorkname() {
+        return workname;
+    }
+
+    public void setWorkname(String workname) {
+        this.workname = workname;
     }
 }

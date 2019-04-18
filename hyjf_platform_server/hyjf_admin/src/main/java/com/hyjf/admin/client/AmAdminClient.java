@@ -1328,4 +1328,10 @@ public interface AmAdminClient {
     List<WorkFlowVO> updateStatusBusinessName();
 
     boolean updateFlowStatus(Integer businessId);
+
+    /**
+     * 查询所有业务流程节点的用户
+     * @return
+     */
+    List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll();
 }

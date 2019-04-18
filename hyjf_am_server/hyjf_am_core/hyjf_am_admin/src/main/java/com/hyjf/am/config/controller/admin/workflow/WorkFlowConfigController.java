@@ -210,6 +210,21 @@ public class WorkFlowConfigController extends BaseConfigController {
     }
 
     /**
+     * 查询所有业务流程节点的用户
+     * @return
+     */
+    @GetMapping("/findWorkFlowNodeUserEmailAll")
+    public WorkFlowUserResponse findWorkFlowNodeUserEmailAll() {
+        WorkFlowUserResponse response = new WorkFlowUserResponse();
+        List<WorkFlowUserVO> workFlowUserVO =workFlowConfigService.findWorkFlowNodeUserEmailAll();
+        if(!CollectionUtils.isEmpty(workFlowUserVO)){
+            response.setResultList(workFlowUserVO);
+            return response;
+        }
+        return response;
+    }
+
+    /**
      * 修改工作流程表的flowStatus
      * @return
      */

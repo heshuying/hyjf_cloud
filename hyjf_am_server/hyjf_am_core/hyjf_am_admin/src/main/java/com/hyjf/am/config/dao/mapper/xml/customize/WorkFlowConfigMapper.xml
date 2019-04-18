@@ -146,6 +146,25 @@
         AND w.check_status = 1;
     </select>
 
+    <select id="findWorkFlowNodeUserEmailAll" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO">
+        select t.workflowid,t.mailWarningUser,t.workname,t.userid,t.truename from (
+
+        select wn.workflow_id as workflowid, wf.mail_notifier as mailWarningUser,wk.work_name as workname,am.id as userid,am.truename as truename from ht_workflow_node wn
+        LEFT JOIN ht_admin_and_role ar on ar.role_id = wn.admin_id
+        LEFT JOIN ht_admin am  on  ar.user_id = am.id
+        LEFT JOIN ht_workflow wf on wf.id = wn.workflow_id
+        LEFT JOIN ht_workname wk on wk.id = wf.workname_id
+        where wn.role=1 and am.state=0 and am.del_flag=0
+
+        UNION ALL
+
+        select wn.workflow_id as workflowid, wf.mail_notifier as mailWarningUser,wk.work_name as workname,am.id as userid,am.truename as truename from ht_workflow_node wn
+        LEFT JOIN ht_admin am on am.id = wn.admin_id
+        LEFT JOIN ht_workflow wf on wf.id = wn.workflow_id
+        LEFT JOIN ht_workname wk on wk.id = wf.workname_id
+        where wn.role=2 and am.state=0 and am.del_flag=0
+        ) t
+    </select>
 
 </mapper>
 

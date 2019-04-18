@@ -115,7 +115,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         request.setAdminuserId(adminUserId);
         List<AdminVO> adminVOList = amConfigClient.getAdminUser(request);
         List<String> userIdList = new ArrayList<>();
-        Map<Integer,WorkFlowVO> workMap = new HashMap<>();
+        Map<Integer,WorkFlowUserVO> workMap = new HashMap<>();
         Map<Integer,String> trueNameMap = new HashMap<>();
         if(adminVOList != null ){
 
@@ -124,24 +124,49 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
             }
         }
 
+//        //将后台用户与业务流程用户匹配
+//        List<WorkFlowVO> workFlowVOList = adminClient.updateStatusBusinessName();
+//        String trueName = "";
+//        if(workFlowVOList != null ){
+//
+//            for(String user: userIdList){
+//
+//                //匹配邮件预警人员
+//                for(WorkFlowVO vo : workFlowVOList){
+//                    if(vo.getMailWarningUser().contains(user)){
+//                        workMap.put(vo.getId(),vo);
+//
+//                        //trueNameMap 放入 删除或禁用的用户姓名
+//                        trueName = user.substring(user.lastIndexOf(",")+1);
+//                        if(trueNameMap.containsKey(vo.getId())){
+//                            trueName = trueNameMap.get(vo.getId()) + "、" + trueName;
+//                            trueNameMap.put(vo.getId(),trueName);
+//                        }else{
+//                            trueNameMap.put(vo.getId(),trueName);
+//                        }
+//
+//                    }
+//
+//                }
+//            }
+//        }
+
         //将后台用户与流程节点用户匹配
-        List<WorkFlowVO> workFlowVOList = adminClient.updateStatusBusinessName();
-        String trueName = "";
-        if(workFlowVOList != null ){
+        List<WorkFlowUserVO> workFlowUserVOList = adminClient.findWorkFlowNodeUserEmailAll();
+        if(workFlowUserVOList != null ){
 
-            for(String user: userIdList){
+            for(AdminVO user: adminVOList){
 
-                for(WorkFlowVO vo : workFlowVOList){
-                    if(vo.getMailWarningUser().contains(user)){
-                        workMap.put(vo.getId(),vo);
+                //匹配邮件预警人员
+                for(WorkFlowUserVO vo : workFlowUserVOList){
+                    if(vo.getUserid().equals(user.getId())){
+                        workMap.put(vo.getWorkflowid(),vo);
 
                         //trueNameMap 放入 删除或禁用的用户姓名
-                        trueName = user.substring(user.lastIndexOf(",")+1);
-                        if(trueNameMap.containsKey(vo.getId())){
-                            trueName = trueNameMap.get(vo.getId()) + "、" + trueName;
-                            trueNameMap.put(vo.getId(),trueName);
+                        if(trueNameMap.containsKey(vo.getWorkflowid())){
+                            trueNameMap.put(vo.getId(),trueNameMap.get(vo.getWorkflowid()) + "、" + vo.getTruename());
                         }else{
-                            trueNameMap.put(vo.getId(),trueName);
+                            trueNameMap.put(vo.getId(),vo.getTruename());
                         }
 
                     }
@@ -149,18 +174,20 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
                 }
             }
         }
+
+
         logger.info("【工作流引擎】 后台用户与流程节点用户匹配条数："+workMap.size());
         //将匹配上的业务流程配置改为异常
         Set<Integer> set = workMap.keySet();
         for (Integer key : set) {
-            WorkFlowVO workFlowVO = workMap.get(key);
+            WorkFlowUserVO workFlowVO = workMap.get(key);
             adminClient.updateFlowStatus(key);
 
             //发送邮件
-            String title = "【工作流引擎】"+workFlowVO.getBusinessName()+"业务名称流程异常";
+            String title = "【工作流引擎】"+workFlowVO.getWorkname()+"业务名称流程异常";
             StringBuffer msg = new StringBuffer();
             msg.append("因").append(trueNameMap.get(key)).append("账号删除或禁用");
-            msg.append("导致").append(workFlowVO.getBusinessName()).append("业务名称流程异常,");
+            msg.append("导致").append(workFlowVO.getWorkname()).append("业务名称流程异常,");
             msg.append("请修改审核流程！");
 
             try {
@@ -175,7 +202,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
             } catch (Exception e2) {
                 logger.error("发送邮件失败..", e2);
             }
-            logger.info("【工作流引擎】"+workFlowVO.getBusinessName()+"修改审核流程邮件发送完成");
+            logger.info("【工作流引擎】"+workFlowVO.getWorkname()+"修改审核流程邮件发送完成");
         }
 
     }
