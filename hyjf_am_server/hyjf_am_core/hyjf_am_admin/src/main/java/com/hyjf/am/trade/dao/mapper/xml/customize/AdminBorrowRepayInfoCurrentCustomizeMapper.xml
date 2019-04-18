@@ -274,7 +274,7 @@
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-2"/>
-        UNION
+        UNION ALL
             <!-- 3、债权转让承接订单查询-->
             SELECT
                 b.borrow_nid AS borrowNid,
@@ -356,7 +356,7 @@
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         WHERE 1=1
         <include refid="where-type-3"/>
-        UNION
+        UNION ALL
             <!-- 4、计划底层标的债权转让承接订单查询-->
             SELECT
                 b.borrow_nid AS borrowNid,
