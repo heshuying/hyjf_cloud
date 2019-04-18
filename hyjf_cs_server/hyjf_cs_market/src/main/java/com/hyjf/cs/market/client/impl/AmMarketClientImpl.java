@@ -8,13 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.market.SellDailyDistributionResponse;
 import com.hyjf.am.response.market.SellDailyResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.cs.market.client.AmMarketClient;
@@ -159,8 +162,31 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-    public boolean insertActivityUserReward(int userId, String rewardName, String rewardType) {
-        // 取消领取按钮，实现细节不用写了
-        return false;
+	public boolean insertActivityUserReward(int userId, int activityId, String rewardName, String rewardType) {
+		ActivityUserRewardVO vo = new ActivityUserRewardVO();
+        vo.setActivityId(activityId);
+        vo.setRewardName(rewardName);
+        vo.setRewardType(rewardType);
+        vo.setUserId(userId);
+        vo.setSendType("系统发放");
+        vo.setSendStatus(1);
+		BooleanResponse response = restTemplate.postForObject("http://AM-MARKET/am-market/activity/reward/insert", vo,
+				BooleanResponse.class);
+		if (response != null && response.getResultBoolean() != null) {
+			return response.getResultBoolean();
+		}
+		return false;
     }
+
+	@Override
+	public ActivityListVO selectActivityList(Integer activityId) {
+		ActivityListResponse response = restTemplate
+				.getForEntity("http://AM-MARKET/am-market/activity/selectActivity/" + activityId,
+						ActivityListResponse.class)
+				.getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

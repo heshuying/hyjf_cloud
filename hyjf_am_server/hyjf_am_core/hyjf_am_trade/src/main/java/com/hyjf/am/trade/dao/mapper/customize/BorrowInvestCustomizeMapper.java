@@ -79,7 +79,7 @@ public interface BorrowInvestCustomizeMapper {
      * @param startTime
      * @param endTime
      */
-    BigDecimal getActivityInvestAmount(Date startTime, Date endTime);
+    BigDecimal getActivityInvestAmount(@Param("startTime") Date startTime,@Param("endTime") Date endTime);
 
     BigDecimal getAnnualInvestAmount(Map<String, Object> map);
 

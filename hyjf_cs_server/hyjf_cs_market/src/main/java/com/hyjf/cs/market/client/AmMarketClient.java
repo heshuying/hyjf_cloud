@@ -1,13 +1,14 @@
 package com.hyjf.cs.market.client;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
+import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -117,9 +118,17 @@ public interface AmMarketClient {
     /**
      * 保存用户领取记录
      * @param userId
+     * @param activityId
      * @param rewardName 奖励名称
      * @param rewardType 奖励类型
      * @return
      */
-    boolean insertActivityUserReward(int userId, String rewardName, String rewardType);
+	boolean insertActivityUserReward(int userId, int activityId, String rewardName, String rewardType);
+
+    /**
+     * 根据活动id查询活动配置
+     * @param activityId
+     * @return
+     */
+    ActivityListVO selectActivityList(Integer activityId);
 }
