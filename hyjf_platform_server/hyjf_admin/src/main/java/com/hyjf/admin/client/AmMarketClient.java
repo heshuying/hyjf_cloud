@@ -1,11 +1,13 @@
 package com.hyjf.admin.client;
 
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.resquest.admin.ContentAdsRequest;
 import com.hyjf.am.resquest.admin.MessagePushHistoryRequest;
 import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
+import com.hyjf.am.resquest.admin.NewYearNineteenRequestBean;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.ActivityListCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -139,4 +141,25 @@ public interface AmMarketClient {
      * @return
      */
     ActivityListResponse getInfoById(Integer id);
+
+    /**
+     * 获取新年活动奖励明细列表
+     * @param requestBean
+     * @return
+     */
+    NewYearActivityRewardResponse selectAwardList(NewYearNineteenRequestBean requestBean);
+
+    /**
+     * 获取奖励明细详情
+     * @param request
+     * @return
+     */
+    NewYearActivityRewardResponse selectAwardInfo(NewYearNineteenRequestBean request);
+
+    /**
+     * 修改奖励发放状态
+     * @param request
+     * @return
+     */
+    BooleanResponse updateStatus(NewYearNineteenRequestBean request);
 }

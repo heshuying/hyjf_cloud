@@ -2277,4 +2277,13 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    /**
+     * 查询累计年华投资
+     * @param newYearNineteenRequestBean
+     * @return
+     */
+    @Override
+    public NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/newYearNineteen/selectInvestList",newYearNineteenRequestBean,NewYearActivityResponse.class).getBody();
+    }
 }
