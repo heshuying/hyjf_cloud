@@ -82,4 +82,10 @@ public interface WorkFlowConfigMapper {
      * @return
      */
     List<WorkFlowVO> findWorkFlowAll();
+
+    /**
+     * 查询所有业务流程节点的用户
+     * @return
+     */
+    List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll();
 }
