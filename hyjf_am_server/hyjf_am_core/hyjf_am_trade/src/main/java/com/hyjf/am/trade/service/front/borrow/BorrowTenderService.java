@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -152,7 +153,8 @@ public interface BorrowTenderService {
 
     List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(String source,String dayStart, String dayEnd);
 
-    BigDecimal getInvestAmountByPeriod();
+    BigDecimal getInvestAmountByPeriod(Date startTime, Date endTime);
 
-    BigDecimal getAnnualInvestAmount(Integer userId);
+    BigDecimal getAnnualInvestAmount(Integer userId, Date startTime, Date endTime);
+
 }

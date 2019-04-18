@@ -297,20 +297,16 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     @Override
-    public BigDecimal getInvestAmountByPeriod() {
-        Date startTime = GetDate.getDayStartOfSomeDay(GetDate.stringToDate("2019-05-01"));
-        Date endTime = GetDate.getDayEndOfSomeDay(GetDate.stringToDate("2019-05-15"));
-        return borrowInvestCustomizeMapper.getActivityInvestAmount(startTime, endTime);
+    public BigDecimal getInvestAmountByPeriod(Date startTime, Date endTime) {
+        return borrowInvestCustomizeMapper.getActivityInvestAmount(GetDate.getDayStartOfSomeDay(startTime), GetDate.getDayEndOfSomeDay(endTime));
     }
 
     @Override
-    public BigDecimal getAnnualInvestAmount(Integer userId) {
-        Date startTime = GetDate.getDayStartOfSomeDay(GetDate.stringToDate("2019-05-01"));
-        Date endTime = GetDate.getDayEndOfSomeDay(GetDate.stringToDate("2019-05-15"));
+    public BigDecimal getAnnualInvestAmount(Integer userId, Date startTime, Date endTime) {
         Map<String, Object> map = new HashMap<>();
         map.put("userId", userId);
-        map.put("startTime", startTime);
-        map.put("endTime", endTime);
+        map.put("startTime", GetDate.getDayStartOfSomeDay(startTime));
+        map.put("endTime", GetDate.getDayStartOfSomeDay(endTime));
         BigDecimal investSum = borrowInvestCustomizeMapper.getAnnualInvestAmount(map);
         if (investSum == null) {
             investSum = BigDecimal.ZERO;
