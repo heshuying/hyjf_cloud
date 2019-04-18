@@ -1,7 +1,6 @@
-package com.hyjf.wbs.user.service.constomerinfo;
+package com.hyjf.wbs.user.service;
 
 import com.hyjf.wbs.user.dao.model.auto.UtmReg;
-import com.hyjf.wbs.user.service.BaseService;
 
 import java.util.List;
 

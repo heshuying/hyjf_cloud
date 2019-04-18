@@ -1,8 +1,8 @@
-package com.hyjf.wbs.user.service.constomerinfo.impl;
+package com.hyjf.wbs.user.service.impl;
 
 import com.hyjf.wbs.user.dao.model.auto.UtmReg;
 import com.hyjf.wbs.user.dao.model.auto.UtmRegExample;
-import com.hyjf.wbs.user.service.constomerinfo.UtmRegService;
+import com.hyjf.wbs.user.service.UtmRegService;
 import com.hyjf.wbs.user.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 

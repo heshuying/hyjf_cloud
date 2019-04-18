@@ -1,8 +1,8 @@
-package com.hyjf.wbs.trade.service.customerinfo.impl;
+package com.hyjf.wbs.trade.service.impl;
 
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.dao.model.auto.AccountExample;
-import com.hyjf.wbs.trade.service.customerinfo.AccountService;
+import com.hyjf.wbs.trade.service.AccountService;
 import com.hyjf.wbs.trade.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
