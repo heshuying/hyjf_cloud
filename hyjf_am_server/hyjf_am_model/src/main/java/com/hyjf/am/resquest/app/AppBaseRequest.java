@@ -17,7 +17,7 @@ public class AppBaseRequest {
     @ApiModelProperty(value = "网络状态")
     private String netStatus;
 
-    @ApiModelProperty(value = "平台web.app.weChat.api")
+    @ApiModelProperty(value = "平台类型 0：PC，1：微官网，2：Android，3：IOS，4：其他")
     private String platform;
 
     @ApiModelProperty(value = "随机字符串app")
@@ -25,6 +25,9 @@ public class AppBaseRequest {
 
     @ApiModelProperty(value = "Order app")
     private String order;
+
+    @ApiModelProperty(value = "用户唯一标识")
+    private String sign;
 
     public String getVersion() {
         return version;
@@ -64,5 +67,13 @@ public class AppBaseRequest {
 
     public void setOrder(String order) {
         this.order = order;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }

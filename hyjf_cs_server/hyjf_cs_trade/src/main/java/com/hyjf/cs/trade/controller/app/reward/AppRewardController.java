@@ -2,23 +2,28 @@ package com.hyjf.cs.trade.controller.app.reward;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.app.AppBaseRequest;
+import com.hyjf.am.vo.app.reward.*;
 import com.hyjf.am.vo.trade.MyRewardRecordCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.service.coupon.MyCouponListService;
 import com.hyjf.cs.trade.service.reward.RewardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +34,11 @@ import java.util.Map;
 @Api(value = "app端-我的奖励",tags = "app端-邀请记录")
 @RestController
 @CrossOrigin(origins = "*")
+@RequestMapping("/hyjf-app/user/reward")
 public class AppRewardController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AppRewardController.class);
+
     @Autowired
     RewardService rewardService;
     @Autowired
@@ -44,7 +53,7 @@ public class AppRewardController {
      * @param response
      * @return
      */
-    @GetMapping("/hyjf-app/user/reward")
+    @GetMapping("")
     @ApiOperation(value = "我的奖励初始化数据", notes = "我的奖励初始化数据")
     public JSONObject reward(HttpServletRequest request, HttpServletResponse response) {
         JSONObject ret = new JSONObject();
@@ -102,7 +111,7 @@ public class AppRewardController {
      * 奖励记录
      * @author pcc
      */
-    @GetMapping("/hyjf-app/user/reward/rewardRecord")
+    @GetMapping("/rewardRecord")
     @ApiOperation(value = "奖励记录", notes = "奖励记录")
     public JSONObject rewardList(@RequestParam(value = "currentPage", defaultValue = "1") int page,
                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpServletRequest request,
@@ -172,4 +181,79 @@ public class AppRewardController {
 
         return ret;
     }
+
+    /**
+     * 我的奖励初始化数据
+     * @author wgx
+     * @date 2019/04/18
+     * @return
+     */
+    @GetMapping("/rewardInit")
+    @ApiOperation(value = "我的奖励-奖励记录", notes = "我的奖励-奖励记录")
+    public WebResult rewardInit(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+                             @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @ModelAttribute AppBaseRequest appBaseRequest) {
+        WebResult webResult = new WebResult();
+        webResult.setData(Collections.emptyMap());
+        String version = appBaseRequest.getVersion();
+        String platform = appBaseRequest.getPlatform();
+        String sign = appBaseRequest.getSign();
+        String key = SecretUtil.getKey(sign);
+        //检查参数正确性
+        if (Validator.isNull(version) || Validator.isNull(platform) || Validator.isNull(key)) {
+            webResult.setStatus("999");
+            webResult.setStatusDesc("请求参数非法");
+            return webResult;
+        }
+        // 取得用户ID
+        Integer userId = null;
+        try {
+            userId = SecretUtil.getUserId(sign);
+        } catch (Exception e) {
+            webResult.setStatus("999");
+            webResult.setStatusDesc("请求参数非法");
+            return webResult;
+        }
+        AppRewardVO appRewardVO = new AppRewardVO();
+        // 我的奖励信息
+        AppRewardDetailVO appRewardDetailVO = new AppRewardDetailVO();
+        Map<String,String> pageData = myCouponListService.selectInvitePageData(String.valueOf(userId));
+        String inviteCount = pageData.get("inviteCount");
+        String total = pageData.get("rewardRecordsSum");
+        WebViewUserVO users = rewardService.getUserFromCache(userId);
+        appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" :total);
+        appRewardDetailVO.setFriendCount(inviteCount);
+        appRewardDetailVO.setCoupon(0);
+        appRewardDetailVO.setUserName(users.getUsername());
+        appRewardDetailVO.setUserId(users.getUserId());
+        appRewardDetailVO.setIconUrl(users.getIconUrl());
+        appRewardVO.setDetail(appRewardDetailVO);
+        // 邀请记录列表
+        List<AppRewardRecordVO> appRewardRecordVOList = new ArrayList<>();
+        try {
+            int limitStart = pageSize * (currentPage - 1);
+            int count = rewardService.selectMyRewardCount(String.valueOf(userId));
+            List<MyRewardRecordCustomizeVO> list = rewardService.selectMyRewardList(String.valueOf(userId), limitStart, pageSize);
+            if(list != null) {
+                list.stream().forEach(p -> {
+                    AppRewardRecordVO appRewardRecordVO = new AppRewardRecordVO();
+                    appRewardRecordVO.setFriendName(p.getUsername());
+                    appRewardRecordVO.setSource("好友出借");
+                    appRewardRecordVO.setContent(p.getPushMoney() + "元现金");
+                    appRewardRecordVOList.add(appRewardRecordVO);
+                });
+            }
+            appRewardVO.setRecordList(appRewardRecordVOList);
+            // 分页信息
+            Page page = new Page();
+            page.setCurrPage(currentPage);
+            page.setPageSize(pageSize);
+            page.setTotal(count);
+            webResult.setPage(page);
+        } catch (Exception e) {
+            logger.error("【我的奖励】获取奖励记录列表发生异常！用户名：{}", users.getUsername(), e);
+        }
+        webResult.setData(appRewardVO);
+        return webResult;
+    }
+
 }
