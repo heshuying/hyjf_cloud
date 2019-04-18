@@ -434,8 +434,10 @@
 		CASE WHEN hba.is_repay_org_flag = 1 THEN '机构垫付' ELSE '借款人还款' END AS repay_money_source,
         CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_action_time,'%Y-%m-%d')
         ELSE FROM_UNIXTIME(hbrp.repay_action_time,'%Y-%m-%d') END AS action_time,
-		hydbr.repay_capital_yes AS capital_yes,
-		hydbr.repay_account_yes AS account_yes,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN hydbr.repay_capital_yes
+        hbrp.repay_capital_yes END AS capital_yes,
+        CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN hydbr.repay_account_yes
+        hbrp.repay_account_yes END AS account_yes,
 		hba.period_now AS repay_period,
 		hba.batch_amount AS repay_total,
 		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_action_time,'%Y-%m-%d')
