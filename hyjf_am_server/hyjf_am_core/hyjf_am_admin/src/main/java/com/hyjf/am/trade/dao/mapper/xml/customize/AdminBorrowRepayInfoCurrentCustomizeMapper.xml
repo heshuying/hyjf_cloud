@@ -265,7 +265,7 @@
          '2' AS recordType
         FROM
             ht_borrow_recover_plan rp
-        INNER JOIN ht_borrow_recover br ON br.borrow_nid = rp.borrow_nid
+        INNER JOIN ht_borrow_recover br ON br.nid = rp.nid
         INNER JOIN ht_borrow b ON rp.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON rp.tender_id = t.id
@@ -477,7 +477,7 @@
                 rp.borrow_nid
         FROM
         ht_borrow_recover_plan rp
-        INNER JOIN ht_borrow_recover br ON br.borrow_nid = rp.borrow_nid
+        INNER JOIN ht_borrow_recover br ON br.nid = rp.nid
         INNER JOIN ht_borrow b ON rp.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON rp.tender_id = t.id
@@ -646,7 +646,7 @@
         '2' AS recordType
         FROM
         ht_borrow_recover_plan rp
-        INNER JOIN ht_borrow_recover br ON br.borrow_nid = rp.borrow_nid
+        INNER JOIN ht_borrow_recover br ON br.nid = rp.nid
        INNER JOIN ht_borrow b ON rp.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_tender AS t ON rp.tender_id = t.id
