@@ -1,17 +1,21 @@
 package com.hyjf.am.config.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
+import com.hyjf.am.config.dao.model.auto.AdminRole;
+import com.hyjf.am.config.dao.model.auto.AdminRoleExample;
 import com.hyjf.am.config.dao.model.auto.WorkFlow;
-import com.hyjf.am.config.dao.model.auto.WorkFlowExample;
 import com.hyjf.am.config.dao.model.auto.WorkFlowNodeExample;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
+import com.hyjf.common.util.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,8 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     private WorkFlowMapper workFlowMapper;
     @Autowired
     private WorkFlowNodeMapper workFlowNodeMapper;
+    @Autowired
+    private AdminRoleMapper adminRoleMapper;
 
     /**
      * 查询工作流配置条数
@@ -148,12 +154,12 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     }
     /**
      *  查询邮件预警通知人
-     * @param userName
+     * @param username
      * @return
      */
     @Override
-    public List<WorkFlowUserVO> selectUser(String userName){
-        return workFlowConfigMapper.selectUser(userName);
+    public List<WorkFlowUserVO> selectUser(WorkFlowUserVO  workFlowUserVO){
+        return workFlowConfigMapper.selectUser(workFlowUserVO.getUsername(),workFlowUserVO.getRoleIds());
     }
     public int deleteWorkFolwNode(int workflowId){
         WorkFlowNodeExample example = new WorkFlowNodeExample();
@@ -220,5 +226,18 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
 
         return workFlowMapper.updateByPrimaryKeySelective(workFlow);
     }
-
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    @Override
+    public List<AdminRoleVO> selectWorkFlowRoleList(){
+        AdminRoleExample example = new AdminRoleExample();
+        example.createCriteria().andStatusEqualTo(0).andDelFlagEqualTo(0);
+        List<AdminRole> adminRoles = adminRoleMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(adminRoles)){
+            return null;
+        }
+        return CommonUtils.convertBeanList(adminRoles,AdminRoleVO.class);
+    }
 }

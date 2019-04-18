@@ -1,9 +1,12 @@
 package com.hyjf.admin.service.workflow;
 
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
+import com.hyjf.am.response.config.AdminUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 
@@ -59,4 +62,11 @@ public interface WorkFlowConfigService {
     WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
 
     void disableAdminUser(Integer[] adminUserId);
+
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    AdminRoleResponse selectWorkFlowRoleList();
+
 }

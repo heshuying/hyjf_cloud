@@ -6,13 +6,14 @@ import com.hyjf.am.config.dao.model.auto.WorkFlow;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
+import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.common.paginator.Paginator;
-import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -171,10 +172,10 @@ public class WorkFlowConfigController extends BaseConfigController {
      */
     @PostMapping("/selectUser")
     public WorkFlowUserResponse selectUser(@RequestBody WorkFlowUserVO workFlowUserVO){
-        logger.info("查询邮件预警通知人,请求参数truename：" + workFlowUserVO.getTruename());
+        logger.info("查询邮件预警通知人,请求参数username：" + workFlowUserVO.getUsername()+"角色id："+JSONObject.toJSONString(workFlowUserVO.getRoleIds()));
         WorkFlowUserResponse response = new WorkFlowUserResponse();
 
-        List<WorkFlowUserVO> workFlowUserVOS = workFlowConfigService.selectUser(workFlowUserVO.getTruename());
+        List<WorkFlowUserVO> workFlowUserVOS = workFlowConfigService.selectUser(workFlowUserVO);
         if(!CollectionUtils.isEmpty(workFlowUserVOS)){
             response.setResultList(workFlowUserVOS);
         }
@@ -232,6 +233,20 @@ public class WorkFlowConfigController extends BaseConfigController {
         response.setResultBoolean(flag);
         response.setRtn(Response.SUCCESS);
         response.setMessage(Response.SUCCESS_MSG);
+        return response;
+    }
+
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    @GetMapping("/selectWorkFlowRoleList")
+    public AdminRoleResponse selectWorkFlowRoleList() {
+        AdminRoleResponse response = new AdminRoleResponse();
+        List<AdminRoleVO> list = workFlowConfigService.selectWorkFlowRoleList() ;
+        if(!CollectionUtils.isEmpty(list)){
+            response.setResultList(list);
+        }
         return response;
     }
 
