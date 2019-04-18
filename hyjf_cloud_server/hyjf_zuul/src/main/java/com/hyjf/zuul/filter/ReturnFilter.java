@@ -34,30 +34,29 @@ public class ReturnFilter extends ZuulFilter {
 
         try{
 
-            InputStream stream = ctx.getResponseDataStream();
-            String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-            String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
             HttpServletRequest request = ctx.getRequest();
             String token = "";
             token = request.getHeader(GatewayConstant.TOKEN);
-            logger.info("token is :{}",token);
-            logger.info("body is :{}",body);
-            if (StringUtils.isNotBlank(body)) {
-                if (StringUtils.isBlank(token)) {
-                    logger.warn("originalRequestPath: {}...", originalRequestPath);
-                    logger.warn("user is not exist, token is : {}...", token);
-                    body = setResult(body);
-                }else{
-                    AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
-
-                    if (accessToken == null) {
-                        logger.warn("user is not exist, token is : {}...，Redis上未查询到该用户登陆信息", token);
-                        body = setResult(body);
-                    }
-                }
+            String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
+            if (StringUtils.isBlank(token)) {
+                InputStream stream = ctx.getResponseDataStream();
+                String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+                logger.warn("originalRequestPath: {}...", originalRequestPath);
+                logger.warn("user is not exist, token is : {}...", token);
+                body = setResult(body);
                 ctx.setResponseBody(body);// 输出最终结果
-            }
+            }else{
+                AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
 
+                if (accessToken == null) {
+                    InputStream stream = ctx.getResponseDataStream();
+                    String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+                    logger.warn("user is not exist, token is : {}...，Redis上未查询到该用户登陆信息", token);
+                    body = setResult(body);
+                    ctx.setResponseBody(body);// 输出最终结果
+                }
+            }
+            logger.info("token is :{}",token);
         }catch (IOException e){
             logger.error("获取业务端返回body异常，不进行处理");
         }
