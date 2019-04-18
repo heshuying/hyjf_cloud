@@ -81,13 +81,15 @@
     </update>
 
     <insert id="insertWorkFlowNode" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO" >
-        insert into ht_workflow_node (workflow_id,flow_order,admin_id)
+        insert into ht_workflow_node (role,workflow_id,flow_order,admin_id,is_finish)
         VALUES
         <foreach collection="flowNodes" item="pojo" index="index" separator=",">
             (
+            #{pojo.role},
             #{workFlowId},
             #{pojo.flowNodeNum},
-            #{pojo.auditUser}
+            #{pojo.auditUser},
+            1
             )
         </foreach>
     </insert>
@@ -111,15 +113,17 @@
     </select>
 
     <select id="selectWorkFlowConfigNode" resultType="com.hyjf.am.vo.admin.WorkFlowNodeVO" parameterType="java.lang.Integer">
-       select n.workflow_id businessId,n.flow_order flowNodeNum ,a.truename auditUserName,n.admin_id auditUser
+       select n.role role,n.workflow_id businessId,n.flow_order flowNodeNum ,n.admin_id auditUser,
+       case when n.role=1 then r.role_name when n.role=2 then a.truename end auditUserName
        from ht_workflow_node n
       left join ht_admin a on a.id =n.admin_id
+      left join ht_admin_role r on r.id =n.admin_id
       where n.workflow_id=#{businessId}
     </select>
 
     <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
-        select id,truename,email from ht_admin
-        where del_flag = 0
+        select id,truename,email,CONCAT(id,',',truename,',',email)mailWarningUser from ht_admin
+        where del_flag = 0 and state=0
         <if test="truename != null and truename !=''">
             and truename like CONCAT(#{truename},'%')
         </if>
@@ -127,10 +131,20 @@
 
     <select id="selectWorkFlowUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">
         select id,truename,email from ht_admin
-        WHERE del_flag = 0 and id  in
-        <foreach collection="flowNodes" item="pojo" index="index" separator=",">
+        WHERE del_flag = 0 and state=0 and id  in
+        <foreach collection="flowNodes" item="pojo" index="index" open="(" separator="," close=")">
             #{pojo.auditUser}
         </foreach>
+    </select>
+
+
+    <select id="selectWorkFlowUserRole" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">
+        select a.id,a.truename,a.email from ht_admin a inner join ht_admin_and_role r on a.id=r.user_id
+        where a.del_flag=0 and a.state=0 and r.role_id in
+        <foreach collection="flowNodes" item="pojo" index="index" open="(" separator="," close=")">
+            #{pojo.auditUser}
+        </foreach>
+        GROUP BY r.role_id
     </select>
     <select id="findWorkFlowAll" resultType="com.hyjf.am.vo.admin.WorkFlowVO">
         SELECT

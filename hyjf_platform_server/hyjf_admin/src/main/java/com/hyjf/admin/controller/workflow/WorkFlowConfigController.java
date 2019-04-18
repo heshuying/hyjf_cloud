@@ -203,7 +203,7 @@ public class WorkFlowConfigController  extends BaseController {
         String businessName = workFlowVO.getBusinessName();
         Integer businessId = workFlowVO.getBusinessId();
         Integer auditFlag = workFlowVO.getAuditFlag();
-        if(null == businessId ||StringUtils.isBlank(businessName)){
+        if(null == businessId){
             return "业务名称不能为空";
         }
         if(null == auditFlag){

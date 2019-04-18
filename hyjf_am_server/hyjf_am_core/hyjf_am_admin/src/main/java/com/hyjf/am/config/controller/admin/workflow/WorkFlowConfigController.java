@@ -115,13 +115,22 @@ public class WorkFlowConfigController extends BaseConfigController {
 
         //修改业务流程
         int flag = workFlowConfigService.updateWorkFlowConfig(workFlowVO);
-        if(flag <=0){
-            response.setRtn(Response.FAIL);
+        if(flag == 0){
+            response.setRtn(Response.FAIL);//修改失败
+            response.setResultBoolean(false);
             response.setMessage("修改业务流程失败");
             logger.debug("修改业务流程失败" );
             return response;
         }
-        response.setRtn(Response.SUCCESS);
+        if(flag == -1){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许修改
+            response.setMessage("修改业务流程失败，节点人员不存在");
+            logger.debug("修改业务流程失败，节点人员不存在" );
+            return response;
+        }
+        response.setRtn(Response.SUCCESS);//修改成功
+        response.setResultBoolean(true);//允许修改
         response.setMessage(Response.SUCCESS_MSG);
         return response;
     }

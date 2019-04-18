@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,7 +69,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
         //保存业务流程表
         workFlowConfigMapper.insertWorkFlow(workFlowVO);
-        logger.debug("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId());
+        logger.debug("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId()+"工作流节点，请求参数："+ JSONObject.toJSONString(flowNodes));
         //保存业务流程节点表
         return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
     }
@@ -102,13 +104,13 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
         if(!CollectionUtils.isEmpty(flowNodes)){
-            //判断业务流程是否异常
-            List<WorkFlowUserVO> workFlowUserVO = workFlowConfigMapper.selectWorkFlowUser(flowNodes);
-            if(!CollectionUtils.isEmpty(workFlowUserVO)&&workFlowUserVO.size() == flowNodes.size()){
+            //判断流程节点是异常 true正常
+            boolean flag= workFlowStatus(flowNodes);
+            if(flag){
                 workFlowVO.setAuditFlag(1);
             }else{
-                //若流程节点中的用户不存在，为异常
-                workFlowVO.setAuditFlag(2);
+                //异常，不允许修改
+                return -1;
             }
         }
         //修改业务了流程
@@ -116,7 +118,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //删除业务流程节点
         deleteWorkFolwNode(workFlowVO.getId());
         //添加业务流程节点表
-        return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+         int count = workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+         if(count <=0){
+             return 0;
+         }
+         return 1;
     }
     /**
      *  删除工作流配置业务流程
@@ -153,6 +159,55 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         WorkFlowNodeExample example = new WorkFlowNodeExample();
         example.createCriteria().andWorkflowIdEqualTo(workflowId);
         return workFlowNodeMapper.deleteByExample(example);
+    }
+
+
+    /**
+     * 判断业务流程是否异常
+     * @param flowNodes
+     * @return
+     */
+    public boolean workFlowStatus(List<WorkFlowNodeVO> flowNodes){
+        int size =flowNodes.size();
+        //角色节点的大小
+        int roleSize = 0;
+        //用户节点大小
+        int userSize = 0;
+        //获取业务流程中角色的节点
+        List<WorkFlowNodeVO> roleFlow = new ArrayList<>();
+        //获取业务流程中用户的节点
+        List<WorkFlowNodeVO> userFlow = new ArrayList<>();
+        for(int i=0;i<flowNodes.size();i++){
+            if(null != flowNodes.get(i).getRole() ){
+                if(flowNodes.get(i).getRole().intValue()==1){
+                    roleFlow.add(flowNodes.get(i));
+                }else{
+                    userFlow.add(flowNodes.get(i));
+                }
+            }
+        }
+        if(!CollectionUtils.isEmpty(userFlow)){
+            logger.debug("工作流节点，用户请求参数userFlow："+JSONObject.toJSONString(userFlow));
+            //查询业务流程节点对应的所有用户
+            List<WorkFlowUserVO> workFlowUserVO = workFlowConfigMapper.selectWorkFlowUser(userFlow);
+            //判断业务流程是否异常
+            if(!CollectionUtils.isEmpty(workFlowUserVO)){
+                userSize = workFlowUserVO.size();
+            }
+        }
+        if(!CollectionUtils.isEmpty(roleFlow)){
+            logger.debug("工作流节点，角色请求参数roleFlow："+JSONObject.toJSONString(roleFlow));
+            //查询业务流程中每个角色下的一个可用用户（只要存在一个用户就可以）
+            List<WorkFlowUserVO> workFlowUserRoleVO = workFlowConfigMapper.selectWorkFlowUserRole(roleFlow);
+            if(!CollectionUtils.isEmpty(workFlowUserRoleVO)){
+                roleSize = workFlowUserRoleVO.size();
+            }
+        }
+        if(size == roleSize+userSize){
+            //用户和角色下的用户都存在
+            return true;
+        }
+        return false;
     }
 
     @Override
