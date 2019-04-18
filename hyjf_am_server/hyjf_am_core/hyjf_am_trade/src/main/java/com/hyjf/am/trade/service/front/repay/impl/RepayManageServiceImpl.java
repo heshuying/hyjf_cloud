@@ -1056,7 +1056,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 if (acctualInterest.compareTo(userInterest) >= 0) {
                                     userChargeInterest = BigDecimal.ZERO;
                                 } else {
-                                    userChargeInterest = userChargeInterest.subtract(acctualInterest);
+                                    userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
                             }
                             // 统计总额
@@ -1182,7 +1182,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 if (acctualInterest.compareTo(userInterest) >= 0) {
                                     userChargeInterest = BigDecimal.ZERO;
                                 } else {
-                                    userChargeInterest = userChargeInterest.subtract(acctualInterest);
+                                    userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
                             }
                             // 统计总额
