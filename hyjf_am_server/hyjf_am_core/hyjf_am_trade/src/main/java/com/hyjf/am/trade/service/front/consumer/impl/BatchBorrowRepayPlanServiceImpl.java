@@ -1334,18 +1334,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		BigDecimal recoverCapitalWait = BigDecimal.ZERO;
 		// 待还款利息
 		BigDecimal recoverInterestWait = BigDecimal.ZERO;
-		// 延期天数
+		// 逾期天数
 		Integer lateDays = 0;
 		// 逾期利息
 		BigDecimal lateInterest = BigDecimal.ZERO;
-		// 延期天数
-		Integer delayDays = 0;
-		// 延期利息
-		BigDecimal delayInterest = BigDecimal.ZERO;
 		// 提前天数
 		Integer chargeDays = 0;
 		// 提前还款少还利息
 		BigDecimal chargeInterest = BigDecimal.ZERO;
+        // 提前还款罚息
+        BigDecimal chargePenaltyInterest = BigDecimal.ZERO;
 		// 还款本息(实际)
 		BigDecimal repayAccount = BigDecimal.ZERO;
 		// 还款本金(实际)
@@ -1385,20 +1383,18 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				lateDays = borrowRecoverPlan.getLateDays();
 				// 逾期利息
 				lateInterest = borrowRecoverPlan.getLateInterest();
-				// 延期天数
-				delayDays = borrowRecoverPlan.getDelayDays();
-				// 延期利息
-				delayInterest = borrowRecoverPlan.getDelayInterest();
 				// 提前天数
 				chargeDays = borrowRecoverPlan.getChargeDays();
 				// 提前还款少还利息
 				chargeInterest = borrowRecoverPlan.getChargeInterest().subtract(borrowRecoverPlan.getRepayChargeInterest());
+				// 提前还款罚息
+				chargePenaltyInterest = borrowRecoverPlan.getChargePenaltyInterest().subtract(borrowRecoverPlan.getRepayChargePenaltyInterest());
 				// 实际还款本息
-				repayAccount = recoverAccountWait.add(lateInterest).add(delayInterest).add(chargeInterest);
+				repayAccount = recoverAccountWait.add(lateInterest).add(chargeInterest);
 				// 实际还款本金
 				repayCapital = recoverCapitalWait;
 				// 实际还款利息
-				repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
+				repayInterest = recoverInterestWait.add(lateInterest).add(chargeInterest);
 				// 还款管理费
 				manageFee = recoverFee.subtract(recoverFeeYes);
 			}
@@ -1422,20 +1418,18 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			lateDays = borrowRecover.getLateDays();
 			// 逾期利息
 			lateInterest = borrowRecover.getLateInterest();
-			// 延期天数
-			delayDays = borrowRecover.getDelayDays();
-			// 延期利息
-			delayInterest = borrowRecover.getDelayInterest();
 			// 提前天数
 			chargeDays = borrowRecover.getChargeDays();
 			// 提前还款少还利息
 			chargeInterest = borrowRecover.getChargeInterest().subtract(borrowRecover.getRepayChargeInterest());
+			// 提前还款罚息
+			chargePenaltyInterest = borrowRecover.getChargePenaltyInterest().subtract(borrowRecover.getRepayChargePenaltyInterest());
 			// 实际还款本息
-			repayAccount = recoverAccountWait.add(lateInterest).add(delayInterest).add(chargeInterest);
+			repayAccount = recoverAccountWait.add(lateInterest).add(chargeInterest);
 			// 实际还款本金
 			repayCapital = recoverCapitalWait;
 			// 实际还款利息
-			repayInterest = recoverInterestWait.add(lateInterest).add(delayInterest).add(chargeInterest);
+			repayInterest = recoverInterestWait.add(lateInterest).add(chargeInterest);
 			// 还款管理费
 			manageFee = recoverFee.subtract(recoverFeeYes);
 		}
@@ -1640,7 +1634,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		newBorrowRecover.setRecoverCapitalWait(recoverCapitalWait);
 		newBorrowRecover.setRecoverInterestWait(recoverInterestWait);
 		newBorrowRecover.setRepayChargeInterest(chargeInterest);
-		newBorrowRecover.setRepayDelayInterest(delayInterest);
+		newBorrowRecover.setRepayChargePenaltyInterest(chargePenaltyInterest);
 		newBorrowRecover.setRepayLateInterest(lateInterest);
 		newBorrowRecover.setRecoverFeeYes(borrowRecover.getRecoverFeeYes().add(manageFee));
 		// 再更新已还待还 update by wgx 2019/03/11
@@ -1686,10 +1680,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		borrowRepay.setRepayInterestYes(borrowRepay.getRepayInterestYes().add(repayInterest));
 		borrowRepay.setLateDays(lateDays);
 		borrowRepay.setLateInterest(borrowRepay.getLateInterest().add(lateInterest));
-		borrowRepay.setDelayDays(delayDays);
-		borrowRepay.setDelayInterest(borrowRepay.getDelayInterest().add(delayInterest));
 		borrowRepay.setChargeDays(chargeDays);
 		borrowRepay.setChargeInterest(borrowRepay.getChargeInterest().add(chargeInterest));
+		borrowRepay.setChargePenaltyInterest(borrowRepay.getChargePenaltyInterest().add(chargePenaltyInterest));
 		// 用户是否提前还款
 		borrowRepay.setAdvanceStatus(borrowRecover.getAdvanceStatus());
 		// 还款来源
@@ -1744,10 +1737,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		debtDetail.setAdvanceDays(borrowRepay.getChargeDays());
 		// 提前还款利息
 		debtDetail.setAdvanceInterest(chargeInterest);
-		// 延期天数
-		debtDetail.setDelayDays(borrowRecover.getDelayDays());
-		// 延期利息
-		debtDetail.setDelayInterest(delayInterest);
 		// 逾期天数
 		debtDetail.setLateDays(borrowRecover.getLateDays());
 		// 逾期利息
@@ -1779,7 +1768,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecoverPlan.setRecoverCapitalWait(borrowRecoverPlan.getRecoverCapitalWait().subtract(recoverCapitalWait));
 			borrowRecoverPlan.setRecoverInterestWait(borrowRecoverPlan.getRecoverInterestWait().subtract(recoverInterestWait));
 			borrowRecoverPlan.setRepayChargeInterest(borrowRecoverPlan.getRepayChargeInterest().add(chargeInterest));
-			borrowRecoverPlan.setRepayDelayInterest(borrowRecoverPlan.getRepayDelayInterest().add(delayInterest));
+			borrowRecoverPlan.setRepayChargePenaltyInterest(borrowRecoverPlan.getRepayChargePenaltyInterest().add(chargePenaltyInterest));
 			borrowRecoverPlan.setRepayLateInterest(borrowRecoverPlan.getRepayLateInterest().add(lateInterest));
 			borrowRecoverPlan.setRecoverFeeYes(borrowRecoverPlan.getRecoverFeeYes().add(manageFee));
 			borrowRecoverPlan.setRecoverType(TYPE_YES);
@@ -1803,10 +1792,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				borrowRepayPlan.setRepayInterestYes(borrowRepayPlan.getRepayInterestYes().add(repayInterest));
 				borrowRepayPlan.setLateDays(lateDays);
 				borrowRepayPlan.setLateInterest(borrowRepayPlan.getLateInterest().add(lateInterest));
-				borrowRepayPlan.setDelayDays(delayDays);
-				borrowRepayPlan.setDelayInterest(borrowRepayPlan.getDelayInterest().add(delayInterest));
 				borrowRepayPlan.setChargeDays(chargeDays);
 				borrowRepayPlan.setChargeInterest(borrowRepayPlan.getChargeInterest().add(chargeInterest));
+				borrowRepayPlan.setChargePenaltyInterest(borrowRepayPlan.getChargePenaltyInterest().add(chargePenaltyInterest));
 				// 用户是否提前还款
 				borrowRepayPlan.setAdvanceStatus(borrowRecoverPlan.getAdvanceStatus());
 				// 还款来源
@@ -2036,16 +2024,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		BigDecimal assignManageFee = creditRepay.getManageFee();
 		// 提前还款少还利息
 		BigDecimal chargeInterest = creditRepay.getRepayAdvanceInterest();
-		// 延期利息
-		BigDecimal delayInterest = creditRepay.getRepayDelayInterest();
+		// 提前还款罚息
+		BigDecimal chargePenaltyInterest = creditRepay.getRepayAdvancePenaltyInterest();
 		// 逾期利息
 		BigDecimal lateInterest = creditRepay.getRepayLateInterest();
 		// 还款本息(实际)
-		BigDecimal repayAccount = assignAccount.add(lateInterest).add(delayInterest).add(chargeInterest);
+		BigDecimal repayAccount = assignAccount.add(lateInterest).add(chargeInterest);
 		// 还款本金(实际)
 		BigDecimal repayCapital = assignCapital;
 		// 还款利息(实际)
-		BigDecimal repayInterest = assignInterest.add(lateInterest).add(delayInterest).add(chargeInterest);
+		BigDecimal repayInterest = assignInterest.add(lateInterest).add(chargeInterest);
 		// 管理费
 		BigDecimal manageFee = assignManageFee;
 		/** 基本变量 */
@@ -2298,10 +2286,6 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		debtDetail.setAdvanceDays(creditRepay.getAdvanceDays());
 		// 提前还款利息
 		debtDetail.setAdvanceInterest(chargeInterest);
-		// 延期天数
-		debtDetail.setDelayDays(creditRepay.getDelayDays());
-		// 延期利息
-		debtDetail.setDelayInterest(delayInterest);
 		// 逾期天数
 		debtDetail.setLateDays(creditRepay.getLateDays());
 		// 逾期利息
@@ -2337,8 +2321,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		newBorrowRecover.setRecoverInterestWait(assignInterest);
 		// 已还款提前还款利息
 		newBorrowRecover.setRepayChargeInterest(chargeInterest);
-		// 已还款延期还款利息
-		newBorrowRecover.setRepayDelayInterest(delayInterest);
+		// 已还款提前还款罚息
+        newBorrowRecover.setRepayChargePenaltyInterest(chargePenaltyInterest);
 		// 已还款逾期还款利息
 		newBorrowRecover.setRepayLateInterest(lateInterest);
 		// 已还款管理费
@@ -2382,12 +2366,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		borrowRepay.setRepayAccountYes(borrowRepay.getRepayAccountYes().add(repayAccount));
 		borrowRepay.setRepayCapitalYes(borrowRepay.getRepayCapitalYes().add(repayCapital));
 		borrowRepay.setRepayInterestYes(borrowRepay.getRepayInterestYes().add(repayInterest));
+        // 已还款提前还款利息
+        borrowRepay.setChargeInterest(borrowRepay.getChargeInterest().add(chargeInterest));
+        // 已还款提前还款罚息
+        borrowRepay.setChargePenaltyInterest(borrowRepay.getChargePenaltyInterest().add(chargePenaltyInterest));
+        // 已还款逾期还款利息
+        borrowRepay.setLateInterest(borrowRepay.getLateInterest().add(lateInterest));
 		// 逾期天数
 		borrowRepay.setLateRepayDays(borrowRecover.getLateDays());
 		// 提前天数
 		borrowRepay.setChargeDays(borrowRecover.getChargeDays());
-		// 延期天数
-		borrowRepay.setDelayDays(borrowRecover.getDelayDays());
 		// 用户是否提前还款
 		borrowRepay.setAdvanceStatus(borrowRecover.getAdvanceStatus());
 		// 还款来源
@@ -2425,8 +2413,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			borrowRecoverPlan.setRecoverInterestWait(borrowRecoverPlan.getRecoverInterestWait().subtract(assignInterest));
 			// 已还款提前还款利息
 			borrowRecoverPlan.setRepayChargeInterest(borrowRecoverPlan.getRepayChargeInterest().add(chargeInterest));
-			// 已还款延期还款利息
-			borrowRecoverPlan.setRepayDelayInterest(borrowRecoverPlan.getRepayDelayInterest().add(delayInterest));
+            // 已还款提前还款罚息
+            borrowRecoverPlan.setRepayChargePenaltyInterest(borrowRecoverPlan.getRepayChargePenaltyInterest().add(chargePenaltyInterest));
 			// 已还款逾期还款利息
 			borrowRecoverPlan.setRepayLateInterest(borrowRecoverPlan.getRepayLateInterest().add(lateInterest));
 			// 已还款管理费
@@ -2447,12 +2435,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				borrowRepayPlan.setRepayInterestYes(borrowRepayPlan.getRepayInterestYes().add(repayInterest));
 				// 已还本金
 				borrowRepayPlan.setRepayCapitalYes(borrowRepayPlan.getRepayCapitalYes().add(repayCapital));
+                // 已还款提前还款利息
+                borrowRepayPlan.setChargeInterest(borrowRepayPlan.getChargeInterest().add(chargeInterest));
+                // 已还款提前还款罚息
+                borrowRepayPlan.setChargePenaltyInterest(borrowRepayPlan.getChargePenaltyInterest().add(chargePenaltyInterest));
+                // 已还款逾期还款利息
+                borrowRepayPlan.setLateInterest(borrowRepayPlan.getLateInterest().add(lateInterest));
 				// 逾期天数
 				borrowRepayPlan.setLateRepayDays(borrowRecoverPlan.getLateDays());
 				// 提前天数
 				borrowRepayPlan.setChargeDays(borrowRecoverPlan.getChargeDays());
-				// 延期天数
-				borrowRepayPlan.setDelayDays(borrowRecoverPlan.getDelayDays());
 				// 用户是否提前还款
 				borrowRepayPlan.setAdvanceStatus(borrowRecoverPlan.getAdvanceStatus());
 				// 还款来源
