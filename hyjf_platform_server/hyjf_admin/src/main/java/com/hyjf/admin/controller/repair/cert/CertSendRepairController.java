@@ -131,6 +131,14 @@ public class CertSendRepairController extends BaseController{
                 commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), mqValue));
                 _log.info(" 交易流水数据同步:"+mqValue);
             }
+            if("3".equals(dataType)){
+                // 产品信息数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_LENDPRODUCT, UUID.randomUUID().toString(), mqValue));
+            }
+            if("10".equals(dataType)){
+                // 产品配置数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_LENDPRODUCTCONFIG, UUID.randomUUID().toString(), mqValue));
+            }
         }catch (Exception e){
             _log.info("应急中心发送MQ出错，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】",e);
             return new AdminResult<>(FAIL, FAIL_DESC);
