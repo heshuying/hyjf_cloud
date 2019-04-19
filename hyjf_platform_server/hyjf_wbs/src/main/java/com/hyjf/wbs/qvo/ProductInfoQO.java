@@ -16,8 +16,8 @@ public class ProductInfoQO implements Serializable {
     private String productName;
     @ApiModelProperty(value = "资产端产品编号")
     private String productNo;
-    @ApiModelProperty(value = "线上产品类型，默认2")
-    private Integer productType=2;
+    @ApiModelProperty(value = "线上产品类型，默认1")
+    private Integer productSort=1;
     @ApiModelProperty(value = "产品来源，默认1")
     private Integer assetId=1;
     @ApiModelProperty(value = "产品状态")
@@ -45,12 +45,12 @@ public class ProductInfoQO implements Serializable {
         this.productNo = productNo;
     }
 
-    public Integer getProductType() {
-        return productType;
+    public Integer getProductSort() {
+        return productSort;
     }
 
-    public void setProductType(Integer productType) {
-        this.productType = productType;
+    public void setProductSort(Integer productSort) {
+        this.productSort = productSort;
     }
 
     public Integer getAssetId() {
