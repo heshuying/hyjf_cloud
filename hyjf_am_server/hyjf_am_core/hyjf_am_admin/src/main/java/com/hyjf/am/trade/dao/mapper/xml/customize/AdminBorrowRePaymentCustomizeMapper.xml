@@ -287,8 +287,13 @@
 		<result column="verifyTime" property="verifyTime" jdbcType="VARCHAR" />
 		<result column="borrowFullTime" property="borrowFullTime" jdbcType="VARCHAR" />
 		<result column="recoverLastTime" property="recoverLastTime" jdbcType="VARCHAR" />
+		<result column="repayAccountCapitalYes" property="repayAccountCapitalYes" jdbcType="VARCHAR" />
+		<result column="repayAccountInterestYes" property="repayAccountInterestYes" jdbcType="VARCHAR" />
+		<result column="chargeInterest" property="chargeInterest" jdbcType="VARCHAR" />
+		<result column="chargePenaltyInterest" property="chargePenaltyInterest" jdbcType="VARCHAR" />
+		<result column="yihuanfuwufei" property="yihuanfuwufei" jdbcType="VARCHAR" />
+		<result column="entrustedUserName" property="entrustedUserName" jdbcType="VARCHAR" />
 	</resultMap>
-
 
 	<sql id="Borrow_Repayment_Plan_Where_Clause">
 		<where>
@@ -417,7 +422,7 @@
 				'' AS yanqitianshu,
 				'' AS yanqilixi,
 				rp.late_days AS yuqitianshu,
-				rp.late_interest
+				rp.late_interest_wait
 				AS yuqilixi,
 				rp.repay_account_yes AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
@@ -433,8 +438,8 @@
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
-				if((ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0')  and rp.advance_status='3',
-				'逾期中', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
+				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='',
+				'未提交', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
@@ -444,7 +449,11 @@
 				binfo.repay_org_name,
 				b.verify_time as verifyTime,
 				b.borrow_full_time as borrowFullTime,
-				b.recover_last_time as recoverLastTime
+				b.recover_last_time as recoverLastTime,
+				rp.repay_capital_yes as repayAccountCapitalYes,
+		        rp.repay_interest_yes as repayAccountInterestYes,
+		        if(rp.repay_type='wait_yes',rp.repay_fee,0) as yihuanfuwufei,
+				binfo.entrusted_user_name as entrustedUserName
 				from
 				ht_borrow_repay AS rp
 				INNER JOIN ht_borrow AS b ON
@@ -498,7 +507,7 @@
 				'' AS yanqitianshu,
 				'' AS yanqilixi,
 				rp.late_days AS yuqitianshu,
-				rp.late_interest
+				rp.late_interest_wait
 				AS yuqilixi,
 				rp.repay_account_yes AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
@@ -514,8 +523,8 @@
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
-				if((ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='' OR ba.extra_yield_repay_status='0')  and rp.advance_status='3',
-				'逾期中', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
+				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='',
+				'未提交', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
@@ -525,7 +534,11 @@
 				binfo.repay_org_name,
 				b.verify_time as verifyTime,
 				b.borrow_full_time as borrowFullTime,
-				b.recover_last_time as recoverLastTime
+				b.recover_last_time as recoverLastTime,
+				rp.repay_capital_yes as repayAccountCapitalYes,
+		        rp.repay_interest_yes as repayAccountInterestYes,
+		        if(rp.repay_type='wait_yes',rp.repay_fee,0) as yihuanfuwufei,
+				binfo.entrusted_user_name as entrustedUserName
 				from
 				ht_borrow_repay_plan AS rp
 				INNER JOIN ht_borrow AS b ON
@@ -879,6 +892,14 @@
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
         select  * from (
 		SELECT
+		 b.plan_nid as planNid,
+		 hbi.repay_org_name as repayOrgName,
+		 b.recover_last_time as recoverLastTime,
+		 br.repay_capital_yes as repayAccountCapitalYes,
+		 br.repay_interest_yes as repayAccountInterestYes,
+		 br.charge_interest as chargeInterest,
+		 br.charge_penalty_interest as chargePenaltyInterest,
+		  if(br.repay_type='wait_yes',br.repay_fee,0) as yihuanfuwufei,
 		br.nid AS nid,
 		br.borrow_nid AS borrowNid,
 		u.user_id AS userId,
@@ -902,15 +923,14 @@
 		b.repay_account_interest AS repayInterest,
 		b.repay_account_all AS repayAccount,
 		br.repay_fee AS repayFee,
-		'' AS tiqiantianshu,
-		'' AS shaohuanlixi,
+		br.charge_days AS tiqiantianshu,
+		br.charge_interest AS shaohuanlixi,
 		'' AS yanqitianshu,
 		'' AS yanqilixi,
-		'' AS yuqitianshu,
-		'' AS yuqilixi,
-		'' AS yinghuanzonge,
-		'' AS shihuanzonge,
-
+		br.late_days AS yuqitianshu,
+		br.late_interest AS yuqilixi,
+		b.repay_account_all AS yinghuanzonge,
+		b.repay_account_yes AS shihuanzonge,
 		IF (
 		b. STATUS = 4,
 		0,
@@ -969,6 +989,14 @@
 		AND b.borrow_style in ('end','endday')
 		UNION ALL
 		SELECT
+		b.plan_nid as planNid,
+		 hbi.repay_org_name as repayOrgName,
+		 b.recover_last_time as recoverLastTime,
+		 rp.repay_capital_yes as repayAccountCapitalYes,
+		 rp.repay_interest_yes as repayAccountInterestYes,
+		 rp.charge_interest as chargeInterest,
+		 rp.charge_penalty_interest as chargePenaltyInterest,
+		  if(rp.repay_type='wait_yes',rp.repay_fee,0) as yihuanfuwufei,
 		rp.nid AS nid,
 		b.borrow_nid AS borrowNid,
 		u.user_id AS userId,
@@ -987,14 +1015,14 @@
 		rp.repay_interest AS repayInterest,
 		rp.repay_account AS repayAccount,
 		rp.repay_fee AS repayFee,
-		'' AS tiqiantianshu,
-		'' AS shaohuanlixi,
+		rp.charge_days AS tiqiantianshu,
+		rp.charge_interest AS shaohuanlixi,
 		'' AS yanqitianshu,
 		'' AS yanqilixi,
-		'' AS yuqitianshu,
-		'' AS yuqilixi,
-		'' AS yinghuanzonge,
-		'' AS shihuanzonge,
+		rp.late_days AS yuqitianshu,
+		rp.late_interest AS yuqilixi,
+		b.repay_account_all AS yinghuanzonge,
+		b.repay_account_yes AS shihuanzonge,
 		rp.repay_status AS STATUS,
 
 		IF (

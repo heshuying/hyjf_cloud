@@ -476,12 +476,12 @@ public class BorrowRepaymentInfoController extends BaseController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("nid","出借订单号");
         map.put("repayOrdid","还款订单号");
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("planNid","智投编号");
         map.put("userId","借款人ID");
-        map.put("borrowUserName","借款人");
-        map.put("borrowName","借款名称");
+        map.put("borrowUserName","借款人用户名");
+        map.put("borrowName","项目名称");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","项目期限");
         map.put("borrowApr","出借利率");
@@ -509,7 +509,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         map.put("repayAccountInterest","应回利息");
         map.put("repayAccountAll","应回本息");
         map.put("borrowManager","还款服务费");
-        // map.put("recoverTotal","还款期次");
+        map.put("recoverPeriod","还款期次");
         map.put("recoverCapital","当期应回本金");
         map.put("recoverInterest","当期应回利息");
         map.put("recoverAccount","当期应回本息");
