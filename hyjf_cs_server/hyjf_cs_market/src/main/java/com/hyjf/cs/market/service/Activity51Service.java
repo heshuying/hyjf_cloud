@@ -46,9 +46,15 @@ public interface Activity51Service {
     /**
      * 判断是否已领取奖励
      * @param userId
+     * @param grade
      * @return
      */
-    boolean isRepeatReceive(int userId);
+    boolean isRepeatReceive(int userId, int grade);
 
+    /**
+     * 判断是否重复竞猜
+     * @param userId
+     * @return
+     */
     boolean isRepeatGuess(int userId);
 }

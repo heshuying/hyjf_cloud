@@ -12,9 +12,10 @@ public interface ActivityUserRewardService {
      * 查询用户在某活动是否领取过奖励
      * @param userId
      * @param activityId
+     * @param grade  奖励档位
      * @return
      */
-    ActivityUserReward selectByUserId(Integer userId, Integer activityId);
+    ActivityUserReward selectByUserId(Integer userId, Integer activityId, Integer grade);
 
     /**
      * 保存领取记录

@@ -67,6 +67,13 @@ public class ActivityUserReward implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 奖励档位，分1,2,3,4四挡
+     *
+     * @mbggenerated
+     */
+    private Integer grade;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -139,5 +146,13 @@ public class ActivityUserReward implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 }

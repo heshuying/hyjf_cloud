@@ -54,7 +54,7 @@ public interface MQConstant {
 	 * 优惠券发放
 	 */
 	String GRANT_COUPON_GROUP = "COUPON_GROUP";
-	String GRANT_COUPON_TOPIC = "COUPON_TOPIC";
+	String GRANT_COUPON_TOPIC = "COUPON_TOPIC——xiasq_test";
 
 	/**
 	 * 汇直投-优惠券使用

@@ -20,6 +20,7 @@ public class ActivityUserRewardVO implements Serializable {
 	private String sendStatusName;
 	private String getTime;
 	private String createTime;
+	private Integer grade;
 
     @Override
     public String toString() {
@@ -119,5 +120,13 @@ public class ActivityUserRewardVO implements Serializable {
 
     public void setSendStatusName(String sendStatusName) {
         this.sendStatusName = sendStatusName;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 }
