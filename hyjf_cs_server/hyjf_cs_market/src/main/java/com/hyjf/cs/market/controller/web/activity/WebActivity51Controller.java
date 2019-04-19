@@ -50,7 +50,10 @@ public class WebActivity51Controller {
 		BigDecimal sumAmount = activity51Service.getSumAmount();
 		sumAmount = sumAmount == null ? BigDecimal.ZERO : sumAmount;
 		String rate = String.format("%.2f", sumAmount.multiply(MULTIPLY).divide(DIVIDE)).concat("%");
-        logger.info("当前累计出借金额sumAmount: {}, 进度rate: {}", sumAmount, rate);
+        if(sumAmount.compareTo(DIVIDE) == 1){
+            rate = "100.00%";
+        }
+		logger.info("当前累计出借金额sumAmount: {}, 进度rate: {}", sumAmount, rate);
 		result.setData(new Activity51VO(sumAmount, rate));
         return result;
     }
