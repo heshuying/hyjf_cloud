@@ -1776,4 +1776,39 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
+
+    /**
+     * 用户提现校验
+     *
+     * @param userId
+     * @param withdrawmoney
+     * @return
+     */
+    @Override
+    public WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawmoney) {
+        WebResult<Object> result = new WebResult<Object>();
+        JSONObject ret = new JSONObject();
+        // 判断当前日期是否为工作日
+        boolean isWorkDay =  amConfigClient.checkSomedayIsWorkDateForWithdraw(GetDate.getDate());
+        // 获取用户信息
+        UserVO userVO = this.amUserClient.findUserById(userId);
+        if (userVO == null) {
+            logger.error("根据用户ID查询用户信息失败,用户ID:[" + userId + "].");
+            result.setStatus(MsgEnum.ERR_USER_INFO_GET.getCode());
+            result.setStatusDesc(MsgEnum.ERR_USER_INFO_GET.getMsg());
+            return result;
+        }
+
+        // 用户类型
+        Integer userType = userVO.getUserType();
+        if (isWorkDay){
+            // 是工作日
+            // 根据提现金额,用户类型,提现时间获取提现规则.获取不到,不能提现
+            WithdrawRuleConfigVO
+
+        }else{
+            // 是节假日
+        }
+        return null;
+    }
 }

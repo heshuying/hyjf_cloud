@@ -406,4 +406,21 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return 0;
 	}
+
+	/**
+	 * 查询某一天是否是工作日
+	 * @param somedate
+	 * @return
+	 */
+	@Override
+	public boolean checkSomedayIsWorkDateForWithdraw(Date somedate) {
+		WithdrawTimeConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/withdrawTimeConfig/checkSomedayIsWorkDateForWithdraw/" + somedate,
+						WithdrawTimeConfigResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.isWorkDateFlag();
+		}
+		return false;
+	}
 }

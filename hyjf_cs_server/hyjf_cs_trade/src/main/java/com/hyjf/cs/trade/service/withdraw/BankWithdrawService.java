@@ -195,4 +195,13 @@ public interface BankWithdrawService extends BaseTradeService {
     BankCallResult withdrawBgReturn(HttpServletRequest request, BankCallBean bean);
 
     BaseResultBean getUserWithdrawRecord(UserWithdrawRequestBean userWithdrawRequestBean);
+
+    /**
+     * 用户提现校验
+     *
+     * @param userId
+     * @param withdrawmoney
+     * @return
+     */
+    WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawmoney);
 }

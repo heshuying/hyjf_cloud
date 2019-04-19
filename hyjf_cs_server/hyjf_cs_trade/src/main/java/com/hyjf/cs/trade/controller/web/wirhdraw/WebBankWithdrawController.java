@@ -68,6 +68,23 @@ public class WebBankWithdrawController extends BaseTradeController {
         return objectWebResult;
     }
 
+    /**
+     * 用户银行提现校验
+     *
+     * @param userId
+     * @param withdrawmoney
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "用户银行提现校验", notes = "用户银行提现校验")
+    @PostMapping("/userBankWithdrawCheck")
+    @RequestLimit(seconds = 3)
+    public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "withdrawmoney") String withdrawmoney, HttpServletRequest request) {
+        WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
+        CheckUtil.check(null != user, MsgEnum.ERR_OBJECT_GET, "用户信息");
+        WebResult<Object> objectWebResult = bankWithdrawService.userBankWithdrawCheck(userId,withdrawmoney);
+    }
+
 
     /**
      * 用户银行提现

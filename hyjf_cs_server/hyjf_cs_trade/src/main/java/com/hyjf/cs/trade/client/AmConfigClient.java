@@ -169,4 +169,12 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	int selectCertLogLength();
+
+	/**
+	 * 判断某一日期是否是工作日
+	 *
+	 * @param somedate
+	 * @return
+	 */
+	boolean checkSomedayIsWorkDateForWithdraw(Date somedate);
 }
