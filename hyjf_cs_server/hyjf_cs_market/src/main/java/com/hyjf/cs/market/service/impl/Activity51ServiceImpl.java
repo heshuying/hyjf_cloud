@@ -85,6 +85,11 @@ public class Activity51ServiceImpl implements Activity51Service {
 			logger.error("未配置优惠券编号...");
 			return false;
 		}
+		//仅有4档奖励
+		if(grade > 4){
+			logger.error("领取档位错误...");
+			return false;
+		}
 		String[] couponCodeArray = couponCodes.split(",");
 		if (couponCodeArray.length < 4) {
 			logger.error("优惠券编号配置错误...");
