@@ -52,6 +52,23 @@ public class BusinessNameMgAmController extends BaseController {
     }
 
     /**
+     * 查找名称是否相同
+     */
+    @PostMapping("/findNameUq")
+    public BusinessNameMgResponse findNameUq(@RequestBody BusinessNameMgRequest request){
+        BusinessNameMgResponse response = new BusinessNameMgResponse();
+
+        List<WorkName> recordList = this.bsService.findNameUq(request);
+        // 更新数据
+        if (recordList != null) {
+            List<WorkNameVO> voList = CommonUtils.convertBeanList(recordList, WorkNameVO.class);
+            response.setResultList(voList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
      * 添加
      */
     @PostMapping("/insert")

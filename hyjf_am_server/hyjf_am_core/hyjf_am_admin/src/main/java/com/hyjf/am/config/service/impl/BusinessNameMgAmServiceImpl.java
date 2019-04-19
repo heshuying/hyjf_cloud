@@ -56,6 +56,18 @@ public class BusinessNameMgAmServiceImpl implements BusinessNameMgAmService {
     }
 
     @Override
+    public List<WorkName> findNameUq(BusinessNameMgRequest request){
+        WorkNameExample example = new WorkNameExample();
+        WorkNameExample.Criteria criteria = example.createCriteria();
+
+        //业务名称
+        if(StringUtils.isNotBlank(request.getBsname())){
+            criteria.andWorkNameEqualTo(request.getBsname());
+        }
+        return workNameMapper.selectByExample(example);
+    }
+
+    @Override
     public int insertBs(BusinessNameMgRequest request){
 
         WorkName workName = new WorkName();
