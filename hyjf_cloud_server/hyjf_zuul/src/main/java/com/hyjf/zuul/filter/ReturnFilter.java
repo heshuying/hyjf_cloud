@@ -83,8 +83,7 @@ public class ReturnFilter extends ZuulFilter {
         String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
         if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
             Map<String,String>  request = ctx.getZuulRequestHeaders();
-            if(null != request && null != request.get("userid")){
-                logger.info("userId is :{}",request.get("userid"));
+            if(null != request && null != request.get("secureflag") && "false".equals(request.get("secureflag"))){
                 return false;
             }else{
                 return true;

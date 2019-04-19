@@ -72,6 +72,7 @@ public class AccessFilter extends ZuulFilter {
             return this.buildErrorRequestContext(ctx, 502, "gateway inner error!");
         }
         boolean secureVisitFlag = isSecureVisit(map, originalRequestPath);
+        ctx.addZuulRequestHeader("secureflag", secureVisitFlag + "");
 
         // 执行不同渠道转发逻辑
         if (originalRequestPath.contains(GatewayConstant.APP_CHANNEL)) {
