@@ -11,6 +11,7 @@
     <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="grade" property="grade" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -72,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, activity_id, user_id, reward_name, reward_type, send_type, send_status, create_time, 
-    update_time
+    update_time, grade
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.market.dao.model.auto.ActivityUserRewardExample" >
     select
@@ -113,10 +114,12 @@
     </selectKey>
     insert into ht_activity_user_reward (activity_id, user_id, reward_name, 
       reward_type, send_type, send_status, 
-      create_time, update_time)
+      create_time, update_time, grade
+      )
     values (#{activityId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{rewardName,jdbcType=VARCHAR}, 
       #{rewardType,jdbcType=VARCHAR}, #{sendType,jdbcType=VARCHAR}, #{sendStatus,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{grade,jdbcType=TINYINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.market.dao.model.auto.ActivityUserReward" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -148,6 +151,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="grade != null" >
+        grade,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="activityId != null" >
@@ -173,6 +179,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -212,6 +221,9 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.grade != null" >
+        grade = #{record.grade,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -227,7 +239,8 @@
       send_type = #{record.sendType,jdbcType=VARCHAR},
       send_status = #{record.sendStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      grade = #{record.grade,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -259,6 +272,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -271,7 +287,8 @@
       send_type = #{sendType,jdbcType=VARCHAR},
       send_status = #{sendStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      grade = #{grade,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -21,10 +21,10 @@ public class ActivityUserRewardServiceImpl implements ActivityUserRewardService 
     private ActivityUserRewardMapper mapper;
 
     @Override
-	public ActivityUserReward selectByUserId(Integer userId, Integer activityId) {
+	public ActivityUserReward selectByUserId(Integer userId, Integer activityId, Integer grade) {
 		ActivityUserRewardExample example = new ActivityUserRewardExample();
 		ActivityUserRewardExample.Criteria criteria = example.createCriteria();
-		criteria.andUserIdEqualTo(userId).andActivityIdEqualTo(activityId);
+		criteria.andUserIdEqualTo(userId).andActivityIdEqualTo(activityId).andGradeEqualTo(grade);
 		List<ActivityUserReward> list = mapper.selectByExample(example);
 		return CollectionUtils.isEmpty(list) ? null : list.get(0);
 	}

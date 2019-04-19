@@ -2048,6 +2048,7 @@
         <table tableName="ht_activity_user_reward" domainObjectName="ActivityUserReward">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
     </context>
 </generatorConfiguration>

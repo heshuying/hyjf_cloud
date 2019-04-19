@@ -9,10 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.market.ActivityListResponse;
-import com.hyjf.am.response.market.AppAdsCustomizeResponse;
-import com.hyjf.am.response.market.SellDailyDistributionResponse;
-import com.hyjf.am.response.market.SellDailyResponse;
+import com.hyjf.am.response.market.*;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
@@ -140,6 +137,18 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
+    public ActivityListVO selectActivityList(Integer activityId) {
+        ActivityListResponse response = restTemplate
+                .getForEntity("http://AM-MARKET/am-market/activity/selectActivity/" + activityId,
+                        ActivityListResponse.class)
+                .getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
     public boolean insertActivityUserGuess(int userId, int grade) {
         BooleanResponse response = restTemplate.getForObject(
                 "http://AM-MARKET/am-market/activity/guess/insert/" + userId + "/" + grade,
@@ -162,7 +171,7 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-	public boolean insertActivityUserReward(int userId, int activityId, String rewardName, String rewardType) {
+	public boolean insertActivityUserReward(int userId, int activityId, int grade, String rewardName, String rewardType) {
 		ActivityUserRewardVO vo = new ActivityUserRewardVO();
         vo.setActivityId(activityId);
         vo.setRewardName(rewardName);
@@ -170,6 +179,7 @@ public class AmMarketClientImpl implements AmMarketClient {
         vo.setUserId(userId);
         vo.setSendType("系统发放");
         vo.setSendStatus(1);
+        vo.setGrade(grade);
 		BooleanResponse response = restTemplate.postForObject("http://AM-MARKET/am-market/activity/reward/insert", vo,
 				BooleanResponse.class);
 		if (response != null && response.getResultBoolean() != null) {
@@ -178,12 +188,11 @@ public class AmMarketClientImpl implements AmMarketClient {
 		return false;
     }
 
-	@Override
-	public ActivityListVO selectActivityList(Integer activityId) {
-		ActivityListResponse response = restTemplate
-				.getForEntity("http://AM-MARKET/am-market/activity/selectActivity/" + activityId,
-						ActivityListResponse.class)
-				.getBody();
+    @Override
+	public ActivityUserRewardVO selectActivityUserReward(Integer activityId, int userId, int grade) {
+		ActivityUserRewardResponse response = restTemplate.getForEntity(
+				"http://AM-MARKET/am-market/activity/reward/select/" + activityId + "/" + userId + "/" + grade,
+				ActivityUserRewardResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResult();
 		}

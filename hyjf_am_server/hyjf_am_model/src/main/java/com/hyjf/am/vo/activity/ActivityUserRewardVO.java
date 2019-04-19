@@ -15,6 +15,7 @@ public class ActivityUserRewardVO implements Serializable {
 	private String rewardType;
 	private String sendType;
 	private Integer sendStatus;
+	private Integer grade;
 
     @Override
     public String toString() {
@@ -74,5 +75,13 @@ public class ActivityUserRewardVO implements Serializable {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 }

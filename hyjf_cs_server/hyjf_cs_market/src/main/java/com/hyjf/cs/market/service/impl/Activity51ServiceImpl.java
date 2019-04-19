@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.coupon.UserCouponBean;
 import com.hyjf.am.vo.market.ActivityListVO;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.common.util.CouponUtil;
@@ -38,10 +38,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 	 */
 	private Date activityStartDate = null;
 	private Date activityEndDate = null;
-	/**
-	 *  一次性的redis key，不更新到RedisContants了
-	 */
-	private final String RECEIVE_COUPON_KEY = "user_receive_coupon_51activity:";
+	//private final String RECEIVE_COUPON_KEY = "user_receive_coupon_51activity:";
 	@Autowired
 	private AmTradeClient amTradeClient;
 	@Autowired
@@ -96,13 +93,14 @@ public class Activity51ServiceImpl implements Activity51Service {
 		String couponCode = couponCodeArray[grade - 1];
 
 		// 保存领取记录
-		boolean insertFlag = amMarketClient.insertActivityUserReward(userId, activityId, getRewardByGrade(grade), "加息券");
+		boolean insertFlag = amMarketClient.insertActivityUserReward(userId, activityId, grade, getRewardByGrade(grade), "加息券");
 		if (!insertFlag) {
 			return false;
 		}
 
 		// 发券
 		try {
+			logger.info("用户:{}领取优惠券:{}, 活动:{}", userId, couponCode, activityId);
 			UserCouponBean couponBean = new UserCouponBean();
 			couponBean.setUserId(userId);
 			couponBean.setSendFlg(CouponUtil.NUM_12);
@@ -114,7 +112,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 			return false;
 		}
 
-		RedisUtils.setObjEx(RECEIVE_COUPON_KEY + userId, String.valueOf(userId), 3600 * 24 * 15);
+		// RedisUtils.setObjEx(RECEIVE_COUPON_KEY + userId, String.valueOf(userId), 3600 * 24 * 15);
 		return true;
 	}
 
@@ -138,9 +136,9 @@ public class Activity51ServiceImpl implements Activity51Service {
 	}
 
 	@Override
-	public boolean isRepeatReceive(int userId) {
-		String value = RedisUtils.getObj(RECEIVE_COUPON_KEY + userId, String.class);
-		if (value != null) {
+	public boolean isRepeatReceive(int userId, int grade) {
+		ActivityUserRewardVO vo = amMarketClient.selectActivityUserReward(activityId, userId, grade);
+		if (vo != null) {
 			return true;
 		}
 		return false;
