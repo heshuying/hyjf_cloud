@@ -301,7 +301,18 @@
                 ) AS period,
                 rp.recover_period AS recoverPeriod,
                 t.account,
-                br.recover_capital - br.credit_amount AS amountHold,
+                br.recover_capital - br.credit_amount - (
+                SELECT
+                IFNULL(
+                SUM(p.recover_capital_yes),
+                0
+                )
+                FROM
+                ht_borrow_recover_plan p
+                WHERE
+                br.nid = p.nid
+                AND p.recover_status = 1
+                )AS amountHold,
                 rp.recover_capital - (
                 SELECT
                 IFNULL(SUM(cr1.assign_capital), 0)
