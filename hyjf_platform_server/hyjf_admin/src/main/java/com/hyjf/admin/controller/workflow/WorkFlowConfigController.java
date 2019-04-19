@@ -66,7 +66,7 @@ public class WorkFlowConfigController  extends BaseController {
     public AdminResult insertWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流添加业务流程配置..." + JSONObject.toJSON(workFlowVO));
         workFlowVO.setUpdateUserName(this.getUser(request).getTruename());
-//         workFlowVO.setUpdateUser("3");
+//         workFlowVO.setUpdateUser("管理员");
         //校验请求参数
         String errorMsg = validation(workFlowVO);
         if(!StringUtils.isBlank(errorMsg)){
@@ -112,7 +112,7 @@ public class WorkFlowConfigController  extends BaseController {
     public AdminResult updateWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流修改业务流程配置..." + JSONObject.toJSON(workFlowVO));
         workFlowVO.setUpdateUser(this.getUser(request).getTruename());
-//        workFlowVO.setUpdateUser("3");
+//        workFlowVO.setUpdateUser("管理员");
         //校验请求参数
         if(null == workFlowVO.getId()){
             logger.debug("工作流修改业务流程配置参数校验不合法，错误消息为:业务流程的id不能为空" );
