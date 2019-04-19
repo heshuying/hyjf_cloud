@@ -100,7 +100,7 @@
 		''
 		END AS `repay_status`,
 		FROM_UNIXTIME(
-		hydbr.repay_time,
+		plan.repay_time,
 		'%Y-%m-%d'
 		) AS repay_time,
 		hba.is_repay_org_flag AS repay_money_source,
