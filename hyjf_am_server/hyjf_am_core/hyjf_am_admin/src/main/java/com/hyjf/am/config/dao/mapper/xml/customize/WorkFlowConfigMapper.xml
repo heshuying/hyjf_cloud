@@ -141,6 +141,9 @@
                 #{role}
             </foreach>
         </if>
+        <if test="creatUser != null and creatUser != ''">
+         and a.username <![CDATA[ != ]]> #{creatUser}
+        </if>
     </select>
 
     <select id="selectWorkFlowUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="com.hyjf.am.vo.admin.WorkFlowNodeVO">

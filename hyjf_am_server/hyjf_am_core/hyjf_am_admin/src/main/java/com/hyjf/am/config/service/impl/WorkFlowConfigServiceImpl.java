@@ -5,16 +5,15 @@ import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
-import com.hyjf.am.config.dao.model.auto.AdminRole;
-import com.hyjf.am.config.dao.model.auto.AdminRoleExample;
-import com.hyjf.am.config.dao.model.auto.WorkFlow;
-import com.hyjf.am.config.dao.model.auto.WorkFlowNodeExample;
+import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.service.BusinessNameMgAmService;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
+import com.hyjf.am.vo.config.WorkNameVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,6 +40,8 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     private WorkFlowNodeMapper workFlowNodeMapper;
     @Autowired
     private AdminRoleMapper adminRoleMapper;
+    @Autowired
+    private BusinessNameMgAmService bsService;
 
     /**
      * 查询工作流配置条数
@@ -173,12 +174,23 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     }
     /**
      *  查询邮件预警通知人
-     * @param username
+     * @param workFlowUserVO
      * @return
      */
     @Override
     public List<WorkFlowUserVO> selectUser(WorkFlowUserVO  workFlowUserVO){
-        return workFlowConfigMapper.selectUser(workFlowUserVO.getUsername(),workFlowUserVO.getRoleIds());
+        //当前业务主管
+        String creatUser =null;
+        //去掉当前业务主管（当前业务主管不能作为审核人）
+        //workFlowUserVO.getId()业务名称的id
+        if(null != workFlowUserVO.getId()){
+            WorkName workName = bsService.findListBsById(workFlowUserVO.getId());
+            if(null != workName){
+                creatUser =workName.getCreateUser();
+            }
+        }
+        logger.debug("查询业务流程详情页面，当期业务主管creatUser：" + creatUser);
+        return workFlowConfigMapper.selectUser(workFlowUserVO.getUsername(),workFlowUserVO.getRoleIds(),creatUser);
     }
     public int deleteWorkFolwNode(int workflowId){
         WorkFlowNodeExample example = new WorkFlowNodeExample();

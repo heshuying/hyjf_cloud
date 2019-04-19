@@ -62,7 +62,7 @@ public interface WorkFlowConfigMapper {
      * @param username
      * @return
      */
-    List<WorkFlowUserVO> selectUser(@Param("username")String username,@Param("roleIds")List roleIds);
+    List<WorkFlowUserVO> selectUser(@Param("username")String username,@Param("roleIds")List roleIds,@Param("creatUser")String creatUser);
 
     /**
      * 查询业务流程节点对应的所有用户

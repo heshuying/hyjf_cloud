@@ -62,16 +62,16 @@ public class WorkFlowConfigController extends BaseConfigController {
         logger.info("添加业务流程..." + JSONObject.toJSON(workFlowVO));
         BooleanResponse response = new BooleanResponse();
 
-//        //校验业务id对应的业务流程是否存在
-//        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
-//        adminRequest.setBusinessId(workFlowVO.getBusinessId());
-//        int count = workFlowConfigService.countWorkFlowConfigList(adminRequest);
-//        if(count > 0){
-//            response.setRtn(Response.FAIL);
-//            response.setMessage("该业务id对应的业务流程已经存在，请修改");
-//            logger.debug("该业务id对应的业务流程已经存在，请修改" );
-//            return response;
-//        }
+        //校验业务id对应的业务流程是否存在
+        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
+        adminRequest.setBusinessId(workFlowVO.getBusinessId());
+        int count = workFlowConfigService.countWorkFlowConfigList(adminRequest);
+        if(count > 0){
+            response.setRtn(Response.FAIL);
+            response.setMessage("该业务id对应的业务流程已经存在，请修改");
+            logger.debug("该业务id对应的业务流程已经存在，请修改" );
+            return response;
+        }
 
         //添加业务流程
         int flag = workFlowConfigService.insertWorkFlowConfig(workFlowVO);
@@ -113,6 +113,18 @@ public class WorkFlowConfigController extends BaseConfigController {
     public BooleanResponse updateWorkFlowConfig( @RequestBody WorkFlowVO workFlowVO) {
         logger.info("修改业务流程,请求参数workFlowVO：" + JSONObject.toJSON(workFlowVO));
         BooleanResponse response = new BooleanResponse();
+
+        //校验业务id对应的业务流程是否存在
+        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
+        adminRequest.setBusinessId(workFlowVO.getBusinessId());
+        adminRequest.setId(workFlowVO.getId());
+        int count = workFlowConfigService.countWorkFlowConfigList(adminRequest);
+        if(count > 0){
+            response.setRtn(Response.FAIL);
+            response.setMessage("该业务id对应的业务流程已经存在，请修改");
+            logger.debug("该业务id对应的业务流程已经存在，请修改" );
+            return response;
+        }
 
         //修改业务流程
         int flag = workFlowConfigService.updateWorkFlowConfig(workFlowVO);
