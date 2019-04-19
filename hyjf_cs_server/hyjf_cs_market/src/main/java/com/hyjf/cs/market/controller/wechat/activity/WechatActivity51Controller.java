@@ -30,6 +30,9 @@ public class WechatActivity51Controller {
      * 第一档到末档金额区间
      */
     private final BigDecimal SUM_AMOUNT_GRADE_1 = new BigDecimal(30000000);
+    private final BigDecimal SUM_AMOUNT_GRADE_2 = new BigDecimal(50000000);
+    private final BigDecimal SUM_AMOUNT_GRADE_3 = new BigDecimal(80000000);
+    private final BigDecimal SUM_AMOUNT_GRADE_4 = new BigDecimal(100000000);
 
     @Autowired
     private Activity51Service activity51Service;
@@ -53,7 +56,7 @@ public class WechatActivity51Controller {
             rate = "100.00%";
         }
 		logger.info("当前累计出借金额sumAmount: {}, 进度rate: {}", sumAmount, rate);
-        result.setData(new Activity51VO(sumAmount, rate));
+        result.setData(new Activity51VO(sumAmount, rate, getGradeFromSumAmount(sumAmount)));
         return result;
     }
 
@@ -83,24 +86,6 @@ public class WechatActivity51Controller {
         if(sumAmount == null || sumAmount.compareTo(SUM_AMOUNT_GRADE_1)< 0) {
             return buildResult("99", "累计出借金额未达到最低标准(3000w)");
         }
-
-        /*  前端传递参数
-        //最高档奖励
-        else if(sumAmount.compareTo(SUM_AMOUNT_GRADE_4)> 0){
-            grade = 4;
-        }
-        //第二档奖励
-        else if(sumAmount.compareTo(SUM_AMOUNT_GRADE_3)> 0){
-            grade = 3;
-        }
-        // 第三档奖励
-        else if(sumAmount.compareTo(SUM_AMOUNT_GRADE_2)> 0){
-            grade = 2;
-        }
-        // 末等奖励
-        else if(sumAmount.compareTo(SUM_AMOUNT_GRADE_1)> 0){
-            grade = 1;
-        }*/
 
         // 判断是否已领取奖励
         if(activity51Service.isRepeatReceive(userId, grade)){
@@ -175,17 +160,41 @@ public class WechatActivity51Controller {
 		return result;
 	}
 
+
+    private int getGradeFromSumAmount(BigDecimal sumAmount) {
+        // 第一档奖励
+        if (sumAmount.compareTo(SUM_AMOUNT_GRADE_4) >= 0) {
+            return 4;
+        }
+        // 第二档奖励
+        if (sumAmount.compareTo(SUM_AMOUNT_GRADE_3) >= 0) {
+            return 3;
+        }
+        // 第三档奖励
+        if (sumAmount.compareTo(SUM_AMOUNT_GRADE_2) >= 0) {
+            return 2;
+        }
+        // 末等奖励
+        if (sumAmount.compareTo(SUM_AMOUNT_GRADE_1) >= 0) {
+            return 1;
+        }
+        return 0;
+    }
+
 	@ApiModel(value = "查询当前累计出借金额返回参数")
 	class Activity51VO {
 		@ApiModelProperty("当前累计出借金额")
 		private BigDecimal sumAmount;
 		@ApiModelProperty("当前进度， 例如 31.10%")
 		private String progressRate;
+        @ApiModelProperty("当前档位， 达到3000万返回1，依次2,3,4")
+        private int progressGrade;
 
-		public Activity51VO(BigDecimal sumAmount, String progressRate) {
-			this.sumAmount = sumAmount;
-			this.progressRate = progressRate;
-		}
+        public Activity51VO(BigDecimal sumAmount, String progressRate, int progressGrade) {
+            this.sumAmount = sumAmount;
+            this.progressRate = progressRate;
+            this.progressGrade = progressGrade;
+        }
 
 		public BigDecimal getSumAmount() {
 			return sumAmount;
@@ -202,7 +211,15 @@ public class WechatActivity51Controller {
 		public void setProgressRate(String progressRate) {
 			this.progressRate = progressRate;
 		}
-	}
+
+        public int getProgressGrade() {
+            return progressGrade;
+        }
+
+        public void setProgressGrade(int progressGrade) {
+            this.progressGrade = progressGrade;
+        }
+    }
 
     @ApiModel(value = "查询用户奖励领取信息")
     class RewardReceiveVO {
