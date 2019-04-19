@@ -231,6 +231,11 @@ public class WorkFlowConfigController  extends BaseController {
             if(CollectionUtils.isEmpty(list)){
                 return "需要审核的时候，流程节点不能为空";
             }
+            for(int i=0;i<list.size();i++){
+                if(null == list.get(i).getAuditUser()||list.get(i).getAuditUser().length==0 ){
+                    return "需要审核的时候，流程节点审核人不能为空";
+                }
+            }
             String mailWarningUser = workFlowVO.getMailWarningUser();
             if(StringUtils.isBlank(mailWarningUser)){
                 return "需要审核的时候，邮件预警人不能为空";
