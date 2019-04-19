@@ -65,7 +65,7 @@ public class WorkFlowConfigController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流添加业务流程配置..." + JSONObject.toJSON(workFlowVO));
-        workFlowVO.setUpdateUserName(this.getUser(request).getTruename());
+        workFlowVO.setUpdateUser(this.getUser(request).getTruename());
 //         workFlowVO.setUpdateUser("管理员");
         //校验请求参数
         String errorMsg = validation(workFlowVO);

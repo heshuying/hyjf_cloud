@@ -73,6 +73,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
      */
     @Override
     public int insertWorkFlowConfig(WorkFlowVO workFlowVO){
+        logger.debug("工作流添加业务流程配置,当前用户的真实姓名："+workFlowVO.getUpdateUser());
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
         //保存业务流程表
