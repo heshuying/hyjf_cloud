@@ -74,7 +74,7 @@
             <!--SELECT LAST_INSERT_ID()-->
         <!--</selectKey>-->
         insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
-        VALUES (#{businessId,jdbcType=VARCHAR},1, #{auditFlag,jdbcType=INTEGER},#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
+        VALUES (#{businessId,jdbcType=VARCHAR},1, #{auditFlag,jdbcType=INTEGER},#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=VARCHAR},#{updateUser,jdbcType=VARCHAR})
     </insert>
 
     <update id="updateWorkFlow" parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
