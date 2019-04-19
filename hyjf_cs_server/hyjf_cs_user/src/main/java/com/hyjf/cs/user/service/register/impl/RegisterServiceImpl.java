@@ -845,6 +845,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Override
     public void sendWbsMQ(WbsRegisterMqVO wbsRegisterMqVO) throws MQException {
-        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,MQConstant.WBS_BORROW_INFO_TAG,UUID.randomUUID().toString(), wbsRegisterMqVO),1);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,MQConstant.WBS_REGISTER_TAG,UUID.randomUUID().toString(), wbsRegisterMqVO),1);
     }
 }
