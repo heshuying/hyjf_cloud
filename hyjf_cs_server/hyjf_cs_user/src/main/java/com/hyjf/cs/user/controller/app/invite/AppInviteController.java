@@ -149,6 +149,7 @@ public class AppInviteController {
         appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" :total);
         appRewardDetailVO.setFriendCount(inviteCount);
         appRewardDetailVO.setCoupon(0);
+        appRewardDetailVO.setCouponTag("邀请好友获得");
         appRewardDetailVO.setUserName(users.getUsername());
         appRewardDetailVO.setUserId(users.getUserId());
         appRewardDetailVO.setIconUrl(users.getIconUrl());
@@ -164,7 +165,7 @@ public class AppInviteController {
                     AppInviteRecordVO appInviteRecordVO = new AppInviteRecordVO();
                     appInviteRecordVO.setFriendName(p.getUsername());
                     appInviteRecordVO.setDate(p.getInviteTime());
-                    appInviteRecordVO.setOpenStatus("0".equals(p.getUserStatus())?"未开户":"已开户");
+                    appInviteRecordVO.setOpenStatus("0".equals(p.getUserStatus()) ? "未开户" : "已开户");
                     appInviteRecordVOList.add(appInviteRecordVO);
                 });
             }

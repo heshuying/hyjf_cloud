@@ -6,9 +6,14 @@ package com.hyjf.am.vo.app.reward;
  */
 public class AppRewardDetailVO {
 
+    // 累计奖金金额
     private String total;
+    // 邀请好友人数
     private String friendCount;
+    // 优惠券数量
     private int coupon;
+    // 优惠券提示信息
+    private String couponTag;
     private String userName;
     private Integer userId;
     private String iconUrl;
@@ -29,12 +34,16 @@ public class AppRewardDetailVO {
         this.friendCount = friendCount;
     }
 
-    public Integer getCoupon() {
-        return coupon;
+    public void setCoupon(int coupon) {
+        this.coupon = coupon;
     }
 
-    public void setCoupon(Integer coupon) {
-        this.coupon = coupon;
+    public String getCouponTag() {
+        return couponTag;
+    }
+
+    public void setCouponTag(String couponTag) {
+        this.couponTag = couponTag;
     }
 
     public String getUserName() {

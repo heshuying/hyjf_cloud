@@ -223,6 +223,7 @@ public class AppRewardController {
         appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" :total);
         appRewardDetailVO.setFriendCount(inviteCount);
         appRewardDetailVO.setCoupon(0);
+        appRewardDetailVO.setCouponTag("邀请好友获得");
         appRewardDetailVO.setUserName(users.getUsername());
         appRewardDetailVO.setUserId(users.getUserId());
         appRewardDetailVO.setIconUrl(users.getIconUrl());
