@@ -18,9 +18,13 @@ public class WorkFlowNodeVO  extends BaseVO implements Serializable {
      */
     private String flowNodeNum;
     /**
-     * 审核人
+     * 多个审核人
      */
-    private Integer auditUser;
+    private String[] auditUser;
+    /**
+     * 审核人(接收数据库的)
+     */
+    private String adminId;
     /**
      * 审核人是否是角色，1.角色，2.不是角色（用户）
      */
@@ -46,14 +50,6 @@ public class WorkFlowNodeVO  extends BaseVO implements Serializable {
         this.flowNodeNum = flowNodeNum;
     }
 
-    public Integer getAuditUser() {
-        return auditUser;
-    }
-
-    public void setAuditUser(Integer auditUser) {
-        this.auditUser = auditUser;
-    }
-
     public Integer getRole() {
         return role;
     }
@@ -68,5 +64,21 @@ public class WorkFlowNodeVO  extends BaseVO implements Serializable {
 
     public void setAuditUserName(String auditUserName) {
         this.auditUserName = auditUserName;
+    }
+
+    public String[] getAuditUser() {
+        return auditUser;
+    }
+
+    public void setAuditUser(String[] auditUser) {
+        this.auditUser = auditUser;
+    }
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
     }
 }
