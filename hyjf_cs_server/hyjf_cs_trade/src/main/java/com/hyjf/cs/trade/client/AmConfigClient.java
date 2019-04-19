@@ -177,4 +177,13 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	boolean checkSomedayIsWorkDateForWithdraw(Date somedate);
+
+	/**
+	 * 获取提现规则配置
+	 *
+	 * @param userType
+	 * @param withdrawmoney
+	 * @return
+	 */
+	WithdrawRuleConfigVO selectWithdrawRuleConfig(Integer userType, String withdrawmoney);
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -422,5 +423,23 @@ public class AmConfigClientImpl implements AmConfigClient {
 			return response.isWorkDateFlag();
 		}
 		return false;
+	}
+
+	/**
+	 * 获取提现规则配置
+	 *
+	 * @param userType
+	 * @param withdrawmoney
+	 * @return
+	 */
+	@Override
+	public WithdrawRuleConfigVO selectWithdrawRuleConfig(Integer userType, String withdrawmoney) {
+		String url = "http://AM-CONFIG/am-config/withdrawRuleConfig/selectWithdrawRuleConfig/";
+		WithdrawRuleConfigResponse response = restTemplate.getForEntity(url + userType + "/" + withdrawmoney, WithdrawRuleConfigResponse.class)
+				.getBody();
+		if (response != null){
+			return response.getResult();
+		}
+		return null;
 	}
 }

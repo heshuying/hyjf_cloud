@@ -6,6 +6,7 @@ import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -1804,7 +1805,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if (isWorkDay){
             // 是工作日
             // 根据提现金额,用户类型,提现时间获取提现规则.获取不到,不能提现
-            WithdrawRuleConfigVO
+            WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(userType,withdrawmoney);
 
         }else{
             // 是节假日
