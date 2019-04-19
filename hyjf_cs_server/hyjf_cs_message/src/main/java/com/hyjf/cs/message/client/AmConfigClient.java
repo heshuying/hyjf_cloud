@@ -126,5 +126,4 @@ public interface AmConfigClient {
 	 */
 	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
 
-	String selectMinEventTime();
 }

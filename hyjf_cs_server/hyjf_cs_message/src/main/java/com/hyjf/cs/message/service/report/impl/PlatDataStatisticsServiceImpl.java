@@ -1,12 +1,9 @@
 package com.hyjf.cs.message.service.report.impl;
 
-import com.hyjf.common.util.GetDateUtils;
-import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
 import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
-import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
 import com.hyjf.cs.message.mongo.ic.report.OperationMongDao;
 import com.hyjf.cs.message.mongo.ic.report.OperationMongoGroupDao;
@@ -94,13 +91,6 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
         query.limit(12);
         query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
         return operationMongDao.find(query);
-    }
-    @Autowired
-    AmConfigClient amTradeClient;
-    @Override
-    public String selectMinEventTime() {
-        String eventTime=amTradeClient.selectMinEventTime();
-        return eventTime;
     }
 
 }

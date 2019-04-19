@@ -2,8 +2,6 @@ package com.hyjf.cs.message.client.impl;
 
 import java.util.List;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -231,14 +229,5 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
 
-	@Override
-	public String selectMinEventTime() {
-		String url = "http://AM-CONFIG/am-config/content/contentevent/selectMinEventTime" ;
-		StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
-		if (response == null || !Response.isSuccess(response)) {
-			return null;
-		}
-		return response.getResultStr();
-	}
 
 }

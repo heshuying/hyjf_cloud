@@ -56,8 +56,6 @@ public class PlatDataStatisticsController {
         DecimalFormat df = new DecimalFormat("#,##0");
         OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
         _log.info("获取到的OperationReport=" + JSONObject.toJSONString(oe));
-        String eventTime=platDataStatisticsService.selectMinEventTime();
-        jsonObject.put("operationDuration", eventTime);
         // 累计出借
         jsonObject.put("investTotal", df.format(platDataStatisticsService.selectTotalInvest().setScale(0, BigDecimal.ROUND_DOWN)));
         // 累计收益
