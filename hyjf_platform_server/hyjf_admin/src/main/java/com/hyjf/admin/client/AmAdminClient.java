@@ -1341,4 +1341,10 @@ public interface AmAdminClient {
      * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
      **/
     List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
+    /**
+     * 查询累计年华投资
+     * @param newYearNineteenRequestBean
+     * @return
+     */
+    NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean);
 }
