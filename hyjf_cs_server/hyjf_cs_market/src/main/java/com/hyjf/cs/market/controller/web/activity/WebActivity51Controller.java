@@ -31,9 +31,6 @@ public class WebActivity51Controller {
      * 第一档到末档金额区间
      */
     private final BigDecimal SUM_AMOUNT_GRADE_1 = new BigDecimal(30000000);
-    private final BigDecimal SUM_AMOUNT_GRADE_2 = new BigDecimal(50000000);
-    private final BigDecimal SUM_AMOUNT_GRADE_3 = new BigDecimal(80000000);
-    private final BigDecimal SUM_AMOUNT_GRADE_4 = new BigDecimal(100000000);
 
     @Autowired
     private Activity51Service activity51Service;
@@ -112,7 +109,7 @@ public class WebActivity51Controller {
         if (sendFlag == false) {
             return buildResult("1", "优惠券领取异常");
         }
-        return buildResult("0", "优惠券领取成功");
+        return buildResult("000", "优惠券领取成功");
     }
 
     @ApiOperation(value = "判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
@@ -129,7 +126,7 @@ public class WebActivity51Controller {
             return buildResult("1", "投资年化金额未达到发放标准(1w)");
         }
 
-        BaseResult result = new BaseResult("0","查询成功");
+        BaseResult result = new BaseResult("000","查询成功");
         // 判断是否已领取奖励
         boolean receiveFlag = activity51Service.isRepeatReceive(userId, grade);
         if(receiveFlag){

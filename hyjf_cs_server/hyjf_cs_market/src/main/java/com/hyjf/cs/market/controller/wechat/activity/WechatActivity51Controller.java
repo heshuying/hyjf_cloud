@@ -30,9 +30,6 @@ public class WechatActivity51Controller {
      * 第一档到末档金额区间
      */
     private final BigDecimal SUM_AMOUNT_GRADE_1 = new BigDecimal(30000000);
-    private final BigDecimal SUM_AMOUNT_GRADE_2 = new BigDecimal(50000000);
-    private final BigDecimal SUM_AMOUNT_GRADE_3 = new BigDecimal(80000000);
-    private final BigDecimal SUM_AMOUNT_GRADE_4 = new BigDecimal(100000000);
 
     @Autowired
     private Activity51Service activity51Service;
