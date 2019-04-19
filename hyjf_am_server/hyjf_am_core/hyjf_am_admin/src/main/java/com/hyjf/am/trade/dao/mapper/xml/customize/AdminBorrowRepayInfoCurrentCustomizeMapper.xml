@@ -686,74 +686,74 @@
         (
         <!-- 1、未分期原始出借订单查询-->
         SELECT
-        rp.recover_capital - (
+        br.recover_capital - (
         SELECT
         IFNULL(SUM(cr1.assign_capital), 0)
         FROM
         ht_credit_repay cr1
         WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
         ) - (
         SELECT
         IFNULL(SUM(cr1.repay_capital), 0)
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
         ) AS recoverCapital,
-        rp.recover_interest - (
+        br.recover_interest - (
         SELECT
         IFNULL(SUM(cr1.assign_interest), 0)
         FROM
         ht_credit_repay cr1
         WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
         ) - (
         SELECT
         IFNULL(SUM(cr1.repay_interest), 0)
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverInterest,
-        rp.recover_account - (
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        ) AS recoverInterest,
+        br.recover_account - (
         SELECT
         IFNULL(SUM(cr1.assign_account), 0)
         FROM
         ht_credit_repay cr1
         WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
         ) - (
         SELECT
         IFNULL(SUM(cr1.repay_account), 0)
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverAccount,
-        rp.recover_fee - (
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        ) AS recoverAccount,
+        br.recover_fee - (
         SELECT
         IFNULL(SUM(cr1.manage_fee), 0)
         FROM
         ht_credit_repay cr1
         WHERE
-        cr1.credit_tender_nid = rp.nid
-        AND cr1.recover_period = rp.recover_period
+        cr1.credit_tender_nid = br.nid
+        AND cr1.recover_period = br.recover_period
         ) - (
         SELECT
         IFNULL(SUM(cr1.manage_fee), 0)
         FROM
         ht_hjh_debt_credit_repay cr1
         WHERE
-        cr1.invest_order_id = rp.nid
-        AND cr1.repay_period = rp.recover_period
-        )AS recoverFee
+        cr1.invest_order_id = br.nid
+        AND cr1.repay_period = br.recover_period
+        ) AS recoverFee
         FROM
         ht_borrow_recover br
         INNER JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
