@@ -935,7 +935,11 @@
         `od5`.`name` AS `referrerBranchName`,
         `od4`.`name` AS `referrerDepartmentName`,
         t.account AS recoverTotal,
-        br.recover_capital - br.recover_capital_yes - br.credit_amount AS amountHold,
+        IF (
+        br.recover_status = 1,
+        0,
+        br.recover_capital - br.credit_amount
+        ) AS amountHold,
         br.recover_capital AS recoverCapital,
         br.recover_interest AS recoverInterest,
         br.recover_Account AS recoverAccount,
