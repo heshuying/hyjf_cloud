@@ -35,7 +35,7 @@ public class BusinessNameMgAmServiceImpl implements BusinessNameMgAmService {
 
         //银行名称
         if(StringUtils.isNotBlank(request.getBsname())){
-            criteria.andWorkNameEqualTo(request.getBsname());
+            criteria.andWorkNameLike(request.getBsname());
         }
         return workNameMapper.countByExample(example);
     }
@@ -47,7 +47,7 @@ public class BusinessNameMgAmServiceImpl implements BusinessNameMgAmService {
 
         //业务名称
         if(StringUtils.isNotBlank(request.getBsname())){
-            criteria.andWorkNameEqualTo(request.getBsname());
+            criteria.andWorkNameLike(request.getBsname());
         }
         example.setLimitStart(limitStart);
         example.setLimitEnd(limitEnd);
