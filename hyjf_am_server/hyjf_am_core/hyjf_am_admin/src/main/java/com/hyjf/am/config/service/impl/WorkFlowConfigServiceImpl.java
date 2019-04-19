@@ -1,19 +1,19 @@
 package com.hyjf.am.config.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
+import com.hyjf.am.config.dao.mapper.auto.WorkNameMapper;
 import com.hyjf.am.config.dao.mapper.customize.WorkFlowConfigMapper;
 import com.hyjf.am.config.dao.model.auto.*;
-import com.hyjf.am.config.service.BusinessNameMgAmService;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
-import com.hyjf.am.vo.config.WorkNameVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     @Autowired
     private AdminRoleMapper adminRoleMapper;
     @Autowired
-    private BusinessNameMgAmService bsService;
+    private WorkNameMapper workNameMapper;
 
     /**
      * 查询工作流配置条数
@@ -181,11 +181,11 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     @Override
     public List<WorkFlowUserVO> selectUser(WorkFlowUserVO  workFlowUserVO){
         //当前业务主管
-        String creatUser =null;
+        String creatUser ="";
         //去掉当前业务主管（当前业务主管不能作为审核人）
         //workFlowUserVO.getId()业务名称的id
         if(null != workFlowUserVO.getId()){
-            WorkName workName = bsService.findListBsById(workFlowUserVO.getId());
+            WorkName workName = workNameMapper.selectByPrimaryKey(workFlowUserVO.getId());
             if(null != workName){
                 creatUser =workName.getCreateUser();
             }
