@@ -84,10 +84,10 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
         }
 
         // 散标类别
-        String productRegType = "散标";
+       /* String productRegType = "散标";
         if (borrowProjectTypes != null && borrowProjectTypes.get(0).getInvestUserType().equals(1)) {
             productRegType = "新手标";
-        }
+        }*/
         // 借款用途  个人报送1 企业报送2
         String loanUse = "1";
         if ("1".equals(borrow.getCompanyOrPersonal())) {
@@ -110,7 +110,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
         String loanType = CertCallUtil.convertLoanType(borrow.getAssetAttributes());
         // 借款主体信用评级  企业根据自己平台信用评级算法进行评级从高到低依次是 A-Z；如果没有评级则进行分类 A 是最好，Z 是最差。
         // AAA 报送A  AA+报送E  AA报送K    AA-报送P  A报送U  BBB报送Z
-        String loanCreditRating = CertCallUtil.convertLoanCreditRating(borrow.getBorrowLevel());
+        // String loanCreditRating = CertCallUtil.convertLoanCreditRating(borrow.getBorrowLevel());
         // 担保方式 1-抵押／2-质押／3-留置／4-定金／5-第三方担保/6-保险/9-风险自担/10-保证（信用）。如果没有担保方式填写-1.
         // 根据资产属性填充值报送 1，2，10
         String securityType = CertCallUtil.convertSecurityType(borrow.getAssetAttributes());
@@ -121,7 +121,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             param.put("productStartTime", productStartTime);
             // 散标类别 企业可以根据平台自己的类型自行扩展。
             // 新手标报送新手标  非新手标均报送散标
-            param.put("productRegType", productRegType);
+            // param.put("productRegType", productRegType);
             // 散标名称  报送项目名称
             param.put("productName", borrow.getProjectName());
             param.put("sourceCode", systemConfig.certSourceCode);
@@ -141,7 +141,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             param.put("amount", borrow.getAccount());
             // 投资年化收益率  投资单个散标的年化利率，散标打包成产品时，设定为-1注意：如果平台本身记录是日利率，请乘以 365以后上传，如果公布的是月利率，请乘以 12 以后上传
             // 均报送出借利率
-            param.put("rate", rate);
+            //param.put("rate", rate);
             // 借款期限 (天)  借款期限必须是天。注意：如果平台期限记录的是月，请乘以 30 以后上传，如果公布的是年，请乘以 365 以后上传
             // 月标转换为天  计算方式：期限*30
             param.put("term", term);
@@ -153,13 +153,13 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             param.put("serviceCost", serviceCost);
             // 风险保证金金额
             // 报送0
-            param.put("riskMargin", "0");
+            // param.put("riskMargin", "0");
             // 借款类型 1-信用标/2-抵押标/3-担保标/4-流转标/5-净值标/6-信用+抵押/7-信用+担保/0-其他
             // 报送 资产类型值
             param.put("loanType", loanType);
             // 借款主体信用评级  企业根据自己平台信用评级算法进行评级从高到低依次是 A-Z；如果没有评级则进行分类 A 是最好，Z 是最差。
             // AAA 报送A  AA+报送E  AA报送K    AA-报送P  A报送U  BBB报送Z
-            param.put("loanCreditRating", loanCreditRating);
+            // param.put("loanCreditRating", loanCreditRating);
             // 逾期期限 固定值1
             param.put("overdueLimmit", "1");
             // 坏账期限 固定值90
@@ -175,9 +175,13 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             // 项目来源 1-平台获得/2-线下/3-合作机构/4-其它
             // 报送3
             param.put("projectSource", "3");
+            // 增加surplusAmount剩余借款本金：报送0
+            param.put("surplusAmount", "0");
+            // 担保公司数量字段，报送-1
+            param.put("securityCompanyAmount", "-1");
             // 原产品链接
             // 报送散标URL
-            param.put("sourceProductUrl",systemConfig.getWebHost()+ "/bank/web/borrow/getBorrowDetail.do?borrowNid=" + borrow.getBorrowNid());
+            // param.put("sourceProductUrl",systemConfig.getWebHost()+ "/bank/web/borrow/getBorrowDetail.do?borrowNid=" + borrow.getBorrowNid());
             //旧数据上报分组用
             // groupByDate  旧数据上报排序 按月用yyyy-MM
             String groupByDate = "";
