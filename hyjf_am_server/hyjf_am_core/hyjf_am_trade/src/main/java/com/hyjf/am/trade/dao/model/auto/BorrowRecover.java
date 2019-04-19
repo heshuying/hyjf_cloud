@@ -455,6 +455,13 @@ public class BorrowRecover implements Serializable {
      */
     private BigDecimal chargePenaltyInterest;
 
+    /**
+     * 已还提前还款罚息
+     *
+     * @mbggenerated
+     */
+    private BigDecimal repayChargePenaltyInterest;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -975,5 +982,13 @@ public class BorrowRecover implements Serializable {
 
     public void setChargePenaltyInterest(BigDecimal chargePenaltyInterest) {
         this.chargePenaltyInterest = chargePenaltyInterest;
+    }
+
+    public BigDecimal getRepayChargePenaltyInterest() {
+        return repayChargePenaltyInterest;
+    }
+
+    public void setRepayChargePenaltyInterest(BigDecimal repayChargePenaltyInterest) {
+        this.repayChargePenaltyInterest = repayChargePenaltyInterest;
     }
 }

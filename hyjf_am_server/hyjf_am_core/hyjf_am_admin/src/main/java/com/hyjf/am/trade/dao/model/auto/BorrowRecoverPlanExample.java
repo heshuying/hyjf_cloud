@@ -4075,6 +4075,66 @@ public class BorrowRecoverPlanExample {
             addCriterion("charge_penalty_interest not between", value1, value2, "chargePenaltyInterest");
             return (Criteria) this;
         }
+
+        public Criteria andRepayChargePenaltyInterestIsNull() {
+            addCriterion("repay_charge_penalty_interest is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestIsNotNull() {
+            addCriterion("repay_charge_penalty_interest is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestEqualTo(BigDecimal value) {
+            addCriterion("repay_charge_penalty_interest =", value, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestNotEqualTo(BigDecimal value) {
+            addCriterion("repay_charge_penalty_interest <>", value, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestGreaterThan(BigDecimal value) {
+            addCriterion("repay_charge_penalty_interest >", value, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("repay_charge_penalty_interest >=", value, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestLessThan(BigDecimal value) {
+            addCriterion("repay_charge_penalty_interest <", value, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("repay_charge_penalty_interest <=", value, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestIn(List<BigDecimal> values) {
+            addCriterion("repay_charge_penalty_interest in", values, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestNotIn(List<BigDecimal> values) {
+            addCriterion("repay_charge_penalty_interest not in", values, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("repay_charge_penalty_interest between", value1, value2, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayChargePenaltyInterestNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("repay_charge_penalty_interest not between", value1, value2, "repayChargePenaltyInterest");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

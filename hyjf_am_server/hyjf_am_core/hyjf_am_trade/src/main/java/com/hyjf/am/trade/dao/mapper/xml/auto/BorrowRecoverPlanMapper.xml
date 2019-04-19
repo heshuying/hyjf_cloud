@@ -65,6 +65,7 @@
     <result column="debt_status" property="debtStatus" jdbcType="TINYINT" />
     <result column="credit_interest" property="creditInterest" jdbcType="DECIMAL" />
     <result column="charge_penalty_interest" property="chargePenaltyInterest" jdbcType="DECIMAL" />
+    <result column="repay_charge_penalty_interest" property="repayChargePenaltyInterest" jdbcType="DECIMAL" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -136,7 +137,7 @@
     tender_user_attribute, invite_user_attribute, auth_code, loan_batch_no, repay_batch_no, 
     recover_fee_yes, credit_status, repay_charge_interest, repay_delay_interest, repay_late_interest, 
     credit_amount, credit_interest_amount, credit_manage_fee, debt_status, credit_interest, 
-    charge_penalty_interest
+    charge_penalty_interest, repay_charge_penalty_interest
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlanExample" >
     select
@@ -196,8 +197,8 @@
       recover_fee_yes, credit_status, repay_charge_interest, 
       repay_delay_interest, repay_late_interest, 
       credit_amount, credit_interest_amount, credit_manage_fee, 
-      debt_status, credit_interest, charge_penalty_interest
-      )
+      debt_status, credit_interest, charge_penalty_interest, 
+      repay_charge_penalty_interest)
     values (#{status,jdbcType=TINYINT}, #{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
       #{borrowNid,jdbcType=VARCHAR}, #{nid,jdbcType=VARCHAR}, #{borrowUserid,jdbcType=INTEGER}, 
       #{borrowUserName,jdbcType=VARCHAR}, #{tenderId,jdbcType=INTEGER}, #{accedeOrderId,jdbcType=VARCHAR}, 
@@ -219,8 +220,8 @@
       #{recoverFeeYes,jdbcType=DECIMAL}, #{creditStatus,jdbcType=TINYINT}, #{repayChargeInterest,jdbcType=DECIMAL}, 
       #{repayDelayInterest,jdbcType=DECIMAL}, #{repayLateInterest,jdbcType=DECIMAL}, 
       #{creditAmount,jdbcType=DECIMAL}, #{creditInterestAmount,jdbcType=DECIMAL}, #{creditManageFee,jdbcType=DECIMAL}, 
-      #{debtStatus,jdbcType=TINYINT}, #{creditInterest,jdbcType=DECIMAL}, #{chargePenaltyInterest,jdbcType=DECIMAL}
-      )
+      #{debtStatus,jdbcType=TINYINT}, #{creditInterest,jdbcType=DECIMAL}, #{chargePenaltyInterest,jdbcType=DECIMAL}, 
+      #{repayChargePenaltyInterest,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -414,6 +415,9 @@
       <if test="chargePenaltyInterest != null" >
         charge_penalty_interest,
       </if>
+      <if test="repayChargePenaltyInterest != null" >
+        repay_charge_penalty_interest,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="status != null" >
@@ -601,6 +605,9 @@
       </if>
       <if test="chargePenaltyInterest != null" >
         #{chargePenaltyInterest,jdbcType=DECIMAL},
+      </if>
+      <if test="repayChargePenaltyInterest != null" >
+        #{repayChargePenaltyInterest,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -802,6 +809,9 @@
       <if test="record.chargePenaltyInterest != null" >
         charge_penalty_interest = #{record.chargePenaltyInterest,jdbcType=DECIMAL},
       </if>
+      <if test="record.repayChargePenaltyInterest != null" >
+        repay_charge_penalty_interest = #{record.repayChargePenaltyInterest,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -871,7 +881,8 @@
       credit_manage_fee = #{record.creditManageFee,jdbcType=DECIMAL},
       debt_status = #{record.debtStatus,jdbcType=TINYINT},
       credit_interest = #{record.creditInterest,jdbcType=DECIMAL},
-      charge_penalty_interest = #{record.chargePenaltyInterest,jdbcType=DECIMAL}
+      charge_penalty_interest = #{record.chargePenaltyInterest,jdbcType=DECIMAL},
+      repay_charge_penalty_interest = #{record.repayChargePenaltyInterest,jdbcType=DECIMAL}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -1065,6 +1076,9 @@
       <if test="chargePenaltyInterest != null" >
         charge_penalty_interest = #{chargePenaltyInterest,jdbcType=DECIMAL},
       </if>
+      <if test="repayChargePenaltyInterest != null" >
+        repay_charge_penalty_interest = #{repayChargePenaltyInterest,jdbcType=DECIMAL},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -1131,7 +1145,8 @@
       credit_manage_fee = #{creditManageFee,jdbcType=DECIMAL},
       debt_status = #{debtStatus,jdbcType=TINYINT},
       credit_interest = #{creditInterest,jdbcType=DECIMAL},
-      charge_penalty_interest = #{chargePenaltyInterest,jdbcType=DECIMAL}
+      charge_penalty_interest = #{chargePenaltyInterest,jdbcType=DECIMAL},
+      repay_charge_penalty_interest = #{repayChargePenaltyInterest,jdbcType=DECIMAL}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
