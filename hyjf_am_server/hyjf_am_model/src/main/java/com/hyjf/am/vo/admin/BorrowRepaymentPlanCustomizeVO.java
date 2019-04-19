@@ -57,7 +57,64 @@ public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializab
     private String borrowFullTime; //满标书简
     private String recoverLastTime; //最后一笔的放款完成时间
     
-    public String getBorrowFullTime() {
+    private String repayAccountCapitalYes; //已还本金
+    private String repayAccountInterestYes;//已还利息
+    private String chargeInterest;//已提前减息
+    private String chargePenaltyInterest;//已收提前还款违约金
+    private String yihuanfuwufei;//已还服务费
+    
+    private String entrustedUserName;
+    
+    public String getEntrustedUserName() {
+		return entrustedUserName;
+	}
+
+	public void setEntrustedUserName(String entrustedUserName) {
+		this.entrustedUserName = entrustedUserName;
+	}
+
+    
+    public String getRepayAccountCapitalYes() {
+		return repayAccountCapitalYes;
+	}
+
+	public void setRepayAccountCapitalYes(String repayAccountCapitalYes) {
+		this.repayAccountCapitalYes = repayAccountCapitalYes;
+	}
+
+	public String getRepayAccountInterestYes() {
+		return repayAccountInterestYes;
+	}
+
+	public void setRepayAccountInterestYes(String repayAccountInterestYes) {
+		this.repayAccountInterestYes = repayAccountInterestYes;
+	}
+
+	public String getChargeInterest() {
+		return chargeInterest;
+	}
+
+	public void setChargeInterest(String chargeInterest) {
+		this.chargeInterest = chargeInterest;
+	}
+
+	public String getChargePenaltyInterest() {
+		return chargePenaltyInterest;
+	}
+
+	public void setChargePenaltyInterest(String chargePenaltyInterest) {
+		this.chargePenaltyInterest = chargePenaltyInterest;
+	}
+
+	public String getYihuanfuwufei() {
+		return yihuanfuwufei;
+	}
+
+	public void setYihuanfuwufei(String yihuanfuwufei) {
+		this.yihuanfuwufei = yihuanfuwufei;
+	}
+
+	public String getBorrowFullTime() {
 		return borrowFullTime;
 	}
 
