@@ -6,7 +6,11 @@
         <where>
             1=1
             <!-- 业务id -->
-            <if test="businessId != null and businessId != ''">
+            <if test="id != null ">
+                AND w.id <![CDATA[ != ]]> #{id}
+            </if>
+            <!-- 业务名称id -->
+            <if test="businessId != null ">
                 AND w.workname_id =#{businessId}
             </if>
             <!-- 业务名称 -->
@@ -48,17 +52,16 @@
         case
         when w.check_status=1 then '是'
         else '否' end auditFlagString,
-        (select count(n.id) from ht_workflow_node n where n.workflow_id=w.id) flowNode,
+        (select count(DISTINCT n.flow_order) from ht_workflow_node n where n.workflow_id=w.id) flowNode,
         w.mail_notifier mailWarningUser,
         date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,
-        a.truename updateUser,
+        w.update_user updateUser,
         case
         when w.flow_status=1 then '正常'
         else '异常' end processStatusString,
         date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime
         from ht_workflow w
         inner join ht_workname n on w.workname_id=n.id
-        left join ht_admin a on a.id =w.update_user
         <include refid="Where_Clause" />
         order by w.update_time desc
         <if test="limitStart >= 0" >
@@ -96,9 +99,9 @@
     <select id="selectWorkFlowConfigInfo" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="java.lang.Integer">
         select w.id,w.workname_id businessId,n.work_name businessName,w.mail_notifier mailWarningUser,
         date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,w.create_user createUser,w.update_user updateUser,
-        (select a.truename from ht_admin a where a.id = w.create_user) createUserName,
+        w.create_user createUserName,
         date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime,
-        (select a.truename from ht_admin a where a.id = w.update_user) updateUserName,
+        w.update_user updateUserName,
         w.flow_status processStatus,w.check_status auditFlag,
         case
         when w.flow_status=1 then '正常'

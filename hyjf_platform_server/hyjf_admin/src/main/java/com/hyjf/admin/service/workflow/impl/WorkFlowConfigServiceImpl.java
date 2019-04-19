@@ -9,10 +9,8 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.admin.AdminRoleResponse;
 import com.hyjf.am.response.admin.WorkFlowConfigResponse;
 import com.hyjf.am.response.admin.WorkFlowUserResponse;
-import com.hyjf.am.response.config.AdminUserResponse;
 import com.hyjf.am.resquest.admin.AdminUserWorkFlowRequest;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
-import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.vo.admin.AdminVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
@@ -73,12 +71,12 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     }
     /**
      * 校验业务id是否存在
-     * @param businessId
+     * @param request
      * @return
      */
     @Override
-    public BooleanResponse selectWorkFlowConfigByBussinessId(int businessId){
-        return adminClient.selectWorkFlowConfigByBussinessId(businessId);
+    public BooleanResponse selectWorkFlowConfigByBussinessId(WorkFlowConfigRequest request){
+        return adminClient.selectWorkFlowConfigByBussinessId(request);
     }
     /**
      * 修改工作流配置

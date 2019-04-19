@@ -65,7 +65,7 @@ public class WorkFlowConfigController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流添加业务流程配置..." + JSONObject.toJSON(workFlowVO));
-        workFlowVO.setUpdateUser(this.getUser(request).getId());
+        workFlowVO.setUpdateUserName(this.getUser(request).getTruename());
 //         workFlowVO.setUpdateUser("3");
         //校验请求参数
         String errorMsg = validation(workFlowVO);
@@ -111,7 +111,7 @@ public class WorkFlowConfigController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult updateWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
         logger.info("工作流修改业务流程配置..." + JSONObject.toJSON(workFlowVO));
-        workFlowVO.setUpdateUser(this.getUser(request).getId());
+        workFlowVO.setUpdateUser(this.getUser(request).getTruename());
 //        workFlowVO.setUpdateUser("3");
         //校验请求参数
         if(null == workFlowVO.getId()){
@@ -167,7 +167,7 @@ public class WorkFlowConfigController  extends BaseController {
         if(null ==  adminRequest.getBusinessId()){
             return new AdminResult<>(FAIL, "业务名称的id不能是空");
         }
-        BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
+        BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest);
         logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

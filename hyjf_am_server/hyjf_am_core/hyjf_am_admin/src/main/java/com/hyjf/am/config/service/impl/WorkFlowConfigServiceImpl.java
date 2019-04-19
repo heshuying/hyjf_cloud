@@ -123,10 +123,10 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     public int updateWorkFlowConfig(WorkFlowVO workFlowVO){
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
-        //处理一个节点用户用户或角色
-        flowNodes = setWorkFlowNodeUser(flowNodes);
         //审核状态，判断节点用户是否异常
         if(workFlowVO.getAuditFlag()==1&&!CollectionUtils.isEmpty(flowNodes)){
+            //处理一个节点用户用户或角色
+            flowNodes = setWorkFlowNodeUser(flowNodes);
             //判断流程节点是异常 true正常
             boolean flag= workFlowStatus(flowNodes);
             if(flag){
@@ -142,8 +142,6 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         deleteWorkFolwNode(workFlowVO.getId());
         //审核状态  添加业务流程节点表
         if(workFlowVO.getAuditFlag().intValue()==1){
-//            //多个用户处理
-//            List<WorkFlowNodeVO> newFlowNode = setWorkFlowNodeUser(flowNodes);
             int count = workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
             if(count <=0){
                 return 0;
