@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -2048,5 +2048,19 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <!-- 提现配置-提现规则配置 -->
+        <table tableName="ht_withdraw_rule_config" domainObjectName="WithdrawRuleConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="customer_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="could_withdraw" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="pay_alliance_code" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <!-- 提现配置-提现时间配置 -->
+        <table tableName="ht_withdraw_time_config" domainObjectName="WithdrawTimeConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="holiday_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
     </context>
 </generatorConfiguration>
