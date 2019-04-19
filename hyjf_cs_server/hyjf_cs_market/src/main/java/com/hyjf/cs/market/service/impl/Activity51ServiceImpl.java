@@ -100,7 +100,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 
 		// 发券
 		try {
-			logger.info("用户:{}领取优惠券:{}, 活动:{}", userId, couponCode, activityId);
+			logger.info("用户:{}发放优惠券:{}, 活动:{}", userId, couponCode, activityId);
 			UserCouponBean couponBean = new UserCouponBean();
 			couponBean.setUserId(userId);
 			couponBean.setSendFlg(CouponUtil.NUM_12);

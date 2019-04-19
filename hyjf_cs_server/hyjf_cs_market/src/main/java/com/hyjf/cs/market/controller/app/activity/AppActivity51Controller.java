@@ -42,7 +42,7 @@ public class AppActivity51Controller {
     @RequestMapping(value = "/sumAmount", method = RequestMethod.GET)
     public BaseResult<Activity51VO> getSumAmount(){
         logger.info("查询活动期间当前累计出借金额...");
-        BaseResult<Activity51VO> result = new BaseResult("0", "成功");
+        BaseResult<Activity51VO> result = new BaseResult("000", "成功");
         if(!activity51Service.isActivityTime()){
             return buildResult("99", "活动未开始");
         }
@@ -108,7 +108,7 @@ public class AppActivity51Controller {
         if (sendFlag == false) {
             return buildResult("99", "优惠券领取异常");
         }
-        return buildResult("0", "优惠券领取成功");
+        return buildResult("000", "优惠券领取成功");
     }
 
     @ApiOperation(value = "判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
@@ -125,7 +125,7 @@ public class AppActivity51Controller {
             return buildResult("99", "投资年化金额未达到发放标准(1w)");
         }
 
-        BaseResult result = new BaseResult("0","查询成功");
+        BaseResult result = new BaseResult("000","查询成功");
         // 判断是否已领取奖励
         boolean receiveFlag = activity51Service.isRepeatReceive(userId, grade);
         if(receiveFlag){
@@ -163,7 +163,7 @@ public class AppActivity51Controller {
         }
 
         activity51Service.guess(userId, grade);
-        return buildResult("0", "竞猜成功");
+        return buildResult("000", "竞猜成功");
     }
 
 	private BaseResult buildResult(String code, String msg) {
