@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
@@ -16,6 +18,7 @@ import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -1563,4 +1566,31 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
+
+	/**
+	 * 提现规则配置列表
+	 * @return
+	 */
+    WithdrawRuleConfigResponse getWithdrawRuleConfigList();
+
+	/**
+	 * 假期时间配置列表
+	 * @return
+	 */
+	WithdrawTimeConfigResponse getWithdrawTimeConfigList();
+
+	/**
+	 * 提现规则配置详情
+	 * @param id
+	 * @return
+	 */
+    WithdrawRuleConfigResponse getWithdrawRuleConfigById(Integer id);
+
+	/**
+	 * 提现规则配置修改
+	 * @param form
+	 * @return
+	 */
+	int updateWithdrawRuleConfig(WithdrawRuleConfigVO form);
+
 }

@@ -9,6 +9,8 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.BankConfigResponse;
+import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -20,6 +22,7 @@ import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
+import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -2318,7 +2321,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminAuthConfigCustomizeResponse getAuthConfigList() {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigList";
         AdminAuthConfigCustomizeResponse response = restTemplate.getForEntity(url,AdminAuthConfigCustomizeResponse.class).getBody();
-        if (Validator.isNotNull(response)) {
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
@@ -2332,7 +2335,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     public AdminAuthConfigLogResponse getAuthConfigLogList(HjhUserAuthConfigLogCustomizeVO request) {
         String url = "http://AM-ADMIN/am-config/configCenter/authConfig/getAuthConfigLogList";
         AdminAuthConfigLogResponse response = restTemplate.postForEntity(url,request,AdminAuthConfigLogResponse.class).getBody();
-        if (Validator.isNotNull(response)){
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response;
         }
         return null;
@@ -2457,4 +2460,61 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
 
     }
+
+    /**
+     * 提现规则配置列表
+     * @return
+     */
+    @Override
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList() {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawRuleConfigList";
+        WithdrawRuleConfigResponse response = restTemplate.getForEntity(url,WithdrawRuleConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 假期时间配置
+     * @return
+     */
+    @Override
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList() {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawTimeConfigList";
+        WithdrawTimeConfigResponse response = restTemplate.getForEntity(url,WithdrawTimeConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 提现规则配置详情
+     * @param id
+     * @return
+     */
+    @Override
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigById(Integer id) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawRuleConfigById/"+id;
+        WithdrawRuleConfigResponse response = restTemplate.getForEntity(url,WithdrawRuleConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 提现规则配置修改
+     * @param form
+     * @return
+     */
+    @Override
+    public int updateWithdrawRuleConfig(WithdrawRuleConfigVO form) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/updateWithdrawRuleConfig";
+        return restTemplate.postForEntity(url,form,Integer.class).getBody();
+    }
+
+
+
 }
