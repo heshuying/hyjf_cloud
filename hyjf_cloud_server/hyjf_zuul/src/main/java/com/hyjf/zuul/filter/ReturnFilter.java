@@ -38,16 +38,9 @@ public class ReturnFilter extends ZuulFilter {
             String token = "";
             token = request.getHeader(GatewayConstant.TOKEN);
             String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
-            if (StringUtils.isBlank(token)) {
-                InputStream stream = ctx.getResponseDataStream();
-                String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+            if (!StringUtils.isBlank(token)) {
                 logger.warn("originalRequestPath: {}...", originalRequestPath);
-                logger.warn("user is not exist, token is : {}...", token);
-                body = setResult(body);
-                ctx.setResponseBody(body);// 输出最终结果
-            }else{
                 AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
-
                 if (accessToken == null) {
                     InputStream stream = ctx.getResponseDataStream();
                     String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
@@ -56,6 +49,25 @@ public class ReturnFilter extends ZuulFilter {
                     ctx.setResponseBody(body);// 输出最终结果
                 }
             }
+
+//            if (StringUtils.isBlank(token)) {
+//                InputStream stream = ctx.getResponseDataStream();
+//                String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+//                logger.warn("originalRequestPath: {}...", originalRequestPath);
+//                logger.warn("user is not exist, token is : {}...", token);
+//                body = setResult(body);
+//                ctx.setResponseBody(body);// 输出最终结果
+//            }else{
+//                AccessToken accessToken = RedisUtils.getObj(RedisConstants.USER_TOEKN_KEY + token, AccessToken.class);
+//
+//                if (accessToken == null) {
+//                    InputStream stream = ctx.getResponseDataStream();
+//                    String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+//                    logger.warn("user is not exist, token is : {}...，Redis上未查询到该用户登陆信息", token);
+//                    body = setResult(body);
+//                    ctx.setResponseBody(body);// 输出最终结果
+//                }
+//            }
             logger.info("token is :{}",token);
         }catch (IOException e){
             logger.error("获取业务端返回body异常，不进行处理");
@@ -82,12 +94,7 @@ public class ReturnFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         String originalRequestPath = ctx.get(FilterConstants.REQUEST_URI_KEY).toString();
         if(originalRequestPath.contains(GatewayConstant.WEB_CHANNEL)) {
-            Map<String,String>  request = ctx.getZuulRequestHeaders();
-            if(null != request && null != request.get("secureflag") && "false".equals(request.get("secureflag"))){
-                return false;
-            }else{
-                return true;
-            }
+            return true;
         }else{
             return false;
         }
