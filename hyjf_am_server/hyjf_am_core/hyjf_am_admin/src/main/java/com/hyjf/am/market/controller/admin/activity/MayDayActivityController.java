@@ -4,9 +4,13 @@
 package com.hyjf.am.market.controller.admin.activity;
 
 import com.hyjf.am.market.service.ActivityUserGuessService;
+import com.hyjf.am.market.service.ActivityUserRewardService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ActivityUserGuessResponse;
+import com.hyjf.am.response.admin.ActivityUserRewardResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
+import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
+import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.ActivityUserGuessVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,8 @@ public class MayDayActivityController {
 
     @Autowired
     private ActivityUserGuessService activityUserGuessService;
+    @Autowired
+    private ActivityUserRewardService activityUserRewardService;
 
     @RequestMapping("/guessUserList")
     public ActivityUserGuessResponse getGuessList(@RequestBody ActivityUserGuessRequest request) {
@@ -42,6 +48,25 @@ public class MayDayActivityController {
                 response.setResultList(userGuessVOList);
             }
             response.setCount(recordCount);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    @RequestMapping("/rewardList")
+    public ActivityUserRewardResponse getRewardList(@RequestBody ActivityUserRewardRequest rewardRequest) {
+        ActivityUserRewardResponse response = new ActivityUserRewardResponse();
+        int rewardCount = activityUserRewardService.getRewardListCount(rewardRequest);
+        Paginator paginator = new Paginator(rewardRequest.getCurrPage(), rewardCount, rewardRequest.getPageSize());
+        if (rewardRequest.getPageSize() == 0) {
+            paginator = new Paginator(rewardRequest.getCurrPage(), rewardCount);
+        }
+        if (rewardCount > 0) {
+            List<ActivityUserRewardVO> userRewardVOList = activityUserRewardService.getRewardList(rewardRequest,paginator.getOffset(), paginator.getLimit());
+            if (!CollectionUtils.isEmpty(userRewardVOList)) {
+                response.setResultList(userRewardVOList);
+            }
+            response.setCount(rewardCount);
             response.setRtn(Response.SUCCESS);
         }
         return response;

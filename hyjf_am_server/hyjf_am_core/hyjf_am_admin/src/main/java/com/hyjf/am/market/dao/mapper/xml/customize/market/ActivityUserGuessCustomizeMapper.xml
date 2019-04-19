@@ -52,7 +52,7 @@
     <if test="userName != null and userName != ''">
       AND u.username = #{userName}
     </if>
-    <if test="trueName != null and trueName = !''">
+    <if test="trueName != null and trueName != ''">
       AND ui.truename = #{trueName}
     </if>
     <if test="grade != null and grade != ''">

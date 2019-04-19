@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.ActivityUserRewardCustomizeMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.vo.activity.ActivityUserRewardVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="true_name" property="trueName" jdbcType="VARCHAR"/>
+    <result column="reward_name" property="rewardName" jdbcType="VARCHAR" />
+    <result column="reward_type" property="rewardType" jdbcType="VARCHAR" />
+    <result column="send_type" property="sendType" jdbcType="VARCHAR" />
+    <result column="send_status" property="sendStatus" jdbcType="INTEGER"/>
+    <result column="send_status_name" property="sendStatusName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectRewardList" resultMap="BaseResultMap">
+    SELECT
+      ur.user_id,
+      u.username as user_name,
+      ui.truename as true_name,
+      ur.reward_name,
+      ur.reward_type,
+      ur.send_type,
+      ur.send_status,
+      CASE
+      WHEN ur.send_status = 1 THEN '已发放'
+      WHEN ur.send_status = 0 THEN '未发放'
+      END AS send_status_name,
+      date_format(ur.create_time, '%Y-%m-%d %H:%i:%s')
+      AS create_time
+      FROM ht_activity_user_reward ur
+      LEFT JOIN hyjf_user.ht_user u ON ur.user_id = u.user_id
+      LEFT JOIN hyjf_user.ht_user_info ui ON ur.user_id = ui.user_id
+      <where>
+       <include refid="where_condition"/>
+      </where>
+      <if test="limitStart >= 0" >
+        LIMIT #{limitStart} , #{limitEnd}
+      </if>
+  </select>
+
+  <select id="countRewardList" resultType="java.lang.Integer">
+    SELECT COUNT(1)
+      FROM ht_activity_user_reward ur
+      LEFT JOIN hyjf_user.ht_user u ON ur.user_id = u.user_id
+      LEFT JOIN hyjf_user.ht_user_info ui ON ur.user_id = ui.user_id
+      <where>
+       <include refid="where_condition"/>
+      </where>
+  </select>
+
+  <sql id="where_condition">
+    <if test="userName != null and userName != ''">
+      AND u.username = #{userName}
+    </if>
+    <if test="trueName != null and trueName != ''">
+      AND ui.truename = #{trueName}
+    </if>
+    <if test="sendStatus != null and sendStatus != ''">
+      AND ur.send_status = #{sendStatus}
+    </if>
+
+  </sql>
+
+</mapper>

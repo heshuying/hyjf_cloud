@@ -11,10 +11,15 @@ public class ActivityUserRewardVO implements Serializable {
 
 	private Integer activityId;
 	private Integer userId;
+	private String userName;
+	private String trueName;
 	private String rewardName;
 	private String rewardType;
 	private String sendType;
 	private Integer sendStatus;
+	private String sendStatusName;
+	private String getTime;
+	private String createTime;
 
     @Override
     public String toString() {
@@ -74,5 +79,45 @@ public class ActivityUserRewardVO implements Serializable {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getTrueName() {
+        return trueName;
+    }
+
+    public void setTrueName(String trueName) {
+        this.trueName = trueName;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getGetTime() {
+        return getTime = createTime;
+    }
+
+    public void setGetTime(String getTime) {
+        this.getTime = getTime;
+    }
+
+    public String getSendStatusName() {
+        return sendStatusName;
+    }
+
+    public void setSendStatusName(String sendStatusName) {
+        this.sendStatusName = sendStatusName;
     }
 }

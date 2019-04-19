@@ -1342,5 +1342,17 @@ public interface AmAdminClient {
      **/
     List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
 
+    /**
+     * 五一活动获取竞猜列表
+     * @param request
+     * @return
+     */
     ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request);
+
+    /**
+     * 五一活动获取奖励领取列表
+     * @param rewardRequest
+     * @return
+     */
+    ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest);
 }

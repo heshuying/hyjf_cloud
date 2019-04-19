@@ -2286,4 +2286,13 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    @Override
+    public ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest) {
+        ActivityUserRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/mayDay/rewardList", rewardRequest, ActivityUserRewardResponse.class);
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
 }
