@@ -133,11 +133,11 @@ public class WebActivity51Controller {
     public BaseResult<List<RewardReceiveVO>> getReceiveStatusList(@RequestHeader int userId) {
         logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
         if (!activity51Service.isActivityTime()) {
-            return buildResult("99", "活动未开始");
+            return buildResult("1", "活动未开始");
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
-            return buildResult("99", "投资年化金额未达到发放标准(1w)");
+            return buildResult("1", "投资年化金额未达到发放标准(1w)");
         }
 
         BaseResult result = new BaseResult("000", "查询成功");

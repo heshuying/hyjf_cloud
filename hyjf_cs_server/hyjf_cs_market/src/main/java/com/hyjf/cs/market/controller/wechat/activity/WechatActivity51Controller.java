@@ -139,7 +139,7 @@ public class WechatActivity51Controller {
             return buildResult("99", "投资年化金额未达到发放标准(1w)");
         }
 
-        BaseResult result = new BaseResult("000", "查询成功");
+        BaseResult result = new BaseResult("0", "查询成功");
         List<RewardReceiveVO> list = new ArrayList<>();
         for (int i = 1; i < 5; i++) {
             // 判断是否已领取奖励
