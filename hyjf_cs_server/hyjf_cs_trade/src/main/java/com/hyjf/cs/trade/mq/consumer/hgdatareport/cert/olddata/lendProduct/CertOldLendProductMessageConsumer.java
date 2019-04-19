@@ -9,8 +9,8 @@ import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
+import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct.CertLendProductService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description 合规数据上报 CERT 产品信息历史数据上报
@@ -69,13 +71,6 @@ public class CertOldLendProductMessageConsumer implements RocketMQListener<Messa
             logger.error(logHeader + "解析消息体失败！！！", e);
             return;
         }
-
-        String planNid = jsonObject.getString("planNid");
-        String tradeDate = jsonObject.getString("tradeDate");
-        if (StringUtils.isBlank(planNid)) {
-            logger.error(logHeader + "通知参数不全！！！");
-            return;
-        }
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
         boolean canRun = certLendProductService.checkCanRun();
         if (!canRun) {
@@ -96,15 +91,14 @@ public class CertOldLendProductMessageConsumer implements RocketMQListener<Messa
                 return;
             }
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE, listRepay);
-            try {
-                // 掉单用
-                if (tradeDate != null && !"".equals(tradeDate)) {
-                    entity.setTradeDate(tradeDate);
+            List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(listRepay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE);
+            // 遍历循环上报
+            for (CertReportEntityVO entity : entitys) {
+                try {
+                    certLendProductService.insertAndSendPost(entity);
+                } catch (Exception e) {
+                    throw e;
                 }
-                certLendProductService.insertAndSendPost(entity);
-            } catch (Exception e) {
-                throw e;
             }
             logger.info(logHeader + " 处理成功。" + msgBody);
         } catch (Exception e) {

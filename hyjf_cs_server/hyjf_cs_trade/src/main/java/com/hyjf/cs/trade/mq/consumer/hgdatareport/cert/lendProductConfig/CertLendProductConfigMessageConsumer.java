@@ -71,11 +71,11 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
         }
 
         //加入订单号或承接承接订单号
-        String orderId = jsonObject.getString("orderId");
-        // 1：代表初始债权，2：代表承接
-        String flag = jsonObject.getString("flag");
+        String assignOrderId = jsonObject.getString("assignOrderId");
+        // 1:承接智投，2：加入智投
+        String isTender = jsonObject.getString("isTender");
         String tradeDate = jsonObject.getString("tradeDate");
-        if (StringUtils.isBlank(orderId)||StringUtils.isEmpty(flag)) {
+        if (StringUtils.isBlank(assignOrderId)||StringUtils.isEmpty(isTender)) {
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
@@ -91,14 +91,15 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductConfigService.ProductConfigInfo(orderId,flag);
+            JSONArray listRepay = certLendProductConfigService.ProductConfigInfo(assignOrderId,isTender);
             logger.info("数据：" + listRepay.toString());
             if (null == listRepay || listRepay.size() <= 0) {
-                logger.error(logHeader + "组装参数为空！！！参数为：" + orderId);
+                String typeStr = isTender.equals("1")?"承接智投":"加入智投";
+                logger.error(logHeader + "组装参数为空！！！订单编号为：" + assignOrderId+"，标示为："+isTender+","+typeStr);
                 return;
             }
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, orderId, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, assignOrderId, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {

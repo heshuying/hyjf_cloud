@@ -68,7 +68,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
     @Override
     public JSONArray getPlanProdouct(String planNid){
         JSONArray json = new JSONArray();
-        Map<String, Object> param =getParam(planNid);
+        Map<String, Object> param =getParam(planNid,false);
         if(!param.isEmpty()&&param.size()>0){
             json.add(param);
         }
@@ -90,7 +90,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                 throw new Exception("获取线上智投信息失败！" );
             }
             for(HjhPlanVO hjhPlanVO:hjhPlanVOList){
-                Map<String,Object> mapParam =getParam(hjhPlanVO.getPlanNid());
+                Map<String,Object> mapParam =getParam(hjhPlanVO.getPlanNid(),true);
                 json.add(mapParam);
             }
         }catch (Exception e){
@@ -100,7 +100,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
     }
 
 
-    public Map<String,Object> getParam(String planNid){
+    public Map<String,Object> getParam(String planNid,Boolean isOld){
         Map<String, Object> param = new HashMap<String, Object>();
         try {
             HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
@@ -136,10 +136,25 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                     termDays = hjhPlanVO.getLockPeriod() * 30;
                 }
                 param.put("term", termDays);
+                if(isOld){
+                    String groupByDateStr = dateFormatTransformation(hjhPlanVO.getCreateTime());
+                    param.put("groupByDate", groupByDateStr);
+                }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return param;
+    }
+
+    /**
+     * 格式化日期，年月日
+     * @param date
+     * @return
+     */
+    private String dateFormatTransformation(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = sdf.format(date);
+        return strDate;
     }
 }

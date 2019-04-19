@@ -17,4 +17,9 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
      * @return
      */
     JSONArray ProductConfigInfo(String orderId, String flag);
+    /**
+     * 查找产品配置信息历史数据
+     * @return
+     */
+    JSONArray getHistoryDate();
 }

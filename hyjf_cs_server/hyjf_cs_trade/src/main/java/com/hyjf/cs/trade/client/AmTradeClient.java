@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.CreditListResponse;
-import com.hyjf.am.response.trade.MyCreditListQueryResponse;
-import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
@@ -2986,5 +2984,21 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhPlanVO> selectAllPlan();
+    // 应急中心二期，产品配置历史数据上报 add by nxl start
+    /**
+     * @description 查找 未还款，转让被部分被承接的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+     List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize();
+    /**
+     * @description 查找未还款的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+    List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize();
+    // 应急中心二期，产品配置历史数据上报 add by nxl end
 }
 

@@ -412,6 +412,15 @@ public class PlanListController extends BaseController{
 				//success();
 				jsonObject.put("status", SUCCESS);
 				jsonObject.put("statusDesc", SUCCESS_DESC);
+				// 智投修改成功发送mq到应急中心上报数据add by nxl
+				try {
+					JSONObject params = new JSONObject();
+					params.put("planNid", planNid);
+					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.HJHPLAN_ADD_MODIFY, UUID.randomUUID().toString(), params),
+							MQConstant.HG_REPORT_DELAY_LEVEL);
+				} catch (Exception e) {
+					logger.error("新加智投发送mq消息到合规数据上报失败！planNid : " + planNid ,e);
+				}
 			} else {
 				//fail("");
 				jsonObject.put("status", FAIL);

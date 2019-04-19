@@ -7258,4 +7258,36 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+    // 应急中心二期，产品配置历史数据上报 add by nxl start
+    /**
+     * @description 查找 未还款，转让被部分被承接的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize() {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getHjhDebtCreditInfoCustomize";
+        HjhDebtCreditCustomizeResponse response = restTemplate.getForEntity(url, HjhDebtCreditCustomizeResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
+    /**
+     * @description 查找未还款的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+    @Override
+    public List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize() {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderInfoCustomize";
+        BorrowTenderCustomizeResponse response = restTemplate.getForEntity(url, BorrowTenderCustomizeResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
+    // 应急中心二期，产品配置历史数据上报 add by nxl end
 }
