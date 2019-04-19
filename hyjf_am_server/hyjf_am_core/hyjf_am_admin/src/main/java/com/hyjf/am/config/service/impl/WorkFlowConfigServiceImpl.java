@@ -16,6 +16,7 @@ import com.hyjf.am.vo.admin.WorkFlowNodeVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
 import com.hyjf.am.vo.admin.WorkFlowVO;
 import com.hyjf.common.util.CommonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,8 +77,13 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //保存业务流程表
         workFlowConfigMapper.insertWorkFlow(workFlowVO);
         logger.debug("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId()+"工作流节点，请求参数："+ JSONObject.toJSONString(flowNodes));
-        //保存业务流程节点表
-        return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+        //审核状态  添加业务流程节点表
+        if(workFlowVO.getAuditFlag().intValue()==1){
+            //多个用户处理
+            List<WorkFlowNodeVO> newFlowNode = setWorkFlowNodeUser(flowNodes);
+            return workFlowConfigMapper.insertWorkFlowNode(newFlowNode,workFlowVO.getId());
+        }
+        return 1;
     }
 
     /**
@@ -95,6 +101,14 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         //根据业务流程中的业务id查询业务流程节点
         List<WorkFlowNodeVO> flowNodes =  workFlowConfigMapper.selectWorkFlowConfigNode(id);
         if(!CollectionUtils.isEmpty(flowNodes)){
+            //将同一个节点多个用户转成数组返回
+            for(int i=0;i<flowNodes.size();i++){
+                String users = flowNodes.get(i).getAdminId();
+                if(StringUtils.isNotEmpty(users)){
+                    String[] auditUser = users.split(",");
+                    flowNodes.get(i).setAuditUser(auditUser);
+                }
+            }
             workFlowVO.setFlowNodes(flowNodes);
             workFlowVO.setFlowNode(flowNodes.size());
         }
@@ -109,7 +123,10 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     public int updateWorkFlowConfig(WorkFlowVO workFlowVO){
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
-        if(!CollectionUtils.isEmpty(flowNodes)){
+        //处理一个节点用户用户或角色
+        flowNodes = setWorkFlowNodeUser(flowNodes);
+        //审核状态，判断节点用户是否异常
+        if(workFlowVO.getAuditFlag()==1&&!CollectionUtils.isEmpty(flowNodes)){
             //判断流程节点是异常 true正常
             boolean flag= workFlowStatus(flowNodes);
             if(flag){
@@ -123,11 +140,15 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         workFlowConfigMapper.updateWorkFlow(workFlowVO);
         //删除业务流程节点
         deleteWorkFolwNode(workFlowVO.getId());
-        //添加业务流程节点表
-         int count = workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
-         if(count <=0){
-             return 0;
-         }
+        //审核状态  添加业务流程节点表
+        if(workFlowVO.getAuditFlag().intValue()==1){
+//            //多个用户处理
+//            List<WorkFlowNodeVO> newFlowNode = setWorkFlowNodeUser(flowNodes);
+            int count = workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
+            if(count <=0){
+                return 0;
+            }
+        }
          return 1;
     }
     /**
@@ -244,5 +265,29 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
             return null;
         }
         return CommonUtils.convertBeanList(adminRoles,AdminRoleVO.class);
+    }
+
+    /**
+     * 处理一个节点多个用户或多个角色
+     * 将一条数据转为多条数据
+     * @param flowNodes
+     */
+    public List setWorkFlowNodeUser(List<WorkFlowNodeVO> flowNodes){
+        List<WorkFlowNodeVO> newFlowNodes = new ArrayList<>();
+        for(int i=0;i<flowNodes.size();i++){
+            WorkFlowNodeVO flowNode = flowNodes.get(i);
+            String[] adminId = flowNode.getAuditUser();
+            if(null != adminId&&adminId.length>0){
+                for(int j=0;j<adminId.length;j++){
+                    WorkFlowNodeVO node= new WorkFlowNodeVO();
+                    node.setRole(flowNode.getRole());
+                    node.setBusinessId(flowNode.getBusinessId());
+                    node.setFlowNodeNum(flowNode.getFlowNodeNum());
+                    node.setAdminId(adminId[j]);
+                    newFlowNodes.add(node);
+                }
+            }
+        }
+        return newFlowNodes;
     }
 }

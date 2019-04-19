@@ -71,12 +71,12 @@
             <!--SELECT LAST_INSERT_ID()-->
         <!--</selectKey>-->
         insert into ht_workflow (workname_id,flow_status,check_status, mail_notifier,create_user,update_user)
-        VALUES (#{businessId,jdbcType=VARCHAR}, #{auditFlag,jdbcType=INTEGER},1,#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
+        VALUES (#{businessId,jdbcType=VARCHAR},1, #{auditFlag,jdbcType=INTEGER},#{mailWarningUser,jdbcType=VARCHAR},#{updateUser,jdbcType=INTEGER},#{updateUser,jdbcType=INTEGER})
     </insert>
 
     <update id="updateWorkFlow" parameterType="com.hyjf.am.vo.admin.WorkFlowVO" >
         UPDATE ht_workflow w
-        SET w.workname_id = #{businessId},w.flow_status=#{auditFlag},w.check_status=#{processStatus},w.mail_notifier=#{mailWarningUser},w.update_user=#{updateUser}
+        SET w.workname_id = #{businessId},w.flow_status=1,w.check_status=#{auditFlag},w.mail_notifier=#{mailWarningUser},w.update_user=#{updateUser}
         WHERE  w.id = #{id}
     </update>
 
@@ -88,7 +88,7 @@
             #{pojo.role},
             #{workFlowId},
             #{pojo.flowNodeNum},
-            #{pojo.auditUser}
+            #{pojo.adminId}
             )
         </foreach>
     </insert>
@@ -112,18 +112,22 @@
     </select>
 
     <select id="selectWorkFlowConfigNode" resultType="com.hyjf.am.vo.admin.WorkFlowNodeVO" parameterType="java.lang.Integer">
-       select n.role role,n.workflow_id businessId,n.flow_order flowNodeNum ,n.admin_id auditUser,
-       case when n.role=1 then r.role_name when n.role=2 then a.truename end auditUserName
+       select n.role role,n.workflow_id businessId,n.flow_order flowNodeNum ,group_concat(n.admin_id) adminId,
+       case when n.role=1 then group_concat(r.role_name) when n.role=2 then group_concat(a.truename) end auditUserName
        from ht_workflow_node n
       left join ht_admin a on a.id =n.admin_id
       left join ht_admin_role r on r.id =n.admin_id
       where n.workflow_id=#{businessId}
+      group by n.flow_order
     </select>
 
     <select id="selectUser" resultType="com.hyjf.am.vo.admin.WorkFlowUserVO" parameterType="java.lang.String">
-        select a.id,a.truename,a.username,ar.role_name roleName,a.mobile,a.email,CONCAT(a.id,',',a.username,',',a.email)mailWarningUser from ht_admin a
+        select a.id,a.truename,a.username,ar.role_name roleName,a.mobile,a.email,dep.name AS departmentname,
+        DATE_FORMAT(a.create_time,'%Y-%m-%d %H:%i:%s')addTime,CONCAT(a.username,',',a.email)mailWarningUser
+        from ht_admin a
         left join ht_admin_and_role r on a.id=r.user_id
         left join ht_admin_role ar on r.role_id=ar.id
+        left join hyjf_user.ht_r_oa_department dep ON a.department_id = dep.id
         where a.del_flag = 0 and a.state=0
         <if test="username != null and username !=''">
             and a.username like CONCAT(#{username},'%')
@@ -140,7 +144,7 @@
         select id,truename,email from ht_admin
         WHERE del_flag = 0 and state=0 and id  in
         <foreach collection="flowNodes" item="pojo" index="index" open="(" separator="," close=")">
-            #{pojo.auditUser}
+            #{pojo.adminId}
         </foreach>
     </select>
 
@@ -149,7 +153,7 @@
         select a.id,a.truename,a.email from ht_admin a inner join ht_admin_and_role r on a.id=r.user_id
         where a.del_flag=0 and a.state=0 and r.role_id in
         <foreach collection="flowNodes" item="pojo" index="index" open="(" separator="," close=")">
-            #{pojo.auditUser}
+            #{pojo.adminId}
         </foreach>
         GROUP BY r.role_id
     </select>
