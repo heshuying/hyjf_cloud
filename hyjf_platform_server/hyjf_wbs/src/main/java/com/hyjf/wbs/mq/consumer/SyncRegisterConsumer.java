@@ -36,7 +36,7 @@ import com.hyjf.wbs.qvo.CustomerSyncQO;
 import com.hyjf.wbs.user.service.SyncCustomerService;
 
 @Service
-@RocketMQMessageListener(topic = MQConstant.WBS_REGISTER_TOPIC, selectorExpression = MQConstant.WBS_BORROW_INFO_TAG, consumerGroup = MQConstant.WBS_REGISTER_GROUP)
+@RocketMQMessageListener(topic = MQConstant.WBS_REGISTER_TOPIC, selectorExpression = MQConstant.WBS_REGISTER_TAG, consumerGroup = MQConstant.WBS_REGISTER_GROUP)
 public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
@@ -72,8 +72,8 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		customerSyncQO.setEntId(Integer.parseInt(utmId));
 		customerSyncQO.setCustomerId(thirdpartyId);
 
-		if (Strings.isNullOrEmpty(userId) || Strings.isNullOrEmpty(thirdpartyId) || Strings.isNullOrEmpty(utmId)) {
-			logger.info("WBS用户注册MQ收到消息格式不正确【{}】", msgBody);
+		if (Strings.isNullOrEmpty(userId)) {
+			logger.info("WBS客户回调MQ收到消息格式不正确【{}】", msgBody);
 		} else {
 			Integer userIdd = Integer.parseInt(userId);
 			UserVO userVO = amUserClient.findUserById(userIdd);
@@ -104,7 +104,6 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		customerSyncQO.setPlatformRegistrationTime(sdf.format(userVO.getRegTime()));
 
 	}
-
 	private void buildData(UserVO userVO, AccountVO accountVO, BankCardVO bankCardVO, CustomerSyncQO customerSyncQO) {
 
 		buildData(userVO, customerSyncQO);
@@ -129,9 +128,16 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 	@Override
 	public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
+		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
+		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-		logger.info("====SyncRegisterConsumer start=====");
+		// 设置并发数
+		defaultMQPushConsumer.setConsumeThreadMin(1);
+		defaultMQPushConsumer.setConsumeThreadMax(1);
+		defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
+		defaultMQPushConsumer.setConsumeTimeout(30);
+		logger.info("====SyncRegisterConsumer监听初始化完成, 启动完毕=====");
 	}
 }

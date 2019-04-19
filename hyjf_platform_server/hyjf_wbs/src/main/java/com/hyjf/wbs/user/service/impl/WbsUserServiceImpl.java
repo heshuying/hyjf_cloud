@@ -88,14 +88,14 @@ public class WbsUserServiceImpl implements WbsUserService {
 			userId = Integer.parseInt(assetCustomerId);
 		} catch (NumberFormatException e) {
 			logger.error("客户ID=【{}】不是INTEGER类型", assetCustomerId);
-			throw new CheckException("客户ID【" + assetCustomerId + "】不是INTEGER类型！");
+			throw new CheckException("999","客户ID【" + assetCustomerId + "】不是INTEGER类型！");
 		}
 
 		User user = userMapper.selectByPrimaryKey(userId);
 
 		if (null == user) {
 			logger.error("未找到ID=【" + assetCustomerId + "】的客户信息");
-			throw new CheckException("未找到ID=【" + assetCustomerId + "】的客户信息");
+			throw new CheckException("999","未找到ID=【" + assetCustomerId + "】的客户信息");
 		}
 
 		wbsUserAuthInfo.setUserName(user.getUsername());
@@ -121,7 +121,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 
 		try {
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
-					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), qo), 1);
+					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), qo), 3);
 		} catch (MQException e) {
 			logger.error("授权发送MQ失败！");
 			throw new CheckException(e.getMessage());

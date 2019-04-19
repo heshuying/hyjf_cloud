@@ -33,8 +33,8 @@ public class CsUserClientImpl implements CsUserClient {
 
 	@Override
 	public WebViewUserVO login(LoginRequestVO user) {
-		String url = "/hyjf-web/user/login";
-		WebResult webResult = restTemplate.getForEntity(url, WebResult.class).getBody();
+		String url = userService+"/hyjf-web/user/login";
+		WebResult webResult = restTemplate.postForEntity(url,user, WebResult.class).getBody();
 		if (webResult != null) {
 			if (WebResult.SUCCESS.equals(webResult.getStatus())) {
 				return (WebViewUserVO) webResult.getData();
