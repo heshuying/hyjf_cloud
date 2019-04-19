@@ -68,6 +68,4 @@ public interface EventService {
 	 * @return
 	 */
     int selectCount(EventsRequest request);
-
-    String selectMinEventTime();
 }

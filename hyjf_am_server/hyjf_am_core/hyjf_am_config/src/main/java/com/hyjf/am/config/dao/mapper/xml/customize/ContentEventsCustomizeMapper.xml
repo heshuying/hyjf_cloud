@@ -36,8 +36,5 @@
 		</where>
 	</sql>
 
-	<select id="selectMinEventTime" resultType="String">
-		SELECT Min(event_time) FROM ht_event
-	</select>
 
 </mapper>

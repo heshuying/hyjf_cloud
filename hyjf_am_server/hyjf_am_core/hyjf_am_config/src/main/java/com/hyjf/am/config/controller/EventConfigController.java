@@ -72,17 +72,5 @@ public class EventConfigController extends BaseConfigController {
         return response;
     }
 
-    /**
-     * 根据条件查询公司管理-公司纪事时间
-     *
-     * @return
-     */
-    @RequestMapping("/selectMinEventTime")
-    public StringResponse selectMinEventTime() {
-        StringResponse response = new StringResponse();
-        String minEventTime= eventService.selectMinEventTime();
-        response.setResultStr(minEventTime);
-        return response;
-    }
 
 }
