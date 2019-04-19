@@ -7,6 +7,7 @@ import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.exceptions.WbsException;
 import com.hyjf.wbs.qvo.ProductInfoQO;
 import com.hyjf.wbs.qvo.WbsCommonQO;
+import com.hyjf.wbs.sign.WbsSignUtil;
 import com.hyjf.wbs.trade.service.SynProductInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,9 +31,9 @@ public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynPro
     @Override
     public void sync(ProductInfoQO productInfoQO) {
         WbsCommonQO wbsCommonQO = new WbsCommonQO();
-//		wbsCommonQO.setApp_key(wbsConfig.getAppKey());
+		wbsCommonQO.setApp_key(wbsConfig.getAppKey());
         wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_PRODUCT_INFO);
-//		wbsCommonQO.setSign(WbsSignUtil.encrypt(customerSyncQO, wbsConfig.getAppSecret()));
+		wbsCommonQO.setSign(WbsSignUtil.encrypt(productInfoQO, wbsConfig.getAppSecret()));
         wbsCommonQO.setData(JSONObject.toJSONString(productInfoQO));
 
         String jsonRequest = JSONObject.toJSONString(wbsCommonQO);
