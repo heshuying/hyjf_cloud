@@ -1,7 +1,10 @@
 package com.hyjf.cs.market.controller.web.activity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.hyjf.cs.market.controller.app.activity.AppActivity51Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,12 +103,12 @@ public class WebActivity51Controller {
         return buildResult("000", "优惠券领取成功");
     }
 
-    @ApiOperation(value = "判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
+    @ApiOperation(value = "单个档位判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
     @RequestMapping(value = "/isReceiveCoupon", method = RequestMethod.GET)
     public BaseResult<RewardReceiveVO> isReceiveCoupon(@RequestHeader int userId,
                                                                                @ApiParam(required = true, name = "grade", value = "累计出借金额区间， 从第一档（3000万）开始，依次传递1,2,3,4")
                                       @RequestParam int grade){
-        logger.info("判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
+        logger.info("单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
         if(!activity51Service.isActivityTime()){
             return buildResult("1", "活动未开始");
         }
@@ -118,12 +121,40 @@ public class WebActivity51Controller {
         // 判断是否已领取奖励
         boolean receiveFlag = activity51Service.isRepeatReceive(userId, grade);
         if(receiveFlag){
-            result.setData(new RewardReceiveVO("Y", "已领取"));
+            result.setData(new RewardReceiveVO(grade, "Y", "已领取"));
         } else {
-            result.setData(new RewardReceiveVO("N", "未领取"));
+            result.setData(new RewardReceiveVO(grade, "N", "未领取"));
         }
         return result;
     }
+
+    @ApiOperation(value = "批量判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
+    @RequestMapping(value = "/getReceiveStatusList", method = RequestMethod.GET)
+    public BaseResult<List<RewardReceiveVO>> getReceiveStatusList(@RequestHeader int userId) {
+        logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
+        if (!activity51Service.isActivityTime()) {
+            return buildResult("99", "活动未开始");
+        }
+
+        if (!activity51Service.canSendCoupon(userId)) {
+            return buildResult("99", "投资年化金额未达到发放标准(1w)");
+        }
+
+        BaseResult result = new BaseResult("000", "查询成功");
+        List<RewardReceiveVO> list = new ArrayList<>();
+        for (int i = 1; i < 5; i++) {
+            // 判断是否已领取奖励
+            boolean receiveFlag = activity51Service.isRepeatReceive(userId, i);
+            if (receiveFlag) {
+                result.setData(new RewardReceiveVO(i, "Y", "已领取"));
+            } else {
+                result.setData(new RewardReceiveVO(i, "N", "未领取"));
+            }
+        }
+        result.setData(list);
+        return result;
+    }
+
 
     /**
      * 用户竞猜
@@ -225,14 +256,25 @@ public class WebActivity51Controller {
     @ApiModel(value = "查询用户奖励领取信息")
     class RewardReceiveVO {
 
+        @ApiModelProperty("奖励档位")
+        private int grade;
         @ApiModelProperty("领取标志, Y-已领取 N-未领取")
         private String receiveFlag;
         @ApiModelProperty("领取描述")
         private String receiveDesc;
 
-        public RewardReceiveVO(String receiveFlag, String receiveDesc) {
+        public RewardReceiveVO(int grade, String receiveFlag, String receiveDesc) {
+            this.grade = grade;
             this.receiveFlag = receiveFlag;
             this.receiveDesc = receiveDesc;
+        }
+
+        public int getGrade() {
+            return grade;
+        }
+
+        public void setGrade(int grade) {
+            this.grade = grade;
         }
 
         public String getReceiveFlag() {
