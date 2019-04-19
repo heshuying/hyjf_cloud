@@ -96,9 +96,9 @@
     <select id="selectWorkFlowConfigInfo" resultType="com.hyjf.am.vo.admin.WorkFlowVO" parameterType="java.lang.Integer">
         select w.id,w.workname_id businessId,n.work_name businessName,w.mail_notifier mailWarningUser,
         date_format(w.create_time,'%Y-%m-%d %H:%i:%s')createTime,w.create_user createUser,w.update_user updateUser,
-        (select a.truename from ht_admin a where a.id = w.create_user) createUserName,
+        w.create_user createUserName,
         date_format(w.update_time,'%Y-%m-%d %H:%i:%s')updateTime,
-        (select a.truename from ht_admin a where a.id = w.update_user) updateUserName,
+        w.update_user updateUserName,
         w.flow_status processStatus,w.check_status auditFlag,
         case
         when w.flow_status=1 then '正常'
