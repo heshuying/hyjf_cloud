@@ -146,9 +146,9 @@ public class WebActivity51Controller {
             // 判断是否已领取奖励
             boolean receiveFlag = activity51Service.isRepeatReceive(userId, i);
             if (receiveFlag) {
-                result.setData(new RewardReceiveVO(i, "Y", "已领取"));
+                list.add(new RewardReceiveVO(i, "Y", "已领取"));
             } else {
-                result.setData(new RewardReceiveVO(i, "N", "未领取"));
+                list.add(new RewardReceiveVO(i, "N", "未领取"));
             }
         }
         result.setData(list);
