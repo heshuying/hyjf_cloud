@@ -167,7 +167,7 @@ public class WorkFlowConfigController  extends BaseController {
         if(null ==  adminRequest.getBusinessId()){
             return new AdminResult<>(FAIL, "业务名称的id不能是空");
         }
-        BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest.getBusinessId());
+        BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest);
         logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

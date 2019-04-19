@@ -1296,10 +1296,10 @@ public interface AmAdminClient {
     WorkFlowConfigResponse selectWorkFlowConfigInfo(int id);
     /**
      * 校验业务id是否存在
-     * @param businessId
+     * @param request
      * @return
      */
-    BooleanResponse selectWorkFlowConfigByBussinessId(int businessId);
+    BooleanResponse selectWorkFlowConfigByBussinessId(WorkFlowConfigRequest request);
     /**
      * 修改工作流配置业务流程
      * @param workFlowVO

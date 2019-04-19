@@ -11,6 +11,8 @@ import java.io.Serializable;
 @ApiModel(value="工作流业务流程配置",description="工作流业务流程配置")
 public class WorkFlowConfigRequest extends BasePage implements Serializable {
     private static final long serialVersionUID = 1L;
+    //业务流程id
+    private Integer id;
     /**
      * 业务名称id
      */
@@ -46,6 +48,13 @@ public class WorkFlowConfigRequest extends BasePage implements Serializable {
      */
     private int limitEnd = -1;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getBusinessId() {
         return businessId;

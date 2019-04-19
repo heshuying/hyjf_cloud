@@ -2247,8 +2247,8 @@ public class AmAdminClientImpl implements AmAdminClient {
      * @return
      */
     @Override
-    public BooleanResponse selectWorkFlowConfigByBussinessId(int businessId){
-        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist/"+businessId, BooleanResponse.class).getBody();
+    public BooleanResponse selectWorkFlowConfigByBussinessId(WorkFlowConfigRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist",request, BooleanResponse.class).getBody();
     }
     /**
      * 修改工作流配置业务流程

@@ -183,16 +183,14 @@ public class WorkFlowConfigController extends BaseConfigController {
     }
     /**
      * 校验业务id是否存在
-     * @param businessId
+     * @param request
      * @return
      */
-    @GetMapping("/exist/{businessId}")
-    public BooleanResponse selectWorkFlowConfigByBussinessId( @PathVariable Integer businessId) {
-        logger.info("校验业务名称是否存在,业务名称的id:" + businessId);
-        WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
-        adminRequest.setBusinessId(businessId);
+    @PostMapping("/exist")
+    public BooleanResponse selectWorkFlowConfigByBussinessId( @RequestBody WorkFlowConfigRequest request) {
+        logger.info("校验业务名称是否存在,业务名称的id:" + request.getBusinessId()+"业务id："+request.getId());
         BooleanResponse response = new BooleanResponse();
-        List<WorkFlowVO> workFlowVOS =workFlowConfigService.selectWorkFlowConfigList(adminRequest, -1, -1);
+        List<WorkFlowVO> workFlowVOS =workFlowConfigService.selectWorkFlowConfigList(request, -1, -1);
         if(!CollectionUtils.isEmpty(workFlowVOS)){
             //已经存在
             response.setResult(true);
