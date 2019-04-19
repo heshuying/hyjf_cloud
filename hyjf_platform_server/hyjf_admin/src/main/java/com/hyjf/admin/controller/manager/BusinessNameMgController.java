@@ -69,7 +69,7 @@ public class BusinessNameMgController  extends BaseController {
         }
 
         AdminSystemVO user = getUser(httpServletRequest);
-        request.setUsername(user.getUsername());
+        request.setUsername(user.getTruename());
         boolean flag = businessNameMgService.insertBusinessName(request);
         if (!flag) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -106,7 +106,7 @@ public class BusinessNameMgController  extends BaseController {
         }
 
         AdminSystemVO user = getUser(httpServletRequest);
-        request.setUsername(user.getUsername());
+        request.setUsername(user.getTruename());
         boolean flag = businessNameMgService.updateBusinessName(request);
         if (!flag) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -122,7 +122,7 @@ public class BusinessNameMgController  extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         AdminSystemVO user = getUser(httpServletRequest);
-        request.setUsername(user.getUsername());
+        request.setUsername(user.getTruename());
         boolean flag = businessNameMgService.updateStatusBusinessName(request);
         if (!flag) {
             return new AdminResult<>(FAIL, FAIL_DESC);
