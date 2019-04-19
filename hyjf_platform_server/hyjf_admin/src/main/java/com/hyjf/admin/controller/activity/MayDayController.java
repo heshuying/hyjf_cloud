@@ -213,7 +213,7 @@ public class MayDayController extends BaseController {
         map.put("rewardName", "奖励名称");
         map.put("rewardType", "奖励类型");
         map.put("sendType", "发放方式");
-        map.put("sendStatus", "发放状态");
+        map.put("sendStatusName", "发放状态");
         map.put("getTime", "领取时间");
         map.put("createTime", "发放时间");
         return map;
