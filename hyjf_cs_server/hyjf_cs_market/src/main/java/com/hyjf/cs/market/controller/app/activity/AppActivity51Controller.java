@@ -44,7 +44,7 @@ public class AppActivity51Controller {
         logger.info("查询活动期间当前累计出借金额...");
         BaseResult<Activity51VO> result = new BaseResult("0", "成功");
         if(!activity51Service.isActivityTime()){
-            return buildResult("1", "活动未开始");
+            return buildResult("99", "活动未开始");
         }
 		BigDecimal sumAmount = activity51Service.getSumAmount();
 		sumAmount = sumAmount == null ? BigDecimal.ZERO : sumAmount;
@@ -66,11 +66,11 @@ public class AppActivity51Controller {
                                  @RequestParam int grade){
         logger.info("领取优惠券, userId is: {}", userId);
         if(!activity51Service.isActivityTime()){
-            return buildResult("1", "活动未开始");
+            return buildResult("99", "活动未开始");
         }
 
         if(!activity51Service.canSendCoupon(userId)){
-            return buildResult("1", "投资年化金额未达到发放标准(1w)");
+            return buildResult("99", "投资年化金额未达到发放标准(1w)");
         }
 
         //档位奖励
@@ -78,7 +78,7 @@ public class AppActivity51Controller {
         BigDecimal sumAmount = activity51Service.getSumAmount();
         //未达到领取奖励最低标准，返回失败
         if(sumAmount == null || sumAmount.compareTo(SUM_AMOUNT_GRADE_1)< 0) {
-            return buildResult("1", "累计出借金额未达到最低标准(3000w)");
+            return buildResult("99", "累计出借金额未达到最低标准(3000w)");
         }
 
         /*  前端传递参数
@@ -101,12 +101,12 @@ public class AppActivity51Controller {
 
         // 判断是否已领取奖励
         if(activity51Service.isRepeatReceive(userId, grade)){
-            return buildResult("1", "重复领取");
+            return buildResult("99", "重复领取");
         }
 
         boolean sendFlag = activity51Service.sendCoupon(userId, grade);
         if (sendFlag == false) {
-            return buildResult("1", "优惠券领取异常");
+            return buildResult("99", "优惠券领取异常");
         }
         return buildResult("0", "优惠券领取成功");
     }
@@ -118,11 +118,11 @@ public class AppActivity51Controller {
                                  @RequestParam int grade){
         logger.info("判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
         if(!activity51Service.isActivityTime()){
-            return buildResult("1", "活动未开始");
+            return buildResult("99", "活动未开始");
         }
 
         if(!activity51Service.canSendCoupon(userId)){
-            return buildResult("1", "投资年化金额未达到发放标准(1w)");
+            return buildResult("99", "投资年化金额未达到发放标准(1w)");
         }
 
         BaseResult result = new BaseResult("0","查询成功");
@@ -150,16 +150,16 @@ public class AppActivity51Controller {
                             @RequestParam int grade){
         logger.info("用户竞猜, userId is: {}, grade is: {}", userId, grade);
         if(!activity51Service.isActivityTime()){
-            return buildResult("1", "活动未开始");
+            return buildResult("99", "活动未开始");
         }
 
         if(!activity51Service.canSendCoupon(userId)){
-            return buildResult("1", "投资年化金额未达到发放标准(1w)");
+            return buildResult("99", "投资年化金额未达到发放标准(1w)");
         }
 
         // 判断是否重复竞猜
         if(activity51Service.isRepeatGuess(userId)){
-            return buildResult("1", "重复竞猜");
+            return buildResult("99", "重复竞猜");
         }
 
         activity51Service.guess(userId, grade);
