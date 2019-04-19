@@ -1576,6 +1576,13 @@ public interface AmConfigClient {
 	BusinessNameMgResponse findBusinessName(BusinessNameMgRequest request);
 
 	/**
+	 * 检索业务名称是否重复
+	 * @param request
+	 * @return
+	 */
+	BusinessNameMgResponse findNameUq(BusinessNameMgRequest request);
+
+	/**
 	 * 通过ID 业务名称管理
 	 * @param id
 	 * @return

@@ -2479,6 +2479,17 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
+    public BusinessNameMgResponse findNameUq(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/findNameUq";
+        BusinessNameMgResponse response = restTemplate
+                .postForEntity(url, request, BusinessNameMgResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
     public WorkNameVO findBusinessNameById(int id) {
         String url = "http://AM-ADMIN/am-config/businessNameMg/info/"+id;
         BusinessNameMgResponse response = restTemplate

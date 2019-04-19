@@ -20,6 +20,8 @@ public interface BusinessNameMgAmService {
 
     List<WorkName> getListBs(BusinessNameMgRequest request, int limitStart, int limitEnd);
 
+    List<WorkName> findNameUq(BusinessNameMgRequest request);
+
     int insertBs(BusinessNameMgRequest request);
 
     WorkName findListBsById(int id);

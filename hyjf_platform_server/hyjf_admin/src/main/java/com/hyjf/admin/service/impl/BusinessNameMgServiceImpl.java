@@ -61,7 +61,7 @@ public class BusinessNameMgServiceImpl implements BusinessNameMgService {
 
     @Override
     public boolean searchBusinessNameUq(BusinessNameMgRequest request,String fun){
-        BusinessNameMgResponse response = amConfigClient.findBusinessName(request) ;
+        BusinessNameMgResponse response = amConfigClient.findNameUq(request) ;
         if(response == null ){
             return false;
         }
