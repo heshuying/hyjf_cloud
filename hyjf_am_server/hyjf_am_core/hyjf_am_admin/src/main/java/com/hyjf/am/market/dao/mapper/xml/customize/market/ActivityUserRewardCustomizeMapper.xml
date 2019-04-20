@@ -57,7 +57,7 @@
     <if test="trueName != null and trueName != ''">
       AND ui.truename = #{trueName}
     </if>
-    <if test="sendStatus != null and sendStatus != ''">
+    <if test="sendStatus != null ">
       AND ur.send_status = #{sendStatus}
     </if>
 
