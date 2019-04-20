@@ -18,30 +18,32 @@ import java.util.Map;
 @Service
 public class ActivityUserGuessServiceImpl implements ActivityUserGuessService {
 
-	@Autowired
-	private ActivityUserGuessCustomizeMapper customizeMapper;
+    @Autowired
+    private ActivityUserGuessCustomizeMapper customizeMapper;
 
     @Override
     public int getGuessListCount(ActivityUserGuessRequest request) {
-		Map<String, Object> requestMap = new HashMap<>();
-		requestMap.put("userName", request.getUserName());
-		requestMap.put("trueName", request.getTrueName());
-		requestMap.put("grade", request.getGrade());
-		int count = customizeMapper.countGuessList(requestMap);
+        Map<String, Object> paramMap = addParams(request);
+        int count = customizeMapper.countGuessList(paramMap);
         return count;
     }
 
-	@Override
-	public List<ActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int limitStart, int limitEnd) {
-		Map<String, Object> requestMap = new HashMap<>();
-		requestMap.put("userName", request.getUserName());
-		requestMap.put("trueName", request.getTrueName());
-		requestMap.put("grade", request.getGrade());
-		if (limitStart != -1) {
-			requestMap.put("limitStart", limitStart);
-			requestMap.put("limitEnd", limitEnd);
-		}
-		List<ActivityUserGuessVO> userGuessVOList = customizeMapper.selectGuessUserList(requestMap);
-		return userGuessVOList;
-	}
+    @Override
+    public List<ActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int limitStart, int limitEnd) {
+        Map<String, Object> requestMap = addParams(request);
+        if (limitStart != -1) {
+            requestMap.put("limitStart", limitStart);
+            requestMap.put("limitEnd", limitEnd);
+        }
+        List<ActivityUserGuessVO> userGuessVOList = customizeMapper.selectGuessUserList(requestMap);
+        return userGuessVOList;
+    }
+
+    private Map<String, Object> addParams(ActivityUserGuessRequest request) {
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("userName", request.getUserName());
+        requestMap.put("trueName", request.getTrueName());
+        requestMap.put("grade", request.getGrade());
+        return requestMap;
+    }
 }

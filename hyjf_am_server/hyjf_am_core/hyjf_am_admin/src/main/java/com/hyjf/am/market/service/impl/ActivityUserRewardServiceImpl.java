@@ -26,24 +26,26 @@ public class ActivityUserRewardServiceImpl implements ActivityUserRewardService 
 
     @Override
     public int getRewardListCount(ActivityUserRewardRequest rewardRequest) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userName", rewardRequest.getUserName());
-        map.put("trueName", rewardRequest.getTrueName());
-        map.put("sendStatus", rewardRequest.getSendStatus());
-        return customizeMapper.countRewardList(map);
+        Map<String, Object> paramMap = addParams(rewardRequest);
+        return customizeMapper.countRewardList(paramMap);
     }
 
     @Override
     public List<ActivityUserRewardVO> getRewardList(ActivityUserRewardRequest rewardRequest, int limitStart, int limitEnd) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userName", rewardRequest.getUserName());
-        map.put("trueName", rewardRequest.getTrueName());
-        map.put("sendStatus", rewardRequest.getSendStatus());
+        Map<String, Object> map = addParams(rewardRequest);
         if (limitStart != -1) {
             map.put("limitStart", limitStart);
             map.put("limitEnd", limitEnd);
         }
         List<ActivityUserRewardVO> userRewardVOList = customizeMapper.selectRewardList(map);
         return userRewardVOList;
+    }
+
+    private Map<String, Object> addParams(ActivityUserRewardRequest rewardRequest) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userName", rewardRequest.getUserName());
+        map.put("trueName", rewardRequest.getTrueName());
+        map.put("sendStatus", rewardRequest.getSendStatus());
+        return map;
     }
 }
