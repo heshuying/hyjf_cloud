@@ -5,6 +5,7 @@ package com.hyjf.am.config.controller.web;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.service.WithdrawTimeConfigService;
+import com.hyjf.am.response.config.WithdrawTimeConfigResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,10 +33,10 @@ public class WithdrawTimeConfigController extends BaseConfigController {
      * @param somedate
      * @return
      */
-    @GetMapping("/checkSomedayIsWorkDateForWithdraw/{somedate}")
-    public WithdrawTimeConfigResponse selectHolidaysConfig(@PathVariable Date somedate) {
+    @GetMapping("/checkSomedayIsWorkDateForWithdraw")
+    public WithdrawTimeConfigResponse selectHolidaysConfig() {
         WithdrawTimeConfigResponse response = new WithdrawTimeConfigResponse();
-        boolean flag = withdrawTimeConfigService.isWorkdateOnSomeDay(somedate);
+        boolean flag = withdrawTimeConfigService.isWorkdateOnSomeDay();
         response.setWorkDateFlag(flag);
         return response;
     }

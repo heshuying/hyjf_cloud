@@ -25,11 +25,11 @@ public class WithdrawTimeConfigServiceImpl extends BaseServiceImpl implements Wi
     /**
      * 判断某一天是否是工作日
      *
-     * @param somedate
      * @return
      */
     @Override
-    public boolean isWorkdateOnSomeDay(Date somedate) {
+    public boolean isWorkdateOnSomeDay() {
+        Date somedate = GetDate.getDate();
         WithdrawTimeConfigExample example = new WithdrawTimeConfigExample();
         WithdrawTimeConfigExample.Criteria cra = example.createCriteria();
         cra.andStartDateLessThanOrEqualTo(somedate);
@@ -49,15 +49,15 @@ public class WithdrawTimeConfigServiceImpl extends BaseServiceImpl implements Wi
         // 如果是周六或周日
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             // 再去查询是否是补休
-             example = new WithdrawTimeConfigExample();
-             cra = example.createCriteria();
+            example = new WithdrawTimeConfigExample();
+            cra = example.createCriteria();
             cra.andStartDateLessThanOrEqualTo(somedate);
             cra.andEndDateGreaterThanOrEqualTo(somedate);
             cra.andDelFlagEqualTo(0);
             // 假日类型 1补休 2假期
             cra.andHolidayTypeEqualTo(1);
             List<WithdrawTimeConfig> resultList = this.withdrawTimeConfigMapper.selectByExample(example);
-            if (!CollectionUtils.isEmpty(resultList)){
+            if (!CollectionUtils.isEmpty(resultList)) {
                 // 如果周六周日是补休,则为工作日,返回true
                 return true;
             }

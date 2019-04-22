@@ -6,6 +6,7 @@ package com.hyjf.am.config.service.impl;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample;
 import com.hyjf.am.config.service.WithdrawRuleConfigService;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.common.util.GetDate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -21,15 +22,21 @@ import java.util.List;
  */
 @Service
 public class WithdrawRuleConfigServiceImpl extends BaseServiceImpl implements WithdrawRuleConfigService {
+
     /**
      * 获取提现规则配置
      *
-     * @param userType
-     * @param withdrawmoney
+     * @param request
      * @return
      */
     @Override
-    public WithdrawRuleConfig selectWithdrawRuleConfig(Integer userType, String withdrawmoney) {
+    public WithdrawRuleConfig selectWithdrawRuleConfig(WithdrawRuleConfigRequest request) {
+        // 提现金额
+        String withdrawMoney = request.getWithdrawMoney();
+        // 用户类型
+        Integer userType = request.getUserType();
+        // 是否是节假日
+        Integer isHoliday = request.getIsHoliday();
         // 提现时间
         String withdrawTime = GetDate.formatShortTimehhmmss();
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
@@ -39,17 +46,19 @@ public class WithdrawRuleConfigServiceImpl extends BaseServiceImpl implements Wi
         // 0删除 1可用
         cra.andDelFlagEqualTo(1);
         // 最小金额 <= 提现金额
-        cra.andMinMoneyLessThanOrEqualTo(new BigDecimal(withdrawmoney));
+        cra.andMinMoneyLessThanOrEqualTo(new BigDecimal(withdrawMoney));
         // 最大金额 >= 提现金额
-        cra.andMaxMoneyGreaterThanOrEqualTo(new BigDecimal(withdrawmoney));
+        cra.andMaxMoneyGreaterThanOrEqualTo(new BigDecimal(withdrawMoney));
         // 用户类型 1个人 2企业
         cra.andCustomerTypeEqualTo(userType);
         // 最小提现时间 <= 当前时间
         cra.andStartTimeLessThanOrEqualTo(withdrawTime);
         // 最大提现时间 >= 当前时间
         cra.andEndTimeGreaterThanOrEqualTo(withdrawTime);
+        // 是否是节假日
+        cra.andIsHolidayEqualTo(isHoliday);
         List<WithdrawRuleConfig> list = this.withdrawRuleConfigMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(list)){
+        if (!CollectionUtils.isEmpty(list)) {
             return list.get(0);
         }
         return null;
