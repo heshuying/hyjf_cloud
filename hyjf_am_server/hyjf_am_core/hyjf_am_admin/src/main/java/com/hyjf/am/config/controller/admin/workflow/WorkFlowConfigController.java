@@ -78,8 +78,8 @@ public class WorkFlowConfigController extends BaseConfigController {
         if(flag == -1){
             response.setRtn(Response.SUCCESS);
             response.setResultBoolean(false);//不允许添加
-            response.setMessage("修改业务流程失败，节点人员不存在");
-            logger.debug("修改业务流程失败，节点人员不存在" );
+            response.setMessage("添加业务流程失败，节点人员不存在");
+            logger.debug("添加业务流程失败，节点人员不存在" );
             return response;
         }
         if(flag ==0){
