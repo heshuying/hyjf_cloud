@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @RestController
 @Api(value = "Web财富端", tags = "财富端绑定、授权")
-@RequestMapping(value = "/wbs-web/user")
+@RequestMapping(value = "/hyjf-wbs/web/user")
 public class WbsWebUserController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());

@@ -3,20 +3,21 @@
  */
 package com.hyjf.wbs.user.controller;
 
-import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
-import com.hyjf.wbs.qvo.WbsUserAuthInfo;
-import com.hyjf.wbs.qvo.WebUserBindQO;
-import com.hyjf.wbs.qvo.WechatUserBindQO;
-import com.hyjf.wbs.user.service.WbsUserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
+import com.hyjf.wbs.qvo.WbsUserAuthInfo;
+import com.hyjf.wbs.qvo.WechatUserBindQO;
+import com.hyjf.wbs.user.service.WbsUserService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author cui
@@ -24,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @Api(value = "Wechat财富端", tags = "财富端绑定、授权")
-@RequestMapping(value = "/wbs-wechat/user")
+@RequestMapping(value = "/hyjf-wbs/wechat/user")
 public class WbsWechatUserController {
 
     private Logger logger=LoggerFactory.getLogger(getClass());
