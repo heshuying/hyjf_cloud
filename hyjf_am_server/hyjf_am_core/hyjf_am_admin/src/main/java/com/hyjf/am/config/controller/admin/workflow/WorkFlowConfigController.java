@@ -3,6 +3,7 @@ package com.hyjf.am.config.controller.admin.workflow;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.WorkFlow;
+import com.hyjf.am.config.dao.model.auto.WorkName;
 import com.hyjf.am.config.service.WorkFlowConfigService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
@@ -72,6 +73,22 @@ public class WorkFlowConfigController extends BaseConfigController {
             logger.debug("该业务id对应的业务流程已经存在，请修改" );
             return response;
         }
+        //校验业务名称是否被禁用
+        WorkName workName = workFlowConfigService.selectWorkNameById(workFlowVO.getBusinessId());
+        if(null == workName){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许添加
+            response.setMessage("添加业务流程失败，业务名称不存在");
+            logger.debug("添加业务流程失败，业务名称不存在" );
+            return response;
+        }
+        if(null == workName.getStatus()||1!=workName.getStatus().intValue()){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许添加
+            response.setMessage("添加业务流程失败，业务名称启用状态方可添加");
+            logger.debug("添加业务流程失败，业务名称启用状态方可添加" );
+            return response;
+        }
 
         //添加业务流程
         int flag = workFlowConfigService.insertWorkFlowConfig(workFlowVO);
@@ -132,6 +149,22 @@ public class WorkFlowConfigController extends BaseConfigController {
             response.setRtn(Response.FAIL);
             response.setMessage("该业务id对应的业务流程已经存在，请修改");
             logger.debug("该业务id对应的业务流程已经存在，请修改" );
+            return response;
+        }
+        //校验业务名称是否被禁用
+        WorkName workName = workFlowConfigService.selectWorkNameById(workFlowVO.getBusinessId());
+        if(null == workName){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许修改
+            response.setMessage("修改业务流程失败，业务名称不存在");
+            logger.debug("修改业务流程失败，业务名称不存在" );
+            return response;
+        }
+        if(null == workName.getStatus()||1!=workName.getStatus().intValue()){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许修改
+            response.setMessage("修改业务流程失败，业务名称启用状态方可添加");
+            logger.debug("修改业务流程失败，业务名称启用状态方可添加" );
             return response;
         }
 

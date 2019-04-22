@@ -313,4 +313,14 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         }
         return newFlowNodes;
     }
+
+    /**
+     * 查询业务名称是否被禁用
+     * @param id
+     * @return
+     */
+    @Override
+   public WorkName selectWorkNameById(Integer id){
+        return workNameMapper.selectByPrimaryKey(id);
+    }
 }

@@ -124,7 +124,7 @@ public class BusinessNameMgAmController extends BaseController {
      * 查询业务名称
      */
     @PostMapping("/searchbusinessname")
-    public BusinessNameMgResponse searchBusinessName(@PathVariable BusinessNameMgRequest request){
+    public BusinessNameMgResponse searchBusinessName(@RequestBody BusinessNameMgRequest request){
         String businessName =request.getBsname();
         logger.info("查询业务名称,businessName:"+businessName);
         BusinessNameMgResponse response = new BusinessNameMgResponse();

@@ -1,6 +1,7 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.WorkFlow;
+import com.hyjf.am.config.dao.model.auto.WorkName;
 import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.vo.admin.AdminRoleVO;
 import com.hyjf.am.vo.admin.WorkFlowUserVO;
@@ -76,4 +77,11 @@ public interface WorkFlowConfigService {
      * @return
      */
     List<AdminRoleVO> selectWorkFlowRoleList();
+
+    /**
+     * 查询业务名称是否被禁用
+     * @param id
+     * @return
+     */
+    WorkName selectWorkNameById(Integer id);
 }

@@ -164,7 +164,7 @@ public class BusinessNameMgController  extends BaseController {
     @PostMapping("/searchbusinessname")
     public AdminResult searchBusinessNameList(@RequestBody BusinessNameMgRequest request) {
         logger.info("查询可用的业务名称，业务名称："+request.getBsname());
-        BusinessNameMgResponse response = businessNameMgService.searchBusinessName(request);
+        BusinessNameMgResponse response = businessNameMgService.searchBusinessNameList(request);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
