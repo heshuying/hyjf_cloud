@@ -3,6 +3,7 @@ package com.hyjf.cs.market.client.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -160,14 +161,14 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-    public boolean existsActivityUserGuess(int userId) {
-        BooleanResponse response = restTemplate.getForObject(
-                "http://AM-MARKET/am-market/activity/guess/isExists/" + userId,
-                BooleanResponse.class);
-        if (response != null && response.getResultBoolean() != null) {
-            return response.getResultBoolean().booleanValue();
+    public ActivityUserGuessVO selectActivityUserGuess(int userId) {
+        ActivityUserGuessResponse response = restTemplate.getForObject(
+                "http://AM-MARKET/am-market/activity/guess/select/" + userId,
+                ActivityUserGuessResponse.class);
+        if (response != null && response.getResult() != null) {
+            return response.getResult();
         }
-        return false;
+        return null;
     }
 
     @Override

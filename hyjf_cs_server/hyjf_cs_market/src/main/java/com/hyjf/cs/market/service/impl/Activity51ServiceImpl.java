@@ -3,6 +3,7 @@ package com.hyjf.cs.market.service.impl;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import org.apache.axis.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -151,7 +152,15 @@ public class Activity51ServiceImpl implements Activity51Service {
 
 	@Override
 	public boolean isRepeatGuess(int userId) {
-		return amMarketClient.existsActivityUserGuess(userId);
+		if (getUserGuess(userId) != null) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public ActivityUserGuessVO getUserGuess(int userId) {
+		return amMarketClient.selectActivityUserGuess(userId);
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
@@ -121,7 +122,7 @@ public interface AmMarketClient {
      * @param userId
      * @return
      */
-    boolean existsActivityUserGuess(int userId);
+    ActivityUserGuessVO selectActivityUserGuess(int userId);
 
     /**
      * 保存用户领取记录

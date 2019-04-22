@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 public class AbstractActivity51Controller {
     private Logger logger = LoggerFactory.getLogger(AbstractActivity51Controller.class);
 
-
     /**
      * 计算进度百分比因子
      */
@@ -29,6 +28,10 @@ public class AbstractActivity51Controller {
     protected final BigDecimal SUM_AMOUNT_GRADE_2 = new BigDecimal(50000000);
     protected final BigDecimal SUM_AMOUNT_GRADE_3 = new BigDecimal(80000000);
     protected final BigDecimal SUM_AMOUNT_GRADE_4 = new BigDecimal(100000000);
+
+    protected final String ACTIVITY_NOT_START = "活动未开始";
+    protected final String ACTIVITY_TENDER_NOT_ENOUTH = "投资年化金额未达到发放标准(1w)";
+    protected final String ACTIVITY_SUM_TENDER_NOT_ENOUTH = "累计出借金额未达到最低标准(3000w)";
 
     @Autowired
     protected Activity51Service activity51Service;

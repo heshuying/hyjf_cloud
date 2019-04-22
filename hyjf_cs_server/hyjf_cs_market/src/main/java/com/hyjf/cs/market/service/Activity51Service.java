@@ -1,5 +1,7 @@
 package com.hyjf.cs.market.service;
 
+import com.hyjf.am.vo.activity.ActivityUserGuessVO;
+
 import java.math.BigDecimal;
 
 /**
@@ -57,4 +59,11 @@ public interface Activity51Service {
      * @return
      */
     boolean isRepeatGuess(int userId);
+
+    /**
+     * 查询用户竞猜结果
+     * @param userId
+     * @return
+     */
+    ActivityUserGuessVO getUserGuess(int userId);
 }

@@ -11,12 +11,19 @@ import io.swagger.annotations.ApiModelProperty;
 public class GuessVO {
     @ApiModelProperty("竞猜标志, Y-已竞猜 N-未竞猜")
     private String guessFlag;
-    @ApiModelProperty("领取描述")
+    @ApiModelProperty("竞猜描述")
     private String guessDesc;
+    @ApiModelProperty("竞猜档位")
+    private Integer grade;
 
     public GuessVO(String guessFlag, String guessDesc) {
         this.guessFlag = guessFlag;
         this.guessDesc = guessDesc;
+    }
+
+    public GuessVO(String guessFlag, String guessDesc, int grade) {
+        this(guessFlag, guessDesc);
+        this.grade = grade;
     }
 
     public String getGuessFlag() {
@@ -33,5 +40,13 @@ public class GuessVO {
 
     public void setGuessDesc(String guessDesc) {
         this.guessDesc = guessDesc;
+    }
+
+    public Integer getGrade() {
+        return grade;
+    }
+
+    public void setGrade(Integer grade) {
+        this.grade = grade;
     }
 }

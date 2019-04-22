@@ -1,14 +1,17 @@
 package com.hyjf.am.market.controller;
 
+import com.hyjf.am.market.dao.model.auto.ActivityUserGuess;
+import com.hyjf.am.market.service.ActivityUserGuessService;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.market.ActivityUserGuessResponse;
+import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.hyjf.am.market.service.ActivityUserGuessService;
-import com.hyjf.am.response.BooleanResponse;
 
 /**
  * @author xiasq
@@ -43,18 +46,21 @@ public class ActivityUserGuessController {
 	}
 
 	/**
-	 * 判断用户是否重复竞猜
+	 * 查询用户是竞猜结果
 	 * @param userId
 	 * @return
 	 */
-	@RequestMapping("/isExists/{userId}")
-	public BooleanResponse insert(@PathVariable int userId) {
-		logger.info("isExists ActivityUserGuess, userId is: {}", userId);
+	@RequestMapping("/select/{userId}")
+	public ActivityUserGuessResponse select(@PathVariable int userId) {
+		logger.info("select ActivityUserGuess, userId is: {}", userId);
+		ActivityUserGuessResponse response = new ActivityUserGuessResponse();
 
-		if (activityUserGuessService.selectByUserId(userId) != null) {
-			logger.error("用户：{}已经参与竞猜...", userId);
-			return new BooleanResponse(Boolean.TRUE);
+		ActivityUserGuess guess = activityUserGuessService.selectByUserId(userId);
+		if (guess != null) {
+			ActivityUserGuessVO vo = new ActivityUserGuessVO();
+			BeanUtils.copyProperties(guess, vo);
+			response.setResult(vo);
 		}
-		return new BooleanResponse(Boolean.FALSE);
+		return response;
 	}
 }
