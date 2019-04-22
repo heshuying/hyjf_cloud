@@ -6,7 +6,7 @@ package com.hyjf.am.market.service.impl;
 import com.hyjf.am.market.dao.mapper.customize.market.ActivityUserRewardCustomizeMapper;
 import com.hyjf.am.market.service.ActivityUserRewardService;
 import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
-import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class ActivityUserRewardServiceImpl implements ActivityUserRewardService 
     }
 
     @Override
-    public List<ActivityUserRewardVO> getRewardList(ActivityUserRewardRequest rewardRequest, int limitStart, int limitEnd) {
+    public List<AdminActivityUserRewardVO> getRewardList(ActivityUserRewardRequest rewardRequest, int limitStart, int limitEnd) {
         Map<String, Object> map = addParams(rewardRequest);
         if (rewardRequest.getSort() != null && rewardRequest.getSort() != 0) {
             map.put("sort", rewardRequest.getSort());
@@ -42,7 +42,7 @@ public class ActivityUserRewardServiceImpl implements ActivityUserRewardService 
             map.put("limitStart", limitStart);
             map.put("limitEnd", limitEnd);
         }
-        List<ActivityUserRewardVO> userRewardVOList = customizeMapper.selectRewardList(map);
+        List<AdminActivityUserRewardVO> userRewardVOList = customizeMapper.selectRewardList(map);
         return userRewardVOList;
     }
 

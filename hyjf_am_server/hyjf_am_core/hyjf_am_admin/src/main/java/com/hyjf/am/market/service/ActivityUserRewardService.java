@@ -4,7 +4,7 @@
 package com.hyjf.am.market.service;
 
 import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
-import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 
 import java.util.List;
 
@@ -28,5 +28,5 @@ public interface ActivityUserRewardService {
      * @param limitEnd
      * @return
      */
-    List<ActivityUserRewardVO> getRewardList(ActivityUserRewardRequest rewardRequest, int limitStart, int limitEnd);
+    List<AdminActivityUserRewardVO> getRewardList(ActivityUserRewardRequest rewardRequest, int limitStart, int limitEnd);
 }

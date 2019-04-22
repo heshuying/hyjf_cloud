@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.market.dao.mapper.customize.market;
 
-import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public interface ActivityUserRewardCustomizeMapper {
      * @param map
      * @return
      */
-    List<ActivityUserRewardVO> selectRewardList(Map<String, Object> map);
+    List<AdminActivityUserRewardVO> selectRewardList(Map<String, Object> map);
 
     /**
      * 查询奖励领取列表数据条数
