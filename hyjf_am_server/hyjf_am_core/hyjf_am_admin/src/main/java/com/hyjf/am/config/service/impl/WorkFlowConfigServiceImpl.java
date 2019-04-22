@@ -182,15 +182,16 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
     public List<WorkFlowUserVO> selectUser(WorkFlowUserVO  workFlowUserVO){
         //当前业务主管
         String creatUser ="";
-        //去掉当前业务主管（当前业务主管不能作为审核人）
+        //去掉当前业务主管（当前业务主管不能作为审核人）通过邮件排除
         //workFlowUserVO.getId()业务名称的id
         if(null != workFlowUserVO.getId()){
             WorkName workName = workNameMapper.selectByPrimaryKey(workFlowUserVO.getId());
             if(null != workName){
-                creatUser =workName.getCreateUser();
+                //业务主管邮箱
+                creatUser =workName.getChargeMail();
             }
         }
-        logger.debug("查询业务流程详情页面，当期业务主管creatUser：" + creatUser);
+        logger.debug("查询业务流程详情页面，当期业务主管邮箱：" + creatUser);
         return workFlowConfigMapper.selectUser(workFlowUserVO.getUsername(),workFlowUserVO.getRoleIds(),creatUser);
     }
     public int deleteWorkFolwNode(int workflowId){
