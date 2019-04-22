@@ -74,6 +74,14 @@ public class WithdrawRuleConfigVO implements Serializable {
     private Integer payAllianceCode;
 
     /**
+     * 是否节假日 1节假日 0工作日
+     *
+     * @mbggenerated
+     */
+    @ApiModelProperty(value = "是否节假日 0工作日 1节假日")
+    private Integer isHoliday;
+
+    /**
      * 0删除 1可用
      *
      * @mbggenerated
@@ -220,5 +228,13 @@ public class WithdrawRuleConfigVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIsHoliday() {
+        return isHoliday;
+    }
+
+    public void setIsHoliday(Integer isHoliday) {
+        this.isHoliday = isHoliday;
     }
 }
