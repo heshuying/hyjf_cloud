@@ -186,7 +186,7 @@
         LEFT JOIN ht_admin am  on  ar.user_id = am.id
         LEFT JOIN ht_workflow wf on wf.id = wn.workflow_id
         LEFT JOIN ht_workname wk on wk.id = wf.workname_id
-        where wn.role=1 and am.state=0 and am.del_flag=0
+        where wn.role=1 and am.id !='' and am.truename !=''
 
         UNION ALL
 
@@ -194,7 +194,7 @@
         LEFT JOIN ht_admin am on am.id = wn.admin_id
         LEFT JOIN ht_workflow wf on wf.id = wn.workflow_id
         LEFT JOIN ht_workname wk on wk.id = wf.workname_id
-        where wn.role=2 and am.state=0 and am.del_flag=0
+        where wn.role=2 and am.id !='' and am.truename !=''
         ) t
     </select>
 
