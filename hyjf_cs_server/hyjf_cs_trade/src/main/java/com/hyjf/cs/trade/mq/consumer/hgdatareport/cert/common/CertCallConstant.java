@@ -50,9 +50,9 @@ public class CertCallConstant implements Serializable {
     /**还款计划 81*/
     public static final String CERT_INF_TYPE_REPAY_PLAN  = "81";
     /**产品信息 3*/
-    public static final String CERT_INF_TYPE_FINANCE  = "3";
+    public static final String CERT_INF_TYPE_FINANCE  = "86";
     /**产品散标配置 10*/
-    public static final String CERT_INF_TYPE_FINANCE_SCATTER_CONFIG  = "10";
+    public static final String CERT_INF_TYPE_FINANCE_SCATTER_CONFIG  = "87";
     /**债权信息 82*/
     public static final String CERT_INF_TYPE_CREDITOR  = "82";
     /**转让项目 83*/
