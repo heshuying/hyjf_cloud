@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.wbs.qvo.WbsUserAuthInfo;
@@ -25,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * @version WbsCustomerBindController, v0.1 2019/4/18 15:21
  */
 @RestController
-@Api(value = "财富端", tags = "财富端绑定、授权")
+@Api(value = "Web财富端", tags = "财富端绑定、授权")
 @RequestMapping(value = "/wbs-web/user")
 public class WbsWebUserController {
 
@@ -34,7 +33,7 @@ public class WbsWebUserController {
 	@Autowired
 	private WbsUserService wbsUserService;
 
-	@ApiOperation(value = "财富端客户绑定", notes = "财富端客户绑定")
+	@ApiOperation(value = "PC快速绑定 提交", notes = "PC快速绑定 提交")
 	@ResponseBody
 	@RequestMapping("bind")
 	public BaseResult bind(HttpServletRequest request, @RequestBody WebUserBindQO webUserBindQO) {
@@ -48,13 +47,13 @@ public class WbsWebUserController {
 			return result;
 		}
 
-		wbsUserService.bind(webUserBindQO, result);
+		wbsUserService.webBind(webUserBindQO, result);
 
 		return result;
 	}
 
 
-	@ApiOperation(value = "获取资产端客户信息",notes = "获取资产端客户信息")
+	@ApiOperation(value = "PC快速授权获取用户信息",notes = "PC快速授权获取用户信息")
 	@GetMapping("/userinfo/{assetCustomerId}")
 	public BaseResult queryUserInfo(@PathVariable String assetCustomerId){
 
@@ -67,7 +66,7 @@ public class WbsWebUserController {
 		return result;
 	}
 
-	@ApiOperation(value = "",notes = "")
+	@ApiOperation(value = "PC快速授权提交",notes = "PC快速授权提交")
 	@ResponseBody
 	@RequestMapping(value = "authorize",method = RequestMethod.POST)
 	public BaseResult authorize(HttpServletRequest request, @RequestBody WbsRegisterMqVO qo){

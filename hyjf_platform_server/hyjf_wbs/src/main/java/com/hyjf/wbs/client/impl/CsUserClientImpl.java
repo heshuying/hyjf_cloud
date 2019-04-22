@@ -3,8 +3,11 @@
  */
 package com.hyjf.wbs.client.impl;
 
+import com.hyjf.wbs.qvo.WechatUserBindVO;
+import com.hyjf.wbs.qvo.csuser.LoginResultBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,5 +45,19 @@ public class CsUserClientImpl implements CsUserClient {
 
 		}
 		throw new CheckException("用户登录失败！");
+	}
+
+	@Override
+	public WechatUserBindVO wechatLogin(String userName, String password) {
+		String url = userService+"//hyjf-wechat/wx/login/doLogin.do?userName="+userName+"&password="+password+"&env=1";
+		LoginResultBean loginResultBean=restTemplate.getForObject(url,LoginResultBean.class);
+		if(loginResultBean!=null){
+			WechatUserBindVO wechatUserBindVO=new WechatUserBindVO();
+			BeanUtils.copyProperties(loginResultBean,wechatUserBindVO);
+			return wechatUserBindVO;
+		}else{
+			throw new CheckException("微信用户登录失败！");
+		}
+
 	}
 }

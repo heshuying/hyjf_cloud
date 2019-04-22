@@ -1,6 +1,7 @@
 package com.hyjf.wbs.client;
 
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.wbs.qvo.WechatUserBindVO;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
 
 /**
@@ -10,5 +11,7 @@ import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
 public interface CsUserClient {
 
     WebViewUserVO login(LoginRequestVO user);
+
+    WechatUserBindVO wechatLogin(String userName,String password);
 
 }

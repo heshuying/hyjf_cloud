@@ -4,6 +4,7 @@ import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.wbs.qvo.WbsUserAuthInfo;
 import com.hyjf.wbs.qvo.WebUserBindQO;
+import com.hyjf.wbs.qvo.WechatUserBindQO;
 
 /**
  * @author cui
@@ -25,5 +26,17 @@ public interface WbsUserService {
     void authorize(WbsRegisterMqVO qo);
 
 
-    void bind(WebUserBindQO webUserBindQO, BaseResult response);
+    /**
+     * web端快速绑定
+     * @param webUserBindQO
+     * @param response
+     */
+    void webBind(WebUserBindQO webUserBindQO, BaseResult response);
+
+    /**
+     * wechat绑定
+     * @param wechatUserBindQO
+     * @param result
+     */
+    void wechatBind(WechatUserBindQO wechatUserBindQO, BaseResult result);
 }

@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.wbs.qvo.WebUserBindVO;
+import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.wbs.client.CsUserClient;
 import com.hyjf.wbs.mq.base.CommonProducer;
 import com.hyjf.wbs.mq.base.MessageContent;
-import com.hyjf.wbs.qvo.WbsUserAuthInfo;
-import com.hyjf.wbs.qvo.WebUserBindQO;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
 import com.hyjf.wbs.user.dao.mapper.auto.UserMapper;
 import com.hyjf.wbs.user.dao.model.auto.User;
@@ -49,7 +47,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 	private CommonProducer commonProducer;
 
 	@Override
-	public void bind(WebUserBindQO webUserBindQO, BaseResult response) {
+	public void webBind(WebUserBindQO webUserBindQO, BaseResult response) {
 		LoginRequestVO loginQO = new LoginRequestVO();
 		loginQO.setUsername(webUserBindQO.getLoginUserName());
 		loginQO.setPassword(webUserBindQO.getLoginPassword());
@@ -69,6 +67,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 //		bindVO.setRetUrl();
 		bindVO.setIconUrl(webViewUserVO.getIconUrl());
 		bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
+		response.setData(bindVO);
 
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();
 		vo.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
@@ -81,6 +80,26 @@ public class WbsUserServiceImpl implements WbsUserService {
 			logger.error("登录发送MQ失败！");
 			throw new CheckException(e.getMessage());
 		}
+	}
+
+	@Override
+	public void wechatBind(WechatUserBindQO wechatUserBindQO, BaseResult result) {
+		WechatUserBindVO bindVO=csUserClient.wechatLogin(wechatUserBindQO.getUsername(),wechatUserBindQO.getPassword());
+		result.setData(bindVO);
+
+		WbsRegisterMqVO vo = new WbsRegisterMqVO();
+		vo.setAssetCustomerId(String.valueOf(bindVO.getUserId()));
+		vo.setUtmId(wechatUserBindQO.getUtmId());
+
+		try {
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
+					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), vo), 1);
+		} catch (MQException e) {
+			logger.error("登录发送MQ失败！");
+			throw new CheckException(e.getMessage());
+		}
+
+
 	}
 
 	@Override
