@@ -13,6 +13,7 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.WorkNameVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,10 @@ public class BusinessNameMgController  extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD )
     public AdminResult insert(@RequestBody BusinessNameMgRequest request, HttpServletRequest httpServletRequest) {
 
+        if(StringUtils.isBlank(request.getMail())){
+            return new AdminResult<>(FAIL, "此用户邮件为空");
+        }
+
         boolean uq = businessNameMgService.searchBusinessNameUq(request,"insert");
         if(!uq){
             return new AdminResult<>(FAIL, "业务名称重复");
@@ -98,6 +103,9 @@ public class BusinessNameMgController  extends BaseController {
 
         if(request.getId() == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if(StringUtils.isBlank(request.getMail())){
+            return new AdminResult<>(FAIL, "此用户邮件为空");
         }
 
         boolean uq = businessNameMgService.searchBusinessNameUq(request,"update");
