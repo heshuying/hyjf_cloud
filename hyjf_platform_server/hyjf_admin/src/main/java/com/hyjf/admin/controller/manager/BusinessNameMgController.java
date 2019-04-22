@@ -1,13 +1,17 @@
 package com.hyjf.admin.controller.manager;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BusinessNameMgService;
+import com.hyjf.admin.service.workflow.WorkFlowConfigService;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.BusinessNameMgResponse;
+import com.hyjf.am.resquest.admin.WorkFlowConfigRequest;
 import com.hyjf.am.resquest.config.BusinessNameMgRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.WorkNameVO;
@@ -42,6 +46,9 @@ public class BusinessNameMgController  extends BaseController {
 
     @Autowired
     private BusinessNameMgService businessNameMgService;
+
+    @Autowired
+    private WorkFlowConfigService workFlowConfigService;
 
     @ApiOperation(value = "查询", notes = "查询")
     @PostMapping("/search")
@@ -129,6 +136,21 @@ public class BusinessNameMgController  extends BaseController {
         if(request.getId() == null || request.getStatus() == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
+
+        //当状态为禁用的时候，判断流程配置是否有引用
+        if(2 == request.getStatus()){
+            WorkFlowConfigRequest adminRequest = new WorkFlowConfigRequest();
+            adminRequest.setBusinessId(request.getId());
+            BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest);
+            logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+            if(response==null || !Response.isSuccess(response)) {
+                return new AdminResult<>(FAIL, FAIL_DESC);
+            }
+            if (response.getResultBoolean()) {
+                return new AdminResult<>(FAIL, "禁用失败！");
+            }
+        }
+
         AdminSystemVO user = getUser(httpServletRequest);
         request.setUsername(user.getTruename());
         boolean flag = businessNameMgService.updateStatusBusinessName(request);

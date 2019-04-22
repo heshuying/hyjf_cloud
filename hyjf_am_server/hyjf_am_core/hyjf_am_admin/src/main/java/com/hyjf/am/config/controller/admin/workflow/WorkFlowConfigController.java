@@ -206,11 +206,13 @@ public class WorkFlowConfigController extends BaseConfigController {
         if(!CollectionUtils.isEmpty(workFlowVOS)){
             //已经存在
             response.setResult(true);
+            response.setResultBoolean(true);
             logger.debug("校验业务id存在,数据为："+JSONObject.toJSONString(workFlowVOS));
             return response;
         }
         //不存在
         response.setResult(false);
+        response.setResultBoolean(false);
         return response;
     }
 
