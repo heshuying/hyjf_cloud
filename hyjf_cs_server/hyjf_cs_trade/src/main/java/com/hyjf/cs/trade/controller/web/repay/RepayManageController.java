@@ -114,7 +114,7 @@ public class RepayManageController extends BaseTradeController {
             BigDecimal repayMangeFee = repayManageService.getUserRepayFeeWaitTotal(userVO.getUserId());
             BigDecimal lateInterest = repayManageService.getUserLateInterestWaitTotal(userVO.getUserId());
             BigDecimal borrowAccountTotal = repayManageService.getUserBorrowAccountTotal(userVO.getUserId());
-            repay = repay.add(repayMangeFee);
+            repay = repay.add(repayMangeFee).add(lateInterest);
             resultMap.put("capitalTotal", CustomConstants.DF_FOR_VIEW.format(borrowAccountTotal));
             resultMap.put("capitalWaitTotal",CustomConstants.DF_FOR_VIEW.format(account.getBankWaitCapital()));
             resultMap.put("interestWaitTotal",CustomConstants.DF_FOR_VIEW.format(account.getBankWaitInterest().add(lateInterest)));
@@ -130,7 +130,7 @@ public class RepayManageController extends BaseTradeController {
             resultMap.put("capitalWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getCapitalWaitTotal()));
             resultMap.put("interestWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getInterestWaitTotal().add(lateInterest)));
             resultMap.put("feeWaitTotal",CustomConstants.DF_FOR_VIEW.format(repayMangeFee));
-            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getWaitTotal().add(repayMangeFee)));
+            resultMap.put("repayMoney",CustomConstants.DF_FOR_VIEW.format(repayWaitOrgVO.getWaitTotal().add(repayMangeFee).add(lateInterest)));
         }
         resultMap.put("roleId", userVO.getRoleId());
         resultMap.put("userId", userVO.getUserId());

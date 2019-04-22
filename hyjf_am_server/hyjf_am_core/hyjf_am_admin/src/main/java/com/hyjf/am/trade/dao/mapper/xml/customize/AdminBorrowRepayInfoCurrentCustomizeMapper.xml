@@ -455,7 +455,7 @@
                 )
                 ) AS period,
                 cr.recover_period AS recoverPeriod,
-                cr.assign_capital AS account,
+                ct.assign_capital AS account,
                 ct.assign_capital - ct.assign_repay_capital AS amountHold,
                 cr.assign_capital AS recoverCapital,
                 cr.assign_interest AS recoverInterest,
