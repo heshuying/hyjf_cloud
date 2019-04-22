@@ -10,8 +10,8 @@ import com.hyjf.am.response.admin.ActivityUserGuessResponse;
 import com.hyjf.am.response.admin.ActivityUserRewardResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
 import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
-import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -62,7 +62,7 @@ public class MayDayActivityController {
             paginator = new Paginator(rewardRequest.getCurrPage(), rewardCount);
         }
         if (rewardCount > 0) {
-            List<ActivityUserRewardVO> userRewardVOList = activityUserRewardService.getRewardList(rewardRequest,paginator.getOffset(), paginator.getLimit());
+            List<AdminActivityUserRewardVO> userRewardVOList = activityUserRewardService.getRewardList(rewardRequest,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(userRewardVOList)) {
                 response.setResultList(userRewardVOList);
             }

@@ -4,13 +4,13 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 
 /**
  * @author yaoyong
  * @version ActivityUserRewardResponse, v0.1 2019/4/19 9:34
  */
-public class ActivityUserRewardResponse extends Response<ActivityUserRewardVO> {
+public class ActivityUserRewardResponse extends Response<AdminActivityUserRewardVO> {
 
     private int count;
 
