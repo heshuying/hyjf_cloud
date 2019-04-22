@@ -22,6 +22,8 @@ public class RegistLandingPageCommitRequestBean extends BaseRequestBean {
     private String refferUserId;
     @ApiModelProperty(value = "推广链接id")
     private String utmId;
+    @ApiModelProperty(value = "财富端用户id")
+    private String customerId;
     @ApiModelProperty(value = "暂时没发现哪里用")
     private String utmSource;
     @ApiModelProperty(value = "验证方式")
@@ -67,6 +69,14 @@ public class RegistLandingPageCommitRequestBean extends BaseRequestBean {
 
     public void setUtmId(String utmId) {
         this.utmId = utmId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getUtmSource() {

@@ -128,11 +128,11 @@ public class WebRegistController extends BaseUserController {
             // add by liuyang 神策数据统计追加 20181029 end
 
             // add by cuigq wbs客户信息回调 20190417 start
-            if(!(Strings.isNullOrEmpty(registerRequest.getUtmId()) || Strings.isNullOrEmpty(registerRequest.getThirdpartyId()))){
+            if(!(Strings.isNullOrEmpty(registerRequest.getUtmId()) || Strings.isNullOrEmpty(registerRequest.getCustomerId()))){
 
                 WbsRegisterMqVO wbsRegisterMqVO=new WbsRegisterMqVO();
                 wbsRegisterMqVO.setUtmId(registerRequest.getUtmId());
-                wbsRegisterMqVO.setThirdpartyId(registerRequest.getThirdpartyId());
+                wbsRegisterMqVO.setCustomerId(registerRequest.getCustomerId());
                 wbsRegisterMqVO.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
 
                 try {

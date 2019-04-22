@@ -5,12 +5,14 @@ package com.hyjf.cs.user.controller.wechat.regist;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.base.Strings;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
@@ -405,6 +407,24 @@ public class WeChatRegistController extends BaseUserController {
                         logger.error(e.getMessage());
                     }
                 }
+
+                // add by cuigq wbs客户信息回调 20190417 start
+                if(!(Strings.isNullOrEmpty(bean.getUtmId()) || Strings.isNullOrEmpty(bean.getCustomerId()))){
+
+                    WbsRegisterMqVO wbsRegisterMqVO=new WbsRegisterMqVO();
+                    wbsRegisterMqVO.setUtmId(bean.getUtmId());
+                    wbsRegisterMqVO.setCustomerId(bean.getCustomerId());
+                    wbsRegisterMqVO.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
+
+                    try {
+                        registService.sendWbsMQ(wbsRegisterMqVO);
+                    } catch (MQException e) {
+                        logger.info("用户【{}】注册后，发达MQ到Wbs失败！",webViewUserVO.getUsername());
+                        logger.error(e.getMessage(),e);
+                    }
+                }
+                // add by cuigq wbs客户信息回调 20190417 end
+
                 String statusDesc = "注册成功";
                 if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
                     BaseMapBean baseMapBean=new BaseMapBean();

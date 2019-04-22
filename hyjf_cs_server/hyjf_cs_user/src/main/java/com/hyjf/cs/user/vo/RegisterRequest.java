@@ -30,7 +30,7 @@ public class RegisterRequest extends AppBaseRequest {
 
     // wbs add by cuigq
     @ApiModelProperty(value = "财富端客户ID")
-    private String thirdpartyId;
+    private String customerId;
 
     @ApiModelProperty(value = "神策预置属性")
     private String presetProps;
@@ -104,11 +104,11 @@ public class RegisterRequest extends AppBaseRequest {
         this.userType = userType;
     }
 
-    public String getThirdpartyId() {
-        return thirdpartyId;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setThirdpartyId(String thirdpartyId) {
-        this.thirdpartyId = thirdpartyId;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 }

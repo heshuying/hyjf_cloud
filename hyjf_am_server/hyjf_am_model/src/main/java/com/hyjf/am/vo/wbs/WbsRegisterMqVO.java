@@ -14,7 +14,7 @@ public class WbsRegisterMqVO {
 	// 财富端id
 	private String utmId;
 	// 财富端客户id
-	private String thirdpartyId;
+	private String customerId;
 	// 资产端客户id
 	private String assetCustomerId;
 
@@ -26,12 +26,12 @@ public class WbsRegisterMqVO {
 		this.utmId = utmId;
 	}
 
-	public String getThirdpartyId() {
-		return thirdpartyId;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setThirdpartyId(String thirdpartyId) {
-		this.thirdpartyId = thirdpartyId;
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
 	}
 
 	public String getAssetCustomerId() {

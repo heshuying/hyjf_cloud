@@ -64,7 +64,7 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 		Preconditions.checkNotNull(wbsRegisterMqVO, "消息内容为空！");
 		String userId = wbsRegisterMqVO.getAssetCustomerId();
-		String thirdpartyId = wbsRegisterMqVO.getThirdpartyId();
+		String thirdpartyId = wbsRegisterMqVO.getCustomerId();
 		String utmId = wbsRegisterMqVO.getUtmId();
 
 		CustomerSyncQO customerSyncQO = new CustomerSyncQO();
