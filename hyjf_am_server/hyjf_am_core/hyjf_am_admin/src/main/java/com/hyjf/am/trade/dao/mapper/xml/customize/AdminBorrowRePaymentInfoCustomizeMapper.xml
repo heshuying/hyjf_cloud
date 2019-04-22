@@ -84,6 +84,11 @@
 			<if test=" yesTimeEndSrch != null and yesTimeEndSrch != ''">
 				AND br.recover_yestime &lt; #{yesTimeEndSrch}
 			</if>
+			
+			<!-- 还款期数 -->
+			<if test="recoverPeriod != null and recoverPeriod != ''">
+				AND br.recover_period = #{recoverPeriod}
+			</if>
 		</where>
 	</sql>
 
