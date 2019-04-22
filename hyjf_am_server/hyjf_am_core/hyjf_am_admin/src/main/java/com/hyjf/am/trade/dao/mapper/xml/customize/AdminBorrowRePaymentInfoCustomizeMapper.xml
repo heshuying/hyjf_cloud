@@ -23,7 +23,6 @@
 				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
 				<include refid="Where_Clause" />
 			) t
-		<include refid="Where_Clause" />
 	</select>
 	<sql id="Where_Clause">
 		<where>
