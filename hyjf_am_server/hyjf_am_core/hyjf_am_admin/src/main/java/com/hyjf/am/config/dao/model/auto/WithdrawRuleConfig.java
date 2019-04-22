@@ -98,6 +98,13 @@ public class WithdrawRuleConfig implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 是否节假日 1节假日 0工作日
+     *
+     * @mbggenerated
+     */
+    private Integer isHoliday;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -210,5 +217,13 @@ public class WithdrawRuleConfig implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIsHoliday() {
+        return isHoliday;
+    }
+
+    public void setIsHoliday(Integer isHoliday) {
+        this.isHoliday = isHoliday;
     }
 }

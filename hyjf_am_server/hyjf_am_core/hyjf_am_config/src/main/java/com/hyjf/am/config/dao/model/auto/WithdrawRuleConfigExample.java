@@ -1015,6 +1015,66 @@ public class WithdrawRuleConfigExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andIsHolidayIsNull() {
+            addCriterion("is_holiday is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayIsNotNull() {
+            addCriterion("is_holiday is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayEqualTo(Integer value) {
+            addCriterion("is_holiday =", value, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayNotEqualTo(Integer value) {
+            addCriterion("is_holiday <>", value, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayGreaterThan(Integer value) {
+            addCriterion("is_holiday >", value, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_holiday >=", value, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayLessThan(Integer value) {
+            addCriterion("is_holiday <", value, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayLessThanOrEqualTo(Integer value) {
+            addCriterion("is_holiday <=", value, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayIn(List<Integer> values) {
+            addCriterion("is_holiday in", values, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayNotIn(List<Integer> values) {
+            addCriterion("is_holiday not in", values, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayBetween(Integer value1, Integer value2) {
+            addCriterion("is_holiday between", value1, value2, "isHoliday");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHolidayNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_holiday not between", value1, value2, "isHoliday");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

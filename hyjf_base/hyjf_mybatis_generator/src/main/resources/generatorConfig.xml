@@ -2055,6 +2055,7 @@
             <columnOverride column="could_withdraw" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="pay_alliance_code" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_holiday" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
         <!-- 提现配置-提现时间配置 -->
         <table tableName="ht_withdraw_time_config" domainObjectName="WithdrawTimeConfig">

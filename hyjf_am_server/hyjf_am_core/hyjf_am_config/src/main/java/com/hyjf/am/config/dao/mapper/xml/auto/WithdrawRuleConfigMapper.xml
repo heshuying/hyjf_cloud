@@ -16,6 +16,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_holiday" property="isHoliday" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, customer_type, min_money, max_money, start_time, end_time, could_withdraw, route_code, 
-    pay_alliance_code, del_flag, create_by, create_time, update_by, update_time
+    pay_alliance_code, del_flag, create_by, create_time, update_by, update_time, is_holiday
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample" >
     select
@@ -120,12 +121,12 @@
       start_time, end_time, could_withdraw, 
       route_code, pay_alliance_code, del_flag, 
       create_by, create_time, update_by, 
-      update_time)
+      update_time, is_holiday)
     values (#{customerType,jdbcType=TINYINT}, #{minMoney,jdbcType=DECIMAL}, #{maxMoney,jdbcType=DECIMAL}, 
       #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, #{couldWithdraw,jdbcType=TINYINT}, 
       #{routeCode,jdbcType=CHAR}, #{payAllianceCode,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, 
       #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP}, #{isHoliday,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -172,6 +173,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="isHoliday != null" >
+        is_holiday,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="customerType != null" >
@@ -212,6 +216,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isHoliday != null" >
+        #{isHoliday,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -266,6 +273,9 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.isHoliday != null" >
+        is_holiday = #{record.isHoliday,jdbcType=TINYINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -286,7 +296,8 @@
       create_by = #{record.createBy,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_by = #{record.updateBy,jdbcType=VARCHAR},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_holiday = #{record.isHoliday,jdbcType=TINYINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -333,6 +344,9 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="isHoliday != null" >
+        is_holiday = #{isHoliday,jdbcType=TINYINT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -350,7 +364,8 @@
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_holiday = #{isHoliday,jdbcType=TINYINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
