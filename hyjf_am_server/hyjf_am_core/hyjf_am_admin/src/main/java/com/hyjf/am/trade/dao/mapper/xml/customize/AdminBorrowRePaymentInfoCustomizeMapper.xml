@@ -10,7 +10,7 @@
 				SELECT
 				COUNT(1) as tmpcount
 				from ht_borrow AS b
-				INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
+				INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid and b.borrow_style in ('end','endday')
 				INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
 				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
 				<include refid="Where_Clause" />
@@ -23,7 +23,6 @@
 				LEFT join ht_borrow_tender AS t on br.tender_id=t.id
 				<include refid="Where_Clause" />
 			) t
-		<include refid="Where_Clause" />
 	</select>
 	<sql id="Where_Clause">
 		<where>
