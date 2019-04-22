@@ -89,7 +89,7 @@
             AND cr.`status` = 0 AND cr.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
-            AND cr.`status` = #{repayStatus}
+            AND cr.`status` = #{repayStatus} AND cr.advance_status != 3
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND cr.assign_repay_next_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
@@ -122,7 +122,7 @@
             AND hcr.repay_status = 0 AND hcr.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
-            AND hcr.repay_status = #{repayStatus}
+            AND hcr.repay_status = #{repayStatus} AND hcr.advance_status != 3
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND hcr.assign_repay_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
