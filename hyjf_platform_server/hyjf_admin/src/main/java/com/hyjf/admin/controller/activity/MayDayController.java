@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.activity;
 
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -18,8 +17,8 @@ import com.hyjf.am.response.admin.ActivityUserGuessResponse;
 import com.hyjf.am.response.admin.ActivityUserRewardResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
 import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
-import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -184,7 +183,7 @@ public class MayDayController extends BaseController {
             if(null == rewardResponse2){
                 rewardResponse2= new ActivityUserRewardResponse();
             }
-            List<ActivityUserRewardVO> resultList = rewardResponse2.getResultList();
+            List<AdminActivityUserRewardVO> resultList = rewardResponse2.getResultList();
             if (!CollectionUtils.isEmpty(resultList)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
