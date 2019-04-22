@@ -6,6 +6,9 @@ package com.hyjf.am.config.controller.web;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.service.WithdrawRuleConfigService;
+import com.hyjf.am.response.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/am-config/withdrawRuleConfig")
 public class WithdrawRuleConfigController extends BaseConfigController {
 
-
     @Autowired
     private WithdrawRuleConfigService withdrawRuleConfigService;
 
@@ -36,7 +38,12 @@ public class WithdrawRuleConfigController extends BaseConfigController {
     @GetMapping("/selectWithdrawRuleConfig/{userType}/{withdrawmoney}")
     public WithdrawRuleConfigResponse selectWithdrawRuleConfig(@PathVariable(value = "userType") Integer userType, @PathVariable(value = "withdrawmoney") String withdrawmoney) {
         WithdrawRuleConfigResponse response = new WithdrawRuleConfigResponse();
-        WithdrawRuleConfig WithdrawRuleConfig = this.withdrawRuleConfigService.selectWithdrawRuleConfig(userType,withdrawmoney);
-
+        WithdrawRuleConfig withdrawRuleConfig = this.withdrawRuleConfigService.selectWithdrawRuleConfig(userType, withdrawmoney);
+        if (withdrawRuleConfig != null) {
+            WithdrawRuleConfigVO withdrawRuleConfigVO = new WithdrawRuleConfigVO();
+            BeanUtils.copyProperties(withdrawRuleConfig, withdrawRuleConfigVO);
+            response.setResult(withdrawRuleConfigVO);
+        }
+        return response;
     }
 }
