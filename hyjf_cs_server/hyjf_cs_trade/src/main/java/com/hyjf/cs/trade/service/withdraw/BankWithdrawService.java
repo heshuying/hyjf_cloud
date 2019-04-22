@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -37,9 +38,10 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param bgRetUrl
      * @param successfulUrl
      * @param forgotPwdUrl
+     * @param withdrawRuleConfigVO
      * @return
      */
-    BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String clientPc, String channelPc, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl);
+    BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String clientPc, String channelPc, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,WithdrawRuleConfigVO withdrawRuleConfigVO);
 
     /**
      * 提现银行同步调用数据处理
@@ -196,12 +198,4 @@ public interface BankWithdrawService extends BaseTradeService {
 
     BaseResultBean getUserWithdrawRecord(UserWithdrawRequestBean userWithdrawRequestBean);
 
-    /**
-     * 用户提现校验
-     *
-     * @param userId
-     * @param withdrawmoney
-     * @return
-     */
-    WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawmoney);
 }

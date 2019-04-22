@@ -18,9 +18,11 @@ public class WithdrawRuleConfigRequest extends Request implements Serializable {
 
     private Integer userType;
 
-    private String withdrawmoney;
+    private String withdrawMoney;
 
     private String withdrawTime;
+
+    private Integer isHoliday;
 
     public Integer getUserType() {
         return userType;
@@ -30,12 +32,12 @@ public class WithdrawRuleConfigRequest extends Request implements Serializable {
         this.userType = userType;
     }
 
-    public String getWithdrawmoney() {
-        return withdrawmoney;
+    public String getWithdrawMoney() {
+        return withdrawMoney;
     }
 
-    public void setWithdrawmoney(String withdrawmoney) {
-        this.withdrawmoney = withdrawmoney;
+    public void setWithdrawMoney(String withdrawMoney) {
+        this.withdrawMoney = withdrawMoney;
     }
 
     public String getWithdrawTime() {
@@ -44,5 +46,13 @@ public class WithdrawRuleConfigRequest extends Request implements Serializable {
 
     public void setWithdrawTime(String withdrawTime) {
         this.withdrawTime = withdrawTime;
+    }
+
+    public Integer getIsHoliday() {
+        return isHoliday;
+    }
+
+    public void setIsHoliday(Integer isHoliday) {
+        this.isHoliday = isHoliday;
     }
 }

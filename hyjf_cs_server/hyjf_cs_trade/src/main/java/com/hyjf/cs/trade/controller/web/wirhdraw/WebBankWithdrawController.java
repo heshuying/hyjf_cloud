@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -79,10 +80,11 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "用户银行提现校验", notes = "用户银行提现校验")
     @PostMapping("/userBankWithdrawCheck")
     @RequestLimit(seconds = 3)
-    public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "withdrawmoney") String withdrawmoney, HttpServletRequest request) {
+    public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "withdrawmoney") String withdrawmoney, HttpServletRequest request) {
         WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
         CheckUtil.check(null != user, MsgEnum.ERR_OBJECT_GET, "用户信息");
-        WebResult<Object> objectWebResult = bankWithdrawService.userBankWithdrawCheck(userId,withdrawmoney);
+        WebResult<Object> objectWebResult = bankWithdrawService.userBankWithdrawCheck(userId, withdrawmoney);
+        return objectWebResult;
     }
 
 
@@ -112,12 +114,19 @@ public class WebBankWithdrawController extends BaseTradeController {
         logger.info("ipAddr is :{}", ipAddr);
         String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawError?token=1";
 
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO =  bankWithdrawService.getWithdrawRuleConfig(userId, bankWithdrawVO.getWithdrawmoney());
+        if (withdrawRuleConfigVO == null) {
+            throw new CheckException(MsgEnum.ERR_GET_WITHDRAW_CONFIG);
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         //                 http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn
         String successfulUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawSuccess?token=1";
         String bgRetUrl = "http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
         String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
+                bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl,withdrawRuleConfigVO);
         if (null == bean) {
             throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }

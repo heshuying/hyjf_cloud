@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.app.withdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -157,6 +158,15 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setStatusDesc("您的账户信息存在异常，请联系客服人员处理。");
             return result;
         }
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, getcash);
+        if (withdrawRuleConfigVO == null){
+            result.setStatus(CustomConstants.APP_STATUS_FAIL);
+            result.setStatusDesc("获取提现配置失败");
+            return result;
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         result.setTotal(CommonUtils.formatAmount(version, account.getBankBalance()));
         logger.info("提现可用余额："+result.getTotal());
         String phoneNum = "";
@@ -206,7 +216,7 @@ public class AppBankWithdrawController extends BaseTradeController {
                     balance = CommonUtils.formatAmount(version, transAmt);
 
                     // 大额支付需要传开户行号
-                    if ((new BigDecimal(getcash).compareTo(new BigDecimal(50001)) >= 0)) {
+                    if (withdrawRuleConfigVO.getPayAllianceCode() == 1) {
                         // 是否是大额提现表示 0:非 1:是
                         result.setIsDisplay("1");
                         // 开户行号
@@ -319,6 +329,17 @@ public class AppBankWithdrawController extends BaseTradeController {
             ret.put("request", requestStr);
             return ret;
         }
+
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, total);
+        if (withdrawRuleConfigVO == null){
+            ret.put("status", CustomConstants.APP_STATUS_FAIL);
+            ret.put("statusDesc", "获取提现配置失败");
+            ret.put("request", requestStr);
+            return ret;
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         //可用金额
         BigDecimal total2 = account.getBankBalance();
         //可提现金额
@@ -346,19 +367,22 @@ public class AppBankWithdrawController extends BaseTradeController {
         }
 
         logger.info("开户行号openCardBankCode is :{}", openCardBankCode);
+
         // 人行通道 提现校验
-
+        // modify by liuyang 20190422 节假日提现修改 start
         String routeCode = "";
-        if (new BigDecimal(total).compareTo(new BigDecimal(50000)) > 0) {
-            routeCode = "2";// 路由代码
+        if (withdrawRuleConfigVO.getPayAllianceCode() == 1) {
+            // 路由代码
+            routeCode = withdrawRuleConfigVO.getRouteCode();
         }
-
-        if ("2".equals(routeCode) && StringUtils.isBlank(openCardBankCode)) {
+        // 如果提现规则配置需要联行号时,判断前端传过来的联行号是否为空
+        if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isBlank(openCardBankCode)){
             ret.put("status", "1");
             ret.put("statusDesc", "大额提现时,开户行号不能为空");
             ret.put("request", requestStr);
             return ret;
         }
+        // modify by liuyang 20190422  节假日提现修改 end
 
         // 取得加密用的Key
         String key = SecretUtil.getKey(sign);
@@ -431,7 +455,13 @@ public class AppBankWithdrawController extends BaseTradeController {
         if (!this.authService.checkPaymentAuthStatus(userId)) {
             throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
-
+        // add by liuyang 20190422 节假日提现修改 start
+        // 获取提现规则配置
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, transAmt);
+        if (withdrawRuleConfigVO == null){ ;
+            throw new ReturnMessageException(MsgEnum.ERR_GET_WITHDRAW_CONFIG);
+        }
+        // add by liuyang 20190422 节假日提现修改 end
         logger.info("user is :{}", JSONObject.toJSONString(user));
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
@@ -443,7 +473,7 @@ public class AppBankWithdrawController extends BaseTradeController {
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
         successfulUrl +="?token=1&sign=" +sign;
         String forgotPwdUrl=super.getForgotPwdUrl(platform,request,systemConfig);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ipAddr,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ipAddr,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl,withdrawRuleConfigVO);
         if (null == bean) {
             throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
         }

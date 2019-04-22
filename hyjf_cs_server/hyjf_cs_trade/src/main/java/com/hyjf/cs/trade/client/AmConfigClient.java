@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.admin.CertLogRequestBean;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
@@ -173,17 +174,15 @@ public interface AmConfigClient {
 	/**
 	 * 判断某一日期是否是工作日
 	 *
-	 * @param somedate
 	 * @return
 	 */
-	boolean checkSomedayIsWorkDateForWithdraw(Date somedate);
+	boolean checkSomedayIsWorkDateForWithdraw();
 
 	/**
 	 * 获取提现规则配置
 	 *
-	 * @param userType
-	 * @param withdrawmoney
+	 * @param request
 	 * @return
 	 */
-	WithdrawRuleConfigVO selectWithdrawRuleConfig(Integer userType, String withdrawmoney);
+	WithdrawRuleConfigVO selectWithdrawRuleConfig(WithdrawRuleConfigRequest request);
 }

@@ -3,8 +3,6 @@
  */
 package com.hyjf.am.config.service;
 
-import java.util.Date;
-
 /**
  * 提现时间配置
  *
@@ -15,8 +13,7 @@ public interface WithdrawTimeConfigService extends BaseService {
     /**
      * 判断某一天是否是工作日
      *
-     * @param somedate
      * @return
      */
-    boolean isWorkdateOnSomeDay(Date somedate);
+    boolean isWorkdateOnSomeDay();
 }

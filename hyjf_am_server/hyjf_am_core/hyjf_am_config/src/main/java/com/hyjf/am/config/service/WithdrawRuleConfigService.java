@@ -4,6 +4,7 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 
 /**
  * 提现规则配置Service
@@ -12,12 +13,13 @@ import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
  * @version WithdrawRuleConfigService, v0.1 2019/4/19 16:41
  */
 public interface WithdrawRuleConfigService extends BaseService {
+
     /**
      * 获取提现规则配置
      *
-     * @param userType
-     * @param withdrawmoney
+     * @param request
      * @return
      */
-    WithdrawRuleConfig selectWithdrawRuleConfig(Integer userType, String withdrawmoney);
+    WithdrawRuleConfig selectWithdrawRuleConfig(WithdrawRuleConfigRequest request);
+
 }
