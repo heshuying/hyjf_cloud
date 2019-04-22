@@ -28,6 +28,50 @@ public class WbsConfig {
     @Value("${third.property.ids}")
     private String thridPropertyIds;
 
+    @Value("${utmid.namizixun}")
+    private Integer utmNami;
+
+    @Value("${utmid.yufengrui}")
+    private Integer utmYufengrui;
+
+    @Value("${utmid.datanghuijin}")
+    private Integer utmDatang;
+
+    @Value("${utmid.qianle}")
+    private Integer utmQianle;
+
+    public Integer getUtmNami() {
+        return utmNami;
+    }
+
+    public void setUtmNami(Integer utmNami) {
+        this.utmNami = utmNami;
+    }
+
+    public Integer getUtmYufengrui() {
+        return utmYufengrui;
+    }
+
+    public void setUtmYufengrui(Integer utmYufengrui) {
+        this.utmYufengrui = utmYufengrui;
+    }
+
+    public Integer getUtmDatang() {
+        return utmDatang;
+    }
+
+    public void setUtmDatang(Integer utmDatang) {
+        this.utmDatang = utmDatang;
+    }
+
+    public Integer getUtmQianle() {
+        return utmQianle;
+    }
+
+    public void setUtmQianle(Integer utmQianle) {
+        this.utmQianle = utmQianle;
+    }
+
     public String getSyncProductInfoUrl() {
         return syncProductInfoUrl;
     }

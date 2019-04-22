@@ -3,6 +3,7 @@ package com.hyjf.wbs.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.CustomerSyncQO;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
@@ -44,6 +45,8 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 
     public static final String CONSUMER_NAME = "<<客户信息同步到WBS财富管理系统>>: ";
     @Autowired
+    private WbsConfig wbsConfig;
+    @Autowired
     private AccountService accountService;
     @Autowired
     private UtmRegService utmRegService;
@@ -72,8 +75,10 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
 
             //根据渠道注册表查询用户是否是属于财富端对应的渠道
             List<Integer> utmId = new ArrayList<Integer>();
-            utmId.add(11200045);//纳觅渠道编号
-//            utmId.add(11200045);//裕峰瑞渠道编号
+            utmId.add(wbsConfig.getUtmNami());//纳觅渠道编号
+            utmId.add(wbsConfig.getUtmYufengrui());//纳觅渠道编号
+            utmId.add(wbsConfig.getUtmDatang());//纳觅渠道编号
+            utmId.add(wbsConfig.getUtmQianle());//纳觅渠道编号
 
 
             UtmReg utmReg = utmRegService.selectUtmInfo(Integer.valueOf(userId), utmId);
@@ -96,7 +101,13 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                     customerSyncQO.setPlatformAccountOpeningTime(bankOpenAccountRecordCustomize.getOpenTime());
                 }
                 customerSyncQO.setAssetCustomerId(userId);
-                customerSyncQO.setEntId(utmReg.getUtmId());//TODO:需要吧渠道编号修改为对应的财富端id
+                if(!getEntId(utmReg.getUtmId()).isEmpty()){
+                    customerSyncQO.setEntId(Integer.valueOf(getEntId(utmReg.getUtmId())));
+                }else{
+                    logger.error("=====" + CONSUMER_NAME + " 查询不到财富端id, utmim = [{}]=====", utmReg.getUtmId());
+                    return;
+                }
+
                 customerSyncQO.setUserName(account.getUserName());
                 customerSyncQO.setPrecipitatedCapital(account.getBalance().doubleValue());
                 customerSyncQO.setFundsToBeCollected(account.getAwait().doubleValue());
@@ -112,6 +123,22 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
         }
         // 如果没有return success ，consumer会重新消费该消息，直到return success
         return;
+    }
+
+    public String getEntId(Integer utmId) {
+        String thirdIds = wbsConfig.getThridPropertyIds();
+        String[] thirdIdsArr = thirdIds.split(",");
+        if (utmId.equals(wbsConfig.getUtmNami()) || utmId.equals(wbsConfig.getUtmYufengrui())) {
+            return thirdIdsArr[0];
+        } else if (utmId.equals(wbsConfig.getUtmDatang())) {
+            return thirdIdsArr[1];
+        } else if (utmId.equals(wbsConfig.getUtmQianle())) {
+            return thirdIdsArr[2];
+        } else {
+            return null;
+        }
+
+
     }
 
     @Override
