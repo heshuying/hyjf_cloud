@@ -254,7 +254,7 @@ public class LoginController extends BaseController {
 		//检查验证码对不对
 		int cnt = loginService.updateCheckMobileCode(username, smsCode, CommonConstant.PARAM_TPL_DUANXINDENGLU, 0+"", CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
 		if (cnt == 0) {
-			return new AdminResult<>(FAIL, "验证码无效");
+			return new AdminResult<>(FAIL, "验证码错误");
 		}
 		String uuid=UUID.randomUUID().toString();
 		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
