@@ -104,9 +104,9 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         Map<String,Object> dataMap = new HashMap<>();
 
         //borrowNid为必须传的参数
-//        if(StringUtils.isBlank(requestBean.getBorrowNid())){
-//            return;
-//        }
+        if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
+            return;
+        }
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
