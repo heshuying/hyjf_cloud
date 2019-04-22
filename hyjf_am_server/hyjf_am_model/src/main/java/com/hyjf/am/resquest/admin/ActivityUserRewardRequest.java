@@ -26,6 +26,12 @@ public class ActivityUserRewardRequest extends BasePage {
      */
     private Integer sendStatus;
 
+    /**
+     * 排序
+     * @return
+     */
+    private Integer sort;
+
     public String getUserName() {
         return userName;
     }
@@ -48,5 +54,13 @@ public class ActivityUserRewardRequest extends BasePage {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

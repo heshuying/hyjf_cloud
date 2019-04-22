@@ -35,6 +35,12 @@
       <where>
        <include refid="where_condition"/>
       </where>
+      <if test="sort == 1">
+        ORDER BY ur.create_time ASC
+      </if>
+      <if test="sort == 2">
+        order BY ur.create_time DESC
+      </if>
       <if test="limitStart >= 0" >
         LIMIT #{limitStart} , #{limitEnd}
       </if>

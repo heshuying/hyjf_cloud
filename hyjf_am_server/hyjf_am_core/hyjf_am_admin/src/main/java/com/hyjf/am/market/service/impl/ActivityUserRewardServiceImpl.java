@@ -33,6 +33,11 @@ public class ActivityUserRewardServiceImpl implements ActivityUserRewardService 
     @Override
     public List<ActivityUserRewardVO> getRewardList(ActivityUserRewardRequest rewardRequest, int limitStart, int limitEnd) {
         Map<String, Object> map = addParams(rewardRequest);
+        if (rewardRequest.getSort() != null && rewardRequest.getSort() != 0) {
+            map.put("sort", rewardRequest.getSort());
+        } else {
+            map.put("sort", 2);
+        }
         if (limitStart != -1) {
             map.put("limitStart", limitStart);
             map.put("limitEnd", limitEnd);
