@@ -1,10 +1,6 @@
 package com.hyjf.am.market.service;
 
 import com.hyjf.am.market.dao.model.auto.ActivityUserGuess;
-import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
-
-import java.util.List;
 
 /**
  * @author xiasq

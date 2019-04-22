@@ -10,7 +10,7 @@ import com.hyjf.am.response.admin.ActivityUserGuessResponse;
 import com.hyjf.am.response.admin.ActivityUserRewardResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
 import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserGuessVO;
 import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class MayDayActivityController {
             paginator = new Paginator(request.getCurrPage(), recordCount);
         }
         if (recordCount > 0) {
-            List<ActivityUserGuessVO> userGuessVOList = activityUserGuessService.getGuessList(request, paginator.getOffset(), paginator.getLimit());
+            List<AdminActivityUserGuessVO> userGuessVOList = activityUserGuessService.getGuessList(request, paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(userGuessVOList)) {
                 response.setResultList(userGuessVOList);
             }

@@ -4,13 +4,13 @@
 package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserGuessVO;
 
 /**
  * @author yaoyong
  * @version ActivityUserGuessResponse, v0.1 2019/4/18 14:53
  */
-public class ActivityUserGuessResponse extends Response<ActivityUserGuessVO> {
+public class ActivityUserGuessResponse extends Response<AdminActivityUserGuessVO> {
 
     private int count;
 

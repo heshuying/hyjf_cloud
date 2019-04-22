@@ -1,7 +1,7 @@
 package com.hyjf.am.market.service;
 
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserGuessVO;
 
 import java.util.List;
 
@@ -25,5 +25,5 @@ public interface ActivityUserGuessService {
      * @param limit
      * @return
      */
-    List<ActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int offset, int limit);
+    List<AdminActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int offset, int limit);
 }
