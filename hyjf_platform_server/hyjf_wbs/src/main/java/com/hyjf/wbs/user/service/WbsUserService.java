@@ -1,6 +1,6 @@
 package com.hyjf.wbs.user.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.wbs.qvo.WbsUserAuthInfo;
 import com.hyjf.wbs.qvo.WebUserBindQO;
@@ -25,5 +25,5 @@ public interface WbsUserService {
     void authorize(WbsRegisterMqVO qo);
 
 
-    void bind(WebUserBindQO webUserBindQO, JSONObject response);
+    void bind(WebUserBindQO webUserBindQO, BaseResult response);
 }

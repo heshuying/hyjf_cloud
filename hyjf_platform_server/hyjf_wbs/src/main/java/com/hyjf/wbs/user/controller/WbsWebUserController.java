@@ -37,21 +37,20 @@ public class WbsWebUserController {
 	@ApiOperation(value = "财富端客户绑定", notes = "财富端客户绑定")
 	@ResponseBody
 	@RequestMapping("bind")
-	public JSONObject bind(HttpServletRequest request, @RequestBody WebUserBindQO webUserBindQO) {
+	public BaseResult bind(HttpServletRequest request, @RequestBody WebUserBindQO webUserBindQO) {
 
-		JSONObject response = new JSONObject();
+		BaseResult result=new BaseResult();
 
 		// 用户接受协议验证
 		if (!webUserBindQO.getReadAgreement()) {
-			response.put("status", "99");
-			response.put("statusCode", "99");
-			response.put("statusDesc", "授权失败，请仔细阅读并同意《汇盈金服授权协议》");
-			return response;
+			result.setStatus("99");
+			result.setStatusDesc("授权失败，请仔细阅读并同意《汇盈金服授权协议》");
+			return result;
 		}
 
-		wbsUserService.bind(webUserBindQO, response);
+		wbsUserService.bind(webUserBindQO, result);
 
-		return response;
+		return result;
 	}
 
 

@@ -7,12 +7,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.wbs.qvo.WebUserBindVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
@@ -48,7 +49,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 	private CommonProducer commonProducer;
 
 	@Override
-	public void bind(WebUserBindQO webUserBindQO, JSONObject response) {
+	public void bind(WebUserBindQO webUserBindQO, BaseResult response) {
 		LoginRequestVO loginQO = new LoginRequestVO();
 		loginQO.setUsername(webUserBindQO.getLoginUserName());
 		loginQO.setPassword(webUserBindQO.getLoginPassword());
@@ -56,14 +57,18 @@ public class WbsUserServiceImpl implements WbsUserService {
 		WebViewUserVO webViewUserVO = csUserClient.login(loginQO);
 
 		// 组织返回数据
-		response.put("status", "000");
-		response.put("statusCode", "0");
-		response.put("statusDesc", "授权成功");
-		response.put("mobile", webViewUserVO.getMobile());
-		response.put("username", webViewUserVO.getUsername());
-		response.put("token", webViewUserVO.getToken());
-		response.put("roleId", webViewUserVO.getRoleId());
-		response.put("iconUrl", webViewUserVO.getIconUrl());
+		response.setStatus("000");
+		response.setStatusDesc("授权成功");
+
+		WebUserBindVO bindVO=new WebUserBindVO();
+		bindVO.setUsername(webViewUserVO.getUsername());
+		bindVO.setMobile(webViewUserVO.getMobile());
+		bindVO.setToken(webViewUserVO.getToken());
+		bindVO.setRoleId(webViewUserVO.getRoleId());
+		//TODO　需要后台指定跳转页面？
+//		bindVO.setRetUrl();
+		bindVO.setIconUrl(webViewUserVO.getIconUrl());
+		bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
 
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();
 		vo.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
