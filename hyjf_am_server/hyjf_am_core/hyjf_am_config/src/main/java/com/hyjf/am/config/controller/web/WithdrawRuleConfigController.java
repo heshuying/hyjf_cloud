@@ -6,7 +6,6 @@ package com.hyjf.am.config.controller.web;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.service.WithdrawRuleConfigService;
-import com.hyjf.am.response.config.WithdrawRuleConfigResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

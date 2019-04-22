@@ -6,7 +6,6 @@ import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.FeeConfigVO;
-import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;

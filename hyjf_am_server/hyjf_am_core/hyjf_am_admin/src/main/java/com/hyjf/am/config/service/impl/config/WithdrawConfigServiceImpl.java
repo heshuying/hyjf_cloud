@@ -1,9 +1,12 @@
 package com.hyjf.am.config.service.impl.config;
 
 import com.hyjf.am.config.dao.mapper.auto.WithdrawRuleConfigMapper;
+import com.hyjf.am.config.dao.mapper.auto.WithdrawTimeConfigMapper;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample;
+import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
+import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,6 +21,9 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
 
     @Resource
     protected WithdrawRuleConfigMapper withdrawRuleConfigMapper;
+
+    @Resource
+    protected WithdrawTimeConfigMapper withdrawTimeConfigMapper;
 
     /**
      * 提现规则配置总数
@@ -60,6 +66,32 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
     @Override
     public WithdrawRuleConfig getWithdrawRuleConfigById(Integer id) {
         return withdrawRuleConfigMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 保存提现时间配置
+     * @param form
+     * @return
+     */
+    @Override
+    public Integer saveWithdrawTimeConfig(WithdrawTimeConfig form) {
+        int recordNum = 0;
+        if (form.getId()!=null){
+            recordNum = withdrawTimeConfigMapper.updateByPrimaryKeySelective(form);
+        }else {
+            recordNum = withdrawTimeConfigMapper.insertSelective(form);
+        }
+        return recordNum;
+    }
+
+    /**
+     * 提现时间配置详情
+     * @param id
+     * @return
+     */
+    @Override
+    public WithdrawTimeConfig getWithdrawTimeConfigById(Integer id) {
+        return withdrawTimeConfigMapper.selectByPrimaryKey(id);
     }
 
 

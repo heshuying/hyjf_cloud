@@ -23,6 +23,7 @@ import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -2515,6 +2516,31 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForEntity(url,form,Integer.class).getBody();
     }
 
+    /**
+     * 保存提现时间配置
+     * @param form
+     * @return
+     */
+    @Override
+    public int saveWithdrawTimeConfig(WithdrawTimeConfigVO form) {
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/saveWithdrawTimeConfig";
+        return restTemplate.postForEntity(url,form,Integer.class).getBody();
+    }
+
+    /**
+     * 提现时间配置
+     * @param id
+     * @return
+     */
+    @Override
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigById(Integer id){
+        String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawTimeConfigById/"+id;
+        WithdrawTimeConfigResponse response = restTemplate.getForEntity(url,WithdrawTimeConfigResponse.class).getBody();
+        if (response!=null && Response.SUCCESS.equals(response.getRtn())){
+            return response;
+        }
+        return null;
+    }
 
 
 }

@@ -19,6 +19,7 @@ import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -1593,4 +1594,17 @@ public interface AmConfigClient {
 	 */
 	int updateWithdrawRuleConfig(WithdrawRuleConfigVO form);
 
+	/**
+	 * 保存提现时间配置
+	 * @param form
+	 * @return
+	 */
+    int saveWithdrawTimeConfig(WithdrawTimeConfigVO form);
+
+	/**
+	 * 提现时间配置详情
+	 * @param id
+	 * @return
+	 */
+	WithdrawTimeConfigResponse getWithdrawTimeConfigById(Integer id);
 }

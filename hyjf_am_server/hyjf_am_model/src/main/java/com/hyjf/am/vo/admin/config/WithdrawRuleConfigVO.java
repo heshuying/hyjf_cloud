@@ -38,7 +38,7 @@ public class WithdrawRuleConfigVO implements Serializable {
      *
      * @mbggenerated
      */
-    @ApiModelProperty(value = "工作日开始时间")
+    @ApiModelProperty(value = "工作日开始时间，格式：24h:mi:ss")
     private String startTime;
 
     /**
@@ -46,7 +46,7 @@ public class WithdrawRuleConfigVO implements Serializable {
      *
      * @mbggenerated
      */
-    @ApiModelProperty(value = "工作日结束时间")
+    @ApiModelProperty(value = "工作日结束时间，格式：24h:mi:ss")
     private String endTime;
 
     /**

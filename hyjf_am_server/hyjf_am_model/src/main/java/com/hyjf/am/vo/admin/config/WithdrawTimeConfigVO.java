@@ -23,7 +23,7 @@ public class WithdrawTimeConfigVO implements Serializable {
      *
      * @mbggenerated
      */
-    @ApiModelProperty(value = "年份")
+    @ApiModelProperty(value = "年份，格式：yyyy")
     private String year;
 
     /**

@@ -3,12 +3,15 @@ package com.hyjf.am.config.controller.admin.config;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
+import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigCustomizeVO;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -75,6 +78,29 @@ public class WithdrawConfigController extends BaseConfigController {
         return withdrawConfigService.updateWithdrawRuleConfig(CommonUtils.convertBean(form,WithdrawRuleConfig.class));
     }
 
+    /**
+     * 保存提现时间配置
+     */
+    @PostMapping("/saveWithdrawTimeConfig")
+    public Integer saveWithdrawTimeConfig(@RequestBody WithdrawTimeConfigVO form){
+        return withdrawConfigService.saveWithdrawTimeConfig(CommonUtils.convertBean(form,WithdrawTimeConfig.class));
+    }
 
+
+    /**
+     * 提现时间配置详情
+     * @param form
+     * @return
+     */
+    @GetMapping("/getWithdrawTimeConfigById/{id}")
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigById(@PathVariable Integer id){
+        WithdrawTimeConfigResponse response = new WithdrawTimeConfigResponse();
+        WithdrawTimeConfig withdrawTimeConfig = withdrawConfigService.getWithdrawTimeConfigById(id);
+        if (withdrawTimeConfig != null){
+            response.setResult(CommonUtils.convertBean(withdrawTimeConfig,WithdrawTimeConfigVO.class));
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 
 }
