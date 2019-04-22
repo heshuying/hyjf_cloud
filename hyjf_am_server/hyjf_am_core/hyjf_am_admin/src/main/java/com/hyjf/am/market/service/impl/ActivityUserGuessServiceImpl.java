@@ -3,7 +3,7 @@ package com.hyjf.am.market.service.impl;
 import com.hyjf.am.market.dao.mapper.customize.market.ActivityUserGuessCustomizeMapper;
 import com.hyjf.am.market.service.ActivityUserGuessService;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserGuessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +29,13 @@ public class ActivityUserGuessServiceImpl implements ActivityUserGuessService {
     }
 
     @Override
-    public List<ActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int limitStart, int limitEnd) {
+    public List<AdminActivityUserGuessVO> getGuessList(ActivityUserGuessRequest request, int limitStart, int limitEnd) {
         Map<String, Object> requestMap = addParams(request);
         if (limitStart != -1) {
             requestMap.put("limitStart", limitStart);
             requestMap.put("limitEnd", limitEnd);
         }
-        List<ActivityUserGuessVO> userGuessVOList = customizeMapper.selectGuessUserList(requestMap);
+        List<AdminActivityUserGuessVO> userGuessVOList = customizeMapper.selectGuessUserList(requestMap);
         return userGuessVOList;
     }
 

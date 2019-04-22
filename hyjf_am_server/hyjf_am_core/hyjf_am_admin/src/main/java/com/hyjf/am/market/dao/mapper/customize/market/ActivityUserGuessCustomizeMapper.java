@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.market.dao.mapper.customize.market;
 
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserGuessVO;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public interface ActivityUserGuessCustomizeMapper {
      * @param requestMap
      * @return
      */
-    List<ActivityUserGuessVO> selectGuessUserList(Map<String, Object> requestMap);
+    List<AdminActivityUserGuessVO> selectGuessUserList(Map<String, Object> requestMap);
 
     /**
      * 查询竞猜列表数据条数

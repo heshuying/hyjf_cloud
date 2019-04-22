@@ -7,9 +7,9 @@ import com.hyjf.am.vo.BaseVO;
 
 /**
  * @author yaoyong
- * @version ActivityUserGuessVO, v0.1 2019/4/18 15:00
+ * @version AdminActivityUserGuessVO, v0.1 2019/4/18 15:00
  */
-public class ActivityUserGuessVO extends BaseVO {
+public class AdminActivityUserGuessVO extends BaseVO {
 
     /**
      * serialVersionUID

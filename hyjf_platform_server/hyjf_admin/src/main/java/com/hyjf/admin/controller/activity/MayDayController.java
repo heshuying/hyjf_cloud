@@ -17,7 +17,7 @@ import com.hyjf.am.response.admin.ActivityUserGuessResponse;
 import com.hyjf.am.response.admin.ActivityUserRewardResponse;
 import com.hyjf.am.resquest.admin.ActivityUserGuessRequest;
 import com.hyjf.am.resquest.admin.ActivityUserRewardRequest;
-import com.hyjf.am.vo.admin.ActivityUserGuessVO;
+import com.hyjf.am.vo.admin.AdminActivityUserGuessVO;
 import com.hyjf.am.vo.admin.AdminActivityUserRewardVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -128,7 +128,7 @@ public class MayDayController extends BaseController {
             if(null == rewardResponse2){
                 rewardResponse2= new ActivityUserGuessResponse();
             }
-            List<ActivityUserGuessVO> resultList = rewardResponse2.getResultList();
+            List<AdminActivityUserGuessVO> resultList = rewardResponse2.getResultList();
             if (!CollectionUtils.isEmpty(resultList)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
