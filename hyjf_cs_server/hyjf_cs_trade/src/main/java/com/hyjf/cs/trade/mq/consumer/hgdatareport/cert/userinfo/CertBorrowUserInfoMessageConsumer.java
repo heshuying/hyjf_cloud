@@ -120,7 +120,7 @@ public class CertBorrowUserInfoMessageConsumer implements RocketMQListener<Messa
             }
             // 垫付机构不用上报
             if (users.getUserAttr().equals(3)){
-                logger.info(logHeader+"垫付机构不用上报");
+                logger.info(logHeader+"垫付机构不用上报.");
                 return;
             }
             // 如果是借款人   并且是解绑卡操作
