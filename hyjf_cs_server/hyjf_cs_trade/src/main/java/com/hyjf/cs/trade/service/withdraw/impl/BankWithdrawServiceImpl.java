@@ -1218,16 +1218,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 }
                 return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_ZC000004,"机构编号错误");
             }
-            // 大额提现判断银行联行号
-            if ((new BigDecimal(account).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
-                logger.info("大额提现时,银行联行号不能为空");
-                // 异步回调URL
-                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
-                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
-                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
-                }
-                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
-            }
+            // modify by liuyang 20190422 节假日提现修改 start
             // 根据电子账户号查询用户ID
             BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(accountId);
             if (bankOpenAccount == null) {
@@ -1252,6 +1243,29 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 }
                 return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
+            // 获取提现规则配置
+            WithdrawRuleConfigVO withdrawRuleConfigVO = this.getWithdrawRuleConfig(userId, account);
+            if (withdrawRuleConfigVO == null) {
+                logger.error("获取提现配置失败");
+                // 异步回调URL
+                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
+                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
+                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
+                }
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
+            }
+
+            // 提现规则配置需要联行号时,并且联行号为空时,报错
+            if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isBlank(payAllianceCode)) {
+                logger.info("大额提现时,银行联行号不能为空");
+                // 异步回调URL
+                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
+                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
+                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
+                }
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
+            }
+            // modify by liuyang 20190422 节假日提现修改 end
 
             // 检查是否设置交易密码
             Integer passwordFlag = user.getIsSetPassword();
@@ -1385,14 +1399,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bean.setCardNo(bankCard.getCardNo());// 银行卡号
             bean.setTxAmount(CustomUtil.formatAmount(account));
             bean.setTxFee(fee);
-
-            // 扣除手续费
-            if ((new BigDecimal(account).compareTo(new BigDecimal(50000)) > 0) && StringUtils.isNotBlank(payAllianceCode)) {
-                routeCode = "2";// 路由代码
-                bean.setCardBankCnaps(payAllianceCode);// 绑定银行联行号
-            }
-            if (routeCode.equals("2")) {
-                bean.setRouteCode(routeCode);
+            // modify by liuyang 20190422 节假日提现修改 start
+            // 提现时需要联行号,并且提现前端传过来的联行号不为空
+            if (withdrawRuleConfigVO.getPayAllianceCode() == 1 && StringUtils.isNotBlank(payAllianceCode)){
+                bean.setRouteCode(withdrawRuleConfigVO.getRouteCode());
+                // 绑定银行联行号
+                bean.setCardBankCnaps(payAllianceCode);
                 LogAcqResBean logAcq = new LogAcqResBean();
                 logAcq.setPayAllianceCode(payAllianceCode);
                 bean.setLogAcqResBean(logAcq);
@@ -1403,9 +1415,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);// 证件类型
                 bean.setIdNo(record.getBusiCode());
                 bean.setName(record.getBusiName());
-                bean.setRouteCode("2");
-                bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
             }
+            // modify by liuyang 20190422 节假日提现修改 end
+
             bean.setForgotPwdUrl(systemConfig.getFrontHost()+systemConfig.getForgetpassword());
             bean.setForgotPwdUrl(userWithdrawRequestBean.getForgotPwdUrl());
             bean.setRetUrl(bankRetUrl+"&logOrderId="+bean.getLogOrderId());// 商户前台台应答地址(必须)
@@ -1782,94 +1794,4 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
     }
 
-    /**
-     * 用户提现校验
-     *
-     * @param userId
-     * @param withdrawmoney
-     * @return
-     */
-    @Override
-    public WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawmoney) {
-        WebResult<Object> result = new WebResult<Object>();
-        JSONObject ret = new JSONObject();
-        // 判断当前日期是否为工作日
-        boolean isWorkDay =  amConfigClient.checkSomedayIsWorkDateForWithdraw();
-        // 获取用户信息
-        UserVO userVO = this.amUserClient.findUserById(userId);
-        if (userVO == null) {
-            logger.error("根据用户ID查询用户信息失败,用户ID:[" + userId + "].");
-            result.setStatus(MsgEnum.ERR_USER_INFO_GET.getCode());
-            result.setStatusDesc(MsgEnum.ERR_USER_INFO_GET.getMsg());
-            return result;
-        }
-        // 用户类型
-        Integer userType = userVO.getUserType();
-        WithdrawRuleConfigRequest request = new WithdrawRuleConfigRequest();
-        // 用户类型
-        request.setUserType(userType);
-        // 提现金额
-        request.setWithdrawMoney(withdrawmoney);
-        if (isWorkDay){
-            // 是工作日
-            request.setIsHoliday(0);
-        }else{
-            // 是节假日
-            request.setIsHoliday(1);
-        }
-        // 根据提现金额,用户类型,提现时间获取提现规则.获取不到,不能提现
-        WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(request);
-        if (withdrawRuleConfigVO == null){
-            // 获取不到提现规则配置,不能提现
-            // 是否能提现
-            ret.put("isWithdrawFlag", false);
-            // 是否显示联行号
-            ret.put("payAllianceCodeDispayFlag", false);
-        }else {
-            // 能够查询到提现规则配置
-            ret.put("isWithdrawFlag", true);
-            // 是否显示联行号
-            ret.put("payAllianceCodeDispayFlag", withdrawRuleConfigVO.getPayAllianceCode() == 1 ? true : false);
-        }
-        result.setData(ret);
-        return result;
-    }
-
-    /**
-     *
-     * 获取提现规则配置
-     *
-     * @param userId
-     * @param withdrawMoney
-     * @return
-     */
-    @Override
-    public WithdrawRuleConfigVO getWithdrawRuleConfig(int userId, String withdrawMoney) {
-        // 判断当前日期是否为工作日
-        boolean isWorkDay =  amConfigClient.checkSomedayIsWorkDateForWithdraw();
-        // 获取用户信息
-        UserVO userVO = this.amUserClient.findUserById(userId);
-        if (userVO == null) {
-            logger.error("根据用户ID查询用户信息失败,用户ID:[" + userId + "].");
-            return null;
-        }
-        // 用户类型
-        Integer userType = userVO.getUserType();
-        WithdrawRuleConfigRequest request = new WithdrawRuleConfigRequest();
-        // 用户类型
-        request.setUserType(userType);
-        // 提现金额
-        request.setWithdrawMoney(withdrawMoney);
-        if (isWorkDay){
-            // 是工作日
-            request.setIsHoliday(0);
-        }else{
-            // 是节假日
-            request.setIsHoliday(1);
-        }
-        // 根据提现金额,用户类型,提现时间获取提现规则.获取不到,不能提现
-        WithdrawRuleConfigVO withdrawRuleConfigVO = this.amConfigClient.selectWithdrawRuleConfig(request);
-
-        return withdrawRuleConfigVO;
-    }
 }

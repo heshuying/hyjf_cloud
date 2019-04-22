@@ -121,8 +121,6 @@ public class WebBankWithdrawController extends BaseTradeController {
             throw new CheckException(MsgEnum.ERR_GET_WITHDRAW_CONFIG);
         }
         // add by liuyang 20190422 节假日提现修改 end
-        // 获取提现规则配置
-
         //                 http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn
         String successfulUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawSuccess?token=1";
         String bgRetUrl = "http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";

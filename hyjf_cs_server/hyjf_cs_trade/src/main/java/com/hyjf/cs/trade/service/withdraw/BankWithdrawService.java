@@ -198,21 +198,4 @@ public interface BankWithdrawService extends BaseTradeService {
 
     BaseResultBean getUserWithdrawRecord(UserWithdrawRequestBean userWithdrawRequestBean);
 
-    /**
-     * 用户提现校验
-     *
-     * @param userId
-     * @param withdrawmoney
-     * @return
-     */
-    WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawmoney);
-
-    /**
-     * 获取提现规则配置
-     *
-     * @param userId
-     * @param withdrawMoney
-     * @return
-     */
-    WithdrawRuleConfigVO getWithdrawRuleConfig(int userId, String withdrawMoney);
 }
