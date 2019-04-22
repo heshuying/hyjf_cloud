@@ -110,7 +110,7 @@ public class CertUserInfoMessageConsumer implements RocketMQListener<MessageExt>
                 }
             }
             // 垫付机构不用上报
-            if (users.getUserAttr().equals(3){
+            if (users.getUserAttr().equals(3)){
                 logger.info(logHeader+"垫付机构不用上报");
                 return;
             }
