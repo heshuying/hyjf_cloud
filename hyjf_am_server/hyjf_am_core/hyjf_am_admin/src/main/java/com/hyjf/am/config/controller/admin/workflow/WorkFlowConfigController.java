@@ -84,10 +84,12 @@ public class WorkFlowConfigController extends BaseConfigController {
         }
         if(flag ==0){
             response.setRtn(Response.FAIL);
+            response.setResultBoolean(false);//添加失败
             response.setMessage("添加业务流程失败");
             logger.debug("添加业务流程失败" );
             return response;
         }
+        response.setResultBoolean(true);//添加成功
         response.setRtn(Response.SUCCESS);
         response.setMessage(Response.SUCCESS_MSG);
         return response;
