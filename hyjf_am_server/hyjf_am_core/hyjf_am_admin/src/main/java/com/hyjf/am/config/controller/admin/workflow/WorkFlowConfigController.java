@@ -75,12 +75,21 @@ public class WorkFlowConfigController extends BaseConfigController {
 
         //添加业务流程
         int flag = workFlowConfigService.insertWorkFlowConfig(workFlowVO);
-        if(flag <=0){
+        if(flag == -1){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许添加
+            response.setMessage("添加业务流程失败，节点人员不存在");
+            logger.debug("添加业务流程失败，节点人员不存在" );
+            return response;
+        }
+        if(flag ==0){
             response.setRtn(Response.FAIL);
+            response.setResultBoolean(false);//添加失败
             response.setMessage("添加业务流程失败");
             logger.debug("添加业务流程失败" );
             return response;
         }
+        response.setResultBoolean(true);//添加成功
         response.setRtn(Response.SUCCESS);
         response.setMessage(Response.SUCCESS_MSG);
         return response;

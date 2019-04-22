@@ -240,6 +240,16 @@ public class WorkFlowConfigController  extends BaseController {
             if(StringUtils.isBlank(mailWarningUser)){
                 return "需要审核的时候，邮件预警人不能为空";
             }
+            //判断邮件预警人是否有邮箱
+            String[] mailWarnings = mailWarningUser.split(";");
+            for(int i=0;i<mailWarnings.length;i++){
+                String mailWarning=mailWarnings[i];
+                int j =mailWarning.lastIndexOf(",");
+                String mail = mailWarning.substring(j+1);
+                if(StringUtils.isBlank(mail)){
+                    return "需要审核的时候，邮件预警人邮箱不能为空";
+                }
+            }
         }
         return "";
     }

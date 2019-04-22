@@ -76,14 +76,25 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         logger.debug("工作流添加业务流程配置,当前用户的真实姓名："+workFlowVO.getUpdateUser());
         //流程节点
         List<WorkFlowNodeVO> flowNodes =workFlowVO.getFlowNodes();
+        //审核状态，判断节点用户是否异常
+        if(workFlowVO.getAuditFlag()==1&&!CollectionUtils.isEmpty(flowNodes)){
+            //处理一个节点用户用户或角色
+            flowNodes = setWorkFlowNodeUser(flowNodes);
+            //判断流程节点是异常 true正常
+            boolean flag= workFlowStatus(flowNodes);
+            if(flag){
+                workFlowVO.setAuditFlag(1);
+            }else{
+                //异常，不允许修改
+                return -1;
+            }
+        }
         //保存业务流程表
         workFlowConfigMapper.insertWorkFlow(workFlowVO);
-        logger.debug("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId()+"工作流节点，请求参数："+ JSONObject.toJSONString(flowNodes));
+        logger.info("工作流添加业务流程配置,插入数据的业务流程id:" + workFlowVO.getId()+"工作流节点，请求参数："+ JSONObject.toJSONString(flowNodes));
         //审核状态  添加业务流程节点表
         if(workFlowVO.getAuditFlag().intValue()==1){
-            //多个用户处理
-            List<WorkFlowNodeVO> newFlowNode = setWorkFlowNodeUser(flowNodes);
-            return workFlowConfigMapper.insertWorkFlowNode(newFlowNode,workFlowVO.getId());
+            return workFlowConfigMapper.insertWorkFlowNode(flowNodes,workFlowVO.getId());
         }
         return 1;
     }
