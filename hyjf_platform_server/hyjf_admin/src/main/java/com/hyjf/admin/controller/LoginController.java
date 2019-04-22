@@ -279,6 +279,12 @@ public class LoginController extends BaseController {
 	@PostMapping(value = "/sendLoginCode/{mobile}")
 	public AdminResult sendVerificationCodeAction(@PathVariable("mobile") String mobile, HttpServletRequest request) {
 
+		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
+		adminSystemRequest.setMobile(mobile);
+		AdminSystemResponse prs = loginService.getUserInfoByMobile(adminSystemRequest);
+		if(!Response.isSuccess(prs)) {
+			return new AdminResult<>(FAIL, "用户不存在");
+		}
 		String ip = GetCilentIP.getIpAddr(request);
 		String mess = loginService.adminSendSmsCodeCheckParam(CommonConstant.PARAM_TPL_DUANXINDENGLU,mobile,"",ip);
 		if(mess!=null){
