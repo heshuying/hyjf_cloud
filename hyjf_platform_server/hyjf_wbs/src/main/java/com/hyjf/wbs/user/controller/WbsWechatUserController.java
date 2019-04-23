@@ -5,6 +5,7 @@ package com.hyjf.wbs.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hyjf.wbs.qvo.WbsUserAuthorizeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,11 @@ public class WbsWechatUserController {
         BaseResult result=new BaseResult();
 
         wbsUserService.authorize(qo);
+
+        WbsUserAuthorizeVO vo=new WbsUserAuthorizeVO();
+        // TODO by cui
+        vo.setRetUrl("");
+        result.setData(vo);
 
         return result;
 
