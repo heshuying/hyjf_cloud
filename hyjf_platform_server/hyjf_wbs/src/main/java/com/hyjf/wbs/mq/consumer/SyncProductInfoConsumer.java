@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Auther: wxd
@@ -69,6 +71,10 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             String productStatus = jsonObj.getString("productStatus");
             // 产品类型 0 散标类, 1 计划类
             String productType = jsonObj.getString("productType");
+
+
+
+
             ProductInfoQO productInfoQO = new ProductInfoQO();
 
 
@@ -91,7 +97,20 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             productInfoQO.setLinkUrl(linkUrl);
             productInfoQO.setH5linkUrl(H5linkUrl);
 
-            synProductInfoService.sync(productInfoQO);
+
+            // 业务参数
+            Map<String, String> jsonMap = new HashMap<String, String>();
+            jsonMap.put("assetId", "1");
+            jsonMap.put("h5linkUrl", H5linkUrl);
+            jsonMap.put("linkUrl", linkUrl);
+            jsonMap.put("productName", productName);
+            jsonMap.put("productNo", productNo);
+            jsonMap.put("productSort", "1");
+            jsonMap.put("productStatus", productStatus);
+            jsonMap.put("publishStatus", "1");
+
+
+            synProductInfoService.sync(jsonMap);
 
 
 //

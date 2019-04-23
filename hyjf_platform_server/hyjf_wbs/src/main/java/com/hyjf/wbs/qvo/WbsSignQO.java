@@ -9,10 +9,10 @@ import java.util.Date;
 /**
  * 通用请求参数封装
  * 
- * @author cui
- * @version WbsCommonQO, v0.1 2019/4/16 14:31
+ * @author wxd
+ * @version WbsCommonQO, v0.1 2019/4/22 14:31
  */
-public class WbsCommonQO {
+public class WbsSignQO {
 	private String name;
 	private String app_key;
 	private String data;
@@ -20,16 +20,7 @@ public class WbsCommonQO {
 	private String timestamp;
 	private String version;
 	private String access_token;
-	private String sign;
-//	private String format="json";
 
-//	public String getFormat() {
-//		return format;
-//	}
-//
-//	public void setFormat(String format) {
-//		this.format = format;
-//	}
 
 	public String getName() {
 		return name;
@@ -80,11 +71,4 @@ public class WbsCommonQO {
 		this.access_token = access_token;
 	}
 
-	public String getSign() {
-		return sign;
-	}
-
-	public void setSign(String sign) {
-		this.sign = sign;
-	}
 }
