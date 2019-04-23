@@ -99,6 +99,13 @@ public class WorkFlowConfigController extends BaseConfigController {
             logger.debug("添加业务流程失败，节点人员不存在" );
             return response;
         }
+        if(flag == -2){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许添加
+            response.setMessage("添加业务流程失败，节点人员不能重复");
+            logger.debug("添加业务流程失败，节点人员不能重复" );
+            return response;
+        }
         if(flag ==0){
             response.setRtn(Response.FAIL);
             response.setResultBoolean(false);//添加失败
@@ -182,6 +189,13 @@ public class WorkFlowConfigController extends BaseConfigController {
             response.setResultBoolean(false);//不允许修改
             response.setMessage("修改业务流程失败，节点人员不存在");
             logger.debug("修改业务流程失败，节点人员不存在" );
+            return response;
+        }
+        if(flag == -2){
+            response.setRtn(Response.SUCCESS);
+            response.setResultBoolean(false);//不允许添加
+            response.setMessage("修改业务流程失败，节点人员不能重复");
+            logger.debug("修改业务流程失败，节点人员不能重复" );
             return response;
         }
         response.setRtn(Response.SUCCESS);//修改成功

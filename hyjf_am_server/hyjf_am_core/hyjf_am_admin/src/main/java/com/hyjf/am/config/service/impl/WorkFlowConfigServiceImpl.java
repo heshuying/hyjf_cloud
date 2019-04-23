@@ -1,7 +1,6 @@
 package com.hyjf.am.config.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.admin.config.ds.DynamicDataSourceContextHolder;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowMapper;
 import com.hyjf.am.config.dao.mapper.auto.WorkFlowNodeMapper;
@@ -23,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiehuili on 2019/4/12.
@@ -80,6 +81,12 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         if(workFlowVO.getAuditFlag()==1&&!CollectionUtils.isEmpty(flowNodes)){
             //处理一个节点用户用户或角色
             flowNodes = setWorkFlowNodeUser(flowNodes);
+            //判断节点中是否有重复的用户或角色
+            boolean compareFlag = compareList(flowNodes);
+            if(!compareFlag){
+                //不允许一个一个流程中有重复的用户或角色
+                return -2;
+            }
             //判断流程节点是异常 true正常
             boolean flag= workFlowStatus(flowNodes);
             if(flag){
@@ -140,6 +147,12 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         if(workFlowVO.getAuditFlag()==1&&!CollectionUtils.isEmpty(flowNodes)){
             //处理一个节点用户用户或角色
             flowNodes = setWorkFlowNodeUser(flowNodes);
+            //判断节点中是否有重复的用户或角色
+            boolean compareFlag = compareList(flowNodes);
+            if(!compareFlag){
+                //不允许一个一个流程中有重复的用户或角色
+                return -2;
+            }
             //判断流程节点是异常 true正常
             boolean flag= workFlowStatus(flowNodes);
             if(flag){
@@ -314,6 +327,19 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
         return newFlowNodes;
     }
 
+    /**
+     * 判断节点中是否有重复的用户或角色
+     * @param flowNodes
+     * @return
+     */
+    public boolean compareList(List<WorkFlowNodeVO> flowNodes){
+        List userAndRole = new ArrayList();
+        for(WorkFlowNodeVO flowNode:flowNodes){
+            userAndRole.add(flowNode.getRole()+flowNode.getAdminId());
+        }
+        Set newUserAndRole = new HashSet(userAndRole);
+        return  newUserAndRole.size() == userAndRole.size() ? true : false;
+    }
     /**
      * 查询业务名称是否被禁用
      * @param id
