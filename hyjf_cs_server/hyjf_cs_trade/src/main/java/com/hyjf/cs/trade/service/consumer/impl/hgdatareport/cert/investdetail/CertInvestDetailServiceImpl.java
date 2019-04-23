@@ -112,23 +112,24 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		case "hjh_repay_frost":
 			tenderRecoverYes(accountList,list);
 			break;
+		//投资收到还款  发送8赎回本金 发送9赎回利息
 		case "credit_tender_recover_yes":
 		case "credit_tender_recover_forst":
 			creditTenderRecoverYes(accountList,list);
 			break;
-		//承接债权 散标债转发送17承接 
+		//承接债权 散标债转发送2出借金额
 		case "creditassign":
 			creditAssign(accountList,list);
 			break;
-		//自动承接债权 计划自动承接债转发送17承接 
+		//自动承接债权 计划自动承接债转发送2出借金额
 		case "accede_assign":
 			accedeAssign(accountList,list);
 			break;
-		// 计划自动投资
+		// 计划自动投资2出借金额
          case "hjh_tender_success":
              hjhTenderSuccess(accountList,list);
              break;
-         // 散标投资
+         // 散标投资2出借金额
          case "tender_success":
              tenderSuccess(accountList,list);
              break;
