@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,24 +24,16 @@ public class HjhPlanCapitalActualVO extends BaseVO implements Serializable {
      */
     private Date date;
 
-    /**
-     * 给前端的格式化后的日期
-     */
+    @ApiModelProperty(value = "给前端的格式化后的日期")
     private String strDate;
 
-    /**
-     * 智投编号
-     */
+    @ApiModelProperty(value = "智投编号")
     private String planNid;
 
-    /**
-     * 智投名称
-     */
+    @ApiModelProperty(value = "智投名称")
     private String planName;
 
-    /**
-     * 天/月标
-     */
+    @ApiModelProperty(value = "天/月标")
     private Integer isMonth;
 
     /**
@@ -48,49 +41,31 @@ public class HjhPlanCapitalActualVO extends BaseVO implements Serializable {
      */
     private Integer lockPeriod;
 
-    /**
-     * 拼接单位后的锁定期
-     */
+    @ApiModelProperty(value = "拼接单位后的锁定期")
     private String lockPeriodView;
 
-    /**
-     * 当日新增债转额
-     */
+    @ApiModelProperty(value = "当日新增债转额")
     private BigDecimal addCreditAccount;
 
-    /**
-     * 当日发起债转额:当日已承接+当日未承接
-     */
+    @ApiModelProperty(value = "当日发起债转额:当日已承接+当日未承接")
     private BigDecimal createCreditAccount;
 
-    /**
-     * 当日已承接债转额
-     */
+    @ApiModelProperty(value = "当日已承接债转额")
     private BigDecimal usedCreditAccount;
 
-    /**
-     * 当日未承接额
-     */
+    @ApiModelProperty(value = "当日未承接额")
     private BigDecimal leaveCreditAccount;
 
-    /**
-     * 当日新增复投额:当日可复投额-昨日未复投额
-     */
+    @ApiModelProperty(value = "当日新增复投额:当日可复投额-昨日未复投额")
     private BigDecimal addReinvestAccount;
 
-    /**
-     * 当日可复投额:当日已复投额+当日未复投额
-     */
+    @ApiModelProperty(value = "当日可复投额:当日已复投额+当日未复投额")
     private BigDecimal sumReinvestAccount;
 
-    /**
-     * 当日已复投额
-     */
+    @ApiModelProperty(value = "当日已复投额")
     private BigDecimal usedReinvestAccount;
 
-    /**
-     * 当日未复投额
-     */
+    @ApiModelProperty(value = "当日未复投额")
     private BigDecimal leaveReinvestAccount;
 
     /**
