@@ -672,7 +672,7 @@ public interface MQConstant {
 	// 产品信息异常重发
 	String CERT_REPAIR_LENDPRODUCT = "CERT_REPAIR_LENDPRODUCT";
 	// 产品信息异常、添加智投、修改智投时报送
-	String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_ADD_MODIFY ;
+	String CERT_LENDPRODUCT_TAG = CERT_REPAIR_LENDPRODUCT+"||"+MQConstant.HJHPLAN_ADD_TAG+"||"+MQConstant.HJHPLAN_MODIFY_TAG ;
 
 	/** 产品配置信息*/
 	String CERT_LENDPRODUCTCONFIG_GROUP = "CERT_LENDPRODUCTCONFIG_GROUP";
@@ -751,7 +751,7 @@ public interface MQConstant {
 	// TAG：新增智投
 	String HJHPLAN_ADD_TAG = "HJHPLAN_ADD_TAG";
 	// TAG：修改智投 add by nxl
-	String HJHPLAN_ADD_MODIFY = "HJHPLAN_ADD_MODIFY";
+	String HJHPLAN_MODIFY_TAG = "HJHPLAN_ADD_MODIFY";
 	// TAG：同步余额
 	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
 	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
@@ -764,5 +764,7 @@ public interface MQConstant {
 
 	// 合规互金上报用MQ延迟发送等级（30s）
 	int HG_REPORT_DELAY_LEVEL = 4;
+	// 延时等级（10s)
+	int HG_REPORT_DELAY_LEVEL_TEN = 3;
 
 }
