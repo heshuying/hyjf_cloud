@@ -2,11 +2,9 @@ package com.hyjf.wbs.trade.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.exceptions.WbsException;
-import com.hyjf.wbs.qvo.ProductInfoQO;
 import com.hyjf.wbs.qvo.WbsCommonQO;
 import com.hyjf.wbs.qvo.WbsSignQO;
 import com.hyjf.wbs.sign.WbsSignUtil;
@@ -20,7 +18,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -70,9 +67,10 @@ public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynPro
         Map map = jasonObject;
         if (map != null && WbsConstants.WBS_RESPONSE_STATUS_SUCCESS
                 .equals(String.valueOf(map.get(WbsConstants.WBS_RESPONSE_STATUS_KEY)))) {
+            logger.info("====<<产品信息及状态同步到WBS财富管理系统>>:推送成功[{}],推送结果=====", jasonObject);
             return;
         } else {
-            logger.error("标的信息回调接口返回失败！详细信息【{}】", map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY));
+            logger.error("标的信息回调接口返回失败！详细信息【{}】", jasonObject);
             throw new WbsException("标的信息回调接口返回失败！");
         }
     }

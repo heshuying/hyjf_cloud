@@ -1,7 +1,5 @@
 package com.hyjf.wbs.trade.service;
 
-import com.hyjf.wbs.qvo.ProductInfoQO;
-
 import java.io.IOException;
 import java.util.Map;
 

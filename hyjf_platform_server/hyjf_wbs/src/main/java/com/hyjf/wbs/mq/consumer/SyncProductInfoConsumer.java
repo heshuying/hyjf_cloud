@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.mq.MqConstants;
-import com.hyjf.wbs.qvo.ProductInfoQO;
 import com.hyjf.wbs.trade.service.SynProductInfoService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -18,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,15 +69,6 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             // 产品类型 0 散标类, 1 计划类
             String productType = jsonObj.getString("productType");
 
-
-
-
-            ProductInfoQO productInfoQO = new ProductInfoQO();
-
-
-            productInfoQO.setProductNo(productNo);
-            productInfoQO.setProductStatus(Integer.valueOf(productStatus));
-
             String productName = "";
             String linkUrl = "";
             String H5linkUrl = "";
@@ -93,34 +81,21 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 linkUrl = PC_ZHITOU_URL + productNo;
                 H5linkUrl = H5_ZHITOU_URL + productNo;
             }
-            productInfoQO.setProductName(productName);
-            productInfoQO.setLinkUrl(linkUrl);
-            productInfoQO.setH5linkUrl(H5linkUrl);
-
 
             // 业务参数
             Map<String, String> jsonMap = new HashMap<String, String>();
-            jsonMap.put("assetId", "1");
+            jsonMap.put("sourceId", "1");
             jsonMap.put("h5linkUrl", H5linkUrl);
             jsonMap.put("linkUrl", linkUrl);
-            jsonMap.put("productName", productName);
+            jsonMap.put("name", productName);
             jsonMap.put("productNo", productNo);
             jsonMap.put("productSort", "1");
+            jsonMap.put("productType", "2");
             jsonMap.put("productStatus", productStatus);
             jsonMap.put("publishStatus", "1");
 
-
             synProductInfoService.sync(jsonMap);
 
-
-//
-//            String reqData = buildData(account).toJSONString();
-//            logger.info("=====" + CONSUMER_NAME + " 请求crm[url = {}]更新数据用户数据[reqData = {}]=====", crmUpdateCustomerUrl, reqData);
-//            CloseableHttpResponse response = postJson(crmUpdateCustomerUrl, reqData);
-//            if (null == response || response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-//                // 请求没有返回200 则稍后重新消费
-//                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
-//            }
         } catch (Exception e1) {
             logger.error("=====" + CONSUMER_NAME + "异常=====");
             logger.error(e1.getMessage());
