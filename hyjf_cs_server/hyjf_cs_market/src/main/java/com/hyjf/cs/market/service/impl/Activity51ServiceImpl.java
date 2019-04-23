@@ -53,10 +53,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 
 	@Override
 	public boolean isActivityTime() {
-		if (activityStartDate == null || activityEndDate == null) {
-			logger.warn("活动时间初始化初始化...");
-			init();
-		}
+		initActivityTime();
 
 		Date today = new Date();
 		if (today.compareTo(activityStartDate) == 1 && today.compareTo(activityEndDate) == -1) {
@@ -67,10 +64,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 
 	@Override
 	public BigDecimal getSumAmount() {
-		if (activityStartDate == null || activityEndDate == null) {
-			logger.warn("活动时间初始化初始化...");
-			init();
-		}
+		initActivityTime();
 		return amTradeClient.getSumAmount(activityStartDate, activityEndDate);
 	}
 
@@ -133,10 +127,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 	 * @return
 	 */
 	private boolean isUserTenderEnough(int userId) {
-		if (activityStartDate == null || activityEndDate == null) {
-			logger.warn("活动时间初始化初始化...");
-			init();
-		}
+		initActivityTime();
 		BigDecimal tenderAmount = amTradeClient.getUserTender(userId, activityStartDate, activityEndDate);
 		return tenderAmount == null || tenderAmount.compareTo(USER_ANNUAL_INVEST_STANDARD) < 0 ? false : true;
 	}
@@ -186,7 +177,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 	/**
 	 * 活动时间初始化
 	 */
-	private void init() {
+	private void initActivityTime() {
 		ActivityListVO vo = amMarketClient.selectActivityList(activityId);
 		if (vo == null) {
 			logger.error("活动未配置, activityId is: {}", activityId);
