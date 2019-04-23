@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.coupon;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.coupon.UserCouponBean;
 
 /**
@@ -16,5 +15,5 @@ public interface CouponSendMessageService {
      * @Param userCouponBean
      * @return 
      */
-    JSONObject insertUserCoupon(UserCouponBean userCouponBean) throws Exception;
+    void insertUserCoupon(UserCouponBean userCouponBean) throws Exception;
 }

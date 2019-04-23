@@ -3116,7 +3116,6 @@ public interface AmTradeClient {
     String getBorrowLevelAction(@Valid String borrowLevel);
 
 
-
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}
@@ -3365,6 +3364,13 @@ public interface AmTradeClient {
      * @param request
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
+
+    /**
+     * 未开户用户销户成功后,删除用户Account表
+     * @param userId
+     * @return
+     */
+    int deleteUserAccountAction(String userId);
 
 
 }

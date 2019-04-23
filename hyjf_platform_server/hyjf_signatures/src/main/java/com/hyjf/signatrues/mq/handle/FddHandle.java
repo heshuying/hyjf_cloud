@@ -1785,7 +1785,7 @@ public class FddHandle {
 			this.uplodTmImage(filePath,ftpPath,0);
 			//开始脱敏文件
 			//获取文件页数
-			pdDocument = PDFToImage.pdfInfo(filePath);
+            pdDocument = PDFToImage.pdfInfo(filePath);
 			int pages = pdDocument.getNumberOfPages();
 
 			//是否企业用户
@@ -1889,7 +1889,6 @@ public class FddHandle {
 			throw new Exception("-----------脱敏协议错误，错误信息"+tenderAgreementID,e);
 		}finally {
 			if (pdDocument != null) {
-
 				try {
 					pdDocument.close();
 				} catch (IOException e) {
@@ -1898,7 +1897,7 @@ public class FddHandle {
 			}
 			logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------结束");
 		}
-	}
+    }
 
 	/**
 	 * 发送邮件(计划订单状态由投标成功变为锁定中，发送此邮件提醒用户投标成功)
@@ -2433,7 +2432,7 @@ public class FddHandle {
 				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
 				try(FileInputStream ins = new FileInputStream(parentDir)){
-					logger.info("--------开始上传文件，准备链接ftp服务器，host:：" + ftpIP + ",port:" + port);
+					logger.info("--------开始上传文件，准备链接ftp服务器，host:" + ftpIP + ",port:" + port);
 
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, ins);
