@@ -1,18 +1,17 @@
 package com.hyjf.am.config.controller.admin.config;
 
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
-import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
 import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigCustomizeVO;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
-import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,24 +35,59 @@ public class WithdrawConfigController extends BaseConfigController {
      * 获取提现规则配置列表
      * @return
      */
-    @GetMapping("/getWithdrawRuleConfigList")
-    public WithdrawRuleConfigResponse getWithdrawRuleConfigList() {
+    @PostMapping("/getWithdrawRuleConfigList")
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(@RequestBody WithdrawRuleConfigRequest request) {
         WithdrawRuleConfigResponse response = new WithdrawRuleConfigResponse();
         int count = withdrawConfigService.getWithdrawRuleConfigCount();
-        if (count>0){
-            List<WithdrawRuleConfig> recordList=withdrawConfigService.getWithdrawRuleConfigList();
-            if(CollectionUtils.isNotEmpty(recordList)){
-                response.setResultList(CommonUtils.convertBeanList(recordList, WithdrawRuleConfigVO.class));
-                response.setCount(count);
-                response.setRtn(Response.SUCCESS);
-            }
+        if (count==0) {
+            return response;
         }
+        if(request.getCurrPage()>0) {
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize() ==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+
+        List<WithdrawRuleConfig> recordList=withdrawConfigService.getWithdrawRuleConfigList(request);
+        if(CollectionUtils.isNotEmpty(recordList)){
+            response.setResultList(CommonUtils.convertBeanList(recordList, WithdrawRuleConfigVO.class));
+            response.setCount(count);
+            response.setRtn(Response.SUCCESS);
+        }
+
         return response;
     }
 
     /**
+     * 获取提现时间配置列表
+     * @return
+     */
+    @PostMapping("/getWithdrawTimeConfigList")
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(@RequestBody WithdrawTimeConfigRequest request) {
+        WithdrawTimeConfigResponse response = new WithdrawTimeConfigResponse();
+        int count = withdrawConfigService.getWithdrawTimeConfigCount();
+        if (count==0){
+            return response;
+        }
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize() ==0?10:request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
+        List<WithdrawTimeConfig> results=withdrawConfigService.getWithdrawTimeConfigList(request);
+        if (CollectionUtils.isNotEmpty(results)){
+            response.setResultList(CommonUtils.convertBeanList(results,WithdrawTimeConfigVO.class));
+            response.setCount(count);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+
+    }
+
+
+    /**
      * 提现规则配置详情
-     * @param form
+     * @param id
      * @return
      */
     @GetMapping("/getWithdrawRuleConfigById/{id}")

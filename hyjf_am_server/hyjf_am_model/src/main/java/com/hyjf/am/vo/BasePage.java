@@ -20,6 +20,18 @@ public class BasePage {
      */
     @ApiModelProperty(value = "当前页条数")
     private int pageSize = 10;
+    /**
+     * 分页查询开始条件
+     */
+    @ApiModelProperty(value = "分页查询开始条件")
+    public int limitStart;
+
+    /**
+     * 分页查询结束条件
+     */
+    @ApiModelProperty(value = "分页查询结束条件")
+    public int limitEnd;
+
 
     public int getCurrPage() {
         return currPage;
@@ -36,4 +48,21 @@ public class BasePage {
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
+
+    public int getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(int limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public int getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(int limitEnd) {
+        this.limitEnd = limitEnd;
+    }
 }
+
