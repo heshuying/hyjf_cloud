@@ -236,8 +236,8 @@ public class LoginController extends BaseController {
 	@ApiOperation(value = "admin短信登录", notes = "admin短信登录")
 	@PostMapping(value = "/mobileCodeLogin")
 	@ResponseBody
-	public AdminResult<Map<String,Object>> mobileCodeLogin(HttpServletRequest request, @ApiParam(required = true, value = "{\"username\": \"\",\"smsCode\":\"\"}") @RequestBody Map<String, String> map) {
-		String username=map.get("username");
+	public AdminResult<Map<String,Object>> mobileCodeLogin(HttpServletRequest request, @ApiParam(required = true, value = "{\"mobile\": \"\",\"smsCode\":\"\"}") @RequestBody Map<String, String> map) {
+		String username=map.get("mobile");
 		logger.info("登陆开始用户:"+username);
 		String smsCode=map.get("smsCode");
 
@@ -254,7 +254,7 @@ public class LoginController extends BaseController {
 		//检查验证码对不对
 		int cnt = loginService.updateCheckMobileCode(username, smsCode, CommonConstant.PARAM_TPL_DUANXINDENGLU, 0+"", CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
 		if (cnt == 0) {
-			return new AdminResult<>(FAIL, "验证码无效");
+			return new AdminResult<>(FAIL, "验证码错误");
 		}
 		String uuid=UUID.randomUUID().toString();
 		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
@@ -279,6 +279,12 @@ public class LoginController extends BaseController {
 	@PostMapping(value = "/sendLoginCode/{mobile}")
 	public AdminResult sendVerificationCodeAction(@PathVariable("mobile") String mobile, HttpServletRequest request) {
 
+		AdminSystemRequest adminSystemRequest=new AdminSystemRequest();
+		adminSystemRequest.setMobile(mobile);
+		AdminSystemResponse prs = loginService.getUserInfoByMobile(adminSystemRequest);
+		if(!Response.isSuccess(prs)) {
+			return new AdminResult<>(FAIL, "用户不存在");
+		}
 		String ip = GetCilentIP.getIpAddr(request);
 		String mess = loginService.adminSendSmsCodeCheckParam(CommonConstant.PARAM_TPL_DUANXINDENGLU,mobile,"",ip);
 		if(mess!=null){

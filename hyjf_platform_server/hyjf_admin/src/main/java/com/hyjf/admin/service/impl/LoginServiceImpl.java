@@ -181,7 +181,7 @@ public class LoginServiceImpl  implements LoginService {
 		String checkCode = GetCode.getRandomSMSCode(6);
 
 		// 测试环境不进行验证
-		if (!hyjfEnvTest) {
+		if (hyjfEnvTest) {
 			// 测试环境验证码111111
 			checkCode = "111111";
 		}

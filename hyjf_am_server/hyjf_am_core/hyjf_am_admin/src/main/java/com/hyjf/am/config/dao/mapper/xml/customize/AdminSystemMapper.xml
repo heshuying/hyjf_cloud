@@ -170,7 +170,7 @@
 			username = #{username} 
 	</select>
 
-	<select id="getUserInfoByMobile" resultMap="UserInfoResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
+	<select id="getUserInfoByMobile" resultMap="UserInfoResultMap" >
 		SELECT DISTINCT
 		a.id,
 		a.username,
@@ -183,9 +183,6 @@
 		WHERE
 		a.mobile = #{mobile, jdbcType=VARCHAR}
 
-		<if test="state != 'NOT CHECK'">
-			AND a.state = '0'
-		</if>
 		AND a.del_flag = '0'
 	</select>
 </mapper>

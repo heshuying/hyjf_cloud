@@ -65,7 +65,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
         CheckUtil.check(Validator.isNotNull(mobile) && Validator.isMobile(mobile), MsgEnum.ERR_FMT_MOBILE);
         if (validCodeType.equals(CommonConstant.PARAM_TPL_ZHUCE)) {
             // 注册时要判断不能重复
-            CheckUtil.check(!existUser(mobile), MsgEnum.ERR_MOBILE_EXISTS);
+            CheckUtil.check(!existUser(mobile), MsgEnum.ERR_USER_NOT_EXISTS);
         }
         if(CommonConstant.PARAM_TPL_DUANXINDENGLU.equals(validCodeType)){
             CheckUtil.check(existUser(mobile), MsgEnum.ERR_USER_INFO_GET);

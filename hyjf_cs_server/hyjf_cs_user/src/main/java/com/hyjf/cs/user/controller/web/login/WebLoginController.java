@@ -241,7 +241,7 @@ public class WebLoginController extends BaseUserController {
         if (!errorInfo.isEmpty()){
             logger.error("web端登录失败...");
             result.setStatus(ApiResult.FAIL);
-            result.setStatusDesc(errorInfo.get("info"));
+            result.setStatusDesc(errorInfo.get("statusDesc"));
             return result;
         }
 

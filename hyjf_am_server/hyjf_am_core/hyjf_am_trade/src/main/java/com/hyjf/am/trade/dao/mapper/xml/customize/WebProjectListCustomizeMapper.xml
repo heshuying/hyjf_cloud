@@ -734,8 +734,9 @@
         <include refid="Web_Plan_Where_Clause" />
         ORDER BY
         <if test="isHome != null" >
+            hp.plan_invest_status asc,
             hp.lock_period asc,
-            hp.plan_invest_status asc, hp.available_invest_account desc, hp.id
+            hp.available_invest_account desc, hp.id
         </if>
         <if test="isHome == null" >
             hp.is_month asc,
@@ -755,13 +756,12 @@
         <include refid="Web_Plan_Where_Clause" />
     </select>
 
+    <!-- PC1.1.3 修改  都显示   AND hp.lock_period IN(1 , 3 , 6 , 12)-->
     <sql id="Web_Plan_Where_Clause">
         <where>
             hp.del_flag = 0
             AND hp.plan_display_status = 1
             <if test="isHome != null" >
-                AND hp.is_month = 1
-                AND hp.lock_period IN(1 , 3 , 6 , 12)
             </if>
         </where>
     </sql>

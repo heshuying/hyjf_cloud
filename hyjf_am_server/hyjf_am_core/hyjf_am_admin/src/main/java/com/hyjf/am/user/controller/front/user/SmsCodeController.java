@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @version UserController, v0.1 2018/1/21 22:37
  */
 
-@RestController
+@RestController("frontSmsCodeController")
 @RequestMapping("/am-user/smsCode")
 public class SmsCodeController extends BaseController {
     @Autowired
