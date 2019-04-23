@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * 提现配置（假期时间配置/提现规则配置）
@@ -130,10 +131,18 @@ public class WithdrawConfigController extends BaseController {
             return new AdminResult<>(FAIL, "假期类型不能为空！");
         }
         AdminSystemVO loginUser = getUser(request);
-        form.setUpdateBy(loginUser.getUsername());
-        form.setUpdateTime(GetDate.getDate());
+        if (form.getId()==null){
+            Date currDate =GetDate.getDate();
+            form.setCreateBy(loginUser.getUsername());
+            form.setCreateTime(currDate);
+            form.setUpdateBy(loginUser.getUsername());
+            form.setUpdateTime(currDate);
+        }else {
+            form.setUpdateBy(loginUser.getUsername());
+            form.setUpdateTime(GetDate.getDate());
+        }
 
-       int num = withdrawConfigService.saveWithdrawTimeConfig(form);
+        int num = withdrawConfigService.saveWithdrawTimeConfig(form);
         if(num>0){
             return new AdminResult<>(SUCCESS, SUCCESS_DESC);
         }
