@@ -695,6 +695,36 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     }
 
     /**
+     * app端校验验证码
+     * @param registerRequest
+     * @return
+     */
+	@Override
+	public JSONObject checkVerificationCode(RegisterRequest registerRequest) {
+		JSONObject checkResult = new JSONObject();
+		// 校验手机号与验证码是否为空
+		if (StringUtils.isBlank(registerRequest.getMobile())
+				|| StringUtils.isBlank(registerRequest.getVerificationCode())
+				|| StringUtils.isBlank(registerRequest.getPlatform())) {
+			checkResult.put(CustomConstants.APP_STATUS, 1);
+			checkResult.put(CustomConstants.APP_STATUS_DESC, "参数有空值，请确认");
+			return checkResult;
+		}
+		// 校验验证码
+		int cnt = amUserClient.checkMobileCode(registerRequest.getMobile(), registerRequest.getVerificationCode(),
+				CommonConstant.PARAM_TPL_ZHUCE, registerRequest.getPlatform(), CommonConstant.CKCODE_YIYAN,
+				CommonConstant.CKCODE_USED, false);
+		if (cnt == 0) {
+			checkResult.put(CustomConstants.APP_STATUS, 1);
+			checkResult.put(CustomConstants.APP_STATUS_DESC, "校验失败");
+		} else {
+            checkResult.put(CustomConstants.APP_STATUS, 0);
+            checkResult.put(CustomConstants.APP_STATUS_DESC, "校验通过");
+        }
+		return checkResult;
+	}
+
+    /**
      * 注册保存账户表
      *
      * @param userId

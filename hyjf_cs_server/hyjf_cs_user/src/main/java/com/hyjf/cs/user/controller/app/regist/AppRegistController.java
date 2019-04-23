@@ -12,7 +12,6 @@ import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetCilentIP;
@@ -20,6 +19,7 @@ import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
@@ -55,6 +55,9 @@ public class AppRegistController extends BaseUserController {
 
     @Autowired
     private SystemConfig systemConfig;
+
+    @Autowired
+    private PassWordService passWordService;
 
     /**
      * 注册
@@ -229,5 +232,41 @@ public class AppRegistController extends BaseUserController {
             logger.info("mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
             return ret;
         }
+    }
+
+    @ApiOperation(value = "校验手机号是否已注册", notes = "校验手机号是否已注册")
+    @PostMapping(value = "/checkMobile")
+    public JSONObject checkMobile(HttpServletRequest request){
+        JSONObject checkResult = new JSONObject();
+        // 手机号
+        String mobile = request.getParameter("mobile");
+        if(StringUtils.isBlank(mobile)){
+            checkResult.put(CustomConstants.APP_STATUS, 1);
+            checkResult.put(CustomConstants.APP_STATUS_DESC, "手机号为空");
+        } else {
+            if(passWordService.existPhone(mobile)){
+                checkResult.put(CustomConstants.APP_STATUS, 1);
+                checkResult.put(CustomConstants.APP_STATUS_DESC, "该手机号已经注册");
+            } else {
+                checkResult.put(CustomConstants.APP_STATUS, 0);
+                checkResult.put(CustomConstants.APP_STATUS_DESC, "该手机号可以注册");
+            }
+        }
+        return checkResult;
+    }
+
+    @ApiOperation(value = "校验验证码", notes = "校验验证码")
+    @PostMapping(value = "/checkVerificationCode")
+    public JSONObject checkVerificationCode(HttpServletRequest request){
+        RegisterRequest registerRequest = new RegisterRequest();
+        // 平台
+        registerRequest.setPlatform(request.getParameter("platform"));
+        // 手机号
+        registerRequest.setMobile(request.getParameter("mobile"));
+        // 验证码
+        registerRequest.setVerificationCode(request.getParameter("verificationCode"));
+        // 校验验证码
+        JSONObject checkResult = registService.checkVerificationCode(registerRequest);
+        return checkResult;
     }
 }

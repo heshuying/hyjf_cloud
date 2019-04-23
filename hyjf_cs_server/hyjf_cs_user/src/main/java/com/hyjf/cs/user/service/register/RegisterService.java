@@ -158,4 +158,11 @@ public interface RegisterService extends BaseUserService {
      * @throws MQException
      */
     void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
+
+    /**
+     * app端校验验证码
+     * @param registerRequest
+     * @return
+     */
+    JSONObject checkVerificationCode(RegisterRequest registerRequest);
 }
