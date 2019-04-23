@@ -3,16 +3,19 @@
  */
 package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * 实际资金计划
+ *
  * @author PC-LIUSHOUYI
  * @version HjhPlanCapitalActualRequest, v0.1 2019/4/2 14:37
  */
-public class HjhPlanCapitalActualRequest  implements Serializable {
+public class HjhPlanCapitalActualRequest extends BasePage implements Serializable {
 
     /**
      * 时间查询条件开始

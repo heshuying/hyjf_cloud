@@ -39,9 +39,19 @@ public class HjhPlanCapitalActualVO extends BaseVO implements Serializable {
     private String planName;
 
     /**
+     * 天/月标
+     */
+    private Integer isMonth;
+
+    /**
      * 锁定期
      */
     private Integer lockPeriod;
+
+    /**
+     * 拼接单位后的锁定期
+     */
+    private String lockPeriodView;
 
     /**
      * 当日新增债转额
@@ -258,5 +268,21 @@ public class HjhPlanCapitalActualVO extends BaseVO implements Serializable {
 
     public void setDelFlg(Integer delFlg) {
         this.delFlg = delFlg;
+    }
+
+    public String getLockPeriodView() {
+        return lockPeriodView;
+    }
+
+    public void setLockPeriodView(String lockPeriodView) {
+        this.lockPeriodView = lockPeriodView;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
     }
 }

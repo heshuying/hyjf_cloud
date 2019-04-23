@@ -5,6 +5,7 @@ package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 
 /**
  * 实际资金计划
@@ -15,6 +16,8 @@ public class HjhPlanCapitalActualResponse extends Response<HjhPlanCapitalActualV
 
     private int count;
 
+    private HjhPlanCapitalActualVO sumHjhPlanCapitalActualVO;
+
     public int getCount() {
         return count;
     }
@@ -23,4 +26,11 @@ public class HjhPlanCapitalActualResponse extends Response<HjhPlanCapitalActualV
         this.count = count;
     }
 
+    public HjhPlanCapitalActualVO getSumHjhPlanCapitalActualVO() {
+        return sumHjhPlanCapitalActualVO;
+    }
+
+    public void setSumHjhPlanCapitalActualVO(HjhPlanCapitalActualVO sumHjhPlanCapitalActualVO) {
+        this.sumHjhPlanCapitalActualVO = sumHjhPlanCapitalActualVO;
+    }
 }

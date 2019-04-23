@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ import java.util.List;
  * @author PC-LIUSHOUYI
  * @version HjhPlanCapitalActualDao, v0.1 2019/4/2 14:26
  */
+@Repository
 public class HjhPlanCapitalActualDao extends BaseMongoDao<HjhPlanCapitalActual>  {
 
     protected static Logger logger = LoggerFactory.getLogger(DateUtils.class);
