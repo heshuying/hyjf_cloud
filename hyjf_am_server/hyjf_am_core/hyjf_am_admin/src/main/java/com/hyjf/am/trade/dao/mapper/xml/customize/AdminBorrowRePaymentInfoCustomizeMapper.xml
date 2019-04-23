@@ -299,7 +299,7 @@
 					SUM( br.recover_fee ) AS recoverFee 
 				FROM
 					ht_borrow AS b
-					INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
+					INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid and b.borrow_style in ('end','endday')
 					INNER JOIN ht_borrow_recover AS br ON br.borrow_nid = b.borrow_nid
 					LEFT JOIN ht_borrow_tender AS t ON br.tender_id = t.id 
 					<include refid="Where_Clause" />
@@ -312,7 +312,7 @@
 				FROM
 					ht_borrow AS b
 					INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
-					INNER JOIN ht_borrow_recover AS br ON br.borrow_nid = b.borrow_nid
+					INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid = b.borrow_nid
 					LEFT JOIN ht_borrow_tender AS t ON br.tender_id = t.id 
 					<include refid="Where_Clause" />
 				) t
