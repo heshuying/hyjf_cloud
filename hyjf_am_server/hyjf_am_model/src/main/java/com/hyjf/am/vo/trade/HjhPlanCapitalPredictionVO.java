@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,64 +24,39 @@ public class HjhPlanCapitalPredictionVO extends BaseVO implements Serializable {
      */
     private Date date;
 
-    /**
-     * 字符串类型的日期
-     */
+    @ApiModelProperty(value = "给前端的格式化后的日期")
     private String stringDate;
 
-    /**
-     * 智投编号
-     */
+    @ApiModelProperty(value = "智投编号")
     private String planNid;
 
-    /**
-     * 智投名称
-     */
+    @ApiModelProperty(value = "智投名称")
     private String planName;
 
-    /**
-     * 天/月标
-     */
+    @ApiModelProperty(value = "天/月标")
     private Integer isMonth;
 
-    /**
-     * 锁定期
-     */
     private Integer lockPeriod;
 
-    /**
-     * 拼接单位后的锁定期
-     */
+    @ApiModelProperty(value = "拼接单位后的锁定期")
     private String lockPeriodView;
 
-    /**
-     * 预计当日新增债转额
-     */
+    @ApiModelProperty(value = "预计当日新增债转额")
     private BigDecimal creditAccount;
 
-    /**
-     * 预计当日新增复投额
-     */
+    @ApiModelProperty(value = "预计当日新增复投额")
     private BigDecimal reinvestAccount;
 
-    /**
-     * 预计当日所需资金量:预计当日新增债转额（元）- 预计当日新增债转额（元）（若为负数显示为0）
-     */
+    @ApiModelProperty(value = "预计当日所需资金量")
     private BigDecimal capitalAccount;
 
-    /**
-     * 预计当日所需资产量:预计当日新增债转额（元）-预计当日新增债转额（元）（若为负数显示为0）
-     */
+    @ApiModelProperty(value = "预计当日所需资产量")
     private BigDecimal assetAccount;
 
-    /**
-     * 预估数据日期
-     */
+    @ApiModelProperty(value = "预估数据日期")
     private Date dualBaseDate;
 
-    /**
-     * 预估数据日期字符串
-     */
+    @ApiModelProperty(value = "预估数据日期字符串")
     private String dualBaseDateStr;
 
     /**
