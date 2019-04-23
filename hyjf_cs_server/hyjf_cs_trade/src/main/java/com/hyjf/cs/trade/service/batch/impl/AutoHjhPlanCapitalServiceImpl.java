@@ -3,6 +3,9 @@
  */
 package com.hyjf.cs.trade.service.batch.impl;
 
+import com.hyjf.am.response.admin.HjhPlanCapitalActualResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalActualRequest;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.GetDate;
@@ -103,8 +106,82 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             }
             listReturnStr.add(oneVo);
         }
+        // 预计当日新增债转额（元） - 预计当日新增复投额（元） “大于零”  =  预计当日所需资金量    （预计当日所需资产量=0）
+        // 预计当日新增复投额（元）- 预计当日新增债转额（元）  “大于零”= 预计当日所需资金量    （预计当日所需资产量=0）
+        for(HjhPlanCapitalPredictionVO vo: listReturnStr){
+            if(vo.getCreditAccount().compareTo(vo.getReinvestAccount()) ==1){
+                vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
+                vo.setAssetAccount(BigDecimal.ZERO);
+            }else{
+                vo.setCapitalAccount(BigDecimal.ZERO);
+                vo.setAssetAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+            }
+        }
         // 调用cs_massage 存储mongodb
         boolean flag = csMessageClient.insertPlanCapitalForCreditInfo(listReturnStr);
+        if(flag){
+            logger.info("资金计划batch计算结束，插入mongodb成功！结束时间："+ GetDate.dateToString(GetDate.getDate()));
+        }else{
+            logger.info("资金计划batch计算结束，插入mongodb失败！结束时间："+ GetDate.dateToString(GetDate.getDate()));
+        }
+    }
+
+    @Override
+    public void autoCapitalActual() {
+        List<HjhPlanCapitalActualVO> listAll = new ArrayList<HjhPlanCapitalActualVO>();
+        // 初始化当前时间
+        Date beginDate = GetDate.getDate();
+        // 初始化当天运行时间
+        Date initDate = GetDate.getDate();
+        // 当前时间
+        long toEndDay = GetDate.getDayEnd10(initDate);
+        // 初始化当前执行时间的时间戳,初始化执行次数
+        long newDate = 0,maxCount = 10;
+        // 判断小于十天且执行时间小于当天23点59分59秒
+        for (int i = 1; i <= maxCount; i++) {
+            // 循环加一天
+            beginDate = GetDate.countDate(beginDate, 5, i);
+            // 获取当前执行时间的时间戳
+            newDate = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.dateToString(GetDate.getDate()));
+            // 判断执行时间是否在当天23点59分59秒以内
+            if (newDate >= toEndDay) {
+                logger.info("BATCH计算资金计划3.3.0时：超过当天23点59分59秒 此任务结束执行！结束计算日期：" + GetDate.dateToString(beginDate) + "    第：" + i + "天");
+                break;
+            }
+            // 计算日期减一天
+            String mogoActual = GetDate.dateToString2(GetDate.countDate(beginDate, 5, -1));
+            // 预计新增复投额
+            List<HjhPlanCapitalActualVO> HjhPlanCapitalActualVOList = amTradeClient.getCapitalActualInfo(GetDate.dateToString(beginDate));
+            // 获取mongo中计算日期-1天的历史数据
+            HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest = new HjhPlanCapitalActualRequest();
+            hjhPlanCapitalActualRequest.setDateFromSrch(mogoActual);
+            hjhPlanCapitalActualRequest.setDateToSrch(mogoActual);
+            HjhPlanCapitalActualResponse hjhPlanCapitalActualResponse = csMessageClient.getPlanCapitalActualInfo(hjhPlanCapitalActualRequest);
+            for(HjhPlanCapitalActualVO actualVO: HjhPlanCapitalActualVOList){
+                BigDecimal sumReinvestAccount = BigDecimal.ZERO;
+                // 当日可复投额
+                BigDecimal leaveReinvestAccount = actualVO.getLeaveReinvestAccount();
+                // 当日已复投额
+                BigDecimal usedReinvestAccount = actualVO.getUsedReinvestAccount();
+                // 当日可复投额	实际值：当日已复投额+当日未复投额
+                sumReinvestAccount = sumReinvestAccount.add(leaveReinvestAccount).add(usedReinvestAccount);
+                for(HjhPlanCapitalActualVO actualVOLs: hjhPlanCapitalActualResponse.getResultList()){
+                    if(actualVO.getPlanNid().equals(actualVOLs.getPlanNid())){
+                        // 当日新增复投额 （初始化 等于当日可复投额）
+                        BigDecimal addReinvestAccount = leaveReinvestAccount;
+                        // 当日新增复投额 实际值：当日可复投额-昨日未复投额
+                        addReinvestAccount = addReinvestAccount.subtract(actualVOLs.getLeaveReinvestAccount());
+                        // 将当日新增复投额set到list的bean中
+                        actualVO.setAddReinvestAccount(addReinvestAccount);
+                    }
+                }
+                // 将当日可复投额set到list的bean中
+                actualVO.setSumReinvestAccount(sumReinvestAccount);
+            }
+            listAll.addAll(HjhPlanCapitalActualVOList);
+        }
+        // 调用cs_massage 存储mongodb
+        boolean flag = csMessageClient.insertCapitalActualInfo(listAll);
         if(flag){
             logger.info("资金计划batch计算结束，插入mongodb成功！结束时间："+ GetDate.dateToString(GetDate.getDate()));
         }else{

@@ -8,18 +8,21 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AccountWebListResponse;
+import com.hyjf.am.response.admin.HjhPlanCapitalActualResponse;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.bifa.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.response.trade.ChinapnrExclusiveLogWithBLOBsResponse;
 import com.hyjf.am.response.trade.ChinapnrLogResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalActualRequest;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.bifa.*;
 import com.hyjf.common.annotation.Cilent;
@@ -442,6 +445,36 @@ public class CsMessageClientImpl implements CsMessageClient {
             return response.getResultBoolean();
         }
         return false;
+    }
+    /**
+     * 统计预计新增债转额
+     * @param listHjhPlanCapitalActual
+     * @return boolean
+     */
+    @Override
+    public boolean insertCapitalActualInfo(List<HjhPlanCapitalActualVO> listHjhPlanCapitalActual){
+        String url = "http://CS-MESSAGE/cs-message/hjhPlanCapitalActual/insertPlanCaptialActual";
+        BooleanResponse response = restTemplate.postForEntity(url, listHjhPlanCapitalActual, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（实际）(从MongoDB读取数据)
+     * @param hjhPlanCapitalActualRequest
+     * @return
+     * @Author : wenxin
+     */
+    @Override
+    public HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest){
+        HjhPlanCapitalActualResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/hjhPlanCapitalActual/getPlanCapitalActualList",
+                hjhPlanCapitalActualRequest, HjhPlanCapitalActualResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
     }
 
 }

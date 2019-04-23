@@ -5,7 +5,6 @@ package com.hyjf.am.response.admin;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 
 /**
  * 实际资金计划

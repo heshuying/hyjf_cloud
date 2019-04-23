@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.service.front.trade;
 
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 
@@ -39,4 +40,11 @@ public interface PlanCapitalService extends BaseService {
 	 * @return
 	 */
 	List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditList(Date date, Date dualDate);
+
+	/**
+	 * 获取该期间的实际资金计划
+	 * @param date
+	 * @return
+	 */
+	List<HjhPlanCapitalActualVO> getPlanCapitalActualformaList(String date);
 }

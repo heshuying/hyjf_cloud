@@ -4,12 +4,15 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.admin.HjhPlanCapitalActualResponse;
+import com.hyjf.am.resquest.admin.HjhPlanCapitalActualRequest;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.bifa.*;
 
@@ -241,4 +244,18 @@ public interface CsMessageClient {
      * @date 2019/4/16 15:18
      */
     boolean insertPlanCapitalForCreditInfo(List<HjhPlanCapitalPredictionVO> listHjhPlanCapitalPrediction);
+
+    /**
+     * 资金计划3.3.0插入mongo（实际）
+     *  @author wenxin
+     * @date 2019/4/23 12:16
+     */
+    boolean insertCapitalActualInfo(List<HjhPlanCapitalActualVO> listHjhPlanCapitalActual);
+
+    /**
+     * 资金计划3.3.0获取mongo（实际）
+     *  @author wenxin
+     * @date 2019/4/23 14:31
+     */
+    HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest);
 }

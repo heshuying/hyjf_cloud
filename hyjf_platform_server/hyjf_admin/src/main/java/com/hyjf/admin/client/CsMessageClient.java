@@ -310,4 +310,12 @@ public interface CsMessageClient {
      * @Author : wenxin
      */
     HjhPlanCapitalPredictionResponse getPlanCapitalPredictionList(HjhPlanCapitalPredictionRequest hjhPlanCapitalPredictionRequest);
+
+    /**
+     * 获取汇计划--计划资金3.3.0列表（实际）
+     * @param hjhPlanCapitalActualRequest
+     * @return
+     * @Author : wenxin
+     */
+    HjhPlanCapitalActualResponse getPlanCapitalActualInfo(HjhPlanCapitalActualRequest hjhPlanCapitalActualRequest);
 }

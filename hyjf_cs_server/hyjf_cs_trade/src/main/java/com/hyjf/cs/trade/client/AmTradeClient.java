@@ -2909,5 +2909,11 @@ public interface AmTradeClient {
      */
     List<HjhPlanCapitalPredictionVO> getPlanCapitalForCreditInfo(String date,String dualDate);
 
+    /**
+     * 统计实际资金计划
+     *  @author wenxin
+     * @date 2019/4/23 11:48
+     */
+    List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date);
 }
 

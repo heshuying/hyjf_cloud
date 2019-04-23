@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,4 +28,10 @@ public interface HjhPlanCapitalCustomizeMapper {
      */
     List<HjhPlanCapitalVO> selectPlanCapitalForProformaList(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
+    /**
+     * 获取该期间的实际资金计划
+     * @param date
+     * @return
+     */
+    List<HjhPlanCapitalActualVO> getPlanCapitalActualformaList(@Param("date") String date);
 }

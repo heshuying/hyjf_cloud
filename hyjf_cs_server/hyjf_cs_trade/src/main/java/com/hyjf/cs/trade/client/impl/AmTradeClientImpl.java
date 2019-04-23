@@ -7056,4 +7056,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     * 统计实际资金计划
+     * @param date
+     * @return List<HjhPlanCapitalActualVO>
+     */
+    @Override
+    public List<HjhPlanCapitalActualVO> getCapitalActualInfo(String date) {
+        String url = "http://AM-TRADE/am-trade/planCapitalController/getPlanCapitalActualformaList/"+date;
+        HjhPlanCapitalActualResponse response = restTemplate.getForEntity(url, HjhPlanCapitalActualResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

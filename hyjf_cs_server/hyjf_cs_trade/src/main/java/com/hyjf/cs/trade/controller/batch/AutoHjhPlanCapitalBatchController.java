@@ -24,6 +24,13 @@ public class AutoHjhPlanCapitalBatchController {
 
     @RequestMapping("/autoCapitalActualPrediction")
     public void autoCapitalnPrediction() {
+        // 计算预计
         autoHjhPlanCapitalService.autoCapitalPrediction();
+    }
+
+    @RequestMapping("/autoCapitalActual")
+    public void autoCapitalActual() {
+        // 计算当日
+        autoHjhPlanCapitalService.autoCapitalActual();
     }
 }

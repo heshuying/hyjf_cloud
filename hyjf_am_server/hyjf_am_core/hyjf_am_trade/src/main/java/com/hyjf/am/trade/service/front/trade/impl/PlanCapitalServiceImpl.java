@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.service.front.trade.PlanCapitalService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.utils.TransUtil;
+import com.hyjf.am.vo.trade.HjhPlanCapitalActualVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalPredictionVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.common.util.CustomConstants;
@@ -48,6 +49,17 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
     @Override
     public List<HjhPlanCapitalVO> getPlanCapitalForProformaList(Date fromDate, Date toDate) {
         List<HjhPlanCapitalVO> list = this.hjhPlanCapitalCustomizeMapper.selectPlanCapitalForProformaList(fromDate, toDate);
+        return list;
+    }
+
+    /**
+     * 获取该期间的实际资金计划
+     * @param date
+     * @return
+     */
+    @Override
+    public List<HjhPlanCapitalActualVO> getPlanCapitalActualformaList(String date){
+        List<HjhPlanCapitalActualVO> list = this.hjhPlanCapitalCustomizeMapper.getPlanCapitalActualformaList(date);
         return list;
     }
 
