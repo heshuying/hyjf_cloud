@@ -121,10 +121,8 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                 //产品名称
                 param.put("productName",hjhPlanVO.getPlanName());
                 //预期年化利率（参考回报率）
-                BigDecimal bigDecimal =hjhPlanVO.getExpectApr().setScale(6,BigDecimal.ROUND_HALF_DOWN);
                 String rate = CertCallUtil.convertLoanRate(hjhPlanVO.getExpectApr(),0,"");
-//                param.put("rate",rate);
-                param.put("rate",bigDecimal.toString());
+                param.put("rate",rate);
                 //最小预期年化利率
                 param.put("minRate","-1");
                 //最大预期年化利率
