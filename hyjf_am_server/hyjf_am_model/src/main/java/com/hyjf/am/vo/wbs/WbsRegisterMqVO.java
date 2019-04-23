@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.vo.wbs;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * wbs 客户注册MQ消息封装
  * 
@@ -40,5 +42,11 @@ public class WbsRegisterMqVO {
 
 	public void setAssetCustomerId(String assetCustomerId) {
 		this.assetCustomerId = assetCustomerId;
+	}
+
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this).add("utmId", utmId).add("customerId", customerId)
+				.add("assetCustomerId", assetCustomerId).toString();
 	}
 }

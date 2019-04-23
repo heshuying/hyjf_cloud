@@ -12,7 +12,7 @@ public interface WbsConstants {
 
     String WBS_RESPONSE_ERROR_MSG_KEY="msg";
 
-    String INTERFACE_NAME_SYNC_CUSTOMER="csc.customer.batchsync";
+    String INTERFACE_NAME_SYNC_CUSTOMER="openapi.customer.bind";
 
     String INTERFACE_NAME_SYNC_PRODUCT_INFO="pdc.product.sync";
 

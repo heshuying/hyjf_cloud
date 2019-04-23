@@ -20,16 +20,6 @@ public class WbsCommonQO {
 	private String timestamp;
 	private String version;
 	private String access_token;
-	private String sign;
-//	private String format="json";
-
-//	public String getFormat() {
-//		return format;
-//	}
-//
-//	public void setFormat(String format) {
-//		this.format = format;
-//	}
 
 	public String getName() {
 		return name;
@@ -56,7 +46,6 @@ public class WbsCommonQO {
 	}
 
 	public String getTimestamp() {
-		//timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		return timestamp;
 	}
 
@@ -80,11 +69,4 @@ public class WbsCommonQO {
 		this.access_token = access_token;
 	}
 
-	public String getSign() {
-		return sign;
-	}
-
-	public void setSign(String sign) {
-		this.sign = sign;
-	}
 }

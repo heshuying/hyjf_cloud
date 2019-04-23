@@ -7,6 +7,7 @@ import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.exceptions.WbsException;
 import com.hyjf.wbs.qvo.ProductInfoQO;
+import com.hyjf.wbs.qvo.WbsCommonExQO;
 import com.hyjf.wbs.qvo.WbsCommonQO;
 import com.hyjf.wbs.qvo.WbsSignQO;
 import com.hyjf.wbs.sign.WbsSignUtil;
@@ -40,7 +41,7 @@ public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynPro
 
         String data = JSONObject.toJSONString(mapdata);
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        WbsCommonQO wbsCommonQO = new WbsCommonQO();
+        WbsCommonExQO wbsCommonQO = new WbsCommonExQO();
 		wbsCommonQO.setApp_key(wbsConfig.getAppKey());
         wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_PRODUCT_INFO);
         wbsCommonQO.setData(URLEncoder.encode(data,"utf-8"));

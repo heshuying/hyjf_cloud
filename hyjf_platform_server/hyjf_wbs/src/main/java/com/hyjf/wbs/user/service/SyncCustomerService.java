@@ -2,6 +2,8 @@ package com.hyjf.wbs.user.service;
 
 import com.hyjf.wbs.qvo.CustomerSyncQO;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * 客户信息回调
  * @author cui

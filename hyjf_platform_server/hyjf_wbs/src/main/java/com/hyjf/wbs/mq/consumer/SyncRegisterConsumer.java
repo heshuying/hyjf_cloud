@@ -9,6 +9,7 @@ package com.hyjf.wbs.mq.consumer;
  */
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 import com.hyjf.am.vo.user.BankCardVO;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -57,10 +58,13 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 	@Override
 	public void onMessage(MessageExt messageExt) {
 
-		logger.info("WBS消息:用户注册,收到消息，开始处理....");
+		String uuid=UUID.randomUUID().toString();
+		logger.info("【{}】WBS客户同步消息:开始处理....",uuid);
 
 		String msgBody = new String(messageExt.getBody());
 		WbsRegisterMqVO wbsRegisterMqVO = JSONObject.parseObject(msgBody, WbsRegisterMqVO.class);
+
+		logger.info("【{}】消息内容【{}】",uuid,wbsRegisterMqVO);
 
 		Preconditions.checkNotNull(wbsRegisterMqVO, "消息内容为空！");
 		String userId = wbsRegisterMqVO.getAssetCustomerId();
@@ -73,7 +77,7 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		customerSyncQO.setCustomerId(thirdpartyId);
 
 		if (Strings.isNullOrEmpty(userId)) {
-			logger.info("WBS客户回调MQ收到消息格式不正确【{}】", msgBody);
+			logger.info("【{}】WBS客户回调MQ收到消息格式不正确【{}】",uuid, msgBody);
 		} else {
 			Integer userIdd = Integer.parseInt(userId);
 			UserVO userVO = amUserClient.findUserById(userIdd);
@@ -92,9 +96,11 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 				}
 			}
 
+			logger.info("【{}】请求参数内容【{}】",uuid,customerSyncQO);
 			syncCustomerService.sync(customerSyncQO);
 
 		}
+		logger.info("【{}】WBS客户同步消息:处理结束....",uuid);
 	}
 
 	private void buildData(UserVO userVO, CustomerSyncQO customerSyncQO) {
