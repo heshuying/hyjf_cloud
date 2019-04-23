@@ -2243,7 +2243,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
     /**
      * 校验业务id是否存在
-     * @param businessId
+     * @param request
      * @return
      */
     @Override
@@ -2284,6 +2284,10 @@ public class AmAdminClientImpl implements AmAdminClient {
         WorkFlowConfigResponse response = restTemplate
                 .getForEntity(url, WorkFlowConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
 
     @Override
     public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
@@ -2366,6 +2370,7 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultList();
         }
         return null;
+    }
 
     public List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex) {
         ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowtenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
@@ -2391,6 +2396,8 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response;
         }
         return null;
+    }
+
     /**
      * 查询累计年华投资
      * @param newYearNineteenRequestBean
@@ -2400,4 +2407,5 @@ public class AmAdminClientImpl implements AmAdminClient {
     public NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean){
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/newYearNineteen/selectInvestList",newYearNineteenRequestBean,NewYearActivityResponse.class).getBody();
     }
+
 }
