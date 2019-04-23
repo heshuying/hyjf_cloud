@@ -413,7 +413,7 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account-rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
@@ -498,7 +498,7 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account-rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
