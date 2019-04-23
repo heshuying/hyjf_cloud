@@ -1,14 +1,14 @@
-package com.hyjf.wbs.trade.service.impl;
+package com.hyjf.wbs.user.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.exceptions.WbsException;
-import com.hyjf.wbs.qvo.WbsCommonExQO;
 import com.hyjf.wbs.qvo.WbsCommonQO;
+import com.hyjf.wbs.qvo.WbsSignQO;
 import com.hyjf.wbs.sign.WbsSignUtil;
-import com.hyjf.wbs.trade.service.SynProductInfoService;
+import com.hyjf.wbs.user.service.SyncCustomerInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,44 +22,44 @@ import java.util.Map;
 
 /**
  * @Auther: wxd
- * @Date: 2019-04-18 10:17
+ * @Date: 2019-04-23 11:25
  * @Description:
  */
 @Service
-public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynProductInfoService {
+public class SyncCustomerInfoServiceImpl extends BaseServiceImpl implements SyncCustomerInfoService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private WbsConfig wbsConfig;
-
     @Override
-    public void sync(Map<String,String> mapdata) throws IOException {
+    public void sync(Map<String, String> mapData) throws IOException {
 
-        String data = JSONObject.toJSONString(mapdata);
+        String data = JSONObject.toJSONString(mapData);
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        WbsCommonExQO wbsCommonExQO = new WbsCommonExQO();
-        wbsCommonExQO.setApp_key(wbsConfig.getAppKey());
-        wbsCommonExQO.setName(WbsConstants.INTERFACE_NAME_SYNC_PRODUCT_INFO);
-        wbsCommonExQO.setData(URLEncoder.encode(data,"utf-8"));
-        wbsCommonExQO.setVersion("");
-        wbsCommonExQO.setTimestamp(timestamp);
-        wbsCommonExQO.setAccess_token("");
-        /**
-         * 组装加签需要的特定参数
-         */
+
         WbsCommonQO wbsCommonQO = new WbsCommonQO();
         wbsCommonQO.setApp_key(wbsConfig.getAppKey());
-        wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_PRODUCT_INFO);
+        wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
         wbsCommonQO.setData(URLEncoder.encode(data,"utf-8"));
         wbsCommonQO.setVersion("");
         wbsCommonQO.setTimestamp(timestamp);
+        wbsCommonQO.setAccess_token("");
+        /**
+         * 组装加签需要的特定参数
+         */
+        WbsSignQO wbsSignQO = new WbsSignQO();
+        wbsSignQO.setApp_key(wbsConfig.getAppKey());
+        wbsSignQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
+        wbsSignQO.setData(URLEncoder.encode(data,"utf-8"));
+        wbsSignQO.setVersion("");
+        wbsSignQO.setTimestamp(timestamp);
 
 
-        wbsCommonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO, wbsConfig.getAppSecret()));
+        wbsCommonQO.setSign(WbsSignUtil.encrypt(wbsSignQO, wbsConfig.getAppSecret()));
 
         String jsonRequest = JSONObject.toJSONString(wbsCommonQO);
 
-        String postUrl = wbsConfig.getSyncProductInfoUrl();
+        String postUrl = wbsConfig.getSyncCustomerUrl();
 
         String content = HttpClientUtils.postJson(postUrl, jsonRequest);
 
@@ -67,11 +67,12 @@ public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynPro
         Map map = jasonObject;
         if (map != null && WbsConstants.WBS_RESPONSE_STATUS_SUCCESS
                 .equals(String.valueOf(map.get(WbsConstants.WBS_RESPONSE_STATUS_KEY)))) {
-            logger.info("====<<产品信息及状态同步到WBS财富管理系统>>:推送成功[{}],推送结果=====", jasonObject);
+            logger.info("====<<客户信息同步到WBS财富管理系统>>:推送成功[{}],推送结果=====", jasonObject);
+
             return;
         } else {
-            logger.error("标的信息回调接口返回失败！详细信息【{}】", jasonObject);
-            throw new WbsException("标的信息回调接口返回失败！");
+            logger.error("客户信息回调接口返回失败！详细信息【{}】", jasonObject);
+            throw new WbsException("客户信息回调接口返回失败！");
         }
     }
 }
