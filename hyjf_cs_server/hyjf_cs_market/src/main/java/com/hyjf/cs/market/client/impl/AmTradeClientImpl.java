@@ -1,5 +1,13 @@
 package com.hyjf.cs.market.client.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -17,13 +25,6 @@ import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author xiasq
@@ -294,4 +295,23 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return null;
 	}
 
+	@Override
+	public BigDecimal getSumAmount(Date startDate, Date endDate) {
+		String url = "http://AM-TRADE//am-trade/investAmount/sum/" + startDate + "/" + endDate;
+		BigDecimalResponse response = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultDec();
+		}
+		return null;
+	}
+
+	@Override
+	public BigDecimal getUserTender(int userId, Date startDate, Date endDate) {
+		String url = "http://AM-TRADE//am-trade/investAmount/annual/" + userId + "/" + startDate + "/" + endDate;
+		BigDecimalResponse response = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultDec();
+		}
+		return null;
+	}
 }

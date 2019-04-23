@@ -2374,6 +2374,23 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    @Override
+    public ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request) {
+        ActivityUserGuessResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/mayDay/guessUserList", request, ActivityUserGuessResponse.class);
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest) {
+        ActivityUserRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/mayDay/rewardList", rewardRequest, ActivityUserRewardResponse.class);
+        if (null != response) {
+            return response;
+        }
+        return null;
     /**
      * 查询累计年华投资
      * @param newYearNineteenRequestBean

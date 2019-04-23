@@ -1393,6 +1393,20 @@ public interface AmAdminClient {
      * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
      **/
     List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
+
+    /**
+     * 五一活动获取竞猜列表
+     * @param request
+     * @return
+     */
+    ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request);
+
+    /**
+     * 五一活动获取奖励领取列表
+     * @param rewardRequest
+     * @return
+     */
+    ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest);
     /**
      * 查询累计年华投资
      * @param newYearNineteenRequestBean
