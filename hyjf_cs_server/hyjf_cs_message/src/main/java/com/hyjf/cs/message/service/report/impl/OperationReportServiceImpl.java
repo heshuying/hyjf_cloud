@@ -2070,8 +2070,4 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			}
 		});
 	}
-
-	public static void main(){
-
-	}
 }
