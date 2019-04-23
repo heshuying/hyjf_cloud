@@ -9,12 +9,12 @@ import com.hyjf.admin.service.config.WithdrawConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
 import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,11 +46,11 @@ public class WithdrawConfigController extends BaseController {
 
 
     @ApiOperation(value = "提现规则配置列表", notes = "提现规则配置列表")
-    @GetMapping(value = "/getWithdrawRuleConfigList")
+    @PostMapping(value = "/getWithdrawRuleConfigList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<WithdrawRuleConfigVO>> getWithdrawRuleConfigList() {
-        WithdrawRuleConfigResponse response = withdrawConfigService.getWithdrawRuleConfigList();
-        if (response == null || !Response.SUCCESS.equals(response.getRtn())){
+    public AdminResult<ListResult<WithdrawRuleConfigVO>> getWithdrawRuleConfigList(@RequestBody WithdrawRuleConfigRequest request) {
+        WithdrawRuleConfigResponse response = withdrawConfigService.getWithdrawRuleConfigList(request);
+        if (response == null || !Response.isSuccess(response)){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<ListResult<WithdrawRuleConfigVO>>(ListResult.build(response.getResultList(), response.getCount()));
@@ -65,7 +65,7 @@ public class WithdrawConfigController extends BaseController {
             return new AdminResult<>(FAIL, "传入id不能为空！");
         }
         WithdrawRuleConfigResponse response = withdrawConfigService.getWithdrawRuleConfigById(id);
-        if (response == null || !Response.SUCCESS.equals(response.getRtn())){
+        if (response == null || !Response.isSuccess(response)){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>(response.getResult());
@@ -97,16 +97,13 @@ public class WithdrawConfigController extends BaseController {
 
 
     @ApiOperation(value = "假期时间配置列表", notes = "假期时间配置列表")
-    @GetMapping(value = "/getWithdrawTimeConfigList")
+    @PostMapping(value = "/getWithdrawTimeConfigList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<WithdrawTimeConfigVO>> getWithdrawTimeConfigList() {
-        WithdrawTimeConfigResponse response = withdrawConfigService.getWithdrawTimeConfigList();
-        if (response == null){
+    public AdminResult<ListResult<WithdrawTimeConfigVO>> getWithdrawTimeConfigList(@RequestBody WithdrawTimeConfigRequest request) {
+        WithdrawTimeConfigResponse response = withdrawConfigService.getWithdrawTimeConfigList(request);
+        if (response == null || !Response.isSuccess(response)){
             return new AdminResult<>(FAIL, FAIL_DESC);
-        }else if(!Response.isSuccess(response)){
-            return new AdminResult<>(FAIL, response.getMessage());
         }
-
         return new AdminResult<ListResult<WithdrawTimeConfigVO>>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
@@ -158,7 +155,7 @@ public class WithdrawConfigController extends BaseController {
             return new AdminResult<>(FAIL, "传入id不能为空！");
         }
         WithdrawTimeConfigResponse response = withdrawConfigService.getWithdrawTimeConfigById(id);
-        if (response == null || !Response.SUCCESS.equals(response.getRtn())){
+        if (response == null || !Response.isSuccess(response)){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>(response.getResult());

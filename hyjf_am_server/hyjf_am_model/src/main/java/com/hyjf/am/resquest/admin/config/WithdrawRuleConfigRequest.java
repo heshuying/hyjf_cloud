@@ -3,11 +3,13 @@ package com.hyjf.am.resquest.admin.config;
 import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
+
 /**
  * @author jun
  * @version WithdrawRuleConfigRequest, v0.1 2019/4/23 15:03
  */
-public class WithdrawRuleConfigRequest extends BasePage {
+public class WithdrawRuleConfigRequest extends BasePage implements Serializable {
 
     /**
      * 分页查询开始条件
