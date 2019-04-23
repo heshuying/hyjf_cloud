@@ -764,7 +764,7 @@ public interface MQConstant {
 
 	// 合规互金上报用MQ延迟发送等级（30s）
 	int HG_REPORT_DELAY_LEVEL = 4;
-	// 延时等级（10s)
+	// 合规互金上报用MQ延迟发送等级（10s） add by nxl
 	int HG_REPORT_DELAY_LEVEL_TEN = 3;
 
 }
