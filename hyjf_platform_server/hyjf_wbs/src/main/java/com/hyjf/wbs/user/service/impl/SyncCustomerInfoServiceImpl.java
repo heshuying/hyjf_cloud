@@ -5,8 +5,8 @@ import com.hyjf.common.http.HttpClientUtils;
 import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.exceptions.WbsException;
+import com.hyjf.wbs.qvo.WbsCommonExQO;
 import com.hyjf.wbs.qvo.WbsCommonQO;
-import com.hyjf.wbs.qvo.WbsSignQO;
 import com.hyjf.wbs.sign.WbsSignUtil;
 import com.hyjf.wbs.user.service.SyncCustomerInfoService;
 import org.slf4j.Logger;
@@ -37,27 +37,27 @@ public class SyncCustomerInfoServiceImpl extends BaseServiceImpl implements Sync
         String data = JSONObject.toJSONString(mapData);
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
+        WbsCommonExQO wbsCommonExQO = new WbsCommonExQO();
+        wbsCommonExQO.setApp_key(wbsConfig.getAppKey());
+        wbsCommonExQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
+        wbsCommonExQO.setData(URLEncoder.encode(data,"utf-8"));
+        wbsCommonExQO.setVersion("");
+        wbsCommonExQO.setTimestamp(timestamp);
+        wbsCommonExQO.setAccess_token("");
+        /**
+         * 组装加签需要的特定参数
+         */
         WbsCommonQO wbsCommonQO = new WbsCommonQO();
         wbsCommonQO.setApp_key(wbsConfig.getAppKey());
         wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
         wbsCommonQO.setData(URLEncoder.encode(data,"utf-8"));
         wbsCommonQO.setVersion("");
         wbsCommonQO.setTimestamp(timestamp);
-        wbsCommonQO.setAccess_token("");
-        /**
-         * 组装加签需要的特定参数
-         */
-        WbsSignQO wbsSignQO = new WbsSignQO();
-        wbsSignQO.setApp_key(wbsConfig.getAppKey());
-        wbsSignQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
-        wbsSignQO.setData(URLEncoder.encode(data,"utf-8"));
-        wbsSignQO.setVersion("");
-        wbsSignQO.setTimestamp(timestamp);
 
 
-        wbsCommonQO.setSign(WbsSignUtil.encrypt(wbsSignQO, wbsConfig.getAppSecret()));
+        wbsCommonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO, wbsConfig.getAppSecret()));
 
-        String jsonRequest = JSONObject.toJSONString(wbsCommonQO);
+        String jsonRequest = JSONObject.toJSONString(wbsCommonExQO);
 
         String postUrl = wbsConfig.getSyncCustomerUrl();
 

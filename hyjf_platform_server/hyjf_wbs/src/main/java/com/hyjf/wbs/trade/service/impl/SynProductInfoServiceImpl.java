@@ -57,7 +57,7 @@ public class SynProductInfoServiceImpl extends BaseServiceImpl implements SynPro
 
         wbsCommonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO, wbsConfig.getAppSecret()));
 
-        String jsonRequest = JSONObject.toJSONString(wbsCommonQO);
+        String jsonRequest = JSONObject.toJSONString(wbsCommonExQO);
 
         String postUrl = wbsConfig.getSyncProductInfoUrl();
 
