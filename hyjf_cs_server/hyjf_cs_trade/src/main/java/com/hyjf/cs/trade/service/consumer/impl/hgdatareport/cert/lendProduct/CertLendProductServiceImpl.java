@@ -133,7 +133,7 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
                     //月标（转换为天数）
                     termDays = hjhPlanVO.getLockPeriod() * 30;
                 }
-                param.put("term", termDays);
+                param.put("term", String.valueOf(termDays));
                 if(isOld){
                     String groupByDateStr = dateFormatTransformation(hjhPlanVO.getCreateTime());
                     param.put("groupByDate", groupByDateStr);
