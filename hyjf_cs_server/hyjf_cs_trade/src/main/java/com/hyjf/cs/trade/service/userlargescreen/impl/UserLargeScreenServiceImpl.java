@@ -87,14 +87,11 @@ public class UserLargeScreenServiceImpl  implements UserLargeScreenService {
     @Override
     public UserLargeScreenTwoResultBean getTwoPage() {
         JSONObject param = new JSONObject();
-        int sendFlag = 0;
         if(!RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:START_BALANCE_"+GetDate.formatDate(new Date(), GetDate.yyyyMM_key)) &&
                 !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
-            sendFlag = 1;
             param.put("flag", "all");
             sendMQ(param);
-        }
-        if(sendFlag != 1 && !RedisUtils.exists("USER_LARGE_SCREEN_TWO_MONTH:NOW_BALANCE_"+ GetDate.formatDate())){
+        }else {
             param.put("flag", "now");
             sendMQ(param);
         }

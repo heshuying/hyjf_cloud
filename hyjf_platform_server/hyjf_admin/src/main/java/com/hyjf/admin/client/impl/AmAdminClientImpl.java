@@ -2284,6 +2284,54 @@ public class AmAdminClientImpl implements AmAdminClient {
         WorkFlowConfigResponse response = restTemplate
                 .getForEntity(url, WorkFlowConfigResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+
+    @Override
+    public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getrechargelist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getPlanTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getplantenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<ScreenDataBean> getPlanRepayList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getplanrepaylist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getCreditTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getcredittenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<ScreenDataBean> getWithdrawList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getwithdrawlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<ScreenDataBean> getBorrowRecoverList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowrecoverlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
             return response.getResultList();
         }
         return null;
@@ -2318,5 +2366,21 @@ public class AmAdminClientImpl implements AmAdminClient {
             return response.getResultList();
         }
         return null;
+
+    public List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex) {
+        ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowtenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
+        if(null != response){
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 查询累计年华投资
+     * @param newYearNineteenRequestBean
+     * @return
+     */
+    @Override
+    public NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/newYearNineteen/selectInvestList",newYearNineteenRequestBean,NewYearActivityResponse.class).getBody();
     }
 }

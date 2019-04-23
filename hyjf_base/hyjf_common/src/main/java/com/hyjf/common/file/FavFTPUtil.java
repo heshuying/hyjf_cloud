@@ -261,9 +261,10 @@ public class FavFTPUtil {
                 return null;
             }
             ftp.enterLocalPassiveMode();
+            logger.info("----------------------------转移到FTP服务器目录"+para.downloadPath);
             ftp.changeWorkingDirectory(para.downloadPath);// 转移到FTP服务器目录
             FTPFile[] fs = ftp.listFiles();
-            System.out.println(fs.length);
+            logger.info("----------------------------fs.length"+fs.length);
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             for (FTPFile ff : fs) {
                 if (ff.getName().equals(para.sftpKeyFile)) {
