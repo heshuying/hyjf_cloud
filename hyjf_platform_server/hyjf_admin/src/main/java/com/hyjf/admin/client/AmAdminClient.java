@@ -1355,4 +1355,10 @@ public interface AmAdminClient {
      * @return
      */
     ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest);
+    /**
+     * 查询累计年华投资
+     * @param newYearNineteenRequestBean
+     * @return
+     */
+    NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean);
 }
