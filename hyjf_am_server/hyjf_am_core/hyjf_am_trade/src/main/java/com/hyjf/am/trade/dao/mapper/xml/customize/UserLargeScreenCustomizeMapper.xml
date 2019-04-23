@@ -565,20 +565,49 @@
     <!-- 运营部-充值 -->
     <select id="getOperMonthPerformanceDataO" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
         SELECT
-            IFNULL(SUM(year_money), 0) AS yearAmount,
-            IFNULL(SUM(money), 0) AS recharge
-        FROM
-            ht_user_operate_list
-        WHERE
-            operating = 2
-        AND create_time BETWEEN DATE_FORMAT(
-            CURDATE(),
-            '%Y-%m-01 00:00:00'
-        )
-        AND DATE_FORMAT(
-            LAST_DAY(CURDATE()),
-            '%Y-%m-%d 23:59:59'
-        )
+	ROUND(SUM(recharge), 0) AS recharge
+    FROM
+	(
+		SELECT
+			IFNULL(SUM(money), 0) AS recharge
+		FROM
+			ht_user_operate_list
+		WHERE
+			operating = 2
+		AND create_time BETWEEN DATE_FORMAT(
+			CURDATE(),
+			'%Y-%m-01 00:00:00'
+		)
+		AND DATE_FORMAT(
+			LAST_DAY(CURDATE()),
+			'%Y-%m-%d 23:59:59'
+		)
+		UNION ALL
+			SELECT
+				IFNULL(SUM(t1.money), 0) AS recharge
+			FROM
+				`ht_account_recharge` t1
+			INNER JOIN ht_user_operate_list t2 ON t1.user_id = t2.user_id
+			WHERE
+				t1.TYPE = 0
+			AND t1.create_time BETWEEN DATE_FORMAT(
+				CURDATE(),
+				'%Y-%m-01 00:00:00'
+			)
+			AND DATE_FORMAT(
+				LAST_DAY(CURDATE()),
+				'%Y-%m-%d 23:59:59'
+			)
+			AND t2.operating = 2
+			AND t2.create_time BETWEEN DATE_FORMAT(
+				CURDATE(),
+				'%Y-%m-01 00:00:00'
+			)
+			AND DATE_FORMAT(
+				LAST_DAY(CURDATE()),
+				'%Y-%m-%d 23:59:59'
+			)
+	) t1
     </select>
 
     <!-- 运营部-提现 -->
