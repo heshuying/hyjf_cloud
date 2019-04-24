@@ -78,14 +78,17 @@ public class WithdrawConfigController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateWithdrawRuleConfig(HttpServletRequest request, @RequestBody WithdrawRuleConfigVO form){
 
-        if (!Validator.isTimeFormat(form.getStartTime())){
+       /* if (!Validator.isTimeFormat(form.getStartTime())){
             return new AdminResult<>(FAIL, "工作日开始时间格式不正确，请重新输入！");
-        }
-        if (!Validator.isTimeFormat(form.getEndTime())){
+        }*/
+        /*if (!Validator.isTimeFormat(form.getEndTime())){
             return new AdminResult<>(FAIL, "工作日结束时间格式不正确，请重新输入！");
-        }
+        }*/
 
         AdminSystemVO loginUser = getUser(request);
+        if (loginUser==null){
+            return new AdminResult<>(FAIL, "用户未登陆！");
+        }
         form.setUpdateBy(loginUser.getUsername());
         form.setUpdateTime(GetDate.getDate());
         int updateRecord = withdrawConfigService.updateWithdrawRuleConfig(form);
@@ -112,6 +115,11 @@ public class WithdrawConfigController extends BaseController {
     @PostMapping(value = "/saveWithdrawTimeConfig")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult saveWithdrawTimeConfig(HttpServletRequest request,@RequestBody WithdrawTimeConfigVO form){
+        AdminSystemVO loginUser = getUser(request);
+        if (loginUser==null){
+            return new AdminResult<>(FAIL, "用户未登陆！");
+        }
+
         if (StringUtils.isEmpty(form.getYear())){
             return new AdminResult<>(FAIL, "年份不能为空！");
         }
@@ -127,7 +135,7 @@ public class WithdrawConfigController extends BaseController {
         if (form.getHolidayType()==null){
             return new AdminResult<>(FAIL, "假期类型不能为空！");
         }
-        AdminSystemVO loginUser = getUser(request);
+
         if (form.getId()==null){
             Date currDate =GetDate.getDate();
             form.setCreateBy(loginUser.getUsername());
