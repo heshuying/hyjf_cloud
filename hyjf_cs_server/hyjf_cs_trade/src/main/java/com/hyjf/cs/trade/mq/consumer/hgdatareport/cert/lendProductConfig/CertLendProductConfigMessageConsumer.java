@@ -34,7 +34,7 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
 
     Logger logger = LoggerFactory.getLogger(CertLendProductConfigMessageConsumer.class);
 
-    private String thisMessName = "产品配置信息信息推送";
+    private String thisMessName = "产品配置信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
