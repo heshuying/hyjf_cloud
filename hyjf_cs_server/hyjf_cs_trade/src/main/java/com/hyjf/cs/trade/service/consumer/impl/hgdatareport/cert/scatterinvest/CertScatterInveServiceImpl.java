@@ -161,14 +161,14 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             // AAA 报送A  AA+报送E  AA报送K    AA-报送P  A报送U  BBB报送Z
             // param.put("loanCreditRating", loanCreditRating);
             // 逾期期限 固定值1
-            param.put("overdueLimmit", "1");
+           // param.put("overdueLimmit", "1");
             // 坏账期限 固定值90
-            param.put("badDebtLimmit", "90");
+            //param.put("badDebtLimmit", "90");
             // 是否允许债 权转让 0-是/1-否
             // 是否允许转让：均报送0
-            param.put("allowTransfer", "0");
+            //param.put("allowTransfer", "0");
             // 封闭期（天）  1
-            param.put("closeLimmit", "1");
+            //param.put("closeLimmit", "1");
             // 担保方式 1-抵押／2-质押／3-留置／4-定金／5-第三方担保/6-保险/9-风险自担/10-保证（信用）。如果没有担保方式填写-1.
             // 根据资产属性填充值报送 1，2，10
             param.put("securityType", securityType);
@@ -176,7 +176,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             // 报送3
             param.put("projectSource", "3");
             // 增加surplusAmount剩余借款本金：报送0
-            param.put("surplusAmount", "0");
+            param.put("surplusAmount", "0.00");
             // 担保公司数量字段，报送-1
             param.put("securityCompanyAmount", "-1");
             // 原产品链接
