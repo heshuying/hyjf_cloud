@@ -132,9 +132,11 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             UserInfoVO userVO = amUserClient.findUserInfoById(userId);
             logger.info(logHeader + "根据用户id:" + userId + " 查询的信息为：" + JSONArray.toJSONString(userVO));
             if (null == userVO) {
-                throw new Exception("产品配置信息推送,获取出借人信息为空！！用户id为:" + userId);
+                throw new Exception("产品配置信息推送,获取出借人信息为空！！用户id为：" + userId);
             }
+            logger.info(logHeader + "用户id:" + userId + " 查询的身份证号为：" + JSONArray.toJSONString(userVO.getIdcard()));
             userIdcardHash = tool.idCardHash(userVO.getIdcard());
+            logger.info(logHeader + "用户id:" + userId + " 加密后的哈希值为：" + userIdcardHash);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
