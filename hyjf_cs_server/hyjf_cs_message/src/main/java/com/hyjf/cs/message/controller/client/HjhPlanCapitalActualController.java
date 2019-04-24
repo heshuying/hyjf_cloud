@@ -45,7 +45,11 @@ public class HjhPlanCapitalActualController extends BaseController {
      */
     @PostMapping(value = "/insertPlanCaptialActual")
     public BooleanResponse insertPlanCaptialActual(@RequestBody List<HjhPlanCapitalActualVO> list) {
-        return new BooleanResponse(this.hjhPlanCapitalActualService.insertPlanCaptialActual(list));
+        if(null != list || list.size() > 0 ) {
+            return new BooleanResponse(this.hjhPlanCapitalActualService.insertPlanCaptialActual(list));
+        } else {
+            return new BooleanResponse(true);
+        }
     }
 
     /**
