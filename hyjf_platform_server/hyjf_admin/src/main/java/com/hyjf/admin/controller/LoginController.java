@@ -7,25 +7,16 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.service.LoginService;
 import com.hyjf.admin.utils.PictureInitUtil;
-import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.util.calculate.DateUtils;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,9 +88,12 @@ public class LoginController extends BaseController {
 			return new AdminResult<>(FAIL, prs.getMessage());
 		}
 		String uuid=UUID.randomUUID().toString();
-		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + username);
+		//if (!hyjfEnvTest) {
+			// 生产环境   单点登录
+			RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID+username, uuid, 3600);
+		//}
 		this.setUser(request, prs.getResult());
 		Map<String,Object> result =new HashMap<String, Object>();;
 		result.put("uuid", uuid);
