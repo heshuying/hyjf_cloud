@@ -92,7 +92,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     for (Map.Entry paramName : clients.entrySet()) {
                         if(clientSed[i].equals(paramName.getKey())){
                             if(i!=0&&clientString.length()!=0){
-                                clientString=clientString+"、";
+                                clientString=clientString+"/";
                             }
                             clientString=clientString+paramName.getValue();
 
@@ -102,13 +102,13 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
             }
             if(clientString.length()==0){
                 coupon.setCouponSystem("");
-            }else if("微官网、Android、iOS".equals(clientString)){
+            }else if("微官网/Android/iOS".equals(clientString)){
                 coupon.setCouponSystem("限移动端可用");
-            }else if("微官网、iOS、Android".equals(clientString)){
+            }else if("微官网/iOS/Android".equals(clientString)){
                 coupon.setCouponSystem("限移动端可用");
             }else{
-                coupon.setCouponSystem("限"+clientString.replace("Android、iOS", "APP").
-                        replace("iOS、Android", "APP")+"可用");
+                coupon.setCouponSystem("限"+clientString.replace("Android/iOS", "APP").
+                        replace("iOS/Android", "APP")+"可用");
             }
 
 
@@ -154,7 +154,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     projectString = projectString + "智投/";
                 }
                 // mod by nxl 智投服务：修改汇计划->智投服务 end
-                projectString = StringUtils.removeEnd(projectString, "/")+" 可用";
+                projectString = StringUtils.removeEnd(projectString, "/")+"可用";
             }
             coupon.setProjectType(projectString);
             if(projectString.indexOf("智投")!=-1 || projectString.indexOf("不限") != -1){
