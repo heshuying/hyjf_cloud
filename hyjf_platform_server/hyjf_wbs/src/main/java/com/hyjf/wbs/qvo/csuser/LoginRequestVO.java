@@ -24,6 +24,9 @@ public class LoginRequestVO {
     @ApiModelProperty(value = "")
     private String env;
 
+    @ApiModelProperty(value = "神策预置属性")
+    private String presetProps;
+
     public String getPlatform() {
         return platform;
     }
@@ -72,4 +75,11 @@ public class LoginRequestVO {
         this.env = env;
     }
 
+    public String getPresetProps() {
+        return presetProps;
+    }
+
+    public void setPresetProps(String presetProps) {
+        this.presetProps = presetProps;
+    }
 }

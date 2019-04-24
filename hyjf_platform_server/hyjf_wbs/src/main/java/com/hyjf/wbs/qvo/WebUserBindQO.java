@@ -27,6 +27,9 @@ public class WebUserBindQO {
     @ApiModelProperty(value = "财富端客户id")
     private String customerId;
 
+    @ApiModelProperty(value = "神策预置属性")
+    private String presetProps;
+
 
     public String getLoginUserName() {
         return loginUserName;
@@ -66,5 +69,13 @@ public class WebUserBindQO {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    public String getPresetProps() {
+        return presetProps;
+    }
+
+    public void setPresetProps(String presetProps) {
+        this.presetProps = presetProps;
     }
 }

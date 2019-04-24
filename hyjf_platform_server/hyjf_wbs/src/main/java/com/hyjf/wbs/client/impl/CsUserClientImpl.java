@@ -58,7 +58,7 @@ public class CsUserClientImpl implements CsUserClient {
 
 	@Override
 	public WechatUserBindVO wechatLogin(String userName, String password) {
-		String url = userService+"//hyjf-wechat/wx/login/doLogin.do?userName="+userName+"&password="+password+"&env=1";
+		String url = userService+"/hyjf-wechat/wx/login/doLogin.do?userName="+userName+"&password="+password+"&env=1";
 		LoginResultBean loginResultBean=restTemplate.postForEntity(url,null,LoginResultBean.class).getBody();
 		if(loginResultBean!=null){
 			if(ResultEnum.SUCCESS.getStatus().equals(loginResultBean.getStatus())){

@@ -5,7 +5,8 @@ package com.hyjf.wbs.user.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.hyjf.wbs.qvo.WbsUserAuthorizeVO;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
-import com.hyjf.wbs.qvo.WbsUserAuthInfo;
-import com.hyjf.wbs.qvo.WebUserBindQO;
 import com.hyjf.wbs.user.service.WbsUserService;
 
 import io.swagger.annotations.Api;
@@ -83,6 +82,19 @@ public class WbsWebUserController {
 
 		return result;
 
+	}
+
+	@ApiOperation(value = "PC 纳觅端重定向接口",notes = "PC 纳觅端重定向接口")
+	@ResponseBody
+	@RequestMapping(value = "redirect")
+	public BaseResult redirect(HttpServletRequest request, @RequestBody WbsRedirectQO qo){
+		BaseResult result=new BaseResult();
+
+		WebUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request));
+
+		result.setData(webUserBindVO);
+
+		return result;
 	}
 
 

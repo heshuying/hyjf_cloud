@@ -2,9 +2,7 @@ package com.hyjf.wbs.user.service;
 
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
-import com.hyjf.wbs.qvo.WbsUserAuthInfo;
-import com.hyjf.wbs.qvo.WebUserBindQO;
-import com.hyjf.wbs.qvo.WechatUserBindQO;
+import com.hyjf.wbs.qvo.*;
 
 /**
  * @author cui
@@ -39,4 +37,6 @@ public interface WbsUserService {
      * @param result
      */
     void wechatBind(WechatUserBindQO wechatUserBindQO, BaseResult result);
+
+    WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr);
 }
