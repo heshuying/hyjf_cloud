@@ -184,8 +184,8 @@ public class WechatBankWithdrawController extends BaseTradeController {
     @PostMapping("/userBankWithdrawCheck.do")
     public WeChatResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign, HttpServletRequest request) {
         // 交易金额
-        String transAmt = request.getParameter("transAmt");
-        WebResult<Object> webResult =  bankWithdrawService.userBankWithdrawCheck(userId, transAmt);
+        String withdrawMoney = request.getParameter("withdrawMoney");
+        WebResult<Object> webResult =  bankWithdrawService.userBankWithdrawCheck(userId, withdrawMoney);
         WeChatResult<Object> objectWebResult = new WeChatResult<Object>();
         objectWebResult.setData(webResult.getData());
         return objectWebResult;
