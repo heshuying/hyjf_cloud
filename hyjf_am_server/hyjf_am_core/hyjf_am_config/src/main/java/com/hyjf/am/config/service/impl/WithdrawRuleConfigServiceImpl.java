@@ -37,6 +37,10 @@ public class WithdrawRuleConfigServiceImpl extends BaseServiceImpl implements Wi
         Integer userType = request.getUserType();
         // 是否是节假日
         Integer isHoliday = request.getIsHoliday();
+
+        logger.info("withdrawMoney:" + withdrawMoney);
+        logger.info("userType:" + userType);
+        logger.info("isHoliday:" + isHoliday);
         // 提现时间
         String withdrawTime = GetDate.formatShortTimehhmmss();
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
