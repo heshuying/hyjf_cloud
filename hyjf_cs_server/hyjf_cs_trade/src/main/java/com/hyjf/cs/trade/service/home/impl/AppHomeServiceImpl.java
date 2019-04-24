@@ -22,6 +22,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseClient;
@@ -636,7 +637,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setBorrowUrl(appHomePageCustomize.getBorrowUrl());
         project.setBorrowName(appHomePageCustomize.getBorrowName());
         project.setBorrowType(appHomePageCustomize.getBorrowType());
-        project.setBorrowApr(appHomePageCustomize.getBorrowApr());
+        project.setBorrowApr( FormatRateUtil.formatBorrowApr(appHomePageCustomize.getBorrowApr()));
         project.setBorrowPeriod(appHomePageCustomize.getBorrowTheSecondDesc() + appHomePageCustomize.getBorrowTheSecond());
         project.setBorrowDesc(appHomePageCustomize.getBorrowDesc());
         project.setButtonText(appHomePageCustomize.getStatusName());
@@ -722,8 +723,8 @@ public class AppHomeServiceImpl implements AppHomeService {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 appProjectListCustomize.setStatus(entity.getStatus());
                 appProjectListCustomize.setBorrowName(entity.getPlanName());
-                appProjectListCustomize.setPlanApr(entity.getPlanApr());
-                appProjectListCustomize.setBorrowApr(entity.getPlanApr());
+                appProjectListCustomize.setPlanApr( FormatRateUtil.formatBorrowApr(entity.getPlanApr()));
+                appProjectListCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(entity.getPlanApr()));
                 appProjectListCustomize.setPlanPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setBorrowPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setAvailableInvestAccount(entity.getAvailableInvestAccount());
@@ -767,7 +768,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowDesc("计划");
             homePageCustomize.setBorrowDesc(listCustomize.getBorrowDesc());
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
-            homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             // mod by nxl 智投服务 计划的历史回报率->参考年回报率
 //			homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
             homePageCustomize.setBorrowTheFirstDesc("参考年回报率");
@@ -787,7 +788,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
 
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
-            homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             String status = listCustomize.getStatus();
             homePageCustomize.setTitle("推荐服务");
@@ -860,7 +861,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             // 产品加息
             homePageCustomize.setBorrowExtraYield(listCustomize.getBorrowExtraYield());
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
-            homePageCustomize.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
             homePageCustomize.setBorrowTheSecond(listCustomize.getBorrowPeriod());
             homePageCustomize.setBorrowTheSecondDesc("项目期限");
@@ -878,7 +879,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             String statusNameDesc = String.valueOf(listCustomize.getBorrowAccountWait());
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
-            homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
+            homePageCustomize.setBorrowApr((listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             homePageCustomize.setStatus(listCustomize.getStatus());
             homePageCustomize.setOnTime(listCustomize.getOnTime());
@@ -1153,7 +1154,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                     list.add(project);
                 }
                 info.put("sprogExist", "1");
-                info.put("sprogBorrowApr", project.getBorrowApr());
+                info.put("sprogBorrowApr", FormatRateUtil.formatBorrowApr(project.getBorrowApr()));
                 info.put("sprogBorrowPeriod", project.getBorrowPeriod());
                 String balance = project.getBorrowAccountWait();//add by cwyang 根据borrowNid 获取项目可投金额
                 info.put("sprogBorrowMoney", balance);//新手标取得是可投余额不是出借总额 add by cwyang
