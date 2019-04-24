@@ -503,8 +503,8 @@
 		<result column="leaveReinvestAccount" property="leaveReinvestAccount" jdbcType="DECIMAL"/>
 	</resultMap>
 	<select id="getPlanCapitalActualformaList" resultMap="selectPlanCapitalActualMap" parameterType="String">
-		SELECT hp.id as id
-		, STR_TO_DATE(#{date}, '%Y-%m-%d') as date
+		SELECT -- hp.id as id,
+		  STR_TO_DATE(#{date}, '%Y-%m-%d') as date
 		, hp.plan_nid as plan_nid
 		, hp.plan_name as plan_name
 		, hp.lock_period as lock_period
