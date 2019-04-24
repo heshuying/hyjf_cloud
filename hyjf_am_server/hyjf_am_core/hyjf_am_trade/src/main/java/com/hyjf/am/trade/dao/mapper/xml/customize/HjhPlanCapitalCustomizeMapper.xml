@@ -476,4 +476,124 @@
 			`date`,
 			plan_nid
 	</select>
+
+	<!--汇计划资本按天统计及预估表列表  -->
+	<resultMap id="selectPlanCapitalActualMap" type="com.hyjf.am.vo.trade.HjhPlanCapitalActualVO">
+		<id column="id" property="id" jdbcType="INTEGER"/>
+		<result column="date" property="date" jdbcType="DATE"/>
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR"/>
+		<result column="plan_name" property="planName" jdbcType="VARCHAR"/>
+		<result column="lock_period" property="lockPeriod" jdbcType="TINYINT"/>
+		<result column="is_month" property="isMonth" jdbcType="TINYINT"/>
+		<!--当日新增债转额-->
+		<result column="addCreditAccount" property="addCreditAccount" jdbcType="DECIMAL"/>
+		<!--当日发起债转额:当日已承接+当日未承接-->
+		<result column="createCreditAccount" property="createCreditAccount" jdbcType="DECIMAL"/>
+		<!--当日已承接债转额-->
+		<result column="usedCreditAccount" property="usedCreditAccount" jdbcType="DECIMAL"/>
+		<!--当日未承接额-->
+		<result column="leaveCreditAccount" property="leaveCreditAccount" jdbcType="DECIMAL"/>
+		<!--当日新增复投额:当日可复投额-昨日未复投额-->
+		<result column="addReinvestAccount" property="addReinvestAccount" jdbcType="DECIMAL"/>
+		<!--当日可复投额:当日已复投额+当日未复投额-->
+		<result column="sumReinvestAccount" property="sumReinvestAccount" jdbcType="DECIMAL"/>
+		<!--当日已复投额-->
+		<result column="usedReinvestAccount" property="usedReinvestAccount" jdbcType="DECIMAL"/>
+		<!--当日未复投额-->
+		<result column="leaveReinvestAccount" property="leaveReinvestAccount" jdbcType="DECIMAL"/>
+	</resultMap>
+	<select id="getPlanCapitalActualformaList" resultMap="selectPlanCapitalActualMap" parameterType="String">
+		SELECT hp.id as id
+		, STR_TO_DATE(#{date}, '%Y-%m-%d') as date
+		, hp.plan_nid as plan_nid
+		, hp.plan_name as plan_name
+		, hp.lock_period as lock_period
+		, hp.is_month as is_month
+		, IFNULL(lca.leaveCreditAccount, 0) as leaveCreditAccount -- 当日未承接债转额
+		, IFNULL(uca.usedCreditAccount, 0) as usedCreditAccount -- 当日已承接债转额
+		, IFNULL(lca.leaveCreditAccount, 0) + IFNULL(uca.usedCreditAccount, 0) as createCreditAccount -- 当日发起债转额 = 当日已承接+当日未承接
+		-- , IFNULL(acat.addCreditAccount, 0) -- 当日新增债转额的当日已承接
+		-- , IFNULL(aca.addCreditAccount, 0) -- 当日新增债转额的当日未承接
+		, IFNULL(acat.addCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) as addCreditAccount -- 当日新增债转额
+		, IFNULL(invest.notDoubleThrowtAccount, 0) as leaveReinvestAccount -- 当日未复投额
+		, IFNULL(assign.yesDoubleThrowtAccount, 0) as usedReinvestAccount -- 当日已复投额
+		FROM ht_hjh_plan hp
+		LEFT JOIN (
+		SELECT dc.plan_nid, SUM(dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned) AS leaveCreditAccount
+		FROM ht_hjh_debt_credit dc
+		WHERE dc.create_time <![CDATA[>]]> STR_TO_DATE(CONCAT(#{date}, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')
+		AND dc.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+		GROUP BY dc.plan_nid
+		) lca
+		ON hp.plan_nid = lca.plan_nid
+		LEFT JOIN (
+		SELECT dct.assign_plan_nid, SUM(dct.assign_pay) AS usedCreditAccount
+		FROM ht_hjh_debt_credit_tender dct
+		WHERE dct.create_time <![CDATA[>]]> STR_TO_DATE(CONCAT(#{date}, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')
+		AND dct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+		GROUP BY dct.assign_plan_nid
+		) uca
+		ON uca.assign_plan_nid = hp.plan_nid
+		LEFT JOIN (
+		SELECT dct.assign_plan_nid, SUM(dct.assign_pay) AS addCreditAccount
+		FROM ht_hjh_debt_credit_tender dct
+		INNER JOIN ht_hjh_debt_credit dc ON dct.credit_nid = dc.credit_nid
+		INNER JOIN ht_hjh_accede ha
+		ON ha.accede_order_id = dc.plan_order_id
+		AND ha.acctual_payment_time <![CDATA[>]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 00:00:00'))
+		AND ha.acctual_payment_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 23:59:59'))
+		GROUP BY dct.assign_plan_nid
+		) acat
+		ON acat.assign_plan_nid = hp.plan_nid
+		LEFT JOIN (
+		SELECT dc.plan_nid, SUM(dc.liquidation_fair_value - dc.credit_capital_assigned - dc.credit_interest_advance_assigned) AS addCreditAccount
+		FROM ht_hjh_debt_credit dc
+		INNER JOIN ht_hjh_accede ha ON ha.accede_order_id = dc.plan_order_id
+		WHERE ha.acctual_payment_time <![CDATA[>]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 00:00:00'))
+		AND ha.acctual_payment_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{date}, ' 23:59:59'))
+		GROUP BY dc.plan_nid
+		) aca
+		ON aca.plan_nid = hp.plan_nid
+		LEFT JOIN (
+		-- 当日未复投额
+		SELECT de.plan_nid, SUM(de.available_invest_account) AS notDoubleThrowtAccount
+		FROM ht_hjh_accede de
+		WHERE de.order_status = '3'
+		AND de.available_invest_account >= 10
+		AND DATEDIFF(FROM_UNIXTIME(de.quit_time, '%Y-%m-%d %H:%i:%s'), CURDATE()) > 3
+		GROUP BY de.plan_nid
+		) invest
+		ON invest.plan_nid = hp.plan_nid
+		LEFT JOIN (
+		-- 当日已复投额
+		SELECT p.plan_nid
+		, IFNULL(accede.account, 0) + IFNULL(tender.assign_pay, 0) AS yesDoubleThrowtAccount
+		FROM ht_hjh_plan p
+		LEFT JOIN (
+		-- 查询投资金额
+		SELECT d.plan_nid -- , DATE_FORMAT(r.create_time, '%Y-%m-%d') AS create_time
+		, SUM(r.account) AS account
+		FROM ht_borrow_tender r
+		LEFT JOIN ht_hjh_accede d ON r.accede_order_id = d.accede_order_id
+		WHERE r.tender_type = '1' -- AND DATE_FORMAT(r.create_time, '%Y-%m-%d') = '2018-11-08'
+		AND r.create_time <![CDATA[>]]> STR_TO_DATE(CONCAT(#{date}, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')
+		AND r.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+		GROUP BY d.plan_nid -- , DATE_FORMAT(r.create_time, '%Y-%m-%d')
+		) accede
+		ON p.plan_nid = accede.plan_nid
+		LEFT JOIN (
+		-- 查询实际支付金额
+		SELECT ct.assign_plan_nid -- , DATE_FORMAT(ct.create_time, '%Y-%m-%d') AS assign_time
+		, SUM(ct.assign_pay) AS assign_pay
+		FROM ht_hjh_debt_credit_tender ct
+		WHERE ct.tender_type = 1 -- AND DATE_FORMAT(ct.create_time, '%Y-%m-%d') = '2018-11-05'
+		AND ct.create_time <![CDATA[>]]> STR_TO_DATE(CONCAT(#{date}, ' 00:00:00'), '%Y-%m-%d %H:%i:%s')
+		AND ct.create_time <![CDATA[<=]]> STR_TO_DATE(CONCAT(#{date}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+		GROUP BY ct.assign_plan_nid -- , DATE_FORMAT(ct.create_time, '%Y-%m-%d')
+		) tender
+		ON p.plan_nid = tender.assign_plan_nid
+		) assign
+		ON assign.plan_nid = hp.plan_nid
+		WHERE IFNULL(lca.leaveCreditAccount, 0) + IFNULL(uca.usedCreditAccount, 0) + IFNULL(acat.addCreditAccount, 0) + IFNULL(aca.addCreditAccount, 0) + IFNULL(invest.notDoubleThrowtAccount, 0) + IFNULL(assign.yesDoubleThrowtAccount, 0) <![CDATA[<>]]> 0
+	</select>
 </mapper>
