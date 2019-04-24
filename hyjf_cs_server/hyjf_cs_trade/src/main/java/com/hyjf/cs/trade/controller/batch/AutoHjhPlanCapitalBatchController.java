@@ -22,8 +22,8 @@ public class AutoHjhPlanCapitalBatchController {
     @Autowired
     private AutoHjhPlanCapitalService autoHjhPlanCapitalService;
 
-    @RequestMapping("/autoCapitalActualPrediction")
-    public void autoCapitalnPrediction() {
+    @RequestMapping("/autoCapitalPrediction")
+    public void autoCapitalPrediction() {
         // 计算预计
         autoHjhPlanCapitalService.autoCapitalPrediction();
     }
