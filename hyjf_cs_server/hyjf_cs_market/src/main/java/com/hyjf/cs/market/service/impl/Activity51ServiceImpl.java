@@ -133,6 +133,11 @@ public class Activity51ServiceImpl implements Activity51Service {
 	private boolean isUserTenderEnough(int userId) {
 		initActivityTime();
 		BigDecimal tenderAmount = amTradeClient.getUserTender(userId, activityStartDate, activityEndDate);
+		if (tenderAmount != null) {
+			logger.info("用户{}出借金额: {}", userId, tenderAmount);
+		} else {
+			logger.warn("用户{}出借金额查询异常...", userId);
+		}
 		return tenderAmount == null || tenderAmount.compareTo(USER_ANNUAL_INVEST_STANDARD) < 0 ? false : true;
 	}
 
