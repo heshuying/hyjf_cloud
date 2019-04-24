@@ -84,7 +84,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
 
             // 业务参数
             Map<String, String> jsonMap = new HashMap<String, String>();
-            jsonMap.put("sourceId", "1");
+            jsonMap.put("assetId", "1");
             jsonMap.put("h5linkUrl", H5linkUrl);
             jsonMap.put("linkUrl", linkUrl);
             jsonMap.put("productName", productName);

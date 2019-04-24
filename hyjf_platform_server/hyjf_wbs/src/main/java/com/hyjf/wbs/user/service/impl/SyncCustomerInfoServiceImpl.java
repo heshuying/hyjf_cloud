@@ -67,7 +67,7 @@ public class SyncCustomerInfoServiceImpl extends BaseServiceImpl implements Sync
         Map map = jasonObject;
         if (map != null && WbsConstants.WBS_RESPONSE_STATUS_SUCCESS
                 .equals(String.valueOf(map.get(WbsConstants.WBS_RESPONSE_STATUS_KEY)))) {
-            logger.info("====<<客户信息同步到WBS财富管理系统>>:推送成功[{}],推送结果=====", jasonObject);
+            logger.info("====<<客户信息同步到WBS财富管理系统>>:推送成功[{}]=====", jasonObject);
 
             return;
         } else {
