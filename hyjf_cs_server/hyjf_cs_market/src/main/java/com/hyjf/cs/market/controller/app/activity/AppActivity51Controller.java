@@ -48,8 +48,7 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     @RequestMapping(value = "/sumAmount", method = RequestMethod.GET)
     public BaseResult<Activity51VO> getSumAmount() {
         logger.info("app端-查询活动期间当前累计出借金额...");
-        // h5返回00才能去到jumpcommand
-        return getSumAmount(H5_SUCCESS_STATUS, H5_SUCCESS_STATUS);
+        return getSumAmount(H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 
     /**
