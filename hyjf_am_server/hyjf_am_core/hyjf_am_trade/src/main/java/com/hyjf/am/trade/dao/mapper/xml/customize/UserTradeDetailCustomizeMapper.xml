@@ -252,6 +252,9 @@
 		<result column="tradeYear" property="tradeYear" jdbcType="VARCHAR" />
 		<result column="tradeMonth" property="tradeMonth" jdbcType="VARCHAR" />
 		<result column="bankBalance" property="bankBalance" jdbcType="VARCHAR" />
+		<result column="trade" property="trade" jdbcType="VARCHAR"/>
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR"/>
 	</resultMap>
 	<select id="searchAppTradeDetailList" resultMap="AppUserTradeListMap" parameterType="Map" >
 		SELECT
@@ -310,7 +313,10 @@
 		ELSE
 		SUBSTRING(FORMAT(hydal.amount,4),1,LENGTH(FORMAT(hydal.amount,4))-2)
 		END AS account,
-		hydal.is_bank
+		hydal.is_bank,
+		hydal.trade,
+		hydal.nid,
+		hydal.accede_order_id
 		FROM
 		ht_account_list hydal
 		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
@@ -328,5 +334,16 @@
 		ht_account_list hydal
 		LEFT JOIN ht_account_trade hydat ON hydal.trade = hydat.`value` AND hydat.`status` = 1
 		<include refid="Where_Clause_Trade_List" />
+	</select>
+
+	<select id="getPlanNameByAccedeOrderId" resultType="java.lang.String">
+		SELECT
+			hp.plan_name
+		FROM
+			ht_hjh_accede ha
+		LEFT JOIN
+			ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
+		WHERE
+			ha.accede_order_id = #{accedeOrderId}
 	</select>
 </mapper>
