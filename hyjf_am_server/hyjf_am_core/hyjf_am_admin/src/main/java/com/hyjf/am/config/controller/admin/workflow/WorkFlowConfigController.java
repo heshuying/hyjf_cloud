@@ -38,7 +38,7 @@ public class WorkFlowConfigController extends BaseConfigController {
      */
     @PostMapping("/init")
     public WorkFlowConfigResponse selectWorkFlowConfigList(@RequestBody WorkFlowConfigRequest adminRequest) {
-        logger.info("工作流查询查询业务流程配置..." + JSONObject.toJSON(adminRequest));
+        logger.info("工作流查询查询业务流程配置..." + JSONObject.toJSONString(adminRequest));
         WorkFlowConfigResponse response = new WorkFlowConfigResponse();
         int count = workFlowConfigService.countWorkFlowConfigList(adminRequest);
         if(count>0){
@@ -49,7 +49,7 @@ public class WorkFlowConfigController extends BaseConfigController {
             }
             response.setCount(count);
         }
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         return response;
     }
 
@@ -60,7 +60,7 @@ public class WorkFlowConfigController extends BaseConfigController {
      */
     @PostMapping("/insert")
     public BooleanResponse insertWorkFlowConfig( @RequestBody WorkFlowVO workFlowVO) {
-        logger.info("添加业务流程..." + JSONObject.toJSON(workFlowVO));
+        logger.info("添加业务流程..." + JSONObject.toJSONString(workFlowVO));
         BooleanResponse response = new BooleanResponse();
 
         //校验业务id对应的业务流程是否存在
@@ -144,7 +144,7 @@ public class WorkFlowConfigController extends BaseConfigController {
      */
     @PostMapping("/update")
     public BooleanResponse updateWorkFlowConfig( @RequestBody WorkFlowVO workFlowVO) {
-        logger.info("修改业务流程,请求参数workFlowVO：" + JSONObject.toJSON(workFlowVO));
+        logger.info("修改业务流程,请求参数workFlowVO：" + JSONObject.toJSONString(workFlowVO));
         BooleanResponse response = new BooleanResponse();
 
         //校验业务id对应的业务流程是否存在

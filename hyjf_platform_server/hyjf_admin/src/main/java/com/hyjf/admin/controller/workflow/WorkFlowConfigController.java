@@ -48,9 +48,9 @@ public class WorkFlowConfigController  extends BaseController {
     @PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult selectWorkFlowConfigList(HttpServletRequest request, @RequestBody WorkFlowConfigRequest adminRequest) {
-        logger.info("工作流查询查询业务流程配置..." + JSONObject.toJSON(adminRequest));
+        logger.info("工作流查询查询业务流程配置..." + JSONObject.toJSONString(adminRequest));
         WorkFlowConfigResponse response = workFlowConfigService.selectWorkFlowConfigList(adminRequest);
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -64,7 +64,7 @@ public class WorkFlowConfigController  extends BaseController {
     @PostMapping("/insert")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
-        logger.info("工作流添加业务流程配置..." + JSONObject.toJSON(workFlowVO));
+        logger.info("工作流添加业务流程配置..." + JSONObject.toJSONString(workFlowVO));
         workFlowVO.setUpdateUser(this.getUser(request).getTruename());
 //         workFlowVO.setUpdateUser("管理员");
         //校验请求参数
@@ -76,7 +76,7 @@ public class WorkFlowConfigController  extends BaseController {
 
         //添加业务流程
         BooleanResponse response =workFlowConfigService.insertWorkFlowConfig(workFlowVO);
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -96,7 +96,7 @@ public class WorkFlowConfigController  extends BaseController {
         }
         //查询业务流程详情页面
         WorkFlowConfigResponse response =workFlowConfigService.selectWorkFlowConfigInfo(workFlowVO.getId());
-        logger.debug("查询业务流程详情页面，response：" + JSONObject.toJSON(response));
+        logger.debug("查询业务流程详情页面，response：" + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -110,7 +110,7 @@ public class WorkFlowConfigController  extends BaseController {
     @PostMapping("/update")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
     public AdminResult updateWorkFlowConfig( HttpServletRequest request,@RequestBody WorkFlowVO workFlowVO) {
-        logger.info("工作流修改业务流程配置..." + JSONObject.toJSON(workFlowVO));
+        logger.info("工作流修改业务流程配置..." + JSONObject.toJSONString(workFlowVO));
         workFlowVO.setUpdateUser(this.getUser(request).getTruename());
 //        workFlowVO.setUpdateUser("管理员");
         //校验请求参数
@@ -126,7 +126,7 @@ public class WorkFlowConfigController  extends BaseController {
 
         //修改业务流程
         BooleanResponse response =workFlowConfigService.updateWorkFlowConfig(workFlowVO);
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -149,7 +149,7 @@ public class WorkFlowConfigController  extends BaseController {
 
         //修改业务流程
         BooleanResponse response =workFlowConfigService.deleteWorkFlowConfigById(workFlowVO.getId());
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -168,7 +168,7 @@ public class WorkFlowConfigController  extends BaseController {
             return new AdminResult<>(FAIL, "业务名称的id不能是空");
         }
         BooleanResponse response = workFlowConfigService.selectWorkFlowConfigByBussinessId(adminRequest);
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -183,7 +183,7 @@ public class WorkFlowConfigController  extends BaseController {
     public AdminResult selectUser( @RequestBody WorkFlowUserVO workFlowUserVO) {
         logger.info("查询邮件预警人，userName:" + workFlowUserVO.getUsername());
         WorkFlowUserResponse response = workFlowConfigService.selectUser(workFlowUserVO);
-        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询查询业务流程配置..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -198,7 +198,7 @@ public class WorkFlowConfigController  extends BaseController {
     public AdminResult selectWorkFlowRoleList(@RequestBody AdminRoleRequest form) {
         logger.info("工作流查询所有角色..." );
         AdminRoleResponse response = workFlowConfigService.selectWorkFlowRoleList();
-        logger.debug("工作流查询所有角色..." + JSONObject.toJSON(response));
+        logger.debug("工作流查询所有角色..." + JSONObject.toJSONString(response));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
