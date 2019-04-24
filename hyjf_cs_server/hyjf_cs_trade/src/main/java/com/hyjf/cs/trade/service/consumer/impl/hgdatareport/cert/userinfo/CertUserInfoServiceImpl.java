@@ -152,7 +152,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             // 投资人
             userIdcard = usersInfo.getIdcard();
             // 用户所属地
-            userAscription = tool.getIdcardAscription(userIdcard);
+           // userAscription = tool.getIdcardAscription(userIdcard);
             //userAge = tool.getAge(userIdcard);
             userSex = tool.getSex(userIdcard);
             //phoneAscription = tool.getPhoneAscription(item.getMobile());
@@ -193,7 +193,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
                 // 身份证号
                 userIdcard = borrowManinfo.getCardNo();
                 // 用户所属地
-                userAscription = tool.getIdcardAscription(userIdcard);
+                //userAscription = tool.getIdcardAscription(userIdcard);
                // userAge = tool.getAge(userIdcard);
                 userSex = tool.getSex(userIdcard);
                 //phoneAscription = tool.getPhoneAscription(item.getMobile());
@@ -284,7 +284,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 注册人邮箱 userMail  不报送
         //param.put("userMail", "-");
         // 用户所属地 自然人属性用户类型（userType）=1必填 使用SDK工具包中getIdcardAscription方法生成的行政区号，6位数字。如：110112表示北京东城区。用户类型（userType）=2填写-1
-        param.put("userAscription", userAscription);
+        //param.put("userAscription", userAscription);
         // 用户年龄  自然人属性 用户类型（userType）=1必填 使用工具包中getAge方法生成的值。用户类型（userType）=2填写-1
         // param.put("userAge", userAge);
         // 用户性别 自然人属性 用户类型（userType）=1必填 使用工具包中getSex方法生成的值，1：男；0：女。 用户类型（userType）=2,填写-1
