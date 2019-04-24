@@ -164,7 +164,9 @@ public class WorkFlowConfigServiceImpl implements WorkFlowConfigService {
 
                         //trueNameMap 放入 删除或禁用的用户姓名
                         if(trueNameMap.containsKey(vo.getWorkflowid())){
-                            trueNameMap.put(vo.getWorkflowid(),trueNameMap.get(vo.getWorkflowid()) + "、" + vo.getTruename());
+                            if(!trueNameMap.get(vo.getWorkflowid()).contains(vo.getTruename())){
+                                trueNameMap.put(vo.getWorkflowid(),trueNameMap.get(vo.getWorkflowid()) + "、" + vo.getTruename());
+                            }
                         }else{
                             trueNameMap.put(vo.getWorkflowid(),vo.getTruename());
                         }
