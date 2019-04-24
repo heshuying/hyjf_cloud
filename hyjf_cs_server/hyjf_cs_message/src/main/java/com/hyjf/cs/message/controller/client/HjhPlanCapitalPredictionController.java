@@ -119,11 +119,15 @@ public class HjhPlanCapitalPredictionController extends BaseController {
             List<HjhPlanCapitalPredictionVO> hjhPlanCapitalVOList = CommonUtils.convertBeanList(recordList, HjhPlanCapitalPredictionVO.class);
 
             for(HjhPlanCapitalPredictionVO vo: hjhPlanCapitalVOList) {
-                // 为服务回报期限 添加单位
-                if (vo.getIsMonth() == 0) {
-                    vo.setLockPeriodView(vo.getLockPeriod() + "天");
+                if(null != vo.getIsMonth()) {
+                    // 为服务回报期限 添加单位
+                    if (vo.getIsMonth() == 0) {
+                        vo.setLockPeriodView(vo.getLockPeriod() + "天");
+                    } else {
+                        vo.setLockPeriodView(vo.getLockPeriod() + "个月");
+                    }
                 } else {
-                    vo.setLockPeriodView(vo.getLockPeriod() + "个月");
+                    vo.setLockPeriodView(vo.getLockPeriod() + "");
                 }
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 vo.setStringDate(formatter.format(vo.getDate()));

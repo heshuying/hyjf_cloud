@@ -144,10 +144,14 @@ public class HjhPlanCapitalActualController extends BaseController {
 
             for(HjhPlanCapitalActualVO vo: hjhPlanCapitalVOList) {
                 // 为服务回报期限 添加单位
-                if (vo.getIsMonth() == 0) {
-                    vo.setLockPeriodView(vo.getLockPeriod() + "天");
+                if(null != vo.getIsMonth()) {
+                    if (vo.getIsMonth() == 0) {
+                        vo.setLockPeriodView(vo.getLockPeriod() + "天");
+                    } else {
+                        vo.setLockPeriodView(vo.getLockPeriod() + "个月");
+                    }
                 } else {
-                    vo.setLockPeriodView(vo.getLockPeriod() + "个月");
+                    vo.setLockPeriodView(vo.getLockPeriod() + "");
                 }
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 vo.setStrDate(formatter.format(vo.getDate()));
