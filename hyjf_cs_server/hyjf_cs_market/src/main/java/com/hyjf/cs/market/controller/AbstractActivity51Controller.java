@@ -4,6 +4,7 @@ import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import com.hyjf.cs.market.service.Activity51Service;
 import com.hyjf.cs.market.vo.Activity51VO;
+import com.hyjf.cs.market.vo.ActivityTimeVO;
 import com.hyjf.cs.market.vo.GuessVO;
 import com.hyjf.cs.market.vo.RewardReceiveVO;
 import org.slf4j.Logger;
@@ -41,9 +42,30 @@ public class AbstractActivity51Controller {
     @Autowired
     protected Activity51Service activity51Service;
 
+    protected BaseResult<ActivityTimeVO> isActivityTime(String successStatus, String failStatus) {
+        BaseResult<ActivityTimeVO> result = new BaseResult(successStatus, "成功");
+
+        ActivityTimeVO vo = null;
+        switch (activity51Service.isActivityTime()) {
+            case -1:
+                vo = new ActivityTimeVO("N", "活动未开始");
+                break;
+            case 0:
+                vo = new ActivityTimeVO("Y", "活动进行中");
+                break;
+            case 1:
+                vo = new ActivityTimeVO("N", "活动已结束");
+                break;
+            default:
+                throw new RuntimeException("unknown error");
+        }
+        result.setData(vo);
+        return result;
+    }
+
     protected BaseResult<Activity51VO> getSumAmount(String successStatus, String failStatus) {
         BaseResult<Activity51VO> result = new BaseResult(successStatus, "查询成功");
-        if (!activity51Service.isActivityTime()) {
+        if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
         BigDecimal sumAmount = activity51Service.getSumAmount();
@@ -59,7 +81,7 @@ public class AbstractActivity51Controller {
 
     protected BaseResult sendCoupon(int userId, int grade, String successStatus, String failStatus) {
         logger.info("领取优惠券, userId is: {}", userId);
-        if (!activity51Service.isActivityTime()) {
+        if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
@@ -90,7 +112,7 @@ public class AbstractActivity51Controller {
 
     protected BaseResult<RewardReceiveVO> isReceiveCoupon(int userId, int grade, String successStatus, String failStatus) {
         logger.info("单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
-        if (!activity51Service.isActivityTime()) {
+        if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
@@ -112,7 +134,7 @@ public class AbstractActivity51Controller {
 
     protected BaseResult<List<RewardReceiveVO>> getReceiveStatusList(int userId, String successStatus, String failStatus) {
         logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
-        if (!activity51Service.isActivityTime()) {
+        if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
@@ -138,7 +160,7 @@ public class AbstractActivity51Controller {
 
     protected BaseResult guess(int userId, int grade, String successStatus, String failStatus) {
         logger.info("用户竞猜, userId is: {}, grade is: {}", userId, grade);
-        if (!activity51Service.isActivityTime()) {
+        if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
@@ -158,7 +180,7 @@ public class AbstractActivity51Controller {
 
     public BaseResult<GuessVO> isGuess(int userId, String successStatus, String failStatus) {
         logger.info("用户竞猜, userId is: {}", userId);
-        if (!activity51Service.isActivityTime()) {
+        if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 

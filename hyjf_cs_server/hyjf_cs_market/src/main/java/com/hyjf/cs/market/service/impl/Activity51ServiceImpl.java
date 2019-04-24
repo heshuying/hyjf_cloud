@@ -51,14 +51,19 @@ public class Activity51ServiceImpl implements Activity51Service {
 	private Integer activityId;
 
 	@Override
-	public boolean isActivityTime() {
+	public Integer isActivityTime() {
 		initActivityTime();
 
 		Date today = new Date();
-		if (today.compareTo(activityStartDate) == 1 && today.compareTo(activityEndDate) == -1) {
-			return true;
+		if (today.compareTo(activityStartDate) == -1) {
+			return -1;
 		}
-		return false;
+
+		if(today.compareTo(activityEndDate) == 1){
+			return 1;
+		}
+
+		return 0;
 	}
 
 	@Override
