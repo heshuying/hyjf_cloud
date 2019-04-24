@@ -57,7 +57,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         // 判断小于十天且执行时间小于当天23点59分59秒
         for (int i = 1; i <= maxCount; i++) {
             // 循环加一天
-            beginDate = GetDate.countDate(beginDate, 5, i);
+            beginDate = GetDate.countDate(beginDate, 5, 1);
             // 获取当前执行时间的时间戳
             newDate = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.dateToString(GetDate.getDate()));
             // 判断执行时间是否在当天23点59分59秒以内
@@ -92,7 +92,9 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             oneVo.setLockPeriod(hjhPlan.getLockPeriod());
             oneVo.setPlanName(hjhPlan.getPlanName());
             oneVo.setIsMonth(hjhPlan.getIsMonth());
+            oneVo.setPlanNid(hjhPlan.getPlanNid());
             for (HjhPlanCapitalPredictionVO mapList : m.getValue()) {
+                oneVo.setDate(mapList.getDate());
                 // 判断预计当日新增债转额，预计当日新增复投额，预计当日所需资金量，预计当日所需资产量 不为空则放入相同planid的list
                 if (mapList.getCreditAccount() != null && !BigDecimal.ZERO.equals(mapList.getCreditAccount())) {
                     oneVo.setCreditAccount(mapList.getCreditAccount());
@@ -109,6 +111,15 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         // 预计当日新增债转额（元） - 预计当日新增复投额（元） “大于零”  =  预计当日所需资金量    （预计当日所需资产量=0）
         // 预计当日新增复投额（元）- 预计当日新增债转额（元）  “大于零”= 预计当日所需资金量    （预计当日所需资产量=0）
         for(HjhPlanCapitalPredictionVO vo: listReturnStr){
+            // 初始化值将null转换为空
+            if(vo.getCreditAccount() == null){
+                vo.setCreditAccount(BigDecimal.ZERO);
+            }
+            // 初始化值将null转换为空
+            if(vo.getReinvestAccount() == null){
+                vo.setReinvestAccount(BigDecimal.ZERO);
+            }
+            // 计算赋值
             if(vo.getCreditAccount().compareTo(vo.getReinvestAccount()) ==1){
                 vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
                 vo.setAssetAccount(BigDecimal.ZERO);
@@ -142,7 +153,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
         // 判断小于十天且执行时间小于当天23点59分59秒
         for (int i = 1; i <= maxCount; i++) {
             // 循环加一天
-            beginDate = GetDate.countDate(beginDate, 5, i);
+            beginDate = GetDate.countDate(beginDate, 5, 1);
             // 获取当前执行时间的时间戳
             newDate = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.dateToString(GetDate.getDate()));
             // 判断执行时间是否在当天23点59分59秒以内
