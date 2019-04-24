@@ -97,7 +97,7 @@ public class LoginController extends BaseController {
 			return new AdminResult<>(FAIL, prs.getMessage());
 		}
 		String uuid=UUID.randomUUID().toString();
-		RedisUtils.set(RedisConstants.ADMIN_REQUEST+username, uuid, 3600);
+		RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID+username, uuid, 3600);
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + username);
 		this.setUser(request, prs.getResult());
