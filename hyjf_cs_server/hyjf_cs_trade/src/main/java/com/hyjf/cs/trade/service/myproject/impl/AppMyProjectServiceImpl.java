@@ -27,6 +27,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
@@ -213,9 +214,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         List<BorrowDetailBean> borrowBeansList = new ArrayList<>();
         // 如果加息的展示加息部分
         if (isIncrease != null && "1" .equals(isIncrease)) {
-            preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowExtraYield() + "%");
+            preckCredit(borrowBeansList, "历史年回报率", FormatRateUtil.formatBorrowApr(borrow.getBorrowExtraYield()) + "%");
         } else {
-            preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowApr() + "%");
+            preckCredit(borrowBeansList, "历史年回报率", FormatRateUtil.formatBorrowApr(borrow.getBorrowApr()) + "%");
         }
 
         //preckCredit(borrowBeansList, "历史年回报率", borrow.getBorrowApr() + "%");
