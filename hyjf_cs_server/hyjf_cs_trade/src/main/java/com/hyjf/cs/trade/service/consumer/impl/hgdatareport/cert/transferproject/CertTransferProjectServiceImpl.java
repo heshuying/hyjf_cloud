@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,7 +48,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 
 	@Override
 	public JSONArray createDate(String creditNid,String flag) {
-		
+		DecimalFormat df=new DecimalFormat("##0.000000");
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if("1".equals(flag)){
 			List<BorrowCreditVO> creditList=amTradeClient.getBorrowCreditListByCreditNid(creditNid);
@@ -75,7 +76,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						//原散标编号
 						param.put("sourceProductCode",credit.getBidNid());// 选填
 						//计划转让利率
-						param.put("transferInterestRate",borrowAndInfoVO.getBorrowApr().divide(new BigDecimal(100), 6, RoundingMode.HALF_UP).toString());// 选填
+						param.put("transferInterestRate",df.format(borrowAndInfoVO.getBorrowApr().divide(new BigDecimal(100))));// 选填
 						//计划转让本金(元)
 						param.put("transferAmount", credit.getCreditCapital().toString());
 						//浮动金额   0-(credit_capital*credit_discount/100)
@@ -118,7 +119,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						//原散标编号
 						param.put("sourceProductCode",hjhDebtCredit.getBorrowNid());// 选填
 						//计划转让利率
-						param.put("transferInterestRate",borrowAndInfoVO.getBorrowApr().divide(new BigDecimal(100), 6, RoundingMode.HALF_UP).toString());// 选填
+						param.put("transferInterestRate",df.format(borrowAndInfoVO.getBorrowApr().divide(new BigDecimal(100))));// 选填
 						//计划转让本金(元)
 						param.put("transferAmount", hjhDebtCredit.getCreditCapital().toString());
 						//浮动金额
