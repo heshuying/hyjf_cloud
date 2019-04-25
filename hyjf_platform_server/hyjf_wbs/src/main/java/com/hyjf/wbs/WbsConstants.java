@@ -14,7 +14,7 @@ public interface WbsConstants {
 
     String INTERFACE_NAME_SYNC_CUSTOMER="openapi.customer.bind";
 
-    String INTERFACE_NAME_PASSPORT_AUTHORIZE_="passport.user.authorize";
+    String INTERFACE_NAME_PASSPORT_AUTHORIZE ="passport.user.authorize";
 
     String INTERFACE_NAME_SYNC_PRODUCT_INFO="pdc.product.sync";
 

@@ -16,7 +16,7 @@ public enum RedirectTypeEnum {
         this.url = url;
     }
 
-    RedirectTypeEnum findType(String type){
+    public static RedirectTypeEnum findType(String type){
         for(RedirectTypeEnum s :RedirectTypeEnum.values()){
             if(s.getType().equals(type)){
                 return s;

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.hyjf.wbs"})
+@ComponentScan(basePackages = {"com.hyjf.wbs","com.hyjf.common"})
 public class WbsApplication {
 
 	@Bean

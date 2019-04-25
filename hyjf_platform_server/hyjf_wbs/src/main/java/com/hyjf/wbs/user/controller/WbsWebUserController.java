@@ -6,6 +6,7 @@ package com.hyjf.wbs.user.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +91,7 @@ public class WbsWebUserController {
 	public BaseResult redirect(HttpServletRequest request, @RequestBody WbsRedirectQO qo){
 		BaseResult result=new BaseResult();
 
-		WebUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request));
+		WebUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_PC,qo.getPresetProps());
 
 		result.setData(webUserBindVO);
 

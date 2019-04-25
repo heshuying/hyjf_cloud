@@ -3,9 +3,12 @@
  */
 package com.hyjf.wbs.user.controller;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
-import com.hyjf.wbs.qvo.WbsUserAuthorizeVO;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.wbs.WbsConstants;
+import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
-import com.hyjf.wbs.qvo.WbsUserAuthInfo;
-import com.hyjf.wbs.qvo.WechatUserBindQO;
 import com.hyjf.wbs.user.service.WbsUserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import java.io.IOException;
 
 /**
  * @author cui
@@ -77,5 +80,48 @@ public class WbsWechatUserController {
         return result;
 
     }
+
+    @ApiOperation(value = "Wechat纳觅端重定向接口",notes = "Wechat纳觅端重定向接口")
+    @ResponseBody
+    @RequestMapping(value = "redirect")
+    public BaseResult redirect(HttpServletRequest request, @RequestBody WbsRedirectQO qo){
+        BaseResult result=new BaseResult();
+
+        String presetProps = getStringFromStream(request);
+
+        WebUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_WEI,presetProps);
+
+        result.setData(webUserBindVO);
+
+        return result;
+    }
+
+
+    /**
+     * 从payload里面取神策预置属性,为解决从request里面取乱码的问题
+     *
+     * @param req
+     * @return
+     */
+    private String getStringFromStream(HttpServletRequest req) {
+        ServletInputStream is;
+        try {
+            is = req.getInputStream();
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0)
+                    nTotalRead = nTotalRead + nRead;
+            }
+            String str = new String(bytes, 0, nTotalRead, "utf-8");
+            return str;
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            return "";
+        }
+    }
+
 
 }

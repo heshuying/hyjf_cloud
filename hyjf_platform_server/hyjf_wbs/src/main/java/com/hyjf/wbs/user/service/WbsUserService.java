@@ -38,5 +38,13 @@ public interface WbsUserService {
      */
     void wechatBind(WechatUserBindQO wechatUserBindQO, BaseResult result);
 
-    WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr);
+    /**
+     * 重定向请求
+     * @param qo
+     * @param ipAddr
+     * @param channel
+     * @param presetProps
+     * @return
+     */
+    WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel, String presetProps);
 }

@@ -31,6 +31,7 @@ import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.wbs.WbsConstants;
 import com.hyjf.wbs.client.AmUserClient;
+import com.hyjf.wbs.common.WbsNewBankerSender;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.exceptions.WbsException;
 import com.hyjf.wbs.qvo.*;
@@ -189,7 +190,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 	}
 
 	@Override
-	public WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr) {
+	public WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel,String presetProps) {
 
 		WebUserBindVO vo=new WebUserBindVO();
 
@@ -203,11 +204,11 @@ public class WbsUserServiceImpl implements WbsUserService {
 			throw new CheckException("999","汇盈查询的用户名【"+userVO.getUsername()+"】与newBanker提供的【"+user.getUsername()+"】不一致！");
 		}
 
-		WebViewUserVO webViewUserVO = loginOperationOnly(userVO,user.getUsername(),ipAddr, WbsConstants.CHANNEL_PC);
+		WebViewUserVO webViewUserVO = loginOperationOnly(user,user.getUsername(),ipAddr,channel);
 		if (webViewUserVO != null) {
 			logger.info("web端登录成功 userId is :{}", webViewUserVO.getUserId());
-			if (user != null && StringUtils.isNotBlank(qo.getPresetProps())) {
-				logger.info("Web登录事件,神策预置属性:" + qo.getPresetProps());
+			if (user != null && StringUtils.isNotBlank(presetProps)) {
+				logger.info("Web登录事件,神策预置属性:" + presetProps);
 				try {
 					SensorsDataBean sensorsDataBean = new SensorsDataBean();
 					// 将json串转换成Bean
@@ -237,10 +238,24 @@ public class WbsUserServiceImpl implements WbsUserService {
 				logger.error("保存用户日志失败" , e);
 			}
 			BeanUtils.copyProperties(webViewUserVO,vo);
+			vo.setUserId(String.valueOf(user.getUserId()));
+
+			buildRetUrl(qo,vo);
+			return vo;
 		} else {
 			throw new CheckException(ApiResult.FAIL,"登录失败,账号或密码错误");
 		}
-		return vo;
+	}
+
+	private void buildRetUrl(WbsRedirectQO qo, WebUserBindVO vo) {
+		String type=qo.getType();
+		if(RedirectTypeEnum.BORROW_TYPE.getType().equals(type)){
+			String url=RedirectTypeEnum.BORROW_TYPE.getUrl();
+			vo.setRetUrl(String.format(url,qo.getBorrowNid()));
+		}else{
+			RedirectTypeEnum redirectTypeEnum=RedirectTypeEnum.findType(type);
+			vo.setRetUrl(redirectTypeEnum.getUrl());
+		}
 	}
 
 	private UserVO getCustomerFromNewBanker(WbsRedirectQO qo) {
@@ -249,46 +264,16 @@ public class WbsUserServiceImpl implements WbsUserService {
 		parameter.put("token",qo.getToken());
 		parameter.put("entId",qo.getEntId());
 
-		WbsCommonQO wbsCommonQO = new WbsCommonQO();
-		wbsCommonQO.setApp_key(wbsConfig.getAppKey());
-		wbsCommonQO.setName(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER);
-
-		String dataJson= JSON.toJSONString(parameter);
-		try {
-			wbsCommonQO.setData(URLEncoder.encode(dataJson, "utf-8"));
-		} catch (UnsupportedEncodingException e) {
-			logger.error("为数据【{}】UTF-8编码出错",dataJson);
-			throw new CheckException("999","编码出错！"+e.getMessage());
-		}
-		wbsCommonQO.setAccess_token("");
-		wbsCommonQO.setVersion("");
-
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String nowTime= sdf.format(new Date());
-
-		wbsCommonQO.setTimestamp(nowTime);
-
-		WbsCommonExQO commonExQO=new WbsCommonExQO();
-		BeanUtils.copyProperties(wbsCommonQO,commonExQO);
-		commonExQO.setSign(WbsSignUtil.encrypt(wbsCommonQO,wbsConfig.getAppSecret()));
-
-		String jsonRequest = JSONObject.toJSONString(commonExQO);
-
-		logger.info("【{}】请求数据【{}】",WbsConstants.INTERFACE_NAME_PASSPORT_AUTHORIZE_,jsonRequest);
-
-		String postUrl = wbsConfig.getSyncCustomerUrl();
-
-		String content = HttpClientUtils.postJson(postUrl, jsonRequest);
-
-		logger.info("【{}】返回数据【{}】",WbsConstants.INTERFACE_NAME_PASSPORT_AUTHORIZE_,content);
+		String content=new WbsNewBankerSender(WbsConstants.INTERFACE_NAME_PASSPORT_AUTHORIZE,parameter).send();
 
 		JSONObject jasonObject = JSONObject.parseObject(content);
 		Map map = jasonObject;
 		if (map != null && WbsConstants.WBS_RESPONSE_STATUS_SUCCESS
 				.equals(String.valueOf(map.get(WbsConstants.WBS_RESPONSE_STATUS_KEY)))) {
 			UserVO userVO=new UserVO();
-			userVO.setUserId(Integer.valueOf((Integer) map.get("assetCustomerId")));
-			userVO.setUsername(((JSONObject) map).getString("userName"));
+			Map<String,String> value= (Map<String, String>) map.get("value");
+			userVO.setUserId(Integer.valueOf(value.get("assetCustomerId")));
+			userVO.setUsername(value.get("userName"));
 			return userVO;
 		} else {
 			logger.error("授权登录调接口返回失败！详细信息【{}】", map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY));
