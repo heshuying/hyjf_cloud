@@ -34,7 +34,7 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
 
     Logger logger = LoggerFactory.getLogger(CertLendProductConfigMessageConsumer.class);
 
-    private String thisMessName = "产品配置信息信息推送";
+    private String thisMessName = "产品配置信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
 
     @Autowired
@@ -93,8 +93,9 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
             // --> 调用service组装数据
             JSONArray listRepay = certLendProductConfigService.ProductConfigInfo(assignOrderId,isTender);
             logger.info("数据：" + listRepay.toString());
+            String typeStr = isTender.equals("1")?"承接智投":"加入智投";
+            logger.info(logHeader + "订单编号为：" + assignOrderId+" ，标示为："+isTender+" , "+typeStr);
             if (null == listRepay || listRepay.size() <= 0) {
-                String typeStr = isTender.equals("1")?"承接智投":"加入智投";
                 logger.error(logHeader + "组装参数为空！！！订单编号为：" + assignOrderId+"，标示为："+isTender+","+typeStr);
                 return;
             }

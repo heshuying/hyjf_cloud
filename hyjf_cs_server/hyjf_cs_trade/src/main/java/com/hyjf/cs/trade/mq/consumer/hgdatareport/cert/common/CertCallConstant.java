@@ -33,6 +33,8 @@ public class CertCallConstant implements Serializable {
     public static final String CERT_CALL_LENDPRODUCT_URL = "/p2p/lendProduct";
     //产品配置信息
     public static final String CERT_CALL_LENDPRODUCTCONFIG_URL = "/p2p/lendProductConfig";
+    //投资明细
+    public static final String CERT_CALL_INVEST_DETAIL_URL = "/p2p/lendParticulars";
 
     // 接口地址相关 end
     
