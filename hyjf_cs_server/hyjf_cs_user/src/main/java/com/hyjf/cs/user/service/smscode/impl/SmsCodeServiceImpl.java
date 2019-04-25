@@ -68,7 +68,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             CheckUtil.check(!existUser(mobile), MsgEnum.ERR_USER_NOT_EXISTS);
         }
         if(CommonConstant.PARAM_TPL_DUANXINDENGLU.equals(validCodeType)){
-            CheckUtil.check(existUser(mobile), MsgEnum.ERR_USER_INFO_GET);
+            CheckUtil.check(existUser(mobile), MsgEnum.ERR_USER_NOT_EXISTS);
         }
         if (validCodeType.equals(CommonConstant.PARAM_TPL_YZYSJH) || validCodeType.equals(CommonConstant.PARAM_TPL_BDYSJH)) {
 			if (userId != null) {
