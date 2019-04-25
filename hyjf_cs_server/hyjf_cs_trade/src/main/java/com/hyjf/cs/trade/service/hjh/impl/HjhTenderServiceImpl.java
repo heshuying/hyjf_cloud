@@ -371,7 +371,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             // 计划不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_PLAN_NOT_EXIST);
         }
-        resultVo.setBorrowApr(plan.getExpectApr()+"%");
+        resultVo.setBorrowApr(FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
         PlanDetailCustomizeVO planDetail = amTradeClient.getPlanDetail(planNid);
         resultVo.setPaymentOfInterest("0" + "元");
         // 获取用户最优优惠券
@@ -522,8 +522,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 BigDecimal borrowInterest = earnings.add(couponInterest);
 
                 //备注
-                resultVo.setDesc("历史年回报率:  "+plan.getExpectApr()+"%      历史回报:  " + borrowInterest+"元");
-                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc("历史年回报率:  "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报:  " + borrowInterest+"元");
+                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,borrowInterest) + "元");
 
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null, borrowInterest) + "元");
@@ -548,8 +548,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setCouponDescribe("无可用");
                 }
 
-                resultVo.setDesc("历史年回报率: "+plan.getExpectApr()+"%      历史回报: " + earnings +"元");
-                resultVo.setDesc0("历史年回报率: "+plan.getExpectApr()+"%");
+                resultVo.setDesc("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%      历史回报: " + earnings +"元");
+                resultVo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(plan.getExpectApr().toString())+"%");
                 resultVo.setDesc1("历史回报: " + CommonUtils.formatAmount(null,earnings) + "元");
                 resultVo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings) + "元");
             }
