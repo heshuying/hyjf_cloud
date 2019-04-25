@@ -1206,7 +1206,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
             int cnt = updateCheckMobileCode(userVO.getMobile(), smsCode, CommonConstant.PARAM_TPL_DUANXINDENGLU, channelApp, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
             if (cnt == 0) {
                 ret.put("status", "1");
-                ret.put("statusDesc", "验证码无效");
+                ret.put("statusDesc", "验证码错误");
                 return ret;
             }
         }
