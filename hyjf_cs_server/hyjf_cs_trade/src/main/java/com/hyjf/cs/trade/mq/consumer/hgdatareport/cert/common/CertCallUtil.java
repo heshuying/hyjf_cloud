@@ -212,7 +212,7 @@ public class CertCallUtil implements Serializable {
             return "1";
         }
         if("1".equals(userType+"")){
-            return "-1";
+            return "7";
         }
         return "";
     }
