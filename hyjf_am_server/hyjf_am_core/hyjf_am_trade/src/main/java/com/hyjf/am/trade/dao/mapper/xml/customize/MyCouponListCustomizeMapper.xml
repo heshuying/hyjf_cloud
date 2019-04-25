@@ -51,7 +51,7 @@
 		WHEN 3 THEN
 			FORMAT(cc.coupon_quota, 0)
 		ELSE
-			cc.coupon_quota
+			FORMAT(cc.coupon_quota, 0)
 		END AS coupon_quota,
 		DATE_FORMAT(cu.create_time, '%Y.%m.%d') AS add_time,
 		FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
