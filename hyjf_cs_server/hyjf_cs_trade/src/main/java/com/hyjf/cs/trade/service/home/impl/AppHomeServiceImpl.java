@@ -827,7 +827,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 if(StringUtils.isNotBlank(borrowExtraYield)){
                     borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
                 }
-                homePageCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(borrowExtraYield)));
+                homePageCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(borrowExtraYield));
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());
