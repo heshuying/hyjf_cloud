@@ -165,7 +165,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
             if ("1".equals(borrow.getCompanyOrPersonal())) {
                 // 公司
                 BorrowUserVO borrowUsers = getBorrowUsers(borrow.getBorrowNid());
-                isCompany = true;
+                //isCompany = true;
                 // 统一社会信用代码
                 userIdcard = borrowUsers.getSocialCreditCode();
                 if (borrowUsers.getSocialCreditCode() == null || "".equals(borrowUsers.getSocialCreditCode())) {
