@@ -150,7 +150,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             if (list == null) {
                 list = new ArrayList<>();
             }
-
+            for (int i = 0; i < list.size(); i++) {
+            	list.get(i).setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+            	list.get(i).setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+			}
             result = convertToAppProjectType(list);
             CommonUtils.convertNullToEmptyString(result);
             info.put(ProjectConstant.APP_PROJECT_LIST,result);
@@ -167,6 +170,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 logger.error("app端查询散标出借列表原子层List异常");
                 throw new RuntimeException("app端查询散标出借列表原子层list数据异常");
             }else {
+                for (int i = 0; i < list.size(); i++) {
+                	list.get(i).setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+    			}
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
                 info.put(ProjectConstant.APP_PROJECT_LIST,result);
@@ -1223,11 +1229,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             appProjectType.setBorrowNid(listCustomize.getBorrowNid());
             appProjectType.setBorrowName(listCustomize.getBorrowNid());
             appProjectType.setBorrowDesc(listCustomize.getBorrowDesc());
-            appProjectType.setBorrowTheFirst(listCustomize.getBorrowApr() + "%");
+            appProjectType.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             appProjectType.setBorrowTheFirstDesc("历史年回报率");
             String borrowNid = listCustomize.getBorrowNid();
             String creditNid = borrowNid.substring(3);
-            appProjectType.setBorrowTheSecond(String.valueOf(listCustomize.getCreditDiscount()) + "%");
+            appProjectType.setBorrowTheSecond(FormatRateUtil.formatBorrowApr(String.valueOf(listCustomize.getCreditDiscount())) + "%");
             appProjectType.setBorrowTheSecondDesc("折让率");
             appProjectType.setBorrowTheThird(listCustomize.getBorrowPeriod() + "天");
             appProjectType.setBorrowTheThirdDesc("项目期限");
@@ -1417,7 +1423,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         tenderCreditDetail.setOnTime(tenderCredit.getCreditTime());
         tenderCreditDetail.setTransferDiscount(tenderCredit.getCreditDiscount());
         tenderCreditDetail.setAccount(tenderCredit.getCreditCapital());
-        tenderCreditDetail.setBorrowApr(tenderCredit.getBidApr());
+        tenderCreditDetail.setBorrowApr(FormatRateUtil.formatBorrowApr(tenderCredit.getBidApr()));
         tenderCreditDetail.setBorrowId(tenderCredit.getBidNid());
         tenderCreditDetail.setTransferLeft(tenderCredit.getCreditTermHold());
         tenderCreditDetail.setStatus(tenderCredit.getStatus());
@@ -1609,7 +1615,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             for (HjhPlanCustomizeVO entity : planList) {
                 appProjectListCustomize = new AppProjectListCustomizeVO();
                 /*重构整合 开始*/
-                appProjectListCustomize.setBorrowTheFirst(entity.getPlanApr() + "%");
+                appProjectListCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(entity.getPlanApr()) + "%");
                 // mod by nxl 智投服务修改历史年回报率->参考年回报率
 //                appProjectListCustomize.setBorrowTheFirstDesc("历史年回报率");
                 appProjectListCustomize.setBorrowTheFirstDesc("参考年回报率");
@@ -1788,7 +1794,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 HjhPlanBorrowResultBean.BorrowList borrow = null;
                 for (DebtPlanBorrowCustomizeVO entity : consumeList) {
                     borrow = new HjhPlanBorrowResultBean.BorrowList();
-                    borrow.setBorrowApr(entity.getBorrowApr());
+                    borrow.setBorrowApr(FormatRateUtil.formatBorrowApr(entity.getBorrowApr()));
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
                     borrow.setTureName(entity.getTrueName());

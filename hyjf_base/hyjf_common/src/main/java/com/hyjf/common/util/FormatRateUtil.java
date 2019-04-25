@@ -23,6 +23,9 @@ public class FormatRateUtil {
      * @return
      */
     public static String formatBorrowApr(String borrowApr) {
+    	if(borrowApr==null) {
+    		return null;
+    	}
         if (StringUtils.isEmpty(borrowApr)) {
             return "0.0";
         }

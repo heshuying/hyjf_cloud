@@ -241,7 +241,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             if (StringUtils.isNotBlank(borrow.getIncreaseInterestFlag()) && borrow.getIncreaseInterestFlag().equals("1")){
-                borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
+                borrowProjectInfoBean.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(borrow.getBorrowExtraYield()));
             }else{
                 borrowProjectInfoBean.setBorrowExtraYield("");
             }
@@ -1383,7 +1383,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
                 customize.setBorrowApr(FormatRateUtil.formatBorrowApr(project.getBorrowApr()));
                 customize.setBorrowPeriod(project.getBorrowPeriodInt() + "");
                 customize.setBorrowPeriodType(project.getBorrowPeriodType());
-                customize.setBorrowExtraYield(project.getBorrowExtraYield());
+                customize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(project.getBorrowExtraYield()));
                 if ("0".equals(project.getOnTime()) || "".equals(project.getOnTime())) {
                     switch (project.getStatus()) {
                         case "10":
