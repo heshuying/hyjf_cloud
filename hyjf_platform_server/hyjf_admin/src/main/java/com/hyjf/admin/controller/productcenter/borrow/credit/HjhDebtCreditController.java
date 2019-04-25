@@ -123,7 +123,7 @@ public class HjhDebtCreditController extends BaseController{
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 hjhDebtCreditVoList.addAll(listAccountDetail);
             }
-            if (hjhDebtCreditVoList.size() > 0) {
+            if (null != hjhDebtCreditVoList && hjhDebtCreditVoList.size() > 0) {
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
                 Map<String,Object> sum = hjhDebtCreditService.selectDebtCreditTotal(request);
@@ -195,8 +195,9 @@ public class HjhDebtCreditController extends BaseController{
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhDebtCreditService.queryHjhDebtCreditList(requestBean);
 
         List<HjhDebtCreditVo> resultList = hjhDebtCreditReponse.getResultList();
-        hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList);
-
+        if(null != resultList && resultList.size() > 0) {
+            hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList);
+        }
 
         Integer totalCount = hjhDebtCreditReponse.getRecordTotal();
 
@@ -218,7 +219,9 @@ public class HjhDebtCreditController extends BaseController{
             HjhDebtCreditReponse hjhDebtCreditReponse2 = hjhDebtCreditService.queryHjhDebtCreditList(requestBean);
             if (hjhDebtCreditReponse2 != null && hjhDebtCreditReponse2.getResultList().size()> 0) {
                 List<HjhDebtCreditVo> resultList1 = hjhDebtCreditReponse2.getResultList();
-                hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList1);
+                if(null != resultList1 && resultList1.size() > 0) {
+                    hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList1);
+                }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList1);
             } else {
