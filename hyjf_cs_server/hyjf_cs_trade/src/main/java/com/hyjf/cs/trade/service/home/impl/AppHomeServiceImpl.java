@@ -879,7 +879,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             String statusNameDesc = String.valueOf(listCustomize.getBorrowAccountWait());
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
-            homePageCustomize.setBorrowApr((listCustomize.getBorrowApr()) + "%");
+            homePageCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             homePageCustomize.setStatus(listCustomize.getStatus());
             homePageCustomize.setOnTime(listCustomize.getOnTime());
