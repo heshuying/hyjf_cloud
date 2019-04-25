@@ -103,7 +103,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         logger.info("当前债权还款明细导出-start, requestBean:{}", JSON.toJSONString(requestBean));
         Map<String,Object> dataMap = new HashMap<>();
 
-        //borrowNid为必须传的参数
+        // 不加条件不能导出
         if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
             return;
         }
