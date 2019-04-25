@@ -9,9 +9,10 @@ import java.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.app.AppBaseRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
-import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
-import com.hyjf.am.vo.app.AppFindNewsVO;
-import com.hyjf.am.vo.app.AppFindVO;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
+import com.hyjf.am.vo.app.find.AppFindNewsVO;
+import com.hyjf.am.vo.app.find.AppFindReportVO;
+import com.hyjf.am.vo.app.find.AppFindVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
@@ -240,7 +241,7 @@ public class AppFindController extends BaseMarketController {
 	}
 
 	@ApiOperation(value = "app发现页面", notes = "app发现页面")
-	@GetMapping("/init")
+	@PostMapping("/init")
 	public WebResult initFind(@ModelAttribute AppBaseRequest appBaseRequest){
 		WebResult webResult = new WebResult();
 		AdsRequest request = new AdsRequest();
@@ -257,7 +258,6 @@ public class AppFindController extends BaseMarketController {
 			newsVO.setImg(article.getImgurl());
 			newsVO.setTitle(article.getTitle());
 			newsVO.setDate(DateFormatUtils.format(article.getCreateTime(), DATE_FORMAT));
-			newsVO.setShareTitle(article.getTitle());
 			newsVO.setShareContent(article.getSummary());
 			newsVO.setSharePicUrl("https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
 			newsVO.setShareUrl(appHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
@@ -265,11 +265,20 @@ public class AppFindController extends BaseMarketController {
 			newList.add(newsVO);
 		}
 		List reportList = appFindService.getReportList(1);
+		List<AppFindReportVO> appFindReportList = new ArrayList<>();
+		reportList.stream().forEach(p -> {
+			AppFindReportVO reportVO = new AppFindReportVO();
+			HashMap report = (HashMap) p;
+			reportVO.setId(report.get("id").toString());
+			reportVO.setTitle(report.get("typeRealName") + "运营报告");
+			reportVO.setDate(report.get("year") + "年" + report.get("sortMonth") + "月" + report.get("sortDay") + "日");
+			appFindReportList.add(reportVO);
+		});
 		AppFindVO appFindVO = new AppFindVO();
 		appFindVO.setModules(adVOList);
 		appFindVO.setBanner(adVO);
 		appFindVO.setNewsList(newList);
-		appFindVO.setReportList(reportList);
+		appFindVO.setReportList(appFindReportList);
 		appFindVO.setContact("联系我们 400-900-7878");
 		webResult.setData(appFindVO);
 		return webResult;

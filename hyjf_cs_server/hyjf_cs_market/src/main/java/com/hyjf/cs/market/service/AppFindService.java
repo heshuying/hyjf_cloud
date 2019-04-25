@@ -6,7 +6,7 @@ package com.hyjf.cs.market.service;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
-import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;

@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.app;
+package com.hyjf.am.vo.app.find;
 
 import java.io.Serializable;
 

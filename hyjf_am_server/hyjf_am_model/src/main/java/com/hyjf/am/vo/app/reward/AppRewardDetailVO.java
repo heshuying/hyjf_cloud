@@ -11,7 +11,7 @@ public class AppRewardDetailVO {
     // 邀请好友人数
     private String friendCount;
     // 优惠券数量
-    private int coupon;
+    private String couponCount;
     // 优惠券提示信息
     private String couponTag;
     private String userName;
@@ -34,8 +34,12 @@ public class AppRewardDetailVO {
         this.friendCount = friendCount;
     }
 
-    public void setCoupon(int coupon) {
-        this.coupon = coupon;
+    public String getCouponCount() {
+        return couponCount;
+    }
+
+    public void setCouponCount(String couponCount) {
+        this.couponCount = couponCount;
     }
 
     public String getCouponTag() {

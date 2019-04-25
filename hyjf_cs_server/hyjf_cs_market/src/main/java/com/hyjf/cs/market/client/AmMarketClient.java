@@ -3,7 +3,7 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
-import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;

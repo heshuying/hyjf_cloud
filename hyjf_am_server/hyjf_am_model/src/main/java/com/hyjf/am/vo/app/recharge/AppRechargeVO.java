@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.app;
+package com.hyjf.am.vo.app.recharge;
 
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
@@ -8,13 +8,13 @@ import java.util.List;
  * @author wgx
  * @date 2019/4/18
  */
-public class AppRechargeVo {
+public class AppRechargeVO {
 
     // 充值规则
     private List rechargeRule;
 
     // 充值限额
-    private List<JxBankConfigVO> rechargeLimit;
+    private List<AppRechargeLimitVO> rechargeLimit;
 
     public List getRechargeRule() {
         return rechargeRule;
@@ -24,11 +24,11 @@ public class AppRechargeVo {
         this.rechargeRule = rechargeRule;
     }
 
-    public List<JxBankConfigVO> getRechargeLimit() {
+    public List<AppRechargeLimitVO> getRechargeLimit() {
         return rechargeLimit;
     }
 
-    public void setRechargeLimit(List<JxBankConfigVO> rechargeLimit) {
+    public void setRechargeLimit(List<AppRechargeLimitVO> rechargeLimit) {
         this.rechargeLimit = rechargeLimit;
     }
 }

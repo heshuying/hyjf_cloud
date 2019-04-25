@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.app;
+package com.hyjf.am.vo.app.find;
 
 /**
  * @author wgx
@@ -10,7 +10,6 @@ public class AppFindNewsVO {
     private String img;
     private String title;
     private String date;
-    private String shareTitle;
     private String shareContent;
     private String sharePicUrl;
     private String shareUrl;
@@ -45,14 +44,6 @@ public class AppFindNewsVO {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getShareTitle() {
-        return shareTitle;
-    }
-
-    public void setShareTitle(String shareTitle) {
-        this.shareTitle = shareTitle;
     }
 
     public String getShareContent() {

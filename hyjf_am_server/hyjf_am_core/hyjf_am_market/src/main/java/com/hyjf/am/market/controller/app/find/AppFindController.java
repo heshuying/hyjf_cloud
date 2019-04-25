@@ -5,7 +5,7 @@ import com.hyjf.am.market.service.AdsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppFindAdResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
-import com.hyjf.am.vo.app.AppFindAdCustomizeVO;
+import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,7 @@
 package com.hyjf.cs.market;
 
+import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +18,8 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @ComponentScan(basePackages = {"com.hyjf.cs.market","com.hyjf.common"})
+@EnableMethodCache(basePackages = "com.hyjf.cs.market")
+@EnableCreateCacheAnnotation
 public class CsMarketApplication {
 
 	@Bean

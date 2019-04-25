@@ -30,7 +30,7 @@ import java.util.Map;
  * @author hesy
  * @version AppInviteController, v0.1 2018/8/15 17:02
  */
-@Api(value = "app端-邀请记录",tags = "app端-邀请记录")
+@Api(value = "app端-我的奖励",tags = "app端-邀请记录")
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/hyjf-app/user/reward")
@@ -114,7 +114,7 @@ public class AppInviteController {
      * @date 2019/04/18
      * @return
      */
-    @GetMapping("/inviteInit")
+    @PostMapping("/inviteInit")
     @ApiOperation(value = "我的奖励-邀请记录", notes = "我的奖励-邀请记录")
     public WebResult inviteInit(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @ModelAttribute AppBaseRequest appBaseRequest) {
@@ -134,6 +134,7 @@ public class AppInviteController {
         Integer userId = null;
         try {
             userId = SecretUtil.getUserId(sign);
+            logger.debug("【邀请记录】用户id：{}", userId);
         } catch (Exception e) {
             webResult.setStatus("999");
             webResult.setStatusDesc("请求参数非法");
@@ -148,7 +149,7 @@ public class AppInviteController {
         WebViewUserVO users = inviteService.getUserFromCache(userId);
         appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" :total);
         appRewardDetailVO.setFriendCount(inviteCount);
-        appRewardDetailVO.setCoupon(0);
+        appRewardDetailVO.setCouponCount("0");
         appRewardDetailVO.setCouponTag("邀请好友获得");
         appRewardDetailVO.setUserName(users.getUsername());
         appRewardDetailVO.setUserId(users.getUserId());

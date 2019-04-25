@@ -1,6 +1,4 @@
-package com.hyjf.am.vo.app;
-
-import com.alibaba.fastjson.JSONObject;
+package com.hyjf.am.vo.app.find;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ public class AppFindVO {
     private List<AppFindNewsVO> newsList;
 
     // app发现页运营报告信息
-    private List reportList;
+    private List<AppFindReportVO> reportList;
 
     // app发现页联系我们
     private String contact;
@@ -49,11 +47,11 @@ public class AppFindVO {
         this.newsList = newsList;
     }
 
-    public List getReportList() {
+    public List<AppFindReportVO> getReportList() {
         return reportList;
     }
 
-    public void setReportList(List reportList) {
+    public void setReportList(List<AppFindReportVO> reportList) {
         this.reportList = reportList;
     }
 

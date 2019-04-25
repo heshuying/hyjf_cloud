@@ -4,7 +4,8 @@
 package com.hyjf.cs.user.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.app.AppRechargeVo;
+import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -37,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -358,8 +358,8 @@ public class AppRechargeController extends BaseUserController {
     public WebResult getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
         WebResult webResult = new WebResult();
         List rechargeRuleList = appRechargeService.getRechargeRule();
-        List<JxBankConfigVO> rechargeLimitList = appRechargeService.getRechargeLimit();
-        AppRechargeVo appRechargeVo = new AppRechargeVo();
+        List<AppRechargeLimitVO> rechargeLimitList = appRechargeService.getRechargeLimit();
+        AppRechargeVO appRechargeVo = new AppRechargeVO();
         appRechargeVo.setRechargeRule(rechargeRuleList);
         appRechargeVo.setRechargeLimit(rechargeLimitList);
         webResult.setData(appRechargeVo);

@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.recharge.impl;
 
+import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -54,7 +55,7 @@ public class AppRechargeServiceImpl extends BaseUserServiceImpl implements AppRe
      * @return
      */
     @Override
-    public List<JxBankConfigVO> getRechargeLimit() {
+    public List<AppRechargeLimitVO> getRechargeLimit() {
         return amConfigClient.getRechargeLimit();
     }
 }

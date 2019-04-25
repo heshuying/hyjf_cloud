@@ -1,12 +1,11 @@
 package com.hyjf.am.config.controller.app.recharge;
 
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
-import com.hyjf.am.config.service.BankSettingService;
+import com.hyjf.am.config.service.JxBankConfigService;
 import com.hyjf.am.config.service.app.AppRechargeService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminBankSettingResponse;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
-import com.hyjf.common.util.CommonUtils;
+import com.hyjf.am.response.app.AppRechargeLimitResponse;
+import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class AppRechargeController {
     private AppRechargeService appRechargeService;
 
     @Autowired
-    private BankSettingService bankSettingService;
+    private JxBankConfigService jxBankConfigService;
 
     @Value("${file.domain.url}")
     private String DOMAIN_URL;
@@ -49,16 +50,27 @@ public class AppRechargeController {
      * @return
      */
     @PostMapping("/getRechargeLimit")
-    public AdminBankSettingResponse getRechargeLimit() {
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
-        List<JxBankConfig> recordList = bankSettingService.getRecordList(new JxBankConfig(), -1, -1);
+    public AppRechargeLimitResponse getRechargeLimit() {
+        AppRechargeLimitResponse response = new AppRechargeLimitResponse();
+        List<JxBankConfig> recordList = jxBankConfigService.getQuickPaymentJxBankConfig();
         if (CollectionUtils.isNotEmpty(recordList)) {
-            recordList.stream().forEach(p -> {
-                p.setBankIcon(DOMAIN_URL + p.getBankIcon());
-                p.setBankLogo(DOMAIN_URL + p.getBankLogo());
+            List<AppRechargeLimitVO> appRechargeLimitList = new ArrayList<>();
+            recordList.stream().forEach(record -> {
+                AppRechargeLimitVO appRechargeLimitVO = new AppRechargeLimitVO();
+                appRechargeLimitVO.setBankName(record.getBankName());// 银行名称
+                appRechargeLimitVO.setBankIcon(DOMAIN_URL + record.getBankIcon());// 银行logo
+                //单月单卡限额
+                appRechargeLimitVO.setMonthly(record.getMonthCardQuota().compareTo(BigDecimal.ZERO) == 0 ?
+                        "不限" : record.getMonthCardQuota().divide(new BigDecimal(10000)) + "万元");
+                //单卡单日限额
+                appRechargeLimitVO.setDaily(record.getSingleCardQuota().compareTo(BigDecimal.ZERO) == 0 ?
+                        "不限" : record.getSingleCardQuota().divide(new BigDecimal(10000)) + "万元");
+                //单笔限额
+                appRechargeLimitVO.setSingle(record.getSingleQuota().compareTo(BigDecimal.ZERO) == 0 ?
+                        "不限" : record.getSingleQuota().divide(new BigDecimal(10000)) + "万元");
+                appRechargeLimitList.add(appRechargeLimitVO);
             });
-            List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
-            response.setResultList(jxBankConfigList);
+            response.setResultList(appRechargeLimitList);
         } else {
             response.setRtn(Response.FAIL);
         }
