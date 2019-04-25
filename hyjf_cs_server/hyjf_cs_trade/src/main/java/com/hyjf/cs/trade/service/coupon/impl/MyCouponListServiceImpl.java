@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.vo.trade.coupon.MyCouponListCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -15,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 我的优惠券列表
@@ -93,7 +92,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     for (Map.Entry paramName : clients.entrySet()) {
                         if(clientSed[i].equals(paramName.getKey())){
                             if(i!=0&&clientString.length()!=0){
-                                clientString=clientString+"、";
+                                clientString=clientString+"/";
                             }
                             clientString=clientString+paramName.getValue();
 
@@ -103,13 +102,13 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
             }
             if(clientString.length()==0){
                 coupon.setCouponSystem("");
-            }else if("微官网、Android、iOS".equals(clientString)){
+            }else if("微官网/Android/iOS".equals(clientString)){
                 coupon.setCouponSystem("限移动端可用");
-            }else if("微官网、iOS、Android".equals(clientString)){
+            }else if("微官网/iOS/Android".equals(clientString)){
                 coupon.setCouponSystem("限移动端可用");
             }else{
-                coupon.setCouponSystem("限"+clientString.replace("Android、iOS", "APP").
-                        replace("iOS、Android", "APP")+"可用");
+                coupon.setCouponSystem("限"+clientString.replace("Android/iOS", "APP").
+                        replace("iOS/Android", "APP")+"可用");
             }
 
 
@@ -155,7 +154,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     projectString = projectString + "智投/";
                 }
                 // mod by nxl 智投服务：修改汇计划->智投服务 end
-                projectString = StringUtils.removeEnd(projectString, "/")+" 可用";
+                projectString = StringUtils.removeEnd(projectString, "/")+"可用";
             }
             coupon.setProjectType(projectString);
             if(projectString.indexOf("智投")!=-1 || projectString.indexOf("不限") != -1){
@@ -166,11 +165,11 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                 coupon.setHrefType(0);
             }
 
-            coupon.setTenderQuota(dealTenderQuota(coupon));
+//            coupon.setTenderQuota(dealTenderQuota(coupon));
 
-            long day=DateUtils.differentDaysByString(coupon.getEndTimeStamp(), GetDateUtils.getNowTime()+"");
-            if(coupon.getUsedFlag() == 0 && day >= 0 && day <=3){
-                coupon.setTime("还有"+(day==0?1:day)+"天过期");
+            long day = GetDate.differentDays(Long.valueOf(GetDate.getNowTime10()), Long.valueOf(coupon.getEndTimeStamp())) + 1;
+            if(coupon.getUsedFlag() == 0 && day >= 1 && day <=3){
+                coupon.setTime("还有"+day+"天过期");
             }else{
                 coupon.setTime(coupon.getAddTime() + "～" + coupon.getEndTime());
             }
@@ -178,11 +177,11 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
         }
     }
 
-    private String dealTenderQuota(MyCouponListCustomizeVO userCouponConfigCustomize) {
+    /*private String dealTenderQuota(MyCouponListCustomizeVO userCouponConfigCustomize) {
         String tenderQuota="";
         switch (userCouponConfigCustomize.getTenderQuotaType()){
             case 0:
-                tenderQuota="不限";
+                tenderQuota="出借金额不限";
                 break;
             case 1:
                 if(userCouponConfigCustomize.getTenderQuotaMin()>=10000&&userCouponConfigCustomize.getTenderQuotaMin()%10000==0){
@@ -215,7 +214,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                 break;
         }
         return tenderQuota;
-    }
+    }*/
 
     /**
      * 加载邀请页面统计数据

@@ -60,7 +60,7 @@
 		cc.project_type project_type,
 		CASE
 		WHEN cc.tender_quota_type = 0 THEN
-			'不限'
+			'出借金额不限'
 		WHEN cc.tender_quota_type = 1 THEN
 			CONCAT(
 
@@ -92,7 +92,7 @@
 			)
 		WHEN cc.tender_quota_type = 2 THEN
 			CONCAT(
-				'满',
+				'',
 
 			IF (
 				(
@@ -105,7 +105,7 @@
 				),
 				cc.tender_quota
 			),
-			'元可用'
+			'元及以上可用'
 			)
 		WHEN cc.tender_quota_type = 3 THEN
 			CONCAT(
@@ -121,43 +121,43 @@
 					),
 					cc.tender_quota
 				),
-				'元（含）内可用'
+				'元及以下可用'
 			)
 		ELSE
-			'不限'
+			'出借金额不限'
 		END tender_quota,
 		cc.tender_quota_type tender_quota_type,
 		 CASE
 		WHEN cc.project_expiration_type = 0 THEN
-			'不限'
+			'项目期限不限'
 		WHEN cc.project_expiration_type = 1 THEN
 			CONCAT(
-				'',
+				'适用于',
 				cc.project_expiration_length,
-				'个月'
+				'个月的项目'
 			)
 		WHEN cc.project_expiration_type = 2 THEN
 			CONCAT(
-				'',
+				'适用于',
 				cc.project_expiration_length_min,
 				'个月~',
 				cc.project_expiration_length_max,
-				'个月'
+				'个月的项目'
 			)
 		WHEN cc.project_expiration_type = 3 THEN
 			CONCAT(
-				'适用于≥',
+				'适用于',
 				cc.project_expiration_length,
-				'个月的项目'
+				'个月及以上项目'
 			)
 		WHEN cc.project_expiration_type = 4 THEN
 			CONCAT(
-				'适用于≤',
+				'适用于',
 				cc.project_expiration_length,
-				'个月的项目'
+				'个月及以下项目'
 			)
 		ELSE
-			'不限'
+			'项目期限不限'
 		END project_expiration_type,
 		cc.project_expiration_type expiration_type,
 		cc.project_expiration_length,
