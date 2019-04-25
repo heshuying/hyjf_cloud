@@ -145,7 +145,7 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-    @Cached(name="appFindModulesCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @Cached(name="appFindModulesCache-", key="#requestBean.platformType", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<AppFindAdCustomizeVO> getFindModules(AdsRequest requestBean) {
         AppFindAdResponse appFindAdResponse = restTemplate.postForEntity(
@@ -158,7 +158,7 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-    @Cached(name="appFindBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @Cached(name="appFindBannerCache-",key="#requestBean.platformType", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
     @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public AppFindAdCustomizeVO getFindBanner(AdsRequest requestBean) {
         AppFindAdResponse appFindAdResponse = restTemplate.postForEntity(
