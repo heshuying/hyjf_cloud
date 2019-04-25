@@ -53,7 +53,7 @@ public class MyCouponListController {
             List<MyCouponListCustomizeVO> listUsed = myCouponListService.selectMyCouponListUsed(String.valueOf(userVO.getUserId()));
             List<MyCouponListCustomizeVO> listInValid = myCouponListService.selectMyCouponListInValid(String.valueOf(userVO.getUserId()));
 
-            listUnUsed.sort((s1, s2) -> s1.getEndTimeStamp().compareTo(s2.getEndTimeStamp()));
+//            listUnUsed.sort((s1, s2) -> s1.getEndTimeStamp().compareTo(s2.getEndTimeStamp()));
             Map<String,Object> resultMap = new HashMap<>();
             resultMap.put("wsyList", listUnUsed);
             resultMap.put("ysyList", listUsed);

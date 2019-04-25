@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
@@ -969,6 +970,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         WebResult<TenderInfoResult> result = new WebResult();
         result.setData(investInfo);
+        logger.info("result:" + JSON.toJSONString(result));
         return result;
     }
 
