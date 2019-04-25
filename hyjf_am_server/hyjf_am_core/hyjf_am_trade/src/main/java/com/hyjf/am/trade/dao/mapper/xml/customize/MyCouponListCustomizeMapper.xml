@@ -45,14 +45,8 @@
 		WHEN 3 THEN
 			'代金券'
 		END AS coupon_type_name,
-		 CASE cc.coupon_type
-		WHEN 1 THEN
-			FORMAT(cc.coupon_quota, 0)
-		WHEN 3 THEN
-			FORMAT(cc.coupon_quota, 0)
-		ELSE
-			cc.coupon_quota
-		END AS coupon_quota,
+		<!-- 如果是加息券后面有两位小数且最后一位不为0就保留两位小数，否则保留1位小数 mod by hesy 20190425-->
+		IF(cc.coupon_type=2,IF(Left(RIGHT(cc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(cc.coupon_quota,3),1)!='0',FORMAT(cc.coupon_quota, 2),FORMAT(cc.coupon_quota, 1)),FORMAT(cc.coupon_quota, 0)) AS coupon_quota,
 		DATE_FORMAT(cu.create_time, '%Y.%m.%d') AS add_time,
 		FROM_UNIXTIME(cu.end_time, '%Y.%m.%d') AS end_time,
 		cu.end_time AS end_time_stamp,
@@ -140,7 +134,7 @@
 			CONCAT(
 				'适用于',
 				cc.project_expiration_length_min,
-				'个月~',
+				'~',
 				cc.project_expiration_length_max,
 				'个月的项目'
 			)
@@ -239,7 +233,8 @@
 			hcc.id,
 			hcc.coupon_code,
 			hcc.coupon_name,
-			hcc.coupon_quota,
+			<!-- 如果是加息券后面有两位小数且最后一位不为0就保留两位小数，否则保留1位小数 mod by hesy 20190425-->
+			IF(hcc.coupon_type=2,IF(Left(RIGHT(hcc.coupon_quota,3),1)='.' AND RIGHT(RIGHT(hcc.coupon_quota,3),1)!='0',FORMAT(hcc.coupon_quota, 2),FORMAT(hcc.coupon_quota, 1)),FORMAT(hcc.coupon_quota, 0)) AS coupon_quota,
 			hcc.coupon_quantity,
 			hcc.expiration_type,
 			hcc.expiration_date,

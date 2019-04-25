@@ -24,26 +24,30 @@ public class FormatRateUtil {
      */
     public static String formatBorrowApr(String borrowApr) {
     	if(borrowApr==null) {
-    		return "0.0";
+    		return null;
     	}
         if (StringUtils.isEmpty(borrowApr)) {
-            return "0.0";
+            return "";
         }
         String[] stringArr = borrowApr.split("\\.");
         if (stringArr.length <= 0) {
             return "0.0";
         }
         //整数或只有一位小数的情况下，格式化利率
-        if (stringArr.length == 1 || stringArr[1].length() == 1) {
-            return new BigDecimal(borrowApr).setScale(1).toString();
-        }
-        String spitArr = stringArr[1];
+//        if (stringArr.length == 1 || stringArr[1].length() == 1) {
+//            return borrowApr;
+//        }
+ //       String spitArr = stringArr[1];
         //两位小数的情况下，判断最后一位是否为0
-        String subBorr = spitArr.substring(spitArr.length() - 1, spitArr.length());
-        if (subBorr.equals("0")) {
-            BigDecimal big = new BigDecimal(borrowApr).setScale(1);
-            borrowApr = big.toString();
+    //    String subBorr = spitArr.substring(spitArr.length() - 1, spitArr.length());
+        if ((borrowApr.substring( borrowApr.length()-1,borrowApr.length())).equals("0")) {
+//            BigDecimal big = new BigDecimal(borrowApr).setScale(1);
+        	return borrowApr.substring(0, borrowApr.length()-1);
         }
+        if ((borrowApr.substring( borrowApr.length()-1,borrowApr.length())).equals("%")&&(borrowApr.substring( borrowApr.length()-2,borrowApr.length()-1)).equals("0")) {
+//          BigDecimal big = new BigDecimal(borrowApr).setScale(1);
+      	return borrowApr.substring(0, borrowApr.length()-2)+"%";
+      }
         return borrowApr;
     }
 

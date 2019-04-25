@@ -1099,7 +1099,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 优惠券总张数
             recordTotal = amTradeClient.getUserCouponCount(loginUser.getUserId(), "0");
             logger.info("recordTotal:{}  , couponAvailableCount:{}",recordTotal,couponAvailableCount);
-            investInfo.setBorrowApr(borrow.getBorrowApr() + "%");
+            investInfo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%");
             investInfo.setPaymentOfInterest("");
             // 是否使用优惠券
             investInfo.setIsUsedCoupon("0");
@@ -1198,7 +1198,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             // 设置产品加息 显示收益率
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-                investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield())+"%");
+                investInfo.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(df.format(borrowInfo.getBorrowExtraYield()))+"%");
             }
 
             BigDecimal earnings = new BigDecimal("0");
@@ -1270,15 +1270,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investInfo.setRealAmount("");
             investInfo.setCouponType("");
 
-            investInfo.setDesc("历史年回报率: " + borrow.getBorrowApr() + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
+            investInfo.setDesc("历史年回报率: " + FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%      历史回报: " + CommonUtils.formatAmount(borrowInterest.add(couponInterest)) + "元");
             /**
              * 产品加息
              */
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-                investInfo.setDesc0("历史年回报率: " + borrow.getBorrowApr() + "% + "
-                        + borrowInfo.getBorrowExtraYield() + "%");
+                investInfo.setDesc0("历史年回报率: " + FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "% + "
+                        + FormatRateUtil.formatBorrowApr(borrowInfo.getBorrowExtraYield().toString()) + "%");
             }else{
-                investInfo.setDesc0("历史年回报率: "+borrow.getBorrowApr()+"%");
+                investInfo.setDesc0("历史年回报率: "+FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString())+"%");
             }
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
