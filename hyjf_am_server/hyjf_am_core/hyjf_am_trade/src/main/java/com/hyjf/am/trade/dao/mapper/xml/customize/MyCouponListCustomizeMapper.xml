@@ -239,7 +239,14 @@
 			hcc.id,
 			hcc.coupon_code,
 			hcc.coupon_name,
-			hcc.coupon_quota,
+			CASE hcc.coupon_type
+			WHEN 1 THEN
+				FORMAT(hcc.coupon_quota, 0)
+			WHEN 3 THEN
+				FORMAT(hcc.coupon_quota, 0)
+			ELSE
+				FORMAT(hcc.coupon_quota, 1)
+			END AS coupon_quota,
 			hcc.coupon_quantity,
 			hcc.expiration_type,
 			hcc.expiration_date,

@@ -100,7 +100,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
                     }
                 }
             }
-            if(clientString.length()==0){
+            if(clientString.length()==0 || (clientString.contains("微官网") && clientString.contains("PC") && clientString.contains("Android") && clientString.contains("iOS"))){
                 coupon.setCouponSystem("");
             }else if("微官网/Android/iOS".equals(clientString)){
                 coupon.setCouponSystem("限移动端可用");
