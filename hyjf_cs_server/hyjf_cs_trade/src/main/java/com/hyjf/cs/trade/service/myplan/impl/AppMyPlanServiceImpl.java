@@ -519,7 +519,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());*/
         // mod by nxl 智投服务 修改锁定期显示 end
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
-        projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :FormatRateUtil.formatBorrowApr(customize.getPlanApr().replace("%","")));
+        projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :FormatRateUtil.formatBorrowApr(customize.getPlanApr()).replace("%",""));
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());
         projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(customize.getRepayStyle()));
         projectIntr.setRepayStyle(customize.getRepayMethod());
