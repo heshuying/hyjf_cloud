@@ -12,6 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.wbs.trade.dao.model.auto.Account;
+import com.hyjf.wbs.trade.service.AccountService;
+import com.hyjf.wbs.user.dao.model.auto.BankCard;
+import com.hyjf.wbs.user.dao.model.auto.User;
+import com.hyjf.wbs.user.service.UserService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -46,10 +51,10 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 	private SyncCustomerService syncCustomerService;
 
 	@Autowired
-	private AmUserClient amUserClient;
+	private AccountService accountService;
 
 	@Autowired
-	private AmTradeClient amTradeClient;
+	private UserService userService;
 
 	private final int ACCOUNT_OPENED = 1;
 
@@ -80,13 +85,13 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 			logger.info("【{}】WBS客户回调MQ收到消息格式不正确【{}】",uuid, msgBody);
 		} else {
 			Integer userIdd = Integer.parseInt(userId);
-			UserVO userVO = amUserClient.findUserById(userIdd);
+			User userVO = userService.findUserById(userIdd);
 			if (userVO != null) {
 				if (userVO.getOpenAccount() != null && userVO.getOpenAccount().intValue() == ACCOUNT_OPENED) {
 					// 余额信息
-					AccountVO accountVO = amTradeClient.getAccount(userIdd);
+					Account accountVO = accountService.getAccount(userIdd);
 					// 开户行信息
-					BankCardVO bankCardVO = amUserClient.selectBankCardByUserId(userIdd);
+					BankCard bankCardVO = userService.selectBankCardByUserId(userIdd);
 
 					buildData(userVO, accountVO, bankCardVO, customerSyncQO);
 
@@ -103,14 +108,14 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		logger.info("【{}】WBS客户同步消息:处理结束....",uuid);
 	}
 
-	private void buildData(UserVO userVO, CustomerSyncQO customerSyncQO) {
+	private void buildData(User userVO, CustomerSyncQO customerSyncQO) {
 
 		customerSyncQO.setUserName(userVO.getUsername());
 
 		customerSyncQO.setPlatformRegistrationTime(sdf.format(userVO.getRegTime()));
 
 	}
-	private void buildData(UserVO userVO, AccountVO accountVO, BankCardVO bankCardVO, CustomerSyncQO customerSyncQO) {
+	private void buildData(User userVO, Account accountVO, BankCard bankCardVO, CustomerSyncQO customerSyncQO) {
 
 		buildData(userVO, customerSyncQO);
 

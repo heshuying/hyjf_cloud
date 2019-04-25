@@ -12,22 +12,6 @@ import java.util.List;
  */
 public interface AmUserClient {
 
-	/**
-	 * 根据userId查询User
-	 * @param userId
-	 * @return
-	 */
-	UserVO findUserById(int userId);
-
-
-	/**
-	 * 根据userId查询开户行信息
-	 * @param userId
-	 * @return
-	 */
-	BankCardVO selectBankCardByUserId(Integer userId);
-
-
     WebViewUserVO getWebViewUserByUserId(Integer userId, String channel);
 
 	void updateUser(UserVO u, String ipAddr);

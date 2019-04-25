@@ -36,33 +36,6 @@ public class AmUserClientImpl implements AmUserClient {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	@Override
-	public UserVO findUserById(int userId) {
-		String url = userService + "/user/findById/" + userId;
-		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
-		if (response != null) {
-			if (Response.SUCCESS.equals(response.getRtn())) {
-				UserVO userVO = response.getResult();
-				return userVO;
-			}
-			logger.info("response rtn is : {}", response.getRtn());
-		} else {
-			logger.info("response is null....");
-		}
-        throw new IllegalArgumentException("获取【" + userId + "】用户信息失败！");
-	}
-
-	@Override
-	public BankCardVO selectBankCardByUserId(Integer userId) {
-
-		String url = userService + "/user/bankopen/selectBankCardByUserIdAndStatus/" + userId + "/1";
-
-		BankCardResponse response = restTemplate.getForEntity(url, BankCardResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResultList().get(0);
-		}
-		throw new IllegalArgumentException("获取【" + userId + "】开户信息失败！");
-	}
 
 	@Override
 	public WebViewUserVO getWebViewUserByUserId(Integer userId, String channel) {

@@ -3,8 +3,6 @@
  */
 package com.hyjf.wbs.user.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -12,30 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.google.common.collect.Maps;
-import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
-import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.bean.AccessToken;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.UserOperationLogConstant;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.http.HttpClientUtils;
-import com.hyjf.common.jwt.Token;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.wbs.WbsConstants;
-import com.hyjf.wbs.client.AmUserClient;
-import com.hyjf.wbs.common.WbsNewBankerSender;
-import com.hyjf.wbs.configs.WbsConfig;
-import com.hyjf.wbs.exceptions.WbsException;
-import com.hyjf.wbs.qvo.*;
-import com.hyjf.wbs.sign.WbsSignUtil;
+import com.hyjf.wbs.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,15 +18,35 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
+import com.hyjf.am.bean.result.BaseResult;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
+import com.hyjf.common.bean.AccessToken;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.jwt.Token;
+import com.hyjf.common.util.SecretUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.wbs.WbsConstants;
+import com.hyjf.wbs.client.AmUserClient;
 import com.hyjf.wbs.client.CsUserClient;
+import com.hyjf.wbs.common.WbsNewBankerSender;
+import com.hyjf.wbs.exceptions.WbsException;
 import com.hyjf.wbs.mq.base.CommonProducer;
 import com.hyjf.wbs.mq.base.MessageContent;
+import com.hyjf.wbs.qvo.*;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
 import com.hyjf.wbs.user.dao.mapper.auto.UserMapper;
 import com.hyjf.wbs.user.dao.model.auto.User;
@@ -70,16 +65,13 @@ public class WbsUserServiceImpl implements WbsUserService {
 	private CsUserClient csUserClient;
 
 	@Autowired
-	private UserMapper userMapper;
+	private UserService userService;
 
 	@Autowired
 	private CommonProducer commonProducer;
 
 	@Autowired
 	private AmUserClient amUserClient;
-
-	@Autowired
-	private WbsConfig wbsConfig;
 
 	@Override
 	public void webBind(WebUserBindQO webUserBindQO, BaseResult response) {
@@ -151,7 +143,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 			throw new CheckException("999","客户ID【" + assetCustomerId + "】不是INTEGER类型！");
 		}
 
-		User user = userMapper.selectByPrimaryKey(userId);
+		User user = userService.findUserById(userId);
 
 		if (null == user) {
 			logger.error("未找到ID=【" + assetCustomerId + "】的客户信息");
@@ -198,13 +190,16 @@ public class WbsUserServiceImpl implements WbsUserService {
 
 		UserVO userVO= getCustomerFromNewBanker(qo);
 
-		UserVO user=amUserClient.findUserById(userVO.getUserId());
+		User user=userService.findUserById(userVO.getUserId());
 
 		if(!user.getUsername().equals(userVO.getUsername())){
 			throw new CheckException("999","汇盈查询的用户名【"+user.getUsername()+"】与newBanker提供的【"+userVO.getUsername()+"】不一致！");
 		}
 
-		WebViewUserVO webViewUserVO = loginOperationOnly(user,user.getUsername(),ipAddr,channel);
+		UserVO userWrapper=new UserVO();
+		BeanUtils.copyProperties(user,userWrapper);
+
+		WebViewUserVO webViewUserVO = loginOperationOnly(userWrapper,user.getUsername(),ipAddr,channel);
 		if (webViewUserVO != null) {
 			logger.info("web端登录成功 userId is :{}", webViewUserVO.getUserId());
 			if (user != null && StringUtils.isNotBlank(presetProps)) {
