@@ -153,6 +153,11 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                 BigDecimal bdCurInterest = borrow.getRepayAccountInterest();
                 bdCurInterest = bdCurInterest.setScale(2, BigDecimal.ROUND_HALF_UP);
                 param.put("curInterest", bdCurInterest.toString());
+                // 应急中心二期，新加应还服务费
+                //本条记录（当期）应还服务费（元）
+                BigDecimal bdRepayFee = repay.getRepayFee();
+                bdRepayFee = bdRepayFee.setScale(2, BigDecimal.ROUND_HALF_UP);
+                param.put("curServiceCharge",bdRepayFee.toString());
                 //当期应还款时间点
                 //当期应还时间点：报送当期应还日期23:59:59
                 param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime()) + " 23:59:59");
