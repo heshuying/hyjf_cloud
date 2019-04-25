@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -129,6 +130,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         // 排序
         Collections.sort(couponConfigs, new ComparatorCouponBean());
         for (BestCouponListVO bestCoupon : couponConfigs) {
+
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if (bestCoupon.getCouponType() == 2) {
@@ -140,6 +142,17 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     continue;
                 }
             }
+
+            // 验证使用平台
+            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+            if(ifcouponSystem){
+                continue;
+            }
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
+
             // 验证项目期限、
             Integer type = bestCoupon.getProjectExpirationType();
             if(dealProjectExpiration(borrow.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
@@ -171,11 +184,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (addFlg) {
                 continue;
             }
-            // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
-            if(!ifcouponSystem){
-                return bestCoupon;
-            }
+            return bestCoupon;
         }
         return null;
     }
@@ -310,6 +319,16 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                         continue;
                     }
                 }
+                // 验证使用平台
+                boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+                if(ifcouponSystem){
+                    continue;
+                }
+                // 加息券如果没有填金额则不可用
+                if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                    continue;
+                }
+
                 // 验证项目期限
                 Integer type = bestCoupon.getProjectExpirationType();
                 if(dealProjectExpiration(plan.getBorrowStyle(),type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),plan.getLockPeriod())){
@@ -344,11 +363,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 if (addFlg) {
                     continue;
                 }
-                // 验证使用平台
-                boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
-                if(!ifcouponSystem){
-                    return bestCoupon;
-                }
+                return bestCoupon;
             }
             return null;
         }
@@ -551,6 +566,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目金额
             Integer tenderQuotaType = bestCoupon.getTenderQuotaType();
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform);
+                notAvailableCouponList.add(couponBean);
+                continue;
+            }
+
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
@@ -668,6 +690,12 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (!ifcouponSystem) {
                 // 验证项目金额
                 Integer tenderQuotaType = userCouponConfigCustomize.getTenderQuotaType();
+                // 加息券如果没有填金额则不可用
+                if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform);
+                    notAvailableCouponList.add(couponBean);
+                    continue;
+                }
                 if (1 == tenderQuotaType) {
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
