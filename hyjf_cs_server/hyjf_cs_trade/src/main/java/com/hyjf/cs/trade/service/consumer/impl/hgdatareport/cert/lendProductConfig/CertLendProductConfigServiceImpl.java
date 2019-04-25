@@ -108,11 +108,11 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         //平台编号
         param.put("sourceCode", systemConfig.getCertSourceCode());
         //产品信息编号
-        param.put("sourceFinancingcode", sourceFinancingcode);
+        param.put("sourceFinancingCode", sourceFinancingcode);
         //债权编号
-        param.put("finClaimID", finClaimID);
+        param.put("finClaimId", finClaimID);
         //产品配置编号
-        param.put("configID", finClaimID);
+        param.put("configId", finClaimID);
         //智投出借人哈希
         param.put("userIdcardHash", userIdcardHash);
         if(isOld){
