@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 public interface Activity51Service {
 
     /**
-     * 判断是否是活动时间
+     * 判断是否是活动时间, -1未开始  0-进行中  1-已结束
      * @return
      */
-    boolean isActivityTime();
+    Integer isActivityTime();
 
     /**
      * 查询活动期间累计投资年化金额

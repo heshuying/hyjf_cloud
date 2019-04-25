@@ -3,6 +3,7 @@ package com.hyjf.cs.market.controller.app.activity;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.cs.market.controller.AbstractActivity51Controller;
 import com.hyjf.cs.market.vo.Activity51VO;
+import com.hyjf.cs.market.vo.ActivityTimeVO;
 import com.hyjf.cs.market.vo.GuessVO;
 import com.hyjf.cs.market.vo.RewardReceiveVO;
 import io.swagger.annotations.Api;
@@ -28,6 +29,17 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     private final String H5_FAIL_STATUS = "99";
 
     /**
+     * 查询当前时间是不是在活动时间范围内
+     * @return
+     */
+    @ApiOperation(value = "查询当前时间是不是在活动时间范围内", notes = "查询当前时间是不是在活动时间范围内")
+    @RequestMapping(value = "/isActivityTime", method = RequestMethod.GET)
+    public BaseResult<ActivityTimeVO> isActivityTime() {
+        logger.info("app端-查询当前时间是不是在活动时间范围内...");
+        return isActivityTime(H5_SUCCESS_STATUS, H5_FAIL_STATUS);
+    }
+
+    /**
      * 查询活动期间当前累计出借金额
      *
      * @return
@@ -36,8 +48,7 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     @RequestMapping(value = "/sumAmount", method = RequestMethod.GET)
     public BaseResult<Activity51VO> getSumAmount() {
         logger.info("app端-查询活动期间当前累计出借金额...");
-        // h5返回00才能去到jumpcommand
-        return getSumAmount(H5_SUCCESS_STATUS, H5_SUCCESS_STATUS);
+        return getSumAmount(H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 
     /**
