@@ -353,7 +353,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         }
 
         projectIntr.setPlanName(appCouponCustomize.getPlanName());
-        projectIntr.setBorrowApr(appCouponCustomize.getPlanApr());
+        projectIntr.setBorrowApr(FormatRateUtil.formatBorrowApr(appCouponCustomize.getPlanApr()));
         // mod by nxl 智投服务 修改优惠券锁定期显示 start
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
       /*  SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
