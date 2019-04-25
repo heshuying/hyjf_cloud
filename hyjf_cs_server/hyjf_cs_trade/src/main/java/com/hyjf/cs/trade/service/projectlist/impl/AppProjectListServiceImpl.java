@@ -151,8 +151,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 list = new ArrayList<>();
             }
             for (int i = 0; i < list.size(); i++) {
-            	list.get(i).setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
-            	list.get(i).setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+            	AppProjectListCustomizeVO is = list.get(i);
+            	is.setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+            	is.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+            	list.set(i,is);
 			}
             result = convertToAppProjectType(list);
             CommonUtils.convertNullToEmptyString(result);
@@ -171,8 +173,10 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 throw new RuntimeException("app端查询散标出借列表原子层list数据异常");
             }else {
                 for (int i = 0; i < list.size(); i++) {
-                	list.get(i).setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
-                	list.get(i).setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+                	AppProjectListCustomizeVO is = list.get(i);
+                	is.setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+                	is.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
+                	list.set(i,is);
     			}
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
