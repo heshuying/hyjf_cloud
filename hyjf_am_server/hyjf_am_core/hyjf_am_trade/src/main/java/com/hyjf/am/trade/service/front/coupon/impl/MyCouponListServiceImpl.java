@@ -518,6 +518,12 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         Integer moneyFlg = borrowInfo.getBorrowTasteMoney();
         List<MyCouponListCustomizeVO> list = myCouponListCustomizeMapper.selectMyCouponList(map);
         for (MyCouponListCustomizeVO bestCoupon : list) {
+            // 验证使用平台
+            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
+            if(ifcouponSystem){
+                continue;
+            }
+
             // 验证项目加息券或体验金是否可用
             if (couponFlg != null && couponFlg == 0) {
                 if ("2".equals(bestCoupon.getCouponType())) {
@@ -537,6 +543,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     continue;
                 }
             }
+
             // 验证项目期限、
             Integer type = bestCoupon.getExpirationType();
             if(dealProjectExpiration(style,type,bestCoupon.getProjectExpirationLength(),bestCoupon.getProjectExpirationLengthMin(),bestCoupon.getProjectExpirationLengthMax(),borrow.getBorrowPeriod())){
@@ -577,12 +584,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (ifprojectType) {
                 continue;
             }
-            // 验证使用平台
-            boolean ifcouponSystem = dealCheckCouponSystem(bestCoupon.getCouponSystem(),platform);
-            if(!ifcouponSystem){
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"",platform);
-                availableCouponList.add(couponBean);
-            }
+
+            CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"",platform);
+            availableCouponList.add(couponBean);
+
         }
 
         jsonObject.put("availableCouponList", availableCouponList);
