@@ -19,7 +19,7 @@
       CASE
       WHEN ug.grade = 1 THEN '1-99名'
       WHEN ug.grade = 2 THEN '100-999名'
-      WHEN ug.grade = 3 THEN '1000-2000名'
+      WHEN ug.grade = 3 THEN '1000-1999名'
       ELSE '2000以外' END AS grade,
       CASE
       WHEN ug.grade = 1 THEN '2%代金券'
