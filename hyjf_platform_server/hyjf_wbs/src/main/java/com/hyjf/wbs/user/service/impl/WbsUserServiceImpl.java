@@ -190,7 +190,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 	}
 
 	@Override
-	public WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel,String presetProps) {
+	public WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel, String presetProps) {
 
 		WebUserBindVO vo=new WebUserBindVO();
 
@@ -201,7 +201,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 		UserVO user=amUserClient.findUserById(userVO.getUserId());
 
 		if(!user.getUsername().equals(userVO.getUsername())){
-			throw new CheckException("999","汇盈查询的用户名【"+userVO.getUsername()+"】与newBanker提供的【"+user.getUsername()+"】不一致！");
+			throw new CheckException("999","汇盈查询的用户名【"+user.getUsername()+"】与newBanker提供的【"+userVO.getUsername()+"】不一致！");
 		}
 
 		WebViewUserVO webViewUserVO = loginOperationOnly(user,user.getUsername(),ipAddr,channel);
