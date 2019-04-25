@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -74,7 +75,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						//原散标编号
 						param.put("sourceProductCode",credit.getBidNid());// 选填
 						//计划转让利率
-						param.put("transferInterestRate",borrowAndInfoVO.getBorrowApr());// 选填
+						param.put("transferInterestRate",borrowAndInfoVO.getBorrowApr().divide(new BigDecimal(100), 2, RoundingMode.HALF_UP));// 选填
 						//计划转让本金(元)
 						param.put("transferAmount", credit.getCreditCapital().toString());
 						//浮动金额   0-(credit_capital*credit_discount/100)
@@ -117,7 +118,7 @@ public class CertTransferProjectServiceImpl extends BaseHgCertReportServiceImpl 
 						//原散标编号
 						param.put("sourceProductCode",hjhDebtCredit.getBorrowNid());// 选填
 						//计划转让利率
-						param.put("transferInterestRate",borrowAndInfoVO.getBorrowApr());// 选填
+						param.put("transferInterestRate",borrowAndInfoVO.getBorrowApr().divide(new BigDecimal(100), 2, RoundingMode.HALF_UP));// 选填
 						//计划转让本金(元)
 						param.put("transferAmount", hjhDebtCredit.getCreditCapital().toString());
 						//浮动金额
