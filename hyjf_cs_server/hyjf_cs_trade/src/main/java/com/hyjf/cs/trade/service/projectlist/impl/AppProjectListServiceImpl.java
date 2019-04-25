@@ -172,6 +172,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }else {
                 for (int i = 0; i < list.size(); i++) {
                 	list.get(i).setBorrowApr(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowApr()));
+                	list.get(i).setBorrowExtraYield(FormatRateUtil.formatBorrowApr(list.get(i).getBorrowExtraYield().toString()));
     			}
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
