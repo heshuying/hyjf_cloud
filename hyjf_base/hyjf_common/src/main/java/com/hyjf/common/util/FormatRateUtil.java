@@ -27,7 +27,7 @@ public class FormatRateUtil {
     		return null;
     	}
         if (StringUtils.isEmpty(borrowApr)) {
-            return "0.0";
+            return "";
         }
         String[] stringArr = borrowApr.split("\\.");
         if (stringArr.length <= 0) {

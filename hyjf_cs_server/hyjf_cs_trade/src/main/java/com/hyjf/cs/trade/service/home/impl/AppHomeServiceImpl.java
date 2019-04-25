@@ -642,7 +642,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         project.setBorrowDesc(appHomePageCustomize.getBorrowDesc());
         project.setButtonText(appHomePageCustomize.getStatusName());
         // 产品加息
-        project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
+        project.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(appHomePageCustomize.getBorrowExtraYield()));
         project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
         if("13".equals(project.getStatus()) || "12".equals(project.getStatus())){
             project.setButtonText("查看详情");
@@ -812,7 +812,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 // add by nxl 智投服务 推荐产品显示历史年回报率
                 homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
                 homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
-                String borrowExtraYield = listCustomize.getBorrowExtraYield();
+                String borrowExtraYield = FormatRateUtil.formatBorrowApr(listCustomize.getBorrowExtraYield());
                 homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             }else if("复审中".equals(listCustomize.getStatusName()) || "还款中".equals(listCustomize.getStatusName()) ){
                 //add by nxl 智投服务->添加推荐服务标题
@@ -827,7 +827,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 if(StringUtils.isNotBlank(borrowExtraYield)){
                     borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
                 }
-                homePageCustomize.setBorrowExtraYield(borrowExtraYield);
+                homePageCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(borrowExtraYield)));
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());
@@ -859,7 +859,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setBorrowDesc("散标");
             }
             // 产品加息
-            homePageCustomize.setBorrowExtraYield(listCustomize.getBorrowExtraYield());
+            homePageCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowExtraYield()));
             homePageCustomize.setBorrowType(listCustomize.getBorrowType());
             homePageCustomize.setBorrowTheFirst(FormatRateUtil.formatBorrowApr(listCustomize.getBorrowApr()) + "%");
             homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
@@ -1164,7 +1164,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 if(!Validator.isIncrease(project.getIncreaseInterestFlag(), project.getBorrowExtraYieldOld())){
                     project.setBorrowExtraYield("");
                 }
-                info.put("borrowExtraYield", project.getBorrowExtraYield());
+                info.put("borrowExtraYield", FormatRateUtil.formatBorrowApr(project.getBorrowExtraYield()));
             }else {
                 info.put("sprogExist", "0");
                 info.put("sprogBorrowApr", "");

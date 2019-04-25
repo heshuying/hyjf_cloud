@@ -1318,7 +1318,7 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         for (WechatHomeProjectListVO wechatHomeProjectListCustomize : list) {
         	wechatHomeProjectListCustomize.setBorrowApr(FormatRateUtil.formatBorrowApr(wechatHomeProjectListCustomize.getBorrowApr()));
-        	
+        	wechatHomeProjectListCustomize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(wechatHomeProjectListCustomize.getBorrowExtraYield()));
             if ("HJH".equals(wechatHomeProjectListCustomize.getBorrowType())) {
                 if ("1".equals(wechatHomeProjectListCustomize.getStatus())) {
                     wechatHomeProjectListCustomize.setStatus("20");
