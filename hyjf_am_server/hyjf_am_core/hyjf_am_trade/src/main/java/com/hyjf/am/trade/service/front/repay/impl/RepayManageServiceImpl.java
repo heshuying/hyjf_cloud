@@ -1048,7 +1048,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
-                                userChargePenaltyInterest = acctualInterest;
+                                userChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr());// 用户提前还款罚息
                             } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
                                 int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
                                 // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
@@ -1174,7 +1174,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                 } else {
                                     userChargeInterest = userInterest.subtract(acctualInterest);
                                 }
-                                userChargePenaltyInterest = acctualInterest;
+                                userChargePenaltyInterest = UnnormalRepayUtils.aheadEndRepayInterest(userCapital, borrow.getBorrowApr());// 用户提前还款罚息
                             } else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
                                 int carryDays = totalDays - Math.min(totalDays,interestDay) + 1;// 按天计息标的实际持有天数
                                 // 产品确认用应还利息-持有天数利息计算减息 update by wgx & mjb 2019/04/17
