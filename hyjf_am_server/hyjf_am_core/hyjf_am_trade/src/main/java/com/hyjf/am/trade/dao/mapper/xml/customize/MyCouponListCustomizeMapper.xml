@@ -140,7 +140,7 @@
 			CONCAT(
 				'适用于',
 				cc.project_expiration_length_min,
-				'个月~',
+				'~',
 				cc.project_expiration_length_max,
 				'个月的项目'
 			)
