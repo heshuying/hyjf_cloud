@@ -56,7 +56,7 @@
             AND rp.recover_status = 0 AND rp.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
-            AND rp.recover_status = #{repayStatus}
+            AND rp.recover_status = #{repayStatus} AND rp.advance_status != 3
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND rp.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
