@@ -2,6 +2,8 @@ package com.hyjf.admin.service.config;
 
 import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
 import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 
@@ -13,14 +15,16 @@ public interface WithdrawConfigService {
     /**
      * 假期时间配置
      * @return
+     * @param request
      */
-    WithdrawTimeConfigResponse getWithdrawTimeConfigList();
+    WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request);
 
     /**
      * 提现规则配置
      * @return
+     * @param request
      */
-    WithdrawRuleConfigResponse getWithdrawRuleConfigList();
+    WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request);
 
     /**
      * 提现规则配置详情

@@ -5,6 +5,8 @@ import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.config.WithdrawConfigService;
 import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
 import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +26,21 @@ public class WithdrawConfigServiceImpl extends BaseServiceImpl implements Withdr
     /**
      *假期时间配置列表
      * @return
+     * @param request
      */
     @Override
-    public WithdrawTimeConfigResponse getWithdrawTimeConfigList() {
-        return amConfigClient.getWithdrawTimeConfigList();
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request) {
+        return amConfigClient.getWithdrawTimeConfigList(request);
     }
 
     /**
      * 提现规则配置列表
      * @return
+     * @param request
      */
     @Override
-    public WithdrawRuleConfigResponse getWithdrawRuleConfigList() {
-        return amConfigClient.getWithdrawRuleConfigList();
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request) {
+        return amConfigClient.getWithdrawRuleConfigList(request);
     }
 
     /**
