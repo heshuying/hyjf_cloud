@@ -64,14 +64,11 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             if (flag.equals("2")) {
                 //加入智投
                 HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(orderId);
-                logger.info(logHeader + "智投加入订单号:" + orderId + "智投的加入记录为：" + JSONArray.toJSONString(hjhAccedeVO));
                 if (null == hjhAccedeVO) {
                     throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + orderId);
                 }
                 //finClaimID
                 List<BorrowTenderVO> borrowTenderList = amTradeClient.getBorrowTenderByAccede(hjhAccedeVO.getAccedeOrderId());
-                logger.info(logHeader + "智投加入订单号:" + hjhAccedeVO.getAccedeOrderId() + "智投的加入记录为：" + JSONArray.toJSONString(hjhAccedeVO));
-
                 if (!CollectionUtils.isNotEmpty(borrowTenderList)) {
                     throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！智投计入订单号:" + hjhAccedeVO.getAccedeOrderId());
                 }
@@ -94,10 +91,9 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 //债权来源承接转让时，填写承接转让编号
                 finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                 //承接用户id
-                userId = hjhDebtCreditTenderVO.getUserId();
+                String idCardHash = getIdCard(userId);
+                json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
             }
-            String idCardHash = getIdCard(userId);
-            json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -130,7 +126,6 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         String userIdcardHash = "";
         try {
             UserInfoVO userVO = amUserClient.findUserInfoById(userId);
-            logger.info(logHeader + "根据用户id:" + userId + " 查询的信息为：" + JSONArray.toJSONString(userVO));
             if (null == userVO) {
                 throw new Exception("产品配置信息推送,获取出借人信息为空！！用户id为：" + userId);
             }
