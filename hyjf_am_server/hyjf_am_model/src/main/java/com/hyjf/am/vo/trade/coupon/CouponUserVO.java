@@ -145,11 +145,12 @@ public class CouponUserVO extends BaseVO implements Serializable {
     }
     //格式化利率dzs
     public String getFormatCouponQuota() {
-    	if(couponQuota!=null) {
-    		return  FormatRateUtil.formatBorrowApr(couponQuota.toString());
-    	}else {
-    		return "";
-    	}
+        return couponQuota.toString();
+//    	if(couponQuota!=null) {
+//    		return  FormatRateUtil.formatBorrowApr(couponQuota.toString());
+//    	}else {
+//    		return "";
+//    	}
         
     }
     
