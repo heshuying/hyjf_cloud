@@ -91,6 +91,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 //债权来源承接转让时，填写承接转让编号
                 finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                 //承接用户id
+                userId = hjhDebtCreditTenderVO.getUserId();
                 String idCardHash = getIdCard(userId);
                 json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
             }
