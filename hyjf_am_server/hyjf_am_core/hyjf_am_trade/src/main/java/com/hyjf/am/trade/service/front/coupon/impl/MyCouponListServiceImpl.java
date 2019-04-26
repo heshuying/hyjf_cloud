@@ -515,6 +515,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
+        List<CouponBeanVo> availableCouponListSort=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -603,9 +604,22 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
         }
 
-        jsonObject.put("availableCouponList", availableCouponList);
+        if(!availableCouponList.isEmpty()){
+            BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
+            if(bestCoupon != null){
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                        availableCouponList.remove(couponBeanVo);
+                    }
+                }
+                availableCouponListSort.addAll(availableCouponList);
+            }
+        }
+
+        jsonObject.put("availableCouponList", availableCouponListSort);
         jsonObject.put("notAvailableCouponList", notAvailableCouponList);
-        jsonObject.put("availableCouponListCount", availableCouponList.size());
+        jsonObject.put("availableCouponListCount", availableCouponListSort.size());
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
         return jsonObject;
     }
@@ -622,6 +636,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
+        List<CouponBeanVo> availableCouponListSort=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -709,10 +724,24 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 availableCouponList.add(couponBeanVo);
             }
         }
+
+        if(!availableCouponList.isEmpty()){
+            BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
+            if(bestCoupon != null){
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                        availableCouponList.remove(couponBeanVo);
+                    }
+                }
+                availableCouponListSort.addAll(availableCouponList);
+            }
+        }
+
         // 排序
-        jsonObject.put("availableCouponList", availableCouponList);
+        jsonObject.put("availableCouponList", availableCouponListSort);
         jsonObject.put("notAvailableCouponList", notAvailableCouponList);
-        jsonObject.put("availableCouponListCount", availableCouponList.size());
+        jsonObject.put("availableCouponListCount", availableCouponListSort.size());
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
 
         return jsonObject;
