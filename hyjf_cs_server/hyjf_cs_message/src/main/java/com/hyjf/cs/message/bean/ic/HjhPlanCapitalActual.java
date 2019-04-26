@@ -35,6 +35,11 @@ public class HjhPlanCapitalActual  implements Serializable {
     private String planName;
 
     /**
+     * 天标/月标
+     */
+    private Integer isMonth;
+
+    /**
      * 锁定期
      */
     private Integer lockPeriod;
@@ -246,5 +251,13 @@ public class HjhPlanCapitalActual  implements Serializable {
 
     public void setDelFlg(Integer delFlg) {
         this.delFlg = delFlg;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
     }
 }
