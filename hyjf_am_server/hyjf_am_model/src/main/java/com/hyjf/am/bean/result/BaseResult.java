@@ -37,6 +37,7 @@ public class BaseResult<T> implements Serializable {
 
 	private String status = SUCCESS;
 	private String statusDesc = SUCCESS_DESC;
+	private String isGuess = "0";
 	private T data;
 
 	public BaseResult() {
@@ -132,6 +133,14 @@ public class BaseResult<T> implements Serializable {
 	 */
 	public void setData(T data) {
 		this.data = data;
+	}
+
+	public String getIsGuess() {
+		return isGuess;
+	}
+
+	public void setIsGuess(String isGuess) {
+		this.isGuess = isGuess;
 	}
 
 	/**

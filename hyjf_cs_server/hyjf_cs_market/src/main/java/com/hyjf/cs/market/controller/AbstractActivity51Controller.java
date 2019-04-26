@@ -185,21 +185,26 @@ public class AbstractActivity51Controller {
         logger.info("用户竞猜, userId is: {}", userId);
         BaseResult result = null;
         if (activity51Service.isActivityTime() != 0) {
-            return buildResult(failStatus, ACTIVITY_NOT_START);
+            result = buildResult(failStatus, ACTIVITY_NOT_START);
+            result.setIsGuess(isShowGuess());
+            return result;
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            result = buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
+            result.setIsGuess(isShowGuess());
+            return result;
         }
 
         // 判断是否已经竞猜
         result = new BaseResult(successStatus, "查询成功");
         ActivityUserGuessVO vo = activity51Service.getUserGuess(userId);
         if (vo != null) {
-            result.setData(new GuessVO("Y", "已竞猜", vo.getGrade(),isShowGuess()));
+            result.setData(new GuessVO("Y", "已竞猜", vo.getGrade()));
         } else {
-            result.setData(new GuessVO("N", "未竞猜",isShowGuess()));
+            result.setData(new GuessVO("N", "未竞猜"));
         }
+        result.setIsGuess(isShowGuess());
         return result;
     }
 
