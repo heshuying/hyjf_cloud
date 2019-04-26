@@ -158,7 +158,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         //借款人id
         Integer userId = 0;
         try {
-            //未还款的标的
+            /*//未还款的标的
             List<CertBorrowVO> listJoin = amTradeClient.selectCertBorrowByFlg(2);
             if(CollectionUtils.isNotEmpty(listJoin)){
                 for(CertBorrowVO certBorrowVO:listJoin){
@@ -187,7 +187,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 }
             }
             // 未完全转让的标的
-            List<CertBorrowVO> listCredit = amTradeClient.selectCertBorrowByFlg(1);
+            List<CertBorrowVO> listCredit = amTradeClient.selectCertBorrowByFlg(1);*/
             //查找未还款的债权信息
            /* List<BorrowTenderCustomizeVO> borrowTenderCustomizeVOList = amTradeClient.getBorrowTenderInfoCustomize();
             if(!CollectionUtils.isNotEmpty(borrowTenderCustomizeVOList)){

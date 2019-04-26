@@ -7260,11 +7260,11 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-    /**
+/*    *//**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
      * @param flg
      * @return
-     */
+     *//*
     @Override
     public List<CertBorrowVO> selectCertBorrowByFlg(int flg){
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectCertBorrowByFlg/"+flg;
@@ -7273,5 +7273,5 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
-    }
+    }*/
 }

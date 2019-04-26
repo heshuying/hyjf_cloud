@@ -2990,6 +2990,6 @@ public interface AmTradeClient {
      * @param flg
      * @return
      */
-    List<CertBorrowVO> selectCertBorrowByFlg(int flg);
+//    List<CertBorrowVO> selectCertBorrowByFlg(int flg);
 }
 
