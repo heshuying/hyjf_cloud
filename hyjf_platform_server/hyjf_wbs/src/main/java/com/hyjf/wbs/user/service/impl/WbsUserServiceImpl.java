@@ -189,6 +189,10 @@ public class WbsUserServiceImpl implements WbsUserService {
 
 		UserVO userVO = getCustomerFromNewBanker(qo);
 
+		//测试用
+		userVO.setUserId(5863);
+		userVO.setUsername("hyjf002383");
+
 		User user = userService.findUserById(userVO.getUserId());
 
 		if (!user.getUsername().equals(userVO.getUsername())) {

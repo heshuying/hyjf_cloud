@@ -44,10 +44,6 @@ public class WbsWechatUserController {
 
         BaseResult result=new BaseResult();
 
-        String presetProps=getStringFromStream(request);
-
-        logger.info("wechat bind presetProps=【{}】",presetProps);
-
         wbsUserService.wechatBind(wechatUserBindQO, result);
 
         return result;
@@ -91,7 +87,7 @@ public class WbsWechatUserController {
     public BaseResult redirect(HttpServletRequest request, @RequestBody WbsRedirectQO qo){
         BaseResult result=new BaseResult();
 
-        String presetProps = getStringFromStream(request);
+        String presetProps = qo.getPresetProps();
 
         WbsUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_WEI,presetProps);
 
@@ -99,33 +95,4 @@ public class WbsWechatUserController {
 
         return result;
     }
-
-
-    /**
-     * 从payload里面取神策预置属性,为解决从request里面取乱码的问题
-     *
-     * @param req
-     * @return
-     */
-    private String getStringFromStream(HttpServletRequest req) {
-        ServletInputStream is;
-        try {
-            is = req.getInputStream();
-            int nRead = 1;
-            int nTotalRead = 0;
-            byte[] bytes = new byte[10240];
-            while (nRead > 0) {
-                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
-                if (nRead > 0)
-                    nTotalRead = nTotalRead + nRead;
-            }
-            String str = new String(bytes, 0, nTotalRead, "utf-8");
-            return str;
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            return "";
-        }
-    }
-
-
 }
