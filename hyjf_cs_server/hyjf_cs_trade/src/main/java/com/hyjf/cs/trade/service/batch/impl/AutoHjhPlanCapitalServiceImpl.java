@@ -69,7 +69,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             List<HjhPlanCapitalPredictionVO> hjhPlanCapitalPredictionDoubleThrowList = amTradeClient.getCapitalPredictionInfo(GetDate.dateToString(beginDate));
             listAll.addAll(hjhPlanCapitalPredictionDoubleThrowList);
             // 预计新增债转额
-            List<HjhPlanCapitalPredictionVO> hjhPlanCapitalPredictionList = amTradeClient.getPlanCapitalForCreditInfo(GetDate.dateToString(beginDate),GetDate.dateToString(initDate));
+            List<HjhPlanCapitalPredictionVO> hjhPlanCapitalPredictionList = amTradeClient.getPlanCapitalForCreditInfo(GetDate.dateToString(initDate),GetDate.dateToString(beginDate));
             listAll.addAll(hjhPlanCapitalPredictionList);
         }
         // 整理listAll数据放入到map中
