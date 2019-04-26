@@ -54,11 +54,24 @@ public class BorrowRepaymentInfoCustomizeVO {
     private String repayOrdid; //还款订单号
     private String repayBatchNo; //还款批次号
     private String instName; //机构名称
+    private String borrowPeriodExcl;
+    
+    
+    
+    
+    public String getBorrowPeriodExcl() {
+    	if("endday".equals(borrowStyle)) {
+    		return borrowPeriod+ "天";
+          }else{
+        	  return borrowPeriod+ "个月";
+          }
+	}
 
-    
-    
-    
-    private String repayAccountAll;
+	public void setBorrowPeriodExcl(String borrowPeriodExcl) {
+		this.borrowPeriodExcl = borrowPeriodExcl;
+	}
+
+	private String repayAccountAll;
     private String repayAccountCapital;
     private String repayAccountInterest;
     private String borrowManager;

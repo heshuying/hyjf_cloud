@@ -164,7 +164,7 @@ public class BorrowRepaymentPlanController extends BaseController {
         map.put("repayAccountInterestYes","实还利息");
         map.put("yihuanfuwufei","实还服务费");
         map.put("yinghuanzonge","实还总额");
-        map.put("status","还款状态");
+        map.put("extraYieldRepayStatus","还款状态");
         map.put("repayActionTime","实际还款日期");
         map.put("repayLastTime","应还日期");
         map.put("repayMoneySource","还款来源");
@@ -212,6 +212,13 @@ public class BorrowRepaymentPlanController extends BaseController {
                 return null;
             }
         };
+		IValueFormatter timeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(value));
+			}
+		};
         mapAdapter.put("borrowPeriod", borrowPeriodAdapter);
         mapAdapter.put("borrowApr", borrowAprAdapter);
         mapAdapter.put("borrowAccount", valueFormatAdapter);
@@ -226,9 +233,12 @@ public class BorrowRepaymentPlanController extends BaseController {
         mapAdapter.put("yuqilixi", valueFormatAdapter);
         mapAdapter.put("yinghuanzonge", valueFormatAdapter);
         mapAdapter.put("shihuanzonge", valueFormatAdapter);
-        mapAdapter.put("status", statusAdapter);
+       // mapAdapter.put("status", statusAdapter);
         mapAdapter.put("repayAccountCapitalWait",valueFormatAdapter);
         mapAdapter.put("repayAccountInterestWait",valueFormatAdapter);
+        mapAdapter.put("verifyTime",timeAdapter);
+        mapAdapter.put("borrowFullTime",timeAdapter);
+        mapAdapter.put("recoverLastTime",timeAdapter);
         return mapAdapter;
     }
 
