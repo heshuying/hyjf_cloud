@@ -241,6 +241,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 				bindVO.setUserType(webViewUserVO.getUserType());
 				bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
 				bindVO.setSign(webViewUserVO.getToken());
+				bindVO.setMobile(webViewUserVO.getMobile());
 				bindVO.setRetUrl(buildRetUrl(qo));
 				return bindVO;
 
