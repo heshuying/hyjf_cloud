@@ -1831,12 +1831,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
-        vo.setBorrowApr(borrow.getBorrowApr() + "%");
+        vo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString())  + "%");
 
         // 产品加息
         if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-            vo.setBorrowApr(borrow.getBorrowApr() + "% + "
-                    + borrowInfo.getBorrowExtraYield() + "%");
+            vo.setBorrowApr(FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString())+ "% + "
+                    + FormatRateUtil.formatBorrowApr(borrowInfo.getBorrowExtraYield().toString()) + "%");
         }
 
         vo.setBorrowNid(tender.getBorrowNid());
