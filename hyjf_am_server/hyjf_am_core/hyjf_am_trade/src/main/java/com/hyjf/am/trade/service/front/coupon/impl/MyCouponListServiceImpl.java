@@ -841,10 +841,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             couponBean.setInvestQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
             couponBean.setTenderQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
-            if("2".equals(userCouponConfigCustomize.getCouponType()) && money.compareTo(BigDecimal.ZERO)<=0){
-                couponBean.setInvestQuota("加息券不可以单独使用");
-                couponBean.setTenderQuota("加息券不可以单独使用");
-            }
+//            if("2".equals(userCouponConfigCustomize.getCouponType()) && money.compareTo(BigDecimal.ZERO)<=0){
+//                couponBean.setInvestQuota("加息券不可以单独使用");
+//                couponBean.setTenderQuota("加息券不可以单独使用");
+//            }
         }else{
             //处理优惠券适用项目
             String projectString = BestCouponUtil.dealProjectType(userCouponConfigCustomize.getProjectType());
