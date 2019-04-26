@@ -234,7 +234,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
             //
             if(!existUser(mobile)){
                 ret.put("status", "1");
-                ret.put("statusDesc", "该手机号未注册");
+                ret.put("statusDesc", "不存在用户");
                 return ret;
             }
         }
