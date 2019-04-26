@@ -563,15 +563,6 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         logger.info(logMsgHeader + "#### BD更新出借数据成功" + borrow.getBorrowNid() + "####");
                         logger.info(logMsgHeader + "删除临时表：hjhPlanBorrowTmp，（BorrowNid：" + borrow.getBorrowNid() + "，AccedeOrderId：" + hjhAccede.getOrderStatus() + "）");
 
-                        //应急中心二期 计入智投时报送数据 埋点 20190419 nxl start
-                        JSONObject paramsComfig = new JSONObject();
-                        paramsComfig.put("assignOrderId",hjhAccede.getAccedeOrderId());//计入智投单号
-                        paramsComfig.put("isTender","2"); //1:承接智投，2：出借智投
-                        // 推送数据到MQ 智投出借成功（每笔）
-                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.INVESTPLAN_TAG, UUID.randomUUID().toString(), paramsComfig),
-                                MQConstant.HG_REPORT_DELAY_LEVEL);
-                        // 应急中心二期 计入智投时报送数据 埋点 20190419 nxl end
-
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         logger.error(logMsgHeader + "对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"

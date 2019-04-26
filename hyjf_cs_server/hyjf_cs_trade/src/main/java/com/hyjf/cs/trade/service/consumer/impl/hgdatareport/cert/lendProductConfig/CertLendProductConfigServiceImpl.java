@@ -63,22 +63,19 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             // flag  1:承接智投，2：加入智投
             if (flag.equals("2")) {
                 //加入智投
-                HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(orderId);
+                //根据投资订单号查找标的投资详情信息
+                BorrowTenderVO borrowTenderVO = amTradeClient.selectBorrowTenderByOrderId(orderId);
+                if (null == borrowTenderVO) {
+                    throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！出借订单号为:" + orderId);
+                }
+                //加入智投信息
+                HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
                 if (null == hjhAccedeVO) {
                     throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + orderId);
                 }
-                //finClaimID
-                List<BorrowTenderVO> borrowTenderList = amTradeClient.getBorrowTenderByAccede(hjhAccedeVO.getAccedeOrderId());
-                if (!CollectionUtils.isNotEmpty(borrowTenderList)) {
-                    throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！智投计入订单号:" + hjhAccedeVO.getAccedeOrderId());
-                }
                 userId = hjhAccedeVO.getUserId();
                 sourceFinancingcode = hjhAccedeVO.getPlanNid();
-                String idCardHash = getIdCard(userId);
-                for (BorrowTenderVO borrowTenderVO : borrowTenderList) {
-                    finClaimID = borrowTenderVO.getNid();
-                    json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
-                }
+                finClaimID = borrowTenderVO.getNid();
             } else if(flag.equals("1")) {
                 //计划承接
                 List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(orderId);
@@ -92,9 +89,10 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                 //承接用户id
                 userId = hjhDebtCreditTenderVO.getUserId();
-                String idCardHash = getIdCard(userId);
-                json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
+//                json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
             }
+            String idCardHash = getIdCard(userId);
+            json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

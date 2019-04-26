@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.batch.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
@@ -28,6 +29,7 @@ import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
 import com.hyjf.common.util.calculate.HJHServiceFeeUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -202,8 +204,43 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
+        //应急中心二期 计入智投时报送数据 埋点 20190419 nxl start
+        BorrowTender borrowTenderParam = new BorrowTender();
+        borrowTenderParam.setAccedeOrderId(hjhAccede.getAccedeOrderId());
+        borrowTenderParam.setBorrowNid(borrow.getBorrowNid());
+        BorrowTender borrowTender = selectBorrowTenderByParam(borrowTenderParam);
+        if (null != borrowTender) {
+            JSONObject paramsComfig = new JSONObject();
+            paramsComfig.put("assignOrderId", borrowTender.getNid());//投资订单号
+            paramsComfig.put("isTender", "2"); //1:承接智投，2：出借智投
+            // 推送数据到MQ 智投出借成功（每笔）
+            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.INVESTPLAN_TAG, UUID.randomUUID().toString(), paramsComfig),
+                    MQConstant.HG_REPORT_DELAY_LEVEL);
+        }
+        // 应急中心二期 计入智投时报送数据 埋点 20190419 nxl end
         result = true;
         return result;
+    }
+
+    /**
+     * 根据参数查找标的投资表
+     * @param borrowTenderParam
+     * @return
+     */
+    public BorrowTender selectBorrowTenderByParam(BorrowTender borrowTenderParam){
+        BorrowTenderExample example = new BorrowTenderExample();
+        BorrowTenderExample.Criteria criteria =example.createCriteria();
+        if(StringUtils.isNotBlank(borrowTenderParam.getAccedeOrderId())){
+            criteria.andAccedeOrderIdEqualTo(borrowTenderParam.getAccedeOrderId());
+        }
+        if(StringUtils.isNotBlank(borrowTenderParam.getBorrowNid())){
+            criteria.andBorrowNidEqualTo(borrowTenderParam.getBorrowNid());
+        }
+        List<BorrowTender> borrowTenderList =borrowTenderMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(borrowTenderList)){
+            return borrowTenderList.get(0);
+        }
+        return null;
     }
 
     /**
