@@ -5,15 +5,18 @@ package com.hyjf.wbs.qvo;
  * @version RedirectTypeEnum, v0.1 2019/4/24 10:34
  */
 public enum RedirectTypeEnum {
-    INDEX_TYPE("index","/"),BORROW_TYPE("borrow","/borrow/borrowDetail?borrowNid=%s"),PANDECT_TYPE("pandect","/user/pandect");
+    INDEX_TYPE("index","/","/"),BORROW_TYPE("borrow","/borrow/borrowDetail?borrowNid=%s","/borrow/%s"),PANDECT_TYPE("pandect","/user/pandect","/mine");
 
     private String type;
 
-    private String url;
+    private String webUrl;
 
-    RedirectTypeEnum(String type, String url) {
+    private String wechatUrl;
+
+    RedirectTypeEnum(String type, String webUrl,String wechatUrl) {
         this.type = type;
-        this.url = url;
+        this.webUrl = webUrl;
+        this.wechatUrl=wechatUrl;
     }
 
     public static RedirectTypeEnum findType(String type){
@@ -34,11 +37,19 @@ public enum RedirectTypeEnum {
         this.type = type;
     }
 
-    public String getUrl() {
-        return url;
+    public String getWebUrl() {
+        return webUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
+    }
+
+    public String getWechatUrl() {
+        return wechatUrl;
+    }
+
+    public void setWechatUrl(String wechatUrl) {
+        this.wechatUrl = wechatUrl;
     }
 }

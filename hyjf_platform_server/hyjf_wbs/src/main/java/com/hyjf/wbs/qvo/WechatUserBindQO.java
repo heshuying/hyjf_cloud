@@ -24,6 +24,9 @@ public class WechatUserBindQO {
     @ApiModelProperty(value = "密码")
     private String password;
 
+    @ApiModelProperty(value = "神策预置属性")
+    private String presetProps;
+
     public String getCustomerId() {
         return customerId;
     }
@@ -54,5 +57,13 @@ public class WechatUserBindQO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPresetProps() {
+        return presetProps;
+    }
+
+    public void setPresetProps(String presetProps) {
+        this.presetProps = presetProps;
     }
 }

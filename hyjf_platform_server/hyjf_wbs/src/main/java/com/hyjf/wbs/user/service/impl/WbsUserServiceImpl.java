@@ -241,14 +241,15 @@ public class WbsUserServiceImpl implements WbsUserService {
 				bindVO.setUserType(webViewUserVO.getUserType());
 				bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
 				bindVO.setSign(webViewUserVO.getToken());
-				bindVO.setRetUrl(buildRetUrl(qo));
+				bindVO.setMobile(webViewUserVO.getMobile());
+				bindVO.setRetUrl(buildRetUrl(qo,WbsConstants.CHANNEL_WEI));
 				return bindVO;
 
 			} else if (WbsConstants.CHANNEL_PC.equals(channel)) {
 				WebUserBindVO vo = new WebUserBindVO();
 				BeanUtils.copyProperties(webViewUserVO, vo);
 				vo.setUserId(String.valueOf(user.getUserId()));
-				vo.setRetUrl(buildRetUrl(qo));
+				vo.setRetUrl(buildRetUrl(qo,WbsConstants.CHANNEL_PC));
 				return vo;
 			} else {
 				throw new CheckException("999", "不支持的channel【" + channel + "】");
@@ -258,15 +259,28 @@ public class WbsUserServiceImpl implements WbsUserService {
 		}
 	}
 
-	private String buildRetUrl(WbsRedirectQO qo) {
+	private String buildRetUrl(WbsRedirectQO qo,String channel) {
 		String type = qo.getType();
-		if (RedirectTypeEnum.BORROW_TYPE.getType().equals(type)) {
-			String url = RedirectTypeEnum.BORROW_TYPE.getUrl();
-			return String.format(url, qo.getBorrowNid());
-		} else {
-			RedirectTypeEnum redirectTypeEnum = RedirectTypeEnum.findType(type);
-			return redirectTypeEnum.getUrl();
+		if(WbsConstants.CHANNEL_PC.equals(channel)){
+			if (RedirectTypeEnum.BORROW_TYPE.getType().equals(type)) {
+				String url = RedirectTypeEnum.BORROW_TYPE.getWebUrl();
+				return String.format(url, qo.getBorrowNid());
+			} else {
+				RedirectTypeEnum redirectTypeEnum = RedirectTypeEnum.findType(type);
+				return redirectTypeEnum.getWebUrl();
+			}
+		}else if(WbsConstants.CHANNEL_WEI.equals(channel)){
+			if (RedirectTypeEnum.BORROW_TYPE.getType().equals(type)) {
+				String url = RedirectTypeEnum.BORROW_TYPE.getWechatUrl();
+				return String.format(url, qo.getBorrowNid());
+			} else {
+				RedirectTypeEnum redirectTypeEnum = RedirectTypeEnum.findType(type);
+				return redirectTypeEnum.getWechatUrl();
+			}
+		}else {
+			throw new CheckException("999","不支持的channel【"+channel+"】");
 		}
+
 	}
 
 	private UserVO getCustomerFromNewBanker(WbsRedirectQO qo) {

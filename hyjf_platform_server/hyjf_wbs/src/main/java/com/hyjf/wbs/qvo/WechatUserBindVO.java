@@ -20,6 +20,8 @@ public class WechatUserBindVO extends WbsUserBindVO{
     private Integer userType;
     @ApiModelProperty(value = "成功后返回地址")
     private String retUrl;
+    @ApiModelProperty(value = "手机号")
+    private String mobile;
 
     public String getSign() {
         return sign;
@@ -50,5 +52,13 @@ public class WechatUserBindVO extends WbsUserBindVO{
 
     public void setRetUrl(String retUrl) {
         this.retUrl = retUrl;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }
