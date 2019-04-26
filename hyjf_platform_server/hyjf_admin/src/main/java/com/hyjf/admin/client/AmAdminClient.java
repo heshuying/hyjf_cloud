@@ -11,10 +11,7 @@ import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.admin.vip.content.CustomerTaskConfigVOResponse;
 import com.hyjf.am.response.admin.vip.content.ScreenConfigVOResponse;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
-import com.hyjf.am.response.config.SmsConfigResponse;
-import com.hyjf.am.response.config.SubmissionsResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
@@ -23,10 +20,7 @@ import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
-import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.trade.ScreenDataBean;
@@ -1282,6 +1276,64 @@ public interface AmAdminClient {
      * @return
      */
     IntegerResponse countRepayUserList();
+    /**
+     * 查询工作流配置
+     * @param adminRequest
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest);
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO);
+
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    WorkFlowConfigResponse selectWorkFlowConfigInfo(int id);
+    /**
+     * 校验业务id是否存在
+     * @param request
+     * @return
+     */
+    BooleanResponse selectWorkFlowConfigByBussinessId(WorkFlowConfigRequest request);
+    /**
+     * 修改工作流配置业务流程
+     * @param workFlowVO
+     * @return
+     */
+    BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO);
+    /**
+     *  删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    BooleanResponse deleteWorkFlowConfigById(int id);
+    /**
+     *  查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO);
+
+    List<WorkFlowVO> updateStatusBusinessName();
+
+    boolean updateFlowStatus(Integer businessId);
+
+    /**
+     * 查询所有业务流程节点的用户
+     * @return
+     */
+    List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll();
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    AdminRoleResponse selectWorkFlowRoleList();
 
     /**
      * @Author walter.limeng
@@ -1341,6 +1393,20 @@ public interface AmAdminClient {
      * @return java.util.List<com.hyjf.am.resquest.trade.ScreenDataBean>
      **/
     List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex);
+
+    /**
+     * 五一活动获取竞猜列表
+     * @param request
+     * @return
+     */
+    ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request);
+
+    /**
+     * 五一活动获取奖励领取列表
+     * @param rewardRequest
+     * @return
+     */
+    ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest);
     /**
      * 查询累计年华投资
      * @param newYearNineteenRequestBean
