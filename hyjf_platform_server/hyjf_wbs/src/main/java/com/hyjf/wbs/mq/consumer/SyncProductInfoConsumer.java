@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.mq.MqConstants;
+import com.hyjf.wbs.qvo.ProductInfoQO;
 import com.hyjf.wbs.trade.service.SynProductInfoService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -17,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Auther: wxd
@@ -81,20 +80,15 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 linkUrl = PC_ZHITOU_URL + productNo;
                 H5linkUrl = H5_ZHITOU_URL + productNo;
             }
+            ProductInfoQO productInfoQO = new ProductInfoQO();
+            productInfoQO.setH5linkUrl(H5linkUrl);
+            productInfoQO.setLinkUrl(linkUrl);
+            productInfoQO.setProductName(productName);
+            productInfoQO.setProductNo(productNo);
+            productInfoQO.setProductStatus(Integer.valueOf(productStatus));
 
-            // 业务参数
-            Map<String, String> jsonMap = new HashMap<String, String>();
-            jsonMap.put("assetId", "1");
-            jsonMap.put("h5linkUrl", H5linkUrl);
-            jsonMap.put("linkUrl", linkUrl);
-            jsonMap.put("productName", productName);
-            jsonMap.put("productNo", productNo);
-            jsonMap.put("productSort", "1");
-            jsonMap.put("productType", "2");
-            jsonMap.put("productStatus", productStatus);
-            jsonMap.put("publishStatus", "1");
 
-            synProductInfoService.sync(jsonMap);
+            synProductInfoService.sync(productInfoQO);
 
         } catch (Exception e1) {
             logger.error("=====" + CONSUMER_NAME + "异常=====");

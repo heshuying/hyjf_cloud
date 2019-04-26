@@ -1,5 +1,7 @@
 package com.hyjf.wbs.trade.service;
 
+import com.hyjf.wbs.qvo.ProductInfoQO;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -9,5 +11,5 @@ import java.util.Map;
  * @Description:
  */
 public interface SynProductInfoService extends BaseService {
-    public void sync(Map<String,String> map) throws IOException;
+    public void sync(ProductInfoQO productInfoQO);
 }

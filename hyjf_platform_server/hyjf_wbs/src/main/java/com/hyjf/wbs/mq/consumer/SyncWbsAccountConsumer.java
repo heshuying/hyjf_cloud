@@ -5,12 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.MqConstants;
+import com.hyjf.wbs.qvo.CustomerSyncQO;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.service.AccountService;
 import com.hyjf.wbs.user.dao.model.auto.UtmReg;
 import com.hyjf.wbs.user.dao.model.customize.BankOpenAccountRecordCustomize;
 import com.hyjf.wbs.user.service.BankOpenRecordService;
-import com.hyjf.wbs.user.service.SyncCustomerInfoService;
+import com.hyjf.wbs.user.service.SyncCustomerService;
 import com.hyjf.wbs.user.service.UtmRegService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -52,7 +53,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
     @Autowired
     private BankOpenRecordService bankOpenRecordService;
     @Autowired
-    private SyncCustomerInfoService syncCustomerInfoService;
+    private SyncCustomerService syncCustomerService;
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -83,7 +84,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
             UtmReg utmReg = utmRegService.selectUtmInfo(Integer.valueOf(userId), utmId);
             //符合资产端客户信息，推送账户变更信息
             if (utmReg != null) {
-                Map<String,String> mapData = new HashMap<String,String>();
+                CustomerSyncQO customerSyncQO = new CustomerSyncQO();
 
 
                 Account account = accountService.getAccount(Integer.valueOf(userId));
@@ -97,20 +98,19 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                 if (bankOpenAccountRecordCustomize == null) {
                     logger.error("=====" + CONSUMER_NAME + "userId==" + userId + "未查到开户记录");
                 } else {
-                    mapData.put("platformAccountOpeningTime",bankOpenAccountRecordCustomize.getOpenTime());
+                    customerSyncQO.setPlatformAccountOpeningTime(bankOpenAccountRecordCustomize.getOpenTime());
                 }
-                mapData.put("assetCustomerId",userId);
+                customerSyncQO.setAssetCustomerId(userId);
                 if(!getEntId(utmReg.getUtmId()).isEmpty()){
-                    mapData.put("entId",getEntId(utmReg.getUtmId()));
+                    customerSyncQO.setEntId(Integer.valueOf(getEntId(utmReg.getUtmId())));
                 }else{
                     logger.error("=====" + CONSUMER_NAME + " 查询不到财富端id, utmim = [{}]=====", utmReg.getUtmId());
                     return;
                 }
-
-                mapData.put("userName",account.getUserName());
-                mapData.put("precipitatedCapital",String.valueOf(account.getBalance()));
-                mapData.put("fundsToBeCollected",String.valueOf(account.getAwait()));
-                syncCustomerInfoService.sync(mapData);
+                customerSyncQO.setUserName(account.getUserName());
+                customerSyncQO.setPrecipitatedCapital(account.getBalance().doubleValue());
+                customerSyncQO.setFundsToBeCollected(account.getAwait().doubleValue());
+                syncCustomerService.sync(customerSyncQO);
 
             }
 
