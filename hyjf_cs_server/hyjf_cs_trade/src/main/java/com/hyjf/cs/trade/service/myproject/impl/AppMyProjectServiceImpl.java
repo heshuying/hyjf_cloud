@@ -975,9 +975,9 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
         // 如果加息的展示加息部分
         if (isIncrease != null && "1" .equals(isIncrease)) {
-            preckCredit(borrowBeansList, "历史年回报率", borrowDetail.getBorrowExtraYield() + "%");
+            preckCredit(borrowBeansList, "历史年回报率", FormatRateUtil.formatBorrowApr(borrowDetail.getBorrowExtraYield()) + "%");
         } else {
-            preckCredit(borrowBeansList, "历史年回报率", borrowDetail.getBorrowApr() + "%");
+            preckCredit(borrowBeansList, "历史年回报率", FormatRateUtil.formatBorrowApr(borrowDetail.getBorrowApr()) + "%");
         }
 
 
