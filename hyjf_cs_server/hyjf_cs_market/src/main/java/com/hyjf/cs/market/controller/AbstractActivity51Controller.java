@@ -214,7 +214,7 @@ public class AbstractActivity51Controller {
         try{
             Date today = new Date();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date dateString = formatter.parse("2018-05-05 00:00:00");
+            Date dateString = formatter.parse("2019-05-05 00:00:00");
             if (today.compareTo(dateString) == -1) {
                 flag = "1";
             }
