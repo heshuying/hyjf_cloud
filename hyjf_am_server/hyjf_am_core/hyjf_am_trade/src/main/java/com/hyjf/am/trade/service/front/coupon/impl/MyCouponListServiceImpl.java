@@ -609,7 +609,6 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if(bestCoupon != null){
                 // 遍历查询出最优优惠券
                 for(CouponBeanVo couponBeanVo : availableCouponList){
-                    logger.info("id in list:" + couponBeanVo.getUserCouponId() + " best id:" + bestCoupon.getUserCouponId());
                     if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
                         logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
                         availableCouponListSort.add(couponBeanVo);
