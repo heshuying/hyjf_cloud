@@ -44,7 +44,7 @@ public class FormatRateUtil {
 //            BigDecimal big = new BigDecimal(borrowApr).setScale(1);
         	return borrowApr.substring(0, borrowApr.length()-1);
         }
-        if ((borrowApr.substring( borrowApr.length()-1,borrowApr.length())).equals("%")&&(borrowApr.substring( borrowApr.length()-2,borrowApr.length()-1)).equals("0")) {
+        if ((borrowApr.substring( borrowApr.length()-1,borrowApr.length())).equals("%")&&(borrowApr.substring( borrowApr.length()-2,borrowApr.length()-1)).equals("0")&&!(borrowApr.substring( borrowApr.length()-3,borrowApr.length()-2)).equals(".")) {
 //          BigDecimal big = new BigDecimal(borrowApr).setScale(1);
       	return borrowApr.substring(0, borrowApr.length()-2)+"%";
       }
