@@ -607,15 +607,20 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         if(!availableCouponList.isEmpty()){
             BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
             if(bestCoupon != null){
+                // 遍历查询出最优优惠券
                 for(CouponBeanVo couponBeanVo : availableCouponList){
                     logger.info("id in list:" + couponBeanVo.getUserCouponId() + " best id:" + bestCoupon.getUserCouponId());
                     if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
                         logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
                         availableCouponListSort.add(couponBeanVo);
-                        availableCouponList.remove(couponBeanVo);
+                        break;
                     }
                 }
-                availableCouponListSort.addAll(availableCouponList);
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(!couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                    }
+                }
             }
         }
 
@@ -730,15 +735,20 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         if(!availableCouponList.isEmpty()){
             BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
             if(bestCoupon != null){
+                // 遍历查询出最优优惠券
                 for(CouponBeanVo couponBeanVo : availableCouponList){
                     logger.info("id in list:" + couponBeanVo.getUserCouponId() + " best id:" + bestCoupon.getUserCouponId());
                     if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
                         logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
                         availableCouponListSort.add(couponBeanVo);
-                        availableCouponList.remove(couponBeanVo);
+                        break;
                     }
                 }
-                availableCouponListSort.addAll(availableCouponList);
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(!couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                    }
+                }
             }
         }
 
