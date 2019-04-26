@@ -48,7 +48,6 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;

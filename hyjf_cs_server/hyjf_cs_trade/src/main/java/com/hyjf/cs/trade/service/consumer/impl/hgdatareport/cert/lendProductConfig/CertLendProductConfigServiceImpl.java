@@ -1,9 +1,7 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProductConfig;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -15,7 +13,6 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProductConfig.CertLendProductConfigService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
