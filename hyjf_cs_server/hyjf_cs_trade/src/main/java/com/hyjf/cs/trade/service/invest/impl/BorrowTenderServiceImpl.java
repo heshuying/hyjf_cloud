@@ -1893,7 +1893,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         if (tender.getCouponGrantId()==null||tender.getCouponGrantId()-0==0) {
             //未选择优惠券
-            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings) + "元");
+            vo.setDesc("年化利率: " + FormatRateUtil.formatBorrowApr(borrow.getBorrowApr().toString()) + "%      预期收益: " + CommonUtils.formatAmount(null, earnings) + "元");
             vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings) + "元");
         } else {
             //选择优惠券计算优惠券收益
@@ -1901,7 +1901,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponConfig != null && couponConfig.getId() > 0) {
                 couponInterest = calculateCouponTenderInterest(couponConfig, money, borrow);
             }
-            vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+            vo.setDesc("年化利率: " +FormatRateUtil.formatBorrowApr( borrow.getBorrowApr().toString()) + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
             earnings = earnings.add(couponInterest);
             vo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings ) + "元");
 
