@@ -230,7 +230,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目金额
             Integer tenderQuota = bestCoupon.getTenderQuotaType();
-
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
             if (tenderQuota == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     continue;
@@ -407,6 +410,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             // 验证项目金额
             Integer tenderQuota = bestCoupon.getTenderQuotaType();
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
             if (tenderQuota == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     continue;
@@ -502,6 +509,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         String userId = requestBean.getUserId();
         String borrowNid = requestBean.getBorrowNid();
         String money = requestBean.getMoney();
+        BigDecimal moneyBigDecimal = BigDecimal.ZERO;
+        if(StringUtils.isNotBlank(money)){
+            moneyBigDecimal = new BigDecimal(money);
+        }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
@@ -533,14 +544,14 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     // 加息券利率统一为小数点后一位
                     String fromatCoupon = FormatRateUtil.formatBorrowApr(bestCoupon.getCouponQuota());
                     bestCoupon.setCouponQuota(fromatCoupon);
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用",platform);
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目加息券不能使用",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             }
             if (moneyFlg != null && moneyFlg == 0) {
                 if ("1".equals(bestCoupon.getCouponType())) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目优惠券不能使用",platform);
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"该项目优惠券不能使用",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -554,8 +565,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             // 验证项目金额
             Integer tenderQuotaType = bestCoupon.getTenderQuotaType();
             // 加息券如果没有填金额则不可用
-            if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform);
+            if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform, moneyBigDecimal);
                 notAvailableCouponList.add(couponBean);
                 continue;
             }
@@ -563,13 +574,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     CouponBeanVo couponBean=createCouponBean(bestCoupon,null,
-                            bestCoupon.getTenderQuota(),platform);
+                            bestCoupon.getTenderQuota(),platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
             } else if (tenderQuotaType == 2) {
                 if (bestCoupon.getTenderQuotaAmount() != null && (new Double(bestCoupon.getTenderQuotaAmount()) > new Double(money))) {
-                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota(),platform);
+                    CouponBeanVo couponBean=createCouponBean(bestCoupon,null,bestCoupon.getTenderQuota(),platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -587,7 +598,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 continue;
             }
 
-            CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"",platform);
+            CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"",platform,moneyBigDecimal);
             availableCouponList.add(couponBean);
 
         }
@@ -605,6 +616,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         String userId = requestBean.getUserId();
         String planNid = requestBean.getBorrowNid();
         String money = requestBean.getMoney();
+        BigDecimal moneyBigDecimal = BigDecimal.ZERO;
+        if(StringUtils.isNotBlank(money)){
+            moneyBigDecimal = new BigDecimal(money);
+        }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
@@ -668,8 +683,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 // 验证项目金额
                 Integer tenderQuotaType = userCouponConfigCustomize.getTenderQuotaType();
                 // 加息券如果没有填金额则不可用
-                if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
-                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform);
+                if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
+                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform, moneyBigDecimal);
                     notAvailableCouponList.add(couponBean);
                     continue;
                 }
@@ -677,20 +692,20 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
 
-                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform);
+                        couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform,moneyBigDecimal);
                         notAvailableCouponList.add(couponBeanVo);
                         continue;
                     }
                 } else if (2 == tenderQuotaType) {
                     if (!"不限".equals(userCouponConfigCustomize.getTenderQuota()) && null != userCouponConfigCustomize.getTenderQuotaAmount()) {
                         if(new Double(userCouponConfigCustomize.getTenderQuotaAmount()) > new Double(money)){
-                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform);
+                            couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo,userCouponConfigCustomize.getTenderQuota(),platform,moneyBigDecimal);
                             notAvailableCouponList.add(couponBeanVo);
                             continue;
                         }
                     }
                 }
-                couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "",platform);
+                couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "",platform,moneyBigDecimal);
                 availableCouponList.add(couponBeanVo);
             }
         }
@@ -746,7 +761,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
      * @param remarks 备注
      * @return CouponBeanVo
      */
-    private CouponBeanVo createCouponBean(MyCouponListCustomizeVO userCouponConfigCustomize,CouponBeanVo couponBean, String remarks,String platform) {
+    private CouponBeanVo createCouponBean(MyCouponListCustomizeVO userCouponConfigCustomize,CouponBeanVo couponBean, String remarks,String platform, BigDecimal money) {
         if(null == couponBean){
             couponBean=new CouponBeanVo();
         }
@@ -784,6 +799,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             couponBean.setInvestQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
             couponBean.setTenderQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
+            if("2".equals(userCouponConfigCustomize.getCouponType()) && money.compareTo(BigDecimal.ZERO)<=0){
+                couponBean.setInvestQuota("加息券不可以单独使用");
+                couponBean.setTenderQuota("加息券不可以单独使用");
+            }
         }else{
             //处理优惠券适用项目
             String projectString = BestCouponUtil.dealProjectType(userCouponConfigCustomize.getProjectType());
