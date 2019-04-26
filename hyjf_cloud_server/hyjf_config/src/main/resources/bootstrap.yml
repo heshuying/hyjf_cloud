@@ -2,20 +2,20 @@ spring:
   application:
     name: config-server
 
-#  profiles:
-#    active: native
+  profiles:
+    active: native
   cloud:
     config:
       server:
-#        native:
-#          searchLocations: I:/micro-deploy/src/main/resources
-        git:
-          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
-          searchPaths: src/main/resources
-          username: deployment
-          password: deploy2018
-  profiles:
-    active: dev
+        native:
+          searchLocations: D:/workspace/micro-deploy/src/main/resources
+#        git:
+#          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
+#          searchPaths: src/main/resources
+#          username: deployment
+#          password: deploy2018
+#  profiles:
+#    active: dev
 
 eureka:
   client:

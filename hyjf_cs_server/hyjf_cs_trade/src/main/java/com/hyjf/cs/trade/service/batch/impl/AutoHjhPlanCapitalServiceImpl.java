@@ -59,7 +59,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             // 循环加一天
             beginDate = GetDate.countDate(beginDate, 5, 1);
             // 获取当前执行时间的时间戳
-            newDate = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.dateToString(GetDate.getDate()));
+            newDate = GetDate.getNowTime10();
             // 判断执行时间是否在当天23点59分59秒以内
             if (newDate >= toEndDay) {
                 logger.info("BATCH计算资金计划3.0（预计）：超过当天23点59分59秒 此任务结束执行！结束计算日期：" + GetDate.dateToString(beginDate) + "    第：" + i + "天");
