@@ -119,9 +119,9 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 			repaySuccess(accountList,list);
 			break;
 			//优惠券回款 上送41红包
-		case "increase_interest_profit":
+		/*case "increase_interest_profit":
 			increaseInerestProfit(accountList,list);
-				break;
+				break;*/
 		/*//优惠券回款 上送41红包
 		case "experience_profit":
 		case "cash_coupon_profit":
