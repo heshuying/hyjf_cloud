@@ -515,6 +515,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
+        List<CouponBeanVo> availableCouponListSort=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -588,6 +589,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             //是否与本金公用
             if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"不能与本金共用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
             /**************逻辑修改 pcc end***************/
@@ -603,9 +606,28 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
         }
 
-        jsonObject.put("availableCouponList", availableCouponList);
+        if(!availableCouponList.isEmpty()){
+            BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
+            if(bestCoupon != null){
+                // 遍历查询出最优优惠券
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
+                        availableCouponListSort.add(couponBeanVo);
+                        break;
+                    }
+                }
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(!couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                    }
+                }
+            }
+        }
+
+        jsonObject.put("availableCouponList", availableCouponListSort);
         jsonObject.put("notAvailableCouponList", notAvailableCouponList);
-        jsonObject.put("availableCouponListCount", availableCouponList.size());
+        jsonObject.put("availableCouponListCount", availableCouponListSort.size());
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
         return jsonObject;
     }
@@ -622,6 +644,7 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         }
         String platform = requestBean.getPlatform();
         List<CouponBeanVo> availableCouponList=new ArrayList<CouponBeanVo>();
+        List<CouponBeanVo> availableCouponListSort=new ArrayList<CouponBeanVo>();
         List<CouponBeanVo> notAvailableCouponList=new ArrayList<CouponBeanVo>();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
@@ -673,6 +696,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             //是否与本金公用
             if (!BestCouponUtil.tasteMoneyCheck(userCouponConfigCustomize.getAddFlag(), money)) {
+                CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"不能与本金共用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
             /**************逻辑修改 pcc end***************/
@@ -709,10 +734,30 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                 availableCouponList.add(couponBeanVo);
             }
         }
+
+        if(!availableCouponList.isEmpty()){
+            BestCouponListVO bestCoupon = this.selectHJHBestCoupon(requestBean);
+            if(bestCoupon != null){
+                // 遍历查询出最优优惠券
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
+                        availableCouponListSort.add(couponBeanVo);
+                        break;
+                    }
+                }
+                for(CouponBeanVo couponBeanVo : availableCouponList){
+                    if(!couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        availableCouponListSort.add(couponBeanVo);
+                    }
+                }
+            }
+        }
+
         // 排序
-        jsonObject.put("availableCouponList", availableCouponList);
+        jsonObject.put("availableCouponList", availableCouponListSort);
         jsonObject.put("notAvailableCouponList", notAvailableCouponList);
-        jsonObject.put("availableCouponListCount", availableCouponList.size());
+        jsonObject.put("availableCouponListCount", availableCouponListSort.size());
         jsonObject.put("notAvailableCouponListCount", notAvailableCouponList.size());
 
         return jsonObject;
@@ -799,10 +844,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             couponBean.setInvestQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
             couponBean.setTenderQuota(BestCouponUtil.dealTenderQuota(userCouponConfigCustomize));
-            if("2".equals(userCouponConfigCustomize.getCouponType()) && money.compareTo(BigDecimal.ZERO)<=0){
-                couponBean.setInvestQuota("加息券不可以单独使用");
-                couponBean.setTenderQuota("加息券不可以单独使用");
-            }
+//            if("2".equals(userCouponConfigCustomize.getCouponType()) && money.compareTo(BigDecimal.ZERO)<=0){
+//                couponBean.setInvestQuota("加息券不可以单独使用");
+//                couponBean.setTenderQuota("加息券不可以单独使用");
+//            }
         }else{
             //处理优惠券适用项目
             String projectString = BestCouponUtil.dealProjectType(userCouponConfigCustomize.getProjectType());
