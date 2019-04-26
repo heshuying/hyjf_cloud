@@ -2654,7 +2654,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				Integer lastPeriod = apicron.getLastPeriod() == null ? 0 :apicron.getLastPeriod();// 同时提交还款的最后一期
 				isAllRepay = isAllRepay || lastPeriod == borrowPeriod;// 多期还款的最后一期是标的的最后一期，是一次性还款
                 // 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/19
-                boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay && lastPeriod > 0);
+                boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay, lastPeriod);
 				if ((isAllRepay && isLastUpdate) || (!isAllRepay && periodNext == 0)) {
 					repayType = TYPE_WAIT_YES;
 					repayStatus = 1;
@@ -3158,13 +3158,14 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * 根据还款任务表查询
 	 * @return
 	 */
-    private boolean isLastAllRepay(String borrowNid, Integer periodNow, boolean isAllRepay) {
-		if (!isAllRepay) {
+    private boolean isLastAllRepay(String borrowNid, Integer periodNow, boolean isAllRepay, int lastPeriod) {
+		if (!isAllRepay && lastPeriod == 0) {
 			return false;
 		}
 		BorrowApicronExample example = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
+		criteria.andLastPeriodEqualTo(lastPeriod);
 		criteria.andApiTypeEqualTo(1);
 		criteria.andPeriodNowNotEqualTo(periodNow);
 		criteria.andStatusNotEqualTo(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
