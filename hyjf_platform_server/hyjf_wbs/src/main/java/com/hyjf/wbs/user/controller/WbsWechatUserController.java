@@ -44,6 +44,10 @@ public class WbsWechatUserController {
 
         BaseResult result=new BaseResult();
 
+        String presetProps=getStringFromStream(request);
+
+        logger.info("wechat bind presetProps=【{}】",presetProps);
+
         wbsUserService.wechatBind(wechatUserBindQO, result);
 
         return result;
