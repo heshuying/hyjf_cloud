@@ -205,6 +205,7 @@ public class AbstractActivity51Controller {
             result.setData(new GuessVO("N", "未竞猜"));
         }
         result.setIsGuess(isShowGuess());
+        logger.info("用户竞猜, userId is: {}，活动二是否可以参与：{}", userId,isShowGuess());
         return result;
     }
 
