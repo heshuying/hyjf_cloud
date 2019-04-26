@@ -230,7 +230,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目金额
             Integer tenderQuota = bestCoupon.getTenderQuotaType();
-
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
             if (tenderQuota == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     continue;
@@ -407,6 +410,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             // 验证项目金额
             Integer tenderQuota = bestCoupon.getTenderQuotaType();
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType() == 2 && (StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO)<=0)){
+                continue;
+            }
             if (tenderQuota == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
                     continue;
