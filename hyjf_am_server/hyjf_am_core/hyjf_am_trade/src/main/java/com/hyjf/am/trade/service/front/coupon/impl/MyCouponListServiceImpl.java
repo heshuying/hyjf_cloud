@@ -608,7 +608,9 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
             if(bestCoupon != null){
                 for(CouponBeanVo couponBeanVo : availableCouponList){
+                    logger.info("id in list:" + couponBeanVo.getUserCouponId() + " best id:" + bestCoupon.getUserCouponId());
                     if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
                         availableCouponListSort.add(couponBeanVo);
                         availableCouponList.remove(couponBeanVo);
                     }
@@ -729,7 +731,9 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
             if(bestCoupon != null){
                 for(CouponBeanVo couponBeanVo : availableCouponList){
+                    logger.info("id in list:" + couponBeanVo.getUserCouponId() + " best id:" + bestCoupon.getUserCouponId());
                     if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
+                        logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
                         availableCouponListSort.add(couponBeanVo);
                         availableCouponList.remove(couponBeanVo);
                     }
