@@ -165,7 +165,7 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
                     vo.setReinvestAccount(BigDecimal.ZERO);
                     // 预计当日新增债转额（元）- 预计当日新增复投额（元）
                     if((vo.getCreditAccount().subtract(vo.getReinvestAccount())).compareTo(BigDecimal.ZERO) > 0){
-                        vo.setCapitalAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+                        vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
                     }
                 }
             }
