@@ -3,9 +3,7 @@ package com.hyjf.am.trade.service.front.borrow;
 import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.math.BigDecimal;
@@ -159,21 +157,5 @@ public interface BorrowTenderService {
      * @return
      */
     List<BorrowTender> getBorrowTenderByAccede(String accedeOrderId);
-    // 应急中心二期，产品配置历史数据上报 add by nxl start
-    /**
-     * @description 查找 未还款，转让被部分被承接的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize();
-    /**
-     * @description 查找未还款的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize();
-    // 应急中心二期，产品配置历史数据上报 add by nxl end
 }
 

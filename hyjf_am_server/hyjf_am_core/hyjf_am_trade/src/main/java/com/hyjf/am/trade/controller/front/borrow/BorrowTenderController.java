@@ -16,10 +16,8 @@ import com.hyjf.am.vo.trade.CreditTenderLogVO;
 import com.hyjf.am.vo.trade.FddTempletVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
@@ -539,42 +537,5 @@ public class BorrowTenderController extends BaseController {
         }
         return response;
     }
-
-    // 应急中心二期，产品配置历史数据上报 add by nxl start
-    /**
-     * @description 查找 未还款，转让被部分被承接的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    @PostMapping("/getHjhDebtCreditInfoCustomize")
-    public HjhDebtCreditCustomizeResponse getHjhDebtCreditInfoCustomize(){
-        HjhDebtCreditCustomizeResponse response = new HjhDebtCreditCustomizeResponse();
-        response.setRtn(Response.FAIL);
-        List<HjhDebtCreditCustomizeVO> borrowTenderList = this.borrowTenderService.getHjhDebtCreditInfoCustomize();
-        if (CollectionUtils.isNotEmpty(borrowTenderList)){
-            response.setRtn(Response.SUCCESS);
-            response.setResultList(borrowTenderList);
-        }
-        return response;
-    }
-    /**
-     * @description 查找未还款的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    @PostMapping("/getBorrowTenderInfoCustomize")
-    public BorrowTenderCustomizeResponse getBorrowTenderInfoCustomize(){
-        BorrowTenderCustomizeResponse response = new BorrowTenderCustomizeResponse();
-        response.setRtn(Response.FAIL);
-        List<BorrowTenderCustomizeVO> borrowTenderList = this.borrowTenderService.getBorrowTenderInfoCustomize();
-        if (CollectionUtils.isNotEmpty(borrowTenderList)){
-            response.setRtn(Response.SUCCESS);
-            response.setResultList(borrowTenderList);
-        }
-        return response;
-    }
-    // 应急中心二期，产品配置历史数据上报 add by nxl end
 
 }

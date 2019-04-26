@@ -3,9 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -96,22 +94,5 @@ public interface BorrowTenderCustomizeMapper {
 
 	List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(@Param("sourceIdSrch") String sourceIdSrch,@Param("timeStartSrch") String dayStart,
 															 @Param("timeEndSrch") String dayEnd);
-
-	// 应急中心二期，产品配置历史数据上报 add by nxl start
-	/**
-	 * @description 查找 未还款，转让被部分被承接的债权信息
-	 * @auth nxl
-	 * @param
-	 * @return
-	 */
-	List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize();
-	/**
-	 * @description 查找未还款的债权信息
-	 * @auth nxl
-	 * @param
-	 * @return
-	 */
-	List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize();
-	// 应急中心二期，产品配置历史数据上报 add by nxl end
 
 }

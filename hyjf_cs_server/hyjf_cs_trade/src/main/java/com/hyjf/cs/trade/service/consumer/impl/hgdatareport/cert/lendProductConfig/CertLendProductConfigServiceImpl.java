@@ -1,10 +1,8 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProductConfig;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
@@ -150,7 +148,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         String finClaimID = "";
         try {
             //查找未还款的债权信息
-            List<BorrowTenderCustomizeVO> borrowTenderCustomizeVOList = amTradeClient.getBorrowTenderInfoCustomize();
+           /* List<BorrowTenderCustomizeVO> borrowTenderCustomizeVOList = amTradeClient.getBorrowTenderInfoCustomize();
             if(!CollectionUtils.isNotEmpty(borrowTenderCustomizeVOList)){
                 throw new Exception("产品配置信息历史数据推送，获取未还款的债权信息为空！！");
             }
@@ -174,7 +172,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 finClaimID = hjhDebtCreditCustomizeVO.getAssignOrderId();
                 String idCardHash = getIdCard(hjhDebtCreditCustomizeVO.getUserId());
                 jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,hjhDebtCreditCustomizeVO.getCreateTime());
-            }
+            }*/
         }catch (Exception e) {
             logger.error(e.getMessage());
         }

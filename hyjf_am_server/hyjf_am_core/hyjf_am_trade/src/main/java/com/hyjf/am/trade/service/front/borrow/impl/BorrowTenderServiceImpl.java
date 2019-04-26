@@ -6,9 +6,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
@@ -310,30 +308,5 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         List<BorrowTender> tenderList = this.borrowTenderMapper.selectByExample(example);
         return tenderList;
     }
-
-    // 应急中心二期，产品配置历史数据上报 add by nxl start
-    /**
-     * @description 查找 未还款，转让被部分被承接的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    @Override
-    public List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize() {
-        List<HjhDebtCreditCustomizeVO> tenderList = this.borrowTenderCustomizeMapper.getHjhDebtCreditInfoCustomize();
-        return tenderList;
-    }
-    /**
-     * @description 查找未还款的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    @Override
-    public List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize() {
-        List<BorrowTenderCustomizeVO> tenderList = this.borrowTenderCustomizeMapper.getBorrowTenderInfoCustomize();
-        return tenderList;
-    }
-    // 应急中心二期，产品配置历史数据上报 add by nxl end
 
 }
