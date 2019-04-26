@@ -589,6 +589,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
 
             //是否与本金公用
             if (!BestCouponUtil.tasteMoneyCheck(bestCoupon.getAddFlag(), money)) {
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"不能与本金共用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
             /**************逻辑修改 pcc end***************/
@@ -694,6 +696,8 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             //是否与本金公用
             if (!BestCouponUtil.tasteMoneyCheck(userCouponConfigCustomize.getAddFlag(), money)) {
+                CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"不能与本金共用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
             /**************逻辑修改 pcc end***************/
@@ -732,11 +736,10 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
         }
 
         if(!availableCouponList.isEmpty()){
-            BestCouponListVO bestCoupon = this.selectBestCouponList(requestBean);
+            BestCouponListVO bestCoupon = this.selectHJHBestCoupon(requestBean);
             if(bestCoupon != null){
                 // 遍历查询出最优优惠券
                 for(CouponBeanVo couponBeanVo : availableCouponList){
-                    logger.info("id in list:" + couponBeanVo.getUserCouponId() + " best id:" + bestCoupon.getUserCouponId());
                     if(couponBeanVo.getUserCouponId().equals(bestCoupon.getUserCouponId())){
                         logger.info("best coupon id:" + couponBeanVo.getUserCouponId());
                         availableCouponListSort.add(couponBeanVo);
