@@ -95,11 +95,14 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             oneVo.setPlanNid(hjhPlan.getPlanNid());
             oneVo.setDelFlg(0);
             oneVo.setCreateTime(new Date());
+            // 初始化预计当日新增债转额累加变量（以计划为维度）
+            BigDecimal creditAccount = BigDecimal.ZERO;
             for (HjhPlanCapitalPredictionVO mapList : m.getValue()) {
                 oneVo.setDate(mapList.getDate());
                 // 判断预计当日新增债转额，预计当日新增复投额，预计当日所需资金量，预计当日所需资产量 不为空则放入相同planid的list
                 if (mapList.getCreditAccount() != null && !BigDecimal.ZERO.equals(mapList.getCreditAccount())) {
-                    oneVo.setCreditAccount(mapList.getCreditAccount());
+                    creditAccount = creditAccount.add(mapList.getCreditAccount());
+                    oneVo.setCreditAccount(creditAccount);
                 } else if (mapList.getReinvestAccount() != null && !BigDecimal.ZERO.equals(mapList.getReinvestAccount())) {
                     oneVo.setReinvestAccount(mapList.getReinvestAccount());
                 } else if (mapList.getCapitalAccount() != null && !BigDecimal.ZERO.equals(mapList.getCapitalAccount())) {
