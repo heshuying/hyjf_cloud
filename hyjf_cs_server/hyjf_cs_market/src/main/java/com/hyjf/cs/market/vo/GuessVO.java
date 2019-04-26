@@ -15,6 +15,8 @@ public class GuessVO {
     private String guessDesc;
     @ApiModelProperty("竞猜档位")
     private Integer grade;
+    @ApiModelProperty("是否可以参与活动二")
+    private String isGuess;
 
     public GuessVO(String guessFlag, String guessDesc) {
         this.guessFlag = guessFlag;
@@ -24,6 +26,18 @@ public class GuessVO {
     public GuessVO(String guessFlag, String guessDesc, int grade) {
         this(guessFlag, guessDesc);
         this.grade = grade;
+    }
+
+    public GuessVO(String guessFlag, String guessDesc, String isGuess) {
+        this.guessFlag = guessFlag;
+        this.guessDesc = guessDesc;
+        this.isGuess = isGuess;
+    }
+
+    public GuessVO(String guessFlag, String guessDesc, int grade,String isGuess) {
+        this(guessFlag, guessDesc);
+        this.grade = grade;
+        this.isGuess = isGuess;
     }
 
     public String getGuessFlag() {
@@ -49,4 +63,13 @@ public class GuessVO {
     public void setGrade(Integer grade) {
         this.grade = grade;
     }
+
+    public String getIsGuess() {
+        return isGuess;
+    }
+
+    public void setIsGuess(String isGuess) {
+        this.isGuess = isGuess;
+    }
+
 }

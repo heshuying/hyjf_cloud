@@ -12,7 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -180,6 +183,7 @@ public class AbstractActivity51Controller {
 
     public BaseResult<GuessVO> isGuess(int userId, String successStatus, String failStatus) {
         logger.info("用户竞猜, userId is: {}", userId);
+        BaseResult result = null;
         if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
@@ -189,14 +193,29 @@ public class AbstractActivity51Controller {
         }
 
         // 判断是否已经竞猜
-        BaseResult result = new BaseResult(successStatus, "查询成功");
+        result = new BaseResult(successStatus, "查询成功");
         ActivityUserGuessVO vo = activity51Service.getUserGuess(userId);
         if (vo != null) {
-            result.setData(new GuessVO("Y", "已竞猜", vo.getGrade()));
+            result.setData(new GuessVO("Y", "已竞猜", vo.getGrade(),isShowGuess()));
         } else {
-            result.setData(new GuessVO("N", "未竞猜"));
+            result.setData(new GuessVO("N", "未竞猜",isShowGuess()));
         }
         return result;
+    }
+
+    private String isShowGuess(){
+        String flag = "0";
+        try{
+            Date today = new Date();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date dateString = formatter.parse("2018-05-05 00:00:00");
+            if (today.compareTo(dateString) == -1) {
+                flag = "1";
+            }
+        }catch (Exception e){
+            logger.error("时间格式化异常");
+        }
+        return flag;
     }
 
     protected int getGradeFromSumAmount(BigDecimal sumAmount) {
