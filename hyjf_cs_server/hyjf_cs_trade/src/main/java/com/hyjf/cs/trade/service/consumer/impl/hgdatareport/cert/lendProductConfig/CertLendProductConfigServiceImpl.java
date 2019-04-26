@@ -49,7 +49,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
      * @return
      */
     @Override
-    public JSONArray ProductConfigInfo(String orderId, String flag) {
+    public JSONArray productConfigInfo(String orderId, String flag) {
         JSONArray json = new JSONArray();
         try {
             //产品信息编号
@@ -60,22 +60,24 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             Integer userId = 0;
             // flag  1:承接智投，2：加入智投
             if (flag.equals("2")) {
+                logger.info(logHeader+"智投发生出借推送数据，出借订单号为："+orderId);
                 //加入智投
                 //根据投资订单号查找标的投资详情信息
-                BorrowTenderVO borrowTenderVO = amTradeClient.selectBorrowTenderByOrderId(orderId);
+                BorrowTenderVO borrowTenderVO = selectBorrowTenderByOrderId(orderId);
                 if (null == borrowTenderVO) {
                     throw new Exception("产品配置信息推送,获取标的投资详情表的信息为空！！出借订单号为:" + orderId);
                 }
                 //加入智投信息
                 HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
                 if (null == hjhAccedeVO) {
-                    throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + orderId);
+                    throw new Exception("产品配置信息推送,智投的加入记录为空！！智投加入订单号:" + borrowTenderVO.getAccedeOrderId());
                 }
                 userId = hjhAccedeVO.getUserId();
                 sourceFinancingcode = hjhAccedeVO.getPlanNid();
                 finClaimID = borrowTenderVO.getNid();
             } else if(flag.equals("1")) {
                 //计划承接
+                logger.info(logHeader+"智投承接后推送数据，承接单号为："+orderId);
                 List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(orderId);
                 if (!CollectionUtils.isNotEmpty(hjhDebtCreditTenderList)) {
                     throw new Exception("产品配置信息推送,获取计划承接信息为空！！承接单号为:" + orderId);
@@ -135,6 +137,10 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         return userIdcardHash;
     }
 
+    @Override
+    public BorrowTenderVO selectBorrowTenderByOrderId(String orderId){
+        return amTradeClient.selectBorrowTenderByOrderId(orderId);
+    }
     /**
      * 查找产品配置信息历史数据
      * @return

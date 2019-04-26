@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.lendProductConfig;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
@@ -91,16 +92,23 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductConfigService.ProductConfigInfo(assignOrderId,isTender);
+            JSONArray listRepay = certLendProductConfigService.productConfigInfo(assignOrderId,isTender);
             logger.info("数据：" + listRepay.toString());
-            String typeStr = isTender.equals("1")?"承接智投":"加入智投";
-            logger.info(logHeader + "订单编号为：" + assignOrderId+" ，标示为："+isTender+" , "+typeStr);
             if (null == listRepay || listRepay.size() <= 0) {
+                String typeStr = isTender.equals("1")?"承接智投":"智投出借";
                 logger.error(logHeader + "组装参数为空！！！订单编号为：" + assignOrderId+"，标示为："+isTender+","+typeStr);
                 return;
             }
+            //智投出借时，可能匹配多个标的，logParam设置为加入计划订单号，方便测试查看
+            String logParam = assignOrderId;
+            if(isTender.equals("2")){
+                BorrowTenderVO borrowTenderVO = certLendProductConfigService.selectBorrowTenderByOrderId(assignOrderId);
+                if(null!=borrowTenderVO){
+                    logParam = borrowTenderVO.getAccedeOrderId();
+                }
+            }
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, assignOrderId, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, logParam, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {
