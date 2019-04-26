@@ -40,8 +40,8 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
     @Override
     public void autoCapitalPrediction() {
         logger.info("预计资金计划batch计算开始！开始时间："+ GetDate.dateToString(GetDate.getDate()));
-        // mongo插入传入总list
-        List<HjhPlanCapitalPredictionVO> listReturnStr = new ArrayList<HjhPlanCapitalPredictionVO>();
+        // 插入MongoDb库中的数据汇总
+        List<HjhPlanCapitalPredictionVO> listMongoDbStr = new ArrayList<HjhPlanCapitalPredictionVO>();
         // 汇总list（预计新增复投额，预计新增债转额）
         List<HjhPlanCapitalPredictionVO> listAll = new ArrayList<HjhPlanCapitalPredictionVO>();
         // 获取当日执行最后时间（任务执行时）当天23点59分59秒
@@ -72,109 +72,127 @@ public class AutoHjhPlanCapitalServiceImpl implements AutoHjhPlanCapitalService 
             List<HjhPlanCapitalPredictionVO> hjhPlanCapitalPredictionList = amTradeClient.getPlanCapitalForCreditInfo(GetDate.dateToString(initDate),GetDate.dateToString(beginDate));
             listAll.addAll(hjhPlanCapitalPredictionList);
         }
-        // 整理listAll数据放入到map中
-        Map<String, List<HjhPlanCapitalPredictionVO>> map = new HashMap<String, List<HjhPlanCapitalPredictionVO>>();
+        // 处理相同的planid，不同日期的数据（整理listAll数据放入到map中）
+        Map<Date,Map<String, List<HjhPlanCapitalPredictionVO>>> mapDate = new HashMap<>();
         // 处理listAll的planid的重复数据
         for (HjhPlanCapitalPredictionVO CapitalPrediction : listAll) {
-            if (map.containsKey(CapitalPrediction.getPlanNid())) {
-                map.get(CapitalPrediction.getPlanNid()).add(CapitalPrediction);
-            } else {
-                List<HjhPlanCapitalPredictionVO> rList = new ArrayList<HjhPlanCapitalPredictionVO>();
-                rList.add(CapitalPrediction);
-                map.put(CapitalPrediction.getPlanNid(), rList);
-            }
-        }
-        // 整合重复planid的list值
-        for (Map.Entry<String, List<HjhPlanCapitalPredictionVO>> m : map.entrySet()) {
-            HjhPlanCapitalPredictionVO oneVo = new HjhPlanCapitalPredictionVO();
-            // 根据计划订单查询（智投名称/锁定期）
-            HjhPlanVO hjhPlan = amTradeClient.getHjhPlan(m.getKey());
-            oneVo.setLockPeriod(hjhPlan.getLockPeriod());
-            oneVo.setPlanName(hjhPlan.getPlanName());
-            oneVo.setIsMonth(hjhPlan.getIsMonth());
-            oneVo.setPlanNid(hjhPlan.getPlanNid());
-            oneVo.setDelFlg(0);
-            oneVo.setCreateTime(new Date());
-            // 初始化预计当日新增债转额累加变量（以计划为维度）
-            BigDecimal creditAccount = BigDecimal.ZERO;
-            for (HjhPlanCapitalPredictionVO mapList : m.getValue()) {
-                oneVo.setDate(mapList.getDate());
-                // 判断预计当日新增债转额，预计当日新增复投额，预计当日所需资金量，预计当日所需资产量 不为空则放入相同planid的list
-                if (mapList.getCreditAccount() != null && !BigDecimal.ZERO.equals(mapList.getCreditAccount())) {
-                    creditAccount = creditAccount.add(mapList.getCreditAccount());
-                    oneVo.setCreditAccount(creditAccount);
-                } else if (mapList.getReinvestAccount() != null && !BigDecimal.ZERO.equals(mapList.getReinvestAccount())) {
-                    oneVo.setReinvestAccount(mapList.getReinvestAccount());
-                } else if (mapList.getCapitalAccount() != null && !BigDecimal.ZERO.equals(mapList.getCapitalAccount())) {
-                    oneVo.setCapitalAccount(mapList.getCapitalAccount());
-                } else if (mapList.getAssetAccount() != null && !BigDecimal.ZERO.equals(mapList.getAssetAccount())) {
-                    oneVo.setAssetAccount(mapList.getAssetAccount());
+            // 判断是否有同一天的数据
+            if(mapDate.containsKey(CapitalPrediction.getDate())){
+                // 判断是否有同一个计划（同一天并且计划相同）
+                if(mapDate.get(CapitalPrediction.getDate()).containsKey(CapitalPrediction.getPlanNid())){
+                    mapDate.get(CapitalPrediction.getDate()).get(CapitalPrediction.getPlanNid()).add(CapitalPrediction);
+                }else{
+                    // 同一天计划不同
+                    List<HjhPlanCapitalPredictionVO> rList = new ArrayList<HjhPlanCapitalPredictionVO>();
+                    rList.add(CapitalPrediction);
+                    mapDate.get(CapitalPrediction.getDate()).put(CapitalPrediction.getPlanNid(), rList);
                 }
+            }else{
+                // mapDate没有存在的日期时
+                Map<String, List<HjhPlanCapitalPredictionVO>> mapNotDate = new HashMap<String, List<HjhPlanCapitalPredictionVO>>();
+                List<HjhPlanCapitalPredictionVO> rListNotDate = new ArrayList<HjhPlanCapitalPredictionVO>();
+                rListNotDate.add(CapitalPrediction);
+                mapNotDate.put(CapitalPrediction.getPlanNid(), rListNotDate);
+                mapDate.put(CapitalPrediction.getDate(),mapNotDate);
             }
-            listReturnStr.add(oneVo);
         }
-        // 预计当日新增债转额（元）- 预计当日新增复投额（元） “大于零”= 预计当日所需资金量    （预计当日所需资产量=0）
-        // 预计当日新增复投额（元）- 预计当日新增债转额（元） “大于零”= 预计当日所需资金量    （预计当日所需资产量=0）
-        for(HjhPlanCapitalPredictionVO vo: listReturnStr){
-            if(vo.getCreditAccount()!=null&&vo.getReinvestAccount()!=null){
-                if((!vo.getCreditAccount().equals(BigDecimal.ZERO))&&(!vo.getReinvestAccount().equals(BigDecimal.ZERO))){
-                    // 计算赋值
-                    if(vo.getCreditAccount().compareTo(vo.getReinvestAccount()) ==1){
-                        // 预计当日所需资金量
-                        vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
-                        //（预计当日所需资产量=0）
-                        vo.setAssetAccount(BigDecimal.ZERO);
+        // 将时间和计划为维度进行数据拼装
+        for(Map.Entry<Date,Map<String, List<HjhPlanCapitalPredictionVO>>> dateMapMap: mapDate.entrySet()){
+            // 某一天的不同计划的处理数据变量
+            List<HjhPlanCapitalPredictionVO> listReturnStr = new ArrayList<HjhPlanCapitalPredictionVO>();
+            // 整合重复planid的list值
+            for (Map.Entry<String, List<HjhPlanCapitalPredictionVO>> m : dateMapMap.getValue().entrySet()) {
+                HjhPlanCapitalPredictionVO oneVo = new HjhPlanCapitalPredictionVO();
+                // 根据计划订单查询（智投名称/锁定期）
+                HjhPlanVO hjhPlan = amTradeClient.getHjhPlan(m.getKey());
+                oneVo.setLockPeriod(hjhPlan.getLockPeriod());
+                oneVo.setPlanName(hjhPlan.getPlanName());
+                oneVo.setIsMonth(hjhPlan.getIsMonth());
+                oneVo.setPlanNid(hjhPlan.getPlanNid());
+                oneVo.setDelFlg(0);
+                oneVo.setCreateTime(new Date());
+                oneVo.setDate(dateMapMap.getKey());
+                // 初始化预计当日新增债转额累加变量（以计划为维度）
+                BigDecimal creditAccount = BigDecimal.ZERO;
+                for (HjhPlanCapitalPredictionVO mapList : m.getValue()) {
+                    // 判断预计当日新增债转额，预计当日新增复投额，预计当日所需资金量，预计当日所需资产量 不为空则放入相同planid的list
+                    if (mapList.getCreditAccount() != null && !BigDecimal.ZERO.equals(mapList.getCreditAccount())) {
+                        creditAccount = creditAccount.add(mapList.getCreditAccount());
+                        oneVo.setCreditAccount(creditAccount);
+                    } else if (mapList.getReinvestAccount() != null && !BigDecimal.ZERO.equals(mapList.getReinvestAccount())) {
+                        oneVo.setReinvestAccount(mapList.getReinvestAccount());
+                    } else if (mapList.getCapitalAccount() != null && !BigDecimal.ZERO.equals(mapList.getCapitalAccount())) {
+                        oneVo.setCapitalAccount(mapList.getCapitalAccount());
+                    } else if (mapList.getAssetAccount() != null && !BigDecimal.ZERO.equals(mapList.getAssetAccount())) {
+                        oneVo.setAssetAccount(mapList.getAssetAccount());
+                    }
+                }
+                listReturnStr.add(oneVo);
+            }
+            // 预计当日新增债转额（元）- 预计当日新增复投额（元） “大于零”= 预计当日所需资金量    （预计当日所需资产量=0）
+            // 预计当日新增复投额（元）- 预计当日新增债转额（元） “大于零”= 预计当日所需资金量    （预计当日所需资产量=0）
+            for(HjhPlanCapitalPredictionVO vo: listReturnStr){
+                if(vo.getCreditAccount()!=null&&vo.getReinvestAccount()!=null){
+                    if((!vo.getCreditAccount().equals(BigDecimal.ZERO))&&(!vo.getReinvestAccount().equals(BigDecimal.ZERO))){
+                        // 计算赋值
+                        if(vo.getCreditAccount().compareTo(vo.getReinvestAccount()) ==1){
+                            // 预计当日所需资金量
+                            vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
+                            //（预计当日所需资产量=0）
+                            vo.setAssetAccount(BigDecimal.ZERO);
+                        }else{
+                            //（预计当日所需资金量=0）
+                            vo.setCapitalAccount(BigDecimal.ZERO);
+                            // 预计当日所需资产量
+                            vo.setAssetAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+                        }
                     }else{
-                        //（预计当日所需资金量=0）
-                        vo.setCapitalAccount(BigDecimal.ZERO);
-                        // 预计当日所需资产量
-                        vo.setAssetAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+                        // 预计当日新增债转额 为零
+                        if(!vo.getCreditAccount().equals(BigDecimal.ZERO)){
+                            //（预计当日所需资产量=0）
+                            vo.setAssetAccount(BigDecimal.ZERO);
+                            // 预计当日新增复投额（元）- 预计当日新增债转额（元）
+                            if((vo.getReinvestAccount().subtract(vo.getCreditAccount())).compareTo(BigDecimal.ZERO) > 0){
+                                vo.setCapitalAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+                            }
+                        }
+                        // 预计当日新增复投额 为零
+                        if(!vo.getReinvestAccount().equals(BigDecimal.ZERO)){
+                            //（预计当日所需资产量=0）
+                            vo.setAssetAccount(BigDecimal.ZERO);
+                            // 预计当日新增债转额（元）- 预计当日新增复投额（元）
+                            if((vo.getCreditAccount().subtract(vo.getReinvestAccount())).compareTo(BigDecimal.ZERO) > 0){
+                                vo.setCapitalAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+                            }
+                        }
                     }
                 }else{
-                    // 预计当日新增债转额 为零
-                    if(!vo.getCreditAccount().equals(BigDecimal.ZERO)){
+                    // 初始化值将null转换为空 预计当日新增债转额
+                    if(vo.getCreditAccount() == null){
                         //（预计当日所需资产量=0）
                         vo.setAssetAccount(BigDecimal.ZERO);
+                        vo.setCreditAccount(BigDecimal.ZERO);
                         // 预计当日新增复投额（元）- 预计当日新增债转额（元）
                         if((vo.getReinvestAccount().subtract(vo.getCreditAccount())).compareTo(BigDecimal.ZERO) > 0){
                             vo.setCapitalAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
                         }
                     }
-                    // 预计当日新增复投额 为零
-                    if(!vo.getReinvestAccount().equals(BigDecimal.ZERO)){
+                    // 初始化值将null转换为空 预计当日新增复投额
+                    if(vo.getReinvestAccount() == null){
                         //（预计当日所需资产量=0）
                         vo.setAssetAccount(BigDecimal.ZERO);
+                        vo.setReinvestAccount(BigDecimal.ZERO);
                         // 预计当日新增债转额（元）- 预计当日新增复投额（元）
                         if((vo.getCreditAccount().subtract(vo.getReinvestAccount())).compareTo(BigDecimal.ZERO) > 0){
-                            vo.setCapitalAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
+                            vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
                         }
                     }
                 }
-            }else{
-                // 初始化值将null转换为空 预计当日新增债转额
-                if(vo.getCreditAccount() == null){
-                    //（预计当日所需资产量=0）
-                    vo.setAssetAccount(BigDecimal.ZERO);
-                    vo.setCreditAccount(BigDecimal.ZERO);
-                    // 预计当日新增复投额（元）- 预计当日新增债转额（元）
-                    if((vo.getReinvestAccount().subtract(vo.getCreditAccount())).compareTo(BigDecimal.ZERO) > 0){
-                        vo.setCapitalAccount(vo.getReinvestAccount().subtract(vo.getCreditAccount()));
-                    }
-                }
-                // 初始化值将null转换为空 预计当日新增复投额
-                if(vo.getReinvestAccount() == null){
-                    //（预计当日所需资产量=0）
-                    vo.setAssetAccount(BigDecimal.ZERO);
-                    vo.setReinvestAccount(BigDecimal.ZERO);
-                    // 预计当日新增债转额（元）- 预计当日新增复投额（元）
-                    if((vo.getCreditAccount().subtract(vo.getReinvestAccount())).compareTo(BigDecimal.ZERO) > 0){
-                        vo.setCapitalAccount(vo.getCreditAccount().subtract(vo.getReinvestAccount()));
-                    }
-                }
             }
+            listMongoDbStr.addAll(listReturnStr);
         }
         // 调用cs_massage 存储mongodb
-        boolean flag = csMessageClient.insertPlanCapitalForCreditInfo(listReturnStr);
+        boolean flag = csMessageClient.insertPlanCapitalForCreditInfo(listMongoDbStr);
         if(flag){
             logger.info("资金计划batch计算结束，插入mongodb成功！结束时间："+ GetDate.dateToString(GetDate.getDate()));
         }else{
