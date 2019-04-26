@@ -106,6 +106,11 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		case "cash_coupon_profit":
 			couponProfit(accountList,list);
 			break;
+
+         //优惠券回款 上送41红包
+         case "increase_interest_profit":
+             increaseInerestProfit(accountList,list);
+             break;
 		//投资收到还款  发送8赎回本金 发送9赎回利息
 		case "tender_recover_yes":
 		case "hjh_repay_balance":
@@ -265,7 +270,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 			if(borrowRecovers==null||borrowRecovers.size()==0){
 				return;
 			}
-
 			interest=borrowRecovers.get(0).getRecoverInterestYes();
 			capital=borrowRecovers.get(0).getRecoverCapitalYes();
 			BorrowRecoverVO borrowRecover=borrowRecovers.get(0);
@@ -368,6 +372,33 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param1);
 	}
+
+
+    private void increaseInerestProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
+        Map<String, Object> param = new HashMap<String, Object>();
+        UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+        //接口版本号
+        param.put("version", CertCallConstant.CERT_CALL_VERSION);
+        //平台编号
+        param.put("sourceCode", systemConfig.getCertSourceCode());
+        //平台交易流水号
+        param.put("transId", accountList.getNid());
+        //产品信息编号
+        param.put("sourceFinancingCode", "-1");
+        //交易类型
+        param.put("transType", "41");
+        //交易金额
+        param.put("transMoney", FORMAT.format(accountList.getAmount()));
+        //用户标示哈希
+        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+        //交易流水时间
+        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+        list.add(param);
+    }
+
+
+
+
     //已改
 	private void couponProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -533,6 +564,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     //已改
 	private void cashSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param1 = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
 		if(accountList.getRoleId()!=1){
 			return ;
@@ -558,8 +590,25 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
         //交易流水时间
         param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+        list.add(param);
+        /******************发送23提现手续费******************/
 
-		list.add(param);
+        param1.put("version", CertCallConstant.CERT_CALL_VERSION);
+        //平台编号
+        param1.put("sourceCode", systemConfig.getCertSourceCode());
+        //平台交易流水号
+        param1.put("transId", accountList.getNid());
+        //产品信息编号
+        param1.put("sourceFinancingCode", "-1");
+        //交易类型
+        param1.put("transType", "23");
+        //交易金额
+        param1.put("transMoney", FORMAT.format(accountwithdraws.get(0).getFee()));
+        //用户标示哈希
+        param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+        //交易流水时间
+        param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		list.add(param1);
 
 	}
 }
