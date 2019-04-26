@@ -91,7 +91,7 @@ public class WbsWebUserController {
 	public BaseResult redirect(HttpServletRequest request, @RequestBody WbsRedirectQO qo){
 		BaseResult result=new BaseResult();
 
-		WebUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_PC,qo.getPresetProps());
+		WbsUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_PC,qo.getPresetProps());
 
 		result.setData(webUserBindVO);
 

@@ -48,7 +48,6 @@ import com.hyjf.wbs.mq.base.CommonProducer;
 import com.hyjf.wbs.mq.base.MessageContent;
 import com.hyjf.wbs.qvo.*;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
-import com.hyjf.wbs.user.dao.mapper.auto.UserMapper;
 import com.hyjf.wbs.user.dao.model.auto.User;
 import com.hyjf.wbs.user.service.WbsUserService;
 
@@ -86,13 +85,13 @@ public class WbsUserServiceImpl implements WbsUserService {
 		response.setStatus("000");
 		response.setStatusDesc("授权成功");
 
-		WebUserBindVO bindVO=new WebUserBindVO();
+		WebUserBindVO bindVO = new WebUserBindVO();
 		bindVO.setUsername(webViewUserVO.getUsername());
 		bindVO.setMobile(webViewUserVO.getMobile());
 		bindVO.setToken(webViewUserVO.getToken());
 		bindVO.setRoleId(webViewUserVO.getRoleId());
-		//TODO　需要后台指定跳转页面？
-//		bindVO.setRetUrl();
+		// TODO 需要后台指定跳转页面？
+		// bindVO.setRetUrl();
 		bindVO.setIconUrl(webViewUserVO.getIconUrl());
 		bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
 		response.setData(bindVO);
@@ -112,7 +111,10 @@ public class WbsUserServiceImpl implements WbsUserService {
 
 	@Override
 	public void wechatBind(WechatUserBindQO wechatUserBindQO, BaseResult result) {
-		WechatUserBindVO bindVO=csUserClient.wechatLogin(wechatUserBindQO.getUsername(),wechatUserBindQO.getPassword());
+		WechatUserBindVO bindVO = csUserClient.wechatLogin(wechatUserBindQO.getUsername(),
+				wechatUserBindQO.getPassword());
+		// TODO by cui 成功返回地址
+		bindVO.setRetUrl("");
 		result.setData(bindVO);
 
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();
@@ -127,7 +129,6 @@ public class WbsUserServiceImpl implements WbsUserService {
 			throw new CheckException(e.getMessage());
 		}
 
-
 	}
 
 	@Override
@@ -140,14 +141,14 @@ public class WbsUserServiceImpl implements WbsUserService {
 			userId = Integer.parseInt(assetCustomerId);
 		} catch (NumberFormatException e) {
 			logger.error("客户ID=【{}】不是INTEGER类型", assetCustomerId);
-			throw new CheckException("999","客户ID【" + assetCustomerId + "】不是INTEGER类型！");
+			throw new CheckException("999", "客户ID【" + assetCustomerId + "】不是INTEGER类型！");
 		}
 
 		User user = userService.findUserById(userId);
 
 		if (null == user) {
 			logger.error("未找到ID=【" + assetCustomerId + "】的客户信息");
-			throw new CheckException("999","未找到ID=【" + assetCustomerId + "】的客户信息");
+			throw new CheckException("999", "未找到ID=【" + assetCustomerId + "】的客户信息");
 		}
 
 		wbsUserAuthInfo.setUserName(user.getUsername());
@@ -182,24 +183,23 @@ public class WbsUserServiceImpl implements WbsUserService {
 	}
 
 	@Override
-	public WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel, String presetProps) {
-
-		WebUserBindVO vo=new WebUserBindVO();
+	public WbsUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel, String presetProps) {
 
 		verifyParameters(qo);
 
-		UserVO userVO= getCustomerFromNewBanker(qo);
+		UserVO userVO = getCustomerFromNewBanker(qo);
 
-		User user=userService.findUserById(userVO.getUserId());
+		User user = userService.findUserById(userVO.getUserId());
 
-		if(!user.getUsername().equals(userVO.getUsername())){
-			throw new CheckException("999","汇盈查询的用户名【"+user.getUsername()+"】与newBanker提供的【"+userVO.getUsername()+"】不一致！");
+		if (!user.getUsername().equals(userVO.getUsername())) {
+			throw new CheckException("999",
+					"汇盈查询的用户名【" + user.getUsername() + "】与newBanker提供的【" + userVO.getUsername() + "】不一致！");
 		}
 
-		UserVO userWrapper=new UserVO();
-		BeanUtils.copyProperties(user,userWrapper);
+		UserVO userWrapper = new UserVO();
+		BeanUtils.copyProperties(user, userWrapper);
 
-		WebViewUserVO webViewUserVO = loginOperationOnly(userWrapper,user.getUsername(),ipAddr,channel);
+		WebViewUserVO webViewUserVO = loginOperationOnly(userWrapper, user.getUsername(), ipAddr, channel);
 		if (webViewUserVO != null) {
 			logger.info("web端登录成功 userId is :{}", webViewUserVO.getUserId());
 			if (user != null && StringUtils.isNotBlank(presetProps)) {
@@ -207,17 +207,19 @@ public class WbsUserServiceImpl implements WbsUserService {
 				try {
 					SensorsDataBean sensorsDataBean = new SensorsDataBean();
 					// 将json串转换成Bean
-					Map<String, Object> sensorsDataMap = JSONObject.parseObject(qo.getPresetProps(), new TypeReference<Map<String, Object>>() {
-					});
+					Map<String, Object> sensorsDataMap = JSONObject.parseObject(qo.getPresetProps(),
+							new TypeReference<Map<String, Object>>() {
+							});
 					sensorsDataBean.setPresetProps(sensorsDataMap);
 					sensorsDataBean.setUserId(webViewUserVO.getUserId());
 					// 发送神策数据统计MQ
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC,
+							UUID.randomUUID().toString(), sensorsDataBean), 2);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				}
 			}
-			//登录成功发送mq
+			// 登录成功发送mq
 			UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
 			userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE1);
 			userOperationLogEntity.setIp(ipAddr);
@@ -226,47 +228,61 @@ public class WbsUserServiceImpl implements WbsUserService {
 			userOperationLogEntity.setOperationTime(new Date());
 			userOperationLogEntity.setUserName(webViewUserVO.getUsername());
 			userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
-			logger.info("userOperationLogEntity发送数据==="+JSONObject.toJSONString(userOperationLogEntity));
+			logger.info("userOperationLogEntity发送数据===" + JSONObject.toJSONString(userOperationLogEntity));
 			try {
-				commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
+				commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC,
+						UUID.randomUUID().toString(), userOperationLogEntity));
 			} catch (MQException e) {
-				logger.error("保存用户日志失败" , e);
+				logger.error("保存用户日志失败", e);
 			}
-			BeanUtils.copyProperties(webViewUserVO,vo);
-			vo.setUserId(String.valueOf(user.getUserId()));
 
-			buildRetUrl(qo,vo);
-			return vo;
+			if (WbsConstants.CHANNEL_WEI.equals(channel)) {
+				WechatUserBindVO bindVO = new WechatUserBindVO();
+				bindVO.setUserType(webViewUserVO.getUserType());
+				bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
+				bindVO.setSign(webViewUserVO.getToken());
+				bindVO.setRetUrl(buildRetUrl(qo));
+				return bindVO;
+
+			} else if (WbsConstants.CHANNEL_PC.equals(channel)) {
+				WebUserBindVO vo = new WebUserBindVO();
+				BeanUtils.copyProperties(webViewUserVO, vo);
+				vo.setUserId(String.valueOf(user.getUserId()));
+				vo.setRetUrl(buildRetUrl(qo));
+				return vo;
+			} else {
+				throw new CheckException("999", "不支持的channel【" + channel + "】");
+			}
 		} else {
-			throw new CheckException(ApiResult.FAIL,"登录失败,账号或密码错误");
+			throw new CheckException(ApiResult.FAIL, "登录失败,账号或密码错误");
 		}
 	}
 
-	private void buildRetUrl(WbsRedirectQO qo, WebUserBindVO vo) {
-		String type=qo.getType();
-		if(RedirectTypeEnum.BORROW_TYPE.getType().equals(type)){
-			String url=RedirectTypeEnum.BORROW_TYPE.getUrl();
-			vo.setRetUrl(String.format(url,qo.getBorrowNid()));
-		}else{
-			RedirectTypeEnum redirectTypeEnum=RedirectTypeEnum.findType(type);
-			vo.setRetUrl(redirectTypeEnum.getUrl());
+	private String buildRetUrl(WbsRedirectQO qo) {
+		String type = qo.getType();
+		if (RedirectTypeEnum.BORROW_TYPE.getType().equals(type)) {
+			String url = RedirectTypeEnum.BORROW_TYPE.getUrl();
+			return String.format(url, qo.getBorrowNid());
+		} else {
+			RedirectTypeEnum redirectTypeEnum = RedirectTypeEnum.findType(type);
+			return redirectTypeEnum.getUrl();
 		}
 	}
 
 	private UserVO getCustomerFromNewBanker(WbsRedirectQO qo) {
 
-		Map<String,String> parameter= Maps.newConcurrentMap();
-		parameter.put("token",qo.getToken());
-		parameter.put("entId",qo.getEntId());
+		Map<String, String> parameter = Maps.newConcurrentMap();
+		parameter.put("token", qo.getToken());
+		parameter.put("entId", qo.getEntId());
 
-		String content=new WbsNewBankerSender(WbsConstants.INTERFACE_NAME_PASSPORT_AUTHORIZE,parameter).send();
+		String content = new WbsNewBankerSender(WbsConstants.INTERFACE_NAME_PASSPORT_AUTHORIZE, parameter).send();
 
 		JSONObject jasonObject = JSONObject.parseObject(content);
 		Map map = jasonObject;
 		if (map != null && WbsConstants.WBS_RESPONSE_STATUS_SUCCESS
 				.equals(String.valueOf(map.get(WbsConstants.WBS_RESPONSE_STATUS_KEY)))) {
-			UserVO userVO=new UserVO();
-			Map<String,String> value= (Map<String, String>) map.get("value");
+			UserVO userVO = new UserVO();
+			Map<String, String> value = (Map<String, String>) map.get("value");
 			userVO.setUserId(Integer.valueOf(value.get("assetCustomerId")));
 			userVO.setUsername(value.get("userName"));
 			return userVO;
@@ -278,26 +294,27 @@ public class WbsUserServiceImpl implements WbsUserService {
 
 	/**
 	 * 重定向参数检验
+	 * 
 	 * @param qo
 	 */
 	private void verifyParameters(WbsRedirectQO qo) {
 
-		if(Strings.isNullOrEmpty(qo.getType())){
-			throw new CheckException("999","重定向Type为空！");
+		if (Strings.isNullOrEmpty(qo.getType())) {
+			throw new CheckException("999", "重定向Type为空！");
 		}
-		if(Strings.isNullOrEmpty(qo.getEntId()) || Strings.isNullOrEmpty(qo.getToken())){
-			throw new CheckException("999","token或entId为空！");
+		if (Strings.isNullOrEmpty(qo.getEntId()) || Strings.isNullOrEmpty(qo.getToken())) {
+			throw new CheckException("999", "token或entId为空！");
 		}
 
-		if(RedirectTypeEnum.BORROW_TYPE.getType().equals(qo.getType())){
-			if(Strings.isNullOrEmpty(qo.getBorrowNid())){
-				throw new CheckException("999","重定向到标的详情页标的号为必填项！");
+		if (RedirectTypeEnum.BORROW_TYPE.getType().equals(qo.getType())) {
+			if (Strings.isNullOrEmpty(qo.getBorrowNid())) {
+				throw new CheckException("999", "重定向到标的详情页标的号为必填项！");
 			}
 		}
 
 	}
 
-	private WebViewUserVO loginOperationOnly(UserVO userVO,String loginUserName,String ip,String channel) {
+	private WebViewUserVO loginOperationOnly(UserVO userVO, String loginUserName, String ip, String channel) {
 		int userId = userVO.getUserId();
 		// 是否禁用
 		if (userVO.getStatus() == 1) {
@@ -306,7 +323,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 		// 更新登录信息
 		amUserClient.updateUser(userVO, ip);
 
-		WebViewUserVO webViewUserVO = amUserClient.getWebViewUserByUserId(userId,channel);
+		WebViewUserVO webViewUserVO = amUserClient.getWebViewUserByUserId(userId, channel);
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
 		String accountId = webViewUserVO.getBankAccount();
@@ -315,9 +332,10 @@ public class WbsUserServiceImpl implements WbsUserService {
 			params.put("accountId", accountId);
 			params.put("ip", ip);
 			try {
-				commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.SYNBALANCE_TAG, UUID.randomUUID().toString(),params));
+				commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.SYNBALANCE_TAG,
+						UUID.randomUUID().toString(), params));
 			} catch (MQException e) {
-				logger.error("同步线下充值异常:"+e.getMessage());
+				logger.error("同步线下充值异常:" + e.getMessage());
 			}
 
 		}
@@ -328,16 +346,16 @@ public class WbsUserServiceImpl implements WbsUserService {
 		return webViewUserVO;
 	}
 
-	private WebViewUserVO setToken(WebViewUserVO webViewUserVO){
+	private WebViewUserVO setToken(WebViewUserVO webViewUserVO) {
 
-		Integer userId=webViewUserVO.getUserId();
-		String username=webViewUserVO.getUsername();
+		Integer userId = webViewUserVO.getUserId();
+		String username = webViewUserVO.getUsername();
 
 		AccessToken accessToken = new AccessToken(userId, username, Instant.now().getEpochSecond());
 		String token = Token.generate(String.valueOf(userId + username + Instant.now().getEpochSecond()));
 
 		// 1.设置页面30分钟超时 2.jwt无法删除已知非法token,redis可以做到
-		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, accessToken, 30*60);
+		RedisUtils.setObjEx(RedisConstants.USER_TOEKN_KEY + token, accessToken, 30 * 60);
 
 		webViewUserVO.setToken(token);
 		RedisUtils.setObjEx(RedisConstants.USERID_KEY + webViewUserVO.getUserId(), webViewUserVO, 7 * 24 * 60 * 60);

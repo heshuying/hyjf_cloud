@@ -89,7 +89,7 @@ public class WbsWechatUserController {
 
         String presetProps = getStringFromStream(request);
 
-        WebUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_WEI,presetProps);
+        WbsUserBindVO webUserBindVO=wbsUserService.redirect(qo, GetCilentIP.getIpAddr(request), WbsConstants.CHANNEL_WEI,presetProps);
 
         result.setData(webUserBindVO);
 

@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author cui
  * @version WechatUserBindVO, v0.1 2019/4/22 11:34
  */
-public class WechatUserBindVO {
+public class WechatUserBindVO extends WbsUserBindVO{
 
     @ApiModelProperty(value = "用户ID")
     private String userId;
@@ -18,6 +18,8 @@ public class WechatUserBindVO {
     private String sign;
     @ApiModelProperty(value = "类型")
     private Integer userType;
+    @ApiModelProperty(value = "成功后返回地址")
+    private String retUrl;
 
     public String getSign() {
         return sign;
@@ -42,4 +44,11 @@ public class WechatUserBindVO {
         this.userType = userType;
     }
 
+    public String getRetUrl() {
+        return retUrl;
+    }
+
+    public void setRetUrl(String retUrl) {
+        this.retUrl = retUrl;
+    }
 }

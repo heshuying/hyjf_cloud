@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author cui
  * @version WebUserBindVO, v0.1 2019/4/22 9:40
  */
-public class WebUserBindVO {
+public class WebUserBindVO extends WbsUserBindVO{
 
     @ApiModelProperty(value = "汇盈金服（资产端）用户名")
     private String username;

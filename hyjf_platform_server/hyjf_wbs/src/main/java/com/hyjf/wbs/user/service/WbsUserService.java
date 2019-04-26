@@ -46,5 +46,5 @@ public interface WbsUserService {
      * @param presetProps
      * @return
      */
-    WebUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel, String presetProps);
+    WbsUserBindVO redirect(WbsRedirectQO qo, String ipAddr, String channel, String presetProps);
 }
