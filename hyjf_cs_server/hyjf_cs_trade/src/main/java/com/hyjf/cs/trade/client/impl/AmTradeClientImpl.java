@@ -32,6 +32,7 @@ import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -79,6 +80,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -7253,6 +7255,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<HjhPlanVO> selectAllPlan(){
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectAllPlan";
         HjhPlanVoResponse response = restTemplate.postForEntity(url,null,HjhPlanVoResponse.class).getBody();
+        if (Validator.isNotNull(response)&&Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @param flg
+     * @return
+     */
+    @Override
+    public List<CertBorrowVO> selectCertBorrowByFlg(int flg){
+        String url = "http://AM-TRADE/am-trade/hjhPlan/selectCertBorrowByFlg/"+flg;
+        CertBorrowResponse response = restTemplate.getForEntity(url,CertBorrowResponse.class).getBody();
         if (Validator.isNotNull(response)&&Response.isSuccess(response)){
             return response.getResultList();
         }

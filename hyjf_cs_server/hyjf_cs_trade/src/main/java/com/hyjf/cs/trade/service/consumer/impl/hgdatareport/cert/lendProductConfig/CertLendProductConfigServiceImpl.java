@@ -1,7 +1,9 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.lendProductConfig;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -13,6 +15,7 @@ import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProductConfig.CertLendProductConfigService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -152,7 +155,39 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
         String sourceFinancingcode = "";
         //债权编号
         String finClaimID = "";
+        //借款人id
+        Integer userId = 0;
         try {
+            //未还款的标的
+            List<CertBorrowVO> listJoin = amTradeClient.selectCertBorrowByFlg(2);
+            if(CollectionUtils.isNotEmpty(listJoin)){
+                for(CertBorrowVO certBorrowVO:listJoin){
+                    String borrwoNid = certBorrowVO.getBorrowNid();
+                    List<BorrowTenderVO> borrowTenderVOList = amTradeClient.getBorrowTenderListByBorrowNid(borrwoNid);
+                    if(CollectionUtils.isEmpty(borrowTenderVOList)){
+                        logger.info(logHeader+" 标的编号："+borrwoNid+" ,暂无投资信息！！");
+                        continue;
+                    }
+                    for(BorrowTenderVO borrowTenderVO:borrowTenderVOList){
+                        if(StringUtils.isBlank(borrowTenderVO.getAccedeOrderId())){
+                            logger.info(logHeader+" 标的编号："+borrwoNid+" ,获取加入智投订单号为空！！");
+                            continue;
+                        }
+                        HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(borrowTenderVO.getAccedeOrderId());
+                        if (null!=hjhAccedeVO){
+                            logger.info(logHeader+" 根据智投加入订单号："+borrowTenderVO.getAccedeOrderId()+" ,查询智投计入明细为空！！");
+                            continue;
+                        }
+                        sourceFinancingcode = hjhAccedeVO.getPlanNid();
+                        finClaimID = borrowTenderVO.getNid();
+                        userId = hjhAccedeVO.getUserId();
+                        String idCardHash = getIdCard(userId);
+                        jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,null);
+                    }
+                }
+            }
+            // 未完全转让的标的
+            List<CertBorrowVO> listCredit = amTradeClient.selectCertBorrowByFlg(1);
             //查找未还款的债权信息
            /* List<BorrowTenderCustomizeVO> borrowTenderCustomizeVOList = amTradeClient.getBorrowTenderInfoCustomize();
             if(!CollectionUtils.isNotEmpty(borrowTenderCustomizeVOList)){

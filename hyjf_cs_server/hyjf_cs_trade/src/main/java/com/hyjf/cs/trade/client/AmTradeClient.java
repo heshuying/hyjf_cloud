@@ -48,6 +48,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -2984,5 +2985,11 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhPlanVO> selectAllPlan();
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @param flg
+     * @return
+     */
+    List<CertBorrowVO> selectCertBorrowByFlg(int flg);
 }
 
