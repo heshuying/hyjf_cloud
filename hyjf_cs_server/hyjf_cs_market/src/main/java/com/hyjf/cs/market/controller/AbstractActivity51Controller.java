@@ -201,12 +201,12 @@ public class AbstractActivity51Controller {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
-        if (!activity51Service.canSendCoupon(userId)) {
-            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
-        }
-
         if (isGuessEnd()) {
             return buildResult(failStatus, ACTIVITY_GUESS_END);
+        }
+
+        if (!activity51Service.canSendCoupon(userId)) {
+            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
 
