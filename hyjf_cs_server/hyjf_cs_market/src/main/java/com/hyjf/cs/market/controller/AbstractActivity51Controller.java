@@ -41,6 +41,12 @@ public class AbstractActivity51Controller {
     protected final String ACTIVITY_NOT_START = "活动未开始";
     protected final String ACTIVITY_TENDER_NOT_ENOUGH = "投资年化金额未达到发放标准(1w)";
     protected final String ACTIVITY_SUM_TENDER_NOT_ENOUGH = "累计出借金额未达到最低标准(3000w)";
+    protected final String ACTIVITY_GUESS_END = "竞猜活动已结束!";
+
+    private final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    //todo 为了适应测试场景， 先改成26截止 上线要修改回去
+    // private final String guessEndTime = "2019-05-05 00:00:00";
+    private final String guessEndTime = "2019-04-27 00:00:00";
 
     @Autowired
     protected Activity51Service activity51Service;
@@ -85,10 +91,12 @@ public class AbstractActivity51Controller {
     protected BaseResult sendCoupon(int userId, int grade, String successStatus, String failStatus) {
         logger.info("领取优惠券, userId is: {}", userId);
         if (activity51Service.isActivityTime() != 0) {
+            logger.debug("sendCoupon: {}", ACTIVITY_NOT_START);
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
+            logger.debug("sendCoupon: {}", ACTIVITY_TENDER_NOT_ENOUGH);
             return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
@@ -116,10 +124,12 @@ public class AbstractActivity51Controller {
     protected BaseResult<RewardReceiveVO> isReceiveCoupon(int userId, int grade, String successStatus, String failStatus) {
         logger.info("单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
         if (activity51Service.isActivityTime() != 0) {
+            logger.debug("isReceiveCoupon: {}", ACTIVITY_NOT_START);
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
+            logger.debug("isReceiveCoupon: {}", ACTIVITY_TENDER_NOT_ENOUGH);
             return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
@@ -138,10 +148,12 @@ public class AbstractActivity51Controller {
     protected BaseResult<List<RewardReceiveVO>> getReceiveStatusList(int userId, String successStatus, String failStatus) {
         logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
         if (activity51Service.isActivityTime() != 0) {
+            logger.debug("getReceiveStatusList: {}", ACTIVITY_NOT_START);
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
+            logger.debug("getReceiveStatusList: {}", ACTIVITY_TENDER_NOT_ENOUGH);
             return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
@@ -164,10 +176,12 @@ public class AbstractActivity51Controller {
     protected BaseResult guess(int userId, int grade, String successStatus, String failStatus) {
         logger.info("用户竞猜, userId is: {}, grade is: {}", userId, grade);
         if (activity51Service.isActivityTime() != 0) {
+            logger.debug("guess: {}", ACTIVITY_NOT_START);
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
+            logger.debug("guess: {}", ACTIVITY_TENDER_NOT_ENOUGH);
             return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
@@ -183,45 +197,43 @@ public class AbstractActivity51Controller {
 
     public BaseResult<GuessVO> isGuess(int userId, String successStatus, String failStatus) {
         logger.info("用户竞猜, userId is: {}", userId);
-        BaseResult result = null;
         if (activity51Service.isActivityTime() != 0) {
-            result = buildResult(failStatus, ACTIVITY_NOT_START);
-            result.setIsGuess(isShowGuess());
-            return result;
+            return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
-            result = buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
-            result.setIsGuess(isShowGuess());
-            return result;
+            return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
         }
 
+        if (isGuessEnd()) {
+            return buildResult(failStatus, ACTIVITY_GUESS_END);
+        }
+
+
         // 判断是否已经竞猜
-        result = new BaseResult(successStatus, "查询成功");
+        BaseResult result = new BaseResult(successStatus, "查询成功");
         ActivityUserGuessVO vo = activity51Service.getUserGuess(userId);
         if (vo != null) {
             result.setData(new GuessVO("Y", "已竞猜", vo.getGrade()));
         } else {
             result.setData(new GuessVO("N", "未竞猜"));
         }
-        result.setIsGuess(isShowGuess());
-        logger.info("用户竞猜, userId is: {}，活动二是否可以参与：{}", userId,isShowGuess());
+        logger.info("用户竞猜, userId is: {}", userId);
         return result;
     }
 
-    private String isShowGuess(){
-        String flag = "0";
+    private boolean isGuessEnd(){
+        boolean result = false;
         try{
             Date today = new Date();
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date dateString = formatter.parse("2019-05-05 00:00:00");
-            if (today.compareTo(dateString) == -1) {
-                flag = "1";
+            Date dateString = sdf.parse(guessEndTime);
+            if (today.compareTo(dateString) == 1) {
+                result = true;
             }
         }catch (Exception e){
             logger.error("时间格式化异常");
         }
-        return flag;
+        return result;
     }
 
     protected int getGradeFromSumAmount(BigDecimal sumAmount) {
@@ -229,6 +241,7 @@ public class AbstractActivity51Controller {
         if (sumAmount.compareTo(SUM_AMOUNT_GRADE_4) >= 0) {
             return 4;
         }
+
         // 第二档奖励
         if (sumAmount.compareTo(SUM_AMOUNT_GRADE_3) >= 0) {
             return 3;
@@ -250,4 +263,5 @@ public class AbstractActivity51Controller {
         result.setStatusDesc(msg);
         return result;
     }
+
 }
