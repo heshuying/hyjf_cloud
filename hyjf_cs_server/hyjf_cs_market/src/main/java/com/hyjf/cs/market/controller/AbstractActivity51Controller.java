@@ -205,10 +205,10 @@ public class AbstractActivity51Controller {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
 
-        if (isGuessEnd()) {
-            logger.debug("isGuess: {}", ACTIVITY_GUESS_END);
-            return buildResult(failStatus, ACTIVITY_GUESS_END);
-        }
+//        if (isGuessEnd()) {
+//            logger.debug("isGuess: {}", ACTIVITY_GUESS_END);
+//            return buildResult(failStatus, ACTIVITY_GUESS_END);
+//        }
 
         if (!activity51Service.canSendCoupon(userId)) {
             return buildResult(failStatus, ACTIVITY_TENDER_NOT_ENOUGH);
