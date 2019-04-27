@@ -32,7 +32,7 @@
 					AND b.status= 4
 				</if>
 				<if test="statusSrch ==1">
-					AND b.status= 5
+					 and br.repay_status=0 and br.advance_status!=3
 				</if>
 				<if test="statusSrch ==2">
 					AND b.status= 8
@@ -158,7 +158,7 @@
 		b.repay_account_yes AS repayAccountYes,
 		b.repay_account_capital-b.repay_account_capital_yes AS repayAccountCapitalWait,
 		b.repay_account_interest_wait AS repayAccountInterestWait,
-		b.repay_account_all-b.repay_account_yes AS repayAccountWait,
+		b.repay_account_wait AS repayAccountWait,
 		b.status AS status,
 		if(br.repay_status=0 and br.advance_status=3 ,'2',br.repay_status) as  repayStatus,
 		if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
@@ -438,8 +438,8 @@
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
-				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='',
-				'未提交', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
+				if(ba.status is null OR ba.status='',
+				'未提交', CASE ba.status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
@@ -523,8 +523,8 @@
 				b.repay_account_interest_wait AS repayAccountInterestWait,
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
-				if(ba.extra_yield_repay_status is null OR ba.extra_yield_repay_status='',
-				'未提交', CASE ba.extra_yield_repay_status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
+				if(ba.status is null OR ba.status='',
+				'未提交', CASE ba.status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0

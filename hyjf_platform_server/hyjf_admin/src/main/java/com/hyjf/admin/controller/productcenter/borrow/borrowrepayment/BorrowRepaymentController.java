@@ -420,7 +420,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayAccountCapitalWait","剩余待还本金");
         map.put("repayAccountInterestWait","剩余待还利息");
         map.put("repayAccountWait","未还本息");
-        map.put("status","还款状态");
+        map.put("repayStatus","还款状态");
         map.put("chargeInterest","已提前减息");
         map.put("chargePenaltyInterest","已收提前还款违约金");
         map.put("lateInterest"," 已收逾期违约金");
@@ -456,11 +456,25 @@ public class BorrowRepaymentController extends BaseController {
             @Override
             public String format(Object object) {
                 if (null != object) {
-                    return "0".equals(object) ? "还款中" : "已还款";
+                	if(object.equals("0")) {
+                		 return "还款中";
+                	}else if(object.equals("1")) {
+                		 return "已还款";
+                	}else {
+                		  return  "逾期中";
+                	}
+                  
                 }
                 return null;
             }
         };
+		IValueFormatter timeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(Integer.valueOf(value));
+			}
+		};
         mapAdapter.put("borrowApr", borrowAprAdapter);
         mapAdapter.put("borrowAccount", valueFormatAdapter);
         mapAdapter.put("borrowAccountYes", valueFormatAdapter);
@@ -474,7 +488,10 @@ public class BorrowRepaymentController extends BaseController {
         mapAdapter.put("repayAccountCapitalWait", valueFormatAdapter);
         mapAdapter.put("repayAccountInterestWait", valueFormatAdapter);
         mapAdapter.put("repayAccountWait", valueFormatAdapter);
-        mapAdapter.put("status", statusAdapter);
+        mapAdapter.put("repayStatus", statusAdapter);
+        mapAdapter.put("borrowFullTime",timeAdapter);
+        mapAdapter.put("verifyTime",timeAdapter);
+        mapAdapter.put("recoverLastTime",timeAdapter);
         return mapAdapter;
     }
 }

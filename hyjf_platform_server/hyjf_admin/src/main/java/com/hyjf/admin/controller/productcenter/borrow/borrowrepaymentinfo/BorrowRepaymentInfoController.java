@@ -392,7 +392,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "还款明细导出数据";
+        String sheetName = "原始债权还款明细数据";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 声明一个工作薄
@@ -483,7 +483,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","项目名称");
         map.put("projectTypeName","项目类型");
-        map.put("borrowPeriod","项目期限");
+        map.put("borrowPeriodExcl","项目期限");
         map.put("borrowApr","出借利率");
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
@@ -537,16 +537,16 @@ public class BorrowRepaymentInfoController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter borrowStyleAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                if("endday".equals(object)) {
-                    return object+ "天";
-                }else{
-                    return object+"个月";
-                }
-            }
-        };
+//        IValueFormatter borrowStyleAdapter = new IValueFormatter() {
+//            @Override
+//            public String format(Object object) {
+//                if("endday".equals(object)) {
+//                    return object+ "天";
+//                }else{
+//                    return object+"个月";
+//                }
+//            }
+//        };
         IValueFormatter borrowAprAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -582,7 +582,7 @@ public class BorrowRepaymentInfoController extends BaseController {
                 return null;
             }
         };
-        mapAdapter.put("borrowPeriod", borrowStyleAdapter);
+       // mapAdapter.put("borrowPeriod", borrowStyleAdapter);
         mapAdapter.put("borrowApr", borrowAprAdapter);
         mapAdapter.put("borrowAccount", valueFormatAdapter);
         mapAdapter.put("borrowAccountYes", valueFormatAdapter);

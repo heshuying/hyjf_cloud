@@ -1703,10 +1703,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					throw new Exception("最后一期还款成功后，标的表(ht_borrow)更新还款状态失败！[借款编号：" + borrowNid + "]，还款期数：" + periodNow + "]");
 				}
 				boolean isAllRepay = apicron.getIsAllrepay() == null ? false : apicron.getIsAllrepay() == 1;
-				Integer lastPeriod = apicron.getLastPeriod() == null ? 0 :apicron.getLastPeriod();// 同时提交还款的最后一期
+				Integer lastPeriod = apicron.getLastPeriod() == null ? 0 : apicron.getLastPeriod();// 同时提交还款的最后一期
 				isAllRepay = isAllRepay || lastPeriod == borrowPeriod;// 多期还款的最后一期是标的的最后一期，是一次性还款
 				// 首先判断当前期是否是一次性还款中唯一一期需要更新的 update by wgx 2019/02/19
-				boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay && lastPeriod > 0);
+				boolean isLastUpdate = isLastAllRepay(borrowNid, periodNow, isAllRepay, lastPeriod);
 				if ((isAllRepay && isLastUpdate) || (!isAllRepay && periodNext == 0)) {
 					repayType = TYPE_WAIT_YES;
 					repayStatus = 1;
@@ -1870,7 +1870,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				repayAccountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作员
 				repayAccountList.setRemark(borrowNid);
 				repayAccountList.setIp(""); // 操作IP
-				if(!isAllRepay || lastPeriod ==0){//非一次性/多期还款时插入资金明细
+				if(!isAllRepay && lastPeriod ==0){//非一次性/多期还款时插入资金明细
 					boolean repayAccountListFlag = this.accountListMapper.insertSelective(repayAccountList) > 0 ? true : false;
 					if (!repayAccountListFlag) {
 						throw new Exception("收支明细表(ht_account_list)写入失败，[借款人用户ID：" + repayUserId + "]，[借款编号:" + borrowNid + "]");
@@ -2996,13 +2996,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * 根据还款任务表查询
 	 * @return
 	 */
-    private boolean isLastAllRepay(String borrowNid, int periodNow, boolean isAllRepay) {
-        if (!isAllRepay) {
+    private boolean isLastAllRepay(String borrowNid, int periodNow, boolean isAllRepay, int lastPeriod) {
+        if (!isAllRepay && lastPeriod == 0) {
             return false;
         }
         BorrowApicronExample example = new BorrowApicronExample();
 		BorrowApicronExample.Criteria criteria = example.createCriteria();
 		criteria.andBorrowNidEqualTo(borrowNid);
+		criteria.andLastPeriodEqualTo(lastPeriod);
 		criteria.andApiTypeEqualTo(1);
 		criteria.andPeriodNowNotEqualTo(periodNow);
 		criteria.andStatusNotEqualTo(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
