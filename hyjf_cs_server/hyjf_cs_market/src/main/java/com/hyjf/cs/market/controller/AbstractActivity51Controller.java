@@ -202,6 +202,7 @@ public class AbstractActivity51Controller {
         }
 
         if (isGuessEnd()) {
+            logger.debug("isGuess: {}", ACTIVITY_GUESS_END);
             return buildResult(failStatus, ACTIVITY_GUESS_END);
         }
 
@@ -233,6 +234,7 @@ public class AbstractActivity51Controller {
         }catch (Exception e){
             logger.error("时间格式化异常");
         }
+        logger.debug("result: {}", result);
         return result;
     }
 
