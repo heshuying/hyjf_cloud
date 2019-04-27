@@ -501,6 +501,21 @@
 			hba.status = 6
 			AND hba.api_type = 1
 			AND hbi.repay_org_user_id = #{userId}
+			<!-- 只显示垫付机构还款-->
+			AND (
+			(
+			hydb.borrow_style != 'endday'
+			AND hydb.borrow_style != 'end'
+			AND hbrp.repay_user_id = hbi.repay_org_user_id
+			)
+			OR (
+			(
+			hydb.borrow_style = 'endday'
+			OR hydb.borrow_style = 'end'
+			)
+			AND hydbr.repay_user_id = hbi.repay_org_user_id
+			)
+			)
 			<if test="startDate != null and startDate != ''">
 				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
 			</if>
