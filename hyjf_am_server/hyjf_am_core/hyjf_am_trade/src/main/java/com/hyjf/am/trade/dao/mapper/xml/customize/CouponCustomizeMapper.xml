@@ -171,7 +171,7 @@
 	<select id="getCouponTenderListByUserIdAndOrderId" resultType="com.hyjf.am.vo.trade.coupon.AppCouponInfoCustomizeVO">
 		SELECT  c.coupon_name AS couponName,
 				c.coupon_code AS couponCode,
-				c.coupon_quota AS couponQuota,
+				IF(Left(RIGHT(c.coupon_quota,3),1)='.' AND RIGHT(RIGHT(c.coupon_quota,3),1)!='0',FORMAT(c.coupon_quota, 2),FORMAT(c.coupon_quota, 1)) AS couponQuota,
 				c.coupon_type AS couponType,
 				d.real_tender_id AS realOrderId,
 				t.recover_account_capital_wait AS recoverAccountCapitalWait,
@@ -268,7 +268,7 @@
 		'元'
 		)
 		WHEN 2 THEN
-		CONCAT(d.coupon_quota, '%')
+		CONCAT(IF(Left(RIGHT(d.coupon_quota,3),1)='.' AND RIGHT(RIGHT(d.coupon_quota,3),1)!='0',FORMAT(d.coupon_quota, 2),FORMAT(d.coupon_quota, 1)), '%')
 		WHEN 3 THEN
 		CONCAT(
 		FORMAT(d.coupon_quota, 2),
