@@ -165,10 +165,23 @@
 		COUNT(hydb.borrow_nid) AS total
 		FROM
 		ht_borrow hydb
-		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
-		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
-		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
-		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
+        INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
+        LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
+        AND hba.api_type = 1
+        AND hba.`status` <![CDATA[<>]]> 6
+        AND CASE WHEN hydb.borrow_style in ('endday','end')
+        THEN hba.period_now = 1
+        ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+        END
+        LEFT JOIN ht_borrow_apicron hbap ON hbap.borrow_nid = hydb.borrow_nid
+        AND hbap.api_type = 0
+        AND hbap.`status` = 6
+        LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
+        AND plan.repay_period = (
+        IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1)
+        )
 		<include refid="Where_Clause_Repay_List" />
 	</select>
 	<sql id="Where_Clause_Repay_List">
@@ -366,22 +379,27 @@
 		COUNT(hydb.borrow_nid) AS total
 		FROM
 		ht_borrow hydb
-		LEFT JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
-		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
-		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 1 AND hba.`status` <![CDATA[<>]]> 6
-		AND CASE WHEN hydb.borrow_style in ('endday','end')
-		THEN hba.period_now = 1
-		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
-		END
-		<if test="repayStatus != null and repayStatus != ''">
-			LEFT JOIN
-			(select orgLog.del_flag,orgLog.borrow_nid from ht_bank_repay_org_freeze_log orgLog inner join ht_borrow hb ON orgLog.borrow_nid = hb.borrow_nid
-			AND orgLog.del_flag = 0 union all
-			select borLog.del_flag,borLog.borrow_nid from ht_bank_repay_freeze_log borLog inner join ht_borrow hb ON borLog.borrow_nid = hb.borrow_nid
-			AND borLog.del_flag = 0
-			) log on log.borrow_nid = hydb.borrow_nid
-		</if>
+        INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+        INNER JOIN ht_r_user u ON hbi.repay_org_user_id = u.user_id
+        LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hbi.project_type
+        LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
+        AND hba.api_type = 1
+        AND hba.`status` <![CDATA[<>]]> 6
+        AND CASE WHEN hydb.borrow_style in ('endday','end')
+        THEN hba.period_now = 1
+        ELSE hba.period_now = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+        END
+        LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
+        AND plan.repay_period = (IF(hydb.borrow_period - hydbr.repay_period + 1>hydb.borrow_period,hydb.borrow_period,hydb.borrow_period - hydbr.repay_period + 1))
+        <if test="repayStatus != null and repayStatus != ''">
+            LEFT JOIN
+            (select orgLog.del_flag,orgLog.borrow_nid from ht_bank_repay_org_freeze_log orgLog inner join ht_borrow hb ON orgLog.borrow_nid = hb.borrow_nid
+            AND orgLog.del_flag = 0 union all
+            select borLog.del_flag,borLog.borrow_nid from ht_bank_repay_freeze_log borLog inner join ht_borrow hb ON borLog.borrow_nid = hb.borrow_nid
+            AND borLog.del_flag = 0
+            ) log on log.borrow_nid = hydb.borrow_nid
+        </if>
 		<include refid="Where_Clause_Repay_Org_List" />
 	</select>
 	<sql id="Where_Clause_Repay_Org_List">
