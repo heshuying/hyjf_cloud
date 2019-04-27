@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.ToIntBiFunction;
 
 /**
  * @author xiasq
@@ -232,6 +233,7 @@ public class AbstractActivity51Controller {
         try{
             Date today = new Date();
             Date dateString = sdf.parse(guessEndTime);
+            logger.debug("today: {}, guessEndTime: {}, today.compareTo(dateString): {}", sdf.format(today), guessEndTime, today.compareTo(dateString));
             if (today.compareTo(dateString) == 1) {
                 result = true;
             }
