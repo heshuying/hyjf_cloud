@@ -174,7 +174,7 @@ public class AbstractActivity51Controller {
 
 
     protected BaseResult guess(int userId, int grade, String successStatus, String failStatus) {
-        logger.info("用户竞猜, userId is: {}, grade is: {}", userId, grade);
+        logger.info("guess 用户竞猜, userId is: {}, grade is: {}", userId, grade);
         if (activity51Service.isActivityTime() != 0) {
             logger.debug("guess: {}", ACTIVITY_NOT_START);
             return buildResult(failStatus, ACTIVITY_NOT_START);
@@ -201,7 +201,7 @@ public class AbstractActivity51Controller {
 
 
     public BaseResult<GuessVO> isGuess(int userId, String successStatus, String failStatus) {
-        logger.info("用户竞猜, userId is: {}", userId);
+        logger.info("isGuess 用户竞猜, userId is: {}", userId);
         if (activity51Service.isActivityTime() != 0) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
