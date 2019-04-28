@@ -297,6 +297,19 @@
 
 	<sql id="Borrow_Repayment_Plan_Where_Clause">
 		<where>
+		
+							<!-- 还款期数 -->
+			<if test="repayPeriod != null and repayPeriod != ''">
+				AND rp.repay_period = #{repayPeriod}
+			</if>
+					<!-- 借款人 -->
+			<if test="borrowUserName != null and borrowUserName != ''">
+				AND b.borrow_user_name LIKE CONCAT( #{borrowUserName}, '%')
+			</if>
+			<!-- 计划编号 -->
+			<if test="planNid != null and planNid != ''">
+				AND b.plan_nid = #{planNid}
+			</if>
 			<!-- 项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
 				AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
@@ -314,10 +327,10 @@
 			<!-- 还款状态 -->
 			<if test="statusSrch != null and statusSrch != ''">
 			<if test="statusSrch ==0">
-					AND rp.repay_status = #{statusSrch}
+					AND rp.repay_status = #{statusSrch} and rp.advance_status!=3
 				</if>
 				<if test="statusSrch ==1">
-					AND rp.repay_status = #{statusSrch}
+					and rp.repay_status=#{statusSrch}
 				</if>
 				<if test="statusSrch ==2">
 					AND rp.repay_status = 0
@@ -439,7 +452,7 @@
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
 				if(ba.status is null OR ba.status='',
-				'未提交', CASE ba.status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
+				'未提交', CASE ba.status WHEN 1 THEN '还款请求中' WHEN 2 THEN '还款请求成功' WHEN 9 THEN '还款处理中' WHEN 3 THEN '还款校验成功' WHEN 4 THEN '还款校验失败' WHEN 5 THEN '还款失败' WHEN 6 THEN '还款成功' WHEN 7 THEN '还款请求失败' WHEN 8 THEN '还款部分成功' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
@@ -524,7 +537,7 @@
 				b.plan_nid as planNid,
 				rp.repay_account_yes as repayAccountYes,
 				if(ba.status is null OR ba.status='',
-				'未提交', CASE ba.status WHEN 1 THEN '还款完成' WHEN 2 THEN '还款执行中' WHEN 9 THEN '还款失败' ELSE '待还款' END ) as extraYieldRepayStatus,
+				'未提交', CASE ba.status WHEN 1 THEN '还款请求中' WHEN 2 THEN '还款请求成功' WHEN 9 THEN '还款处理中' WHEN 3 THEN '还款校验成功' WHEN 4 THEN '还款校验失败' WHEN 5 THEN '还款失败' WHEN 6 THEN '还款成功' WHEN 7 THEN '还款请求失败' WHEN 8 THEN '还款部分成功' ELSE '待还款' END ) as extraYieldRepayStatus,
 				ba.user_name as userName,
 				ba.submitter,
 				CASE rp.auto_repay when 0
