@@ -33,6 +33,8 @@ public interface UserLargeScreenCustomizeMapper {
 
     List<MonthDataStatisticsVO> getMonthDataStatisticsT();
 
+    List<MonthDataStatisticsVO> getMonthDataStatisticsFi();
+
     List<MonthDataStatisticsVO> getMonthDataStatisticsFo();
 
     OperMonthPerformanceDataVO getOperMonthPerformanceDataO();
