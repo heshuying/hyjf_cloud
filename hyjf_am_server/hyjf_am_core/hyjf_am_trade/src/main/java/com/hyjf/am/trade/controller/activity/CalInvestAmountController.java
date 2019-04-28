@@ -43,6 +43,7 @@ public class CalInvestAmountController extends BaseController {
     public BigDecimalResponse sumAnnualInvestAmount(@PathVariable Integer userId, @PathVariable Date startDate, @PathVariable Date endDate) {
         BigDecimalResponse response = new BigDecimalResponse();
         BigDecimal annualInvestAmount = borrowTenderService.getAnnualInvestAmount(userId, startDate, endDate);
+        logger.debug("annualInvestAmount: {}", annualInvestAmount);
         if (annualInvestAmount != null) {
             response.setResultDec(annualInvestAmount);
         } else {

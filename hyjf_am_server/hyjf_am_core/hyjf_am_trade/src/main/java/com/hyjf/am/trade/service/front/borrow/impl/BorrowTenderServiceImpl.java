@@ -308,12 +308,18 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         map.put("userId", userId);
         map.put("startTime", startTime);
         map.put("endTime", endTime);
-        logger.info("开始日期：" + startTime + ",结束日期：" + endTime);
+        logger.info("开始日期：" + startTime + ",结束日期：" + endTime + ", userId：" + userId);
         BigDecimal investSum = borrowInvestCustomizeMapper.getAnnualInvestAmount(map);
         if (investSum == null) {
             investSum = BigDecimal.ZERO;
         }
+        logger.debug("investSum: {}", investSum);
         BigDecimal planSum = borrowInvestCustomizeMapper.getPlanAnnualAmount(map);
+        if(planSum!=null){
+            logger.debug("planSum: {}", planSum);
+        }else {
+            logger.warn("planSum is null....");
+        }
         return investSum.add(planSum);
     }
 
