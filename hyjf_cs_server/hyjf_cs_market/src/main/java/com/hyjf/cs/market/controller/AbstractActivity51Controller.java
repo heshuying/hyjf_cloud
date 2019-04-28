@@ -7,6 +7,7 @@ import com.hyjf.cs.market.vo.Activity51VO;
 import com.hyjf.cs.market.vo.ActivityTimeVO;
 import com.hyjf.cs.market.vo.GuessVO;
 import com.hyjf.cs.market.vo.RewardReceiveVO;
+import io.swagger.models.auth.In;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class AbstractActivity51Controller {
     protected final BigDecimal SUM_AMOUNT_GRADE_4 = new BigDecimal(100000000);
 
     protected final String ACTIVITY_NOT_START = "活动未开始";
+    protected final String ACTIVITY_IS_END = "活动已结束";
     protected final String ACTIVITY_TENDER_NOT_ENOUGH = "投资年化金额未达到发放标准(1w)";
     protected final String ACTIVITY_SUM_TENDER_NOT_ENOUGH = "累计出借金额未达到最低标准(3000w)";
     protected final String ACTIVITY_GUESS_END = "竞猜活动已结束!";
@@ -60,13 +62,13 @@ public class AbstractActivity51Controller {
         ActivityTimeVO vo = null;
         switch (activity51Service.isActivityTime()) {
             case -1:
-                vo = new ActivityTimeVO("N", "活动未开始");
+                vo = new ActivityTimeVO("N", ACTIVITY_NOT_START);
                 break;
             case 0:
                 vo = new ActivityTimeVO("Y", "活动进行中");
                 break;
             case 1:
-                vo = new ActivityTimeVO("N", "活动已结束");
+                vo = new ActivityTimeVO("N", ACTIVITY_IS_END);
                 break;
             default:
                 throw new RuntimeException("unknown error");
@@ -77,9 +79,15 @@ public class AbstractActivity51Controller {
 
     protected BaseResult<Activity51VO> getSumAmount(String successStatus, String failStatus) {
         BaseResult<Activity51VO> result = new BaseResult(successStatus, "查询成功");
-        if (activity51Service.isActivityTime() != 0) {
+        Integer flag = activity51Service.isActivityTime();
+        if (flag == -1) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
         }
+        if (flag == 1) {
+            return buildResult(failStatus, ACTIVITY_IS_END);
+        }
+
+
         BigDecimal sumAmount = activity51Service.getSumAmount();
         sumAmount = sumAmount == null ? BigDecimal.ZERO : sumAmount;
         String rate = String.format("%.2f", sumAmount.multiply(MULTIPLY).divide(DIVIDE)).concat("%");
@@ -93,9 +101,12 @@ public class AbstractActivity51Controller {
 
     protected BaseResult sendCoupon(int userId, int grade, String successStatus, String failStatus) {
         logger.info("领取优惠券, userId is: {}", userId);
-        if (activity51Service.isActivityTime() != 0) {
-            logger.debug("sendCoupon: {}", ACTIVITY_NOT_START);
+        Integer flag = activity51Service.isActivityTime();
+        if (flag == -1) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
+        }
+        if (flag == 1) {
+            return buildResult(failStatus, ACTIVITY_IS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
@@ -126,9 +137,12 @@ public class AbstractActivity51Controller {
 
     protected BaseResult<RewardReceiveVO> isReceiveCoupon(int userId, int grade, String successStatus, String failStatus) {
         logger.info("单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
-        if (activity51Service.isActivityTime() != 0) {
-            logger.debug("isReceiveCoupon: {}", ACTIVITY_NOT_START);
+        Integer flag = activity51Service.isActivityTime();
+        if (flag == -1) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
+        }
+        if (flag == 1) {
+            return buildResult(failStatus, ACTIVITY_IS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
@@ -150,9 +164,12 @@ public class AbstractActivity51Controller {
 
     protected BaseResult<List<RewardReceiveVO>> getReceiveStatusList(int userId, String successStatus, String failStatus) {
         logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
-        if (activity51Service.isActivityTime() != 0) {
-            logger.debug("getReceiveStatusList: {}", ACTIVITY_NOT_START);
+        Integer flag = activity51Service.isActivityTime();
+        if (flag == -1) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
+        }
+        if (flag == 1) {
+            return buildResult(failStatus, ACTIVITY_IS_END);
         }
 
         if (!activity51Service.canSendCoupon(userId)) {
@@ -178,9 +195,12 @@ public class AbstractActivity51Controller {
 
     protected BaseResult guess(int userId, int grade, String successStatus, String failStatus) {
         logger.info("guess 用户竞猜, userId is: {}, grade is: {}", userId, grade);
-        if (activity51Service.isActivityTime() != 0) {
-            logger.debug("guess: {}", ACTIVITY_NOT_START);
+        Integer flag = activity51Service.isActivityTime();
+        if (flag == -1) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
+        }
+        if (flag == 1) {
+            return buildResult(failStatus, ACTIVITY_IS_END);
         }
 
         if (isGuessEnd()) {
@@ -205,8 +225,12 @@ public class AbstractActivity51Controller {
 
     public BaseResult<GuessVO> isGuess(int userId, String successStatus, String failStatus) {
         logger.info("isGuess 用户竞猜, userId is: {}", userId);
-        if (activity51Service.isActivityTime() != 0) {
+        Integer flag = activity51Service.isActivityTime();
+        if (flag == -1) {
             return buildResult(failStatus, ACTIVITY_NOT_START);
+        }
+        if (flag == 1) {
+            return buildResult(failStatus, ACTIVITY_IS_END);
         }
 
         if (isGuessEnd()) {
