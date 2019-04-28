@@ -145,6 +145,11 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     //已改
 	private void accedeAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
+		List<HjhDebtCreditTenderVO> hjhDebtCreditTenders=amTradeClient.selectHjhCreditTenderListByAssignOrderId(accountList.getNid());
+		if(hjhDebtCreditTenders==null||hjhDebtCreditTenders.size()==0){
+			return;
+		}
+		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
         //接口版本号
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
@@ -153,7 +158,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid());
         //交易类型
         param.put("transType", "2");
         //交易金额
