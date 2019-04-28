@@ -14,6 +14,7 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.FormatRateUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.ThreeDESUtils;
 import org.springframework.beans.BeanUtils;
@@ -144,6 +145,9 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                     //将"borrowExtraYield": 替换为 "data":
                     customize.setData(customize.getBorrowExtraYield());
                 }
+                customize.setBorrowApr(FormatRateUtil.formatBorrowApr(customize.getBorrowApr()));
+                customize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(customize.getBorrowExtraYield()));
+                customize.setData(FormatRateUtil.formatBorrowApr(customize.getData()));
             }
             vo.getLstProject().addAll(lst);
         }
