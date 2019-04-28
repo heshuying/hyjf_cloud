@@ -19,10 +19,7 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
-import com.hyjf.am.resquest.config.AppBorrowImageRequest;
-import com.hyjf.am.resquest.config.STZHWhiteListRequestBean;
-import com.hyjf.am.resquest.config.SubmissionsRequest;
-import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
+import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
@@ -2217,6 +2214,81 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.getForEntity(url, IntegerResponse.class).getBody();
     }
 
+    /**
+     * 查询工作流配置
+     * @param adminRequest
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigList(WorkFlowConfigRequest adminRequest){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/init",adminRequest, WorkFlowConfigResponse.class).getBody();
+    }
+    /**
+     * 添加工作流配置
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public BooleanResponse insertWorkFlowConfig(WorkFlowVO workFlowVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/insert",workFlowVO, BooleanResponse.class).getBody();
+    }
+    /**
+     * 查询业务流程详情页面
+     * @param id
+     * @return
+     */
+    @Override
+    public WorkFlowConfigResponse selectWorkFlowConfigInfo(int id){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/info/"+id, WorkFlowConfigResponse.class).getBody();
+    }
+    /**
+     * 校验业务id是否存在
+     * @param request
+     * @return
+     */
+    @Override
+    public BooleanResponse selectWorkFlowConfigByBussinessId(WorkFlowConfigRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/exist",request, BooleanResponse.class).getBody();
+    }
+    /**
+     * 修改工作流配置业务流程
+     * @param workFlowVO
+     * @return
+     */
+    @Override
+    public BooleanResponse updateWorkFlowConfig(WorkFlowVO workFlowVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/update",workFlowVO, BooleanResponse.class).getBody();
+    }
+    /**
+     * 删除工作流配置业务流程
+     * @param id
+     * @return
+     */
+    @Override
+    public BooleanResponse deleteWorkFlowConfigById(int id){
+        return restTemplate.getForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/delete/"+id, BooleanResponse.class).getBody();
+    }
+    /**
+     *  查询邮件预警通知人
+     * @param workFlowUserVO
+     * @return
+     */
+    @Override
+    public WorkFlowUserResponse selectUser(WorkFlowUserVO workFlowUserVO){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/workflow/bussinessflow/selectUser",workFlowUserVO, WorkFlowUserResponse.class).getBody();
+    }
+
+    @Override
+    public List<WorkFlowVO> updateStatusBusinessName() {
+        String url = "http://AM-ADMIN/am-admin/workflow/bussinessflow/findWorkFlowAll";
+        WorkFlowConfigResponse response = restTemplate
+                .getForEntity(url, WorkFlowConfigResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     @Override
     public List<ScreenDataBean> getRechargeList(Integer startIndex, Integer endIndex) {
         ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getrechargelist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
@@ -2270,6 +2342,36 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     @Override
+    public boolean updateFlowStatus(Integer businessId) {
+        String url = "http://AM-ADMIN/am-admin/workflow/bussinessflow/updateFlowStatus/"+businessId;
+        BooleanResponse response = restTemplate
+                .getForEntity(url, BooleanResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+    /**
+     * 工作流查询所有用户角色
+     * @return
+     */
+    @Override
+    public AdminRoleResponse selectWorkFlowRoleList(){
+        return restTemplate
+                .getForEntity( "http://AM-ADMIN/am-admin/workflow/bussinessflow/selectWorkFlowRoleList", AdminRoleResponse.class).getBody();
+    }
+
+    @Override
+    public List<WorkFlowUserVO> findWorkFlowNodeUserEmailAll() {
+        String url = "http://AM-ADMIN/am-admin/workflow/bussinessflow/findWorkFlowNodeUserEmailAll";
+        WorkFlowUserResponse response = restTemplate
+                .getForEntity(url, WorkFlowUserResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
     public List<ScreenDataBean> getBorrowTenderList(Integer startIndex, Integer endIndex) {
         ScreenDataResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/screen_data/getborrowtenderlist/"+startIndex + "/" + endIndex, ScreenDataResponse.class).getBody();
         if(null != response){
@@ -2277,6 +2379,25 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
+    @Override
+    public ActivityUserGuessResponse getGuessList(ActivityUserGuessRequest request) {
+        ActivityUserGuessResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/mayDay/guessUserList", request, ActivityUserGuessResponse.class);
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public ActivityUserRewardResponse getRewardList(ActivityUserRewardRequest rewardRequest) {
+        ActivityUserRewardResponse response = restTemplate.postForObject("http://AM-ADMIN/am-market/mayDay/rewardList", rewardRequest, ActivityUserRewardResponse.class);
+        if (null != response) {
+            return response;
+        }
+        return null;
+    }
+
     /**
      * 查询累计年华投资
      * @param newYearNineteenRequestBean
@@ -2286,4 +2407,5 @@ public class AmAdminClientImpl implements AmAdminClient {
     public NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean){
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/newYearNineteen/selectInvestList",newYearNineteenRequestBean,NewYearActivityResponse.class).getBody();
     }
+
 }
