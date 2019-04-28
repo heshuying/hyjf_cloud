@@ -19,6 +19,9 @@ public class UserTenderRequest implements Serializable {
 
     private Date endDate;
 
+    public UserTenderRequest() {
+    }
+
     public UserTenderRequest(Date startDate, Date endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
