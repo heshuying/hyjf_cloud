@@ -5,6 +5,7 @@ package com.hyjf.cs.message.service.hgreportdata.cert;
 
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.message.bean.hgreportdata.cert.CertAccountList;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertReportEntity;
 
 /**
@@ -29,4 +30,6 @@ public interface CertStatisticalService extends BaseService {
      * @return
      */
     CertReportEntity getCertSendLogByLogOrdId(String logOrdId);
+
+    void insertOldMessage(CertAccountList certAccountList);
 }

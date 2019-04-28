@@ -5,7 +5,9 @@ package com.hyjf.cs.message.service.hgreportdata.cert.impl;
 
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.message.bean.hgreportdata.cert.CertAccountList;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertReportEntity;
+import com.hyjf.cs.message.mongo.hgreportdata.cert.CertAccountListDao;
 import com.hyjf.cs.message.mongo.hgreportdata.cert.CertReportDao;
 import com.hyjf.cs.message.service.hgreportdata.cert.CertStatisticalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class CertStatisticalServiceImpl extends BaseServiceImpl implements CertS
 
     @Autowired
     CertReportDao certReportDao;
+
+    @Autowired
+    CertAccountListDao certAccountListDao;
 
     /**
      * 插入mongo数据
@@ -57,5 +62,10 @@ public class CertStatisticalServiceImpl extends BaseServiceImpl implements CertS
         Query q1 = Query.query(Criteria.where("logOrdId").is(logOrdId));
         CertReportEntity entity = certReportDao.findOne(q1);
         return entity;
+    }
+
+    @Override
+    public void insertOldMessage(CertAccountList certAccountList) {
+        certAccountListDao.insert(certAccountList);
     }
 }

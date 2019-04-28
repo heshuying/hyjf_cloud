@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.bean.hgreportdata.cert.CertAccountList;
 import com.hyjf.cs.message.bean.hgreportdata.cert.CertReportEntity;
 import com.hyjf.cs.message.service.hgreportdata.cert.CertStatisticalService;
 import org.springframework.beans.BeanUtils;
@@ -40,7 +41,7 @@ public class CertStatisticalController extends BaseController {
      * @return
      */
     @PostMapping("/insertAndSendPost")
-    public BooleanResponse insertNifaBorrowerInfo(@RequestBody @Valid CertReportEntityVO certReportEntityVO) {
+    public BooleanResponse insertAndSendPost(@RequestBody @Valid CertReportEntityVO certReportEntityVO) {
         if(null!=certReportEntityVO){
             CertReportEntity certReportEntity = new CertReportEntity();
             BeanUtils.copyProperties(certReportEntityVO,certReportEntity);
@@ -49,6 +50,25 @@ public class CertStatisticalController extends BaseController {
         }
         return new BooleanResponse(false);
     }
+
+
+    /**
+     * 插入mongo，保存报送历史记录
+     *
+     * @param certReportEntityVO
+     * @return
+     */
+    @PostMapping("/insertOldMessage")
+    public BooleanResponse insertOldMessage(@RequestBody @Valid CertReportEntityVO certReportEntityVO) {
+        if(null!=certReportEntityVO){
+            CertAccountList certAccountList = new CertAccountList();
+            BeanUtils.copyProperties(certReportEntityVO,certAccountList);
+            certStatisticalService.insertOldMessage(certAccountList);
+            return new BooleanResponse(true);
+        }
+        return new BooleanResponse(false);
+    }
+
 
     /**
      * 修改mongo，修改报送状态

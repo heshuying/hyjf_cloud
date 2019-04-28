@@ -62,6 +62,17 @@ public class CertController extends BaseController {
         return response;
     }
 
+    @PostMapping("/getCertAccountListCustomizeVO")
+    public CertAccountListResponse getCertAccountListCustomizeVO(@RequestBody CertRequest certRequest) {
+        CertAccountListResponse response = new CertAccountListResponse();
+        List<CertAccountListCustomize> certAccountListCustomizes = certService.getCertAccountListCustomizeVO(certRequest);
+        if (!CollectionUtils.isEmpty(certAccountListCustomizes)) {
+            List<CertAccountListCustomizeVO> voList = CommonUtils.convertBeanList(certAccountListCustomizes, CertAccountListCustomizeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
     @PostMapping("/queryCertAccountListId")
     public CertAccountListResponse queryCertAccountListId(@RequestBody CertRequest certRequest) {
         logger.info("queryCertAccountListId:" + JSONObject.toJSONString(certRequest));

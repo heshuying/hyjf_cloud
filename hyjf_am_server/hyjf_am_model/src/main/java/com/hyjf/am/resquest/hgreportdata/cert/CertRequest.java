@@ -21,6 +21,7 @@ public class CertRequest implements Serializable {
     private String couponTenderId;
     private String repayOrdid;
     private String investOrderId;
+    private String trade;
     private Integer period;
 
     private Integer limitStart;
@@ -136,5 +137,13 @@ public class CertRequest implements Serializable {
 
     public void setRealTenderId(String realTenderId) {
         this.realTenderId = realTenderId;
+    }
+
+    public String getTrade() {
+        return trade;
+    }
+
+    public void setTrade(String trade) {
+        this.trade = trade;
     }
 }

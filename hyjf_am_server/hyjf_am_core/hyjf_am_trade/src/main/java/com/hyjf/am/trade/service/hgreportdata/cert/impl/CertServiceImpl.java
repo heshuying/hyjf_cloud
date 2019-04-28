@@ -156,4 +156,15 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         CertAccountListIdCustomize customize=certMapper.queryCertAccountListId(param);
         return customize;
     }
+
+    @Override
+    public List<CertAccountListCustomize> getCertAccountListCustomizeVO(CertRequest certRequest) {
+        Map<String, Object> map =new HashMap<String, Object>();
+        map.put("limitStart", certRequest.getLimitStart());
+        map.put("limitEnd", certRequest.getLimitEnd());
+        map.put("trade",certRequest.getTrade());
+        map.put("maxId", certRequest.getMaxId());
+        List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);
+        return accountLists;
+    }
 }

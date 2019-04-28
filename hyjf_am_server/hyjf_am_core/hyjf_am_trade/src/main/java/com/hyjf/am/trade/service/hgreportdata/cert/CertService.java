@@ -40,4 +40,6 @@ public interface CertService extends BaseService {
     List<CreditRepay> getCreditRepayListByRepayOrdId(CertRequest certRequest);
 
     CertAccountListIdCustomize queryCertAccountListId(CertRequest certRequest);
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVO(CertRequest certRequest);
 }

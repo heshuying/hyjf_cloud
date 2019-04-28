@@ -2984,11 +2984,29 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhPlanVO> selectAllPlan();
+    // 应急中心二期，产品配置历史数据上报 add by nxl start
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
      * @param flg
      * @return
      */
 //    List<CertBorrowVO> selectCertBorrowByFlg(int flg);
+    /**
+     * @description 查找 未还款，转让被部分被承接的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+     List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize();
+    /**
+     * @description 查找未还款的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+    List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize();
+
+    List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
+    // 应急中心二期，产品配置历史数据上报 add by nxl end
 }
 

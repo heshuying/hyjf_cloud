@@ -2,29 +2,28 @@ package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.investdetail;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
-import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
-import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
-import com.hyjf.am.vo.trade.CreditTenderVO;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
-import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
-import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.investdetail.CertInvestDetailService;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.transact.CertTransactService;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.investdetail.CertOldInvestDetailService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
 import org.cert.open.CertException;
 import org.slf4j.Logger;
@@ -44,8 +43,8 @@ import java.util.Map;
  */
 
 @Service
-public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl implements CertInvestDetailService {
-	Logger logger = LoggerFactory.getLogger(CertInvestDetailServiceImpl.class);
+public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl implements CertOldInvestDetailService {
+	Logger logger = LoggerFactory.getLogger(CertOldInvestDetailServiceImpl.class);
 	@Autowired
 	AmTradeClient amTradeClient;
 	@Autowired
@@ -58,14 +57,9 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 
 	public static final DecimalFormat FORMAT = new DecimalFormat("#0.00");
 	@Override
-	public JSONArray createDate(String minId, String maxId) {
+	public JSONArray createDate(List<CertAccountListCustomizeVO> accountLists) {
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-		CertRequest certTransactRequest=new CertRequest();
-		certTransactRequest.setMaxId(maxId);
-		certTransactRequest.setMinId(minId);
-		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
@@ -78,6 +72,35 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		}
 
 		return JSONArray.parseArray(JSON.toJSONString(list));
+	}
+	@Autowired
+	private BaseClient baseClient;
+
+	private String baseUrl = "http://CS-MESSAGE/cs-message/certStatistical/";
+	@Override
+	public void insertOldMessage(CertReportEntityVO bean) {
+		try {
+			// 设置共通参数
+			bean = setCommonParam(bean);
+		}catch (Exception e) {
+			logger.error("设置参数失败",e);
+		}
+		Map<String, String> params = getBankParam(bean);
+		// 插入mongo
+		String url = baseUrl + "insertOldMessage";
+		BooleanResponse response = this.baseClient.postExe(url, bean, BooleanResponse.class);
+
+	}
+
+	@Override
+	public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(Integer page, Integer size, String trader) {
+		CertRequest certTransactRequest=new CertRequest();
+		certTransactRequest.setLimitStart((page-1) * size);
+		certTransactRequest.setLimitEnd(size);
+		certTransactRequest.setTrade(trader);
+		certTransactRequest.setMaxId(RedisUtils.get("CERT_OLD_INVEST_DETAIL_MAX_ID"));
+		List<CertAccountListCustomizeVO> accountLists=amTradeClient.getCertAccountListCustomizeVO(certTransactRequest);
+		return accountLists;
 	}
 
 
@@ -145,11 +168,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     //已改
 	private void accedeAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
-		List<HjhDebtCreditTenderVO> hjhDebtCreditTenders=amTradeClient.selectHjhCreditTenderListByAssignOrderId(accountList.getNid());
-		if(hjhDebtCreditTenders==null||hjhDebtCreditTenders.size()==0){
-			return;
-		}
-		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
         //接口版本号
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
@@ -158,7 +176,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid());
+        param.put("sourceFinancingCode", "-1");
         //交易类型
         param.put("transType", "2");
         //交易金额
@@ -251,7 +269,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //产品信息编号
         param1.put("sourceFinancingCode", "-1");
         //交易类型
-        param1.put("transType", "9");
+        param1.put("transType", "8");
         //交易金额
         param1.put("transMoney", FORMAT.format(creditInterest));
         //用户标示哈希
@@ -368,7 +386,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //产品信息编号
         param1.put("sourceFinancingCode", "-1");
         //交易类型
-        param1.put("transType", "9");
+        param1.put("transType", "8");
         //交易金额
         param1.put("transMoney", FORMAT.format(interest));
         //用户标示哈希

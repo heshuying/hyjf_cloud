@@ -7258,7 +7258,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-/*    *//**
+    // 应急中心二期，产品配置历史数据上报 add by nxl start
+    /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
      * @param flg
      * @return
@@ -7272,4 +7273,46 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }*/
+
+    /**
+     * @description 查找 未还款，转让被部分被承接的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+    @Override
+    public List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize() {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getHjhDebtCreditInfoCustomize";
+        HjhDebtCreditCustomizeResponse response = restTemplate.getForEntity(url, HjhDebtCreditCustomizeResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
+    /**
+     * @description 查找未还款的债权信息
+     * @auth nxl
+     * @param
+     * @return
+     */
+    @Override
+    public List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize() {
+        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderInfoCustomize";
+        BorrowTenderCustomizeResponse response = restTemplate.getForEntity(url, BorrowTenderCustomizeResponse.class).getBody();
+        if (response == null || !Response.isSuccess(response)) {
+            return null;
+        }
+        return response.getResultList();
+    }
+
+    @Override
+    public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest request) {
+        String url = urlBase + "cert/getCertAccountListCustomizeVO";
+        CertAccountListResponse response = restTemplate.postForEntity(url, request, CertAccountListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    // 应急中心二期，产品配置历史数据上报 add by nxl end
 }

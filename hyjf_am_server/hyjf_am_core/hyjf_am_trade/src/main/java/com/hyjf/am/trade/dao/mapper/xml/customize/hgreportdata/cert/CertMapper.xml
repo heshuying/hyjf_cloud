@@ -61,6 +61,42 @@
 	</select>
 
 
+    <select id="getCertAccountListCustomizeVO" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+		SELECT
+            hru.role_id role_id,
+            hal.*
+        FROM
+            ht_borrow hb
+        INNER JOIN ht_account_list hal ON hb.borrow_nid = hal.remark
+        INNER JOIN ht_r_user hru ON hal.user_id = hru.user_id
+        WHERE
+            hb.`status` IN (2, 3, 4, 7)
+        AND hru.id <![CDATA[<=]]> #{maxId}
+        <if test="trade == 'tenderRecoverYes'">
+            AND (
+                hal.trade = "tender_recover_yes"
+                OR hal.trade = "hjh_repay_balance"
+                OR hal.trade = "hjh_repay_frost"
+            )
+        </if>
+        <if test="trade == 'creditTenderRecoverYes'">
+            AND (
+              hal.trade = "credit_tender_recover_yes"
+              OR hal.trade = "credit_tender_recover_forst"
+            )
+        </if>
+        <if test="trade == 'hjh_tender_success'">
+            AND  hal.trade = "hjh_tender_success"
+        </if>
+        <if test="trade == 'tender_success'">
+            AND  hal.trade = "tender_success"
+        </if>
+
+        LIMIT #{limitStart} , #{limitEnd}
+	</select>
+
+
     <resultMap id="queryCertAccountListIdMap" type="com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize" >
         <result column="limitMinId" property="limitMinId" jdbcType="INTEGER" />
         <result column="limitMaxId" property="limitMaxId" jdbcType="INTEGER" />
