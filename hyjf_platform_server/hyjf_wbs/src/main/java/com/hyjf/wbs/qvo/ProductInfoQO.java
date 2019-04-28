@@ -21,7 +21,7 @@ public class ProductInfoQO implements Serializable {
     @ApiModelProperty(value = "产品状态")
     protected Integer productStatus;
     @ApiModelProperty(value = "产品发布状态")
-    protected Integer publishStatus=1;
+    protected Integer publishStatus;
     @ApiModelProperty(value = "pc站外跳转链接")
     protected String linkUrl;
     @ApiModelProperty(value = "h5站外跳转链接")
