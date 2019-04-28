@@ -61,7 +61,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 	public JSONArray createDate(String minId, String maxId) {
 		
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
+		logger.info(logHeader + " list.size():" + list.size());
 		CertRequest certTransactRequest=new CertRequest();
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
@@ -437,29 +437,33 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         certRequest.setRealTenderId(accountList.getNid());
         List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
         if(couponRealTenders==null||couponRealTenders.size()==0){
-            return;
-        }
-        certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
-        List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-        if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
-            return;
-        }
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "2");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+			//交易金额
+			param.put("transMoney", FORMAT.format(accountList.getAmount()));
+        }else{
+			certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
+			List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
+			if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
+				//交易金额
+				param.put("transMoney", FORMAT.format(accountList.getAmount()));
+			}else{
+				//交易金额
+				param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
+			}
+		}
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "2");
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 	}
 
