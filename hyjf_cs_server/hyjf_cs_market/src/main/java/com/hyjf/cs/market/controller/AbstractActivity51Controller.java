@@ -10,6 +10,7 @@ import com.hyjf.cs.market.vo.RewardReceiveVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -45,8 +46,10 @@ public class AbstractActivity51Controller {
     protected final String ACTIVITY_GUESS_END = "竞猜活动已结束!";
 
     private final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private final String guessEndTime = "2019-05-05 00:00:00";
-    //private final String guessEndTime = "2019-04-27 00:00:00";
+
+    @Value("${activity.qingma.guessEndTime}")
+    private String guessEndTime ;
+    //private final String guessEndTime = "2019-04-27 00:00:00";   = "2019-05-05 00:00:00"
 
     @Autowired
     protected Activity51Service activity51Service;
