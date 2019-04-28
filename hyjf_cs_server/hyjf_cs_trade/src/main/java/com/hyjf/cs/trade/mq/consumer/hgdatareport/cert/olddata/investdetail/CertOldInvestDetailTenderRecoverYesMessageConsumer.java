@@ -35,7 +35,7 @@ import java.util.List;
  * @Date
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HYJF_CERT_OLD_TOPIC, selectorExpression = MQConstant.CERT_OLD_INVEST_DETAIL_TENDER_RECOVER_YES_TAG, consumerGroup = MQConstant.CERT_OLD_INVEST_DETAIL_TENDER_RECOVER_YES_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HYJF_TOPIC, selectorExpression = MQConstant.CERT_OLD_INVEST_DETAIL_TENDER_RECOVER_YES_TAG, consumerGroup = MQConstant.CERT_OLD_INVEST_DETAIL_TENDER_RECOVER_YES_GROUP)
 public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(CertOldInvestDetailTenderRecoverYesMessageConsumer.class);
 
