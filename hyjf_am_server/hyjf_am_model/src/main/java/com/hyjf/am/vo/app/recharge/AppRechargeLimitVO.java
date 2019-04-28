@@ -1,23 +1,26 @@
 package com.hyjf.am.vo.app.recharge;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * @author wgx
  * @date 2019/4/24
  */
+@ApiModel(value = "限额说明", description = "限额说明")
 public class AppRechargeLimitVO implements Serializable {
-
     private static final long serialVersionUID = -2323359532266579146L;
-    // 银行名称
+    @ApiModelProperty(value = "银行名称")
     private String bankName;
-    // 银行logo
+    @ApiModelProperty(value = "银行logo", example = "http://micro.file.hyjf.com/...")
     private String bankIcon;
-    // 每笔限额
+    @ApiModelProperty(value = "每笔限额", example = "XX万元/不限")
     private String single;
-    // 每日限额
+    @ApiModelProperty(value = "每日限额", example = "XX万元/不限")
     private String daily;
-    // 每月限额
+    @ApiModelProperty(value = "每月限额", example = "XX万元/不限")
     private String monthly;
 
     public String getBankName() {

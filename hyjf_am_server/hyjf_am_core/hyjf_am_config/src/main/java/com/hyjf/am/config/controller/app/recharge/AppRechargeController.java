@@ -5,7 +5,9 @@ import com.hyjf.am.config.service.JxBankConfigService;
 import com.hyjf.am.config.service.app.AppRechargeService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppRechargeLimitResponse;
+import com.hyjf.am.response.app.AppRechargeRuleResponse;
 import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,8 +41,8 @@ public class AppRechargeController {
      * @return
      */
     @PostMapping("/getRechargeRule")
-    public Response getRechargeRule() {
-        Response response = new Response();
+    public AppRechargeRuleResponse getRechargeRule() {
+        AppRechargeRuleResponse response = new AppRechargeRuleResponse();
         response.setResultList(appRechargeService.getRechargeRule());
         return response;
     }

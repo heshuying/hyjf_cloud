@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.app.recharge;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import com.hyjf.am.vo.app.recharge.AppRechargeVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -355,9 +356,9 @@ public class AppRechargeController extends BaseUserController {
      */
     @ApiOperation(value = "获取充值说明", notes = "获取充值说明")
     @PostMapping(value = "/getRechargeDetail")
-    public WebResult getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
+    public WebResult<AppRechargeVO> getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
         WebResult webResult = new WebResult();
-        List rechargeRuleList = appRechargeService.getRechargeRule();
+        List<AppRechargeRuleVO> rechargeRuleList = appRechargeService.getRechargeRule();
         List<AppRechargeLimitVO> rechargeLimitList = appRechargeService.getRechargeLimit();
         AppRechargeVO appRechargeVo = new AppRechargeVO();
         appRechargeVo.setRechargeRule(rechargeRuleList);

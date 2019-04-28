@@ -9,5 +9,5 @@ import java.io.Serializable;
  * @author wgx
  * @date 2019/4/24
  */
-public class AppRechargeLimitResponse extends Response<AppRechargeLimitVO> implements Serializable {
+public class AppRechargeLimitResponse extends Response<AppRechargeLimitVO> {
 }

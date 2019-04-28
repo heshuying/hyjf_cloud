@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.service.recharge;
 
 import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.cs.user.service.BaseUserService;
@@ -38,7 +39,7 @@ public interface AppRechargeService extends BaseUserService {
      * @return
      * @author wgx
      */
-    List getRechargeRule();
+    List<AppRechargeRuleVO> getRechargeRule();
 
     /**
      * 获取充值限额说明

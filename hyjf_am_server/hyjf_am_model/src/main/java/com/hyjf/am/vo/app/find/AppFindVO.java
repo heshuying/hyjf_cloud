@@ -1,26 +1,27 @@
 package com.hyjf.am.vo.app.find;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author wgx
  * @date 2019/4/18
  */
-public class AppFindVO {
-
-    // app发现页面顶部广告位
+@ApiModel(value = "发现页", description = "发现页")
+public class AppFindVO implements Serializable {
+    private static final long serialVersionUID = -3430328226898059147L;
+    @ApiModelProperty(value = "顶部广告位")
     private List<AppFindAdCustomizeVO> modules;
-
-    // app发现页面banner
+    @ApiModelProperty(value = "广告banner")
     private AppFindAdCustomizeVO banner;
-
-    // app发现页面公司动态列表(三条)
+    @ApiModelProperty(value = "公司动态列表(三条)")
     private List<AppFindNewsVO> newsList;
-
-    // app发现页运营报告信息
+    @ApiModelProperty(value = "运营报告列表(两条)")
     private List<AppFindReportVO> reportList;
-
-    // app发现页联系我们
+    @ApiModelProperty(value = "联系我们", example = "联系我们 400-900-7878")
     private String contact;
 
     public List<AppFindAdCustomizeVO> getModules() {

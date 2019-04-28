@@ -1,21 +1,30 @@
 package com.hyjf.am.vo.app.reward;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.io.Serializable;
+
 /**
  * @author wgx
  * @date 2019/4/18
  */
-public class AppRewardDetailVO {
-
-    // 累计奖金金额
+@ApiModel(value = "我的奖励信息", description = "我的奖励信息")
+public class AppRewardDetailVO implements Serializable {
+    private static final long serialVersionUID = 3543816915996261068L;
+    @ApiModelProperty(value = "累计奖金金额")
     private String total;
-    // 邀请好友人数
+    @ApiModelProperty(value = "邀请好友人数")
     private String friendCount;
-    // 优惠券数量
+    @ApiModelProperty(value = "优惠券数量", example = "0")
     private String couponCount;
-    // 优惠券提示信息
+    @ApiModelProperty(value = "优惠券提示信息", example = "邀请好友获得")
     private String couponTag;
+    @ApiModelProperty(value = "用户名")
     private String userName;
+    @ApiModelProperty(value = "用户id")
     private Integer userId;
+    @ApiModelProperty(value = "app头像的url", example = "https://img.hyjf.com/...")
     private String iconUrl;
 
     public String getTotal() {

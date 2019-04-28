@@ -2,6 +2,7 @@ package com.hyjf.cs.user.client;
 
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -155,7 +156,7 @@ public interface AmConfigClient {
      * app获取充值规则
      * @return
      */
-    List getRechargeRule();
+    List<AppRechargeRuleVO> getRechargeRule();
 
     /**
      * app获取充值限额说明

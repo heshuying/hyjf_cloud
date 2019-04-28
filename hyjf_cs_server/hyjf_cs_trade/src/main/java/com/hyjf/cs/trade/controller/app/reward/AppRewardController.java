@@ -12,8 +12,7 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.service.coupon.MyCouponListService;
 import com.hyjf.cs.trade.service.reward.RewardService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,7 +189,12 @@ public class AppRewardController {
      */
     @PostMapping("/rewardInit")
     @ApiOperation(value = "我的奖励-奖励记录", notes = "我的奖励-奖励记录")
-    public WebResult rewardInit(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "version", value = "版本号", dataType = "String", required = true),
+            @ApiImplicitParam(name = "platform", value = "平台类型 2：Android，3：IOS", dataType = "String", required = true),
+            @ApiImplicitParam(name = "sign", value = "用户唯一标识", dataType = "String", required = true)
+    })
+    public WebResult<AppRewardVO> rewardInit(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @ModelAttribute AppBaseRequest appBaseRequest) {
         WebResult webResult = new WebResult();
         webResult.setData(Collections.emptyMap());

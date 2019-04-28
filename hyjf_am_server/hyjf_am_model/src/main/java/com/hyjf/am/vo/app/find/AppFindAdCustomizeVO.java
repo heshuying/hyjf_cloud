@@ -1,21 +1,24 @@
 package com.hyjf.am.vo.app.find;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * @author wgx
  * @date 2019/4/16
  */
+@ApiModel(value = "广告位", description = "发现页广告位")
 public class AppFindAdCustomizeVO implements Serializable {
-
     private static final long serialVersionUID = 6091232926950690410L;
-
+    @ApiModelProperty(value = "广告位主键")
     private Integer id;
-    //模块图片
+    @ApiModelProperty(value = "广告位图片", example = "https://app.hyjf.com/...")
     private String moduleUrl;
-    //模块图片点击进入的H5页面
+    @ApiModelProperty(value = "广告位图片点击进入的H5页面", example = "/find/...")
     private String moduleH5Url;
-    //模块标题
+    @ApiModelProperty(value = "广告位标题")
     private String moduleTitle;
 
     public Integer getId() {

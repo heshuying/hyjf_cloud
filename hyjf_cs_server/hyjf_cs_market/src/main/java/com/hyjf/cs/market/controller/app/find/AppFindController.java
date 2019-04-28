@@ -14,6 +14,7 @@ import com.hyjf.am.vo.app.find.AppFindNewsVO;
 import com.hyjf.am.vo.app.find.AppFindReportVO;
 import com.hyjf.am.vo.app.find.AppFindVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import io.swagger.annotations.ApiImplicitParam;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -242,7 +243,8 @@ public class AppFindController extends BaseMarketController {
 
 	@ApiOperation(value = "app发现页面", notes = "app发现页面")
 	@PostMapping("/init")
-	public WebResult initFind(@ModelAttribute AppBaseRequest appBaseRequest){
+	@ApiImplicitParam(name = "platform", value = "平台类型 2：Android，3：IOS", required = true, dataType = "String")
+	public WebResult<AppFindVO> initFind(@ModelAttribute AppBaseRequest appBaseRequest){
 		WebResult webResult = new WebResult();
 		AdsRequest request = new AdsRequest();
 		request.setPlatformType(appBaseRequest.getPlatform());

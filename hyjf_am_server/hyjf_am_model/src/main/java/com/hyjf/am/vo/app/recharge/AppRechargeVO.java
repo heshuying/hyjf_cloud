@@ -1,26 +1,28 @@
 package com.hyjf.am.vo.app.recharge;
 
-import com.hyjf.am.vo.trade.JxBankConfigVO;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author wgx
  * @date 2019/4/18
  */
-public class AppRechargeVO {
-
-    // 充值规则
-    private List rechargeRule;
-
-    // 充值限额
+@ApiModel(value = "充值说明", description = "充值说明")
+public class AppRechargeVO implements Serializable {
+    private static final long serialVersionUID = 7498073184357071490L;
+    @ApiModelProperty(value = "充值规则")
+    private List<AppRechargeRuleVO> rechargeRule;
+    @ApiModelProperty(value = "充值限额")
     private List<AppRechargeLimitVO> rechargeLimit;
 
-    public List getRechargeRule() {
+    public List<AppRechargeRuleVO> getRechargeRule() {
         return rechargeRule;
     }
 
-    public void setRechargeRule(List rechargeRule) {
+    public void setRechargeRule(List<AppRechargeRuleVO> rechargeRule) {
         this.rechargeRule = rechargeRule;
     }
 

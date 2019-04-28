@@ -6,6 +6,7 @@ import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.app.AppRechargeLimitResponse;
+import com.hyjf.am.response.app.AppRechargeRuleResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
@@ -14,6 +15,7 @@ import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.app.recharge.AppRechargeLimitVO;
+import com.hyjf.am.vo.app.recharge.AppRechargeRuleVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -282,9 +284,9 @@ public class AmConfigClientImpl implements AmConfigClient {
     }
 
     @Override
-    public List getRechargeRule() {
-        Response response = restTemplate.postForObject(
-                "http://AM-CONFIG/am-config/recharge/getRechargeRule", null, Response.class);
+    public List<AppRechargeRuleVO> getRechargeRule() {
+        AppRechargeRuleResponse response = restTemplate.postForObject(
+                "http://AM-CONFIG/am-config/recharge/getRechargeRule", null, AppRechargeRuleResponse.class);
         if (response != null) {
             return response.getResultList();
         }
