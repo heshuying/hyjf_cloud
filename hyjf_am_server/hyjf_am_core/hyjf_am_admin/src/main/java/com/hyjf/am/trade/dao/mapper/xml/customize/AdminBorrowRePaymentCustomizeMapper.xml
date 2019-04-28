@@ -307,8 +307,8 @@
 				AND b.borrow_user_name LIKE CONCAT( #{borrowUserName}, '%')
 			</if>
 			<!-- 计划编号 -->
-			<if test="planNidSrch != null and planNidSrch != ''">
-				AND b.plan_nid = #{planNidSrch}
+			<if test="planNid != null and planNid != ''">
+				AND b.plan_nid = #{planNid}
 			</if>
 			<!-- 项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
@@ -327,10 +327,10 @@
 			<!-- 还款状态 -->
 			<if test="statusSrch != null and statusSrch != ''">
 			<if test="statusSrch ==0">
-					AND rp.repay_status = #{statusSrch}
+					AND rp.repay_status = #{statusSrch} and br.advance_status!=3
 				</if>
 				<if test="statusSrch ==1">
-					and br.repay_status=0 and br.advance_status!=3
+					and br.repay_status=#{statusSrch}
 				</if>
 				<if test="statusSrch ==2">
 					AND rp.repay_status = 0
