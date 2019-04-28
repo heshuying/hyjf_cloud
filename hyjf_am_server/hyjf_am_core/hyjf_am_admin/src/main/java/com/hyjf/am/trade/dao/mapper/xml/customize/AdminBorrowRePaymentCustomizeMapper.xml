@@ -327,10 +327,10 @@
 			<!-- 还款状态 -->
 			<if test="statusSrch != null and statusSrch != ''">
 			<if test="statusSrch ==0">
-					AND rp.repay_status = #{statusSrch} and br.advance_status!=3
+					AND rp.repay_status = #{statusSrch} and rp.advance_status!=3
 				</if>
 				<if test="statusSrch ==1">
-					and br.repay_status=#{statusSrch}
+					and rp.repay_status=#{statusSrch}
 				</if>
 				<if test="statusSrch ==2">
 					AND rp.repay_status = 0
