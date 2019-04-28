@@ -176,6 +176,8 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                     customize.setCouponType("4");
                     customize.setLabel(customize.getBorrowExtraYield());
                 }
+                customize.setBorrowApr(FormatRateUtil.formatBorrowApr(customize.getBorrowApr()));
+                customize.setBorrowExtraYield(FormatRateUtil.formatBorrowApr(customize.getBorrowExtraYield()));
             }
             vo.getLstProject().addAll(lst);
 

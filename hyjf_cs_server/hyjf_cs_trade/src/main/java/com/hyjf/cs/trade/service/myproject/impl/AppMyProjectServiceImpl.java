@@ -257,7 +257,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             if (inc != null) {
                 // 2. 出借信息 ( 有真实资金，显示出借信息 )
                 this.setTenderInfoToResult(detailBeansList, inc.getTenderNid());
-                jsonObject.put("couponType", "加息" + borrow.getBorrowExtraYield() + "%");
+                jsonObject.put("couponType", "加息" + FormatRateUtil.formatBorrowApr(borrow.getBorrowExtraYield()) + "%");
                 jsonObject.put("couponTypeCode", "4");
                /* jsonObject.put("couponType", "加息"+inc.getBorrowExtraYield()+"%");
                 preckCredit(borrowBeansList3, "待收利息", CommonUtils.formatAmount(inc.getRepayInterestWait()) + "元");
