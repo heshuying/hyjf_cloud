@@ -121,7 +121,7 @@ public class EvalationServiceImpl implements EvalationService {
         ParamName paramName6 = new ParamName();
         paramName6.setNameCd("进取型");
         paramName6.setName("进取型");
-        list.add(paramName5);
+        list.add(paramName6);
         return list;
     }
 
