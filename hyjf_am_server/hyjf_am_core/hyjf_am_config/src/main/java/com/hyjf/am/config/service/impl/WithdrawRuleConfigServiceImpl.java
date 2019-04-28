@@ -37,19 +37,23 @@ public class WithdrawRuleConfigServiceImpl extends BaseServiceImpl implements Wi
         Integer userType = request.getUserType();
         // 是否是节假日
         Integer isHoliday = request.getIsHoliday();
+
+        logger.info("withdrawMoney:" + withdrawMoney);
+        logger.info("userType:" + userType);
+        logger.info("isHoliday:" + isHoliday);
         // 提现时间
         String withdrawTime = GetDate.formatShortTimehhmmss();
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
         WithdrawRuleConfigExample.Criteria cra = example.createCriteria();
         // 可否提现 1可以 0不可以
         cra.andCouldWithdrawEqualTo(1);
-        // 0删除 1可用
-        cra.andDelFlagEqualTo(1);
+        // 0 可用 1 删除
+        cra.andDelFlagEqualTo(0);
         // 最小金额 <= 提现金额
         cra.andMinMoneyLessThanOrEqualTo(new BigDecimal(withdrawMoney));
         // 最大金额 >= 提现金额
         cra.andMaxMoneyGreaterThanOrEqualTo(new BigDecimal(withdrawMoney));
-        // 用户类型 1个人 2企业
+        // 用户类型 0个人 1企业
         cra.andCustomerTypeEqualTo(userType);
         // 最小提现时间 <= 当前时间
         cra.andStartTimeLessThanOrEqualTo(withdrawTime);

@@ -14,7 +14,7 @@ public class WithdrawRuleConfigVO implements Serializable {
      *
      * @mbggenerated
      */
-    @ApiModelProperty(value = "用户类型 1个人 2企业")
+    @ApiModelProperty(value = "用户类型 0个人 1企业")
     private Integer customerType;
 
     /**
@@ -50,6 +50,12 @@ public class WithdrawRuleConfigVO implements Serializable {
     private String endTime;
 
     /**
+     * 是否节假日 1是 0否
+     */
+    @ApiModelProperty(value = "是否节假日 1是 0否")
+    private Integer isHoliday;
+
+    /**
      * 可否提现 1可以 0不可以 
      *
      * @mbggenerated
@@ -62,7 +68,7 @@ public class WithdrawRuleConfigVO implements Serializable {
      *
      * @mbggenerated
      */
-    @ApiModelProperty(value = "通道")
+    @ApiModelProperty(value = "通道 1默认空 2大额通道 3小额 0不传")
     private String routeCode;
 
     /**

@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.wirhdraw;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.config.WithdrawRuleConfigRequest;
 import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -26,6 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -73,17 +75,18 @@ public class WebBankWithdrawController extends BaseTradeController {
      * 用户银行提现校验
      *
      * @param userId
-     * @param withdrawmoney
      * @param request
      * @return
      */
     @ApiOperation(value = "用户银行提现校验", notes = "用户银行提现校验")
     @PostMapping("/userBankWithdrawCheck")
     @RequestLimit(seconds = 3)
-    public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "withdrawmoney") String withdrawmoney, HttpServletRequest request) {
+    public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId, @RequestBody WithdrawRuleConfigRequest withdrawRuleConfigRequest, HttpServletRequest request) {
         WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
+        String withdrawMoney = withdrawRuleConfigRequest.getWithdrawMoney();
+        logger.info("提现金额:[" + withdrawMoney + "]");
         CheckUtil.check(null != user, MsgEnum.ERR_OBJECT_GET, "用户信息");
-        WebResult<Object> objectWebResult = bankWithdrawService.userBankWithdrawCheck(userId, withdrawmoney);
+        WebResult<Object> objectWebResult = bankWithdrawService.userBankWithdrawCheck(userId, withdrawMoney);
         return objectWebResult;
     }
 

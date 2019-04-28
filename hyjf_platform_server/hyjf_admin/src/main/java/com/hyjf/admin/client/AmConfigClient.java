@@ -6,13 +6,14 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
 import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 import com.hyjf.am.resquest.config.*;
 import com.hyjf.am.vo.admin.CategoryVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
@@ -1571,14 +1572,16 @@ public interface AmConfigClient {
 	/**
 	 * 提现规则配置列表
 	 * @return
+	 * @param request
 	 */
-    WithdrawRuleConfigResponse getWithdrawRuleConfigList();
+    WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request);
 
 	/**
 	 * 假期时间配置列表
 	 * @return
+     * @param request
 	 */
-	WithdrawTimeConfigResponse getWithdrawTimeConfigList();
+	WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request);
 
 	/**
 	 * 提现规则配置详情

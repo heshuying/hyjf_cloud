@@ -901,13 +901,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         //  mod by liuyang 20190422 节假日提现修改 end
         // 企业用户提现
         if (user.getUserType() == 1) { // 企业用户 传组织机构代码
-            CorpOpenAccountRecordVO
-                    record=amUserClient.selectCorpOpenAccountRecordByUserId(user.getUserId());
+            CorpOpenAccountRecordVO record=amUserClient.selectCorpOpenAccountRecordByUserId(user.getUserId());
             bean.setIdType(record.getCardType() != null ? String.valueOf(record.getCardType()) : BankCallConstant.ID_TYPE_COMCODE);// 证件类型 20：其他证件（组织机构代码）25：社会信用号
             bean.setIdNo(record.getBusiCode());
             bean.setName(record.getBusiName());
-            bean.setRouteCode("2");
-            bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
+            // del by liuyang 20190422 节假日提现修改 start
+//            bean.setRouteCode("2");
+//            bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
+            // del by liuyang 20190422 节假日提现修改 end
         }
 
         bean.setForgotPwdUrl(forgotPwdUrl);

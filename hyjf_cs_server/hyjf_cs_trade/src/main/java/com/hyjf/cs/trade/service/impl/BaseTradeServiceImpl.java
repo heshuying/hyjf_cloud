@@ -591,11 +591,11 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
      * 用户提现校验
      *
      * @param userId
-     * @param withdrawmoney
+     * @param withdrawMoney
      * @return
      */
     @Override
-    public WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawmoney) {
+    public WebResult<Object> userBankWithdrawCheck(Integer userId, String withdrawMoney) {
         WebResult<Object> result = new WebResult<Object>();
         JSONObject ret = new JSONObject();
         // 判断当前日期是否为工作日
@@ -614,7 +614,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         // 用户类型
         request.setUserType(userType);
         // 提现金额
-        request.setWithdrawMoney(withdrawmoney);
+        request.setWithdrawMoney(withdrawMoney);
         if (isWorkDay){
             // 是工作日
             request.setIsHoliday(0);
@@ -629,12 +629,12 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             // 是否能提现
             ret.put("isWithdrawFlag", false);
             // 是否显示联行号
-            ret.put("payAllianceCodeDispayFlag", false);
+            ret.put("payAllianceCodeDisplayFlag", false);
         }else {
             // 能够查询到提现规则配置
             ret.put("isWithdrawFlag", true);
             // 是否显示联行号
-            ret.put("payAllianceCodeDispayFlag", withdrawRuleConfigVO.getPayAllianceCode() == 1 ? true : false);
+            ret.put("payAllianceCodeDisplayFlag", withdrawRuleConfigVO.getPayAllianceCode() == 1 ? true : false);
         }
         result.setData(ret);
         return result;

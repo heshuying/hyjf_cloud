@@ -2,7 +2,8 @@ package com.hyjf.am.config.service.config;
 
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
-import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface WithdrawConfigService{
      * 提现规则配置列表
      * @return
      */
-    List<WithdrawRuleConfig> getWithdrawRuleConfigList();
+    List<WithdrawRuleConfig> getWithdrawRuleConfigList(WithdrawRuleConfigRequest request);
 
     /**
      * 修改提现规则配置
@@ -52,4 +53,17 @@ public interface WithdrawConfigService{
      * @return
      */
     WithdrawTimeConfig getWithdrawTimeConfigById(Integer id);
+
+    /**
+     * 获取提现时间配置总数
+     * @return
+     */
+    int getWithdrawTimeConfigCount();
+
+    /**
+     * 获取提现时间配置列表
+     * @param request
+     * @return
+     */
+    List<WithdrawTimeConfig> getWithdrawTimeConfigList(WithdrawTimeConfigRequest request);
 }

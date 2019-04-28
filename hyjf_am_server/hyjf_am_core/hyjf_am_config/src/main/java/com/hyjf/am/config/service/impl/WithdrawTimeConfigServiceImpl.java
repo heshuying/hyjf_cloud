@@ -49,11 +49,6 @@ public class WithdrawTimeConfigServiceImpl extends BaseServiceImpl implements Wi
         // 如果是周六或周日
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             // 再去查询是否是补休
-            example = new WithdrawTimeConfigExample();
-            cra = example.createCriteria();
-            cra.andStartDateLessThanOrEqualTo(somedate);
-            cra.andEndDateGreaterThanOrEqualTo(somedate);
-            cra.andDelFlagEqualTo(0);
             // 假日类型 1补休 2假期
             cra.andHolidayTypeEqualTo(1);
             List<WithdrawTimeConfig> resultList = this.withdrawTimeConfigMapper.selectByExample(example);

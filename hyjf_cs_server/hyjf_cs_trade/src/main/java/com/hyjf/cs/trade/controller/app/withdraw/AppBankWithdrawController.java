@@ -160,7 +160,12 @@ public class AppBankWithdrawController extends BaseTradeController {
         }
         // add by liuyang 20190422 节假日提现修改 start
         // 获取提现规则配置
-        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, getcash);
+        logger.info("提现金额:[" + getcash + "].");
+        String withdrawMoney = "0";
+        if (!StringUtils.isBlank(getcash)) {
+            withdrawMoney = getcash;
+        }
+        WithdrawRuleConfigVO withdrawRuleConfigVO = this.bankWithdrawService.getWithdrawRuleConfig(userId, withdrawMoney);
         if (withdrawRuleConfigVO == null){
             result.setStatus(CustomConstants.APP_STATUS_FAIL);
             result.setStatusDesc("获取提现配置失败");

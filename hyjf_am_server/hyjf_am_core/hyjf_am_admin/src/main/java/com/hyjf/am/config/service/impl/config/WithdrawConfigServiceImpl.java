@@ -5,7 +5,10 @@ import com.hyjf.am.config.dao.mapper.auto.WithdrawTimeConfigMapper;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
+import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfigExample;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
+import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
 import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +44,10 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
      * @return
      */
     @Override
-    public List<WithdrawRuleConfig> getWithdrawRuleConfigList() {
+    public List<WithdrawRuleConfig> getWithdrawRuleConfigList(WithdrawRuleConfigRequest request) {
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
         List<WithdrawRuleConfig> recordList = withdrawRuleConfigMapper.selectByExample(example);
         return recordList;
     }
@@ -92,6 +97,29 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
     @Override
     public WithdrawTimeConfig getWithdrawTimeConfigById(Integer id) {
         return withdrawTimeConfigMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 获取提现时间配置总数
+     * @return
+     */
+    @Override
+    public int getWithdrawTimeConfigCount() {
+        WithdrawTimeConfigExample example = new WithdrawTimeConfigExample();
+        return withdrawTimeConfigMapper.countByExample(example);
+    }
+
+    /**
+     * 获取提现时间配置列表
+     * @param request
+     * @return
+     */
+    @Override
+    public List<WithdrawTimeConfig> getWithdrawTimeConfigList(WithdrawTimeConfigRequest request) {
+        WithdrawTimeConfigExample example = new WithdrawTimeConfigExample();
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
+        return withdrawTimeConfigMapper.selectByExample(example);
     }
 
 
