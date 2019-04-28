@@ -4,11 +4,14 @@
 package com.hyjf.am.trade.controller.hgreportdata.cert;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponRecoverResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -26,6 +29,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -212,5 +217,38 @@ public class CertController extends BaseController {
         }
         return response;
     }
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @param flg
+     * @return
+     */
+    @GetMapping("/selectCertBorrowByFlg/{flg}")
+    public CertBorrowResponse selectCertBorrowByFlg(@PathVariable String flg){
+        CertBorrowResponse response = new CertBorrowResponse();
+        response.setRtn(Response.FAIL);
+        List<CertBorrow> certBorrowList =certService.selectCertBorrowConfig(flg);
+        if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
+            List<CertBorrowVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertBorrowVO.class);
+            response.setResultList(borrowVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    @PostMapping("/updateCertBorrowStatusBatch")
+    public IntegerResponse updateCertBorrowStatusBatch(@RequestBody CertBorrowUpdateVO updateVO){
+        IntegerResponse response = new IntegerResponse();
+        try{
+           certService.updateCertBorrowStatusBatch(updateVO);
+            response.setResult(1);
+        }catch (Exception e){
+            response.setResult(0);
+        }
+        return response;
+    }
 }

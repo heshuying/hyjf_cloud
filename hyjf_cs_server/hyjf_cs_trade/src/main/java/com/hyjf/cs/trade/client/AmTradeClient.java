@@ -48,6 +48,8 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -2984,29 +2986,21 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhPlanVO> selectAllPlan();
-    // 应急中心二期，产品配置历史数据上报 add by nxl start
+    // 应急中心二期，历史数据上报 add by nxl start
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
      * @param flg
      * @return
      */
-//    List<CertBorrowVO> selectCertBorrowByFlg(int flg);
-    /**
-     * @description 查找 未还款，转让被部分被承接的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-     List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize();
-    /**
-     * @description 查找未还款的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize();
-
+    List<CertBorrowVO> selectCertBorrowByFlg(String flg);
     List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
-    // 应急中心二期，产品配置历史数据上报 add by nxl end
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    Integer updateCertBorrowStatusBatch(CertBorrowUpdateVO updateVO);
+    // 应急中心二期，历史数据上报 add by nxl end
+
 }
 

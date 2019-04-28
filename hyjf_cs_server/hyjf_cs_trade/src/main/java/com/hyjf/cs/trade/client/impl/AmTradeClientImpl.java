@@ -32,6 +32,7 @@ import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -79,6 +80,8 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
+import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -7258,53 +7261,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-    // 应急中心二期，产品配置历史数据上报 add by nxl start
+
+    // 应急中心二期，历史数据上报 add by nxl start
     /**
      * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
      * @param flg
      * @return
-     *//*
+     */
     @Override
-    public List<CertBorrowVO> selectCertBorrowByFlg(int flg){
-        String url = "http://AM-TRADE/am-trade/hjhPlan/selectCertBorrowByFlg/"+flg;
+    public List<CertBorrowVO> selectCertBorrowByFlg(String flg){
+        String url = "http://AM-TRADE/am-trade/cert/selectCertBorrowByFlg/"+flg;
         CertBorrowResponse response = restTemplate.getForEntity(url,CertBorrowResponse.class).getBody();
         if (Validator.isNotNull(response)&&Response.isSuccess(response)){
             return response.getResultList();
         }
         return null;
-    }*/
-
-    /**
-     * @description 查找 未还款，转让被部分被承接的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    @Override
-    public List<HjhDebtCreditCustomizeVO> getHjhDebtCreditInfoCustomize() {
-        String url = "http://AM-TRADE/am-trade/borrowTender/getHjhDebtCreditInfoCustomize";
-        HjhDebtCreditCustomizeResponse response = restTemplate.getForEntity(url, HjhDebtCreditCustomizeResponse.class).getBody();
-        if (response == null || !Response.isSuccess(response)) {
-            return null;
-        }
-        return response.getResultList();
     }
-    /**
-     * @description 查找未还款的债权信息
-     * @auth nxl
-     * @param
-     * @return
-     */
-    @Override
-    public List<BorrowTenderCustomizeVO> getBorrowTenderInfoCustomize() {
-        String url = "http://AM-TRADE/am-trade/borrowTender/getBorrowTenderInfoCustomize";
-        BorrowTenderCustomizeResponse response = restTemplate.getForEntity(url, BorrowTenderCustomizeResponse.class).getBody();
-        if (response == null || !Response.isSuccess(response)) {
-            return null;
-        }
-        return response.getResultList();
-    }
-
     @Override
     public List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest request) {
         String url = urlBase + "cert/getCertAccountListCustomizeVO";
@@ -7314,5 +7286,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
-    // 应急中心二期，产品配置历史数据上报 add by nxl end
+
+    /**
+     * 批量更新
+     * @param updateVO
+     * @return
+     */
+    @Override
+    public Integer updateCertBorrowStatusBatch(CertBorrowUpdateVO updateVO){
+        String url = "http://AM-TRADE/am-trade/cert/updateCertBorrowStatusBatch";
+        IntegerResponse response = restTemplate.postForEntity(url,updateVO,IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+
+    // 应急中心二期，历史数据上报 add by nxl end
 }

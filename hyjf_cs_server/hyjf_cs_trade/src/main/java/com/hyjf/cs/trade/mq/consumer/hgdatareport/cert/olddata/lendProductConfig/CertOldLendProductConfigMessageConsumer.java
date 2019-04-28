@@ -9,13 +9,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hyjf.am.vo.hgreportdata.cert.CertOldLendProductConfigVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertBorrowVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProductConfig.CertLendProductConfigService;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -89,6 +91,12 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
         try {
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
+            List<CertBorrowVO> certBorrowEntityList = certLendProductConfigService.getCertBorrowNoConfig();
+            if(CollectionUtils.isEmpty(certBorrowEntityList)){
+                logger.error(logHeader + "暂无未上报的产品配置信息！！！");
+                return;
+            }
+            logger.info(logHeader + "查询的未上报的产品配置历史数据共: " + certBorrowEntityList.size() + "条");
             // --> 调用service组装数据
             JSONArray listRepay = certLendProductConfigService.getHistoryDate();
             int intCount = listRepay == null ? 0 : listRepay.size();
@@ -121,6 +129,27 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
                         } catch (Exception e) {
                             throw e;
                         }
+                        // 批量修改状态  start
+                        List<Integer> ids = new ArrayList<>();
+                        for (CertBorrowVO item : certBorrowEntityList) {
+                            ids.add(item.getId());
+                        }
+                        if (ids.size() > 0) {
+                            CertBorrowUpdateVO update = new CertBorrowUpdateVO();
+                            update.setIds(ids);
+                            CertBorrowVO certBorrow = new CertBorrowVO();
+                            if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
+                                // 成功
+                                certBorrow.setIsConfig(1);
+                            } else {
+                                // 失败
+                                certBorrow.setIsConfig(99);
+                            }
+                            update.setCertBorrow(certBorrow);
+                            // 批量修改
+                            certLendProductConfigService.updateCertBorrowStatusBatch(update);
+                        }
+                        // 批量修改状态  end
                     }
                 }
             }

@@ -10,7 +10,10 @@ import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -166,5 +169,37 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         map.put("maxId", certRequest.getMaxId());
         List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);
         return accountLists;
+    }
+
+    /**
+     * 根据标示，查找国家互联网应急中心（产品配置历史数据上报）
+     * @param isTender
+     * @return
+     */
+    @Override
+    public List<CertBorrow> selectCertBorrowConfig(String isTender){
+        CertBorrowExample example = new CertBorrowExample();
+        CertBorrowExample.Criteria criteria = example.createCriteria();
+        if(StringUtils.isNotBlank(isTender)){
+            criteria.andCreditFlgEqualTo(Integer.parseInt(isTender));
+        }
+        //配置信息未上报
+        criteria.andIsConfigEqualTo(0);
+        return certBorrowMapper.selectByExample(example);
+    }
+
+    /**
+     * 批量更新
+     * @param update
+     * @return
+     */
+    @Override
+    public int updateCertBorrowStatusBatch (CertBorrowUpdateVO update) {
+        CertBorrowExample example = new CertBorrowExample();
+        CertBorrowExample.Criteria cra = example.createCriteria();
+        cra.andIdIn(update.getIds());
+        CertBorrow certBorrow = new CertBorrow();
+        BeanUtils.copyProperties(update.getCertBorrow(),certBorrow);
+        return certBorrowMapper.updateByExampleSelective(certBorrow,example);
     }
 }
