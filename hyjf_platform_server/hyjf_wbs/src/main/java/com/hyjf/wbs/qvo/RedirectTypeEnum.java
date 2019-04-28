@@ -5,7 +5,10 @@ package com.hyjf.wbs.qvo;
  * @version RedirectTypeEnum, v0.1 2019/4/24 10:34
  */
 public enum RedirectTypeEnum {
-    INDEX_TYPE("index","/","/"),BORROW_TYPE("borrow","/borrow/borrowDetail?borrowNid=%s","/borrow/%s"),PANDECT_TYPE("pandect","/user/pandect","/mine");
+    INDEX_TYPE("index","/","/"),
+    BORROW_TYPE("borrow","/borrow/borrowDetail?borrowNid=%s","/borrow/%s"),
+    PANDECT_TYPE("pandect","/user/pandect","/mine"),
+    PLAN_TYPE("plan","/plan/planDetail?planNid=%s","/plan/%s");
 
     private String type;
 

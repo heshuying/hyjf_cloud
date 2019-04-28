@@ -3,13 +3,6 @@
  */
 package com.hyjf.wbs.client.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.wbs.qvo.WechatUserBindVO;
-import com.hyjf.wbs.qvo.csuser.LoginResultBean;
-import com.hyjf.wbs.qvo.csuser.ResultEnum;
-import com.hyjf.wbs.qvo.csuser.WebUserLoginResponse;
-import com.hyjf.wbs.sign.IntrospectorBeanUtils;
-import org.aspectj.weaver.ast.Instanceof;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,13 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.wbs.client.CsUserClient;
+import com.hyjf.wbs.qvo.WechatUserBindVO;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
-
-import java.util.Map;
+import com.hyjf.wbs.qvo.csuser.LoginResultBean;
+import com.hyjf.wbs.qvo.csuser.ResultEnum;
+import com.hyjf.wbs.qvo.csuser.WebUserLoginResponse;
 
 /**
  * @author cui
