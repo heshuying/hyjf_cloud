@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.hyjf.wbs.qvo.WechatUserBindVO;
 import com.hyjf.wbs.qvo.csuser.LoginResultBean;
 import com.hyjf.wbs.qvo.csuser.ResultEnum;
+import com.hyjf.wbs.qvo.csuser.WebUserLoginResponse;
 import com.hyjf.wbs.sign.IntrospectorBeanUtils;
 import org.aspectj.weaver.ast.Instanceof;
 import org.slf4j.Logger;
@@ -43,20 +44,24 @@ public class CsUserClientImpl implements CsUserClient {
 	@Override
 	public WebViewUserVO login(LoginRequestVO user) {
 		String url = userService+"/hyjf-web/user/login";
-		WebResult webResult = restTemplate.postForEntity(url,user, WebResult.class).getBody();
-		logger.info("调用cs-user登录返回内容【{}】,data类型【{}】",JSON.toJSONString(webResult),webResult.getData().getClass());
 
-		if (webResult != null) {
-			if (WebResult.SUCCESS.equals(webResult.getStatus())) {
+		WebUserLoginResponse response = restTemplate.postForEntity(url,user, WebUserLoginResponse.class).getBody();
+
+		logger.info("调用cs-user登录返回内容【{}】",JSON.toJSONString(response));
+
+		if (response != null) {
+			if (WebResult.SUCCESS.equals(response.getStatus())) {
 				try {
-					return (WebViewUserVO) IntrospectorBeanUtils.mapToObject((Map<String, Object>) webResult.getData(),WebViewUserVO.class);
+					return response.getData();
 				} catch (Exception e) {
 					logger.error("绑定登录返回数据转换失败！",e);
 				}
 			}else{
-				throw new CheckException(webResult.getStatus(),webResult.getStatusDesc());
+				throw new CheckException(response.getStatus(),response.getStatusDesc());
 			}
 		}
+
+
 		throw new CheckException("用户登录失败！");
 	}
 
