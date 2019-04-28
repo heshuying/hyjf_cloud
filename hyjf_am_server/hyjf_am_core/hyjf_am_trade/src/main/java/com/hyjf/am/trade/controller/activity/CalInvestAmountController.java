@@ -4,16 +4,16 @@
 package com.hyjf.am.trade.controller.activity;
 
 import com.hyjf.am.response.BigDecimalResponse;
+import com.hyjf.am.resquest.trade.UserTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @author yaoyong
@@ -26,10 +26,11 @@ public class CalInvestAmountController extends BaseController {
     @Autowired
     private BorrowTenderService borrowTenderService;
 
-    @GetMapping("/sum/{startDate}/{endDate}")
-    public BigDecimalResponse sumInvestAmount(@PathVariable Date startDate, @PathVariable Date endDate) {
+    @PostMapping("/sum")
+    public BigDecimalResponse sumInvestAmount(@RequestBody UserTenderRequest request) {
+        logger.info("sumInvestAmount run, request is: {}", request);
         BigDecimalResponse response = new BigDecimalResponse();
-        BigDecimal investAmount = borrowTenderService.getInvestAmountByPeriod(startDate, endDate);
+        BigDecimal investAmount = borrowTenderService.getInvestAmountByPeriod(request.getStartDate(), request.getEndDate());
         if (investAmount != null) {
             response.setResultDec(investAmount);
         } else {
@@ -39,10 +40,11 @@ public class CalInvestAmountController extends BaseController {
     }
 
 
-    @GetMapping("/annual/{userId}/{startDate}/{endDate}")
-    public BigDecimalResponse sumAnnualInvestAmount(@PathVariable Integer userId, @PathVariable Date startDate, @PathVariable Date endDate) {
+    @PostMapping("/annual")
+    public BigDecimalResponse sumAnnualInvestAmount(@RequestBody UserTenderRequest request) {
+        logger.info("annual run, request is: {}", request);
         BigDecimalResponse response = new BigDecimalResponse();
-        BigDecimal annualInvestAmount = borrowTenderService.getAnnualInvestAmount(userId, startDate, endDate);
+        BigDecimal annualInvestAmount = borrowTenderService.getAnnualInvestAmount(request.getUserId(), request.getStartDate(), request.getEndDate());
         logger.debug("annualInvestAmount: {}", annualInvestAmount);
         if (annualInvestAmount != null) {
             response.setResultDec(annualInvestAmount);

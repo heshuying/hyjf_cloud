@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.hyjf.am.resquest.trade.UserTenderRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -304,8 +305,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public BigDecimal getSumAmount(Date startDate, Date endDate) {
 		logger.info("getSumAmount, startDate is: {}, endDate is: {}", sdf.format(startDate), sdf.format(endDate));
-		String url = "http://AM-TRADE/am-trade/investAmount/sum/" + startDate + "/" + endDate;
-		BigDecimalResponse response = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+		String url = "http://AM-TRADE/am-trade/investAmount/sum";
+		BigDecimalResponse response = restTemplate.postForEntity(url, new UserTenderRequest(startDate, endDate), BigDecimalResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultDec();
 		}
@@ -315,8 +316,8 @@ public class AmTradeClientImpl implements AmTradeClient {
 	@Override
 	public BigDecimal getUserTender(int userId, Date startDate, Date endDate) {
 		logger.info("getUserTender, userId is: {}, startDate is: {}, endDate is: {}", userId, sdf.format(startDate), sdf.format(endDate));
-		String url = "http://AM-TRADE/am-trade/investAmount/annual/" + userId + "/" + startDate + "/" + endDate;
-		BigDecimalResponse response = restTemplate.getForEntity(url, BigDecimalResponse.class).getBody();
+		String url = "http://AM-TRADE/am-trade/investAmount/annual";
+		BigDecimalResponse response = restTemplate.postForEntity(url, new UserTenderRequest(userId, startDate, endDate), BigDecimalResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultDec();
 		}
