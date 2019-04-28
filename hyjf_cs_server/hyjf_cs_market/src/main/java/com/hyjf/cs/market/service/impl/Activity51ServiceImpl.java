@@ -1,16 +1,6 @@
 package com.hyjf.cs.market.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.hyjf.am.vo.activity.ActivityUserGuessVO;
-import org.apache.axis.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.coupon.UserCouponBean;
 import com.hyjf.am.vo.market.ActivityListVO;
@@ -22,6 +12,15 @@ import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.Activity51Service;
+import org.apache.axis.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -52,14 +51,19 @@ public class Activity51ServiceImpl implements Activity51Service {
 	private Integer activityId;
 
 	@Override
-	public boolean isActivityTime() {
+	public Integer isActivityTime() {
 		initActivityTime();
 
 		Date today = new Date();
-		if (today.compareTo(activityStartDate) == 1 && today.compareTo(activityEndDate) == -1) {
-			return true;
+		if (today.compareTo(activityStartDate) == -1) {
+			return -1;
 		}
-		return false;
+
+		if(today.compareTo(activityEndDate) == 1){
+			return 1;
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -129,6 +133,11 @@ public class Activity51ServiceImpl implements Activity51Service {
 	private boolean isUserTenderEnough(int userId) {
 		initActivityTime();
 		BigDecimal tenderAmount = amTradeClient.getUserTender(userId, activityStartDate, activityEndDate);
+		if (tenderAmount != null) {
+			logger.info("用户{}出借金额: {}", userId, tenderAmount);
+		} else {
+			logger.warn("用户{}出借金额查询异常...", userId);
+		}
 		return tenderAmount == null || tenderAmount.compareTo(USER_ANNUAL_INVEST_STANDARD) < 0 ? false : true;
 	}
 
@@ -181,6 +190,7 @@ public class Activity51ServiceImpl implements Activity51Service {
 		ActivityListVO vo = amMarketClient.selectActivityList(activityId);
 		if (vo == null) {
 			logger.error("活动未配置, activityId is: {}", activityId);
+			throw new RuntimeException("活动未配置...");
 		}
 		activityStartDate = new Date(vo.getTimeStart() * 1000L);
 		activityEndDate = new Date(vo.getTimeEnd() * 1000L);
