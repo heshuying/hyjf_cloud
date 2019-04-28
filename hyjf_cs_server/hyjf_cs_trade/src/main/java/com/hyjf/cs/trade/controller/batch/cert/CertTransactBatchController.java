@@ -120,6 +120,7 @@ public class CertTransactBatchController {
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("minId", minId);
             params.put("maxId", maxId);
+            logger.info(logHeader + "CertInvestDetailBatchController execute ...params"+JSONObject.toJSONString(params));
             try{
                 commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_INVEST_DETAIL_TAG, UUID.randomUUID().toString(), params),
                         MQConstant.HG_REPORT_DELAY_LEVEL);
