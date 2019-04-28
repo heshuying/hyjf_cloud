@@ -22,4 +22,8 @@ public interface CertMapper {
     CertAccountListIdCustomize queryCertAccountListId(Map<String, Object> param);
 
     List<CertAccountListCustomize> getCertAccountListCustomizeVO(Map<String,Object> map);
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVOByCreditassign(Map<String,Object> map);
+
+    List<CertAccountListCustomize> getCertAccountListCustomizeVOByAccedeassign(Map<String,Object> map);
 }

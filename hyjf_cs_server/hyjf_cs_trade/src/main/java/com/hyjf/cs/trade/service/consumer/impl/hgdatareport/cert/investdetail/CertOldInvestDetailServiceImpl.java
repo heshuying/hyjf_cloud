@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -165,52 +166,57 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			break;
 		}
 	}
-    //已改
+	//已改
 	private void accedeAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
+		List<HjhDebtCreditTenderVO> hjhDebtCreditTenders=amTradeClient.selectHjhCreditTenderListByAssignOrderId(accountList.getNid());
+		if(hjhDebtCreditTenders==null||hjhDebtCreditTenders.size()==0){
+			return;
+		}
+		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "2");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode",borrowAndInfoVO.getPlanNid());
+		//交易类型
+		param.put("transType", "2");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 	}
-    //已改
+	//已改
 	private void creditAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		//接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "2");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "2");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 
 		list.add(param);
 	}
-    //已改
+	//已改
 	private void creditTenderRecoverYes(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
@@ -242,43 +248,43 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		}
 
 		/****************** 发送8赎回本金******************/
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "8");
-        //交易金额
-        param.put("transMoney", FORMAT.format(creditCapital));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "8");
+		//交易金额
+		param.put("transMoney", FORMAT.format(creditCapital));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 		/****************** 发送9赎回利息******************/
-        //接口版本号
-        param1.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param1.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param1.put("transId", accountList.getNid());
-        //产品信息编号
-        param1.put("sourceFinancingCode", "-1");
-        //交易类型
-        param1.put("transType", "8");
-        //交易金额
-        param1.put("transMoney", FORMAT.format(creditInterest));
-        //用户标示哈希
-        param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param1.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param1.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param1.put("transId", accountList.getNid());
+		//产品信息编号
+		param1.put("sourceFinancingCode", "-1");
+		//交易类型
+		param1.put("transType", "9");
+		//交易金额
+		param1.put("transMoney", FORMAT.format(creditInterest));
+		//用户标示哈希
+		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param1);
 	}
-    //已改
+	//已改
 	private void tenderRecoverYes(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
@@ -359,90 +365,90 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 
 		/****************** 发送8赎回本金******************/
 
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "8");
-        //交易金额
-        param.put("transMoney", FORMAT.format(capital));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "8");
+		//交易金额
+		param.put("transMoney", FORMAT.format(capital));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 		/****************** 发送9赎回利息******************/
-        //接口版本号
-        param1.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param1.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param1.put("transId", accountList.getNid());
-        //产品信息编号
-        param1.put("sourceFinancingCode", "-1");
-        //交易类型
-        param1.put("transType", "8");
-        //交易金额
-        param1.put("transMoney", FORMAT.format(interest));
-        //用户标示哈希
-        param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param1.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param1.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param1.put("transId", accountList.getNid());
+		//产品信息编号
+		param1.put("sourceFinancingCode", "-1");
+		//交易类型
+		param1.put("transType", "9");
+		//交易金额
+		param1.put("transMoney", FORMAT.format(interest));
+		//用户标示哈希
+		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param1);
 	}
 
-
-    private void increaseInerestProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
-        Map<String, Object> param = new HashMap<String, Object>();
-        UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "41");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
-        list.add(param);
-    }
-
-
+	//已改
+	private void increaseInerestProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
+		Map<String, Object> param = new HashMap<String, Object>();
+		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "41");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		list.add(param);
+	}
 
 
-    //已改
+
+
+	//已改
 	private void couponProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "10");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "10");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 
 		list.add(param);
 	}
@@ -451,61 +457,65 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void tenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		Map<String, Object> param = new HashMap<String, Object>();
-        CertRequest certRequest=new CertRequest();
-        certRequest.setRealTenderId(accountList.getNid());
-        List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-        if(couponRealTenders==null||couponRealTenders.size()==0){
-            return;
-        }
-        certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
-        List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-        if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
-            return;
-        }
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "2");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		CertRequest certRequest=new CertRequest();
+		certRequest.setRealTenderId(accountList.getNid());
+		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+		if(couponRealTenders==null||couponRealTenders.size()==0){
+			//交易金额
+			param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		}else{
+			certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
+			List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
+			if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
+				//交易金额
+				param.put("transMoney", FORMAT.format(accountList.getAmount()));
+			}else{
+				//交易金额
+				param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
+			}
+		}
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "2");
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 	}
 
 	//已改
-    private void hjhTenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
-        UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
-        BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
-        Map<String, Object> param = new HashMap<String, Object>();
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid());
-        //交易类型
-        param.put("transType", "2");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
-        list.add(param);
-    }
+	private void hjhTenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
+		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
+		Map<String, Object> param = new HashMap<String, Object>();
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid());
+		//交易类型
+		param.put("transType", "2");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		list.add(param);
+	}
 
-    //已改
+	//已改
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
@@ -514,25 +524,25 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		}
 
 		/******************发送6充值******************/
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "6");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "6");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 	}
-    //已改
+	//已改
 	private void recharge(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
@@ -540,25 +550,25 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return ;
 		}
 		/******************发送6充值******************/
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "6");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "6");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 	}
-    //已改
+	//已改
 	private void accountAdjustmentDown(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
@@ -566,28 +576,28 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return ;
 		}
 		/******************发送7提现******************/
-        //接口版本号
-        param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "7");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountList.getAmount()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		//接口版本号
+		param.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param.put("transId", accountList.getNid());
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "7");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountList.getAmount()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
 	}
-    //已改
+	//已改
 	private void cashSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
-        Map<String, Object> param1 = new HashMap<String, Object>();
+		Map<String, Object> param1 = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
 		if(accountList.getRoleId()!=1){
 			return ;
@@ -599,38 +609,38 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		/******************发送7提现******************/
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台编号
+		param.put("sourceCode", systemConfig.getCertSourceCode());
 		//平台交易流水号
 		param.put("transId", accountList.getNid());
-        //产品信息编号
-        param.put("sourceFinancingCode", "-1");
-        //交易类型
-        param.put("transType", "7");
-        //交易金额
-        param.put("transMoney", FORMAT.format(accountwithdraws.get(0).getCredited()));
-        //用户标示哈希
-        param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
-        list.add(param);
-        /******************发送23提现手续费******************/
+		//产品信息编号
+		param.put("sourceFinancingCode", "-1");
+		//交易类型
+		param.put("transType", "7");
+		//交易金额
+		param.put("transMoney", FORMAT.format(accountwithdraws.get(0).getCredited()));
+		//用户标示哈希
+		param.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		list.add(param);
+		/******************发送23提现手续费******************/
 
-        param1.put("version", CertCallConstant.CERT_CALL_VERSION);
-        //平台编号
-        param1.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param1.put("transId", accountList.getNid());
-        //产品信息编号
-        param1.put("sourceFinancingCode", "-1");
-        //交易类型
-        param1.put("transType", "23");
-        //交易金额
-        param1.put("transMoney", FORMAT.format(accountwithdraws.get(0).getFee()));
-        //用户标示哈希
-        param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
-        //交易流水时间
-        param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
+		param1.put("version", CertCallConstant.CERT_CALL_VERSION);
+		//平台编号
+		param1.put("sourceCode", systemConfig.getCertSourceCode());
+		//平台交易流水号
+		param1.put("transId", accountList.getNid());
+		//产品信息编号
+		param1.put("sourceFinancingCode", "-1");
+		//交易类型
+		param1.put("transType", "23");
+		//交易金额
+		param1.put("transMoney", FORMAT.format(accountwithdraws.get(0).getFee()));
+		//用户标示哈希
+		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
+		//交易流水时间
+		param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param1);
 
 	}

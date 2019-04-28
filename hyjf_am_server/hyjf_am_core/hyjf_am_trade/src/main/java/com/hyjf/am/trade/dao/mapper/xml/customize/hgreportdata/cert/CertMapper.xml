@@ -97,6 +97,38 @@
 	</select>
 
 
+    <select id="getCertAccountListCustomizeVOByCreditassign" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+        hru.role_id role_id,
+        hal.*
+        FROM
+        ht_borrow hb
+        INNER JOIN ht_credit_tender hct ON hb.borrow_nid=hct.bid_nid
+        INNER JOIN ht_account_list hal ON hct.assign_nid = hal.nid
+        INNER JOIN ht_r_user hru ON hal.user_id = hru.user_id
+        WHERE
+        hb.`status` IN (2, 3, 4, 7)
+        AND  hal.trade = "creditassign"
+        LIMIT #{limitStart} , #{limitEnd}
+    </select>
+    <select id="getCertAccountListCustomizeVOByAccedeassign" resultMap="queryCertAccountListMap"
+            parameterType="java.util.Map">
+        SELECT
+            hru.role_id role_id,
+            hal.*
+        FROM
+            ht_borrow hb
+				INNER JOIN ht_hjh_debt_credit_tender hdct ON hb.borrow_nid=hdct.borrow_nid
+        INNER JOIN ht_account_list hal ON hdct.assign_order_id = hal.nid
+        INNER JOIN ht_r_user hru ON hal.user_id = hru.user_id
+        WHERE
+            hb.`status` IN (2, 3, 4, 7)
+        AND  hal.trade = "accede_assign"
+        LIMIT #{limitStart} , #{limitEnd}
+    </select>
+
+
     <resultMap id="queryCertAccountListIdMap" type="com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize" >
         <result column="limitMinId" property="limitMinId" jdbcType="INTEGER" />
         <result column="limitMaxId" property="limitMaxId" jdbcType="INTEGER" />
