@@ -5,14 +5,13 @@ package com.hyjf.am.trade.controller.api.userlargescreen;
 
 import com.hyjf.am.response.api.UserLargeScreenTwoResponse;
 import com.hyjf.am.trade.service.api.userlargescreen.UserLargeScreenService;
-import com.hyjf.am.vo.api.MonthDataStatisticsVO;
 import com.hyjf.am.vo.api.UserLargeScreenTwoVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Api(value = "运营大屏接口", tags = "运营大屏接口")
 @RestController
@@ -41,10 +40,10 @@ public class UserLargeScreenTwoController {
     }
 
     @ApiOperation(value = "屏幕二本月数据统计(新客组、老客组)", notes = "屏幕二本月数据统计(新客组、老客组)")
-    @PostMapping(value = "/getmonthdatastatistics")
-    public UserLargeScreenTwoResponse getMonthDataStatistics(@RequestBody List<MonthDataStatisticsVO> currentOwnersAndUserIds) {
+    @GetMapping(value = "/getmonthdatastatistics")
+    public UserLargeScreenTwoResponse getMonthDataStatistics() {
         UserLargeScreenTwoResponse response = new UserLargeScreenTwoResponse();
-        UserLargeScreenTwoVO vo = userLargeScreenService.getMonthDataStatistics(currentOwnersAndUserIds);
+        UserLargeScreenTwoVO vo = userLargeScreenService.getMonthDataStatistics();
         response.setResult(vo);
         return response;
     }

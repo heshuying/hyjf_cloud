@@ -587,17 +587,14 @@ public interface MQConstant {
 	String SELL_DAILY_GROUP = "SELL_DAILY_GROUP";
 	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
     String SELL_DAILY_SELECT_TAG = "SELL_DAILY_SELECT_TAG";
-	/** ------------------------------ 运营大屏数据统计 start ------------------------------ */
+
+    /** ------------------------------ 运营大屏数据统计 start ------------------------------ */
 	String SCREEN_DATA_GROUP = "SCREEN_DATA_GROUP";
 	String SCREEN_DATA_TOPIC = "SCREEN_DATA_TOPIC";
-
-	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
-
-	/** ------------------------------ 运营大屏二月初、末站岗资金统计 start ------------------------------ */
 	String SCREEN_DATA_TWO_GROUP = "SCREEN_DATA_TWO_GROUP";
 	String SCREEN_DATA_TWO_TOPIC = "SCREEN_DATA_TWO_TOPIC";
 	String SCREEN_DATA_TWO_SELECT_TAG = "SCREEN_DATA_TWO_SELECT_TAG";
-	/** ------------------------------ 运营大屏二月初、末站岗资金统计 end ------------------------------ */
+	/** ------------------------------ 运营大屏数据统计 end ------------------------------ */
 
     /**--------------------------------- 应急中心 -------------------------------------*/
 

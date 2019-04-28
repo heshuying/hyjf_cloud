@@ -519,49 +519,6 @@
                 current_owner
     </select>
 
-    <!-- 本月数据统计 坐席、回款 -->
-    <select id="getMonthDataStatisticsFi" resultType="com.hyjf.am.vo.api.MonthDataStatisticsVO">
-        SELECT
-            ROUND(IFNULL(SUM(money), 0), 0) AS received,
-            current_owner AS currentOwner,
-            customer_group AS customerGroup
-        FROM
-            ht_user_operate_list
-        WHERE
-            operating = 3
-        AND customer_group = 1
-        AND create_time BETWEEN DATE_FORMAT(
-            CURDATE(),
-            '%Y-%m-01 00:00:00'
-        )
-        AND DATE_FORMAT(
-            LAST_DAY(CURDATE()),
-            '%Y-%m-%d 23:59:59'
-        )
-        GROUP BY
-            current_owner
-        UNION ALL
-            SELECT
-                ROUND(IFNULL(SUM(money), 0), 0) AS received,
-                current_owner AS currentOwner,
-                customer_group AS customerGroup
-            FROM
-                ht_user_operate_list
-            WHERE
-                operating = 3
-            AND customer_group = 2
-            AND create_time BETWEEN DATE_FORMAT(
-                CURDATE(),
-                '%Y-%m-01 00:00:00'
-            )
-            AND DATE_FORMAT(
-                LAST_DAY(CURDATE()),
-                '%Y-%m-%d 23:59:59'
-            )
-            GROUP BY
-                current_owner
-    </select>
-
     <!-- 运营部-充值 -->
     <select id="getOperMonthPerformanceDataO" resultType="com.hyjf.am.vo.api.OperMonthPerformanceDataVO">
         SELECT

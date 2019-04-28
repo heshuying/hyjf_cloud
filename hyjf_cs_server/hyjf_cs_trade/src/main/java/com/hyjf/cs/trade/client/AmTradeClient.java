@@ -2968,7 +2968,7 @@ public interface AmTradeClient {
      * 本月数据统计(新客组、老客组)
      * @return
      */
-    UserLargeScreenTwoVO getMonthDataStatistics(List<MonthDataStatisticsVO> currentOwnersAndUserIds);
+    UserLargeScreenTwoVO getMonthDataStatistics();
 
     /**
      * 运营部月度业绩数据
