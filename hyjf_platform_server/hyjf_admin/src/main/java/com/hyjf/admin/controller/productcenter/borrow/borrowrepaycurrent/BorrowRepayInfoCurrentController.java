@@ -221,6 +221,8 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                         return "未还款";
                     }else if("1".equals(object)){
                         return "已还款";
+                    }else if("2".equals(object)){
+                        return "还款失败";
                     }else if("8".equals(object)){
                         return "逾期中";
                     }else{
