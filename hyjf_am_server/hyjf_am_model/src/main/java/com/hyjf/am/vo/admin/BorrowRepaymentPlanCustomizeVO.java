@@ -64,7 +64,23 @@ public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializab
     private String yihuanfuwufei;//已还服务费
     
     private String entrustedUserName;
+    private String borrowPeriodExcl;
     
+    
+    
+    
+    public String getBorrowPeriodExcl() {
+    	if(repayType.contains("天")) {
+    		return borrowPeriod+ "天";
+          }else{
+        	  return borrowPeriod+ "个月";
+          }
+	}
+
+	public void setBorrowPeriodExcl(String borrowPeriodExcl) {
+		this.borrowPeriodExcl = borrowPeriodExcl;
+	}
+
     public String getEntrustedUserName() {
 		return entrustedUserName;
 	}

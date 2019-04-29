@@ -432,10 +432,10 @@ public class BorrowRepaymentController extends BaseController {
         map.put("repayNextTime","下期还款日");
         map.put("repayMoneySource","还款来源");
         map.put("repayActionTime","实际还款时间");
-        map.put("repayOrgUserName" ,"担保机构用户名");
-        map.put("createUserName","添加标的人员");
-        map.put("registUserName","备案人员");
-        map.put("freezeOrderId","还款冻结订单号");
+       // map.put("repayOrgUserName" ,"担保机构用户名");
+      //  map.put("createUserName","添加标的人员");
+     //   map.put("registUserName","备案人员");
+   //     map.put("freezeOrderId","还款冻结订单号");
         return map;
     }
     private Map<String, IValueFormatter> exportBuildValueAdapter() {
