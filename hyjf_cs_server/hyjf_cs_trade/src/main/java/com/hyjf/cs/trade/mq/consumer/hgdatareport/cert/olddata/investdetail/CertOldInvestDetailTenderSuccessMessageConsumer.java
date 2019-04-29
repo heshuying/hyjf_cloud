@@ -71,12 +71,12 @@ public class CertOldInvestDetailTenderSuccessMessageConsumer implements RocketMQ
         Integer page=1;
         Integer size=1000;
         try {
-            while ("1".equals(RedisUtils.get("CREDIT_TENDER_TENDER_SUCCESS_RUN"))){
+            while (!"1".equals(RedisUtils.get("CREDIT_TENDER_SUCCESS_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"tender_success");
                 if (accountLists.size()==0){
                     logger.info(logHeader + "生成完成！");
-                    RedisUtils.set("CREDIT_TENDER_TENDER_SUCCESS_RUN","1");
+                    RedisUtils.set("CREDIT_TENDER_SUCCESS_RUN","1");
                     return;
                 }
                 // --> 调用service组装数据

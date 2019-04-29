@@ -77,12 +77,12 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
         Integer page=1;
         Integer size=1000;
         try {
-            while (!"1".equals(RedisUtils.get("TENDER_RECOVER_YES_RUN"))){
+            while (!"1".equals(RedisUtils.get("CREDIT_TENDER_RECOVER_YES_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"tenderRecoverYes");
                 if (accountLists.size()==0){
                     logger.info(logHeader + "生成完成！");
-                    RedisUtils.set("TENDER_RECOVER_YES_RUN","1");
+                    RedisUtils.set("CREDIT_TENDER_RECOVER_YES_RUN","1");
                     return;
                 }
                 // --> 调用service组装数据
