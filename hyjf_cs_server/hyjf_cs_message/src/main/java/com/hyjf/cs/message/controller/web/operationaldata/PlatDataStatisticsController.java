@@ -238,7 +238,7 @@ public class PlatDataStatisticsController {
         jsonObject.put("borrowuserMoneyTopten", oe.getBorrowUserMoneyTopTen() == null ? 0.00 : oe.getBorrowUserMoneyTopTen().setScale(2, BigDecimal.ROUND_DOWN));
 
         //安全运营天数
-        Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
+        Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-04-23 00:00:00"), new Date());
         jsonObject.put("survivalYears",totalDays/365);
         jsonObject.put("survivalDays",totalDays%365);
 
