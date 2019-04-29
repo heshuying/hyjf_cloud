@@ -66,9 +66,9 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
      * @return
      */
     @Override
-    public JSONArray getPlanProdouct(String planNid){
+    public JSONArray getPlanProdouct(String planNid,Boolean isOld){
         JSONArray json = new JSONArray();
-        Map<String, Object> param =getParam(planNid,false);
+        Map<String, Object> param =getParam(planNid,isOld);
         if(!param.isEmpty()&&param.size()>0){
             json.add(param);
         }
@@ -76,29 +76,6 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
     }
 
     //
-
-    /**
-     * 获取所有智投信息，组装上报数据
-     * @return
-     */
-    @Override
-    public JSONArray getAllPlan(){
-        JSONArray json = new JSONArray();
-        try{
-            List<HjhPlanVO> hjhPlanVOList = amTradeClient.selectAllPlan();
-            if (!CollectionUtils.isNotEmpty(hjhPlanVOList)) {
-                throw new Exception("获取线上智投信息失败！" );
-            }
-            for(HjhPlanVO hjhPlanVO:hjhPlanVOList){
-                Map<String,Object> mapParam =getParam(hjhPlanVO.getPlanNid(),true);
-                json.add(mapParam);
-            }
-        }catch (Exception e){
-            logger.error(e.getMessage());
-        }
-        return json;
-    }
-
 
     public Map<String,Object> getParam(String planNid,Boolean isOld){
         Map<String, Object> param = new HashMap<String, Object>();
@@ -151,8 +128,19 @@ public class CertLendProductServiceImpl extends BaseHgCertReportServiceImpl impl
      * @return
      */
     private String dateFormatTransformation(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         String strDate = sdf.format(date);
         return strDate;
+    }
+
+
+    /**
+     * 获取线上所有计划信息
+     * @return
+     */
+    @Override
+    public List<HjhPlanVO> getAllPlanInfo(){
+        List<HjhPlanVO> hjhPlanVOList = amTradeClient.selectAllPlan();
+        return hjhPlanVOList;
     }
 }
