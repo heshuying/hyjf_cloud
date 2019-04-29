@@ -164,9 +164,9 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
         map.put("repayType","还款方式");
+
         map.put("recoverUserName","出借人用户名");
         map.put("recoverUserId","出借人ID");
-
         map.put("recoverUserAttribute","出借人用户属性（当时）");
         map.put("recoverRegionName","出借人所属一级分部（当时）");
         map.put("recoverBranchName","出借人所属二级分部（当时）");
@@ -175,10 +175,10 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         map.put("referrerRegionName","推荐人所属一级分部（当时）");
         map.put("referrerBranchName","推荐人所属二级分部（当时）");
         map.put("referrerDepartmentName","推荐人所属团队（当时）");
+
         map.put("recoverTotal","出借金额");
         map.put("amountHold","持有金额");
         map.put("recoverCapital","应回本金");
-
         map.put("recoverInterest","应回利息");
         map.put("recoverAccount","应回本息");
         map.put("recoverFee","还款服务费");
