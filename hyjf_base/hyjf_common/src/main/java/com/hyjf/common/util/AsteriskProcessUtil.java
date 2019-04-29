@@ -94,8 +94,7 @@ public class AsteriskProcessUtil {
         if(originValue.length() <= 7){
             return originValue;
         }
-        // phoneNumAsterisked = originValue.substring(0, 3) + getAsterisked(originValue.length() - 7) + originValue.substring(originValue.length() - 4);
-        phoneNumAsterisked = originValue.substring(0, 2) +"*********";
+        phoneNumAsterisked = originValue.substring(0, 3) + getAsterisked(originValue.length() - 7) + originValue.substring(originValue.length() - 4);
         return phoneNumAsterisked;
     }
 }
