@@ -76,8 +76,8 @@ public class ProjectListController extends BaseController {
                 String fromatBorr= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowApr());
                 webProjectListCustomize.setBorrowApr(fromatBorr);
                 //加息利率
-                String fromatExtraYield= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowExtraYield());
-                webProjectListCustomize.setBorrowExtraYield(fromatExtraYield);
+                	String fromatExtraYield= FormatRateUtil.formatBorrowApr(webProjectListCustomize.getBorrowExtraYield());
+                	webProjectListCustomize.setBorrowExtraYield(fromatExtraYield);
                 // mod by nxl 20190409 end
             }
         }

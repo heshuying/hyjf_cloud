@@ -259,6 +259,7 @@ public class AppMyProjectController extends BaseTradeController {
                 borrowUrl += "&isIncrease=1&isCalendar=1";
                 vo.setCouponType("4");
             }
+            vo.setLabel(FormatRateUtil.formatBorrowApr(vo.getLabel()));
             vo.setBorrowUrl(borrowUrl);
             CommonUtils.convertNullToEmptyString(vo);
             vos.add(vo);
