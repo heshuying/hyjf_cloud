@@ -11,7 +11,7 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountListResponse;
 import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
-import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -19,7 +19,6 @@ import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.vo.admin.coupon.CertCouponRecoverVO;
-import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListIdCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
@@ -29,8 +28,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -224,12 +223,12 @@ public class CertController extends BaseController {
      * @return
      */
     @GetMapping("/selectCertBorrowByFlg/{flg}")
-    public CertBorrowResponse selectCertBorrowByFlg(@PathVariable String flg){
-        CertBorrowResponse response = new CertBorrowResponse();
+    public CertClaimResponse selectCertBorrowByFlg(@PathVariable String flg){
+        CertClaimResponse response = new CertClaimResponse();
         response.setRtn(Response.FAIL);
-        List<CertBorrow> certBorrowList =certService.selectCertBorrowConfig(flg);
+        List<CertClaim> certBorrowList =certService.selectCertBorrowConfig(flg);
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(certBorrowList)){
-            List<CertBorrowVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertBorrowVO.class);
+            List<CertClaimVO> borrowVOList = CommonUtils.convertBeanList(certBorrowList,CertClaimVO.class);
             response.setResultList(borrowVOList);
             response.setRtn(Response.SUCCESS);
         }
@@ -242,7 +241,7 @@ public class CertController extends BaseController {
      * @return
      */
     @PostMapping("/updateCertBorrowStatusBatch")
-    public IntegerResponse updateCertBorrowStatusBatch(@RequestBody CertBorrowUpdateVO updateVO){
+    public IntegerResponse updateCertBorrowStatusBatch(@RequestBody CertClaimUpdateVO updateVO){
         IntegerResponse response = new IntegerResponse();
         try{
            certService.updateCertBorrowStatusBatch(updateVO);

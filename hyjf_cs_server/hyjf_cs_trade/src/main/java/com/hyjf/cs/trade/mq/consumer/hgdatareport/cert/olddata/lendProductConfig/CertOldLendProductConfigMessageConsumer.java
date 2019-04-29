@@ -9,8 +9,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hyjf.am.vo.hgreportdata.cert.CertOldLendProductConfigVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -91,7 +91,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
         try {
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
-            List<CertBorrowVO> certBorrowEntityList = certLendProductConfigService.getCertBorrowNoConfig();
+            List<CertClaimVO> certBorrowEntityList = certLendProductConfigService.getCertBorrowNoConfig();
             if(CollectionUtils.isEmpty(certBorrowEntityList)){
                 logger.error(logHeader + "暂无未上报的产品配置信息！！！");
                 return;
@@ -131,13 +131,13 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
                         }
                         // 批量修改状态  start
                         List<Integer> ids = new ArrayList<>();
-                        for (CertBorrowVO item : certBorrowEntityList) {
+                        for (CertClaimVO item : certBorrowEntityList) {
                             ids.add(item.getId());
                         }
                         if (ids.size() > 0) {
-                            CertBorrowUpdateVO update = new CertBorrowUpdateVO();
+                            CertClaimUpdateVO update = new CertClaimUpdateVO();
                             update.setIds(ids);
-                            CertBorrowVO certBorrow = new CertBorrowVO();
+                            CertClaimVO certBorrow = new CertClaimVO();
                             if (entity != null && CertCallConstant.CERT_RETURN_STATUS_SUCCESS.equals(entity.getReportStatus())) {
                                 // 成功
                                 certBorrow.setIsConfig(1);
@@ -145,7 +145,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
                                 // 失败
                                 certBorrow.setIsConfig(99);
                             }
-                            update.setCertBorrow(certBorrow);
+                            update.setCertClaim(certBorrow);
                             // 批量修改
                             certLendProductConfigService.updateCertBorrowStatusBatch(update);
                         }

@@ -10,7 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.hgreportdata.cert.CertService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -188,9 +188,9 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
      * @return
      */
     @Override
-    public List<CertBorrow> selectCertBorrowConfig(String isTender){
-        CertBorrowExample example = new CertBorrowExample();
-        CertBorrowExample.Criteria criteria = example.createCriteria();
+    public List<CertClaim> selectCertBorrowConfig(String isTender){
+        CertClaimExample example = new CertClaimExample();
+        CertClaimExample.Criteria criteria = example.createCriteria();
         if(StringUtils.isNotBlank(isTender)){
             criteria.andCreditFlgEqualTo(Integer.parseInt(isTender));
         }
@@ -199,7 +199,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
         //测试，获取300条数据
         example.setLimitStart(0);
         example.setLimitEnd(300);
-        return certBorrowMapper.selectByExample(example);
+        return certClaimMapper.selectByExample(example);
     }
 
     /**
@@ -208,12 +208,12 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
      * @return
      */
     @Override
-    public int updateCertBorrowStatusBatch (CertBorrowUpdateVO update) {
-        CertBorrowExample example = new CertBorrowExample();
-        CertBorrowExample.Criteria cra = example.createCriteria();
-        cra.andIdIn(update.getIds());
-        CertBorrow certBorrow = new CertBorrow();
-        BeanUtils.copyProperties(update.getCertBorrow(),certBorrow);
-        return certBorrowMapper.updateByExampleSelective(certBorrow,example);
+    public int updateCertBorrowStatusBatch (CertClaimUpdateVO update) {
+        CertClaimExample example = new CertClaimExample();
+        CertClaimExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(update.getIds());
+        CertClaim certBorrow = new CertClaim();
+        BeanUtils.copyProperties(update.getCertClaim(),certBorrow);
+        return certClaimMapper.updateByExampleSelective(certBorrow,example);
     }
 }

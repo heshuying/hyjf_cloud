@@ -32,7 +32,7 @@ import com.hyjf.am.response.trade.coupon.CouponRealTenderResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.trade.hgreportdata.cert.CertAccountListResponse;
-import com.hyjf.am.response.trade.hgreportdata.cert.CertBorrowResponse;
+import com.hyjf.am.response.trade.hgreportdata.cert.CertClaimResponse;
 import com.hyjf.am.response.trade.hgreportdata.nifa.NifaContractEssenceResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
@@ -80,8 +80,8 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -7269,9 +7269,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public List<CertBorrowVO> selectCertBorrowByFlg(String flg){
-        String url = "http://AM-TRADE/am-trade/cert/selectCertBorrowByFlg/"+flg;
-        CertBorrowResponse response = restTemplate.getForEntity(url,CertBorrowResponse.class).getBody();
+    public List<CertClaimVO> selectCertBorrowByFlg(String flg){
+//        String url = "http://AM-TRADE/am-trade/cert/selectCertBorrowByFlg/"+flg;
+        String url = urlBase+"cert/selectCertBorrowByFlg/"+flg;
+        CertClaimResponse response = restTemplate.getForEntity(url,CertClaimResponse.class).getBody();
         if (Validator.isNotNull(response)&&Response.isSuccess(response)){
             return response.getResultList();
         }
@@ -7293,7 +7294,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public Integer updateCertBorrowStatusBatch(CertBorrowUpdateVO updateVO){
+    public Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO){
         String url = "http://AM-TRADE/am-trade/cert/updateCertBorrowStatusBatch";
         IntegerResponse response = restTemplate.postForEntity(url,updateVO,IntegerResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getResultInt())) {

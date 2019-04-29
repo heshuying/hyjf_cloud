@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @Description 数据库批量操作
  */
-public class CertBorrowUpdateVO {
+public class CertClaimUpdateVO {
 
     /**
      * 要修改的对象的ID集合
@@ -17,7 +17,7 @@ public class CertBorrowUpdateVO {
     /**
      * 自己new一个要修改哪个字段set哪个字段
      */
-    private CertBorrowVO certBorrow;
+    private CertClaimVO certClaim;
 
     public List<Integer> getIds() {
         return ids;
@@ -27,11 +27,11 @@ public class CertBorrowUpdateVO {
         this.ids = ids;
     }
 
-    public CertBorrowVO getCertBorrow() {
-        return certBorrow;
+    public CertClaimVO getCertClaim() {
+        return certClaim;
     }
 
-    public void setCertBorrow(CertBorrowVO certBorrow) {
-        this.certBorrow = certBorrow;
+    public void setCertClaim(CertClaimVO certClaim) {
+        this.certClaim = certClaim;
     }
 }

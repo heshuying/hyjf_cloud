@@ -5,7 +5,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListCustomize;
 import com.hyjf.am.trade.dao.model.customize.CertAccountListIdCustomize;
 import com.hyjf.am.trade.service.BaseService;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
 
 import java.util.List;
 
@@ -48,11 +48,11 @@ public interface CertService extends BaseService {
      * @param isTender
      * @return
      */
-    List<CertBorrow> selectCertBorrowConfig(String isTender);
+    List<CertClaim> selectCertBorrowConfig(String isTender);
     /**
      * 批量更新
      * @param update
      * @return
      */
-    int updateCertBorrowStatusBatch (CertBorrowUpdateVO update);
+    int updateCertBorrowStatusBatch (CertClaimUpdateVO update);
 }

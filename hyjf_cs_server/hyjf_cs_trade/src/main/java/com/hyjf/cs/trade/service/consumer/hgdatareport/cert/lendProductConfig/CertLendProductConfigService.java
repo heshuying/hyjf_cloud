@@ -2,8 +2,8 @@ package com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProductConfig;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.cs.trade.service.consumer.BaseHgCertReportService;
 
 import java.util.List;
@@ -34,19 +34,19 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
      * 未还款的标的
      * @return
      */
-     List<CertBorrowVO> getBorrowNoRepay();
+     List<CertClaimVO> getBorrowNoRepay();
 
     /**
      * 未完全转让的标的
      * @return
      */
-     List<CertBorrowVO> getBorrowNoTransferred();
+     List<CertClaimVO> getBorrowNoTransferred();
 
-     List<CertBorrowVO> getCertBorrowNoConfig();
+     List<CertClaimVO> getCertBorrowNoConfig();
     /**
      * 批量更新
      * @param updateVO
      * @return
      */
-    Integer updateCertBorrowStatusBatch(CertBorrowUpdateVO updateVO);
+    Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO);
 }

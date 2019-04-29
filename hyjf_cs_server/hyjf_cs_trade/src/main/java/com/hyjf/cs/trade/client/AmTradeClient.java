@@ -48,8 +48,8 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.bifa.BifaBorrowUserInfoVO;
 import com.hyjf.am.vo.trade.bifa.UserIdAccountSumBeanVO;
 import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.cert.CertBorrowUpdateVO;
-import com.hyjf.am.vo.trade.cert.CertBorrowVO;
+import com.hyjf.am.vo.trade.cert.CertClaimUpdateVO;
+import com.hyjf.am.vo.trade.cert.CertClaimVO;
 import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
@@ -2992,14 +2992,14 @@ public interface AmTradeClient {
      * @param flg
      * @return
      */
-    List<CertBorrowVO> selectCertBorrowByFlg(String flg);
+    List<CertClaimVO> selectCertBorrowByFlg(String flg);
     List<CertAccountListCustomizeVO> getCertAccountListCustomizeVO(CertRequest certTransactRequest);
     /**
      * 批量更新
      * @param updateVO
      * @return
      */
-    Integer updateCertBorrowStatusBatch(CertBorrowUpdateVO updateVO);
+    Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO);
     // 应急中心二期，历史数据上报 add by nxl end
 
 }
