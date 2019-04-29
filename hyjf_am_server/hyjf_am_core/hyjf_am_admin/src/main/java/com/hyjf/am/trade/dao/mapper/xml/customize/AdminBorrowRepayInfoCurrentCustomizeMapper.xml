@@ -1017,7 +1017,6 @@
         ) AS repayActionTime,
         '1' AS recordType
         FROM
-        FROM
         ht_borrow_recover br
         INNER JOIN ht_borrow b ON br.borrow_nid = b.borrow_nid
         INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid = b.borrow_nid
