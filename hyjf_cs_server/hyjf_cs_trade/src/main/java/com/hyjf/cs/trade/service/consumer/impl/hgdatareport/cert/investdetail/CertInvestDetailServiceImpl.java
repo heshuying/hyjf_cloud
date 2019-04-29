@@ -504,8 +504,14 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
         //平台编号
         param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
+		//平台交易流水号
+		if(accountList.getNid()==null||accountList.getNid().length()==0){
+			//平台交易流水号
+			param.put("transId", accountList.getId()+"");
+		}else{
+			//平台交易流水号
+			param.put("transId", accountList.getNid());
+		}
         //产品信息编号
         param.put("sourceFinancingCode", "-1");
         //交易类型
@@ -556,8 +562,14 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
         //平台编号
         param.put("sourceCode", systemConfig.getCertSourceCode());
-        //平台交易流水号
-        param.put("transId", accountList.getNid());
+		//平台交易流水号
+		if(accountList.getNid()==null||accountList.getNid().length()==0){
+			//平台交易流水号
+			param.put("transId", accountList.getId()+"");
+		}else{
+			//平台交易流水号
+			param.put("transId", accountList.getNid());
+		}
         //产品信息编号
         param.put("sourceFinancingCode", "-1");
         //交易类型
