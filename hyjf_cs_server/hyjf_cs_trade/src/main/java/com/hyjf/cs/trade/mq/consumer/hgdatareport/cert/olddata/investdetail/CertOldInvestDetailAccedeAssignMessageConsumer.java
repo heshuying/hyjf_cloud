@@ -74,6 +74,7 @@ public class CertOldInvestDetailAccedeAssignMessageConsumer implements RocketMQL
             while (!"1".equals(RedisUtils.get("CREDIT_TENDER_ACCEDE_ASSIGN_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"accede_assign");
+                logger.info(logHeader + "accountLists.size():"+accountLists.size());
                 if (accountLists.size()==0){
                     logger.info(logHeader + "生成完成！");
                     RedisUtils.set("CREDIT_TENDER_ACCEDE_ASSIGN_RUN","1");
