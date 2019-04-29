@@ -72,7 +72,7 @@
         INNER JOIN ht_r_user hru ON hal.user_id = hru.user_id
         WHERE
             hb.`status` IN (2, 3, 4, 7)
-        AND hru.id <![CDATA[<=]]> #{maxId}
+        AND hal.id <![CDATA[<=]]> #{maxId}
         <if test="trade == 'tenderRecoverYes'">
             AND (
                 hal.trade = "tender_recover_yes"
