@@ -173,7 +173,9 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
             return accountLists;
         }
         if("accede_assign".equals(trade)){
+            logger.info("map:" + JSONObject.toJSONString(map));
             List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVOByAccedeassign(map);
+            logger.info("accountLists.size():" + accountLists.size());
             return accountLists;
         }
         List<CertAccountListCustomize> accountLists=certMapper.getCertAccountListCustomizeVO(map);
