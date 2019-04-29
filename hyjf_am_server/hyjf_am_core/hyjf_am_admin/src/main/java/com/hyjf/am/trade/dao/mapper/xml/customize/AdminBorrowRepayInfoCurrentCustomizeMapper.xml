@@ -1369,6 +1369,7 @@
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
         LEFT JOIN ht_borrow_apicron AS api ON api.borrow_nid = b.borrow_nid
         AND api.period_now = cr.assign_repay_period
+        LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
         LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
         LEFT JOIN ht_r_user AS u1 ON bry.user_id = u1.user_id
         LEFT JOIN ht_r_user AS u2 ON cr.user_id = u2.user_id
