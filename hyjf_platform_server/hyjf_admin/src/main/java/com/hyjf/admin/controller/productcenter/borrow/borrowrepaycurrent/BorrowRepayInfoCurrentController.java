@@ -196,16 +196,16 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         map.put("lateInterest","逾期违约金");
         map.put("recoverCapitalYesPeriod","当期实回本金");
         map.put("recoverInterestYesPeriod","当期实回利息");
-        map.put("recoverAccountYesPeriod","当期实还总额");
         map.put("recoverFeeYesPeriod","当期实还管理费");
+        map.put("recoverAccountYesPeriod","当期实还总额");
         map.put("recoverCapitalWait","剩余待回本金");
         map.put("recoverInterestWait","剩余待回利息");
         map.put("recoverAccountWait","剩余待回本息");
         map.put("repayUserName","当期还款人");
-        map.put("recoverStatus","还款状态");
+        map.put("recoverStatus","回款状态");
         map.put("autoRepay","平台还款方式");
         map.put("repayMoneySource","还款来源");
-        map.put("recoverCapital","发起人");
+        map.put("submitter","发起人");
         map.put("recoverTime","应还日期");
         map.put("repayActionTime","实际回款时间");
         return map;
@@ -213,17 +213,24 @@ public class BorrowRepayInfoCurrentController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter entrustedFlgAdapter = new IValueFormatter() {
+        IValueFormatter recoverStatusAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String isStzf_str="否";
-                if (object != null && Integer.parseInt(object.toString()) - 1 == 0) {
-                    isStzf_str = "是";
+                if (null!=object) {
+                    if("0".equals(object)){
+                        return "未还款";
+                    }else if("1".equals(object)){
+                        return "已还款";
+                    }else if("8".equals(object)){
+                        return "逾期中";
+                    }else{
+                        return "";
+                    }
                 }
-                return isStzf_str;
+                return null;
             }
         };
-        mapAdapter.put("entrustedFlg", entrustedFlgAdapter);
+        mapAdapter.put("recoverStatus", recoverStatusAdapter);
         return mapAdapter;
     }
 }

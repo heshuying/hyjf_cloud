@@ -903,8 +903,8 @@
         b.borrow_user_name AS borrowUserName,
         binfo. NAME AS borrowName,
         bpt.borrow_name AS projectTypeName,
-        b.borrow_Period AS borrowPeriod,
-        b.borrow_Apr AS borrowApr,
+        IF(b.borrow_style = 'endday',CONCAT(b.borrow_period,'天'),CONCAT(b.borrow_period,'个月')) AS borrowPeriod,
+        CONCAT(b.borrow_apr, '%') AS borrowApr,
         b.account AS borrowAccount,
         b.borrow_account_yes AS borrowAccountYes,
         bs. NAME AS repayType,
@@ -974,8 +974,12 @@
         br.recover_interest_wait AS recoverInterestWait,
         br.recover_account_wait AS recoverAccountWait,
         bry.repay_username AS repayUserName,
-        br.recover_status AS recoverStatus,
-        bry.auto_repay AS autoRepay,
+        IF (
+        b.`status` != 8,
+        br.recover_status,
+        8
+        ) AS recoverStatus,
+        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
         IF (
         bry.repay_status = 1
@@ -1120,8 +1124,12 @@
         rp.recover_interest_wait AS recoverInterestWait,
         rp.recover_account_wait AS recoverAccountWait,
         brp.repay_username AS repayUserName,
-        rp.recover_status AS recoverStatus,
-        brp.auto_repay AS autoRepay,
+        IF (
+        rp.recover_status = 0,
+        IF (brp.advance_status = 3, 8, 0),
+        1
+        ) AS recoverStatus,
+        IF(brp.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
         IF (
         brp.repay_status = 1
@@ -1266,8 +1274,12 @@
         cr.assign_interest - cr.assign_repay_interest AS recoverInterestWait,
         cr.assign_account - cr.assign_repay_account AS recoverAccountWait,
         bry.repay_username AS repayUserName,
-        cr.`status` AS recoverStatus,
-        bry.auto_repay AS autoRepay,
+        IF (
+        cr.`status` = 0,
+        IF (cr.advance_status = 3, 8, 0),
+        1
+        ) AS recoverStatus,
+        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
 
         IF (
         bry.repay_status = 1
@@ -1415,9 +1427,13 @@
         hcr.repay_interest_wait AS recoverInterestWait,
         hcr.repay_interest_wait AS recoverAccountWait,
         bry.repay_username AS repayUserName,
-        hcr.repay_status AS recoverStatus,
-        bry.auto_repay AS autoRepay,
-
+        IF (
+        hcr.repay_status = 0,
+        IF (hcr.advance_status = 3, 8, 0),
+        1
+        )
+        AS recoverStatus,
+        IF(bry.auto_repay=0,'主动还款','系统自动') AS autoRepay,
         IF (
         bry.repay_status = 1
         AND bry.repay_action_time > 0,
