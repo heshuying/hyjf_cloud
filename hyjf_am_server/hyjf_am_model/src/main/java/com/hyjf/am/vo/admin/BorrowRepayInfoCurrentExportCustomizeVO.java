@@ -62,6 +62,8 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
     private String recoverTotal;
     /** 期数*/
     private String period;
+    /** 总期数*/
+    private String periodTotal;
     /** 持有金额*/
     private String amountHold;
     /** 应还本金*/
