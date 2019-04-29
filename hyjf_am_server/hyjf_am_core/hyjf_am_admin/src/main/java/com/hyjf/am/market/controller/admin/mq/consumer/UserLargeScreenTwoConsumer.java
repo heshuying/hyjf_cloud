@@ -41,6 +41,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
     @Override
     public void onMessage(MessageExt messageExt) {
         if (MQConstant.SCREEN_DATA_TWO_SELECT_TAG.equals(messageExt.getTags())) {
+            logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [Start]");
             // 增资、提现率处理
             // 查询有效坐席
             CustomerTaskConfigExample example = new CustomerTaskConfigExample();
@@ -74,8 +75,9 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     userLargeScreenTwoCustomizeMapper.insertResult(result);
                 }
             }
+            logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [End]");
 
-
+            logger.info("用户画像-运营部投屏 每日用户划转执行 ==========>>> [Start]");
             // 运营部用户划转线下，同步删除用户历史数据
             // 查询所有运营部用户的userId
             List<String> operUserIdList = userLargeScreenTwoCustomizeMapper.getOperationUserId();
@@ -126,7 +128,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     }
                 }
             }
-
+            logger.info("用户画像-运营部投屏 每日用户划转执行 ==========>>> [End]");
         }
     }
 
@@ -167,6 +169,6 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
         //设置最大重试次数
         defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
 
-        logger.info("====用户画像-运营部投屏,增资、提现率获取 消费端开始执行=====");
+        logger.info("====用户画像-运营部投屏二数据batch获取、每日用户划转执行 消费端开始执行=====");
     }
 }
