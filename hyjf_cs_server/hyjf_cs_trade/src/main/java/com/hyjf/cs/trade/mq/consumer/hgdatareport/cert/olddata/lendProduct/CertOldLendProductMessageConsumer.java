@@ -6,11 +6,13 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.olddata.lendProduct;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct.CertLendProductService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -84,20 +86,27 @@ public class CertOldLendProductMessageConsumer implements RocketMQListener<Messa
 
             // --> 调用service组装数据
             // 智投历史数据上报，查询所有智投信息，组装上报数据
-            JSONArray listRepay = certLendProductService.getAllPlan();
-            logger.info("数据：" + listRepay.toString());
-            if (null == listRepay || listRepay.size() <= 0) {
-                logger.error(logHeader + "组装参数为空！！！");
+            List<HjhPlanVO> hjhPlanVOList = certLendProductService.getAllPlanInfo();
+            if (!CollectionUtils.isNotEmpty(hjhPlanVOList)) {
+                logger.error(logHeader + "线上智投信息获取失败，暂无智投信息！！！");
                 return;
             }
-            // 上送数据
-            List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(listRepay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE);
-            // 遍历循环上报
-            for (CertReportEntityVO entity : entitys) {
-                try {
-                    certLendProductService.insertAndSendPost(entity);
-                } catch (Exception e) {
-                    throw e;
+            for (HjhPlanVO hjhPlanVO:hjhPlanVOList){
+                JSONArray listRepay = certLendProductService.getPlanProdouct(hjhPlanVO.getPlanNid(),true);
+                logger.info("数据：" + listRepay.toString());
+                if (null == listRepay || listRepay.size() <= 0) {
+                    logger.error(logHeader + "组装参数为空！！！参数为：" + hjhPlanVO.getPlanNid());
+                    return;
+                }
+                // 上送数据
+                List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(listRepay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE);
+                // 遍历循环上报
+                for (CertReportEntityVO entity : entitys) {
+                    try {
+                        certLendProductService.insertAndSendPost(entity);
+                    } catch (Exception e) {
+                        throw e;
+                    }
                 }
             }
             logger.info(logHeader + " 处理成功。" + msgBody);

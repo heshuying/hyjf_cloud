@@ -1,7 +1,10 @@
 package com.hyjf.cs.trade.service.consumer.hgdatareport.cert.lendProduct;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.cs.trade.service.consumer.BaseHgCertReportService;
+
+import java.util.List;
 
 
 /**
@@ -15,10 +18,11 @@ public interface CertLendProductService extends BaseHgCertReportService {
      * @param planNid
      * @return
      */
-    JSONArray getPlanProdouct(String planNid);
+    JSONArray getPlanProdouct(String planNid,Boolean isOld);
+
     /**
-     * 获取所有智投信息，组装上报数据
+     * 获取线上所有计划信息
      * @return
      */
-    JSONArray getAllPlan();
+    List<HjhPlanVO> getAllPlanInfo();
 }

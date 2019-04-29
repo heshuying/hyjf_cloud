@@ -121,7 +121,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
             if (null != jsonArrayList && jsonArrayList.size() > 0) {
                 for (int i = 0; i < jsonArrayList.size(); i++) {
                     JSONArray repay = jsonArrayList.get(i);
-                    List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(repay, thisMessName, CertCallConstant.CERT_INF_TYPE_REPAY_PLAN);
+                    List<CertReportEntityVO> entitys = CertCallUtil.groupByDate(repay, thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG);
                     // 遍历循环上报
                     for (CertReportEntityVO entity : entitys) {
                         try {
