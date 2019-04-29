@@ -3,6 +3,7 @@ package com.hyjf.cs.market.controller.app.activity;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.cs.market.controller.AbstractActivity51Controller;
 import com.hyjf.cs.market.vo.Activity51VO;
+import com.hyjf.cs.market.vo.ActivityTimeVO;
 import com.hyjf.cs.market.vo.GuessVO;
 import com.hyjf.cs.market.vo.RewardReceiveVO;
 import io.swagger.annotations.Api;
@@ -28,6 +29,17 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     private final String H5_FAIL_STATUS = "99";
 
     /**
+     * 查询当前时间是不是在活动时间范围内
+     * @return
+     */
+    @ApiOperation(value = "查询当前时间是不是在活动时间范围内", notes = "查询当前时间是不是在活动时间范围内")
+    @RequestMapping(value = "/isActivityTime", method = RequestMethod.GET)
+    public BaseResult<ActivityTimeVO> isActivityTime() {
+        logger.info("app端-查询当前时间是不是在活动时间范围内...");
+        return isActivityTime(H5_SUCCESS_STATUS, H5_FAIL_STATUS);
+    }
+
+    /**
      * 查询活动期间当前累计出借金额
      *
      * @return
@@ -50,7 +62,7 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     public BaseResult sendCoupon(@RequestHeader int userId,
                                  @ApiParam(required = true, name = "grade", value = "累计出借金额区间， 从第一档（3000万）开始，依次传递1,2,3,4")
                                  @RequestParam int grade) {
-        logger.info("领取优惠券, userId is: {}", userId);
+        logger.info("app端-领取优惠券, userId is: {}", userId);
         return sendCoupon(userId, grade, H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 
@@ -59,14 +71,14 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     public BaseResult<RewardReceiveVO> isReceiveCoupon(@RequestHeader int userId,
                                                        @ApiParam(required = true, name = "grade", value = "累计出借金额区间， 从第一档（3000万）开始，依次传递1,2,3,4")
                                                        @RequestParam int grade) {
-        logger.info("单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
+        logger.info("app端-单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
         return isReceiveCoupon(userId, grade, H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 
     @ApiOperation(value = "批量判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
     @RequestMapping(value = "/getReceiveStatusList", method = RequestMethod.GET)
     public BaseResult<List<RewardReceiveVO>> getReceiveStatusList(@RequestHeader int userId) {
-        logger.info("批量判断用户是否已经领取优惠券, userId is: {}", userId);
+        logger.info("app端-批量判断用户是否已经领取优惠券, userId is: {}", userId);
         return getReceiveStatusList(userId, H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 
@@ -82,7 +94,7 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     public BaseResult guess(@RequestHeader int userId,
                             @ApiParam(required = true, name = "grade", value = "用户竞猜区间， 从第一档（1-99）开始，依次传递1,2,3,4")
                             @RequestParam int grade) {
-        logger.info("用户竞猜, userId is: {}, grade is: {}", userId, grade);
+        logger.info("app端-用户竞猜, userId is: {}, grade is: {}", userId, grade);
         return guess(userId, grade, H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 
@@ -95,7 +107,7 @@ public class AppActivity51Controller extends AbstractActivity51Controller {
     @ApiOperation(value = "查询用户是否竞猜", notes = "查询用户是否竞猜")
     @RequestMapping(value = "/isGuess", method = RequestMethod.GET)
     public BaseResult<GuessVO> isGuess(@RequestHeader int userId) {
-        logger.info("用户竞猜, userId is: {}", userId);
+        logger.info("app端-用户竞猜, userId is: {}", userId);
         return isGuess(userId, H5_SUCCESS_STATUS, H5_FAIL_STATUS);
     }
 

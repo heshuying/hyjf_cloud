@@ -19,13 +19,13 @@
       CASE
       WHEN ug.grade = 1 THEN '1-99名'
       WHEN ug.grade = 2 THEN '100-999名'
-      WHEN ug.grade = 3 THEN '1000-2000名'
+      WHEN ug.grade = 3 THEN '1000-1999名'
       ELSE '2000以外' END AS grade,
       CASE
-      WHEN ug.grade = 1 THEN '2%代金券'
-      WHEN ug.grade = 2 THEN '1.5%代金券'
-      WHEN ug.grade = 3 THEN '1%代金券'
-      ELSE '0.5%代金券' END AS reward,
+      WHEN ug.grade = 1 THEN '2%加息券'
+      WHEN ug.grade = 2 THEN '1.5%加息券'
+      WHEN ug.grade = 3 THEN '1%加息券'
+      ELSE '0.5%加息券' END AS reward,
       '手动发放' AS style
       FROM ht_activity_user_guess ug
       LEFT JOIN hyjf_user.ht_user u ON ug.user_id = u.user_id
