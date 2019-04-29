@@ -77,7 +77,7 @@ public class CertOldInvestDetailTenderRecoverYesMessageConsumer implements Rocke
         Integer page=1;
         Integer size=1000;
         try {
-            while ("1".equals(RedisUtils.get("TENDER_RECOVER_YES_RUN"))){
+            while (!"1".equals(RedisUtils.get("TENDER_RECOVER_YES_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"tenderRecoverYes");
                 if (accountLists.size()==0){

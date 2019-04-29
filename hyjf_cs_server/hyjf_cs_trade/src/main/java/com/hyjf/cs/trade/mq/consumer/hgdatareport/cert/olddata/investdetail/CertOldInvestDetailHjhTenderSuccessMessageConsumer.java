@@ -71,7 +71,7 @@ public class CertOldInvestDetailHjhTenderSuccessMessageConsumer implements Rocke
         Integer page=1;
         Integer size=1000;
         try {
-            while ("1".equals(RedisUtils.get("CREDIT_TENDER_HJH_TENDER_SUCCESS_RUN"))){
+            while (!"1".equals(RedisUtils.get("CREDIT_TENDER_HJH_TENDER_SUCCESS_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"hjh_tender_success");
                 if (accountLists.size()==0){

@@ -71,7 +71,7 @@ public class CertOldInvestDetailCreditTenderRecoverYesMessageConsumer implements
         Integer page=1;
         Integer size=1000;
         try {
-            while ("1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN"))){
+            while (!"1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_RECOVER_YES_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"creditTenderRecoverYes");
                 if (accountLists.size()==0){

@@ -71,7 +71,7 @@ public class CertOldInvestDetailCreditAssignMessageConsumer implements RocketMQL
         Integer page=1;
         Integer size=1000;
         try {
-            while ("1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_ASSIGN_RUN"))){
+            while (!"1".equals(RedisUtils.get("CREDIT_TENDER_CREDIT_ASSIGN_RUN"))){
                 // --> 消息处理
                 List<CertAccountListCustomizeVO> accountLists=certOldInvestDetailService.getCertAccountListCustomizeVO(page,size,"creditassign");
                 if (accountLists.size()==0){
