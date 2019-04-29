@@ -242,8 +242,9 @@ public class AppFindController extends BaseMarketController {
 	}
 
 	@ApiOperation(value = "app发现页面", notes = "app发现页面")
-	@PostMapping("/init")
 	@ApiImplicitParam(name = "platform", value = "平台类型 2：Android，3：IOS", required = true, dataType = "String")
+	@PostMapping("/init")
+	@ResponseBody
 	public WebResult<AppFindVO> initFind(@ModelAttribute AppBaseRequest appBaseRequest){
 		WebResult webResult = new WebResult();
 		AdsRequest request = new AdsRequest();

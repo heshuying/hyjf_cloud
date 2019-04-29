@@ -30,10 +30,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -356,6 +353,7 @@ public class AppRechargeController extends BaseUserController {
      */
     @ApiOperation(value = "获取充值说明", notes = "获取充值说明")
     @PostMapping(value = "/getRechargeDetail")
+    @ResponseBody
     public WebResult<AppRechargeVO> getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
         WebResult webResult = new WebResult();
         List<AppRechargeRuleVO> rechargeRuleList = appRechargeService.getRechargeRule();

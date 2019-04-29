@@ -116,13 +116,14 @@ public class AppInviteController {
      * @date 2019/04/18
      * @return
      */
-    @PostMapping("/inviteInit")
     @ApiOperation(value = "我的奖励-邀请记录", notes = "我的奖励-邀请记录")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "version", value = "版本号", dataType = "String", required = true),
             @ApiImplicitParam(name = "platform", value = "平台类型 2：Android，3：IOS", dataType = "String", required = true),
             @ApiImplicitParam(name = "sign", value = "用户唯一标识", dataType = "String", required = true)
     })
+    @PostMapping("/inviteInit")
+    @ResponseBody
     public WebResult<AppInviteVO> inviteInit(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @ModelAttribute AppBaseRequest appBaseRequest) {
         WebResult webResult = new WebResult();
