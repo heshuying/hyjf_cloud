@@ -108,8 +108,8 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                     return;
                 }
                 customerSyncQO.setUserName(account.getUserName());
-                customerSyncQO.setPrecipitatedCapital(account.getBalance().doubleValue());
-                customerSyncQO.setFundsToBeCollected(account.getAwait().doubleValue());
+                customerSyncQO.setPrecipitatedCapital(account.getBankBalance().doubleValue());
+                customerSyncQO.setFundsToBeCollected(account.getBankAwait().doubleValue());
                 syncCustomerService.sync(customerSyncQO);
 
             }
