@@ -30,7 +30,7 @@ public class FormatRateUtil {
             return borrowApr;
         }
         if (borrowApr.equals("0.0")||borrowApr.equals("0.00")||borrowApr.equals("0")) {
-            return borrowApr;
+            return "0.0";
         }
         if ((borrowApr.substring( borrowApr.length()-1,borrowApr.length())).equals("0")&&!(borrowApr.substring( borrowApr.length()-2,borrowApr.length()-1)).equals(".")) {
         	return borrowApr.substring(0, borrowApr.length()-1);
