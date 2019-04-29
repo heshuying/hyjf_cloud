@@ -2034,6 +2034,11 @@
             <columnOverride column="customer_group" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+         <table tableName="ht_sponsor_log" domainObjectName="SponsorLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
     </context>
 </generatorConfiguration>
