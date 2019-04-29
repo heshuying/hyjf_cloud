@@ -360,7 +360,7 @@
 					br.recover_Account_yes AS recoverAccountYes,
 					br.recover_capital_wait AS recoverCapitalWait,
 					br.recover_interest_wait AS recoverInterestWait,
-					br.recover_Account-br.recover_Account_yes AS recoverAccountWait,
+					if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
 					br.recover_status AS status,
 					if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 					b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
@@ -453,7 +453,7 @@
 					br.recover_Account_yes AS recoverAccountYes,
 					br.recover_capital_wait AS recoverCapitalWait,
 					br.recover_interest_wait AS recoverInterestWait,
-					br.recover_Account-br.recover_Account_yes AS recoverAccountWait,
+					if(SIGN(br.recover_Account-br.recover_Account_yes)=-1,'0.00',br.recover_Account-br.recover_Account_yes) AS recoverAccountWait,
 					br.recover_status AS status,
 					if(b.repay_last_time='' OR b.repay_last_time='0' OR b.repay_last_time='null','',FROM_UNIXTIME(
 					b.repay_last_time, '%Y-%m-%d' )) AS recoverLastTime,
