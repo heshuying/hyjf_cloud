@@ -606,4 +606,12 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
     public void setSubmitter(String submitter) {
         this.submitter = submitter;
     }
+
+    public String getPeriodTotal() {
+        return periodTotal;
+    }
+
+    public void setPeriodTotal(String periodTotal) {
+        this.periodTotal = periodTotal;
+    }
 }

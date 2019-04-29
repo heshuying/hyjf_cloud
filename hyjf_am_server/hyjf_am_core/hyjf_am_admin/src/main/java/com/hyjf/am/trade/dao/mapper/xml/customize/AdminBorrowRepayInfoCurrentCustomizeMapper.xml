@@ -910,7 +910,13 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        u2.attribute AS recoverUserAttribute,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttribute,
         CASE
         WHEN u2.attribute = '1' THEN
         `od6`.`name`
@@ -1061,7 +1067,13 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        u2.attribute AS recoverUserAttribute,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttribute,
         CASE
         WHEN u2.attribute = '1' THEN
         `od6`.`name`
@@ -1211,7 +1223,13 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        u2.attribute AS recoverUserAttribute,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttribute,
         CASE
         WHEN u2.attribute = '1' THEN
         `od6`.`name`
@@ -1379,7 +1397,13 @@
         bs. NAME AS repayType,
         u2.user_id AS recoverUserId,
         u2.username AS recoverUserName,
-        u2.attribute AS recoverUserAttribute,
+        CASE u2.attribute
+        WHEN 0 THEN '无主单'
+        WHEN 1 THEN '有主单'
+        WHEN 2 THEN '线下员工'
+        WHEN 3 THEN '线上员工'
+        ELSE ''
+        END recoverUserAttribute,
         CASE
         WHEN u2.attribute = '1' THEN
         `od6`.`name`

@@ -184,7 +184,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         map.put("recoverFee","还款服务费");
         map.put("recoverLastTime","到期日");
         map.put("period","回款期数");
-        map.put("borrowPeriod","总期数");
+        map.put("periodTotal","总期数");
         map.put("recoverCapitalPeriod","当期应回本金");
         map.put("recoverInterestPeriod","当期应回利息");
         map.put("recoverAccountPeriod","当期应回本息");
