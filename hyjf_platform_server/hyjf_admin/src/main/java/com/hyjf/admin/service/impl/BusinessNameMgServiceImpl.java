@@ -71,7 +71,7 @@ public class BusinessNameMgServiceImpl implements BusinessNameMgService {
 
             if("update".equals(fun)){
 
-                if(request.getId() != vo.getId()){
+                if(!request.getId().equals(vo.getId())){
                     return false;
                 }
             }else{
