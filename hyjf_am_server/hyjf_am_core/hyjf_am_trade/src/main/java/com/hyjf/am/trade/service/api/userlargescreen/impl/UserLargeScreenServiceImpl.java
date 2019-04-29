@@ -235,11 +235,11 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
 
                     // 新客组数据
                     monthDataStatisticsNew.add(monthDataStatisticsVOO);
-                }else {
+                }else if("2".equals(monthDataStatisticsVOO.getCustomerGroup())) {
                     // 年化业绩
                     if(!CollectionUtils.isEmpty(listFo)){
                         for(MonthDataStatisticsVO listFoSon : listFo){
-                            if (!"1".equals(listFoSon.getCustomerGroup()) &&
+                            if ("2".equals(listFoSon.getCustomerGroup()) &&
                                     listFoSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setYearMoney(listFoSon.getYearMoney());
                             }
@@ -248,7 +248,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 充值
                     if(!CollectionUtils.isEmpty(listO)){
                         for(MonthDataStatisticsVO listOSon : listO){
-                            if (!"1".equals(listOSon.getCustomerGroup()) &&
+                            if ("2".equals(listOSon.getCustomerGroup()) &&
                                     listOSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setRecharge(listOSon.getRecharge());
                             }
@@ -257,7 +257,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                     // 提现
                     if(!CollectionUtils.isEmpty(listT)){
                         for(MonthDataStatisticsVO listTSon : listT){
-                            if (!"1".equals(listTSon.getCustomerGroup()) &&
+                            if ("2".equals(listTSon.getCustomerGroup()) &&
                                     listTSon.getCurrentOwner().equals(monthDataStatisticsVOO.getCurrentOwner())){
                                 monthDataStatisticsVOO.setWithdraw(listTSon.getWithdraw());
                             }
