@@ -271,8 +271,7 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowUserStatisticsMapper borrowUserStatisticsMapper;
 	@Autowired
 	protected UserLargeScreenCustomizeMapper userLargeScreenCustomizeMapper;
-	@Autowired
-	protected CertBorrowMapper certBorrowMapper;
+
 	@Autowired
 	protected CertClaimMapper certClaimMapper;
 }
