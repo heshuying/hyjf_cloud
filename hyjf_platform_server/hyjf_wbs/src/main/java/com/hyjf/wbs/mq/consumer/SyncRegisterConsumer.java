@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 import com.hyjf.am.vo.user.BankCardVO;
+import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.trade.dao.model.auto.Account;
 import com.hyjf.wbs.trade.service.AccountService;
 import com.hyjf.wbs.user.dao.model.auto.BankCard;
@@ -56,6 +57,9 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private WbsConfig wbsConfig;
+
 	private final int ACCOUNT_OPENED = 1;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -78,7 +82,7 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 		CustomerSyncQO customerSyncQO = new CustomerSyncQO();
 		customerSyncQO.setAssetCustomerId(userId);
-		customerSyncQO.setEntId(Integer.parseInt(utmId));
+		customerSyncQO.setEntId(Integer.parseInt(parse(utmId)));
 		customerSyncQO.setCustomerId(thirdpartyId);
 
 		if (Strings.isNullOrEmpty(userId)) {
@@ -106,6 +110,21 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 		}
 		logger.info("【{}】WBS客户同步消息:处理结束....",uuid);
+	}
+
+	//thirdPropertyIds有顺序
+	private String parse(String utmId) {
+		String thirdIds = wbsConfig.getThridPropertyIds();
+		String[] thirdIdsArr = thirdIds.split(",");
+		if (utmId.equals(wbsConfig.getUtmNami()) || utmId.equals(wbsConfig.getUtmYufengrui())) {
+			return thirdIdsArr[0];
+		} else if (utmId.equals(wbsConfig.getUtmDatang())) {
+			return thirdIdsArr[1];
+		} else if (utmId.equals(wbsConfig.getUtmQianle())) {
+			return thirdIdsArr[2];
+		} else {
+			return "";
+		}
 	}
 
 	private void buildData(User userVO, CustomerSyncQO customerSyncQO) {

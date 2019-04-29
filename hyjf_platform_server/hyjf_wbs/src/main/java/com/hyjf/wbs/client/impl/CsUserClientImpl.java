@@ -3,10 +3,6 @@
  */
 package com.hyjf.wbs.client.impl;
 
-import com.hyjf.wbs.qvo.WechatUserBindVO;
-import com.hyjf.wbs.qvo.csuser.LoginResultBean;
-import com.hyjf.wbs.qvo.csuser.ResultEnum;
-import com.hyjf.wbs.sign.IntrospectorBeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,13 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.wbs.client.CsUserClient;
+import com.hyjf.wbs.qvo.WechatUserBindVO;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
-
-import java.util.Map;
+import com.hyjf.wbs.qvo.csuser.LoginResultBean;
+import com.hyjf.wbs.qvo.csuser.ResultEnum;
+import com.hyjf.wbs.qvo.csuser.WebUserLoginResponse;
 
 /**
  * @author cui
@@ -41,18 +40,24 @@ public class CsUserClientImpl implements CsUserClient {
 	@Override
 	public WebViewUserVO login(LoginRequestVO user) {
 		String url = userService+"/hyjf-web/user/login";
-		WebResult<WebViewUserVO> webResult = restTemplate.postForEntity(url,user, WebResult.class).getBody();
-		if (webResult != null) {
-			if (WebResult.SUCCESS.equals(webResult.getStatus())) {
+
+		WebUserLoginResponse response = restTemplate.postForEntity(url,user, WebUserLoginResponse.class).getBody();
+
+		logger.info("调用cs-user登录返回内容【{}】",JSON.toJSONString(response));
+
+		if (response != null) {
+			if (WebResult.SUCCESS.equals(response.getStatus())) {
 				try {
-					return (WebViewUserVO) IntrospectorBeanUtils.mapToObject((Map<String, Object>) webResult.getData(),WebViewUserVO.class);
+					return response.getData();
 				} catch (Exception e) {
 					logger.error("绑定登录返回数据转换失败！",e);
 				}
 			}else{
-				throw new CheckException(webResult.getStatus(),webResult.getStatusDesc());
+				throw new CheckException(response.getStatus(),response.getStatusDesc());
 			}
 		}
+
+
 		throw new CheckException("用户登录失败！");
 	}
 
