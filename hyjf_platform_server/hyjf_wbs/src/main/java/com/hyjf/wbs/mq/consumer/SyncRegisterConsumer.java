@@ -114,13 +114,15 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 	//thirdPropertyIds有顺序
 	private String parse(String utmId) {
+		Integer utmIdInt=Integer.parseInt(utmId);
 		String thirdIds = wbsConfig.getThridPropertyIds();
+		logger.info("传入的utmId【{}】配置的财富端ID信息【{}】",utmId,thirdIds);
 		String[] thirdIdsArr = thirdIds.split(",");
-		if (utmId.equals(wbsConfig.getUtmNami()) || utmId.equals(wbsConfig.getUtmYufengrui())) {
+		if (utmIdInt.equals(wbsConfig.getUtmNami()) || utmIdInt.equals(wbsConfig.getUtmYufengrui())) {
 			return thirdIdsArr[0];
-		} else if (utmId.equals(wbsConfig.getUtmDatang())) {
+		} else if (utmIdInt.equals(wbsConfig.getUtmDatang())) {
 			return thirdIdsArr[1];
-		} else if (utmId.equals(wbsConfig.getUtmQianle())) {
+		} else if (utmIdInt.equals(wbsConfig.getUtmQianle())) {
 			return thirdIdsArr[2];
 		} else {
 			return "";
