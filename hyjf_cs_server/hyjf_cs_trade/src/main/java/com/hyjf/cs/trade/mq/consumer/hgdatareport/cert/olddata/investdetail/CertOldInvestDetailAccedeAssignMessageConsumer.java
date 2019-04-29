@@ -66,12 +66,6 @@ public class CertOldInvestDetailAccedeAssignMessageConsumer implements RocketMQL
         }
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
-        boolean canRun = certOldInvestDetailService.checkCanRun();
-        if(!canRun){
-            logger.info(logHeader + "redis不允许上报！");
-            return;
-        }
-
         String tradeDate = jsonObject.getString("tradeDate");
 
         Integer page=1;
