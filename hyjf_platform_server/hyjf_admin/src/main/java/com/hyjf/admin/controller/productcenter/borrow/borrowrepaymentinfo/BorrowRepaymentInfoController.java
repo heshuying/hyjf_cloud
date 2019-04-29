@@ -577,7 +577,14 @@ public class BorrowRepaymentInfoController extends BaseController {
             @Override
             public String format(Object object) {
                 if (null!=object) {
-                    return"0".equals(object) ? "还款中" : "已还款";
+                	if("0".equals(object) ) {
+                		return "还款中";
+                	}else if ("1".equals(object) ) {
+                		return "已还款";
+                	}else {
+                		  return"还款失败";
+                	}
+                
                 }
                 return null;
             }
