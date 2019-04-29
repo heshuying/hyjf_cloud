@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.investdetail;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
@@ -100,6 +101,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		certTransactRequest.setLimitEnd(size);
 		certTransactRequest.setTrade(trader);
 		certTransactRequest.setMaxId(RedisUtils.get("CERT_OLD_INVEST_DETAIL_MAX_ID"));
+		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.getCertAccountListCustomizeVO(certTransactRequest);
 		return accountLists;
 	}
