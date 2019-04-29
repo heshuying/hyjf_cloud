@@ -188,6 +188,7 @@ public class UserLargeScreenServiceImpl extends BaseServiceImpl implements UserL
                 monthDataStatisticsVO.setGuardFund(param.getNowBalance());
                 monthDataStatisticsVO.setAdditionalShare(param.getCapitalIncrease());
                 monthDataStatisticsVO.setExtractionRate(param.getCashWithdrawalRate());
+                currentOwnersAndUserIds.add(monthDataStatisticsVO);
             }
             // 坐席、年化业绩
             List<MonthDataStatisticsVO> listFo =  userLargeScreenCustomizeMapper.getMonthDataStatisticsFo();
