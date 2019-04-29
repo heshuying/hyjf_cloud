@@ -72,8 +72,10 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             String productName = "";
             String linkUrl = "";
             String H5linkUrl = "";
+            Integer productTpye=2;
             if (productType.equals("0")) {
                 productName = "散标";
+                productTpye=2;
                 linkUrl = PC_SANBIAO_URL + productNo;
                 H5linkUrl = H5_SANBIAO_URL + productNo;
                 if (productStatus.equals("5")){
@@ -81,6 +83,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 }
             } else if (productType.equals("1")) {
                 productName = "智投";
+                productTpye=3;
                 linkUrl = PC_ZHITOU_URL + productNo;
                 H5linkUrl = H5_ZHITOU_URL + productNo;
                 //智投项目 还款中的状态5改为对应的募集结束3
@@ -91,6 +94,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             }
 
             ProductInfoQO productInfoQO = new ProductInfoQO();
+            productInfoQO.setProductType(productTpye);
             productInfoQO.setPublishStatus(publishStatus);
             productInfoQO.setH5linkUrl(H5linkUrl);
             productInfoQO.setLinkUrl(linkUrl);
