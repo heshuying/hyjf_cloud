@@ -675,8 +675,12 @@ WHERE
 		  CASE WHEN b.verify_time <![CDATA[ <>]]> 0 AND b.verify_time IS NOT NULL THEN FROM_UNIXTIME( b.verify_time, '%Y-%m-%d %H:%i:%s' ) ELSE '' END AS verify_time,
 		  <!--ADD  BY  zhangyk   增加初审时间显示 END -->
 		  b.create_time as addtime,
-		  b.borrow_account_scale
-		  FROM
+		  b.borrow_account_scale,
+		  <!--增加是否可以备案撤销状态 add by hesy -->
+		  IF((b.`status`=1 OR b.`status` = 2) AND b.tender_times=0 AND b.borrow_account_yes=0,1,0) AS registCancelEnable,
+		  <!--增加是否可以删标状态 add by hesy -->
+		  IF(b.`status`=0 OR b.`status` = 1,1,0) AS borrowDeleteEnable
+			 FROM
 		  ht_borrow b
 		  LEFT JOIN ht_borrow_info bb ON b.borrow_nid = bb.borrow_nid
 		  LEFT JOIN ht_hjh_label label ON b.label_id = label.id
