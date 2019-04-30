@@ -67,7 +67,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
-        logger.info(logHeader + " accountLists.size():" + accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
@@ -596,10 +595,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		if(accountwithdraws==null||accountwithdraws.size()==0){
 			return;
 		}
-        logger.info(logHeader + " accountwithdraws.size():" + accountwithdraws.size());
-        logger.info(logHeader + " accountwithdraws:" + JSONObject.toJSONString(accountwithdraws.get(0)));
-        logger.info(logHeader + " accountwithdraws.get(0).getCredited():" + accountwithdraws.get(0).getCredited());
-        logger.info(logHeader + " accountwithdraws.get(0).getFee():" + accountwithdraws.get(0).getFee());
 		/******************发送7提现******************/
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
@@ -636,7 +631,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //交易流水时间
         param1.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param1);
-        logger.info(logHeader + " 1111list.size():" + list.size());
 	}
 }
 

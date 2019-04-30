@@ -650,7 +650,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//交易类型
 		param1.put("transType", "23");
 		//交易金额
-		param1.put("transMoney", FORMAT.format(accountwithdraws.get(0).getFee()));
+		param1.put("transMoney",accountwithdraws.get(0).getFee());
 		//用户标示哈希
 		param1.put("userIdcardHash", tool.idCardHash(usersInfo.getIdcard()));
 		//交易流水时间
