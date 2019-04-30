@@ -54,6 +54,7 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
     private BankOpenRecordService bankOpenRecordService;
     @Autowired
     private SyncCustomerService syncCustomerService;
+
     @Override
     public void onMessage(MessageExt messageExt) {
         try {

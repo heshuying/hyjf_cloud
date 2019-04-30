@@ -5,6 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.mq.MqConstants;
 import com.hyjf.wbs.qvo.ProductInfoQO;
+import com.hyjf.wbs.trade.dao.model.auto.HjhPlan;
+import com.hyjf.wbs.trade.dao.model.customize.BorrowCustomize;
+import com.hyjf.wbs.trade.service.BorrowInfoService;
+import com.hyjf.wbs.trade.service.HjhPlanInfoService;
 import com.hyjf.wbs.trade.service.SynProductInfoService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -46,7 +50,10 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
     private String H5_ZHITOU_URL;
     @Autowired
     private SynProductInfoService synProductInfoService;
-
+    @Autowired
+    private BorrowInfoService borrowInfoService;
+    @Autowired
+    private HjhPlanInfoService hjhPlanInfoService;
     @Override
     public void onMessage(MessageExt messageExt) {
         try {
@@ -73,6 +80,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
             String linkUrl = "";
             String H5linkUrl = "";
             Integer productTpye=2;
+            ProductInfoQO productInfoQO = new ProductInfoQO();
             if (productType.equals("0")) {
                 productName = "散标";
                 productTpye=2;
@@ -80,6 +88,15 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 H5linkUrl = H5_SANBIAO_URL + productNo;
                 if (productStatus.equals("5")){
                     publishStatus=3;
+                }
+                //查询标的信息
+                BorrowCustomize borrowCustomize = borrowInfoService.selectByNid(productNo);
+                if(borrowCustomize!=null){
+                    productInfoQO.setDeadlineNum(borrowCustomize.getDeadlineNum());
+                    productInfoQO.setDeadlineUnit(borrowCustomize.getDeadlineUnit());
+                    productInfoQO.setInvestAmount(Double.valueOf(borrowCustomize.getInvestAmount()));
+                    productInfoQO.setReferenceIncome(String.valueOf(borrowCustomize.getReferenceIncome()));
+
                 }
             } else if (productType.equals("1")) {
                 productName = "智投";
@@ -91,9 +108,28 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                     productStatus="3";
                     publishStatus=3;
                 }
+
+                //查询标的信息
+                HjhPlan hjhPlan = hjhPlanInfoService.selectHjhPlanInfo(productNo);
+                if(hjhPlan!=null){
+                    Integer isMonth=1;
+                    if(hjhPlan.getIsMonth() ==0){
+                        isMonth=1;
+                    } else if (hjhPlan.getIsMonth()==1) {
+                        isMonth=2;
+                    }
+                    productInfoQO.setDeadlineNum(hjhPlan.getLockPeriod());
+                    productInfoQO.setDeadlineUnit(isMonth);
+                    productInfoQO.setInvestAmount(hjhPlan.getMinInvestment().doubleValue());
+                    productInfoQO.setReferenceIncome(String.valueOf(hjhPlan.getExpectApr()));
+
+                }
             }
 
-            ProductInfoQO productInfoQO = new ProductInfoQO();
+
+
+
+
             productInfoQO.setProductType(productTpye);
             productInfoQO.setPublishStatus(publishStatus);
             productInfoQO.setH5linkUrl(H5linkUrl);

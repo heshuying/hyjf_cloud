@@ -3,6 +3,7 @@ package com.hyjf.wbs.qvo;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @Auther: wxd
@@ -26,6 +27,46 @@ public class ProductInfoQO implements Serializable {
     protected String linkUrl;
     @ApiModelProperty(value = "h5站外跳转链接")
     protected String h5linkUrl;
+    @ApiModelProperty(value = "期限数值")
+    private Integer deadlineNum;
+    @ApiModelProperty(value = "参考收益")
+    private String referenceIncome;
+    @ApiModelProperty(value = "期限数值")
+    private Integer deadlineUnit;
+    @ApiModelProperty(value = "起投金额")
+    private Double investAmount;
+
+    public Integer getDeadlineNum() {
+        return deadlineNum;
+    }
+
+    public void setDeadlineNum(Integer deadlineNum) {
+        this.deadlineNum = deadlineNum;
+    }
+
+    public String getReferenceIncome() {
+        return referenceIncome;
+    }
+
+    public void setReferenceIncome(String referenceIncome) {
+        this.referenceIncome = referenceIncome;
+    }
+
+    public Integer getDeadlineUnit() {
+        return deadlineUnit;
+    }
+
+    public void setDeadlineUnit(Integer deadlineUnit) {
+        this.deadlineUnit = deadlineUnit;
+    }
+
+    public Double getInvestAmount() {
+        return investAmount;
+    }
+
+    public void setInvestAmount(Double investAmount) {
+        this.investAmount = investAmount;
+    }
 
     public String getProductName() {
         return productName;

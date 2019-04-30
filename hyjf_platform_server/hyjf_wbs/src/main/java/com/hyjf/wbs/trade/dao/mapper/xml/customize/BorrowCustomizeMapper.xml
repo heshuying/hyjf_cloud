@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.hyjf.wbs.trade.dao.mapper.customize.BorrowCustomizeMapper">
+
+
+    <resultMap id="borrowCustomizeMap"
+               type="com.hyjf.wbs.trade.dao.model.customize.BorrowCustomize">
+        <result column="borrow_period" property="deadlineNum" jdbcType="INTEGER"/>
+        <result column="is_month" property="deadlineUnit" jdbcType="TINYINT"/>
+        <result column="borrow_apr" property="referenceIncome" jdbcType="DECIMAL"/>
+        <result column="invest_start" property="investAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getBorrowCustomize" resultMap="borrowCustomizeMap"
+            parameterType="String">
+		SELECT
+		b.borrow_period,
+		CASE
+		b.is_month
+		WHEN 0 THEN
+		1
+		WHEN 1 THEN
+		2
+		END as is_month,
+		b.borrow_apr,
+		ht.invest_start
+		FROM
+		ht_borrow b
+		LEFT JOIN ht_borrow_project_type ht ON b.project_type = ht.borrow_cd
+		WHERE
+		b.borrow_nid =#{borrowNid}
+	</select>
+
+</mapper>
