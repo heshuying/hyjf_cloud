@@ -265,62 +265,52 @@ public class SponsorLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdEqualTo(String value) {
+        public Criteria andOldSponsorIdEqualTo(Integer value) {
             addCriterion("old_sponsor_id =", value, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdNotEqualTo(String value) {
+        public Criteria andOldSponsorIdNotEqualTo(Integer value) {
             addCriterion("old_sponsor_id <>", value, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdGreaterThan(String value) {
+        public Criteria andOldSponsorIdGreaterThan(Integer value) {
             addCriterion("old_sponsor_id >", value, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdGreaterThanOrEqualTo(String value) {
+        public Criteria andOldSponsorIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("old_sponsor_id >=", value, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdLessThan(String value) {
+        public Criteria andOldSponsorIdLessThan(Integer value) {
             addCriterion("old_sponsor_id <", value, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdLessThanOrEqualTo(String value) {
+        public Criteria andOldSponsorIdLessThanOrEqualTo(Integer value) {
             addCriterion("old_sponsor_id <=", value, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdLike(String value) {
-            addCriterion("old_sponsor_id like", value, "oldSponsorId");
-            return (Criteria) this;
-        }
-
-        public Criteria andOldSponsorIdNotLike(String value) {
-            addCriterion("old_sponsor_id not like", value, "oldSponsorId");
-            return (Criteria) this;
-        }
-
-        public Criteria andOldSponsorIdIn(List<String> values) {
+        public Criteria andOldSponsorIdIn(List<Integer> values) {
             addCriterion("old_sponsor_id in", values, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdNotIn(List<String> values) {
+        public Criteria andOldSponsorIdNotIn(List<Integer> values) {
             addCriterion("old_sponsor_id not in", values, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdBetween(String value1, String value2) {
+        public Criteria andOldSponsorIdBetween(Integer value1, Integer value2) {
             addCriterion("old_sponsor_id between", value1, value2, "oldSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andOldSponsorIdNotBetween(String value1, String value2) {
+        public Criteria andOldSponsorIdNotBetween(Integer value1, Integer value2) {
             addCriterion("old_sponsor_id not between", value1, value2, "oldSponsorId");
             return (Criteria) this;
         }
@@ -405,62 +395,52 @@ public class SponsorLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdEqualTo(String value) {
+        public Criteria andNewSponsorIdEqualTo(Integer value) {
             addCriterion("new_sponsor_id =", value, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdNotEqualTo(String value) {
+        public Criteria andNewSponsorIdNotEqualTo(Integer value) {
             addCriterion("new_sponsor_id <>", value, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdGreaterThan(String value) {
+        public Criteria andNewSponsorIdGreaterThan(Integer value) {
             addCriterion("new_sponsor_id >", value, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdGreaterThanOrEqualTo(String value) {
+        public Criteria andNewSponsorIdGreaterThanOrEqualTo(Integer value) {
             addCriterion("new_sponsor_id >=", value, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdLessThan(String value) {
+        public Criteria andNewSponsorIdLessThan(Integer value) {
             addCriterion("new_sponsor_id <", value, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdLessThanOrEqualTo(String value) {
+        public Criteria andNewSponsorIdLessThanOrEqualTo(Integer value) {
             addCriterion("new_sponsor_id <=", value, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdLike(String value) {
-            addCriterion("new_sponsor_id like", value, "newSponsorId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNewSponsorIdNotLike(String value) {
-            addCriterion("new_sponsor_id not like", value, "newSponsorId");
-            return (Criteria) this;
-        }
-
-        public Criteria andNewSponsorIdIn(List<String> values) {
+        public Criteria andNewSponsorIdIn(List<Integer> values) {
             addCriterion("new_sponsor_id in", values, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdNotIn(List<String> values) {
+        public Criteria andNewSponsorIdNotIn(List<Integer> values) {
             addCriterion("new_sponsor_id not in", values, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdBetween(String value1, String value2) {
+        public Criteria andNewSponsorIdBetween(Integer value1, Integer value2) {
             addCriterion("new_sponsor_id between", value1, value2, "newSponsorId");
             return (Criteria) this;
         }
 
-        public Criteria andNewSponsorIdNotBetween(String value1, String value2) {
+        public Criteria andNewSponsorIdNotBetween(Integer value1, Integer value2) {
             addCriterion("new_sponsor_id not between", value1, value2, "newSponsorId");
             return (Criteria) this;
         }
@@ -535,66 +515,6 @@ public class SponsorLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNull() {
-            addCriterion("`type` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeIsNotNull() {
-            addCriterion("`type` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeEqualTo(Integer value) {
-            addCriterion("`type` =", value, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeNotEqualTo(Integer value) {
-            addCriterion("`type` <>", value, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeGreaterThan(Integer value) {
-            addCriterion("`type` >", value, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`type` >=", value, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeLessThan(Integer value) {
-            addCriterion("`type` <", value, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("`type` <=", value, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeIn(List<Integer> values) {
-            addCriterion("`type` in", values, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeNotIn(List<Integer> values) {
-            addCriterion("`type` not in", values, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeBetween(Integer value1, Integer value2) {
-            addCriterion("`type` between", value1, value2, "type");
-            return (Criteria) this;
-        }
-
-        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("`type` not between", value1, value2, "type");
-            return (Criteria) this;
-        }
-
         public Criteria andStatusIsNull() {
             addCriterion("`status` is null");
             return (Criteria) this;
@@ -652,6 +572,66 @@ public class SponsorLogExample {
 
         public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("`status` not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagIsNull() {
+            addCriterion("del_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagIsNotNull() {
+            addCriterion("del_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagEqualTo(Integer value) {
+            addCriterion("del_flag =", value, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagNotEqualTo(Integer value) {
+            addCriterion("del_flag <>", value, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagGreaterThan(Integer value) {
+            addCriterion("del_flag >", value, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("del_flag >=", value, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagLessThan(Integer value) {
+            addCriterion("del_flag <", value, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("del_flag <=", value, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagIn(List<Integer> values) {
+            addCriterion("del_flag in", values, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagNotIn(List<Integer> values) {
+            addCriterion("del_flag not in", values, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagBetween(Integer value1, Integer value2) {
+            addCriterion("del_flag between", value1, value2, "delFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("del_flag not between", value1, value2, "delFlag");
             return (Criteria) this;
         }
 
