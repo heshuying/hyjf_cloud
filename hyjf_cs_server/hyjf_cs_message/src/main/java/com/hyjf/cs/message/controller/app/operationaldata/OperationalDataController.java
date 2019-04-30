@@ -92,7 +92,7 @@ public class OperationalDataController {
 			info.put("MonthlyTransactionNumList", detail);
 
 			//安全运营天数
-			Integer totalDays = GetDate.countDate(GetDate.stringToDate("2003-04-13 00:00:00"), new Date());
+			Integer totalDays = GetDate.countDate(GetDate.stringToDate("2013-12-23 00:00:00"), new Date());
 			info.put("survivalYears",totalDays/365);
 			info.put("survivalDays",totalDays%365);
 
