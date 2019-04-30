@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.productcenter;
 
+import com.hyjf.admin.beans.request.BorrowRegistCancelRequestBean;
 import com.hyjf.admin.beans.request.BorrowRegistRequestBean;
 import com.hyjf.admin.beans.response.BorrowRegistResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
@@ -119,6 +120,19 @@ public class BorrowRegistController extends BaseController {
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
         return borrowRegistService.registCancel(borrowNid, currUser.getId(), currUser.getUsername());
+    }
+
+    /**
+     * 异常标的备案撤销
+     */
+    @ApiOperation(value = "异常标的备案撤销", notes = "异常标的备案撤销")
+    @GetMapping("/debtregist_cancel_exception/{borrowNid}")
+    public AdminResult registCancelForException(HttpServletRequest request, @RequestBody BorrowRegistCancelRequestBean requestBean){
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        return borrowRegistService.registCancel(requestBean.getBorrowNid(), currUser.getId(), currUser.getUsername());
     }
 
     /**
