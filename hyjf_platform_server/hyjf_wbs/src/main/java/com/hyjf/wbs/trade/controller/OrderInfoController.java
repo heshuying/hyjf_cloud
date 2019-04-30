@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Api(value = "回款信息",tags ="回款信息" )
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/hyjf-wbs/trade/order")
 public class OrderInfoController extends BaseController {
 
     @Autowired
@@ -34,10 +34,10 @@ public class OrderInfoController extends BaseController {
      */
     @ApiOperation(value = "订单明细", notes = "订单明细")
     @ResponseBody
-    @PostMapping(value = "/hyjf-wbs/trade/batchsync")
+    @PostMapping(value = "/batchsync")
     public WbsCommonVO searchAction(
-                                    @ModelAttribute WbsCommonExQO wbsCommonExQO
-//@ModelAttribute TenderAccedeQO tenderAccedeQO
+                                    @RequestBody WbsCommonExQO wbsCommonExQO
+//@RequestBody TenderAccedeQO tenderAccedeQO
     ) {
         WbsCommonVO wbsCommonVO =new WbsCommonVO();
         WbsCommonQO wbsCommonQO = wbsCommonExQO;

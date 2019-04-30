@@ -43,7 +43,7 @@ public class RecoverInfoController extends BaseController {
     @RequestMapping(value = "/searchInfoRecover", method = RequestMethod.POST)
     public WbsCommonVO searchAction(
                                     @RequestBody WbsCommonExQO wbsCommonExQO
-//                                    @ModelAttribute RecoverQO recoverQO
+//                                    @RequestBody RecoverQO recoverQO
     ) {
         WbsRecoverVO wbsCommonVO =new WbsRecoverVO();
         String jsonRequest = JSONObject.toJSONString(wbsCommonExQO);
