@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.trade.dao.mapper.auto.RecoverMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.qvo.RecoverVO" >
+    <result column="assetCustomerId" property="assetCustomerId" jdbcType="VARCHAR" />
+    <result column="refundOrderNumber" property="refundOrderNumber" jdbcType="VARCHAR" />
+    <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+    <result column="productNo" property="productNo" jdbcType="VARCHAR" />
+    <result column="entId" property="entId" jdbcType="INTEGER" />
+    <result column="assetId" property="assetId" jdbcType="INTEGER" />
+    <result column="expectedExitTime" property="expectedExitTime" jdbcType="DATE" />
+    <result column="actualExitTime" property="actualExitTime" jdbcType="DATE" />
+    <result column="expectedRepay" property="expectedRepay" jdbcType="DOUBLE" />
+    <result column="actualRepay" property="actualRepay" jdbcType="DOUBLE" />
+    <result column="expectedExitCapital" property="expectedExitCapital" jdbcType="DOUBLE" />
+    <result column="actualExitCapital" property="actualExitCapital" jdbcType="DOUBLE" />
+    <result column="expectedExitAmount" property="expectedExitAmount" jdbcType="DOUBLE" />
+    <result column="actualExitAmount" property="actualExitAmount" jdbcType="DOUBLE" />
+    <result column="period" property="period" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Where_Clause">
+    <where>
+      <!-- 资产端客户id -->
+      <if test="assetCustomerId != null and assetCustomerId != ''">
+        AND br.user_id = #{assetCustomerId}
+      </if>
+      <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+      <if test="entId != null and entId != ''">
+
+      </if>
+    </where>
+  </sql>
+  <select id="getRecoverInfo" resultMap="BaseResultMap"
+          parameterType="com.hyjf.wbs.qvo.RecoverVO">
+    SELECT
+    br.user_id AS assetCustomerId,
+    br.borrow_nid AS refundOrderNumber,
+    br.nid AS orderNo,
+    br.repay_ordid AS productNo,
+    8001 AS entId,
+    1 AS assetId,
+    br.recover_time AS expectedExitTime,
+    br.recover_yestime AS actualExitTime,
+    br.recover_interest AS expectedRepay,
+    br.recover_interest_yes AS actualRepay,
+    br.recover_capital AS expectedExitCapital,
+    br.recover_capital_yes AS actualExitCapital,
+    br.recover_account AS expectedExitAmount,
+    br.recover_account_yes AS actualExitAmount,
+    br.recover_period AS period,
+    br.recover_status AS status
+    FROM ht_borrow_recover br
+    LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
+    INNER JOIN ht_r_oa_users hrou ON br.user_id = hrou.hyd_id
+    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
+    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
+    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="entId != null and entId != ''">
+      <if test="entId == 8001">
+        AND dep1.id in (428,527)
+      </if>
+      <if test="entId == 8002">
+        AND dep1.id = 550
+      </if>
+      <if test="entId == 8003">
+        AND dep1.id = 0
+      </if>
+    </if>
+    WHERE br.recover_status=1 AND b.is_installment=0
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    UNION ALL
+    SELECT
+    brp.user_id AS assetCustomerId,
+    brp.borrow_nid AS refundOrderNumber,
+    brp.nid AS orderNo,
+    brp.repay_order_id AS productNo,
+    8001 AS entId,
+    1 AS assetId,
+    brp.recover_time AS expectedExitTime,
+    brp.recover_yestime AS actualExitTime,
+    brp.recover_interest AS expectedRepay,
+    brp.recover_interest_yes AS actualRepay,
+    brp.recover_capital AS expectedExitCapital,
+    brp.recover_capital_yes AS actualExitCapital,
+    brp.recover_account AS expectedExitAmount,
+    brp.recover_account_yes AS actualExitAmount,
+    brp.recover_period AS period,
+    brp.recover_status AS status
+    FROM ht_borrow_recover_plan brp
+    LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
+    INNER JOIN ht_r_oa_users hrou ON brp.user_id = hrou.hyd_id
+    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
+    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
+    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="entId != null and entId != ''">
+      <if test="entId == 8001">
+        AND dep1.id in (428,527)
+      </if>
+      <if test="entId == 8002">
+        AND dep1.id = 550
+      </if>
+      <if test="entId == 8003">
+        AND dep1.id = 0
+      </if>
+    </if>
+    WHERE brp.recover_status=1
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    <if test="limitStart >= 0">
+      LIMIT #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="getRecoverCount" resultType="java.lang.Integer"
+          parameterType="com.hyjf.wbs.qvo.RecoverVO">
+    select count(*)
+    from (SELECT
+    br.user_id AS assetCustomerId
+    FROM ht_borrow_recover br
+    LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
+    INNER JOIN ht_r_oa_users hrou ON br.user_id = hrou.hyd_id
+    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
+    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
+    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="entId != null and entId != ''">
+      <if test="entId == 8001">
+        AND dep1.id in (428,527)
+      </if>
+      <if test="entId == 8002">
+        AND dep1.id = 550
+      </if>
+      <if test="entId == 8003">
+        AND dep1.id = 0
+      </if>
+    </if>
+    WHERE br.recover_status=1 AND b.is_installment=0
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    UNION ALL
+    SELECT
+    brp.user_id AS assetCustomerId
+    FROM ht_borrow_recover_plan brp
+    LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
+    INNER JOIN ht_r_oa_users hrou ON brp.user_id = hrou.hyd_id
+    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
+    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
+    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="entId != null and entId != ''">
+      <if test="entId == 8001">
+        AND dep1.id in (428,527)
+      </if>
+      <if test="entId == 8002">
+        AND dep1.id = 550
+      </if>
+      <if test="entId == 8003">
+        AND dep1.id = 0
+      </if>
+    </if>
+    WHERE brp.recover_status=1
+    <if test="assetCustomerId != null and assetCustomerId != ''">
+      AND br.user_id = #{assetCustomerId}
+    </if>
+    ) countR
+  </select>
+</mapper>

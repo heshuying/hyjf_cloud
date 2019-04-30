@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.wbs.trade.dao.mapper.auto.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.wbs.qvo.TenderAccedeVO" >
+    <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+    <result column="orderStatus" property="orderStatus" jdbcType="INTEGER" />
+    <result column="assetCustomerId" property="assetCustomerId" jdbcType="VARCHAR" />
+    <result column="assetId" property="assetId" jdbcType="INTEGER" />
+    <result column="empNo" property="empNo" jdbcType="VARCHAR" />
+    <result column="productType" property="productType" jdbcType="INTEGER" />
+    <result column="productNo" property="productNo" jdbcType="VARCHAR" />
+    <result column="productName" property="productName" jdbcType="VARCHAR" />
+    <result column="transAmount" property="transAmount" jdbcType="DOUBLE" />
+    <result column="transTime" property="transTime" jdbcType="VARCHAR" />
+    <result column="deadlineNum" property="deadlineNum" jdbcType="VARCHAR" />
+    <result column="DeadlineUnit" property="DeadlineUnit" jdbcType="INTEGER" />
+    <result column="contractNumber" property="contractNumber" jdbcType="VARCHAR" />
+    <result column="insurer" property="insurer" jdbcType="VARCHAR" />
+    <result column="insuredName" property="insuredName" jdbcType="VARCHAR" />
+    <result column="insuredPhone" property="insuredPhone" jdbcType="VARCHAR" />
+    <result column="insuredPaperworkType" property="insuredPaperworkType" jdbcType="VARCHAR" />
+    <result column="insuredPaperworkNo" property="insuredPaperworkNo" jdbcType="VARCHAR" />
+    <result column="cusName" property="cusName" jdbcType="VARCHAR" />
+    <result column="cusPaperworkType" property="cusPaperworkType" jdbcType="INTEGER" />
+    <result column="cusPaperworkNo" property="cusPaperworkNo" jdbcType="VARCHAR" />
+    <result column="cusPhone" property="cusPhone" jdbcType="VARCHAR" />
+    <result column="insurance_effect_time" property="insurance_effect_time" jdbcType="VARCHAR" />
+    <result column="insurance_Invalid_time" property="insurance_Invalid_time" jdbcType="VARCHAR" />
+    <result column="insurance_police" property="insurance_police" jdbcType="VARCHAR" />
+  </resultMap>
+    <select id="getOrderInfo" resultMap="BaseResultMap"
+          parameterType="com.hyjf.wbs.qvo.TenderAccedeQO">
+    SELECT
+        br.nid	AS orderNo,
+        2	AS orderStatus,
+        br.user_id	AS assetCustomerId,
+        1	AS assetId,
+        ""	AS empNo,
+        IF(br.accede_order_id is null,2,3) AS productType,
+        IF(br.accede_order_id is null,br.borrow_nid,ha.plan_nid)	AS productNo,
+        IF(br.accede_order_id is null,'散标','智投') AS productName,
+        br.recover_capital	AS transAmount,
+        bi.update_time	AS transTime,
+        b.borrow_period	AS deadlineNum,
+        CASE WHEN b.is_month=0 THEN 1
+        WHEN b.is_month=1 THEN 2
+        END	AS DeadlineUnit,
+        ta.contract_number AS contractNumber
+        FROM ht_borrow_recover br
+        LEFT JOIN ht_borrow_apicron ba ON br.borrow_nid = ba.borrow_nid AND ba.api_type = 0
+        LEFT JOIN ht_borrow_info bi ON br.borrow_nid = bi.borrow_nid
+        LEFT JOIN ht_hjh_accede ha ON br.accede_order_id = ha.accede_order_id
+        LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
+        LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
+        INNER JOIN ht_r_oa_users hrou ON br.user_id = hrou.hyd_id
+        INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
+        INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
+        INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+        <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+        <if test="entId != null and entId != ''">
+            <if test="entId == 8001">
+                AND dep1.id in (428,527)
+            </if>
+            <if test="entId == 8002">
+                AND dep1.id = 550
+            </if>
+            <if test="entId == 8003">
+                AND dep1.id = 0
+            </if>
+        </if>
+        WHERE br.status=1
+        <!-- 放款时间 -->
+        <if test="startTime != null and startTime != ''">
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND br.create_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND br.create_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+        <if test="assetCustomerId != null and assetCustomerId != ''">
+            AND br.user_id = #{assetCustomerId}
+        </if>
+  </select>
+</mapper>
