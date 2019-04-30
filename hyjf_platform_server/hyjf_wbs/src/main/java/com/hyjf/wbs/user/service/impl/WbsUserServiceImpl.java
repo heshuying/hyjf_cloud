@@ -100,6 +100,9 @@ public class WbsUserServiceImpl implements WbsUserService {
 		vo.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
 		vo.setUtmId(webUserBindQO.getUtmId());
 
+		String uuid=UUID.randomUUID().toString();
+		vo.setRequestUUID(uuid);
+		logger.info("【PC绑定操作】发送MQ消息UUID【{}】内容【{}】",uuid,vo);
 		try {
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
 					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), vo), 1);
@@ -121,6 +124,9 @@ public class WbsUserServiceImpl implements WbsUserService {
 		vo.setAssetCustomerId(String.valueOf(bindVO.getUserId()));
 		vo.setUtmId(wechatUserBindQO.getUtmId());
 
+		String uuid=UUID.randomUUID().toString();
+		vo.setRequestUUID(uuid);
+		logger.info("【H5绑定操作】发送MQ消息UUID【{}】内容【{}】",uuid,vo);
 		try {
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
 					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), vo), 1);
@@ -172,6 +178,10 @@ public class WbsUserServiceImpl implements WbsUserService {
 			throw new CheckException("快速授权请求参数为空！");
 		}
 
+		String uuid=UUID.randomUUID().toString();
+		qo.setRequestUUID(uuid);
+		logger.info("【快速授权操作】发送MQ消息UUID【{}】内容【{}】",uuid,qo);
+
 		try {
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
 					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), qo), 3);
@@ -188,10 +198,6 @@ public class WbsUserServiceImpl implements WbsUserService {
 		verifyParameters(qo);
 
 		UserVO userVO = getCustomerFromNewBanker(qo);
-
-		//测试用
-		userVO.setUserId(5863);
-		userVO.setUsername("hyjf002383");
 
 		User user = userService.findUserById(userVO.getUserId());
 

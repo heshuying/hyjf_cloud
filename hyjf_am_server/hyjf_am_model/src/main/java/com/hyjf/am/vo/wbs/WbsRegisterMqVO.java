@@ -20,6 +20,9 @@ public class WbsRegisterMqVO {
 	// 资产端客户id
 	private String assetCustomerId;
 
+	//消息UUID,便于查找对应的消费者
+	private String requestUUID;
+
 	public String getUtmId() {
 		return utmId;
 	}
@@ -44,9 +47,17 @@ public class WbsRegisterMqVO {
 		this.assetCustomerId = assetCustomerId;
 	}
 
+	public String getRequestUUID() {
+		return requestUUID;
+	}
+
+	public void setRequestUUID(String requestUUID) {
+		this.requestUUID = requestUUID;
+	}
+
 	@Override
 	public String toString() {
-		return MoreObjects.toStringHelper(this).add("utmId", utmId).add("customerId", customerId)
+		return MoreObjects.toStringHelper(this).add("requestUUID",requestUUID).add("utmId", utmId).add("customerId", customerId)
 				.add("assetCustomerId", assetCustomerId).toString();
 	}
 }
