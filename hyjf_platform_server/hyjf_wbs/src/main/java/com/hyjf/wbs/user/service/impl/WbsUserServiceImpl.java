@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.hyjf.wbs.user.service.UserService;
+import com.hyjf.wbs.mq.base.CommonProducer;
+import com.hyjf.wbs.user.service.SyncCustomerService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,12 @@ import com.hyjf.wbs.client.AmUserClient;
 import com.hyjf.wbs.client.CsUserClient;
 import com.hyjf.wbs.common.WbsNewBankerSender;
 import com.hyjf.wbs.exceptions.WbsException;
-import com.hyjf.wbs.mq.base.CommonProducer;
 import com.hyjf.wbs.mq.base.MessageContent;
 import com.hyjf.wbs.qvo.*;
 import com.hyjf.wbs.qvo.csuser.LoginRequestVO;
 import com.hyjf.wbs.user.dao.model.auto.User;
+import com.hyjf.wbs.user.service.SyncCustomerBaseService;
+import com.hyjf.wbs.user.service.UserService;
 import com.hyjf.wbs.user.service.WbsUserService;
 
 /**
@@ -67,10 +69,16 @@ public class WbsUserServiceImpl implements WbsUserService {
 	private UserService userService;
 
 	@Autowired
-	private CommonProducer commonProducer;
+	private AmUserClient amUserClient;
 
 	@Autowired
-	private AmUserClient amUserClient;
+	private SyncCustomerBaseService syncCustomerBaseService;
+
+	@Autowired
+	private SyncCustomerService syncCustomerService;
+
+	@Autowired
+	private CommonProducer commonProducer;
 
 	@Override
 	public void webBind(WebUserBindQO webUserBindQO, BaseResult response) {
@@ -101,16 +109,11 @@ public class WbsUserServiceImpl implements WbsUserService {
 		vo.setUtmId(webUserBindQO.getUtmId());
 		vo.setCustomerId(webUserBindQO.getCustomerId());
 
-		String uuid=UUID.randomUUID().toString();
-		vo.setRequestUUID(uuid);
-		logger.info("【PC绑定操作】发送MQ消息UUID【{}】内容【{}】",uuid,vo);
-		try {
-			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
-					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), vo), 1);
-		} catch (MQException e) {
-			logger.error("登录发送MQ失败！");
-			throw new CheckException(e.getMessage());
-		}
+		logger.info("【PC绑定操作】请求内容【{}】",vo);
+
+		CustomerSyncQO customerSyncQO=syncCustomerBaseService.build(vo);
+
+		syncCustomerService.sync(customerSyncQO);
 	}
 
 	@Override
@@ -126,16 +129,11 @@ public class WbsUserServiceImpl implements WbsUserService {
 		vo.setUtmId(wechatUserBindQO.getUtmId());
 		vo.setCustomerId(wechatUserBindQO.getCustomerId());
 
-		String uuid=UUID.randomUUID().toString();
-		vo.setRequestUUID(uuid);
-		logger.info("【H5绑定操作】发送MQ消息UUID【{}】内容【{}】",uuid,vo);
-		try {
-			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
-					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), vo), 1);
-		} catch (MQException e) {
-			logger.error("登录发送MQ失败！");
-			throw new CheckException(e.getMessage());
-		}
+		logger.info("【H5绑定操作】内容【{}】",vo);
+
+		CustomerSyncQO customerSyncQO=syncCustomerBaseService.build(vo);
+
+		syncCustomerService.sync(customerSyncQO);
 
 	}
 
@@ -180,18 +178,11 @@ public class WbsUserServiceImpl implements WbsUserService {
 			throw new CheckException("快速授权请求参数为空！");
 		}
 
-		String uuid=UUID.randomUUID().toString();
-		qo.setRequestUUID(uuid);
-		logger.info("【快速授权操作】发送MQ消息UUID【{}】内容【{}】",uuid,qo);
+		logger.info("【快速授权操作】请求内容【{}】",qo);
 
-		try {
-			commonProducer.messageSendDelay(new MessageContent(MQConstant.WBS_REGISTER_TOPIC,
-					MQConstant.WBS_REGISTER_TAG, UUID.randomUUID().toString(), qo), 3);
-		} catch (MQException e) {
-			logger.error("授权发送MQ失败！");
-			throw new CheckException(e.getMessage());
-		}
+		CustomerSyncQO customerSyncQO=syncCustomerBaseService.build(qo);
 
+		syncCustomerService.sync(customerSyncQO);
 	}
 
 	@Override

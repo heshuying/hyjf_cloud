@@ -5,6 +5,7 @@ package com.hyjf.wbs.user.service.impl;
 
 import java.util.Map;
 
+import com.hyjf.common.exception.CheckException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class SyncCustomerServiceImpl implements SyncCustomerService {
 	@Override
 	public void sync(CustomerSyncQO customerSyncQO) {
 
-		WbsNewBankerSender sender=new WbsNewBankerSender(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER,customerSyncQO);
+		WbsNewBankerSender sender = new WbsNewBankerSender(WbsConstants.INTERFACE_NAME_SYNC_CUSTOMER, customerSyncQO);
 
-		String content=sender.send();
+		String content = sender.send();
 
 		JSONObject jasonObject = JSONObject.parseObject(content);
 		Map map = jasonObject;
@@ -39,7 +40,7 @@ public class SyncCustomerServiceImpl implements SyncCustomerService {
 			return;
 		} else {
 			logger.error("客户信息回调接口返回失败！详细信息【{}】", map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY));
-			throw new WbsException("客户信息回调接口返回失败！");
+			throw new CheckException("999", String.valueOf(map.get(WbsConstants.WBS_RESPONSE_ERROR_MSG_KEY)));
 		}
 	}
 

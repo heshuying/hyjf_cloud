@@ -8,16 +8,8 @@ package com.hyjf.wbs.mq.consumer;
  * @version SyncRegisterConsumer, v0.1 2019/4/17 15:20
  */
 
-import java.text.SimpleDateFormat;
 import java.util.UUID;
 
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.wbs.configs.WbsConfig;
-import com.hyjf.wbs.trade.dao.model.auto.Account;
-import com.hyjf.wbs.trade.service.AccountService;
-import com.hyjf.wbs.user.dao.model.auto.BankCard;
-import com.hyjf.wbs.user.dao.model.auto.User;
-import com.hyjf.wbs.user.service.UserService;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -31,15 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.wbs.WbsRegisterMqVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.wbs.client.AmTradeClient;
-import com.hyjf.wbs.client.AmUserClient;
 import com.hyjf.wbs.qvo.CustomerSyncQO;
+import com.hyjf.wbs.user.service.SyncCustomerBaseService;
 import com.hyjf.wbs.user.service.SyncCustomerService;
 
 @Service
@@ -49,20 +36,10 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
+	private SyncCustomerBaseService syncCustomerBaseService;
+
+	@Autowired
 	private SyncCustomerService syncCustomerService;
-
-	@Autowired
-	private AccountService accountService;
-
-	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private WbsConfig wbsConfig;
-
-	private final int ACCOUNT_OPENED = 1;
-
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Override
 	public void onMessage(MessageExt messageExt) {
@@ -75,93 +52,11 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 
 		logger.info("【{}】消息内容【{}】", uuid, wbsRegisterMqVO);
 
-		Preconditions.checkNotNull(wbsRegisterMqVO, "消息内容为空！");
-		String userId = wbsRegisterMqVO.getAssetCustomerId();
-		String thirdpartyId = wbsRegisterMqVO.getCustomerId();
-		String utmId = wbsRegisterMqVO.getUtmId();
+		CustomerSyncQO customerSyncQO=syncCustomerBaseService.build(wbsRegisterMqVO);
 
-		CustomerSyncQO customerSyncQO = new CustomerSyncQO();
-		customerSyncQO.setAssetCustomerId(userId);
-		customerSyncQO.setEntId(Integer.parseInt(parse(utmId)));
-		customerSyncQO.setCustomerId(thirdpartyId);
+		syncCustomerService.sync(customerSyncQO);
 
-		if (Strings.isNullOrEmpty(userId)) {
-			logger.info("【{}】WBS客户回调MQ收到消息格式不正确【{}】", uuid, msgBody);
-		} else {
-			Integer userIdd = Integer.parseInt(userId);
-			User userVO = userService.findUserById(userIdd);
-			if (userVO != null) {
-				if (userVO.getOpenAccount() != null && userVO.getOpenAccount().intValue() == ACCOUNT_OPENED) {
-					// 余额信息
-					Account accountVO = accountService.getAccount(userIdd);
-					// 开户行信息
-					BankCard bankCardVO = userService.selectBankCardByUserId(userIdd);
-
-					buildData(userVO, accountVO, bankCardVO, customerSyncQO);
-
-				} else {
-
-					buildData(userVO, customerSyncQO);
-				}
-			}
-
-			logger.info("【{}】请求参数内容【{}】", uuid, customerSyncQO);
-			syncCustomerService.sync(customerSyncQO);
-
-		}
 		logger.info("【{}】WBS客户同步消息:处理结束....", uuid);
-	}
-
-	// thirdPropertyIds有顺序
-	private String parse(String utmId) {
-		Integer utmIdInt = Integer.parseInt(utmId);
-		String thirdIds = wbsConfig.getThridPropertyIds();
-		logger.info("传入的utmId【{}】配置的财富端ID信息【{}】", utmId, thirdIds);
-		logger.info("配置纳觅【{}】裕峰瑞【{}】大唐【{}】千乐【{}】", wbsConfig.getUtmNami(), wbsConfig.getUtmYufengrui(),
-				wbsConfig.getUtmDatang(), wbsConfig.getUtmQianle());
-		String[] thirdIdsArr = thirdIds.split(",");
-
-		String thirdUtmId = thirdIdsArr[0];
-
-		if (utmIdInt.equals(wbsConfig.getUtmNami()) || utmIdInt.equals(wbsConfig.getUtmYufengrui())) {
-			thirdUtmId = thirdIdsArr[0];
-		} else if (utmIdInt.equals(wbsConfig.getUtmDatang())) {
-			thirdUtmId = thirdIdsArr[1];
-		} else if (utmIdInt.equals(wbsConfig.getUtmQianle())) {
-			thirdUtmId = thirdIdsArr[2];
-		}
-		logger.info("解析返回utmId【{}】", thirdUtmId);
-		return thirdUtmId;
-	}
-
-	private void buildData(User userVO, CustomerSyncQO customerSyncQO) {
-
-		customerSyncQO.setUserName(userVO.getUsername());
-
-		customerSyncQO.setPlatformRegistrationTime(sdf.format(userVO.getRegTime()));
-
-	}
-
-	private void buildData(User userVO, Account accountVO, BankCard bankCardVO, CustomerSyncQO customerSyncQO) {
-
-		buildData(userVO, customerSyncQO);
-
-		// 开户行信息
-		customerSyncQO.setBankOfDeposit(bankCardVO.getBank());
-
-		customerSyncQO.setPlatformAccountOpeningTime(sdf.format(bankCardVO.getCreateTime()));
-
-		customerSyncQO.setBankReservedPhoneNumber(bankCardVO.getMobile());
-
-		customerSyncQO.setBankCardNumber(bankCardVO.getCardNo());
-
-		// 余额待收信息
-		customerSyncQO
-				.setPrecipitatedCapital(accountVO.getBalance() == null ? 0 : accountVO.getBalance().doubleValue());
-
-		customerSyncQO
-				.setFundsToBeCollected(accountVO.getBankAwait() == null ? 0 : accountVO.getBankAwait().doubleValue());
-
 	}
 
 	@Override
