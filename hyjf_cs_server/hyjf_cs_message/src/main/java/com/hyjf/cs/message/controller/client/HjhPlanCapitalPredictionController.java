@@ -14,6 +14,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapitalPrediction;
 import com.hyjf.cs.message.service.plancapital.HjhPlanCapitalPredictionService;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -131,7 +132,14 @@ public class HjhPlanCapitalPredictionController extends BaseController {
                 }
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 vo.setStringDate(formatter.format(vo.getDate()));
-                vo.setDualBaseDateStr(formatter.format(vo.getDualBaseDate()));
+                try {
+                    // 时间格式化
+                    if(null != vo.getDualBaseDate()) {
+                        vo.setDualBaseDateStr(formatter.format(vo.getDualBaseDate()));
+                    }
+                } catch (Exception e) {
+                    logger.error("预估数据日期格式化失败!" + e);
+                }
             }
 
             HjhPlanCapitalPredictionVO hjhPlanCapitalVO = new HjhPlanCapitalPredictionVO();
