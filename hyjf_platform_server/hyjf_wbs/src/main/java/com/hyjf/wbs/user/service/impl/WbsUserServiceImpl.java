@@ -99,6 +99,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();
 		vo.setAssetCustomerId(String.valueOf(webViewUserVO.getUserId()));
 		vo.setUtmId(webUserBindQO.getUtmId());
+		vo.setCustomerId(webUserBindQO.getCustomerId());
 
 		String uuid=UUID.randomUUID().toString();
 		vo.setRequestUUID(uuid);
@@ -123,6 +124,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();
 		vo.setAssetCustomerId(String.valueOf(bindVO.getUserId()));
 		vo.setUtmId(wechatUserBindQO.getUtmId());
+		vo.setCustomerId(wechatUserBindQO.getCustomerId());
 
 		String uuid=UUID.randomUUID().toString();
 		vo.setRequestUUID(uuid);
