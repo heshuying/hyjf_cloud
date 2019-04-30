@@ -224,8 +224,8 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
                 // 汇计划加入订单号
                 String accedeOrderId = appTradeListCustomize.getAccedeOrderId();
                 // 根据交易类型编号 追加显示字样
-                if("tender_success".equals(trade) ){
-                    // 出借成功，取borrow_tender，追加"(标的号)"显示字样
+                if("tender_success".equals(trade) || "tender".equals(trade)){
+                    // 出借成功，投标冻结，取borrow_tender，追加"(标的号)"显示字样
                     BorrowTenderExample borrowTenderExample = new BorrowTenderExample();
                     borrowTenderExample.createCriteria().andNidEqualTo(nid);
                     List<BorrowTender> borrowTenderList = borrowTenderMapper.selectByExample(borrowTenderExample);
@@ -277,6 +277,14 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
                     String planName = userTradeDetailCustomizeMapper.getPlanNameByAccedeOrderId(accedeOrderId);
                     if(StringUtils.isNotBlank(planName)){
                         appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(planName.concat(")")));
+                    }
+                } else if("repay_freeze".equals(trade)){
+                    // 还款冻结 nid生成规则borrowNid_userid_期数
+                    if(StringUtils.isNotBlank(nid)){
+                        String[] repayFreezeArr = nid.split("_");
+                        if(repayFreezeArr != null || StringUtils.isNotBlank(repayFreezeArr[0])){
+                            appTradeListCustomize.setTradeType(appTradeListCustomize.getTradeType().concat("(").concat(repayFreezeArr[0].concat(")")));
+                        }
                     }
                 }
                 list.add(appTradeListCustomize);
