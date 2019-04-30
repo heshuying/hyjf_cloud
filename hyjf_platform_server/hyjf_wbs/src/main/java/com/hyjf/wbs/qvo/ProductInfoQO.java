@@ -15,7 +15,7 @@ public class ProductInfoQO implements Serializable {
     @ApiModelProperty(value = "产品编号")
     protected String productNo;
     @ApiModelProperty(value = "线上产品类型")
-    protected Integer productType=2;
+    protected Integer productType;
     @ApiModelProperty(value = "产品来源")
     protected Integer assetId = 1;
     @ApiModelProperty(value = "产品状态")
