@@ -103,4 +103,20 @@ public class BorrowRegistController extends BaseController {
         }
         return borrowRegistService.updateBorrowRegist(borrowNid, currUser.getId(), currUser.getUsername());
     }
+
+    /**
+     * 备案撤销
+     * @param borrowNid
+     * @return
+     */
+    @ApiOperation(value = "备案撤销", notes = "备案撤销")
+    @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
+    @GetMapping("/debtregist_cancel/{borrowNid}")
+    public AdminResult registCancel(HttpServletRequest request, @PathVariable String borrowNid){
+        AdminSystemVO currUser = getUser(request);
+        if(currUser == null){
+            return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
+        }
+        return borrowRegistService.registCancel(borrowNid, currUser.getId(), currUser.getUsername());
+    }
 }

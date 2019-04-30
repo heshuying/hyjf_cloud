@@ -6937,6 +6937,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
 
+    /**
+     * 备案撤销成功后更新数据库
+     */
+    @Override
+    public AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request) {
+        String url = "http://AM-ADMIN/am-trade/borrow_regist/regist_cancel";
+        Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
+        if (Response.isSuccess(response)){
+            return new AdminResult(BaseResult.SUCCESS, "备案撤销成功");
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
+    }
+
 
 
 }

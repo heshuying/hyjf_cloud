@@ -3115,6 +3115,13 @@ public interface AmTradeClient {
      */
     String getBorrowLevelAction(@Valid String borrowLevel);
 
+    /**
+     * 标的备案撤销
+     * @param request
+     * @return
+     */
+    AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request);
+
 
     /** 加息接口开始*/
     /** 枚举类型 */

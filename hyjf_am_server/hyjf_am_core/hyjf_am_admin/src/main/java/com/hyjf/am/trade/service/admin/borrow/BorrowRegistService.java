@@ -57,4 +57,6 @@ public interface BorrowRegistService extends BaseService {
      * @return
      */
     Response updateBorrowRegist(BorrowRegistUpdateRequest request);
+
+    Response updateForRegistCancel(BorrowRegistUpdateRequest requestBean);
 }

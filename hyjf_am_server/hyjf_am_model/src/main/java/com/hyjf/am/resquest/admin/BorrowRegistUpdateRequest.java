@@ -24,6 +24,11 @@ public class BorrowRegistUpdateRequest implements Serializable {
     private BorrowInfoVO borrowInfoVO;
 
     /**
+     * 项目编号
+     */
+    private String borrowNid;
+
+    /**
      * 借款人电子账户
      */
     private String AccountId;
@@ -128,5 +133,13 @@ public class BorrowRegistUpdateRequest implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

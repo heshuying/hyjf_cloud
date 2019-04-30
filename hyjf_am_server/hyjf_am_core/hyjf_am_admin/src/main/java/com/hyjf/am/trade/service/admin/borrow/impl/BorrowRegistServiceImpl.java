@@ -16,12 +16,14 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.helper.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -404,5 +406,77 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         hjhPlanAssetnew.setUpdateTime(new Date());
         hjhPlanAssetnew.setUpdateUserId(1);
         return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew) > 0;
+    }
+
+    /**
+     * 备案撤销成功后更新DB
+     */
+    @Override
+    public Response updateForRegistCancel(BorrowRegistUpdateRequest requestBean) {
+        BorrowInfoWithBLOBs borrowInfo = this.getBorrowInfoByNid(requestBean.getBorrowNid());
+        Borrow borrow = this.getBorrow(requestBean.getBorrowNid());
+
+        try{
+            // borrow表相应状态回退到备案前状态
+            Borrow updateBorrow = new Borrow();
+            BorrowExample example = new BorrowExample();
+            example.createCriteria().andBorrowNidEqualTo(requestBean.getBorrowNid());
+            // 备案状态：3 撤销备案
+            updateBorrow.setRegistStatus(3);
+            // 标的状态：0 备案中
+            updateBorrow.setStatus(0);
+            updateBorrow.setBorrowStatus(0);
+            // 初审时间
+            updateBorrow.setVerifyTime(0);
+            // 发标的状态
+            updateBorrow.setVerifyStatus(Integer.valueOf(0));
+            // 借款到期时间
+            updateBorrow.setBorrowEndTime("");
+            updateBorrow.setRegistUserId(null);
+            updateBorrow.setRegistUserName(null);
+            updateBorrow.setRegistTime(null);
+            this.borrowMapper.updateByExampleSelective(updateBorrow, example);
+
+            // 如果是计划资产还要更新计划资产状态为备案前状态
+            if (!CustomConstants.INST_CODE_HYJF.equals(borrowInfo.getInstCode())) {
+                HjhPlanAsset asset = this.selectHjhPlanAssetByBorrowNid(requestBean.getBorrowNid());
+                if(asset != null){
+                    HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
+                    hjhPlanAssetnew.setId(asset.getId());
+                    // 3 备案中
+                    hjhPlanAssetnew.setStatus(3);
+                    hjhPlanAssetnew.setUpdateTime(new Date());
+                    hjhPlanAssetnew.setUpdateUserId(1);
+                    hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew);
+                }
+            }
+
+            // 添加标的修改日志
+            BorrowLog borrowLog = new BorrowLog();
+            borrowLog.setBorrowNid(requestBean.getBorrowNid());
+//                    String statusNameString = getBorrowStatusName(borrowBean.getStatus());
+//                    borrowLog.setBorrowStatus(statusNameString);
+            borrowLog.setBorrowStatusCd(borrow.getStatus());
+            borrowLog.setType("撤销备案");
+            borrowLog.setCreateTime(new Date());
+            borrowLog.setCreateUserId(Integer.parseInt(requestBean.getCurrUserId()));
+            borrowLog.setCreateUserName(requestBean.getCurrUserName());
+            borrowLogMapper.insert(borrowLog);
+        }catch (Exception e) {
+            logger.error("备案撤销成功后更新DB异常", e);
+            return new Response(Response.FAIL, "备案撤销成功后更新DB异常");
+        }
+
+        return new Response();
+    }
+
+    public HjhPlanAsset selectHjhPlanAssetByBorrowNid(String borrowNid){
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        example.createCriteria().andBorrowNidEqualTo(borrowNid);
+        List<HjhPlanAsset> hjhPlanAssetList = this.hjhPlanAssetMapper.selectByExample(example);
+        if (null != hjhPlanAssetList && hjhPlanAssetList.size() > 0 ) {
+            return hjhPlanAssetList.get(0);
+        }
+        return null;
     }
 }
