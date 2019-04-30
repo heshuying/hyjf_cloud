@@ -404,7 +404,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		list.add(param1);
 	}
 
-	//已改
+
 	private void increaseInerestProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
@@ -531,7 +531,13 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台编号
 		param.put("sourceCode", systemConfig.getCertSourceCode());
 		//平台交易流水号
-		param.put("transId", accountList.getNid());
+		if(accountList.getNid()==null||accountList.getNid().length()==0){
+			//平台交易流水号
+			param.put("transId", accountList.getId()+"");
+		}else{
+			//平台交易流水号
+			param.put("transId", accountList.getNid());
+		}
 		//产品信息编号
 		param.put("sourceFinancingCode", "-1");
 		//交易类型
@@ -583,7 +589,13 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台编号
 		param.put("sourceCode", systemConfig.getCertSourceCode());
 		//平台交易流水号
-		param.put("transId", accountList.getNid());
+		if(accountList.getNid()==null||accountList.getNid().length()==0){
+			//平台交易流水号
+			param.put("transId", accountList.getId()+"");
+		}else{
+			//平台交易流水号
+			param.put("transId", accountList.getNid());
+		}
 		//产品信息编号
 		param.put("sourceFinancingCode", "-1");
 		//交易类型
