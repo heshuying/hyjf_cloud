@@ -6951,6 +6951,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
     }
 
+    /**
+     * 备案撤销确认页面数据
+     */
+    @Override
+    public BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid) {
+        BorrowRegistCancelConfirmCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-trade/borrow_regist/registcancel_confirm/" + borrowNid,
+                        BorrowRegistCancelConfirmCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 
 
 }

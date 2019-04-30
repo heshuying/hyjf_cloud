@@ -3122,6 +3122,8 @@ public interface AmTradeClient {
      */
     AdminResult updateForRegistCancel(BorrowRegistUpdateRequest request);
 
+    BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
+
 
     /** 加息接口开始*/
     /** 枚举类型 */

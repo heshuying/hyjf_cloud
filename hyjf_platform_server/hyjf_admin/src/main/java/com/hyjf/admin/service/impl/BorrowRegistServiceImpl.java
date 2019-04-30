@@ -13,6 +13,7 @@ import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
@@ -209,5 +210,15 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
             logger.error("备案撤销失败，标的号：{}，银行返回码：{}", borrowNid, retCode);
             return new AdminResult(BaseResult.FAIL, "调用银行撤销接口失败");
         }
+    }
+
+    /**
+     * 备案撤销确认页面数据
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid) {
+        return amTradeClient.selectRegistCancelConfirm(borrowNid);
     }
 }

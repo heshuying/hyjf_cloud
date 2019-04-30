@@ -13,17 +13,16 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowRegistCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowRegistService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.helper.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -478,5 +477,15 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
             return hjhPlanAssetList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 备案撤销确认页面数据获取
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid){
+        return borrowRegistCustomizeMapper.selectRegistCancelConfirm(borrowNid);
     }
 }

@@ -15,6 +15,7 @@ import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
+import com.hyjf.am.vo.admin.BorrowRegistCancelConfirmCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.util.CustomConstants;
@@ -118,5 +119,19 @@ public class BorrowRegistController extends BaseController {
             return new AdminResult(BaseResult.FAIL, "未获取到当前登录用户信息");
         }
         return borrowRegistService.registCancel(borrowNid, currUser.getId(), currUser.getUsername());
+    }
+
+    /**
+     * 备案撤销确认页面
+     */
+    @ApiOperation(value = "备案撤销确认页面", notes = "备案撤销确认页面")
+    @GetMapping("/registcancel_confirm/{borrowNid}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<BorrowRegistCancelConfirmCustomizeVO> registCancelConfirm(HttpServletRequest request, @PathVariable String borrowNid) {
+        BorrowRegistCancelConfirmCustomizeVO responseBean = borrowRegistService.selectRegistCancelConfirm(borrowNid);
+        if(responseBean == null){
+            return new AdminResult(BaseResult.FAIL, "未查询到标的信息");
+        }
+        return new AdminResult(responseBean);
     }
 }
