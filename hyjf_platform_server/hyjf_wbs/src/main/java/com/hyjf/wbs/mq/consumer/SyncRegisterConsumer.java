@@ -67,13 +67,13 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 	@Override
 	public void onMessage(MessageExt messageExt) {
 
-		String uuid=UUID.randomUUID().toString();
-		logger.info("【{}】WBS客户同步消息:开始处理....",uuid);
+		String uuid = UUID.randomUUID().toString();
+		logger.info("【{}】WBS客户同步消息:开始处理....", uuid);
 
 		String msgBody = new String(messageExt.getBody());
 		WbsRegisterMqVO wbsRegisterMqVO = JSONObject.parseObject(msgBody, WbsRegisterMqVO.class);
 
-		logger.info("【{}】消息内容【{}】",uuid,wbsRegisterMqVO);
+		logger.info("【{}】消息内容【{}】", uuid, wbsRegisterMqVO);
 
 		Preconditions.checkNotNull(wbsRegisterMqVO, "消息内容为空！");
 		String userId = wbsRegisterMqVO.getAssetCustomerId();
@@ -86,7 +86,7 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		customerSyncQO.setCustomerId(thirdpartyId);
 
 		if (Strings.isNullOrEmpty(userId)) {
-			logger.info("【{}】WBS客户回调MQ收到消息格式不正确【{}】",uuid, msgBody);
+			logger.info("【{}】WBS客户回调MQ收到消息格式不正确【{}】", uuid, msgBody);
 		} else {
 			Integer userIdd = Integer.parseInt(userId);
 			User userVO = userService.findUserById(userIdd);
@@ -105,26 +105,33 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 				}
 			}
 
-			logger.info("【{}】请求参数内容【{}】",uuid,customerSyncQO);
+			logger.info("【{}】请求参数内容【{}】", uuid, customerSyncQO);
 			syncCustomerService.sync(customerSyncQO);
 
 		}
-		logger.info("【{}】WBS客户同步消息:处理结束....",uuid);
+		logger.info("【{}】WBS客户同步消息:处理结束....", uuid);
 	}
 
-	//thirdPropertyIds有顺序
+	// thirdPropertyIds有顺序
 	private String parse(String utmId) {
+		Integer utmIdInt = Integer.parseInt(utmId);
 		String thirdIds = wbsConfig.getThridPropertyIds();
+		logger.info("传入的utmId【{}】配置的财富端ID信息【{}】", utmId, thirdIds);
+		logger.info("配置纳觅【{}】裕峰瑞【{}】大唐【{}】千乐【{}】", wbsConfig.getUtmNami(), wbsConfig.getUtmYufengrui(),
+				wbsConfig.getUtmDatang(), wbsConfig.getUtmQianle());
 		String[] thirdIdsArr = thirdIds.split(",");
-		if (utmId.equals(wbsConfig.getUtmNami()) || utmId.equals(wbsConfig.getUtmYufengrui())) {
-			return thirdIdsArr[0];
-		} else if (utmId.equals(wbsConfig.getUtmDatang())) {
-			return thirdIdsArr[1];
-		} else if (utmId.equals(wbsConfig.getUtmQianle())) {
-			return thirdIdsArr[2];
-		} else {
-			return "";
+
+		String thirdUtmId = thirdIdsArr[0];
+
+		if (utmIdInt.equals(wbsConfig.getUtmNami()) || utmIdInt.equals(wbsConfig.getUtmYufengrui())) {
+			thirdUtmId = thirdIdsArr[0];
+		} else if (utmIdInt.equals(wbsConfig.getUtmDatang())) {
+			thirdUtmId = thirdIdsArr[1];
+		} else if (utmIdInt.equals(wbsConfig.getUtmQianle())) {
+			thirdUtmId = thirdIdsArr[2];
 		}
+		logger.info("解析返回utmId【{}】", thirdUtmId);
+		return thirdUtmId;
 	}
 
 	private void buildData(User userVO, CustomerSyncQO customerSyncQO) {
@@ -134,6 +141,7 @@ public class SyncRegisterConsumer implements RocketMQListener<MessageExt>, Rocke
 		customerSyncQO.setPlatformRegistrationTime(sdf.format(userVO.getRegTime()));
 
 	}
+
 	private void buildData(User userVO, Account accountVO, BankCard bankCardVO, CustomerSyncQO customerSyncQO) {
 
 		buildData(userVO, customerSyncQO);
