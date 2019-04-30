@@ -7,77 +7,77 @@ public class SponsorLog implements Serializable {
     private Integer id;
 
     /**
-     * æ ‡å·
+     * ±êºÅ
      *
      * @mbggenerated
      */
     private String borrowNid;
 
     /**
-     * åŸå§‹æ‹…ä¿äººid
+     * Ô­Ê¼µ£±£ÈËid
      *
      * @mbggenerated
      */
-    private String oldSponsorId;
+    private Integer oldSponsorId;
 
     /**
-     * åŸå§‹æ‹…ä¿äººusername
+     * Ô­Ê¼µ£±£ÈËusername
      *
      * @mbggenerated
      */
     private String oldSponsor;
 
     /**
-     * æ–°æ‹…ä¿äººid
+     * ĞÂµ£±£ÈËid
      *
      * @mbggenerated
      */
-    private String newSponsorId;
+    private Integer newSponsorId;
 
     /**
-     * æ–°æ‹…ä¿äººusername
+     * ĞÂµ£±£ÈËusername
      *
      * @mbggenerated
      */
     private String newSponsor;
 
     /**
-     * 0åˆå§‹1ä¿®æ”¹æˆåŠŸ2ä¿®æ”¹å¤±è´¥
-     *
-     * @mbggenerated
-     */
-    private Integer type;
-
-    /**
-     * 0åˆå§‹1å…³é—­2åˆ é™¤
+     * 0³õÊ¼1ĞŞ¸Ä³É¹¦2ĞŞ¸ÄÊ§°Ü
      *
      * @mbggenerated
      */
     private Integer status;
 
     /**
-     * åˆ›å»ºç”¨æˆ·å
+     * 0³õÊ¼ 1¹Ø±Õ 2É¾³ı
+     *
+     * @mbggenerated
+     */
+    private Integer delFlag;
+
+    /**
+     * ´´½¨ÓÃ»§Ãû
      *
      * @mbggenerated
      */
     private String createUserName;
 
     /**
-     * æ›´æ–°ç”¨æˆ·å
+     * ¸üĞÂÓÃ»§Ãû
      *
      * @mbggenerated
      */
     private String updateUserName;
 
     /**
-     * åˆ›å»ºæ—¶é—´
+     * ´´½¨Ê±¼ä
      *
      * @mbggenerated
      */
     private Date createTime;
 
     /**
-     * æ›´æ–°æ—¶é—´
+     * ¸üĞÂÊ±¼ä
      *
      * @mbggenerated
      */
@@ -101,12 +101,12 @@ public class SponsorLog implements Serializable {
         this.borrowNid = borrowNid == null ? null : borrowNid.trim();
     }
 
-    public String getOldSponsorId() {
+    public Integer getOldSponsorId() {
         return oldSponsorId;
     }
 
-    public void setOldSponsorId(String oldSponsorId) {
-        this.oldSponsorId = oldSponsorId == null ? null : oldSponsorId.trim();
+    public void setOldSponsorId(Integer oldSponsorId) {
+        this.oldSponsorId = oldSponsorId;
     }
 
     public String getOldSponsor() {
@@ -117,12 +117,12 @@ public class SponsorLog implements Serializable {
         this.oldSponsor = oldSponsor == null ? null : oldSponsor.trim();
     }
 
-    public String getNewSponsorId() {
+    public Integer getNewSponsorId() {
         return newSponsorId;
     }
 
-    public void setNewSponsorId(String newSponsorId) {
-        this.newSponsorId = newSponsorId == null ? null : newSponsorId.trim();
+    public void setNewSponsorId(Integer newSponsorId) {
+        this.newSponsorId = newSponsorId;
     }
 
     public String getNewSponsor() {
@@ -133,20 +133,20 @@ public class SponsorLog implements Serializable {
         this.newSponsor = newSponsor == null ? null : newSponsor.trim();
     }
 
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
     }
 
     public String getCreateUserName() {
