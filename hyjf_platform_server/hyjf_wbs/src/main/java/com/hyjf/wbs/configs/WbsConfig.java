@@ -28,6 +28,18 @@ public class WbsConfig {
     @Value("${third.property.ids}")
     private String thridPropertyIds;
 
+    @Value("{web.authorize.returl}")
+    private String webAuthorizeRetUrl;
+
+    @Value("{wechat.authorize.returl}")
+    private String wechatAuthorizeRetUrl;
+
+    @Value("{web.bind.returl}")
+    private String webBindRetUrl;
+
+    @Value("{wechat.bind.returl}")
+    private String wechatBingRetUrl;
+
     @Value("${utmid.namizixun}")
     private Integer utmNami;
 
@@ -110,5 +122,37 @@ public class WbsConfig {
 
     public void setThridPropertyIds(String thridPropertyIds) {
         this.thridPropertyIds = thridPropertyIds;
+    }
+
+    public String getWebAuthorizeRetUrl() {
+        return webAuthorizeRetUrl;
+    }
+
+    public void setWebAuthorizeRetUrl(String webAuthorizeRetUrl) {
+        this.webAuthorizeRetUrl = webAuthorizeRetUrl;
+    }
+
+    public String getWechatAuthorizeRetUrl() {
+        return wechatAuthorizeRetUrl;
+    }
+
+    public void setWechatAuthorizeRetUrl(String wechatAuthorizeRetUrl) {
+        this.wechatAuthorizeRetUrl = wechatAuthorizeRetUrl;
+    }
+
+    public String getWebBindRetUrl() {
+        return webBindRetUrl;
+    }
+
+    public void setWebBindRetUrl(String webBindRetUrl) {
+        this.webBindRetUrl = webBindRetUrl;
+    }
+
+    public String getWechatBingRetUrl() {
+        return wechatBingRetUrl;
+    }
+
+    public void setWechatBingRetUrl(String wechatBingRetUrl) {
+        this.wechatBingRetUrl = wechatBingRetUrl;
     }
 }

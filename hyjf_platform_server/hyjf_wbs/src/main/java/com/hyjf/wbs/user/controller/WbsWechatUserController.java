@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.wbs.WbsConstants;
+import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,9 @@ public class WbsWechatUserController {
 
     @Autowired
     private WbsUserService wbsUserService;
+
+    @Autowired
+    private WbsConfig wbsConfig;
 
     @ApiOperation(value = "Wechat财富端客户绑定", notes = "Wechat财富端客户绑定")
     @ResponseBody
@@ -73,8 +77,7 @@ public class WbsWechatUserController {
         wbsUserService.authorize(qo);
 
         WbsUserAuthorizeVO vo=new WbsUserAuthorizeVO();
-        // TODO by cui
-        vo.setRetUrl("");
+        vo.setRetUrl(wbsConfig.getWechatAuthorizeRetUrl());
         result.setData(vo);
 
         return result;

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.wbs.WbsConstants;
+import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.qvo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,9 @@ import io.swagger.annotations.ApiOperation;
 public class WbsWebUserController {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	private WbsConfig wbsConfig;
 
 	@Autowired
 	private WbsUserService wbsUserService;
@@ -78,7 +82,7 @@ public class WbsWebUserController {
 
 		WbsUserAuthorizeVO vo=new WbsUserAuthorizeVO();
 		// TODO by cui
-		vo.setRetUrl("");
+		vo.setRetUrl(wbsConfig.getWebAuthorizeRetUrl());
 		result.setData(vo);
 
 		return result;
