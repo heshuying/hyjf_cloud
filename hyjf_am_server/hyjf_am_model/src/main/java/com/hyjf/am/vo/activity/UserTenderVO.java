@@ -5,11 +5,10 @@ import java.math.BigDecimal;
 
 /**
  * @author xiasq
- * @version Activity518LeaderboardVO, v0.1 2019/4/30 15:52
+ * @version UserTenderVO, v0.1 2019/4/30 15:52
  */
-public class Activity518LeaderboardVO implements Serializable {
+public class UserTenderVO implements Serializable {
     private static final long serialVersionUID = 1L;
-
 
     private int userId;
 

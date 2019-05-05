@@ -8,10 +8,12 @@ import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.response.trade.EvaluationConfigResponse;
+import com.hyjf.am.response.trade.UserTenderResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.trade.UserTenderRequest;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.EvaluationConfigVO;
@@ -336,6 +338,17 @@ public class AmTradeClientImpl implements AmTradeClient {
 		BigDecimalResponse response = restTemplate.postForEntity(url, request, BigDecimalResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultDec();
+		}
+		return null;
+	}
+
+	@Override
+	public List<UserTenderVO> getLeaderboard(Date startDate, Date endDate) {
+		logger.info("getLeaderboard, startDate is: {}, endDate is: {}", sdf.format(startDate), sdf.format(endDate));
+		String url = "http://AM-TRADE/am-trade/investAmount/top5";
+		UserTenderResponse response = restTemplate.postForEntity(url, new UserTenderRequest(null, startDate, endDate), UserTenderResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultList();
 		}
 		return null;
 	}

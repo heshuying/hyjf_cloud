@@ -1,6 +1,6 @@
 package com.hyjf.cs.market.service.impl;
 
-import com.hyjf.am.vo.activity.Activity518LeaderboardVO;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -10,11 +10,13 @@ import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.service.Activity518Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -64,9 +66,8 @@ public class Activity518ServiceImpl implements Activity518Service {
     }
 
     @Override
-    public List<Activity518LeaderboardVO> getLeaderboard(Date activityStartDate, Date activityEndDate) {
-        //todo
-        return null;
+    public List<UserTenderVO> getLeaderboard(Date activityStartDate, Date activityEndDate) {
+        return amTradeClient.getLeaderboard(activityStartDate, activityEndDate);
     }
 
     @Override

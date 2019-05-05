@@ -12,7 +12,7 @@ import java.util.Date;
 public class SumTenderAmountRequest  implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss";
+    private final DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private int userId;
     private Date startDate;

@@ -1,6 +1,6 @@
 package com.hyjf.cs.market.service;
 
-import com.hyjf.am.vo.activity.Activity518LeaderboardVO;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 
@@ -43,7 +43,7 @@ public interface Activity518Service {
      * @param activityEndDate
      * @return
      */
-    List<Activity518LeaderboardVO> getLeaderboard(Date activityStartDate, Date activityEndDate);
+    List<UserTenderVO> getLeaderboard(Date activityStartDate, Date activityEndDate);
 
     /**
      * 查询用户领奖记录

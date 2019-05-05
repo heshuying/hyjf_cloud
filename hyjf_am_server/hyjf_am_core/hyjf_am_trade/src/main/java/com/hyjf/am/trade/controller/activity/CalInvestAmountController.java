@@ -4,10 +4,12 @@
 package com.hyjf.am.trade.controller.activity;
 
 import com.hyjf.am.response.BigDecimalResponse;
+import com.hyjf.am.response.trade.UserTenderResponse;
 import com.hyjf.am.resquest.trade.UserTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
 import com.hyjf.am.resquest.trade.SumTenderAmountRequest;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -68,6 +71,15 @@ public class CalInvestAmountController extends BaseController {
         } else {
             response.setResultDec(BigDecimal.ZERO);
         }
+        return response;
+    }
+
+    @PostMapping("/top5")
+    public UserTenderResponse sumAnnualInvestAmountTop5(@RequestBody UserTenderRequest request) {
+        logger.info("sumAnnualInvestAmountTop5 run, request is: {}", request);
+        UserTenderResponse response = new UserTenderResponse();
+        List<UserTenderVO> vos = borrowTenderService.getSumAnnualInvestAmountTop5(request.getStartDate(),request.getEndDate());
+        response.setResultList(vos);
         return response;
     }
 }

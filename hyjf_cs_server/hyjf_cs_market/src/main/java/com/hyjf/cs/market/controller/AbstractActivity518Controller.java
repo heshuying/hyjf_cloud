@@ -1,7 +1,7 @@
 package com.hyjf.cs.market.controller;
 
 import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.vo.activity.Activity518LeaderboardVO;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.cs.market.service.Activity518Service;
@@ -34,6 +34,13 @@ public class AbstractActivity518Controller {
     @Autowired
     private Activity518Service activity518Service;
 
+    /**
+     * 共有查询活动信息接口
+     * @param userId
+     * @param successStatus 成功返回码
+     * @param failStatus  失败返回码
+     * @return
+     */
     protected BaseResult<Activity518InfoVO> queryActivityInfo(Integer userId, String successStatus, String failStatus) {
         BaseResult<Activity518InfoVO> result = new BaseResult(successStatus, SUCCESS_DESC);
         Activity518InfoVO activity518InfoVO = new Activity518InfoVO();
@@ -50,15 +57,15 @@ public class AbstractActivity518Controller {
         if (started != -1) {
             // 查询排行榜
             List<Activity518InfoVO.Leaderboard> list = new ArrayList<>();
-            List<Activity518LeaderboardVO> vos = activity518Service.getLeaderboard(activityStartDate, activityEndDate);
+            List<UserTenderVO> vos = activity518Service.getLeaderboard(activityStartDate, activityEndDate);
             if (!CollectionUtils.isEmpty(vos)) {
-                for (Activity518LeaderboardVO vo : vos) {
+                for (UserTenderVO vo : vos) {
                     list.add(new Activity518InfoVO.Leaderboard(vo.getUsername(), String.valueOf(vo.getAmount() == null ? BigDecimal.ZERO : vo.getAmount())));
                 }
             }
             activity518InfoVO.setLeaderboard(list);
 
-            // 查询登陆用户信息
+            // 查询登陆用户信息，未登陆返回空
             if (userId != null) {
                 activity518InfoVO.setUsername(activity518Service.getUsernameByUserId(userId));
                 BigDecimal amount = activity518Service.getUserTenderAmount(userId, activityStartDate, activityEndDate);
@@ -70,6 +77,13 @@ public class AbstractActivity518Controller {
         return result;
     }
 
+    /**
+     * 共有查询用户信息接口
+     * @param userId
+     * @param successStatus 成功返回码
+     * @param failStatus 失败返回码
+     * @return
+     */
     protected BaseResult<Activity518UserInfoVO> queryUserInfo(Integer userId, String successStatus, String failStatus) {
         BaseResult<Activity518UserInfoVO> result = new BaseResult(successStatus, SUCCESS_DESC);
         Activity518UserInfoVO vo = new Activity518UserInfoVO();
@@ -98,6 +112,18 @@ public class AbstractActivity518Controller {
         return result;
     }
 
+    /**
+     *  共有抽奖接口
+     *      1.校验剩余抽奖次数大于0
+     *      2.随机抽奖
+     *      3.保存抽奖记录
+     *      4.发送奖励
+     *      5.失败回滚，成功返回奖励信息
+     * @param userId
+     * @param successStatus 成功返回码
+     * @param failStatus 失败返回码
+     * @return
+     */
     protected BaseResult<Activity518DrawVO> doDraw(Integer userId, String successStatus, String failStatus) {
 
         //todo 抽奖，保存抽奖记录，   amMarketClient.insertActivityUserReward   grade默认0， rewardName：奖品名称（可选字段）， rewardType奖品代号，代号详情如下
