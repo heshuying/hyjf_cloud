@@ -429,27 +429,22 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		CertRequest certRequest=new CertRequest();
 		certRequest.setTransferId(accountList.getNid());
 		List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
-		logger.info(logHeader + "certCouponRecoverVO.size()：" + certCouponRecoverVOList.size());
 		if(certCouponRecoverVOList==null||certCouponRecoverVOList.size()==0){
 			//交易金额
 			return;
 		}
 		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-		logger.info(logHeader + "borrowTenderCpnList.size()：" + borrowTenderCpnList.size());
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
 			return;
 		}
 
-		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" +borrowTenderCpnList.get(0).getBorrowNid());
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
-		logger.info(logHeader + "borrowAndInfoVO：" +JSONObject.toJSONString(borrowAndInfoVO));
 		if(borrowAndInfoVO==null){
 			return;
 		}
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
-		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" +borrowTenderCpnList.get(0).getBorrowNid());
         //接口版本号
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
         //平台编号
@@ -467,7 +462,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //交易流水时间
         param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
-		logger.info(logHeader + "list.size()：" +list.size());
 	}
 
 	//已改
@@ -477,6 +471,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         CertRequest certRequest=new CertRequest();
         certRequest.setRealTenderId(accountList.getNid());
         List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+		logger.info(logHeader + "couponRealTenders.size()：" +couponRealTenders.size());
         if(couponRealTenders==null||couponRealTenders.size()==0){
 			//交易金额
 			param.put("transMoney", FORMAT.format(accountList.getAmount()));
