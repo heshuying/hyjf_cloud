@@ -248,7 +248,7 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public boolean hasLoginInActivity(int userId, Date activityStartDate, Date activityEndDate) {
-		String url = "http://AM-TRADE/am-user/userLogin/hasLogin";
+		String url = "http://AM-USER/am-user/userLogin/hasLogin";
 		BooleanResponse response = restTemplate.postForEntity(url, new UserTenderRequest(userId, activityStartDate, activityEndDate), BooleanResponse.class).getBody();
 		if (Response.isSuccess(response)) {
 			return response.getResultBoolean() == null ? false : response.getResultBoolean();

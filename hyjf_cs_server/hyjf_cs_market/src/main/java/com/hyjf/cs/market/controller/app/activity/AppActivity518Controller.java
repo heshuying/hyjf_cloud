@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author xiasq
  * @version AppActivity518Controller, v0.1 2019-04-17 9:48
  */
-@Api(tags = "app端-2019-5-1青马活动")
+@Api(tags = "app端-2019-518活动")
 @RestController
 @RequestMapping("/hyjf-app/activity/2019518")
 public class AppActivity518Controller extends AbstractActivity518Controller {

@@ -14,10 +14,13 @@ public class Activity518InfoVO {
 
     @ApiModelProperty("活动状态，未开启:-1,进行中:0,已结束:1")
     private int started;
+
     @ApiModelProperty("排行榜")
     private List<Leaderboard> leaderboard;
+
     @ApiModelProperty("脱敏的用户名")
     private String username;
+
     @ApiModelProperty("累计年化出借金额")
     private String amount;
 
