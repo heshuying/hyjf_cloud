@@ -23,7 +23,7 @@ import java.util.List;
  * @author xiasq
  * @version AbstractActivity518Controller, v0.1 2019/4/30 13:55
  */
-public class AbstractActivity518Controller {
+public abstract class AbstractActivity518Controller extends AbstractController{
     private Logger logger = LoggerFactory.getLogger(AbstractActivity518Controller.class);
 
     protected final String SUCCESS_DESC = "成功";
@@ -37,12 +37,10 @@ public class AbstractActivity518Controller {
     /**
      * 共有查询活动信息接口
      * @param userId
-     * @param successStatus 成功返回码
-     * @param failStatus  失败返回码
      * @return
      */
-    protected BaseResult<Activity518InfoVO> queryActivityInfo(Integer userId, String successStatus, String failStatus) {
-        BaseResult<Activity518InfoVO> result = new BaseResult(successStatus, SUCCESS_DESC);
+    protected BaseResult<Activity518InfoVO> queryActivityInfo(Integer userId) {
+        BaseResult<Activity518InfoVO> result = new BaseResult(getSuccessStatus(), SUCCESS_DESC);
         Activity518InfoVO activity518InfoVO = new Activity518InfoVO();
         ActivityListVO activityListVO = activity518Service.getActivityById(activityId);
         Date activityStartDate = new Date(activityListVO.getTimeStart() * 1000L);
@@ -80,12 +78,10 @@ public class AbstractActivity518Controller {
     /**
      * 共有查询用户信息接口
      * @param userId
-     * @param successStatus 成功返回码
-     * @param failStatus 失败返回码
      * @return
      */
-    protected BaseResult<Activity518UserInfoVO> queryUserInfo(Integer userId, String successStatus, String failStatus) {
-        BaseResult<Activity518UserInfoVO> result = new BaseResult(successStatus, SUCCESS_DESC);
+    protected BaseResult<Activity518UserInfoVO> queryUserInfo(Integer userId) {
+        BaseResult<Activity518UserInfoVO> result = new BaseResult(getSuccessStatus(), SUCCESS_DESC);
         Activity518UserInfoVO vo = new Activity518UserInfoVO();
         ActivityListVO activityListVO = activity518Service.getActivityById(activityId);
         Date activityStartDate = new Date(activityListVO.getTimeStart() * 1000L);
@@ -120,11 +116,9 @@ public class AbstractActivity518Controller {
      *      4.发送奖励
      *      5.失败回滚，成功返回奖励信息
      * @param userId
-     * @param successStatus 成功返回码
-     * @param failStatus 失败返回码
      * @return
      */
-    protected BaseResult<Activity518DrawVO> doDraw(Integer userId, String successStatus, String failStatus) {
+    protected BaseResult<Activity518DrawVO> doDraw(Integer userId) {
 
         //todo 抽奖，保存抽奖记录，   amMarketClient.insertActivityUserReward   grade默认0， rewardName：奖品名称（可选字段）， rewardType奖品代号，代号详情如下
         // 代号详情   0：18元代金券

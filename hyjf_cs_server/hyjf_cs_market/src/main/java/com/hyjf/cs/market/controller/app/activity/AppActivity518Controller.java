@@ -36,7 +36,7 @@ public class AppActivity518Controller extends AbstractActivity518Controller {
     @RequestMapping(value = "/activityinfo", method = RequestMethod.POST)
     public BaseResult<Activity518InfoVO> queryActivityInfo(@RequestHeader(required = false) Integer userId) {
         logger.info("app端-活动信息接口...");
-        return super.queryActivityInfo(userId, SUCCESS_STATUS, FAIL_STATUS);
+        return super.queryActivityInfo(userId);
     }
 
     /**
@@ -48,7 +48,7 @@ public class AppActivity518Controller extends AbstractActivity518Controller {
     @RequestMapping(value = "/userinfo", method = RequestMethod.POST)
     public BaseResult<Activity518UserInfoVO> queryUserInfo(@RequestHeader Integer userId) {
         logger.info("app端-用户信息接口...");
-        return super.queryUserInfo(userId, SUCCESS_STATUS, FAIL_STATUS);
+        return super.queryUserInfo(userId);
     }
 
     /**
@@ -61,7 +61,17 @@ public class AppActivity518Controller extends AbstractActivity518Controller {
     @RequestMapping(value = "/draw", method = RequestMethod.POST)
     public BaseResult<Activity518DrawVO> draw(@RequestHeader Integer userId) {
         logger.info("app端-抽奖, userId is: {}", userId);
-        return super.doDraw(userId, SUCCESS_STATUS, FAIL_STATUS);
+        return super.doDraw(userId);
+    }
+
+    @Override
+    protected String getSuccessStatus() {
+        return SUCCESS_STATUS;
+    }
+
+    @Override
+    protected String getFailStatus() {
+        return FAIL_STATUS;
     }
 
 }

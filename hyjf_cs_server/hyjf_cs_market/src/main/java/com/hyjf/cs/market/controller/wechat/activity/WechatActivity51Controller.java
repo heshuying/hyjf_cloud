@@ -36,7 +36,7 @@ public class WechatActivity51Controller extends AbstractActivity51Controller {
     @RequestMapping(value = "/isActivityTime", method = RequestMethod.GET)
     public BaseResult<ActivityTimeVO> isActivityTime() {
         logger.info("wechat端-查询当前时间是不是在活动时间范围内...");
-        return isActivityTime(WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return isActivityTime();
     }
 
     /**
@@ -48,7 +48,7 @@ public class WechatActivity51Controller extends AbstractActivity51Controller {
     @RequestMapping(value = "/sumAmount", method = RequestMethod.GET)
     public BaseResult<Activity51VO> getSumAmount() {
         logger.info("wechat端-查询活动期间当前累计出借金额...");
-        return getSumAmount(WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return getSumAmount();
     }
 
     /**
@@ -63,7 +63,7 @@ public class WechatActivity51Controller extends AbstractActivity51Controller {
                                  @ApiParam(required = true, name = "grade", value = "累计出借金额区间， 从第一档（3000万）开始，依次传递1,2,3,4")
                                  @RequestParam int grade) {
         logger.info("wechat端-领取优惠券, userId is: {}", userId);
-        return sendCoupon(userId, grade, WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return sendCoupon(userId, grade);
     }
 
     @ApiOperation(value = "单个档位判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
@@ -72,14 +72,14 @@ public class WechatActivity51Controller extends AbstractActivity51Controller {
                                                        @ApiParam(required = true, name = "grade", value = "累计出借金额区间， 从第一档（3000万）开始，依次传递1,2,3,4")
                                                        @RequestParam int grade) {
         logger.info("wechat端-单个档位判断用户是否已经领取优惠券, userId is: {}， grade is: {}", userId, grade);
-        return isReceiveCoupon(userId, grade, WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return isReceiveCoupon(userId, grade);
     }
 
     @ApiOperation(value = "批量判断用户是否已经领取优惠券", notes = "判断用户是否已经领取优惠券-对应累计出借金额区间")
     @RequestMapping(value = "/getReceiveStatusList", method = RequestMethod.GET)
     public BaseResult<List<RewardReceiveVO>> getReceiveStatusList(@RequestHeader int userId) {
         logger.info("wechat端-批量判断用户是否已经领取优惠券, userId is: {}", userId);
-        return getReceiveStatusList(userId, WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return getReceiveStatusList(userId);
     }
 
 
@@ -96,7 +96,7 @@ public class WechatActivity51Controller extends AbstractActivity51Controller {
                             @ApiParam(required = true, name = "grade", value = "用户竞猜区间， 从第一档（1-99）开始，依次传递1,2,3,4")
                             @RequestParam int grade) {
         logger.info("wechat端-用户竞猜, userId is: {}, grade is: {}", userId, grade);
-        return guess(userId, grade, WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return guess(userId, grade);
     }
 
     /**
@@ -109,7 +109,16 @@ public class WechatActivity51Controller extends AbstractActivity51Controller {
     @RequestMapping(value = "/isGuess", method = RequestMethod.GET)
     public BaseResult<GuessVO> isGuess(@RequestHeader int userId) {
         logger.info("wechat端-用户竞猜, userId is: {}", userId);
-        return isGuess(userId, WECHAT_SUCCESS_STATUS, WECHAT_FAIL_STATUS);
+        return isGuess(userId);
     }
 
+    @Override
+    protected String getSuccessStatus() {
+        return WECHAT_SUCCESS_STATUS;
+    }
+
+    @Override
+    protected String getFailStatus() {
+        return WECHAT_FAIL_STATUS;
+    }
 }
