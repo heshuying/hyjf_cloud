@@ -44,19 +44,19 @@ public class SponsorLogRequest extends BasePage {
 	 */
 	private String newSponsor;
 
-	/**
-	 * 0初始1修改成功2修改失败
-	 *
-	 * @mbggenerated
-	 */
-	private Integer type;
+    /**
+     * 0初始1修改成功2修改失败
+     *
+     * @mbggenerated
+     */
+    private Integer status;
 
-	/**
-	 * 0初始1关闭2删除
-	 *
-	 * @mbggenerated
-	 */
-	private Integer status;
+    /**
+     * 0初始 1关闭 2删除
+     *
+     * @mbggenerated
+     */
+    private Integer delFlag;
 
 	/**
 	 * 创建用户名
@@ -150,14 +150,6 @@ public class SponsorLogRequest extends BasePage {
 		this.newSponsor = newSponsor;
 	}
 
-	public Integer getType() {
-		return type;
-	}
-
-	public void setType(Integer type) {
-		this.type = type;
-	}
-
 	public Integer getStatus() {
 		return status;
 	}
@@ -212,6 +204,14 @@ public class SponsorLogRequest extends BasePage {
 
 	public void setTimeEnd(String timeEnd) {
 		this.timeEnd = timeEnd;
+	}
+
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
 	}
 
 }

@@ -45,8 +45,8 @@ public class SponsorLogController {
         if (StringUtils.isNotEmpty(sponsorLogRequest.getBorrowNid())) {
         	criteria.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
         }
-        if (sponsorLogRequest.getType()!=null) {
-        	criteria.andTypeEqualTo(sponsorLogRequest.getType());
+        if (sponsorLogRequest.getStatus()!=null) {
+        	criteria.andStatusEqualTo(sponsorLogRequest.getStatus());
         }
         if(StringUtils.isNotEmpty(sponsorLogRequest.getTimeStart())&&StringUtils.isNotEmpty(sponsorLogRequest.getTimeEnd())) {
         	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -38,7 +38,7 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 		cr.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
 		
 		SponsorLog re=new SponsorLog();
-		re.setStatus(1);
+		re.setDelFlag(1);
 		sponsorLogMapper.updateByExample(re, example);
 		SponsorLog record=new SponsorLog();
 		BeanUtils.copyProperties(sponsorLogRequest,record);
@@ -59,7 +59,7 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 		List<SponsorLog> list=sponsorLogMapper.selectByExample(example);
 		SponsorLog sl=list.get(0);
 		sl.setStatus(sponsorLogRequest.getStatus());
-		sl.setType(sponsorLogRequest.getType());
+		sl.setDelFlag(sponsorLogRequest.getDelFlag());
 		sl.setUpdateUserName(sponsorLogRequest.getAdminUserName());
 		sl.setUpdateTime(new Date());
 		return sponsorLogMapper.updateByPrimaryKey(sl);
