@@ -63,4 +63,14 @@ public interface Activity518Service {
      * @return
      */
     int countRewardTimes(int activityId, int userId, Date activityStartDate, Date activityEndDate);
+
+    /**
+     * @Author walter.limeng
+     * @Description //用户抽奖成功，保存用户奖品记录
+     * @Date 17:00 2019-05-05
+     * @Param [userId, activityId, grade 暂无用途，默认0, rewardName 奖励名称, rewardType 奖励类型]
+     * @return void
+     **/
+
+    void saveActivityUserReward(int userId, int activityId, int grade, String rewardName, String rewardType);
 }
