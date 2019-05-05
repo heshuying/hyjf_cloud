@@ -106,7 +106,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		//优惠券回款 上送41红包
 		case "experience_profit":
 		case "cash_coupon_profit":
-            logger.info(logHeader + "进这里面了~~~~" );
 			couponProfit(accountList,list);
 			break;
 
@@ -385,22 +384,18 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     private void increaseInerestProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
         Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
-		logger.info(logHeader + "accountList.getNid()：" + accountList.getNid());
 		certRequest.setTransferId(accountList.getNid());
 		List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
-		logger.info(logHeader + "certCouponRecoverVOList.size()：" + certCouponRecoverVOList.size());
 		if(certCouponRecoverVOList==null||certCouponRecoverVOList.size()==0){
 			//交易金额
 			return;
 		}
 		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-		logger.info(logHeader + "borrowTenderCpnList.size()：" + borrowTenderCpnList.size());
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
 			return;
 		}
-		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" + borrowTenderCpnList.get(0).getBorrowNid());
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
 		if(borrowAndInfoVO==null){
 			return;
@@ -446,6 +441,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 			//交易金额
 			return;
 		}
+
+		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" +borrowTenderCpnList.get(0).getBorrowNid());
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
 		if(borrowAndInfoVO==null){
 			return;
