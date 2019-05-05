@@ -11,11 +11,13 @@ import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 还款管理
@@ -25,9 +27,17 @@ import java.util.List;
 public interface RepayManageService extends BaseService {
     BigDecimal selectUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal selectUserLateInterestWaitTotal(Integer userId);
+
+    BigDecimal selectUserBorrowAccountTotal(Integer userId);
+
     BigDecimal selectOrgRepayFeeWaitTotal(Integer userId);
 
-    BigDecimal selectRepayOrgRepaywait(Integer userId);
+    BigDecimal selectOrgLateInterestWaitTotal(Integer userId);
+
+    Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId);
+
+    List<RepayPlanListVO> selectRepayPlanList(String borrowNid);
 
     List<RepayListCustomizeVO> selectRepayList(RepayListRequest requestBean);
 
@@ -43,11 +53,11 @@ public interface RepayManageService extends BaseService {
 
     Integer selectOrgRepayedCount(RepayListRequest requestBean);
 
-    ProjectBean searchRepayProjectDetail(ProjectBean form, boolean isAllRepay) throws Exception;
+    ProjectBean searchRepayProjectDetail(ProjectBean form, boolean isAllRepay, int latePeriod) throws Exception;
 
-    RepayBean calculateRepay(int userId, Borrow borrow) throws ParseException;
+    RepayBean calculateRepay(int userId, Borrow borrow) throws ParseException, Exception;
 
-    boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay) throws Exception;
+    boolean updateRepayMoney(RepayBean repay, BankCallBean bean, boolean isAllRepay, int latePeriod) throws Exception;
 
     boolean updateBorrowCreditStautus(String borrowNid);
 
@@ -66,13 +76,13 @@ public interface RepayManageService extends BaseService {
     void insertRepayFreezeLog(Integer userId, String orderId, String account, String borrowNid,
                               BigDecimal repayTotal, String userName);
 
-    void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay);
+    void insertRepayOrgFreezeLog(Integer userId, String orderId, String account, String borrowNid, RepayBean repay, String userName, boolean isAllRepay, int latePeriod);
 
-    void deleteFreezeTempLogs(String orderId);
+    void deleteFreezeTempLogs(String orderId, String borrowNid);
 
     Borrow searchRepayProject(int userId, String userName, String roleId, String borrowNid);
 
-    BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException;
+    BigDecimal searchRepayTotal(int userId, Borrow borrow) throws ParseException, Exception;
 
     BigDecimal searchRepayByTermTotal(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception;
 
@@ -104,4 +114,6 @@ public interface RepayManageService extends BaseService {
     String usernameEncryption(String name);
 
     boolean getFailCredit(String borrowNid);
+
+    RepayBean searchRepayPlanPart(int userId, Borrow borrow, int latePeriod) throws Exception;
 }

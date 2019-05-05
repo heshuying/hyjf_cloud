@@ -2,8 +2,10 @@ package com.hyjf.admin.beans;
 
 import com.hyjf.am.vo.BaseVO;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
+import com.hyjf.am.vo.admin.BorrowRepaymentPlanCustomizeVO;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -14,8 +16,18 @@ public class RepayInfoBean {
     private AdminRepayDelayCustomizeVO borrowRepayInfo;
     private BigDecimal balance;
     private BaseVO repayInfo;
+    private List<BorrowRepaymentPlanCustomizeVO> list;
+    
+    
+    public List<BorrowRepaymentPlanCustomizeVO> getList() {
+		return list;
+	}
 
-    public AdminRepayDelayCustomizeVO getBorrowRepayInfo() {
+	public void setList(List<BorrowRepaymentPlanCustomizeVO> list) {
+		this.list = list;
+	}
+
+	public AdminRepayDelayCustomizeVO getBorrowRepayInfo() {
         return borrowRepayInfo;
     }
 

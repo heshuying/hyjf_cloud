@@ -3995,6 +3995,66 @@ public class HjhDebtCreditRepayExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andRepayAdvancePenaltyInterestIsNull() {
+            addCriterion("repay_advance_penalty_interest is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestIsNotNull() {
+            addCriterion("repay_advance_penalty_interest is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestEqualTo(BigDecimal value) {
+            addCriterion("repay_advance_penalty_interest =", value, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestNotEqualTo(BigDecimal value) {
+            addCriterion("repay_advance_penalty_interest <>", value, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestGreaterThan(BigDecimal value) {
+            addCriterion("repay_advance_penalty_interest >", value, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("repay_advance_penalty_interest >=", value, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestLessThan(BigDecimal value) {
+            addCriterion("repay_advance_penalty_interest <", value, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("repay_advance_penalty_interest <=", value, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestIn(List<BigDecimal> values) {
+            addCriterion("repay_advance_penalty_interest in", values, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestNotIn(List<BigDecimal> values) {
+            addCriterion("repay_advance_penalty_interest not in", values, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("repay_advance_penalty_interest between", value1, value2, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
+
+        public Criteria andRepayAdvancePenaltyInterestNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("repay_advance_penalty_interest not between", value1, value2, "repayAdvancePenaltyInterest");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
