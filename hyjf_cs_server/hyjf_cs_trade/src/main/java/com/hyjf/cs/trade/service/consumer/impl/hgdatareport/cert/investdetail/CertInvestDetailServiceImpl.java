@@ -465,6 +465,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //交易流水时间
         param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
+		logger.info(logHeader + "list.size()：" +list.size());
 	}
 
 	//已改
