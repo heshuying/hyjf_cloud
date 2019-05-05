@@ -12,7 +12,7 @@ import org.quartz.JobExecutionException;
  * @Description:用户画像-运营部投屏二数据获取
  */
 @DisallowConcurrentExecution
-public class OperationScreenJob extends BaseJob implements Job {
+public class OperationScreenTJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         // 0 17 4 * * ? 每天凌晨4点17分执行一次
