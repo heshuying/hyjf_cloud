@@ -41,9 +41,8 @@ public class OrderInfoController extends BaseController {
     ) {
         WbsCommonVO wbsCommonVO =new WbsCommonVO();
         WbsCommonQO wbsCommonQO = wbsCommonExQO;
-        TenderAccedeQO tenderAccedeQO = JSONObject.parseObject(wbsCommonQO.getData(),TenderAccedeQO.class);
         //验签
-        Boolean booleanSian = WbsSignUtil.verify(tenderAccedeQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
+        Boolean booleanSian = WbsSignUtil.verify(wbsCommonQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
         logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口  " + JSONObject.toJSON(wbsCommonExQO)+"验签结果："+booleanSian);
         if(!booleanSian){
             wbsCommonVO.setCode(Response.ERROR);
@@ -51,6 +50,7 @@ public class OrderInfoController extends BaseController {
             wbsCommonVO.setData("");
             return wbsCommonVO;
         }
+        TenderAccedeQO tenderAccedeQO = JSONObject.parseObject(wbsCommonQO.getData(),TenderAccedeQO.class);
         // 订单明细
         if (tenderAccedeQO!=null){
             if (tenderAccedeQO.getStartTime().isEmpty()||tenderAccedeQO.getEndTime().isEmpty()){
