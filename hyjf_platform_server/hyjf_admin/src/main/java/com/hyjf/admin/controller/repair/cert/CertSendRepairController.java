@@ -17,6 +17,7 @@ import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -131,16 +132,45 @@ public class CertSendRepairController extends BaseController{
                 commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_TRANSACT_TAG, UUID.randomUUID().toString(), mqValue));
                 _log.info(" 交易流水数据同步:"+mqValue);
             }
-            if("3".equals(dataType)){
+            if("86".equals(dataType)){
                 // 产品信息数据同步
                 commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_LENDPRODUCT, UUID.randomUUID().toString(), mqValue));
             }
-            if("10".equals(dataType)){
+            if("87".equals(dataType)){
                 // 产品配置数据同步
                 commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_REPAIR_LENDPRODUCTCONFIG, UUID.randomUUID().toString(), mqValue));
             }
         }catch (Exception e){
             _log.info("应急中心发送MQ出错，请求人【"+getUser(request).getId()+"】，请求类型【"+dataType+"】，请求参数【"+mqValue+"】",e);
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        return new AdminResult<>();
+    }
+
+    /**
+     * 应急中心历史数据上报方法
+     * @param request
+     * @param reqBean
+     * @return
+     */
+    @ApiOperation(value = "应急中心历史数据同步", notes = "应急中心历史数据同步")
+    @PostMapping("/doDdataSyn")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    public AdminResult doDdataSyn(HttpServletRequest request, @RequestBody CertSendMqReqBean reqBean) {
+        String dataType = reqBean.getDataType();
+        //当前时间
+        int mqValue = GetDate.getNowTime10();
+        try {
+            if ("86".equals(dataType)) {
+                // 产品信息历史数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_OLD_LENDPRODUCT_TAG, UUID.randomUUID().toString(), mqValue));
+            }
+            if ("87".equals(dataType)) {
+                // 产品配置历史数据同步
+                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_OLD_LENDPRODUCTCONFIG_TAG, UUID.randomUUID().toString(), mqValue));
+            }
+        } catch (Exception e) {
+            _log.info("应急中心历史数据上报错误，请求人【" + getUser(request).getId() + "】，请求类型【" + dataType + "】，请求参数【" + mqValue + "】", e);
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>();
