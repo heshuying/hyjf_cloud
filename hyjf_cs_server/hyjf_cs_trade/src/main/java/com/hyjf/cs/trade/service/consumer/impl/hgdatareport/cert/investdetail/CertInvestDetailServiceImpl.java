@@ -444,10 +444,12 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 
 		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" +borrowTenderCpnList.get(0).getBorrowNid());
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
+		logger.info(logHeader + "borrowAndInfoVO：" +JSONObject.toJSONString(borrowAndInfoVO));
 		if(borrowAndInfoVO==null){
 			return;
 		}
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" +borrowTenderCpnList.get(0).getBorrowNid());
         //接口版本号
         param.put("version", CertCallConstant.CERT_CALL_VERSION);
         //平台编号
