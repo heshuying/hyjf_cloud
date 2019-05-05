@@ -106,6 +106,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		//优惠券回款 上送41红包
 		case "experience_profit":
 		case "cash_coupon_profit":
+            logger.info(logHeader + "进这里面了~~~~" );
 			couponProfit(accountList,list);
 			break;
 
@@ -433,7 +434,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		CertRequest certRequest=new CertRequest();
 		certRequest.setTransferId(accountList.getNid());
 		List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
-		logger.info(logHeader + "certCouponRecoverVOList.size()：" + certCouponRecoverVOList.size());
+		logger.info(logHeader + "certCouponRecoverVO.size()：" + certCouponRecoverVOList.size());
 		if(certCouponRecoverVOList==null||certCouponRecoverVOList.size()==0){
 			//交易金额
 			return;
