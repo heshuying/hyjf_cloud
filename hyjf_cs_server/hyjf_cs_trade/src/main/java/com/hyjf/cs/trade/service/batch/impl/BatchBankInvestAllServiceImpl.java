@@ -207,12 +207,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 			params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
 			// 出借时间
 			params.put("investTime", request.getNowTime());
-			// 项目类型
-			if (request.getBorrowInfo().getProjectType() == 13) {
-				params.put("projectType", "汇金理财");
-			} else {
-				params.put("projectType", "汇直投");
-			}
+			params.put("projectType", "散标");
 			// 首次投标项目期限
 			String investProjectPeriod = "";
 			if ("endday".equals(request.getBorrow().getBorrowStyle())) {
@@ -221,7 +216,8 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
 			}
 			params.put("investProjectPeriod", investProjectPeriod);
-
+			// 根据investFlag标志位来决定更新哪种出借
+			params.put("investFlag", checkIsNewUserCanInvest2(utmRegVO.getUserId()));
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
 				logger.info("******首投信息推送消息队列******");

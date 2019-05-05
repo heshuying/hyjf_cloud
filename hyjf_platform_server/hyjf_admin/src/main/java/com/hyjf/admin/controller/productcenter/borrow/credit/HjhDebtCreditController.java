@@ -92,18 +92,19 @@ public class HjhDebtCreditController extends BaseController{
             jsonObject.put("status",FAIL);
             jsonObject.put("msg","获取还款状态列表失败！");
         }
-        HjhDebtCreditListRequest request = new HjhDebtCreditListRequest();
-        JSONObject creditDetail = queryHjhDebtCreditDetail(request);
-        if(creditDetail != null){
-            List<HjhDebtCreditVo> hjhDebtCreditVoList = (List<HjhDebtCreditVo>) creditDetail.get(LIST);
-            if(hjhDebtCreditVoList != null && hjhDebtCreditVoList.size() > 0){
-                jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
-                jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
-                jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
-                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
-                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
-            }
-        }
+        //modify by cwyang 2019-3-29 初始化接口只查询检索条件，列表数据又其他接口提供。
+//        HjhDebtCreditListRequest request = new HjhDebtCreditListRequest();
+//        JSONObject creditDetail = queryHjhDebtCreditDetail(request);
+//        if(creditDetail != null){
+//            List<HjhDebtCreditVo> hjhDebtCreditVoList = (List<HjhDebtCreditVo>) creditDetail.get(LIST);
+//            if(hjhDebtCreditVoList != null && hjhDebtCreditVoList.size() > 0){
+//                jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
+//                jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
+//                jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
+//                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+//                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
+//            }
+//        }
         return jsonObject;
     }
 
@@ -122,7 +123,7 @@ public class HjhDebtCreditController extends BaseController{
             if (null != listAccountDetail && listAccountDetail.size() > 0) {
                 hjhDebtCreditVoList.addAll(listAccountDetail);
             }
-            if (hjhDebtCreditVoList.size() > 0) {
+            if (null != hjhDebtCreditVoList && hjhDebtCreditVoList.size() > 0) {
                 hjhDebtCreditService.queryHjhDebtCreditListStatusName(hjhDebtCreditVoList);
                 jsonObject = this.success(recordCount, hjhDebtCreditVoList);
                 Map<String,Object> sum = hjhDebtCreditService.selectDebtCreditTotal(request);
@@ -194,8 +195,9 @@ public class HjhDebtCreditController extends BaseController{
         HjhDebtCreditReponse hjhDebtCreditReponse = hjhDebtCreditService.queryHjhDebtCreditList(requestBean);
 
         List<HjhDebtCreditVo> resultList = hjhDebtCreditReponse.getResultList();
-        hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList);
-
+        if(null != resultList && resultList.size() > 0) {
+            hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList);
+        }
 
         Integer totalCount = hjhDebtCreditReponse.getRecordTotal();
 
@@ -217,7 +219,9 @@ public class HjhDebtCreditController extends BaseController{
             HjhDebtCreditReponse hjhDebtCreditReponse2 = hjhDebtCreditService.queryHjhDebtCreditList(requestBean);
             if (hjhDebtCreditReponse2 != null && hjhDebtCreditReponse2.getResultList().size()> 0) {
                 List<HjhDebtCreditVo> resultList1 = hjhDebtCreditReponse2.getResultList();
-                hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList1);
+                if(null != resultList1 && resultList1.size() > 0) {
+                    hjhDebtCreditService.queryHjhDebtCreditListStatusName(resultList1);
+                }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList1);
             } else {
@@ -231,6 +235,10 @@ public class HjhDebtCreditController extends BaseController{
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("planNid", "出让人智投编号");
         map.put("planOrderId", "出让人智投订单号");
+        // 需求改为只展示一个字段：出借订单号
+//        map.put("orderId", "出让人出借订单号");
+//        map.put("assignId", "出让人承接订单号");
+        map.put("assignId", "出借订单号");
         map.put("planNidNew", "清算后智投编号");
         map.put("userName", "出让人");
         map.put("creditNid", "债转编号");
@@ -239,7 +247,7 @@ public class HjhDebtCreditController extends BaseController{
         map.put("repayStyleName", "还款方式");
         map.put("creditCapital", "债权本金");
         map.put("liquidationFairValue", "债权价值");
-        map.put("actualApr", "预期承接出借利率");
+        map.put("actualApr", "预期承接收益率");
         map.put("assignCapital", "已转让本金");
         map.put("assignAdvanceInterest", "垫付利息");
         map.put("remainCredit", "剩余债权价值");

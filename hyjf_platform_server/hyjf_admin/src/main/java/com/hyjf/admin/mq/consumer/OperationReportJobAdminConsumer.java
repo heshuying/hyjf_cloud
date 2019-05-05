@@ -22,10 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author tyy
@@ -52,8 +51,6 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         bean.setCityGroup(cityGroup);
         List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));
         bean.setSexGroup(sexGroup);
-/*        List<OperationReportJobVO> ageRangeUserIds = amAdminClient.getTenderAgeByRangeList(getLastDay(cal));
-        bean.setAgeRangeUserIds(ageRangeUserIds);*/
         // 月交易金额
         bean.setAccountMonth(amAdminClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
         logger.info("月交易金额 ：" + bean.getAccountMonth() + ",查询区间：" + getFirstDay(cal) + "~" + getLastDay(cal));
