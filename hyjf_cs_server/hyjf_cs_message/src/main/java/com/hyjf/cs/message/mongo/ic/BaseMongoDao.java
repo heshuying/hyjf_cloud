@@ -52,7 +52,7 @@ public abstract class BaseMongoDao<T> {
 	}
 
 	public List<T> find(Query query, String collectionName){
-		return this.mongoTempBaseMongoDaolate.find(query, getEntityClass(), collectionName);
+		return this.mongoTemplate.find(query, getEntityClass(), collectionName);
 	}
 
 	public void update(Query query, Update update){
