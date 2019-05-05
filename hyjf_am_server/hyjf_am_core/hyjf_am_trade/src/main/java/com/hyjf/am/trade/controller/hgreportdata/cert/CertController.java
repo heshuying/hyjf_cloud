@@ -146,6 +146,7 @@ public class CertController extends BaseController {
 
     @PostMapping("/getCouponRealTenderListByCertRequest")
     public CouponRealTenderResponse getCouponRealTenderListByCertRequest(@RequestBody CertRequest certRequest) {
+        logger.info("CouponRealTenderResponse:" + JSONObject.toJSONString(certRequest));
         CouponRealTenderResponse response = new CouponRealTenderResponse();
         List<CouponRealTender> couponRealTenderList = certService.getCouponRealTenderListByCertRequest(certRequest);
         if (!CollectionUtils.isEmpty(couponRealTenderList)) {
