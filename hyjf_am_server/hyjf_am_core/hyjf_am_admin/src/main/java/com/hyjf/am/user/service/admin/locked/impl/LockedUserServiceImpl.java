@@ -162,7 +162,11 @@ public class LockedUserServiceImpl implements LockedUserService {
 		long retValue  = RedisUtils.incr(key);
 //		RedisUtils.expire(key,RedisUtils.getRemainMiao());//给key设置过期时间
 		Integer	loginErrorConfigManager=LockedConfigManager.getInstance().getAdminConfig().getLockLong();
-		RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+        //.获取用户允许输入的最大错误次数
+        Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
+        if(retValue<=maxLoginErrorNum){
+            RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
+        }
 		return retValue;
 	}
 }
