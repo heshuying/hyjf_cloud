@@ -32,6 +32,7 @@ public class CertServiceImpl extends BaseServiceImpl implements CertService {
 
     @Override
     public List<CertAccountListCustomize> queryCertAccountList(CertRequest certTransactRequest) {
+        logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
         Map<String, Object> map =new HashMap<String, Object>();
         map.put("minId", certTransactRequest.getMinId());
         map.put("maxId", certTransactRequest.getMaxId());
