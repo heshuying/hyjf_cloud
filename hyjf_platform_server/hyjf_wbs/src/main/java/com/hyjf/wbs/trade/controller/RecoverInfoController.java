@@ -48,8 +48,9 @@ public class RecoverInfoController extends BaseController {
         WbsRecoverVO wbsCommonVO =new WbsRecoverVO();
         String jsonRequest = JSONObject.toJSONString(wbsCommonExQO);
         WbsCommonQO wbsCommonQO = wbsCommonExQO;
+        RecoverQO recoverQO = JSONObject.parseObject(wbsCommonQO.getData(),RecoverQO.class);
         //验签
-        Boolean booleanSian = WbsSignUtil.verify(wbsCommonQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
+        Boolean booleanSian = WbsSignUtil.verify(recoverQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
         logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口  " + JSONObject.toJSON(wbsCommonExQO)+"验签结果："+booleanSian);
         if(!booleanSian){
             wbsCommonVO.setCode(Response.ERROR);
@@ -57,8 +58,6 @@ public class RecoverInfoController extends BaseController {
             wbsCommonVO.setData("");
             return wbsCommonVO;
         }
-
-        RecoverQO recoverQO = JSONObject.parseObject(wbsCommonQO.getData(),RecoverQO.class);
         if (recoverQO!=null){
             if (recoverQO.getEntId()==null|| recoverQO.getCurrentPage().isEmpty()){
                 wbsCommonVO.setCode(Response.ERROR);
