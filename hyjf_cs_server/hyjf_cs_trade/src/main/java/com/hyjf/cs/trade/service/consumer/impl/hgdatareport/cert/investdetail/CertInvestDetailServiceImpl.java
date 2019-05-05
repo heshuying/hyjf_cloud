@@ -434,7 +434,6 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 	private void couponProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
-		logger.info(logHeader + "accountList.getNid()：" + accountList.getNid());
 		certRequest.setTransferId(accountList.getNid());
 		List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
 		logger.info(logHeader + "certCouponRecoverVOList.size()：" + certCouponRecoverVOList.size());
