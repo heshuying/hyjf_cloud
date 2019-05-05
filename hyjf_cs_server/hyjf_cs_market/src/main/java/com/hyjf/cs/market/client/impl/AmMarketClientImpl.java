@@ -190,12 +190,12 @@ public class AmMarketClientImpl implements AmMarketClient {
     }
 
     @Override
-	public ActivityUserRewardVO selectActivityUserReward(Integer activityId, int userId, int grade) {
+	public List<ActivityUserRewardVO> selectActivityUserReward(int activityId, int userId, int grade) {
 		ActivityUserRewardResponse response = restTemplate.getForEntity(
 				"http://AM-MARKET/am-market/activity/reward/select/" + activityId + "/" + userId + "/" + grade,
 				ActivityUserRewardResponse.class).getBody();
 		if (Response.isSuccess(response)) {
-			return response.getResult();
+			return response.getResultList();
 		}
 		return null;
 	}

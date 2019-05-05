@@ -14,6 +14,7 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,6 +232,12 @@ public class AmUserClientImpl implements AmUserClient {
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
 		}
+		return null;
+	}
+
+	@Override
+	public UserVO getUserById(Integer userId) {
+		//todo
 		return null;
 	}
 }

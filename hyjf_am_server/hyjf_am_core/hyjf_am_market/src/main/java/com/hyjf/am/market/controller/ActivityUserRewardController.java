@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,9 @@ import com.hyjf.am.market.service.ActivityUserRewardService;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.market.ActivityUserRewardResponse;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xiasq
@@ -61,13 +65,18 @@ public class ActivityUserRewardController {
 		logger.info("select ActivityUserReward, activityId is: {}, userId is: {}, grade is: {}", activityId, userId,
 				grade);
 
-		ActivityUserReward reward = activityUserRewardService.selectByUserId(userId, activityId, grade);
+		List<ActivityUserReward> list = activityUserRewardService.selectByUserId(userId, activityId, grade);
 		ActivityUserRewardResponse rewardResponse = new ActivityUserRewardResponse();
 
-		if (reward != null) {
-			ActivityUserRewardVO vo = new ActivityUserRewardVO();
-			BeanUtils.copyProperties(reward, vo);
-			rewardResponse.setResult(vo);
+		if (!CollectionUtils.isEmpty(list)) {
+			List<ActivityUserRewardVO> vos = new ArrayList<>(list.size());
+			ActivityUserRewardVO vo = null;
+			for (ActivityUserReward reward : list) {
+				vo = new ActivityUserRewardVO();
+				BeanUtils.copyProperties(reward, vo);
+				vos.add(vo);
+			}
+			rewardResponse.setResultList(vos);
 		}
 		return rewardResponse;
 	}

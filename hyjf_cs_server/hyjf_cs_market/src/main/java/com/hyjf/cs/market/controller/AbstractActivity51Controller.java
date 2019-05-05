@@ -3,11 +3,10 @@ package com.hyjf.cs.market.controller;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.activity.ActivityUserGuessVO;
 import com.hyjf.cs.market.service.Activity51Service;
-import com.hyjf.cs.market.vo.Activity51VO;
-import com.hyjf.cs.market.vo.ActivityTimeVO;
-import com.hyjf.cs.market.vo.GuessVO;
-import com.hyjf.cs.market.vo.RewardReceiveVO;
-import io.swagger.models.auth.In;
+import com.hyjf.cs.market.vo.activity51.Activity51VO;
+import com.hyjf.cs.market.vo.activity51.ActivityTimeVO;
+import com.hyjf.cs.market.vo.activity51.GuessVO;
+import com.hyjf.cs.market.vo.activity51.RewardReceiveVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.ToIntBiFunction;
 
 /**
  * @author xiasq

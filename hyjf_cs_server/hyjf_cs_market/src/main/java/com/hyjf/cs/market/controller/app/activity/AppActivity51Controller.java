@@ -2,10 +2,10 @@ package com.hyjf.cs.market.controller.app.activity;
 
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.cs.market.controller.AbstractActivity51Controller;
-import com.hyjf.cs.market.vo.Activity51VO;
-import com.hyjf.cs.market.vo.ActivityTimeVO;
-import com.hyjf.cs.market.vo.GuessVO;
-import com.hyjf.cs.market.vo.RewardReceiveVO;
+import com.hyjf.cs.market.vo.activity51.Activity51VO;
+import com.hyjf.cs.market.vo.activity51.ActivityTimeVO;
+import com.hyjf.cs.market.vo.activity51.GuessVO;
+import com.hyjf.cs.market.vo.activity51.RewardReceiveVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

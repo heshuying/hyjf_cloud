@@ -142,5 +142,5 @@ public interface AmMarketClient {
      * @param grade
      * @return
      */
-    ActivityUserRewardVO selectActivityUserReward(Integer activityId, int userId, int grade);
+    List<ActivityUserRewardVO> selectActivityUserReward(int activityId, int userId, int grade);
 }
