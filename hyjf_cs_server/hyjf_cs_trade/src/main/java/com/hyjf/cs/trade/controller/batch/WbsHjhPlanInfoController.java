@@ -27,7 +27,7 @@ public class WbsHjhPlanInfoController extends BaseTradeController {
     @Autowired
     private WbsHjhPlanInfoService wbsHjhPlanInfoService;
 
-    @RequestMapping(value = "/wbsHjhPlanInfo")
+    @RequestMapping(value = "/wbsSendHjhPlanInfo")
     public void wbsSendHjhPlanInfo() {
         List<HjhPlanVO> resultList = wbsHjhPlanInfoService.selectWbsSendHjhPlanList();
         if (!CollectionUtils.isEmpty(resultList)) {
