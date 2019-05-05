@@ -72,6 +72,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         logger.info(logHeader + "accountLists.size():"+accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
+                logger.info(logHeader + "accountList.getTrade():"+accountList.getTrade());
 				 createParam(accountList,list);
 			}
 			if(list==null||list.size()==0){
