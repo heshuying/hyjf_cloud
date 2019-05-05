@@ -40,12 +40,13 @@ public class AbstractActivity518Controller {
         ActivityListVO activityListVO = activity518Service.getActivityById(activityId);
         Date activityStartDate = new Date(activityListVO.getTimeStart() * 1000L);
         Date activityEndDate = new Date(activityListVO.getTimeEnd() * 1000L);
+
         //查询活动状态
         Integer started = isActivityTime(activityStartDate, activityEndDate);
         logger.debug("当前活动状态started: {}", started);
         activity518InfoVO.setStarted(started);
 
-        //活动未开始不查询其他信息
+        //活动未开始不查询排行榜信息和用户信息
         if (started != -1) {
             // 查询排行榜
             List<Activity518InfoVO.Leaderboard> list = new ArrayList<>();
@@ -57,7 +58,7 @@ public class AbstractActivity518Controller {
             }
             activity518InfoVO.setLeaderboard(list);
 
-            // 返回用户信息
+            // 查询登陆用户信息
             if (userId != null) {
                 activity518InfoVO.setUsername(activity518Service.getUsernameByUserId(userId));
                 BigDecimal amount = activity518Service.getUserTenderAmount(userId, activityStartDate, activityEndDate);
@@ -71,21 +72,19 @@ public class AbstractActivity518Controller {
 
     protected BaseResult<Activity518UserInfoVO> queryUserInfo(Integer userId, String successStatus, String failStatus) {
         BaseResult<Activity518UserInfoVO> result = new BaseResult(successStatus, SUCCESS_DESC);
-
         Activity518UserInfoVO vo = new Activity518UserInfoVO();
         ActivityListVO activityListVO = activity518Service.getActivityById(activityId);
         Date activityStartDate = new Date(activityListVO.getTimeStart() * 1000L);
         Date activityEndDate = new Date(activityListVO.getTimeEnd() * 1000L);
 
-        // 剩余抽奖次数 todo
-        int times = 0;
-        vo.setTimes(times);
+        // 查询用户剩余抽奖次数
+        vo.setTimes(activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate));
 
-        // 累计年化出借金额
+        // 查询用户累计年化出借金额
         BigDecimal amount = activity518Service.getUserTenderAmount(userId, activityStartDate, activityEndDate);
         vo.setAmount(String.valueOf(amount == null ? BigDecimal.ZERO : amount));
 
-        //抽奖记录
+        // 查询抽奖记录
         List<Activity518UserInfoVO.RewardRecord> records = new ArrayList<>();
         List<ActivityUserRewardVO> rewardVOS = activity518Service.selectActivityUserReward(activityId == null ? 0 : activityId, userId, 0);
         if(!CollectionUtils.isEmpty(rewardVOS)){

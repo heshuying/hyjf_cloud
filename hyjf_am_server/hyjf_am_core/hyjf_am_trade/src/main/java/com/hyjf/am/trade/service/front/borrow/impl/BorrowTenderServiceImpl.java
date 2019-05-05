@@ -323,4 +323,13 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
         return investSum.add(planSum);
     }
 
+    @Override
+    public BigDecimal getUserInvestAmount(int userId, Date startDate, Date endDate, Integer client) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("startTime", startDate);
+        map.put("endTime", endDate);
+        map.put("client", client);
+        return borrowInvestCustomizeMapper.getUserInvestAmount(map);
+    }
 }

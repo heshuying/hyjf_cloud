@@ -1,14 +1,14 @@
 package com.hyjf.cs.market.client.impl;
 
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.user.EvalationCustomizeResponse;
 import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.response.user.UserUtmInfoResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.resquest.trade.UserTenderRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
@@ -237,7 +237,22 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UserVO getUserById(Integer userId) {
-		//todo
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/findById/" + userId, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
 		return null;
+	}
+
+
+	@Override
+	public boolean hasLoginInActivity(int userId, Date activityStartDate, Date activityEndDate) {
+		String url = "http://AM-TRADE/am-user/userLogin/hasLogin";
+		BooleanResponse response = restTemplate.postForEntity(url, new UserTenderRequest(userId, activityStartDate, activityEndDate), BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResultBoolean() == null ? false : response.getResultBoolean();
+		}
+		return false;
 	}
 }

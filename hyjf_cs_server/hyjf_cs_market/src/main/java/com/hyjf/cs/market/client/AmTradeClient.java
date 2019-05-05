@@ -139,4 +139,14 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	BigDecimal getUserTender(int userId, Date from, Date from1);
+
+	/**
+	 * 查询用户活动期间投资金额
+	 * @param userId
+	 * @param activityStartDate
+	 * @param activityEndDate
+	 * @param client    不传查询所有端
+	 * @return
+	 */
+	BigDecimal getTenderAmount(int userId, Date activityStartDate, Date activityEndDate, Integer client);
 }

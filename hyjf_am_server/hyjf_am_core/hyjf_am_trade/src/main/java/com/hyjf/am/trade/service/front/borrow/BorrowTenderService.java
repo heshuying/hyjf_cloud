@@ -157,4 +157,13 @@ public interface BorrowTenderService {
 
     BigDecimal getAnnualInvestAmount(Integer userId, Date startTime, Date endTime);
 
+    /**
+     * 查询活动期间用户投资
+     * @param userId
+     * @param startDate
+     * @param endDate
+     * @param client 客户端
+     * @return
+     */
+    BigDecimal getUserInvestAmount(int userId, Date startDate, Date endDate, Integer client);
 }

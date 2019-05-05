@@ -7,6 +7,7 @@ import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.resquest.trade.UserTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.borrow.BorrowTenderService;
+import com.hyjf.am.resquest.trade.SumTenderAmountRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +49,22 @@ public class CalInvestAmountController extends BaseController {
         logger.debug("annualInvestAmount: {}", annualInvestAmount);
         if (annualInvestAmount != null) {
             response.setResultDec(annualInvestAmount);
+        } else {
+            response.setResultDec(BigDecimal.ZERO);
+        }
+        return response;
+    }
+
+
+    @PostMapping("/")
+    public BigDecimalResponse getTenderAmount(@RequestBody SumTenderAmountRequest request) {
+        logger.info("getTenderAmount run, request is: {}", request);
+        BigDecimalResponse response = new BigDecimalResponse();
+        BigDecimal userInvestAmount = borrowTenderService.getUserInvestAmount(request.getUserId(), request.getStartDate(), request.getEndDate(), request.getClient());
+        logger.debug("userInvestAmount: {}", userInvestAmount);
+
+        if (userInvestAmount != null) {
+            response.setResultDec(userInvestAmount);
         } else {
             response.setResultDec(BigDecimal.ZERO);
         }

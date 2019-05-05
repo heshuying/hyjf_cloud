@@ -102,4 +102,13 @@ public interface AmUserClient {
      * @return
      */
     UserVO getUserById(Integer userId);
+
+    /**
+     * 查询用户活动期间登陆情况
+     * @param userId
+     * @param activityStartDate
+     * @param activityEndDate
+     * @return
+     */
+    boolean hasLoginInActivity(int userId, Date activityStartDate, Date activityEndDate);
 }

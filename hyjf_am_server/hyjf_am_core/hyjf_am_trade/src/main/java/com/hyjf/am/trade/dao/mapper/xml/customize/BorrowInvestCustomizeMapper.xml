@@ -536,4 +536,32 @@
 		    ),0)
 	</select>
 
+
+
+	<select id="getUserInvestAmount" resultType="java.math.BigDecimal">
+		SELECT SUM(t.account) FROM (
+		 	SELECT IFNULL(SUM(IFNULL(hbt.account,0)),0) AS account
+			 FROM ht_borrow_tender hbt
+			 WHERE hbt.user_id = #{userId,jdbcType=INTEGER}
+				AND hbt.create_time <![CDATA[>=]]> #{startTime}
+				AND hbt.create_time <![CDATA[<=]]> #{endTime}
+				AND hbt.accede_order_id IS NULL
+				<if test="client != null and client != ''">
+					AND hbt.client = #{client,jdbcType=INTEGER}
+				</if>
+
+		   UNION ALL
+
+			SELECT IFNULL(SUM(IFNULL(hha.accede_account,0)),0) AS account
+			FROM `ht_hjh_accede`  hha
+			   WHERE  hha.user_id = #{userId,jdbcType=INTEGER}
+				AND hha.create_time <![CDATA[>=]]> #{startTime}
+				AND hha.create_time <![CDATA[<=]]> #{endTime}
+				AND hha.accede_order_id IS NULL
+				<if test="client != null and client != ''">
+					AND hha.client = #{client,jdbcType=INTEGER}
+				</if>
+			 ) AS t
+	</select>
+
 </mapper>

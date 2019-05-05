@@ -53,4 +53,14 @@ public interface Activity518Service {
      * @return
      */
     List<ActivityUserRewardVO> selectActivityUserReward(int activityId, int userId, int grade);
+
+    /**
+     * 统计用户抽奖次数
+     * @param activityId
+     * @param userId
+     * @param activityStartDate
+     * @param activityEndDate
+     * @return
+     */
+    int countRewardTimes(int activityId, int userId, Date activityStartDate, Date activityEndDate);
 }

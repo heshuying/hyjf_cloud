@@ -84,4 +84,11 @@ public interface BorrowInvestCustomizeMapper {
     BigDecimal getAnnualInvestAmount(Map<String, Object> map);
 
     BigDecimal getPlanAnnualAmount(Map<String, Object> map);
+
+    /**
+     * 查询用户投资金额
+     * @param map
+     * @return
+     */
+    BigDecimal getUserInvestAmount(Map<String, Object> map);
 }
