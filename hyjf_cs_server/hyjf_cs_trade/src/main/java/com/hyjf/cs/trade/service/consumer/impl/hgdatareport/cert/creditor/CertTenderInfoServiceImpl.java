@@ -100,6 +100,7 @@ public class CertTenderInfoServiceImpl extends BaseHgCertReportServiceImpl imple
                             //投资计息时间
                             invTime = dateFormatTransformation(borrowRecoverVO.getCreateTime(),"H");
                             //封闭截止时间：智投报送计息日
+                            logger.info(logHeader +" 智投报送计息日: " +hjhAccede.getCountInterestTime()+"=====");
                             lockTime = GetDate.times10toStrYYYYMMDD(hjhAccede.getCountInterestTime());
                             //红包
                             sumRedPackage= amTradeClient.getRedPackageSum(hjhAccede.getAccedeOrderId());
