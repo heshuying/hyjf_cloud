@@ -5,12 +5,12 @@ import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
-import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
-import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
-import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
-import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
-import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
+import com.hyjf.am.response.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.config.WithdrawTimeConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -36,7 +36,7 @@ public class WithdrawConfigController extends BaseConfigController {
      * @return
      */
     @PostMapping("/getWithdrawRuleConfigList")
-    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(@RequestBody WithdrawRuleConfigRequest request) {
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(@RequestBody AdminWithdrawRuleConfigRequest request) {
         WithdrawRuleConfigResponse response = new WithdrawRuleConfigResponse();
         int count = withdrawConfigService.getWithdrawRuleConfigCount();
         if (count==0) {
@@ -63,7 +63,7 @@ public class WithdrawConfigController extends BaseConfigController {
      * @return
      */
     @PostMapping("/getWithdrawTimeConfigList")
-    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(@RequestBody WithdrawTimeConfigRequest request) {
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(@RequestBody AdminWithdrawTimeConfigRequest request) {
         WithdrawTimeConfigResponse response = new WithdrawTimeConfigResponse();
         int count = withdrawConfigService.getWithdrawTimeConfigCount();
         if (count==0){

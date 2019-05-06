@@ -4,17 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -1619,14 +1618,14 @@ public interface AmConfigClient {
 	 * @return
 	 * @param request
 	 */
-    WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request);
+    WithdrawRuleConfigResponse getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request);
 
 	/**
 	 * 假期时间配置列表
 	 * @return
      * @param request
 	 */
-	WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request);
+	WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request);
 
 	/**
 	 * 提现规则配置详情

@@ -13,4 +13,13 @@ import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
  * @version WithdrawRuleConfigResponse, v0.1 2019/4/19 16:16
  */
 public class WithdrawRuleConfigResponse extends Response<WithdrawRuleConfigVO> {
+    private int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

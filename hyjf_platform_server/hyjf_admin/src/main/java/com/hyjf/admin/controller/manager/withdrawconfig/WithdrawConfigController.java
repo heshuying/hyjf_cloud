@@ -7,15 +7,14 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.config.WithdrawConfigService;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.config.WithdrawRuleConfigResponse;
-import com.hyjf.am.response.admin.config.WithdrawTimeConfigResponse;
-import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
-import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
-import com.hyjf.am.vo.admin.config.WithdrawRuleConfigVO;
-import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
+import com.hyjf.am.response.config.WithdrawRuleConfigResponse;
+import com.hyjf.am.response.config.WithdrawTimeConfigResponse;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.WithdrawRuleConfigVO;
+import com.hyjf.am.vo.config.WithdrawTimeConfigVO;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +47,7 @@ public class WithdrawConfigController extends BaseController {
     @ApiOperation(value = "提现规则配置列表", notes = "提现规则配置列表")
     @PostMapping(value = "/getWithdrawRuleConfigList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<WithdrawRuleConfigVO>> getWithdrawRuleConfigList(@RequestBody WithdrawRuleConfigRequest request) {
+    public AdminResult<ListResult<WithdrawRuleConfigVO>> getWithdrawRuleConfigList(@RequestBody AdminWithdrawRuleConfigRequest request) {
         WithdrawRuleConfigResponse response = withdrawConfigService.getWithdrawRuleConfigList(request);
         if (response == null || !Response.isSuccess(response)){
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -102,7 +101,7 @@ public class WithdrawConfigController extends BaseController {
     @ApiOperation(value = "假期时间配置列表", notes = "假期时间配置列表")
     @PostMapping(value = "/getWithdrawTimeConfigList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<WithdrawTimeConfigVO>> getWithdrawTimeConfigList(@RequestBody WithdrawTimeConfigRequest request) {
+    public AdminResult<ListResult<WithdrawTimeConfigVO>> getWithdrawTimeConfigList(@RequestBody AdminWithdrawTimeConfigRequest request) {
         WithdrawTimeConfigResponse response = withdrawConfigService.getWithdrawTimeConfigList(request);
         if (response == null || !Response.isSuccess(response)){
             return new AdminResult<>(FAIL, FAIL_DESC);

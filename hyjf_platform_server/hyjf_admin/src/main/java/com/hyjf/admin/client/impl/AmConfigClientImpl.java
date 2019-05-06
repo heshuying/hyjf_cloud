@@ -15,10 +15,10 @@ import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -2552,7 +2551,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @param request
      */
     @Override
-    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(WithdrawRuleConfigRequest request) {
+    public WithdrawRuleConfigResponse getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request) {
         String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawRuleConfigList";
         WithdrawRuleConfigResponse response = restTemplate.postForEntity(url,request,WithdrawRuleConfigResponse.class).getBody();
         if (response!=null && Response.SUCCESS.equals(response.getRtn())){
@@ -2567,7 +2566,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @param request
      */
     @Override
-    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(WithdrawTimeConfigRequest request) {
+    public WithdrawTimeConfigResponse getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request) {
         String url = "http://AM-ADMIN/am-config/configCenter/withdrawConfig/getWithdrawTimeConfigList";
         WithdrawTimeConfigResponse response = restTemplate.postForEntity(url,request,WithdrawTimeConfigResponse.class).getBody();
         if (response!=null && Response.SUCCESS.equals(response.getRtn())){
