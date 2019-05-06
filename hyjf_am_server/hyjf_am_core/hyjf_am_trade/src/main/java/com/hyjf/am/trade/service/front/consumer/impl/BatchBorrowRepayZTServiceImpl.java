@@ -2593,7 +2593,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         try {
 			if(borrowRecover.getAdvanceStatus()-1==0){
 				// 提前还款
-
+                // 发送短信
+				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,borrowRecover.getAdvanceStatus());
 			}else{
 				// 发送短信
 				this.sendSms(tenderUserId, borrowNid, repayCapital, repayInterest,borrowRecover.getAdvanceStatus());
