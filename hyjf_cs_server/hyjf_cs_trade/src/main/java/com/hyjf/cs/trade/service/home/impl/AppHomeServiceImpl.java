@@ -287,7 +287,10 @@ public class AppHomeServiceImpl implements AppHomeService {
         this.createBannerPage(info, platform, request, HOST);//加缓存
         this.createBannerlittlePage(info,getNewProjectFlag);
         this.createPopImgPage(info, uniqueIdentifier);
+        // IOS强制更新
         this.createForceUpdateInfo(info, platform, version, HOST);
+        // 升级维护页面
+        this.createNoticeInfo(info, platform, version, HOST);
 
         String serviceAgreementUrl = systemConfig.getAppServiceAgreementUrl();
         String privacyPolicyUrl = systemConfig.getAppPrivacyPolicyUrl();
@@ -923,6 +926,45 @@ public class AppHomeServiceImpl implements AppHomeService {
         if("true".equals(noticeStatus) && StringUtils.isNotBlank(platform) && "3".equals(platform) && isNeedUpdate){
             info.put("needForcedToUpdate", "1");
             info.put("forcedToUpdateUrl", noticeUrlIOS);
+        }else {
+            info.put("needForcedToUpdate", "0");
+            info.put("forcedToUpdateUrl", "");
+        }
+
+    }
+
+    /**
+     *
+     * 升级维护页
+     * @author hsy
+     * @param info
+     */
+    private void createNoticeInfo(JSONObject info, String platform, String version, String HOST){
+        // 从配置文件中加载配置信息
+        String haltStatus = systemConfig.haltStatus;
+        String haltTimeRange = systemConfig.haltTimeRange;
+        String haltUrl = systemConfig.haltUrl;
+        if (StringUtils.isNotBlank(haltUrl)){
+            haltUrl = (haltUrl.substring(0,1).equals("/")) ? haltUrl.substring(1) : haltUrl;
+        }
+        haltUrl = HOST +"/"+ haltUrl+"?";
+        logger.info("haltStatus:" + haltStatus + " haltTimeRange:" + haltTimeRange + " haltUrl:" + haltUrl);
+
+        // 未开启直接返回
+        if(haltStatus.equals("false")){
+            info.put("needForcedToUpdate", "0");
+            info.put("forcedToUpdateUrl", "");
+            return;
+        }
+
+        Integer timeStart = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[0]);
+        Integer timeEnd = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[1]);
+        Integer nowTime = GetDate.getNowTime10();
+
+        // 是否需要显示维护通知
+        if(timeStart <= nowTime && timeEnd >= nowTime){
+            info.put("needForcedToUpdate", "1");
+            info.put("forcedToUpdateUrl", haltUrl);
         }else {
             info.put("needForcedToUpdate", "0");
             info.put("forcedToUpdateUrl", "");
