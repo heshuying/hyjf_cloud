@@ -17,7 +17,7 @@ public class OperationScreenTJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         // 0 17 4 * * ? 每天凌晨4点17分执行一次
         logger.info("OperationScreenTJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/page2", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/page2", null);
         logger.info("OperationScreenTJob execute end...");
     }
 }
