@@ -191,7 +191,7 @@ public abstract class AbstractActivity518Controller extends AbstractController{
 
     /**
      * @Author walter.limeng
-     * @Description //抽奖，0：18元代金券，1：58元代金券，2：518元代金券，3：0.8%加息券，4：1.0%加息券 因产品决定不能让用户抽中手机，顾手机不参与抽奖
+     * @Description //抽奖，0：18元代金券，1：58元代金券，2：518元代金券，3：0.8%加息券，4：1.0%加息券 因产品决定不能让用户抽中手机，故手机不参与抽奖
      * @Date 15:28 2019-05-05
      * @Param []
      * @return int 抽中奖品的代码
