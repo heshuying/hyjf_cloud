@@ -283,7 +283,7 @@ public class ClientConstants implements Serializable {
 
 	public static final String BANKOPEN_OPEN_ACTION = "/user/open";
 
-	public static final String USER_RISKTEST = "/user/riskTest";
+	public static final String USER_RISKTEST = "/user/riskTest?evaluation=";
 
 	public static final String USER_AUTH_INVES_ACTION = "/bank/user/auto/userAuthInves";
 
