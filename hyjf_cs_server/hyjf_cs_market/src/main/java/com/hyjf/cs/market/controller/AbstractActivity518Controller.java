@@ -5,6 +5,8 @@ import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.cs.market.service.Activity518Service;
+import com.hyjf.cs.market.util.Activity518Prize;
+import com.hyjf.cs.market.util.LotteryUtil;
 import com.hyjf.cs.market.vo.activity518.Activity518DrawVO;
 import com.hyjf.cs.market.vo.activity518.Activity518InfoVO;
 import com.hyjf.cs.market.vo.activity518.Activity518UserInfoVO;
@@ -119,17 +121,57 @@ public abstract class AbstractActivity518Controller extends AbstractController{
      * @return
      */
     protected BaseResult<Activity518DrawVO> doDraw(Integer userId) {
+        BaseResult<Activity518DrawVO> resultBean = new BaseResult<>(getSuccessStatus(), SUCCESS_DESC);
+        Activity518DrawVO activity518DrawVO = new Activity518DrawVO();
 
-        //todo 抽奖，保存抽奖记录，   amMarketClient.insertActivityUserReward   grade默认0， rewardName：奖品名称（可选字段）， rewardType奖品代号，代号详情如下
-        // 代号详情   0：18元代金券
-        //         * 1：58元代金券
-        //         * 2：518元代金券
-        //         * 3：0.8%加息券
-        //         * 4：1.0%加息券
-        //         * 5：iPhone XS（256G）
-        //         * 6： 华为P30（256G）
+        //查询活动是否存在
+        ActivityListVO activityListVO = activity518Service.getActivityById(activityId);
+        if(null != activityListVO){
+            Date activityStartDate = new Date(activityListVO.getTimeStart() * 1000L);
+            Date activityEndDate = new Date(activityListVO.getTimeEnd() * 1000L);
 
-        return null;
+            // 查询用户剩余抽奖次数
+            int time = activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate);
+            logger.info("用户：{},剩余抽奖次数：{}",userId,time);
+            if(time > 0){
+                //抽奖，保存抽奖记录，   amMarketClient.insertActivityUserReward   grade默认0， rewardName：奖品名称（可选字段）， rewardType奖品代号，代号详情如下
+                // 代号详情   0：18元代金券 1：58元代金券  2：518元代金券 3：0.8%加息券 4：1.0%加息券  5：iPhone XS（256G） 6： 华为P30（256G）
+                //用户进行抽奖活动
+                int luckNum = luckDraw(userId);
+                String rewardType = "代金券";
+                if(luckNum > 2){
+                    rewardType = "加息券";
+                }
+                //保存用户中奖记录
+                activity518Service.saveActivityUserReward(userId,  activityId, 0, Activity518Prize.getValue(luckNum), rewardType);
+                //TODO 自动发送用户奖品
+                activity518DrawVO.setCurrentAward(luckNum);
+                resultBean.setData(activity518DrawVO);
+                logger.info("用户：{},抽奖完成，奖品：{}",userId,Activity518Prize.getValue(luckNum));
+            }else{
+                resultBean.setStatus(getFailStatus());
+                resultBean.setStatusDesc("用户抽奖机会不足！");
+            }
+        }else{
+            resultBean.setStatus(getFailStatus());
+            resultBean.setStatusDesc("活动不存在！");
+        }
+
+        return resultBean;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description //抽奖，0：18元代金券，1：58元代金券，2：518元代金券，3：0.8%加息券，4：1.0%加息券 因产品决定不能让用户抽中手机，顾手机不参与抽奖
+     * @Date 15:28 2019-05-05
+     * @Param []
+     * @return int 抽中奖品的代码
+     **/
+    public int luckDraw(Integer userId){
+        //抽奖开始
+        LotteryUtil ll = new LotteryUtil(Activity518Prize.getPrize());
+        logger.info("用户ID：{} 的用户中奖代码：{}",userId, ll.randomColunmIndex());
+        return ll.randomColunmIndex();
     }
 
 

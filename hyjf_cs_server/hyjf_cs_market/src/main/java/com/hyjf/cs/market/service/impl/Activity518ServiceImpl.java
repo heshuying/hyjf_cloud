@@ -122,6 +122,11 @@ public class Activity518ServiceImpl implements Activity518Service {
         return remainderTimes < 0 ? 0 : remainderTimes;
     }
 
+    @Override
+    public void saveActivityUserReward(int userId, int activityId, int grade, String rewardName, String rewardType) {
+        amMarketClient.insertActivityUserReward(userId,activityId,grade,rewardName,rewardType);
+    }
+
     private BigDecimal getTenderAmountInActivity(int userId, Date activityStartDate, Date activityEndDate, Integer client) {
         return amTradeClient.getTenderAmount(userId, activityStartDate, activityEndDate, client);
     }
