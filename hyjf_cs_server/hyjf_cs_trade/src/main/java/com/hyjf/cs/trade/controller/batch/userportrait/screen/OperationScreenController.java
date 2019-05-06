@@ -4,6 +4,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class OperationScreenController {
         try {
             logger.info("用户画像-运营部投屏二数据获取定时任务 ==========>>> [Start]");
             commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), null));
+                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), new JSONObject()));
             logger.info("用户画像-运营部投屏二数据获取定时任务 ==========>>> [End]");
         } catch (MQException e) {
             logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
