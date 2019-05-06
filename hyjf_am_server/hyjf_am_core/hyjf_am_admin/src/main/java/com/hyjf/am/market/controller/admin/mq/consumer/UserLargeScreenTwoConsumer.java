@@ -112,7 +112,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delRpUserIdLists = averageAssign(delRpUserId, listNum);
                         for (List<String> param : delRpUserIdLists) {
-                            userLargeScreenTwoCustomizeService.deleteUserOperateT(param);
+                            userLargeScreenTwoCustomizeService.deleteRepaymentPlan(param);
                         }
                     }
                 }
