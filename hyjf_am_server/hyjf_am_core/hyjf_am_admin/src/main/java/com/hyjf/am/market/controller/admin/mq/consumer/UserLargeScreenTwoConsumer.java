@@ -1,15 +1,10 @@
 package com.hyjf.am.market.controller.admin.mq.consumer;
 
 import com.hyjf.am.admin.mq.consumer.SellDailyConsumer;
-import com.hyjf.am.market.dao.mapper.customize.market.UserLargeScreenTwoCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ScreenTwoParam;
 import com.hyjf.am.market.service.UserLargeScreenTwoCustomizeService;
-import com.hyjf.am.user.dao.mapper.auto.CustomerTaskConfigMapper;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
-import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -95,7 +90,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delUolUserIdLists = averageAssign(delUolUserId, listNum);
                         for (List<String> param : delUolUserIdLists) {
-                            userLargeScreenTwoCustomizeService.delUserOperate(param);
+                            userLargeScreenTwoCustomizeService.deleteUserOperate(param);
                         }
                     }
                 }
@@ -117,7 +112,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delRpUserIdLists = averageAssign(delRpUserId, listNum);
                         for (List<String> param : delRpUserIdLists) {
-                            userLargeScreenTwoCustomizeService.delRepaymentPlan(param);
+                            userLargeScreenTwoCustomizeService.deleteRepaymentPlan(param);
                         }
                     }
                 }
