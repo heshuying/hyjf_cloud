@@ -81,6 +81,7 @@ public class CertOldInvestDetailTenderSuccessMessageConsumer implements RocketMQ
                 }
                 // --> 调用service组装数据
                 JSONArray data =certOldInvestDetailService.createDate(accountLists);
+                logger.info(logHeader + " data.size()："+data.size());
                 if(data==null){
                     logger.info(logHeader + " 处理成功。page=" + page+",size="+size);
                     continue;

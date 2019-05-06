@@ -501,6 +501,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 
 	//已改
 	private void tenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
+		logger.info(logHeader + " accountList.getNid()："+accountList.getNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
@@ -535,6 +536,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//交易流水时间
 		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
+		logger.info(logHeader + " list.size()："+list.size());
 	}
 
 	//已改
