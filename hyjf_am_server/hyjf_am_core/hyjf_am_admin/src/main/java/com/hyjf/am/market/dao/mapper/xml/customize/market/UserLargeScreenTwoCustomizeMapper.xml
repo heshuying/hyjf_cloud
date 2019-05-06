@@ -279,7 +279,7 @@
 	</select>
 
 	<delete id="deleteAllParam">
-		DELETE FROM ht_screen_two_param
+		DELETE FROM hyjf_trade.ht_screen_two_param
 	</delete>
 
 	<insert id="insertResult" parameterType="java.util.List">
@@ -337,22 +337,22 @@
 	</select>
 
 	<select id="getUserOperateListUserId" resultType="java.lang.String">
-		SELECT user_id FROM ht_user_operate_list GROUP BY user_id;
+		SELECT user_id FROM hyjf_trade.ht_user_operate_list GROUP BY user_id;
 	</select>
 
 	<select id="getRepaymentPlan" resultType="java.lang.String">
-		SELECT user_id FROM ht_repayment_plan GROUP BY user_id;
+		SELECT user_id FROM hyjf_trade.ht_repayment_plan GROUP BY user_id;
 	</select>
 
 	<delete id="delUserOperate" parameterType="java.util.List">
-		DELETE FROM ht_user_operate_list WHERE user_id IN
+		DELETE FROM hyjf_trade.ht_user_operate_list WHERE user_id IN
 		<foreach collection="list" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>
 	</delete>
 
 	<delete id="delRepaymentPlan" parameterType="java.util.List">
-		DELETE FROM ht_repayment_plan WHERE user_id IN
+		DELETE FROM hyjf_trade.ht_repayment_plan WHERE user_id IN
 		<foreach collection="list" item="item" separator="," open="(" close=")">
 			#{item}
 		</foreach>
