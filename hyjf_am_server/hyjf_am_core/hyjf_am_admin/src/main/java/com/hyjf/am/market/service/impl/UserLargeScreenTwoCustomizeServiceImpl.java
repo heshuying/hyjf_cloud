@@ -50,23 +50,6 @@ public class UserLargeScreenTwoCustomizeServiceImpl implements UserLargeScreenTw
     }
 
     /**
-     * 添加数据之前先清空表历史数据,防止表数据增长太快
-     */
-    @Override
-    public void deleteAllParam() {
-        userLargeScreenTwoCustomizeMapper.deleteAllParam();
-    }
-
-    /**
-     * 添加集合数据到 用户画像-屏幕二数据表
-     * @param result
-     */
-    @Override
-    public void insertResult(List<ScreenTwoParam> result) {
-        userLargeScreenTwoCustomizeMapper.insertResult(result);
-    }
-
-    /**
      * 查询所有运营部用户的userId
      * @return
      */
@@ -82,15 +65,6 @@ public class UserLargeScreenTwoCustomizeServiceImpl implements UserLargeScreenTw
     @Override
     public List<String> getUserOperateListUserId() {
         return userLargeScreenTwoCustomizeMapper.getUserOperateListUserId();
-    }
-
-    /**
-     * 资金明细表-数据批量删除
-     * @param param
-     */
-    @Override
-    public void deleteUserOperate(List<String> param) {
-        userLargeScreenTwoCustomizeMapper.delUserOperate(param);
     }
 
     /**

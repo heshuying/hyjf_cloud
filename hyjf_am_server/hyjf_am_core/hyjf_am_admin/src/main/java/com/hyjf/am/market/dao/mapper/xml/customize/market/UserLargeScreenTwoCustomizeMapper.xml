@@ -17,14 +17,14 @@
 		current_owner AS customerName,
 		NOW() AS queryTime,
 		ROUND(SUM(add_share), 0) AS capitalIncrease,
-		ROUND(SUM(numerator) / SUM(denominator), 2) AS cashWithdrawalRate,
+		ROUND(IFNULL(SUM(numerator) / SUM(denominator), 0), 2) AS cashWithdrawalRate,
 		ROUND(SUM(end_balance), 0) AS nowBalance
 		FROM
 		(
 		SELECT
 		username AS '用户名',
 		attribute AS '用户属性',
-		money - withdraw + start_balance - end_balance AS add_share,
+		IFNULL(money - withdraw + start_balance - end_balance, 0) AS add_share,
 		money AS '充值',
 		withdraw AS '提现',
 		start_balance AS '月初站岗',
@@ -231,7 +231,7 @@
 		) bt
 		) hh
 		WHERE
-		add_share > 0
+		add_share >= 0
 		GROUP BY
 		current_owner
 	</select>

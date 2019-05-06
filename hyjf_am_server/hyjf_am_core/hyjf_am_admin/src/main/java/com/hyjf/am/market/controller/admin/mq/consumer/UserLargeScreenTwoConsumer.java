@@ -62,9 +62,9 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     operationParam.setNowBalance(operNowBalance);
                     result.add(operationParam);
                     // 添加数据之前先清空表历史数据,防止表数据增长太快
-                    userLargeScreenTwoCustomizeService.deleteAllParam();
+                    userLargeScreenTwoCustomizeTService.deleteAllParam();
                     // 添加集合数据到 用户画像-屏幕二数据表
-                    userLargeScreenTwoCustomizeService.insertResult(result);
+                    userLargeScreenTwoCustomizeTService.insertResult(result);
                 }
             }
             logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [End]");
@@ -93,7 +93,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delUolUserIdLists = averageAssign(delUolUserId, listNum);
                         for (List<String> param : delUolUserIdLists) {
-                            userLargeScreenTwoCustomizeService.deleteUserOperate(param);
+                            userLargeScreenTwoCustomizeTService.deleteUserOperate(param);
                         }
                     }
                 }
