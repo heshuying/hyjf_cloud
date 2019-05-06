@@ -1015,6 +1015,7 @@
                 OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 OR ( hydb.`status` = 3 )
                 OR ( hydb.`status` = 4 )
+                OR ( hydb.`status` = 8 )
                 )
             </if>
             <choose>

@@ -70,11 +70,14 @@ public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializab
     
     
     public String getBorrowPeriodExcl() {
-    	if(repayType.contains("天")) {
-    		return borrowPeriod+ "天";
-          }else{
-        	  return borrowPeriod+ "个月";
-          }
+    	if(repayType!=null) {
+        	if(repayType.contains("天")) {
+        		return borrowPeriod+ "天";
+              }else{
+            	  return borrowPeriod+ "个月";
+              }
+    	}
+    	return null;
 	}
 
 	public void setBorrowPeriodExcl(String borrowPeriodExcl) {
