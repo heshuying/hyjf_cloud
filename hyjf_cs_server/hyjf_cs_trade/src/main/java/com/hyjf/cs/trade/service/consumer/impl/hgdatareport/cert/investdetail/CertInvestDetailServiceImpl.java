@@ -68,11 +68,8 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 		certTransactRequest.setMaxId(maxId);
 		certTransactRequest.setMinId(minId);
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.queryCertAccountList(certTransactRequest);
-
-        logger.info(logHeader + "accountLists.size():"+accountLists.size());
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
-                logger.info(logHeader + "accountList.getTrade():"+accountList.getTrade());
 				 createParam(accountList,list);
 			}
 			if(list==null||list.size()==0){
@@ -353,7 +350,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param.put("transId", accountList.getNid());
         //产品信息编号
-        param.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
         //交易类型
         param.put("transType", "8");
         //交易金额
@@ -371,7 +368,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         //平台交易流水号
         param1.put("transId", accountList.getNid());
         //产品信息编号
-        param1.put("sourceFinancingCode", "-1");
+        param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
         //交易类型
         param1.put("transType", "9");
         //交易金额
@@ -387,21 +384,23 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
     private void increaseInerestProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
         Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
-		certRequest.setRealTenderId(accountList.getNid());
-		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-		logger.info(logHeader + "couponRealTenders.size()：" + couponRealTenders.size());
-		if(couponRealTenders==null||couponRealTenders.size()==0){
+		certRequest.setTransferId(accountList.getNid());
+		List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
+		if(certCouponRecoverVOList==null||certCouponRecoverVOList.size()==0){
 			//交易金额
 			return;
 		}
-		certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
+        List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+        if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
+            //交易金额
+            return;
+        }
+		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-		logger.info(logHeader + "borrowTenderCpnList.size()：" + borrowTenderCpnList.size());
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
 			return;
 		}
-		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" + borrowTenderCpnList.get(0).getBorrowNid());
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
 		if(borrowAndInfoVO==null){
 			return;
@@ -433,21 +432,24 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 	private void couponProfit(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
-		certRequest.setRealTenderId(accountList.getNid());
-		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-		logger.info(logHeader + "couponRealTenders.size()：" + couponRealTenders.size());
-		if(couponRealTenders==null||couponRealTenders.size()==0){
+		certRequest.setTransferId(accountList.getNid());
+		List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
+		if(certCouponRecoverVOList==null||certCouponRecoverVOList.size()==0){
 			//交易金额
 			return;
 		}
-		certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
+		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-		logger.info(logHeader + "borrowTenderCpnList.size()：" + borrowTenderCpnList.size());
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
 			return;
 		}
-		logger.info(logHeader + "borrowTenderCpnList.get(0).getBorrowNid()：" + borrowTenderCpnList.get(0).getBorrowNid());
+
+        List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+        if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
+            //交易金额
+            return;
+        }
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(borrowTenderCpnList.get(0).getBorrowNid());
 		if(borrowAndInfoVO==null){
 			return;
@@ -479,20 +481,16 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         CertRequest certRequest=new CertRequest();
         certRequest.setRealTenderId(accountList.getNid());
         List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-		logger.info(logHeader + "couponRealTenders.size()：" + couponRealTenders.size());
         if(couponRealTenders==null||couponRealTenders.size()==0){
 			//交易金额
 			param.put("transMoney", FORMAT.format(accountList.getAmount()));
         }else{
-			certRequest.setCouponTenderId(couponRealTenders.get(0).getRealTenderId());
+			certRequest.setCouponTenderId(couponRealTenders.get(0).getCouponTenderId());
 			List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-			logger.info(logHeader + "borrowTenderCpnList.size()：" + borrowTenderCpnList.size());
 			if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 				//交易金额
 				param.put("transMoney", FORMAT.format(accountList.getAmount()));
 			}else{
-				logger.info(logHeader + "borrowTenderCpnList.get(0).getRecoverAccountAll()：" + borrowTenderCpnList.get(0).getRecoverAccountAll());
-				logger.info(logHeader + "accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll()))：" + accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll()));
 				//交易金额
 				param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
 			}
