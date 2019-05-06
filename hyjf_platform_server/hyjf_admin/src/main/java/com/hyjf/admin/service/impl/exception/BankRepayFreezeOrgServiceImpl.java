@@ -91,12 +91,13 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
     }
 
     @Override
-    public RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay) {
+    public RepayBean getRepayBean(Integer userId, String roleId, String borrowNid, boolean isAllRepay, int latePeriod) {
         Map<String,String> paraMap = new HashMap<>();
         paraMap.put("userId", String.valueOf(userId));
         paraMap.put("roleId", roleId);
         paraMap.put("borrowNid", borrowNid);
         paraMap.put("isAllRepay", String.valueOf(isAllRepay));
+        paraMap.put("latePeriod", String.valueOf(latePeriod));
 
         return amTradeClient.getRepayBean(paraMap);
     }
@@ -107,11 +108,12 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
      * @date: 2018/7/10
      */
     @Override
-    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay){
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay, int latePeriod){
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
         requestBean.setAllRepay(isAllRepay);
+        requestBean.setLatePeriod(latePeriod);
         return amTradeClient.repayRequestUpdate(requestBean);
     }
 

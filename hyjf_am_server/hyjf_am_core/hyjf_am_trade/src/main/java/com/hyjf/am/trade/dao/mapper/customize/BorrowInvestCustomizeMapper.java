@@ -8,7 +8,10 @@ import com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize;
 import com.hyjf.am.trade.dao.model.customize.BorrowListCustomize;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wangjun
@@ -69,4 +72,16 @@ public interface BorrowInvestCustomizeMapper {
      * @return
      */
     Integer selectTenderCount(Integer userId);
+
+    /**
+     * 获取五一活动期间出借总额
+     * @return
+     * @param startTime
+     * @param endTime
+     */
+    BigDecimal getActivityInvestAmount(@Param("startTime") Date startTime,@Param("endTime") Date endTime);
+
+    BigDecimal getAnnualInvestAmount(Map<String, Object> map);
+
+    BigDecimal getPlanAnnualAmount(Map<String, Object> map);
 }

@@ -122,4 +122,21 @@ public interface AmTradeClient {
 
 	/** 用户测评配置 */
 	List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
+
+	/**
+	 * 查询时间范围内累计投资金额
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	BigDecimal getSumAmount(Date startDate, Date endDate);
+
+	/**
+	 * 查询时间范围内某用户投资年化
+	 * @param userId
+	 * @param from
+	 * @param from1
+	 * @return
+	 */
+	BigDecimal getUserTender(int userId, Date from, Date from1);
 }

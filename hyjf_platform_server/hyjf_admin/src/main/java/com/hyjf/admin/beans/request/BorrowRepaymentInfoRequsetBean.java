@@ -79,8 +79,18 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
     @ApiModelProperty(value = "列表来源标识 0：还款明细 1：批次还款-查看按钮")
     private  int serchFlag = 0;
     private String accedeOrderIdSrch;
+    private String recoverPeriod;
+    
+    
+    public String getRecoverPeriod() {
+		return recoverPeriod;
+	}
 
-    public String getBorrowNid() {
+	public void setRecoverPeriod(String recoverPeriod) {
+		this.recoverPeriod = recoverPeriod;
+	}
+
+	public String getBorrowNid() {
         return borrowNid;
     }
 
