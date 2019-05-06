@@ -107,7 +107,7 @@ public class UserLargeScreenTwoCustomizeServiceImpl implements UserLargeScreenTw
      * @param param
      */
     @Override
-    public void deleteUserRepaymentPlan(List<String> param) {
+    public void deleteUserOperateT(List<String> param) {
         userLargeScreenTwoCustomizeMapper.delRepaymentPlan(param);
     }
 }
