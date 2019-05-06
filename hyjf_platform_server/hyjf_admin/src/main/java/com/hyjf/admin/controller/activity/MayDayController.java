@@ -153,10 +153,34 @@ public class MayDayController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAwardExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody ActivityUserRewardRequest activityUserRewardRequest) throws Exception {
         logger.info("奖励领取列表导出, activityUserRewardRequest is: {} ", activityUserRewardRequest);
-        //sheet默认最大行数
-        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "奖励领取列表";
+        Map<String, String> beanPropertyColumnMap = buildMap51();
+        this.export(request,response,sheetName,activityUserRewardRequest, beanPropertyColumnMap);
+    }
+
+
+    /**
+     * 518活动奖励领取列表导出
+     *
+     * @param request
+     * @param response
+     * @param
+     */
+    @ApiOperation(value = "518活动奖励领取列表导出", notes = "518活动奖励领取列表导出")
+    @PostMapping("exportRewardList518")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    public void exportAwardExcel518(HttpServletRequest request, HttpServletResponse response, @RequestBody ActivityUserRewardRequest activityUserRewardRequest) throws Exception {
+        logger.info("518活动奖励领取列表导出, activityUserRewardRequest is: {} ", activityUserRewardRequest);
+        // 表格sheet名称
+        String sheetName = "518活动奖励领取列表";
+        Map<String, String> beanPropertyColumnMap = buildMap518();
+        this.export(request,response,sheetName,activityUserRewardRequest, beanPropertyColumnMap);
+    }
+
+    private void export(HttpServletRequest request, HttpServletResponse response, String sheetName, ActivityUserRewardRequest activityUserRewardRequest, Map<String, String> beanPropertyColumnMap) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 声明一个工作薄
@@ -165,12 +189,11 @@ public class MayDayController extends BaseController {
         //请求第一页5000条
         activityUserRewardRequest.setPageSize(defaultRowMaxCount);
         activityUserRewardRequest.setCurrPage(1);
-
         ActivityUserRewardResponse rewardResponse = activityUserRewardService.getRewardList(activityUserRewardRequest);
         Integer totalCount = rewardResponse.getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -182,8 +205,8 @@ public class MayDayController extends BaseController {
             activityUserRewardRequest.setPageSize(defaultRowMaxCount);
             activityUserRewardRequest.setCurrPage(i + 1);
             ActivityUserRewardResponse rewardResponse2 = activityUserRewardService.getRewardList(activityUserRewardRequest);
-            if(null == rewardResponse2){
-                rewardResponse2= new ActivityUserRewardResponse();
+            if (null == rewardResponse2) {
+                rewardResponse2 = new ActivityUserRewardResponse();
             }
             List<AdminActivityUserRewardVO> resultList = rewardResponse2.getResultList();
             if (!CollectionUtils.isEmpty(resultList)) {
@@ -198,16 +221,10 @@ public class MayDayController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter borrowPeriodAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                return (String) object;
-            }
-        };
         return mapAdapter;
     }
 
-    private Map<String,String> buildMap() {
+    private Map<String,String> buildMap51() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("userName", "用户名");
         map.put("trueName", "姓名");
@@ -216,6 +233,19 @@ public class MayDayController extends BaseController {
         map.put("sendType", "发放方式");
         map.put("sendStatusName", "发放状态");
         map.put("getTime", "领取时间");
+        map.put("createTime", "发放时间");
+        return map;
+    }
+
+
+    private Map<String,String> buildMap518() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName", "账户名");
+        map.put("trueName", "姓名");
+        map.put("rewardName", "获得奖励");
+        map.put("sendType", "发放方式");
+        map.put("sendStatusName", "发放状态");
+        map.put("getTime", "抽奖时间");
         map.put("createTime", "发放时间");
         return map;
     }
