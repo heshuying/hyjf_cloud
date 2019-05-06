@@ -6,7 +6,15 @@ package com.hyjf.cs.market.controller;
  */
 public abstract class AbstractController {
 
+    /**
+     * 成功返回码
+     * @return
+     */
     protected abstract String getSuccessStatus();
 
+    /**
+     * 失败返回码
+     * @return
+     */
     protected abstract String getFailStatus();
 }

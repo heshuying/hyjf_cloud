@@ -32,6 +32,28 @@ public class ActivityUserRewardRequest extends BasePage {
      */
     private Integer sort;
 
+    /**
+     * 奖励代号
+     */
+    private Integer rewardCode;
+
+    /**
+     * 活动id
+     */
+    private Integer activityId;
+
+    @Override
+    public String toString() {
+        return "ActivityUserRewardRequest{" +
+                "userName='" + userName + '\'' +
+                ", trueName='" + trueName + '\'' +
+                ", sendStatus=" + sendStatus +
+                ", sort=" + sort +
+                ", rewardCode=" + rewardCode +
+                ", activityId=" + activityId +
+                '}';
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -62,5 +84,21 @@ public class ActivityUserRewardRequest extends BasePage {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Integer getRewardCode() {
+        return rewardCode;
+    }
+
+    public void setRewardCode(Integer rewardCode) {
+        this.rewardCode = rewardCode;
+    }
+
+    public Integer getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
     }
 }
