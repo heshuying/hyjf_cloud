@@ -56,10 +56,11 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     // 查询运营部当前总站岗资金
                     BigDecimal operNowBalance = userLargeScreenTwoCustomizeService.getOperNowBalance();
                     // 给运营部对象赋值
-                    operationParam.setFlag(3);
                     operationParam.setCapitalIncrease(operationalCapitalIncrease);
-                    operationParam.setQueryTime(new Date());
                     operationParam.setNowBalance(operNowBalance);
+                    operationParam.setQueryTime(new Date());
+                    operationParam.setCustomerName("");
+                    operationParam.setFlag(3);
                     result.add(operationParam);
                     // 添加数据之前先清空表历史数据,防止表数据增长太快
                     userLargeScreenTwoCustomizeTService.deleteAllParam();
