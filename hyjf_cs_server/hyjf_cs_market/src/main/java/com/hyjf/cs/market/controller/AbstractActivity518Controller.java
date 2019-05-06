@@ -3,7 +3,13 @@ package com.hyjf.cs.market.controller;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.coupon.UserCouponBean;
 import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.common.util.CouponUtil;
+import com.hyjf.cs.market.mq.base.CommonProducer;
+import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.Activity518Service;
 import com.hyjf.cs.market.util.Activity518Prize;
 import com.hyjf.cs.market.util.LotteryUtil;
@@ -32,9 +38,13 @@ public abstract class AbstractActivity518Controller extends AbstractController{
 
     @Value("${activity.518.activityId}")
     private Integer activityId;
+    @Value("${activity.518.couponCodes}")
+    private String couponCodes;
 
     @Autowired
     private Activity518Service activity518Service;
+    @Autowired
+    private CommonProducer producer;
 
     /**
      * 共有查询活动信息接口
@@ -144,7 +154,26 @@ public abstract class AbstractActivity518Controller extends AbstractController{
                 }
                 //保存用户中奖记录
                 activity518Service.saveActivityUserReward(userId,  activityId, 0, Activity518Prize.getValue(luckNum), rewardType);
-                //TODO 自动发送用户奖品
+                // 自动发送用户奖品
+                // 根据配置获取配置文件中配置的活动优惠券，把所有优惠券按照上述优惠券代码依次排列，分割为数组，根据中奖编号获取优惠券编号
+                String [] st1 = couponCodes.split(",");
+                String couponCode = st1[luckNum];
+                //系统通过MQ自动发放用户中奖的优惠券
+                try {
+                    logger.info("用户:{}发放优惠券:{}, 活动:{}", userId, couponCode, activityId);
+                    UserCouponBean couponBean = new UserCouponBean();
+                    couponBean.setUserId(userId);
+                    couponBean.setSendFlg(CouponUtil.NUM_12);
+                    //本次参加的活动ID
+                    couponBean.setActivityId(activityId);
+                    //用户获取的优惠券编号
+                    couponBean.setCouponCode(couponCode);
+                    producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC, userId + "," + "", couponBean));
+                } catch (MQException e) {
+                    logger.error("用户:{}发放优惠券:{}, 活动:{}，发放失败！", userId, couponCode, activityId);
+                    logger.error("活动发券失败...", e);
+                }
+
                 activity518DrawVO.setCurrentAward(luckNum);
                 resultBean.setData(activity518DrawVO);
                 logger.info("用户：{},抽奖完成，奖品：{}",userId,Activity518Prize.getValue(luckNum));
@@ -170,8 +199,9 @@ public abstract class AbstractActivity518Controller extends AbstractController{
     public int luckDraw(Integer userId){
         //抽奖开始
         LotteryUtil ll = new LotteryUtil(Activity518Prize.getPrize());
-        logger.info("用户ID：{} 的用户中奖代码：{}",userId, ll.randomColunmIndex());
-        return ll.randomColunmIndex();
+        int luckNum = ll.randomColunmIndex();
+        logger.info("用户ID：{} 的用户中奖代码：{}",userId, luckNum);
+        return luckNum;
     }
 
 
