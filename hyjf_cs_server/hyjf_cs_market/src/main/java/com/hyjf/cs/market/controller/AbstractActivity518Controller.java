@@ -148,10 +148,8 @@ public abstract class AbstractActivity518Controller extends AbstractController{
                 // 代号详情   0：18元代金券 1：58元代金券  2：518元代金券 3：0.8%加息券 4：1.0%加息券  5：iPhone XS（256G） 6： 华为P30（256G）
                 //用户进行抽奖活动
                 int luckNum = luckDraw(userId);
-                String rewardType = "代金券";
-                if(luckNum > 2){
-                    rewardType = "加息券";
-                }
+                String rewardType = luckNum + "";
+
                 //保存用户中奖记录
                 activity518Service.saveActivityUserReward(userId,  activityId, 0, Activity518Prize.getValue(luckNum), rewardType);
                 // 自动发送用户奖品
