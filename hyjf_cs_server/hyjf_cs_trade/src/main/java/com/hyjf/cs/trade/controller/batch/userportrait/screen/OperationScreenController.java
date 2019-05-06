@@ -1,9 +1,9 @@
-package com.hyjf.am.market.controller.admin.batch;
+package com.hyjf.cs.trade.controller.batch.userportrait.screen;
 
-import com.hyjf.am.admin.mq.base.CommonProducer;
-import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +16,15 @@ import java.util.UUID;
 
 /**
  * @Auther:dangzw
- * @Date:2019/4/25
- * @Description:用户画像-运营部投屏二数据获取Batch
+ * @Date:2019/5/6
+ * @Description:
  */
-@ApiIgnore
 @RestController
-@RequestMapping("/am-admin/batch")
-public class OperationScreenBatch {
-    private static final Logger logger = LoggerFactory.getLogger(OperationScreenBatch.class);
+@ApiIgnore
+@RequestMapping("/cs-trade/batch")
+public class OperationScreenController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OperationScreenController.class);
 
     @Autowired
     private CommonProducer commonProducer;
@@ -31,12 +32,12 @@ public class OperationScreenBatch {
     /**
      * 用户画像-运营部投屏二数据获取定时任务
      */
-    @GetMapping(value="/operationScreenBatch", produces="application/json; charset=utf-8")
+    @GetMapping(value="/page2", produces="application/json; charset=utf-8")
     public void operationScreenBatch() {
         try {
             logger.info("用户画像-运营部投屏二数据获取定时任务 ==========>>> [Start]");
             commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), null));
+                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString()));
             logger.info("用户画像-运营部投屏二数据获取定时任务 ==========>>> [End]");
         } catch (MQException e) {
             logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
