@@ -5,6 +5,7 @@ import com.hyjf.am.market.dao.model.auto.ScreenTwoParam;
 import com.hyjf.am.market.service.UserLargeScreenTwoCustomizeService;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,8 +13,9 @@ import java.util.List;
 /**
  * @Auther:dangzw
  * @Date:2019/5/6
- * @Description:
+ * @Description:用户画像-运营部投屏二数据batch获取、每日用户划转
  */
+@Service
 public class UserLargeScreenTwoCustomizeServiceImpl implements UserLargeScreenTwoCustomizeService {
 
     @Autowired
