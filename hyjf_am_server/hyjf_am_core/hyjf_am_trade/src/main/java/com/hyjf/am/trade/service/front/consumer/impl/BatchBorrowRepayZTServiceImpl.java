@@ -2840,7 +2840,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				msg.put("val_borrownid", borrowNid);
 				msg.put("val_capital", repayCapital.toString());
 				msg.put("val_interest", repayInterest.toString());
-				new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN,
+				smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN_TIQIAN,
 						CustomConstants.CHANNEL_TYPE_NORMAL);
 			}else {
 				Map<String, String> msg = new HashMap<>();
@@ -2848,7 +2848,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				msg.put("val_borrownid", borrowNid);
 				msg.put("val_capital", repayCapital.toString());
 				msg.put("val_interest", repayInterest.toString());
-				 new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
+				smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
 						CustomConstants.CHANNEL_TYPE_NORMAL);
 			}
 			try {
