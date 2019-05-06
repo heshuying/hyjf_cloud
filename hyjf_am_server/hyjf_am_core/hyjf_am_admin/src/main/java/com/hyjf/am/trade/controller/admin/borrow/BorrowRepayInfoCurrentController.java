@@ -212,6 +212,35 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         // 查询列表数据
         List<BorrowRepayInfoCurrentExportCustomizeVO> resultList = borrowRepayInfoCurrentService.getRepayInfoCurrentListExport(paraMap);
 
+        // 计算还款管理费
+        for(BorrowRepayInfoCurrentExportCustomizeVO repayInfo : resultList){
+            if(repayInfo.getRecordType().equals("3") || repayInfo.getRecordType().equals("4")){
+                BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户还款管理费
+                BigDecimal assignCapital = new BigDecimal(repayInfo.getRecoverCapital());
+                BigDecimal feeRate = repayInfo.getFeeRate();
+                BigDecimal differentialRate = repayInfo.getDifferentialRate();
+                BigDecimal borrowAccount = new BigDecimal(repayInfo.getBorrowAccount());
+                BigDecimal assignAccount = new BigDecimal(repayInfo.getAccount());
+                String borrowPeriod = repayInfo.getBorrowPeriod();
+                String borrowStyle = repayInfo.getBorrowStyle();
+                Integer verifyTime = repayInfo.getVerifyTime();
+                Integer repayPeriod = repayInfo.getRecoverPeriod();
+                // 按月计息，到期还本还息end
+                if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, Integer.parseInt(borrowPeriod), differentialRate, verifyTime);
+                }
+                // 按天计息到期还本还息
+                else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, Integer.parseInt(borrowPeriod), differentialRate, verifyTime);
+                }
+                // 分期还款
+                else {
+                    assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, Integer.parseInt(borrowPeriod), repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
+                }
+                repayInfo.setRecoverFee(assignManageFee.toString());
+            }
+        }
+
         response.setResultList(resultList);
         response.setRtn(Response.SUCCESS);
 

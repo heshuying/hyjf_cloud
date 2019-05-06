@@ -1039,6 +1039,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriod,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        b.account AS borrowAccount,
+        t.account,
         '1' AS recordType
         FROM
         ht_borrow_recover br
@@ -1207,6 +1214,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriod,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        b.account AS borrowAccount,
+        t.account,
         '2' AS recordType
         FROM
         ht_borrow_recover_plan rp
@@ -1380,6 +1394,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriod,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        b.account AS borrowAccount,
+        ct.assign_capital AS account,
         '3' AS recordType
         FROM
         ht_credit_repay cr
@@ -1554,6 +1575,13 @@
         '%Y-%m-%d %H:%i:%s'
         )
         ) AS repayActionTime,
+        b.borrow_style AS borrowStyle,
+        b.borrow_period AS borrowPeriod,
+        b.manage_fee_rate AS feeRate,
+        b.differential_rate AS differentialRate,
+        b.verify_time AS verifyTime,
+        b.account AS borrowAccount,
+        hct.assign_capital AS account,
         '4' AS recordType
         FROM
         ht_hjh_debt_credit_repay hcr
