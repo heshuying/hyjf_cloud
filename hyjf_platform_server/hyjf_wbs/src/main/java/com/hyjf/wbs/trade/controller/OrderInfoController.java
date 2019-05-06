@@ -70,7 +70,9 @@ public class OrderInfoController extends BaseController {
                 wbsCommonVO.setData("");
             }
             tenderAccedeQO.setEntIds(getUtmId(tenderAccedeQO.getEntId()));
+            logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口 请求参数 " + JSONObject.toJSON(tenderAccedeQO));
             List<TenderAccedeVO> tenderAccedeVOS = this.orderService.getOrderInfo(tenderAccedeQO);
+            logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口 总条数 " + tenderAccedeVOS.size());
             if (tenderAccedeVOS!=null&&tenderAccedeVOS.size()>0){
                 wbsCommonVO.setCode(Response.SUCCESS);
                 wbsCommonVO.setMsg(Response.SUCCESS_MSG);
