@@ -1,8 +1,10 @@
 package com.hyjf.wbs.trade.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.common.http.UnicodeFormatter;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.qvo.*;
 import com.hyjf.wbs.sign.WbsSignUtil;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -40,7 +44,8 @@ public class OrderInfoController extends BaseController {
 //@RequestBody TenderAccedeQO tenderAccedeQO
     ) {
         WbsCommonVO wbsCommonVO =new WbsCommonVO();
-        WbsCommonQO wbsCommonQO = wbsCommonExQO;
+        WbsCommonQO wbsCommonQO =new WbsCommonQO();
+        BeanUtils.copyProperties(wbsCommonExQO, wbsCommonQO);
         //验签
         Boolean booleanSian = WbsSignUtil.verify(wbsCommonQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
         logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口  " + JSONObject.toJSON(wbsCommonExQO)+"验签结果："+booleanSian);
@@ -50,7 +55,13 @@ public class OrderInfoController extends BaseController {
             wbsCommonVO.setData("");
             return wbsCommonVO;
         }
-        TenderAccedeQO tenderAccedeQO = JSONObject.parseObject(wbsCommonQO.getData(),TenderAccedeQO.class);
+        String data="";
+        try {
+            data=URLDecoder.decode(wbsCommonQO.getData(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        TenderAccedeQO tenderAccedeQO = JSONObject.parseObject(data,TenderAccedeQO.class);
         // 订单明细
         if (tenderAccedeQO!=null){
             if (tenderAccedeQO.getStartTime().isEmpty()||tenderAccedeQO.getEndTime().isEmpty()){

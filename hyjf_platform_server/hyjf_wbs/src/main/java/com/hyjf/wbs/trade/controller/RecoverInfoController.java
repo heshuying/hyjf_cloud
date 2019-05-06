@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -51,7 +53,6 @@ public class RecoverInfoController extends BaseController {
         BeanUtils.copyProperties(wbsCommonExQO, wbsCommonQO);
         //验签
         Boolean booleanSian = WbsSignUtil.verify(wbsCommonQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
-        String jsonRequest = JSONObject.toJSONString(wbsCommonExQO);
         logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口  " + JSONObject.toJSON(wbsCommonExQO)+"验签结果："+booleanSian);
         if(!booleanSian){
             wbsRecoverVO.setCode(Response.ERROR);
@@ -59,7 +60,13 @@ public class RecoverInfoController extends BaseController {
             wbsRecoverVO.setData("");
             return wbsRecoverVO;
         }
-        RecoverQO recoverQO = JSONObject.parseObject(wbsCommonQO.getData(),RecoverQO.class);
+        String data="";
+        try {
+            data=URLDecoder.decode(wbsCommonQO.getData(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        RecoverQO recoverQO = JSONObject.parseObject(data,RecoverQO.class);
         if (recoverQO!=null){
             if (recoverQO.getEntId()==null|| recoverQO.getCurrentPage().isEmpty()){
                 wbsRecoverVO.setCode(Response.ERROR);
