@@ -1021,9 +1021,9 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             //修改信息
             int flag = this.updateCorpOpenAccountRecord(record);
             if (flag > 0) {
-                logger.info(("==================ht_corp_open_account_record 企业用户信息变更保存成功!======"));
+                logger.info(("==================ht_corp_open_account_record 企业用户信息变更成功!======"));
             }else{
-                logger.info("============企业信息变更保存异常!========");
+                logger.info("============企业信息变更异常!========");
             }
         } else {
             // 保存信息

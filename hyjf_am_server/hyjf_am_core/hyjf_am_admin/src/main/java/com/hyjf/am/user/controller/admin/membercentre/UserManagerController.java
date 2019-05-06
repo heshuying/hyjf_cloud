@@ -953,6 +953,8 @@ public class UserManagerController extends BaseController {
         BankCard bankCard = userManagerService.selectBankCardByUserId(Integer.parseInt(request.getUserId()));
         User user = userManagerService.selectUserByUserId(Integer.parseInt(request.getUserId()));
         if(null!=bankCard){
+            //银行卡id
+            bankCard.setBankId(request.getBankId());
             //银行卡
             bankCard.setBank(request.getBank());
             //联行号

@@ -1054,23 +1054,22 @@ public class UserCenterController extends BaseController {
                 result.setStatus(SUCCESS);
                 logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
                 return result;
-            } else {
-                logger.info("调用银行接口未能查找到银联号,调用本地数据库查找");
-                JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
-                if (null != banksConfig) {
-                    response.setResult(banksConfig.getPayAllianceCode());
-                    result.setStatus(SUCCESS);
-                    result.setStatusDesc("未查询到分行联行号已填充总行联行号");
-                    result.setData(response);
-                    logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
-                    return result;
-                } else {
-                    return new AdminResult<>(FAIL, "未查询到联行号");
-                }
             }
         } else {
-            return new AdminResult<>(FAIL, "银行接口调用失败");
+            logger.info("调用银行接口未能查找到银联号,调用本地数据库查找");
+            JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
+            if (null != banksConfig) {
+                response.setResult(banksConfig.getPayAllianceCode());
+                result.setStatus(SUCCESS);
+                result.setStatusDesc("未查询到分行联行号已填充总行联行号");
+                result.setData(response);
+                logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
+                return result;
+            } else {
+                return new AdminResult<>(FAIL, "未查询到联行号");
+            }
         }
+        return new AdminResult<>(FAIL, "未查询到联行号");
     }
 
 
@@ -1302,20 +1301,37 @@ public class UserCenterController extends BaseController {
      * @return
      */
     @ResponseBody
-    @GetMapping(value = "/selectBankConfigByName/{bankName}")
+    @GetMapping(value = "/selectBankConfigByName",produces = "application/json; charset=utf-8")
     @ApiOperation(value = "根据所属银行名查找银联号", notes = "根据所属银行名查找银联号")
-    public AdminResult<Response> selectBankConfigByName(HttpServletRequest request, @PathVariable String bankName) {
-        AdminResult<Response> result = new AdminResult<Response>();
+    public AdminResult<JxBankConfigCustomizeVO> selectBankConfigByName(HttpServletRequest request, @RequestParam String bankName) {
+        AdminResult<JxBankConfigCustomizeVO> result = new AdminResult<JxBankConfigCustomizeVO>();
         Response response = new Response();
         JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(bankName);
         if(banksConfig==null) {
-            return new AdminResult<>(FAIL, "未查询到银联号");
+            return new AdminResult<>(FAIL, "未查询到配置信息");
         }
-        response.setResult(banksConfig.getPayAllianceCode());
-        result.setStatus(SUCCESS);
-        result.setData(response);
+        JxBankConfigCustomizeVO jxBankConfigCustomizeVO = new JxBankConfigCustomizeVO();
+        BeanUtils.copyProperties(banksConfig,jxBankConfigCustomizeVO);
         logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
-        return result;
+        return new AdminResult<JxBankConfigCustomizeVO>(jxBankConfigCustomizeVO);
     }
+
+    /**
+     * 根据银行卡号查询相应的银行配置信息
+     * @param request
+     * @param cardNo
+     * @return
+     */
+  /*  @ResponseBody
+    @GetMapping(value = "/selectBankConfigByCardNo")
+    @ApiOperation(value = "根据银卡号查找配置信息", notes = "根据银卡号查找配置信息")
+    public AdminResult<JxBankConfigCustomizeVO> selectBankConfigByCardNo(HttpServletRequest request, @RequestParam String cardNo) {
+        AdminResult<JxBankConfigCustomizeVO> result = new AdminResult<JxBankConfigCustomizeVO>();
+        JxBankConfigCustomizeVO jxBankConfigVO = userCenterService.getBankIdByCardNo(cardNo);
+        if(null==jxBankConfigVO){
+            return new AdminResult<>(FAIL, "未查询到所属银行信息");
+        }
+        return new AdminResult<JxBankConfigCustomizeVO>(jxBankConfigVO);
+    }*/
 
 }
