@@ -1,7 +1,7 @@
 package com.hyjf.cs.market.service.impl;
 
-import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.market.client.AmMarketClient;
@@ -10,13 +10,11 @@ import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.service.Activity518Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -89,22 +87,23 @@ public class Activity518ServiceImpl implements Activity518Service {
         int sumTimes = 0;
         // 查询活动期间登陆次数，大于等于1次， 获得一次抽奖机会
         if(hasLoginInActivity(userId, activityStartDate, activityEndDate)){
+            logger.info("用户: {}, 518活动期间已登录，抽奖次数: 1", userId);
             sumTimes += 1;
         }
 
         // 查询活动期间出借金额
         BigDecimal tenderAmount = getTenderAmountInActivity(userId, activityStartDate, activityEndDate, null);
         if (tenderAmount != null) {
-            logger.info("用户: {}, 518活动期间总计投资: {}", userId, tenderAmount);
             int tenderTimes = tenderAmount.divideToIntegralValue(new BigDecimal(10000)).intValue();
+            logger.info("用户: {}, 518活动期间总计投资: {}, 获得抽奖次数: {}", userId, tenderAmount, tenderTimes);
             tenderTimes = tenderTimes > 3 ? 3 : (tenderTimes < 0 ? 0 : tenderTimes);
             sumTimes += tenderTimes;
         }
         // 查询活动期间微信端出借金额
         BigDecimal weTenderAmount = getTenderAmountInActivity(userId, activityStartDate, activityEndDate, 1);
         if (tenderAmount != null) {
-            logger.info("用户: {}, 518活动期间微信端投资: {}", userId, weTenderAmount);
             int weTenderTimes = weTenderAmount.subtract(new BigDecimal(3000)).compareTo(BigDecimal.ZERO) >= 0 ? 1 : 0;
+            logger.info("用户: {}, 518活动期间微信端投资: {}, 获得抽奖次数: {}", userId, weTenderAmount, weTenderTimes);
             sumTimes += weTenderTimes;
         }
 

@@ -1,8 +1,8 @@
 package com.hyjf.cs.market.controller;
 
 import com.hyjf.am.bean.result.BaseResult;
-import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.coupon.UserCouponBean;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.constants.MQConstant;
@@ -141,9 +141,9 @@ public abstract class AbstractActivity518Controller extends AbstractController{
             Date activityEndDate = new Date(activityListVO.getTimeEnd() * 1000L);
 
             // 查询用户剩余抽奖次数
-            int time = activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate);
-            logger.info("用户：{},剩余抽奖次数：{}",userId,time);
-            if(time > 0){
+            int times = activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate);
+            logger.info("用户：{},剩余抽奖次数：{}", userId, times);
+            if(times > 0){
                 //抽奖，保存抽奖记录，   amMarketClient.insertActivityUserReward   grade默认0， rewardName：奖品名称（可选字段）， rewardType奖品代号，代号详情如下
                 // 代号详情   0：18元代金券 1：58元代金券  2：518元代金券 3：0.8%加息券 4：1.0%加息券  5：iPhone XS（256G） 6： 华为P30（256G）
                 //用户进行抽奖活动
@@ -159,13 +159,7 @@ public abstract class AbstractActivity518Controller extends AbstractController{
                 //系统通过MQ自动发放用户中奖的优惠券
                 try {
                     logger.info("用户:{}发放优惠券:{}, 活动:{}", userId, couponCode, activityId);
-                    UserCouponBean couponBean = new UserCouponBean();
-                    couponBean.setUserId(userId);
-                    couponBean.setSendFlg(CouponUtil.NUM_12);
-                    //本次参加的活动ID
-                    couponBean.setActivityId(activityId);
-                    //用户获取的优惠券编号
-                    couponBean.setCouponCode(couponCode);
+                    UserCouponBean couponBean = new UserCouponBean(userId, CouponUtil.NUM_12, couponCode, activityId);
                     producer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC, userId + "," + "", couponBean));
                 } catch (MQException e) {
                     logger.error("用户:{}发放优惠券:{}, 活动:{}，发放失败！", userId, couponCode, activityId);
