@@ -944,10 +944,10 @@ public class AppHomeServiceImpl implements AppHomeService {
         String haltStatus = systemConfig.haltStatus;
 //        String haltTimeRange = systemConfig.haltTimeRange;
         String haltUrl = systemConfig.haltUrl;
-        if (StringUtils.isNotBlank(haltUrl)){
-            haltUrl = (haltUrl.substring(0,1).equals("/")) ? haltUrl.substring(1) : haltUrl;
-        }
-        haltUrl = HOST +"/"+ haltUrl+"?";
+//        if (StringUtils.isNotBlank(haltUrl)){
+//            haltUrl = (haltUrl.substring(0,1).equals("/")) ? haltUrl.substring(1) : haltUrl;
+//        }
+//        haltUrl = HOST +"/"+ haltUrl+"?";
         logger.info("haltStatus:" + haltStatus  + " haltUrl:" + haltUrl);
 
         // 未开启直接返回
