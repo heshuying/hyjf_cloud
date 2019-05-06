@@ -942,33 +942,37 @@ public class AppHomeServiceImpl implements AppHomeService {
     private void createNoticeInfo(JSONObject info, String platform, String version, String HOST){
         // 从配置文件中加载配置信息
         String haltStatus = systemConfig.haltStatus;
-        String haltTimeRange = systemConfig.haltTimeRange;
+//        String haltTimeRange = systemConfig.haltTimeRange;
         String haltUrl = systemConfig.haltUrl;
         if (StringUtils.isNotBlank(haltUrl)){
             haltUrl = (haltUrl.substring(0,1).equals("/")) ? haltUrl.substring(1) : haltUrl;
         }
         haltUrl = HOST +"/"+ haltUrl+"?";
-        logger.info("haltStatus:" + haltStatus + " haltTimeRange:" + haltTimeRange + " haltUrl:" + haltUrl);
+        logger.info("haltStatus:" + haltStatus  + " haltUrl:" + haltUrl);
 
         // 未开启直接返回
         if(haltStatus.equals("false")){
             info.put("needForcedToUpdate", "0");
             info.put("forcedToUpdateUrl", "");
             return;
-        }
-
-        Integer timeStart = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[0]);
-        Integer timeEnd = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[1]);
-        Integer nowTime = GetDate.getNowTime10();
-
-        // 是否需要显示维护通知
-        if(timeStart <= nowTime && timeEnd >= nowTime){
+        }else{
             info.put("needForcedToUpdate", "1");
             info.put("forcedToUpdateUrl", haltUrl);
-        }else {
-            info.put("needForcedToUpdate", "0");
-            info.put("forcedToUpdateUrl", "");
+            return;
         }
+
+//        Integer timeStart = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[0]);
+//        Integer timeEnd = GetDate.strYYYYMMDDHHMMSS2Timestamp(haltTimeRange.split(",")[1]);
+//        Integer nowTime = GetDate.getNowTime10();
+
+        // 是否需要显示维护通知
+//        if(timeStart <= nowTime && timeEnd >= nowTime){
+//            info.put("needForcedToUpdate", "1");
+//            info.put("forcedToUpdateUrl", haltUrl);
+//        }else {
+//            info.put("needForcedToUpdate", "0");
+//            info.put("forcedToUpdateUrl", "");
+//        }
 
     }
 
