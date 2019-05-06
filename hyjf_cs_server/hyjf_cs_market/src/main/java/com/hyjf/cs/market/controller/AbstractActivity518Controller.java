@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public abstract class AbstractActivity518Controller extends AbstractController{
             List<UserTenderVO> vos = activity518Service.getLeaderboard(activityStartDate, activityEndDate);
             if (!CollectionUtils.isEmpty(vos)) {
                 for (UserTenderVO vo : vos) {
-                    list.add(new Activity518InfoVO.Leaderboard(vo.getUsername(), String.valueOf(vo.getAmount() == null ? BigDecimal.ZERO : vo.getAmount())));
+                    list.add(new Activity518InfoVO.Leaderboard(desensitization(vo.getMobile()), String.valueOf(vo.getAmount() == null ? BigDecimal.ZERO : vo.getAmount())));
                 }
             }
             activity518InfoVO.setLeaderboard(list);
@@ -208,5 +209,22 @@ public abstract class AbstractActivity518Controller extends AbstractController{
         }
 
         return 0;
+    }
+
+
+    /**
+     * 脱敏
+     * @param mobile
+     * @return
+     */
+    private String desensitization(String mobile) {
+        if (StringUtils.isEmpty(mobile)) {
+            return "";
+        }
+        StringBuffer result = new StringBuffer();
+        result.append(mobile, 0, 3);
+        result.append("****");
+        result.append(mobile.substring(mobile.length() - 4));
+        return result.toString();
     }
 }

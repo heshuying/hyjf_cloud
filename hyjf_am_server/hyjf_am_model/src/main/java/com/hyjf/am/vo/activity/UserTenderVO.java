@@ -12,7 +12,7 @@ public class UserTenderVO implements Serializable {
 
     private int userId;
 
-    private String username;
+    private String mobile;
 
     private BigDecimal amount;
 
@@ -25,12 +25,12 @@ public class UserTenderVO implements Serializable {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public BigDecimal getAmount() {

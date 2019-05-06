@@ -564,12 +564,12 @@
 
 	<resultMap id="sumAnnualInvestAmountTop5Map" type="com.hyjf.am.vo.activity.UserTenderVO">
 		<result column="userId" property="user_id" jdbcType="INTEGER" />
-		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
 		<result column="amount" property="amount" jdbcType="DECIMAL" />
 	</resultMap>
 
 	<select id="getSumAnnualInvestAmountTop5" resultMap="sumAnnualInvestAmountTop5Map">
-		SELECT t.user_id, r.username, SUM(t.account) AS amount FROM (
+		SELECT t.user_id, r.mobile, SUM(t.account) AS amount FROM (
 			SELECT hbt.user_id, IFNULL(CASE WHEN hb.borrow_style = 'endday' THEN ROUND( IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 360,2) END,0)
 						   + IFNULL(CASE WHEN hb.borrow_style <![CDATA[<>]]>  'endday' THEN ROUND(IFNULL(hbt.account, 0) * CONVERT (hb.borrow_period, SIGNED) / 12,2) END,0) AS account
 					FROM

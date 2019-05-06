@@ -29,22 +29,22 @@ public class Activity518InfoVO {
      */
     @ApiModel(value = "活动信息返回参数")
     public static class Leaderboard {
-        @ApiModelProperty("脱敏的用户名")
-        private String username;
+        @ApiModelProperty("脱敏的手机号码")
+        private String mobile;
         @ApiModelProperty("累计年化出借金额")
         private String amount;
 
         public Leaderboard(String username, String amount) {
-            this.username = username;
+            this.mobile = username;
             this.amount = amount;
         }
 
-        public String getUsername() {
-            return username;
+        public String getMobile() {
+            return mobile;
         }
 
-        public void setUsername(String username) {
-            this.username = username;
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
         }
 
         public String getAmount() {
