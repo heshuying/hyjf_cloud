@@ -84,8 +84,8 @@ public class SystemConfig {
     @Value("${hyjf.notice.halt.status}")
     public String haltStatus;
 
-    @Value("${hyjf.notice.halt.timerange}")
-    public String haltTimeRange;
+//    @Value("${hyjf.notice.halt.timerange}")
+//    public String haltTimeRange;
 
     @Value("${hyjf.notice.halt.requesturl}")
     public String haltUrl;
@@ -936,13 +936,13 @@ public class SystemConfig {
         this.haltStatus = haltStatus;
     }
 
-    public String getHaltTimeRange() {
-        return haltTimeRange;
-    }
-
-    public void setHaltTimeRange(String haltTimeRange) {
-        this.haltTimeRange = haltTimeRange;
-    }
+//    public String getHaltTimeRange() {
+//        return haltTimeRange;
+//    }
+//
+//    public void setHaltTimeRange(String haltTimeRange) {
+//        this.haltTimeRange = haltTimeRange;
+//    }
 
     public String getHaltUrl() {
         return haltUrl;
