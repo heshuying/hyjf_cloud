@@ -34,8 +34,6 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
     private static int MAX_RECONSUME_TIME = 3;
 
     @Autowired
-    private CustomerTaskConfigMapper customerTaskConfigMapper;
-    @Autowired
     private UserLargeScreenTwoCustomizeMapper userLargeScreenTwoCustomizeMapper;
 
     @Override
@@ -44,12 +42,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
             logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [Start]");
             // 增资、提现率处理
             // 查询有效坐席
-            CustomerTaskConfigExample example = new CustomerTaskConfigExample();
-            CustomerTaskConfigExample.Criteria criteria = example.createCriteria();
-            criteria.andTaskTimeEqualTo(GetDateUtils.format(new Date(), GetDate.yyyyMM_key));
-            criteria.andStatusEqualTo(1);
-            criteria.andDelFlagEqualTo(0);
-            List<CustomerTaskConfig> customerList = customerTaskConfigMapper.selectByExample(example);
+            List<CustomerTaskConfig> customerList = userLargeScreenTwoCustomizeMapper.getCustomer();
             if (!CollectionUtils.isEmpty(customerList)){
                 // 查询坐席下的增资、提现率
                 List<ScreenTwoParam> result = userLargeScreenTwoCustomizeMapper.getCapitalIncreaseAndCashWithdrawalRateByCustomer(customerList);

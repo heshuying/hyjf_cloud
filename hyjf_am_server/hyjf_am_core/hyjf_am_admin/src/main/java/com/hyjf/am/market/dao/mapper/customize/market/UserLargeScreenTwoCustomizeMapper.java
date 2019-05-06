@@ -12,6 +12,12 @@ import java.util.List;
 public interface UserLargeScreenTwoCustomizeMapper {
 
     /**
+     * 查询所有有效坐席姓名
+     * @return
+     */
+    List<CustomerTaskConfig> getCustomer();
+
+    /**
      * 通过坐席姓名查询增资和提现率
      * @param customerList
      * @return

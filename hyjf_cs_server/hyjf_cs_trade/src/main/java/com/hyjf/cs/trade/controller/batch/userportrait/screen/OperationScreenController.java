@@ -37,10 +37,8 @@ public class OperationScreenController {
     public void operationScreenBatch() {
         try {
             logger.info("用户画像-运营部投屏二数据获取定时任务 ==========>>> [Start]");
-            JSONObject params = new JSONObject();
-            params.put("type", 1);
             commonProducer.messageSend(new MessageContent(MQConstant.SCREEN_DATA_TWO_TOPIC,
-                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), params));
+                    MQConstant.SCREEN_DATA_TWO_SELECT_TAG, UUID.randomUUID().toString(), new JSONObject()));
             logger.info("用户画像-运营部投屏二数据获取定时任务 ==========>>> [End]");
         } catch (MQException e) {
             logger.error("用户画像屏幕二运营部站岗资金获取异常,异常详情如下:{}", e);
