@@ -11,6 +11,8 @@ import com.hyjf.am.trade.service.admin.borrow.BorrowRepayInfoCurrentService;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO;
 import com.hyjf.am.vo.admin.BorrowRepayInfoCurrentExportCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.calculate.AccountManagementFeeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,6 +76,35 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             resultList = new ArrayList<>();
         }
 
+        // 计算还款管理费
+        for(BorrowRepayInfoCurrentCustomizeVO repayInfo : resultList){
+            if(repayInfo.getRecordType().equals("3") || repayInfo.getRecordType().equals("4")){
+                BigDecimal assignManageFee = BigDecimal.ZERO;// 计算用户还款管理费
+                BigDecimal assignCapital = new BigDecimal(repayInfo.getRecoverCapital());
+                BigDecimal feeRate = repayInfo.getFeeRate();
+                BigDecimal differentialRate = repayInfo.getDifferentialRate();
+                BigDecimal borrowAccount = repayInfo.getBorrowAccount();
+                BigDecimal assignAccount = new BigDecimal(repayInfo.getAccount());
+                String borrowPeriod = repayInfo.getBorrowPeriod();
+                String borrowStyle = repayInfo.getBorrowStyle();
+                Integer verifyTime = repayInfo.getVerifyTime();
+                Integer repayPeriod = repayInfo.getRecoverPeriod();
+                // 按月计息，到期还本还息end
+                if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
+                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, Integer.parseInt(borrowPeriod), differentialRate, verifyTime);
+                }
+                // 按天计息到期还本还息
+                else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
+                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, Integer.parseInt(borrowPeriod), differentialRate, verifyTime);
+                }
+                // 分期还款
+                else {
+                    assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, Integer.parseInt(borrowPeriod), repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
+                }
+                repayInfo.setRecoverFee(assignManageFee.toString());
+            }
+        }
+
         // 查询列表统计数据
         Map<String,Object> sumInfo = borrowRepayInfoCurrentService.getRepayInfoCurrentSum(paraMap);
 
@@ -84,6 +116,30 @@ public class BorrowRepayInfoCurrentController extends BaseController {
 
         logger.info("当前债权还款明细-end, response:{}", JSON.toJSONString(response));
         return response;
+    }
+
+    private BigDecimal getManageFee(String borrowStyle, BigDecimal feeRate, BigDecimal differentialRate, int borrowVerifyTime, Integer borrowPeriod, int repayPeriod, BigDecimal assignCapital, BigDecimal assignManageFee, BigDecimal account, BigDecimal assignCapital2) {
+        // 等额本息month、等额本金principal
+        if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
+            if (repayPeriod == borrowPeriod.intValue()) {
+                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 1,
+                        account, borrowPeriod, borrowVerifyTime);
+            } else {
+                assignManageFee = AccountManagementFeeUtils.getMonthAccountManagementFee(assignCapital, feeRate, repayPeriod, differentialRate, 0,
+                        account, borrowPeriod, borrowVerifyTime);
+            }
+        }
+        // 先息后本endmonth
+        else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {
+            if (repayPeriod == borrowPeriod.intValue()) {
+                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(assignCapital2, feeRate,
+                        borrowPeriod, borrowPeriod, differentialRate, 1, borrowVerifyTime);
+            } else {
+                assignManageFee = AccountManagementFeeUtils.getBeforeInterestAfterPrincipalAccountManagementFee(assignCapital2, feeRate,
+                        borrowPeriod, borrowPeriod, differentialRate, 0, borrowVerifyTime);
+            }
+        }
+        return assignManageFee;
     }
 
     /**
