@@ -69,5 +69,5 @@ public interface UserLargeScreenTwoCustomizeMapper {
      * 坐席每日待回款金额表-数据批量删除
      * @param delRpUserId
      */
-    void delRepaymentPlan(List<String> delRpUserId);
+    void deleteUserOperateT(List<String> delRpUserId);
 }
