@@ -16,8 +16,8 @@ public class OperationScreenTJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         // 0 17 4 * * ? 每天凌晨4点17分执行一次
-        logger.info("OperationScreenJob: {} execute...", context.getJobDetail().getKey().getName());
+        logger.info("OperationScreenTJob: {} execute...", context.getJobDetail().getKey().getName());
         restTemplate.getForEntity("http://AM-ADMIN/am-admin/batch/operationScreenBatch", String.class);
-        logger.info("OperationScreenJob execute end...");
+        logger.info("OperationScreenTJob execute end...");
     }
 }
