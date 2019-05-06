@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.base.CommonProducer;
 import com.hyjf.wbs.user.service.SyncCustomerService;
 import org.apache.commons.lang3.StringUtils;
@@ -80,6 +81,9 @@ public class WbsUserServiceImpl implements WbsUserService {
 	@Autowired
 	private CommonProducer commonProducer;
 
+	@Autowired
+	private WbsConfig wbsConfig;
+
 	@Override
 	public void webBind(WebUserBindQO webUserBindQO, BaseResult response) {
 		LoginRequestVO loginQO = new LoginRequestVO();
@@ -98,10 +102,10 @@ public class WbsUserServiceImpl implements WbsUserService {
 		bindVO.setMobile(webViewUserVO.getMobile());
 		bindVO.setToken(webViewUserVO.getToken());
 		bindVO.setRoleId(webViewUserVO.getRoleId());
-		// TODO 需要后台指定跳转页面？
-		// bindVO.setRetUrl();
+		bindVO.setRetUrl(wbsConfig.getWebBindRetUrl());
 		bindVO.setIconUrl(webViewUserVO.getIconUrl());
 		bindVO.setUserId(String.valueOf(webViewUserVO.getUserId()));
+		bindVO.setRetUrl(wbsConfig.getWebBindRetUrl());
 		response.setData(bindVO);
 
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();
@@ -120,8 +124,7 @@ public class WbsUserServiceImpl implements WbsUserService {
 	public void wechatBind(WechatUserBindQO wechatUserBindQO, BaseResult result) {
 		WechatUserBindVO bindVO = csUserClient.wechatLogin(wechatUserBindQO.getUsername(),
 				wechatUserBindQO.getPassword());
-		// TODO by cui 成功返回地址
-		bindVO.setRetUrl("");
+		bindVO.setRetUrl(wbsConfig.getWechatBingRetUrl());
 		result.setData(bindVO);
 
 		WbsRegisterMqVO vo = new WbsRegisterMqVO();

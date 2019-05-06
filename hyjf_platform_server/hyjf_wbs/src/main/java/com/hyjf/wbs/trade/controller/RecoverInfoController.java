@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 /**
@@ -45,25 +47,31 @@ public class RecoverInfoController extends BaseController {
                                     @RequestBody WbsCommonExQO wbsCommonExQO
 //                                    @RequestBody RecoverQO recoverQO
     ) {
-        WbsRecoverVO wbsCommonVO =new WbsRecoverVO();
-        String jsonRequest = JSONObject.toJSONString(wbsCommonExQO);
-        WbsCommonQO wbsCommonQO = wbsCommonExQO;
+        WbsCommonVO wbsCommonVO =new WbsCommonVO();
+        WbsRecoverVO wbsRecoverVO=new WbsRecoverVO();
+        WbsCommonQO wbsCommonQO =new WbsCommonQO();
+        BeanUtils.copyProperties(wbsCommonExQO, wbsCommonQO);
         //验签
         Boolean booleanSian = WbsSignUtil.verify(wbsCommonQO,wbsCommonExQO.getSign(), wbsConfig.getAppSecret());
         logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口  " + JSONObject.toJSON(wbsCommonExQO)+"验签结果："+booleanSian);
         if(!booleanSian){
-            wbsCommonVO.setCode(Response.ERROR);
-            wbsCommonVO.setMsg("验签失败");
-            wbsCommonVO.setData("");
-            return wbsCommonVO;
+            wbsRecoverVO.setCode(Response.ERROR);
+            wbsRecoverVO.setMsg("验签失败");
+            wbsRecoverVO.setData("");
+            return wbsRecoverVO;
         }
-
-        RecoverQO recoverQO = JSONObject.parseObject(wbsCommonQO.getData(),RecoverQO.class);
+        String data="";
+        try {
+            data=URLDecoder.decode(wbsCommonQO.getData(),"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        RecoverQO recoverQO = JSONObject.parseObject(data,RecoverQO.class);
         if (recoverQO!=null){
             if (recoverQO.getEntId()==null|| recoverQO.getCurrentPage().isEmpty()){
-                wbsCommonVO.setCode(Response.ERROR);
-                wbsCommonVO.setMsg("请求参数不允许为空");
-                wbsCommonVO.setData("");
+                wbsRecoverVO.setCode(Response.ERROR);
+                wbsRecoverVO.setMsg("请求参数不允许为空");
+                wbsRecoverVO.setData("");
             }
             int countRecover=recoverService.getRecoverCount(recoverQO);
             Paginator paginator = new Paginator(Integer.parseInt(recoverQO.getCurrentPage()),countRecover,10000);
@@ -71,21 +79,21 @@ public class RecoverInfoController extends BaseController {
             recoverQO.setLimitEnd(paginator.getLimit());
             List<RecoverVO> recoverVOS = recoverService.getRecoverInfo(recoverQO);
             if (recoverVOS!=null&&recoverVOS.size()>0){
-                wbsCommonVO.setCode(Response.SUCCESS);
-                wbsCommonVO.setMsg(Response.SUCCESS_MSG);
-                wbsCommonVO.setData(recoverVOS);
-                wbsCommonVO.setCurrentPage(recoverQO.getCurrentPage());
-                wbsCommonVO.setTotalPages(paginator.getTotalPages()+"");
+                wbsRecoverVO.setCode(Response.SUCCESS);
+                wbsRecoverVO.setMsg(Response.SUCCESS_MSG);
+                wbsRecoverVO.setData(recoverVOS);
+                wbsRecoverVO.setCurrentPage(recoverQO.getCurrentPage());
+                wbsRecoverVO.setTotalPages(paginator.getTotalPages()+"");
             }else {
-                wbsCommonVO.setCode(Response.ERROR);
-                wbsCommonVO.setMsg(Response.FAIL_MSG);
-                wbsCommonVO.setData("");
+                wbsRecoverVO.setCode(Response.ERROR);
+                wbsRecoverVO.setMsg(Response.FAIL_MSG);
+                wbsRecoverVO.setData("");
             }
         }else {
-            wbsCommonVO.setCode(Response.ERROR);
-            wbsCommonVO.setMsg("请求参数不允许为空");
-            wbsCommonVO.setData("");
+            wbsRecoverVO.setCode(Response.ERROR);
+            wbsRecoverVO.setMsg("请求参数不允许为空");
+            wbsRecoverVO.setData("");
         }
-        return wbsCommonVO;
+        return wbsRecoverVO;
     }
 }
