@@ -32,8 +32,6 @@
                 OR ( htb.`status` = 4 )
                 OR ( htb.`status` = 8 )
                 )
-                <!-- 方便测试暂时添加-->
-                AND ( htb.`status` = 8 )
             </if>
 
             <if test="status != null and status != ''">
@@ -1019,7 +1017,6 @@
                 OR ( hydb.`status` = 4 )
                 OR ( hydb.`status` = 8 )
                 )
-                AND  hydb.`status` = 8
             </if>
             <choose>
                 <!-- 获取待发布 -->
