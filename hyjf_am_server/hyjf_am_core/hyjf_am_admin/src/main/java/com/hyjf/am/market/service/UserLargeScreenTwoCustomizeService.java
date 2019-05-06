@@ -52,12 +52,6 @@ public interface UserLargeScreenTwoCustomizeService {
     List<String> getUserOperateListUserId();
 
     /**
-     * 坐席每日待回款金额表-数据批量删除
-     * @param param
-     */
-    void deleteRepaymentPlan(List<String> param);
-
-    /**
      * 资金明细表-数据批量删除
      * @param param
      */

@@ -101,13 +101,4 @@ public class UserLargeScreenTwoCustomizeServiceImpl implements UserLargeScreenTw
     public List<String> getRepaymentPlan() {
         return userLargeScreenTwoCustomizeMapper.getRepaymentPlan();
     }
-
-    /**
-     * 坐席每日待回款金额表-数据批量删除
-     * @param param
-     */
-    @Override
-    public void deleteRepaymentPlan(List<String> param) {
-        userLargeScreenTwoCustomizeMapper.delRepaymentPlan(param);
-    }
 }

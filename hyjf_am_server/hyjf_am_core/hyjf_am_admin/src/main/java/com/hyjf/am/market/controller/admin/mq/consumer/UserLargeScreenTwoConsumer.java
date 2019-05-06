@@ -3,6 +3,7 @@ package com.hyjf.am.market.controller.admin.mq.consumer;
 import com.hyjf.am.admin.mq.consumer.SellDailyConsumer;
 import com.hyjf.am.market.dao.model.auto.ScreenTwoParam;
 import com.hyjf.am.market.service.UserLargeScreenTwoCustomizeService;
+import com.hyjf.am.trade.service.UserLargeScreenTwoCustomizeTService;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -31,6 +32,8 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
 
     @Autowired
     private UserLargeScreenTwoCustomizeService userLargeScreenTwoCustomizeService;
+    @Autowired
+    private UserLargeScreenTwoCustomizeTService userLargeScreenTwoCustomizeTService;
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -112,7 +115,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delRpUserIdLists = averageAssign(delRpUserId, listNum);
                         for (List<String> param : delRpUserIdLists) {
-                            userLargeScreenTwoCustomizeService.deleteRepaymentPlan(param);
+                            userLargeScreenTwoCustomizeTService.deleteRepaymentPlan(param);
                         }
                     }
                 }
