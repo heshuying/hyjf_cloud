@@ -75,6 +75,7 @@ public class MayDayController extends BaseController {
     @PostMapping("/rewardList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult getRewardList(@RequestBody ActivityUserRewardRequest rewardRequest) {
+        logger.info("奖励领取列表初始化, rewardRequest is: {} ", rewardRequest);
         ActivityUserRewardResponse response = activityUserRewardService.getRewardList(rewardRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -151,6 +152,7 @@ public class MayDayController extends BaseController {
     @PostMapping("exportRewardList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAwardExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody ActivityUserRewardRequest activityUserRewardRequest) throws Exception {
+        logger.info("奖励领取列表导出, activityUserRewardRequest is: {} ", activityUserRewardRequest);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
