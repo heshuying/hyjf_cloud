@@ -69,6 +69,7 @@ public class OrderInfoController extends BaseController {
                 wbsCommonVO.setMsg("请求参数不允许为空");
                 wbsCommonVO.setData("");
             }
+            tenderAccedeQO.setEntIds(getUtmId(tenderAccedeQO.getEntId()));
             List<TenderAccedeVO> tenderAccedeVOS = this.orderService.getOrderInfo(tenderAccedeQO);
             if (tenderAccedeVOS!=null&&tenderAccedeVOS.size()>0){
                 wbsCommonVO.setCode(Response.SUCCESS);
@@ -86,5 +87,18 @@ public class OrderInfoController extends BaseController {
         }
 
         return wbsCommonVO;
+    }
+    public String getUtmId(Integer entId) {
+        String thirdIds = wbsConfig.getThridPropertyIds();
+        String[] thirdIdsArr = thirdIds.split(",");
+        if (entId.equals(thirdIdsArr[0])){
+            return wbsConfig.getUtmNami()+","+wbsConfig.getUtmYufengrui();
+        }else if (entId.equals(thirdIdsArr[1])){
+            return wbsConfig.getUtmDatang()+"";
+        }else if (entId.equals(thirdIdsArr[2])){
+            return wbsConfig.getUtmQianle()+"";
+        }else {
+            return null;
+        }
     }
 }

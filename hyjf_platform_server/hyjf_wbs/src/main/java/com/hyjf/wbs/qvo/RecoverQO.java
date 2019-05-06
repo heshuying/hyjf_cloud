@@ -16,6 +16,8 @@ public class RecoverQO {
     private String  assetCustomerId ;
     //财富端id
     private Integer entId;
+
+    private String entIds;
     //资产端id
     private Integer  assetId ;
     //当前请求页码
@@ -79,5 +81,13 @@ public class RecoverQO {
 
     public void setLimitEnd(Integer limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getEntIds() {
+        return entIds;
+    }
+
+    public void setEntIds(String entIds) {
+        this.entIds = entIds;
     }
 }
