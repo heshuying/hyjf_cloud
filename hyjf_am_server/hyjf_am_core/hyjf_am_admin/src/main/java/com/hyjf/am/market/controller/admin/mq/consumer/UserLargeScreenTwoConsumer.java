@@ -3,6 +3,7 @@ package com.hyjf.am.market.controller.admin.mq.consumer;
 import com.hyjf.am.admin.mq.consumer.SellDailyConsumer;
 import com.hyjf.am.market.dao.mapper.customize.market.UserLargeScreenTwoCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ScreenTwoParam;
+import com.hyjf.am.market.service.UserLargeScreenTwoCustomizeService;
 import com.hyjf.am.user.dao.mapper.auto.CustomerTaskConfigMapper;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfig;
 import com.hyjf.am.user.dao.model.auto.CustomerTaskConfigExample;
@@ -34,7 +35,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
     private static int MAX_RECONSUME_TIME = 3;
 
     @Autowired
-    private UserLargeScreenTwoCustomizeMapper userLargeScreenTwoCustomizeMapper;
+    private UserLargeScreenTwoCustomizeService userLargeScreenTwoCustomizeService;
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -42,10 +43,10 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
             logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [Start]");
             // 增资、提现率处理
             // 查询有效坐席
-            List<CustomerTaskConfig> customerList = userLargeScreenTwoCustomizeMapper.getCustomer();
+            List<CustomerTaskConfig> customerList = userLargeScreenTwoCustomizeService.getCustomer();
             if (!CollectionUtils.isEmpty(customerList)){
                 // 查询坐席下的增资、提现率
-                List<ScreenTwoParam> result = userLargeScreenTwoCustomizeMapper.getCapitalIncreaseAndCashWithdrawalRateByCustomer(customerList);
+                List<ScreenTwoParam> result = userLargeScreenTwoCustomizeService.getCapitalIncreaseAndCashWithdrawalRateByCustomer(customerList);
                 if (!CollectionUtils.isEmpty(result)){
                     // 运营部对象
                     ScreenTwoParam operationParam = new ScreenTwoParam();
@@ -55,7 +56,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         operationalCapitalIncrease = operationalCapitalIncrease.add(param.getCapitalIncrease());
                     }
                     // 查询运营部当前总站岗资金
-                    BigDecimal operNowBalance = userLargeScreenTwoCustomizeMapper.getOperNowBalance();
+                    BigDecimal operNowBalance = userLargeScreenTwoCustomizeService.getOperNowBalance();
                     // 给运营部对象赋值
                     operationParam.setFlag(3);
                     operationParam.setCapitalIncrease(operationalCapitalIncrease);
@@ -63,9 +64,9 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     operationParam.setNowBalance(operNowBalance);
                     result.add(operationParam);
                     // 添加数据之前先清空表历史数据,防止表数据增长太快
-                    userLargeScreenTwoCustomizeMapper.deleteAllParam();
+                    userLargeScreenTwoCustomizeService.deleteAllParam();
                     // 添加集合数据到 用户画像-屏幕二数据表
-                    userLargeScreenTwoCustomizeMapper.insertResult(result);
+                    userLargeScreenTwoCustomizeService.insertResult(result);
                 }
             }
             logger.info("用户画像-运营部投屏二数据batch获取 ==========>>> [End]");
@@ -73,12 +74,12 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
             logger.info("用户画像-运营部投屏 每日用户划转执行 ==========>>> [Start]");
             // 运营部用户划转线下，同步删除用户历史数据
             // 查询所有运营部用户的userId
-            List<String> operUserIdList = userLargeScreenTwoCustomizeMapper.getOperationUserId();
+            List<String> operUserIdList = userLargeScreenTwoCustomizeService.getOperationUserId();
             if(!CollectionUtils.isEmpty(operUserIdList)){
                 // 每个集合数据量
                 int num = 1000;
                 // 查询运营部用户资金明细表下的所有userId
-                List<String> uolUserIdList = userLargeScreenTwoCustomizeMapper.getUserOperateListUserId();
+                List<String> uolUserIdList = userLargeScreenTwoCustomizeService.getUserOperateListUserId();
                 if(!CollectionUtils.isEmpty(uolUserIdList)){
                     // 资金明细表-非运营部用户统计
                     List<String> delUolUserId = new ArrayList<>();
@@ -94,13 +95,13 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delUolUserIdLists = averageAssign(delUolUserId, listNum);
                         for (List<String> param : delUolUserIdLists) {
-                            userLargeScreenTwoCustomizeMapper.delUserOperate(param);
+                            userLargeScreenTwoCustomizeService.delUserOperate(param);
                         }
                     }
                 }
 
                 // 查询坐席每日待回款金额表下的所有userId
-                List<String> rpUserIdList = userLargeScreenTwoCustomizeMapper.getRepaymentPlan();
+                List<String> rpUserIdList = userLargeScreenTwoCustomizeService.getRepaymentPlan();
                 if(!CollectionUtils.isEmpty(rpUserIdList)){
                     // 坐席每日待回款金额表-非运营部用户统计
                     List<String> delRpUserId = new ArrayList<>();
@@ -116,7 +117,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                         // 储存userId的大list切分成多个小list,防止sql过长
                         List<List<String>> delRpUserIdLists = averageAssign(delRpUserId, listNum);
                         for (List<String> param : delRpUserIdLists) {
-                            userLargeScreenTwoCustomizeMapper.delRepaymentPlan(param);
+                            userLargeScreenTwoCustomizeService.delRepaymentPlan(param);
                         }
                     }
                 }
