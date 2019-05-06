@@ -18,7 +18,7 @@
 		NOW() AS queryTime,
 		ROUND(SUM(add_share), 0) AS capitalIncrease,
 		ROUND(SUM(numerator) / SUM(denominator), 2) AS cashWithdrawalRate,
-		ROUND(SUM(end_balance), 0) AS
+		ROUND(SUM(end_balance), 0) AS nowBalance
 		FROM
 		(
 		SELECT
@@ -28,7 +28,7 @@
 		money AS '充值',
 		withdraw AS '提现',
 		start_balance AS '月初站岗',
-		end_balance AS '月末站岗',
+		end_balance,
 		credit_advanc AS '债转到手金额',
 		withdraw - credit_advanc AS '提现-债转',
 		recover_account_yes AS '回款',
@@ -229,7 +229,6 @@
 			</foreach>
 		</if>
 		) bt
-
 		) hh
 		WHERE
 		add_share > 0
