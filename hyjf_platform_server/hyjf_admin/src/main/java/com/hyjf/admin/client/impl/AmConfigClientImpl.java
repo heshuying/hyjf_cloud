@@ -2297,11 +2297,11 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @auth nxl
      */
     @Override
-    public JxBankConfigVO getBankConfigByBankName(String bankName) {
+    public List<JxBankConfigVO> getBankConfigByBankName(String bankName) {
         String url = "http://AM-ADMIN/am-config/config/selectBankConfigByName/"+bankName;
         JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
         if (response != null) {
-            return response.getResult();
+            return response.getResultList();
         }
         return null;
     }

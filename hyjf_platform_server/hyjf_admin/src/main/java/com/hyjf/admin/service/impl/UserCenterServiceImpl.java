@@ -655,7 +655,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
      * @auth nxl
      */
     @Override
-    public JxBankConfigVO getBankConfigByBankName(String bankName){
+    public List<JxBankConfigVO> getBankConfigByBankName(String bankName){
         return amConfigClient.getBankConfigByBankName(bankName);
     }
     /**

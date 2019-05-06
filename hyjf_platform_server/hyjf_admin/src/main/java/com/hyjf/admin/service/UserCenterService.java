@@ -225,7 +225,7 @@ public interface UserCenterService {
      * @return
      * @auth nxl
      */
-    JxBankConfigVO getBankConfigByBankName(String bankName);
+    List<JxBankConfigVO> getBankConfigByBankName(String bankName);
     /**
      * 更新用户信息(基本信息,手机号,邮箱,用户角色)
      *

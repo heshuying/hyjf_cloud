@@ -407,13 +407,13 @@ public class BanksConfigController extends BaseConfigController{
         JxBankConfigResponse response = new JxBankConfigResponse();
         response.setRtn(Response.FAIL);
         logger.info("所属银行为:[" + bankName + "] 模糊查询银行卡配置信息");
-        JxBankConfig jxBankConfig = jxBankConfigService.selectBankConfigByName(bankName);
+        List<JxBankConfig> jxBankConfig = jxBankConfigService.selectBankConfigByName(bankName);
 
         if(null!=jxBankConfig){
-            JxBankConfigVO jxBankConfigVO = new JxBankConfigVO();
+            List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(jxBankConfig,JxBankConfigVO.class);
             BeanUtils.copyProperties(jxBankConfig,jxBankConfigVO);
             response.setRtn(Response.SUCCESS);
-            response.setResult(jxBankConfigVO);
+            response.setResultList(jxBankConfigVO);
         }
         return response;
     }

@@ -694,8 +694,9 @@ public class UserManagerController extends BaseController {
         // add by nxl 后台优化 start
         //企业账户由于银行卡号是短号,获取不到bankid的情况下,根据输入所属银行名获取bankId
         if(StringUtils.isBlank(bankId)&&StringUtils.isNotBlank(updCompanyRequest.getBankName())){
-            JxBankConfig jxBankConfig = jxBankConfigService.selectBankConfigByName(updCompanyRequest.getBankName());
-            if(null!=jxBankConfig){
+            List<JxBankConfig> jxBankConfigList = jxBankConfigService.selectBankConfigByName(updCompanyRequest.getBankName());
+            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(jxBankConfigList)){
+                JxBankConfig jxBankConfig = jxBankConfigList.get(0);
                 bankId=jxBankConfig.getBankId().toString();
                 if(StringUtils.isBlank(updCompanyRequest.getPayAllianceCode())){
                     //如果银联号没有输入的情况下,获取江西银行配置

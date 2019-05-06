@@ -36,6 +36,7 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
@@ -1052,18 +1053,19 @@ public class UserCenterController extends BaseController {
                 response.setResult(bankCallBean.getPayAllianceCode());
                 result.setData(response);
                 result.setStatus(SUCCESS);
-                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
+                logger.info("============本地银联号为："+bankCallBean.getPayAllianceCode()+" ============");
                 return result;
             }
         } else {
             logger.info("调用银行接口未能查找到银联号,调用本地数据库查找");
-            JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
-            if (null != banksConfig) {
+            List<JxBankConfigVO> banksConfigList = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
+            if (CollectionUtils.isNotEmpty(banksConfigList)) {
+                JxBankConfigVO banksConfig = banksConfigList.get(0);
                 response.setResult(banksConfig.getPayAllianceCode());
                 result.setStatus(SUCCESS);
                 result.setStatusDesc("未查询到分行联行号已填充总行联行号");
                 result.setData(response);
-                logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
+                logger.info("============本地银联号为："+banksConfig.getPayAllianceCode()+" ============");
                 return result;
             } else {
                 return new AdminResult<>(FAIL, "未查询到联行号");
@@ -1303,17 +1305,15 @@ public class UserCenterController extends BaseController {
     @ResponseBody
     @GetMapping(value = "/selectBankConfigByName",produces = "application/json; charset=utf-8")
     @ApiOperation(value = "根据所属银行名查找银联号", notes = "根据所属银行名查找银联号")
-    public AdminResult<JxBankConfigCustomizeVO> selectBankConfigByName(HttpServletRequest request, @RequestParam String bankName) {
+    public  AdminResult<ListResult<JxBankConfigCustomizeVO>> selectBankConfigByName(HttpServletRequest request, @RequestParam String bankName) {
         AdminResult<JxBankConfigCustomizeVO> result = new AdminResult<JxBankConfigCustomizeVO>();
         Response response = new Response();
-        JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(bankName);
-        if(banksConfig==null) {
+        List<JxBankConfigVO> bankConfigVOList = userCenterService.getBankConfigByBankName(bankName);
+        if(CollectionUtils.isEmpty(bankConfigVOList)) {
             return new AdminResult<>(FAIL, "未查询到配置信息");
         }
-        JxBankConfigCustomizeVO jxBankConfigCustomizeVO = new JxBankConfigCustomizeVO();
-        BeanUtils.copyProperties(banksConfig,jxBankConfigCustomizeVO);
-        logger.info("============本地银联号为:", banksConfig.getPayAllianceCode());
-        return new AdminResult<JxBankConfigCustomizeVO>(jxBankConfigCustomizeVO);
+        List<JxBankConfigCustomizeVO> jxBankConfigCustomizeVO =CommonUtils.convertBeanList(bankConfigVOList,JxBankConfigCustomizeVO.class);
+        return new AdminResult<ListResult<JxBankConfigCustomizeVO>>(ListResult.build(jxBankConfigCustomizeVO,jxBankConfigCustomizeVO.size())) ;
     }
 
     /**
