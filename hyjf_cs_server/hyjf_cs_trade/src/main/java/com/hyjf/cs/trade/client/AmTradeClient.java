@@ -2975,5 +2975,9 @@ public interface AmTradeClient {
      * @return
      */
     UserLargeScreenTwoVO getOperMonthPerformanceData();
+
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+
+	int selectSponsorLogCount(RepayListRequest requestBean);
 }
 

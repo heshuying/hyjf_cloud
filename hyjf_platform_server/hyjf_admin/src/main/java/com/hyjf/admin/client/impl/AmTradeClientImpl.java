@@ -6921,6 +6921,30 @@ public class AmTradeClientImpl implements AmTradeClient {
         return response.getResult().intValue();
     }
 
+	@Override
+	public SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/sponsorLogList", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse deleteSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/deleteSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/insertSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
+	@Override
+	public SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sponsorLog/updateSponsorLog", sponsorLogRequest, SponsorLogResponse.class).getBody();
+        return response;
+	}
+
 
 
 

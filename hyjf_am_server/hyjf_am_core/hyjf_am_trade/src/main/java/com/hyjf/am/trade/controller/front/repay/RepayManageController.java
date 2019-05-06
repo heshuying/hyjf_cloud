@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.front.repay;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.response.trade.SponsorLogListResponse;
 import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
 import com.hyjf.am.resquest.trade.*;
@@ -18,6 +19,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
@@ -522,5 +524,31 @@ public class RepayManageController extends BaseController {
         repayTransferCustomizeResponse.setResultList(voList);
 
         return repayTransferCustomizeResponse;
+    }
+    /**
+     * 检索还款列表
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/selectSponsorLog")
+    public SponsorLogListResponse selectSponsorLog(@RequestBody @Valid RepayListRequest requestBean) {
+    	SponsorLogListResponse responseBean = new SponsorLogListResponse();
+          List<SponsorLogCustomizeVO> resultList = repayManageService.selectSponsorLog(requestBean);
+        responseBean.setResultList(resultList);
+
+        return responseBean;
+    }
+
+    /**
+     * 统计还款总记录数
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/selectSponsorLogCount")
+    public IntegerResponse selectSponsorLogCount(@RequestBody @Valid RepayListRequest requestBean) {
+        IntegerResponse responseBean = new IntegerResponse();
+        Integer result = repayManageService.selectSponsorLogCount(requestBean);
+        responseBean.setResultInt(result);
+        return responseBean;
     }
 }

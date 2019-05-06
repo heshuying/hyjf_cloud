@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
@@ -255,4 +256,6 @@ public interface RepayManageService extends BaseTradeService {
      * @date 2019/03/04
      */
    boolean getFailCredit(String borrowNid);
+	Integer selectSponsorLogCount(RepayListRequest requestBean);
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
 }

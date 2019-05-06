@@ -15,6 +15,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -1140,4 +1141,36 @@ public class RepayManageController extends BaseTradeController {
         result.setStatus(true);
         return result;
     }
+    /**
+     * 用户待还款列表
+     * @auther: dzs
+     * @date: 2018/6/23
+     */
+    @ApiOperation(value = "担保授权", notes = "担保授权")
+    @PostMapping(value = "/sponsorLog", produces = "application/json; charset=utf-8")
+    public WebResult<List<SponsorLogCustomizeVO>> sponsorLog(@RequestHeader(value = "userId") Integer userId, @RequestBody RepayListRequest requestBean, HttpServletRequest request){
+        WebResult<List<SponsorLogCustomizeVO>> result = new WebResult<>();
+        result.setData(Collections.emptyList());
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        logger.info("担保授权列表开始，userId:{}", userVO.getUserId());
+        requestBean.setUserId(userVO.getUsername());
+        repayManageService.checkForRepayList(requestBean);
+        // 分页信息
+        Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
+        Integer count = repayManageService.selectSponsorLogCount(requestBean);
+        page.setTotal(count);
+        requestBean.setLimitStart(page.getOffset());
+        requestBean.setLimitEnd(page.getLimit());
+        try {
+            List<SponsorLogCustomizeVO> resultList = repayManageService.selectSponsorLog(requestBean);
+            result.setData(resultList);
+        } catch (Exception e) {
+            logger.error("获取担保授权列表异常", e);
+            result.setStatus(WebResult.ERROR);
+            result.setStatusDesc(WebResult.ERROR_DESC);
+        }
+        result.setPage(page);
+        return result;
+    }
+    
 }

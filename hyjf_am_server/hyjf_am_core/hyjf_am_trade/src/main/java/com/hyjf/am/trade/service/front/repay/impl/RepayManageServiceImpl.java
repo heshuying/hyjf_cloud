@@ -14,6 +14,7 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -5562,5 +5563,34 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     public boolean getFailCredit(String borrowNid) {
         Integer failCreditCount = webUserRepayListCustomizeMapper.getFailCredit(borrowNid);
         return failCreditCount != null && failCreditCount > 0;
+    }
+    @Override
+    public Integer selectSponsorLogCount(RepayListRequest requestBean){
+    	 Map<String, Object> param = new HashMap<String, Object>();
+         param.put("userName", requestBean.getUserId());
+         Integer count = repayManageCustomizeMapper.selectSponsorLogCount(param);
+
+         return count;
+    }
+    @Override
+    public  List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean){
+    	 Map<String, Object> param = new HashMap<String, Object>();
+         param.put("userName", requestBean.getUserId());
+
+         if (requestBean.getLimitStart() != null) {
+             param.put("limitStart", requestBean.getLimitStart());
+         }else {
+             param.put("limitStart", -1);
+         }
+         if (requestBean.getLimitEnd() != null) {
+             param.put("limitEnd", requestBean.getLimitEnd());
+         }else {
+             param.put("limitEnd", -1);
+         }
+
+          List<SponsorLogCustomizeVO> list = repayManageCustomizeMapper.selectSponsorLog(param);
+
+         return list;
+    
     }
 }

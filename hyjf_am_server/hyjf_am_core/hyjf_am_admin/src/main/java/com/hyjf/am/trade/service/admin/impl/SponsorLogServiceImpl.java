@@ -59,7 +59,7 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 		List<SponsorLog> list=sponsorLogMapper.selectByExample(example);
 		SponsorLog sl=list.get(0);
 		sl.setStatus(sponsorLogRequest.getStatus());
-		sl.setDelFlag(sponsorLogRequest.getDelFlag());
+		//sl.setDelFlag(sponsorLogRequest.getDelFlag());
 		sl.setUpdateUserName(sponsorLogRequest.getAdminUserName());
 		sl.setUpdateTime(new Date());
 		return sponsorLogMapper.updateByPrimaryKey(sl);

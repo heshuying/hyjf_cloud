@@ -565,4 +565,42 @@
 		</if>
 		<include refid="Where_Clause_Repay_Org_List" />
 	</select>
+	<resultMap id="SponsorLogCustomizeVO" type="com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO" >
+	   <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+	   <result column="status" property="status" jdbcType="VARCHAR" />
+	   <result column="account" property="account" jdbcType="VARCHAR" />
+	   <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+	   <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+	   <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+	   <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+    </resultMap>
+    <select id="selectSponsorLog" resultMap="SponsorLogCustomizeVO" parameterType="Map">
+		SELECT
+			sl.`status`,
+			sl.borrow_nid,
+			bw.account,
+			bw.borrow_period,
+			bw.borrow_apr,
+			bw.create_time,
+			bw.borrow_style 
+		FROM
+			ht_sponsor_log sl
+			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid 
+		WHERE
+			sl.new_sponsor = #{userName}
+		ORDER BY
+			sl.create_time
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="selectSponsorLogCount" resultType="java.lang.Integer" parameterType="Map">
+			SELECT
+			count(1)
+		FROM
+			ht_sponsor_log sl
+			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid 
+		WHERE
+			sl.new_sponsor = #{userName}
+	</select>
 </mapper>

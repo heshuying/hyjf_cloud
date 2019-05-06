@@ -7229,4 +7229,33 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return response.getResult();
     }
+    /**
+     * 用户待授权列表
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean) {
+    	SponsorLogListResponse response = restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/repay/selectSponsorLog",requestBean,
+                SponsorLogListResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    /**
+     * 用户待授权列表count
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public int selectSponsorLogCount(RepayListRequest requestBean) {
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/selectSponsorLogCount", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }

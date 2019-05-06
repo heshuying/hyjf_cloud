@@ -23,6 +23,7 @@ import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
 import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.resquest.trade.BorrowTenderUpdRequest;
 import com.hyjf.am.resquest.trade.RepayRequestUpdateRequest;
+import com.hyjf.am.resquest.trade.SponsorLogRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.BorrowCreditVO;
@@ -3366,6 +3367,10 @@ public interface AmTradeClient {
      */
     int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
 
-
+    SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse deleteSponsorLog(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse insertSponsorLog(SponsorLogRequest sponsorLogRequest);
+    SponsorLogResponse updateSponsorLog(SponsorLogRequest sponsorLogRequest);
+  //SponsorLogResponse sponsorLogList(SponsorLogRequest sponsorLogRequest);
 }
 

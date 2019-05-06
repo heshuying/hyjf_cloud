@@ -11,6 +11,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.math.BigDecimal;
@@ -104,4 +105,8 @@ public interface RepayManageService extends BaseService {
     String usernameEncryption(String name);
 
     boolean getFailCredit(String borrowNid);
+
+	Integer selectSponsorLogCount(RepayListRequest requestBean);
+
+	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
 }

@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,4 +36,6 @@ public interface RepayManageCustomizeMapper {
      * @return
      */
     BigDecimal selectOrgRepayWaitTotal(Map<String, Object> params);
+    Integer selectSponsorLogCount(Map<String,Object> paraMap);
+    List<SponsorLogCustomizeVO> selectSponsorLog(Map<String,Object> paraMap);
 }

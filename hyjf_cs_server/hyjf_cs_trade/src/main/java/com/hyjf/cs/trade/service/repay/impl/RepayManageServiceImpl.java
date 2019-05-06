@@ -17,6 +17,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.SponsorLogCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -1066,6 +1067,20 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         webResult.setPage(page);
         return webResult;
     }
+
+	@Override
+	public Integer selectSponsorLogCount(RepayListRequest requestBean) {
+		return  amTradeClient.selectSponsorLogCount(requestBean);
+	}
+
+	@Override
+	public List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean) {
+        List<SponsorLogCustomizeVO> resultList = amTradeClient.selectSponsorLog(requestBean);
+        if (resultList == null) {
+            return new ArrayList<SponsorLogCustomizeVO>();
+        }
+        return resultList;
+	}
 
 
 }

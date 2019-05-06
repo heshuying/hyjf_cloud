@@ -93,7 +93,16 @@ public class SponsorLogRequest extends BasePage {
 	private String timeEnd;
 	
 	private String adminUserName;
+	private int adminUserId;
 	
+	public int getAdminUserId() {
+		return adminUserId;
+	}
+
+	public void setAdminUserId(int adminUserId) {
+		this.adminUserId = adminUserId;
+	}
+
 	public String getAdminUserName() {
 		return adminUserName;
 	}
