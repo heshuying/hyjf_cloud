@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.dao.model.auto.SponsorLogExample.Criteria;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
@@ -37,6 +38,8 @@ import redis.clients.jedis.Transaction;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
+
+import javax.validation.Valid;
 
 /**
  * 还款管理
@@ -5593,4 +5596,27 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
          return list;
     
     }
+
+	@Override
+	public int updateSponsorLog(@Valid RepayListRequest requestBean) {
+		RUser user = rUserMapper.selectByPrimaryKey(Integer.valueOf(requestBean.getUserId()));
+		SponsorLog record = new SponsorLog();
+		SponsorLogExample example=new SponsorLogExample();
+		 Criteria cr = example.createCriteria();
+		 cr.andBorrowNidEqualTo(requestBean.getBorrowNid());
+		 cr.andDelFlagEqualTo(0);
+		 record.setStatus(Integer.valueOf(requestBean.getStatus()));
+		 record.setUpdateTime(new Date());
+		 record.setUpdateUserName(user.getUsername());
+		 sponsorLogMapper.updateByExampleSelective(record, example);
+		if(requestBean.getStatus().equals("1")) {
+			BorrowInfo record2=new BorrowInfo();
+			BorrowInfoExample example2=new BorrowInfoExample();
+			example2.or().andBorrowNidEqualTo(requestBean.getBorrowNid());
+			record2.setRepayOrgName(user.getUsername());
+			record2.setIsRepayOrgFlag(1);
+			borrowInfoMapper.updateByExample(record2, example2);
+		}
+		return 0;
+	}
 }

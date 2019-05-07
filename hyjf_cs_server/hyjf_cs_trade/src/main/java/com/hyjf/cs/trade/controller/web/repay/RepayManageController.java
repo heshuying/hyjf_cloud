@@ -24,7 +24,9 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.ZIPGenerator;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -32,6 +34,7 @@ import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.SponsorLogBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -45,6 +48,7 @@ import com.hyjf.cs.trade.vo.RepayDetailRequestVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -55,6 +59,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.File;
 import java.math.BigDecimal;
@@ -1172,5 +1177,60 @@ public class RepayManageController extends BaseTradeController {
         result.setPage(page);
         return result;
     }
-    
+    @ApiOperation(value = "修改担保人", notes = "修改担保人")
+    @PostMapping(value = "/updateSponsorLog")
+    @ResponseBody
+    public WebResult<Object> updateSponsorLog(@RequestHeader(value = "userId") int userId,@RequestBody RepayListRequest requestBean, HttpServletRequest request) {
+        WebResult<Object> result = new WebResult<Object>();
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        SponsorLogBean openBean = new SponsorLogBean();
+        openBean.setChannel(BankCallConstant.CHANNEL_PC);
+        openBean.setUserId(userVO.getUserId());
+        openBean.setIp(CustomUtil.getIpAddr(request));
+        openBean.setPlatform(ClientConstants.WEB_CLIENT+"");
+        openBean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
+        openBean.setBorrowNid(requestBean.getBorrowNid());
+        openBean.setCardNo(userVO.getBankAccount());
+        // 组装参数
+        Map<String,Object> data = repayManageService.getSponsorLogMV(openBean,requestBean.getOldBailAccountId());
+        result.setData(data);
+        //修改担保人
+        logger.info("修改担保人end");
+        return result;
+    }
+    /**
+     * web页面开户异步处理
+     *
+     * @param bean
+     * @return
+     */
+    @ApiOperation(value = "修改担保人异步处理", notes = "修改担保人异步处理")
+    @PostMapping("/bgReturn")
+    @ResponseBody
+    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("borrowNid") String borrowNid) {
+        logger.info("web端修改担保人异步处理start,userId:{}", bean.getLogUserId());
+        // 银行返回响应代码
+        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
+        RepayListRequest requestBean=new RepayListRequest();
+        requestBean.setUserId(bean.getLogUserId());
+        requestBean.setBorrowNid(bean.getProductId());
+        if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode) ) {
+        	requestBean.setStatus("1");
+        }else {
+        	requestBean.setStatus("2");
+        }
+        int i=repayManageService.updateSponsorLog(requestBean);
+        BankCallResult result=new BankCallResult();
+        if(i==0) {
+            result.setStatus(true);
+            result.setMessage("修改担保人保存成功");
+            logger.info("修改担保人成功end,UserId:{}修改担保人成功平台为：{}", bean.getLogUserId(),bean.getLogClient());
+        }else {
+            result.setStatus(true);
+            result.setMessage("修改担保人保存失败");
+            logger.info("修改担保人保存失败end,UserId:{}修改担保人成功平台为：{}", bean.getLogUserId(),bean.getLogClient());
+        }
+
+        return result;
+    }
 }

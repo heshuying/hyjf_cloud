@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.repay;
 
-import com.hyjf.am.resquest.trade.BatchRepayTotalRequest;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -17,6 +16,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.List;
+
+import javax.validation.Valid;
 
 /**
  * 还款管理
@@ -109,4 +110,6 @@ public interface RepayManageService extends BaseService {
 	Integer selectSponsorLogCount(RepayListRequest requestBean);
 
 	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+
+	int updateSponsorLog(@Valid RepayListRequest requestBean);
 }

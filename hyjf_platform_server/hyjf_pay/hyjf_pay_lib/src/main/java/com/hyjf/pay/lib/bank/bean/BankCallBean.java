@@ -653,14 +653,40 @@ public class BankCallBean extends BankCallPnrApiBean implements Serializable {
 
 	/**交易状态*/
 	public String status;
+	// 原担保人账号
+	private String oldBailAccountId;
+	// 新担保人账号
+	private String newBailAccountId;
 
+	
 	/** =========== 字段结束 ===========  */
 
+	
     public String getTransactionUrl() {
         return transactionUrl;
     }
 
-    public void setTransactionUrl(String transactionUrl) {
+    public String getOldBailAccountId() {
+		return oldBailAccountId;
+	}
+
+	public void setOldBailAccountId(String oldBailAccountId) {
+		this.oldBailAccountId = oldBailAccountId;
+	}
+
+	public String getNewBailAccountId() {
+		return newBailAccountId;
+	}
+
+	public void setNewBailAccountId(String newBailAccountId) {
+		this.newBailAccountId = newBailAccountId;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setTransactionUrl(String transactionUrl) {
         this.transactionUrl = transactionUrl;
     }
 

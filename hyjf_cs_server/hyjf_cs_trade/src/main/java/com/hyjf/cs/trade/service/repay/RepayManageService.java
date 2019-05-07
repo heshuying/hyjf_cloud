@@ -16,6 +16,7 @@ import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.trade.bean.SponsorLogBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
@@ -258,4 +259,6 @@ public interface RepayManageService extends BaseTradeService {
    boolean getFailCredit(String borrowNid);
 	Integer selectSponsorLogCount(RepayListRequest requestBean);
 	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
+	Map<String, Object> getSponsorLogMV(SponsorLogBean openBean, String string);
+	int updateSponsorLog(RepayListRequest requestBean);
 }

@@ -526,7 +526,7 @@ public class RepayManageController extends BaseController {
         return repayTransferCustomizeResponse;
     }
     /**
-     * 检索还款列表
+     * 查询修改担保人
      * @param requestBean
      * @return
      */
@@ -540,7 +540,7 @@ public class RepayManageController extends BaseController {
     }
 
     /**
-     * 统计还款总记录数
+     * 查询修改担保人总记录数
      * @param requestBean
      * @return
      */
@@ -549,6 +549,18 @@ public class RepayManageController extends BaseController {
         IntegerResponse responseBean = new IntegerResponse();
         Integer result = repayManageService.selectSponsorLogCount(requestBean);
         responseBean.setResultInt(result);
+        return responseBean;
+    }
+    /**
+     * 修改修改担保人
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/updateSponsorLog")
+    public IntegerResponse updateSponsorLog(@RequestBody @Valid RepayListRequest requestBean) {
+    	IntegerResponse responseBean = new IntegerResponse();
+    	int result = repayManageService.updateSponsorLog(requestBean);
+    	 responseBean.setResultInt(result);
         return responseBean;
     }
 }

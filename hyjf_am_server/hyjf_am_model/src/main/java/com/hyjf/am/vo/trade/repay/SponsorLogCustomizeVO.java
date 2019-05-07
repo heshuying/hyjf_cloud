@@ -33,6 +33,17 @@ public class SponsorLogCustomizeVO extends BaseVO {
     private String borrowPeriod;
 
     private String createTime;
+    
+    private String oldBailAccountId;
+
+    
+	public String getOldBailAccountId() {
+		return oldBailAccountId;
+	}
+
+	public void setOldBailAccountId(String oldBailAccountId) {
+		this.oldBailAccountId = oldBailAccountId;
+	}
 
 	public String getStatus() {
 		return status;

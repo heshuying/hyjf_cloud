@@ -7258,4 +7258,14 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return 0;
     }
+
+	@Override
+	public int updateSponsorLog(RepayListRequest requestBean) {
+        IntegerResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/updateSponsorLog", requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 1;
+	}
 }

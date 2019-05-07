@@ -2979,5 +2979,7 @@ public interface AmTradeClient {
 	List<SponsorLogCustomizeVO> selectSponsorLog(RepayListRequest requestBean);
 
 	int selectSponsorLogCount(RepayListRequest requestBean);
+
+	int updateSponsorLog(RepayListRequest requestBean);
 }
 

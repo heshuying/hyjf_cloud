@@ -573,6 +573,7 @@
 	   <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 	   <result column="create_time" property="createTime" jdbcType="VARCHAR" />
 	   <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
+	   <result column="oldBailAccountId" property="oldBailAccountId" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectSponsorLog" resultMap="SponsorLogCustomizeVO" parameterType="Map">
 		SELECT
@@ -582,12 +583,14 @@
 			bw.borrow_period,
 			bw.borrow_apr,
 			bw.create_time,
-			bw.borrow_style 
+			bw.borrow_style,
+			sl.old_sponsor as oldBailAccountId
 		FROM
 			ht_sponsor_log sl
 			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid 
 		WHERE
 			sl.new_sponsor = #{userName}
+			AND sl.del_flag = 0
 		ORDER BY
 			sl.create_time
 		<if test="limitStart != null and limitEnd !=null" >
@@ -602,5 +605,6 @@
 			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid 
 		WHERE
 			sl.new_sponsor = #{userName}
+			AND sl.del_flag = 0
 	</select>
 </mapper>

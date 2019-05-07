@@ -3,6 +3,9 @@ package com.hyjf.am.trade.dao.auto;
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowFullCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.HjhDebtDetailCustomizeMapper;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -495,5 +498,8 @@ public class AutoMapper {
 
     @Resource
     protected AppPushManageMapper appPushManageMapper;
+
+    @Resource
+	protected SponsorLogMapper sponsorLogMapper;
 }
 
