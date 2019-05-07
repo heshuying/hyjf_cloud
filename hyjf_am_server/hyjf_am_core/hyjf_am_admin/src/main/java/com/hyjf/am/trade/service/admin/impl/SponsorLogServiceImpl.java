@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hyjf.am.resquest.trade.SponsorLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.SponsorLogMapper;
@@ -13,7 +14,7 @@ import com.hyjf.am.trade.dao.model.auto.SponsorLogExample;
 import com.hyjf.am.trade.dao.model.auto.SponsorLogExample.Criteria;
 import com.hyjf.am.trade.service.admin.SponsorLogService;
 
-
+@Service
 public class SponsorLogServiceImpl implements SponsorLogService{
 
 	@Autowired
