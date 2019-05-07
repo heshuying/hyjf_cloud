@@ -15,6 +15,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.DES;
 import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.SecretUtil;
 import com.hyjf.cs.common.util.GetJumpCommand;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -240,6 +241,11 @@ public class AppRegistController extends BaseUserController {
         JSONObject checkResult = new JSONObject();
         // 手机号
         String mobile = request.getParameter("mobile");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 取得加密用的Key
+        String key = SecretUtil.getKey(sign);
+        mobile = DES.decodeValue(key, mobile);
         if(StringUtils.isBlank(mobile)){
             checkResult.put(CustomConstants.APP_STATUS, 1);
             checkResult.put(CustomConstants.APP_STATUS_DESC, "手机号为空");
