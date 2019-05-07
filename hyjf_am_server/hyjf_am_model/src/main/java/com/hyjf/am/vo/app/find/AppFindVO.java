@@ -19,8 +19,8 @@ public class AppFindVO implements Serializable {
     private AppFindAdCustomizeVO banner;
     @ApiModelProperty(value = "公司动态列表(三条)")
     private List<AppFindNewsVO> newsList;
-    @ApiModelProperty(value = "文章类型(公司动态)", example = "20")
-    private Integer moreNewsType;
+    @ApiModelProperty(value = "文章类型信息")
+    private AppFindMoreNewsVO moreNewsType;
     @ApiModelProperty(value = "运营报告列表(两条)")
     private List<AppFindReportVO> reportList;
     @ApiModelProperty(value = "查看更多(运营报告)", example = "https://app.hyjf.com/...")
@@ -52,11 +52,11 @@ public class AppFindVO implements Serializable {
         this.newsList = newsList;
     }
 
-    public Integer getMoreNewsType() {
+    public AppFindMoreNewsVO getMoreNewsType() {
         return moreNewsType;
     }
 
-    public void setMoreNewsType(Integer moreNewsType) {
+    public void setMoreNewsType(AppFindMoreNewsVO moreNewsType) {
         this.moreNewsType = moreNewsType;
     }
 

@@ -355,13 +355,18 @@ public class AppRechargeController extends BaseUserController {
     @PostMapping(value = "/getRechargeDetail")
     @ResponseBody
     public WebResult<AppRechargeVO> getRechargeRule(@RequestHeader(value = "userId") Integer userId) {
-        WebResult webResult = new WebResult();
-        List<AppRechargeRuleVO> rechargeRuleList = appRechargeService.getRechargeRule();
-        List<AppRechargeLimitVO> rechargeLimitList = appRechargeService.getRechargeLimit();
-        AppRechargeVO appRechargeVo = new AppRechargeVO();
-        appRechargeVo.setRechargeRule(rechargeRuleList);
-        appRechargeVo.setRechargeLimit(rechargeLimitList);
-        webResult.setData(appRechargeVo);
+        WebResult webResult = new WebResult("0","成功");
+        try {
+            List<AppRechargeRuleVO> rechargeRuleList = appRechargeService.getRechargeRule();
+            List<AppRechargeLimitVO> rechargeLimitList = appRechargeService.getRechargeLimit();
+            AppRechargeVO appRechargeVo = new AppRechargeVO();
+            appRechargeVo.setRechargeRule(rechargeRuleList);
+            appRechargeVo.setRechargeLimit(rechargeLimitList);
+            webResult.setData(appRechargeVo);
+        } catch (Exception e) {
+            webResult.setStatus("1");
+            webResult.setStatusDesc("充值说明获取失败");
+        }
         return webResult;
     }
 

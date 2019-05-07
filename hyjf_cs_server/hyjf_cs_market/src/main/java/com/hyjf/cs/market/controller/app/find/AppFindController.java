@@ -9,10 +9,7 @@ import java.util.*;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.resquest.app.AppBaseRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
-import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
-import com.hyjf.am.vo.app.find.AppFindNewsVO;
-import com.hyjf.am.vo.app.find.AppFindReportVO;
-import com.hyjf.am.vo.app.find.AppFindVO;
+import com.hyjf.am.vo.app.find.*;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -279,15 +276,21 @@ public class AppFindController extends BaseMarketController {
 			reportVO.setId(report.get("id").toString());
 			reportVO.setTitle(report.get("typeRealName") + "运营报告");
 			reportVO.setDate(report.get("year") + "年" + report.get("sortMonth") + "月" + report.get("sortDay") + "日");
+			reportVO.setUrl(CommonUtils.concatReturnUrl(request, appHost + ClientConstants.FIND_REPORT + ClientConstants.FIND_REPORT_DETAIL
+					.replace("{year}", report.get("year") + "").replace("{month}", report.get("sortMonth") + "")
+			+ "?id=" +report.get("id")));
 			appFindReportList.add(reportVO);
 		});
 		AppFindVO appFindVO = new AppFindVO();
 		appFindVO.setModules(adVOList);
 		appFindVO.setBanner(adVO);
 		appFindVO.setNewsList(newList);
-		appFindVO.setMoreNewsType(20);
+		AppFindMoreNewsVO moreNewsVO = new AppFindMoreNewsVO();
+		moreNewsVO.setTitle("公司动态");
+		moreNewsVO.setType("20");
+		appFindVO.setMoreNewsType(moreNewsVO);
 		appFindVO.setReportList(appFindReportList);
-		appFindVO.setMoreReportsUrl(CommonUtils.concatReturnUrl(request, appHost + ClientConstants.FIND_REPORTS));
+		appFindVO.setMoreReportsUrl(CommonUtils.concatReturnUrl(request, appHost + ClientConstants.FIND_REPORT));
 		appFindVO.setContact("联系我们 400-900-7878");
 		webResult.setData(appFindVO);
 		return webResult;

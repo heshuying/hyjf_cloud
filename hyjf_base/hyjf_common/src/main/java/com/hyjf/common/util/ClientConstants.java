@@ -319,6 +319,9 @@ public class ClientConstants implements Serializable {
 	/** @RequestMapping值 */
 	public static final String GET_WITHDRAW_RULE_MAPPING = "/getRule";
 
-	/** 发现页 运营报告*/
-	public static final String FIND_REPORTS = "/find/report";
+	/** 发现页 运营报告 */
+	public static final String FIND_REPORT = "/find/report";
+
+	/** 发现页 运营报告详情 */
+	public static final String FIND_REPORT_DETAIL ="/reportYear/{year}/{month}";
 }

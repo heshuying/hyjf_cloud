@@ -18,6 +18,8 @@ public class AppFindReportVO implements Serializable {
     private String title;
     @ApiModelProperty(value = "运营报告日期", example = "2018年12月31日")
     private String date;
+    @ApiModelProperty(value = "运营报告链接地址", example = "https://app.hyjf.com/...")
+    private String url;
 
     public String getId() {
         return id;
@@ -41,5 +43,13 @@ public class AppFindReportVO implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

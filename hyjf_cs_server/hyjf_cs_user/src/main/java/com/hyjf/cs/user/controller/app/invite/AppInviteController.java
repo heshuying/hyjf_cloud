@@ -126,7 +126,7 @@ public class AppInviteController {
     @ResponseBody
     public WebResult<AppInviteVO> inviteInit(@RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, @ModelAttribute AppBaseRequest appBaseRequest) {
-        WebResult webResult = new WebResult();
+        WebResult webResult = new WebResult("0","成功");
         webResult.setData(Collections.emptyMap());
         String version = appBaseRequest.getVersion();
         String platform = appBaseRequest.getPlatform();
@@ -134,7 +134,7 @@ public class AppInviteController {
         String key = SecretUtil.getKey(sign);
         //检查参数正确性
         if (Validator.isNull(version) || Validator.isNull(platform) || Validator.isNull(key)) {
-            webResult.setStatus("999");
+            webResult.setStatus("1");
             webResult.setStatusDesc("请求参数非法");
             return webResult;
         }
@@ -144,28 +144,37 @@ public class AppInviteController {
             userId = SecretUtil.getUserId(sign);
             logger.debug("【邀请记录】用户id：{}", userId);
         } catch (Exception e) {
-            webResult.setStatus("999");
+            webResult.setStatus("1");
             webResult.setStatusDesc("请求参数非法");
             return webResult;
         }
         AppInviteVO appInviteVO = new AppInviteVO();
-        // 我的奖励信息
-        AppRewardDetailVO appRewardDetailVO = new AppRewardDetailVO();
-        Map<String,String> pageData = inviteService.selectInvitePageData(String.valueOf(userId));
-        String inviteCount = pageData.get("inviteCount");
-        String total = pageData.get("rewardRecordsSum");
-        WebViewUserVO users = inviteService.getUserFromCache(userId);
-        appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" :total);
-        appRewardDetailVO.setFriendCount(inviteCount);
-        appRewardDetailVO.setCouponCount("0");
-        appRewardDetailVO.setCouponTag("邀请好友获得");
-        appRewardDetailVO.setUserName(users.getUsername());
-        appRewardDetailVO.setUserId(users.getUserId());
-        appRewardDetailVO.setIconUrl(users.getIconUrl());
-        appInviteVO.setDetail(appRewardDetailVO);
+        Page page = new Page();
+        WebViewUserVO users = null;
+        try {
+            // 我的奖励信息
+            AppRewardDetailVO appRewardDetailVO = new AppRewardDetailVO();
+            Map<String, String> pageData = inviteService.selectInvitePageData(String.valueOf(userId));
+            String inviteCount = pageData.get("inviteCount");
+            String total = pageData.get("rewardRecordsSum");
+            users = inviteService.getUserFromCache(userId);
+            appRewardDetailVO.setTotal(StringUtils.isBlank(total) ? "0" : total);
+            appRewardDetailVO.setFriendCount(inviteCount);
+            appRewardDetailVO.setCouponCount("0");
+            appRewardDetailVO.setCouponTag("邀请好友获得");
+            appRewardDetailVO.setUserName(users.getUsername());
+            appRewardDetailVO.setUserId(users.getUserId());
+            appRewardDetailVO.setIconUrl(users.getIconUrl());
+            appInviteVO.setDetail(appRewardDetailVO);
+        } catch (Exception e){
+            logger.error("【我的奖励】我的奖励信息获取失败！用户id：{}", userId, e);
+            webResult.setStatus("1");
+            webResult.setStatusDesc("我的奖励信息获取失败");
+            return webResult;
+        }
         // 邀请记录列表
         List<AppInviteRecordVO> appInviteRecordVOList = new ArrayList<>();
-        try {
+        try{
             int limitStart = pageSize * (currentPage - 1);
             int count = inviteService.selectMyInviteCount(String.valueOf(userId));
             List<MyInviteListCustomizeVO> list = inviteService.selectMyInviteList(String.valueOf(userId), limitStart, pageSize);
@@ -179,15 +188,17 @@ public class AppInviteController {
                 });
             }
             appInviteVO.setRecordList(appInviteRecordVOList);
-            Page page = new Page();
+            // 分页信息
             page.setCurrPage(currentPage);
             page.setPageSize(pageSize);
             page.setTotal(count);
-            webResult.setPage(page);
         } catch (Exception e) {
             logger.error("【我的奖励】获取邀请记录列表发生异常！用户名：{}", users.getUsername(), e);
+            appInviteVO.setRecordList(new ArrayList<>());
+            page.setTotal(0);
         }
         webResult.setData(appInviteVO);
+        webResult.setPage(page);
         return webResult;
     }
 }
