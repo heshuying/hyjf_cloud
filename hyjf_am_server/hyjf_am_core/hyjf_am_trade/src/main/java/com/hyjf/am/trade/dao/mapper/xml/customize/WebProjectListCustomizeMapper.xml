@@ -1001,6 +1001,7 @@
             </if>
             <!-- 包含汇直投、尊享汇、融通宝 -->
             <if test="(type == null or type == '') and projectType=='ZQ' ">
+                <!--
                 AND hydb.project_type NOT IN (4,8)
                 AND CASE
                 WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ))
@@ -1009,6 +1010,7 @@
                 ELSE
                 hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                 END
+                -->
             </if>
             <if test="status == null or status == ''">
                 <!--
@@ -1021,8 +1023,8 @@
                 OR ( hydb.`status` = 8 )
                 )
                 -->
-                AND hydb.`status` = 8
             </if>
+            AND hydb.`status` = 8
             <choose>
                 <!-- 获取待发布 -->
                 <when test="status == '10'">
