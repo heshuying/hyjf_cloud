@@ -3,12 +3,14 @@
 <mapper namespace="com.hyjf.am.user.dao.mapper.customize.SmsCountCustomizeMapper">
 
     <!-- 统计注册人数 -->
-	<select id="querySmsCountLlist" parameterType="com.hyjf.am.resquest.user.SmsCountRequest" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
+	<select id="querySmsCountLlist" parameterType="com.hyjf.am.resquest.user.SmsCountRequest"
+            resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
        select
         IFNULL(`od3`.`name`,'其他') AS `departmentName`,
         IFNULL(od3.id,0) as departmentId,
         sum(s.sms_number) as smsNumber,
-        s.posttime as posttime
+        s.posttime as posttime,
+        case when posttime > '2018-08-19' then (sms_number * 0.04)  else (sms_number * 0.042) end as smsMoney
         from ht_sms_count s
         LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
         LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
@@ -35,9 +37,15 @@
         </if>
     </select>
     
-    <select id="querySmsCountNumberTotal" resultType="java.lang.Integer"
-            parameterType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
-        select ifnull(sum(sms_number),0) from ht_sms_count l
+    <select id="querySmsCountNumberTotal" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize"
+            parameterType="com.hyjf.am.resquest.user.SmsCountRequest">
+        select 	ifnull(sum(sms_number), 0) AS smsNumber,
+        sum(CASE
+        WHEN posttime > '2018-08-19' THEN
+        (sms_number * 0.04)
+        ELSE
+        (sms_number * 0.042)
+        END ) AS smsMoney  from ht_sms_count l
         <where>
             <if test="post_time_begin!=null">
                 AND l.posttime <![CDATA[>=]]> STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
@@ -144,5 +152,70 @@
             </if>
         </where>
     </select>
-	
+
+    <select id="getDeptByMobile" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT deptId, deptName FROM
+        (
+        SELECT od.id AS deptId, od. NAME AS deptName FROM  ht_user hu
+        LEFT JOIN ht_r_oa_users ou ON hu.user_id = ou.hyd_id
+        LEFT JOIN ht_r_oa_department od ON ou.departmentid = od.id
+        WHERE
+            hu.mobile = #{mobile}
+            AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21')
+        UNION ALL
+        SELECT od.id AS deptId, od. NAME AS deptName FROM ht_user hu
+        LEFT JOIN ht_r_oa_users ou ON hu.user_id = ou.hyd_id
+        LEFT JOIN ht_r_oa_department od ON ou.departmentid = od.id
+        WHERE
+            hu.user_id = (
+            SELECT
+            hs.spreads_user_id
+            FROM
+            ht_user t INNER JOIN ht_spreads_user hs on t.user_id = hs.user_id
+            WHERE
+                t.mobile = #{mobile} limit 1)
+                AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21')
+        ) tt
+        LIMIT 1;
+    </select>
+
+    <select id="querySms" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize"
+            parameterType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
+        select l.id , l.department_id AS departmentId ,l.department_name AS departmentName ,l.sms_number AS smsNumber
+        ,l.posttime ,l.create_time AS createTime from ht_sms_count l
+        <where>
+            <if test="post_time_begin!=null">
+                AND l.posttime <![CDATA[>=]]> STR_TO_DATE(#{post_time_begin},'%Y-%m-%d')
+            </if>
+            <if test="post_time_end!= null">
+                AND l.posttime  <![CDATA[<=]]> STR_TO_DATE(#{post_time_end},'%Y-%m-%d')
+            </if>
+            <if test="departmentId!= null">
+                AND l.department_id = #{departmentId}
+            </if>
+            <if test="posttime!= null">
+                AND l.posttime = STR_TO_DATE(#{posttime},'%Y-%m-%d')
+            </if>
+            <if test="combotreeListSrch != null and combotreeListSrch != ''">
+                AND l.department_id in
+                <foreach collection="combotreeListSrch" open="(" close=")" separator="," item="dep">
+                    #{dep}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO ht_sms_count (id,department_id,department_name,sms_number,posttime)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.departmentId},#{item.departmentName},#{item.smsNumber},#{item.posttime})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        id=VALUES(id),sms_number =
+        VALUES
+        (sms_number);
+    </insert>
+
 </mapper>

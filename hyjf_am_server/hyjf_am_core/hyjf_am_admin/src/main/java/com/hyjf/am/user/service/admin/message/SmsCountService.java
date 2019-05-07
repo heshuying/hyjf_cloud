@@ -9,6 +9,7 @@ import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fq
@@ -27,7 +28,7 @@ public interface SmsCountService {
      * @param request
      * @return
      */
-    Integer querySmsCountNumberTotal(SmsCountRequest request);
+    List<SmsCountCustomize> querySmsCountNumberTotal(SmsCountRequest request);
 
     /**
      * 查询部门信息
@@ -47,4 +48,8 @@ public interface SmsCountService {
      * @return
      */
     List<String> queryUser(SmsCodeUserRequest request);
+
+    Map<String, SmsCountCustomize> getSmsCount(String mobile, String messageStr);
+
+    void addSmsCount(Map<String, SmsCountCustomize> paramMap);
 }

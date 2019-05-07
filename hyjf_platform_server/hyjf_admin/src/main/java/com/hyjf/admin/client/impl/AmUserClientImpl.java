@@ -2026,11 +2026,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
-		return restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/query_sms_count_number_total", request, Integer.class);
-	}
-
-	@Override
 	public List<OADepartmentCustomizeVO> queryDepartmentInfo(Object o) {
 		SmsCountCustomizeResponse response = restTemplate.getForObject(
 				"http://AM-ADMIN/am-user/sms_count/query_department_info", SmsCountCustomizeResponse.class,
@@ -2709,16 +2704,6 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getCount();
 		}
 		return 0;
-	}
-
-	@Override
-	public List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request) {
-		SmsCountCustomizeResponse response =
-				restTemplate.postForEntity("http://AM-ADMIN/am-user/sms_count/getsmslistforexport", request, SmsCountCustomizeResponse.class).getBody();
-		if(Response.isSuccess(response)){
-			return response.getResultList();
-		}
-		return null;
 	}
 
 	@Override

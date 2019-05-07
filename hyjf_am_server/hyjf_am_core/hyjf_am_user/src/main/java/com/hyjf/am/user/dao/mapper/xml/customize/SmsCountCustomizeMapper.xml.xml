@@ -35,7 +35,7 @@
         </if>
     </select>
     
-    <select id="querySmsCountNumberTotal" resultType="java.lang.Integer"
+    <select id="querySmsCountNumberTotal" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize"
             parameterType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
         select ifnull(sum(sms_number),0) from ht_sms_count l
         <where>

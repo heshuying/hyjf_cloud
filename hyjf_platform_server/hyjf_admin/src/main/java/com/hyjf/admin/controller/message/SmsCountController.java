@@ -55,13 +55,6 @@ public class SmsCountController extends BaseController {
     @PostMapping("/sms_count_list")
     public AdminResult smsCountList(@RequestBody SmsCountRequestBean request) {
         SmsCountRequest smsCountCustomize = new SmsCountRequest();
-        //查询短信单价配置
-        String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
-        if (StringUtils.isEmpty(configMoney)) {
-            configMoney = "0.042";//短信单价（0.042元/条）
-        }
-
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         if (StringUtils.isNotEmpty(request.getPost_time_begin())) {
             //int begin = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayStart(form.getPost_time_begin()));
             smsCountCustomize.setPost_time_begin(request.getPost_time_begin());

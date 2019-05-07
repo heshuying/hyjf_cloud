@@ -23,7 +23,7 @@ public class SmsCountCustomize implements Serializable {
     //短信发送数量
     private Integer smsNumber;
 
-    //短信发送数量
+    //短信发送时间
     private String posttime;
 
     //创建时间

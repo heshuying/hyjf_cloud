@@ -35,11 +35,6 @@ public class SmsCountServiceImpl implements SmsCountService {
     }
 
     @Override
-    public Integer querySmsCountNumberTotal(SmsCountCustomizeVO request) {
-        return amUserClient.querySmsCountNumberTotal(request);
-    }
-
-    @Override
     public JSONArray getCrmDepartmentList(String[] list) {
         List<OADepartmentCustomizeVO> departmentList = amUserClient.queryDepartmentInfo(null);
 
@@ -55,11 +50,6 @@ public class SmsCountServiceImpl implements SmsCountService {
     @Override
     public Integer getSmsCountForExport(SmsCountRequest request) {
         return amUserClient.getSmsCountForExport(request);
-    }
-
-    @Override
-    public List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request) {
-        return amUserClient.getSmsListForExport(request);
     }
 
     /**

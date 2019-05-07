@@ -43,6 +43,12 @@ public interface MQConstant {
 	 */
 	String APP_MESSAGE_GROUP = "APP_MESSAGE_GROUP";
 	String APP_MESSAGE_TOPIC = "APP_MESSAGE_TOPIC";
+
+	/**
+	 * 发送短信统计 push group topic
+	 */
+	String SMS_COUNT_MESSAGE_GROUP = "SMS_COUNT_MESSAGE_GROUP";
+	String SMS_COUNT_MESSAGE_TOPIC = "SMS_COUNT_MESSAGE_TOPIC";
 	/** ------------------------------ 消息中心 end ------------------------------ */
 
 

@@ -44,25 +44,31 @@ public class SmsCountController extends BaseController {
     @RequestMapping("/query_sms_count_list")
     public SmsCountCustomizeResponse querySmsCountLlist(@RequestBody SmsCountRequest request) {
         SmsCountCustomizeResponse response = new SmsCountCustomizeResponse();
-        List<SmsCountCustomize> list = smsCountService.querySmsCountLlist(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            List<SmsCountCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCountCustomizeVO.class);
-            response.setResultList(voList);
-        }
         // 查询总条数
         int count = smsCountService.selectCount(request);
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
-        String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
-        if (StringUtils.isEmpty(configMoney)) {
-            configMoney = "0.042";//短信单价（0.042元/条）
-        }
         response.setCount(count);
+        if(count > 0){
+            //根据需求：2018年12月27日之前的按照5分钱算，之后按4分钱算
+            List<SmsCountCustomize> list = smsCountService.querySmsCountLlist(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<SmsCountCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCountCustomizeVO.class);
+                response.setResultList(voList);
+            }
+            //根据需求：2018年12月27日之前的按照5分钱算，之后按4分钱算
+//            String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
+////            if (StringUtils.isEmpty(configMoney)) {
+////                configMoney = "0.042";//短信单价（0.042元/条）
+////            }
 
-
-        // 查询短信总条数
-        int smsCount = smsCountService.querySmsCountNumberTotal(request);
-        response.setSumCount(smsCount);
-        response.setSumMoney(decimalFormat.format(new BigDecimal(configMoney).multiply(new BigDecimal(smsCount))));
+            // 查询短信总条数
+            //根据需求：2018年12月27日之前的按照5分钱算，之后按4分钱算
+            List<SmsCountCustomize> listsmsCount = smsCountService.querySmsCountNumberTotal(request);
+            if(listsmsCount.size() > 0){
+                SmsCountCustomize vo = listsmsCount.get(0);
+                response.setSumCount(vo.getSmsNumber());
+                response.setSumMoney(vo.getSmsMoney());
+            }
+        }
         return response;
     }
 
@@ -77,32 +83,6 @@ public class SmsCountController extends BaseController {
         SmsCountCustomizeResponse response = new SmsCountCustomizeResponse();
         response.setCount(smsCountService.selectCount(request));
         return response;
-    }
-
-    /**
-     * 查询导出列表
-     * @param request
-     * @return
-     */
-    @RequestMapping("getsmslistforexport")
-    public SmsCountCustomizeResponse getListForExport (@RequestBody SmsCountRequest request){
-        SmsCountCustomizeResponse response = new SmsCountCustomizeResponse();
-        List<SmsCountCustomize> list = smsCountService.querySmsCountLlist(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            List<SmsCountCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCountCustomizeVO.class);
-            response.setResultList(voList);
-        }
-        return response;
-    }
-
-    /**
-     * 查询询短信总条数+总费用
-     * @param request
-     * @return
-     */
-    @RequestMapping("/query_sms_count_number_total")
-    public Integer querySmsCountNumberTotal(@RequestBody SmsCountRequest request) {
-        return smsCountService.querySmsCountNumberTotal(request);
     }
 
     /**

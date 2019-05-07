@@ -1021,13 +1021,6 @@ public interface AmUserClient {
     SmsCountCustomizeResponse querySmsCountList(SmsCountRequest request);
 
     /**
-     * 查询短信总条数+总费用
-     * @param request
-     * @return
-     */
-    Integer querySmsCountNumberTotal(SmsCountCustomizeVO request);
-
-    /**
      * 获取部门列表
      * @param o
      * @return
@@ -1336,13 +1329,6 @@ public interface AmUserClient {
      * @return
      */
     Integer getSmsCountForExport(SmsCountRequest request);
-
-    /**
-     * 查询短信统计导出列表
-     * @param request
-     * @return
-     */
-    List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
 
     /**
      * 查询满足条件的服务费授权的条数

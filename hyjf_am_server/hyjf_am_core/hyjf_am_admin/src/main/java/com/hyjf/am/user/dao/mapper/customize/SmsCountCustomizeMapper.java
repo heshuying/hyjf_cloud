@@ -17,11 +17,28 @@ import java.util.Map;
 public interface SmsCountCustomizeMapper {
     List<SmsCountCustomize> querySmsCountLlist(SmsCountRequest request);
 
-    Integer querySmsCountNumberTotal(SmsCountRequest request);
+    List<SmsCountCustomize> querySmsCountNumberTotal(SmsCountRequest request);
 
     List<OADepartmentCustomize> queryDepartmentInfo();
 
     int selectCount(SmsCountRequest request);
 
     List<String> queryUser(Map<String, Object> params);
+
+    /**
+     * 通过手机号获取部门
+     * @param mobile
+     * @return
+     */
+    Map<String,Object> getDeptByMobile(String mobile);
+
+    List<SmsCountCustomize> querySms(SmsCountCustomize smsCountCustomize);
+
+    /**
+     * 批量插入
+     * @param list
+     * @return
+     */
+    void insertBatch(List<SmsCountCustomize> list);
+
 }
