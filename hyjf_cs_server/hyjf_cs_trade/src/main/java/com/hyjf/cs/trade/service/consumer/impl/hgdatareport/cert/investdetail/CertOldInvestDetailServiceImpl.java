@@ -66,12 +66,13 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
+
 			}
 			if(list==null||list.size()==0){
 				return null;
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("报错了",e);
 		}
 
 		return JSONArray.parseArray(JSON.toJSONString(list));
@@ -393,7 +394,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+        param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
@@ -507,25 +508,21 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		CertRequest certRequest=new CertRequest();
 		certRequest.setRealTenderId(accountList.getNid());
 		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-		logger.info(logHeader + " couponRealTenders.size()："+couponRealTenders.size());
 		if(couponRealTenders==null||couponRealTenders.size()==0){
-            logger.info(logHeader + " 11111：");
 			//交易金额
 			param.put("transMoney", FORMAT.format(accountList.getAmount()));
 		}else{
 			certRequest.setCouponTenderId(couponRealTenders.get(0).getCouponTenderId());
 			List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 			if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
-                logger.info(logHeader + " 22222：");
 				//交易金额
 				param.put("transMoney", FORMAT.format(accountList.getAmount()));
 			}else{
-                logger.info(logHeader + " 33333：");
 				//交易金额
 				param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
 			}
 		}
-        logger.info(logHeader + " 44444：");
+
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -541,7 +538,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//交易流水时间
 		param.put("transTime", GetDate.dateToString(accountList.getCreateTime()));
 		list.add(param);
-		logger.info(logHeader + " list.size()："+list.size());
 	}
 
 	//已改
