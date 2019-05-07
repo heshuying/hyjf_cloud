@@ -68,18 +68,28 @@ public class OrderInfoController extends BaseController {
                 wbsCommonVO.setCode(Response.ERROR);
                 wbsCommonVO.setMsg("请求参数不允许为空");
                 wbsCommonVO.setData("");
+                return wbsCommonVO;
+            }
+            if(getUtmId(tenderAccedeQO.getEntId())!=null){
+                tenderAccedeQO.setEntIds(getUtmId(tenderAccedeQO.getEntId()));
+            }else {
+                wbsCommonVO.setCode(Response.ERROR);
+                wbsCommonVO.setMsg("请输入有效的entId");
+                wbsCommonVO.setData("");
+                return wbsCommonVO;
             }
             tenderAccedeQO.setEntIds(getUtmId(tenderAccedeQO.getEntId()));
             logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口 请求参数 " + JSONObject.toJSON(tenderAccedeQO));
             List<TenderAccedeVO> tenderAccedeVOS = this.orderService.getOrderInfo(tenderAccedeQO);
-            logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口 总条数 " + tenderAccedeVOS.size());
             if (tenderAccedeVOS!=null&&tenderAccedeVOS.size()>0){
+                logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口 总条数 " + tenderAccedeVOS.size());
                 wbsCommonVO.setCode(Response.SUCCESS);
                 wbsCommonVO.setMsg(Response.SUCCESS_MSG);
                 wbsCommonVO.setData(tenderAccedeVOS);
             }else {
-                wbsCommonVO.setCode(Response.ERROR);
-                wbsCommonVO.setMsg("返回结果集为空");
+                logger.info("---searchInfoRecover.searchAction by param---wbs订单信息接口 总条数 0");
+                wbsCommonVO.setCode(Response.SUCCESS);
+                wbsCommonVO.setMsg("订单信息为空");
                 wbsCommonVO.setData("");
             }
         }else {
@@ -90,7 +100,8 @@ public class OrderInfoController extends BaseController {
 
         return wbsCommonVO;
     }
-    public String getUtmId(Integer entId) {
+    public String getUtmId(Integer entIds) {
+        String entId=entIds.toString();
         String thirdIds = wbsConfig.getThridPropertyIds();
         String[] thirdIdsArr = thirdIds.split(",");
         if (entId.equals(thirdIdsArr[0])){

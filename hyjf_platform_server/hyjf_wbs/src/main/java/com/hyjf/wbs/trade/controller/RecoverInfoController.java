@@ -72,8 +72,16 @@ public class RecoverInfoController extends BaseController {
                 wbsRecoverVO.setCode(Response.ERROR);
                 wbsRecoverVO.setMsg("请求参数不允许为空");
                 wbsRecoverVO.setData("");
+                return wbsRecoverVO;
             }
-            recoverQO.setEntIds(getUtmId(recoverQO.getEntId()));
+            if(getUtmId(recoverQO.getEntId())!=null){
+                recoverQO.setEntIds(getUtmId(recoverQO.getEntId()));
+            }else {
+                wbsRecoverVO.setCode(Response.ERROR);
+                wbsRecoverVO.setMsg("请输入有效的entId");
+                wbsRecoverVO.setData("");
+                return wbsRecoverVO;
+            }
             recoverQO.setEntId(recoverQO.getEntId());
             logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口 请求实体参数 " + JSONObject.toJSON(recoverQO));
             int countRecover=recoverService.getRecoverCount(recoverQO);
@@ -89,8 +97,8 @@ public class RecoverInfoController extends BaseController {
                 wbsRecoverVO.setCurrentPage(recoverQO.getCurrentPage());
                 wbsRecoverVO.setTotalPages(paginator.getTotalPages()+"");
             }else {
-                wbsRecoverVO.setCode(Response.ERROR);
-                wbsRecoverVO.setMsg(Response.FAIL_MSG);
+                wbsRecoverVO.setCode(Response.SUCCESS);
+                wbsRecoverVO.setMsg("回款信息为空");
                 wbsRecoverVO.setData("");
             }
         }else {
@@ -100,7 +108,8 @@ public class RecoverInfoController extends BaseController {
         }
         return wbsRecoverVO;
     }
-    public String getUtmId(Integer entId) {
+    public String getUtmId(Integer entIds) {
+        String entId=entIds.toString();
         String thirdIds = wbsConfig.getThridPropertyIds();
         String[] thirdIdsArr = thirdIds.split(",");
         if (entId.equals(thirdIdsArr[0])){
