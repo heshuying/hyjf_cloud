@@ -892,6 +892,19 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								params.put("userId", borrow.getUserId());
 								commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTING_TAG, UUID.randomUUID().toString(), params),
 										MQConstant.HG_REPORT_DELAY_LEVEL);
+
+
+								// add by liuyang 20190507 wbs系统标的信息推送MQ start
+								// 如果是散标,则往wbs系统推送标的
+								if (StringUtil.isBlank(bwb.getPlanNid())) {
+									try {
+										logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+										sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+									} catch (Exception e) {
+										logger.error("wbs系统标的信息推送MQ失败,标的编号:[" + borrow.getBorrowNid() + "].");
+									}
+								}
+								// add by liuyang 20190507 wbs系统标的信息推送MQ end
 							}
 						}
 
@@ -6322,4 +6335,22 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
         }
         return null;
     }
+
+	/**
+	 * wbs标的信息推送MQ
+	 *
+	 * @param borrowNid
+	 * @param productStatus
+	 * @param productType
+	 */
+	private void sendWbsBorrowInfo(String borrowNid, String productStatus, Integer productType) throws MQException {
+		JSONObject params = new JSONObject();
+		// 产品编号
+		params.put("productNo", borrowNid);
+		// 产品状态
+		params.put("productStatus", productStatus);
+		// 产品类型 0 散标类, 1 计划类
+		params.put("productType", productType);
+		commonProducer.messageSend(new MessageContent(MQConstant.WBS_BORROW_INFO_TOPIC, MQConstant.WBS_BORROW_INFO_TAG, UUID.randomUUID().toString(), params));
+	}
 }
