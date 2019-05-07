@@ -40,7 +40,7 @@
     br.recover_status AS status
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
-    INNER JOIN ht_utm_reg ur ON br.user_id = ur.user_id
+    INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
       AND ur.utm_id in (#{entIds})
@@ -69,7 +69,7 @@
     brp.recover_status AS status
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    INNER JOIN ht_utm_reg ur ON br.user_id = ur.user_id
+    INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
       AND ur.utm_id in (#{entIds})
@@ -89,7 +89,7 @@
     br.user_id AS assetCustomerId
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
-    INNER JOIN ht_utm_reg ur ON br.user_id = ur.user_id
+    INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
       AND ur.utm_id in (#{entIds})
