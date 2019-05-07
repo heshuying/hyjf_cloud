@@ -221,21 +221,21 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                 BigDecimal differentialRate = repayInfo.getDifferentialRate();
                 BigDecimal borrowAccount = new BigDecimal(repayInfo.getBorrowAccount());
                 BigDecimal assignAccount = new BigDecimal(repayInfo.getAccount());
-                String borrowPeriod = repayInfo.getBorrowPeriod();
+                Integer borrowPeriod = repayInfo.getBorrowPeriodInt();
                 String borrowStyle = repayInfo.getBorrowStyle();
                 Integer verifyTime = repayInfo.getVerifyTime();
                 Integer repayPeriod = repayInfo.getRecoverPeriod();
                 // 按月计息，到期还本还息end
                 if (CustomConstants.BORROW_STYLE_END.equals(borrowStyle)) {
-                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, Integer.parseInt(borrowPeriod), differentialRate, verifyTime);
+                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByMonth(assignCapital, feeRate, borrowPeriod, differentialRate, verifyTime);
                 }
                 // 按天计息到期还本还息
                 else if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
-                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, Integer.parseInt(borrowPeriod), differentialRate, verifyTime);
+                    assignManageFee = AccountManagementFeeUtils.getDueAccountManagementFeeByDay(assignCapital, feeRate, borrowPeriod, differentialRate, verifyTime);
                 }
                 // 分期还款
                 else {
-                    assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, Integer.parseInt(borrowPeriod), repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
+                    assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
                 }
                 repayInfo.setRecoverFee(assignManageFee.toString());
             }
