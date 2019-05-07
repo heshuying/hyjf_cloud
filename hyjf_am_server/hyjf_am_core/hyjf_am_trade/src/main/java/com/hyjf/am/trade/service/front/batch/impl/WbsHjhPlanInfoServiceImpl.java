@@ -29,7 +29,6 @@ public class WbsHjhPlanInfoServiceImpl extends BaseServiceImpl implements WbsHjh
     public List<HjhPlan> selectWbsSendHjhPlanList() {
         HjhPlanExample example = new HjhPlanExample();
         HjhPlanExample.Criteria cra = example.createCriteria();
-        cra.andAvailableInvestAccountGreaterThan(BigDecimal.ZERO);
         return this.hjhPlanMapper.selectByExample(example);
     }
 }
