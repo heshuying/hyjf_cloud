@@ -132,7 +132,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         return bean;
     }
 
-    public BankCallBean fallBackWithdraw(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,Throwable e){
+    public BankCallBean fallBackWithdraw(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl,WithdrawRuleConfigVO withdrawRuleConfigVO,Throwable e){
         logger.error("警告 ！！ fallBackWithdraw -->"+e.getMessage());
         return null;
     }
