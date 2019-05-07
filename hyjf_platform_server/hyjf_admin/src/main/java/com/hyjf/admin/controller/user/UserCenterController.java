@@ -881,12 +881,13 @@ public class UserCenterController extends BaseController {
                 }
             }
             //企业信息补录时，企业名称若含有英文括号，自动替换成中文括号再保存 add by nxl end
-            // 后台优化 add by nxl start
+            // 后台优化 add by nxl start 根据对公账号查找银行卡信息
             BankCardResponse bankCardResponse = userCenterService.getBankInfoByAccount(infoVO.getAccount(),userId);
             if(null!=bankCardResponse){
                 BankCardVO bankCardVO =bankCardResponse.getResult();
                 companyInfoCompanyInfoVO.setBankName(bankCardVO.getBank());
                 companyInfoCompanyInfoVO.setPayAllianceCode(bankCardVO.getPayAllianceCode());
+                companyInfoCompanyInfoVO.setBankId(bankCardVO.getBankId().toString());
             }
 
             //后台优化 add by nxl end

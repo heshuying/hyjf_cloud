@@ -690,7 +690,8 @@ public class UserManagerController extends BaseController {
             return response;
         }
         User user = userManagerService.selectUserByUserId(Integer.parseInt(userId));
-        String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
+
+       /* String bankId = bankConfigService.queryBankIdByCardNo(updCompanyRequest.getAccount());
         // add by nxl 后台优化 start
         //企业账户由于银行卡号是短号,获取不到bankid的情况下,根据输入所属银行名获取bankId
         if(StringUtils.isBlank(bankId)&&StringUtils.isNotBlank(updCompanyRequest.getBankName())){
@@ -703,7 +704,8 @@ public class UserManagerController extends BaseController {
                     updCompanyRequest.setPayAllianceCode(jxBankConfig.getPayAllianceCode());
                 }
             }
-        }
+        }*/
+
         // 企业用户补录功能追加所属银行跟联行号 需求,根据也么输入保存银行卡信息
         /*logger.info("==============企业信息补录,获取的bankId值为: "+bankId+" ==============");
         String bankName = null;
@@ -728,7 +730,7 @@ public class UserManagerController extends BaseController {
             }
         }*/
         // add by nxl 后台优化 end
-        response = userManagerService.saveCompanyInfo(updCompanyRequest, user, bankId);
+        response = userManagerService.saveCompanyInfo(updCompanyRequest, user);
         //
         if(response.getRtn()!=Response.SUCCESS){
             return response;
@@ -1002,6 +1004,7 @@ public class UserManagerController extends BaseController {
             if (null != jxBankConfigList && jxBankConfigList.size() > 0) {
                 bankName = jxBankConfigList.get(0).getBankName();
                 bankCardVO.setBank(bankName);
+                bankCardVO.setBankId(Integer.parseInt(bankId));
             }
         }
         BankCallBean callBean = userManagerService.payAllianceCodeQuery(updCompanyRequest.getAccount(), Integer.parseInt(updCompanyRequest.getUserId()));

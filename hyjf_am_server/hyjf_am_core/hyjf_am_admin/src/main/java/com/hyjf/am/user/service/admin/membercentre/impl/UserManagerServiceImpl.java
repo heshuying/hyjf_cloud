@@ -969,7 +969,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user,String bankId) {
+    public Response saveCompanyInfo(UpdCompanyRequest updCompanyRequest,User user) {
         Response response = new Response();
         response.setRtn(Response.FAIL);
         String accountId = updCompanyRequest.getAccountId();
@@ -1077,7 +1077,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         }
         //
         if(null!=bankCard){
-            bankCard = getBankCardValue(updCompanyRequest, user, bankId,bankCard);
+            bankCard = getBankCardValue(updCompanyRequest, user,bankCard);
             int updateflag = bankCardMapper.updateByPrimaryKeySelective(bankCard);
             if (updateflag > 0) {
                 logger.info("=============银行卡信息更新成功==================");
@@ -1086,7 +1086,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
             }
         }else{
             bankCard = new BankCard();
-            bankCard = getBankCardValue(updCompanyRequest, user, bankId,bankCard);
+            bankCard = getBankCardValue(updCompanyRequest, user,bankCard);
             int insertcard = bankCardMapper.insertSelective(bankCard);
             if (insertcard > 0) {
                 logger.info("=============银行卡信息保存成功==================");
@@ -1584,13 +1584,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      * 设置银行卡信息
      * @param updCompanyRequest
      * @param user
-     * @param bankId
      * @param bankCard
      * @return
      */
-    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,User user,String bankId,BankCard bankCard){
-        if(StringUtils.isNotBlank(bankId)){
-            bankCard.setBankId(Integer.parseInt(bankId));
+    public BankCard getBankCardValue(UpdCompanyRequest updCompanyRequest,User user,BankCard bankCard){
+        if(StringUtils.isNotBlank(updCompanyRequest.getBankId())){
+            bankCard.setBankId(Integer.parseInt(updCompanyRequest.getBankId()));
         }else{
             bankCard.setBankId(0);
         }
