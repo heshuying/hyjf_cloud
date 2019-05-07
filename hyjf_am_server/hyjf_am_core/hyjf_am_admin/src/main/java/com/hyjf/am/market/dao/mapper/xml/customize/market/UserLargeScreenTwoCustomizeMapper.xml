@@ -74,9 +74,7 @@
 		WHERE
 		u.user_id = r.user_id
 		AND STATUS = 2
-		AND create_time >= unix_timestamp(
-		DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		)
+		AND create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
 		),
 		0
 		) AS money,
@@ -89,9 +87,7 @@
 		WHERE
 		u.user_id = w.user_id
 		AND STATUS = 2
-		AND w.create_time >= unix_timestamp(
-		DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		)
+		AND w.create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
 		GROUP BY
 		user_id
 		),
@@ -103,11 +99,9 @@
 		FROM
 		hyjf_trade.ht_account_list l
 		WHERE
-		l.create_time <![CDATA[<]]> unix_timestamp(
-		date_format(
+		l.create_time <![CDATA[<]]> date_format(
 		now() - INTERVAL 1 DAY,
 		'%Y-%m-01'
-		)
 		)
 		AND l.user_id = u.user_id
 		ORDER BY
@@ -138,9 +132,7 @@
 		LEFT JOIN hyjf_trade.ht_borrow_credit bc ON bc.tender_nid = bt.nid
 		LEFT JOIN hyjf_trade.ht_credit_tender ct ON ct.credit_nid = bc.credit_nid
 		WHERE
-		ct.create_time >= unix_timestamp(
-		DATE_FORMAT(CURDATE(), '%Y-%m-01')
-		)
+		ct.create_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
 		AND br.accede_order_id IS NULL
 		AND ui.attribute = 0
 		AND br.user_id = u.user_id
