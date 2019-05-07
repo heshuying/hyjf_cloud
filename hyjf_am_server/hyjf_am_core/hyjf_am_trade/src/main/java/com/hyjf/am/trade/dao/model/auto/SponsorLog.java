@@ -7,77 +7,77 @@ public class SponsorLog implements Serializable {
     private Integer id;
 
     /**
-     * ±êºÅ
+     * æ ‡å·
      *
      * @mbggenerated
      */
     private String borrowNid;
 
     /**
-     * Ô­Ê¼µ£±£ÈËid
+     * åŸå§‹æ‹…ä¿äººid
      *
      * @mbggenerated
      */
     private Integer oldSponsorId;
 
     /**
-     * Ô­Ê¼µ£±£ÈËusername
+     * åŸå§‹æ‹…ä¿äººusername
      *
      * @mbggenerated
      */
     private String oldSponsor;
 
     /**
-     * ĞÂµ£±£ÈËid
+     * æ–°æ‹…ä¿äººid
      *
      * @mbggenerated
      */
     private Integer newSponsorId;
 
     /**
-     * ĞÂµ£±£ÈËusername
+     * æ–°æ‹…ä¿äººusername
      *
      * @mbggenerated
      */
     private String newSponsor;
 
     /**
-     * 0³õÊ¼1ĞŞ¸Ä³É¹¦2ĞŞ¸ÄÊ§°Ü
+     * 0åˆå§‹1ä¿®æ”¹æˆåŠŸ2ä¿®æ”¹å¤±è´¥
      *
      * @mbggenerated
      */
     private Integer status;
 
     /**
-     * 0³õÊ¼ 1¹Ø±Õ 2É¾³ı
+     * 0åˆå§‹ 1å…³é—­ 2åˆ é™¤
      *
      * @mbggenerated
      */
     private Integer delFlag;
 
     /**
-     * ´´½¨ÓÃ»§Ãû
+     * åˆ›å»ºç”¨æˆ·å
      *
      * @mbggenerated
      */
     private String createUserName;
 
     /**
-     * ¸üĞÂÓÃ»§Ãû
+     * æ›´æ–°ç”¨æˆ·å
      *
      * @mbggenerated
      */
     private String updateUserName;
 
     /**
-     * ´´½¨Ê±¼ä
+     * åˆ›å»ºæ—¶é—´
      *
      * @mbggenerated
      */
     private Date createTime;
 
     /**
-     * ¸üĞÂÊ±¼ä
+     * æ›´æ–°æ—¶é—´
      *
      * @mbggenerated
      */
