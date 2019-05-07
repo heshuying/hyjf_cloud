@@ -1305,7 +1305,7 @@ public class UserCenterController extends BaseController {
      */
     @ResponseBody
     @GetMapping(value = "/selectBankConfigByName",produces = "application/json; charset=utf-8")
-    @ApiOperation(value = "根据所属银行名查找银联号", notes = "根据所属银行名查找银联号")
+    @ApiOperation(value = "根据所属银行名查找银行配置信息", notes = "根据所属银行名查找银行配置信息")
     public  AdminResult<ListResult<JxBankConfigCustomizeVO>> selectBankConfigByName(HttpServletRequest request, @RequestParam String bankName) {
         AdminResult<JxBankConfigCustomizeVO> result = new AdminResult<JxBankConfigCustomizeVO>();
         Response response = new Response();
