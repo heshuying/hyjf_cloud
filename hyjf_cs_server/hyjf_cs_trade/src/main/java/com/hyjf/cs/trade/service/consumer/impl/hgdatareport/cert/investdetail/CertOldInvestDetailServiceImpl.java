@@ -509,19 +509,23 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
 		logger.info(logHeader + " couponRealTenders.size()："+couponRealTenders.size());
 		if(couponRealTenders==null||couponRealTenders.size()==0){
+            logger.info(logHeader + " 11111：");
 			//交易金额
 			param.put("transMoney", FORMAT.format(accountList.getAmount()));
 		}else{
 			certRequest.setCouponTenderId(couponRealTenders.get(0).getCouponTenderId());
 			List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 			if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
+                logger.info(logHeader + " 22222：");
 				//交易金额
 				param.put("transMoney", FORMAT.format(accountList.getAmount()));
 			}else{
+                logger.info(logHeader + " 33333：");
 				//交易金额
 				param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
 			}
 		}
+        logger.info(logHeader + " 44444：");
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
