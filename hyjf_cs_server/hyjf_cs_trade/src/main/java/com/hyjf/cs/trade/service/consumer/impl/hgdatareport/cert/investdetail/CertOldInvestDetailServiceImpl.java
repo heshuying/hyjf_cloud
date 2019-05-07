@@ -478,14 +478,14 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
-		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
+
+		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+		if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null||couponRealTenders.get(0).getRealTenderId().length()==0){
 			//交易金额
 			return;
 		}
-
-		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-		if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
+		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
+		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
 			return;
 		}
