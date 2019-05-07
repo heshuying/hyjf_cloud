@@ -19,8 +19,12 @@ public class AppFindVO implements Serializable {
     private AppFindAdCustomizeVO banner;
     @ApiModelProperty(value = "公司动态列表(三条)")
     private List<AppFindNewsVO> newsList;
+    @ApiModelProperty(value = "文章类型(公司动态)", example = "20")
+    private Integer moreNewsType;
     @ApiModelProperty(value = "运营报告列表(两条)")
     private List<AppFindReportVO> reportList;
+    @ApiModelProperty(value = "查看更多(运营报告)", example = "https://app.hyjf.com/...")
+    private String moreReportsUrl;
     @ApiModelProperty(value = "联系我们", example = "联系我们 400-900-7878")
     private String contact;
 
@@ -48,12 +52,28 @@ public class AppFindVO implements Serializable {
         this.newsList = newsList;
     }
 
+    public Integer getMoreNewsType() {
+        return moreNewsType;
+    }
+
+    public void setMoreNewsType(Integer moreNewsType) {
+        this.moreNewsType = moreNewsType;
+    }
+
     public List<AppFindReportVO> getReportList() {
         return reportList;
     }
 
     public void setReportList(List<AppFindReportVO> reportList) {
         this.reportList = reportList;
+    }
+
+    public String getMoreReportsUrl() {
+        return moreReportsUrl;
+    }
+
+    public void setMoreReportsUrl(String moreReportsUrl) {
+        this.moreReportsUrl = moreReportsUrl;
     }
 
     public String getContact() {

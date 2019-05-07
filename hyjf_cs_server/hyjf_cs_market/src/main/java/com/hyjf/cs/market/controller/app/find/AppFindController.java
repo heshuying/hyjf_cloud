@@ -13,6 +13,8 @@ import com.hyjf.am.vo.app.find.AppFindAdCustomizeVO;
 import com.hyjf.am.vo.app.find.AppFindNewsVO;
 import com.hyjf.am.vo.app.find.AppFindReportVO;
 import com.hyjf.am.vo.app.find.AppFindVO;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.bean.result.WebResult;
 import io.swagger.annotations.ApiImplicitParam;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -36,6 +38,8 @@ import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author fq
@@ -245,14 +249,14 @@ public class AppFindController extends BaseMarketController {
 	@ApiImplicitParam(name = "platform", value = "平台类型 2：Android，3：IOS", required = true, dataType = "String")
 	@PostMapping("/init")
 	@ResponseBody
-	public WebResult<AppFindVO> initFind(@ModelAttribute AppBaseRequest appBaseRequest){
-		WebResult webResult = new WebResult();
-		AdsRequest request = new AdsRequest();
-		request.setPlatformType(appBaseRequest.getPlatform());
-		request.setHost(appHost);
-		request.setLimitEnd(1);
-		List<AppFindAdCustomizeVO> adVOList = appFindService.getFindModules(request);
-		AppFindAdCustomizeVO adVO = appFindService.getFindBanner(request);
+	public WebResult<AppFindVO> initFind(HttpServletRequest request, @ModelAttribute AppBaseRequest appBaseRequest) {
+		WebResult webResult = new WebResult("0","成功");
+		AdsRequest adsRequest = new AdsRequest();
+		adsRequest.setPlatformType(appBaseRequest.getPlatform());
+		adsRequest.setHost(appHost);
+		adsRequest.setLimitEnd(1);
+		List<AppFindAdCustomizeVO> adVOList = appFindService.getFindModules(adsRequest);
+		AppFindAdCustomizeVO adVO = appFindService.getFindBanner(adsRequest);
 		List<ContentArticleVO> articleList = appFindService.searchHomeNoticeList("20", 0, 3);
 		List<AppFindNewsVO> newList = new ArrayList<>();
 		for (ContentArticleVO article : articleList) {
@@ -281,7 +285,9 @@ public class AppFindController extends BaseMarketController {
 		appFindVO.setModules(adVOList);
 		appFindVO.setBanner(adVO);
 		appFindVO.setNewsList(newList);
+		appFindVO.setMoreNewsType(20);
 		appFindVO.setReportList(appFindReportList);
+		appFindVO.setMoreReportsUrl(CommonUtils.concatReturnUrl(request, appHost + ClientConstants.FIND_REPORTS));
 		appFindVO.setContact("联系我们 400-900-7878");
 		webResult.setData(appFindVO);
 		return webResult;

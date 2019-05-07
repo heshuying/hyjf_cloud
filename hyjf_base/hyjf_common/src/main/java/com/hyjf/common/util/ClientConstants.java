@@ -283,6 +283,7 @@ public class ClientConstants implements Serializable {
 
 	public static final String BANKOPEN_OPEN_ACTION = "/user/open";
 
+	/** 风险测评 */
 	public static final String USER_RISKTEST = "/user/riskTest?evaluation=";
 
 	public static final String USER_AUTH_INVES_ACTION = "/bank/user/auto/userAuthInves";
@@ -317,4 +318,7 @@ public class ClientConstants implements Serializable {
 
 	/** @RequestMapping值 */
 	public static final String GET_WITHDRAW_RULE_MAPPING = "/getRule";
+
+	/** 发现页 运营报告*/
+	public static final String FIND_REPORTS = "/find/report";
 }
