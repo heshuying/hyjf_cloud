@@ -275,7 +275,7 @@
 	</delete>
 
 	<insert id="insertResult" parameterType="java.util.List">
-		INSERT INTO hyjf_trade.ht_screen_two_param (flag, customer_name, query_time, capital_increase, cash_withdrawal_rate)
+		INSERT INTO hyjf_trade.ht_screen_two_param (flag, customer_name, query_time, capital_increase, cash_withdrawal_rate, now_balance)
 		VALUES
 		<foreach collection="list" item="item" separator=",">
 			(
@@ -283,7 +283,8 @@
 			#{item.customerName} ,
 			#{item.queryTime} ,
 			#{item.capitalIncrease} ,
-			#{item.cashWithdrawalRate}
+			#{item.cashWithdrawalRate} ,
+			#{item.nowBalance}
 			)
 		</foreach>
 	</insert>
