@@ -105,8 +105,7 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 linkUrl = PC_ZHITOU_URL + productNo;
                 H5linkUrl = H5_ZHITOU_URL + productNo;
                 //智投项目 还款中的状态5改为对应的募集结束3
-                if (productStatus.equals("5") || productStatus.equals("6")) {
-                    productStatus = "3";
+                if (productStatus.equals("3")) {
                     publishStatus = 3;
                 }
 
