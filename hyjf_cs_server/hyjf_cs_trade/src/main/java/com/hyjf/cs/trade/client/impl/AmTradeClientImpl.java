@@ -7303,5 +7303,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 根据原投资订单号查找转让信息
+     *
+     * @param sellOrderId
+     * @return add by nxl
+     */
+    @Override
+    public List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId) {
+        String url = "http://AM-TRADE/am-trade/hjhDebtCredit/selectCreditBySellOrderId/"+sellOrderId;
+        HjhDebtCreditResponse response = restTemplate.getForEntity(url,  HjhDebtCreditResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultList();
+        }
+        return null;
+    }
     // 应急中心二期，历史数据上报 add by nxl end
 }

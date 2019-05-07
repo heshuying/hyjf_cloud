@@ -173,6 +173,16 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                         logger.info(logHeader+" 根据智投加入订单号："+borrowTenderVO.getAccedeOrderId()+" ,查询智投计入明细为空！！");
                         continue;
                     }
+                    //根据原投资订单号查找转让信息
+                    List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(borrowTenderVO.getNid());
+                    if(CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                        HjhDebtCreditVO hjhDebtCreditVO = hjhDebtCreditVOList.get(0);
+                        if (hjhDebtCreditVO.getCreditStatus() == 2) {
+                            //完全承接
+                            logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
+                            continue;
+                        }
+                    }
                     sourceFinancingcode = hjhAccedeVO.getPlanNid();
                     finClaimID = borrowTenderVO.getNid();
                     userId = hjhAccedeVO.getUserId();
@@ -204,12 +214,35 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     }*/
                 }
             }
-            // 未完全转让的标的
+            // 承接债权（未还款）
             List<CertClaimVO> listCredit = amTradeClient.selectCertBorrowByFlg("1");
             if(CollectionUtils.isNotEmpty(listCredit)){
                 for(CertClaimVO certClaimVO:listCredit){
-//                    List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.getHjhDebtCreditListByBorrowNid(certBorrowVO.getBorrowNid());
                     String nid = certClaimVO.getClaimNid();
+                    List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOLists = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);
+                    if(CollectionUtils.isEmpty(hjhDebtCreditTenderVOLists)){
+                        logger.info(logHeader+" 承接债转编码："+nid+" ,查询智投债转投资信息为空！！");
+                        continue;
+                    }
+                    HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditTenderVOLists.get(0);
+                    //根据原投资订单号查找转让信息
+                    List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(hjhDebtCreditTenderVO.getAssignOrderId());
+                    if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                        HjhDebtCreditVO hjhDebtCreditVO = hjhDebtCreditVOList.get(0);
+                        if (hjhDebtCreditVO.getCreditStatus() == 2) {
+                            //完全承接
+                            logger.info(logHeader + " 承接债权编号：" + nid + " ,完全承接！！");
+                            continue;
+                        }
+                    }
+                    finClaimID = hjhDebtCreditTenderVO.getAssignPlanOrderId();
+                    userId = hjhDebtCreditTenderVO.getUserId();
+                    String strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
+                    String idCardHash = getIdCard(userId);
+                    jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,strDate);
+
+//                    List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.getHjhDebtCreditListByBorrowNid(certBorrowVO.getBorrowNid());
+                    /*String nid = certClaimVO.getClaimNid();
                     List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.getHjhDebtCreditListByCreditNid(nid);
                     if(CollectionUtils.isEmpty(hjhDebtCreditVOList)){
                         logger.info(logHeader+" 转让编号："+nid+" ,查询转让信息为空！！");
@@ -225,12 +258,13 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                         continue;
                     }
                     for(HjhDebtCreditTenderVO hjhDebtCreditTenderVO:hjhDebtCreditTenderVOLists){
+
                         finClaimID = hjhDebtCreditTenderVO.getAssignPlanOrderId();
                         userId = hjhDebtCreditTenderVO.getUserId();
                         String strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
                         String idCardHash = getIdCard(userId);
                         jsonArray = putParam(sourceFinancingcode, finClaimID, idCardHash, jsonArray,true,strDate);
-                    }
+                    }*/
                     /*for(HjhDebtCreditVO hjhDebtCreditVO:hjhDebtCreditVOList){
                         sourceFinancingcode = hjhDebtCreditVO.getPlanNid();
                         HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();

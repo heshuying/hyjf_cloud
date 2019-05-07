@@ -3000,6 +3000,14 @@ public interface AmTradeClient {
      * @return
      */
     Integer updateCertBorrowStatusBatch(CertClaimUpdateVO updateVO);
+    /**
+     * 根据原投资订单号查找转让信息
+     *
+     * @param sellOrderId
+     * @return add by nxl
+     */
+    List<HjhDebtCreditVO> selectCreditBySellOrderId(String sellOrderId);
+
     // 应急中心二期，历史数据上报 add by nxl end
 
 }
