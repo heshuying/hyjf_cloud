@@ -66,12 +66,13 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		try {
 			for (CertAccountListCustomizeVO accountList : accountLists) {
 				 createParam(accountList,list);
+
 			}
 			if(list==null||list.size()==0){
 				return null;
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("报错了",e);
 		}
 
 		return JSONArray.parseArray(JSON.toJSONString(list));
@@ -102,7 +103,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		certTransactRequest.setLimitEnd(size);
 		certTransactRequest.setTrade(trader);
 		certTransactRequest.setMaxId(RedisUtils.get("CERT_OLD_INVEST_DETAIL_MAX_ID"));
-		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.getCertAccountListCustomizeVO(certTransactRequest);
 		return accountLists;
 	}
@@ -178,6 +178,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		}
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -200,6 +203,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void creditAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -225,7 +231,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
-
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		BigDecimal creditInterest=BigDecimal.ZERO;
 		BigDecimal creditCapital=BigDecimal.ZERO;
 		if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
@@ -293,6 +301,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		BigDecimal interest=BigDecimal.ZERO;
 		BigDecimal capital=BigDecimal.ZERO;
 		if("end".equals(borrowAndInfoVO.getBorrowStyle())||"endday".equals(borrowAndInfoVO.getBorrowStyle())){
@@ -393,7 +404,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-		param.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+        param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
@@ -431,6 +442,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -464,14 +478,14 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
-		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
+
+		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+		if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null||couponRealTenders.get(0).getRealTenderId().length()==0){
 			//交易金额
 			return;
 		}
-
-		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-		if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
+		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
+		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
 			return;
 		}
@@ -480,6 +494,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -502,6 +519,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	//已改
 	private void tenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+            return;
+        }
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setRealTenderId(accountList.getNid());
@@ -520,6 +540,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 				param.put("transMoney", FORMAT.format(accountList.getAmount().add(borrowTenderCpnList.get(0).getRecoverAccountAll())));
 			}
 		}
+
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -540,6 +561,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	//已改
 	private void hjhTenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		Map<String, Object> param = new HashMap<String, Object>();
 		//接口版本号
@@ -565,6 +589,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
@@ -598,6 +625,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void recharge(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
@@ -624,6 +654,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void accountAdjustmentDown(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
@@ -657,6 +690,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
