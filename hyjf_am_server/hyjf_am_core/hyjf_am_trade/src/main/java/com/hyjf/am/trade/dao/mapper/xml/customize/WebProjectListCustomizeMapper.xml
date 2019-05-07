@@ -14,13 +14,14 @@
                 AND htbpt.borrow_class <![CDATA[<>]]> 'NEW'
                 <!-- 汇直投列表数据过滤:只显示有效的项目 -->
                 <if test="projectType == 'HZT'">
+                    <!--
                     AND CASE
                     WHEN ( htb.`status` = 1 AND htb.verify_status = 3)
                     THEN
                     htb.ontime + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                     ELSE
                     htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
-                    END
+                    END -->
                 </if>
             </if>
             <if test="status == null or status == ''">
@@ -32,7 +33,7 @@
                 OR ( htb.`status` = 4 )
                 OR ( htb.`status` = 8 )
                 )-->
-                OR htb.`status` = 8
+                AND htb.`status` = 8
             </if>
 
             <if test="status != null and status != ''">
@@ -973,13 +974,13 @@
             <if test="(type == null or type == '') and projectType!='CFH' and projectType!='ZQ'">
                 AND hydb.project_type <![CDATA[<>]]> '4'
                 <if test="projectType == 'HZT'">
-                    AND CASE
+                    <!-- AND CASE
                     WHEN  ( hydb.`status` = 1 AND hydb.verify_status = 3)
                     THEN
                     hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                     ELSE
                     hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
-                    END
+                    END -->
                 </if>
                 AND hydb.project_type <![CDATA[<>]]> '11'
                 <!-- 融通宝过滤 -->
@@ -989,25 +990,25 @@
             </if>
             <!-- 包含汇直投、尊享汇、新手汇  modify by cwyang 改版要求债权页面除新手汇项目其他出借项目 -->
             <if test="(type == null or type == '') and projectType=='CFH' ">
-                AND hydb.project_type NOT IN (4,8)
+                <!-- AND hydb.project_type NOT IN (4,8)
                 AND CASE
                 WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ))
                 THEN
                 hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                 ELSE
                 hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
-                END
+                END -->
             </if>
             <!-- 包含汇直投、尊享汇、融通宝 -->
             <if test="(type == null or type == '') and projectType=='ZQ' ">
-                AND hydb.project_type NOT IN (4,8)
+                <!-- AND hydb.project_type NOT IN (4,8)
                 AND CASE
                 WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ))
                 THEN
                 hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
                 ELSE
                 hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() )
-                END
+                END -->
             </if>
             <if test="status == null or status == ''">
                 <!--
@@ -1020,7 +1021,7 @@
                 OR ( hydb.`status` = 8 )
                 )
                 -->
-                OR hydb.`status` = 8
+                AND hydb.`status` = 8
             </if>
             <choose>
                 <!-- 获取待发布 -->
