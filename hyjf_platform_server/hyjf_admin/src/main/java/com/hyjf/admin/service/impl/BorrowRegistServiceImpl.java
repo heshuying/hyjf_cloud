@@ -151,7 +151,7 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
      * @return
      */
     @Override
-    public AdminResult registCancel(String borrowNid, String currUserId, String currUserName) {
+    public AdminResult registCancel(String borrowNid, String borrowAccountId, String raiseDate, String currUserId, String currUserName) {
         BorrowRegistUpdateRequest request = new BorrowRegistUpdateRequest();
         // 获取标的并校验
         BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrowNid);
@@ -163,6 +163,9 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
         BankOpenAccountVO bankOpenAccount = amUserClient.getBankOpenAccount(userId);
         if(bankOpenAccount == null){
             return new AdminResult(BaseResult.FAIL,"未查询到借款人开户信息！");
+        }
+        if(StringUtils.isNotBlank(borrowAccountId) && !bankOpenAccount.getAccount().equals(borrowAccountId)){
+            return new AdminResult(BaseResult.FAIL,"借款人电子账号不正确");
         }
 
         // 调用银行接口订单号，订单日期

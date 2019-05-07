@@ -49,7 +49,7 @@ public interface BorrowRegistService {
      */
     AdminResult updateBorrowRegist(String borrowNid, String currUserId, String currUserName);
 
-    AdminResult registCancel(String borrowNid, String currUserId, String currUserName);
+    AdminResult registCancel(String borrowNid, String borrowAccountId, String raiseDate, String currUserId, String currUserName);
 
     BorrowRegistCancelConfirmCustomizeVO selectRegistCancelConfirm(String borrowNid);
 }
