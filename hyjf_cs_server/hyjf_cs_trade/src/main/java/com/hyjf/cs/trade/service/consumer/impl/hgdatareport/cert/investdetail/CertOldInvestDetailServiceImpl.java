@@ -103,7 +103,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		certTransactRequest.setLimitEnd(size);
 		certTransactRequest.setTrade(trader);
 		certTransactRequest.setMaxId(RedisUtils.get("CERT_OLD_INVEST_DETAIL_MAX_ID"));
-		logger.info("certTransactRequest:" + JSONObject.toJSONString(certTransactRequest));
 		List<CertAccountListCustomizeVO> accountLists=amTradeClient.getCertAccountListCustomizeVO(certTransactRequest);
 		return accountLists;
 	}
@@ -179,6 +178,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		}
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(hjhDebtCreditTenders.get(0).getBorrowNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -201,6 +203,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void creditAssign(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -226,7 +231,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
-
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		BigDecimal creditInterest=BigDecimal.ZERO;
 		BigDecimal creditCapital=BigDecimal.ZERO;
 		if(borrowAndInfoVO.getPlanNid()!=null&&borrowAndInfoVO.getPlanNid().length()>0){
@@ -294,6 +301,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		BigDecimal interest=BigDecimal.ZERO;
 		BigDecimal capital=BigDecimal.ZERO;
 		if("end".equals(borrowAndInfoVO.getBorrowStyle())||"endday".equals(borrowAndInfoVO.getBorrowStyle())){
@@ -432,6 +442,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -481,6 +494,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		//接口版本号
 		param.put("version", CertCallConstant.CERT_CALL_VERSION);
 		//平台编号
@@ -502,8 +518,10 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 
 	//已改
 	private void tenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
-		logger.info(logHeader + " accountList.getNid()："+accountList.getNid());
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+            return;
+        }
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setRealTenderId(accountList.getNid());
@@ -543,6 +561,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	//已改
 	private void hjhTenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		Map<String, Object> param = new HashMap<String, Object>();
 		//接口版本号
@@ -568,6 +589,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void accountAdjustmentUp(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
@@ -601,6 +625,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void recharge(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
@@ -627,6 +654,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void accountAdjustmentDown(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws CertException {
 		Map<String, Object> param = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
@@ -660,6 +690,9 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		UserInfoVO usersInfo=amUserClient.findUsersInfoById(accountList.getUserId());
+		if(usersInfo==null||usersInfo.getIdcard()==null){
+			return;
+		}
 		if(accountList.getRoleId()!=1){
 			return ;
 		}
