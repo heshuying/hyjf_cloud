@@ -507,6 +507,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		CertRequest certRequest=new CertRequest();
 		certRequest.setRealTenderId(accountList.getNid());
 		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
+		logger.info(logHeader + " couponRealTenders.size()："+couponRealTenders.size());
 		if(couponRealTenders==null||couponRealTenders.size()==0){
 			//交易金额
 			param.put("transMoney", FORMAT.format(accountList.getAmount()));
