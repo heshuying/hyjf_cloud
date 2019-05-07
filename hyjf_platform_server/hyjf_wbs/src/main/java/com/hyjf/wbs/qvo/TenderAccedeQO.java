@@ -22,7 +22,8 @@ public class TenderAccedeQO {
     private  Integer  assetId;
     //财富端id
     private  Integer  entId;
-
+    //财富端id
+    private  String  entIds;
     public String getStartTime() {
         return startTime;
     }
@@ -69,5 +70,13 @@ public class TenderAccedeQO {
 
     public void setEntId(Integer entId) {
         this.entId = entId;
+    }
+
+    public String getEntIds() {
+        return entIds;
+    }
+
+    public void setEntIds(String entIds) {
+        this.entIds = entIds;
     }
 }

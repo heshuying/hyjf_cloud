@@ -73,11 +73,14 @@ public class RecoverInfoController extends BaseController {
                 wbsRecoverVO.setMsg("请求参数不允许为空");
                 wbsRecoverVO.setData("");
             }
+            recoverQO.setEntIds(getUtmId(recoverQO.getEntId()));
+            logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口 请求实体参数 " + JSONObject.toJSON(recoverQO));
             int countRecover=recoverService.getRecoverCount(recoverQO);
             Paginator paginator = new Paginator(Integer.parseInt(recoverQO.getCurrentPage()),countRecover,10000);
             recoverQO.setLimitStart(paginator.getOffset());
             recoverQO.setLimitEnd(paginator.getLimit());
             List<RecoverVO> recoverVOS = recoverService.getRecoverInfo(recoverQO);
+            logger.info("---searchInfoRecover.searchAction by param---wbs回款信息接口 响应结果集 " + "总条数："+countRecover);
             if (recoverVOS!=null&&recoverVOS.size()>0){
                 wbsRecoverVO.setCode(Response.SUCCESS);
                 wbsRecoverVO.setMsg(Response.SUCCESS_MSG);
@@ -95,5 +98,18 @@ public class RecoverInfoController extends BaseController {
             wbsRecoverVO.setData("");
         }
         return wbsRecoverVO;
+    }
+    public String getUtmId(Integer entId) {
+        String thirdIds = wbsConfig.getThridPropertyIds();
+        String[] thirdIdsArr = thirdIds.split(",");
+        if (entId.equals(thirdIdsArr[0])){
+            return wbsConfig.getUtmNami()+","+wbsConfig.getUtmYufengrui();
+        }else if (entId.equals(thirdIdsArr[1])){
+            return wbsConfig.getUtmDatang()+"";
+        }else if (entId.equals(thirdIdsArr[2])){
+            return wbsConfig.getUtmQianle()+"";
+        }else {
+            return null;
+        }
     }
 }

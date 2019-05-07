@@ -52,21 +52,10 @@
         LEFT JOIN ht_hjh_accede ha ON br.accede_order_id = ha.accede_order_id
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
-        INNER JOIN ht_r_oa_users hrou ON br.user_id = hrou.hyd_id
-        INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
-        INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
-        INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+        INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
         <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-        <if test="entId != null and entId != ''">
-            <if test="entId == 8001">
-                AND dep1.id in (428,527)
-            </if>
-            <if test="entId == 8002">
-                AND dep1.id = 550
-            </if>
-            <if test="entId == 8003">
-                AND dep1.id = 0
-            </if>
+        <if test="entIds != null and entIds != ''">
+            AND ur.utm_id in (#{entIds})
         </if>
         WHERE br.status=1
         <!-- 放款时间 -->

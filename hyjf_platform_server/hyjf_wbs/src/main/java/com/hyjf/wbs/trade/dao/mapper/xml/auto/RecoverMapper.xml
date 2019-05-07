@@ -19,18 +19,6 @@
     <result column="period" property="period" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Where_Clause">
-    <where>
-      <!-- 资产端客户id -->
-      <if test="assetCustomerId != null and assetCustomerId != ''">
-        AND br.user_id = #{assetCustomerId}
-      </if>
-      <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-      <if test="entId != null and entId != ''">
-
-      </if>
-    </where>
-  </sql>
   <select id="getRecoverInfo" resultMap="BaseResultMap"
           parameterType="com.hyjf.wbs.qvo.RecoverVO">
     SELECT
@@ -38,7 +26,7 @@
     br.borrow_nid AS refundOrderNumber,
     br.nid AS orderNo,
     br.repay_ordid AS productNo,
-    8001 AS entId,
+    ur.utm_id AS entId,
     1 AS assetId,
     br.recover_time AS expectedExitTime,
     br.recover_yestime AS actualExitTime,
@@ -52,21 +40,10 @@
     br.recover_status AS status
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
-    INNER JOIN ht_r_oa_users hrou ON br.user_id = hrou.hyd_id
-    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
-    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
-    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    INNER JOIN ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entId != null and entId != ''">
-      <if test="entId == 8001">
-        AND dep1.id in (428,527)
-      </if>
-      <if test="entId == 8002">
-        AND dep1.id = 550
-      </if>
-      <if test="entId == 8003">
-        AND dep1.id = 0
-      </if>
+    <if test="entIds != null and entIds != ''">
+      AND ur.utm_id in (#{entIds})
     </if>
     WHERE br.recover_status=1 AND b.is_installment=0
     <if test="assetCustomerId != null and assetCustomerId != ''">
@@ -78,7 +55,7 @@
     brp.borrow_nid AS refundOrderNumber,
     brp.nid AS orderNo,
     brp.repay_order_id AS productNo,
-    8001 AS entId,
+    ur.utm_id AS entId,
     1 AS assetId,
     brp.recover_time AS expectedExitTime,
     brp.recover_yestime AS actualExitTime,
@@ -92,21 +69,10 @@
     brp.recover_status AS status
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    INNER JOIN ht_r_oa_users hrou ON brp.user_id = hrou.hyd_id
-    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
-    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
-    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    INNER JOIN ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entId != null and entId != ''">
-      <if test="entId == 8001">
-        AND dep1.id in (428,527)
-      </if>
-      <if test="entId == 8002">
-        AND dep1.id = 550
-      </if>
-      <if test="entId == 8003">
-        AND dep1.id = 0
-      </if>
+    <if test="entIds != null and entIds != ''">
+      AND ur.utm_id in (#{entIds})
     </if>
     WHERE brp.recover_status=1
     <if test="assetCustomerId != null and assetCustomerId != ''">
@@ -123,21 +89,10 @@
     br.user_id AS assetCustomerId
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
-    INNER JOIN ht_r_oa_users hrou ON br.user_id = hrou.hyd_id
-    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
-    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
-    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    INNER JOIN ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entId != null and entId != ''">
-      <if test="entId == 8001">
-        AND dep1.id in (428,527)
-      </if>
-      <if test="entId == 8002">
-        AND dep1.id = 550
-      </if>
-      <if test="entId == 8003">
-        AND dep1.id = 0
-      </if>
+    <if test="entIds != null and entIds != ''">
+      AND ur.utm_id in (#{entIds})
     </if>
     WHERE br.recover_status=1 AND b.is_installment=0
     <if test="assetCustomerId != null and assetCustomerId != ''">
@@ -148,21 +103,10 @@
     brp.user_id AS assetCustomerId
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
-    INNER JOIN ht_r_oa_users hrou ON brp.user_id = hrou.hyd_id
-    INNER JOIN ht_r_oa_department dep3 ON hrou.departmentid = dep3.id
-    INNER JOIN ht_r_oa_department dep2 ON dep3.parentid = dep2.id
-    INNER JOIN ht_r_oa_department dep1 ON dep2.parentid = dep1.id
+    INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entId != null and entId != ''">
-      <if test="entId == 8001">
-        AND dep1.id in (428,527)
-      </if>
-      <if test="entId == 8002">
-        AND dep1.id = 550
-      </if>
-      <if test="entId == 8003">
-        AND dep1.id = 0
-      </if>
+    <if test="entIds != null and entIds != ''">
+      AND ur.utm_id in (#{entIds})
     </if>
     WHERE brp.recover_status=1
     <if test="assetCustomerId != null and assetCustomerId != ''">
