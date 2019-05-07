@@ -32,7 +32,7 @@
                 OR ( htb.`status` = 4 )
                 OR ( htb.`status` = 8 )
                 )-->
-                AND htb.`status` = 8
+                OR htb.`status` = 8
             </if>
 
             <if test="status != null and status != ''">
@@ -1010,6 +1010,7 @@
                 END
             </if>
             <if test="status == null or status == ''">
+                <!--
                 AND
                 (
                 ( hydb.`status` = 1 AND hydb.verify_status = 3 )
@@ -1018,6 +1019,8 @@
                 OR ( hydb.`status` = 4 )
                 OR ( hydb.`status` = 8 )
                 )
+                -->
+                OR hydb.`status` = 8
             </if>
             <choose>
                 <!-- 获取待发布 -->
