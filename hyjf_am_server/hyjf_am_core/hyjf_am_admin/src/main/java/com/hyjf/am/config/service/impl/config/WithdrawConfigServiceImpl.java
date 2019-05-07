@@ -7,9 +7,8 @@ import com.hyjf.am.config.dao.model.auto.WithdrawRuleConfigExample;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfig;
 import com.hyjf.am.config.dao.model.auto.WithdrawTimeConfigExample;
 import com.hyjf.am.config.service.config.WithdrawConfigService;
-import com.hyjf.am.resquest.admin.config.WithdrawRuleConfigRequest;
-import com.hyjf.am.resquest.admin.config.WithdrawTimeConfigRequest;
-import com.hyjf.am.vo.admin.config.WithdrawTimeConfigVO;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawRuleConfigRequest;
+import com.hyjf.am.resquest.admin.config.AdminWithdrawTimeConfigRequest;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -44,7 +43,7 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
      * @return
      */
     @Override
-    public List<WithdrawRuleConfig> getWithdrawRuleConfigList(WithdrawRuleConfigRequest request) {
+    public List<WithdrawRuleConfig> getWithdrawRuleConfigList(AdminWithdrawRuleConfigRequest request) {
         WithdrawRuleConfigExample example = new WithdrawRuleConfigExample();
         example.setLimitStart(request.getLimitStart());
         example.setLimitEnd(request.getLimitEnd());
@@ -115,7 +114,7 @@ public class WithdrawConfigServiceImpl implements WithdrawConfigService {
      * @return
      */
     @Override
-    public List<WithdrawTimeConfig> getWithdrawTimeConfigList(WithdrawTimeConfigRequest request) {
+    public List<WithdrawTimeConfig> getWithdrawTimeConfigList(AdminWithdrawTimeConfigRequest request) {
         WithdrawTimeConfigExample example = new WithdrawTimeConfigExample();
         example.setLimitStart(request.getLimitStart());
         example.setLimitEnd(request.getLimitEnd());

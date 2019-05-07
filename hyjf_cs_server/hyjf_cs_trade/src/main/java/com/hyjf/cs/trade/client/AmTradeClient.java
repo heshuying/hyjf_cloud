@@ -1485,6 +1485,8 @@ public interface AmTradeClient {
 
     List<RepayListCustomizeVO> repayList(RepayListRequest requestBean);
 
+    List<RepayPlanListVO> repayPlanList(String borrowNid);
+
     List<RepayListCustomizeVO> orgRepayList(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> orgRepayedList(RepayListRequest requestBean);
@@ -1671,9 +1673,15 @@ public interface AmTradeClient {
 
     BigDecimal getUserRepayFeeWaitTotal(Integer userId);
 
+    BigDecimal getUserLateInterestWaitTotal(Integer userId);
+
+    BigDecimal getUserBorrowAccountTotal(Integer userId);
+
     BigDecimal getOrgRepayFeeWaitTotal(Integer userId);
 
-    BigDecimal getOrgRepayWaitTotal(Integer userId);
+    BigDecimal getOrgLateInterestWaitTotal(Integer userId);
+
+    RepayWaitOrgVO getOrgRepayWaitTotal(Integer userId);
 
     /**
      * 查询广告列表
@@ -2879,6 +2887,11 @@ public interface AmTradeClient {
      * @return
      */
     List<HjhAccedeVO> selectCrmHjhAccedeList();
+
+    /**
+     * 更新还款逾期标的信息
+     */
+    void updateBorrowRepayLateInfo();
     /**
      * 获取所有在帮助中心显示的模板列表
      * add by nxl 20190313

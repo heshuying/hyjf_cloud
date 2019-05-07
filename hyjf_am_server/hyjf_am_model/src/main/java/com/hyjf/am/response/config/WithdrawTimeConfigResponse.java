@@ -16,11 +16,21 @@ public class WithdrawTimeConfigResponse extends Response<WithdrawTimeConfigVO> {
     // 是否是工作日
     private  boolean isWorkDateFlag;
 
+    private int count;
+
     public boolean isWorkDateFlag() {
         return isWorkDateFlag;
     }
 
     public void setWorkDateFlag(boolean workDateFlag) {
         isWorkDateFlag = workDateFlag;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 }

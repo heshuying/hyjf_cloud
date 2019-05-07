@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.config;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,10 +21,11 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
     private Integer id;
 
     /**
-     * 用户类型 1个人 2企业
+     * 用户类型 0个人 1企业
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "用户类型 0个人 1企业")
     private Integer customerType;
 
     /**
@@ -31,6 +33,7 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "最小金额")
     private BigDecimal minMoney;
 
     /**
@@ -38,6 +41,7 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "最大金额")
     private BigDecimal maxMoney;
 
     /**
@@ -45,6 +49,7 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "工作日开始时间，格式：24h:mi:ss")
     private String startTime;
 
     /**
@@ -52,13 +57,21 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "工作日结束时间，格式：24h:mi:ss")
     private String endTime;
+
+    /**
+     * 是否节假日 1是 0否
+     */
+    @ApiModelProperty(value = "是否节假日 1是 0否")
+    private Integer isHoliday;
 
     /**
      * 可否提现 1可以 0不可以
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "可否提现 0不可以 1可以")
     private Integer couldWithdraw;
 
     /**
@@ -66,6 +79,7 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "通道 1默认空 2大额通道 3小额 0不传")
     private String routeCode;
 
     /**
@@ -73,6 +87,7 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
      *
      * @mbggenerated
      */
+    @ApiModelProperty(value = "联行号 0无 1有")
     private Integer payAllianceCode;
 
     /**
@@ -221,6 +236,14 @@ public class WithdrawRuleConfigVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getIsHoliday() {
+        return isHoliday;
+    }
+
+    public void setIsHoliday(Integer isHoliday) {
+        this.isHoliday = isHoliday;
     }
 }
 

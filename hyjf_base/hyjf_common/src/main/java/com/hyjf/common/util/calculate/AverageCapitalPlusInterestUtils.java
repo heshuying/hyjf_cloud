@@ -13,6 +13,7 @@ package com.hyjf.common.util.calculate;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -177,5 +178,98 @@ public class AverageCapitalPlusInterestUtils {
 		BigDecimal count = perMonthInterest.multiply(new BigDecimal(totalmonth));
 		count = count.setScale(2, BigDecimal.ROUND_DOWN);
 		return count;
+	}
+
+	/**
+	 * 计算等额本息每月应还本息
+	 * @param invest 金额
+	 * @param yearRate 年利率
+	 * @param totalMonth 总期数
+	 * @param lastMonthPrincipal 最后一期本金
+	 * @return
+	 */
+	public static Map<Integer, BigDecimal> getPerMonthPrincipalInterestForMonth(BigDecimal invest, BigDecimal yearRate, int totalMonth, BigDecimal lastMonthPrincipal){
+		Map<Integer, BigDecimal> map = new LinkedHashMap<>();
+		//月利率
+		BigDecimal monthRate = yearRate.divide(new BigDecimal(totalMonth), 12, BigDecimal.ROUND_DOWN);
+		//前n-1期的应还本息
+		BigDecimal monthIncome = invest
+				.multiply(monthRate
+				.multiply(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth))))
+				.divide(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth))
+				.subtract(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+
+		//第n期利息
+		BigDecimal lastMonthInterest = invest
+				.multiply(monthRate)
+				.multiply(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth)).subtract(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth - 1))))
+				.divide(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth))
+				.subtract(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+
+		//第n期本息 = 第n期利息 + 第n期本金
+		BigDecimal lastMonthPrincipalInterest = lastMonthPrincipal.add(lastMonthInterest);
+
+		//先往map中插入前n-1期的应还本息，最后再插入第n期的
+		for(int i = 1; i < totalMonth; i++){
+			map.put(i, monthIncome);
+		}
+		map.put(totalMonth, lastMonthPrincipalInterest);
+		return map;
+	}
+
+	/**
+	 * 计算等额本息每月应还本金
+	 * @param invest 金额
+	 * @param yearRate 年利率
+	 * @param totalMonth 总期数
+	 * @return
+	 */
+	public static Map<Integer, BigDecimal> getPerMonthPrincipalForMonth(BigDecimal invest, BigDecimal yearRate, int totalMonth){
+		Map<Integer, BigDecimal> map = new LinkedHashMap<>();
+		//月利率
+		BigDecimal monthRate = yearRate.divide(new BigDecimal(totalMonth), 12, BigDecimal.ROUND_DOWN);
+		//前n-1期的应还本金
+		BigDecimal sumPrincipalRemoveLast = BigDecimal.ZERO;
+		for(int i = 1; i < totalMonth; i++){
+			BigDecimal monthPrincipal= invest
+					.multiply(monthRate
+					.multiply(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), i - 1))))
+					.divide(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth))
+					.subtract(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+			map.put(i, monthPrincipal);
+			sumPrincipalRemoveLast = sumPrincipalRemoveLast.add(monthPrincipal);
+		}
+
+		//第n期的应还本金
+		BigDecimal lastMonthPrincipal = invest.subtract(sumPrincipalRemoveLast);
+		map.put(totalMonth, lastMonthPrincipal);
+		return map;
+	}
+
+	/**
+	 * 计算等额本息每月应还利息
+	 * @param perMonthPrincipalInterestForMonth 每月应还本息
+	 * @param perMonthPrincipalForMonth 每月应还本金
+	 * @param invest 金额
+	 * @param yearRate 年利率
+	 * @param totalMonth 总期数
+	 * @return
+	 */
+	public static Map<Integer, BigDecimal> getPerMonthInterestForMonth(Map<Integer, BigDecimal> perMonthPrincipalInterestForMonth, Map<Integer, BigDecimal> perMonthPrincipalForMonth, BigDecimal invest, BigDecimal yearRate, int totalMonth){
+		Map<Integer, BigDecimal> map = new LinkedHashMap<>();
+		//月利率
+		BigDecimal monthRate = yearRate.divide(new BigDecimal(totalMonth), 12, BigDecimal.ROUND_DOWN);
+		//前n-1期利息
+		for(int i = 1; i < totalMonth; i++){
+			map.put(i, perMonthPrincipalInterestForMonth.get(i).subtract(perMonthPrincipalForMonth.get(i)));
+		}
+		//第n期利息
+		BigDecimal lastMonthInterest = invest
+				.multiply(monthRate)
+				.multiply(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth)).subtract(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth - 1))))
+				.divide(new BigDecimal(Math.pow(new BigDecimal(1).add(monthRate).doubleValue(), totalMonth))
+				.subtract(new BigDecimal(1)), 2, BigDecimal.ROUND_DOWN);
+		map.put(totalMonth, lastMonthInterest);
+		return map;
 	}
 }

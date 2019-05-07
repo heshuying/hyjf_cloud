@@ -4,7 +4,8 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_config.properties"/>
+
+    <properties resource="init_market.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -514,7 +515,15 @@
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
 			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
-			<columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_late" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_borrow_apicron_log" domainObjectName="BorrowApicronLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1999,8 +2008,8 @@
         <table tableName="ht_evaluation_config_log" domainObjectName="EvaluationConfigLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2035,33 +2044,33 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_bank_cancellation_account" domainObjectName="BankCancellationAccount">
+        <table tableName="ht_workflow" domainObjectName="WorkFlow">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="bank_open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="flow_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-        <table tableName="ht_new_year_activity_reward" domainObjectName="NewYearActivityReward">
+
+        <table tableName="ht_workflow_node" domainObjectName="WorkFlowNode">
+
+        <table tableName="ht_workname" domainObjectName="WorkName">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        
+        <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
 
-        <!-- 提现配置-提现规则配置 -->
-        <table tableName="ht_withdraw_rule_config" domainObjectName="WithdrawRuleConfig">
+        <table tableName="ht_activity_user_reward" domainObjectName="ActivityUserReward">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="customer_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="could_withdraw" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="pay_alliance_code" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="is_holiday" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        <!-- 提现配置-提现时间配置 -->
-        <table tableName="ht_withdraw_time_config" domainObjectName="WithdrawTimeConfig">
+        
+        <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="holiday_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+
+
     </context>
 </generatorConfiguration>
