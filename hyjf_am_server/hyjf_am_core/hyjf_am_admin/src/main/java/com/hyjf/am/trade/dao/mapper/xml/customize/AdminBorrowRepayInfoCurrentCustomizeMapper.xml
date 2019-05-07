@@ -1040,11 +1040,10 @@
         )
         ) AS repayActionTime,
         b.borrow_style AS borrowStyle,
-        b.borrow_period AS borrowPeriod,
+        b.borrow_period AS borrowPeriodInt,
         b.manage_fee_rate AS feeRate,
         b.differential_rate AS differentialRate,
         b.verify_time AS verifyTime,
-        b.account AS borrowAccount,
         t.account,
         '1' AS recordType
         FROM
@@ -1215,11 +1214,10 @@
         )
         ) AS repayActionTime,
         b.borrow_style AS borrowStyle,
-        b.borrow_period AS borrowPeriod,
+        b.borrow_period AS borrowPeriodInt,
         b.manage_fee_rate AS feeRate,
         b.differential_rate AS differentialRate,
         b.verify_time AS verifyTime,
-        b.account AS borrowAccount,
         t.account,
         '2' AS recordType
         FROM
@@ -1395,11 +1393,10 @@
         )
         ) AS repayActionTime,
         b.borrow_style AS borrowStyle,
-        b.borrow_period AS borrowPeriod,
+        b.borrow_period AS borrowPeriodInt,
         b.manage_fee_rate AS feeRate,
         b.differential_rate AS differentialRate,
         b.verify_time AS verifyTime,
-        b.account AS borrowAccount,
         ct.assign_capital AS account,
         '3' AS recordType
         FROM
@@ -1576,11 +1573,10 @@
         )
         ) AS repayActionTime,
         b.borrow_style AS borrowStyle,
-        b.borrow_period AS borrowPeriod,
+        b.borrow_period AS borrowPeriodInt,
         b.manage_fee_rate AS feeRate,
         b.differential_rate AS differentialRate,
         b.verify_time AS verifyTime,
-        b.account AS borrowAccount,
         hct.assign_capital AS account,
         '4' AS recordType
         FROM

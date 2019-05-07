@@ -140,6 +140,8 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
     private Integer recoverPeriod;
     /** 原始出借金额*/
     private String account;
+    /** 借款期限*/
+    private Integer borrowPeriodInt;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -675,5 +677,13 @@ public class BorrowRepayInfoCurrentExportCustomizeVO {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public Integer getBorrowPeriodInt() {
+        return borrowPeriodInt;
+    }
+
+    public void setBorrowPeriodInt(Integer borrowPeriodInt) {
+        this.borrowPeriodInt = borrowPeriodInt;
     }
 }
