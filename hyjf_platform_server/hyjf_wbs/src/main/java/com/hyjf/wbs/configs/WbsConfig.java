@@ -28,16 +28,16 @@ public class WbsConfig {
     @Value("${third.property.ids}")
     private String thridPropertyIds;
 
-    @Value("{web.authorize.returl}")
+    @Value("${web.authorize.returl}")
     private String webAuthorizeRetUrl;
 
-    @Value("{wechat.authorize.returl}")
+    @Value("${wechat.authorize.returl}")
     private String wechatAuthorizeRetUrl;
 
-    @Value("{web.bind.returl}")
+    @Value("${web.bind.returl}")
     private String webBindRetUrl;
 
-    @Value("{wechat.bind.returl}")
+    @Value("${wechat.bind.returl}")
     private String wechatBingRetUrl;
 
     @Value("${utmid.namizixun}")
