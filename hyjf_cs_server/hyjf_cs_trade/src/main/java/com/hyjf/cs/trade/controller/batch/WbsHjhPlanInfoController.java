@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -39,7 +40,10 @@ public class WbsHjhPlanInfoController extends BaseTradeController {
                 Integer planInvestStatus = hjhPlanVO.getPlanInvestStatus();
                 // 显示状态字段 1显示 2 隐藏'
                 Integer planDisplayStatus = hjhPlanVO.getPlanDisplayStatus();
-                if (planInvestStatus == 1 && planDisplayStatus == 1) {
+                // 计划可投金额
+                BigDecimal planBalance = hjhPlanVO.getAvailableInvestAccount();
+                // 可投余额 > 0
+                if (planInvestStatus == 1 && planDisplayStatus == 1 && planBalance.compareTo(BigDecimal.ZERO) > 0) {
                     // 智投开启的状态:开启
                     try {
                         this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "2", 1);
