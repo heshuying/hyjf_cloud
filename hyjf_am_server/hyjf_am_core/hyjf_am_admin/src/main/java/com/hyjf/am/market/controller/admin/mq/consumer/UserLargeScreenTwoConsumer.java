@@ -57,6 +57,7 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     BigDecimal operNowBalance = userLargeScreenTwoCustomizeService.getOperNowBalance();
                     // 给运营部对象赋值
                     operationParam.setCapitalIncrease(operationalCapitalIncrease);
+                    operationParam.setCashWithdrawalRate(BigDecimal.ZERO);
                     operationParam.setNowBalance(operNowBalance);
                     operationParam.setQueryTime(new Date());
                     operationParam.setCustomerName("");
