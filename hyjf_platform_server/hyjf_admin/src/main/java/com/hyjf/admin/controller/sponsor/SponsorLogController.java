@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 public class SponsorLogController {
     @Autowired
     SponsorLogService sponsorLogService;
+    
     private static final String PERMISSIONS = "sponsorLog";
 	/**
 	 * 查询列表
