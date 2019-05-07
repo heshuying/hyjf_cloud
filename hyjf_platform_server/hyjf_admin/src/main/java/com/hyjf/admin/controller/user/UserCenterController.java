@@ -1072,7 +1072,7 @@ public class UserCenterController extends BaseController {
                 return new AdminResult<>(FAIL, "未查询到联行号");
             }
         }
-        return new AdminResult<>(FAIL, "未查询到联行号");
+        return new AdminResult<>(FAIL, "调用银行接口和恁地未能查找到银联号！");
     }
 
 
