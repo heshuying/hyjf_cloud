@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * WBS系统
+ *
  * @author liuyang
  * @version WbsHjhPlanInfoController, v0.1 2019/4/15 18:00
  */
@@ -48,7 +49,7 @@ public class WbsHjhPlanInfoController extends BaseTradeController {
                 } else {
                     // 智投开启的状态:关闭
                     try {
-                        this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "1", 1);
+                        this.wbsHjhPlanInfoService.sendWbsPlanInfoMQ(planNid, "3", 1);
                     } catch (Exception e) {
                         logger.error("WBS系统发送智投服务MQ失败,[" + e + "].");
                     }
