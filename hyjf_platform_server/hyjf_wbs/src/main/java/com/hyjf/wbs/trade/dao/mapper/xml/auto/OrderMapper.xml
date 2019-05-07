@@ -37,7 +37,7 @@
         1	AS assetId,
         ""	AS empNo,
         IF(br.accede_order_id is null,2,3) AS productType,
-        IF(br.accede_order_id is null,br.borrow_nid,ha.plan_nid)	AS productNo,
+        IF(br.accede_order_id is null,br.borrow_nid,ha.plan_nid) AS productNo,
         IF(br.accede_order_id is null,'散标','智投') AS productName,
         br.recover_capital	AS transAmount,
         bi.update_time	AS transTime,

@@ -25,9 +25,9 @@ public class RecoverVO {
     //资产端id
     private Integer  assetId;
     //预计退出日期--应还
-    private Date  expectedExitTime;
+    private String  expectedExitTime;
     //实际退出日期--实还
-    private Date  actualExitTime;
+    private String  actualExitTime;
     //参考回报--
     private  Double expectedRepay;
     //实际回报--
@@ -85,19 +85,19 @@ public class RecoverVO {
         this.assetId = assetId;
     }
 
-    public Date getExpectedExitTime() {
+    public String getExpectedExitTime() {
         return expectedExitTime;
     }
 
-    public void setExpectedExitTime(Date expectedExitTime) {
+    public void setExpectedExitTime(String expectedExitTime) {
         this.expectedExitTime = expectedExitTime;
     }
 
-    public Date getActualExitTime() {
+    public String getActualExitTime() {
         return actualExitTime;
     }
 
-    public void setActualExitTime(Date actualExitTime) {
+    public void setActualExitTime(String actualExitTime) {
         this.actualExitTime = actualExitTime;
     }
 
