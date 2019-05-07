@@ -725,6 +725,38 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 批次中心-批次还款记录列表导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getBatchBorrowRecoverLogCount(BatchBorrowRecoverRequest request) {
+        IntegerResponse response =
+                restTemplate.postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecoverLog/getListCount", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 查询批次中心-批次还款记录
+     * yangchangwei
+     * @param request
+     * @return
+     */
+    @Override
+    public BatchBorrowRecoverLogReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request) {
+        BatchBorrowRecoverLogReponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecoverLog/getList", request, BatchBorrowRecoverLogReponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 查询批次中心-批次放款列表
      * yangchangwei
      * @param request
@@ -2408,4 +2440,38 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.postForEntity("http://AM-ADMIN/am-admin/newYearNineteen/selectInvestList",newYearNineteenRequestBean,NewYearActivityResponse.class).getBody();
     }
 
+
+    /**
+     * 获取当前债权还款明细数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getData", requestBean, BorrowRepayInfoCurrentResponse.class).getBody();
+    }
+
+    /**
+     * 获取当前债权还款明细导出数据
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getExportData", requestBean, BorrowRepayInfoCurrentExportResponse.class).getBody();
+    }
+
+    /**
+     * 获取当前债权还款明细导出总记录数
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer getRepayInfoCurrentExportCount(BorrowRepayInfoCurrentRequest requestBean) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/repayinfo_current/getExportCount", requestBean, IntegerResponse.class).getBody();
+        if(response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }

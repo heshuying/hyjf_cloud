@@ -395,6 +395,10 @@ public interface AmAdminClient {
     int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
 
 
+    int getBatchBorrowRecoverLogCount(BatchBorrowRecoverRequest request);
+
+    BatchBorrowRecoverLogReponse getBatchBorrowRecoverLogList(BatchBorrowRecoverRequest request);
+
     /**
      * 查询批次中心-批次放款列表
      * @param request
@@ -1413,4 +1417,10 @@ public interface AmAdminClient {
      * @return
      */
     NewYearActivityResponse selectInvestList(NewYearNineteenRequestBean newYearNineteenRequestBean);
+
+    BorrowRepayInfoCurrentResponse getRepayInfoCurrentData(BorrowRepayInfoCurrentRequest requestBean);
+
+    BorrowRepayInfoCurrentExportResponse getRepayInfoCurrentExportData(BorrowRepayInfoCurrentRequest requestBean);
+
+    Integer getRepayInfoCurrentExportCount(BorrowRepayInfoCurrentRequest requestBean);
 }

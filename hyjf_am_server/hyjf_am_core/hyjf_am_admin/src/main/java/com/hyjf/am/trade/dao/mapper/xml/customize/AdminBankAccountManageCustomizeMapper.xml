@@ -122,7 +122,63 @@
         a.bank_balance,
         a.bank_frost,
         a.bank_await,
-        a.bank_wait_repay,
+        a.bank_wait_repay +
+        <!-- 累加上待还的逾期利息 add by hesy 20190428-->
+        (SELECT
+        IFNULL(SUM(br.late_interest), 0) lateInterestTotal
+        FROM
+        ht_borrow htb
+        INNER JOIN ht_borrow_recover br ON br.borrow_nid = htb.borrow_nid
+        LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+        LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+        AND htba.api_type = 1
+        AND htba.`status` = 6
+        AND htba.period_now = 1
+        WHERE
+        (
+        htbpt.borrow_project_type = 'HZT'
+        OR htbpt.borrow_project_type = 'HXF'
+        )
+        AND htb.borrow_style IN ('endday', 'end')
+        AND htba.id IS NULL
+        AND htb.user_id = a.user_id
+        AND (
+        (
+        htb.`status` = 4
+        AND htb.repay_full_status = 0
+        )
+        OR (
+        htb.`status` = 8
+        AND htb.repay_full_status = 0
+        )
+        )) +
+        (SELECT
+        IFNULL(SUM(brp.late_interest), 0) lateInterestTotal
+        FROM
+        ht_borrow htb
+        INNER JOIN ht_borrow_recover_plan brp ON brp.borrow_nid = htb.borrow_nid
+        LEFT JOIN ht_borrow_project_type htbpt ON htbpt.borrow_cd = htb.project_type
+        LEFT JOIN ht_borrow_apicron htba ON htba.borrow_nid = htb.borrow_nid
+        AND htba.api_type = 1
+        AND htba.`status` = 6
+        AND htba.period_now = brp.recover_period
+        WHERE
+        (
+        htbpt.borrow_project_type = 'HZT'
+        OR htbpt.borrow_project_type = 'HXF'
+        )
+        AND htba.id IS NULL
+        AND htb.user_id = a.user_id
+        AND (
+        (
+        htb.`status` = 4
+        AND htb.repay_full_status = 0
+        )
+        OR (
+        htb.`status` = 8
+        AND htb.repay_full_status = 0
+        )
+        )) AS bank_wait_repay,
         a.bank_balance_cash,
         a.bank_frost_cash,
         a.id,

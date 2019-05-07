@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.mapper.auto.HjhAssetRiskInfoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.customize.batch.BorrowRepayLateMapper;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BorrowUserStatisticsMapper;
 import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.*;
 import com.hyjf.am.trade.dao.mapper.customize.hgreportdata.cert.CertMapper;
@@ -273,4 +274,7 @@ public class CustomizeMapper extends AutoMapper {
 	protected BorrowUserStatisticsMapper borrowUserStatisticsMapper;
 	@Autowired
 	protected UserLargeScreenCustomizeMapper userLargeScreenCustomizeMapper;
+
+	@Autowired
+	protected BorrowRepayLateMapper borrowRepayLateMapper;
 }
