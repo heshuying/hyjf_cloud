@@ -72,7 +72,7 @@ public class OrderInfoController extends BaseController {
                 return wbsCommonVO;
             }
             if(tenderAccedeQO.getEntId()!=null){
-                tenderAccedeQO.setEntIds(getUtmId(tenderAccedeQO.getEntId()));
+                tenderAccedeQO.setUtmIds(getUtmIdList(tenderAccedeQO.getEntId()));
             }else {
                 wbsCommonVO.setCode(Response.ERROR);
                 wbsCommonVO.setMsg("请输入有效的entId");

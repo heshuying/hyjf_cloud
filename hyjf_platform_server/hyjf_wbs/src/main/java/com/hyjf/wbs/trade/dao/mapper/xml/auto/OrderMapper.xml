@@ -53,11 +53,14 @@
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
         INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-        <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-        <if test="entIds != null and entIds != ''">
-            AND ur.utm_id in (#{entIds})
-        </if>
         WHERE br.status=1
+        <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+        <if test="utmIds != null">
+            AND ur.utm_id in
+            <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
         <!-- 放款时间 -->
         <if test="startTime != null and startTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
