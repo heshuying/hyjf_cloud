@@ -39,8 +39,17 @@ public class BorrowRepaymentInfoListRequset extends BasePage {
      * 检索条件 limitEnd
      */
     private int limitEnd = -1;
+    private String repayOrderId;
+    
+    public String getRepayOrderId() {
+		return repayOrderId;
+	}
 
-    public String getIsMonth() {
+	public void setRepayOrderId(String repayOrderId) {
+		this.repayOrderId = repayOrderId;
+	}
+
+	public String getIsMonth() {
         return isMonth;
     }
 

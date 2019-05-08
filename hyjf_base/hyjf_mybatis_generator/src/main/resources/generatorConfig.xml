@@ -4,7 +4,8 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+
+    <properties resource="init_market.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -513,8 +514,16 @@
             <columnOverride column="extra_yield_repay_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_late" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_borrow_apicron_log" domainObjectName="BorrowApicronLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1643,7 +1652,7 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
-        <table tableName="ht_link" domainObjectName="Link">
+       <table tableName="ht_link" domainObjectName="Link">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1704,7 +1713,7 @@
         </table>
 
         <table tableName="ht_sms_notice_config" domainObjectName="SmsNoticeConfig">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+			<generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1777,7 +1786,7 @@
             <columnOverride column="associated_state" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
 
-        <table tableName="ht_content_environment" domainObjectName="ContentEnvironment">
+         <table tableName="ht_content_environment" domainObjectName="ContentEnvironment">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
@@ -1785,9 +1794,9 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
-        <table tableName="ht_invite_prize_conf" domainObjectName="InvitePrizeConf">
+         <table tableName="ht_invite_prize_conf" domainObjectName="InvitePrizeConf">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="prize_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+             <columnOverride column="prize_type" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="prize_kind" javaType="java.lang.Integer" jdbcType="TINYINT"/>
             <columnOverride column="del_flag" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
@@ -1852,8 +1861,8 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
         <table tableName="ht_under_line_recharge" domainObjectName="UnderLineRecharge">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
+           <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+           <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT"/>
         </table>
 
         <table tableName="ht_protocol_log" domainObjectName="ProtocolLog">
@@ -1908,7 +1917,7 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_debt_config" domainObjectName="DebtConfig">
+	    <table tableName="ht_debt_config" domainObjectName="DebtConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="toggle" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="config_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1999,8 +2008,8 @@
         <table tableName="ht_evaluation_config_log" domainObjectName="EvaluationConfigLog">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
-            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -2035,18 +2044,33 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
-        <table tableName="ht_bank_cancellation_account" domainObjectName="BankCancellationAccount">
+        <table tableName="ht_workflow" domainObjectName="WorkFlow">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="bank_open_account" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="flow_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
-        <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
-            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
-            <columnOverride column="sex" javaType="java.lang.Integer" jdbcType="TINYINT" />
-        </table>
-        <table tableName="ht_new_year_activity_reward" domainObjectName="NewYearActivityReward">
+
+        <table tableName="ht_workflow_node" domainObjectName="WorkFlowNode">
+
+        <table tableName="ht_workname" domainObjectName="WorkName">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
+        
+        <table tableName="ht_activity_user_guess" domainObjectName="ActivityUserGuess">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_activity_user_reward" domainObjectName="ActivityUserReward">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="grade" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        
+        <table tableName="ht_new_year_activity" domainObjectName="NewYearActivity">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
 
     </context>
 </generatorConfiguration>

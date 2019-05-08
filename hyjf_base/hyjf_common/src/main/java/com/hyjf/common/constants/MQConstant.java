@@ -730,4 +730,9 @@ public interface MQConstant {
 	// 合规互金上报用MQ延迟发送等级（30s）
 	int HG_REPORT_DELAY_LEVEL = 4;
 
+	/**--------------------------------- 业务流程配置start -------------------------------------*/
+	String WORKFLOW_GROUP = "WORKFLOW_GROUP";
+	String WORKFLOW_MESSAGE_TOPIC = "WORKFLOW_MESSAGE_TOPIC";
+	/**--------------------------------- 业务流程配置end -------------------------------------*/
+
 }

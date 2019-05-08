@@ -1129,7 +1129,7 @@ ORDER BY
 		AND hbrp.borrow_nid = hb.borrow_nid
 		AND hbrp.recover_period = hb.borrow_period
 		WHERE
-		hb.`status` in (3,4,5)
+		hb.`status` in (3,4,5,8)
 		AND
 		hbt.accede_order_id = #{accedeOrderId}
 		)
@@ -1204,7 +1204,7 @@ ORDER BY
 				LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
 				LEFT JOIN ht_borrow_recover hbr ON hbt.nid = hbr.nid
 				WHERE
-				hb.`status` in (3,4,5)
+				hb.`status` in (3,4,5,8)
 				AND
 				hbt.accede_order_id = #{accedeOrderId}
 				)

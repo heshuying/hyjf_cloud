@@ -12,7 +12,7 @@ public class CouponUserSearchRequest {
 
     private Integer activityId;
 
-    private String userId;
+    private Integer userId;
 
     public List<String> getCouponCodeList() {
         return couponCodeList;
@@ -30,11 +30,11 @@ public class CouponUserSearchRequest {
         this.activityId = activityId;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 }
