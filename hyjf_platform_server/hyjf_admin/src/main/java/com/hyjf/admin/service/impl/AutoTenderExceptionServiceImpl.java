@@ -364,16 +364,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             // 更改加入明细状态和出借临时表状态
                             // 更改加入明细状态
                             updateTenderByParam(orderStatus,hjhAccede.getId());
-
-                            //应急中心二期 计入智投时报送数据 埋点 20190419 nxl start
-                            JSONObject paramsComfig = new JSONObject();
-                            paramsComfig.put("assignOrderId",hjhAccede.getAccedeOrderId());//计入智投单号
-                            paramsComfig.put("isTender","2"); //1:承接智投，2：出借智投
-                            // 推送数据到MQ 智投出借成功（每笔）
-                            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.INVESTPLAN_TAG, UUID.randomUUID().toString(), paramsComfig),
-                                    MQConstant.HG_REPORT_DELAY_LEVEL);
-                            // 应急中心二期 计入智投时报送数据 埋点 20190419 nxl end
-
                             // 如果标的可投金额非0，推回队列的头部
                             String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                             redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));

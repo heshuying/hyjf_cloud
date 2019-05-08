@@ -705,7 +705,7 @@ public interface MQConstant {
 	// 产品配置异常重发
 	String CERT_REPAIR_LENDPRODUCTCONFIG = "CERT_REPAIR_LENDPRODUCTCONFIG";
 	// 计入计划，或单笔承接成功
-	String CERT_LENDPRODUCTCONFIG_TAG = CERT_REPAIR_LENDPRODUCTCONFIG+"||"+MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG+"||"+MQConstant.INVESTPLAN_TAG;
+	String CERT_LENDPRODUCTCONFIG_TAG = CERT_REPAIR_LENDPRODUCTCONFIG+"||"+MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG+"||"+MQConstant.LOAN_SUCCESS_TAG;
 
 	//产品信息历史数据推送
 	String CERT_OLD_LENDPRODUCT_GROUP = "CERT_OLD_LENDPRODUCT_GROUP";
@@ -782,9 +782,6 @@ public interface MQConstant {
 	String SYNBALANCE_GROUP = "SYNBALANCE_GROUP";
 	String SYNBALANCE_TOPIC = "SYNBALANCE_TOPIC";
 	String SYNBALANCE_TAG = "SYNBALANCE_TAG";
-
-	//TAG:智投出借add by nxl
-	String INVESTPLAN_TAG ="INVESTPLAN_TAG";
 
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
 

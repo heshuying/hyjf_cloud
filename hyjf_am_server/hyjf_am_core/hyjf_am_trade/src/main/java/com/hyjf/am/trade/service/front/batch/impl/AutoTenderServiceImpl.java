@@ -204,20 +204,6 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
 
         // 复投时，减去该计划的开放额度
         updateAvailableInvestAccount(hjhAccede, accountDecimal);
-        //应急中心二期 计入智投时报送数据 埋点 20190419 nxl start
-        BorrowTender borrowTenderParam = new BorrowTender();
-        borrowTenderParam.setAccedeOrderId(hjhAccede.getAccedeOrderId());
-        borrowTenderParam.setBorrowNid(borrow.getBorrowNid());
-        BorrowTender borrowTender = selectBorrowTenderByParam(borrowTenderParam);
-        if (null != borrowTender) {
-            JSONObject paramsComfig = new JSONObject();
-            paramsComfig.put("assignOrderId", borrowTender.getNid());//投资订单号
-            paramsComfig.put("isTender", "2"); //1:承接智投，2：出借智投
-            // 推送数据到MQ 智投出借成功（每笔）
-            commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.INVESTPLAN_TAG, UUID.randomUUID().toString(), paramsComfig),
-                    MQConstant.HG_REPORT_DELAY_LEVEL);
-        }
-        // 应急中心二期 计入智投时报送数据 埋点 20190419 nxl end
         result = true;
         return result;
     }
