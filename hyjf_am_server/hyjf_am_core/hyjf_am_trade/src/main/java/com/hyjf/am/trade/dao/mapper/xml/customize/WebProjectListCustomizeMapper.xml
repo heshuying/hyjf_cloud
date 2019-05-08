@@ -24,7 +24,6 @@
                 </if>
             </if>
             <if test="status == null or status == ''">
-                AND
                 (
                 ( htb.`status` = 1 AND htb.verify_status = 3 )
                 OR ( htb.`status` = 2 AND htb.verify_time + ( htb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
@@ -1015,6 +1014,7 @@
                 OR ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 OR ( hydb.`status` = 3 )
                 OR ( hydb.`status` = 4 )
+                OR ( hydb.`status` = 8 )
                 )
             </if>
             <choose>
