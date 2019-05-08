@@ -397,20 +397,17 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
         CertRequest certRequest=new CertRequest();
         certRequest.setTransferId(accountList.getNid());
         List<CertCouponRecoverVO> certCouponRecoverVOList=amTradeClient.getCouponRecoverListByCertRequest(certRequest);
-        logger.info(logHeader + "certCouponRecoverVOList.size():"+certCouponRecoverVOList.size());
         if(certCouponRecoverVOList==null||certCouponRecoverVOList.size()==0){
             //交易金额
             return;
         }
         certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
         List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
-        logger.info(logHeader + "couponRealTenders.size():"+couponRealTenders.size());
         if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
             //交易金额
             return;
         }
         List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
-        logger.info(logHeader + "borrowTenderCpnList.size():"+borrowTenderCpnList.size());
         if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
             //交易金额
             return;
