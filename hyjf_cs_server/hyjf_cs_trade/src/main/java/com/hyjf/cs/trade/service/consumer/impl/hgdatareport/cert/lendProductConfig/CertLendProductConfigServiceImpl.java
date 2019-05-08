@@ -176,9 +176,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     //根据原投资订单号查找转让信息
                     List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(borrowTenderVO.getNid());
                     if(CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
-                        HjhDebtCreditVO hjhDebtCreditVO = hjhDebtCreditVOList.get(0);
-                        if (hjhDebtCreditVO.getCreditStatus() == 2) {
-                            //完全承接
+                        if (hjhDebtCreditVOList.size() == 1 && hjhDebtCreditVOList.get(0).getCreditStatus() == 2) {
                             logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
                             continue;
                         }
@@ -228,11 +226,11 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     //根据原投资订单号查找转让信息
                     List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(hjhDebtCreditTenderVO.getAssignOrderId());
                     if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
-                        HjhDebtCreditVO hjhDebtCreditVO = hjhDebtCreditVOList.get(0);
-                        if (hjhDebtCreditVO.getCreditStatus() == 2) {
-                            //完全承接
-                            logger.info(logHeader + " 承接债权编号：" + nid + " ,完全承接！！");
-                            continue;
+                        if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                            if (hjhDebtCreditVOList.size() == 1 && hjhDebtCreditVOList.get(0).getCreditStatus() == 2) {
+                                logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
+                                continue;
+                            }
                         }
                     }
                     finClaimID = hjhDebtCreditTenderVO.getAssignPlanOrderId();
