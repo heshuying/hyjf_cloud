@@ -176,6 +176,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     //根据原投资订单号查找转让信息
                     List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(borrowTenderVO.getNid());
                     if(CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                        //完全承接后就不能发起转让了，因此判断转让个数和状态即可
                         if (hjhDebtCreditVOList.size() == 1 && hjhDebtCreditVOList.get(0).getCreditStatus() == 2) {
                             logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
                             continue;
@@ -227,6 +228,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(hjhDebtCreditTenderVO.getAssignOrderId());
                     if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
                         if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                            //完全承接后就不能发起转让了，因此判断转让个数和状态即可
                             if (hjhDebtCreditVOList.size() == 1 && hjhDebtCreditVOList.get(0).getCreditStatus() == 2) {
                                 logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
                                 continue;
