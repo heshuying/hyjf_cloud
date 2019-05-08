@@ -75,8 +75,8 @@ public class RecoverInfoController extends BaseController {
                 wbsRecoverVO.setData("");
                 return wbsRecoverVO;
             }
-            if(getUtmId(recoverQO.getEntId())!=null){
-                recoverQO.setEntIds(getUtmId(recoverQO.getEntId()));
+            if(recoverQO.getEntId()!=null){
+                recoverQO.setUtmIds(getUtmIdList(recoverQO.getEntId()));
             }else {
                 wbsRecoverVO.setCode(Response.ERROR);
                 wbsRecoverVO.setMsg("请输入有效的entId");
@@ -123,7 +123,8 @@ public class RecoverInfoController extends BaseController {
             return null;
         }
     }
-    public List<Integer> getUtmIdList(Integer entId) {
+    public List<Integer> getUtmIdList(Integer entIds) {
+        String entId=entIds.toString();
         String thirdIds = wbsConfig.getThridPropertyIds();
         String[] thirdIdsArr = thirdIds.split(",");
         List<Integer> utmId = new ArrayList<Integer>();

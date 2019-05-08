@@ -20,8 +20,9 @@
     <result column="status" property="status" jdbcType="INTEGER" />
   </resultMap>
   <select id="getRecoverInfo" resultMap="BaseResultMap"
-          parameterType="com.hyjf.wbs.qvo.RecoverVO">
-    SELECT
+          parameterType="com.hyjf.wbs.qvo.RecoverQO">
+    select * from
+    (SELECT
     br.user_id AS assetCustomerId,
     br.repay_ordid AS refundOrderNumber,
     br.nid AS orderNo,
@@ -41,13 +42,16 @@
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
     INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (${entIds})
-    </if>
     WHERE br.recover_status=1 AND b.is_installment=0
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
     </if>
     UNION ALL
     SELECT
@@ -70,33 +74,39 @@
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
     INNER JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
-    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (${entIds})
-    </if>
     WHERE brp.recover_status=1
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
     </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>) as recover
     <if test="limitStart >= 0">
       LIMIT #{limitStart} , #{limitEnd}
     </if>
   </select>
   <select id="getRecoverCount" resultType="java.lang.Integer"
-          parameterType="com.hyjf.wbs.qvo.RecoverVO">
+          parameterType="com.hyjf.wbs.qvo.RecoverQO">
     select count(*)
     from (SELECT
     br.user_id AS assetCustomerId
     FROM ht_borrow_recover br
     LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
     INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (${entIds})
-    </if>
     WHERE br.recover_status=1 AND b.is_installment=0
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
     </if>
     UNION ALL
     SELECT
@@ -104,13 +114,16 @@
     FROM ht_borrow_recover_plan brp
     LEFT JOIN ht_borrow b ON brp.borrow_nid =b.borrow_nid
     INNER JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
-    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
-    <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (${entIds})
-    </if>
     WHERE brp.recover_status=1
     <if test="assetCustomerId != null and assetCustomerId != ''">
       AND br.user_id = #{assetCustomerId}
+    </if>
+    <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+    <if test="utmIds != null">
+      AND ur.utm_id in
+      <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+        #{item}
+      </foreach>
     </if>
     ) countR
   </select>
