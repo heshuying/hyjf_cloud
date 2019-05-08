@@ -271,7 +271,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                             }
                         }
                     }*/
-                    finClaimID = hjhDebtCreditTenderVO.getAssignPlanOrderId();
+                    finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                     userId = hjhDebtCreditTenderVO.getUserId();
                     String strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
                     String idCardHash = getIdCard(userId);
