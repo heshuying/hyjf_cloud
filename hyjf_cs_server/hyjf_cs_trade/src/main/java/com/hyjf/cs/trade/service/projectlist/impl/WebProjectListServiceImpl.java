@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
@@ -176,7 +177,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
     public WebResult searchProjectListNew(ProjectListRequest request) {
-
+        logger.info("Web端项目列表 requestBean：{}", JSON.toJSONString(request));
         WebResult result = new WebResult();
         BorrowProjectListBean resultBean = new BorrowProjectListBean();
         // 初始化分页参数，并组合到请求参数
@@ -233,7 +234,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     if (limit > 0) {
                         request.setLimitEnd(limit);
                     }
-
+                    logger.info("requestBean:{}", JSON.toJSONString(request));
                     List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
                     resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
                 }else{
@@ -254,6 +255,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     }
 
                     request.setStatus(null);
+                    logger.info("requestBean:{}", JSON.toJSONString(request));
                     List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
                     resultBean.setList( CommonUtils.convertBeanList(projectList, WebProjectListCsVO.class));
                 }
@@ -269,6 +271,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         resultBean.setNowTime(GetDate.getNowTime10());
         result.setData(resultBean);
         result.setPage(page);
+        logger.info("Web端项目列表 result:{}", JSON.toJSONString(result));
         return result;
     }
 
