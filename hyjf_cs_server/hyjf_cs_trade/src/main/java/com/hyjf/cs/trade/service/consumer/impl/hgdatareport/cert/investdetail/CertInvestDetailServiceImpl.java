@@ -76,7 +76,7 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
 				return null;
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("报错了",e);
 		}
 
 		return JSONArray.parseArray(JSON.toJSONString(list));
