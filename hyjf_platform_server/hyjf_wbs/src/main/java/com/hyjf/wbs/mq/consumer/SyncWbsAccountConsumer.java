@@ -2,6 +2,7 @@ package com.hyjf.wbs.mq.consumer;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.wbs.configs.WbsConfig;
 import com.hyjf.wbs.mq.MqConstants;
@@ -107,9 +108,10 @@ public class SyncWbsAccountConsumer implements RocketMQListener<MessageExt>, Roc
                     logger.error("=====" + CONSUMER_NAME + " 查询不到财富端id, utmim = [{}]=====", utmReg.getUtmId());
                     return;
                 }
+
                 customerSyncQO.setUserName(account.getUserName());
                 customerSyncQO.setPrecipitatedCapital(account.getBankBalance().doubleValue());
-                customerSyncQO.setFundsToBeCollected(account.getBankAwait().doubleValue());
+                customerSyncQO.setFundsToBeCollected(account.getBankAwait().add(account.getPlanAccountWait()).doubleValue());
                 syncCustomerService.sync(customerSyncQO);
 
             }else{
