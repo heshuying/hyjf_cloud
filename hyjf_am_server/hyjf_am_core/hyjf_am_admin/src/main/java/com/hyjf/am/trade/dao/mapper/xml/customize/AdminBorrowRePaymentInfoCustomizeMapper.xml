@@ -57,7 +57,14 @@
 			<!-- 还款状态 -->
 			<if test="status != null and status != ''">
 				AND br.recover_status = #{status}
+				<if test="status ==1">
+					AND br.advance_status!=3
+				</if>
+				<if test="status ==2">
+					AND br.advance_status=3
+				</if>
 			</if>
+
 			<!-- 还款批次号 -->
 			<if test="repayBatchNo != null and repayBatchNo != ''">
 				AND br.repay_batch_no LIKE CONCAT( #{repayBatchNo}, '%')
@@ -371,9 +378,9 @@
 					hic.inst_name AS instName,
 					b.plan_nid,
 					IFNULL(flg.order_id,rflg.order_id) AS freezeOrderId,
-					br.recover_account  as repayAccountAll,
-					br.recover_capital as repayAccountCapital,
-					br.recover_interest as repayAccountInterest,
+					t.recover_account_all  as repayAccountAll,
+					t.account as repayAccountCapital,
+					t.recover_account_interest as repayAccountInterest,
 					b.borrow_manager as borrowManager,
 					br.charge_days as chargeDays,
 					br.repay_charge_interest-br.charge_interest as jianxi,
@@ -464,9 +471,9 @@
 					hic.inst_name AS instName,
 					b.plan_nid,
 					IFNULL(flg.order_id,rflg.order_id) AS freezeOrderId,
-					b.repay_account_all  as repayAccountAll,
-					b.repay_account_capital as repayAccountCapital,
-					b.repay_account_interest as repayAccountInterest,
+					t.recover_account_all  as repayAccountAll,
+					t.account as repayAccountCapital,
+					t.recover_account_interest as repayAccountInterest,
 					b.borrow_manager as borrowManager,
 					br.charge_days as chargeDays,
 					br.repay_charge_interest-br.charge_interest as jianxi,
