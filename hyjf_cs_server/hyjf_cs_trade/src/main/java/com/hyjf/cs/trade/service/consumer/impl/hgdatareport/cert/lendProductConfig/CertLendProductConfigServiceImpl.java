@@ -251,10 +251,12 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                     HjhDebtCreditTenderVO hjhDebtCreditTenderVO = hjhDebtCreditTenderVOLists.get(0);
                     //根据原投资订单号查找转让信息
                     List<HjhDebtCreditVO> hjhDebtCreditVOList = amTradeClient.selectCreditBySellOrderId(hjhDebtCreditTenderVO.getAssignOrderId());
-                    List<HjhDebtCreditVO> filterList = hjhDebtCreditVOList.stream().filter(t -> t.getCreditStatus() == 2).collect(Collectors.toList());
-                    if(filterList.size()>=1) {
-                        logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
-                        continue;
+                    if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
+                        List<HjhDebtCreditVO> filterList = hjhDebtCreditVOList.stream().filter(t -> t.getCreditStatus() == 2).collect(Collectors.toList());
+                        if(filterList.size()>=1) {
+                            logger.info(logHeader + " 初始债权编号：" + nid + " ,完全承接！！");
+                            continue;
+                        }
                     }
                     /*if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
                         if (CollectionUtils.isNotEmpty(hjhDebtCreditVOList)) {
