@@ -237,7 +237,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                 else {
                     assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
                 }
-                repayInfo.setRecoverFee(assignManageFee.toString());
+                repayInfo.setRecoverFeePeriod(assignManageFee.toString());
             }
         }
 
