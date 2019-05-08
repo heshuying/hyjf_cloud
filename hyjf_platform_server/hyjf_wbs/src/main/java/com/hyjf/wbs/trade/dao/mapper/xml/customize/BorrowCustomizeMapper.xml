@@ -9,11 +9,13 @@
         <result column="borrow_period" property="deadlineNum" jdbcType="INTEGER"/>
         <result column="is_month" property="deadlineUnit" jdbcType="TINYINT"/>
         <result column="borrow_apr" property="referenceIncome" jdbcType="DECIMAL"/>
-        <result column="invest_start" property="investAmount" jdbcType="VARCHAR"/>
+        <result column="tender_account_min" property="investAmount" jdbcType="INTEGER"/>
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     </resultMap>
     <select id="getBorrowCustomize" resultMap="borrowCustomizeMap"
             parameterType="String">
 		SELECT
+		b.plan_nid,
 		b.borrow_period,
 		CASE
 		b.is_month
@@ -23,10 +25,10 @@
 		2
 		END as is_month,
 		b.borrow_apr,
-		ht.invest_start
+		bi.tender_account_min
 		FROM
 		ht_borrow b
-		LEFT JOIN ht_borrow_project_type ht ON b.project_type = ht.borrow_cd
+		LEFT JOIN ht_borrow_info bi ON b.borrow_nid = bi.borrow_nid
 		WHERE
 		b.borrow_nid =#{borrowNid}
 	</select>

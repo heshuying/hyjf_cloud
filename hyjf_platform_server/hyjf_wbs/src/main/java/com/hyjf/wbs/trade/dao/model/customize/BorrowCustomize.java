@@ -12,7 +12,16 @@ public class BorrowCustomize {
     private Integer deadlineNum;
     private BigDecimal referenceIncome;
     private Integer deadlineUnit;
-    private String investAmount;
+    private Integer investAmount;
+    private String planNid;
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
 
     public Integer getDeadlineNum() {
         return deadlineNum;
@@ -38,11 +47,11 @@ public class BorrowCustomize {
         this.deadlineUnit = deadlineUnit;
     }
 
-    public String getInvestAmount() {
+    public Integer getInvestAmount() {
         return investAmount;
     }
 
-    public void setInvestAmount(String investAmount) {
+    public void setInvestAmount(Integer investAmount) {
         this.investAmount = investAmount;
     }
 }

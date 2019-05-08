@@ -898,8 +898,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								// 如果是散标,则往wbs系统推送标的
 								if (StringUtil.isBlank(bwb.getPlanNid())) {
 									try {
-										logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
-										sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+										Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+										// 判断标的当前状态是否是投资中的状态
+										if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isEmpty(nowBorrow.getPlanNid())) {
+											logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+											sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+										}
 									} catch (Exception e) {
 										logger.error("wbs系统标的信息推送MQ失败,标的编号:[" + borrow.getBorrowNid() + "].");
 									}

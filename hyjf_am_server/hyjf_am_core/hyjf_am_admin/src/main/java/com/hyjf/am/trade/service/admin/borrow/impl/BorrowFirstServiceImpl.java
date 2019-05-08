@@ -211,8 +211,12 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     changeOntimeOfRedis(borrow);
                     // add by liuyang 20190415 wbs标的信息推送 start
                     try {
-                        logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
-                        sendWbsBorrowInfo(borrow.getBorrowNid(),"2",0);
+                        Borrow nowBorrow = this.getBorrow(borrow.getBorrowNid());
+                        // 判断标的当前状态是否是投资中的状态
+                        if (nowBorrow != null && nowBorrow.getStatus() == 2 && StringUtils.isBlank(borrow.getPlanNid())) {
+                            logger.info("WBS系统标的信息推送MQ:标的号:[" + borrow.getBorrowNid() + "].");
+                            sendWbsBorrowInfo(borrow.getBorrowNid(), "2", 0);
+                        }
                     } catch (Exception e) {
                         logger.error("WBS系统标的信息推送MQ失败,[" + e + "].");
                     }
