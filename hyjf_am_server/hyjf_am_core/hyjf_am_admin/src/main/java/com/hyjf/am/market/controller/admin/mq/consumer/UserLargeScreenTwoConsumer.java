@@ -51,7 +51,9 @@ public class UserLargeScreenTwoConsumer implements RocketMQListener<MessageExt>,
                     // 运营部总增资
                     BigDecimal operationalCapitalIncrease = new BigDecimal("0");
                     for (ScreenTwoParam param : result) {
-                        operationalCapitalIncrease = operationalCapitalIncrease.add(param.getCapitalIncrease());
+                        if(param.getFlag() == 2){
+                            operationalCapitalIncrease = operationalCapitalIncrease.add(param.getCapitalIncrease());
+                        }
                     }
                     // 查询运营部当前总站岗资金
                     BigDecimal operNowBalance = userLargeScreenTwoCustomizeService.getOperNowBalance();
