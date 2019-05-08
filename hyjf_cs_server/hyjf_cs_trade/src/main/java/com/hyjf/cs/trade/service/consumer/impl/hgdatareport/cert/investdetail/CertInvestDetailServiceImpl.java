@@ -401,12 +401,12 @@ public class CertInvestDetailServiceImpl extends BaseHgCertReportServiceImpl imp
             //交易金额
             return;
         }
+        certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
         List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
         if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
             //交易金额
             return;
         }
-        certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
         List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
         if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
             //交易金额

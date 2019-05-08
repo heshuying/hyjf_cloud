@@ -404,7 +404,7 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 		//平台交易流水号
 		param1.put("transId", accountList.getNid());
 		//产品信息编号
-        param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
+		param1.put("sourceFinancingCode", borrowAndInfoVO.getPlanNid()==null?"-1":borrowAndInfoVO.getPlanNid());
 		//交易类型
 		param1.put("transType", "9");
 		//交易金额
@@ -426,12 +426,12 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			//交易金额
 			return;
 		}
+		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
 		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
 		if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null){
 			//交易金额
 			return;
 		}
-		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
 		List<BorrowTenderCpnVO> borrowTenderCpnList=amTradeClient.getBorrowTenderCpnListByCertRequest(certRequest);
 		if(borrowTenderCpnList==null||borrowTenderCpnList.size()==0){
 			//交易金额
@@ -478,7 +478,6 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 			return;
 		}
 		certRequest.setCouponTenderId(certCouponRecoverVOList.get(0).getTenderId());
-
 		List<CouponRealTenderVO> couponRealTenders =amTradeClient.getCouponRealTenderListByCertRequest(certRequest);
 		if(couponRealTenders==null||couponRealTenders.get(0).getRealTenderId()==null||couponRealTenders.get(0).getRealTenderId().length()==0){
 			//交易金额
@@ -520,8 +519,8 @@ public class CertOldInvestDetailServiceImpl extends BaseHgCertReportServiceImpl 
 	private void tenderSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
 		UserInfoVO usersInfo=this.amUserClient.findUserInfoById(accountList.getUserId());
 		if(usersInfo==null||usersInfo.getIdcard()==null){
-            return;
-        }
+			return;
+		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		CertRequest certRequest=new CertRequest();
 		certRequest.setRealTenderId(accountList.getNid());
