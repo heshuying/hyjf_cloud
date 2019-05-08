@@ -13,6 +13,15 @@ public class BorrowCustomize {
     private BigDecimal referenceIncome;
     private Integer deadlineUnit;
     private Integer investAmount;
+    private String planNid;
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
 
     public Integer getDeadlineNum() {
         return deadlineNum;
