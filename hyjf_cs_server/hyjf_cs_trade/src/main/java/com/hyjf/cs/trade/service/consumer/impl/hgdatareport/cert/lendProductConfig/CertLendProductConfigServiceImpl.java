@@ -88,6 +88,8 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                         userId = hjhAccedeVO.getUserId();
                         sourceFinancingcode = hjhAccedeVO.getPlanNid();
                         finClaimID = borrowTenderVO.getNid();
+                        String idCardHash = getIdCard(userId);
+                        json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
                     }
                 }
                 //加入智投
@@ -118,9 +120,10 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                 finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                 //承接用户id
                 userId = hjhDebtCreditTenderVO.getUserId();
+                String idCardHash = getIdCard(userId);
+                json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
             }
-            String idCardHash = getIdCard(userId);
-            json = putParam(sourceFinancingcode, finClaimID, idCardHash, json,false,null);
+
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

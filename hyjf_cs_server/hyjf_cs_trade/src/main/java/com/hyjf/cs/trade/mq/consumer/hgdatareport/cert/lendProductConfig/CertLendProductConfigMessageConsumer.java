@@ -99,16 +99,8 @@ public class CertLendProductConfigMessageConsumer implements RocketMQListener<Me
                 logger.error(logHeader + "组装参数为空！！！订单编号为：" + assignOrderId+"，标示为："+isTender+","+typeStr);
                 return;
             }
-            //智投出借时，可能匹配多个标的，logParam设置为加入计划订单号，方便测试查看
-            String logParam = assignOrderId;
-            if(isTender.equals("2")){
-                BorrowTenderVO borrowTenderVO = certLendProductConfigService.selectBorrowTenderByOrderId(assignOrderId);
-                if(null!=borrowTenderVO){
-                    logParam = borrowTenderVO.getAccedeOrderId();
-                }
-            }
             // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, logParam, listRepay);
+            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_FINANCE_SCATTER_CONFIG, assignOrderId, listRepay);
             try {
                 // 掉单用
                 if (tradeDate != null && !"".equals(tradeDate)) {
