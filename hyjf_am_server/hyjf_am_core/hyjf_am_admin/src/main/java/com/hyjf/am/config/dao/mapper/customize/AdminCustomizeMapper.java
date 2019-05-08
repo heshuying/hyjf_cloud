@@ -15,11 +15,16 @@ public interface AdminCustomizeMapper {
 	 * @return
 	 */
 	List<AdminCustomize> selectAdminList(AdminCustomize adminCustomize);
-
+	Integer selectAdminListCount(AdminCustomize adminCustomize);
 	/**
 	 * 根据用户名获取用户
 	 * @param userName
 	 * @return
 	 */
 	List<Admin> selectByUsername(String userName);
+
+	/**
+	 * 根据用户ID获取用户
+	 */
+	List<Admin> selectByUserId(Integer[] userId);
 }

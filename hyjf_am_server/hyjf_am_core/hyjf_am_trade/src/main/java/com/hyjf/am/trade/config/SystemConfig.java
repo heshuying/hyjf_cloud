@@ -135,6 +135,9 @@ public class SystemConfig {
      */
     @Value("${hyjf.bank.merrp.account}")
     private String merrpAccount;
+
+    @Value("${hyjf.repay.late.rate}")
+    private String repayLateRate;
     
     
 
@@ -448,5 +451,13 @@ public class SystemConfig {
 
     public void setAppFrontHost(String appFrontHost) {
         AppFrontHost = appFrontHost;
+    }
+
+    public String getRepayLateRate() {
+        return repayLateRate;
+    }
+
+    public void setRepayLateRate(String repayLateRate) {
+        this.repayLateRate = repayLateRate;
     }
 }

@@ -333,13 +333,13 @@ public interface AmUserClient {
      */
     int updateUserCard(BankCardRequest request);
 
-    /**
-     * 保存用户绑定的银行卡
-     *
+    /***
+     * 开户掉单，保存用户绑定的银行卡
+     * @author Zha Daojian
+     * @date 2019/3/15 10:13
      * @param request
-     * @return
-     * @auth nxl
-     */
+     * @return com.hyjf.am.vo.admin.OpenAccountEnquiryDefineResultBeanVO
+     **/
     int insertUserCard(BankCardRequest request);
 
     /**
@@ -1397,4 +1397,38 @@ public interface AmUserClient {
      * @return
      */
     int updateBatch(UserPortraitCustomizeRequest request);
+
+    /**
+     * 企业信息补录时查询，根据对公账号查找银行信息
+     *
+     * @param updCompanyRequest
+     * @auther: nxl
+     * @return
+     */
+    BankCardResponse getBankInfoByAccount(UpdCompanyRequest updCompanyRequest);
+
+    /**
+     * 用户销户操作
+     *
+     * @param userId
+     * @param bankOpenAccount
+     * @return
+     */
+    int cancellationAccountAction(String userId, Integer bankOpenAccount);
+
+    /**
+     * 用户销户成功后,保存销户记录表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    int saveCancellationAccountRecordAction(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     * 查询用户销户记录列表
+     *
+     * @param bankCancellationAccountRequest
+     * @return
+     */
+    BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
 }

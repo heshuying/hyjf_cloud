@@ -242,9 +242,9 @@ public class RepayController extends BaseController {
             throw new RuntimeException("参数非法,ProductId或accountId或instCode不得为空!");
         }
         //验签(测试暂时关闭验签功能)
-        /*if(!this.verifyRequestSign(info, METHOD_REPAY_INFO)){
+        if(!this.verifyRequestSign(info, METHOD_REPAY_INFO)){
             throw new RuntimeException("验签失败!");
-        }*/
+        }
         BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(info.getAccountId());
         if (bankOpenAccount == null) {
             throw new RuntimeException("该用户没有在平台开户!");

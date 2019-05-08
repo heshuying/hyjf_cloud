@@ -354,7 +354,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date torrowDate = calendar.getTime();
 
-        // 昨天非工作日， 前推到第一个工作日
+        // 明天非工作日， 后推到第一个工作日
         if (!amConfigClient.isWorkdateOnSomeDay(torrowDate)) {
             torrowDate = amConfigClient.getFirstWorkdateAfterSomeDate(torrowDate);
             // 取昨日
@@ -362,7 +362,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
             calendar.add(Calendar.DAY_OF_MONTH, -1);
             currentDate = calendar.getTime();
         }
-
+        logger.info("统计昨日待还金额结束时间：" + currentDate);
         return currentDate;
     }
 }

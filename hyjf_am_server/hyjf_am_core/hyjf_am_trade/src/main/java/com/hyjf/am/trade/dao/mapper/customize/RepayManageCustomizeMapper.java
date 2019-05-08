@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.trade.repay.RepayPlanListVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,7 +28,7 @@ public interface RepayManageCustomizeMapper {
 
     BigDecimal selectOrgRepayFeeWaitTotal(Map<String,Object> paraMap);
 
-    BigDecimal selectRepayOrgRepaywait(Integer userId);
+    Map<String, BigDecimal> selectRepayOrgRepaywait(Integer userId);
 
     /**
      * 垫付机构本期应还总额
@@ -35,4 +36,18 @@ public interface RepayManageCustomizeMapper {
      * @return
      */
     BigDecimal selectOrgRepayWaitTotal(Map<String, Object> params);
+
+    /**
+     * 借款人总借款金额
+     * @param params
+     * @return
+     */
+    BigDecimal selectUserBorrowAccountTotal(Map<String, Object> params);
+
+    /** 用户还款计划列表*/
+    List<RepayPlanListVO> selectRepayPlanList(Map<String,Object> paraMap);
+
+    /** 用户还款计划列表不分期*/
+    List<RepayPlanListVO> selectRepayNotPlanList(Map<String,Object> paraMap);
+
 }

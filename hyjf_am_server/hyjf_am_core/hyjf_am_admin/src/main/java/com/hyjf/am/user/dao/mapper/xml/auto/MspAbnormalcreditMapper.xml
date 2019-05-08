@@ -108,20 +108,16 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
-    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into ht_msp_abnormalcredit (id,apply_id, creditStartDate, creditEndDate, 
-      loanType, loanMoney, assureType, 
-      loanPeriods, num)
-    values (#{id,jdbcType=VARCHAR},#{applyId,jdbcType=VARCHAR}, #{creditstartdate,jdbcType=VARCHAR}, #{creditenddate,jdbcType=VARCHAR}, 
-      #{loantype,jdbcType=VARCHAR}, #{loanmoney,jdbcType=VARCHAR}, #{assuretype,jdbcType=VARCHAR}, 
-      #{loanperiods,jdbcType=VARCHAR}, #{num,jdbcType=VARCHAR})
+    insert into ht_msp_abnormalcredit (id, apply_id, creditStartDate, 
+      creditEndDate, loanType, loanMoney, 
+      assureType, loanPeriods, num
+      )
+    values (#{id,jdbcType=VARCHAR}, #{applyId,jdbcType=VARCHAR}, #{creditstartdate,jdbcType=VARCHAR}, 
+      #{creditenddate,jdbcType=VARCHAR}, #{loantype,jdbcType=VARCHAR}, #{loanmoney,jdbcType=VARCHAR}, 
+      #{assuretype,jdbcType=VARCHAR}, #{loanperiods,jdbcType=VARCHAR}, #{num,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.user.dao.model.auto.MspAbnormalcredit" >
-    <selectKey resultType="java.lang.String" keyProperty="id" order="AFTER" >
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into ht_msp_abnormalcredit
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

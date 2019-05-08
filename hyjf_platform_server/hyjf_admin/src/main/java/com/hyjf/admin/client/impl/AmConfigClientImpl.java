@@ -9,7 +9,6 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.BankConfigResponse;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -30,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -55,9 +53,6 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${am.config.service.name}")
-    private String configService;
-
     /**
      * 用loginUserId去am-config查询登录的用户信息
      *
@@ -70,28 +65,6 @@ public class AmConfigClientImpl implements AmConfigClient {
 //        String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         String url = "http://AM-ADMIN/am-config/adminSystem/get_admin_system_by_userid/" + loginUserId;
         AdminSystemResponse response = restTemplate.getForEntity(url, AdminSystemResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-    @Override
-    public String getBankIdByCardNo(String cardNo) {
-        return restTemplate
-                .getForEntity(configService+"/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
-    }
-
-    /**
-     * 根据银行id查询江西银行配置
-     * @author Zha Daojian
-     * @date 2019/3/12 18:49
-     * @param id
-     * @return com.hyjf.am.vo.trade.JxBankConfigVO
-     **/
-    @Override
-    public JxBankConfigVO getJxBankConfigById(Integer id) {
-        JxBankConfigResponse response = restTemplate
-                .getForEntity(configService+"/config/getJxBankConfigByBankId/" + id, JxBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -2481,4 +2454,92 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForEntity(url, request, ConfigApplicantResponse.class).getBody();
 
     }
+
+    @Override
+    public Integer insertBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/insert";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+
+    }
+
+    @Override
+    public BusinessNameMgResponse findBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/find";
+        BusinessNameMgResponse response = restTemplate
+                .postForEntity(url, request, BusinessNameMgResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BusinessNameMgResponse findNameUq(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/findNameUq";
+        BusinessNameMgResponse response = restTemplate
+                .postForEntity(url, request, BusinessNameMgResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public WorkNameVO findBusinessNameById(int id) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/info/"+id;
+        BusinessNameMgResponse response = restTemplate
+                .getForObject(url, BusinessNameMgResponse.class);
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer updateBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/update";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    @Override
+    public Integer updateStatusBusinessName(BusinessNameMgRequest request) {
+        String url = "http://AM-ADMIN/am-config/businessNameMg/updateStatus";
+        IntegerResponse response = restTemplate
+                .postForEntity(url, request, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+    /**
+     * 查询业务名称
+     * @param request
+     * @return
+     */
+    @Override
+    public BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request){
+        return  restTemplate.postForEntity("http://AM-ADMIN/am-config/businessNameMg/searchbusinessname",request, BusinessNameMgResponse.class).getBody();
+    }
+
+    @Override
+    public List<AdminVO> getAdminUser(AdminUserWorkFlowRequest request) {
+        String url = "http://AM-ADMIN/am-config/admin/getAdminUser";
+        AdminResponse response = restTemplate
+                .postForEntity(url, request, AdminResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getAdminVOList();
+        }
+        return null;
+    }
+
 }

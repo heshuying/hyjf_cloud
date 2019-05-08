@@ -79,6 +79,9 @@
 			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
 				AND admin.create_time <![CDATA[<=]]> CONCAT(#{addtimeEndSrch},' 23:59:59')
 			</if>
+			<if test="roleName != null and roleName != ''">
+				AND role.role_name LIKE CONCAT(#{roleName}, '%')
+			</if>
 			and admin.del_flag=0
 		ORDER BY
 			admin.create_time DESC
@@ -86,7 +89,54 @@
 	      limit #{limitStart} , #{limitEnd}
 	    </if>
 	</select>
-
+	<select id="selectAdminListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.config.dao.model.customize.AdminCustomize">
+		SELECT
+			count(1)
+		FROM
+			ht_admin admin
+			LEFT JOIN ht_admin_and_role aar ON aar.user_id = admin.id
+			LEFT JOIN ht_admin_role role ON aar.role_id = role.id 
+			LEFT JOIN hyjf_user.ht_r_oa_department dep ON admin.department_id = dep.id
+		WHERE
+			1=1
+			<if test="id != null and id != ''">
+				AND admin.id = #{id}
+			</if>
+			<if test="usernameSrch != null and usernameSrch != ''">
+				AND admin.username LIKE CONCAT( #{usernameSrch}, '%')
+			</if>
+			<if test="truenameSrch != null and truenameSrch != ''">
+				AND admin.truename LIKE CONCAT( #{truenameSrch}, '%')
+			</if>
+			<if test="mobileSrch != null and mobileSrch != ''">
+				AND admin.mobile = #{mobileSrch}
+			</if>
+			<if test="departmentSrch != null and departmentSrch != ''">
+				AND dep.`name` LIKE CONCAT( #{departmentSrch}, '%')
+			</if>
+          	<if test="stateSrchOn != null and stateSrchOn != '' and stateSrchOff != null and stateSrchOff != ''" >
+          		AND (admin.state = #{stateSrchOn} or admin.state = #{stateSrchOff})
+          	</if>
+          	<if test="stateSrchOn != null and stateSrchOn != '' and (stateSrchOff == null or stateSrchOff == '')" >
+          		AND admin.state = #{stateSrchOn}
+          	</if>
+          	<if test="stateSrchOff != null and stateSrchOff != '' and (stateSrchOn == null or stateSrchOn == '')" >
+          		AND admin.state = #{stateSrchOff}
+          	</if>
+          	<if test="stateSrch != null and stateSrch != ''">
+          		AND admin.state = #{stateSrch}
+          	</if>
+			<if test="addtimeStartSrch != null and addtimeStartSrch != ''">
+				AND admin.create_time  <![CDATA[>=]]> CONCAT(#{addtimeStartSrch},' 00:00:00')
+			</if>
+			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
+				AND admin.create_time <![CDATA[<=]]> CONCAT(#{addtimeEndSrch},' 23:59:59')
+			</if>
+			<if test="roleName != null and roleName != ''">
+				AND role.role_name LIKE CONCAT(#{roleName}, '%')
+			</if>
+			and admin.del_flag=0
+	</select>
 	<select id="selectByUsername" parameterType="string" resultType="com.hyjf.am.config.dao.model.auto.Admin">
 		SELECT
 			*
@@ -94,6 +144,19 @@
 			ht_admin a
 		WHERE
 			username = #{username}
+	</select>
+
+	<select id="selectByUserId" resultType="com.hyjf.am.config.dao.model.auto.Admin">
+		SELECT
+		id,username,truename
+		FROM
+		ht_admin a
+		WHERE
+		id in
+		<foreach collection="array" item="userId" index="index"
+				 open="(" close=")" separator=",">
+			#{userId}
+		</foreach>
 	</select>
 
 </mapper>

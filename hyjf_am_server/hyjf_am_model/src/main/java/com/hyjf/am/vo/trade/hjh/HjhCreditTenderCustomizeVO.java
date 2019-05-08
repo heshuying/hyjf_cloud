@@ -141,6 +141,10 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 	 * 项目期数
 	 */
 	private String projectPeriod;
+	/**
+	 * 原投资订单号
+	 */
+	private String sellOrderId;
 
 	/**
 	 * 构造方法
@@ -361,5 +365,13 @@ public class HjhCreditTenderCustomizeVO extends BaseVO implements Serializable{
 
     public String getPeriodView(){
 		return this.getAssignPeriod() + "/" + this.getBorrowPeriod();
+	}
+
+	public String getSellOrderId() {
+		return sellOrderId;
+	}
+
+	public void setSellOrderId(String sellOrderId) {
+		this.sellOrderId = sellOrderId;
 	}
 }

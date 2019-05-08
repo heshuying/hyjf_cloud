@@ -3,8 +3,10 @@
  */
 package com.hyjf.am.trade.service.front.borrow.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.resquest.trade.ScreenDataBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
@@ -471,6 +473,14 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         }catch (MQException e){
             logger.error("=================发送运营数据更新MQ失败,出借订单号:" + hjhAccede.getAccedeOrderId());
         }
+
+        try {
+            ScreenDataBean screenDataBean = new ScreenDataBean(hjhAccede.getAccedeOrderId(),userId,hjhAccede.getUserName(),waitCaptical,3);
+            sendScreenDataMQ(screenDataBean);
+        }catch (MQException e){
+            logger.error("=================计划退出成功后,发送大屏数据统计MQ失败,出借订单号:" + hjhAccede.getAccedeOrderId());
+        }
+
     }
 
 
@@ -559,6 +569,13 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         }
     }
 
+    /**
+     * 计划退出成功后,发送大屏数据统计MQ
+     * @param screenDataBean
+     */
+    private void sendScreenDataMQ(ScreenDataBean screenDataBean) throws MQException {
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SCREEN_DATA_TOPIC, UUID.randomUUID().toString(), screenDataBean), 2);
+    }
     /**
      * 计划退出推送消息
      *

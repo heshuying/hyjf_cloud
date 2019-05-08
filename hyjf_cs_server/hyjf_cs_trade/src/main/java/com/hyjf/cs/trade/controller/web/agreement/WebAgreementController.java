@@ -29,7 +29,7 @@ import java.util.Map;
 @RequestMapping(value = "/hyjf-web/agreement")
 public class WebAgreementController extends BaseTradeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgreementController.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebAgreementController.class);
 
     @Autowired
     private NewAgreementService agreementService;
@@ -66,7 +66,7 @@ public class WebAgreementController extends BaseTradeController {
         try {
             List<ProtocolTemplateVO> list = agreementService.selectAllShowProtocolTemplate();
             //是否在枚举中有定义
-            if (CollectionUtils.isNotEmpty(list)) {
+            if (null!=list&&list.size()>0) {
                 for (ProtocolTemplateVO p : list) {
                     String protocolType = p.getProtocolType();
                     String alia = ProtocolEnum.getAlias(protocolType);

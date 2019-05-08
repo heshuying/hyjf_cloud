@@ -140,6 +140,21 @@ public class AdminBankAccountCheckCustomizeVO extends BaseVO implements Serializ
      */
     private String txTime;
 
+    /**
+     * 操作机器ip
+     */
+    private String ip;
+
+    /**
+     * 所属银行
+     */
+    private String payment;
+
+    /**
+     * 开户卡号
+     */
+    private String cardId;
+
     public String getOperator() {
         return operator;
     }
@@ -386,5 +401,29 @@ public class AdminBankAccountCheckCustomizeVO extends BaseVO implements Serializ
 
     public void setTxTime(String txTime) {
         this.txTime = txTime;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
     }
 }

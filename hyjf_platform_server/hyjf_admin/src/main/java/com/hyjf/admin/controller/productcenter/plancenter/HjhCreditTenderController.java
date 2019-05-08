@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AdminHjhCreditTenderRequest;
@@ -364,6 +363,8 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignUserName", "承接人");
 		map.put("assignPlanNid", "承接智投编号");
 		map.put("assignPlanOrderId", "承接智投订单号");
+		map.put("assignOrderId", "承接订单号");
+        map.put("sellOrderId", "出让人智投订单号");
 		map.put("creditUserName", "出让人");
 		map.put("creditNid", "债转编号");
 		map.put("borrowNid", "原项目编号");

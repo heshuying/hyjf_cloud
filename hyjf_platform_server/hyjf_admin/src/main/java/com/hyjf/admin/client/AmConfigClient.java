@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.config.MessagePushTagResponse;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
@@ -12,9 +11,7 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -49,10 +46,6 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	DebtConfigResponse getDebtConfig();
-
-	String getBankIdByCardNo(String cardNo);
-
-	JxBankConfigVO getJxBankConfigById(Integer id);
 
 	/**
 	 * 债转配置更新
@@ -1567,4 +1560,54 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ConfigApplicantResponse findConfigApplicant(ConfigApplicantRequest request);
+
+	/**
+	 * 添加业务名称管理
+	 * @param request
+	 * @return
+	 */
+	Integer insertBusinessName(BusinessNameMgRequest request);
+
+	/**
+	 * 检索业务名称管理
+	 * @param request
+	 * @return
+	 */
+	BusinessNameMgResponse findBusinessName(BusinessNameMgRequest request);
+
+	/**
+	 * 检索业务名称是否重复
+	 * @param request
+	 * @return
+	 */
+	BusinessNameMgResponse findNameUq(BusinessNameMgRequest request);
+
+	/**
+	 * 通过ID 业务名称管理
+	 * @param id
+	 * @return
+	 */
+	WorkNameVO findBusinessNameById(int id);
+
+	/**
+	 * 修改业务名称管理
+	 * @param request
+	 * @return
+	 */
+	Integer updateBusinessName(BusinessNameMgRequest request);
+
+	/**
+	 * 修改业务名称管理状态
+	 * @param request
+	 * @return
+	 */
+	Integer updateStatusBusinessName(BusinessNameMgRequest request);
+	/**
+	 * 查询业务名称
+	 * @param businessName
+	 * @return
+	 */
+	BusinessNameMgResponse searchBusinessNameList(BusinessNameMgRequest request);
+
+	List<AdminVO> getAdminUser(AdminUserWorkFlowRequest request);
 }

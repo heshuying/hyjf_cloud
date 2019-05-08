@@ -6,6 +6,7 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.trade.bean.BaseResultBean;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -97,7 +98,7 @@ public class GlobalExceptionHandler {
 	public BaseResult<?> CheckExceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception ex) {
 		CheckException e = (CheckException)ex;
 		BaseResult<?> result = new BaseResult<>(e.getData());
-		result.setStatusInfo(e.getCode(), ex.getLocalizedMessage());
+		result.setStatusInfo(StringUtils.isNotEmpty(e.getCode()) ? e.getCode() : "404", ex.getLocalizedMessage());
 		return result;
 	}
 

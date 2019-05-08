@@ -83,4 +83,12 @@ public interface AccountDetailService {
      * @return
      */
     Integer updateAccountNumberByUserId(Integer userId, String accountId);
+
+    /**
+     * 用户销户成功后,删除用户账户表
+     *
+     * @param userId
+     * @return
+     */
+    int deleteUserAccountAction(String userId);
 }

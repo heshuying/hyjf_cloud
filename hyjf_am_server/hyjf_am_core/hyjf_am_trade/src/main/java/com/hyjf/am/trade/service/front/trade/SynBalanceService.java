@@ -1,6 +1,10 @@
 package com.hyjf.am.trade.service.front.trade;
 
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.trade.dao.model.auto.UnderLineRecharge;
+
+import java.util.List;
 
 /**
  * @author pangchengchao
@@ -8,4 +12,6 @@ import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
  */
 public interface SynBalanceService {
     boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
+
+    List<UnderLineRecharge> getUnderLineRechargeListByCode(UnderLineRechargeRequest request);
 }
