@@ -118,7 +118,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         return response;
     }
 
-    private BigDecimal getManageFee(String borrowStyle, BigDecimal feeRate, BigDecimal differentialRate, int borrowVerifyTime, Integer borrowPeriod, int repayPeriod, BigDecimal assignCapital, BigDecimal assignManageFee, BigDecimal account, BigDecimal assignCapital2) {
+    private BigDecimal getManageFee(String borrowStyle, BigDecimal feeRate, BigDecimal differentialRate, Integer borrowVerifyTime, Integer borrowPeriod, Integer repayPeriod, BigDecimal assignCapital, BigDecimal assignManageFee, BigDecimal account, BigDecimal assignCapital2) {
         // 等额本息month、等额本金principal
         if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
             if (repayPeriod == borrowPeriod.intValue()) {
