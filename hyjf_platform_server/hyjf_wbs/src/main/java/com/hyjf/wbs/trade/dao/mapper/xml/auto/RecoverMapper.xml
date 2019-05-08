@@ -8,8 +8,8 @@
     <result column="productNo" property="productNo" jdbcType="VARCHAR" />
     <result column="entId" property="entId" jdbcType="INTEGER" />
     <result column="assetId" property="assetId" jdbcType="INTEGER" />
-    <result column="expectedExitTime" property="expectedExitTime" jdbcType="DATE" />
-    <result column="actualExitTime" property="actualExitTime" jdbcType="DATE" />
+    <result column="expectedExitTime" property="expectedExitTime" jdbcType="VARCHAR" />
+    <result column="actualExitTime" property="actualExitTime" jdbcType="VARCHAR" />
     <result column="expectedRepay" property="expectedRepay" jdbcType="DOUBLE" />
     <result column="actualRepay" property="actualRepay" jdbcType="DOUBLE" />
     <result column="expectedExitCapital" property="expectedExitCapital" jdbcType="DOUBLE" />
@@ -23,13 +23,13 @@
           parameterType="com.hyjf.wbs.qvo.RecoverVO">
     SELECT
     br.user_id AS assetCustomerId,
-    br.borrow_nid AS refundOrderNumber,
+    br.repay_ordid AS refundOrderNumber,
     br.nid AS orderNo,
-    br.repay_ordid AS productNo,
-    ur.utm_id AS entId,
+    br.borrow_nid AS productNo,
+    #{entId} AS entId,
     1 AS assetId,
-    br.recover_time AS expectedExitTime,
-    br.recover_yestime AS actualExitTime,
+    FROM_UNIXTIME(br.recover_time,'%Y-%m-%d') AS expectedExitTime,
+    FROM_UNIXTIME(br.recover_yestime,'%Y-%m-%d') AS actualExitTime,
     br.recover_interest AS expectedRepay,
     br.recover_interest_yes AS actualRepay,
     br.recover_capital AS expectedExitCapital,
@@ -55,10 +55,10 @@
     brp.borrow_nid AS refundOrderNumber,
     brp.nid AS orderNo,
     brp.repay_order_id AS productNo,
-    ur.utm_id AS entId,
+    #{entId} AS entId,
     1 AS assetId,
-    brp.recover_time AS expectedExitTime,
-    brp.recover_yestime AS actualExitTime,
+      FROM_UNIXTIME(brp.recover_time,'%Y-%m-%d') AS expectedExitTime,
+      FROM_UNIXTIME(brp.recover_yestime,'%Y-%m-%d') AS actualExitTime,
     brp.recover_interest AS expectedRepay,
     brp.recover_interest_yes AS actualRepay,
     brp.recover_capital AS expectedExitCapital,
