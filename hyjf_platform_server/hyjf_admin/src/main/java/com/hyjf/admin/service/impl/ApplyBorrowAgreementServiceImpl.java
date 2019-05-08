@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -57,6 +58,9 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
     private BaseClient baseClient;
 
     @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
     private AmTradeClient amTradeClient;
 
 
@@ -67,9 +71,6 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
 
     /**协议申请列表页count*/
     public static final String BORROW_AGREEMENT_COUNT_URL = BASE_URL + "/getApplyBorrowAgreementCount";
-
-    /**协议申请明细*/
-    public static final String ADD_BORROW_AND_INFO_URL= BASE_URL + "/getApplyBorrowInfoDetail";
 
 
     /**
@@ -104,14 +105,14 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
      * @return com.hyjf.admin.common.result.AdminResult
      **/
     @Override
-    public AdminResult getApplyBorrowInfoDetail(ApplyBorrowAgreementRequest request){
+    public AdminResult getApplyBorrowInfoDetail(ApplyBorrowInfoRequest request){
         AdminResult result = new AdminResult();
         if(StringUtils.isEmpty(request.getBorrowNid())){
             return new AdminResult(BaseResult.FAIL, "项目编号不能为空");
         }
         // 根据标的编号查询标的详情
-        ApplyBorrowInfoResponse response = baseClient.postExe(ADD_BORROW_AND_INFO_URL, request, ApplyBorrowInfoResponse.class);
-        ApplyBorrowInfoVO borrowVO = response.getResult();
+        String borrowId = request.getBorrowNid();
+        ApplyBorrowInfoVO borrowVO  = amTradeClient.selectApplyBorrowInfoDetail(borrowId);
         if (borrowVO == null) {
             return new AdminResult(BaseResult.FAIL, "未找到对应的编号的标");
         }else{

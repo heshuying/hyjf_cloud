@@ -1939,6 +1939,24 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 标的放款记录
+     *
+     * @param userId
+     * @param borrowNid
+     * @param nid
+     * @return
+     */
+    @Override
+    public ApplyBorrowInfoVO selectApplyBorrowInfoDetail(String borrowNid) {
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/getApplyBorrowInfoDetail/" + borrowNid;
+        ApplyBorrowInfoResponse response = restTemplate.getForEntity(url, ApplyBorrowInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
      * 标的放款记录列表
      *
      * @param borrowNid

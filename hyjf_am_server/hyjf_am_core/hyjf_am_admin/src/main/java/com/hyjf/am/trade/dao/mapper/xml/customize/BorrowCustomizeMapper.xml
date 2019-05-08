@@ -237,6 +237,27 @@ WHERE
 
 	</select>
 
+	<select id="getApplyBorrowInfoDetail" resultType="com.hyjf.am.vo.trade.borrow.ApplyBorrowInfoVO"
+			parameterType="String">
+		SELECT
+			hb.id,
+			hb.borrow_nid AS borrowNid,
+			hb.plan_nid AS planNid,
+			hb.borrow_period AS borrowPeriod,
+			hbi.borrow_project_source AS borrowProjectSource,
+			hbi.borrow_user_name AS borrowUserName,
+			hb.account,
+			hb.`status`,
+			FROM_UNIXTIME(
+				hb.recover_last_time,
+				'%Y-%c-%d %h:%i:%s'
+			) AS recoverLastTime
+		FROM
+			ht_borrow hb
+		LEFT JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+		WHERE
+		hb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+	</select>
 
 	<select id="getProjectPsersonDetail" resultType="com.hyjf.am.vo.trade.WebProjectPersonDetailVO"
 		parameterType="String">

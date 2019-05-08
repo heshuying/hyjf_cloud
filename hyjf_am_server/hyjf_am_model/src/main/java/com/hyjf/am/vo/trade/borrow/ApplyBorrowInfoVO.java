@@ -20,16 +20,16 @@ public class ApplyBorrowInfoVO extends BaseVO implements Serializable {
     private String borrowNid;
 
     @ApiModelProperty(value = "智投编号")
-    private String plan_nid;
+    private String planNid;
 
     @ApiModelProperty(value = "标的期限")
-    private Integer borrow_period;
+    private Integer borrowPeriod;
 
     @ApiModelProperty(value = "资产来源")
-    private String borrow_project_source;
+    private String borrowProjectSource;
 
     @ApiModelProperty(value = "借款人")
-    private Integer borrow_user_name;
+    private Integer borrowUserName;
 
     @ApiModelProperty(value = "借款金额")
     private BigDecimal account;
@@ -56,36 +56,36 @@ public class ApplyBorrowInfoVO extends BaseVO implements Serializable {
         this.borrowNid = borrowNid;
     }
 
-    public String getPlan_nid() {
-        return plan_nid;
+    public String getPlanNid() {
+        return planNid;
     }
 
-    public void setPlan_nid(String plan_nid) {
-        this.plan_nid = plan_nid;
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
     }
 
-    public Integer getBorrow_period() {
-        return borrow_period;
+    public Integer getBorrowPeriod() {
+        return borrowPeriod;
     }
 
-    public void setBorrow_period(Integer borrow_period) {
-        this.borrow_period = borrow_period;
+    public void setBorrowPeriod(Integer borrowPeriod) {
+        this.borrowPeriod = borrowPeriod;
     }
 
-    public String getBorrow_project_source() {
-        return borrow_project_source;
+    public String getBorrowProjectSource() {
+        return borrowProjectSource;
     }
 
-    public void setBorrow_project_source(String borrow_project_source) {
-        this.borrow_project_source = borrow_project_source;
+    public void setBorrowProjectSource(String borrowProjectSource) {
+        this.borrowProjectSource = borrowProjectSource;
     }
 
-    public Integer getBorrow_user_name() {
-        return borrow_user_name;
+    public Integer getBorrowUserName() {
+        return borrowUserName;
     }
 
-    public void setBorrow_user_name(Integer borrow_user_name) {
-        this.borrow_user_name = borrow_user_name;
+    public void setBorrowUserName(Integer borrowUserName) {
+        this.borrowUserName = borrowUserName;
     }
 
     public BigDecimal getAccount() {

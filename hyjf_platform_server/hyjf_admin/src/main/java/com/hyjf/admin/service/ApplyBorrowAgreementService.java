@@ -1,10 +1,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
-import com.hyjf.am.resquest.admin.ApplyBorrowAgreementRequest;
-import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
-import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
+import com.hyjf.am.resquest.admin.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,7 +24,7 @@ public interface ApplyBorrowAgreementService {
      * @author Zha Daojian
      * @date 2018/7/12 10:52
      */
-    AdminResult getApplyBorrowInfoDetail(ApplyBorrowAgreementRequest request);
+    AdminResult getApplyBorrowInfoDetail(ApplyBorrowInfoRequest request);
 
 
     /**

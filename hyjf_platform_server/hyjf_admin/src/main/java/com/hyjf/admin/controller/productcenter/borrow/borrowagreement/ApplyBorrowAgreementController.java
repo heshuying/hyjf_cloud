@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.ApplyBorrowAgreementService;
-import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
-import com.hyjf.am.resquest.admin.ApplyBorrowAgreementRequest;
-import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
-import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
+import com.hyjf.am.resquest.admin.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,7 @@ public class ApplyBorrowAgreementController extends BaseController {
 
     @ApiOperation(value = "协议申请明细页", notes = "协议申请明细页")
     @PostMapping("/getBorrowAndInfoDetail")
-    public AdminResult addListDetail(@RequestBody ApplyBorrowAgreementRequest request){
+    public AdminResult addListDetail(@RequestBody ApplyBorrowInfoRequest request){
         AdminResult result =  applyBorrowAgreementService.getApplyBorrowInfoDetail(request);
         return result;
     }

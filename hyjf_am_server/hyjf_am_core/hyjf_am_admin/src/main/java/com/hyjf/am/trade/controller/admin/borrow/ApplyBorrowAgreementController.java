@@ -63,8 +63,8 @@ public class ApplyBorrowAgreementController extends BaseController {
         return reponse;
     }
     @ApiOperation(value = "协议申请标的详情页")
-    @PostMapping("/getApplyBorrowInfoDetail")
-    public ApplyBorrowInfoResponse getApplyBorrowInfoDetail(@RequestBody String borrowNid){
+    @RequestMapping("/getApplyBorrowInfoDetail/{borrowNid}")
+    public ApplyBorrowInfoResponse getApplyBorrowInfoDetail( @PathVariable(value = "borrowNid") String borrowNid){
         logger.info("协议申请标的详情页:::::::[{}]", borrowNid);
         ApplyBorrowInfoResponse reponse = new ApplyBorrowInfoResponse();
         ApplyBorrowInfoVO vo =  applyAgreementService.getApplyBorrowInfoDetail(borrowNid);

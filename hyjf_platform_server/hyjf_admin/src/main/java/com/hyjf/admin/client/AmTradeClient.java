@@ -859,6 +859,15 @@ public interface AmTradeClient {
     BorrowRecoverVO selectBorrowRecover(Integer userId, String borrowNid, String nid);
 
     /**
+     * 协议申请明细列表页
+    * @author Zha Daojian
+    * @date 2019/5/8 15:35
+    * @param borrowNid
+    * @return com.hyjf.am.vo.trade.borrow.BorrowRecoverVO
+    **/
+    ApplyBorrowInfoVO selectApplyBorrowInfoDetail(String borrowNid);
+
+    /**
      * 标的放款记录列表
      *
      * @param borrowNid
