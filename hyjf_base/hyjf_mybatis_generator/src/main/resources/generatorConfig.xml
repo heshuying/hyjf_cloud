@@ -2071,6 +2071,11 @@
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
 
+        <table tableName="ht_bank_mobile_modify" domainObjectName="BankMobileModify">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
 
     </context>
 </generatorConfiguration>
