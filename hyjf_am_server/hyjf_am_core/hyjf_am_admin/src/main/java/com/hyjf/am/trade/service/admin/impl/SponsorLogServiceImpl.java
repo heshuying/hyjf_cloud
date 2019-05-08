@@ -11,7 +11,6 @@ import com.hyjf.am.resquest.trade.SponsorLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.SponsorLogMapper;
 import com.hyjf.am.trade.dao.model.auto.SponsorLog;
 import com.hyjf.am.trade.dao.model.auto.SponsorLogExample;
-import com.hyjf.am.trade.dao.model.auto.SponsorLogExample.Criteria;
 import com.hyjf.am.trade.service.admin.SponsorLogService;
 
 @Service
@@ -34,13 +33,13 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 	@Override
 	public int insertSponsorLog(SponsorLogRequest sponsorLogRequest) {
 		
-		SponsorLogExample example=new SponsorLogExample();
-		Criteria cr = example.createCriteria();
-		cr.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
-		
-		SponsorLog re=new SponsorLog();
-		re.setDelFlag(1);
-		sponsorLogMapper.updateByExample(re, example);
+//		SponsorLogExample example=new SponsorLogExample();
+//		Criteria cr = example.createCriteria();
+//		cr.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
+//		
+//		SponsorLog re=new SponsorLog();
+//		re.setDelFlag(1);
+//		sponsorLogMapper.updateByExample(re, example);
 		SponsorLog record=new SponsorLog();
 		BeanUtils.copyProperties(sponsorLogRequest,record);
 		record.setCreateUserName(sponsorLogRequest.getAdminUserName());
@@ -53,12 +52,12 @@ public class SponsorLogServiceImpl implements SponsorLogService{
 
 	@Override
 	public int updateSponsorLog(SponsorLogRequest sponsorLogRequest) {
-		SponsorLogExample example=new SponsorLogExample();
-		Criteria cri = example.createCriteria();
-		cri.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
-		cri.andStatusEqualTo(0);
-		List<SponsorLog> list=sponsorLogMapper.selectByExample(example);
-		SponsorLog sl=list.get(0);
+//		SponsorLogExample example=new SponsorLogExample();
+//		Criteria cri = example.createCriteria();
+//		cri.andBorrowNidEqualTo(sponsorLogRequest.getBorrowNid());
+//		cri.andStatusEqualTo(0);
+//		List<SponsorLog> list=sponsorLogMapper.selectByExample(example);
+		SponsorLog sl=sponsorLogMapper.selectByPrimaryKey(sponsorLogRequest.getId());
 		sl.setStatus(sponsorLogRequest.getStatus());
 		//sl.setDelFlag(sponsorLogRequest.getDelFlag());
 		sl.setUpdateUserName(sponsorLogRequest.getAdminUserName());

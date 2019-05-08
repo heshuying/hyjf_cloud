@@ -36,7 +36,17 @@ public class SponsorLogCustomizeVO extends BaseVO {
     
     private String oldBailAccountId;
 
+    private String id;
     
+    
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getOldBailAccountId() {
 		return oldBailAccountId;
 	}

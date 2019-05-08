@@ -5601,14 +5601,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 	public int updateSponsorLog(@Valid RepayListRequest requestBean) {
 		RUser user = rUserMapper.selectByPrimaryKey(Integer.valueOf(requestBean.getUserId()));
 		SponsorLog record = new SponsorLog();
-		SponsorLogExample example=new SponsorLogExample();
-		 Criteria cr = example.createCriteria();
-		 cr.andBorrowNidEqualTo(requestBean.getBorrowNid());
-		 cr.andDelFlagEqualTo(0);
+		record.setId(Integer.valueOf(requestBean.getRoleId()));
 		 record.setStatus(Integer.valueOf(requestBean.getStatus()));
 		 record.setUpdateTime(new Date());
 		 record.setUpdateUserName(user.getUsername());
-		 sponsorLogMapper.updateByExampleSelective(record, example);
+		 sponsorLogMapper.updateByPrimaryKey(record);
 		if(requestBean.getStatus().equals("1")) {
 			BorrowInfo record2=new BorrowInfo();
 			BorrowInfoExample example2=new BorrowInfoExample();

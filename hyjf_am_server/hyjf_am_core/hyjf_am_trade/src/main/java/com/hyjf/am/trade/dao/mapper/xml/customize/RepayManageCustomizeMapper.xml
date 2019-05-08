@@ -574,6 +574,7 @@
 	   <result column="create_time" property="createTime" jdbcType="VARCHAR" />
 	   <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
 	   <result column="oldBailAccountId" property="oldBailAccountId" jdbcType="VARCHAR" />
+	   <result column="id" property="id" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectSponsorLog" resultMap="SponsorLogCustomizeVO" parameterType="Map">
 		SELECT
@@ -584,7 +585,8 @@
 			bw.borrow_apr,
 			bw.create_time,
 			bw.borrow_style,
-			sl.old_sponsor as oldBailAccountId
+			sl.old_sponsor as oldBailAccountId,
+			sl.id
 		FROM
 			ht_sponsor_log sl
 			LEFT JOIN ht_borrow bw ON sl.borrow_nid = bw.borrow_nid 
