@@ -156,6 +156,7 @@ public abstract class AbstractActivity518Controller extends AbstractController{
                 // 自动发送用户奖品
                 // 根据配置获取配置文件中配置的活动优惠券，把所有优惠券按照上述优惠券代码依次排列，分割为数组，根据中奖编号获取优惠券编号
                 String [] st1 = couponCodes.split(",");
+                logger.info("活动配置优惠券编号：{}",couponCodes);
                 String couponCode = st1[luckNum];
                 //系统通过MQ自动发放用户中奖的优惠券
                 try {
