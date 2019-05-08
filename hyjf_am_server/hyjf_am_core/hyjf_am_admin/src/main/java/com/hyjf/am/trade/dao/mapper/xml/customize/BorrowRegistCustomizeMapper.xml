@@ -129,7 +129,7 @@
 		 b.borrow_style AS borrowStyle,
 		 bs.`name` AS borrowStyleName,
 		 bpt.borrow_name AS projectTypeName,
-		 bi.repay_org_name AS repayOrgName,
+		 IFNULL(bi.repay_org_name,'') AS repayOrgName,
 		 DATE_FORMAT(
 			b.create_time,
 			'%Y-%m-%d %H:%i:%s'

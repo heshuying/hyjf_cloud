@@ -6966,6 +6966,21 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 标的删除确认页面数据
+     */
+    @Override
+    public BorrowDeleteConfirmCustomizeVO selectDeleteConfirm(String borrowNid) {
+        BorrowDeleteConfirmCustomizeResponse response = restTemplate
+                .getForEntity("http://AM-ADMIN/am-trade/borrow_delete/delete_confirm/" + borrowNid,
+                        BorrowDeleteConfirmCustomizeResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResult();
+        }
+        return null;
+    }
+
 
 
 }
