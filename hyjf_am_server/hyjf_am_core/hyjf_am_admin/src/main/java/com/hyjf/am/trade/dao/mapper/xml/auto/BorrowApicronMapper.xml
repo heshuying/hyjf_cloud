@@ -40,6 +40,9 @@
     <result column="agreement_status" property="agreementStatus" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="submitter" property="submitter" jdbcType="VARCHAR" />
+    <result column="is_late" property="isLate" jdbcType="TINYINT" />
+    <result column="last_period" property="lastPeriod" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.hyjf.am.trade.dao.model.auto.BorrowApicron" extends="BaseResultMap" >
     <result column="data" property="data" jdbcType="LONGVARCHAR" />
@@ -108,7 +111,7 @@
     user_name, borrow_account, borrow_period, batch_no, batch_amount, batch_counts, batch_service_fee, 
     tx_amount, tx_counts, fail_times, suc_counts, suc_amount, fail_counts, fail_amount, 
     service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, is_allrepay, 
-    agreement_status, create_time, update_time
+    agreement_status, create_time, update_time, submitter, is_late, last_period
   </sql>
   <sql id="Blob_Column_List" >
     `data`
@@ -183,7 +186,8 @@
       service_fee, tx_date, tx_time, 
       seq_no, bank_seq_no, plan_nid, 
       ordid, is_allrepay, agreement_status, 
-      create_time, update_time, `data`
+      create_time, update_time, submitter, 
+      is_late, last_period, `data`
       )
     values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, #{apiType,jdbcType=TINYINT}, 
@@ -197,7 +201,8 @@
       #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
       #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{agreementStatus,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{submitter,jdbcType=VARCHAR}, 
+      #{isLate,jdbcType=TINYINT}, #{lastPeriod,jdbcType=INTEGER}, #{data,jdbcType=LONGVARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
@@ -317,6 +322,15 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="submitter != null" >
+        submitter,
+      </if>
+      <if test="isLate != null" >
+        is_late,
+      </if>
+      <if test="lastPeriod != null" >
+        last_period,
+      </if>
       <if test="data != null" >
         `data`,
       </if>
@@ -432,6 +446,15 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitter != null" >
+        #{submitter,jdbcType=VARCHAR},
+      </if>
+      <if test="isLate != null" >
+        #{isLate,jdbcType=TINYINT},
+      </if>
+      <if test="lastPeriod != null" >
+        #{lastPeriod,jdbcType=INTEGER},
       </if>
       <if test="data != null" >
         #{data,jdbcType=LONGVARCHAR},
@@ -561,6 +584,15 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.submitter != null" >
+        submitter = #{record.submitter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isLate != null" >
+        is_late = #{record.isLate,jdbcType=TINYINT},
+      </if>
+      <if test="record.lastPeriod != null" >
+        last_period = #{record.lastPeriod,jdbcType=INTEGER},
+      </if>
       <if test="record.data != null" >
         `data` = #{record.data,jdbcType=LONGVARCHAR},
       </if>
@@ -609,6 +641,9 @@
       agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      submitter = #{record.submitter,jdbcType=VARCHAR},
+      is_late = #{record.isLate,jdbcType=TINYINT},
+      last_period = #{record.lastPeriod,jdbcType=INTEGER},
       `data` = #{record.data,jdbcType=LONGVARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -653,7 +688,10 @@
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
       agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      submitter = #{record.submitter,jdbcType=VARCHAR},
+      is_late = #{record.isLate,jdbcType=TINYINT},
+      last_period = #{record.lastPeriod,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -772,6 +810,15 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="submitter != null" >
+        submitter = #{submitter,jdbcType=VARCHAR},
+      </if>
+      <if test="isLate != null" >
+        is_late = #{isLate,jdbcType=TINYINT},
+      </if>
+      <if test="lastPeriod != null" >
+        last_period = #{lastPeriod,jdbcType=INTEGER},
+      </if>
       <if test="data != null" >
         `data` = #{data,jdbcType=LONGVARCHAR},
       </if>
@@ -817,6 +864,9 @@
       agreement_status = #{agreementStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
+      submitter = #{submitter,jdbcType=VARCHAR},
+      is_late = #{isLate,jdbcType=TINYINT},
+      last_period = #{lastPeriod,jdbcType=INTEGER},
       `data` = #{data,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -858,7 +908,10 @@
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
       agreement_status = #{agreementStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      submitter = #{submitter,jdbcType=VARCHAR},
+      is_late = #{isLate,jdbcType=TINYINT},
+      last_period = #{lastPeriod,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

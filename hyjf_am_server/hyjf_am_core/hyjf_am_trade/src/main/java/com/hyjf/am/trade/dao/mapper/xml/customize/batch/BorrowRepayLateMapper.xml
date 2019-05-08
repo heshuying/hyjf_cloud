@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.batch.BorrowRepayLateMapper">
+
+
+    <select id="selectBorrowRepayLate" resultType="com.hyjf.am.trade.dao.model.customize.BorrowRepayLateCustomize">
+        SELECT
+        br.id AS `id`,
+        br.borrow_nid AS borrowNid,
+        br.recover_account AS recoverAccount,
+        br.credit_amount AS creditAmount,
+        br.nid AS tenderNid,
+        br.accede_order_id AS accedeOrderId,
+        br.credit_status AS creditStatus,
+        1 as recoverPeriod,
+        FROM_UNIXTIME(br.recover_time, '%Y-%m-%d %H:%i:%s') AS recoverTime
+        FROM
+        ht_borrow_recover br
+        LEFT JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
+        LEFT JOIN ht_borrow_apicron ba ON ba.borrow_nid = br.borrow_nid AND ba.api_type = 1
+        WHERE
+        br.recover_time &lt; unix_timestamp(CURDATE())
+        AND (
+        b.borrow_style = 'end'
+        OR b.borrow_style = 'endday'
+        )
+        AND (br.recover_yestime = '' OR br.recover_yestime IS NULL)
+        AND br.recover_status = 0
+        AND ba.id IS NULL
+	</select>
+
+    <select id="selectBorrowRepayLateByStages" resultType="com.hyjf.am.trade.dao.model.customize.BorrowRepayLateCustomize">
+        SELECT
+        brp.id as `id`,
+        brp.borrow_nid AS borrowNid,
+        brp.recover_account AS recoverAccount,
+        CASE
+        WHEN (brp.accede_order_id is null or brp.accede_order_id = '')
+            THEN brp.credit_amount + brp.credit_interest
+        ELSE
+            brp.credit_amount + brp.credit_interest_amount
+        END AS creditAmount,
+        brp.nid AS tenderNid,
+        brp.accede_order_id AS accedeOrderId,
+        brp.credit_status AS creditStatus,
+        brp.recover_period as recoverPeriod,
+        FROM_UNIXTIME(brp.recover_time,'%Y-%m-%d %H:%i:%s') AS recoverTime
+        FROM
+        ht_borrow_recover_plan brp
+        LEFT JOIN ht_borrow_apicron ba ON ba.borrow_nid = brp.borrow_nid AND ba.api_type = 1 AND brp.recover_period = ba.period_now
+        WHERE
+        brp.recover_time &lt; unix_timestamp(CURDATE())
+        AND (brp.recover_yestime = '' OR brp.recover_yestime IS NULL)
+        AND brp.recover_status = 0
+        AND ba.id IS NULL
+    </select>
+
+    <update id="updateBorrowRepay" parameterType="com.hyjf.am.trade.dao.model.customize.BorrowRepayLateCustomize">
+        UPDATE ht_borrow_repay bry
+        INNER JOIN(
+            SELECT SUM(late_interest) as late_interest, late_days
+            FROM ht_borrow_recover
+            WHERE borrow_nid = #{borrowNid}
+        ) br
+        SET
+            bry.late_interest_wait = br.late_interest,
+            bry.late_days = br.late_days,
+            bry.advance_status = 3
+        WHERE
+            bry.borrow_nid = #{borrowNid};
+    </update>
+
+    <update id="updateBorrowRepayPlan" parameterType="com.hyjf.am.trade.dao.model.customize.BorrowRepayLateSetCustomize">
+        UPDATE ht_borrow_repay_plan bry
+        INNER JOIN(
+            SELECT SUM(late_interest) as late_interest, late_days
+            FROM ht_borrow_recover_plan
+            WHERE borrow_nid = #{borrowNid} AND
+                  recover_period = #{recoverPeriod}
+        ) br
+        SET
+            bry.late_interest_wait = br.late_interest,
+            bry.late_days = br.late_days,
+            bry.advance_status = 3
+        WHERE
+            bry.borrow_nid = #{borrowNid} AND
+            bry.repay_period = #{recoverPeriod};
+    </update>
+</mapper>

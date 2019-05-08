@@ -149,7 +149,9 @@
         ELSE
         '进行中'
         END AS credit_status_name,
-        CASE WHEN bc.repay_status= 0 THEN '未还款'
+        CASE
+        when b.`status`=8 then '逾期中'
+        WHEN bc.repay_status= 0 THEN '未还款'
         WHEN bc.repay_status = 1 THEN '还款成功'
         WHEN bc.repay_status = 2 THEN '还款失败'
         ELSE '还款失败' END AS repay_status_name,

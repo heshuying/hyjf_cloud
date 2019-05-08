@@ -1,6 +1,5 @@
 package com.hyjf.cs.market.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.primitives.Doubles.asList;
