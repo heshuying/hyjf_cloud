@@ -6,6 +6,7 @@
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
         <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="bank_mobile" property="bankMobile" jdbcType="VARCHAR"/>
         <result column="user_role" property="userRole" jdbcType="VARCHAR"/>
         <result column="user_type" property="userType" jdbcType="VARCHAR"/>
         <result column="user_property" property="userProperty" jdbcType="VARCHAR"/>
@@ -36,6 +37,7 @@
         hydu.username AS user_name,
         hydui.truename AS real_name,
         hydu.mobile,
+        hydu.bank_mobile,
         hydu.user_type AS type_id,
         hydui.role_id,
         hydui.attribute,

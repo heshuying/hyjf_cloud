@@ -101,7 +101,10 @@ public class UserCenterController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for(UserManagerVO userManagerVO:listUserManagetVO){
+                    // 注册手机号
                     userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+                    // 银行预留手机号
+                    userManagerVO.setBankMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getBankMobile()));
                 }
             }
             userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
