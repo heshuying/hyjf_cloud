@@ -43,7 +43,7 @@
     INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (#{entIds})
+      AND ur.utm_id in (${entIds})
     </if>
     WHERE br.recover_status=1 AND b.is_installment=0
     <if test="assetCustomerId != null and assetCustomerId != ''">
@@ -72,7 +72,7 @@
     INNER JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (#{entIds})
+      AND ur.utm_id in (${entIds})
     </if>
     WHERE brp.recover_status=1
     <if test="assetCustomerId != null and assetCustomerId != ''">
@@ -92,7 +92,7 @@
     INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (#{entIds})
+      AND ur.utm_id in (${entIds})
     </if>
     WHERE br.recover_status=1 AND b.is_installment=0
     <if test="assetCustomerId != null and assetCustomerId != ''">
@@ -106,7 +106,7 @@
     INNER JOIN hyjf_user.ht_utm_reg ur ON brp.user_id = ur.user_id
     <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
     <if test="entIds != null and entIds != ''">
-      AND ur.utm_id in (#{entIds})
+      AND ur.utm_id in (${entIds})
     </if>
     WHERE brp.recover_status=1
     <if test="assetCustomerId != null and assetCustomerId != ''">

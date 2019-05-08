@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -118,6 +119,25 @@ public class RecoverInfoController extends BaseController {
             return wbsConfig.getUtmDatang()+"";
         }else if (entId.equals(thirdIdsArr[2])){
             return wbsConfig.getUtmQianle()+"";
+        }else {
+            return null;
+        }
+    }
+    public List<Integer> getUtmIdList(Integer entId) {
+        String thirdIds = wbsConfig.getThridPropertyIds();
+        String[] thirdIdsArr = thirdIds.split(",");
+        List<Integer> utmId = new ArrayList<Integer>();
+        if (entId.equals(thirdIdsArr[0])){
+            utmId.add(wbsConfig.getUtmNami());
+            utmId.add(wbsConfig.getUtmYufengrui());
+            return  utmId;
+//            return wbsConfig.getUtmNami()+","+wbsConfig.getUtmYufengrui();
+        }else if (entId.equals(thirdIdsArr[1])){
+            utmId.add(wbsConfig.getUtmDatang());
+            return  utmId;
+        }else if (entId.equals(thirdIdsArr[2])){
+            utmId.add(wbsConfig.getUtmQianle());
+            return  utmId;
         }else {
             return null;
         }
