@@ -19,10 +19,10 @@
             AND br.recover_period = #{repayPeriod}
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus == 8">
-            AND b.`status` = 8
+            AND br.recover_status = 0 AND br.advance_status = 3
         </if>
         <if test="repayStatus != null and repayStatus != '' and repayStatus != 8">
-            AND br.recover_status = #{repayStatus}
+            AND br.recover_status = #{repayStatus} AND br.advance_status != 3
         </if>
         <if test="repayTimeStart != null and repayTimeStart != ''">
             AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{repayTimeStart})
