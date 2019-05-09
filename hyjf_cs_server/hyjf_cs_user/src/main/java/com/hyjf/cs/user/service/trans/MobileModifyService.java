@@ -4,11 +4,13 @@
 package com.hyjf.cs.user.service.trans;
 
 import com.hyjf.common.exception.MQException;
+import com.hyjf.cs.user.bean.BankMobileModifyBean;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 import java.text.ParseException;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -56,4 +58,13 @@ public interface MobileModifyService extends BaseUserService {
      * @throws MQException
      */
     void updateUserCAMQ(int userId) throws ParseException, MQException;
+
+    /**
+     * 用户修改银行预留手机号
+     *
+     * @param bean
+     * @param o
+     * @return
+     */
+    Map<String,Object> getBankMobileModify(BankMobileModifyBean bean, String sign);
 }
