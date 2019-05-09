@@ -127,6 +127,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         // 查询
 
         Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean.getBorrowNid());
+        logger.info("当前债权还款明细导出数据 totalCount:" + totalCount);
         requestBean.setCount(totalCount);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
@@ -149,6 +150,10 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(1271/5000);
     }
 
     private Map<String, String> buildMap(String isOrganizationView) {
