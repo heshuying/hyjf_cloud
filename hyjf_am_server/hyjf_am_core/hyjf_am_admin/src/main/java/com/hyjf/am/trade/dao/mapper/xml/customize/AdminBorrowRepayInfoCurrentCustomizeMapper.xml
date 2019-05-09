@@ -1176,9 +1176,9 @@
         rp.recover_interest_yes AS recoverInterestYesPeriod,
         rp.recover_Account_yes AS recoverAccountYesPeriod,
         rp.recover_fee_yes AS recoverFeeYesPeriod,
-        rp.recover_capital_wait AS recoverCapitalWait,
-        rp.recover_interest_wait AS recoverInterestWait,
-        rp.recover_account_wait AS recoverAccountWait,
+        br.recover_capital_wait AS recoverCapitalWait,
+        br.recover_interest_wait AS recoverInterestWait,
+        br.recover_account_wait AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
@@ -1304,9 +1304,9 @@
         `od4`.`name` AS `referrerDepartmentName`,
         ct.assign_capital AS recoverTotal,
         ct.assign_capital - ct.assign_repay_capital AS amountHold,
-        cr.assign_capital AS recoverCapital,
-        cr.assign_interest AS recoverInterest,
-        cr.assign_account AS recoverAccount,
+        ct.assign_capital AS recoverCapital,
+        ct.assign_interest AS recoverInterest,
+        ct.assign_account AS recoverAccount,
         cr.manage_fee AS recoverFee,
 
         IF (
@@ -1353,9 +1353,9 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        cr.assign_capital - cr.assign_repay_capital AS recoverCapitalWait,
-        cr.assign_interest - cr.assign_repay_interest AS recoverInterestWait,
-        cr.assign_account - cr.assign_repay_account AS recoverAccountWait,
+        ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
+        ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
+        ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
         bry.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
@@ -1485,9 +1485,9 @@
         `od4`.`name` AS `referrerDepartmentName`,
         hct.assign_capital AS recoverTotal,
         hct.assign_capital - hct.repay_capital_yes  AS amountHold,
-        hcr.repay_capital AS recoverCapital,
-        hcr.repay_interest AS recoverInterest,
-        hcr.repay_account AS recoverAccount,
+        hct.assign_capital AS recoverCapital,
+        hct.assign_interest AS recoverInterest,
+        hct.assign_account AS recoverAccount,
         hcr.manage_fee AS recoverFee,
 
         IF (
@@ -1534,9 +1534,9 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        hcr.repay_capital_wait AS recoverCapitalWait,
-        hcr.repay_interest_wait AS recoverInterestWait,
-        hcr.repay_interest_wait AS recoverAccountWait,
+        hct.repay_capital_wait AS recoverCapitalWait,
+        hct.repay_interest_wait AS recoverInterestWait,
+        hct.repay_interest_wait AS recoverAccountWait,
         bry.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,

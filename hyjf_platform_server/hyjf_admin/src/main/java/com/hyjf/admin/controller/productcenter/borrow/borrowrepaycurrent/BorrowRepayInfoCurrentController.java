@@ -104,7 +104,8 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         Map<String,Object> dataMap = new HashMap<>();
 
         // 不加条件不能导出
-        if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
+        if(StringUtils.isBlank(requestBean.getBorrowNid()) && StringUtils.isBlank(requestBean.getTenderOrderId()) && StringUtils.isBlank(requestBean.getAssignOrderId())
+                && StringUtils.isBlank(requestBean.getRepayTimeStart()) && StringUtils.isBlank(requestBean.getRepayedTimeStart())){
             return;
         }
 
