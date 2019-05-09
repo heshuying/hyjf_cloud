@@ -63,7 +63,7 @@
 				</if>
 				<if test="status ==2">
 					AND br.advance_status=3
-					AND br.recover_status = #{status}
+					AND br.recover_status = 0
 				</if>
 				<if test="status ==1">
 					AND br.recover_status = #{status}
