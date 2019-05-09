@@ -164,15 +164,17 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                     //应下载协议数量
                     orderNumber = orderNumber +1;
                 }
-                applyBorrowAgreementVO.setOrderNumber(orderNumber);
-                applyBorrowAgreementVO.setAgreementNumber(agreementNumber);
-                amTradeClient.saveApplyBorrowAgreement(applyBorrowAgreementVO);
+                if(agreementNumber==0){
+                    return new AdminResult(BaseResult.FAIL, "对应的编号的标没有下载成功状态协议");
+                }else {
+                    applyBorrowAgreementVO.setOrderNumber(orderNumber);
+                    applyBorrowAgreementVO.setAgreementNumber(agreementNumber);
+                    amTradeClient.saveApplyBorrowAgreement(applyBorrowAgreementVO);
+                }
             }else{
                 return new AdminResult(BaseResult.FAIL, "对应的编号的标没有生成协议记录");
             }
-            if(agreementNumber==0){
-                return new AdminResult(BaseResult.FAIL, "对应的编号的标没有下载成功状态协议");
-            }
+
             result.setData(applyBorrowAgreementVO);
         }
         return result;

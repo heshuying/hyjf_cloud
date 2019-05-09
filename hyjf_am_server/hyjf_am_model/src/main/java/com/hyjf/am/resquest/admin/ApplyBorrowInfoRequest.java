@@ -1,7 +1,5 @@
 package com.hyjf.am.resquest.admin;
 
-import com.hyjf.am.vo.BasePage;
-import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
