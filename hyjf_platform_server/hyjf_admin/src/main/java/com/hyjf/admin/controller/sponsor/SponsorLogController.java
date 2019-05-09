@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.sponsor;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SponsorLogService;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.SponsorLogResponse;
 import com.hyjf.am.resquest.trade.SponsorLogRequest;
+import com.hyjf.am.vo.trade.SponsorLogVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,15 +41,22 @@ public class SponsorLogController extends BaseController {
 	@PostMapping(value = "/sponsorLogList")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    private SponsorLogResponse sponsorLogList(@RequestBody SponsorLogRequest sponsorLogRequest)  {
-        return sponsorLogService.sponsorLogList(sponsorLogRequest);
+    private AdminResult<ListResult<SponsorLogVO>> sponsorLogList(@RequestBody SponsorLogRequest sponsorLogRequest)  {
+        SponsorLogResponse rs = sponsorLogService.sponsorLogList(sponsorLogRequest);
+        return new AdminResult<ListResult<SponsorLogVO>>(ListResult.build(rs.getResultList(), rs.getRecordTotal()));
+        
     }
 	@ApiOperation(value = " 删除", notes = " 删除")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     @PostMapping(value = "/deleteSponsorLog")
-    private SponsorLogResponse deleteSponsorLog(@RequestBody SponsorLogRequest sponsorLogRequest) {
-    	return sponsorLogService.deleteSponsorLog(sponsorLogRequest);
+    private AdminResult deleteSponsorLog(@RequestBody SponsorLogRequest sponsorLogRequest) {
+		SponsorLogResponse rs = sponsorLogService.deleteSponsorLog(sponsorLogRequest);
+	   	 if(!Response.isSuccess(rs)) {
+			 return new AdminResult(AdminResult.FAIL, rs.getMessage());
+		 }else {
+			 return new AdminResult();
+		 }
     }
 	@ApiOperation(value = " 查询", notes = " 查询")
 	@ResponseBody
@@ -58,10 +70,16 @@ public class SponsorLogController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/insertSponsorLog")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    private SponsorLogResponse insertSponsorLog(HttpServletRequest request,@RequestBody SponsorLogRequest sponsorLogRequest) {
+    private AdminResult insertSponsorLog(HttpServletRequest request,@RequestBody SponsorLogRequest sponsorLogRequest) {
 		sponsorLogRequest.setAdminUserName(this.getUser(request).getUsername());
 		sponsorLogRequest.setAdminUserId(Integer.valueOf(this.getUser(request).getId()));
-    	return sponsorLogService.insertSponsorLog(sponsorLogRequest);
+    	 SponsorLogResponse rs = sponsorLogService.insertSponsorLog(sponsorLogRequest);
+    	 if(!Response.isSuccess(rs)) {
+    		 return new AdminResult(AdminResult.FAIL, rs.getMessage());
+    	 }else {
+    		 return new AdminResult();
+    	 }
+    	 
     }
 
 }
