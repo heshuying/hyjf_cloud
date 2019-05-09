@@ -2891,4 +2891,21 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 		return response;
 	}
+
+	/**
+	 * 同步用户手机号
+	 *
+	 * @param userRequest
+	 * @return
+	 */
+	@Override
+	public boolean syncUserMobile(UserRequest userRequest) {
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertorupdateutm",
+				userRequest, UserResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return true;
+		}else{
+			return  false;
+		}
+	}
 }

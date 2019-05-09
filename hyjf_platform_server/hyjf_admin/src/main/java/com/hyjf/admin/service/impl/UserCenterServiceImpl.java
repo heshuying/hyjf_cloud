@@ -765,9 +765,14 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         return response;
     }
 
+    /**
+     * 同步用户手机号
+     *
+     * @param userRequest
+     * @return
+     */
     @Override
     public boolean syncUserMobile(UserRequest userRequest) {
-       /// UserResponse response =  this.userCenterClient.syncUserMobile(userRequest);
-        return false;
+        return this.userCenterClient.syncUserMobile(userRequest);
     }
 }
