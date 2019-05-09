@@ -109,6 +109,9 @@ public class BorrowRepayInfoCurrentController extends BaseController {
             return;
         }
 
+        // 是否具有组织机构查看权限
+        String isOrganizationView = requestBean.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -126,7 +129,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean.getBorrowNid());
         requestBean.setCount(totalCount);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -148,7 +151,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("tenderOrdid","出借订单号");
         map.put("assignOrdid","承接订单号");
@@ -169,13 +172,17 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         map.put("recoverUserName","出借人用户名");
         map.put("recoverUserId","出借人ID");
         map.put("recoverUserAttribute","出借人用户属性（当时）");
-        map.put("recoverRegionName","出借人所属一级分部（当时）");
-        map.put("recoverBranchName","出借人所属二级分部（当时）");
-        map.put("recoverDepartmentName","出借人所属团队（当时）");
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("recoverRegionName","出借人所属一级分部（当时）");
+            map.put("recoverBranchName","出借人所属二级分部（当时）");
+            map.put("recoverDepartmentName","出借人所属团队（当时）");
+        }
         map.put("referrerName","推荐人用户名（当时）");
-        map.put("referrerRegionName","推荐人所属一级分部（当时）");
-        map.put("referrerBranchName","推荐人所属二级分部（当时）");
-        map.put("referrerDepartmentName","推荐人所属团队（当时）");
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("referrerRegionName","推荐人所属一级分部（当时）");
+            map.put("referrerBranchName","推荐人所属二级分部（当时）");
+            map.put("referrerDepartmentName","推荐人所属团队（当时）");
+        }
 
         map.put("recoverTotal","出借金额");
         map.put("amountHold","持有金额");

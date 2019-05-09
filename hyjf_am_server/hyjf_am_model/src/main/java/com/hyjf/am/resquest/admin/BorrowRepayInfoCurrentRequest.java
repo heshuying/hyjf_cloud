@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -31,6 +32,8 @@ public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializa
     private String repayedTimeStart;
     /** 实还结束时间*/
     private String repayedTimeEnd;
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
 
     public String getBorrowNid() {
         return borrowNid;
@@ -110,5 +113,13 @@ public class BorrowRepayInfoCurrentRequest extends BasePage implements Serializa
 
     public void setRepayedTimeEnd(String repayedTimeEnd) {
         this.repayedTimeEnd = repayedTimeEnd;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }
