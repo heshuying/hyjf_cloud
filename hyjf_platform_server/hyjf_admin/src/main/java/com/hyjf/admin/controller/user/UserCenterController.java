@@ -1370,7 +1370,10 @@ public class UserCenterController extends BaseController {
                 if (!bankMobile.equals(userVO.getBankMobile())) {
                     logger.info("银行预留手机号:[" + bankMobile + "],本地保存的预留手机号:[" + userVO.getBankMobile() + "].");
                     // 更新用户银行预留手机号,插入操作记录
-
+                    UserRequest userRequest = new UserRequest();
+                    userRequest.setBankMobile(bankMobile);
+                    userRequest.setUserId(Integer.parseInt(userId));
+                  boolean  updateFlag =  this.userCenterService.syncUserMobile(userRequest);
 
                 } else {
                     return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");
