@@ -126,8 +126,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         requestBean.setCurrPage(1);
         // 查询
 
-        Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean.getBorrowNid());
-        logger.info("当前债权还款明细导出数据 totalCount:" + totalCount);
+        Integer totalCount = borrowRepayInfoCurrentService.getRepayInfoCurrentExportCount(requestBean);
         requestBean.setCount(totalCount);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
