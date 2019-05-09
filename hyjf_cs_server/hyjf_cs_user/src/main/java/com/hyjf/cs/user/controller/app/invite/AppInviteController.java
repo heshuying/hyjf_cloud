@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.app.AppBaseRequest;
 import com.hyjf.am.vo.app.reward.*;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.util.SecretUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.invite.InviteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -42,6 +44,8 @@ public class AppInviteController {
 
     @Autowired
     InviteService inviteService;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 邀请记录
@@ -166,6 +170,14 @@ public class AppInviteController {
             appRewardDetailVO.setUserId(users.getUserId());
             appRewardDetailVO.setIconUrl(users.getIconUrl());
             appInviteVO.setDetail(appRewardDetailVO);
+            // 分享信息
+            AppShareInfoVO appShareInfoVO = new AppShareInfoVO();
+            ShareNewsBeanVO shareNewsBean = inviteService.queryShareNews();
+            appShareInfoVO.setTitle(shareNewsBean.getTitle());
+            appShareInfoVO.setContent(shareNewsBean.getContent());
+            appShareInfoVO.setImage("https://www.hyjf.com" + shareNewsBean.getImg());
+            appShareInfoVO.setUrl(systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId);
+            appInviteVO.setShareInfo(appShareInfoVO);
         } catch (Exception e){
             logger.error("【我的奖励】我的奖励信息获取失败！用户id：{}", userId, e);
             webResult.setStatus("1");

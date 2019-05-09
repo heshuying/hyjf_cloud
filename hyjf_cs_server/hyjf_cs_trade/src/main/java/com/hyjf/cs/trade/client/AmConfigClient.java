@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -169,4 +170,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	int selectCertLogLength();
+
+	/**
+	 * 获取分享信息
+	 * @author wgx
+	 * @date 2019/05/09
+	 */
+	ShareNewsBeanVO queryShareNews();
 }

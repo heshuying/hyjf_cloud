@@ -15,6 +15,8 @@ public class AppRewardVO implements Serializable {
     private static final long serialVersionUID = -290987346206116536L;
     @ApiModelProperty(value = "我的奖励信息")
     private AppRewardDetailVO detail;
+    @ApiModelProperty(value = "分享信息")
+    private AppShareInfoVO shareInfo;
     @ApiModelProperty(value = "我的奖励列表")
     private List<AppRewardRecordVO> recordList;
 
@@ -24,6 +26,14 @@ public class AppRewardVO implements Serializable {
 
     public void setDetail(AppRewardDetailVO detail) {
         this.detail = detail;
+    }
+
+    public AppShareInfoVO getShareInfo() {
+        return shareInfo;
+    }
+
+    public void setShareInfo(AppShareInfoVO shareInfo) {
+        this.shareInfo = shareInfo;
     }
 
     public List<AppRewardRecordVO> getRecordList() {

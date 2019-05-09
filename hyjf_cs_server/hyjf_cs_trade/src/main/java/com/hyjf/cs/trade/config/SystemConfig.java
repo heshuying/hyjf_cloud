@@ -297,6 +297,12 @@ public class SystemConfig {
     public String certWebYibu;
     //国家应急中心配置文件添加 add by nxl end
 
+    /**
+     * 微信分享地址 add by wgx 2019/05/09
+     */
+    @Value("${hyjf.wechat.qrcode.url}")
+    private String wechatQrcodeUrl;
+
     public String getHyjfOnlineType() {
         return hyjfOnlineType;
     }
@@ -917,5 +923,13 @@ public class SystemConfig {
 
     public void setCertWebYibu(String certWebYibu) {
         this.certWebYibu = certWebYibu;
+    }
+
+    public String getWechatQrcodeUrl() {
+        return wechatQrcodeUrl;
+    }
+
+    public void setWechatQrcodeUrl(String wechatQrcodeUrl) {
+        this.wechatQrcodeUrl = wechatQrcodeUrl;
     }
 }

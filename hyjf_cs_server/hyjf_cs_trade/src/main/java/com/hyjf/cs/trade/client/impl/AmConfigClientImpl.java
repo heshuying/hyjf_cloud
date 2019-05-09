@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -405,5 +406,20 @@ public class AmConfigClientImpl implements AmConfigClient {
 			return reportLogResponse.getResultInt();
 		}
 		return 0;
+	}
+
+	/**
+	 * 获取分享信息
+	 * @author wgx
+	 * @date 2019/05/09
+	 */
+	@Override
+	public ShareNewsBeanVO queryShareNews() {
+		ShareNewsResponse response = restTemplate
+				.getForObject("http://AM-CONFIG/am-config/article/querysharenews" , ShareNewsResponse.class);
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
 	}
 }
