@@ -1,5 +1,7 @@
 package com.hyjf.admin.controller.sponsor;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SponsorLogService;
 import com.hyjf.am.response.trade.SponsorLogResponse;
@@ -20,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "产品中心-担保户修改记录",tags = "产品中心-担保户修改记录")
 @RestController
 @RequestMapping("/hyjf-admin/sponsorLog")
-public class SponsorLogController {
+public class SponsorLogController extends BaseController {
     @Autowired
     SponsorLogService sponsorLogService;
     
@@ -53,8 +56,11 @@ public class SponsorLogController {
     }
 	@ApiOperation(value = "新增", notes = " 新增")
 	@ResponseBody
+	@PostMapping(value = "/insertSponsorLog")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    private SponsorLogResponse insertSponsorLog(@RequestBody SponsorLogRequest sponsorLogRequest) {
+    private SponsorLogResponse insertSponsorLog(HttpServletRequest request,@RequestBody SponsorLogRequest sponsorLogRequest) {
+		sponsorLogRequest.setAdminUserName(this.getUser(request).getUsername());
+		sponsorLogRequest.setAdminUserId(Integer.valueOf(this.getUser(request).getId()));
     	return sponsorLogService.insertSponsorLog(sponsorLogRequest);
     }
 
