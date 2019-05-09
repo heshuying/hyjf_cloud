@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -141,6 +142,8 @@ public class UserCenterController extends BaseController {
                 userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getMobile()));
                 //紧急联系人手机号加密显示
                 userManagerDetailVO.setEmPhone(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getEmPhone()));
+                // 银行预留手机号脱敏
+                userManagerDetailVO.setBankMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getBankMobile()));
             }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
@@ -1321,4 +1324,63 @@ public class UserCenterController extends BaseController {
         return result;
     }
 
+
+    @GetMapping(value = "/syncUserMobileAction/{userId}")
+    @ApiOperation(value = "同步用户手机号", notes = "同步用户手机号")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SYNC_USER_MOBILE)
+    public AdminResult<Response> syncUserMobileAction(HttpServletRequest request,@PathVariable String userId) {
+        AdminResult<Response> result = new AdminResult<Response>();
+        if (StringUtils.isBlank(userId)) {
+            return new AdminResult<>(FAIL, "获取用户userId失败!");
+        }
+        // 根据用户ID查询用户信息
+        UserVO userVO = this.userCenterService.selectUserByUserId(userId);
+        if (userVO == null) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户信息失败");
+        }
+        // 根据用户ID查询用户详情信息
+        UserInfoVO userInfoVO = this.userCenterService.selectUserInfoByUserId(userId);
+        if (userInfoVO == null) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户详情信息失败");
+        }
+
+        // 判断用户是否开户
+        Integer bankOpenAccount = userVO.getBankOpenAccount();
+        if (bankOpenAccount == 0) {
+            // 用户未开户
+            return new AdminResult<>(FAIL, "用户未开户");
+        }
+        // 根据用户ID查询用户开户信息
+        BankOpenAccountVO bankOpenAccountVO = this.userCenterService.queryBankOpenAccountByUserId(Integer.parseInt(userId));
+        if (bankOpenAccountVO == null || StringUtils.isEmpty(bankOpenAccountVO.getAccount())) {
+            return new AdminResult<>(FAIL, "根据用户ID查询用户开户信息失败");
+        }
+        // 调用银行接口
+        BankCallBean bankCallBean = new BankCallBean(BankCallConstant.VERSION_10, BankCallConstant.TXCODE_MOBILE_QUERY_BY_ACCOUNT, Integer.parseInt(userId));
+        bankCallBean.setAccountId(bankOpenAccountVO.getAccount());
+        try {
+            BankCallBean resultBean = BankCallUtils.callApiBg(bankCallBean);
+            if (resultBean == null) {
+                return new AdminResult<>(FAIL, "调用银行接口失败");
+            }
+            if (resultBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
+                // 银行预留手机号
+                String bankMobile = resultBean.getMobile();
+                // 本地保存手机号与银行的预留手机号不一致,更新本地银行预留手机号
+                if (!bankMobile.equals(userVO.getBankMobile())) {
+                    logger.info("银行预留手机号:[" + bankMobile + "],本地保存的预留手机号:[" + userVO.getBankMobile() + "].");
+                    // 更新用户银行预留手机号,插入操作记录
+
+
+                } else {
+                    return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");
+                }
+            } else {
+                return new AdminResult<>(FAIL, "调用银行接口失败");
+            }
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
 }

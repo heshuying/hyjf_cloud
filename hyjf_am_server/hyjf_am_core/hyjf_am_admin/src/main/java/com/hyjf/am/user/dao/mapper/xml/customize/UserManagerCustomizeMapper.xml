@@ -291,6 +291,7 @@
         hydu.email,
         hydui.email_isApprove AS email_status,
         hydu.mobile,
+        hydu.bank_mobile,
         hydui.mobile_isApprove AS mobile_status,
         hydui.truename AS real_name,
         hydui.truename_isApprove AS real_name_status,

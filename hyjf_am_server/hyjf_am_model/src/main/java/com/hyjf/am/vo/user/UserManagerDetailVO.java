@@ -63,6 +63,8 @@ public class UserManagerDetailVO extends BaseVO implements Serializable {
     public String emailStatus;
     /** 手机号码 */
     public String mobile;
+    /** 银行预留手机号 */
+    private String bankMobile;
     /** 手机号码认证状态 */
     public String mobileStatus;
     /** 用户真实姓名 */
@@ -402,5 +404,13 @@ public class UserManagerDetailVO extends BaseVO implements Serializable {
 
     public void setIsSetPassword(Integer isSetPassword) {
         this.isSetPassword = isSetPassword;
+    }
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile;
     }
 }
