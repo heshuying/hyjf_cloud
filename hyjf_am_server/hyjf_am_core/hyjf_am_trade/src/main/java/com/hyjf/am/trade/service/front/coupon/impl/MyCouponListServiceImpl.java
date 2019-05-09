@@ -565,12 +565,6 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             }
             // 验证项目金额
             Integer tenderQuotaType = bestCoupon.getTenderQuotaType();
-            // 加息券如果没有填金额则不可用
-            if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
-                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform, moneyBigDecimal);
-                notAvailableCouponList.add(couponBean);
-                continue;
-            }
 
             if (tenderQuotaType == 1) {
                 if (bestCoupon.getTenderQuotaMin() > new Double(money) || bestCoupon.getTenderQuotaMax() < new Double(money)) {
@@ -598,6 +592,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             // 验证优惠券适用的项目 新逻辑 pcc20160715
             boolean ifprojectType = BestCouponUtil.dealBorrowClass(bestCoupon.getProjectType(),borrowProjectType.getBorrowClass());
             if (ifprojectType) {
+                continue;
+            }
+
+            // 加息券如果没有填金额则不可用
+            if(bestCoupon.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
+                CouponBeanVo couponBean=createCouponBean(bestCoupon,null,"加息券不可以单独使用",platform, moneyBigDecimal);
+                notAvailableCouponList.add(couponBean);
                 continue;
             }
 
@@ -707,12 +708,6 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
             if (!ifcouponSystem) {
                 // 验证项目金额
                 Integer tenderQuotaType = userCouponConfigCustomize.getTenderQuotaType();
-                // 加息券如果没有填金额则不可用
-                if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
-                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform, moneyBigDecimal);
-                    notAvailableCouponList.add(couponBean);
-                    continue;
-                }
                 if (1 == tenderQuotaType) {
                     if (userCouponConfigCustomize.getTenderQuotaMin() > new Double(money)
                             || userCouponConfigCustomize.getTenderQuotaMax() < new Double(money)) {
@@ -729,6 +724,13 @@ public class MyCouponListServiceImpl extends BaseServiceImpl implements MyCoupon
                             continue;
                         }
                     }
+                }
+
+                // 加息券如果没有填金额则不可用
+                if(userCouponConfigCustomize.getCouponType().equals("2") && (StringUtils.isBlank(money) || moneyBigDecimal.compareTo(BigDecimal.ZERO)<=0)){
+                    CouponBeanVo couponBean=createCouponBean(userCouponConfigCustomize,null,"加息券不可以单独使用",platform, moneyBigDecimal);
+                    notAvailableCouponList.add(couponBean);
+                    continue;
                 }
                 couponBeanVo = createCouponBean(userCouponConfigCustomize,couponBeanVo, "",platform,moneyBigDecimal);
                 availableCouponList.add(couponBeanVo);
