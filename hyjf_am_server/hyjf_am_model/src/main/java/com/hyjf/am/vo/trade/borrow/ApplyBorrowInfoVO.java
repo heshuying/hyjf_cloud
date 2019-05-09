@@ -29,7 +29,7 @@ public class ApplyBorrowInfoVO extends BaseVO implements Serializable {
     private String borrowProjectSource;
 
     @ApiModelProperty(value = "借款人")
-    private Integer borrowUserName;
+    private String borrowUserName;
 
     @ApiModelProperty(value = "借款金额")
     private BigDecimal account;
@@ -80,11 +80,11 @@ public class ApplyBorrowInfoVO extends BaseVO implements Serializable {
         this.borrowProjectSource = borrowProjectSource;
     }
 
-    public Integer getBorrowUserName() {
+    public String getBorrowUserName() {
         return borrowUserName;
     }
 
-    public void setBorrowUserName(Integer borrowUserName) {
+    public void setBorrowUserName(String borrowUserName) {
         this.borrowUserName = borrowUserName;
     }
 

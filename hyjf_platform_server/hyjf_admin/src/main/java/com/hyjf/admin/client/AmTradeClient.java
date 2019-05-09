@@ -2992,6 +2992,17 @@ public interface AmTradeClient {
 
     List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request);
 
+    List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId);
+
+    /**
+     * 保存协议申请
+    * @author Zha Daojian
+    * @date 2019/5/8 17:56
+    * @param applyBorrowAgreementVO
+    * @return com.hyjf.am.response.trade.ApplyBorrowAgreementResponse
+    **/
+    ApplyBorrowAgreementResponse saveApplyBorrowAgreement( ApplyBorrowAgreementVO applyBorrowAgreementVO);
+
     Integer countRecordLog(ProtocolLogRequest request);
 
     /**

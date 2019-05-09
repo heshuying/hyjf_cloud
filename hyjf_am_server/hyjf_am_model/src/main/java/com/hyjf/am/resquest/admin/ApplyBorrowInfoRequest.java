@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version ApplyAgreementRequest, v0.1 2018/8/9 17:05
  * @Author: Zha Daojian
  */
-public class ApplyBorrowInfoRequest extends BasePage {
+public class ApplyBorrowInfoRequest{
 
     /**
      * 检索条件 项目编号

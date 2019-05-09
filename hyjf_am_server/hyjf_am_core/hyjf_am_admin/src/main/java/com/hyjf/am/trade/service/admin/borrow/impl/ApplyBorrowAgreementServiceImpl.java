@@ -1,6 +1,10 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
+import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyBorrowAgreementRequest;
+import com.hyjf.am.resquest.admin.ApplyBorrowAgreementSaveRequest;
+import com.hyjf.am.trade.dao.model.auto.ApplyAgreementInfo;
+import com.hyjf.am.trade.dao.model.auto.ApplyAgreementInfoExample;
 import com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreement;
 import com.hyjf.am.trade.dao.model.auto.ApplyBorrowAgreementExample;
 import com.hyjf.am.trade.service.admin.borrow.ApplyBorrowAgreementService;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,6 +108,32 @@ public class ApplyBorrowAgreementServiceImpl extends BaseServiceImpl implements 
     @Override
     public ApplyBorrowInfoVO getApplyBorrowInfoDetail(String borrowNid){
         return this.borrowCustomizeMapper.getApplyBorrowInfoDetail(borrowNid);
+    }
+
+    /**
+     * 协议申请标
+     * @author Zha Daojian
+     * @date 2019/5/9 10:14
+     * @param request
+     * @return int
+     **/
+    @Override
+    public int saveApplyBorrowAgreement(ApplyBorrowAgreementSaveRequest request) {
+        ApplyBorrowAgreement applyBorrowAgreement = new ApplyBorrowAgreement();
+        BeanUtils.copyProperties(request,applyBorrowAgreement);
+        ApplyAgreementInfoExample example = new ApplyAgreementInfoExample();
+        example.createCriteria().andContractIdEqualTo(applyBorrowAgreement.getBorrowNid());
+        List<ApplyAgreementInfo> openAccountRecords = this.applyAgreementInfoMapper.selectByExample(example);
+        if(openAccountRecords != null && openAccountRecords.size() > 0){
+            applyBorrowAgreement.setId(openAccountRecords.get(0).getId());
+            applyBorrowAgreement.setUpdateTime(new Date());
+            applyBorrowAgreement.setCreateTime(openAccountRecords.get(0).getCreateTime());
+            return this.applyBorrowAgreementMapper.updateByPrimaryKey(applyBorrowAgreement);
+
+        }else {
+            applyBorrowAgreement.setCreateTime(new Date());
+            return this.applyBorrowAgreementMapper.insert(applyBorrowAgreement);
+        }
     }
 
 }

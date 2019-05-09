@@ -10,6 +10,8 @@ import com.hyjf.am.vo.trade.borrow.ApplyBorrowAgreementVO;
  */
 public class ApplyBorrowAgreementResponse extends Response<ApplyBorrowAgreementVO> {
 
+    private int recordTotal;
+
     private int count;
 
     public int getCount() {
@@ -20,4 +22,11 @@ public class ApplyBorrowAgreementResponse extends Response<ApplyBorrowAgreementV
         this.count = count;
     }
 
+    public int getRecordTotal() {
+        return recordTotal;
+    }
+
+    public void setRecordTotal(int recordTotal) {
+        this.recordTotal = recordTotal;
+    }
 }

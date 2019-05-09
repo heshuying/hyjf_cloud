@@ -49,6 +49,25 @@ public class TenderAgreementController extends BaseController {
     }
 
 
+    /**
+     * 根据borrowId获取法大大协议信息列表
+     * @author Zha Daojian
+     * @date 2019/5/9 10:42
+     * @param
+     * @return
+     **/
+    @RequestMapping("/getTenderAgreementByBorrowNid/{borrowId}")
+    public TenderAgreementResponse getTenderAgreementByBorrowNid(@PathVariable(value = "borrowId") String borrowId){
+        logger.info("borrowId:" +borrowId);
+        TenderAgreementResponse response = new TenderAgreementResponse();
+        List<TenderAgreement> tenderAgreements=tenderAgreementService.getTenderAgreementByBorrowNid(borrowId);
+        if (CollectionUtils.isNotEmpty(tenderAgreements)){
+            response.setResultList(CommonUtils.convertBeanList(tenderAgreements,TenderAgreementVO.class));
+        }
+        return response;
+    }
+
+
     @GetMapping("/getTenderAgreementInfo/{tenderAgreementID}")
     public TenderAgreementResponse getTenderAgreementInfo(@PathVariable String tenderAgreementID){
         TenderAgreementResponse response = new TenderAgreementResponse();

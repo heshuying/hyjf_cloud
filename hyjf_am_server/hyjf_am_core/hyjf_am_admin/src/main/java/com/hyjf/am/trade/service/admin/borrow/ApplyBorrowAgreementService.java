@@ -38,4 +38,12 @@ public interface ApplyBorrowAgreementService extends BaseService{
      */
    ApplyBorrowInfoVO getApplyBorrowInfoDetail(String borrowNid);
 
+    /**
+     * 协议申请标
+     *
+     * @param request
+     * @return
+     */
+   int saveApplyBorrowAgreement(ApplyBorrowAgreementSaveRequest request);
+
 }

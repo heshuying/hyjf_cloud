@@ -2,6 +2,7 @@ package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.trade.controller.BaseController;
@@ -62,6 +63,25 @@ public class ApplyBorrowAgreementController extends BaseController {
         }
         return reponse;
     }
+
+    /**
+     * 保存协议申请-详情
+     * @author Zha Daojian
+     * @date 2019/5/9 10:07
+     * @param request
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     **/
+    @RequestMapping("/saveApplyBorrowAgreement")
+    public ApplyBorrowAgreementResponse saveApplyBorrowAgreement(@RequestBody ApplyBorrowAgreementSaveRequest request) {
+        ApplyBorrowAgreementResponse response = new ApplyBorrowAgreementResponse();
+        logger.info("saveApplyBorrowAgreement::::::::::[{}]",JSON.toJSONString(request));
+        int re = applyAgreementService.saveApplyBorrowAgreement(request);
+        response.setRecordTotal(re);
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
+
     @ApiOperation(value = "协议申请标的详情页")
     @RequestMapping("/getApplyBorrowInfoDetail/{borrowNid}")
     public ApplyBorrowInfoResponse getApplyBorrowInfoDetail( @PathVariable(value = "borrowNid") String borrowNid){

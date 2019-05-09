@@ -16,6 +16,7 @@ import com.hyjf.am.response.trade.ApplyBorrowInfoResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.common.file.FavFTPUtil;
@@ -56,9 +57,6 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
 
     @Autowired
     private BaseClient baseClient;
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -117,6 +115,63 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
             return new AdminResult(BaseResult.FAIL, "未找到对应的编号的标");
         }else{
             result.setData(borrowVO);
+        }
+        return result;
+    }
+
+    /**
+     *  申请协议
+     * @author Zha Daojian
+     * @date 2019/5/6 9:39
+     * @param request
+     * @return com.hyjf.admin.common.result.AdminResult
+     **/
+    @Override
+    public AdminResult addBorrowAgreement(ApplyBorrowInfoRequest request,AdminSystemVO currUser){
+        AdminResult result = new AdminResult();
+        if(StringUtils.isEmpty(request.getBorrowNid())){
+            return new AdminResult(BaseResult.FAIL, "项目编号不能为空");
+        }
+        // 根据标的编号查询标的详情
+        String borrowId = request.getBorrowNid();
+        ApplyBorrowInfoVO borrowVO  = amTradeClient.selectApplyBorrowInfoDetail(borrowId);
+        if (borrowVO == null) {
+            return new AdminResult(BaseResult.FAIL, "未找到对应的编号的标");
+        }else{
+            //需要保存的协议下载申请
+            ApplyBorrowAgreementVO applyBorrowAgreementVO =  new ApplyBorrowAgreementVO();
+            applyBorrowAgreementVO.setBorrowNid(borrowVO.getBorrowNid());
+            applyBorrowAgreementVO.setRepayPeriod(borrowVO.getBorrowPeriod());
+            applyBorrowAgreementVO.setBorrowProjectSource(borrowVO.getBorrowProjectSource());
+            applyBorrowAgreementVO.setApplyUserName(currUser.getUsername());
+            applyBorrowAgreementVO.setStatus(1);
+            applyBorrowAgreementVO.setDelFlag(0);
+            applyBorrowAgreementVO.setApplyUserId(Integer.valueOf(currUser.getId()));
+            //协议份数(出借订单数+承接订单数,下载成功状态的协议份数)
+            int agreementNumber = 0;
+            //订单份数(应下载协议数量=出借订单数+承接订单数)
+            int orderNumber = 0;
+            //对应的编号的标生成协议记录
+            List<TenderAgreementVO>  applyAgreementlist = amTradeClient.getTenderAgreementByBorrowNid(borrowId);
+            if(applyAgreementlist!=null && applyAgreementlist.size()>0){
+                for (TenderAgreementVO tenderAgreementVO:applyAgreementlist) {
+                    //下载成功状态的协议份数
+                    if(tenderAgreementVO.getStatus()==3){
+                        agreementNumber = agreementNumber +1 ;
+                    }
+                    //应下载协议数量
+                    orderNumber = orderNumber +1;
+                }
+                applyBorrowAgreementVO.setOrderNumber(orderNumber);
+                applyBorrowAgreementVO.setAgreementNumber(agreementNumber);
+                amTradeClient.saveApplyBorrowAgreement(applyBorrowAgreementVO);
+            }else{
+                return new AdminResult(BaseResult.FAIL, "对应的编号的标没有生成协议记录");
+            }
+            if(agreementNumber==0){
+                return new AdminResult(BaseResult.FAIL, "对应的编号的标没有下载成功状态协议");
+            }
+            result.setData(applyBorrowAgreementVO);
         }
         return result;
     }

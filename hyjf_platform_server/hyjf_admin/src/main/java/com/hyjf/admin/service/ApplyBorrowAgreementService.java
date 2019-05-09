@@ -2,6 +2,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.vo.config.AdminSystemVO;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,6 +26,15 @@ public interface ApplyBorrowAgreementService {
      * @date 2018/7/12 10:52
      */
     AdminResult getApplyBorrowInfoDetail(ApplyBorrowInfoRequest request);
+
+    /**
+     * 申请协议
+    * @author Zha Daojian
+    * @date 2019/5/8 17:28
+    * @param request
+    * @return com.hyjf.admin.common.result.AdminResult
+    **/
+    AdminResult addBorrowAgreement(ApplyBorrowInfoRequest request,AdminSystemVO currUser);
 
 
     /**

@@ -5999,6 +5999,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 保存协议申请
+     * @author Zha Daojian
+     * @date 2019/5/8 17:56
+     * @param applyBorrowAgreementVO
+     * @return com.hyjf.am.response.trade.ApplyBorrowAgreementResponse
+     **/
+    @Override
+    public ApplyBorrowAgreementResponse saveApplyBorrowAgreement(ApplyBorrowAgreementVO applyBorrowAgreementVO) {
+        ApplyBorrowAgreementSaveRequest request = new ApplyBorrowAgreementSaveRequest();
+        BeanUtils.copyProperties(applyBorrowAgreementVO, request);
+        String url = "http://AM-ADMIN/am-trade/applyBorrowAgreement/saveApplyBorrowAgreement";
+        return restTemplate.postForEntity(url, applyBorrowAgreementVO, ApplyBorrowAgreementResponse.class)
+                .getBody();
+    }
+
+    /**
      * 保存垫付协议申请-协议生成详情
      *
      * @param applyAgreementVO
@@ -6153,6 +6169,13 @@ public class AmTradeClientImpl implements AmTradeClient {
         ProtocolLogResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/getProtocolLogVOAll",
                 request, ProtocolLogResponse.class);
 
+        return response.getResultList();
+    }
+
+    @Override
+    public List<TenderAgreementVO> getTenderAgreementByBorrowNid(String borrowId) {
+        String url = "http://AM-ADMIN/am-trade/tenderagreement/getTenderAgreementByBorrowNid/" + borrowId;
+        TenderAgreementResponse response = restTemplate.getForObject(url, TenderAgreementResponse.class);
         return response.getResultList();
     }
 
