@@ -122,7 +122,7 @@ public class CertRepayPlanServiceImpl extends BaseHgCertReportServiceImpl implem
                         param.put("curServiceCharge",bdRepayFee.toString());
                         //当期应还款时间点
                         //当期应还时间点：报送当期应还日期23:59:59
-                        param.put("repayTime", GetDate.times10toStrYYYYMMDD(repay.getRepayTime()) + " 23:59:59");
+                        param.put("repayTime", GetDate.times10toStrYYYYMMDD(borrowRepayPlan.getRepayTime()) + " 23:59:59");
                         json.add(param);
                     }
                 }

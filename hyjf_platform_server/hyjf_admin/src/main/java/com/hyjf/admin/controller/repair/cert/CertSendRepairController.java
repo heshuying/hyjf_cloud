@@ -150,33 +150,4 @@ public class CertSendRepairController extends BaseController{
         }
         return new AdminResult<>();
     }
-
-    /**
-     * 应急中心历史数据上报方法
-     * @param request
-     * @param reqBean
-     * @return
-     */
-    @ApiOperation(value = "应急中心历史数据同步", notes = "应急中心历史数据同步")
-    @PostMapping("/doDdataSyn")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult doDdataSyn(HttpServletRequest request, @RequestBody CertSendMqReqBean reqBean) {
-        String dataType = reqBean.getDataType();
-        //当前时间
-        int mqValue = GetDate.getNowTime10();
-        try {
-            if ("86".equals(dataType)) {
-                // 产品信息历史数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_OLD_LENDPRODUCT_TAG, UUID.randomUUID().toString(), mqValue));
-            }
-            if ("87".equals(dataType)) {
-                // 产品配置历史数据同步
-                commonProducer.messageSend(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.CERT_OLD_LENDPRODUCTCONFIG_TAG, UUID.randomUUID().toString(), mqValue));
-            }
-        } catch (Exception e) {
-            _log.info("应急中心历史数据上报错误，请求人【" + getUser(request).getId() + "】，请求类型【" + dataType + "】，请求参数【" + mqValue + "】", e);
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        return new AdminResult<>();
-    }
 }
