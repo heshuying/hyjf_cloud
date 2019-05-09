@@ -112,7 +112,7 @@ public class AppSmsCodeController extends BaseUserController {
         int cnt = 0;
         // app4.0 注册验证码单独验证，不失效
         if(verificationType.equals(CommonConstant.PARAM_TPL_ZHUCE)){
-            cnt = amUserClient.checkMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,false);
+            cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,false);
         } else {
             cnt = smsCodeService.updateCheckMobileCode(mobile, verificationCode, verificationType, platform, CommonConstant.CKCODE_NEW, CommonConstant.CKCODE_YIYAN,true);
         }
