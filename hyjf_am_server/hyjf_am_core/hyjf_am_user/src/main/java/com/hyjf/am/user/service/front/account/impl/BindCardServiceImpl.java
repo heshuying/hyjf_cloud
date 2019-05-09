@@ -10,6 +10,8 @@ import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +104,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 	public int insertUserCard(BankCard bankCard) {
 		return this.bankCardMapper.insertSelective(bankCard);
 	}
-	
+	private static final Logger logger = LoggerFactory.getLogger(BindCardServiceImpl.class);
 	/**
 	 * 更新用户绑定的银行卡
 	 * @param bankCard
@@ -114,6 +116,7 @@ public class BindCardServiceImpl extends BaseServiceImpl implements BindCardServ
 		int cnt = this.bankCardMapper.updateByPrimaryKeySelective(bankCard);
 
 		// add 合规数据上报 埋点 liubin 20181122 start
+		logger.info("绑卡：："+bankCard.getCardNo()+"-------"+cnt);
 		if (StringUtils.isNotEmpty(bankCard.getCardNo()) && cnt > 0){
 			// 推送数据到MQ 用户信息修改（绑卡异步）
 			JSONObject params = new JSONObject();
