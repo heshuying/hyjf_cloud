@@ -47,6 +47,48 @@
 
     </sql>
 
+    <select id="queryAccountCount" resultType="java.lang.Integer"
+            parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
+        SELECT
+        COUNT(1)
+        FROM
+        (
+        SELECT
+        a.user_id,
+        u.username,
+        ui.truename,
+        a.bank_balance+a.bank_frost+a.bank_await AS bankTotal,
+        a.account_id,
+        a.bank_balance,
+        a.bank_frost,
+        a.bank_await,
+        a.bank_wait_repay,
+        a.bank_balance_cash,
+        a.bank_frost_cash,
+        a.id,
+        CASE WHEN ui.attribute = 2 OR ui.attribute = 3 THEN a.user_id ELSE su.spreads_user_id END AS hyd_id
+        FROM
+        ht_account a
+        LEFT JOIN ht_r_user u ON a.user_id = u.user_id
+        LEFT JOIN ht_r_user ui ON a.user_id = ui.user_id
+        <!-- LEFT JOIN ht_vip_info vip on vip.id = ui.vip_id-->
+        LEFT JOIN ht_r_user su ON a.user_id = su.user_id
+        where
+        1=1
+        <if test="accountSrch != null and accountSrch != ''">
+            AND a.account_id LIKE CONCAT( #{accountSrch}, '%')
+        </if><!--
+        <if test="vipSrch != null and vipSrch != ''">
+            AND vip.id =  #{vipSrch}
+        </if>-->
+        ) t
+        LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = t.hyd_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN ht_r_oa_department `od` ON `od`.`id` = `ou`.`departmentid` AND `od`.id IS NOT NULL
+        LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
+        LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
+        WHERE 1=1
+        <include refid="where-all-page-condition"/>
+    </select>
 
     <select id="queryAccountInfos" resultMap="accountInfoMapResult"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
