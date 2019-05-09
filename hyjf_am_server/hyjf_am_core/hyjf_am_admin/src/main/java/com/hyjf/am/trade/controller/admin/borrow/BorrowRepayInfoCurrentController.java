@@ -99,6 +99,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                 }
                 // 分期还款
                 else {
+                    logger.info("borrowNid:" + repayInfo.getBorrowNid() + " borrowStyle:" + borrowStyle + " feeRate:" + feeRate + " differentialRate:" + differentialRate + " verifyTime:" + verifyTime + " borrowPeriod:" + borrowPeriod + " repayPeriod:" + repayPeriod + " assignCapital:" + assignCapital + " assignManageFee:" + assignManageFee + " borrowAccount:" + borrowAccount + " assignAccount:" + assignAccount);
                     assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, Integer.parseInt(borrowPeriod), repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
                 }
                 repayInfo.setRecoverFee(assignManageFee.toString());
@@ -118,7 +119,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         return response;
     }
 
-    private BigDecimal getManageFee(String borrowStyle, BigDecimal feeRate, BigDecimal differentialRate, int borrowVerifyTime, Integer borrowPeriod, int repayPeriod, BigDecimal assignCapital, BigDecimal assignManageFee, BigDecimal account, BigDecimal assignCapital2) {
+    private BigDecimal getManageFee(String borrowStyle, BigDecimal feeRate, BigDecimal differentialRate, Integer borrowVerifyTime, Integer borrowPeriod, Integer repayPeriod, BigDecimal assignCapital, BigDecimal assignManageFee, BigDecimal account, BigDecimal assignCapital2) {
         // 等额本息month、等额本金principal
         if (CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle) || CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle)) {
             if (repayPeriod == borrowPeriod.intValue()) {
@@ -237,7 +238,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                 else {
                     assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, borrowPeriod, repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
                 }
-                repayInfo.setRecoverFee(assignManageFee.toString());
+                repayInfo.setRecoverFeePeriod(assignManageFee.toString());
             }
         }
 
