@@ -252,12 +252,7 @@
                     END,
                     ''
                     ) AS repayMoneySource,
-                    br.recover_account_yes +
-                    IF (
-                    br.recover_status = 1,
-                    br.recover_fee,
-                    0
-                    ) AS recoverAmountTotal,
+                    IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = br.repay_ordid LIMIT 1),0) AS recoverAmountTotal,
                     FROM_UNIXTIME(br.recover_time, '%Y-%m-%d') AS recoverTime,
 
                     IF (
@@ -411,12 +406,7 @@
                 END,
                 ''
                 ) AS repayMoneySource,
-                rp.recover_account_yes +
-                IF (
-                rp.recover_status = 1,
-                rp.recover_fee,
-                0
-                ) AS recoverAmountTotal,
+                IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAmountTotal,
                 FROM_UNIXTIME(rp.recover_time, '%Y-%m-%d') AS recoverTime,
 
                 IF (
@@ -585,7 +575,7 @@
             END,
             ''
             ) AS repayMoneySource,
-            hcr.repay_account_yes +
+            hcr.receive_account_yes +
         IF (
             hcr.repay_status = 1,
             hcr.manage_fee,
