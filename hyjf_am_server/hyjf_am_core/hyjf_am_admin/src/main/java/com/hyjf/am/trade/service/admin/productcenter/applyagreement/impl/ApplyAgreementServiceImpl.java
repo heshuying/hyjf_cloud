@@ -143,11 +143,14 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
      */
     @Override
     public List<TenderAgreementVO> selectLikeByExample(DownloadAgreementRequest request) {
-        String tenderNid = request.getRepayPeriod()+"%";
+        String tenderNid = request.getRepayPeriod();
         String borrowNid = request.getBorrowNid();
         TenderAgreementExample example = new TenderAgreementExample();
         TenderAgreementExample.Criteria cra = example.createCriteria();
-        cra.andTenderNidLike(tenderNid);
+        if(StringUtils.isNotEmpty(tenderNid)){
+            tenderNid =  request.getRepayPeriod()+"%";
+            cra.andTenderNidLike(tenderNid);
+        }
         cra.andBorrowNidEqualTo(borrowNid);
         List<TenderAgreement> tenderAgreements= this.tenderAgreementMapper.selectByExample(example);
         List<TenderAgreementVO> tenderAgreementvos = new ArrayList<>();

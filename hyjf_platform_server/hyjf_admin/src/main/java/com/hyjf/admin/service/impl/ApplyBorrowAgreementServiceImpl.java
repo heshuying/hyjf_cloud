@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.ApplyBorrowAgreementRequestBean;
 import com.hyjf.admin.beans.request.BorrowRepayAgreementRequestBean;
 import com.hyjf.admin.client.AmTradeClient;
@@ -25,6 +26,7 @@ import com.hyjf.common.file.SFTPParameter;
 import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -182,27 +184,25 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
      * @return
      */
     public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
-        //logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
+        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
         String status = requestBean.getStatus();//1:脱敏，0：原始
-        String repayPeriod = "DF-"+requestBean.getRepayPeriod()+"-";
-        requestBean.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(requestBean);//债转协议
-        //logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
-        //logger.info("下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
+        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
+        logger.info("下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
         //输出文件集合
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
             for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
                 if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
                     if("1".equals(status)){
-                        //logger.info("--------------------下载文件签署,脱敏");
+                        logger.info("--------------------下载文件签署,脱敏");
                         File file = createFaddPDFImgFile(tenderAgreement);
-                        //logger.info("--------------------下载文件签署,脱敏file:"+file);
+                        logger.info("--------------------下载文件签署,脱敏file:"+file);
                         if(file!=null){
                             files.add(file);
                         }
                     }else {
-                        //logger.info("--------------------下载文件签署，原始");
+                        logger.info("--------------------下载文件签署，原始");
                         if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             try {
                                 File filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
@@ -211,7 +211,7 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
                                     files.add(filePdf);
                                 }
                             } catch (IOException e) {
-                                //logger.info("--------------------下载文件签署，原始filePdf失败");
+                                logger.info("--------------------下载文件签署，原始filePdf失败");
                             }//债转协议
                         }
                     }
@@ -222,16 +222,16 @@ public class ApplyBorrowAgreementServiceImpl implements ApplyBorrowAgreementServ
         }
 
         if(files!=null && files.size()>0){
-            //logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
-           ZIPGenerator.generateZip(response, files, repayPeriod);
-            //logger.info("searchTenderToCreditDetail下载成功");
+            logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
+            ZIPGenerator.generateZip(response, files, DateUtils.getNowDateOfDay());
+            logger.info("searchTenderToCreditDetail下载成功");
         }else{
             logger.error("searchTenderToCreditDetail下载失败，请稍后重试。。。。");
 
         }
     }
     /**
-     * 下载法大大协议 __垫付
+     * 下载法大大协议
      *
      * @param tenderAgreement
      * 返回 0:下载成功；1:下载失败；2:没有生成法大大合同记录

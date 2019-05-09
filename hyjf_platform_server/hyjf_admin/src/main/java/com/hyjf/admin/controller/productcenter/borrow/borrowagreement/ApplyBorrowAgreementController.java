@@ -57,10 +57,10 @@ public class ApplyBorrowAgreementController extends BaseController {
         return result;
     }
 
-    @ApiOperation(value = "下載担保机构协议", notes = "下載担保机构协议")
+    @ApiOperation(value = "下載协议", notes = "下載协议")
     @PostMapping("/downloadAction")
     public void downloadAction(@RequestBody DownloadAgreementRequest requestBean,HttpServletResponse response){
-        logger.info("------------------------------下載担保机构协议requestBean:"+JSONObject.toJSON(requestBean));
+        logger.info("------------------------------下載协议requestBean:"+JSONObject.toJSON(requestBean));
         applyBorrowAgreementService.downloadAction(requestBean,response);
     }
 }
