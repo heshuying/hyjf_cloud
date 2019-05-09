@@ -45,7 +45,8 @@ public class SmsCountCustomize implements Serializable {
     //
     private String[] combotreeListSrch;
 
-
+    //重复ID集合
+    private String listRepeatId;
 
     public Integer getId() {
         return id;
@@ -125,5 +126,13 @@ public class SmsCountCustomize implements Serializable {
 
     public void setSmsMoney(String smsMoney) {
         this.smsMoney = smsMoney;
+    }
+
+    public String getListRepeatId() {
+        return listRepeatId;
+    }
+
+    public void setListRepeatId(String listRepeatId) {
+        this.listRepeatId = listRepeatId;
     }
 }

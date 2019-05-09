@@ -10,7 +10,7 @@
         IFNULL(od3.id,0) as departmentId,
         sum(s.sms_number) as smsNumber,
         s.posttime as posttime,
-        case when posttime > '2018-08-19' then (sms_number * 0.04)  else (sms_number * 0.042) end as smsMoney
+        case when posttime > '2018-12-27' then (sms_number * 0.04)  else (sms_number * 0.042) end as smsMoney
         from ht_sms_count s
         LEFT JOIN ht_r_oa_department `od` on s.department_id = od.id
         LEFT JOIN ht_r_oa_department `od2` ON `od2`.`id` = `od`.`parentid`
@@ -41,7 +41,7 @@
             parameterType="com.hyjf.am.resquest.user.SmsCountRequest">
         select 	ifnull(sum(sms_number), 0) AS smsNumber,
         sum(CASE
-        WHEN posttime > '2018-08-19' THEN
+        WHEN posttime > '2018-12-27' THEN
         (sms_number * 0.04)
         ELSE
         (sms_number * 0.042)
@@ -217,5 +217,89 @@
         VALUES
         (sms_number);
     </insert>
+
+    <!-- 下面为临时使用 -->
+    <select id="getuserIdAnddepartmentName" resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize">
+        SELECT
+        hu.user_id AS id,
+        od.id AS departmentId,
+        od.`name` AS departmentName
+        FROM
+        ht_r_oa_users ou
+        INNER JOIN ht_user hu ON hu.user_id = ou.hyd_id
+        INNER JOIN ht_r_oa_department od ON ou.departmentid = od.id
+        AND ou.user_status IN ('E', 'Q1', 'Q2', 'Q11', 'Q21');
+    </select>
+
+    <select id="selectUserListByMobile" resultType="com.hyjf.am.vo.user.UserVO" parameterType="list" >
+        SELECT
+        hydu.user_id AS userId,
+        hs.spreads_user_id AS referrer,
+        hydu.mobile AS mobile
+        FROM
+        ht_user hydu LEFT JOIN ht_spreads_user hs on hydu.user_id = hs.user_id
+        WHERE  hydu.mobile in
+        <foreach collection="list" item="item" index="index" open="("  separator="," close=")" >
+            #{item}
+        </foreach>
+    </select>
+
+    <insert id="insertBatchSmsCount" parameterType="java.util.List">
+        INSERT INTO ht_sms_count (department_id,department_name,sms_number,posttime)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.departmentId},#{item.departmentName},#{item.smsNumber},#{item.posttime})
+        </foreach>
+    </insert>
+
+    <update id="updateBatch" parameterType="java.util.List">
+        update ht_sms_count
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="sms_number =case" suffix="end">
+                <foreach collection="list" item="i" index="index">
+                    <if test="i.smsNumber!=null">
+                        when id=#{i.id,jdbcType=INTEGER} then #{i.smsNumber,jdbcType=INTEGER}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id,jdbcType=INTEGER}
+        </foreach>
+
+    </update>
+
+    <select id="selectRepeatSmsCount" resultType="java.lang.Integer">
+        select count(*) from  (
+        select count(id) as counts from ht_sms_count GROUP BY posttime,department_id having counts > 1 )as b;
+    </select>
+
+    <select id="selectRepeatSmsCountData"
+            resultType="com.hyjf.am.user.dao.model.customize.SmsCountCustomize" parameterType="java.util.Map" >
+        SELECT
+            count(id) AS counts,
+            sum(sms_number) AS smsNumber,
+            GROUP_CONCAT(id) AS listRepeatId
+        FROM
+            ht_sms_count
+        GROUP BY
+            posttime,
+            department_id
+        HAVING
+        counts > 1
+        <if test="limitStart >=0 and limitEnd > 0">
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
+
+    </select>
+
+    <delete id="deleteBatch" >
+        DELETE FROM ht_sms_count
+        WHERE id in
+            <foreach collection="array"  item="item" open="(" separator="," close=")"  >
+                #{item}
+            </foreach>
+    </delete>
 
 </mapper>

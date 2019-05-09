@@ -5,22 +5,24 @@ package com.hyjf.am.user.controller.admin.message;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
+import com.hyjf.am.response.user.UserResponse;
+import com.hyjf.am.resquest.admin.ListRequest;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCountRequest;
+import com.hyjf.am.resquest.user.UserRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 import com.hyjf.am.user.service.admin.message.SmsCountService;
 import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -111,6 +113,61 @@ public class SmsCountController extends BaseController {
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }
+        return response;
+    }
+
+    /**
+     * 查询CRM中的企业用户对应的部门都查询出来
+     * @return
+     */
+    @GetMapping("/getuserIdAnddepartmentName")
+    public SmsCountCustomizeResponse getuserIdAnddepartmentName() {
+        SmsCountCustomizeResponse response = new SmsCountCustomizeResponse();
+        List<SmsCountCustomize> list = smsCountService.getuserIdAnddepartmentName();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<SmsCountCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCountCustomizeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 通过手机号码查询用户信息
+     * @return
+     */
+    @PostMapping("/selectUserListByMobile")
+    public UserResponse selectUserListByMobile(@RequestBody ListRequest request) {
+        UserResponse response = new UserResponse();
+        List<UserVO> list = smsCountService.selectUserListByMobile(request.getList());
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
+        return response;
+    }
+
+    /**
+     * 通过手机号码查询用户信息
+     * @return
+     */
+    @PostMapping("/insertBatchSmsCount")
+    public UserResponse insertBatchSmsCount(@RequestBody ListRequest request) {
+        UserResponse response = new UserResponse();
+        if(request.getSmsCountCustomizeVOList() != null ){
+            List<SmsCountCustomize> list = CommonUtils.convertBeanList
+                    (request.getSmsCountCustomizeVOList(), SmsCountCustomize.class);
+            smsCountService.insertBatchSmsCount(list);
+        }
+        return response;
+    }
+
+    /**
+     * 修改and删除短信统计重复数据
+     * @return
+     */
+    @GetMapping("/updateOrDelectRepeatData")
+    public UserResponse updateOrDelectRepeatData() {
+        UserResponse response = new UserResponse();
+        smsCountService.updateOrDelectRepeatData();
         return response;
     }
 }

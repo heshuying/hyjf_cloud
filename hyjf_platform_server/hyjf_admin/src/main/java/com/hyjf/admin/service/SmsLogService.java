@@ -6,6 +6,9 @@ package com.hyjf.admin.service;
 import com.hyjf.am.response.admin.SmsLogResponse;
 import com.hyjf.am.response.admin.SmsOntimeResponse;
 import com.hyjf.am.resquest.message.SmsLogRequest;
+import com.hyjf.am.vo.admin.SmsLogVO;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -33,4 +36,6 @@ public interface SmsLogService {
 	 * @return
 	 */
     SmsOntimeResponse queryTime(SmsLogRequest request);
+
+	List<SmsLogVO> findSmsLogList(SmsLogRequest request);
 }

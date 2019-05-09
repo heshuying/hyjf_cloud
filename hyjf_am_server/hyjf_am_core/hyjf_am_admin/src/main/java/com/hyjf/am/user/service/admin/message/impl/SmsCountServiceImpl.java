@@ -12,6 +12,7 @@ import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 import com.hyjf.am.user.service.admin.message.SmsCountService;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
@@ -185,4 +186,84 @@ public class SmsCountServiceImpl implements SmsCountService {
         }
         smsCountCustomizeMapper.insertBatch(insertList);
     }
+
+    /********** 短信统计  临时类需要的方法      ********/
+    @Override
+    public List<SmsCountCustomize> getuserIdAnddepartmentName(){
+       return smsCountCustomizeMapper.getuserIdAnddepartmentName();
+    }
+
+    @Override
+    public List<UserVO> selectUserListByMobile(List<String> list){
+        return smsCountCustomizeMapper.selectUserListByMobile(list);
+    }
+
+    @Override
+    public void insertBatchSmsCount( List<SmsCountCustomize> insertListsms){
+
+        smsCountCustomizeMapper.insertBatchSmsCount(insertListsms);
+    }
+
+    /**
+     * 修改and删除短信统计重复数据
+     */
+    @Override
+    public void updateOrDelectRepeatData(){
+
+        //查询所有重复数据
+        Integer count = smsCountCustomizeMapper.selectRepeatSmsCount();
+        if(count != null && count > 0){
+
+            Integer loopCount = (count + 5000 - 1) / 5000;
+
+            Map<String,Object> mapLimit = null;
+            //分页
+            for (int i = 0; i < loopCount; i++) {
+                mapLimit = new HashMap<>();
+                mapLimit.put("limitStart",i*5000);
+                mapLimit.put("limitEnd",5000);
+
+                List<SmsCountCustomize> listVo = smsCountCustomizeMapper.selectRepeatSmsCountData(mapLimit);
+                if(CollectionUtils.isEmpty(listVo)){
+                    continue;
+                }
+
+                List<SmsCountCustomize> updateVO = new ArrayList<>();
+                StringBuilder delectBuilder = new StringBuilder();
+                for(SmsCountCustomize vo: listVo){
+
+                    String repeatId = vo.getListRepeatId();
+                    if(StringUtils.isBlank(repeatId)){
+                        continue;
+                    }
+                    String[] repeatIdArray = repeatId.split(",");
+                    if(repeatIdArray == null || repeatIdArray.length < 2){
+                        continue;
+                    }
+                    SmsCountCustomize smsCount = new SmsCountCustomize();
+                    smsCount.setId(Integer.valueOf(repeatIdArray[0]));
+                    smsCount.setSmsNumber(vo.getSmsNumber());
+
+                    updateVO.add(smsCount);
+                    delectBuilder.append(repeatId.substring
+                            (repeatId.indexOf(","),vo.getListRepeatId().length()));
+                }
+                String newDel = delectBuilder.toString().substring(1,delectBuilder.length());
+                int[] listId = StringToInt(newDel.split(","));
+                smsCountCustomizeMapper.updateBatch(updateVO);
+                smsCountCustomizeMapper.deleteBatch(listId);
+            }
+
+        }
+
+    }
+
+    public int[] StringToInt(String[] arrs){
+        int[] ints = new int[arrs.length];
+        for (int i =0 ;i<arrs.length;i++){
+            ints[i] = Integer.valueOf(arrs[i]);
+        }
+        return ints;
+    }
+
 }

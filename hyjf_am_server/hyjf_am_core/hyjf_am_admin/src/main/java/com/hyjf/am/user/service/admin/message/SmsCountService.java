@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
+import com.hyjf.am.vo.user.UserVO;
 
 import java.util.List;
 import java.util.Map;
@@ -52,4 +53,12 @@ public interface SmsCountService {
     Map<String, SmsCountCustomize> getSmsCount(String mobile, String messageStr);
 
     void addSmsCount(Map<String, SmsCountCustomize> paramMap);
+
+    List<SmsCountCustomize> getuserIdAnddepartmentName();
+
+    List<UserVO> selectUserListByMobile(List<String> list);
+
+    void insertBatchSmsCount( List<SmsCountCustomize> insertListsms);
+
+    void updateOrDelectRepeatData();
 }

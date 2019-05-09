@@ -44,6 +44,7 @@ public class SmsCountConsumer implements RocketMQListener<MessageExt>, RocketMQP
             return;
         }
 
+        //TODO 待添加Redis同步锁，防止并发修改
         try{
             Map<String, SmsCountCustomize> smsCountCustomizeMap =
                     smsCountService.getSmsCount(map.get("mobile"),map.get("messageStr"));
@@ -57,7 +58,7 @@ public class SmsCountConsumer implements RocketMQListener<MessageExt>, RocketMQP
         }catch (Exception e){
             logger.error("【短信统计】发生异常："+e.getMessage());
         }
-        
+
     }
 
     @Override

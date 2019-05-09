@@ -6,6 +6,7 @@ package com.hyjf.am.user.dao.mapper.customize;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
+import com.hyjf.am.vo.user.UserVO;
 
 import java.util.List;
 import java.util.Map;
@@ -41,4 +42,21 @@ public interface SmsCountCustomizeMapper {
      */
     void insertBatch(List<SmsCountCustomize> list);
 
+    /***********  下面方法为临时使用 ****************/
+    //获得内部员工的ID和部门
+    List<SmsCountCustomize> getuserIdAnddepartmentName();
+
+    List<UserVO> selectUserListByMobile(List<String> list);
+
+    void insertBatchSmsCount(List<SmsCountCustomize> list);
+
+    void updateBatch(List<SmsCountCustomize> list);
+
+    void deleteBatch(int[] listid);
+
+    //查询重复数据总数
+    Integer selectRepeatSmsCount();
+
+    //分页查询重复数据
+    List<SmsCountCustomize> selectRepeatSmsCountData(Map<String, Object> params);
 }

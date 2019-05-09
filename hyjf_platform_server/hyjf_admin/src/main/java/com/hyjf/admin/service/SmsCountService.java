@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
+import com.hyjf.am.vo.user.UserVO;
 
 import java.util.List;
 
@@ -35,5 +36,13 @@ public interface SmsCountService {
      * @return
      */
     Integer getSmsCountForExport(SmsCountRequest request);
+
+    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
+
+    List<UserVO> getUsersVo(List<String> list);
+
+    void insertBatchSmsCount(List<SmsCountCustomizeVO> list);
+
+    void updateOrDelectRepeatData();
 
 }

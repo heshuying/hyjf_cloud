@@ -1417,4 +1417,12 @@ public interface AmUserClient {
      * @return
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    List<SmsCountCustomizeVO>  getuserIdAnddepartmentName();
+
+    List<UserVO> selectUserListByMobile(ListRequest request);
+
+    void insertBatchSmsCount(ListRequest request);
+
+    void updateOrDelectRepeatData();
 }
