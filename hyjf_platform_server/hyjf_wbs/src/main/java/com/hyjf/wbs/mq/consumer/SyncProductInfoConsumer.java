@@ -92,13 +92,22 @@ public class SyncProductInfoConsumer implements RocketMQListener<MessageExt>, Ro
                 }
                 //查询标的信息
                 BorrowCustomize borrowCustomize = borrowInfoService.selectByNid(productNo);
-                if (borrowCustomize != null) {
-                    productInfoQO.setDeadlineNum(borrowCustomize.getDeadlineNum());
-                    productInfoQO.setDeadlineUnit(borrowCustomize.getDeadlineUnit());
-                    productInfoQO.setInvestAmount(Double.valueOf(borrowCustomize.getInvestAmount()));
-                    productInfoQO.setReferenceIncome(String.valueOf(borrowCustomize.getReferenceIncome()));
 
+                if (borrowCustomize != null) {
+                    /**
+                     * 散标判断是否加入计划，如果加入计划，则不推送
+                     */
+                    if(borrowCustomize.getPlanNid()==null||borrowCustomize.getPlanNid().isEmpty()) {
+                        productInfoQO.setDeadlineNum(borrowCustomize.getDeadlineNum());
+                        productInfoQO.setDeadlineUnit(borrowCustomize.getDeadlineUnit());
+                        productInfoQO.setInvestAmount(Double.valueOf(borrowCustomize.getInvestAmount()));
+                        productInfoQO.setReferenceIncome(String.valueOf(borrowCustomize.getReferenceIncome()));
+                    }else{
+                        logger.info("====" + CONSUMER_NAME + "散标已加入计划，不符合推送范围，不消费，标的编号[{}]=====", productNo);
+                        return;
+                    }
                 }
+
             } else if (productType.equals("1")) {
                 productName = "智投";
                 productTpyeInt = 3;

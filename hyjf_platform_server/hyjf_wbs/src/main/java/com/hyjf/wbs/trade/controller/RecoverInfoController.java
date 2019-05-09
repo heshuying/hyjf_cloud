@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,8 +75,8 @@ public class RecoverInfoController extends BaseController {
                 wbsRecoverVO.setData("");
                 return wbsRecoverVO;
             }
-            if(getUtmId(recoverQO.getEntId())!=null){
-                recoverQO.setEntIds(getUtmId(recoverQO.getEntId()));
+            if(recoverQO.getEntId()!=null){
+                recoverQO.setUtmIds(getUtmIdList(recoverQO.getEntId()));
             }else {
                 wbsRecoverVO.setCode(Response.ERROR);
                 wbsRecoverVO.setMsg("请输入有效的entId");
@@ -118,6 +119,26 @@ public class RecoverInfoController extends BaseController {
             return wbsConfig.getUtmDatang()+"";
         }else if (entId.equals(thirdIdsArr[2])){
             return wbsConfig.getUtmQianle()+"";
+        }else {
+            return null;
+        }
+    }
+    public List<Integer> getUtmIdList(Integer entIds) {
+        String entId=entIds.toString();
+        String thirdIds = wbsConfig.getThridPropertyIds();
+        String[] thirdIdsArr = thirdIds.split(",");
+        List<Integer> utmId = new ArrayList<Integer>();
+        if (entId.equals(thirdIdsArr[0])){
+            utmId.add(wbsConfig.getUtmNami());
+            utmId.add(wbsConfig.getUtmYufengrui());
+            return  utmId;
+//            return wbsConfig.getUtmNami()+","+wbsConfig.getUtmYufengrui();
+        }else if (entId.equals(thirdIdsArr[1])){
+            utmId.add(wbsConfig.getUtmDatang());
+            return  utmId;
+        }else if (entId.equals(thirdIdsArr[2])){
+            utmId.add(wbsConfig.getUtmQianle());
+            return  utmId;
         }else {
             return null;
         }

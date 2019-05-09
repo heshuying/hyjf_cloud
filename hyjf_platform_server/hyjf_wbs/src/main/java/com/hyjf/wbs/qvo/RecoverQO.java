@@ -3,6 +3,8 @@
  */
 package com.hyjf.wbs.qvo;
 
+import java.util.List;
+
 /**
  * 回款信息接口请求具体参数
  * @author kou
@@ -26,6 +28,8 @@ public class RecoverQO {
     private  Integer limitStart;
 
     private  Integer limitEnd;
+
+    private List<Integer> utmIds;
 
     public Integer getStatus() {
         return status;
@@ -89,5 +93,13 @@ public class RecoverQO {
 
     public void setEntIds(String entIds) {
         this.entIds = entIds;
+    }
+
+    public List<Integer> getUtmIds() {
+        return utmIds;
+    }
+
+    public void setUtmIds(List<Integer> utmIds) {
+        this.utmIds = utmIds;
     }
 }

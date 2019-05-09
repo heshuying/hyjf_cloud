@@ -3,6 +3,8 @@
  */
 package com.hyjf.wbs.qvo;
 
+import java.util.List;
+
 /**
  * 订单信息接口请求具体参数
  * @author kou
@@ -24,6 +26,9 @@ public class TenderAccedeQO {
     private  Integer  entId;
     //财富端id
     private  String  entIds;
+
+    private List<Integer> utmIds;
+
     public String getStartTime() {
         return startTime;
     }
@@ -78,5 +83,13 @@ public class TenderAccedeQO {
 
     public void setEntIds(String entIds) {
         this.entIds = entIds;
+    }
+
+    public List<Integer> getUtmIds() {
+        return utmIds;
+    }
+
+    public void setUtmIds(List<Integer> utmIds) {
+        this.utmIds = utmIds;
     }
 }
