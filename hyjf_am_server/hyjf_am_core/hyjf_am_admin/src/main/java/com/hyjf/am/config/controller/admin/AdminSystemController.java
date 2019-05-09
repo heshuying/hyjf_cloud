@@ -323,7 +323,7 @@ public class AdminSystemController extends BaseConfigController {
 			return asr;
 		}
 		asr.setRtn(Response.ERROR);
-		asr.setMessage("用户名或者密码无效");
+		asr.setMessage("用户不存在");
 		return asr;
 	}
 }
