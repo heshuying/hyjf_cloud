@@ -290,7 +290,7 @@ public class LoginController extends BaseController {
 		adminSystemRequest.setMobile(mobile);
 		AdminSystemResponse prs = loginService.getUserInfoByMobile(adminSystemRequest);
 		if(!Response.isSuccess(prs)) {
-			return new AdminResult<>(FAIL, "用户不存在");
+			return new AdminResult<>(FAIL, prs.getMessage());
 		}
 		String ip = GetCilentIP.getIpAddr(request);
 		String mess = loginService.adminSendSmsCodeCheckParam(CommonConstant.PARAM_TPL_DUANXINDENGLU,mobile,"",ip);
