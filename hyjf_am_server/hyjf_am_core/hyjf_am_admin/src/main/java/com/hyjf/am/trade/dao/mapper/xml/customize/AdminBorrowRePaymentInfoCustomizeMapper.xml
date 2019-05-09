@@ -56,12 +56,17 @@
 			</if>
 			<!-- 还款状态 -->
 			<if test="status != null and status != ''">
-				AND br.recover_status = #{status}
-				<if test="status ==1">
+				
+				<if test="status ==0">
 					AND br.advance_status!=3
+					AND br.recover_status = #{status}
 				</if>
 				<if test="status ==2">
 					AND br.advance_status=3
+					AND br.recover_status = #{status}
+				</if>
+				<if test="status ==1">
+					AND br.recover_status = #{status}
 				</if>
 			</if>
 
