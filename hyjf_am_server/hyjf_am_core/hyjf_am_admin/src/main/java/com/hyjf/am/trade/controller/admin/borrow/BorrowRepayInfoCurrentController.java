@@ -99,6 +99,7 @@ public class BorrowRepayInfoCurrentController extends BaseController {
                 }
                 // 分期还款
                 else {
+                    logger.info("borrowNid:" + repayInfo.getBorrowNid() + " borrowStyle:" + borrowStyle + " feeRate:" + feeRate + " differentialRate:" + differentialRate + " verifyTime:" + verifyTime + " borrowPeriod:" + " repayPeriod:" + repayPeriod + " assignCapital:" + assignCapital + " assignManageFee:" + assignManageFee + " borrowAccount:" + borrowAccount + " assignAccount:" + assignAccount);
                     assignManageFee = getManageFee(borrowStyle, feeRate, differentialRate, verifyTime, Integer.parseInt(borrowPeriod), repayPeriod, assignCapital, assignManageFee, borrowAccount, assignAccount);
                 }
                 repayInfo.setRecoverFee(assignManageFee.toString());
