@@ -1,6 +1,7 @@
 package com.hyjf.cs.market.vo.activity518;
 
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -77,7 +78,7 @@ public class Activity518UserInfoVO {
     }
 
     public void setAmount(String amount) {
-        this.amount = amount;
+        this.amount = CommonUtils.formatAmount(amount);
     }
 
     public List<RewardRecord> getRecord() {

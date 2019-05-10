@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.vo.activity518;
 
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,7 +37,7 @@ public class Activity518InfoVO {
 
         public Leaderboard(String username, String amount) {
             this.mobile = username;
-            this.amount = amount;
+            this.amount = CommonUtils.formatAmount(amount);
         }
 
         public String getMobile() {
@@ -52,7 +53,7 @@ public class Activity518InfoVO {
         }
 
         public void setAmount(String amount) {
-            this.amount = amount;
+            this.amount = CommonUtils.formatAmount(amount);
         }
     }
 
@@ -86,7 +87,7 @@ public class Activity518InfoVO {
     }
 
     public void setAmount(String amount) {
-        this.amount = amount;
+        this.amount = CommonUtils.formatAmount(amount);
     }
 }
 
