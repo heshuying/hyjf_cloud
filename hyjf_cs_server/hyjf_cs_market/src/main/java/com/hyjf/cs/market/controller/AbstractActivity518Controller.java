@@ -152,7 +152,16 @@ public abstract class AbstractActivity518Controller extends AbstractController{
                 String rewardType = luckNum + "";
 
                 //保存用户中奖记录
-                activity518Service.saveActivityUserReward(userId,  activityId, 0, Activity518Prize.getValue(luckNum), rewardType);
+
+                ActivityUserRewardVO vo = new ActivityUserRewardVO();
+                vo.setActivityId(activityId);
+                vo.setRewardName(Activity518Prize.getValue(luckNum));
+                vo.setRewardType(rewardType);
+                vo.setUserId(userId);
+                vo.setSendType("系统发放");
+                vo.setSendStatus(1);
+                vo.setGrade(0);
+                Integer rewardId = activity518Service.saveActivity518UserReward(vo);
                 // 自动发送用户奖品
                 // 根据配置获取配置文件中配置的活动优惠券，把所有优惠券按照上述优惠券代码依次排列，分割为数组，根据中奖编号获取优惠券编号
                 String [] st1 = couponCodes.split(",");

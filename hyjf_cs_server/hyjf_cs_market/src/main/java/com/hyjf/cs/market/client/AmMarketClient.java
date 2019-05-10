@@ -143,4 +143,13 @@ public interface AmMarketClient {
      * @return
      */
     List<ActivityUserRewardVO> selectActivityUserReward(int activityId, int userId, int grade);
+
+    /**
+     * @Author walter.limeng
+     * @Description //保存518活动抽奖记录
+     * @Date 14:34 2019-05-10
+     * @Param [vo]
+     * @return Integer 主键ID
+     **/
+    Integer saveActivity518UserReward(ActivityUserRewardVO vo);
 }

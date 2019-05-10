@@ -126,6 +126,11 @@ public class Activity518ServiceImpl implements Activity518Service {
         amMarketClient.insertActivityUserReward(userId,activityId,grade,rewardName,rewardType);
     }
 
+    @Override
+    public Integer saveActivity518UserReward(ActivityUserRewardVO vo) {
+        return amMarketClient.saveActivity518UserReward(vo);
+    }
+
     private BigDecimal getTenderAmountInActivity(int userId, Date activityStartDate, Date activityEndDate, Integer client) {
         return amTradeClient.getTenderAmount(userId, activityStartDate, activityEndDate, client);
     }

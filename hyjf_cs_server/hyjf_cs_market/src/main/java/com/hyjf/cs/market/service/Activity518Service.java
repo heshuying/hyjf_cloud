@@ -73,4 +73,13 @@ public interface Activity518Service {
      **/
 
     void saveActivityUserReward(int userId, int activityId, int grade, String rewardName, String rewardType);
+
+    /**
+     * @Author walter.limeng
+     * @Description //保存518活动抽奖记录
+     * @Date 14:34 2019-05-10
+     * @Param [vo]
+     * @return Integer 主键ID
+     **/
+    Integer saveActivity518UserReward(ActivityUserRewardVO vo);
 }

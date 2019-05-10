@@ -199,4 +199,14 @@ public class AmMarketClientImpl implements AmMarketClient {
 		}
 		return null;
 	}
+
+    @Override
+    public Integer saveActivity518UserReward(ActivityUserRewardVO vo) {
+        ActivityUserRewardResponse response = restTemplate.postForObject("http://AM-MARKET/am-market/activity/reward/savereward", vo,
+                ActivityUserRewardResponse.class);
+        if (response != null && response.getRewardId() != null) {
+            return response.getRewardId();
+        }
+        return null;
+    }
 }
