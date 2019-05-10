@@ -4,16 +4,16 @@
 package com.hyjf.cs.user.service.trans.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankMobileModifyVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -254,13 +254,13 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
             return result;
         }
         // 重新调用一下查询银行预留手机号
-        newBankMobile = getNewBankMobile(bean, userId);
+        newBankMobile = getBankMobile(bean.getAccountId(), userId);
         if (StringUtils.isBlank(newBankMobile)) {
             // 接口未查询出最新手机号用原异步回掉返回的手机号
             newBankMobile = bean.getMobile();
         }
         // 同一手机号不更新
-        if(oldMobile.equals(newBankMobile)) {
+        if (oldMobile.equals(newBankMobile)) {
             result.setStatus(true);
             logger.info("页面更新银行预留手机号与原手机号相同,UserId:{} 更新平台为：{}", bean.getLogUserId(), bean.getLogClient());
             result.setMessage("更新银行预留手机号处理成功,但银行新预留手机号码与旧手机号码相同。");
@@ -282,17 +282,74 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     }
 
     /**
-     * 重新查询最新银行预留手机号
+     * 查询最新银行预留手机号更新数据库
      *
-     * @param bean
+     * @param userId
      * @return
      */
-    private String getNewBankMobile(BankCallBean bean, Integer userId) {
+    @Override
+    @HystrixCommand(commandKey = "查询银行预留手机号(三端)-getBankMobileModify", fallbackMethod = "fallBackGetBankMobile", ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
+    public String getNewBankMobile(Integer userId) {
+        logger.info("查询更新银行预留手机号开始，userId:{}" + userId);
+        // 获取用户信息
+        UserVO user = this.getUsersById(userId);
+        if (user == null) {
+            // 获取用户信息失败
+            CheckUtil.check(false, MsgEnum.ERR_OBJECT_GET, "用户信息");
+        }
+        // 目前只有个人用户可修改
+        if(null == user.getUserType() || user.getUserType() ==  1) {
+            // 只针对个人用户修改手机号
+            throw new CheckException(MsgEnum.ERR_USER_PERSON_ONLY);
+        }
+        BankOpenAccountVO bankOpenAccountVO = this.getBankOpenAccount(userId);
+        if (null == bankOpenAccountVO || StringUtils.isBlank(bankOpenAccountVO.getAccount())) {
+            // 用户未开户
+            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        }
+        // 调用银行获取最新银行预留手机号
+        String newBankMobile = getBankMobile(bankOpenAccountVO.getAccount(), userId);
+        if(StringUtils.isBlank(newBankMobile)) {
+            throw new CheckException(MsgEnum.STATUS_CE000004);
+        }
+        user.setBankMobile(newBankMobile);
+        // 更新redis
+        RedisUtils.setObj(RedisConstants.USERID_KEY + user.getUserId(), user);
+        // 更新用户信息表
+        this.amUserClient.updateBankMobileByUserId(userId, newBankMobile);
+        // 更新用户修改银行预留手机号日志表
+        BankMobileModifyVO vo = new BankMobileModifyVO();
+        vo.setUserId(user.getUserId());
+        vo.setBankMobileNew(newBankMobile);
+        vo.setUpdateBy(userId + "");
+        vo.setUpdateTime(new Date());
+        this.amUserClient.updateBankMobileModify(vo);
+        return newBankMobile;
+    }
+
+    /**
+     * 查询最新银行预留手机号
+     *
+     * @param accountId
+     * @param userId
+     * @return
+     */
+    private String getBankMobile(String accountId, Integer userId) {
         BankCallBean callBean = new BankCallBean(userId, BankCallConstant.TXCODE_MOBILE_MODIFY_QUERY, 0);
         callBean.setChannel(BankCallConstant.CHANNEL_PC);
         callBean.setLogRemark("根据电子账户号查询手机号");
         callBean.setLogUserId(userId + "");
-        callBean.setAccountId(bean.getAccountId());
+        callBean.setAccountId(accountId);
         callBean = BankCallUtils.callApiBg(callBean);
         logger.info("根据电子账户号查询手机号 结果：{}  ", JSONObject.toJSONString(callBean));
         return callBean.getMobile();
@@ -305,6 +362,15 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
      */
     public Map<String, Object> fallBackBankMobileModify(BankMobileModifyBean bean, String sign) {
         logger.info("==================已进入 修改银行预留手机号（三端）fallBackBankOpen 方法================");
+        return null;
+    }
+
+    /**
+     * @param userId
+     * @return
+     */
+    public String fallBackGetBankMobile(Integer userId) {
+        logger.info("==================已进入 查询银行预留手机号（三端）fallBackGetBankMobile 方法================");
         return null;
     }
 }

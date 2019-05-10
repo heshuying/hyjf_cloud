@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.service.trans;
 
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.bean.BankMobileModifyBean;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
@@ -87,4 +88,12 @@ public interface MobileModifyService extends BaseUserService {
      * @return
      */
     BankCallResult updateNewBankMobile(BankCallBean bean, String oldMobile);
+
+    /**
+     * 查询最新银行预留手机号
+     *
+     * @param userId
+     * @return
+     */
+    String getNewBankMobile(Integer userId);
 }

@@ -10,6 +10,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
@@ -69,6 +70,11 @@ public class MobileModifyController extends BaseUserController {
             // 获取用户信息失败
             CheckUtil.check(false, MsgEnum.ERR_OBJECT_GET, "用户信息");
         }
+        // 目前只有个人用户可修改
+        if(null == user.getUserType() || user.getUserType() ==  1) {
+            // 只针对个人用户修改手机号
+            throw new CheckException(MsgEnum.ERR_USER_PERSON_ONLY);
+        }
         BankOpenAccountVO bankOpenAccountVO = this.mobileModifyService.getBankOpenAccount(userId);
         if (null == bankOpenAccountVO || StringUtils.isBlank(bankOpenAccountVO.getAccount())) {
             // 用户未开户
@@ -97,7 +103,7 @@ public class MobileModifyController extends BaseUserController {
     }
 
     /**
-     * web页面开户异步处理
+     * web页面修改银行预留手机号异步处理
      *
      * @param bean
      * @return
@@ -111,6 +117,24 @@ public class MobileModifyController extends BaseUserController {
         BankCallResult result = mobileModifyService.updateNewBankMobile(bean, oldMobile);
         logger.info("异步处理结束。");
         return result;
+    }
+
+    /**
+     * 获取最新预留银行手机号
+     *
+     * @param userId
+     * @return
+     * @Author liushouyi
+     */
+    @ApiOperation(value = "获取最新预留银行手机号", notes = "获取最新预留银行手机号")
+    @PostMapping("/getNewBankMobile")
+    public String getNewBankMobile(@RequestHeader(value = "userId") int userId) {
+        // 调用银行接口获取最新银行预留手机号
+        String newBankMobile = mobileModifyService.getNewBankMobile(userId);
+        if(StringUtils.isBlank(newBankMobile)) {
+            throw new CheckException(MsgEnum.STATUS_CE000004);
+        }
+        return newBankMobile;
     }
 
     /**

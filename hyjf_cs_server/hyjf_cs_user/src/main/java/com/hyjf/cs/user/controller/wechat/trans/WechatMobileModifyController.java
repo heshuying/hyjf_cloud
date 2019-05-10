@@ -59,10 +59,15 @@ public class WechatMobileModifyController extends BaseUserController {
             // 获取用户信息失败
             throw new ReturnMessageException(MsgEnum.ERR_USER_NOT_LOGIN);
         }
+        // 目前只有个人用户可修改
+        if(null == user.getUserType() || user.getUserType() ==  1) {
+            // 只针对个人用户修改手机号
+            throw new ReturnMessageException(MsgEnum.ERR_USER_PERSON_ONLY);
+        }
         BankOpenAccountVO bankOpenAccountVO = this.mobileModifyService.getBankOpenAccount(userId);
         if (null == bankOpenAccountVO || StringUtils.isBlank(bankOpenAccountVO.getAccount())) {
             // 用户未开户
-            throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
 
         BankMobileModifyBean bean = new BankMobileModifyBean();
@@ -89,4 +94,21 @@ public class WechatMobileModifyController extends BaseUserController {
     }
 
 
+    /**
+     * 获取最新预留银行手机号
+     *
+     * @param userId
+     * @return
+     * @Author liushouyi
+     */
+    @ApiOperation(value = "获取最新预留银行手机号", notes = "获取最新预留银行手机号")
+    @PostMapping("/getNewBankMobile")
+    public String getNewBankMobile(@RequestHeader(value = "userId") int userId) {
+        // 调用银行接口获取最新银行预留手机号
+        String newBankMobile = mobileModifyService.getNewBankMobile(userId);
+        if(StringUtils.isBlank(newBankMobile)) {
+            throw new CheckException(MsgEnum.STATUS_CE000004);
+        }
+        return newBankMobile;
+    }
 }
