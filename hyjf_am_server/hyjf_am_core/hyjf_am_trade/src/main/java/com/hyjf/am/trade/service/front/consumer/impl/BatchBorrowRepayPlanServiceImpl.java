@@ -1188,7 +1188,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
-			List<HjhDebtCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1);
+			List<HjhDebtCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1, isAllRepay, lastPeriod);
 			boolean isLastUpdate2 = isLastAllRepay(borrowNid, periodNow, tenderUserId, tenderOrderId, isAllRepay);
 			if(isLastUpdate2 && !isLastUpdate){
 				logger.error("【智投还款/出借人】借款编号：{}，一次性还款重新更新放款记录总表(ht_borrow_recover)状态为成功", apicron.getBorrowNid());
@@ -1212,8 +1212,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 						// 债转最后还款时间
 						borrowCredit.setCreditRepayYesTime(isMonth ? 0 : nowTime);
 					}
-					// 债转还款期
-					borrowCredit.setRepayPeriod(periodNow);
+                    // 债转还款期  update by wgx 2019/05/10 一次性还款更新为borrowPeriod，多期还款更新为提交的最后一期
+                    borrowCredit.setRepayPeriod(isAllRepay ? borrowPeriod : lastPeriod == 0 ? periodNow : lastPeriod);
 					// 债转最近还款时间
 					borrowCredit.setCreditRepayLastTime(nowTime);
 					// 更新债转标的表
@@ -1258,10 +1258,16 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		return true;
 	}
 
-	private List<HjhDebtCredit> getBorrowCredit(String tenderOrderId, Integer periodNow) {
+	private List<HjhDebtCredit> getBorrowCredit(String tenderOrderId, Integer periodNow, boolean isAllRepay, int lastPeriod) {
 		
 		HjhDebtCreditExample example = new HjhDebtCreditExample();
-		example.createCriteria().andInvestOrderIdEqualTo(tenderOrderId).andRepayPeriodEqualTo(periodNow);
+		HjhDebtCreditExample.Criteria crt = example.createCriteria();
+		crt.andInvestOrderIdEqualTo(tenderOrderId);
+		if (!isAllRepay && lastPeriod == 0) { // 非一次性/非多期还款根据还款期数更新
+			crt.andRepayPeriodEqualTo(periodNow);
+		} else if (lastPeriod > 0) { // 多期还款按照提交的最后期数确定条件
+			crt.andRepayPeriodLessThanOrEqualTo(lastPeriod);
+		}
 		List<HjhDebtCredit> borrowCredits = this.hjhDebtCreditMapper.selectByExample(example);
 		return borrowCredits;
 	}
@@ -1648,7 +1654,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
-			List<HjhDebtCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1);
+			List<HjhDebtCredit> borrowCredits = this.getBorrowCredit(tenderOrderId, periodNow - 1, isAllRepay, lastPeriod);
 			if (borrowCredits != null && borrowCredits.size() > 0) {
 				for (int i = 0; i < borrowCredits.size(); i++) {
 					// 获取相应的债转记录
@@ -1663,8 +1669,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 						// 债转最后还款时间
 						borrowCredit.setCreditRepayYesTime(isMonth ? 0 : nowTime);
 					}
-					// 债转还款期
-					borrowCredit.setRepayPeriod(periodNow);
+					// 债转还款期  update by wgx 2019/05/10 一次性还款更新为borrowPeriod，多期还款更新为提交的最后一期
+					borrowCredit.setRepayPeriod(isAllRepay ? borrowPeriod : lastPeriod == 0 ? periodNow : lastPeriod);
 					// 债转最近还款时间
 					borrowCredit.setCreditRepayLastTime(nowTime);
 					// 更新债转标的表
