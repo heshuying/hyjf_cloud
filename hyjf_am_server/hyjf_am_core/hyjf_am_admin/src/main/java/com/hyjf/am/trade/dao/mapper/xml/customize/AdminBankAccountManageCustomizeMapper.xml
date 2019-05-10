@@ -47,7 +47,6 @@
 
     </sql>
 
-
     <select id="queryAccountCount" resultType="java.lang.Integer"
             parameterType="com.hyjf.am.resquest.admin.BankAccountManageRequest">
         SELECT
