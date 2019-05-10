@@ -31,7 +31,7 @@ public class ActivityUserRewardController {
     @Autowired
     private ActivityUserRewardService activityUserRewardService;
     /**
-     * 保存领取记录
+     * 保存领取记录 (不支持重复保存)
      * @param vo
      * @return
      */
@@ -39,10 +39,12 @@ public class ActivityUserRewardController {
     public BooleanResponse insert(@RequestBody ActivityUserRewardVO vo) {
         logger.info("insert ActivityUserReward, vo is: {}", vo);
 
-        if (activityUserRewardService.selectByUserId(vo.getUserId(), vo.getActivityId(), vo.getGrade()) != null) {
-            logger.error("用户：{}在活动： {}已经领取奖励", vo.getUserId(), vo.getActivityId());
-            return new BooleanResponse(Boolean.FALSE);
-        }
+		List<ActivityUserReward> list = activityUserRewardService.selectByUserId(vo.getUserId(), vo.getActivityId(), vo.getGrade());
+		// logger.info("test, {}", list != null);
+		if (!CollectionUtils.isEmpty(list)) {
+			logger.error("用户：{}在活动： {}已经领取奖励", vo.getUserId(), vo.getActivityId());
+			return new BooleanResponse(Boolean.FALSE);
+		}
 
 		ActivityUserReward reward = new ActivityUserReward();
 		BeanUtils.copyProperties(vo, reward);

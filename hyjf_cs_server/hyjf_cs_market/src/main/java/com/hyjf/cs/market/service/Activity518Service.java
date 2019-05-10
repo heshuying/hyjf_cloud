@@ -3,6 +3,7 @@ package com.hyjf.cs.market.service;
 import com.hyjf.am.vo.activity.UserTenderVO;
 import com.hyjf.am.vo.activity.ActivityUserRewardVO;
 import com.hyjf.am.vo.market.ActivityListVO;
+import com.hyjf.cs.market.dto.activity518.RewardTimesDTO;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -62,7 +63,7 @@ public interface Activity518Service {
      * @param activityEndDate
      * @return
      */
-    int countRewardTimes(int activityId, int userId, Date activityStartDate, Date activityEndDate);
+    RewardTimesDTO countRewardTimes(int activityId, int userId, Date activityStartDate, Date activityEndDate);
 
     /**
      * @Author walter.limeng

@@ -7,6 +7,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.dto.activity518.RewardTimesDTO;
 import com.hyjf.cs.market.service.Activity518Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class Activity518ServiceImpl implements Activity518Service {
     }
 
     @Override
-    public int countRewardTimes(int activityId, int userId, Date activityStartDate, Date activityEndDate){
+    public RewardTimesDTO countRewardTimes(int activityId, int userId, Date activityStartDate, Date activityEndDate){
         /*
         计算规则：
             公式： 剩余抽奖次数 = 总计抽奖次数 - 已抽奖次数
@@ -118,7 +119,10 @@ public class Activity518ServiceImpl implements Activity518Service {
         logger.info("sumTimes is: {}, alreadyTimes is: {}", sumTimes, alreadyTimes);
         int remainderTimes = sumTimes - alreadyTimes;
 
-        return remainderTimes < 0 ? 0 : remainderTimes;
+        RewardTimesDTO dto = new RewardTimesDTO();
+        dto.setTimes(remainderTimes < 0 ? 0 : remainderTimes);
+        dto.setAlreadyTimes(alreadyTimes);
+        return dto;
     }
 
     @Override

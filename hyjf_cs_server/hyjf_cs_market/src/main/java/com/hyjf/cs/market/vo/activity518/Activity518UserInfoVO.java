@@ -17,6 +17,8 @@ import java.util.List;
 public class Activity518UserInfoVO {
     @ApiModelProperty("剩余抽奖次数")
     private int times;
+    @ApiModelProperty("已抽奖次数")
+    private int alreadyTimes;
     @ApiModelProperty("累计年化出借金额")
     private String amount;
     @ApiModelProperty("抽奖记录")
@@ -84,5 +86,13 @@ public class Activity518UserInfoVO {
 
     public void setRecord(List<RewardRecord> record) {
         this.record = record;
+    }
+
+    public int getAlreadyTimes() {
+        return alreadyTimes;
+    }
+
+    public void setAlreadyTimes(int alreadyTimes) {
+        this.alreadyTimes = alreadyTimes;
     }
 }

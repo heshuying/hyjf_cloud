@@ -8,6 +8,7 @@ import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.common.util.CouponUtil;
+import com.hyjf.cs.market.dto.activity518.RewardTimesDTO;
 import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.service.Activity518Service;
@@ -101,7 +102,9 @@ public abstract class AbstractActivity518Controller extends AbstractController{
         Date activityEndDate = new Date(activityListVO.getTimeEnd() * 1000L);
 
         // 查询用户剩余抽奖次数
-        vo.setTimes(activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate));
+        RewardTimesDTO dto = activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate);
+        vo.setTimes(dto.getTimes());
+        vo.setAlreadyTimes(dto.getAlreadyTimes());
 
         // 查询用户累计年化出借金额
         BigDecimal amount = activity518Service.getUserTenderAmount(userId, activityStartDate, activityEndDate);
@@ -142,7 +145,8 @@ public abstract class AbstractActivity518Controller extends AbstractController{
             Date activityEndDate = new Date(activityListVO.getTimeEnd() * 1000L);
 
             // 查询用户剩余抽奖次数
-            int times = activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate);
+            RewardTimesDTO dto = activity518Service.countRewardTimes(activityId == null ? 0 : activityId, userId, activityStartDate, activityEndDate);
+            int times = dto == null ? 0 : dto.getTimes();
             logger.info("用户：{},剩余抽奖次数：{}", userId, times);
             if(times > 0){
                 //抽奖，保存抽奖记录，   amMarketClient.insertActivityUserReward   grade默认0， rewardName：奖品名称（可选字段）， rewardType奖品代号，代号详情如下
