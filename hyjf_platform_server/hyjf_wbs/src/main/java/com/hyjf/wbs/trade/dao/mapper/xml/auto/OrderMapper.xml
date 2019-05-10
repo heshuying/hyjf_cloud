@@ -36,11 +36,11 @@
         br.user_id	AS assetCustomerId,
         1	AS assetId,
         ""	AS empNo,
-        IF(br.accede_order_id is null,2,3) AS productType,
-        IF(br.accede_order_id is null,br.borrow_nid,ha.plan_nid) AS productNo,
-        IF(br.accede_order_id is null,'散标','智投') AS productName,
+        2 AS productType,
+        br.borrow_nid AS productNo,
+        '散标' AS productName,
         br.recover_capital	AS transAmount,
-        bi.update_time	AS transTime,
+        FROM_UNIXTIME(b.recover_last_time,'%Y-%m-%d %H:%i:%s') AS transTime,
         b.borrow_period	AS deadlineNum,
         CASE WHEN b.is_month=0 THEN 1
         WHEN b.is_month=1 THEN 2
@@ -53,7 +53,7 @@
         LEFT JOIN ht_borrow b ON br.borrow_nid =b.borrow_nid
         LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = br.nid
         INNER JOIN hyjf_user.ht_utm_reg ur ON br.user_id = ur.user_id
-        WHERE br.status=1
+        WHERE br.status=1 and br.accede_order_id is null
         <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
         <if test="utmIds != null">
             AND ur.utm_id in
@@ -64,14 +64,57 @@
         <!-- 放款时间 -->
         <if test="startTime != null and startTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND br.create_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+            AND b.recover_last_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
         </if>
         <if test="endTime != null and endTime != ''">
             <!-- 优化sql(字段类型转换) timestamp-->
-            AND br.create_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+            AND b.recover_last_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
         </if>
         <if test="assetCustomerId != null and assetCustomerId != ''">
             AND br.user_id = #{assetCustomerId}
+        </if>
+        union all
+        SELECT
+        ha.accede_order_id	AS orderNo,
+        2	AS orderStatus,
+        ha.user_id	AS assetCustomerId,
+        1	AS assetId,
+        ""	AS empNo,
+        3 AS productType,
+        ha.plan_nid AS productNo,
+        '智投' AS productName,
+        ha.accede_account	AS transAmount,
+        FROM_UNIXTIME(b.recover_last_time,'%Y-%m-%d %H:%i:%s') AS transTime,
+        b.borrow_period	AS deadlineNum,
+        CASE WHEN b.is_month=0 THEN 1
+        WHEN b.is_month=1 THEN 2
+        END	AS DeadlineUnit,
+        ta.contract_number AS contractNumber
+        FROM ht_hjh_accede ha
+        LEFT JOIN ht_borrow_apicron ba ON ha.plan_nid = ba.plan_nid AND ba.api_type = 0
+        LEFT JOIN ht_borrow b ON ha.plan_nid =b.plan_nid
+        LEFT JOIN ht_borrow_tender bt ON bt.accede_order_id =ha.accede_order_id
+        LEFT JOIN ht_tender_agreement ta ON ta.tender_nid = bt.nid
+        INNER JOIN hyjf_user.ht_utm_reg ur ON ha.user_id = ur.user_id
+        WHERE ha.order_status in (2,3)
+        <!-- 财富端id  纳觅：8001大唐：8002千乐：8003 -->
+        <if test="utmIds != null">
+            AND ur.utm_id in
+            <foreach collection="utmIds" item="item" index="index" open="("  close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <!-- 放款时间 -->
+        <if test="startTime != null and startTime != ''">
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND b.recover_last_time >= STR_TO_DATE(#{startTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <!-- 优化sql(字段类型转换) timestamp-->
+            AND b.recover_last_time <![CDATA[<=]]> STR_TO_DATE(#{endTime},'%Y/%m/%d %H:%i:%s')
+        </if>
+        <if test="assetCustomerId != null and assetCustomerId != ''">
+            AND ha.user_id = #{assetCustomerId}
         </if>
   </select>
 </mapper>
