@@ -26,7 +26,7 @@ public interface CertLendProductConfigService extends BaseHgCertReportService {
      * 查找产品配置信息历史数据
      * @return
      */
-    JSONArray getHistoryDate();
+    JSONArray getHistoryDate(List<CertClaimVO> certClaimVOList);
 
     BorrowTenderVO selectBorrowTenderByOrderId(String orderId);
 
