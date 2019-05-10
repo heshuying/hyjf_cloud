@@ -1125,7 +1125,9 @@
         `od5`.`name` AS `referrerBranchName`,
         `od4`.`name` AS `referrerDepartmentName`,
         t.account AS recoverTotal,
-        br.recover_capital - br.credit_amount - (
+        <!-- 当前持有=投资额-债转金额-（已还本金-已还债转）-->
+        br.recover_capital - br.credit_amount -
+        ((
         SELECT
         IFNULL(
         SUM(p.recover_capital_yes),
@@ -1136,6 +1138,9 @@
         WHERE
         br.nid = p.nid
         AND p.recover_status = 1
+        )
+        - (select IFNULL(SUM(t.repay_capital_yes),0) from ht_hjh_debt_credit_tender t where t.invest_order_id = br.nid)
+        - (select IFNULL(SUM(t.assign_repay_capital),0) from ht_credit_tender t where t.credit_tender_nid = br.nid)
         )AS amountHold,
         br.recover_capital AS recoverCapital,
         br.recover_interest AS recoverInterest,
