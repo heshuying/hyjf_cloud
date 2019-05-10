@@ -5,7 +5,7 @@
                type="com.hyjf.am.vo.admin.BorrowRepayInfoCurrentCustomizeVO">
     </resultMap>
     <sql id="where-type-1">
-        AND br.credit_status != 2 AND  br.recover_capital > br.credit_amount AND br.recover_interest > br.credit_interest_amount
+        AND br.credit_status != 2 AND  (br.recover_capital > br.credit_amount OR br.recover_interest > br.credit_interest_amount)
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
@@ -39,7 +39,7 @@
     </sql>
 
     <sql id="where-type-2">
-        AND rp.credit_status != 2 AND  rp.recover_capital > rp.credit_amount AND rp.recover_interest > rp.credit_interest_amount
+        AND rp.credit_status != 2 AND (rp.recover_capital > rp.credit_amount OR rp.recover_interest > rp.credit_interest_amount)
         <if test="borrowNid != null and borrowNid != ''">
             AND b.borrow_nid = #{borrowNid}
         </if>
