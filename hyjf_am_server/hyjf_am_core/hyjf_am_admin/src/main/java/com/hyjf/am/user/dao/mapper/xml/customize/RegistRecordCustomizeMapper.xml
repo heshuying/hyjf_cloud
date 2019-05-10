@@ -7,7 +7,7 @@
         <result column="mobile" property="mobile" jdbcType="VARCHAR" />
         <result column="user_property" property="userProperty" jdbcType="VARCHAR" />
         <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
-        <result column="utm_source" property="sourceName" jdbcType="VARCHAR" />
+        <result column="source_name" property="sourceName" jdbcType="VARCHAR" />
         <result column="regist_plat" property="registPlat" jdbcType="VARCHAR" />
         <result column="reg_time" property="regTime" jdbcType="TIMESTAMP" />
         <result column="reg_ip" property="regIP" jdbcType="VARCHAR" />
@@ -21,7 +21,7 @@
         hydui.attribute AS user_property,
         hydur.username AS recommend_name,
         IF(plat.source_type=0,hydutm.source_id, plat.source_id) AS source_id,
-        IF(plat.source_type=0,hydutm.utm_source, plat.source_name) AS utm_source,
+        IF(plat.source_type=0,hydutm.utm_source, plat.source_name) AS source_name,
         hydu.reg_esb AS regist_plat, DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
@@ -56,7 +56,7 @@
         hydui.attribute AS user_property,
         hydur.username AS recommend_name,
         IF(plat.source_type=0,hydutm.source_id, plat.source_id) AS source_id,
-        IF(plat.source_type=0,hydutm.utm_source, plat.source_name) AS utm_source,
+        IF(plat.source_type=0,hydutm.utm_source, plat.source_name) AS source_name,
         hydu.reg_esb AS regist_plat, DATE_FORMAT(hydu.reg_time,'%Y-%c-%d %H:%i:%s') AS reg_time,
         hydu.reg_ip
         FROM
