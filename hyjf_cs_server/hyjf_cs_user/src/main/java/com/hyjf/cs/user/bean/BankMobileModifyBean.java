@@ -14,7 +14,15 @@ public class BankMobileModifyBean {
      */
     private String accountId;
 
+    /**
+     * 注册手机号
+     */
     private String mobile;
+
+    /**
+     * 银行预留手机号
+     */
+    private String bankMobile;
 
     /**
      * 用户id
@@ -148,5 +156,13 @@ public class BankMobileModifyBean {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getBankMobile() {
+        return bankMobile;
+    }
+
+    public void setBankMobile(String bankMobile) {
+        this.bankMobile = bankMobile;
     }
 }

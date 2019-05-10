@@ -57,11 +57,11 @@ public class MobileModifyController extends BaseUserController {
      * @return
      * @Author liushouyi
      */
-    @ApiOperation(value = "手机号码修改（未开户）", notes = "手机号码修改（未开户）")
+    @ApiOperation(value = "银行预留手机号码修改", notes = "银行预留手机号码修改")
     @PostMapping(value = "/bankMobileModify", produces = "application/json; charset=utf-8")
     @ResponseBody
     public WebResult<Object> bankMobileModify(@RequestHeader(value = "userId") int userId, HttpServletRequest request) {
-        logger.info("用户预留手机号修改,userId:" + userId);
+        logger.info("银行预留手机号码修改,userId:" + userId);
         WebResult<Object> result = new WebResult<Object>();
         // 获取用户信息
         UserVO user = this.mobileModifyService.getUsersById(userId);
@@ -82,12 +82,17 @@ public class MobileModifyController extends BaseUserController {
         bean.setIp(CustomUtil.getIpAddr(request));
         bean.setPlatform(ClientConstants.WEB_CLIENT + "");
         bean.setClientHeader(ClientConstants.CLIENT_HEADER_PC);
+        bean.setBankMobile(user.getBankMobile());
 
         // 组装参数
         Map<String, Object> data = mobileModifyService.getBankMobileModify(bean, null);
         result.setData(data);
-        // TODO 插入修改日志表
-
+        // 插入修改日志表
+        boolean re = mobileModifyService.insertBankMobileModify(bankOpenAccountVO.getAccount(), user.getBankMobile(), userId);
+        if (!re) {
+            logger.info("保存修改预留手机号日志失败,手机号:[" + user.getBankMobile() + "],用户ID:[" + user.getUserId() + "]");
+            throw new CheckException(MsgEnum.STATUS_CE999999);
+        }
         return result;
     }
 
@@ -98,19 +103,13 @@ public class MobileModifyController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "修改银行预留手机号异步处理", notes = "修改银行预留手机号异步处理")
-    @PostMapping("/bgReturn")
+    @PostMapping("/bankMobileModifyBgReturn")
     @ResponseBody
-    public BankCallResult openAccountBgReturn(@RequestBody BankCallBean bean, @RequestParam("mobile") String mobile) {
-        logger.info("web端开户异步处理start,userId:{}", bean.getLogUserId());
-        logger.info("银行异步回掉、修改前手机号：" + mobile + "修改后手机号：" + bean.getMobile());
-        // 查询用
-        bean.setRemark(bean.getMobile());
-        bean.setMobile(mobile);
-
-//        BankCallResult result = mobileModifyService.bankMobileModifyBgReturn(bean);
-        // 确认修改成功后更新日志表
-
-        BankCallResult result = new BankCallResult();
+    public BankCallResult bankMobileModifyBgReturn(@RequestBody BankCallBean bean, @RequestParam("phone") String oldMobile) {
+        logger.info("web端修改银行预留手机号异步处理start,userId:{}", bean.getLogUserId());
+        // 通过查询接口重新获取用户当前最新手机号
+        BankCallResult result = mobileModifyService.updateNewBankMobile(bean, oldMobile);
+        logger.info("异步处理结束。");
         return result;
     }
 
