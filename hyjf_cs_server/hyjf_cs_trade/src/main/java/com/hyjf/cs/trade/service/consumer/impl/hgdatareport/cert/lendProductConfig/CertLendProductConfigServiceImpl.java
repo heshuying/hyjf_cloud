@@ -191,7 +191,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             if(CollectionUtils.isNotEmpty(listJoin)){
                 for(CertClaimVO certClaimVO:listJoin){
                     String nid = certClaimVO.getClaimNid();
-                    logger.info("产品配置信息历史数据推送日志 原始债权编号："+nid);
+//                    logger.info("产品配置信息历史数据推送日志 原始债权编号："+nid);
                     List<BorrowTenderVO> borrowTenderVOList = amTradeClient.getBorrowTenderListByNid(nid);
                     if(CollectionUtils.isEmpty(borrowTenderVOList)){
                         logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】债权编号："+nid+" ,暂无投资信息！！");
@@ -214,7 +214,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                             continue;
                         }
                     }
-                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】初始债权编号：" + nid  +"组装数据");
+//                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】初始债权编号：" + nid  +"组装数据");
                     sourceFinancingcode = hjhAccedeVO.getPlanNid();
                     finClaimID = borrowTenderVO.getNid();
                     userId = hjhAccedeVO.getUserId();
@@ -228,7 +228,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
             if(CollectionUtils.isNotEmpty(listCredit)){
                 for(CertClaimVO certClaimVO:listCredit){
                     String nid = certClaimVO.getClaimNid();
-                    logger.info("产品配置信息历史数据推送日志 承接债权编号："+nid);
+//                    logger.info("产品配置信息历史数据推送日志 承接债权编号："+nid);
                     List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOLists = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);
                     if(CollectionUtils.isEmpty(hjhDebtCreditTenderVOLists)){
                         logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码："+nid+" ,查询智投债转投资信息为空！！");
@@ -244,7 +244,7 @@ public class CertLendProductConfigServiceImpl extends BaseHgCertReportServiceImp
                             continue;
                         }
                     }
-                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码：" + nid +"组装数据");
+//                    logger.info("【合规数据上报_CERT 产品配置信息历史数据推送】承接债转编码：" + nid +"组装数据");
                     finClaimID = hjhDebtCreditTenderVO.getAssignOrderId();
                     userId = hjhDebtCreditTenderVO.getUserId();
                     String strDate = fromatDate(hjhDebtCreditTenderVO.getCreateTime());
