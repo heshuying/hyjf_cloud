@@ -18,11 +18,11 @@ public class Activity518InfoVO {
     @ApiModelProperty("排行榜")
     private List<Leaderboard> leaderboard;
 
-    @ApiModelProperty("脱敏的用户名")
-    private String username;
+    @ApiModelProperty("用户名")
+    private String username = "";
 
     @ApiModelProperty("累计年化出借金额")
-    private String amount;
+    private String amount = "";
 
     /**
      * 出借排行榜
