@@ -98,7 +98,7 @@ public class CertOldLendProductConfigMessageConsumer implements RocketMQListener
             }
             logger.info(logHeader + "查询的未上报的产品配置历史数据共: " + certBorrowEntityList.size() + "条");
             // --> 调用service组装数据
-            JSONArray listRepay = certLendProductConfigService.getHistoryDate(certBorrowEntityList);
+            JSONArray listRepay = certLendProductConfigService.getHistoryDate();
             int intCount = listRepay == null ? 0 : listRepay.size();
             logger.info(logHeader + "查询的产品配置历史数据共: " + intCount + "条" + ",当前时间为:" + GetDate.getNowTime10());
             if (null == listRepay || listRepay.size() <= 0) {
