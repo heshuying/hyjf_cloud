@@ -50,20 +50,20 @@ public class SmsCountController extends BaseController {
         int count = smsCountService.selectCount(request);
         response.setCount(count);
         if(count > 0){
-            //根据需求：2018年12月27日之前的按照5分钱算，之后按4分钱算
+            //根据需求：2018年12月27日之前的按照0.042分钱算，之后按0.04分钱算
             List<SmsCountCustomize> list = smsCountService.querySmsCountLlist(request);
             if (!CollectionUtils.isEmpty(list)) {
                 List<SmsCountCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCountCustomizeVO.class);
                 response.setResultList(voList);
             }
-            //根据需求：2018年12月27日之前的按照5分钱算，之后按4分钱算
+            //根据需求：2018年12月27日之前的按照0.042分钱算，之后按0.04分钱算
 //            String configMoney = CacheUtil.getParamName("SMS_COUNT_PRICE", "PRICE");
 ////            if (StringUtils.isEmpty(configMoney)) {
 ////                configMoney = "0.042";//短信单价（0.042元/条）
 ////            }
 
             // 查询短信总条数
-            //根据需求：2018年12月27日之前的按照5分钱算，之后按4分钱算
+            //根据需求：2018年12月27日之前的按照0.042分钱算，之后按0.04分钱算
             List<SmsCountCustomize> listsmsCount = smsCountService.querySmsCountNumberTotal(request);
             if(listsmsCount.size() > 0){
                 SmsCountCustomize vo = listsmsCount.get(0);

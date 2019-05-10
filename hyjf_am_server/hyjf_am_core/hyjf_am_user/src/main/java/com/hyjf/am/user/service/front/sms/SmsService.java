@@ -54,4 +54,11 @@ public interface SmsService extends BaseService{
      * @return
      */
     List<String> queryUser(SmsCodeUserRequest request);
+
+    /**
+     * 根据用户生日查询手机号码
+     * @param request
+     * @return
+     */
+    List<String> queryUserByBirthday(SmsCodeUserRequest request);
 }

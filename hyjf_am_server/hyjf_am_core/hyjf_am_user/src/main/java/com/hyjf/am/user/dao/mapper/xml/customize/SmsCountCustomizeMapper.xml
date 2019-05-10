@@ -140,7 +140,21 @@
                 AND create_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
             </if>
             <if test="open_account!= null and open_account == 1" >
-                AND open_account = 1
+                AND bank_open_account = 1
+            </if>
+        </where>
+    </select>
+
+    <select id="queryUserByBirthday" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+            hu.mobile
+        FROM
+            ht_user hu
+        INNER JOIN ht_user_info hui ON hu.user_id = hui.user_id
+        <where>
+            bank_open_account = 1
+            <if test="birthday != null" >
+                AND hui.birthday LIKE #{birthday}
             </if>
         </where>
     </select>
