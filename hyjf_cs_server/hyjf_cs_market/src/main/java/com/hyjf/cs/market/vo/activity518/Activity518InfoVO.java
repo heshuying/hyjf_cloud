@@ -4,6 +4,7 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class Activity518InfoVO {
     private int started;
 
     @ApiModelProperty("排行榜")
-    private List<Leaderboard> leaderboard;
+    private List<Leaderboard> leaderboard = new ArrayList<>();
 
     @ApiModelProperty("用户名")
     private String username = "";
