@@ -61,13 +61,13 @@ public class ActivityUserRewardController {
 	@RequestMapping("/save")
 	public ActivityUserRewardResponse saveReward(@RequestBody ActivityUserRewardVO vo) {
 		logger.info("insert ActivityUserReward, vo is: {}", vo);
-		ActivityUserRewardResponse reaponse = new ActivityUserRewardResponse();
+		ActivityUserRewardResponse response = new ActivityUserRewardResponse();
 		ActivityUserReward reward = new ActivityUserReward();
 		BeanUtils.copyProperties(vo, reward);
 		int rewardId = activityUserRewardService.insertActivityUserReward(reward);
 		logger.info("用户: {}参与活动成功， rewardId: {}", vo.getUserId(), rewardId);
-		reaponse.setRewardId(rewardId);
-		return reaponse;
+		response.setRewardId(rewardId);
+		return response;
 	}
 
     /**
