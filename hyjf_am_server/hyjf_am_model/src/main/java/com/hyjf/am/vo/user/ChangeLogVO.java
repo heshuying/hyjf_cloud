@@ -45,6 +45,11 @@ public class ChangeLogVO extends BaseVO implements Serializable {
     //注册渠道
     private String utmName;
 
+    //原注册渠道ID
+    private String sourceIdWasId;
+    //原注册渠道NAME
+    private String sourceIdWasName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -208,6 +213,22 @@ public class ChangeLogVO extends BaseVO implements Serializable {
 
     public void setUtmName(String utmName) {
         this.utmName = utmName;
+    }
+
+    public String getSourceIdWasId() {
+        return sourceIdWasId;
+    }
+
+    public void setSourceIdWasId(String sourceIdWasId) {
+        this.sourceIdWasId = sourceIdWasId;
+    }
+
+    public String getSourceIdWasName() {
+        return sourceIdWasName;
+    }
+
+    public void setSourceIdWasName(String sourceIdWasName) {
+        this.sourceIdWasName = sourceIdWasName;
     }
 }
 

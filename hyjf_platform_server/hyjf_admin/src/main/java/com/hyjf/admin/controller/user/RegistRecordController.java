@@ -16,7 +16,6 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
@@ -152,23 +151,9 @@ public class RegistRecordController extends BaseController {
     @PostMapping(value = "/registRecordUtmEdit")
     @ResponseBody
     public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
-        // 判断客户端类型 （registPlat  账户开通平台 0pc 1微信 2安卓 3IOS 4其他）
-
-        // app,ios,wechat: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_app_utm_reg）
-        // 1.有渠道直接更新ht_app_utm_reg的source_id和source_name
-        // 2.没有渠道记录插入一条新数据 （ht_app_utm_reg）
-
-        // app,ios,wechat: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_utm ，再用utm_id查询 ht_utm_reg）
-        // 1.有渠道直接更新ht_utm_reg的utm_id
-        // 2.没有渠道记录插入一条新数据
-
-        RegistRecordResponse registRecordResponse = registRecordService.editRegistRecordOne(registRcordRequestBean);
-        if (registRecordResponse == null) {
+        boolean registRecordResponse = registRecordService.editRegistRecordOne(registRcordRequestBean);
+        if (registRecordResponse) {
             return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!AdminResponse.isSuccess(registRecordResponse)) {
-            return new AdminResult<>(FAIL, registRecordResponse.getMessage());
-
         }
         return new AdminResult<>();
     }

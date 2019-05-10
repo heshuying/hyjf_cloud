@@ -77,6 +77,11 @@ public class ChangeLogCustomize {
     //注册渠道
     private String utmName;
 
+    //原注册渠道
+    private String sourceIdWasId;
+    //原注册渠道NAME
+    private String sourceIdWasName;
+
     public String getStartTime() {
 		return startTime;
 	}
@@ -304,6 +309,22 @@ public class ChangeLogCustomize {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSourceIdWasId() {
+        return sourceIdWasId;
+    }
+
+    public void setSourceIdWasId(String sourceIdWasId) {
+        this.sourceIdWasId = sourceIdWasId;
+    }
+
+    public String getSourceIdWasName() {
+        return sourceIdWasName;
+    }
+
+    public void setSourceIdWasName(String sourceIdWasName) {
+        this.sourceIdWasName = sourceIdWasName;
     }
 }
 

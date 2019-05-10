@@ -84,17 +84,28 @@ public class RegistRecordServiceImpl implements RegistRecordService {
      * @return
      */
     @Override
-    public RegistRecordResponse editRegistRecordOne(RegistRcordRequestBean registRcordRequestBean){
-        RegistRecordResponse RgistRecord = new RegistRecordResponse();
+    public boolean editRegistRecordOne(RegistRcordRequestBean registRcordRequestBean){
         Integer UserId = Integer.valueOf(registRcordRequestBean.getUserId());
+        // 修改渠道id
         String sourceId = registRcordRequestBean.getSourceId();
+        // 原渠道id
+        String sourceIdWasId = registRcordRequestBean.getSourceIdWasId();
+        // 是否记录日志
         boolean flagIns = false;
+        // 原渠道名称
+        String sourceName = "";
+        // 修改注册渠道名称
         String utmNameLog = "";
         // 判断客户端类型 （registPlat  账户开通平台 0pc 1微信 2安卓 3IOS 4其他）
         if(registRcordRequestBean.getRegistPlat()!=null&&registRcordRequestBean.getRegistPlat().equals("0")){
             // pc: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_utm ，再用utm_id查询 ht_utm_reg）
             // 根据source_id查询是否有渠道
             UtmVO utmVO  = registRecordClient.getUtmBySourceId(sourceId);
+            // 搜索原渠道信息
+            UtmVO utmVOWas  = registRecordClient.getUtmBySourceId(sourceIdWasId);
+            if(utmVOWas!=null){
+                sourceName = utmVOWas.getSourceName();
+            }
             if(utmVO!=null){
                 // 根据userId查询是否有渠道记录
                 UtmRegVO utmRegVO = registRecordClient.findUtmRegByUserId(UserId);
@@ -124,13 +135,26 @@ public class RegistRecordServiceImpl implements RegistRecordService {
             }else{
                 // 没有查询到可以调用的渠道信息 抛出日志
                 logger.error("没有查询到可以调用的渠道信息,请根据source_id【"+sourceId+"】检查ht_utm表中是否存在相关数据！");
+                return false;
             }
         }else if(registRcordRequestBean.getRegistPlat()!=null&&registRcordRequestBean.getRegistPlat().equals("2")&&registRcordRequestBean.getRegistPlat().equals("3")){
             // app,ios,wechat: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_app_utm_reg）
             // 根据source_id查询是否有渠道
+            // 修改渠道id
             HashMap<String,Object> hashMap = new HashMap<>();
+            hashMap.put("delFlag",0);
             hashMap.put("sourceId",sourceId);
+            // 原渠道id
+            HashMap<String,Object> hashMapWas = new HashMap<>();
+            hashMapWas.put("delFlag",0);
+            hashMapWas.put("sourceId",sourceIdWasId);
+            // 修改渠道信息
             List<UtmPlatVO> utmPlatResponse = registRecordClient.getAllUtmPlat(hashMap).getResultList();
+            // 原渠道信息
+            List<UtmPlatVO> utmPlatResponseWas = registRecordClient.getAllUtmPlat(hashMapWas).getResultList();
+            if(utmPlatResponseWas!=null&&utmPlatResponseWas.size()>0){
+                sourceName = utmPlatResponseWas.get(0).getSourceName();
+            }
             // 存在渠道
             if(utmPlatResponse!=null&&utmPlatResponse.size()>0){
                 // 根据userId查询是否有渠道记录
@@ -165,6 +189,7 @@ public class RegistRecordServiceImpl implements RegistRecordService {
             }else{
                 // 没有查询到可以调用的渠道信息 抛出日志
                 logger.error("没有查询到可以调用的渠道信息,请根据source_id【"+sourceId+"】检查ht_utm_plat表中是否存在相关数据！");
+                return false;
             }
         }
         // 插入操作日志表
@@ -172,8 +197,10 @@ public class RegistRecordServiceImpl implements RegistRecordService {
             ChangeLogVO changeLogVO = new ChangeLogVO();
             changeLogVO.setUserId(UserId);
             changeLogVO.setUtmName(utmNameLog);
+            changeLogVO.setSourceIdWasName(sourceName);
+            changeLogVO.setRemark(registRcordRequestBean.getEditUtmCause());
             registRecordClient.insertChangeLogList(changeLogVO);
         }
-        return RgistRecord;
+        return true;
     }
 }

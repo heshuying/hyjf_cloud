@@ -36,5 +36,5 @@ public interface RegistRecordService {
      * 修改注册渠道
      *
      */
-    RegistRecordResponse editRegistRecordOne(RegistRcordRequestBean registRcordRequestBean);
+    boolean editRegistRecordOne(RegistRcordRequestBean registRcordRequestBean);
 }

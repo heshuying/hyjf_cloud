@@ -27,11 +27,17 @@ public class RegistRcordRequestBean extends BasePage {
 	@ApiModelProperty(value = "注册时间（结束）")
 	private String regTimeEnd;
 	//用户Id
-	@ApiModelProperty(value = "userId")
+	@ApiModelProperty(value = "用户Id")
 	private String userId;
 	//注册渠道Id
-	@ApiModelProperty(value = "sourceId")
+	@ApiModelProperty(value = "注册渠道Id（修改值）")
 	private String sourceId;
+    //渠道修改原因
+    @ApiModelProperty(value = "修改原因")
+    private String editUtmCause;
+    //列表渠道Id
+    @ApiModelProperty(value = "列表渠道Id")
+    private String sourceIdWasId;
 
 	public String getUserName() {
 		return userName;
@@ -95,6 +101,22 @@ public class RegistRcordRequestBean extends BasePage {
 
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
+	}
+
+    public String getEditUtmCause() {
+        return editUtmCause;
+    }
+
+    public void setEditUtmCause(String editUtmCause) {
+        this.editUtmCause = editUtmCause;
+    }
+
+	public String getSourceIdWasId() {
+		return sourceIdWasId;
+	}
+
+	public void setSourceIdWasId(String sourceIdWasId) {
+		this.sourceIdWasId = sourceIdWasId;
 	}
 }
 

@@ -147,9 +147,9 @@
 		utm_campaign utmCampaign,utm_referrer utmReferrer,link_address linkAddress,remark remark,STATUS STATUS
 		FROM ht_utm
 		where 1=1
-		<if test="sourceId != null and sourceId != ''" >
+		<!-- <if test="sourceId != null and sourceId != ''" > -->
 			AND source_id = #{sourceId}
-		</if>
+		<!-- </if> -->
 		limit 1
 	</select>
 

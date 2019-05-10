@@ -7,7 +7,6 @@ import com.hyjf.am.user.dao.model.customize.UserInfoForLogCustomize;
 import com.hyjf.am.user.service.front.user.ChangeLogService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.impl.execchain.TunnelRefusedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -122,22 +121,21 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
             changeLog.setStatus(logRecord.getUserStatus());
             changeLog.setIdcard(logRecord.getIdCard());
             changeLog.setUtmName(userChangeLog.getUtmName());
-            UserChangeLogExample logExample = new UserChangeLogExample();
-            UserChangeLogExample.Criteria logCriteria = logExample.createCriteria();
-            logCriteria.andUserIdEqualTo(userChangeLog.getUserId());
-            int count = userChangeLogMapper.countByExample(logExample);
-            if (count <= 0) {
-                // 如果从来没有添加过操作日志，则将原始信息插入修改日志中
-                if (users != null && !users.isEmpty()) {
-                    changeLog.setRemark("渠道修改");
-                    changeLog.setUpdateUser("system");
-                    changeLog.setUpdateTime(new Date());
-                    int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
-                    if (userLogFlg > 0) {
-                        logger.info("==================用户信息修改日志保存成功!======");
-                    } else {
-                        throw new RuntimeException("============用户信息修改日志保存失败!========");
-                    }
+            changeLog.setRemark(userChangeLog.getRemark());
+            if (users != null && !users.isEmpty()) {
+                changeLog.setRemark("渠道修改");
+                changeLog.setUpdateUser("system");
+                changeLog.setUpdateTime(new Date());
+                // 修改渠道
+                int userLogFlg =  changeLogCustomizeMapper.insertSelective(changeLog);
+                changeLog.setUtmName(userChangeLog.getSourceIdWasName());
+                changeLog.setRemark("该记录为用户原渠道记录");
+                // 原渠道记录
+                int userLogFlgWas =  changeLogCustomizeMapper.insertSelective(changeLog);
+                if (userLogFlg > 0&&userLogFlgWas>0) {
+                    logger.info("==================用户信息修改日志保存成功!======");
+                } else {
+                    throw new RuntimeException("============用户信息修改日志保存失败!========");
                 }
             }
         }
