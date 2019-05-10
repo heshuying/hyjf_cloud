@@ -151,10 +151,6 @@ public class BorrowRepayInfoCurrentController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    public static void main(String[] args) {
-        System.out.println(1271/5000);
-    }
-
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("tenderOrdid","出借订单号");
