@@ -81,7 +81,6 @@ public class WebBankWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "用户银行提现校验", notes = "用户银行提现校验")
     @PostMapping("/userBankWithdrawCheck")
-    @RequestLimit(seconds = 3)
     public WebResult<Object> userBankWithdrawCheck(@RequestHeader(value = "userId") Integer userId, @RequestBody WithdrawRuleConfigRequest withdrawRuleConfigRequest, HttpServletRequest request) {
         WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
         String withdrawMoney = withdrawRuleConfigRequest.getWithdrawMoney();
