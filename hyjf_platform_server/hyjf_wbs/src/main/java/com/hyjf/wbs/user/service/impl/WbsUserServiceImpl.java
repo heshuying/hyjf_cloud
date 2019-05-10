@@ -271,6 +271,9 @@ public class WbsUserServiceImpl implements WbsUserService {
 			if (RedirectTypeEnum.BORROW_TYPE.getType().equals(type)) {
 				String url = RedirectTypeEnum.BORROW_TYPE.getWebUrl();
 				return String.format(url, qo.getBorrowNid());
+			}else if(RedirectTypeEnum.PLAN_TYPE.getType().equals(type)){
+				String url=RedirectTypeEnum.PLAN_TYPE.getWebUrl();
+				return String.format(url,qo.getBorrowNid());
 			} else {
 				RedirectTypeEnum redirectTypeEnum = RedirectTypeEnum.findType(type);
 				return redirectTypeEnum.getWebUrl();
@@ -279,6 +282,9 @@ public class WbsUserServiceImpl implements WbsUserService {
 			if (RedirectTypeEnum.BORROW_TYPE.getType().equals(type)) {
 				String url = RedirectTypeEnum.BORROW_TYPE.getWechatUrl();
 				return String.format(url, qo.getBorrowNid());
+			} else if(RedirectTypeEnum.PLAN_TYPE.getType().equals(type)){
+				String url=RedirectTypeEnum.PLAN_TYPE.getWechatUrl();
+				return String.format(url,qo.getBorrowNid());
 			} else {
 				RedirectTypeEnum redirectTypeEnum = RedirectTypeEnum.findType(type);
 				return redirectTypeEnum.getWechatUrl();
