@@ -355,12 +355,12 @@
 					CASE WHEN u2.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
 					CASE WHEN u2.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
 					CASE WHEN u2.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
-					u3.username AS referrer_name,
-					u3.user_id AS referrer_user_id,
+					t.invite_user_name AS referrer_name,
+					t.invite_user_id AS referrer_user_id,
 					u3.truename AS referrer_true_name,
-					`od6`.`name` AS `referrer_region_name`,
-					`od5`.`name` AS `referrer_branch_name`,
-					`od4`.`name` AS `referrer_department_name`,
+					t.invite_region_name AS `referrer_region_name`,
+					t.invite_branch_name AS `referrer_branch_name`,
+					t.invite_department_name AS `referrer_department_name`,
 					br.recover_period AS recoverPeriod,
 					t.account AS recoverTotal,
 					br.recover_capital AS recoverCapital,
@@ -415,7 +415,7 @@
 					LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
 			
 			
-					LEFT JOIN ht_r_user AS u3 ON u2.spreads_user_id = u3.user_id
+					LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
 					LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 					LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 					LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`
@@ -448,12 +448,12 @@
 					CASE WHEN u2.attribute = '1' THEN `od6`.`name` ELSE `od3`.`name` END `recover_region_name`,
 					CASE WHEN u2.attribute = '1' THEN `od5`.`name` ELSE `od2`.`name` END `recover_branch_name`,
 					CASE WHEN u2.attribute = '1' THEN `od4`.`name` ELSE `od`.`name`  END `recover_department_name`,
-					u3.username AS referrer_name,
-					u3.user_id AS referrer_user_id,
+					t.invite_user_name AS referrer_name,
+					t.invite_user_id AS referrer_user_id,
 					u3.truename AS referrer_true_name,
-					`od6`.`name` AS `referrer_region_name`,
-					`od5`.`name` AS `referrer_branch_name`,
-					`od4`.`name` AS `referrer_department_name`,
+					t.invite_region_name AS `referrer_region_name`,
+					t.invite_branch_name AS `referrer_branch_name`,
+					t.invite_department_name AS `referrer_department_name`,
 					br.recover_period AS recoverPeriod,
 					t.account AS recoverTotal,
 					br.recover_capital AS recoverCapital,
@@ -508,7 +508,7 @@
 					LEFT JOIN ht_r_oa_department `od3` ON `od3`.`id` = `od2`.`parentid`
 			
 			
-					LEFT JOIN ht_r_user AS u3 ON u2.spreads_user_id = u3.user_id
+					LEFT JOIN ht_r_user AS u3 ON t.invite_user_id = u3.user_id
 					LEFT JOIN ht_r_oa_users `ou1` ON `ou1`.hyd_id = u2.spreads_user_id AND ou1.user_status IN ('E','Q1','Q11','Q2','Q21')
 					LEFT JOIN ht_r_oa_department `od4` ON `od4`.`id` = `ou1`.`departmentid` AND `od4`.id IS NOT NULL
 					LEFT JOIN ht_r_oa_department `od5` ON `od5`.`id` = `od4`.`parentid`

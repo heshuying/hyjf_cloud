@@ -496,12 +496,12 @@ public class BorrowRepaymentInfoController extends BaseController {
             map.put("recoverBranchName", "出借人所属二级分部（当前）");
             map.put("recoverDepartmentName", "出借人所属团队（当前）");
         }
-        map.put("referrerName","推荐人用户名（当前）");
-        map.put("referrerTrueName","推荐人姓名（当前）");
+        map.put("referrerName","推荐人用户名（当时）");
+        map.put("referrerTrueName","推荐人姓名（当时）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("referrerRegionName", "推荐人所属一级分部（当前）");
-            map.put("referrerBranchName", "推荐人所属二级分部（当前）");
-            map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+            map.put("referrerRegionName", "推荐人所属一级分部（当时）");
+            map.put("referrerBranchName", "推荐人所属二级分部（当时）");
+            map.put("referrerDepartmentName", "推荐人所属团队（当时）");
         }
         map.put("recoverTotal","出借金额");
        // map.put("recoverTotal","持有金额");

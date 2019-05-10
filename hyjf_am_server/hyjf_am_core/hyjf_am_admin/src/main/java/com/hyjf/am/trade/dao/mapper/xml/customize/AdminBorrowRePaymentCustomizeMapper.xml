@@ -127,6 +127,7 @@
 		<result column="repayAccountCapitalWaitAll" property="repayAccountCapitalWaitAll" jdbcType="VARCHAR" />
 		<result column="repayAccountInterestWaitAll" property="repayAccountInterestWaitAll" jdbcType="VARCHAR" />
 		<result column="repayFeeWaitAll" property="repayFeeWaitAll" jdbcType="VARCHAR" />
+		<result column="webName" property="webName" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectBorrowRepaymentList" resultMap="searchBorrowRepaymentListResultMap" parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentRequest">
 		SELECT
@@ -150,7 +151,8 @@
 		b.regist_user_name,
 		b.repay_account_capital AS repayAccountCapital,
 		b.repay_account_interest AS repayAccountInterest,
-		b.repay_account_all repayAccountAll,
+		b.repay_account_all+br.repay_fee AS repayAccountAll,
+		b.repay_account_all AS repayFeeWaitAll
 		b.borrow_manager AS borrowManager,
 		br.repay_fee AS repayFee,
 		b.repay_account_capital_yes AS repayAccountCapitalYes,
@@ -404,17 +406,7 @@
 				hic.inst_name AS instName,
 				b.project_Type AS
 				projectType,
-				CASE
-				WHEN b.project_Type = 0 THEN '汇保贷'
-				WHEN b.project_Type
-				= 1 THEN '汇典贷'
-				WHEN
-				b.project_Type = 2 THEN '汇小贷'
-				WHEN b.project_Type = 3
-				THEN '汇车贷'
-				WHEN
-				b.project_Type = 4 THEN '新手标'
-				END AS projectTypeName,
+				bpt.borrow_name AS projectTypeName,
 				b.borrow_Period AS borrowPeriod,
 				b.borrow_Apr AS borrowApr,
 				b.account AS
@@ -426,7 +418,7 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
@@ -437,7 +429,7 @@
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
-				rp.repay_account_yes AS yinghuanzonge,
+				if(rp.repay_status='1',rp.repay_account_yes+rp.repay_fee,rp.repay_account_yes) AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
 				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
@@ -478,6 +470,7 @@
 				u.user_id
 				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 			 	<include refid="Borrow_Repayment_Plan_Where_Clause" />
 			 	UNION ALL
 			 	select
@@ -489,17 +482,7 @@
 				hic.inst_name AS instName,
 				b.project_Type AS
 				projectType,
-				CASE
-				WHEN b.project_Type = 0 THEN '汇保贷'
-				WHEN b.project_Type
-				= 1 THEN '汇典贷'
-				WHEN
-				b.project_Type = 2 THEN '汇小贷'
-				WHEN b.project_Type = 3
-				THEN '汇车贷'
-				WHEN
-				b.project_Type = 4 THEN '新手标'
-				END AS projectTypeName,
+				bpt.borrow_name AS projectTypeName,
 				b.borrow_Period AS borrowPeriod,
 				b.borrow_Apr AS borrowApr,
 				b.account AS
@@ -511,7 +494,7 @@
 				rp.repay_capital AS
 				repayCapital,
 				rp.repay_interest AS repayInterest,
-				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait AS
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS
 				repayAccount,
 				rp.repay_fee AS repayFee,
 				rp.charge_days AS tiqiantianshu,
@@ -522,7 +505,7 @@
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
-				rp.repay_account_yes AS yinghuanzonge,
+				if(rp.repay_status='1',rp.repay_account_yes+rp.repay_fee,rp.repay_account_yes) AS yinghuanzonge,
 				rp.charge_penalty_interest AS shihuanzonge,
 				if(rp.repay_status=0 and  rp.advance_status=3,2,rp.repay_status) AS
 				status,
@@ -563,6 +546,7 @@
 				u.user_id
 				LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
 				Left join ht_borrow_apicron ba on rp.borrow_nid=ba.borrow_nid and rp.repay_period=ba.period_now and ba.api_type='1'
+				LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
 				<include refid="Borrow_Repayment_Plan_Where_Clause" />
 			 ) tt
 			ORDER BY
@@ -576,17 +560,36 @@
 	<select id="sumBorrowRepaymentPlanInfo"
 			resultType="com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentPlanCustomize"
 			parameterType="com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest">
-		select
-		SUM(rp.repay_capital) AS repayCapital,
-		SUM(rp.repay_interest) AS
-		repayInterest,
-		SUM(rp.repay_account) AS repayAccount,
-		SUM(rp.repay_fee) AS repayFee
-		from
-		ht_borrow_repay_plan AS rp
-		INNER JOIN ht_borrow AS b ON rp.borrow_nid=b.borrow_nid
-		INNER JOIN  ht_borrow_info  AS binfo on b.borrow_nid=binfo.borrow_nid
-		<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			SELECT
+				SUM( repayCapital ) AS repayCapital,
+				SUM( repayInterest ) AS repayInterest,
+				SUM( repayAccount ) AS repayAccount,
+				SUM( repayFee ) AS repayFee 
+			FROM
+				(
+			SELECT
+				SUM( rp.repay_capital ) AS repayCapital,
+				SUM( rp.repay_interest ) AS repayInterest,
+				SUM( rp.repay_account ) AS repayAccount,
+				SUM( rp.repay_fee ) AS repayFee 
+			FROM
+				ht_borrow_repay_plan AS rp
+				INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid
+				INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+			UNION ALL
+			SELECT
+				SUM( rp.repay_capital ) AS repayCapital,
+				SUM( rp.repay_interest ) AS repayInterest,
+				SUM( rp.repay_account ) AS repayAccount,
+				SUM( rp.repay_fee ) AS repayFee 
+			FROM
+				ht_borrow_repay AS rp
+				INNER JOIN ht_borrow AS b ON rp.borrow_nid = b.borrow_nid 
+				AND b.borrow_style IN ( 'end', 'endday' )
+				INNER JOIN ht_borrow_info AS binfo ON b.borrow_nid = binfo.borrow_nid
+				<include refid="Borrow_Repayment_Plan_Where_Clause" />
+				) t
 	</select>
 
 	<select id="exportRepayClkActBorrowRepaymentInfoListOld" resultMap="searchBorrowRepaymentPlanListResultMap"
@@ -991,7 +994,7 @@
 		b.repay_account_interest_wait AS repayAccountInterestWait
         FROM
         ht_borrow AS b
-        INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid
+        INNER JOIN ht_borrow_repay AS br ON b.borrow_nid = br.borrow_nid AND b.borrow_style in ('end','endday')
         INNER JOIN ht_borrow_info hbi ON b.borrow_nid=hbi.borrow_nid
         LEFT JOIN ht_r_user u ON b.user_id = u.user_id
         LEFT JOIN ht_borrow_style AS bs ON b.borrow_style = bs.nid
@@ -999,7 +1002,6 @@
         LEFT JOIN ht_borrow_apicron as ba ON b.borrow_nid = ba.borrow_nid and ba.api_type = 1 and ba.status <![CDATA[<>]]> 6
         LEFT JOIN ht_hjh_inst_config hic ON hbi.inst_code = hic.inst_code
 		<include refid="Where_Clause_New" />
-		AND b.borrow_style in ('end','endday')
 		UNION ALL
 		SELECT
 		b.plan_nid as planNid,
