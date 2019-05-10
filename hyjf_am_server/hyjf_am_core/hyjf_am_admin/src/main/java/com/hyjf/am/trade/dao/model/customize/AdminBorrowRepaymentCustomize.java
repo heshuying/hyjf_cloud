@@ -67,10 +67,19 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
     private String repayAccountCapitalWaitAll;
     private String repayAccountInterestWaitAll;
     private String repayFeeWaitAll;
+    private String webName;
     
     
     
-    public String getRepayAccountInterestAll() {
+    public String getWebName() {
+		return webName;
+	}
+
+	public void setWebName(String webName) {
+		this.webName = webName;
+	}
+
+	public String getRepayAccountInterestAll() {
 		return repayAccountInterestAll;
 	}
 
