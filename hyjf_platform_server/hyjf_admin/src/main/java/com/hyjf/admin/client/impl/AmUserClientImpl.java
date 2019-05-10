@@ -2900,12 +2900,11 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public boolean syncUserMobile(UserRequest userRequest) {
-		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/promotion/utm/insertorupdateutm",
-				userRequest, UserResponse.class).getBody();
+		UserResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/syncUserMobile", userRequest, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return true;
-		}else{
-			return  false;
+		} else {
+			return false;
 		}
 	}
 }

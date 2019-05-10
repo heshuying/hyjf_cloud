@@ -1084,4 +1084,44 @@ public class UserManagerController extends BaseController {
         return response;
     }
 
+
+    /**
+     * 同步用户银行手机号
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/syncUserMobile")
+    public UserResponse syncUserMobile(@RequestBody UserRequest request) {
+        logger.info("同步用户手机号:用户ID:[" + request.getUserId() + "],银行预留手机号:[" + request.getBankMobile() + "].");
+        UserResponse response = new UserResponse();
+        response.setRtn(Response.FAIL);
+        // 用户ID
+        Integer userId = request.getUserId();
+        // 根据用户查询查询用户信息
+        User user = this.userManagerService.selectUserByUserId(userId);
+        if (user == null) {
+            logger.error("根据用户ID查询用户信息失败,用户ID:[" + userId + "].");
+            return response;
+        }
+        // 银行预留手机号
+        String bankMobile = request.getBankMobile();
+        if(StringUtils.isEmpty(bankMobile)){
+            logger.error("银行预留手机号为空");
+            return response;
+        }
+        if (bankMobile.equals(user.getBankMobile())) {
+            logger.error("预留手机号不变,无需更新");
+            return response;
+        }
+        boolean updateUserMobile = this.userManagerService.updateUserMobile(userId, bankMobile,request.getRegIp());
+        if (!updateUserMobile){
+            logger.error("同步手机号更新用户手机号失败");
+            return response;
+        }
+        response.setRtn(Response.SUCCESS);
+        response.setMessage(Response.SUCCESS_MSG);
+        return response;
+    }
+
 }

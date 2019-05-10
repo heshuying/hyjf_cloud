@@ -1373,6 +1373,7 @@ public class UserCenterController extends BaseController {
                     UserRequest userRequest = new UserRequest();
                     userRequest.setBankMobile(bankMobile);
                     userRequest.setUserId(Integer.parseInt(userId));
+                    userRequest.setRegIp(GetCilentIP.getIpAddr(request));
                   boolean  updateFlag =  this.userCenterService.syncUserMobile(userRequest);
 
                 } else {

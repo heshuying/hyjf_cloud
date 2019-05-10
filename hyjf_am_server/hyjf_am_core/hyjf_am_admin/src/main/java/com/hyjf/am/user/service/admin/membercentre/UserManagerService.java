@@ -369,4 +369,15 @@ public interface UserManagerService extends BaseService {
      * @return
      */
     List<BankCancellationAccount> getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest, int limitStart, int limitEnd);
+
+
+    /**
+     * 更新用户预留手机号
+     *
+     * @param userId
+     * @param bankMobile
+     * @param ip
+     * @return
+     */
+    boolean updateUserMobile(Integer userId, String bankMobile,String ip);
 }
