@@ -644,7 +644,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             // 是否能提现
             ret.put("isWithdrawFlag", false);
             // 是否显示联行号
-            ret.put("payAllianceCodeDisplayFlag", false);
+            ret.put("payAllianceCodeDisplayFlag", true);
             ret.put("statusDesc",statusDesc);
         }else {
             // 能够查询到提现规则配置
