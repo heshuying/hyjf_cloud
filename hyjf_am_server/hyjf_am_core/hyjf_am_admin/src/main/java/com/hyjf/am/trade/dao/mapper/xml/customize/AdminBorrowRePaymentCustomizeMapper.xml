@@ -152,7 +152,7 @@
 		b.repay_account_capital AS repayAccountCapital,
 		b.repay_account_interest AS repayAccountInterest,
 		b.repay_account_all+br.repay_fee AS repayAccountAll,
-		b.repay_account_all AS repayFeeWaitAll
+		b.repay_account_all AS repayFeeWaitAll,
 		b.borrow_manager AS borrowManager,
 		br.repay_fee AS repayFee,
 		b.repay_account_capital_yes AS repayAccountCapitalYes,
