@@ -4,6 +4,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.response.user.UtmVOResponse;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.resquest.admin.ChannelRequest;
 import com.hyjf.am.user.controller.BaseController;
@@ -118,6 +119,20 @@ public class UtmController extends BaseController {
         response.setResult(utmChannelVO);
         return response;
     }
+
+    /**
+     * 获取Utm对象
+     * @param sourceId
+     * @return
+     */
+    @RequestMapping("/getUtmBySourceId/{sourceId}")
+    public UtmVOResponse getUtmBySourceId(@PathVariable String sourceId) {
+        UtmVOResponse response = new UtmVOResponse();
+        UtmVO utmVO = utmService.getUtmBySourceId(sourceId);
+        response.setResult(utmVO);
+        return response;
+    }
+
 
     /**
      * 更新或新增Utm对象

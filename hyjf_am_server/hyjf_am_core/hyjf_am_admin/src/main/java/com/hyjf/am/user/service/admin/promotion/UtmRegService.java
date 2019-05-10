@@ -33,4 +33,18 @@ public interface UtmRegService extends BaseService {
      * @return
      */
     Integer getAccountNumber(List<Integer> list, String type);
+
+    /**
+     * 插入pc渠道信息
+     * @param utmReg
+     * @return
+     */
+    void insertPcUtmReg(UtmReg utmReg);
+
+    /**
+     * 更新pc渠道信息
+     * @param utmReg
+     * @return
+     */
+    void updatePcUtmReg(UtmReg utmReg);
 }

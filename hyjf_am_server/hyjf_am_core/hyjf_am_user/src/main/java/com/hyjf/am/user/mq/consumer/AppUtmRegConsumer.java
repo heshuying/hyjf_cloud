@@ -2,9 +2,15 @@ package com.hyjf.am.user.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.customize.AppUtmRegCustomize;
 import com.hyjf.am.user.service.front.user.AppUtmRegService;
+import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -18,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -31,8 +38,10 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 	private static final Logger logger = LoggerFactory.getLogger(AppUtmRegConsumer.class);
 	@Autowired
 	private AppUtmRegService appUtmRegService;
-	
-	
+
+	@Autowired
+	private UserService userService;
+
 	@Override
 	public void onMessage(MessageExt  message) {
 		logger.info("AppUtmRegConsumer 收到消息，开始处理....msgs is :{}", new String(message.getBody()));
@@ -56,11 +65,12 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 				}
 			} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG.equals(msg.getTags())) {
 				logger.info("app渠道统计保存消息....");
-				AppUtmReg entity = JSONObject.parseObject(msg.getBody(),
-						AppUtmReg.class);
+				AppUtmRegCustomize entity = JSONObject.parseObject(msg.getBody(),
+						AppUtmRegCustomize.class);
 				if (entity != null) {
 	                logger.info("entity: {}", JSONObject.toJSONString(entity));
-					appUtmRegService.insert(entity);
+					this.insertRefferAppUtmReg(entity);
+					// appUtmRegService.insert(entity);
 				}
 			} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
 					|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
@@ -110,5 +120,68 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.setMaxReconsumeTimes(3);
 		logger.info("====AppUtmRegConsumer consumer=====");
+	}
+
+	/**
+	 * 用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道
+	 * 推荐人ID ： refferUserId
+	 * 注册用户ID ： userId
+	 * 前端回传固定渠道信息 ： utmId
+	 * 前端回传客户端类型 ： platform
+	 * */
+	private void insertRefferAppUtmReg(AppUtmRegCustomize entity){
+		Integer attribute = null;
+		// 获取推荐人表
+		User refferUser = userService.getRefferUsers(entity.getMobile(),entity.getReffer());
+		if (refferUser != null) {
+			UserInfo refferUserInfo = userService.findUsersInfo(refferUser.getUserId());
+			if (refferUserInfo != null) {
+				// 如果该用户的上级不为空
+				if (Validator.isNotNull(refferUserInfo.getAttribute())) {
+					if (Arrays.asList(2, 3).contains(refferUserInfo.getAttribute())) {
+						// 有推荐人且推荐人为员工(Attribute=2或3)时才设置为有主单
+						attribute = 1;
+					}
+				}
+			}
+		}
+		Boolean refferUtmFlag = true;
+		// 判断是否为线下线上员工（是员工走以下逻辑）
+		if(attribute == 1) {
+			// 推荐人不为空时
+			if (refferUser != null) {
+				String regSourctId;
+				// 查询推荐人渠道
+				AppUtmReg appUtmReg = appUtmRegService.findByUserId(refferUser.getUserId());
+				if (appUtmReg != null) {
+					// 类型转换
+					regSourctId = String.valueOf(appUtmReg.getSourceId());
+					// 是否为空
+					if (StringUtils.isNotEmpty(regSourctId) && Validator.isNumber(regSourctId)) {
+						// 插入推荐人渠道（覆盖MQ发送前拼装的推荐人数据）
+						entity.setSourceId(appUtmReg.getSourceId());
+						entity.setSourceName(appUtmReg.getSourceName());
+						// 转换实体类
+						AppUtmReg appUtmRegInsert = CommonUtils.convertBean(entity, AppUtmReg.class);
+						appUtmRegService.insert(appUtmRegInsert);
+						// 不再进行默认渠道插入
+						refferUtmFlag = false;
+						logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道，插入推荐人渠道（覆盖MQ发送前拼装的推荐人数据，推荐人推广） entity：" + appUtmRegInsert.toString());
+					}
+				} else {
+					logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道，查询推荐人渠道appUtmReg 结果为null（走默认推广） refferUserId ：refferUser.getUserId()");
+				}
+			} else {
+				logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道，获取推荐人结果为null（走默认推广） Mobile ：" + entity.getMobile() + "Reffer" + entity.getReffer());
+			}
+		}else{
+			logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道  ： 推荐人非员工！ （走默认推广）");
+		}
+		if(refferUtmFlag){
+			// 默认推广，插入
+			AppUtmReg appUtmRegInsertDef = CommonUtils.convertBean(entity,AppUtmReg.class);
+			appUtmRegService.insert(appUtmRegInsertDef);
+			logger.error("用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道，插入推荐人渠道 app 默认渠道信息（默认推广）  entity：" + appUtmRegInsertDef.toString());
+		}
 	}
 }

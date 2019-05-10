@@ -149,7 +149,7 @@ public interface RegisterService extends BaseUserService {
      * @param version
      * @param webViewUserVO
      */
-    void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO);
+    void sendMqToSaveAppChannel(String version, WebViewUserVO webViewUserVO,RegisterRequest register);
 
     /**
      * 注册成功后,发送神策统计MQ

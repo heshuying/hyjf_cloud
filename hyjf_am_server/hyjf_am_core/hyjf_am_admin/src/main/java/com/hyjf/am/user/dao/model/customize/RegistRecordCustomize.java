@@ -29,7 +29,8 @@ public class RegistRecordCustomize implements Serializable {
     public String regTime;
     // 注册ip
     public String regIP;
-
+    // 注册渠道Id
+    public String sourceId;
     /**
      * 获取用户id userId
      *
@@ -173,5 +174,12 @@ public class RegistRecordCustomize implements Serializable {
     public void setRegIP(String regIP) {
         this.regIP = regIP;
     }
-    
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
 }

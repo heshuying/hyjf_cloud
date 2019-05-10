@@ -16,6 +16,7 @@ import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
@@ -59,6 +60,10 @@ public class RegistRecordController extends BaseController {
         Map<String, String> registPlat = CacheUtil.getParamNameMap("CLIENT");
         List<DropDownVO> listRegistPlat = com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(registPlat);
         userManagerInitResponseBean.setRegistPlat(listRegistPlat);
+        // 注册渠道
+        RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        RegistRecordResponse registRecordResponse = registRecordService.findUtmAll(registerRcordeRequest);
+        userManagerInitResponseBean.setUtmPlatList(registRecordResponse.getUtmPlatVOList());
         return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
     }
 
@@ -98,6 +103,76 @@ public class RegistRecordController extends BaseController {
         }
         return new AdminResult<ListResult<RegistRecordCustomizeVO>>(ListResult.build(registRecordCustomizeVO, registRecordResponse.getCount())) ;
     }
+
+    /**
+     * 修改注册用户渠道信息： 加载渠道修改页面详细信息
+     * 规则说明：
+     *
+     * 1、用户名、用户类型、用户属性、注册时间、注册平台：系统带出，不可修改
+     *
+     * 2、注册渠道：下拉框，默认显示当前渠道名称（无可不显示），可以输入渠道名称修改，输入名称必须在推广中心-渠道列表中存在。
+     *
+     * @param userId
+     *
+     */
+    @ApiOperation(value = "渠道修改详细信息", notes = "渠道修改详细信息")
+    @PostMapping(value = "/registRecordUtmEditStr")
+    @ResponseBody
+    public AdminResult<RegistRecordCustomizeVO> findRegistRecordOne(HttpServletRequest request ,@RequestBody String userId) {
+        RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        registerRcordeRequest.setUserId(userId);
+        RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordOne(registerRcordeRequest);
+        if(registRecordResponse==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(registRecordResponse)) {
+            return new AdminResult<>(FAIL, registRecordResponse.getMessage());
+        }
+        // 详细信息 注册渠道（source_id）
+        RegistRecordCustomizeVO registRecordCustomizeVO = new RegistRecordCustomizeVO();
+        if(null!=registRecordResponse.getResult()){
+                RegistRecordVO registRecordVO = registRecordResponse.getResult();
+                registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+            registRecordCustomizeVO = CommonUtils.convertBean(registRecordResponse.getResult(),RegistRecordCustomizeVO.class);
+        }
+        // 注册渠道（source_id）
+        RegistRecordResponse registRecordResponseUtmAll = registRecordService.findUtmAll(registerRcordeRequest);
+        registRecordCustomizeVO.setUtmPlatList(registRecordResponseUtmAll.getUtmPlatVOList());
+        return new AdminResult<RegistRecordCustomizeVO>(registRecordCustomizeVO);
+    }
+
+    /**
+     * 修改渠道信息
+     *  3、注册渠道和修改原因必填
+     *  4、点击确定：
+     *     1）校验渠道值是否正确，校验成功后，修改用户注册渠道，更新为修改值，并且新增一条操作记录。
+     *  @param registRcordRequestBean
+     */
+    @ApiOperation(value = "渠道修改详细信息", notes = "渠道修改详细信息")
+    @PostMapping(value = "/registRecordUtmEdit")
+    @ResponseBody
+    public AdminResult editRegistRecordOne(HttpServletRequest request , @RequestBody RegistRcordRequestBean registRcordRequestBean) {
+        // 判断客户端类型 （registPlat  账户开通平台 0pc 1微信 2安卓 3IOS 4其他）
+
+        // app,ios,wechat: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_app_utm_reg）
+        // 1.有渠道直接更新ht_app_utm_reg的source_id和source_name
+        // 2.没有渠道记录插入一条新数据 （ht_app_utm_reg）
+
+        // app,ios,wechat: 插入时判断是否有渠道（根据列表下拉数据ht_utm_plat返回的source_id查询ht_utm ，再用utm_id查询 ht_utm_reg）
+        // 1.有渠道直接更新ht_utm_reg的utm_id
+        // 2.没有渠道记录插入一条新数据
+
+        RegistRecordResponse registRecordResponse = registRecordService.editRegistRecordOne(registRcordRequestBean);
+        if (registRecordResponse == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!AdminResponse.isSuccess(registRecordResponse)) {
+            return new AdminResult<>(FAIL, registRecordResponse.getMessage());
+
+        }
+        return new AdminResult<>();
+    }
+
 
     /**
      * 根据业务需求导出相应的表格 此处暂时为可用情况 缺陷：

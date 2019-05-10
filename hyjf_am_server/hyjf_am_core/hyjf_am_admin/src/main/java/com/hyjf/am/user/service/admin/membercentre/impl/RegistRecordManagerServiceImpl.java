@@ -63,4 +63,22 @@ public class RegistRecordManagerServiceImpl extends BaseServiceImpl implements R
         return intUserCount;
     }
 
+
+    /**
+     * 根据筛选条件查找注册信息
+     *
+     * @param mapParam 筛选条件
+     * @return
+     */
+    @Override
+    public RegistRecordCustomize selectRegistOne(Map<String, Object> mapParam) {
+        RegistRecordCustomize listRegistRecord = registRecordCustomizeMapper.selectRegistOne(mapParam);
+        if (listRegistRecord!=null) {
+            Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
+            Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
+            listRegistRecord.setUserProperty(userProperty.getOrDefault(listRegistRecord.getUserProperty(), null));
+            listRegistRecord.setRegistPlat(client.getOrDefault(listRegistRecord.getRegistPlat(), null));
+        }
+        return listRegistRecord;
+    }
 }

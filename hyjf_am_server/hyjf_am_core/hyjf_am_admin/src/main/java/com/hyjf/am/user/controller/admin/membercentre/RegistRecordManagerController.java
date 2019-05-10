@@ -74,6 +74,26 @@ public class RegistRecordManagerController extends BaseController {
     }
 
     /**
+     * 根据筛选条件查找(用户渠道修改列表详细信息)
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/registRecordOne")
+    public RegistRecordResponse findRegistRecordOne(@RequestBody @Valid RegistRcordRequest request) {
+        logger.info("---findRegistRecordOne by param---  " + JSONObject.toJSON(request));
+        Map<String, Object> mapParam = paramSet(request);
+        RegistRecordResponse response = new RegistRecordResponse();
+        RegistRecordCustomize registRecordCustomize = registRecordService.selectRegistOne(mapParam);
+        if (registRecordCustomize!=null) {
+            RegistRecordVO userVoList = CommonUtils.convertBean(registRecordCustomize, RegistRecordVO.class);
+            response.setResult(userVoList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
      * 获取列表总数
      *
      * @param request

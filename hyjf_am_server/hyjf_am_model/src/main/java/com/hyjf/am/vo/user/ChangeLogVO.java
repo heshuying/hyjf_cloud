@@ -42,6 +42,9 @@ public class ChangeLogVO extends BaseVO implements Serializable {
     //合规四期(添加邮箱) add by nxl
     private String email;
 
+    //注册渠道
+    private String utmName;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -197,6 +200,14 @@ public class ChangeLogVO extends BaseVO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUtmName() {
+        return utmName;
+    }
+
+    public void setUtmName(String utmName) {
+        this.utmName = utmName;
     }
 }
 

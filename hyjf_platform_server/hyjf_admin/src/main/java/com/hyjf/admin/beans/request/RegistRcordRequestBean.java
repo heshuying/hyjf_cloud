@@ -26,6 +26,12 @@ public class RegistRcordRequestBean extends BasePage {
 	//注册时间（结束）
 	@ApiModelProperty(value = "注册时间（结束）")
 	private String regTimeEnd;
+	//用户Id
+	@ApiModelProperty(value = "userId")
+	private String userId;
+	//注册渠道Id
+	@ApiModelProperty(value = "sourceId")
+	private String sourceId;
 
 	public String getUserName() {
 		return userName;
@@ -73,6 +79,22 @@ public class RegistRcordRequestBean extends BasePage {
 
 	public void setRegTimeEnd(String regTimeEnd) {
 		this.regTimeEnd = regTimeEnd;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
 	}
 }
 

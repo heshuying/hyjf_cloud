@@ -352,4 +352,23 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	HashMap<String, String> findUserGroup(Integer userId);
+
+	/**
+	 * 用户自主注册时，如果有推荐人，用户注册渠道=推荐人注册渠道
+	 * @param refferUser
+	 * @param userId
+	 * @param utmId
+	 * @param platform
+	 * @return
+	 */
+	void insertRefferUtmReg(User refferUser, Integer userId, String utmId, String platform, Integer attribute);
+
+	/**
+	 * 注册查询推荐人信息
+	 *
+	 * @param mobile
+	 * @param reffer
+	 * @return
+	 */
+	User getRefferUsers(String mobile, String reffer);
 }

@@ -18,9 +18,14 @@ public interface ChangeLogCustomizeMapper {
 	 * @param
 	 * @return
 	 */
-	public List<ChangeLogCustomize> queryChangeLogList(ChangeLogCustomize changeLogCustomize) ;         
-	
-	
+	public List<ChangeLogCustomize> queryChangeLogList(ChangeLogCustomize changeLogCustomize) ;
+
+	/**
+	 * 新增用户信息修改日志列表
+	 * @param
+	 * @return
+	 */
+	int insertSelective(ChangeLogCustomize changeLogCustomize);
 }
 
 	

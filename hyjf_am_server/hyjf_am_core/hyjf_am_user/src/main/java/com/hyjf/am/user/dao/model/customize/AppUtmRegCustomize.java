@@ -1,44 +1,121 @@
-package com.hyjf.am.vo.datacollect;
-
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.util.GetDate;
+package com.hyjf.am.user.dao.model.customize;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * @author xiasq
- * @version AppUtmRegVO, v0.1 2018/5/15 17:16
- */
-public class AppUtmRegVO extends BaseVO implements Serializable {
+public class AppUtmRegCustomize implements Serializable {
     private Long id;
 
+    /**
+     * 渠道编号
+     *
+     * @mbggenerated
+     */
     private Integer sourceId;
 
+    /**
+     * 渠道名称
+     *
+     * @mbggenerated
+     */
     private String sourceName;
 
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
     private Date registerTime;
 
+    /**
+     * 开户时间
+     *
+     * @mbggenerated
+     */
     private Date openAccountTime;
 
+    /**
+     * 首次出借时间
+     *
+     * @mbggenerated
+     */
     private Integer firstInvestTime;
 
-    private String firstInvestTimeT;
-
+    /**
+     * 首投金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAmount;
 
+    /**
+     * 首次出借标的的项目类型
+     *
+     * @mbggenerated
+     */
     private String investProjectType;
 
+    /**
+     * 首次出借标的的项目期限
+     *
+     * @mbggenerated
+     */
     private String investProjectPeriod;
 
+    /**
+     * 累积出借金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal cumulativeInvest;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    private Date updateTime;
+
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
+    private String mobile;
+
+    /**
+     * 推荐人
+     *
+     * @mbggenerated
+     */
+    private String reffer;
+
     private static final long serialVersionUID = 1L;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Integer getSourceId() {
         return sourceId;
@@ -128,22 +205,35 @@ public class AppUtmRegVO extends BaseVO implements Serializable {
         this.cumulativeInvest = cumulativeInvest;
     }
 
-    public String getFirstInvestTimeT() {
-        if(firstInvestTime != null&&firstInvestTime!=0){
-            return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(firstInvestTime);
-        }
-        return null;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setFirstInvestTimeT(String firstInvestTimeT) {
-        this.firstInvestTimeT = firstInvestTimeT;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Long getId() {
-        return id;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getReffer() {
+        return reffer;
+    }
+
+    public void setReffer(String reffer) {
+        this.reffer = reffer;
     }
 }

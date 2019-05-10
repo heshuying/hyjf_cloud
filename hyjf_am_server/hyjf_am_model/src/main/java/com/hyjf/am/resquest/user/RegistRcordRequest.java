@@ -7,6 +7,8 @@ import com.hyjf.am.vo.BasePage;
  * @version RegisterUserRequest, v0.1 2018/4/11 12:49
  */
 public class RegistRcordRequest extends BasePage{
+	//用户Id
+	private String userId;
 	//用户名
 	private String userName;
 	//手机号
@@ -76,6 +78,14 @@ public class RegistRcordRequest extends BasePage{
 
 	public void setLimitFlg(boolean limitFlg) {
 		this.limitFlg = limitFlg;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }
 

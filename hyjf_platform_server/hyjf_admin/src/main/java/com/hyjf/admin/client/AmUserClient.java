@@ -795,6 +795,15 @@ public interface AmUserClient {
 
     /**
      * @return
+     * @Author walter.wx
+     * @Description 获取Utm对象
+     * @Date 15:14 2019/5/9
+     * @Param utmId
+     */
+    UtmVO getUtmBySourceId(String sourceId);
+
+    /**
+     * @return
      * @Author walter.limeng
      * @Description 根据userId获取用户对象
      * @Date 15:15 2018/7/14
@@ -1431,4 +1440,61 @@ public interface AmUserClient {
      * @return
      */
     BankCancellationAccountResponse getBankCancellationAccountList(BankCancellationAccountRequest bankCancellationAccountRequest);
+
+    /**
+     * 查找注册记录列表（渠道修改列表专用）
+     *
+     * @author wx
+     * @param request
+     * @return
+     */
+    RegistRecordResponse findRegistRecordOne(RegistRcordRequest request);
+
+    /**
+     * 根据userId查询用户推广链接注册
+     *
+     * @param userId
+     * @return
+     */
+    UtmRegVO findUtmRegByUserId(Integer userId);
+
+    /**
+     * 修改app渠道信息
+     *
+     * @param appUtmRegVO
+     * @return
+     */
+    boolean updateAppUtmReg(AppUtmRegVO appUtmRegVO);
+
+    /**
+     * 新增app渠道信息
+     *
+     * @param appUtmRegVO
+     * @return
+     */
+    boolean insertAppUtmReg(AppUtmRegVO appUtmRegVO);
+
+    /**
+     * 新增pc渠道信息
+     *
+     * @param
+     * @return
+     */
+    boolean insertPcUtmReg(UtmRegVO utmRegVO);
+
+    /**
+     * 修改pc渠道信息
+     *
+     * @param
+     * @return
+     */
+    boolean updatePcUtmReg(UtmRegVO utmRegVO);
+
+    /**
+     * 修改渠道插入
+     *
+     * @param changeLogVO
+     * @return
+     */
+    boolean insertChangeLogList(ChangeLogVO changeLogVO);
 }

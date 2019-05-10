@@ -54,6 +54,15 @@ public interface UtmService extends BaseService {
     UtmChannelVO getUtmByUtmId(String utmId);
 
     /**
+     * @Author walter.wx
+     * @Description  获取Utm对象
+     * @Date 15:58 2018/7/14
+     * @Param utmId
+     * @return
+     */
+    UtmVO getUtmBySourceId(String sourceId);
+
+    /**
      * @Author walter.limeng
      * @Description  新增或者修改对象
      * @Date 10:11 2018/7/16

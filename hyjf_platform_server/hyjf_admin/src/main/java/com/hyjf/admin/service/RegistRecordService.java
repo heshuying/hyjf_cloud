@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.beans.request.RegistRcordRequestBean;
 import com.hyjf.am.response.user.RegistRecordResponse;
 import com.hyjf.am.resquest.user.RegistRcordRequest;
 
@@ -19,4 +20,21 @@ public interface RegistRecordService {
      */
     RegistRecordResponse findRegistRecordList(RegistRcordRequest request);
 
+    /**
+     * 获取所有注册渠道（有效）
+     *
+     */
+    RegistRecordResponse findUtmAll(RegistRcordRequest request);
+
+    /**
+     * 获取修改渠道页面详细信息
+     *
+     */
+    RegistRecordResponse findRegistRecordOne(RegistRcordRequest request);
+
+    /**
+     * 修改注册渠道
+     *
+     */
+    RegistRecordResponse editRegistRecordOne(RegistRcordRequestBean registRcordRequestBean);
 }
