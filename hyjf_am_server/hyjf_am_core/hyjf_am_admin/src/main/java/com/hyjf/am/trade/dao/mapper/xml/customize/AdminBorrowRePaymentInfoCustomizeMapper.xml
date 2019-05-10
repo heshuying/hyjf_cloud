@@ -63,7 +63,7 @@
 				</if>
 				<if test="status ==2">
 					AND br.advance_status=3
-					AND br.recover_status = #{status}
+					AND br.recover_status = 0
 				</if>
 				<if test="status ==1">
 					AND br.recover_status = #{status}
@@ -392,7 +392,7 @@
 					br.charge_penalty_interest as chargeInterest,
 					br.late_days as lateDays,
 					br.late_interest as lateInterest,
-					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
 					brr.repay_username as repayUsername,
 					CASE brr.auto_repay when 0
 					then '手动还款'
@@ -485,7 +485,7 @@
 					br.charge_penalty_interest as chargeInterest,
 					br.late_days as lateDays,
 					br.late_interest as lateInterest,
-					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '机构垫付' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
+					CASE brr.repay_money_source WHEN 1 THEN '借款人还款' WHEN 2 THEN '第三方保障' WHEN 3 THEN '保证金垫付' ELSE '借款人还款' END  as repayMoneySource,
 					brr.repay_username as repayUsername,
 					CASE brr.auto_repay when 0
 					then '手动还款'
