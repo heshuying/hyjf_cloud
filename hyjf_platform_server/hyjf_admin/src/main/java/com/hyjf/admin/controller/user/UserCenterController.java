@@ -1374,8 +1374,8 @@ public class UserCenterController extends BaseController {
                     userRequest.setBankMobile(bankMobile);
                     userRequest.setUserId(Integer.parseInt(userId));
                     userRequest.setRegIp(GetCilentIP.getIpAddr(request));
-                  boolean  updateFlag =  this.userCenterService.syncUserMobile(userRequest);
-
+                    this.userCenterService.syncUserMobile(userRequest);
+                   return  new AdminResult<>(SUCCESS, "同步用户手机号成功");
                 } else {
                     return new AdminResult<>(FAIL, "银行的预留手机号与本地预留手机号一致,无需更新");
                 }
@@ -1383,8 +1383,7 @@ public class UserCenterController extends BaseController {
                 return new AdminResult<>(FAIL, "调用银行接口失败");
             }
         } catch (Exception e) {
-
+            return new AdminResult<>(FAIL, "调用银行接口失败");
         }
-        return result;
     }
 }
