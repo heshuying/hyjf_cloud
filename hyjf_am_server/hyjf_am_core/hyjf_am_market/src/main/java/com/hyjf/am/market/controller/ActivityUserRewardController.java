@@ -54,11 +54,11 @@ public class ActivityUserRewardController {
     }
 
 	/**
-	 * 保存领取记录
+	 * 保存领取记录 支持重复复保存
 	 * @param vo
 	 * @return
 	 */
-	@RequestMapping("/savereward")
+	@RequestMapping("/save")
 	public ActivityUserRewardResponse saveReward(@RequestBody ActivityUserRewardVO vo) {
 		logger.info("insert ActivityUserReward, vo is: {}", vo);
 		ActivityUserRewardResponse reaponse = new ActivityUserRewardResponse();
