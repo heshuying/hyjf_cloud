@@ -116,7 +116,7 @@ public class BorrowRegistController extends BaseController {
     @ApiOperation(value = "备案撤销", notes = "备案撤销")
     @ApiImplicitParam(name = "borrowNid", value = "标的编号", required = true, dataType = "String", paramType = "path")
     @GetMapping("/debtregist_cancel/{borrowNid}")
-//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
+    @AuthorityAnnotation(key = "borrow", value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult registCancel(HttpServletRequest request, @PathVariable String borrowNid){
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
@@ -130,7 +130,7 @@ public class BorrowRegistController extends BaseController {
      */
     @ApiOperation(value = "异常标的备案撤销", notes = "异常标的备案撤销")
     @PostMapping("/debtregist_cancel_exception")
-//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
+    @AuthorityAnnotation(key = "borrow", value = ShiroConstants.PERMISSIONS_DEBT_REGIST)
     public AdminResult registCancelForException(HttpServletRequest request, @RequestBody BorrowRegistCancelRequestBean requestBean){
         AdminSystemVO currUser = getUser(request);
         if(currUser == null){
@@ -147,7 +147,7 @@ public class BorrowRegistController extends BaseController {
      */
     @ApiOperation(value = "备案撤销确认页面", notes = "备案撤销确认页面")
     @GetMapping("/registcancel_confirm/{borrowNid}")
-//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = "borrow", value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowRegistCancelConfirmCustomizeVO> registCancelConfirm(HttpServletRequest request, @PathVariable String borrowNid) {
         BorrowRegistCancelConfirmCustomizeVO responseBean = borrowRegistService.selectRegistCancelConfirm(borrowNid);
         if(responseBean == null){
