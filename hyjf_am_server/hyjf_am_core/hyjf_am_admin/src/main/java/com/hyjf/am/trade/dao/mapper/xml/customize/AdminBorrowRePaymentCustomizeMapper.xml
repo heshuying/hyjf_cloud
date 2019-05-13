@@ -29,13 +29,13 @@
 			<!-- 还款状态0还款中,1已还款 -->
 			<if test="statusSrch != null and statusSrch != ''">
 				<if test="statusSrch ==0">
-					AND b.status= 4
+					and br.repay_status=0 and br.advance_status!=3
 				</if>
 				<if test="statusSrch ==1">
-					 and br.repay_status=0 and br.advance_status!=3
+					 and br.repay_status=1
 				</if>
 				<if test="statusSrch ==2">
-					AND b.status= 8
+					br.repay_status=0 and br.advance_status=3
 				</if>
 			</if>
 			<!-- 最后还款日 -->
