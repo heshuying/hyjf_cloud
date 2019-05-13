@@ -1,13 +1,10 @@
 package com.hyjf.am.admin.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.market.service.UserLargeScreenTwoService;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 import com.hyjf.am.user.service.admin.message.SmsCountService;
-import com.hyjf.am.vo.api.OperMonthPerformanceDataVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetDate;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -20,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -44,19 +40,25 @@ public class SmsCountConsumer implements RocketMQListener<MessageExt>, RocketMQP
             return;
         }
 
-        //TODO 待添加Redis同步锁，防止并发修改
+        String token = "短信统计";
+        String rediskey = "SMS_COUNT_MESSAGE_TOPIC";
         try{
-            Map<String, SmsCountCustomize> smsCountCustomizeMap =
-                    smsCountService.getSmsCount(map.get("mobile"),map.get("messageStr"));
-            if(smsCountCustomizeMap == null ){
-                logger.info("【短信统计】SmsCountConsumer 需要更新的数据为0, mobile is :{}", map.get("mobile"));
-                return;
-            }
+            //得到锁
+            if (RedisUtils.lockWithTimeout(rediskey,token,6000L)) {
+                Map<String, SmsCountCustomize> smsCountCustomizeMap =
+                        smsCountService.getSmsCount(map.get("mobile"), map.get("messageStr"));
+                if (smsCountCustomizeMap == null) {
+                    logger.info("【短信统计】SmsCountConsumer 需要更新的数据为0, mobile is :{}", map.get("mobile"));
+                    return;
+                }
 
-            logger.info("【短信统计】SmsCountConsumer 需要更新的条数为 is :{}", smsCountCustomizeMap.size());
-            smsCountService.addSmsCount(smsCountCustomizeMap);
+                logger.info("【短信统计】SmsCountConsumer 需要更新的条数为 is :{}", smsCountCustomizeMap.size());
+                smsCountService.addSmsCount(smsCountCustomizeMap);
+            }
         }catch (Exception e){
             logger.error("【短信统计】发生异常："+e.getMessage());
+        }finally {
+            RedisUtils.release(rediskey,token);
         }
 
     }
