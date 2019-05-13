@@ -153,7 +153,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                     // 类型转换
                     regUtmid = String.valueOf(reg.getUtmId());
                     // 是否为空
-                    if (StringUtils.isNotEmpty(regUtmid) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
+                    if (StringUtils.isNotEmpty(regUtmid) &&  Validator.isNumber(regUtmid) && !(platform.equals(String.valueOf(ClientConstants.APP_CLIENT)) || platform.equals(String.valueOf(ClientConstants.APP_CLIENT_IOS)))) {
                         // 插入推荐人渠道
                         this.insertUtmReg(userId, regUtmid);
                         // 不再进行默认渠道插入
