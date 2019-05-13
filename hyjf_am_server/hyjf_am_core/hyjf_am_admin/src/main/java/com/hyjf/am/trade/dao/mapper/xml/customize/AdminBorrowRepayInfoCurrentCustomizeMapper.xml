@@ -1080,9 +1080,9 @@
         rp.recover_interest_yes AS recoverInterestYesPeriod,
         IFNULL((SELECT l.amount FROM ht_account_list l WHERE l.nid = rp.repay_order_id LIMIT 1),0) AS recoverAccountYesPeriod,
         rp.recover_fee_yes AS recoverFeeYesPeriod,
-        br.recover_capital_wait AS recoverCapitalWait,
-        br.recover_interest_wait AS recoverInterestWait,
-        br.recover_account_wait AS recoverAccountWait,
+        rp.recover_capital_wait AS recoverCapitalWait,
+        rp.recover_interest_wait AS recoverInterestWait,
+        rp.recover_account_wait AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         rp.recover_status = 0,
@@ -1257,9 +1257,9 @@
         cr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        ct.assign_capital - ct.assign_repay_capital AS recoverCapitalWait,
-        ct.assign_interest - ct.assign_repay_interest AS recoverInterestWait,
-        ct.assign_account - ct.assign_repay_account AS recoverAccountWait,
+        IF(cr.`status`=0,cr.assign_capital,0) AS recoverCapitalWait,
+        IF(cr.`status`=0,cr.assign_interest,0) AS recoverInterestWait,
+        IF(cr.`status`=0,cr.assign_account,0) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         cr.`status` = 0,
@@ -1438,9 +1438,9 @@
         hcr.manage_fee,
         0
         ) AS recoverFeeYesPeriod,
-        hct.repay_capital_wait AS recoverCapitalWait,
-        hct.repay_interest_wait AS recoverInterestWait,
-        hct.repay_interest_wait AS recoverAccountWait,
+        IF(hcr.repay_status=0,hcr.repay_capital,0) AS recoverCapitalWait,
+        IF(hcr.repay_status=0,hcr.repay_interest,0) AS recoverInterestWait,
+        IF(hcr.repay_status=0,hcr.repay_account,0) AS recoverAccountWait,
         brp.repay_username AS repayUserName,
         IF (
         hcr.repay_status = 0,
