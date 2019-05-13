@@ -425,7 +425,7 @@
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				'' AS yanqilixi,
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
@@ -501,7 +501,7 @@
 				rp.charge_interest AS
 				shaohuanlixi,
 				'' AS yanqitianshu,
-				'' AS yanqilixi,
+				rp.repay_account+rp.charge_interest+rp.late_interest+rp.late_interest_wait+rp.repay_fee AS yanqilixi,
 				rp.late_days AS yuqitianshu,
 				if(rp.repay_status='1',rp.late_interest,rp.late_interest_wait)
 				AS yuqilixi,
