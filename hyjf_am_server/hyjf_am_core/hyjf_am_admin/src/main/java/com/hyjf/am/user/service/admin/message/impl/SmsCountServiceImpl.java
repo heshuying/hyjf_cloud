@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.user.service.admin.message.impl;
 
-import com.hyjf.am.admin.mq.consumer.SellDailyConsumer;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.user.dao.mapper.auto.SmsCountMapper;
@@ -11,9 +10,7 @@ import com.hyjf.am.user.dao.mapper.customize.SmsCountCustomizeMapper;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 import com.hyjf.am.user.service.admin.message.SmsCountService;
-import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -153,12 +148,14 @@ public class SmsCountServiceImpl implements SmsCountService {
             }
             smsCountCustomize.setPosttime(postTime);
             smsCountCustomize.setSmsNumber(contentSize);
-            List<SmsCountCustomize> list = smsCountCustomizeMapper.querySms(smsCountCustomize);
 
+            //查询是否已存在
+            List<SmsCountCustomize> list = smsCountCustomizeMapper.querySms(smsCountCustomize);
             if(list.size() > 0){
                 //通过部门和发送时间查询
                 //只有一条
                 smsCountCustomize =  list.get(0);
+                smsCountCustomize.setSmsNumber(smsCountCustomize.getSmsNumber()+contentSize);
                 logger.debug("更新sms_count條數============================="+(smsCountCustomize.getSmsNumber()+contentSize));
             }
             String key = smsCountCustomize.getDepartmentId()+smsCountCustomize.getDepartmentName();
